@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "climbing-stairs": [
@@ -8,7 +8,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "When climbing 1 or 2 steps at a time, the number of ways to reach step $n$ follows which sequence pattern?",
+        "When climbing 1 or 2 steps at a time, the number of distinct ways to reach step $n$ follows which well-known sequence?",
       options: ["Fibonacci", "Factorial", "Binary", "Harmonic"],
       correctAnswer: 0,
       explanation:

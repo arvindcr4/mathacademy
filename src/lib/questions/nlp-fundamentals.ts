@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   // ── nlp-kp-1: Tokenization & Subword Methods ──────────────────────────────
