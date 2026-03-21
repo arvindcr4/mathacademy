@@ -2369,6 +2369,52 @@ const questionOverrides: Record<string, QuestionOverride> = {
     options: ["1.5", "1.75", "1.875", "2.0"],
     correctAnswer: 1,
   },
+  "q-agent-kp2-2": {
+    type: "multiple-choice",
+    question: "A model returns two independent tool calls in one turn. What should the host usually do?",
+    options: [
+      "Execute both concurrently and send both results back together",
+      "Execute only one, because one model turn can authorize only one tool call",
+      "Force sequential execution, because multiple tool calls are never meant to run in parallel",
+      "Discard both and ask the model to pick a single preferred tool",
+    ],
+    correctAnswer: 0,
+  },
+  "q-agent-kp2-7": {
+    type: "multiple-choice",
+    question:
+      'A tool schema marks "location" as required and "units" as optional. What must a valid tool call include?',
+    options: [
+      '"location" only; "units" may be omitted',
+      '"units" only; "location" may be omitted',
+      "Both fields, because every listed property is automatically required",
+      "Neither field, because the model can infer missing arguments",
+    ],
+    correctAnswer: 0,
+  },
+  "q-agent-kp7-8": {
+    type: "multiple-choice",
+    question:
+      "Agent A passes a wrong summary to Agent B and Agent C. Nobody validates it. What is the main risk?",
+    options: [
+      "The error can cascade through later agents as if it were ground truth",
+      "The error stays local because each agent has its own context window",
+      "Downstream agents will usually correct the mistake automatically",
+      "The main effect is extra latency, not lower accuracy",
+    ],
+    correctAnswer: 0,
+  },
+  "q-agentic-kp13-2": {
+    type: "multiple-choice",
+    question: "What does trajectory evaluation score in an agent run?",
+    options: [
+      "Only the final answer",
+      "Only the intermediate steps, not the final answer",
+      "Both the final answer and the path taken to reach it",
+      "Only latency and token cost",
+    ],
+    correctAnswer: 2,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
