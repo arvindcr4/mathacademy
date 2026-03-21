@@ -38,9 +38,9 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The chain rule states that for a composed function \\(f(x) = g(h(x))\\), the derivative with respect to \\(x\\) is:\n" +
-        "\\[\\frac{df}{dx} = \\frac{dg}{dh} \\cdot \\frac{dh}{dx}\\]" +
-        "The derivative of the outer function \\(g\\) evaluated at \\(h(x)\\), multiplied by the derivative of the inner function \\(h\\) with respect to \\(x\\).",
+        "**Step 1:** The chain rule states that for a composed function $f(x) = g(h(x))$, the derivative with respect to $x$ is: $\\frac{df}{dx} = \\frac{dg}{dh} \\cdot \\frac{dh}{dx}$.\n" +
+        "\n**Step 2:** The derivative of the outer function $g$ evaluated at $h(x)$, multiplied by the derivative of the inner function $h$ with respect to $x$.\n" +
+        "\n**Step 3:** This is the fundamental mechanism by which gradients flow backwards through computational graphs in neural networks.",
       hints: [
         "The chain rule multiplies derivatives along the chain of compositions.",
         "Each intermediate variable contributes its own local derivative.",
@@ -77,7 +77,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "By the chain rule, dL/dx = (dL/dz) * (dz/dx) = dL/dz * y. The local gradient of multiplication for x is y, so you multiply the upstream gradient by y. Symmetrically, y receives dL/dz * x.",
+        "**Step 1:** The chain rule gives dL/dx = (dL/dz) * (dz/dx). For z = x * y, we have dz/dx = y.\n\n**Step 2:** So dL/dx = dL/dz * y. The local gradient for x is y, multiplied by the upstream gradient.\n\n**Step 3:** Symmetrically, y receives gradient dL/dz * x, since dz/dy = x.",
       hints: [
         "Apply the chain rule: upstream gradient times local gradient.",
         "The local gradient of x*y with respect to x is just y.",
@@ -97,7 +97,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "The derivative of tanh(x) is 1 - tanh^2(x), also written as sech^2(x). This is why in Micrograd's backward pass for tanh, Karpathy writes `self.grad += (1 - t**2) * out.grad` where t = out.data.",
+        "**Step 1:** The derivative of tanh(x) is 1 - tanh^2(x), also written as sech^2(x).\n\n**Step 2:** This is why in Micrograd's backward pass, Karpathy writes `self.grad += (1 - t**2) * out.grad` where t = out.data.\n\n**Step 3:** The gradient uses the already-computed forward value t, requiring no extra computation.",
       hints: [
         "This is the standard calculus derivative of the hyperbolic tangent.",
         "It can be re-expressed using the output value itself, which is convenient for backprop.",
@@ -117,7 +117,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If a value node is used more than once (e.g., x used in both x*y and x*z), its gradient is the sum of contributions from each usage. Using `=` would overwrite one path's gradient with another; `+=` accumulates them correctly.",
+        "**Step 1:** If a value node is used more than once (e.g., x in both x*y and x*z), each usage path contributes to x.grad.\n\n**Step 2:** Using `=` would overwrite one path's gradient with another, losing contributions.\n\n**Step 3:** Using `+=` accumulates both contributions correctly, giving the total derivative.",
       hints: [
         "Think about what happens when a variable appears multiple times in a computational graph.",
         "Calculus: the total derivative sums contributions from all paths.",
@@ -137,7 +137,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "ReLU passes the input unchanged when x > 0 (gradient = 1) and clamps to zero when x <= 0 (gradient = 0). This piecewise linear gradient is why ReLU avoids the saturation problem of sigmoid/tanh in the positive region.",
+        "**Step 1:** ReLU is defined as f(x) = max(0, x). When x > 0, f'(x) = 1 (gradient passes through unchanged).\n\n**Step 2:** When x <= 0, f(x) = 0 and f'(x) = 0 (gradient is clamped to zero).\n\n**Step 3:** This piecewise linear nature makes ReLU computationally efficient and avoids the saturation problem of sigmoid/tanh in the positive region.",
       hints: [
         "Differentiate max(0, x) piecewise: one piece for x > 0, one for x < 0.",
         "The gradient at x = 0 is technically undefined but conventionally set to 0 in practice.",
