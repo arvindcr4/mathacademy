@@ -2340,7 +2340,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Feature freshness SLAs should be defined per feature based on how quickly feature staleness degrades model quality, rather than applying a single uniform freshness SLA to all features in a feature store.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Feature freshness requirements vary by orders of magnitude: a 'current session activity' feature may need sub-second updates, while a 'customer tenure in years' feature can be updated monthly. Applying a single strict SLA to all features massively overengineers low-velocity features (increasing cost) while potentially missing the point for high-velocity ones. Feature-level SLA definition also enables per-feature alerting when update pipelines lag.",
       hints: [
         "Real-time feature (session activity): staleness of 60 seconds is catastrophic. Monthly feature (tenure): staleness of 1 day is completely fine.",
@@ -2391,7 +2391,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "A/B testing for ML model evaluation requires the experimental design to be set up before the rollout begins - post-hoc analysis of traffic logs to compare two models that were deployed at different times is generally invalid due to temporal confounding.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Post-hoc comparison confounds model effect with time effect: traffic patterns, user behavior, and external events differ between time periods (day of week, seasonality, news events). A/B testing requires simultaneous exposure of matched user groups to both models, with randomized assignment. Pre/post comparisons cannot distinguish model quality improvement from external factors that changed between periods - a fundamental validity threat to ML offline-online metric comparisons.",
       hints: [
         "Temporal confound: Monday users behave differently from Friday users. Comparing Monday (old model) vs. Friday (new model) is invalid.",
@@ -2442,7 +2442,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Concept drift (changes in the relationship between features X and label Y) is more dangerous than data drift (changes in the feature distribution P(X)) because data drift is observable from unlabeled serving data, while concept drift requires labeled data to detect and may silently degrade model quality before labels become available.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Data drift detection requires only feature values from serving traffic (no labels needed) - detectable immediately via PSI, KS test, or statistical tests. Concept drift (P(Y|X) changes) requires both features and labels to measure - in fraud detection, labels may arrive hours to weeks after the transaction. This lag means concept drift can silently degrade model quality for the entire label collection period before it becomes observable. Proxy signals (prediction confidence distribution shift, business metric changes) are often used to detect concept drift early.",
       hints: [
         "Data drift: feature distribution changed. Detectable from unlabeled data immediately using statistical tests.",
@@ -2493,7 +2493,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "ML pipeline reproducibility requires pinning not only Python package versions but also the exact dataset version, random seeds, and hardware configuration used for each training run, since any of these can silently change model outputs.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Full ML reproducibility requires: (1) code version (git commit hash); (2) data version (dataset snapshot ID or timestamp); (3) software environment (pinned dependency lock file + Docker image hash); (4) random seeds (Python, NumPy, PyTorch); (5) hardware configuration (CUDA version, GPU model - different GPU generations can produce different numerical results even with the same code). Missing any of these makes a 'reproduced' run potentially produce different model weights.",
       hints: [
         "Dataset version matters: if training data is updated between runs, identical code produces different models.",
@@ -2544,7 +2544,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Comparing two ML experiments is only valid when they differ in at most one variable - running experiments that change multiple hyperparameters simultaneously makes it impossible to attribute performance differences to any specific change.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "This is the scientific single-variable principle applied naively. In practice, multi-variable experiments are valid and common: hyperparameter search (grid search, random search, Bayesian optimization) varies multiple hyperparameters simultaneously to find the optimal combination efficiently. The distinction is: single-variable experiments test causal hypotheses ('does adding dropout improve this architecture?'); multi-variable search finds the best configuration without causal attribution. Both are legitimate experimental strategies with different goals.",
       hints: [
         "Hypothesis testing: vary one variable to establish causality. Hyperparameter search: vary many to find the best combination.",
@@ -2577,7 +2577,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Network effects (when one user's experience is affected by other users' model assignments) violate the independence assumptions of standard A/B tests and require more sophisticated experimental designs like cluster-based randomization.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Standard A/B tests assume SUTVA: each user's outcome depends only on their own treatment assignment. For social networks, marketplace models, and recommendation systems, this is violated: showing User A a new recommendation model affects what items User B sees (inventory depletion, social virality). Solutions: cluster randomization (assign entire friend groups or geographic regions together), switchback designs (alternate between treatments over time periods), or synthetic control methods.",
       hints: [
         "Marketplace example: showing discounts to 50% of buyers changes inventory availability for the other 50% - treatments are not independent.",
@@ -2646,7 +2646,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Monitoring only aggregate model performance metrics (overall AUC, overall accuracy) is insufficient for detecting gradual model degradation in production because aggregate metrics can remain stable while per-segment performance silently degrades.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Aggregate metric masking: if a model's performance improves on the majority segment but degrades on a minority segment, the aggregate metric may be unchanged or even improve. Example: a fraud model's overall AUC stays at 0.92, but its AUC on mobile users (15% of traffic) drops from 0.88 to 0.75 - a major quality regression affecting millions of users that is invisible in aggregate metrics. Production monitoring requires per-segment metric tracking with alerting thresholds for each important segment.",
       hints: [
         "Aggregate AUC = weighted average of segment AUCs. If the segment with degradation is small, the aggregate barely moves.",
@@ -2679,7 +2679,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Feature freshness monitoring should alert on feature staleness before it exceeds the SLA, not after - because alerts that fire after SLA breach mean the model has already been serving with stale features, potentially for extended periods.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Leading-indicator alerting: alert when feature update lag approaches 80% of the SLA threshold, giving the on-call engineer time to investigate and resolve before SLA breach. Alert-at-breach means the model has already been serving degraded predictions since the breach time. For a fraud model with a 15-minute feature freshness SLA, alert at 12 minutes lag - giving 3 minutes to diagnose before users are affected.",
       hints: [
         "Alert at 80% of SLA: 12-minute alert for 15-minute SLA gives investigation time before breach.",
@@ -2730,7 +2730,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A rollback plan should be documented and tested before beginning a canary deployment, not created reactively when problems are discovered during the canary.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Rollback under incident pressure is high-risk: engineers make mistakes when stressed, novel rollback procedures are error-prone, and documenting rollback steps while an incident is ongoing wastes critical minutes. Pre-deployment checklist should include: verified rollback commands, tested rollback procedure in staging, estimated rollback time, and designation of who is authorized to trigger rollback. Automation of the rollback (one-command or single-click) is ideal for ML serving where every second of degraded service matters.",
       hints: [
         "During an incident, the goal is recovery speed, not process discovery. Pre-written rollback commands execute in seconds.",
@@ -2799,7 +2799,7 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "For ML models serving very low base rate outcomes (e.g., fraud rate of 0.1%), standard A/B testing requires prohibitively large sample sizes to detect meaningful improvements, making the Minimum Detectable Effect (MDE) a critical planning tool.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Low base rates dramatically increase required sample sizes for A/B tests. For 0.1% fraud rate: detecting a 10% relative improvement (from 0.1% to 0.11% detection rate) requires millions of transactions with adequate power. The MDE tells you the smallest effect you can detect given your available sample size - if your test only runs for 1M transactions and your MDE is a 20% relative improvement, you cannot detect the 10% improvement you care about. Teams must either accept lower power, run longer tests, or focus on higher-volume metrics (e.g., prediction scores rather than binary outcomes).",
       hints: [
         "Sample size for 0.1% base rate, 10% relative lift, 80% power, alpha=0.05: roughly 60 million samples - impractical for most teams.",

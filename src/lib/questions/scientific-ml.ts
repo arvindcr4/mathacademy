@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PINNs can solve both forward problems (simulating a known PDE) and inverse problems (inferring unknown parameters from observations) within the same framework.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in \\partial u/\\partial t = ν\\partial\\^2u/\\partial x\\^2) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
       hints: [
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Fourier Neural Operator (FNO) achieves resolution invariance by performing convolution operations in Fourier space, allowing it to be evaluated at any spatial resolution at inference time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "FNO applies linear transforms in Fourier space (equivalent to global convolutions in physical space), then truncates to a fixed number of modes. Because the Fourier transform is resolution-independent, FNO trained at 64\\times64 can be evaluated at 128\\times128 without retraining.",
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Data-driven PDE solvers trained on simulation data from one physical regime can perfectly generalize to radically different parameter regimes without any additional training.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Neural PDE solvers often exhibit poor generalization outside the training distribution - a model trained on low-Reynolds-number flows may fail at turbulent regimes. Active learning, meta-learning, and physics constraints help extend generalization.",
       hints: [
@@ -263,7 +263,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ML-based turbulence closure models that are trained on DNS data can guarantee physical realizability (e.g., non-negative turbulent kinetic energy) without explicit constraints.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Pure data-driven closure models can produce unphysical predictions (negative TKE, violated Galilean invariance) without hard physical constraints; embedding symmetries and realizability conditions into the model architecture or loss function is essential.",
       hints: [
@@ -320,7 +320,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Behler-Parrinello symmetry functions ensure that ML potentials are invariant to translation, rotation, and permutation of identical atoms.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Behler-Parrinello atom-centered symmetry functions (radial and angular) encode local chemical environments in a way that is invariant to rigid-body transformations and atom index permutation - physical symmetries that any valid potential energy surface must satisfy.",
       hints: [
@@ -377,7 +377,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Google DeepMind\'s GNoME model discovered millions of new stable crystal structures by combining GNN-based property prediction with high-throughput DFT validation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "GNoME (Graph Networks for Materials Exploration) used a GNN trained on existing crystal data to predict stable structures, then validated ~380,000 new stable materials with DFT - a 45-fold increase in known stable inorganic crystals.",
       hints: [
@@ -434,7 +434,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Scientific foundation models like ESM-2 demonstrate that self-supervised pre-training on large biological sequence databases can learn biologically meaningful representations without explicit structural or functional labels.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "ESM-2's representations encode secondary structure, contact maps, and functional sites even though training used only sequence prediction - evolutionary co-variation in sequences encodes 3D structural constraints implicitly captured by the language model.",
       hints: [
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Deep ensembles - training multiple neural networks with different random seeds - provide reliable estimates of predictive uncertainty without requiring Bayesian inference.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Deep ensembles have been shown empirically to produce well-calibrated uncertainty estimates, outperforming many approximate Bayesian methods on out-of-distribution detection, despite being a simple, non-Bayesian approach.",
       hints: [
@@ -547,7 +547,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Genetic programming is a classical approach to symbolic regression that evolves mathematical expression trees through selection, crossover, and mutation operations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Genetic programming represents equations as tree structures (operators as internal nodes, variables/constants as leaves) and evolves populations of trees using evolutionary operators - DEAP and PySR use this paradigm, often with physics-informed constraints.",
       hints: [
@@ -604,7 +604,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FourCastNet uses a Fourier-based vision transformer to model global atmospheric dynamics on a latitude-longitude grid.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "FourCastNet (NVIDIA) uses an Adaptive Fourier Neural Operator as its core layer, operating on the spherical grid of atmospheric variables (temperature, wind, humidity) at multiple pressure levels for short-to-medium range weather prediction.",
       hints: [
@@ -661,7 +661,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Neural networks have been used to emulate cosmological N-body simulations, enabling rapid generation of large-scale structure realizations without running expensive particle simulations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Emulators like CAMELS and EuclidEmulator train neural networks on N-body simulation outputs; given cosmological parameters, they predict power spectra or density fields in milliseconds vs. hours for a full N-body run - enabling MCMC posterior sampling.",
       hints: [
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Graph Neural Networks are particularly well-suited for particle physics event reconstruction because collision events naturally form variable-size sets of particle tracks and calorimeter clusters with pairwise interaction structure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Collision events have variable numbers of particles with complex pairwise interactions (e.g., proximity in detector space, shared vertex) - GNNs operating on particle sets or k-NN graphs capture these interactions naturally, outperforming architectures that require fixed-size inputs.",
       hints: [
@@ -774,7 +774,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DimeNet improves upon SchNet by incorporating directional information (bond angles) in addition to interatomic distances, enabling more accurate property prediction.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DimeNet uses directional message passing that incorporates the angle between bonds - not just radial distances - capturing angular geometry of atomic environments, which is important for properties like molecular dipole moments and torsion barriers.",
       hints: [
@@ -830,7 +830,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Graph Network Simulators (GNS) can simulate fluid dynamics by treating fluid particles or mesh nodes as graph nodes and learning interaction rules via message passing.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "GNS (DeepMind) treats simulation particles as graph nodes connected by proximity edges; it learns position updates via message passing GNNs, enabling simulation of fluids, granular materials, and deformable bodies that generalize to unseen geometries.",
       hints: [
@@ -887,7 +887,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural network-based topology optimization methods can amortize the FEM solve cost by learning to predict optimal material distributions directly from load/boundary conditions, enabling real-time design exploration.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Approaches like TopNet and TopoGAN train neural networks on pairs of (boundary conditions, optimal topology) from classical TO runs; at inference, the network predicts near-optimal topologies without iterative FEM solves - enabling interactive design tools.",
       hints: [
@@ -943,7 +943,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Score-based diffusion models have been applied to inverse problems by using the learned prior score to regularize the likelihood gradient, enabling posterior sampling without retraining for each new measurement operator.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Methods like DPS and DDRM use the pre-trained diffusion score as an implicit prior; at inference, they combine the score with the measurement likelihood gradient to sample from the posterior p(x|y), enabling zero-shot adaptation to new inverse problems.",
       hints: [
@@ -1000,7 +1000,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Homogenization theory provides a mathematical foundation for deriving effective coarse-grained equations from fine-scale physics, and ML can learn these effective properties directly from micro-scale simulations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Computational homogenization uses micro-scale simulations (RVE analysis) to compute effective material properties (stiffness tensor, diffusivity); ML surrogates learn these property maps from fine-scale data, enabling rapid macro-scale simulations with micro-structure awareness.",
       hints: [
@@ -1057,7 +1057,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Bayesian optimization is a form of active learning that models the objective function with a Gaussian process and uses an acquisition function to select the next query point.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Bayesian optimization maintains a Gaussian process surrogate of the unknown objective; acquisition functions (Expected Improvement, UCB, Thompson sampling) balance exploration of uncertain regions and exploitation of known good regions to find the optimum efficiently.",
       hints: [
@@ -1113,7 +1113,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The PC algorithm for causal discovery is a constraint-based method that uses conditional independence tests to construct a causal graph skeleton and then orient edges using v-structure patterns.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "PC algorithm starts with a fully connected graph, removes edges where conditional independence is detected (ci-tests), then orients remaining edges by identifying v-structures (A \\to C \\leftarrow B where A and B are not adjacent) and applying orientation rules.",
       hints: [
@@ -1170,7 +1170,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "NequIP (Neural Equivariant Interatomic Potentials) achieves high data efficiency partly because its equivariant architecture does not need to learn rotational invariance from data - it is built into the model by construction.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "By encoding E(3)-equivariance into the architecture, NequIP never needs to learn that rotating a molecule does not change its energy from data - this prior reduces the effective learning problem, enabling accurate potentials from as few as hundreds of training structures.",
       hints: [
@@ -1227,7 +1227,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Invariant neural networks (like SchNet) and equivariant neural networks (like NequIP) are both useful in molecular simulation, but equivariant networks are generally needed when the output is a directional quantity like atomic forces.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Forces are vectors (directional) - a rotation-invariant model cannot directly output rotated forces. Equivariant models output quantities that transform correctly, enabling direct force prediction without finite-difference derivatives of the energy.",
       hints: [
@@ -1284,7 +1284,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Differentiable physics simulators enable end-to-end gradient-based optimization of physical system parameters by backpropagating loss gradients through the simulation itself.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Differentiable simulators (e.g., Brax, DiffTaichi, Warp) compute derivatives of simulation outputs with respect to physical parameters (initial conditions, material properties) via AD, enabling gradient-based inverse design without finite-difference approximations.",
       hints: [
@@ -1340,7 +1340,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural surrogate models are used within digital twins to replace expensive physics-based simulations that cannot run at the speeds required for real-time decision making.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "High-fidelity FEM or CFD simulations can take hours, incompatible with real-time twin operation; neural surrogates trained on simulation data provide predictions in milliseconds, enabling real-time state estimation, anomaly detection, and optimization within the twin.",
       hints: [
@@ -1397,7 +1397,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "AlphaFold2's impact on structural biology is a concrete example of accelerated scientific discovery, having predicted the structures of over 200 million proteins and depositing them in a public database.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DeepMind and EMBL-EBI released the AlphaFold Protein Structure Database with predicted structures for virtually all known proteins (~200M+), transforming structural biology by making structure prediction near-instantaneous rather than requiring months of X-ray crystallography.",
       hints: [
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "AlphaFold2's impact on structural biology is a concrete example of accelerated scientific discovery, having predicted the structures of over 200 million proteins and depositing them in a public database.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DeepMind and EMBL-EBI released the AlphaFold Protein Structure Database with predicted structures for virtually all known proteins (~200M+), transforming structural biology by making structure prediction near-instantaneous rather than requiring months of X-ray crystallography.",
       hints: [
@@ -1510,7 +1510,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The use of fixed random seeds and releasing complete training code and data is considered best practice for reproducible ML research in scientific domains.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Reproducibility best practices include: fixed seeds for all stochastic operations, full code release (training, evaluation, preprocessing), data release or specification, hardware/software environment documentation (requirements.txt, Dockerfile), and reporting variance over multiple runs.",
       hints: [
@@ -1567,7 +1567,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Deep learning-based compressed sensing reconstruction methods (e.g., unrolled iterative algorithms) can outperform classical L1-minimization (basis pursuit) by learning problem-specific priors from data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Algorithm unrolling (LISTA, ISTA-Net) and end-to-end reconstruction networks (E2E-Var-Net) learn measurement-specific priors, achieving higher image quality at lower acceleration factors than classical CS for MRI and CT - at the cost of generalizability across protocols.",
       hints: [
@@ -1624,7 +1624,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "WeatherBench is a standardized benchmark for evaluating ML-based weather forecasting models that provides baseline scores from numerical weather prediction (NWP) models for comparison.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "WeatherBench (and WeatherBench 2) provides ERA5-based evaluation protocols, standard metrics (RMSE, ACC at specific pressure levels), and operational NWP (IFS, GFS) baseline scores - enabling fair comparison of ML weather models on a common test set.",
       hints: [
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Universal Differential Equation (UDE) framework combines mechanistic ODE/PDE models with neural networks by replacing unknown or uncertain model terms with neural network components that are learned from data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "UDEs (Rackauckas et al.) embed neural networks inside differential equations: known physics is written explicitly while unknown terms (reaction rates, constitutive relations) are replaced by neural networks, trained end-to-end using differentiable ODE solvers.",
       hints: [
@@ -2260,7 +2260,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Extended PINNs (XPINNs) decompose the spatial-temporal domain into non-overlapping subdomains, training separate neural networks on each subdomain with interface conditions enforcing continuity, enabling parallelization and better scaling to large domains.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "XPINNs (Jagtap & Karniadakis, 2020) partition the domain and train local networks with: (1) the PDE residual loss within each subdomain, (2) interface conditions requiring continuity of the solution and its normal derivatives at shared boundaries. This divide-and-conquer approach is embarrassingly parallelizable across subdomains, handles large domains that a single network cannot represent well, and can adaptively refine subdomain placement.",
       hints: [
         "A single PINN over a large 3D domain requires a huge network to represent the solution everywhere - XPINNs use smaller, local networks.",
@@ -2328,7 +2328,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Neural operators like FNO and DeepONet learn mappings between function spaces (infinite-dimensional), whereas standard neural networks learn mappings between finite-dimensional vector spaces, making neural operators fundamentally capable of discretization-invariant predictions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Neural operators approximate operators G: U -> V between function spaces, where U and V are infinite-dimensional (e.g., L^2 spaces). The learned operator can then be evaluated at any discretization of the input/output domain. Standard neural networks map R^n -> R^m with fixed input/output dimensions - changing the grid resolution requires retraining. Neural operators achieve discretization invariance by parameterizing the operator kernel rather than the discrete matrix.",
       hints: [
         "Function space learning: the operator maps a function (continuous object) to another function, regardless of how either is discretized.",
@@ -2414,7 +2414,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "For scientific ML applications, epistemic uncertainty (model uncertainty from limited data) should decrease as more training data is added, whereas aleatoric uncertainty (data noise) remains constant regardless of dataset size.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Epistemic uncertainty reflects what the model doesn't know due to limited training data - more data reduces this by constraining the posterior over model parameters. Aleatoric uncertainty reflects inherent noise in measurements or the physical system (e.g., quantum noise in molecular energy measurements) and cannot be reduced by collecting more data. Disentangling these two types is critical in scientific ML: epistemic uncertainty guides active learning (query where the model is uncertain), while aleatoric uncertainty sets the floor of achievable prediction accuracy.",
       hints: [
         "Aleatoric: if you repeated the same experiment 1000 times and still got different energy values, that is aleatoric uncertainty - irreducible.",
@@ -2500,7 +2500,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In equivariant GNNs for molecular force fields, forces can be computed as the negative gradient of the predicted potential energy with respect to atomic positions (-dE/dx_i), automatically guaranteeing energy conservation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "If an equivariant network predicts a scalar energy E(x_1,...,x_N) that is E(3)-invariant, then F_i = -dE/dx_i is automatically equivariant (a vector that rotates with the molecule) and by construction satisfies F = -grad_x E, guaranteeing energy conservation. This 'energy-conserving' force prediction is used in NequIP, MACE, and SchNet - it is more physically principled than directly predicting forces, which can violate energy conservation.",
       hints: [
         "Force = -gradient of potential energy. If E is invariant and x_i transforms as a vector, then -dE/dx_i transforms as a vector - equivariance follows.",
@@ -2550,7 +2550,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Operator learning (FNO, DeepONet) can be applied to time-dependent PDEs by treating time as an additional spatial dimension, enabling autoregressive rollouts where the operator maps the current solution field to the next time step.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "For time-dependent PDEs like Navier-Stokes, FNO can be trained to map u(x,t) -> u(x,t+dt) as a one-step rollout operator. Autoregressively applying this operator over many steps generates long-time predictions. Challenges include error accumulation in autoregressive rollouts (each step's error is the next step's input error). Pushforward training (training with rollout-accumulated inputs) and pushforward regularization improve stability compared to only training on one-step predictions.",
       hints: [
         "One-step training vs. multi-step training: one-step is easier but accumulates errors; multi-step (rollout training) is harder but produces more stable long-time predictions.",
@@ -2618,7 +2618,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Markov Chain Monte Carlo (MCMC) methods like Hamiltonian Monte Carlo (HMC) produce asymptotically exact samples from the posterior p(W|D) for Bayesian neural networks, unlike variational inference which produces biased approximations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "HMC (Neal, 2011) simulates Hamiltonian dynamics in weight space, using gradients of log p(W|D) to propose distant, low-autocorrelation samples with high acceptance probability. Given sufficient computation, HMC converges to the true posterior - making it asymptotically exact. Variational inference optimizes a tractable approximate family q(W) which, due to the mean-field or other approximation, can never match the true posterior even with infinite compute. For small networks, HMC-based BNNs (e.g., NUTS) are the gold standard.",
       hints: [
         "MCMC is exact asymptotically because the Markov chain's stationary distribution is the target posterior - but mixing can be slow in high dimensions.",
@@ -2668,7 +2668,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Attention-based GNNs like Graph Attention Networks (GAT) can learn to assign different importance weights to different neighboring atoms when aggregating messages, unlike isotropic GNNs that treat all neighbors equally.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "GAT (Velickovic et al., 2018) computes attention weights alpha_ij = softmax(e_ij) where e_ij = LeakyReLU(a^T [W h_i || W h_j]) - the attention score between atom i and neighbor j depends on both their features. This allows the network to attend more to chemically important neighbors (e.g., electronegative atoms in polar bonds) and less to distant or irrelevant atoms, in contrast to sum/mean aggregation GNNs that weight all neighbors equally.",
       hints: [
         "In a benzene ring, all carbons are equidistant - but a functional group attached to one position is more chemically relevant. GAT can learn to attend to it more.",

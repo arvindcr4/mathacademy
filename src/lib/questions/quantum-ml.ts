@@ -71,7 +71,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In a quantum circuit, gates must be applied in a strictly sequential order and cannot be parallelized across independent qubits.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Gates acting on disjoint (non-overlapping) qubits commute and can be executed simultaneously on most quantum hardware.  This parallelism is explicitly used to minimise circuit depth — the critical metric for hardware where decoherence limits how many sequential operations can be performed.  Only gates that share a qubit must respect their ordering.",
       hints: [
@@ -127,7 +127,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Quantum entanglement allows two parties to communicate information faster than the speed of light.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Entanglement creates non-local correlations — measuring one qubit instantly fixes the other — but this cannot convey information because each party cannot control or predict their individual outcome.  The no-communication theorem proves that without a classical side-channel, no signal can be sent; the statistical correlations alone are insufficient.",
       hints: [
@@ -179,7 +179,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Shor\'s algorithm can factor large integers exponentially faster than the best known classical algorithms.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Shor's algorithm reduces integer factorisation to period-finding, which the quantum Fourier transform (QFT) solves in polynomial time O((log N)^3).  The best classical algorithms (general number field sieve) run in sub-exponential time ~e^{O((log N)^{1/3} (log log N)^{2/3})}, so Shor gives an exponential speed-up.",
       hints: [
@@ -235,7 +235,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Decoherence in NISQ devices causes qubits to lose their quantum properties by interacting with the environment.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Decoherence is the process by which a qubit loses its quantum superposition due to unwanted interactions with the environment (thermal fluctuations, electromagnetic noise, etc.).  It causes off-diagonal density matrix elements to decay, effectively converting a pure quantum state into a classical mixed state.  This limits both the depth of circuits that can run reliably and the effective number of sequential operations.",
       hints: [
@@ -292,7 +292,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In VQE, the quantum computer is used to prepare a parameterized state and measure expectation values, while a classical optimizer updates the parameters.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "VQE is a hybrid quantum-classical algorithm.  The quantum processor prepares the parameterized state |\\psi(\\theta)\\rangle and measures \\langle H \\rangle.  A classical optimiser then updates \\theta to minimise E(\\theta).  This hybrid approach is essential for NISQ devices, which cannot run deep quantum algorithms but can evaluate expectation values of shallow circuits.",
       hints: [
@@ -349,7 +349,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "At p = 1 layer, QAOA is guaranteed to find the optimal solution to any combinatorial optimization problem.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "At p = 1, QAOA applies a single cost and mixer layer.  This provides only a constant-factor approximation guarantee for MAX-CUT (\\alpha \\approx 0.5 for large regular graphs), not the optimal solution.  For NP-hard problems like MAX-CUT, finding the global optimum requires either large p or a quantum algorithm with different guarantees.  Classical approximation algorithms with better guarantees exist for some problems.",
       hints: [
@@ -405,7 +405,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Hardware-efficient ansatze are designed to minimize the number of gates that are native to the quantum hardware, regardless of the problem structure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Hardware-efficient ansatze use gates and qubit connectivity native to the specific quantum device, minimising gate errors and SWAP overhead.  The trade-off is that the ansatz structure may have no relationship to the problem being solved, potentially harming trainability and solution quality.  They contrast with problem-directed ansatze like UCCSD for quantum chemistry.",
       hints: [
@@ -457,7 +457,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The parameter-shift rule gives the exact gradient (not an approximation) of the expectation value with respect to a gate parameter.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The expectation value of a Pauli rotation gate e^{-i\\theta P/2} varies as \\sin(\\theta + \\phi) or \\cos(\\theta + \\phi), both of which have exact derivatives expressible in terms of shifted evaluations.  The parameter-shift rule exploits this sinusoidal structure to compute \\partial\\langle H\\rangle/\\partial\\theta analytically, unlike finite-difference methods which are approximate.",
       hints: [
@@ -504,7 +504,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Barren plateaus can be partially avoided by using problem-inspired or shallow local ansatze instead of deep global random circuits.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Local cost functions (e.g., measuring only a single qubit or shallow subsystems) and problem-inspired ansatze avoid the full Haar-random regime that causes exponential gradient vanishing.  Barren plateaus arise in globally-entangled, expressible circuits; keeping the circuit shallow and structured prevents the distribution from becoming Haar-random, yielding at most polynomially vanishing gradients.",
       hints: [
@@ -561,7 +561,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The ZZFeatureMap in PennyLane/Qiskit encodes classical data using both single-qubit and two-qubit interactions to create entanglement between feature dimensions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The ZZFeatureMap encodes n features using n qubits with the circuit:\n\\[\nU_{\\text{ZZ}}(x) = \\left(\\prod_{i<j} e^{i\\phi_{ij}(x) Z_i Z_j}\\right)\\text{HADAMARD}^{\\otimes n}, \\quad \\phi_{ij}(x) = (\\pi - x_i)(\\pi - x_j).\n\\]\nThe ZZ interactions create entanglement between feature dimensions and the \\phi_{ij} encoding introduces higher-order feature cross terms.",
       hints: [
@@ -617,7 +617,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Computing the full N\\timesN quantum kernel matrix for N training points requires O(N\\^2) quantum circuit evaluations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The kernel trick lets SVMs learn non-linear decision boundaries without explicitly computing features in high-dimensional space.  Instead, only kernel values K(x, x') between pairs of data points are needed.  A quantum feature map \\phi(x) provides access to kernels in large (possibly exponentially large) Hilbert spaces, potentially capturing richer feature interactions than classical kernels.",
       hints: [
@@ -674,7 +674,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Angle encoding maps each classical feature to the rotation angle of a single-qubit gate, requiring one qubit per feature.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Amplitude encoding stores classical data in the amplitudes of a quantum state:\n\\[\n|\\psi\\rangle = \\frac{1}{\\|x\\|}\\sum_{i=1}^{N} x_i|i\\rangle,\n\\]\nwhere N = 2^n and x_i are the components of the normalized data vector x.  This achieves exponential compression (n qubits encode N = 2^n dimensional vectors) but requires efficient preparation and readout of arbitrary amplitude distributions.",
       hints: [
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A provable quantum advantage in ML has been conclusively demonstrated for real-world large-scale datasets as of 2024.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Potential advantages for quantum ML include: (1) kernel methods in exponentially large feature spaces; (2) quantum sampling from distributions classically intractable to approximate; (3) quantum linear algebra speedups for certain matrix inversions; (4) quantum simulation of physical systems that underlie molecular or materials data.",
       hints: [
@@ -783,7 +783,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Dequantization results disprove the utility of all quantum algorithms.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "QNNs differ from classical NNs in that: (1) information is encoded in quantum states (superposition, entanglement); (2) parameterised gates perform rotations on the Bloch sphere or in higher-dimensional spaces; (3) measurement collapses the state, producing classical outputs; (4) training uses quantum (parameter-shift) or classical (finite difference) gradients.  They are not simply quantisations of classical NNs.",
       hints: [
@@ -840,7 +840,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum neural networks are unitary transformations and therefore cannot introduce non-linearity the same way classical activation functions do.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "QCNNs exploit quantum superposition to process multiple regions of an image simultaneously and use entanglement between neighbouring qubits to learn spatial correlations.  The hierarchical structure progressively reduces qubit count via pooling, keeping the circuit depth shallow enough for NISQ hardware while maintaining quantum advantage potential.",
       hints: [
@@ -897,7 +897,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "QCNNs have been shown to be free from barren plateaus due to their hierarchical local structure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "QRNNs can process sequences of quantum states or classical data encoded into quantum states.  Unlike classical RNNs that store hidden state vectors classically, QRNNs maintain quantum coherence across time steps, potentially capturing long-range dependencies more efficiently due to exponential state space size.",
       hints: [
@@ -954,7 +954,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum RNNs can perfectly memorize arbitrarily long sequences due to the unitary nature of quantum evolution, which prevents information loss.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Classical-to-quantum transfer learning uses a classical pre-trained model to select or initialise quantum circuit parameters.  Quantum-to-quantum transfer directly ports parameters from one quantum circuit to another.  Both reduce the effective training cost by leveraging knowledge from related tasks.",
       hints: [
@@ -1011,7 +1011,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum transfer learning allows quantum circuits to benefit from the vast amount of pre-training done on classical hardware without retraining from scratch.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The quantum portion is responsible for tasks that benefit from superposition and entanglement (e.g., evaluating high-dimensional kernels, generating or processing quantum states).  The classical portion handles tasks that are already efficient classically (e.g., gradient-based optimisation, data loading, loss evaluation).  VQE is a canonical example of this hybrid paradigm.",
       hints: [
@@ -1068,7 +1068,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Hybrid architectures are motivated in part by the limited qubit counts and coherence times of current NISQ devices, which cannot run fully quantum algorithms.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Unlike classical Boltzmann machines that sample from P(v) \\propto e^{\\beta E(v)} using Markov Chain Monte Carlo, QBMs directly encode the Boltzmann distribution in quantum states.  This avoids the thermal equilibration bottleneck of classical MCMC but requires preparing quantum Gibbs states, which itself is challenging.",
       hints: [
@@ -1124,7 +1124,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum GANs (qGANs) are fundamentally different from classical GANs because they use quantum circuits instead of classical neural networks.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Quantum autoencoders compress quantum states by identifying and discarding irrelevant qubits (those mapped to |0\\rangle after the encoding circuit).  The latent space is the subspace spanned by the remaining qubits.  Unlike classical autoencoders that compress statistical data, quantum autoencoders compress quantum information, preserving coherence and entanglement structure.",
       hints: [
@@ -1181,7 +1181,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum Boltzmann Machines sample from a thermal (Gibbs) distribution defined by a quantum Hamiltonian.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A quantum diffusion model represents the data distribution as the equilibrium state of a noisy quantum channel.  The forward diffusion maps clean data to a mixed state; the reverse process is a learned quantum channel that denoises.  Measurement during the reverse process provides samples from the learned distribution.",
       hints: [
@@ -1238,7 +1238,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum sampling (e.g., boson sampling) has been proposed as a near-term demonstration of quantum computational advantage over classical computers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Qiskit's SamQHO (Sampling Quantum HO) and QGAN (Quantum Generative Adversarial Network) are quantum ML algorithms implemented in Qiskit.  They demonstrate the platform's capabilities for quantum generative modeling and sampling tasks.",
       hints: [
@@ -1295,7 +1295,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A quantum autoencoder can compress quantum states that have no efficient classical description.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Jordan-Wigner transformation maps fermionic creation/annihilation operators to qubit operators:\n\\[\nc_i = \\prod_{j<i} Z_j \\sigma_i^-, \\qquad c_i^\\dagger = \\prod_{j<i} Z_j \\sigma_i^+,\n\\]\nThis allows any molecular Hamiltonian (fermionic) to be expressed as a sum of tensor products of Pauli operators, enabling its evaluation on a qubit-based quantum computer.",
       hints: [
@@ -1352,7 +1352,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum-inspired diffusion models require actual quantum hardware to run.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Adiabatic quantum computation works by preparing the ground state of a simple Hamiltonian H_0, then slowly evolving to H_p (encoding the problem).  By the adiabatic theorem, the system stays in the ground state if the evolution is slow enough.  Quantum annealing is a finite-temperature, non-ideal implementation of this idea on devices like D-Wave.",
       hints: [
@@ -1409,7 +1409,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In PennyLane, a QNode wraps a quantum function and makes it differentiable with respect to its parameters using the parameter-shift rule by default.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Quantum linear algebra advantages require special data structures: the condition number \\kappa (ratio of largest to smallest eigenvalue) must be small; matrix must be sparse with efficient QPCA-oracle access; and results must be readable without full state tomography.  These conditions are restrictive in practice.",
       hints: [
@@ -1466,7 +1466,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Qiskit Machine Learning\'s QSVC class implements a quantum kernel SVM that is compatible with scikit-learn\'s SVC interface.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Adaptive QAOA varies the number of layers p based on training progress, increasing depth when the optimisation is still improving and stopping when marginal gains are small.  This is particularly useful for problems where optimal depth is unknown a priori and hardware noise makes unnecessarily deep circuits counterproductive.",
       hints: [
@@ -1523,7 +1523,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Jordan-Wigner transformation is used to map fermionic operators (electron creation/annihilation) to qubit operators (Pauli matrices).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Random circuit sampling (RCS) benchmarks like Google Sycamore use pseudo-random quantum circuits and compare classical simulation cost (estimated via Tensor Network methods) against hardware runtime.  While Sycamore demonstrated quantum supremacy on this task, it remains an abstract computation without known practical applications.",
       hints: [
@@ -1580,7 +1580,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Traveling Salesman Problem (TSP) and portfolio optimization can both be formulated as Quadratic Unconstrained Binary Optimization (QUBO) problems for quantum solvers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Many combinatorial optimization problems, including TSP, max-cut, portfolio optimization, and vehicle routing, can be reformulated as QUBO problems, which are directly solvable by quantum annealers (D-Wave) or approximated by QAOA.",
       hints: [
@@ -1632,7 +1632,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum phase estimation (QPE) can determine the eigenvalues of a unitary operator U to n bits of precision using n ancilla qubits and controlled-U operations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Post-quantum cryptography (PQC) develops classical cryptographic algorithms (lattice-based, code-based, hash-based) secure against quantum attacks.  QML contributes to cryptanalysis — using QNNs to attack or test cryptographic primitives — and to securing machine learning itself against quantum adversaries.",
       hints: [
@@ -1689,7 +1689,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "D-Wave quantum annealers implement quantum annealing using superconducting flux qubits that are coupled via programmable Josephson junction couplers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "D-Wave systems use superconducting flux qubits whose tunneling rates (transverse field) and pairwise couplings (Ising J_ij terms) are programmed via Josephson junction control lines, realizing the quantum annealing process in hardware.",
       hints: [
@@ -1746,7 +1746,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Cross-entropy benchmarking (XEB), as used in Google's quantum supremacy experiment, estimates circuit fidelity by comparing the measured output distribution against the ideal distribution from classical simulation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "XEB computes the cross-entropy between measured bitstring probabilities and classically-simulated ideal probabilities; a high XEB score indicates the quantum hardware is faithfully implementing the intended random circuit, providing evidence of quantum computational fidelity.",
       hints: [
@@ -1803,7 +1803,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A quantum convolutional neural network (QCNN) shares the same trainable parameters (weight sharing) across qubit patches, analogous to how classical CNNs share filter weights across spatial positions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "QCNNs apply the same parameterized two-qubit gates to all neighboring qubit pairs in each convolutional layer, implementing translational equivariance over the qubit register and reducing the parameter count analogously to classical convolutional weight sharing.",
       hints: [
@@ -1860,7 +1860,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Post-quantum cryptography refers to classical cryptographic algorithms that are designed to be secure against attacks from both classical and quantum computers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Post-quantum (or quantum-resistant) cryptography develops classical algorithms based on problems believed to be hard for quantum computers, such as lattice problems (CRYSTALS-Kyber, CRYSTALS-Dilithium), hash-based signatures, and code-based cryptography - standardized by NIST starting 2022.",
       hints: [
@@ -1917,7 +1917,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In hybrid quantum-classical architectures, batching multiple quantum circuit evaluations reduces the overhead of classical-quantum communication but requires quantum hardware capable of parallel circuit execution.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Each classical-quantum call has latency overhead; batching groups multiple inputs into a single submission to the quantum device, amortizing communication costs; however this requires either parallel execution on separate qubits or sequential execution on the same hardware with queuing.",
       hints: [
@@ -1974,7 +1974,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum computers can in principle achieve chemical accuracy (within 1 kcal/mol of the exact ground state energy) for molecular simulations, which classical density functional theory (DFT) often fails to reach for strongly correlated systems.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DFT relies on approximate exchange-correlation functionals that fail for strongly correlated molecules; quantum algorithms like VQE with UCCSD ansatz or quantum phase estimation can in principle compute ground state energies to chemical accuracy (1 kcal/mol \\approx 1.6 mhartree) by working directly in the full Hilbert space.",
       hints: [
@@ -2031,7 +2031,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Noise characterization on NISQ devices - such as measuring T1 (energy relaxation), T2 (dephasing time), and gate error rates - is essential for error-aware circuit compilation and mitigation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Characterizing each qubit's T1 (relaxation time), T2 (coherence time), single- and two-qubit gate fidelities, and readout errors allows compilers to route circuits to less noisy qubits, choose error-aware decompositions, and calibrate mitigation techniques like ZNE or PEC.",
       hints: [
@@ -2088,7 +2088,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum error mitigation techniques eliminate quantum errors completely, equivalent to full quantum error correction.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Strategies include local cost functions, shallow but expressive ansatze, identity block initialisation, and problem-inspired circuit architectures.  No single approach universally solves the barren plateau problem; the best strategy depends on the specific circuit structure and problem.",
       hints: [
@@ -2145,7 +2145,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Readout errors in superconducting qubits arise partly from the finite lifetime of the |1⟩ state (T1 decay) causing the qubit to relax to |0⟩ during the measurement pulse.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "During the readout pulse (which takes microseconds), a qubit in |1⟩ can relax to |0⟩ via T1 decay, causing a false |0⟩ measurement outcome; this asymmetric error (|1⟩\\to|0⟩ more likely than |0⟩\\to|1⟩) is a primary source of readout error in superconducting quantum processors.",
       hints: [
@@ -2202,7 +2202,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Photonic quantum computers encode qubits in the quantum states of photons (e.g., polarization or path), offering the advantage of naturally operating at room temperature and enabling long-distance quantum communication.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Photonic qubits use photon polarization, time-bin, or spatial path modes; photons travel at the speed of light and experience minimal environmental decoherence at room temperature, making them ideal for quantum communication (QKD) and distributed quantum computing, though deterministic photon-photon interactions are challenging for universal computation.",
       hints: [

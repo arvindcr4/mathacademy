@@ -97,7 +97,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "If A and B are both invertible n \\times n matrices, then (AB)\\^{-1} = A\\^{-1}B\\^{-1}.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         'The correct formula is (AB)\\^{-1} = B\\^{-1}A\\^{-1} - order reverses. Verify: (AB)(B\\^{-1}A\\^{-1}) = A(BB\\^{-1})A\\^{-1} = AIA\\^{-1} = I. The "socks before shoes" rule: to undo AB, first undo B then undo A.',
       hints: [
@@ -154,7 +154,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Every n \\times n square matrix can be diagonalized over the real numbers.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Diagonalization requires n linearly independent eigenvectors. The matrix A = [[1,1],[0,1]] has characteristic polynomial (1-\\lambda)\\^2 = 0, so \\lambda = 1 with algebraic multiplicity 2, but only one independent eigenvector [1,0]\\^T. It cannot be diagonalized over \\mathbb{R}.",
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The singular values of any matrix A are always non-negative real numbers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Singular values \\sigma\\_i = √(\\lambda\\_i(A\\^TA)). Since A\\^TA is positive semi-definite, all its eigenvalues \\lambda\\_i \\geq 0, so \\sigma\\_i = √\\lambda\\_i \\geq 0. This holds even for complex matrices (using A*A).",
       hints: [
@@ -258,7 +258,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The principal components returned by PCA are always orthogonal to each other.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The covariance matrix C is real and symmetric, so by the Spectral Theorem its eigenvectors can be chosen to be orthonormal. Principal components are these eigenvectors, so they are mutually orthogonal: PC\\_i \\cdot PC\\_j = 0 for i \$\\neq\$ j.",
       hints: [
@@ -290,7 +290,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "If events A and B are mutually exclusive (P(A \\cap B) = 0), then they are also independent (P(A \\cap B) = P(A)\\cdotP(B)).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Mutual exclusivity means P(A \\cap B) = 0. Independence requires P(A \\cap B) = P(A)\\cdotP(B). These are equal only if P(A) = 0 or P(B) = 0. For a fair die with A = {1,2,3} and B = {4,5,6}: P(A\\capB) = 0 but P(A)\\cdotP(B) = 1/4 \$\\neq\$ 0. They are dependent.",
       hints: [
@@ -357,7 +357,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The Poisson distribution can be derived as the limit of Binomial(n,p) as n \\to \\infty, p \\to 0, with np = \\lambda fixed.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "As n\\to\\infty, p\\to0 with np=\\lambda: C(n,k)\\cdotp\\^k\\cdot(1-p)\\^n\\^{-\\^k \\to e\\^{-\\lambda\\lambda\\^k/k!. This is the Poisson PMF. Practically: the Poisson models rare-event counts (\\lambda small) over many trials (n large).",
       hints: [
@@ -413,7 +413,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Bayes' theorem requires the events H and E to be independent.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Bayes' theorem P(H|E) = P(E|H)P(H)/P(E) holds for any events with P(E) > 0, derived purely from the definition of conditional probability: P(H|E)\\cdotP(E) = P(H\\capE) = P(E|H)\\cdotP(H). Independence would make P(H|E) = P(H), making Bayesian updating useless.",
       hints: [
@@ -459,7 +459,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For independent random variables X and Y, Var(X + Y) = Var(X) + Var(Y).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Var(X+Y) = Var(X) + 2\\cdotCov(X,Y) + Var(Y). Independence ⟹ Cov(X,Y) = 0 ⟹ Var(X+Y) = Var(X)+Var(Y). For example: X,Y ~ N(0,1) independent ⟹ X+Y ~ N(0,2), and Var(X+Y) = 2 = 1+1 = Var(X)+Var(Y). ✓",
       hints: [
@@ -516,7 +516,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The MLE for the variance of a normal distribution, \\sigmâ\\^2 = (1/n)\\sum(x\\_i-x̄)\\^2, is an unbiased estimator.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "E[\\sigmâ\\^2_MLE] = (n-1)/n \\cdot \\sigma\\^2. The MLE divides by n but the unbiased estimator divides by (n-1) (Bessel\'s correction). For n=10: E[\\sigmâ\\^2_MLE] = 0.9\\sigma\\^2 - it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
       hints: [
@@ -553,7 +553,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "At a local minimum of a differentiable function $f: \\mathbb{R}^n \\to \\mathbb{R}$, the gradient $\\nabla f$ must equal the zero vector.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is a **necessary condition** (but not sufficient) for a local extremum.\n\n**Why must $\\nabla f = 0$ at a local minimum?**\n\nIf $\\nabla f(x^*) \\neq 0$, then at least one partial derivative is non-zero, say $\\frac{\\partial f}{\\partial x_k} > 0$ at $x^*$. Then moving a small step in the direction $-h_k$ (decreasing $x_k$) would decrease $f$, contradicting $x^*$ being a local minimum:\n\\[\nf(x^* - \\epsilon \\cdot e_k) \\approx f(x^*) - \\epsilon \\cdot \\frac{\\partial f}{\\partial x_k}(x^*) < f(x^*).\n\\]\n\n**Key insight:** $\\nabla f = 0$ defines a **stationary (critical) point**. These can be:\n- Local minima (all directions curve upward)\n- Local maxima (all directions curve downward)\n- Saddle points (some directions curve up, others curve down)\n\nThis is why the first-derivative test is only a necessary condition - you need the second-derivative test (Hessian) to distinguish between these cases.",
       hints: [
@@ -619,7 +619,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Automatic differentiation (autograd) and symbolic differentiation are the same technique.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "These are fundamentally different approaches to computing derivatives:\n\n**Symbolic Differentiation**\nManipulates algebraic expressions to produce new expressions:\n\\[\n\\frac{d}{dx}(x^2 + \\sin(x)) \\to 2x + \\cos(x).\n\\]\n- Pros: Exact, mathematically clean results\n- Cons: \"Expression swell\" (explosive growth in expression size), struggles with control flow (loops, conditionals)\n- Examples: Mathematica, SymPy, MATLAB's Symbolic Toolbox\n\n**Automatic Differentiation (Autograd)**\nApplies the chain rule to **numerical values** during program execution:\n- Forward mode: evaluates $\\frac{\\partial f}{\\partial x}$ alongside $f(x)$ using dual numbers\n- Reverse mode (backpropagation): records operations in a computational graph, then replays backward to accumulate gradients\n- Handles arbitrary Python code (loops, branches, recursion)\n- Examples: PyTorch, JAX, TensorFlow's Autograd\n\n**Key difference:**\n- Symbolic: \"manipulate the formula\"\n- Autograd: \"evaluate and accumulate\"\n\nFor neural networks with millions of parameters, autograd's reverse-mode differentiation (backprop) is essential - computing symbolic gradients would be intractable.",
       hints: [
@@ -675,7 +675,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Newton's method for optimization uses the update $\\theta \\leftarrow \\theta - H^{-1}\\nabla f$, and achieves quadratic convergence near a minimum.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Newton's method uses **second-order Taylor approximation** to take more accurate steps than gradient descent.\n\n**Derivation:**\nAround the current point $\\theta_t$, the second-order Taylor expansion of $f$ is:\n\\[\nf(\\theta) \\approx f(\\theta_t) + \\nabla f(\\theta_t)^\\top (\\theta - \\theta_t) + \\frac{1}{2}(\\theta - \\theta_t)^\\top H_t (\\theta - \\theta_t).\n\\]\n\nTaking the gradient with respect to $\\theta$ and setting to zero gives the optimum of this local quadratic model:\n\\[\n\\nabla f(\\theta_t) + H_t(\\theta - \\theta_t) = 0 \\implies \\theta_{t+1} = \\theta_t - H_t^{-1}\\nabla f(\\theta_t).\n\\]\n\n**Convergence analysis:**\nNear a minimum $\\theta^*$ with $\\nabla f(\\theta^*) = 0$ and $H$ positive definite:\n\\[\n\\|\\theta_{t+1} - \\theta^*\\| \\leq C \\cdot \\|\\theta_t - \\theta^*\\|^2.\n\\]\nThis is **quadratic convergence** - the error squares (roughly doubles correct digits) at each iteration.\n\n**Comparison with gradient descent:**\n- GD: $\\|\\text{error}_{t+1}\\| \\leq r \\cdot \\|\\text{error}_t\\|$ - linear (slow)\n- Newton: $\\|\\text{error}_{t+1}\\| \\leq C \\cdot \\|\\text{error}_t\\|^2$ - quadratic (fast)\n\n**Trade-offs:**\n- Newton requires computing and inverting the Hessian ($O(n^3)$ for $n$ parameters)\n- Works best near optima; may diverge far from minimum (Hessian may not be PD)\n- Quasi-Newton methods (L-BFGS) approximate $H^{-1}$ cheaply",
       hints: [
@@ -711,7 +711,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a convex function, every local minimum is also a global minimum.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is one of the most important properties of convex functions - it guarantees that optimization is \"well-behaved.\"\n\n**Proof by contradiction:**\n\nSuppose $x^*$ is a local minimum but **not** a global minimum. Then there exists some $y$ with:\n\\[\nf(y) < f(x^*).\n\\]\n\nBy convexity, for any $t \\in (0, 1)$:\n\\[\nf(tx^* + (1-t)y) \\leq t f(x^*) + (1-t) f(y) < t f(x^*) + (1-t) f(x^*) = f(x^*).\n\\]\n\nNow consider points of the form $z_t = tx^* + (1-t)y$ as $t \\to 1$:\n- $z_t \\to x^*$ as $t \\to 1$\n- For $t$ close enough to 1, $z_t$ is arbitrarily close to $x^*$\n- Yet $f(z_t) < f(x^*)$ for all $t < 1$\n\nThis contradicts $x^*$ being a local minimum!\n\n**Practical implication:**\nWhen training convex models (like linear regression with MSE loss), any local minimum you find is **the** global minimum - no risk of being trapped in a suboptimal local minimum.\n\n**Non-convex counterexample:**\n$f(x) = x^3 - x$ has local minima at $x = -1/\\sqrt{3}$ and $x = 1/\\sqrt{3}$, but the global minimum is not at a local minimum (it goes to $-\\infty$).",
       hints: [
@@ -768,7 +768,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Lagrange multiplier \\lambda has the interpretation as the rate of change of the optimal objective value with respect to the constraint level c in g(x) = c.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the **envelope theorem** interpretation of Lagrange multipliers - one of the most economically meaningful aspects.\n\nConsider optimizing $f(x)$ subject to $g(x) = c$. Let $F^*(c)$ be the optimal value. Then:\n\\[\n\\frac{dF^*}{dc}(c) = \\lambda^*,\n\\]\nwhere $\\lambda^*$ is the optimal Lagrange multiplier.\n\nIn our $xy$ example with constraint $x + y = 4$:\n- At the optimum we found $\\lambda = 2$ (since $y = \\lambda = 2$ and $x = \\lambda = 2$)\n- If the constraint changes to $x + y = 4 + \\epsilon$:\n\\[\nF^*(4 + \\epsilon) \\approx F^*(4) + \\lambda \\cdot \\epsilon = 4 + 2\\epsilon.\n\\]\n\nFor $\\epsilon = 1$: new optimum $\\approx 6$ (AM-GM gives $((4+1)/2)^2 = 6.25$).\n\n$\\lambda$ is called the \"shadow price\" because it tells you the marginal value of relaxing the constraint.",
       hints: [
@@ -840,7 +840,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Mutual information I(X; Y) equals zero if and only if X and Y are statistically independent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "I(X;Y) = D_KL(P(X,Y) ‖ P(X)P(Y)). Since KL \\geq 0 with equality iff P(X,Y) = P(X)P(Y), we have I(X;Y) = 0 iff X and Y are independent. Unlike correlation (which only measures linear dependence), MI captures all statistical dependence including nonlinear.",
       hints: [
@@ -887,7 +887,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Hoeffding\'s inequality gives an exponential tail bound for bounded random variables, making it much tighter than Chebyshev\'s 1/k\\^2 bound for large deviations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For bounded i.i.d. X\\_i \\in [0,1] with mean \\mu, Hoeffding gives P(|X̄-\\mu| \\geq t) \\leq 2exp(-2nt\\^2). Chebyshev gives 1/(nt/\\sigma)\\^2. For n=100, t=0.1: Hoeffding \\leq 2e\\^{-\\^2 \\approx 0.27 while Chebyshev gives \\sigma\\^2/(n\\cdott\\^2) - much looser. The exponential decay enables PAC learning sample complexity bounds.",
       hints: [
@@ -923,7 +923,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A result that is statistically significant (p < 0.05) is always practically significant.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Statistical significance depends heavily on sample size. With n = 1,000,000, a 0.001% change in click rate might give p < 0.001 but have zero business impact. Effect size (e.g., Cohen\'s d) measures practical significance. Always report both p-values and effect sizes.",
       hints: [
@@ -980,7 +980,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A high-variance model tends to overfit the training data and perform poorly on unseen data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "High variance means the model is sensitive to specific training samples - it fits noise. This results in low training error but high test error (overfitting). Example: a degree-15 polynomial fitted to 10 points has near-zero training error but wild extrapolation.",
       hints: [
@@ -1032,7 +1032,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A hypothesis class with infinite VC dimension is not PAC learnable.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Fundamental Theorem of Statistical Learning: a binary hypothesis class H is (agnostic) PAC learnable if and only if its VC dimension is finite. With infinite VC dimension, H can shatter arbitrarily large sets, so no finite sample size guarantees generalization for all distributions.",
       hints: [
@@ -1084,7 +1084,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A function k(x,z) is a valid Mercer kernel iff the kernel (Gram) matrix K with K\\_i\\_j = k(x\\_i,x\\_j) is positive semi-definite for any finite input set.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Mercer\'s theorem: k is a valid kernel (i.e., \\exists feature map \\phi such that k(x,z) = ⟨\\phi(x),\\phi(z)⟩) iff for all finite sets {x\\_1,…,x\\_n} and all vectors c: \\sum\_i\\_j c\\_ic\\_jk(x\\_i,x\\_j) \\geq 0, i.e., the Gram matrix is PSD.",
       hints: [
@@ -1141,7 +1141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Convolution in the time/spatial domain corresponds to pointwise multiplication in the Fourier (frequency) domain.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Convolution theorem: F{f * g} = F{f} \\cdot F{g}. This enables O(N log N) convolution: FFT(f), FFT(g), multiply elementwise, IFFT - versus O(N\\cdotK) direct convolution. CNNs with large kernels can exploit this; Fourier Neural Operators (FNO) use it explicitly.",
       hints: [
@@ -1198,7 +1198,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The Lebesgue integral generalizes the Riemann integral: every Riemann-integrable function is Lebesgue-integrable with the same value.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Lebesgue integral partitions the range (not the domain) and handles a far wider class of functions - including pointwise limits of measurable functions. Every bounded Riemann-integrable function is Lebesgue-integrable with equal value. Lebesgue handles \\Sigma x\\_i over countable sets and the dominated convergence theorem, both essential for probability theory.",
       hints: [
@@ -1255,7 +1255,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Fiedler value (second smallest eigenvalue \\lambda\\_2 of the graph Laplacian) measures graph connectivity - larger \\lambda\\_2 means the graph is harder to disconnect.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The algebraic connectivity \\lambda\\_2 = 0 iff the graph is disconnected. For a connected graph, \\lambda\\_2 > 0 and quantifies how well-connected the graph is. The Cheeger inequality relates \\lambda\\_2 to the edge expansion (min-cut ratio), justifying its use in spectral clustering.",
       hints: [
@@ -1307,7 +1307,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Catastrophic cancellation occurs when subtracting two nearly equal floating-point numbers, causing significant loss of significant digits.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Example: a = 1.000000001, b = 1.000000000 (both representable to 10 significant digits). a-b = 0.000000001 = 1\\times10\\^{-⁹ - only 1 significant digit! The leading digits cancel, leaving only the noisy low-order bits. This affects the naive variance formula E[X\\^2]-(E[X])\\^2 when mean >> std.",
       hints: [
@@ -1374,7 +1374,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "MCMC methods (Metropolis-Hastings, HMC) can sample from distributions known only up to a normalizing constant.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Metropolis-Hastings acceptance ratio is \\alpha = min(1, [p̃(x')q(x|x')] / [p̃(x)q(x'|x)]) where p̃ \\propto p. The normalizing constant cancels in the ratio p̃(x')/p̃(x) = p(x')/p(x). This is essential for Bayesian inference where the posterior p(\\theta|D) \\propto p(D|\\theta)p(\\theta) is known only up to P(D).",
       hints: [
@@ -1431,7 +1431,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The mean-field variational assumption q(z) = \\Pi\\_i q\\_i(z\\_i) ignores posterior correlations between latent variables.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Mean-field VI assumes complete independence among latent variables. The optimal q\\_i*(z\\_i) \\propto exp(E_{q_{-i}}[log p(x,z)]). This factorization ignores posterior correlations, potentially making the approximation poor when latent variables are strongly correlated (e.g., in linear regression with correlated features).",
       hints: [
@@ -1468,7 +1468,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GP regression produces both a predictive mean (point prediction) and a predictive variance (uncertainty estimate) at each test point.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "GP posterior at test point x*: \\mu* = k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}y and \\sigma*\\^2 = k(x*,x*) - k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}k(X,x*). The variance \\sigma*\\^2 is zero at training points and grows far from data - automatic uncertainty quantification without approximation.",
       hints: [
@@ -1525,7 +1525,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "An SDE dX = \\mu(X,t)dt + \\sigma(X,t)dW (where W is a Wiener process) has solutions that are Markov processes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Solutions to SDEs driven by Brownian motion are Markov processes: given X(t), the future {X(s):s>t} is independent of the past {X(s):s<t}. This follows because Wiener increments dW are independent of the past. This Markov property is fundamental to diffusion models, enabling the forward/reverse process formulation.",
       hints: [
@@ -1582,7 +1582,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Euler characteristic χ = V - E + F (vertices - edges + faces) is a topological invariant, unchanged by continuous deformations of a shape.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For a sphere: χ = 2. For a torus: χ = 0. For a pretzel (2 holes): χ = -2. The Euler characteristic depends only on topology, not geometry. Equivalent formula: χ = \\Sigma (-1)\\^k\\beta\\_k where \\beta\\_k are Betti numbers (number of k-dimensional holes).",
       hints: [
@@ -2232,7 +2232,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The conditional entropy H(Y|X) is always less than or equal to H(Y), with equality if and only if X and Y are independent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Conditioning reduces entropy (or leaves it unchanged): H(Y|X) \\leq H(Y). Proof: H(Y) - H(Y|X) = I(X;Y) \\geq 0. Equality H(Y|X) = H(Y) holds iff I(X;Y) = 0 iff X and Y are independent. This formalises the intuition that knowing X cannot increase uncertainty about Y.",
       hints: [
         "I(X;Y) = H(Y) - H(Y|X) \\geq 0. Mutual information is always non-negative.",
@@ -2262,7 +2262,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Cross-entropy H(P, Q) = -\\sum P(x) log Q(x) is always greater than or equal to the entropy H(P) = -\\sum P(x) log P(x), with equality iff P = Q.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "H(P, Q) - H(P) = KL(P||Q) \\geq 0 (Gibbs' inequality). Equivalently: -\\sum P log Q \\geq -\\sum P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
       hints: [
         "H(P,Q) = H(P) + KL(P||Q). Since KL \\geq 0, cross-entropy \\geq entropy.",
@@ -2313,7 +2313,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The QR decomposition A = QR (Q orthogonal, R upper triangular) can be used to solve least-squares problems Ax \\approx b more numerically stably than forming the normal equations A\\^TAx = A\\^Tb.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Normal equations A\\^TAx = A\\^Tb square the condition number: κ(A\\^TA) = κ(A)\\^2. For κ(A) = 10⁸, κ(A\\^TA) = 10¹⁶, exhausting float64 precision. QR solves min‖Ax-b‖ via Rx=Q\\^Tb without squaring the condition number, using orthogonal transformations (Householder, Givens) that are numerically stable. Standard numerical libraries (LAPACK's dgels) use QR for least-squares.",
       hints: [
         "Normal equations condition number = κ(A)\\^2: for ill-conditioned A, this can catastrophically amplify errors.",
@@ -2343,7 +2343,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Newton's method for finding the root of f(x)=0 has quadratic convergence near the root: the error at step t+1 satisfies |e\\_t₊\\_1| \\approx C|e\\_t|\\^2, meaning the number of correct decimal digits doubles each iteration.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Newton's method: x\\_t₊\\_1 = x\\_t - f(x\\_t)/f'(x\\_t). Taylor expansion around root x*: e\\_t₊\\_1 \\approx f''(x*)/(2f'(x*)) \\cdot e\\_t\\^2. This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 \\to 2 \\to 4 \\to 8 \\to 16 significant digits per iteration. Applied to f(\\theta) = \\nablaL(\\theta): Newton step = -H\\^{-1}\\nablaL is the full Newton method for optimization.",
       hints: [
         "Quadratic convergence: error ~ C \\times (previous error)\\^2. Starting at 10\\^{-1}: next step 10\\^{-\\^2, then 10\\^{-\\^4, then 10\\^{-⁸.",
@@ -2412,7 +2412,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Hamiltonian Monte Carlo (HMC) uses gradient information \\nablalog \\pi(x) to propose distant moves that are accepted with high probability, making it more efficient than random-walk Metropolis for smooth high-dimensional targets.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = -log \\pi(x) + ½p\\^TM\\^{-1}p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
       hints: [
         "Random-walk MH explores by diffusion (O(n) steps to traverse the target). HMC uses gradient to slide along level sets - much more efficient.",
@@ -2460,7 +2460,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Gibbs sampling is a special case of Metropolis-Hastings where each coordinate is updated from its full conditional distribution P(x\\_i|x_{-i}), and all proposed updates are accepted with probability 1.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "In Gibbs sampling, the proposal for coordinate i is Q(x\\_i'|x) = P(x\\_i'|x_{-i}). The MH acceptance ratio: \\pi(x')Q(x|x')/\\pi(x)Q(x'|x) = P(x')/P(x\\_i|x_{-i}) \\times P(x\\_i'|x_{-i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) - otherwise MH with a different proposal is needed.",
       hints: [
         "Gibbs = MH with acceptance rate 1. The proposal already places probability according to the target's full conditional.",
@@ -2493,7 +2493,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Strong duality holds for convex optimization problems satisfying Slater's condition (existence of a strictly feasible point), meaning the primal and dual optimal values are equal: p* = d*.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Slater's condition: \\existsx with g\\_i(x)<0 for all i. For convex f, g\\_i: Slater's condition guarantees strong duality (p*=d*). The duality gap p*-d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max \\Sigma\\alpha\\_i - ½\\sum\_i\\_j\\alpha\\_i\\alpha\\_jy\\_iy\\_jx\\_i\\^Tx\\_j s.t. \\alpha\\_i\\geq0, \\Sigma\\alpha\\_iy\\_i=0 - enabling the kernel trick.",
       hints: [
         "Slater's condition: there is a point that strictly satisfies all inequality constraints - not just on the boundary.",
@@ -2541,7 +2541,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A function f is convex if and only if its epigraph epi(f) = {(x,t): f(x) \\leq t} is a convex set.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The epigraph definition is equivalent to the standard definition f(\\lambdax+(1-\\lambda)y) \\leq \\lambdaf(x)+(1-\\lambda)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x\\_1,t\\_1) and (x\\_2,t\\_2) in epi(f): f(x\\_1)\\leqt\\_1, f(x\\_2)\\leqt\\_2, and by convexity of epi(f): f(\\lambdax\\_1+(1-\\lambda)x\\_2) \\leq \\lambdat\\_1+(1-\\lambda)t\\_2.",
       hints: [
         "epi(f) = region above the graph. Convex epigraph = the 'bowl' above a convex function.",
@@ -2592,7 +2592,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The moment generating function (MGF) M_X(t) = E[e^{tX}] of a random variable X uniquely determines its distribution (when it exists in a neighborhood of t=0), and the k-th moment E[X\\^k] can be recovered as M_X^{(k)}(0) (the k-th derivative at t=0).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "MGF uniqueness theorem: if M_X(t) exists for |t|<\\delta, it uniquely determines the distribution of X. Derivatives: M_X'(0) = E[X], M_X''(0) = E[X\\^2], M_X^{(k)}(0) = E[X\\^k]. Example: X ~ N(\\mu,\\sigma\\^2): M_X(t) = exp(\\mut + \\sigma\\^2t\\^2/2). MGFs are useful for proving CLT and computing moments without integration.",
       hints: [
         "Taylor expand M_X(t) = \\Sigma\\_k (E[X\\^k]/k!) t\\^k - coefficients are moments divided by k!.",
@@ -2663,7 +2663,7 @@ const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "In a Gaussian mixture model (GMM) fit with the EM algorithm, the E-step computes the posterior probability that each data point belongs to each component, and the M-step updates the component parameters (means, covariances, weights) to maximize the expected complete-data log-likelihood.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "EM for GMM: E-step: r\\_i\\_k = P(z\\_i=k|x\\_i, \\theta) = \\pi\\_kN(x\\_i|\\mu\\_k,\\Sigma\\_k)/\\sum\_j\\pi\\_j N(x\\_i|\\mu\\_j,\\sum\_j) (soft cluster assignments). M-step: \\pi\\_k = (1/n)\\sum\_ir\\_i\\_k, \\mu\\_k = \\sum\_ir\\_i\\_kx\\_i/\\sum\_ir\\_i\\_k, \\Sigma\\_k = \\sum\_ir\\_i\\_k(x\\_i-\\mu\\_k)(x\\_i-\\mu\\_k)\\^T/\\sum\_ir\\_i\\_k. EM monotonically increases the marginal log-likelihood log p(X|\\theta) and converges to a local maximum.",
       hints: [
         "E-step: soft assignment r\\_i\\_k = responsibility of component k for point i. M-step: update parameters using weighted statistics.",

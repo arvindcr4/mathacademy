@@ -26,7 +26,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In a limit order book, price-time priority (FIFO) means that among all orders at the same price level, the order that arrived first is matched first.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Price-time priority (also called price-time-priority or FIFO matching) first ranks orders by price (best price matches first) and then, for orders at the same price, by arrival time (earliest timestamp wins).\n\n**Step 1:** Price is the primary ranking factor — the best bid (highest) and best ask (lowest) are matched first.\n\n**Step 2:** At the same price level, arrival time breaks the tie — the order with the earliest timestamp gets priority.\n\n**Step 3:** This is the dominant rule on most equity exchanges (NYSE, NASDAQ). The alternative is pro-rata allocation, where multiple orders at the same price are filled proportionally to their size — common on options and futures exchanges like CME.",
       hints: [
         "FIFO stands for First In, First Out — the first order to arrive at a price level is served first.",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Double-entry bookkeeping requires that every financial transaction is recorded as at least two journal entries (a debit and a credit) such that the sum of all debits always equals the sum of all credits.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Double-entry bookkeeping is the foundation of all modern accounting and most financial ledger systems. Every transaction creates at least two entries:\n\n**Step 1:** Each transaction debits one or more accounts and credits one or more accounts by equal amounts, preserving the accounting equation: Assets = Liabilities + Equity.\n\n**Step 2:** This invariant makes fraud and errors detectable — any imbalance indicates a bug or tampered record.\n\n**Step 3:** Systems like Stripe's Ledger, Airbnb's payment infrastructure, and traditional core banking systems all implement double-entry internally to maintain financial integrity.",
       hints: [
         "If you transfer $100 from checking to savings, which accounts are debited and credited?",

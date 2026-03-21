@@ -44,8 +44,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "An API gateway should contain business logic such as calculating discounts or validating order quantities, because centralizing this logic reduces duplication across microservices.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "This statement is false. Here is why:\n\n**Step 1:** Recognize the anti-pattern — placing business logic in the API gateway creates a god-service anti-pattern.\n\n**Step 2:** Identify the consequences — the gateway becomes a bottleneck: every business rule change requires a gateway deployment, it cannot be scaled independently per domain, and it couples unrelated services.\n\n**Step 3:** Apply the correct principle — business logic belongs in the appropriate microservice. The gateway handles only cross-cutting infrastructure concerns (auth, routing, rate limiting, logging). This is called the 'smart gateway, dumb services' anti-pattern.",
       hints: [
         "If the gateway encodes discount logic, what happens when the pricing team needs to change it — do they control gateway deployments?",
@@ -117,8 +116,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "DNS-based service discovery is always preferred over dedicated service registries like Consul because DNS is universally supported and requires no additional infrastructure.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "This statement is false. Here is why DNS is not always preferred:\n\n**Step 1:** Identify DNS limitations in dynamic environments — TTL-based caching means stale records persist after a pod dies, health checks are basic (TCP/HTTP), DNS returns only IP addresses without port or metadata, and round-robin provides no load-balancing awareness.\n\n**Step 2:** Recognize what dedicated registries provide — Consul, Eureka, and etcd offer richer health checking (script, gRPC), immediate deregistration on failure, and metadata/tag support for advanced routing.\n\n**Step 3:** Choose the right tool — DNS works well for stable, low-churn environments but struggles in Kubernetes-scale dynamic deployments.",
       hints: [
         "What happens to DNS cached records when a service instance crashes — how quickly do clients discover the failure?",
@@ -226,8 +224,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "It is safe to retry any failed HTTP request with exponential backoff, regardless of whether the operation is idempotent, as long as the downstream service uses exactly-once processing guarantees.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "This statement is false. Here is why safe retry requires idempotency:\n\n**Step 1:** Recognize the duplicate risk — retrying non-idempotent operations (like POST /orders) can cause duplicate records if the original request succeeded but the response was lost.\n\n**Step 2:** Understand the solution — to safely retry non-idempotent operations, the client must include an idempotency key (e.g., Idempotency-Key: <uuid> header — used by Stripe), and the server must store processed keys to detect and deduplicate retries.\n\n**Step 3:** Know what is safe without infrastructure — only operations that are naturally idempotent (GET, PUT with full state, DELETE) can be retried safely without idempotency key infrastructure.",
       hints: [
         "POST /payments with retry: did the first request succeed and the response was lost, or did it truly fail? Without idempotency keys, you cannot know.",
@@ -374,8 +371,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "mTLS (mutual TLS) is always a better authentication mechanism than OAuth 2.0 for service-to-service (east-west) communication in a microservices architecture and should replace OAuth entirely.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "This statement is false. mTLS and OAuth 2.0 are complementary:\n\n**Step 1:** Understand mTLS — it provides transport-layer identity (proves 'this connection comes from a process with a valid certificate for service X') but does not carry authorization context (scopes, user identity, tenant ID).\n\n**Step 2:** Understand OAuth 2.0 — it provides application-layer authorization; the token carries claims about what the caller is allowed to do.\n\n**Step 3:** Use both in production — mTLS (via Istio) enforces that connections are from known services, while a service-level JWT (from an OAuth server) carries the originating user context for audit and authorization decisions. Netflix uses this layered approach.",
       hints: [
         "mTLS answers 'who is connecting?' (service identity). OAuth answers 'what are they allowed to do?' (authorization scope).",

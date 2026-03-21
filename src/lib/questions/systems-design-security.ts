@@ -80,7 +80,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Server-side sessions are inherently more scalable than client-side JWTs because the server does not need to store any session data.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Server-side sessions store session state in a server-side store (memory, Redis, database) for every logged-in user.\n\n**Step 2:** Every request must query this session store to retrieve session data, creating a shared-state dependency that complicates horizontal scaling.\n\n**Step 3:** Client-side JWTs carry all claims in the token itself — validation is stateless and any server replica can verify the token without shared storage.\n\nThe trade-off is that revocation is harder with JWTs because there is no server-side record to update.",
       hints: [
         "Which approach requires a network call to a session store on every request?",

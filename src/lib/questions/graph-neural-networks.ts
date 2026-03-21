@@ -130,7 +130,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Computing the eigenvectors of the graph Laplacian for spectral GNN operations is practical for large graphs with millions of nodes.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1**\n" +
         "Full eigenvector computation requires $O(n^3)$ time and $O(n^2)$ space — completely intractable for large graphs.\n\n" +
@@ -306,7 +306,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GCN's symmetric normalization $\\tilde{D}^{-1/2} \\tilde{A} \\tilde{D}^{-1/2}$ is equivalent to computing the mean of neighbors' features (unweighted average).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1**\n" +
         "$D^{-1} A$ would compute the mean: each row sums to 1, so the contribution of neighbor $u$ to node $v$ is $1/\\deg(v)$ — all neighbors equally weighted.\n\n" +
@@ -476,7 +476,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GAT's attention mechanism is computed using only the features of the source and target nodes, making it insensitive to the structural position of nodes in the graph (e.g., node degree is not directly used).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1**\n" +
         "Standard GAT computes attention solely from the features $W h_i$ and $W h_j$ of the source and target nodes, with no explicit use of structural information (degree, betweenness centrality, etc.).\n\n" +
@@ -561,7 +561,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GIN (with SUM aggregation and MLP updates) can distinguish any two non-isomorphic graphs, making it a complete graph isomorphism test.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1**\n" +
         "GIN is as powerful as the 1-dimensional WL (1-WL) test, which is not complete — there exist pairs of non-isomorphic graphs that 1-WL cannot distinguish (e.g., certain regular graphs).\n\n" +
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Structural features (like node degree, triangle count, or PageRank) can be precomputed and added as node features to a GNN, making the GNN strictly more expressive than the 1-WL test without any architectural changes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1**\n" +
         "Adding precomputed structural features (degree, local clustering coefficient, triangle count, eigenvector centrality, etc.) as input node features can help GNNs distinguish graphs that 1-WL cannot.\n\n" +
@@ -1036,7 +1036,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GraphRAG's community detection step (using Leiden algorithm to cluster the knowledge graph) is used primarily to reduce indexing time during graph construction.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1**\n" +
         "Community detection in GraphRAG hierarchically groups related entities and their relationships into coherent communities (topics/themes), generating community summaries at multiple granularities.\n\n" +
@@ -1108,7 +1108,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Static knowledge graph completion methods (like TransE or RotatE) can be directly applied to temporal knowledge graphs without modification, treating all temporal facts as static.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1**\n" +
         "Treating TKG facts as static ignores temporal validity: TransE would learn $h + r \\approx t$ regardless of time, unable to represent that 'Trump, presidentOf, USA, 2017-2021' but not before or after.\n\n" +

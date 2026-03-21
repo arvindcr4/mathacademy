@@ -28,7 +28,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The Two Sum hash-map solution requires $\\mathrm{O}(n)$ extra space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The hash map stores one entry per array element in the worst case.",
         "In the worst case (no solution found until the last element), every element is stored before the algorithm terminates."
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Kadane's algorithm can be viewed as a dynamic programming approach that runs in $\\mathrm{O}(n)$ time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Dynamic programming on arrays typically involves computing each state from the previous state in O(1) time.",
         "At position $i$, does $\\text{maxEndingHere}$ depend only on $\\text{maxEndingHere}$ at position $i-1$?"
@@ -237,7 +237,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Kadane's algorithm can be extended to also return the start and end indices of the maximum subarray, while maintaining $\\mathrm{O}(n)$ time and $\\mathrm{O}(1)$ space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "When $\\text{maxEndingHere}$ is reset (a new subarray begins), what index should become the candidate start?",
         "When $\\text{maxSoFar}$ is updated, which index marks the end of the current best subarray?"
@@ -285,7 +285,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The division-based solution for Product Except Self handles arrays containing zeros correctly.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       hints: [
         "What is the product of all elements in an array containing one or more zeros?",
         "What happens when you try to divide by zero?"
@@ -441,7 +441,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The juggling algorithm (cyclic replacements) for array rotation uses $\\mathrm{O}(1)$ extra space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The juggling algorithm moves elements in directed cycles, reusing a single temporary variable.",
         "How many extra variables does it use regardless of the array size?"
@@ -456,7 +456,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The three-step reversal algorithm for array rotation preserves the relative order of elements within each segment (the first $n-k$ elements and the last $k$ elements).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Trace through the three reversal steps: what happens to the order within each segment?",
         "Reversing a sequence twice restores its original order. Does each segment get reversed twice?"
@@ -516,7 +516,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The hash-set approach for Contains Duplicate achieves $\\mathrm{O}(n)$ average time complexity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "For each element, what hash-set operation is performed, and what is its average cost?",
         "What happens when a duplicate is found during insertion?"
@@ -654,7 +654,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "If any string in the input array is empty, the longest common prefix is an empty string.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "What is the length of an empty string?",
         "Can an empty string share any prefix characters with a non-empty string?"
@@ -710,7 +710,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: 'The string "${[()]}$" is a valid parentheses string.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Trace through each character: push openers, pop and match on closers.",
         "At the end, is the stack empty?"
@@ -846,7 +846,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Recursive linked list reversal uses $\\mathrm{O}(n)$ stack space due to the call stack.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "For a list of $n$ nodes, how many recursive calls are made before hitting the base case?",
         "Each recursive call consumes stack space. How deep does the recursion go?"
@@ -897,7 +897,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A sublist (a contiguous portion) of a linked list can be reversed without reversing the entire list.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Think about identifying the boundary nodes before and after the sublist.",
         "After reversing the sublist portion, how do you reconnect it to the rest of the list?"
@@ -950,7 +950,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The hash-set approach for cycle detection has $\\mathrm{O}(n)$ time and $\\mathrm{O}(n)$ space complexity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "How many nodes can be stored in the hash set in the worst case?",
         "What happens when a node is visited for the second time?"
@@ -1082,7 +1082,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The divide-and-conquer approach to merging $k$ sorted lists takes $\\mathrm{O}(n \\log k)$ time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "In round 1, $k$ lists are paired into $k/2$ merged lists. In round 2, $k/4$ lists. How many rounds until one list remains?",
         "Each round processes all $n$ elements. How many rounds?"
@@ -1128,7 +1128,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Merging two sorted linked lists of lengths $m$ and $n$ requires $\\mathrm{O}(m + n)$ space.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       hints: [
         "Are new nodes being allocated, or are existing nodes being rewired?",
         "In-place merging changes only the next pointers of existing nodes."
@@ -1191,7 +1191,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Using a dummy head node simplifies the edge case of removing the head node of a linked list.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "What happens when the node to delete is the original head?",
         "With a dummy node, does the real head need special-case handling?"
@@ -1266,7 +1266,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The stack-based palindrome check uses $\\mathrm{O}(n)$ extra space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "How many values are pushed onto the stack?",
         "What is the maximum size of the stack?"
@@ -1373,7 +1373,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "If the stack is empty at the end of processing the string (and no mismatches were found), the parentheses are balanced.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "An empty stack at the end means every opening bracket had a matching closing bracket.",
         "What condition is violated if the stack is non-empty?"
@@ -1490,7 +1490,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In the two-stacks MinStack design, the min stack tracks all historical minima, pushing a new entry only when the newly pushed value is less than or equal to the current minimum.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "When do we push to the min stack? When do we pop from it?",
         "If the new value is strictly greater than the current minimum, should the min stack change?"
@@ -1586,7 +1586,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "With the two-stack queue, the FIFO order of elements is correctly preserved.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "When elements go from stack1 to stack2, what is the reversal effect?",
         "What is the order of elements in stack2 (from top to bottom) after transfer?"
@@ -1638,7 +1638,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In the two-stack queue, elements may be transferred from stack1 to stack2 multiple times during the queue's lifetime.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       hints: [
         "Once an element is transferred to stack2, does it ever return to stack1?",
         "What happens to elements in stack2?"
@@ -1699,7 +1699,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "If an element has no greater element to its right, the standard NGE algorithm assigns $-1$ as its next greater element.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "What remains in the stack at the end of processing?",
         "Elements never popped from the stack have no greater element to their right."
@@ -1778,7 +1778,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The monotonic stack for Next Greater Element maintains elements in strictly decreasing order.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "When a new element $x$ arrives, all elements smaller than $x$ are popped. What remains in the stack?",
         "The remaining elements are all $\\geq x$. Is the stack strict or non-strict?"
@@ -1827,7 +1827,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In the boundary-shrinking approach for spiral traversal, after processing the top row we increment the top pointer.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The top row has been fully consumed, so we move the boundary inward",
         "The same logic applies to each of the four boundaries after their row or column is processed",
@@ -1881,7 +1881,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Rotating an image 90 degrees counter-clockwise in-place can be done by transposing then reversing each column.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Counter-clockwise is the mirror of clockwise",
         "Instead of reversing rows after transpose, reverse columns",
@@ -1925,7 +1925,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Memoized DFS (top-down) and tabulation DP (bottom-up) for Word Break have the same asymptotic time complexity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Both explore the same subproblems: can we segment s[i..n-1]?",
         "Memoization caches results to avoid recomputation, same as tabulation",
@@ -1988,7 +1988,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "For Jump Game II, the greedy approach is guaranteed to find the minimum number of jumps.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The greedy always extends the boundary as far as possible with each jump",
         "No local choice can lead to a globally better solution",
@@ -2042,7 +2042,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Merging overlapping intervals requires sorting by start time first.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "If intervals are unsorted, we cannot efficiently find which ones overlap",
         "After sorting by start, overlapping intervals are adjacent",
@@ -2091,7 +2091,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Stock with transaction fee: adding a fee per transaction can be handled in O(n) time with a two-state DP.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "DP with two states (hold, cash) handles the fee naturally",
         "The fee is subtracted when selling, reducing effective profit",
@@ -2135,7 +2135,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A palindrome can be even-length (e.g., 'abba') or odd-length (e.g., 'aba').",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Odd-length palindromes have a single center character",
         "Even-length palindromes have a center between two characters",
@@ -2170,7 +2170,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Two strings are anagrams if and only if their sorted character arrays are equal.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Sorting rearranges characters into canonical order",
         "Anagrams contain the same characters with the same frequencies",
@@ -2228,7 +2228,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Run-length encoding always reduces string size compared to the original.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       hints: [
         "What happens with a string like 'abcde' where each character appears once?",
         "A count of 1 adds an extra character per unique char",
@@ -2277,7 +2277,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "The staircase search for a matrix with sorted rows and columns runs in O(m + n) regardless of matrix dimensions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Each step moves either left or down, never backtracking",
         "Starting from top-right, we can move at most n-1 times left and m-1 times down",

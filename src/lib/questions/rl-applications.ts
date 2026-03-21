@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DQN can be applied directly to environments with continuous action spaces.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Standard DQN requires computing max_a Q(s,a) over all actions, which is only tractable for discrete action spaces. Algorithms like DDPG or SAC extend deep Q-learning ideas to continuous actions.",
       hints: [
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Experience replay improves data efficiency because each transition can be used for multiple gradient updates.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Since transitions are stored in a buffer and sampled multiple times, each experience contributes to many gradient updates rather than being used once and discarded, improving sample efficiency.",
       hints: [
@@ -141,7 +141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Without a target network, training DQN is equivalent to supervised learning because the targets are fixed.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Without a target network, the targets y = R + \\gamma max_a Q(s',a;\\theta) change with every gradient update to \\theta, creating a moving target problem unlike standard supervised learning where labels are fixed.",
       hints: [
@@ -197,7 +197,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Double DQN completely eliminates maximization bias in Q-value estimation.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Double DQN substantially reduces maximization bias but does not eliminate it entirely, as the online and target networks are still correlated (one is a lagged copy of the other). True decorrelation would require fully independent networks.",
       hints: [
@@ -252,7 +252,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In Dueling DQN, the advantage stream A(s,a) is directly added to V(s) without any normalization to produce Q(s,a).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Without normalization, V and A are not identifiable - the same Q can arise from infinitely many V/A combinations. The standard fix subtracts the mean advantage: Q(s,a) = V(s) + A(s,a) − (1/|A|)\\Sigma_a A(s,a).",
       hints: [
@@ -308,7 +308,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Prioritized experience replay requires importance sampling corrections to maintain unbiased gradient estimates.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "By oversampling high-priority transitions, PER introduces a bias in the training distribution. Importance sampling weights w_i \\propto (1/P(i))^\\beta correct for this non-uniform sampling to preserve unbiasedness.",
       hints: [
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Rainbow DQN achieved superhuman performance on Atari games with far fewer environment interactions than standard DQN.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Rainbow substantially improved sample efficiency over DQN. It achieved the same performance as DQN with roughly 7\\times fewer environment interactions and reached higher final performance, demonstrating the compounding benefits of combining multiple improvements.",
       hints: [
@@ -421,7 +421,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The policy gradient theorem applies only to parametric policies represented by neural networks.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The policy gradient theorem holds for any differentiable parametric policy \\pi_\\theta(a|s), including tabular softmax policies, linear policies, and neural networks - as long as \\nabla_\\theta log \\pi_\\theta(a|s) exists.",
       hints: [
@@ -477,7 +477,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "REINFORCE is an unbiased gradient estimator of \\nabla_\\theta J(\\theta), but it typically has high variance.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "REINFORCE uses the full Monte Carlo return, which is an unbiased sample of Q^\\pi(s,a), giving an unbiased gradient. However, the variance is high because the return depends on all future random actions and transitions.",
       hints: [
@@ -534,7 +534,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The optimal baseline that minimizes gradient variance is exactly V^\\pi(s), the state value function.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The variance-minimizing baseline is not exactly V^\\pi(s) in general - the optimal baseline is a weighted function involving the squared gradient norms. However, V^\\pi(s) is an excellent and commonly used approximation.",
       hints: [
@@ -590,7 +590,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Actor-critic methods combine the advantages of both policy gradient methods (no value function needed) and value-based methods (no policy gradient needed).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Actor-critic methods use both a policy (actor) and a value function (critic) - they do not eliminate either component. Their advantage is lower variance than pure REINFORCE (thanks to the critic\'s bootstrapping) while handling continuous actions (unlike pure value-based methods).",
       hints: [
@@ -647,7 +647,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A2C (Advantage Actor-Critic) is the synchronous version of A3C, where all workers are synchronized before updating the global network.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A2C runs workers synchronously: all workers collect experience in parallel, the coordinator waits for all workers to finish, computes the average gradient, and updates the global network. This deterministic update is often more stable than A3C\'s asynchronous updates.",
       hints: [
@@ -704,7 +704,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PPO requires computing second-order derivatives (the Hessian of the KL divergence) to update the policy.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "A key advantage of PPO over TRPO is that it uses only first-order gradient optimization (e.g., Adam). The clipping mechanism approximates the trust region constraint without any second-order computations.",
       hints: [
@@ -761,7 +761,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TRPO guarantees monotonic improvement in policy performance at every update step.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "TRPO provides a theoretical lower bound on improvement and guarantees monotonic improvement in the surrogate objective, but due to approximations in the constraint (conjugate gradient, line search), the actual policy performance can occasionally decrease slightly in practice.",
       hints: [
@@ -818,7 +818,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The natural policy gradient is invariant to reparameterization of the policy, meaning it finds the same update direction regardless of how the policy is parameterized.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "By using the Fisher information metric (the natural geometry of the space of probability distributions), the natural gradient update is covariant - two equivalent parameterizations of the same policy family yield equivalent updates in policy space.",
       hints: [
@@ -875,7 +875,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SAC is an off-policy algorithm, meaning it can learn from data collected by any policy stored in a replay buffer.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "SAC is off-policy and uses a replay buffer, like DQN. This makes it highly sample efficient because old transitions can be reused. The reparameterization trick allows efficient policy gradient computation from replayed data.",
       hints: [
@@ -932,7 +932,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'TD3\'s "delayed" policy updates mean the actor is updated less frequently than the critics to allow Q-value estimates to stabilize first.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TD3 updates the actor (and target networks) every d critic steps (typically d=2). Updating the actor on unstable Q-values would propagate errors - letting the critics train first leads to more reliable policy gradient signals.",
       hints: [
@@ -989,7 +989,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DDPG uses Ornstein-Uhlenbeck noise for exploration, which is correlated across time steps, making it suitable for physical control tasks with momentum.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Ornstein-Uhlenbeck (OU) noise is temporally correlated (mean-reverting), producing smoother exploration trajectories than i.i.d. Gaussian noise - beneficial for physical systems where jerky random actions are unhelpful.",
       hints: [
@@ -1045,7 +1045,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Model-based RL is always more sample efficient than model-free RL because simulated data is free to generate.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "While model-based RL can be more sample efficient with a good model, a poor model introduces errors that can compound when planning. Model bias can outweigh the sample efficiency benefits, making model-based RL worse in practice when the model is inaccurate.",
       hints: [
@@ -1101,7 +1101,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In Dyna-Q, simulated experience is generated by sampling states and actions from the model of the entire state-action space, not just from recently visited states.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Dyna-Q\'s planning step samples previously visited (s,a) pairs from a tabular model and queries the model for the resulting (r, s'). It does not generate experience from states that have never been visited.",
       hints: [
@@ -1158,7 +1158,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In the World Models framework, the controller C is trained entirely inside the world model without any interaction with the real environment.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'The controller is trained via CMA-ES (evolution strategy) purely within the learned dream world generated by V and M. The resulting controller is then transferred to the real environment - demonstrating "learning inside a dream."',
       hints: [
@@ -1214,7 +1214,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "MuZero\'s learned model predicts transitions in the original observation space (e.g., raw pixels).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "MuZero learns transitions in an abstract latent space h (not in observation space). The representation, dynamics, and prediction networks all operate in this compressed latent space, which is optimized for planning rather than reconstructing observations.",
       hints: [
@@ -1271,7 +1271,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DreamerV3 is the first model-based RL algorithm to achieve human-level performance across a wide range of tasks including Atari, continuous control, and 3D environments with a single set of hyperparameters.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DreamerV3 introduced robust techniques (symlog transformation, free-nats KL balancing, fixed bucket regression for returns) that made it work reliably across many domains with a single hyperparameter configuration - a major milestone for general-purpose model-based RL.",
       hints: [
@@ -1328,7 +1328,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In cooperative MARL, the Centralized Training with Decentralized Execution (CTDE) paradigm allows agents to share information during training but act independently at test time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CTDE methods (e.g., MADDPG, QMIX) use global state information and joint policies during training to coordinate learning, but each agent\'s policy conditions only on local observations during execution - enabling practical deployment without a central coordinator.",
       hints: [
@@ -1384,7 +1384,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The options framework in HRL allows the low-level policy (option) to have its own termination condition, determining when control returns to the high-level policy.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "An option is a triple (\\pi, I, \\beta): a policy \\pi, an initiation set I (states where the option can start), and a termination condition \\beta(s) - the probability of terminating in state s. This allows options to span variable time horizons.",
       hints: [
@@ -1440,7 +1440,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Potential-based reward shaping F(s,s') = \\gamma\\Phi(s') − \\Phi(s) is guaranteed to preserve the optimal policy of the original MDP.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Ng, Harada & Russell (1999) proved that potential-based shaping is the only class of shaping functions that preserves all optimal policies. The shaped MDP R' = R + F(s,s') has the same set of optimal policies as the original.",
       hints: [
@@ -1495,7 +1495,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Automatic curriculum learning (ACL) methods must be provided with a manually designed sequence of tasks by a human expert.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "ACL methods automatically generate or select tasks to train on, using signals like learning progress, intermediate difficulty, or self-play to adapt the curriculum without human-designed task sequences.",
       hints: [
@@ -1551,7 +1551,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Standard off-policy RL algorithms (like Q-learning with a replay buffer) can be applied directly to offline RL datasets without modification.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Standard off-policy RL suffers from distributional shift and extrapolation errors in offline settings: Q-values for out-of-distribution (OOD) actions are overestimated because those actions were never corrected by real environment feedback. Offline-specific methods like CQL, IQL, or TD3+BC add constraints to handle this.",
       hints: [
@@ -1608,7 +1608,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The IRL problem has a unique solution: given enough expert demonstrations, there is exactly one reward function that explains the behavior.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "IRL is fundamentally ill-posed: many reward functions can make observed behavior optimal (e.g., a constant reward, or a reward proportional to the state-action frequency). Additional assumptions or regularization are required to identify a meaningful reward.",
       hints: [
@@ -1664,7 +1664,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Constrained MDPs (CMDPs) extend standard MDPs by adding auxiliary cost functions C_i(s,a), and the goal is to maximize reward subject to E[\\Sigma C_i] \\leq d_i for each constraint i.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CMDPs formalize safe RL: the agent maximizes expected cumulative reward while satisfying cumulative cost constraints. Algorithms like CPO (Constrained Policy Optimization) and LaGrangian methods directly solve CMDP objectives.",
       hints: [
@@ -2282,7 +2282,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "QMIX (Rashid et al., 2018) factorizes the joint Q-function as a sum of individual Q-functions: Q_tot = \\Sigma_i Q_i(o_i, a_i).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "QMIX uses a more expressive factorization: Q_tot = f(Q_1(o_1,a_1), ..., Q_n(o_n,a_n)) where f is a monotone mixing network with weights conditioned on the global state. This satisfies the IGM (Individual-Global-Max) property: \argmax Q_tot = (\argmax Q_1, ..., \argmax Q_n). Simple additive factorization (VDN) is a special case of QMIX. The monotone mixing network allows QMIX to represent cooperative strategies beyond simple summation while maintaining decentralized execution.",
       hints: [
         "A simple sum \\Sigma_i Q_i would be VDN (Value Decomposition Network). Is QMIX the same as VDN?",
@@ -2351,7 +2351,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Distribution shift in offline RL refers to the mismatch between the state-action distribution induced by the learned policy and the state-action distribution of the offline dataset used for training.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "During offline RL training, the Q-function is estimated from a fixed dataset D = {(s,a,r,s')} collected by some behavior policy \\pi_b. The learned policy \\pi may visit (s,a) pairs that are rare or absent in D, causing Q-values extrapolated to OOD regions to be unreliable (often overestimated). This distribution shift is the core challenge: the Bellman backup uses Q(s', \\pi(s')) which may query OOD actions. CQL, IQL, TD3+BC, and other offline RL methods each address this shift differently.",
       hints: [
         "The dataset was collected by a specific behavior policy. Does the learned policy visit the same states and actions?",
@@ -2384,7 +2384,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Offline RL algorithms trained on suboptimal datasets (e.g., containing mostly random behavior) can still recover a near-optimal policy as long as the dataset covers the state-action space densely.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Dense coverage of the state-action space does not guarantee near-optimal policy recovery. First, the offline dataset must contain some near-optimal trajectories or the stitching of suboptimal paths that compose to optimal behavior - dense random coverage may not include these. Second, offline RL algorithms like CQL and IQL are conservative and may underestimate Q-values in data-sparse regions, preventing improvement beyond the behavior policy. Third, stitching (combining different parts of suboptimal trajectories) requires accurate value estimation in the overlap regions, which is difficult with noisy random data.",
       hints: [
         "If the dataset only contains random trajectories, does it contain examples of optimal behavior for the agent to learn from?",
@@ -2453,7 +2453,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Reward hacking in RLHF occurs when the language model finds outputs that achieve high scores under the learned reward model but are not actually preferred by humans - exploiting imperfections in the reward model.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Reward hacking (also called reward model overoptimization) is a central challenge in RLHF: the reward model R(x,y) is an imperfect proxy for human preferences, trained on a finite set of comparisons. The RL fine-tuning process can find outputs that exploit the reward model's errors - long responses that artificially boost scores, repetitive patterns, or sycophantic text - while human evaluators would actually prefer simpler, more honest responses. Gao et al. (2022) empirically showed that as the KL divergence from the reference policy grows, RL performance first improves then degrades, following an 'alignment tax' curve.",
       hints: [
         "The reward model is a neural network trained on finite human preference data. Can a neural network be perfectly calibrated for all possible text outputs?",
@@ -2486,7 +2486,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "RLHF with PPO requires sampling from the language model policy during fine-tuning (online), while DPO only requires a fixed offline dataset of preference pairs.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "RLHF with PPO is an online RL method: at each training step, the LLM generates new completions (samples from \\pi_\\theta), which are scored by the reward model, and PPO updates are computed. This requires inference during training, making it expensive. DPO is offline: the loss is computed entirely from a fixed dataset of (prompt, preferred, rejected) triples. No LLM inference is needed during training, only forward passes through the policy and reference model. This makes DPO 2-3x faster to train than PPO-based RLHF.",
       hints: [
         "PPO's policy gradient requires computing E_{y~\\pi_\\theta}[R(x,y)*\\nablalog \\pi_\\theta(y|x)]. Does this require sampling from \\pi_\\theta?",
@@ -2537,7 +2537,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The reality gap in sim-to-real transfer refers to the mismatch between simulation physics and the real world, which can cause policies trained in simulation to fail when deployed on physical robots.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The reality gap encompasses multiple sources of mismatch: (1) physics fidelity - simulators cannot perfectly model contact dynamics, deformable objects, or fluid; (2) actuation - real motors have delays, backlash, and nonlinear responses that differ from ideal actuators; (3) perception - real sensor noise, lighting variations, and camera characteristics differ from simulation; (4) unmodeled dynamics - wear, temperature effects, and environmental disturbances. Techniques to address the gap include domain randomization, system identification (calibrating the simulator to match real data), and domain adaptation (fine-tuning on limited real data).",
       hints: [
         "Can any physics simulator perfectly replicate the friction behavior between a robot's rubber gripper and an irregular wooden block?",
@@ -2588,7 +2588,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Adding a reward of +1 for every timestep the agent stays alive in a navigation task (to encourage longer episodes) is a safe form of reward shaping that will not change the optimal policy.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "A constant +1 reward per timestep is NOT potential-based (it cannot be written as \\gamma\\Phi(s') - \\Phi(s) for any \\Phi unless \\gamma=1 and \\Phi=const). This changes the optimal policy: the agent now prefers longer episodes, potentially learning to delay reaching the goal or to wander aimlessly (reward hacking). This is a classic example of a misspecified reward shaping that causes the policy to optimize the shaped reward instead of the true objective. In contrast, the potential-based shaping -\\Phi(s) + \\Phi(s') encourages progress without incentivizing delay.",
       hints: [
         "Can the constant reward +1 be written as \\gamma\\Phi(s') - \\Phi(s) for some function \\Phi? Try \\Phi(s) = c for all s.",
@@ -2639,7 +2639,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Constrained Policy Optimization (CPO, Achiam et al., 2017) guarantees monotone policy improvement on the reward objective while satisfying safety constraints at every policy update.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "CPO (Achiam et al., 2017) is a policy optimization algorithm that provides theoretical guarantees for both reward improvement and constraint satisfaction at each update step (similar to TRPO's reward improvement guarantee but extended to CMDPs). It achieves this by solving a constrained optimization problem with a trust region and analytical approximations of the constraint functions using the cost advantage. While these are first-order approximations and may occasionally be violated due to approximation errors, CPO provides the strongest available guarantees for safe policy optimization with constraints.",
       hints: [
         "TRPO guarantees monotone improvement without constraints. How does CPO extend this to include safety constraints?",
@@ -2693,7 +2693,7 @@ const extra3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In cooperative MARL, achieving global optimality is generally harder than in single-agent RL because the joint action space grows exponentially with the number of agents.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "In cooperative MARL with n agents each having |A| actions, the joint action space has |A|^n elements. Computing the joint Q-function Q(s, a_1, ..., a_n) and finding \argmax over the joint space is exponential in n. This is why value decomposition methods (VDN, QMIX, QPLEX) factorize the joint Q-function into individual contributions that can be maximized independently (the IGM condition). Even with factorization, representing and learning from the exponentially large joint state-action space remains a fundamental challenge in cooperative MARL.",
       hints: [
         "With 10 agents each having 5 actions, how large is the joint action space?",
@@ -2744,7 +2744,7 @@ const extra3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Group Relative Policy Optimization (GRPO, DeepSeek, 2024) eliminates the need for a separate critic/value network by computing advantages relative to a group of sampled responses for the same prompt.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "GRPO (used in DeepSeek-R1) samples G responses {y_1, ..., y_G} for each prompt x, computes rewards {r_1, ..., r_G} from a reward model, and normalizes: A_i = (r_i - mean(r)) / std(r). This group-relative advantage eliminates the critic network entirely - no separate value function is learned. The policy is updated with a clipped importance ratio (like PPO) using these normalized advantages. GRPO is simpler and more memory-efficient than PPO-based RLHF (no critic forward/backward pass) and showed strong performance for training reasoning models on math and coding tasks.",
       hints: [
         "PPO requires a value network V(s) to estimate baselines. Does GRPO need a value network?",

@@ -1761,7 +1761,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "CVaR (Conditional Value at Risk) is a coherent risk measure while VaR is not, because CVaR satisfies sub-additivity: CVaR(A+B) is at most CVaR(A) + CVaR(B), ensuring that diversification is always rewarded.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand coherent risk measures. Artzner et al. (1999) defined coherent risk measures via four axioms: monotonicity, sub-additivity, homogeneity, and translation invariance. VaR fails sub-additivity in general (VaR(A+B) can exceed VaR(A) + VaR(B) for non-normal distributions). CVaR satisfies all four axioms, making it a coherent measure suitable for portfolio optimization.",
       hints: [
@@ -1819,7 +1819,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Fair lending laws in the US (ECOA and FHA) can be violated by a credit model even if race, gender, and other protected characteristics are not included as explicit model features, if the model produces disparate impact on protected classes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand disparate impact doctrine. Disparate impact doctrine holds that facially neutral practices that disproportionately harm protected groups are discriminatory absent business necessity justification. Proxy variables (zip code, social network features) correlated with race can produce disparate impact even without explicit race inputs. ML models must be tested for disparate impact across protected classes under the 80% rule.",
       hints: [
@@ -1877,7 +1877,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Insurance claims fraud detection is a highly imbalanced classification problem where fraudulent claims typically represent less than 5% of all claims, requiring techniques such as oversampling, undersampling, or cost-sensitive learning to achieve useful fraud detection rates.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand fraud detection challenges. Fraud rates of 1-5% mean a naive model predicting all claims as legitimate achieves 95%+ accuracy but detects no fraud. SMOTE (Synthetic Minority Over-sampling Technique) generates synthetic fraud examples to balance training data; cost-sensitive learning assigns higher misclassification cost to missed fraud cases. Precision-recall curves are more informative than ROC curves for this imbalanced setting.",
       hints: [
@@ -1935,7 +1935,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Signal decay (alpha decay) refers to the decrease in predictive power of a trading signal as the holding period increases. Momentum signals typically have longer alpha decay (weeks to months) while microstructure signals decay within seconds to minutes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand signal decay. Alpha decay depends on how quickly arbitrageurs can detect and trade against a signal. Microstructure signals (order flow imbalance, bid-ask spread) are observable by many HFT participants and decay in milliseconds to minutes. Momentum signals from slower price discovery mechanisms persist for weeks to months. Optimal holding period should match signal half-life.",
       hints: [
@@ -1993,7 +1993,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "The Black-Litterman model uses Bayesian updating to combine equilibrium market returns (implied by market capitalization weights via reverse optimization) with investor views, producing more stable and diversified portfolio allocations than unconstrained MVO.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Black-Litterman solves MVO instability by: (1) using equilibrium returns Pi = delta * Sigma * w_mkt as the prior (market-implied, well-diversified); (2) combining Pi with subjective views using Bayesian updating to get posterior returns mu_BL. Portfolios derived from mu_BL are more stable because they start from a sensible prior rather than noisy historical returns.",
       hints: [
@@ -2051,7 +2051,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Volatility clustering in financial markets — the tendency for large price changes to be followed by large price changes of either sign — is the empirical motivation for GARCH models, which model conditional volatility as a function of past squared returns and past conditional variance.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Mandelbrot (1963) and Fama (1965) documented that financial returns exhibit volatility clustering. GARCH(1,1): sigma_t^2 = omega + alpha * r_{t-1}^2 + beta * sigma_{t-1}^2 directly models this: high absolute past return increases current volatility, and high past conditional variance persists into current variance. Volatility clustering means absolute returns are autocorrelated even though returns themselves are not.",
       hints: [
@@ -2109,7 +2109,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Satellite imagery and natural language processing of corporate disclosures are examples of alternative data sources used to independently estimate ESG metrics, reducing reliance on self-reported corporate data that may be subject to greenwashing.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand greenwashing risk. Greenwashing risk: companies control their own ESG disclosures and have incentives to overstate environmental and social performance. Satellite imagery can measure actual carbon emissions, land use, and deforestation; NLP of regulatory filings, news, and NGO reports can identify discrepancies between corporate claims and third-party observations.",
       hints: [
@@ -2167,7 +2167,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Miner revenue and miner selling behavior are useful on-chain features for predicting Bitcoin price movements because miners have high fixed costs (electricity, hardware) and may be forced to sell holdings when prices fall below their break-even cost, creating predictable supply pressure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand Bitcoin mining economics. Bitcoin mining economics: miners earn block rewards and transaction fees but have ongoing electricity costs. When BTC price falls near miners' cost of production, economically stressed miners must sell reserves to fund operations. The Puell Multiple (daily miner revenue divided by 365-day moving average of daily revenue) has shown predictive power at historical price inflection points.",
       hints: [
@@ -2225,7 +2225,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Neural networks trained to estimate option Greeks (delta, gamma, vega) can produce more accurate Greeks than finite-difference estimation from noisy market prices, because the network learns a smooth function of inputs and analytical differentiation via autograd avoids numerical differentiation noise.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand neural network Greeks advantages. Market price-based finite differences amplify noise: (V(S+h) - V(S-h)) divided by 2h is noisy because market prices include bid-ask spread and microstructure noise. A neural network trained on option prices learns a smooth surface; automatic differentiation through the network gives analytical Greeks of the fitted surface, avoiding numerical differentiation noise.",
       hints: [
@@ -2283,7 +2283,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Look-ahead bias in financial backtesting occurs when a strategy uses information at time t that was not actually available until time t+k, such as using end-of-day closing prices to determine trades that are placed at the start of that same day's trading session.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Understand look-ahead bias forms. Look-ahead bias is a pervasive backtesting error: (1) using closing price to generate a signal, then assuming the position was entered at that same closing price; (2) using financial data reported with delay (earnings announced after close, used as if available at open); (3) using survivor-biased index constituents. Each form makes the backtest appear better than live trading.",
       hints: [

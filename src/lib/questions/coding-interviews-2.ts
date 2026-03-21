@@ -1692,7 +1692,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "LCA of two nodes in a binary tree can be found in O(h) time using recursive DFS without extra space (beyond the call stack).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The recursive solution returns the LCA naturally when both nodes are found",
         "O(h) is the recursion stack depth; h = O(log n) balanced, O(n) worst case",
@@ -1722,7 +1722,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In the greedy camera placement for binary trees, cameras are preferably placed at leaf nodes.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       hints: [
         "Cameras at leaves only cover their immediate parent",
         "Placing cameras one level above leaves maximizes coverage",
@@ -1790,7 +1790,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The maximum binary tree satisfies the max-heap ordering property (every parent value is larger than its children values).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The root of each subtree is the maximum of its subarray",
         "By construction, every parent is the max of its range and thus larger than any child",
@@ -1839,7 +1839,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Sorting the array to find the duplicate works in O(n log n) time and O(1) extra space (using in-place sort).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "After sorting, duplicates will be adjacent",
         "In-place sorting algorithms like heapsort use O(1) extra space",
@@ -1893,7 +1893,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Morris traversal can find the k-th smallest BST element in O(n) time and O(1) space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Morris traversal performs inorder traversal without a stack or recursion",
         "It uses the tree right pointers temporarily, restoring them afterward",
@@ -1942,7 +1942,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The right side view of a binary tree always contains exactly as many nodes as the tree height.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Each level of the tree contributes exactly one node to the right side view",
         "The number of levels equals the tree height",
@@ -1977,7 +1977,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Two sibling nodes (same parent) cannot be cousins.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Cousins must have different parents by definition",
         "Siblings share the same parent",
@@ -2050,7 +2050,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "BFS from the target node after building an undirected graph produces correct results even if k equals 0.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "Distance 0 means the node itself; BFS starts at the target so it is at level 0",
         "If k=0, BFS returns just the target node itself",
@@ -2085,7 +2085,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A complete binary tree of n nodes always has height floor(log2(n)).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "A complete binary tree fills levels left to right",
         "All levels except the last are completely filled",
@@ -2153,7 +2153,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The root node can never be counted as a left leaf, even if the tree has only one node.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       hints: [
         "The root is not a child of any node - it is neither left nor right",
         "Left leaf means a leaf that is specifically the left child of its parent",

@@ -44,8 +44,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Twitter's user timeline (all tweets posted by a specific user, viewed on their profile page) is precomputed and stored in the same timeline cache as the home timeline (a user's personalized feed of people they follow).",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1: Define the two timeline types.** The user timeline shows all tweets from one specific user in reverse chronological order — a simple query over that user's own tweets. The home timeline is a personalized feed assembled from all accounts a user follows, which historically required precomputation.\n\n**Step 2: Understand the storage difference.** The user timeline is cheap to compute on demand (query one user's posts) and does not benefit from caching. The home timeline merges posts from thousands of accounts, making precomputation valuable for read performance.\n\n**Step 3: Conclude they are stored separately.** Twitter keeps them in separate systems: the user timeline is a direct database query, while the home timeline is precomputed and stored in a timeline cache (Redis). Mixing them would be wasteful.",
       hints: [
         "A user timeline is just 'show me all tweets from @user in reverse order.' Does that require precomputation?",
@@ -117,8 +116,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "When a user has the Twitter app open on their phone, Twitter uses persistent WebSocket connections to deliver real-time tweet updates to the home timeline rather than relying solely on APNs/FCM push notifications.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. Push notifications via APNs (Apple Push Notification Service) and FCM (Firebase Cloud Messaging) are designed for app-in-background delivery — they wake the app or display a banner. When a user actively has the app open, a persistent connection (WebSocket or long-polling) is used to stream updates in real time without OS-level notification system overhead. The persistent connection provides lower latency and higher throughput than round-tripping through APNs/FCM. Most social apps use both: persistent connections when the app is foregrounded, and APNs/FCM when backgrounded.",
       hints: [
         "APNs and FCM are designed for what scenario — app open or app closed?",
@@ -229,8 +227,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Discord uses WebRTC for voice and video calls in its client applications, which means voice data travels peer-to-peer directly between users without passing through Discord's servers.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. While WebRTC is a peer-to-peer protocol, Discord routes all voice and video traffic through its own servers (Selective Forwarding Units or SFUs) rather than directly between peers. A peer-to-peer model breaks down for group calls: with N participants, each peer would need to upload N-1 streams, causing upstream bandwidth exhaustion for large voice channels. An SFU receives one stream from each participant and selectively forwards only the streams each other participant needs. This also works behind NAT/firewalls where true P2P connections often fail. Discord's SFUs are distributed globally to minimize latency.",
       hints: [
         "In a 20-person voice channel with pure P2P, how many upload streams does each participant need?",
@@ -284,8 +281,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Facebook and Twitter display exact like/reaction counts (e.g., 4,827,341) rather than approximate counts because maintaining exact distributed counters is straightforward at billion-scale.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. At very high scale, maintaining perfectly exact counts across distributed systems requires expensive coordination. In practice, large social platforms display approximate counts: Instagram truncates to '4.8M' and Twitter shows '4.8K', reducing the precision requirement. Additionally, eventual consistency is acceptable — a count that is off by a few thousand for a fraction of a second is imperceptible to users. Facebook has written about using approximate counting mechanisms and sharded counters with periodic roll-up. Exact counting at billion-scale with strong consistency would require costly distributed transactions.",
       hints: [
         "Does a user care if the like count shows 4,827,341 vs 4,827,340?",
@@ -399,8 +395,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "OAuth 2.0 is an authentication protocol that verifies the identity of a user, while OpenID Connect (OIDC) is an authorization framework that grants third-party apps permission to access user resources.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False — this is reversed. OAuth 2.0 is an authorization framework: it defines how a user grants a third-party application limited access to their resources without sharing credentials. OAuth 2.0 does not authenticate users — it does not establish who the user is. OpenID Connect (OIDC) is an identity layer built on top of OAuth 2.0 that adds authentication: it issues an ID token (a JWT) that contains claims about the authenticated user's identity (sub, email, name). When you click 'Sign in with Google,' Google uses OIDC to verify your identity and OAuth 2.0 to grant the app access to your profile data.",
       hints: [
         "OAuth 2.0 is about granting access to resources. Does that tell the app who the user is?",

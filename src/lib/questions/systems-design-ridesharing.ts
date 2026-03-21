@@ -54,7 +54,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "To find drivers near a rider, storing driver locations in a Redis sorted set with geohash scores allows GEORADIUS to return results sorted by distance in O(log N) time for the index lookup.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. Redis GEOADD stores coordinates encoded as a 52-bit integer geohash in a sorted set. GEORADIUS translates the search circle into a set of geohash ranges and performs a sorted set range scan — O(log N + M) where N is total members and M is results. Because nearby locations have similar geohash scores, the range scan is efficient. Results can be returned sorted by distance, and the underlying sorted set structure makes this sub-millisecond for typical city-scale datasets of hundreds of thousands of drivers.",
       hints: [
         "What data structure does Redis use internally for GEOADD, and how does it enable efficient spatial indexing?",
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Surge pricing zones should be defined using fixed rectangular grid cells rather than dynamic geofenced zones because fixed grids are simpler to compute and cache.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Fixed rectangular grids poorly align with natural demand boundaries (neighborhoods, event venues, transit hubs). Uber uses irregular, hand-tuned geofence polygons for surge zones, often corresponding to city neighborhoods or airport areas. Hexagonal grids (e.g., H3 by Uber) are increasingly preferred for demand heatmaps because hexagons have equal distance to all neighbors, minimizing directional bias and enabling smoother zone aggregation. Dynamic zone boundaries based on demand clustering can further improve accuracy. The computational cost of geofence polygon containment checks is negligible compared to the accuracy improvement over fixed rectangles.",
       hints: [
         "Do neighborhoods, event venues, and transit hubs follow rectangular boundaries, or do they have irregular natural shapes?",
@@ -284,7 +284,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In a ride-sharing trip state machine, a COMPLETED trip should be allowed to transition back to IN_TRIP to handle GPS signal loss that caused premature trip completion.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Terminal states (COMPLETED, CANCELLED) must be immutable — no backward transitions allowed. Allowing backward transitions creates billing inconsistencies (double charging), breaks downstream systems (payment already processed at COMPLETED), and makes the state machine undecidable. The correct approach for GPS signal loss is to implement a grace period before completing a trip (e.g., wait 30 seconds after apparent stop), use dead-reckoning to extend the trip, and provide a post-trip dispute resolution flow if GPS caused incorrect completion. Once a trip is COMPLETED and payment is processed, the state must not change — corrections happen via separate refund/adjustment records.",
       hints: [
         "What happens to payment processing when a trip reaches COMPLETED, and why must this remain immutable?",
@@ -350,7 +350,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "To minimize battery drain on driver phones, the driver app should send a GPS location update to the server every 1 second regardless of whether the driver is moving, idle, or on a trip.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Constant 1-second updates waste battery and bandwidth when the driver is stationary. Battery-efficient location strategies use adaptive update rates: high frequency (1-4 Hz) during active trips for accurate route tracking, medium frequency (every 4-8 seconds) when online and waiting for requests, and low frequency (every 30-60 seconds or using significant-location-change API) when the app is backgrounded. On iOS, the significant-location-change API uses cell tower triangulation (low power) rather than GPS. On Android, fused location provider selects the lowest-power sensor sufficient for the current accuracy requirement. This can reduce GPS battery consumption by 50-80% with minimal dispatch quality impact.",
       hints: [
         "Does a stationary driver need the same location update frequency as a driver actively navigating a route?",
@@ -514,7 +514,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Gopuff, which operates dark stores (micro-fulfillment centers), has an inherent delivery ETA advantage over restaurant delivery platforms because preparation time is near-zero — items are pre-packed and ready to pick within 2-3 minutes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. Gopuff's model uses dark stores with pre-packaged SKUs where picking is mechanical and fast (2-3 minutes). Unlike restaurant food, items don't require cooking and preparation time is effectively a constant, low-variance picking operation. This eliminates the highest-variance component of food delivery ETAs, enabling Gopuff to reliably promise 15-30 minute delivery windows. The remaining variance comes from driver availability and last-mile traffic. This structural ETA advantage is a core differentiator of the dark-store/quick-commerce model over restaurant delivery aggregators like DoorDash or Uber Eats.",
       hints: [
         "What is the preparation time for a pre-packed bag of chips at a dark store versus a freshly cooked restaurant meal?",
@@ -655,7 +655,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Uber's two-sided rating system (riders rate drivers, drivers rate riders) should show each party's rating to the other before both have submitted their rating to prevent anchoring bias.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Ratings should be collected independently before either party sees the other's rating. Showing the driver's rating before the rider submits creates anchoring bias — a rider who sees they received 3 stars from the driver may retaliate with a lower rating. Both Uber and Lyft use a blind simultaneous reveal: both parties submit ratings before either is shown the result (or ratings are revealed after a timeout regardless of whether both submit). This produces more honest, independent ratings. The blind model is also used in academic peer review and diplomatic negotiations for the same reason.",
       hints: [
         "What is anchoring bias in rating systems, and how does seeing the other party's rating before submitting affect your own rating?",

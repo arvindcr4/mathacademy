@@ -2251,7 +2251,7 @@ const sysdesign: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In a distributed system with multiple API gateway nodes, a local (in-process) rate limiter on each node guarantees that the global per-user request rate is enforced accurately.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Local rate limiters enforce per-node limits, not global limits. If a user sends requests to 5 nodes with a local limit of 100 req/s each, they can achieve 500 req/s globally. Accurate global rate limiting requires either (a) a centralized store (Redis with atomic INCR/EXPIRE) that all nodes consult, or (b) a consistent-hash load balancer that routes each user to exactly one node. Centralized Redis with Lua scripting is the most common production approach, accepting the latency trade-off of a network hop per request.",
       hints: [
@@ -2425,7 +2425,7 @@ const famous2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a typeahead system, displaying personalized completions (based on the individual user's past queries) requires the same trie data structure as global completions, just partitioned by user_id.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Personalized completions require a fundamentally different architecture. A global trie aggregates frequencies across all users - you cannot shard it by user_id while maintaining global top-K semantics. Personalization is typically done by a separate lightweight model: (1) fetch top-K global completions from the global trie; (2) re-rank using a per-user model that boosts completions matching the user's past query history, location, language, and session context. The re-ranking model (logistic regression or small neural net) runs in-memory with the user's profile vector. This two-stage approach (retrieve then personalize) keeps the global trie simple while enabling personalization.",
       hints: [

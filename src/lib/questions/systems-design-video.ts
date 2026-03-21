@@ -44,8 +44,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In S3 multipart upload, all parts must be exactly the same size, including the final part.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "S3 multipart upload requires parts 1 through N-1 to be at least 5 MB, but the final part (part N) can be any size including smaller than 5 MB. This accommodates files whose total size is not evenly divisible by the chosen chunk size. Parts can also be uploaded in parallel, and each part has its own ETag for integrity verification. The CompleteMultipartUpload call assembles all parts in order.",
       hints: [
         "Think about a 12 MB file split into 5 MB chunks: the third chunk would only be 2 MB.",
@@ -153,8 +152,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In HLS adaptive bitrate streaming, the client player is responsible for selecting which rendition (quality level) to download next — the server does not make this decision.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "ABR is entirely client-driven. The server simply makes all renditions available via the master playlist; the client player runs an ABR algorithm (throughput-based, buffer-based, or hybrid) to decide which rendition's next segment to request. The server has no knowledge of the client's buffer state or network conditions. This stateless server design is fundamental to why HLS/DASH scale so well — any CDN edge can serve segments without coordination. Server-side ABR (where the server selects quality) has been explored but requires persistent server-client state.",
       hints: [
         "Think about why CDN caching works for HLS — if the server controlled which rendition each client got, caching would be impossible.",
@@ -205,8 +203,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "CDN cache hit rate for video segments is generally higher for popular live streams than for long-tail VOD content.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Popular live streams (e.g., a Super Bowl broadcast) have extremely high cache hit rates because millions of viewers request the same set of segments simultaneously (the current 2-6 second segment). This temporal locality means once a segment is cached at an edge PoP, it serves thousands of viewers before expiring. Long-tail VOD content (obscure titles, old episodes) may only be requested a few times per day per PoP, so segments often expire from cache between requests, causing origin fetches. This is why CDN economics work well for live sports but require origin shields or pre-positioning for long-tail VOD.",
       hints: [
         "During a live event, what fraction of a PoP's viewers are watching the exact same 4-second segment right now?",
@@ -317,8 +314,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Common Encryption (CENC) allows a single encrypted video file to be decrypted by multiple DRM systems (Widevine, PlayReady, FairPlay) using their respective license servers.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "CENC (Common Encryption, ISO 23001-7) standardizes the encryption scheme (AES-CTR or AES-CBC mode) and the format of encryption metadata in MP4 and MPEG-TS containers. A single CENC-encrypted fMP4 file embeds 'pssh' (Protection System Specific Header) boxes for multiple DRM systems. Each DRM system's CDM reads its own pssh box to obtain key ID information, then fetches the decryption key from its respective license server. The actual video content is encrypted once; only the key delivery mechanism differs per DRM. This dramatically reduces storage costs — platforms don't need to store Widevine-encrypted, FairPlay-encrypted, and PlayReady-encrypted copies separately.",
       hints: [
         "Without CENC, a platform would need to store 3x the video data — one copy per DRM system.",

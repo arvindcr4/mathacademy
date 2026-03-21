@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The primary motivation for self-supervised learning is to leverage the vastly larger supply of unlabelled data compared to labelled data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Human annotation is expensive and slow. The internet provides orders of magnitude more unlabelled images, text, and audio than labelled data. SSL methods unlock this resource for learning powerful representations.",
       hints: [
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The jigsaw puzzle pretext task trains a model to predict the permutation applied to image patches, encouraging it to learn spatial relationships between image regions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Jigsaw puzzle SSL shuffles an image\'s patches and trains the network to identify the correct permutation. Solving this requires understanding how image regions relate spatially, learning features that capture scene structure.",
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SimCLR uses a non-linear projection head (MLP) between the encoder and the contrastive loss, and the representations used for downstream tasks are taken from the encoder output, not the projection head output.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Chen et al. found that a 2-layer MLP projection head (g(h) = W_2\\cdotReLU(W_1\\cdoth)) significantly improves representation quality. The projection head learns to discard augmentation-specific information not needed for contrastive loss, while the encoder retains it - so encoder outputs h are used for downstream tasks, not z = g(h). This finding boosted linear eval by ~10% compared to no projection head.",
       hints: [
@@ -262,7 +262,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In MoCo, the momentum encoder\'s parameters are updated by backpropagating gradients through the key encoding path.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1:** Why gradients cannot flow through the queue.\\n\\nThe momentum encoder\'s parameters are NOT updated by gradient backpropagation - the queue is not differentiable. Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible (each key has thousands of dimensions).\\n\\n**Step 2:** The EMA solution.\\n\\nInstead, parameters are updated by EMA: $\theta_k \leftarrow m \cdot \theta_k + (1-m) \cdot \theta_q$ with $m=0.999$. This is a simple weighted average that does not require storing any gradient history.\\n\\n**Step 3:** Why EMA maintains consistency.\\n\\nHigh momentum (0.999) ensures that the key encoder changes slowly, so older keys in the queue remain consistent with the current encoder state. This is crucial because negatives from many batches ago are still used in the contrastive loss.",hints: [
         "Gradient-updating the momentum encoder would make it inconsistent with the older keys in the queue.",
@@ -317,7 +317,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In BYOL, the target network\'s parameters are trained by gradient descent on the BYOL loss, just like the online network.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The target network in BYOL is a momentum-updated (EMA) copy of the online network - it receives no gradients at all. Only the online network is updated by gradient descent. Gradients are stopped before the target network (stop_gradient operation). This asymmetry is essential for preventing collapse.",
       hints: [
@@ -374,7 +374,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Representation collapse in SimSiam occurs when the encoder maps all inputs to the same constant embedding, making the cosine similarity always 1 and the loss always −1 (the minimum possible value).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A collapsed SimSiam produces p_i = z_j = constant for all inputs, giving cosine_sim = 1 and loss = −1 trivially. This is a degenerate global minimum of the loss without stopgrad, but stopgrad prevents gradients from exploiting this solution.",
       hints: [
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Barlow Twins is inspired by H. Barlow\'s redundancy reduction principle (1961), which suggests that efficient neural coding should minimise redundancy between neurons to maximise the information capacity of the representation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Horace Barlow\'s "redundancy reduction" hypothesis proposes that the visual system encodes information with minimal redundancy between neurons - each neuron should convey independent information. Barlow Twins operationalizes this as decorrelating embedding dimensions (off-diagonal C_{ij} \\to 0), with the Barlow Twins name explicitly honoring this connection.',
       hints: [
@@ -484,7 +484,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "VICReg does not require negative pairs and prevents collapse using explicit variance regularisation that forces the standard deviation of each embedding dimension to stay above a minimum threshold.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "VICReg replaces implicit collapse prevention (negatives, stop-gradient, momentum encoder) with an explicit variance term that penalises collapse directly if any embedding dimension\'s standard deviation drops below 1.",
       hints: [
@@ -541,7 +541,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DINO with ViT encoders produces attention maps that unsupervisedly segment objects in images - the [CLS] token\'s self-attention heads attend to semantically coherent foreground regions without any segmentation supervision.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DINO-ViT\'s self-attention from the [CLS] token naturally concentrates on semantically relevant object regions, producing sharp segmentation-like attention maps without any pixel-level annotation. This emergent property (Caron et al., 2021) is not observed in supervised ViTs or CNN-based SSL - it requires the DINO multi-crop objective with ViT architecture.",
       hints: [
@@ -598,7 +598,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "MAE applies the ViT encoder only to the unmasked (visible) patches and does NOT include [MASK] tokens in the encoder input - [MASK] tokens are only added in the decoder, making the encoder asymmetrically lightweight.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "By excluding [MASK] tokens from the encoder (unlike BEiT), MAE\'s encoder processes only ~25% of patches at full ViT depth. Mask tokens are added only in the lightweight decoder, which reconstructs the full image. This design is key to MAE\'s 3\\times training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.",
       hints: [
@@ -655,7 +655,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "BERT\'s Next Sentence Prediction (NSP) task, which predicts whether two sentences are consecutive, was later found to be largely unnecessary and was dropped in models like RoBERTa.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RoBERTa\'s ablation studies found that NSP provides little or no benefit and can even hurt downstream performance. Removing NSP and training longer on more data with larger batches significantly improves results.",
       hints: [
@@ -712,7 +712,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The key difference between BERT (masked LM) and GPT (causal LM) as SSL approaches is that BERT uses bidirectional context for each token while GPT uses only left-to-right (unidirectional) context.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "BERT\'s bidirectional attention allows each token to attend to the full sentence context, making it powerful for understanding tasks. GPT\'s causal attention only uses past context, making it naturally suited for text generation.",
       hints: [
@@ -769,7 +769,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "wav2vec 2.0 uses a product quantisation module to discretise continuous speech features into a finite vocabulary of speech units (pseudo-phonemes), which serve as the prediction targets.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'The quantisation module in wav2vec 2.0 learns a codebook of discrete speech representations (Gumbel-softmax). The model must predict which codebook entry corresponds to each masked frame - creating a discrete target like a "speech vocabulary" without any phoneme labels.',
       hints: [
@@ -826,7 +826,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "data2vec avoids the need for modality-specific quantisation steps (like the codebook in wav2vec 2.0) by using a unified continuous target for all modalities.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Quantisation (wav2vec 2.0 for speech, dVAE for images in BEiT) requires modality-specific design. data2vec replaces discrete targets with continuous teacher embeddings, eliminating this modality-specific preprocessing step and making the framework truly unified.",
       hints: [
@@ -883,7 +883,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In iBOT, the online tokeniser (teacher) produces soft token distributions as targets for masked patches, rather than requiring a pre-trained discrete vocabulary like BEiT.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Unlike BEiT which uses a pre-trained dVAE as a fixed tokeniser, iBOT\'s teacher evolves during training (EMA of the student), producing soft token distributions that improve as training progresses - eliminating the need for a separate pre-training stage for the tokeniser.",
       hints: [
@@ -940,7 +940,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'The "uniformity-alignment" framework (Wang & Isola) decomposes contrastive SSL objectives into two desirable properties: alignment (positive pairs close together) and uniformity (embeddings spread uniformly on the hypersphere).',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Wang & Isola showed that NT-Xent implicitly optimises alignment (positive pair similarity) and uniformity (uniform coverage of the representation sphere). Both are necessary: alignment alone causes collapse; uniformity alone ignores semantic structure.",
       hints: [
@@ -997,7 +997,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Augmentations that are too strong (destroying semantic content) will hurt SSL performance because positive pairs no longer share meaningful information.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "If augmentations are so severe that positive pair views share no semantic content, the contrastive objective has no valid learning signal - the model cannot learn to match truly different (augmented-beyond-recognition) views of the same image.",
       hints: [
@@ -1054,7 +1054,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "All negative-free SSL methods prevent representational collapse using the same mechanism (stop-gradient).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Different negative-free methods use distinct anti-collapse mechanisms: BYOL uses a momentum encoder + predictor asymmetry; SimSiam uses stop-gradient; Barlow Twins uses cross-correlation decorrelation; VICReg uses explicit variance regularisation.",
       hints: [
@@ -1111,7 +1111,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Node-level SSL on graphs can use the graph structure itself as a self-supervised signal, for example by predicting the masked features of a node from its neighbours' features.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Node-level SSL methods (e.g., GPT-GNN, GraphMAE) mask node features and train a GNN to reconstruct them using neighbourhood context - leveraging the graph\'s structural inductive bias for self-supervised representation learning.",
       hints: [
@@ -1168,7 +1168,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Time-Frequency Consistency (TF-C) is an SSL method for time series that creates positive pairs from the same signal\'s time-domain and frequency-domain representations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TF-C (Zhang et al.) creates positive pairs by taking a time-domain window and its frequency-domain Fourier transform, training the encoder to produce consistent representations in both domains - leveraging the inherent time-frequency duality of signals.",
       hints: [
@@ -1225,7 +1225,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Pre-training on natural images (e.g., ImageNet) and then fine-tuning on medical images consistently outperforms SSL pre-training directly on domain-specific medical images for medical imaging tasks.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Multiple studies show that SSL pre-training on domain-specific medical images (e.g., chest X-rays, pathology patches) can match or outperform ImageNet pre-training, especially when medical data volume is large enough - because in-domain features transfer better.",
       hints: [
@@ -1282,7 +1282,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TabTransformer uses SSL pre-training by masking categorical feature tokens and training the Transformer to reconstruct the masked values, analogous to BERT\'s masked language modelling.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TabTransformer SSL applies masked token prediction to the categorical feature embeddings: random features are masked and the Transformer encoder is trained to reconstruct them from context - learning correlations between categorical variables without labels.",
       hints: [
@@ -1339,7 +1339,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SSL pre-trained models consistently outperform supervised pre-trained models on all downstream tasks when fine-tuned with large labelled datasets.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The relative advantage of SSL vs. supervised pre-training depends on the downstream task, domain, and fine-tuning data size. With large labelled fine-tuning sets, supervised pre-training on the same domain can be competitive; SSL advantages are most consistent in low-label regimes.",
       hints: [
@@ -1396,7 +1396,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FixMatch, a semi-supervised learning method, combines consistency regularisation and pseudo-labelling by generating pseudo-labels from weakly augmented views and using them to train on strongly augmented views.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "FixMatch generates high-confidence pseudo-labels from the model\'s predictions on weakly augmented unlabelled images, then trains the model to make the same predictions for strongly augmented versions of the same images - a consistency constraint that leverages unlabelled data effectively.",
       hints: [
@@ -1453,7 +1453,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SSL methods that require large batch sizes (e.g., SimCLR with 4096 batch) can be made more accessible by using methods like MoCo that maintain a large queue of negatives decoupled from batch size.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "MoCo\'s key queue provides thousands of negatives without requiring a proportionally large batch, making it feasible to train on hardware with limited GPU memory that cannot accommodate 4096-sample batches.",
       hints: [
@@ -1510,7 +1510,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "V-JEPA (Video Joint Embedding Predictive Architecture) predicts abstract representations of masked video regions rather than reconstruct raw pixels, following the JEPA framework.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "V-JEPA trains a predictor to predict the encoder\'s representations of masked spatio-temporal regions from visible context - not raw pixels. This avoids learning irrelevant low-level details (noise, texture) that pixel reconstruction requires, leading to more semantic representations.",
       hints: [
@@ -1567,7 +1567,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CLIP enables zero-shot image classification by encoding class name text prompts and finding the class whose text embedding is most similar to the image embedding.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'At inference, CLIP encodes candidate class names (e.g., "a photo of a dog") as text embeddings and computes their similarity to the image embedding. The highest-similarity class is selected - enabling zero-shot classification without any labelled images.',
       hints: [
@@ -1624,7 +1624,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CURL (Contrastive Unsupervised Representations for Reinforcement Learning) applies contrastive SSL to consecutive frames from an RL agent\'s trajectory as positive pairs.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CURL treats random crops of the same observation frame as positive pairs (analogous to SimCLR) and applies MoCo-style contrastive learning as an auxiliary loss alongside the RL objective, improving sample efficiency on visual RL benchmarks.",
       hints: [
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The emergent capabilities of large foundation models (e.g., in-context learning, chain-of-thought reasoning) are generally attributed to SSL pre-training scale rather than to the specific SSL objective used.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Emergent capabilities appear at large scales regardless of the specific SSL variant. Scale - model size, data quantity, and compute - is the primary driver, with the SSL objective (causal LM for GPT, masked LM for BERT) shaping what capabilities emerge rather than causing emergence per se.",
       hints: [
@@ -2034,7 +2034,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPT-style causal language modeling (predicting the next token) is a form of self-supervised learning because the supervision signal (the next token) is derived from the data itself without human annotation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Causal language modeling (CLM) is self-supervised: the input text provides both input (tokens 1..t) and label (token t+1) without any human labels. This is why GPT-series models can be pre-trained on vast amounts of raw internet text. Self-supervised learning is the broader category encompassing both BERT-style MLM and GPT-style CLM - both derive training signal from the data structure itself.",
       hints: [
@@ -2090,7 +2090,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "BYOL (Bootstrap Your Own Latent) requires negative pairs or explicit decorrelation objectives to prevent representational collapse, similar to SimCLR.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "BYOL uses no negative pairs, no memory bank, no explicit decorrelation. It uses only an online and a target (EMA) network with a stop-gradient on the target branch. Theoretical understanding of why BYOL does not collapse has been debated - key factors include the stop-gradient preventing the target from being directly optimized, the BatchNorm in the predictor creating implicit negative samples through batch statistics, and the EMA providing slowly-moving targets.",
       hints: [
@@ -2146,7 +2146,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Self-supervised pre-training on large unlabeled molecular datasets consistently helps molecular property prediction, even when the pre-training and fine-tuning target properties are chemically unrelated.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "GNN pre-training benefits are task-dependent. Hu et al. (2020) found that pre-training helps for some tasks (especially those needing structural/chemical context) but can hurt for others. The benefit is largest when pre-training data distribution is similar to fine-tuning targets, and smallest when properties are highly specific and unrelated to general structural patterns. Negative transfer - pre-training hurting fine-tuning - has been documented in molecular GNN pre-training.",
       hints: [
@@ -2202,7 +2202,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SSL-pretrained speech models like wav2vec 2.0 can achieve near-human performance on automatic speech recognition with only 10 minutes of labeled data, compared to hundreds of hours needed by supervised baselines.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Baevski et al. (2020) showed wav2vec 2.0 fine-tuned on 10 minutes of labeled LibriSpeech data achieves WER comparable to previous best results using 100 hours of labeled data. With 1 hour of labels, it surpasses the previous best trained on 960 hours. This dramatic label efficiency improvement is the defining practical advantage of SSL for speech: high-quality ASR in low-resource languages without large transcribed speech corpora.",
       hints: [
@@ -2258,7 +2258,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "k-nearest neighbor (kNN) classification on frozen SSL features is a valid evaluation protocol that requires no training of any additional parameters beyond the SSL pre-training.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "kNN evaluation: extract features for all labeled training images using the frozen SSL backbone, then for each test image compute its embedding and find the k nearest training embeddings by cosine distance - the majority label among neighbors is the prediction. No parameters are trained. This is even simpler than linear probing and evaluates raw feature quality. DINO and DINOv2 report kNN accuracy as a primary evaluation metric. High kNN accuracy indicates that the embedding space has a natural neighborhood structure aligned with semantic labels.",
       hints: [
@@ -2314,7 +2314,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Increasing the number of negative samples N in InfoNCE always improves the quality of the learned representations, with no diminishing returns.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "While more negatives tighten the MI lower bound and generally improve representation quality in practice, there are important caveats: (1) false negatives - with large N, some negatives may be semantically similar to the anchor (especially in large batches from datasets with many similar images), corrupting the gradient signal; (2) memory constraints - larger N requires larger batches or memory banks, which is computationally expensive; (3) diminishing returns - empirical gains plateau after sufficient negatives (e.g., MoCo uses 65536 but SimCLR plateaus around 4096-8192). The optimal N is dataset- and task-dependent.",
       hints: [
         "False negatives: when a 'negative' sample is actually semantically similar to the anchor, treating it as negative misleads the model.",
@@ -2364,7 +2364,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "SimSiam (Chen and He, 2021) demonstrates that the stop-gradient operation on the target branch (not the EMA mechanism itself) is the essential ingredient for preventing collapse in BYOL-style methods.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "SimSiam simplifies BYOL by removing the EMA target network entirely - both branches share the same encoder weights. The only difference is that one branch uses stop-gradient. Despite having no EMA and no negative samples, SimSiam achieves competitive performance. This demonstrates that stop-gradient, not EMA, is the critical collapse-prevention mechanism. The stop-gradient creates an implicit EM-like alternation: one branch provides fixed targets while the other optimizes, analogous to the E-step (fix cluster centers) and M-step (assign points) in k-means.",
       hints: [
         "SimSiam = Siamese network with stop-gradient. No EMA, no negatives, no separate target network weights.",
@@ -2414,7 +2414,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "MAE reconstructs raw pixel values (normalized per patch) rather than predicting discrete visual tokens like BEiT. This choice results in lower linear probing accuracy but higher fine-tuning accuracy than token-based reconstruction targets.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "MAE predicts normalized pixel values (mean and std computed per patch) rather than discrete visual tokens (as in BEiT which predicts dVAE token ids). He et al. find that pixel reconstruction with MAE gives slightly lower linear probing accuracy (~73.5% for ViT-L with linear probe) compared to BEiT (~73.5% too) but substantially higher fine-tuning accuracy (MAE ViT-L reaches 85.9% vs BEiT's 85.2% on ImageNet). This is because the encoder learns richer, more holistic representations optimized for reconstruction rather than discrete tokenization, which transfers better when the full model is fine-tuned.",
       hints: [
         "Linear probing evaluates representation quality when the encoder is frozen; fine-tuning updates all parameters.",
@@ -2446,7 +2446,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "BERT's Next Sentence Prediction (NSP) objective has been shown by RoBERTa and ALBERT to be beneficial for all downstream NLP tasks and should be retained in all BERT-style pre-training.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "RoBERTa (Liu et al., 2019) ablated NSP and found it hurts downstream performance on most tasks - removing NSP and using longer contiguous text sequences (instead of sentence pairs) improves GLUE, SQuAD, and RACE scores. ALBERT (Lan et al., 2020) replaced NSP with Sentence Order Prediction (SOP), which predicts whether two consecutive sentences are in the correct order (harder than NSP). The hypothesis is that NSP is too easy (documents from different sources are trivially distinguishable by topic) and encourages the model to learn topic differentiation rather than coherence modeling.",
       hints: [
         "NSP negative pairs are sampled from different documents - the model learns to detect topic switches, not true discourse coherence.",
@@ -2496,7 +2496,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "wav2vec 2.0 trained with just 10 minutes of labeled speech data, when used for fine-tuning, achieves word error rates competitive with the best supervised models trained on 960 hours of labeled LibriSpeech data from 2019.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Baevski et al. (2020) demonstrate that wav2vec 2.0 pre-trained on 960h of unlabeled LibriSpeech and fine-tuned on just 10 minutes of labeled data achieves 4.8% WER on the test-clean split and 8.2% on test-other. This is competitive with the best supervised-only baselines from 2019 that used the full 960h of labeled data. The SSL pre-training provides such rich speech representations that only minimal labeled data is needed for ASR fine-tuning - a compelling demonstration of SSL's label efficiency.",
       hints: [
         "960 hours of labeled speech vs. 10 minutes: a 5760x reduction in labeled data requirement.",
@@ -2564,7 +2564,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "DINO's self-attention maps in the final ViT layer can be directly used as unsupervised object segmentation masks without any fine-tuning on segmentation data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "One of DINO's remarkable emergent properties is that the [CLS] token's self-attention maps in the final transformer layer produce high-quality, semantically meaningful attention patterns that closely match foreground object masks. Querying the attention of the [CLS] token with respect to all patch tokens reveals which patches the model considers most relevant to the global image representation - these patches correspond to semantic objects. Thresholding these attention maps provides surprisingly accurate unsupervised segmentation, demonstrated on VOC2012 and COCO without any segmentation supervision.",
       hints: [
         "[CLS] token attends to the most semantically relevant patches - in DINO, this correlates with object foregrounds.",
@@ -2614,7 +2614,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The Barlow Twins objective (Zbontar et al., 2021) is equivalent to minimizing the squared Frobenius distance between the cross-correlation matrix of the two views' embeddings and the identity matrix.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Barlow Twins computes C_ij = sum_b z_bi * z_bj / N (the cross-correlation matrix between the two views' embeddings, normalized across the batch). The loss is L = sum_i (1 - C_ii)^2 + lambda * sum_{i != j} C_ij^2. The first term encourages C_ii = 1 (the two views of the same image produce correlated embeddings - invariance). The second term encourages C_ij = 0 for i != j (different embedding dimensions are decorrelated between views - reducing redundancy). Together, this is exactly minimizing ||C - I||_F^2 (with the lambda weighting off-diagonal terms), where I is the identity matrix.",
       hints: [
         "Cross-correlation matrix C: C_ii = 1 means dimension i is perfectly correlated across the two views.",
@@ -2646,7 +2646,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The projection head used for contrastive loss computation is typically discarded after pre-training, and only the backbone encoder is used for downstream task fine-tuning or linear probing.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The projection head (usually a 2-3 layer MLP) is used only during contrastive pre-training to compute the loss. After pre-training is complete, the projection head is discarded. Only the backbone encoder (e.g., ResNet-50 or ViT) is retained. For evaluation, either a linear classifier is trained on top of frozen backbone features (linear probing) or the entire backbone is fine-tuned on the downstream labeled dataset. The projection head's purpose is solely to provide a better optimization target for the contrastive objective during pre-training.",
       hints: [
         "SimCLR, MoCo, BYOL, DINO - all discard their projection/prediction heads after pre-training.",
@@ -2696,7 +2696,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Hard negative mining - preferentially selecting negative samples that are semantically similar to the anchor - consistently improves contrastive learning performance when implemented correctly.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Hard negatives are negative samples close to the anchor in embedding space (semantically similar but different class). They provide stronger gradient signal than easy negatives (far from the anchor) because the loss contribution of far negatives approaches zero after the model learns to separate them. Methods like MoCHi (He et al., 2020) synthesize hard negatives by interpolating or mixing anchor and negative embeddings. RingLoss and hard negative sampling strategies consistently improve contrastive representations. The key challenge is avoiding false negatives (hard samples that are actually semantically similar to the anchor but in different augmented views) - these corrupt the gradient signal.",
       hints: [
         "Easy negatives: loss contribution ~ 0 after training, providing no gradient. Hard negatives: loss contribution remains high.",
@@ -2746,7 +2746,7 @@ const extraSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Contrastive Language-Image Pre-training (CLIP) can be categorized as self-supervised learning because its training signal (image-text pairing) is automatically derived from the structure of the data (scraped image-alt-text pairs) rather than human-annotated class labels.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "CLIP (Radford et al., 2021) trains on 400M image-text pairs scraped from the internet, where the supervisory signal is the natural co-occurrence of images and their alt-text descriptions - no human annotation is performed. This satisfies the SSL definition: the training signal is derived automatically from data structure. CLIP is sometimes called 'weakly supervised' or 'naturally supervised' because the alt-text is noisier than human labels, but it is fundamentally self-supervised in that no human labeling effort was performed on the training data. The contrastive objective (match image to its text among N pairs in a batch) is the SSL objective.",
       hints: [
         "The alt-text accompanying internet images was written by humans, but not as annotation for ML - it is naturally occurring paired data.",
@@ -2820,7 +2820,7 @@ const patchSsl: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "SSL pre-training on unlabeled medical images (e.g., chest X-rays) consistently outperforms ImageNet-supervised pre-training for downstream medical imaging tasks, even when the ImageNet-pre-trained model is fine-tuned on the same medical dataset.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "The superiority of domain-specific SSL over ImageNet supervised pre-training is task-dependent and dataset-size-dependent. For large medical datasets (e.g., CheXpert with 224K X-rays), domain-specific SSL (e.g., MoCo v2 trained on X-rays) can match or slightly exceed ImageNet pre-training on CXR tasks. However, for small medical datasets, ImageNet supervised pre-training often remains competitive because the feature hierarchy (edges, textures, shapes) transfers well. The picture is nuanced: SSL on in-domain data helps more when labeled data is scarce and the domain gap is large (e.g., pathology vs. natural images).",
       hints: [
         "ImageNet pre-training captures a rich visual hierarchy that transfers across many visual tasks.",

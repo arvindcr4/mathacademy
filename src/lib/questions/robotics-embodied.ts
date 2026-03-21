@@ -28,7 +28,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In factor graph SLAM (as implemented in GTSAM or g2o), the key computational advantage over EKF-SLAM is that the information (Fisher) matrix is sparse, enabling efficient incremental updates via methods like iSAM2 without full matrix inversion.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N^{2}) full relinearization.",
       hints: [
@@ -85,7 +85,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Voxel-based 3D object detection methods such as VoxelNet partition the point cloud into a regular 3D grid and apply 3D convolutions within each voxel.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "VoxelNet divides the point cloud into equally-spaced 3D voxels, encodes points within each voxel using a Voxel Feature Encoding layer, and then applies 3D convolutional layers on the resulting dense feature volume.",
       hints: [
@@ -141,7 +141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Monocular visual odometry can recover the absolute metric scale of translation without any additional sensor or known reference.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "A single camera observing a scene has an inherent scale ambiguity: the same image sequence is consistent with a small scene close-up or a large scene far away, so absolute metric scale cannot be recovered from monocular images alone without extra information (e.g., known object size, stereo baseline, or IMU).",
       hints: [
@@ -198,7 +198,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Camera-LiDAR fusion requires extrinsic calibration to transform point cloud data into the camera coordinate frame before projecting onto the image plane.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Extrinsic calibration determines the rigid body transformation (rotation R and translation t) between the LiDAR and camera frames; without it, LiDAR points cannot be accurately projected onto the image, making pixel-level fusion impossible. Intrinsic calibration (camera matrix K, distortion coefficients) is additionally required to map 3D camera-frame points to 2D pixel coordinates via perspective projection: p = K[R|t]P.",
       hints: [
@@ -253,7 +253,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Panoptic segmentation unifies semantic segmentation (stuff classes) and instance segmentation (thing classes) into a single output.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Panoptic segmentation assigns every pixel a semantic label and, for countable objects (things), a unique instance ID, while uncountable regions (stuff like floor or sky) receive only a category label - combining both tasks in one framework.",
       hints: [
@@ -309,7 +309,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GraspNet-1Billion and similar large-scale grasp datasets provide grasp annotations in 6-DoF pose (position + orientation) rather than only top-down 2D pixel grasp rectangles.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Modern grasp datasets like GraspNet-1Billion annotate 6-DoF grasps (3D position and 3D orientation) sampled on object point clouds, enabling methods that plan grasps from any approach direction rather than only overhead planar grasps.",
       hints: [
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "OpenAI\'s Dactyl system demonstrated dexterous cube manipulation by training entirely in simulation with domain randomization and then transferring the policy to a physical Shadow Hand.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Dactyl trained a deep RL policy in the OpenAI Gym / MuJoCo simulator with extensive domain randomization (physics parameters, visual appearance) and successfully transferred it zero-shot to a real Shadow Hand robot, solving the Rubik\'s cube face rotation task.",
       hints: [
@@ -442,7 +442,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Representing deformable object state as a learned low-dimensional latent embedding can make manipulation planning tractable by reducing the effective state space dimensionality.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1.** Learning a compact latent representation (e.g., via a variational autoencoder or graph neural network) of the high-dimensional deformable object configuration enables planning and control algorithms that would be infeasible in the full configuration space.",
       hints: [
@@ -499,7 +499,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Impedance control allows a robot to regulate the relationship between end-effector force and position, making it suitable for contact-rich tasks where pure position control would cause large, damaging forces.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Impedance control sets a desired mechanical impedance (spring-damper relationship) between the robot\'s end-effector and the environment; when contact occurs, forces are regulated naturally rather than fighting against a stiff position controller.",
       hints: [
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PDDLStream is a TAMP framework that extends PDDL with streams - functions that lazily sample continuous values (e.g., grasp poses, IK solutions) conditioned on symbolic bindings.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "PDDLStream augments PDDL with certified streams that produce continuous parameter values (poses, trajectories) on demand; the planner interleaves symbolic search with stream evaluation, avoiding exhaustive pre-enumeration of continuous parameter spaces.",
       hints: [
@@ -611,7 +611,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DAgger (Dataset Aggregation) addresses the compounding error problem of behavior cloning by iteratively collecting new demonstrations at states the learned policy actually visits.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DAgger\'s algorithm: (1) Train initial policy \\pi\\_1 on expert dataset D. (2) Roll out \\pi\\_i to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2-5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
       hints: [
@@ -688,7 +688,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Maximum Entropy IRL (MaxEnt IRL) resolves the ambiguity in reward function recovery by choosing the reward that makes all expert trajectories equally likely under a maximum entropy distribution over trajectories.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "MaxEnt IRL applies the maximum entropy principle: among all reward functions consistent with observed expert feature expectations, it selects the one that produces a maximum entropy distribution over trajectories, avoiding overfitting to a single deterministic explanation.",
       hints: [
@@ -722,7 +722,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In Inverse Reinforcement Learning, the recovered reward function is typically more useful than the recovered policy because it generalizes to new environments and enables retraining under changed dynamics.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "IRL\'s key advantage over behavior cloning is that the recovered reward function encodes the underlying objective rather than a specific trajectory; the robot can optimize this reward in a new environment or with different dynamics using RL, whereas a cloned policy from BC is tightly coupled to the original state distribution and may fail in altered settings.",
       hints: [
@@ -758,7 +758,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A key advantage of Diffusion Policy over standard behavior cloning with an MSE loss is its ability to represent multimodal action distributions without explicitly modeling the mixture components.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "MSE-based behavior cloning averages over multiple valid actions, producing blurry, averaged predictions. Diffusion Policy models the full action distribution implicitly via the denoising process and can capture multiple modes (e.g., go left or go right) without requiring explicit mixture modeling.",
       hints: [
@@ -815,7 +815,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ACT uses a Conditional Variational Autoencoder (CVAE) during training to capture the style or variation in demonstrations, and at inference time the CVAE encoder is replaced by a fixed zero latent vector.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The CVAE style encoder captures demonstration variability during training, providing the decoder with a latent code; at inference (without access to future actions), the encoder is replaced by a zero vector, and the decoder generates actions conditioned only on the current observation.",
       hints: [
@@ -872,7 +872,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ALOHA (A Low-cost Open-source Hardware System for Bimanual Teleoperation) uses leader-follower arm pairs where the human moves the leader arms and the follower arms on the robot replicate the motion.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "ALOHA uses two pairs of low-cost robot arms: the operator physically moves the lightweight leader arms, and joint-angle commands are mirrored to the follower arms that perform the actual manipulation task, enabling intuitive bilateral teleoperation for bimanual tasks.",
       hints: [
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PRM (Probabilistic Roadmap Method) has two phases: a learning phase that builds a roadmap of collision-free configurations, and a query phase that connects start/goal to the roadmap and finds a path.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "PRM first samples many random configurations, checks them for collision-free status, and connects nearby valid configurations with local planners to build a roadmap graph; subsequent queries then simply connect start and goal to the graph and run a graph search (e.g., Dijkstra\'s).",
       hints: [
@@ -961,7 +961,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Trajectory Optimization methods such as TrajOpt can find smooth, locally-optimal robot arm motions by formulating collision avoidance as a convex penalty on signed distances and solving the resulting nonlinear program with sequential convex programming.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TrajOpt (Schulman et al.) represents collision avoidance constraints as penalties on the signed distance between robot links and obstacles, convexifies these penalties locally, and iteratively solves the convex approximation (sequential convex programming / SQCQP); this produces smooth, collision-free trajectories faster than pure sampling-based planners for high-DoF arms in cluttered environments.",
       hints: [
@@ -998,7 +998,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural motion planners trained in simulation can generalize to novel unseen environments at test time because they learn to encode environment context (e.g., obstacle point clouds) as part of their input.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Neural planners like MPNets encode the current environment (as a point cloud or occupancy map) alongside start and goal configurations; this conditioning allows generalization to new obstacle configurations not seen during training, unlike planners tied to a fixed environment.",
       hints: [
@@ -1055,7 +1055,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Social Force Model (SFM) represents pedestrian interaction as attractive forces toward goals and repulsive forces from obstacles and other pedestrians.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Social Force Model by Helbing & Molnar models pedestrian dynamics using social forces: a motivational force toward the destination, repulsive forces that keep pedestrians away from walls and each other, and optional attractive forces for groups - together reproducing emergent crowd behavior.",
       hints: [
@@ -1112,7 +1112,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "EmbodiedBERT and similar pre-trained transformers for embodied navigation are trained on room-to-room navigation datasets and fine-tuned for downstream tasks such as object goal navigation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Large pre-trained transformer models for embodied navigation learn representations from large-scale navigation datasets (e.g., R2R) and can be fine-tuned on downstream embodied tasks, following the pre-train/fine-tune paradigm from NLP.",
       hints: [
@@ -1169,7 +1169,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Terrain traversability estimation for off-road robots can be performed by analyzing geometric properties of LiDAR point clouds (e.g., local surface normals, slope, roughness) without any learned semantic labels.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Geometry-based traversability analysis computes local surface properties - normal vectors, slope angles, step heights, and roughness metrics - directly from LiDAR point clouds to classify terrain as drivable or not, without requiring semantic scene understanding.",
       hints: [
@@ -1226,7 +1226,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Visual domain randomization (randomizing textures, colors, and lighting) is most effective when the downstream policy uses visual observations, as it prevents the policy from overfitting to simulation-specific visual features.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "When policies receive raw image observations, they can overfit to simulation-specific colors, textures, and lighting; visual domain randomization trains the perception module to be invariant to these low-level visual variations, improving real-world generalization.",
       hints: [
@@ -1283,7 +1283,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Isaac Gym (NVIDIA) achieves massive simulation throughput by running thousands of physics environments in parallel entirely on the GPU, eliminating CPU-GPU data transfer bottlenecks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Isaac Gym moves the full simulation loop (physics stepping, observation generation, reward computation) onto the GPU using NVIDIA PhysX; with thousands of parallel environments on a single GPU, it achieves training throughputs orders of magnitude higher than CPU-based simulators like MuJoCo.",
       hints: [
@@ -1339,7 +1339,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "3D Gaussian Splatting can be used for real-to-sim by reconstructing a scene from multi-view images into a set of 3D Gaussians that can be rendered photorealistically from novel viewpoints for robot training.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "3D Gaussian Splatting reconstructs scenes as collections of 3D Gaussian primitives optimized to match multi-view photographs; these representations render at real-time speeds and produce photorealistic novel views, making them attractive for building visual robot training environments from real-world scans.",
       hints: [
@@ -1395,7 +1395,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Online adaptive control methods can adjust controller parameters in real-time as the robot\'s dynamics change (e.g., due to payload variation or wear), without requiring an offline re-identification procedure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Adaptive controllers (e.g., MRAC - Model Reference Adaptive Control, or online Gaussian process-based methods) continuously update model or controller parameters based on real-time prediction errors, enabling the robot to compensate for changing dynamics without stopping for offline recalibration.",
       hints: [
@@ -1452,7 +1452,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Privileged learning in robot locomotion often provides the critic with exteroceptive information like ground contact forces and terrain height maps, which would be unavailable from a robot\'s onboard sensors at deployment.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "In simulation, privileged information such as exact foot contact forces, terrain height fields, and object masses is directly accessible; providing this to the critic during RL training produces a better teacher signal, enabling the actor - trained on only proprioceptive observations - to learn more robust policies.",
       hints: [
@@ -1509,7 +1509,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RT-2 demonstrates emergent capabilities in robot manipulation, such as reasoning about novel object categories and multi-step semantic reasoning, that were not present in the robot training data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Because RT-2 leverages a pre-trained VLM\'s internet-scale knowledge, it exhibits emergent behaviors at test time - for example, identifying which object is "recyclable" or understanding "move the banana to the dinosaur" - tasks not explicitly present in the robot demonstration data.',
       hints: [
@@ -1543,7 +1543,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RT-1 (Robotic Transformer 1) represents robot actions as a discrete set of tokenized bins for each action dimension, allowing a standard transformer sequence model to output motor commands the same way it outputs text tokens.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RT-1 discretizes each action dimension (e.g., end-effector x, y, z, roll, pitch, yaw, gripper) into 256 uniform bins, turning continuous robot control into a token prediction problem that a causal transformer (based on EfficientNet + Transformer Decoder) can solve with a standard cross-entropy loss - the same formulation used in language modeling.",
       hints: [
@@ -1580,7 +1580,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Open X-Embodiment dataset aggregates demonstrations from more than ten different robot platforms and has been used to show that co-training on diverse robot data improves downstream task performance compared to training on single-robot datasets alone.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Open X-Embodiment collects demonstrations from 22+ robot embodiments across multiple research labs; RT-X experiments show that co-training on this diverse mixture improves performance on held-out tasks compared to single-embodiment training, demonstrating positive transfer across robot platforms.",
       hints: [
@@ -1637,7 +1637,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Learning-based humanoid locomotion controllers trained with deep RL in simulation (e.g., on Unitree H1 or Figure robots) have demonstrated robust real-world walking and running without relying on simplified ZMP (Zero Moment Point) controllers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Recent RL-trained humanoid controllers (e.g., from Carnegie Mellon, ETH, and robot companies) have surpassed traditional ZMP-based control in agility and robustness by learning complex whole-body dynamics directly from simulation, enabling running, jumping, and recovery from pushes.",
       hints: [
@@ -1714,7 +1714,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Grasp quality metrics such as the epsilon (\\epsilon) metric measure the radius of the largest wrench ball inscribed in the grasp wrench space, capturing how well a grasp can resist arbitrary external perturbations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The \\epsilon-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space - a larger \\epsilon means the grasp resists stronger perturbations from any direction.",
       hints: [
@@ -1771,7 +1771,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Instance segmentation (e.g., Mask R-CNN) is preferred over semantic segmentation for robot manipulation because it separates individual object instances, enabling per-object grasping when multiple copies of the same object are present.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Semantic segmentation labels each pixel with a category but cannot distinguish between individual instances of the same class; instance segmentation outputs separate masks for each object instance, which is essential for manipulation planning when a scene contains multiple apples, cups, or other identical objects.",
       hints: [
@@ -1828,7 +1828,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Model Predictive Control (MPC) for legged locomotion optimizes a short-horizon trajectory of contact forces and base motion at each control timestep, enabling dynamic gait adaptation to terrain perturbations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Legged MPC (e.g., as used in MIT Cheetah, ANYmal) solves a constrained optimization problem at 100-500 Hz over a receding horizon: it computes optimal contact forces, stance/swing schedules, and base trajectories that satisfy friction cone and motion constraints, allowing real-time adaptation to uneven terrain and external disturbances.",
       hints: [
@@ -1885,7 +1885,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In swarm robotics, desired collective behaviors (e.g., aggregation, pattern formation) emerge from local interaction rules without any robot having a global view of the swarm.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Swarm robotics draws from biological swarms (ants, bees, birds): each robot follows simple local rules (attraction/repulsion to neighbors, pheromone-like communication) and the collective behavior emerges globally. No robot has global state knowledge, making the system robust to individual failures and highly scalable.",
       hints: [
@@ -1942,7 +1942,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Keypoint-based robot state representations detect semantically meaningful points (e.g., end-effector, object corners) from images, providing a compact, geometrically interpretable state for imitation learning policies.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Keypoint representations (e.g., Transporter Networks, Keypoint3D) detect task-relevant landmarks from images using heatmap networks, producing a low-dimensional geometric state that is more robust to visual appearance changes (lighting, color) than raw pixel features and more interpretable for spatial reasoning.",
       hints: [
@@ -1999,7 +1999,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Control Barrier Functions (CBFs) provide a formal mathematical framework for enforcing safety constraints in robot control by adding constraint terms to the control law that render a safe set forward invariant.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CBFs define a safety set C = {x : h(x) >= 0} and impose the condition on the control input that ensures the system remains in C for all time if it starts in C; this provides formal safety guarantees while being compatible with performance-optimizing controllers (e.g., QP-based CBF-CLF controllers).",
       hints: [
@@ -2056,7 +2056,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Topological maps represent environments as graphs of places (nodes) connected by navigable edges, enabling efficient long-horizon navigation planning without the memory overhead of dense metric maps.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Topological maps abstract the environment into a graph where nodes represent distinctive places (rooms, intersections) and edges represent navigable paths between them; graph search (e.g., Dijkstra's) provides efficient long-horizon path planning, while local metric planners handle navigation between adjacent nodes.",
       hints: [
@@ -2113,7 +2113,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Intent prediction in HRI often models the human's goal as a Bayesian posterior updated over time as the human's trajectory is observed, enabling the robot to predict and proactively assist before the human completes their action.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Bayesian intent prediction maintains a distribution over possible human goals; as human motion is observed, the posterior is updated using a likelihood model (e.g., assuming humans take approximately optimal paths toward their goal); the robot uses this distribution to pre-position itself or pre-grasp objects in anticipation.",
       hints: [
@@ -2170,7 +2170,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Fluid handling in robotics (e.g., pouring liquid from a container) requires modeling free-surface fluid dynamics, making it one of the most challenging manipulation tasks due to the coupling between container tilt, pour rate, and fluid shape.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Pouring tasks require understanding fluid dynamics (surface tension, viscosity, turbulence), predicting pour trajectories as a function of container orientation and velocity, and perceiving the fluid level and pour accuracy - all of which are challenging to model precisely and sensitive to small variations in motion parameters.",
       hints: [
@@ -2227,7 +2227,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Vision-based tactile sensors (e.g., GelSight, DIGIT) estimate contact geometry and shear forces by imaging the deformation of a gel-covered surface using an internal camera and lighting.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Vision-based tactile sensors coat a transparent elastomer gel with a reflective or colored layer; when an object contacts the gel surface, it deforms - an internal camera images this deformation, and photometric stereo or neural network processing recovers contact geometry (surface normals), contact area, and shear force direction from the image sequence.",
       hints: [
@@ -2283,7 +2283,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Behavior cloning trained on N expert demonstrations achieves policy error that grows quadratically with the task horizon T under covariate shift, making it impractical for long-horizon tasks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Ross & Bagnell (2010) proved that BC error accumulates as O(T^2 * epsilon) where epsilon is the per-step mistake rate - quadratic in the horizon. Even small per-step errors compound dramatically over long horizons, which is why a robot learning to cook from demonstrations may fail catastrophically mid-task.",
       hints: [
         "Each small mistake changes the state distribution, causing subsequent mistakes - the error compounds across T steps.",
@@ -2349,7 +2349,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "DAgger requires access to an expert that can be queried at arbitrary states during training, which limits its applicability when the expert is a human demonstrator who finds it burdensome to provide dense online corrections.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "DAgger's theoretical guarantees rely on labeling every visited state with the optimal expert action. With human experts, this is costly and unnatural - humans typically demonstrate full trajectories, not per-state corrections. Extensions like SafeDAgger, HG-DAgger, and EnsembleDAgger reduce the query burden by selectively querying only uncertain states, but the fundamental limitation of needing an interactive expert remains.",
       hints: [
         "In robotics, the expert might be a human teleoperating the robot - querying them on every visited state is impractical.",
@@ -2417,7 +2417,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "RT-1 (Robotic Transformer 1) uses a Transformer with a TokenLearner module to reduce the number of image tokens before action prediction, enabling real-time inference at approximately 3 Hz on a standard robot.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "RT-1 applies an EfficientNet backbone to extract image features, then uses TokenLearner to compress spatial image tokens from 81 to 8, dramatically reducing attention computation. The resulting compact representations are processed by a transformer decoder to predict discretized robot actions. This compression enables 3 Hz inference necessary for closed-loop robot control.",
       hints: [
         "TokenLearner learns to select or combine spatial tokens using attention - keeping only the most task-relevant visual features.",
@@ -2485,7 +2485,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "RRT* (Rapidly-exploring Random Tree Star) is an asymptotically optimal motion planning algorithm, meaning that given enough samples, its solution path converges to the globally optimal path with probability one.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "RRT* (Karaman & Frazzoli, 2011) adds two key operations to RRT: choose_parent selects the lowest-cost parent for each new node within a rewiring radius, and rewire updates existing nodes if routing through the new node reduces their cost. With these modifications, RRT* is almost-surely asymptotically optimal, unlike standard RRT which is neither complete for continuous problems nor optimal.",
       hints: [
         "RRT is probabilistically complete but not optimal - it finds a path, not the best path.",
@@ -2535,7 +2535,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Tactile sensing using GelSight or similar vision-based tactile sensors can provide rich contact geometry information (contact patch shape, normal/shear force distribution) that is valuable for dexterous manipulation but difficult to simulate accurately.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "GelSight sensors use a soft elastomer with embedded markers and a camera to image contact deformations, recovering contact geometry and force distribution at sub-millimeter resolution. Simulating the non-linear elastomer deformation and optical response is computationally expensive and imprecise, making sim-to-real transfer for tactile-based policies challenging and an active research area.",
       hints: [
         "GelSight essentially creates a touch camera - the elastomer deforms under contact, and the camera images the deformation field.",
@@ -2583,7 +2583,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Adaptive domain randomization methods like ADR (Automatic Domain Randomization from OpenAI) expand the randomization range during training based on policy performance, rather than using fixed parameter distributions from the start.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "ADR (OpenAI, 2019, used for dexterous in-hand manipulation) starts with a narrow parameter range and expands it when the policy achieves sufficient performance on both the easy (minimal randomization) and hard (maximal randomization) ends of the current range. This curriculum approach avoids starting with parameter distributions so wide that the task is unsolvable, while eventually achieving robustness to a very large range of physical variations.",
       hints: [
         "Starting with maximal domain randomization can make the task too hard to learn from scratch - ADR provides a curriculum.",
@@ -2615,7 +2615,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Impedance control is preferred over pure position control for contact-rich tasks because it allows the robot to comply with unexpected contact forces by behaving as a virtual spring-damper system.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Impedance control (Hogan, 1985) regulates the relationship between end-effector force and displacement as F = K(x_d - x) + B(dx_d/dt - dx/dt), where K and B are virtual stiffness and damping. Unlike position control (which fights unexpected contacts), impedance control allows compliant yielding to contact forces, essential for assembly, polishing, and any task where precise force modulation is needed to prevent damage.",
       hints: [
         "A position-controlled robot hitting an unexpected obstacle will keep pushing - potentially damaging the object or itself.",
@@ -2683,7 +2683,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "R3M (Reusable Representations for Robot Manipulation, Nair et al. 2022) pre-trains visual representations using time-contrastive learning on human video data, without any robot-specific demonstrations, and these representations outperform ImageNet-pretrained features on downstream robot manipulation tasks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "R3M is trained on Ego4D human video with a time-contrastive objective (states further in time should be more different) plus an alignment objective between video frames and language descriptions. Despite never seeing a robot, R3M's representations encode task-relevant visual features (object state, contact, progress) that transfer effectively to manipulation, outperforming ImageNet-pretrained ViT/ResNet features that encode texture and category information less relevant to manipulation.",
       hints: [
         "Ego4D contains egocentric human manipulation video - visually similar to robot manipulation but without robot data.",
@@ -2731,7 +2731,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Eureka (Ma et al., 2023) uses GPT-4 to automatically generate reward functions for robot learning tasks through iterative refinement, using the training curve statistics as feedback to improve the reward code.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Eureka (Ma et al., 2023) prompts GPT-4 with the environment code and task description, generating Python reward functions that are executed in IsaacGym. Training statistics (mean reward, success rate, component magnitudes) are fed back to GPT-4 as context, which then revises the reward function. After multiple iterations, Eureka matches or exceeds human-engineered rewards on 83% of tasks across 29 RL environments, including dexterous pen spinning.",
       hints: [
         "The key innovation: LLM generates code, RL trains on it, the resulting statistics become context for the next LLM prompt - a closed feedback loop.",

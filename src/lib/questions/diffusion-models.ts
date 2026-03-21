@@ -92,7 +92,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DDPM sampling requires exactly $T$ sequential denoising steps (one per timestep, from $T$ down to $0$) to generate a high-quality sample.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DDPM's reverse process is Markovian: given $x_t$, the model predicts the noise $\\varepsilon_\\theta(x_t, t)$ and samples:\n\n**Step 1**\n\n\\[\nx_{t-1} \\sim p_\\theta(x_{t-1} \\mid x_t) = \\mathcal{N}\\!\\left(x_{t-1}; \\mu_\\theta(x_t, t),\\; \\sigma_t^2 I\\right).\n\\]\n\n**Step 2**\n\nEach step $t \\to t-1$ requires one forward pass of the neural network, so generating one sample requires $T$ sequential passes. In the original DDPM paper, $T = 1000$.\n\n**Step 3**\n\nThis is DDPM's primary practical limitation: 1000 sequential neural network evaluations make generation slow. DDIM (Song et al., 2020) and other accelerated samplers break the Markovian structure to skip steps, reducing generation to 10-50 steps while maintaining quality.",
       hints: [
@@ -212,7 +212,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DDIM with $\\eta = 0$ (fully deterministic sampling) enables exact image reconstruction from its latent representation $x_T$, making the generative process invertible.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "With $\\eta = 0$, DDIM uses a deterministic mapping from the initial noise $x_T$ to the generated image $x_0$.\n\n**Step 1**\n\nRunning the reverse DDIM in the forward direction - called DDIM inversion - maps a real image $x_0$ to its corresponding $x_T$.\n\n**Step 2**\n\nThis invertibility is the foundation of many image editing methods. A real image is inverted to $x_T$, the latent is edited by modifying the denoising trajectory, and then DDIM regeneration produces the edited image.\n\n**Step 3**\n\nMethods such as SDEdit, Prompt-to-Prompt, and Null-Text Inversion all rely on DDIM inversion to map real images into the latent space for editing.",
       hints: [
@@ -269,7 +269,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Classifier-Free Guidance requires training a separate classifier on noisy data to compute the class-conditional score.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "CFG is 'classifier-free' precisely because it does not require any separate classifier.\n\n**Step 1**\n\nInstead, the same diffusion model is jointly trained on two objectives:\n- Conditional: with a conditioning signal $c$ (e.g., a text prompt).\n- Unconditional: with $c$ replaced by a null token $\\emptyset$, which is randomly dropped during training (roughly 10-20\\% of the time).\n\n**Step 2**\n\nAt sampling time, two forward passes compute the conditional and unconditional noise estimates, and their difference is used for guidance.\n\n**Step 3**\n\nThis avoids the distributional mismatch of classifier-based guidance and requires only one model.",
       hints: [
@@ -326,7 +326,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In Stable Diffusion (an LDM), the text prompt is incorporated into the denoising U-Net via cross-attention layers, where the text embedding acts as the key and value, and the spatial feature map acts as the query.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Stable Diffusion uses CLIP text embeddings as conditioning. The U-Net's spatial feature maps (queries) attend to the text token embeddings (keys and values) via cross-attention at multiple resolutions.\n\n**Step 1**\n\nThe cross-attention operation is:\n\n\\[\nQ = W_Q \\cdot \\phi(z_t), \\quad K = W_K \\cdot \\tau_\\theta(y), \\quad V = W_V \\cdot \\tau_\\theta(y),\n\\]\n\nwhere $z_t$ is the diffusion latent at step $t$ and $\\tau_\\theta$ is the CLIP text encoder.\n\n**Step 2**\n\nThis allows different spatial regions of the latent to attend to different text tokens, enabling fine-grained spatial conditioning.",
       hints: [
@@ -446,7 +446,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "ControlNet requires re-training the entire Stable Diffusion model from scratch when adding a new conditioning signal type.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "ControlNet fine-tunes only the trainable copy of the encoder blocks - the original U-Net weights remain frozen. This means:\n1. The pre-trained text-to-image capability is fully preserved.\n2. Training is parameter-efficient (roughly 50% additional parameters over the base model).\n3. Different ControlNet adapters can be swapped for different conditioning signals without retraining the base model.\n4. Multiple ControlNets can even be combined additively for multi-condition control.",
       hints: [
@@ -566,7 +566,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Outpainting (extending an image beyond its original boundaries) cannot be performed with a standard text-to-image diffusion model - it requires a model specifically trained for outpainting.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Outpainting can be performed using a standard inpainting model by treating the outpainting region as a 'hole' at the image boundary.\n\n**Step 1**\n\nThe existing pixels guide the generation of the new region to maintain consistency.\n\n**Step 2**\n\nMultiDiffusion and tiling approaches enable outpainting at arbitrary aspect ratios by running overlapping denoising windows that enforce consistency in overlapping regions.\n\n**Step 3**\n\nNo dedicated outpainting training is strictly required, though models fine-tuned specifically for outpainting (e.g., DALL-E's outpainting) may yield better results.",
       hints: [
@@ -686,7 +686,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Flow Matching with straight-line (linear) interpolation paths enables generation with far fewer function evaluations (NFEs) than DDPM, because the learned ODE trajectories are approximately straight.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "When the learned vector field is approximately constant along the trajectory (straight-line paths), a simple Euler ODE integrator with very few steps (even $1$-$2$) can accurately follow the path from noise to data.\n\nIn contrast, DDPM's SDE paths are curved and require many steps ($1000$) for accurate simulation. FLUX and SD3 exploit this: they train with flow matching (specifically, rectified flow) and generate high-quality images in approximately $20$-$30$ steps. The 'optimal transport' property of straight-line paths minimizes trajectory curvature, which minimizes integration error per step.",
       hints: [
@@ -806,7 +806,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DreamBooth fine-tuning always requires fine-tuning both the U-Net and the text encoder to achieve high-fidelity subject reconstruction.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The original DreamBooth fine-tunes only the U-Net. Fine-tuning the text encoder (CLIP encoder) can improve concept binding and reconstruction fidelity, but it risks 'language drift' - corrupting the encoding of other words and reducing the model's ability to generalize the subject to new contexts.\n\nMany practical implementations use U-Net-only fine-tuning for safety, or LoRA on both the U-Net and text encoder to reduce the risk of language drift. Extended DreamBooth techniques use lighter fine-tuning (e.g., LoRA on the text encoder) for better results without full fine-tuning.",
       hints: [
@@ -926,7 +926,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Equivariance to the SE(3) group (3D rotations and translations) is essential for molecular diffusion models, because valid molecules must be generated regardless of their absolute orientation in space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A valid molecule should have the same physical properties and binding behavior regardless of how it is oriented or positioned in space.\n\n**Step 1**\n\nIf the generative model is not SE(3)-equivariant, it would need to learn separately that a benzene ring rotated by $45°$ is identical to the original - vastly increasing sample complexity and data requirements.\n\n**Step 2**\n\nEquivariant models (EGNN, SE(3)-Transformer, SEGNN) encode this symmetry by construction: rotating the input rotates the output by the same amount, and translating the input translates the output by the same amount.\n\n**Step 3**\n\nPermutation invariance (over atom ordering) is also required since molecules have no canonical atom ordering.",
       hints: [
@@ -983,7 +983,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Diffusion-DPO directly optimizes a diffusion model using preference pairs (winning/losing images) without requiring an explicit trained reward model.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Diffusion-DPO (Wallace et al., 2023) adapts Direct Preference Optimization (DPO) to diffusion models.\n\n**Step 1**\n\nGiven paired images $(x_w, x_l)$ where a human prefers $x_w$ over $x_l$, it directly optimizes the diffusion model to increase the likelihood of generating $x_w$ over $x_l$, without training a separate reward model.\n\n**Step 2**\n\nThe DPO objective for diffusion uses the ELBO to tractably compute the implicit reward difference.\n\n**Step 3**\n\nThis is analogous to how DPO works in LLMs - bypassing the reward model training step entirely.",
       hints: [

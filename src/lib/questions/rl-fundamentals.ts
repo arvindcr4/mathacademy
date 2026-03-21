@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A policy must always be represented as a finite lookup table - one row per state, one column per action.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Policies can be represented in many ways: lookup tables (tabular RL), linear function approximators, or deep neural networks (deep RL). What matters is that the representation maps states (or observations) to action probabilities. Sutton & Barto discuss function approximation in Chapters 9-11 precisely because tables become infeasible for large state spaces.",
       hints: [
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For any finite MDP with a known model, there always exists a deterministic optimal policy \\pi* - a stochastic policy cannot do strictly better.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sutton & Barto (§3.6) prove that for any finite MDP there is always at least one deterministic optimal policy. This follows from the policy improvement theorem: given V^\\pi, acting greedily (deterministically) yields a policy at least as good as any mixed strategy. Stochastic policies offer no benefit in fully observed MDPs.",
       hints: [
@@ -143,7 +143,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a finite MDP with $\\gamma = 0.9$, if $V^\cdot (s_0) = 50$ and we follow a suboptimal policy $\\pi$ from $s_0$ with $V^\\pi(s_0) = 45$, then the policy improvement theorem guarantees that the greedy policy $\\pi'$ w.r.t. $V^\\pi$ satisfies $V^{\\pi'}(s_0) \\geq 45$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Policy Improvement Theorem (Sutton & Barto Section 4.2) states that if $\\pi'$ is greedy with respect to $V^\\pi$ (i.e., $\\pi'(s) = \\arg\\max_a Q^\\pi(s,a)$), then $V^{\\pi'}(s) \\geq V^\\pi(s)$ for all $s$. So the greedy policy can only be at least as good -- possibly better -- than the policy it was derived from.",
       hints: [
@@ -199,7 +199,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "V^\\pi(s) = 0 for all terminal states s, for any policy \\pi.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "By convention (Sutton & Barto §3.4), terminal states yield no future rewards: once the agent transitions into a terminal state, the episode ends. V^\\pi(terminal) = E_\\pi[G_t | S_t = terminal] = E[0] = 0, since no rewards are received after termination. This holds regardless of \\pi.",
       hints: [
@@ -251,7 +251,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a deterministic policy \mu, V^\mu(s) = Q^\mu(s, \mu(s)) holds for all states s.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Sutton & Barto establish V^\\pi(s) = \sum_a \\pi(a|s) Q^\\pi(s,a). For a deterministic policy \mu, \\pi(\mu(s)|s) = 1 and \\pi(a|s) = 0 for all a \neq \mu(s). The sum collapses to: V^\mu(s) = 1\cdot Q^\mu(s,\mu(s)) = Q^\mu(s,\mu(s)). Spinning Up also states this identity: "V^\\pi(s) = Q^\\pi(s, \mu(s)) for a deterministic policy."',
       hints: [
@@ -307,7 +307,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The expected advantage under a policy is always zero: \sum_a \\pi(a|s) A^\\pi(s,a) = 0 for all states s.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "\sum_a \\pi(a|s) A^\\pi(s,a) = \sum_a \\pi(a|s) [Q^\\pi(s,a) - V^\\pi(s)] = \sum_a \\pi(a|s) Q^\\pi(s,a) - V^\\pi(s) \\sum_a \\pi(a|s) = V^\\pi(s) - V^\\pi(s) \\cdot 1 = 0. This confirms that advantages are zero-mean - they are a centered version of Q^\\pi, measuring relative rather than absolute value.",
       hints: [
@@ -364,7 +364,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality equation for V\cdot (s) uses an expectation over actions (like V^\\pi), replacing \\pi(a|s) with the optimal policy distribution.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The Bellman optimality equation uses a max over actions, NOT an expectation: V\cdot (s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gamma V\cdot (s')]. Sutton & Barto §3.6 emphasize that the max replaces the weighted average because the optimal agent always picks the best action - it does not hedge over suboptimal actions.",
       hints: [
@@ -416,7 +416,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Banach fixed-point theorem guarantees that the Bellman operator T^\\pi has a unique fixed point, and that unique fixed point is exactly V^\\pi.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Banach fixed-point theorem states: any contraction mapping on a complete metric space has a unique fixed point, and iterating the mapping from any starting point converges to that fixed point. Since T^\\pi is a \\gamma-contraction (\\gamma < 1) on the complete metric space of bounded functions with sup-norm, there is a unique V such that T^\\pi V = V. By definition of the Bellman equation, that unique fixed point is V^\\pi.",
       hints: [
@@ -472,7 +472,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Iterative policy evaluation with \\gamma = 1 always converges to V^\\pi, as long as the MDP is finite and every state is reachable.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The convergence proof for iterative policy evaluation requires \\gamma < 1 OR that the policy guarantees eventual termination (episodic tasks). With \\gamma = 1 in a continuing (non-terminating) task, the Bellman operator is not a contraction - the sup-norm of V can grow without bound, and the algorithm may diverge or fail to converge.",
       hints: [
@@ -529,7 +529,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Policy Improvement Theorem guarantees V^{\\pi'}(s) \\geq V^\\pi(s) for all s, where \\pi' is greedy with respect to V^\\pi.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sutton & Barto §4.2 state and prove this theorem: if \\pi' is the greedy policy w.r.t. Q^\\pi, then V^{\\pi'}(s) \\geq V^\\pi(s) for all s. The proof proceeds by showing Q^\\pi(s, \\pi'(s)) \\geq V^\\pi(s) (greedy selects at least as good an action), then unrolling this inequality over time. Equality holds iff both \\pi and \\pi' are already optimal.",
       hints: [
@@ -586,7 +586,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Policy iteration is guaranteed to converge to the optimal policy \\pi* in a finite number of iterations for any finite MDP with \\gamma < 1.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For a finite MDP with |S| states and |A| actions, there are at most |A|^|S| deterministic policies. Each policy iteration step either strictly improves the policy or terminates. Since policies are strictly improving and there are finitely many, the algorithm must terminate - and at termination, \\pi = \\pi*. Sutton & Barto §4.3 establish this result.",
       hints: [
@@ -643,7 +643,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Value iteration requires maintaining an explicit policy representation \\pi(s) that is updated alongside V(s) at each sweep.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass \\pi\cdot (s) = argmax_a \\Sigma_{s'} P[R + \\gamma V\cdot (s')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.",
       hints: [
@@ -700,7 +700,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Both policy iteration and value iteration are guaranteed to find the exact optimal policy \\pi* for any finite MDP with \\gamma < 1 and known transition model.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For finite MDPs with \\gamma < 1 and complete model knowledge, both algorithms converge to V* and \\pi* with probability 1. Sutton & Barto §4.3-4.4 prove this: policy iteration terminates in finitely many steps at \\pi*, and value iteration\'s V_k converges to V* as k \\to \\infty (from which \\pi* is extracted by greedy).",
       hints: [
@@ -757,7 +757,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Asynchronous DP is guaranteed to converge to V* as long as every state is updated infinitely often (no state is permanently skipped).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Sutton & Barto §4.5 prove that asynchronous DP converges to V* under the condition that all states continue to receive updates. The contraction property of the Bellman operator holds regardless of update order - what matters is that no state\'s value becomes permanently stale. This justifies focusing updates on "important" states.',
       hints: [
@@ -814,7 +814,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "First-visit Monte Carlo is an unbiased estimator of V^\\pi(s): the expected value of the first-visit return equals V^\\pi(s).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Each first-visit return G_t (where t is the first time S_t = s in an episode) is an independent, unbiased sample of V^\\pi(s) = E_\\pi[G_t|S_t=s]. By the strong law of large numbers, the average of these samples converges to V^\\pi(s). Sutton & Barto §5.1 prove this unbiasedness and convergence.",
       hints: [
@@ -871,7 +871,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Every-visit Monte Carlo is a biased but consistent estimator of V^\\pi(s) - unlike first-visit MC which is unbiased.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Every-visit MC is biased because returns from later visits to s within the same episode are not independent of the return from the first visit - they are correlated through the shared trajectory up to that point. However, every-visit MC is still consistent: as the number of episodes approaches infinity, the estimate converges to V^\\pi(s). Sutton & Barto §5.1 discuss these properties.",
       hints: [
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Monte Carlo control with exploring starts is guaranteed to converge to the optimal policy \\pi* in the limit of infinitely many episodes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "With exploring starts (every state-action pair has nonzero probability of being the initial (s,a) of each episode), all Q(s,a) are updated infinitely often. Sutton & Barto §5.3 prove that Monte Carlo ES (exploring starts) converges to Q* and \\pi*. Without exploring starts, convergence requires \\epsilon \\to 0 (GLIE policies).",
       hints: [
@@ -984,7 +984,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Ordinary importance sampling provides an unbiased estimate of V^\\pi(s) but can have infinite variance, while weighted importance sampling is biased but has finite variance and is strongly consistent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sutton & Barto §5.5-5.6: ordinary IS estimate V̂(s) = (\\Sigma \\rho_i G_i) / n is unbiased (E[V̂] = V^\\pi(s)) but its variance can be infinite if \\rho_i is heavy-tailed. Weighted IS normalizes by \\Sigma \\rho_i: V̂_w(s) = \\Sigma \\rho_i G_i / \\Sigma \\rho_i - this is biased (E[V̂_w] \neq V^\\pi(s) for finite n) but consistent (converges to V^\\pi(s)) and has dramatically lower variance.",
       hints: [
@@ -1041,7 +1041,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TD(0) can update V after every single step of environment interaction, making it applicable to continuing (non-episodic) tasks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'TD(0) requires only (S\\_t, R\\_t₊\\_1, S\\_t₊\\_1) to update - one transition. It does not need a complete episode. This makes TD(0) applicable to continuing tasks that never terminate, unlike Monte Carlo which requires complete episodes to compute G_t. Sutton & Barto §6.1 call TD learning "one of the most fundamental and novel ideas in reinforcement learning" partly for this reason.',
       hints: [
@@ -1098,7 +1098,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SARSA is on-policy because it updates Q(s,a) using the action A\\_t₊\\_1 actually selected by the current behavior policy (e.g., \\epsilon-greedy), not the greedy maximizing action.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sutton & Barto §6.4: SARSA is on-policy because the Q-values it learns correspond to the behavior policy being followed - including its exploration actions. The target Q(S\\_t₊\\_1, A\\_t₊\\_1) uses the actual next action. In contrast, Q-learning is off-policy: its target max_a Q(S\\_t₊\\_1, a) uses the greedy action - regardless of which action the behavior policy actually takes.",
       hints: [
@@ -1155,7 +1155,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Tabular Q-learning converges to Q* with probability 1, given that all state-action pairs are visited infinitely often and step sizes satisfy the Robbins-Monro conditions (\\Sigma \\alpha\\_t = \\infty and \\Sigma \\alpha\\_t\\^2 < \\infty).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Watkins and Dayan (1992) proved this convergence result for tabular Q-learning. The Robbins-Monro conditions (standard conditions from stochastic approximation theory) ensure step sizes decrease at the right rate: large enough to overcome noise (\\Sigma \\alpha = \\infty) but small enough to converge (\\Sigma \\alpha\\^2 < \\infty). Sutton & Barto §6.5 state this result directly.",
       hints: [
@@ -1212,7 +1212,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Setting \\gamma = 1 is valid and produces a well-defined (finite) expected return in all continuing (non-terminating) MDPs, as long as rewards are bounded.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "With \\gamma = 1 and a non-terminating task, G\\_t = \\Sigma_{k=0}^\\infty R\\_t₊\\_k₊\\_1 is an infinite sum that diverges unless rewards eventually reach zero - which they generally do not. Sutton & Barto §3.3 restrict \\gamma < 1 for continuing tasks precisely to guarantee convergence: |G\\_t| \\leq R_max/(1-\\gamma). \\gamma = 1 is only valid for episodic tasks where the sum terminates at the end of the episode.",
       hints: [
@@ -1269,7 +1269,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality equation V\cdot (s) = max_a Q\cdot (s,a) is a system of nonlinear equations (because of the max operation), so it cannot in general be solved by simple matrix inversion unlike the Bellman expectation equation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Bellman expectation equation for V^\\pi is a linear system: V^\\pi = R^\\pi + \\gammaP^\\piV^\\pi, solvable as V^\\pi = (I - \\gammaP^\\pi)^{-1}R^\\pi. The Bellman optimality equation V\cdot (s) = max_a[...] is nonlinear due to the max operator. This expresses the fundamental difference between the two equations: one linear, one nonlinear. The linear system has a closed-form matrix solution; the nonlinear system typically requires iterative methods.",
       hints: [
@@ -1326,7 +1326,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a finite MDP, the optimal value function V* is unique (there is exactly one V* satisfying the Bellman optimality equation), but there may be multiple optimal policies \\pi* that all achieve V*.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Bellman optimality equation T\cdot V = V is a contraction mapping with a unique fixed point V* (by the Banach fixed-point theorem). However, multiple optimal policies may exist whenever V\cdot (s) = Q\cdot (s,a) for more than one action a in some state - ties in the greedy argmax. All such tie-breaking choices yield optimal policies. V* is unique; \\pi* need not be.",
       hints: [
@@ -1383,7 +1383,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality operator T* is defined as (T* V)(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gamma V(s')]. T* is also a \\gamma-contraction in the sup-norm, and its unique fixed point is V*.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The proof that T* is a \\gamma-contraction uses the inequality |max_a f(a) - max_a g(a)| \\leq max_a |f(a) - g(a)|: ‖T\cdot V - T\cdot U‖_\\infty = max_s |max_a[...V...] - max_a[...U...]| \\leq \\gamma max_s max_a|V(s') - U(s')| = \\gamma‖V - U‖_\\infty. By Banach fixed-point theorem, the unique fixed point exists, and substituting T\cdot V = V yields the Bellman optimality equation - so the fixed point is V*.",
       hints: [
@@ -1440,7 +1440,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Modified policy iteration with any finite m \\geq 1 is still guaranteed to converge to the optimal policy \\pi* for finite MDPs with \\gamma < 1.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Modified policy iteration generates a sequence of improving policies. Each policy improvement step produces a policy at least as good as the previous (by the Policy Improvement Theorem applied to the partially-evaluated value estimate). Since policies are strictly improving and there are finitely many, the algorithm must terminate - and at termination, \\pi = \\pi*. The convergence guarantee holds for all m \\geq 1; the number of outer iterations may vary, but the algorithm converges to the same \\pi*.",
       hints: [
@@ -1497,7 +1497,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "An \\epsilon-greedy policy with fixed \\epsilon > 0 always converges to the globally optimal policy \\pi* as the number of interactions \\to \\infty.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "A fixed \\epsilon > 0 permanently assigns probability \\epsilon/|A| to suboptimal actions, so the agent never fully commits to the greedy-optimal policy. The \\epsilon-greedy policy converges to the best \\epsilon-soft policy (the optimal policy among all policies that satisfy \\pi(a|s) \\geq \\epsilon/|A|), not \\pi*. To converge to \\pi*, \\epsilon must be decayed to 0 (e.g., \\epsilon\\_n = 1/n) while satisfying GLIE conditions. Sutton & Barto §5.4 discuss this distinction.",
       hints: [
@@ -1554,7 +1554,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Weighted importance sampling is consistent: as the number of episodes n \\to \\infty, V̂_w(s) converges to V^\\pi(s) with probability 1, despite being biased for finite n.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)\\Sigma\\rho\\_i \\to E_b[\\rho] = 1 and (1/n)\\Sigma\\rho\\_iG\\_i \\to E_b[\\rhoG] = E_\\pi[G] = V^\\pi(s). The ratio converges to V^\\pi(s)/1 = V^\\pi(s). Bias for finite n arises because the ratio of averages \neq average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
       hints: [
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "An \\epsilon-greedy policy with \\epsilon = 0.05 (constant) satisfies GLIE because every state-action pair is visited infinitely often (since \\epsilon > 0 ensures exploration forever).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Constant \\epsilon = 0.05 satisfies the first GLIE condition (infinite exploration - all (s,a) pairs are visited infinitely often) but fails the second (greedy in the limit - the policy never converges to greedy, it always explores with probability 0.05). Both conditions are required for GLIE. Without \\epsilon \\to 0, MC control converges to the optimal \\epsilon-soft policy, not \\pi*.",
       hints: [
@@ -1668,7 +1668,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TD(\\lambda = 0) is equivalent to TD(0), and TD(\\lambda = 1) is equivalent to every-visit Monte Carlo in the offline (batch) setting.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Sutton & Barto §12.1 establish the "\\lambda-return" forward view: TD(\\lambda) uses a weighted combination of n-step returns G\\_t^(n) with exponential weights (1-\\lambda)\\lambda^{n-1}. At \\lambda=0: only G^(1) (the 1-step TD return) contributes \\to TD(0). At \\lambda=1: the trace decays only by \\gamma per step, giving full (undiscounted) credit to all past states - equivalent to Monte Carlo. Intermediate \\lambda gives a weighted combination.',
       hints: [
@@ -1745,7 +1745,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Q(sigma) is a unifying algorithm that generalizes between TD(0), Expected Sarsa, and n-step Tree Backup by using a parameter sigma that controls how much sampling versus expectation is used at each step.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Q(sigma) (Asis et al., 2017) introduces a per-step parameter \\sigma \\in [0,1]: \\sigma=1 corresponds to full sampling (like Sarsa), \\sigma=0 corresponds to pure expectation (like Expected Sarsa/Tree Backup). At different \\sigma values for each step, Q(sigma) subsumes n-step Sarsa (all \\sigma=1), n-step Expected Sarsa (all \\sigma=0), and intermediate algorithms. This provides a principled framework for understanding and designing n-step methods.",
       hints: [
@@ -1798,7 +1798,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Tile coding is a form of linear function approximation where the state space is covered by overlapping grids (tilings), and the feature vector has a 1 for each tile containing the current state.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Tile coding (CMAC): multiple offset grids (tilings) partition the state space. For each tiling, exactly one tile is active (value 1); all others are 0. The complete feature vector has (num_tilings \\times tiles_per_tiling) binary features. Linear function approximation with this binary feature vector can represent non-linear value functions because different tilings overlap differently, capturing interactions between state dimensions. It is fast (only active tiles need updating) and proven effective in classical RL benchmarks.",
       hints: [
@@ -1855,7 +1855,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Trust Region Policy Optimization (TRPO) constrains policy updates to a trust region defined by a maximum KL divergence between the old and new policy to prevent destructive large policy updates.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TRPO's insight: gradient ascent on expected return can take steps that catastrophically degrade the policy when the linear approximation breaks down far from the current policy. TRPO adds a hard constraint: D_KL(\\pi_old || \\pi_new) \\leq \\delta. This trust region ensures the new policy is close enough to the old policy that the linear/quadratic approximation remains valid. PPO approximates this constraint with a clipped objective, achieving similar stability with simpler first-order optimization.",
       hints: [
@@ -1912,7 +1912,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In model-based RL, learning a world model that predicts next state and reward from current state and action allows the agent to plan without interacting with the real environment, improving sample efficiency.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "World models are the core of model-based RL: with an accurate model P(s'|s,a) and R(s,a), the agent can simulate rollouts to evaluate policies, perform planning (MPC, tree search), or augment replay with synthetic data. This improves sample efficiency by reducing reliance on expensive real-world interactions. The trade-off is model learning cost and error propagation during rollouts. In robotics and scientific domains where real interactions are expensive or dangerous, model-based RL is often essential.",
       hints: [
@@ -1969,7 +1969,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Upper Confidence Bound (UCB) exploration selects actions with high estimated value OR high uncertainty (rarely tried actions), balancing exploitation and exploration in a principled way.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "UCB selects: a = argmax_a [Q(a) + c√(ln(t)/N(a))], where N(a) is the count of times action a was taken and t is the total steps. The bonus c√(ln(t)/N(a)) is large for rarely taken actions, driving exploration, and shrinks as an action is tried more. UCB is optimistic in the face of uncertainty and achieves logarithmic regret in the multi-armed bandit setting - theoretically stronger than epsilon-greedy's linear exploration rate.",
       hints: [
@@ -2026,7 +2026,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Atari games in the ALE (Arcade Learning Environment) became a standard RL benchmark because they provide diverse challenges across many games with a unified observation space (screen pixels) and action space (joystick actions).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The ALE benchmark (Bellemare et al., 2013) enabled systematic evaluation of RL algorithms across 57 diverse games using a common interface. DQN's performance across these games demonstrated that a single algorithm with the same hyperparameters could achieve human-level performance on a broad range of tasks - previously considered impossible. The benchmark enabled fair comparison across algorithms and drove rapid RL progress from 2013 to 2020.",
       hints: [
@@ -2083,7 +2083,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Offline RL datasets collected by suboptimal behavior policies (e.g., a random or mediocre agent) can still be used to train policies that outperform the behavior policy, a phenomenon called policy improvement.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Policy improvement from suboptimal data: offline RL algorithms can extract better behaviors than the data-collecting behavior policy by combining observations across many trajectories to identify which actions lead to better outcomes. For example, a dataset of medium-quality demonstrations may contain some instances where an agent accidentally took a good action sequence - offline RL can learn to replicate these better actions while avoiding bad ones seen in other trajectories. This is why offline RL is valuable for real-world settings where safe online exploration is costly.",
       hints: [
@@ -2136,7 +2136,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In cooperative multi-agent RL, credit assignment refers to the problem of determining which agent's actions contributed to a shared team reward when all agents receive the same global reward signal.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Cooperative credit assignment: with a single team reward, each agent must infer how its own actions contributed to the shared outcome - difficult when many agents act simultaneously. Solutions: counterfactual baselines (COMA: compare actual reward to reward expected if agent took a different action, holding others fixed); value decomposition (QMIX, VDN: decompose team Q-value into per-agent contributions); agent-specific reward shaping. Without credit assignment, agents may learn to free-ride on teammates or blame each other for failures.",
     },
@@ -2189,7 +2189,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Reward hacking in RLHF occurs when a language model learns to exploit flaws in the reward model to achieve high reward scores while producing outputs that do not satisfy the underlying human intent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Reward hacking (Goodhart's Law applied to RLHF): the reward model is an imperfect proxy for human preferences. A sufficiently capable LLM finds inputs that score highly on the reward model but do not represent genuinely good outputs - e.g., very long but padded responses if the reward model overvalues length, or confident-sounding but incorrect answers. The KL penalty in PPO limits but does not eliminate this. Ongoing research in constitutional AI, iterative RLHF, and improved reward modeling addresses this challenge.",
       hints: [
@@ -2246,7 +2246,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Reward shaping, which adds intermediate rewards to guide exploration, can change the optimal policy if not done carefully, potentially causing the agent to learn the wrong behavior.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Naive reward shaping can cause misalignment: adding intermediate rewards for subgoals that seem helpful may inadvertently create a locally optimal policy that maximizes shaped rewards without achieving the true objective (reward hacking). Potential-based reward shaping (Ng et al., 1999) provides a safe form: adding F(s,a,s') = \\gamma\\Phi(s') - \\Phi(s) for any potential function \\Phi preserves the set of optimal policies. Non-potential-based shaping risks changing which policies are optimal.",
       hints: [
@@ -2283,7 +2283,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "n-step TD with n=1 is equivalent to standard one-step TD(0) prediction.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Substituting n=1 into G_t^(n) = r_{t+1} + \\gamma^1 V(S_{t+1}) gives exactly the TD(0) target. The n-step family unifies TD(0) (n=1) and Monte Carlo (n=T), allowing practitioners to tune the bias-variance trade-off by selecting n. This is why Sutton & Barto dedicate Chapter 7 to n-step bootstrapping as a bridge between TD and MC methods.",
       hints: [
         "Write out G_t^(1) explicitly and compare to the TD(0) update target r_{t+1} + \\gamma V(S_{t+1}).",
@@ -2334,7 +2334,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Replacing eligibility traces (where e_t(s) is reset to 1 on revisiting state s) can outperform accumulating traces when states are revisited frequently within an episode.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Replacing traces set e_t(s) = 1 whenever S_t = s, capping the trace. Accumulating traces can grow large when a state is revisited in a loop - if visited 10 times, the trace can reach 1/(1-\\gamma\\lambda). This runaway growth can cause instability. Replacing traces prevent it, and Sutton & Barto show they often outperform accumulating traces in environments where the agent revisits states frequently.",
       hints: [
         "With accumulating traces, visiting state s 10 times yields trace approximately 1/(1-\\gamma\\lambda). Could this magnitude cause instability in the update \\DeltaV(s) = \\alpha * \\delta_t * e_t(s)?",
@@ -2385,7 +2385,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Count-based exploration methods scale naturally to high-dimensional continuous state spaces like raw image observations.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Count-based methods require counting visits to individual states. In continuous or high-dimensional spaces (e.g., Atari pixel observations), each state is visited at most once, making raw counts useless. Pseudo-count methods (Bellemare et al., 2016) address this by using a density model to estimate a pseudo-count from the rate of surprise: the model's prediction probability for s before and after seeing it determines a pseudo-count that generalizes to nearby states.",
       hints: [
         "In a continuous state space, how many times would any exact state typically be visited during training?",
@@ -2436,7 +2436,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The Bellman evaluation operator T^\\pi (for a fixed policy \\pi) is also a \\gamma-contraction with unique fixed point V^\\pi, guaranteeing convergence of iterative policy evaluation from any initial value function.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The Bellman evaluation operator T^\\pi V(s) = \sum_a \\pi(a|s) [r(s,a) + \\gamma * \\Sigma_{s'} P(s'|s,a) V(s')] is a \\gamma-contraction in the sup-norm with unique fixed point V^\\pi. This guarantees that iterative policy evaluation - repeatedly applying T^\\pi starting from any V_0 - converges to V^\\pi geometrically: ||(T^\\pi)^k V_0 - V^\\pi||_inf \\leq \\gamma^k ||V_0 - V^\\pi||_inf.",
       hints: [
         "The contraction argument does not depend on whether we take a max or a weighted sum over actions. Does T^\\pi also contract by factor \\gamma?",
@@ -2487,7 +2487,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Value iteration is guaranteed to find the exact optimal value function V* in a finite number of iterations for finite MDPs with \\gamma < 1.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Value iteration converges asymptotically to V* but does not reach it in finite steps. Each iteration contracts the error by factor \\gamma: ||V_k - V*||_inf \\leq \\gamma^k ||V_0 - V*||_inf. For practical \\epsilon-optimality, we stop when ||V_{k+1} - V_k||_inf < \\epsilon(1-\\gamma)/(2\\gamma), which guarantees the greedy policy is \\epsilon-optimal. Exact convergence in finite steps would require \\gamma=0.",
       hints: [
         "Each value iteration sweep multiplies the error by \\gamma < 1. Does the error ever reach exactly zero in a finite number of steps?",
@@ -2538,7 +2538,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In Dyna-Q, increasing the number of planning steps n always improves performance regardless of the quality of the learned environment model.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "If the environment model is inaccurate (e.g., early in learning or in non-stationary environments), extensive planning on a wrong model can be harmful - the agent reinforces incorrect Q-values based on faulty simulated experience. With an accurate model, more planning steps improve performance; with an inaccurate model, excessive planning can be worse than fewer steps or pure model-free RL. Dyna-Q+ addresses non-stationarity by adding exploration bonuses for infrequently tried actions.",
       hints: [
         "If the model is wrong and predicts the wrong next state, what happens to Q-values after many planning steps using that wrong model?",
@@ -2589,7 +2589,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "MuZero learns to plan without learning to reconstruct observations, instead learning a latent transition model sufficient only for MCTS-based planning.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "MuZero (Schrittwieser et al., 2020) learns three functions: a representation function mapping observations to latent states, a dynamics function predicting the next latent state and reward, and a prediction function outputting policy and value. Crucially, MuZero does NOT learn to reconstruct observations - there is no decoder. It learns a latent model sufficient for MCTS planning, trained to match MCTS policy targets and game outcomes, achieving state-of-the-art on Atari, Go, Chess, and Shogi.",
       hints: [
         "MuZero uses MCTS for planning. Does it need to reconstruct pixel observations from latent states to perform this planning?",
@@ -2640,7 +2640,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "All intrinsic motivation methods for exploration require maintaining an explicit count N(s) of how many times each state has been visited.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Many intrinsic motivation methods avoid explicit state counts. RND uses neural network prediction error. ICM uses forward model prediction error in a learned feature space. VIME uses information gain on a Bayesian neural network model. These methods generalize to continuous and high-dimensional state spaces where exact state counts are meaningless (every state is visited at most once). Pseudo-count methods approximate counts via density models but still avoid explicit enumeration.",
       hints: [
         "RND computes intrinsic reward as ||f(s) - g_theta(s)||^2. Does this formula require knowing N(s)?",
@@ -2691,7 +2691,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "For a discounted MDP with \\gamma < 1, the optimal value function V* is the unique fixed point of T*, always exists, and is always finite for bounded rewards.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "By Banach's fixed-point theorem, since T* is a \\gamma-contraction on the complete metric space of bounded functions with the sup-norm, it has a unique fixed point V*. Boundedness: since |r| \\leq r_max, the value function satisfies |V\cdot (s)| \\leq r_max / (1-\\gamma) < \\infty. Uniqueness: if V and U are both fixed points, then ||V - U||_inf = ||T\cdot V - T\cdot U||_inf \\leq \\gamma * ||V - U||_inf, requiring ||V - U||_inf = 0.",
       hints: [
         "If |r(s,a)| \\leq r_max for all s,a, what is an upper bound on |\\Sigma_{t=0}^\\infty \\gamma^t * r_t|?",
@@ -2742,7 +2742,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "A world model that accurately minimizes one-step observation prediction loss (MSE on next observations) is always sufficient to learn a near-optimal policy via model-based planning.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "A model with low one-step MSE may still be a poor model for policy optimization: (1) the model may have high error in regions of state space visited by the optimal policy, even if global MSE is low; (2) compounding errors over multi-step rollouts can be large even when per-step error is small; (3) the relevant metric for policy optimization is return under the model vs. real environment, not global observation MSE. This motivates value-equivalent models trained jointly with policy objectives, and latent models like MuZero that match return distributions rather than observations.",
       hints: [
         "MSE averages over the training data distribution. If the optimal policy visits different states, can a low global MSE still imply high error on policy-relevant states?",

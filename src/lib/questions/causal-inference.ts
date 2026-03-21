@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A high Pearson correlation coefficient (e.g., $r = 0.95$) between two variables $X$ and $Y$ is sufficient evidence to conclude that $X$ causes $Y$.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Correlation measures the strength of a linear association, not causation. Both variables may be caused by a third confounder, the causal direction may be reversed ($Y$ causes $X$), or the correlation could be coincidental.\n\nThe key asymmetry:\n\\[\\text{corr}(X,Y) = \\text{corr}(Y,X)\\] but causation is asymmetric: $X \\to Y$ is not equivalent to $Y \\to X$.\n\nEstablishing causation requires additional assumptions (no confounding, temporal precedence, mechanism) or experimental design (randomization).",
       hints: [
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Two different SCMs (with different structural equations) can generate the same observational joint distribution $P(X_1, \\dots, X_n)$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Step 1**: Recognize that multiple SCMs can generate the same observational distribution.\nThis is the problem of **Markov equivalence** and **causal non-identifiability** from observational data alone. Multiple SCMs — even with different causal structures — can be consistent with the same observational distribution.\n\n**Step 2**: See why different causal structures can look the same in the data.\nFor example, $X \\to Y$ and $Y \\to X$ are indistinguishable from $P(X, Y)$ alone under Gaussian linear models:\n\\[\nP(X, Y) = \\int P(Y|X)P(X) = \\int P(X|Y)P(Y)\n\\]\n\n**Step 3**: Understand what is needed to distinguish causal structure.\nThis is why additional assumptions (functional form restrictions, non-Gaussianity, or interventional data) are needed for causal discovery.",
       hints: [
@@ -269,7 +269,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The backdoor adjustment formula $P(Y \\mid do(X)) = \\sum_z P(Y \\mid X, Z)P(Z)$ is valid when $Z$ is any set of observed variables that satisfies the backdoor criterion relative to $(X, Y)$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The backdoor criterion requires that $Z$: (1) blocks **all backdoor paths** from $X$ to $Y$ (paths with an arrow into $X$), and (2) contains **no descendant** of $X$.\n\nWhen $Z$ satisfies these conditions, the backdoor adjustment formula identifies the interventional distribution:\n\\[P(Y \\do(X)) = \\sum_{z \\in Z} P(Y \\mid X, Z = z) \\cdot P(Z = z)\\]\n\nThis effectively removes confounding by conditioning on $Z$, leaving only the causal effect.",
       hints: [
@@ -389,7 +389,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Network interference (spillover effects) violates SUTVA and can cause A/B tests to underestimate or overestimate the true treatment effect if users in treatment and control groups interact with each other.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "When users in control and treatment groups interact (e.g., in social networks, marketplaces), the outcome of a control user may be affected by treated users nearby, violating SUTVA's no-interference condition.\n\nExample: in a feed-ranking experiment, if treated users post more, their posts appear in control users' feeds, affecting control outcomes. This leads to **bias** in standard estimators:\n\\[E[Y_i \\mid T_i = 0] \\neq E[Y_i(0)]\\]\n\nRemedies include cluster randomization (randomizing by network community) or switchback experiments.",
       hints: [
@@ -572,7 +572,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The parallel trends assumption in DiD is directly testable using pre-treatment data alone.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The parallel trends assumption — that treated and control groups would have had the same trend in outcomes absent the treatment — is **fundamentally untestable** for the post-treatment period.\n\nResearchers use **pre-treatment placebo tests** as supporting evidence: if groups had parallel trends before treatment, this is necessary (but not sufficient) evidence that they would have continued in parallel after treatment:\n\\[\nE[Y_t^{\\text{counterfactual}} - Y_t^{\\text{observed}} \\mid \\text{post-treatment}]\\]\n\nThis cannot be directly measured — only approximated with pre-treatment data.",
       hints: [
@@ -629,7 +629,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The PC algorithm can always identify a unique causal DAG from observational data, given infinite data and correct conditional independence tests.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The PC algorithm recovers a **CPDAG** — the Markov equivalence class of all DAGs consistent with the observed conditional independence structure.\n\nTwo DAGs are **Markov equivalent** if they have the same skeleton and the same v-structures (immoralities). Within a Markov equivalence class, the causal direction of some edges cannot be determined from observational data alone.\n\nFor example, $X \\to Y$ and $Y \\to X$ are Markov equivalent under certain conditions (e.g., Gaussian linear models).",
       hints: [
@@ -686,7 +686,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Score-based causal discovery methods like GES are guaranteed to find the globally optimal DAG (highest-scoring DAG) even in very large graphs.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Exact optimization over the space of DAGs is **NP-hard** (superexponential in the number of variables). The number of possible DAGs for $p$ variables is approximately:\n\\[\n\\text{DAGs}(p) \\approx 2^{\\binom{p}{2}}\\]\n\nGES uses **greedy search** in CPDAG space, which is provably consistent asymptotically (under faithfulness) but **not guaranteed** to find the global optimum in finite samples or when faithfulness is violated. Exact methods (e.g., dynamic programming for small $p$) become intractable for large graphs.",
       hints: [
@@ -743,7 +743,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "LiNGAM can identify the full causal DAG even when there are hidden (latent) common causes between observed variables.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The basic LiNGAM model assumes **causal sufficiency** — all common causes of observed variables are themselves observed. When latent confounders are present, the basic DirectLiNGAM algorithm fails.\n\nThe model:\n\\[X = BX + EU\\]\n\nassumes $E$ (exogenous noise) is diagonal. If there are latent common causes, $E$ would have non-zero off-diagonal entries, violating this assumption.\n\nExtensions like **LvLiNGAM** (latent variable LiNGAM) handle hidden confounders, but at the cost of more complex algorithms and potentially weaker identifiability guarantees.",
       hints: [
@@ -800,7 +800,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DAG-GNN extends NOTEARS by modeling the structural equations as linear functions, making it strictly more powerful for non-linear causal relationships.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "DAG-GNN (Yu et al., 2019) extends NOTEARS by using a **Graph Neural Network** to model **non-linear** structural equations:\n\\[\nX = \\text{GNN}(X; \\theta)\\]\n\nmaking it **more powerful** than the linear NOTEARS for capturing non-linear relationships.\n\nThe original NOTEARS uses a **linear** SEM: $X = WX + E$. DAG-GNN replaces the linear model with a GNN encoder-decoder, which can represent arbitrary non-linear dependencies.",
       hints: [
@@ -857,7 +857,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Granger causality is equivalent to structural causation in the sense that if $X$ Granger-causes $Y$, then $X$ is a genuine cause of $Y$ in the structural causal sense.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Granger causality is a **predictive/statistical concept**, not a structural one. A common cause $Z$ that influences $X$ before $Y$ will make $X$ appear to Granger-cause $Y$, even with no direct structural link.\n\nConversely, a structural cause $X$ may **not** Granger-cause $Y$ if:\n- The causal effect is **instantaneous** (same time-step)\n- The **measurement frequency** is coarser than the true causal lag\n\nTrue structural causal discovery in time series requires additional assumptions (non-Gaussianity, interventional data).",
       hints: [
@@ -1040,7 +1040,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Causal forests provide asymptotically valid confidence intervals for the CATE at any query point $x$, not just for the ATE.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Wager & Athey (2018) proved that causal forest estimates $\\hat{\\tau}(x)$ are **asymptotically normal**:\n\\[\\sqrt{n}\\bigl(\\hat{\\tau}(x) - \\tau(x)\\bigr) \\xrightarrow{d} N(0, \\sigma^2(x))\\]\n\nwith a **computable variance** $\\hat{\\sigma}^2(x)$, enabling **pointwise confidence intervals** for the CATE.\n\nThis is a significant advantage over many other CATE methods (e.g., T-learner with neural networks) which produce point estimates without valid uncertainty quantification.",
       hints: [
@@ -1097,7 +1097,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "DML requires correctly specifying both the propensity score model and the outcome regression model to produce a consistent estimate of the treatment effect.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "DML uses **doubly-robust / Neyman-orthogonal moment conditions**, so the treatment effect estimator is consistent if **either** the propensity score model **or** the outcome regression model is consistent:\n\\[\n\\hat{\\theta}_{\\text{DR}} = \\text{consistent} \\iff \\hat{e} \\text{ is correct} \\; \\mathbf{OR} \\; \\hat{m} \\text{ is correct}\\]\n\nMoreover, when both nuisance models converge at rates faster than $n^{-1/4}$, the treatment effect estimator achieves the **parametric $\\sqrt{n}$ rate** — the efficiency bound.",
       hints: [
@@ -1217,7 +1217,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "$\\beta$-VAE achieves causal disentanglement by increasing the weight on the KL divergence term, which is sufficient to learn causally meaningful latent factors from observational data alone.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Locatello et al. (2019) proved that disentanglement (even in the statistical sense) is **provably impossible** without inductive biases or additional supervision from observational data alone — any entangled representation can be reparameterized to appear disentangled.\n\n$\\beta$-VAE's KL regularization encourages **statistical independence** of latents but provides **no causal guarantees** without additional constraints:\n- Supervision (labels for generative factors)\n- Interventional data\n- Inductive biases encoding causal structure\n\nUnsupervised disentanglement from observational data alone is fundamentally underdetermined.",
       hints: [
@@ -1274,7 +1274,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "According to the ICM principle, in the causal direction $X \\to Y$, the marginal distribution $P(X)$ (cause) and the conditional $P(Y \\mid X)$ (mechanism) should be statistically independent — knowing $P(X)$ provides no information about $P(Y \\mid X)$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The ICM principle implies that in the causal direction, $P(\\text{cause})$ and $P(\\text{effect} \\mid \\text{cause})$ are **algorithmically independent** — they contain no shared information.\n\nIn the anti-causal direction, $P(Y)$ and $P(X \\mid Y)$ are typically **dependent**: knowing the marginal of $Y$ gives information about the conditional.\n\nThis asymmetry is the basis for causal direction tests: if $P(X)$ and $P(Y \\mid X)$ are simpler to describe jointly than $P(Y)$ and $P(X \\mid Y)$, then $X \\to Y$ is the causal direction.",
       hints: [
@@ -1331,7 +1331,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "IRM is guaranteed to recover the causal features and achieve zero out-of-distribution (OOD) error in all settings with sufficient environment diversity.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "IRM requires **sufficient environment diversity** (environments must create sufficient interpolation of the spurious correlations) to identify causal features.\n\nRosenfeld et al. (2021) showed that IRM can **fail** when linear environment structure is insufficient to separate causal from spurious features.\n\nAdditionally:\n- IRM's bi-level optimization is **NP-hard** in general\n- The practical **IRMv1** approximation can be inconsistent\n- **OOD generalization** beyond training environments is not guaranteed without further structural assumptions",
       hints: [
@@ -1388,7 +1388,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Under the Rubin Potential Outcomes Framework, individual treatment effects $Y_i(1) - Y_i(0)$ are identifiable (estimable without bias) from observational data under the strong ignorability assumption.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Under strong ignorability (unconfoundedness + overlap):\n- **ATE** $= E[Y(1) - Y(0)]$ is identifiable\n- **CATE** $= E[Y(1) - Y(0) \\mid X=x]$ is identifiable\n- **Individual treatment effects (ITEs)** $Y_i(1) - Y_i(0)$ are **not** identifiable\n\nThe fundamental problem of causal inference means we can never observe both $Y_i(1)$ and $Y_i(0)$ for the same unit. Strong ignorability identifies **population-level averages** but not individual counterfactuals. ITEs require **stronger structural assumptions** (SCMs with known functional forms).",
       hints: [
@@ -1445,7 +1445,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Empirical Risk Minimization (ERM) with sufficient data will eventually converge to the optimal OOD-generalizing predictor that relies only on causal features.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "ERM minimizes the average loss on the training distribution. If spurious features are more **predictive** than causal features on the training distribution (e.g., because the spurious correlation is stronger), ERM will **exploit** spurious features.\n\nWith infinite data from the same distribution, ERM converges to the **Bayes-optimal predictor for that distribution** — which includes spurious features when they are informative.\n\n**More training data reinforces the spurious correlations** present in that distribution. OOD generalization requires explicitly constraining the learning to ignore spurious correlations.",
       hints: [
@@ -1628,7 +1628,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Causal fairness criteria (like counterfactual fairness) resolve the tensions between different statistical fairness criteria (demographic parity, equal opportunity, individual fairness) by providing a unified framework.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Different causal fairness criteria (counterfactual fairness, path-specific effects, no direct discrimination, etc.) can still be **mutually contradictory**.\n\nFor example:\n- Blocking the **direct effect** of $A$ on $\\hat{Y}$ while allowing indirect effects through **legitimate mediators** (like education) may conflict with counterfactual fairness\n\nDifferent conceptions of what constitutes discrimination:\n- Direct vs. indirect pathways\n- Legitimate vs. illegitimate mediators\n\nlead to different criteria. **Causal models formalize the question but do not resolve the fundamental normative tensions** — those require policy choices.",
       hints: [

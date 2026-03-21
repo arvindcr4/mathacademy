@@ -1676,7 +1676,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "GAN training is guaranteed to converge to the Nash equilibrium when both networks use gradient descent with a sufficiently small learning rate.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Standard gradient descent on the minimax objective does not guarantee convergence to Nash equilibrium; the two-player game can exhibit oscillation, mode collapse, or divergence - convergence is an active research problem requiring careful tuning and stabilization techniques.",
       hints: [
@@ -1733,7 +1733,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The projection discriminator (Miyato & Koyama, 2018) conditions the discriminator on the class label by computing the inner product between the final feature vector and the class embedding, rather than concatenating the label.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The projection discriminator computes D(x, y) = v^T phi(x) + psi(phi(x)), where v is the class embedding vector and phi(x) is the feature vector; this multiplicative interaction is theoretically motivated by the optimal conditional discriminator form.",
       hints: [
@@ -1790,7 +1790,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CycleGAN's identity loss term penalizes the generator when it changes an image that already belongs to the target domain, helping preserve color and style. Step 1: In CycleGAN, G_AB translates images from domain A to domain B. Step 2: If we pass a real domain-B image through G_AB, we want it to remain unchanged. Step 3: The identity loss L_identity = ||G_AB(b) - b|| penalizes changes to domain-B images, preserving color and style.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The identity loss L_identity = ||G_AB(b) - b|| encourages G_AB to act as an identity mapping when given images already in domain B, preventing the generator from unnecessarily altering color distributions of target-domain inputs.",
       hints: [
@@ -1847,7 +1847,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "AttnGAN generates images from text descriptions by computing word-level attention to align specific words with specific spatial regions of the generated image at multiple resolutions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: Text descriptions contain multiple words describing different aspects of the desired image. Step 2: AttnGAN applies word-level cross-attention at each generation stage, computing attention weights between word tokens and spatial regions of the feature map. Step 3: This allows specific words like 'red beak' to guide the generation of the corresponding image region (the beak), rather than conditioning on a single sentence embedding for the whole image. Multiple stages progressively increase resolution with refined word alignment.",
       hints: [
@@ -1904,7 +1904,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Implicit surface GANs (e.g., using implicit neural representations or occupancy networks) can generate arbitrarily high-resolution 3D shapes without the cubic memory cost of voxel grids.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: Voxel grids discretize 3D space into a fixed N x N x N grid; memory usage is O(N^3), making high-resolution voxel grids prohibitively expensive. Step 2: Implicit neural representations define a shape as a continuous function f(x, y, z) -> occupancy (or SDF), where f is a neural network. Step 3: Resolution is determined at query time - the network can be evaluated at any 3D coordinate regardless of a pre-discretized grid, eliminating the cubic memory cost and enabling high-fidelity shapes.",
       hints: [
@@ -1961,7 +1961,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Temporal coherence in video GANs can be enforced by adding a loss that penalizes optical flow inconsistencies between consecutive generated frames.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: Optical flow estimates the apparent motion vector field between two consecutive frames - where each pixel moved. Step 2: Warp-based temporal consistency computes flow from frame t to frame t+1, warps frame t by that flow, and compares the warped result to frame t+1. Step 3: Penalizing the difference between the warped frame and the actual frame directly discourages flickering, ghosting, or unnatural motion, encouraging physically plausible smooth transitions between consecutive generated frames.",
       hints: [
@@ -2018,7 +2018,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "GAN encoders trained with a perceptual loss (VGG feature matching) in addition to pixel reconstruction loss tend to produce higher-quality inversions than those trained with pixel loss alone.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: Pixel-level L2 loss treats all pixels equally - a slight shift in texture or structure that is perceptually obvious may have low pixel error. Step 2: Perceptual loss (VGG feature matching) measures similarity in the VGG feature space, capturing semantic content and textural patterns that pixel metrics miss. Step 3: Encoders trained with both losses produce inversions that better preserve perceptually important attributes (texture, structure, identity) while still maintaining pixel-level fidelity.",
       hints: [
@@ -2075,7 +2075,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "GANs generally generate samples faster than diffusion models because GANs require only a single forward pass through the generator, while diffusion models require hundreds of sequential denoising steps.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: GAN generation is a single forward pass: sample noise z, pass through G(z), produce an image - one step. Step 2: DDPM generation requires T sequential denoising steps: x_T (noise) -> x_{T-1} -> x_{T-2} -> ... -> x_0, where T is typically 1000. Step 3: Even accelerated samplers (DDIM, DPM-Solver, ~10-50 steps) are significantly slower than a single GAN forward pass. This speed gap makes GANs preferable for real-time applications like interactive editing or video streaming.",
       hints: [
@@ -2132,7 +2132,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CTGAN (Conditional Tabular GAN) is specifically designed to generate synthetic tabular data by modeling the complex non-Gaussian, multi-modal distributions of continuous and discrete columns jointly.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: Tabular data contains mixed types: continuous columns (e.g., age, income) with non-Gaussian multi-modal distributions, and discrete columns (e.g., category, zip code) with class imbalance. Standard GANs assume continuous unimodal data. Step 2: CTGAN uses mode-specific normalization (fitting a Variational Gaussian Mixture Model per continuous column) to capture multi-modal distributions, and conditional generation for discrete columns to handle imbalance. Step 3: These innovations allow CTGAN to model the full joint distribution of complex tabular datasets, making it the standard approach for synthetic tabular data generation.",
       hints: [
@@ -2189,7 +2189,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Inception Score (IS) measures both sample quality and diversity by evaluating the entropy of the marginal label distribution and the conditional label distribution over generated images.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Step 1: IS = exp(E[KL(p(y|x) || p(y))]). High quality requires p(y|x) to be sharp (low entropy) - each generated image looks like a clear, identifiable object. Step 2: High diversity requires p(y) to be uniform (high entropy) - the generated images span many classes. Step 3: Only when both conditions hold (sharp per-image predictions AND uniform marginal distribution) does IS become large, making IS a useful proxy for quality-diversity in the absence of reference real images.",
       hints: [
@@ -2337,7 +2337,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "StarGAN allows multi-domain image translation using a single generator, unlike CycleGAN which requires a separate generator pair for each domain pair.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: CycleGAN needs G_AB and G_BA for each domain pair A-B, so with N domains it needs N(N-1) generators. Step 2: StarGAN uses one generator G(x, c_target) where c_target is the target domain label vector. Step 3: With a single G, changing c_target changes the target domain - all domain pairs share the same generator. This reduces model count from quadratic to linear in the number of domains.",
       hints: [
         "CycleGAN: with 5 domains you need many generator pairs. StarGAN: always just 1.",
@@ -2406,7 +2406,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Stochastic variation in StyleGAN (adding per-pixel Gaussian noise before each AdaIN layer) allows the model to produce fine-grained random details like individual hair strands that vary independently of the overall style.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: Deterministic generation with fixed z produces identical fine details every time - this over-regularizes high-frequency stochastic variation (skin pores, hair strands). Step 2: Per-pixel Gaussian noise is injected before each AdaIN layer; a learned per-channel scale factor controls how much noise affects each layer. Step 3: The noise is independent of w (style) and only affects high-frequency details at the layer where it is injected, allowing stochastic variation without disturbing coarse structure, pose, or identity.",
       hints: [
         "Stochastic details like exact hair strand positions should vary between samples even with the same w.",
@@ -2454,7 +2454,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "StyleGAN's W+ space (using a different w for each layer) is strictly more expressive than the W space (same w for all layers) and always produces better reconstructions of real images.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: W uses a single w for all 18 AdaIN layers, giving 512 degrees of freedom. W+ uses a different w per layer, giving 18 * 512 = 9216 degrees of freedom. Step 2: More degrees of freedom means W+ can represent a much larger set of images, enabling more faithful reconstruction of real images. Step 3: However, the extra degrees of freedom mean W+ codes can be correlated in complex ways that do not align with semantic editing directions, which were discovered in the W subspace. This is the reconstruction vs. editability tradeoff.",
       hints: [
         "More degrees of freedom always improves reconstruction capability - W+ has far more than W.",
@@ -2505,7 +2505,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Mode collapse in GANs refers to the phenomenon where the generator produces only a few distinct outputs regardless of the input noise, failing to capture the full diversity of the training distribution.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: The generator receives noise z and produces images G(z). With mode collapse, different z values produce nearly identical outputs. Step 2: The discriminator then learns to identify this collapsed mode, and the generator shifts to a different small set of outputs to fool D again. The cycle repeats indefinitely. Step 3: The generator never learns to cover the full training distribution - it only chases the discriminator's current weaknesses, cycling through a few modes rather than learning all modes.",
       hints: [
         "If you generate 1000 faces and they all look nearly identical, the generator has mode-collapsed.",
@@ -2553,7 +2553,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In GAN training, using a learning rate that is too high for the discriminator relative to the generator can cause the discriminator to overpower the generator early, leading to vanishing gradients for the generator.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: If D converges faster than G, it can perfectly separate real from fake early in training (D(x) = 1 for real, D(G(z)) = 0 for fake). Step 2: The generator loss is -log(D(G(z))). When D(G(z)) = 0, log(0) approaches -infinity and the gradient vanishes. Step 3: Once D is perfect and G has vanishing gradients, G cannot improve. This is why GAN training requires balancing update rates (often D updates more than G) and stabilization techniques like spectral normalization.",
       hints: [
         "A perfect discriminator gives D(G(z)) near 0, so the log of that value approaches -infinity and the gradient is near zero.",
@@ -2586,7 +2586,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "For high-resolution image generation on large diverse datasets, diffusion models typically achieve lower FID scores than state-of-the-art GANs such as StyleGAN3.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: FID measures both quality (sharpness) and diversity (coverage of real data distribution). GANs can suffer from mode collapse, missing real data modes. Step 2: Diffusion models' likelihood-based training explicitly penalizes missing modes - the model must assign positive probability to all training data. Step 3: On large diverse datasets (ImageNet, COCO), DALL-E 3, Stable Diffusion, and Imagen outperform GAN FID benchmarks due to better mode coverage. On narrow domains like faces (FFHQ), StyleGAN still competes strongly.",
       hints: [
         "FID measures both quality and diversity - diffusion models' better mode coverage helps FID.",
@@ -2634,7 +2634,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Diffusion models are generally less suitable than GANs for direct latent space editing of real images because diffusion's inversion process requires running approximate reverse steps that accumulate errors.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: GAN inversion finds z such that G(z) approximates a real image x - a direct optimization in the generator's latent space, no intermediate steps. Step 2: Diffusion inversion (DDIM inversion) runs the forward diffusion process to find the noise corresponding to x, but this is approximate because the forward process uses the model itself. Step 3: The accumulated approximation error and the fact that guidance changes between inversion (where it may be absent) and generation (where it is applied) cause inconsistencies, making precise semantic editing harder than with GANs.",
       hints: [
         "GAN inversion finds a z such that G(z) approximates x - straightforward optimization in latent space.",
@@ -2685,7 +2685,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Progressive growing in ProGAN (Karras et al., 2018) trains the GAN by gradually adding new higher-resolution layers to both generator and discriminator, allowing stable training of high-resolution image generators.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: Training a 1024x1024 GAN from scratch is unstable - the discriminator can easily overpower the generator when both must learn high-frequency details simultaneously. Step 2: ProGAN starts with a 4x4 GAN, and gradually fades in higher-resolution layers (8x8, 16x16, ... 1024x1024) using an alpha parameter that interpolates new layers in smoothly. Step 3: Each resolution level learns coarse structure (pose, layout) before adding high-frequency details (texture, fine features), providing a stable curriculum that dramatically improves training stability for high-resolution generation.",
       hints: [
         "Training a 1024x1024 GAN from scratch is unstable; starting from 4x4 and growing is much more tractable.",
@@ -2733,7 +2733,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The FID (Frechet Inception Distance) metric for evaluating GANs uses feature representations from a pre-trained Inception network to compare the distribution of generated images to the distribution of real images.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Step 1: Raw pixel comparison (MSE) misses semantic quality - two images with similar pixel values can be very different semantically. Step 2: FID extracts feature vectors from the penultimate layer of Inception-v3 (a network trained on ImageNet) for both real and generated images. These features capture semantic content better than pixels. Step 3: FID fits a multivariate Gaussian to each feature distribution and computes the Frechet (Wasserstein-2) distance between them. This captures both mean difference (quality) and covariance difference (diversity) in a single scalar.",
       hints: [
         "FID uses Inception network features because they capture semantic content better than raw pixels.",

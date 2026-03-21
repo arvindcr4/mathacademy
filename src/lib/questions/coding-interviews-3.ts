@@ -41,7 +41,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "For the climbing stairs problem with step sizes 1 and 2, the recurrence relation is $dp[i] = dp[i-1] + dp[i-2]$ for $i \\geq 3$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "From step $i$, the last move was either:\n- A 1-step from step $i-1$, or\n- A 2-step from step $i-2$\n\nSince these are mutually exclusive ways to end, we sum them:\n$$dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for } i \\geq 3$$\n\nEvery valid path to step $i$ ends with exactly one of these two moves.",
       hints: [
@@ -139,7 +139,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In the coin change DP formulation, $dp[i]$ represents the minimum number of coins needed to make amount $i$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The DP state is defined as:\n$$dp[i] = \\text{minimum coins needed to form amount } i$$\n\nWith base case $dp[0] = 0$ (zero coins make amount 0). Each $dp[i]$ stores the best (minimum) count found so far.",
       hints: [
@@ -217,7 +217,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In House Robber II, the houses are arranged in a circle, meaning the first and last houses are adjacent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "In House Robber II, houses $[0, 1, 2, \\ldots, n-1]$ form a circle, so houses $0$ and $n-1$ cannot both be robbed.\n\nThe solution is to take the maximum of two linear cases:\n$$max\\big(\\text{rob}(0, n-2),\\; \\text{rob}(1, n-1)\\big)$$\n\nEither exclude the first house or exclude the last house.",
       hints: [
@@ -300,7 +300,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "LIS strictly increasing means equal elements do not count as increasing.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Strictly increasing** means each element must be **greater than** the previous element:\n$$x_1 < x_2 < x_3 < \\cdots$$\n\nFor **strictly** increasing: $[1, 2, 3, 4]$ ✓, $[1, 1, 2, 3]$ ✗\n\nEqual elements form a **non-increasing** sequence, not increasing.",
       hints: [
@@ -387,7 +387,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Using trie can optimize word break dictionary lookup.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Trie allows O(m) lookup for each substring starting at position j, where m is max word length.",
       hints: [
@@ -433,7 +433,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In the Word Break problem, $dp[0]$ is initialized to $\\texttt{true}$ because an empty prefix can always be segmented.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The empty string requires no words from the dictionary, so it is trivially segmentable.\n\nBase case: $dp[0] = \\text{true}$ (empty string). All subsequent states build on this foundation.",
       hints: [
@@ -466,7 +466,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Sieve of Eratosthenes only works for finding primes up to a fixed limit $n$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The classical Sieve requires:\n1. Pre-allocating a boolean array of size $n$\n2. Starting from $p^2$ when marking multiples (requiring knowing $n$)\n\nFor unbounded or streaming prime generation, the Segmented Sieve is used instead.",
       hints: [
@@ -519,7 +519,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The Sieve can be modified to generate all prime factors of numbers up to $n$ in $O(n \\log \\log n)$ time.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The Sieve of Eratosthenes only determines **primality** (isPrime or not). To find prime factors, we need more information:\n\n- **Smallest Prime Factor (SPF) array**: Precompute during sieve by storing the first prime that divides each $i$\n- **Factorization per query**: Each factorization takes $O(\\log n)$ using SPF\n\nThe SPF construction itself is $O(n \\log \\log n)$, but storing factors for all numbers is a different problem (not covered by the basic Sieve).",
       hints: [
@@ -568,7 +568,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Prime factorization of a number is unique up to the order of factors.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the **Fundamental Theorem of Arithmetic**:\n\n> Every integer $n > 1$ can be written uniquely as:\n> $$n = p_1 \\times p_2 \\times \\cdots \\times p_k$$\n> where $p_i$ are primes in non-decreasing order.\n\nFor example:\n$$360 = 2^3 \\times 3^2 \\times 5 = 5 \\times 3^2 \\times 2^3$$\nare the same factorization (only the order differs).",
       hints: [
@@ -632,7 +632,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The identity $\\gcd(a, b) = \\gcd(b, a \\bmod b)$ is the basis of the Euclidean algorithm.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Euclidean algorithm uses the fact that:\n$$\\gcd(a, b) = \\gcd(b, a \\bmod b)$$\n\n**Why?** Let $a = qb + r$ where $r = a \\bmod b$. Any common divisor of $a$ and $b$ also divides $r = a - qb$, and vice versa. The algorithm recursively reduces the pair until $b = 0$, at which point $\\gcd(a, 0) = a$.",
       hints: [
@@ -689,7 +689,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "$\\gcd(a, b)$ can be computed in $O(\\log \\min(a, b))$ time using the Euclidean algorithm.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Euclidean algorithm's complexity is $O(\\log \\min(a, b))$ because:\n\n- Each step reduces the pair $(a, b)$ to $(b, a \\bmod b)$\n- When $a > b$, we have $a \\bmod b < a/2$\n- Therefore the numbers decrease by at least half every two steps\n- The number of steps is bounded by $2 \\cdot \\log_2 \\min(a, b) = O(\\log \\min(a, b))$",
       hints: [
@@ -724,7 +724,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In modular arithmetic, $(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Modular multiplication also distributes:\n$$(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$$\n\n**Example**: $a = 17, b = 8, n = 7$:\n- $(17 \\times 8) \\bmod 7 = 136 \\bmod 7 = 3$\n- $((17 \\bmod 7) \\times (8 \\bmod 7)) \\bmod 7 = (3 \\times 1) \\bmod 7 = 3$\n\nThis is crucial for preventing overflow in large multiplications.",
       hints: [
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Fermat's Little Theorem states: if $p$ is prime, then $a^p \\equiv a \\pmod{p}$ for all integers $a$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nMultiplying both sides by $a$:\n$$a \\times a^{p-1} = a^p \\equiv a \\pmod{p}$$\n\nThis holds for all $a$ when $p$ is prime (if $\\gcd(a, p) \\neq 1$, then $p \\mid a$ and both sides are $0 \\bmod p$).",
       hints: [
@@ -808,7 +808,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Fermat's Little Theorem can be used to test primality with certainty.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Fermat's primality test is **probabilistic**, not deterministic.\n\n**Carmichael numbers** are composite numbers $n$ that fool the Fermat test: $a^{n-1} \\equiv 1 \\pmod{n}$ for all $a$ coprime to $n$.\n\nThe smallest Carmichael number is $561 = 3 \\times 11 \\times 17$. For any $a$ coprime to 561:\n$$a^{560} \\equiv 1 \\pmod{561}$$\n\nSo FLT-based primality test can give false positives for Carmichael numbers.",
       hints: [
@@ -855,7 +855,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Miller-Rabin primality test is a deterministic version of the Fermat method.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**False**. Miller-Rabin is a **probabilistic** (randomized) test, not deterministic.\n\nHowever, it can be made **deterministic** for certain ranges:\n- For $n < 3,317,044,064,679,887,385,961,981$, testing bases $a = 2$ and $a = 3$ is sufficient.\n- For $n < 2^{64}$, only 12 bases need to be tested.\n\nMiller-Rabin is stronger than Fermat because it doesn't have Carmichael number false positives (within its error bounds).",
       hints: [
@@ -889,7 +889,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "If $p$ is prime, then $\\phi(p) = p - 1$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "If $p$ is prime, all numbers $1, 2, \\ldots, p-1$ are coprime to $p$ (since $p$ has no divisors other than 1 and itself).\n\nTherefore:\n$$\\phi(p) = p - 1$$",
       hints: [
@@ -936,7 +936,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Euler's theorem states $a^{\\phi(n)} \\equiv 1 \\pmod{n}$ when $\\gcd(a, n) = 1$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Euler's Theorem** generalizes Fermat's Little Theorem to any modulus $n$:\n$$\\text{If } \\gcd(a, n) = 1, \\text{ then } a^{\\phi(n)} \\equiv 1 \\pmod{n}$$\n\n**Special case**: When $n = p$ is prime, $\\phi(p) = p - 1$, giving FLT:\n$$a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEuler's theorem is used in RSA encryption: $m^{\\phi(n)} \\equiv 1 \\pmod{n}$ for $\\gcd(m, n) = 1$.",
       hints: [
@@ -967,7 +967,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "C(n, k) = C(n-1, k-1) + C(n-1, k) is the Pascal triangle recurrence.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the fundamental recurrence that generates Pascal triangle.",
     },
@@ -994,7 +994,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Computing C(n, k) using dynamic programming is O(n \\times k).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DP builds Pascal triangle row by row, requiring O(n \\times k) time and space.",
     },
@@ -1021,7 +1021,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the binomial coefficient formula: C_n = C(2n, n) / (n+1).",
     },
@@ -1055,7 +1055,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Catalan numbers grow exponentially as ~4^n / (n^(3/2) \\times sqrt(pi)).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Catalan numbers have exponential growth rate approximately 4^n / (n^(3/2) \\times sqrt(pi)).",
     },
@@ -1082,7 +1082,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "F_n \\approx \\phi^n / sqrt(5) where \\phi = (1 + sqrt(5)) / 2 is Binet formula.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Binet\'s formula expresses Fibonacci numbers using the golden ratio \\phi.",
     },
@@ -1111,7 +1111,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "The sum of first n Fibonacci numbers equals F_{n+2} - 1.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sum_{i=0}^{n} F_i = F_{n+2} - 1 can be proven by induction.",
     },
@@ -1133,7 +1133,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In binary exponentiation, if n is even we square the base; if odd we multiply by base and reduce exponent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Even: a^n = (a^{n/2})^2. Odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2.",
     },
@@ -1173,7 +1173,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Matrix exponentiation uses the same binary exponentiation principle as scalar exponentiation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Matrix multiplication is associative, so we can apply binary exponentiation to matrices.",
     },
@@ -1217,7 +1217,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Binary search can be implemented iteratively with $O(1)$ space complexity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "**Iterative implementation** uses only three pointers:\n- $\\text{left}$: start index\n- $\\text{right}$: end index\n- $\\text{mid} = \\lfloor(\\text{left} + \\text{right})/2\\rfloor$\n\nEach iteration updates only the pointers, requiring **constant extra space** $O(1)$.\n\n**Recursive implementation** uses $O(\\log n)$ space due to the call stack depth.",
       hints: [
@@ -1247,7 +1247,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Binary search requires the input array to be sorted.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Binary search relies on the sorted order to decide whether to search the left or right half after each comparison.\n\nIf the array is unsorted, the decision rule $\\text{target} < \\text{mid}$ \\Rightarrow \\text{search left}$ is invalid.",
       hints: [
@@ -1315,7 +1315,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Merge sort is a stable sorting algorithm.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n\n\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
@@ -1345,7 +1345,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "The merge sort algorithm requires $O(n)$ auxiliary space for the merge step.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "During the merge step, we combine two sorted halves into a single sorted array.\n\nWe cannot merge in-place efficiently (in-place merge runs in $O(n \\log n)$ time or requires complex logic), so the standard implementation uses an auxiliary buffer of size $n$.\n\n$$\\text{Space: } O(n) \\text{ for the auxiliary array} + O(\\log n) \\text{ for the call stack}$$",
       hints: [
@@ -1393,7 +1393,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Quicksort is not stable because partition step can change relative order of equal elements.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "During partition, elements are moved around based on comparison with pivot, potentially reorder equal elements.",
       hints: [
@@ -1445,7 +1445,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Strassen algorithm uses 7 multiplications instead of 8 to multiply two 2x2 matrices.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The key insight: compute 7 products (P1-P7) instead of 8, then combine them to get the result matrix entries.",
       hints: [
@@ -1478,7 +1478,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Standard matrix multiplication of two $n \\times n$ matrices runs in $O(n^3)$ time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For each of the $n^2$ entries in the result matrix, we compute a dot product of two length-$n$ vectors:\n\n$$n^2 \\times n = n^3 \\text{ multiplications and additions}$$\n\nStrassen's algorithm improves on this with $O(n^{\\log_2 7}) \\approx O(n^{2.81})$.",
       hints: [
@@ -1524,7 +1524,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "When checking the strip region for closer pairs, we only need to examine points within delta distance of the dividing line.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "If a pair has distance < delta, both points must be within delta of the dividing line in the strip region.",
       hints: [
@@ -1537,7 +1537,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The brute-force algorithm for finding the closest pair of points in a 2D plane runs in $O(n^2)$ time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The brute-force approach checks every pair of points:\n\n$$\\binom{n}{2} = \\frac{n(n-1)}{2} = O(n^2) \\text{ pairs}$$\n\nFor each pair, distance is computed in $O(1)$. The divide and conquer approach achieves $O(n \\log n)$.",
       hints: [
@@ -1592,7 +1592,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The candidate returned by Boyer-Moore is always the majority element if one exists.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The algorithm guarantees the candidate is the majority element if one exists, due to the cancellation property.",
       hints: [
@@ -1675,7 +1675,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "We can binary search on either array to find median of two sorted arrays.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "We binary search on the shorter array to reduce search space faster, but mathematically either works.",
       hints: [
@@ -1688,7 +1688,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "For a single sorted array of odd length $n$, the median is the element at index $\\lfloor n/2 \\rfloor$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For a sorted array of odd length $n$, the median is the middle element at index $\\lfloor n/2 \\rfloor$ (0-indexed).\n\nExample: $[1, 3, 5, 7, 9]$ has $n = 5$, median at index $2$ is $5$.\n\nFor even $n$, the median is the average of elements at indices $n/2 - 1$ and $n/2$.",
       hints: [
@@ -1758,7 +1758,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Fast exponentiation can be implemented recursively or iteratively.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Recursive: divide and conquer. Iterative: use binary representation of exponent to process bits.",
       hints: [
@@ -1798,7 +1798,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Matrix exponentiation using fast exponentiation can compute the $n$-th Fibonacci number in $O(\\log n)$ time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The Fibonacci recurrence can be written as a matrix equation:\n\n\n\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
       hints: [
@@ -1839,7 +1839,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For small numbers, standard multiplication is faster than Karatsuba due to overhead.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Karatsuba has significant overhead from recursive calls and additions. Below a threshold (often ~16-64 bits), naive multiplication wins.",
       hints: [
@@ -1852,7 +1852,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Standard long multiplication of two $n$-digit numbers requires $O(n^2)$ digit multiplications.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "In long multiplication, each digit of the first number is multiplied by each digit of the second:\n\n$$n \\times n = n^2 \\text{ single-digit multiplications}$$\n\nKaratsuba reduces this to $O(n^{\\log_2 3}) \\approx O(n^{1.585})$ using a clever divide-and-conquer approach.",
       hints: [
@@ -1896,7 +1896,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The Knuth optimization requires the quadrangle inequality and monotonicity conditions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Knuth optimization applies when opt[i][j-1] <= opt[i][j] <= opt[i+1][j], reducing DP from O(n\\^2) to O(n log n).",
       hints: [
@@ -1929,7 +1929,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The divide and conquer DP optimization applies when the optimal split point $\\text{opt}(i, j)$ is monotone in $j$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "When $\\text{opt}(i, j) \\leq \\text{opt}(i, j+1)$ (monotonicity), the divide and conquer approach works:\n\n- Compute $\\text{opt}$ for the midpoint $\\text{mid}$ of $[l, r]$\n- Left half: restrict $\\text{opt}$ search to $[\\text{opt}_L, \\text{opt}(\\text{mid})]$\n- Right half: restrict to $[\\text{opt}(\\text{mid}), \\text{opt}_R]$\n\nThis reduces the overall cost from $O(n^2)$ to $O(n \\log n)$ per DP layer.",
       hints: [
@@ -2386,7 +2386,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "To reverse the bits of an 8-bit number, you can extract each bit and build the result from LSB to MSB.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The straightforward method extracts one bit at a time:\n\n```\nresult = 0\nfor i in 0..7:\n    result = (result << 1) | (n & 1)\n    n >>= 1\n```\n\nEach iteration shifts the result left and appends the current LSB of $n$. After 8 iterations, the bits are reversed.",
       hints: [
@@ -2727,7 +2727,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The binary string $101$ is a palindrome.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ - identical. So yes, it is a binary palindrome.",
       hints: [
@@ -2783,7 +2783,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A good hash function should distribute keys uniformly across array slots.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Uniform distribution minimizes collisions and ensures balanced load across buckets.",
       hints: [
@@ -2796,7 +2796,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A hash function always maps distinct inputs to distinct outputs (no collisions).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "By the **pigeonhole principle**, if the number of possible keys exceeds the number of hash buckets, collisions are unavoidable.\n\nA **perfect hash function** for a specific static key set can avoid collisions, but in general, hash functions produce collisions.",
       hints: [
@@ -2846,7 +2846,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Hash maps use separate chaining to handle collisions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Separate chaining stores colliding elements in a linked list at each bucket index.",
       hints: [
@@ -2859,7 +2859,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In a hash map, the load factor is defined as the number of stored elements divided by the number of buckets.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Load factor $\\alpha = n / m$ where $n$ = number of entries and $m$ = number of buckets.\n\nA higher load factor increases collision probability and degrades performance. Most implementations resize (rehash) when $\\alpha$ exceeds a threshold (typically 0.75).",
       hints: [
@@ -2969,7 +2969,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Two Sum with hash map runs in O(n) time with O(n) space.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Single pass O(n), hash map stores up to n elements O(n) space.",
       hints: [
@@ -3038,7 +3038,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Grouping anagrams using sorting has O(n * k log k) time complexity where k is max string length.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Sorting each string costs O(k log k), done for n strings gives O(n * k log k).",
       hints: ["Cost to sort one string", "Applied to n strings"],
@@ -3048,7 +3048,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: 'Two strings are anagrams of each other if and only if they have the same character frequencies.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Anagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters - that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
       hints: [
@@ -3099,7 +3099,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The sliding window expands by moving right pointer and contracts by moving left pointer.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Window grows when adding new character, shrinks when duplicate is found.",
       hints: [
@@ -3112,7 +3112,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The longest substring without repeating characters can have length at most 26 for lowercase English letters.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "There are only 26 lowercase English letters. A substring with no repeating characters can contain each letter at most once.\n\nTherefore its length is bounded by the alphabet size: $\\leq 26$.",
       hints: [
@@ -3162,7 +3162,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Hash map alone can implement LRU cache efficiently.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Hash map gives O(1) access but not O(1) eviction ordering. Need a data structure for recency (doubly linked list).",
       hints: ["What ordering do we need?", "Can hash map maintain order?"],
@@ -3172,7 +3172,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In an LRU cache of capacity $k$, when the cache is full and a new item is inserted, the least recently used item is evicted.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "LRU (Least Recently Used) eviction policy: when capacity is reached, the item that was accessed least recently is removed to make room for the new item.\n\nThis approximates the optimal offline algorithm (Bélády's algorithm) and works well in practice.",
       hints: [
@@ -3228,7 +3228,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Finding majority element (appears > n/2 times) can use hash map counting.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Count all elements, any with count > n/2 is majority.",
       hints: [
         "Can we track counts for all elements?",
@@ -3301,7 +3301,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A Bloom filter can have false positives but not false negatives.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'May say "probably yes" when element not in set, but never says "no" when it is.',
       hints: ["What error type is possible?", "What error is impossible?"],
@@ -3311,7 +3311,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A Bloom filter uses a bit array and multiple hash functions to check set membership.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set - if any is 0, $x$ was not inserted",
       hints: [
@@ -3366,7 +3366,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In consistent hashing, only K/n keys are remapped when adding a new server.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Unlike mod-N hashing which remaps all keys, consistent hashing only remaps K/n keys.",
       hints: [
@@ -3379,7 +3379,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In traditional modular hashing ($\\text{hash}(k) \\bmod N$), adding one new server forces remapping almost all keys.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "With $N$ servers and modular hashing, adding a server changes $N$ to $N+1$.\n\n$$k \\bmod N \\neq k \\bmod (N+1) \\text{ for most } k$$\n\nOn average, $N/(N+1)$ of all keys (nearly all of them) are remapped to different servers.\n\nConsistent hashing reduces this to only $K/N$ keys being remapped (where $K$ is total keys).",
       hints: [
@@ -3434,7 +3434,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "In a TSP bitmask DP with 20 cities, the state space is 2^20 * 20 = ~400M entries.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For each subset (2^n subsets) and each ending city (n cities), we have O(n * 2^n) states.",
       hints: [
@@ -3515,7 +3515,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In bitmask DP, each bit in the state mask typically represents whether a specific element is included in the current subset.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A bitmask of $n$ bits represents a subset of $n$ elements. If bit $i$ is set, element $i$ is in the subset.\n\nFor example, with elements $\\{A, B, C\\}$:\n- $011_2 = 3$: elements $A$ and $B$ are included\n- $111_2 = 7$: all three elements are included\n- $000_2 = 0$: empty subset",
       hints: [
@@ -3602,7 +3602,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In tree DP, each node can be independent root and we compute subtree sizes/bottoms-up.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Tree DP treats each node as root of its own subtree and computes information in O(size of subtree).",
       hints: [
@@ -3634,7 +3634,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Tree DP is a special case of dynamic programming where the structure of the problem follows a tree (acyclic graph).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Tree DP exploits the recursive structure of trees: each subtree's optimal solution depends only on its own children, not on siblings or ancestors.\n\nThis enables bottom-up computation (post-order traversal) where each node's value is computed after all its children are processed.",
       hints: [
@@ -3721,7 +3721,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Interval DP always processes intervals in increasing order of length.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "To use optimal substructure, all subintervals must be computed before larger intervals that depend on them.",
       hints: [
@@ -3753,7 +3753,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In interval DP, the smallest intervals (single elements) form the base cases.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Interval DP builds up from subintervals of length 1 (single elements) to the full interval.\n\nBase case: $dp[i][i]$ for all $i$ (interval of length 1).\nFill order: increasing interval length $2, 3, \\ldots, n$.\n\nThis ensures all subintervals are computed before the intervals that depend on them.",
       hints: [
@@ -3828,7 +3828,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In DAG DP, if there are multiple topological orders, the result is always the same.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "All topological sorts produce valid processing orders because they respect dependencies.",
       hints: [
@@ -3874,7 +3874,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Dynamic programming on graphs is only applicable to directed acyclic graphs (DAGs).",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "DP can be applied to graphs with cycles when combined with appropriate state design.\n\nExamples:\n- **Shortest paths with negative edges**: Bellman-Ford DP works on general graphs\n- **Floyd-Warshall**: all-pairs shortest paths on general graphs\n- **Bitmask DP (TSP)**: works on complete graphs with cycles\n\nThe key is that the DP state must avoid circular dependencies.",
       hints: [
@@ -3963,7 +3963,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'In digit DP, leading zeros are typically skipped using a "started" flag.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The started flag tracks whether we have encountered a non-zero digit, allowing proper handling of leading zeros.",
       hints: [
@@ -3988,7 +3988,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Digit DP counts numbers in a range $[0, N]$ satisfying some digit-level constraint.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Digit DP processes numbers digit by digit from the most significant position.\n\nIt counts how many integers in $[0, N]$ satisfy a property (e.g., no two adjacent digits are the same, sum of digits is divisible by $k$, etc.) by tracking a compact state at each position.",
       hints: [
@@ -4059,7 +4059,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In probability DP, the sum of probabilities over all states should always equal 1.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Normalization ensures the probability distribution is valid at each step.",
       hints: [
@@ -4083,7 +4083,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In probability DP, $dp[i]$ often stores the probability of being in state $i$ after some number of transitions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Probability DP tracks the probability distribution over states as random events occur.\n\nFor example, in a random walk:\n- $dp[i]$ = probability of being at position $i$ after $k$ steps\n- Transition: $dp_{k+1}[i] = dp_k[i-1] \\cdot p + dp_k[i+1] \\cdot (1-p)$\n\nNormalization ensures $\\sum_i dp[i] = 1$ at all times.",
       hints: [
@@ -4121,7 +4121,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "In game DP with perfect play, dp[i] = true if any move leads to a losing position for opponent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the standard minimax DP: winning = exists move to losing; losing = all moves lead to winning.",
       hints: ["What is the base case?", "How do winning/losing alternate?"],
@@ -4195,7 +4195,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In a two-player game DP, a position is a losing position if all moves from it lead to winning positions for the opponent.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Standard two-player game DP with perfect play:\n- **Losing position**: every available move leads to a winning state for the opponent\n- **Winning position**: at least one move leads to a losing state for the opponent\n\nBase case: a position with no moves is a losing position (the player to move loses).",
       hints: [
@@ -4284,7 +4284,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Monotone queue optimization is used for DP of the form dp[i] = min/max over j in sliding window.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "When the valid range for j is a moving window, monotone queue maintains candidate minima/maxima in O(1) amortized.",
       hints: [
@@ -4316,7 +4316,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A standard 2D DP table of size $n \\times n$ can often be reduced to $O(n)$ space by observing that only the previous row is needed.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Many 2D DP recurrences of the form $dp[i][j] = f(dp[i-1][\\ldots])$ only reference the immediately preceding row.\n\nIn such cases, we can replace the $n \\times n$ table with two 1D arrays (current and previous rows), reducing space from $O(n^2)$ to $O(n)$.\n\nExample: LCS, Longest Common Substring, 0/1 Knapsack.",
       hints: [
@@ -4380,7 +4380,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In string DP, dp[i][j] typically represents optimal solution for prefixes of length i and j.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The 2D DP table is built incrementally, where cell (i,j) represents the optimal answer for s1[0..i-1] and s2[0..j-1].",
       hints: [
@@ -4434,7 +4434,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The edit distance between two identical strings is 0.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Edit distance (Levenshtein distance) counts the minimum number of insertions, deletions, and substitutions to transform one string into another.\n\nIf both strings are identical, no operations are needed: edit distance = 0.\n\nBase case in DP: $dp[0][0] = 0$ (empty prefix to empty prefix).",
       hints: [
@@ -4470,7 +4470,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A subset mask with all bits set (1..1) means all elements are included.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "(1 << n) - 1 in binary is n ones, representing the full set.",
       hints: [
@@ -4556,7 +4556,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In bitmask DP with $n$ elements, the number of distinct states (masks) is $2^n$.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Each element can either be included (bit = 1) or excluded (bit = 0). With $n$ independent binary choices, there are $2^n$ possible masks.\n\nFor $n = 20$: $2^{20} \\approx 10^6$ masks, which is feasible. For $n = 30$: $2^{30} \\approx 10^9$, too large for most problems.",
       hints: [

@@ -359,8 +359,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "According to blameless postmortem culture (as practiced at Google, Etsy, and PagerDuty), the primary goal of a postmortem is to identify and punish the engineer whose mistake caused the incident.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1:** Understand the core assumption: blameless postmortems assume that engineers act with good intentions given the information they had at the time.\n" +
         "**Step 2:** Recognize the true goal: understanding systemic factors — what in the system, process, or tooling made this failure possible — and implementing improvements that prevent recurrence.\n" +

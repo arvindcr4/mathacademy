@@ -62,7 +62,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Kafka guarantees total message ordering across all partitions of a topic.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Kafka guarantees ordering only within a single partition. Messages across different partitions have no global ordering guarantee relative to each other. Two messages written to partition 0 and partition 1 simultaneously cannot be reliably ordered. To preserve total order for a logical entity (e.g., all events for a user), use a consistent partition key (e.g., user_id) so all related events land in the same partition. This is a foundational Kafka design constraint documented by LinkedIn when open-sourcing Kafka in 2011.",
       hints: [
         "If partition 0 and partition 1 are on different brokers, who decides which message was 'first'?",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Consumer lag measured in message count is always a reliable indicator of processing delay in seconds.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "False. Message lag (count) does not directly translate to time delay without knowing the current production rate. 1 million messages of lag means 1 second of delay at 1M msg/sec but 17 minutes at 1K msg/sec. Time-based lag (seconds = lag_messages / current_throughput_rate) is a far better SLI for latency SLOs. Netflix's keystone pipeline team uses both metrics: message lag for capacity planning and time-based lag for alerting on SLO breaches. Monitoring tools like Burrow and kminion expose both metrics.",
       hints: [
         "If a topic produces 1 message per hour and you have 1 message of lag, is that urgent?",
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Increasing the watermark delay from 1 minute to 10 minutes in a streaming pipeline eliminates more late data but also increases end-to-end result latency by approximately 9 minutes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. The watermark delay is a direct trade-off between completeness (fewer late events dropped) and latency (longer wait before windows fire). A 10-minute watermark means results are delayed by 10 minutes relative to event time — a window covering 12:00-13:00 event time will not fire until the watermark reaches 13:10. This 10-minute buffer accommodates late-arriving events at the cost of staleness. LinkedIn's Samza team and Flink's documentation both describe this as the fundamental completeness-vs-latency knob in event-time stream processing.",
       hints: [
         "If the watermark is 10 minutes behind event time, when does the 13:00 window boundary trigger?",
@@ -257,7 +257,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In Kappa architecture, historical reprocessing is done by replaying events from the beginning of the Kafka topic through the same streaming job used for real-time processing.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. This is the core insight of Kappa architecture. Kafka retains events for a configurable period (or indefinitely with tiered storage). To reprocess history after a bug fix or logic change, you start a new instance of the streaming job from offset 0 (or a specific historical offset) on a new consumer group and new output topic. Once it catches up to real time, you atomically swap the serving layer to point to the new output. The old job is decommissioned. This eliminates the need for a separate batch system. Confluent documents this as the standard Kappa deployment model.",
       hints: [
         "What Kafka setting retains data long enough for historical reprocessing?",
@@ -407,7 +407,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Kafka's time-based retention and log compaction can be enabled simultaneously on the same topic using cleanup.policy=compact,delete.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "True. Setting cleanup.policy=compact,delete enables both policies: the topic retains at least the latest value per key (compaction guarantee), AND segments older than retention.ms or larger than retention.bytes are eventually deleted. This is useful for CDC changelog topics that need latest-value semantics but should not grow unboundedly. Old compacted segments that age past the retention window are deleted. This is the default configuration for Kafka Streams internal changelog topics in production deployments and is documented in Confluent's operator guide.",
       hints: [
         "What does cleanup.policy=compact,delete mean for a topic?",

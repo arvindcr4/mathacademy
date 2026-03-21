@@ -254,7 +254,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Key-value stores like Redis natively support efficient secondary index queries (e.g., 'find all users with age > 30') without any additional infrastructure.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Key-value stores are optimized for single-key operations, not arbitrary attribute queries.\n\n**Step 1.** Key-value stores provide O(1) get/put operations by primary key only. There is no built-in mechanism to query by arbitrary attributes — the fundamental design is optimized for primary-key lookup.\n\n**Step 2.** To support secondary index queries in Redis, you must manually maintain additional data structures. For example, sorted sets can encode range indexes (e.g., ZADD users:age 30 user_id), but this is application-managed, not automatic.\n\n**Step 3.** For full-featured secondary indexing, an external search layer like Elasticsearch is typically required. DynamoDB similarly requires explicit Global Secondary Indexes (GSIs) — separate index tables you create and pay for.",
       hints: [
         "The defining feature of a key-value store is O(1) lookup by key. What happens to that guarantee if you need to scan by a non-key attribute?",
@@ -363,7 +363,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "A covering index (index-only scan) eliminates the need to access the main table heap for queries where all needed columns are included in the index.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "A covering index enables the query engine to satisfy a query entirely from the index, never touching the heap.\n\n**Step 1.** A covering index includes all columns referenced by a query — both in WHERE clauses and in the SELECT projection. When the query planner recognizes this, it performs an index-only scan.\n\n**Step 2.** The engine reads the required data directly from the index pages, without looking up the corresponding heap (table) pages. This dramatically reduces I/O, especially for queries that touch a small fraction of columns on a large table.\n\n**Step 3.** Example: CREATE INDEX ON orders (user_id, created_at, amount) covers the query SELECT amount FROM orders WHERE user_id = 42 AND created_at > '2024-01-01' entirely without heap access.",
       hints: [
         "If the index already contains everything the query needs, why would the database bother reading the original table at all?",

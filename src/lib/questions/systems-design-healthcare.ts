@@ -44,7 +44,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In FHIR R4, the Encounter resource represents a single interaction between a patient and a healthcare provider, and it can reference both the Patient and the Condition(s) being addressed during that visit.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "**Step 1:** Confirm what the Encounter resource represents. The FHIR R4 Encounter resource models a single patient-provider interaction — an office visit, an ER visit, a telehealth session, or an inpatient stay. It carries the who (Patient), when (date/time), where (Location), and who participated (Practitioner).\\n\\n**Step 2:** Check the reason-reference field. Encounter.reasonReference is an array that links to Condition resources (among other things), allowing the Encounter to document what clinical problems or diagnoses were addressed during that specific visit.\\n\\n**Step 3:** Verify the statement is accurate. The statement says Encounter can reference both the Patient and the Condition(s) — both of these are true. The Encounter.classifier captures the type of encounter, and reasonReference captures the clinical motivation.",
       hints: [
         "Look at the Encounter.reasonReference field in the FHIR R4 specification.",
@@ -116,7 +116,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "HIPAA requires that PHI transmitted over a public network (e.g., the internet) must be encrypted, but PHI stored at rest on internal servers is only \"addressable\" — meaning covered entities may choose not to encrypt it if they document a reasonable alternative.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "**Step 1:** Distinguish between required and addressable standards. HIPAA's Security Rule distinguishes between \"required\" standards (which must be implemented) and \"addressable\" implementation specifications (which must be implemented if reasonable, or documented as not reasonable if not). Encryption in transit (45 CFR §164.312(e)(2)(ii)) is addressable, but the underlying transmission security standard (§164.312(e)(1)) is required.\\n\\n**Step 2:** Recognize practical reality. In practice, unencrypted internet transmission is virtually impossible to defend before a auditor — any reasonable security review would flag it. Most cloud EHR vendors (Epic, Cerner, Google Health) encrypt both in transit and at rest by default, making the addressability question largely academic.\\n\\n**Step 3:** Confirm the statement is accurate. The statement correctly describes the required/addressable distinction for encryption at rest versus in transit.",
       hints: [
         "Look up the difference between 'required' and 'addressable' in the HIPAA Security Rule.",
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In an HL7 v2 to FHIR transformation pipeline, it is safe to use the HL7 v2 message control ID (MSH-10) as the FHIR resource ID to guarantee idempotency across retries.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Recognize the idempotency requirement. When a message is retried (due to network timeout, for example), the pipeline must not create duplicate FHIR resources. Storing MSH-10 as an idempotency key in a deduplication table is a valid approach.\\n\\n**Step 2:** Identify why MSH-10 cannot be used as the FHIR resource ID. A single ORU message creates multiple FHIR resources: one Patient, one Encounter, one DiagnosticReport, and multiple Observations (one per OBX segment). All of these cannot share the same ID — FHIR resource IDs must be unique per resource type on the server.\\n\\n**Step 3:** Apply the correct pattern. Use MSH-10 as a correlation key stored in a deduplication table or as a resource.identifier, but use server-assigned IDs or deterministic UUIDs based on the patient ID + encounter ID + observation ID for the FHIR resource IDs.",
       hints: [
         "A single ORU message creates how many FHIR resources?",
@@ -278,7 +278,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Under HIPAA, a telehealth platform's video streaming vendor (e.g., Zoom, Twilio) must sign a Business Associate Agreement (BAA) before the platform can transmit PHI through their infrastructure.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "**Step 1:** Identify the business associate definition. Under HIPAA, any vendor that creates, receives, maintains, or transmits PHI on behalf of a covered entity is a Business Associate (BA). A telehealth video vendor that transmits video containing PHI — even if it does not store the video — is transmitting PHI.\\n\\n**Step 2:** Recognize the contractual requirement. A BAA is a legally binding contract that obligates the vendor to safeguard PHI according to HIPAA standards. Without a BAA, the covered entity cannot legally allow the vendor to handle PHI.\\n\\n**Step 3:** Confirm the statement is accurate. Major telehealth vendors (Twilio, Zoom for Healthcare, Daily.co, Amazon Chime SDK) all offer BAAs. Using consumer-grade products (standard Zoom, FaceTime) without a BAA is a HIPAA violation and a common compliance audit finding.",
       hints: [
         "Who qualifies as a Business Associate under HIPAA?",
@@ -392,7 +392,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In an OMOP CDM data warehouse, the PERSON table stores one row per patient and the VISIT_OCCURRENCE table stores one row per clinical encounter, allowing a single patient to have multiple visits over time.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "**Step 1:** Understand the PERSON table. PERSON is the central patient table in OMOP CDM. It contains one row per patient with demographics (gender, birth year, race, ethnicity) and serves as the parent table for all clinical data.\\n\\n**Step 2:** Understand the VISIT_OCCURRENCE table. VISIT_OCCURRENCE stores individual encounters — one row per visit (inpatient stay, outpatient visit, emergency department visit, etc.). The person_id foreign key links each visit to the patient.\\n\\n**Step 3:** Confirm the statement is accurate. All clinical event tables (CONDITION_OCCURRENCE, DRUG_EXPOSURE, MEASUREMENT, OBSERVATION, PROCEDURE_OCCURRENCE) reference both person_id and visit_occurrence_id, enabling queries like \"find all lab results for diabetic patients during inpatient stays in 2023.\"",
       hints: [
         "How does OMOP represent the relationship between a patient and their multiple visits?",

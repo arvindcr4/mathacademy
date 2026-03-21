@@ -29,8 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A single perceptron can learn to classify data that is not linearly separable, such as the XOR function.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "A single perceptron can only represent linear decision boundaries. XOR is not linearly separable — no single hyperplane correctly separates the four XOR input points.\n\n**Step 1.** Recall the perceptron's geometric constraint. A perceptron computes $z = w \cdot x + b$ and applies a step function. The decision boundary is the set of points where $z = 0$, which is a hyperplane.\n\n**Step 2.** Check the XOR truth table. The four input points are $(0,0)\to 0$, $(0,1)\to 1$, $(1,0)\to 1$, $(1,1)\to 0$. If we try to separate the 1s from the 0s with a line, any line that places $(0,1)$ and $(1,0)$ on one side will inevitably place either $(0,0)$ or $(1,1)$ on the wrong side.\n\n**Step 3.** Conclude. Since no such separating hyperplane exists, the perceptron cannot learn XOR regardless of how many training iterations or how much data it receives. This fundamental limitation, publicized by Minsky and Papert (1969), motivated the development of multi-layer networks.\n\nTherefore, the statement is **False**.",
       hints: [
@@ -87,8 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A computational graph records every operation during the forward pass; the autograd engine traverses it backward, applying the chain rule at each node to compute all gradients without manual derivation.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is exactly how modern deep learning frameworks work, as described in d2l.ai §5.3.\n\n**Step 1.** Forward pass — build the graph. During forward propagation, every operation (matrix multiplication, ReLU, softmax, etc.) is recorded in a computational graph. Each node represents the result of an operation; edges represent data flow.\n\n**Step 2.** Backward pass — traverse in reverse. During backpropagation, the autograd engine traverses this graph in reverse order. At each node, it knows the gradient flowing back from the loss and computes the local gradient with respect to the node's inputs using the chain rule.\n\n**Step 3.** Chain and accumulate. The local gradient is multiplied by the incoming gradient and passed to the previous node. This repeats all the way to the input. By the end of the backward pass, every parameter has its gradient computed automatically — you never write $\\partial L / \\partial w$ by hand.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -145,8 +143,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GELU (Gaussian Error Linear Unit), defined as $x \cdot \Phi(x)$ where $\\Phi$ is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "GELU (Hendrycks and Gimpel, 2016) smoothly gates inputs using the Gaussian CDF — unlike ReLU's hard threshold at zero.\n\n**Step 1.** Understand GELU's mechanism. $\\Phi(x)$ ranges from 0 to 1, so GELU multiplies the input $x$ by a learned gate $\\Phi(x)$. For large positive $x$, $\\Phi(x) \\approx 1$ and GELU approximates ReLU. For negative $x$, $\\Phi(x)$ is small but positive, so GELU produces a small negative output — smoothly attenuating rather than hard-zeroing.\n\n**Step 2.** Contrast with ReLU. ReLU sets all negative inputs to exactly 0, discarding all gradient information for negative signals. GELU preserves a small negative output and gradient for negative inputs, which can be useful in certain contexts.\n\n**Step 3.** Recognize the empirical result. GELU has become the default activation in BERT, GPT-2/3/4, and LLaMA feed-forward layers, empirically outperforming ReLU and other alternatives on language modeling benchmarks.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -203,8 +200,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Xavier initialization (Glorot and Bengio, 2010) sets weight variance to $\\sigma^2 = 2/(n_{\\text{in}} + n_{\\text{out}})$. This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is exactly the Xavier initialization derivation from d2l.ai §5.4.2.2.\n\n**Step 1.** Derive the forward-pass condition. If input $x$ has variance $\\text{Var}[x]$ and weights have variance $\\sigma^2$, then the output variance is:\n\n\\[\n\\text{Var}[\\text{output}] = n_{\\text{in}} \\cdot \\sigma^2 \\cdot \\text{Var}[x].\n\\]\n\nSetting $\\text{Var}[\\text{output}] = \\text{Var}[x]$ (no signal explosion or vanishing in the forward pass) requires:\n\n\\[\nn_{\\text{in}} \\cdot \\sigma^2 = 1. \\tag{1}\n\\]\n\n**Step 2.** Derive the backward-pass condition. Similarly, for gradients flowing backward:\n\n\\[\nn_{\\text{out}} \\cdot \\sigma^2 = 1. \\tag{2}\n\\]\n\n**Step 3.** Recognize the incompatibility and the compromise. Equations (1) and (2) cannot both hold unless $n_{\\text{in}} = n_{\\text{out}}$. Xavier takes the geometric mean compromise:\n\n\\[\n\\sigma^2 = \\frac{2}{n_{\\text{in}} + n_{\\text{out}}},\n\\]\n\nkeeping signal variance stable in both directions and preventing vanishing or exploding activations.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -261,8 +257,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Layer Normalization normalizes across the feature dimension for a single sample (not across the batch), making it suitable for transformers where batch statistics would be unreliable for variable-length sequences.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Layer Norm (Ba et al., 2016) computes statistics across the hidden dimension for each individual token independently.\n\n**Step 1.** Contrast with Batch Norm. Batch Norm computes statistics over the batch dimension — it requires multiple samples to compute a meaningful mean and variance. For a batch of size 1, Batch Norm normalizes using statistics from a single data point, which are trivially 0 (mean) and 0 (variance).\n\n**Step 2.** Understand Layer Norm's approach. Layer Norm computes the mean and variance across the $d_{\\text{model}}$ feature dimension for each token independently. Each token uses only its own features — no batch dependence.\n\n**Step 3.** Connect to transformers. In transformer inference, we often decode one token at a time (batch size 1). Layer Norm works perfectly in this setting since it never relies on batch statistics. Additionally, for variable-length sequences in training, Batch Norm's batch statistics would mix statistics from different sequence positions — LN avoids this entirely.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -319,8 +314,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Dropout is applied during inference (test time) the same way it is applied during training.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "As d2l.ai §5.6 states: 'we disable dropout at test time. Given a trained model and a new example, we do not drop out any nodes.' All neurons are active at test time.\n\n**Step 1.** Understand the training phase. During training, dropout randomly zeros out neurons with probability $p$, and the surviving activations are scaled by $1/(1-p)$ (inverted dropout).\n\n**Step 2.** Understand the test phase. At test time, all neurons are active and no scaling is applied. The inverted dropout scaling during training already ensures that the expected activation magnitude matches what the model will see at test time.\n\n**Step 3.** Recognize the danger of test-time dropout. Applying dropout at test time would make predictions non-deterministic — running the same input through the model twice would give different outputs. This is unacceptable for production deployment.\n\nTherefore, the statement is **False**.",
       hints: [
@@ -377,8 +371,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "AdamW fixes a flaw in Adam by applying weight decay directly to the weights ($\\theta \\leftarrow \\theta - \\eta \\cdot \\lambda \\cdot \\theta$) rather than folding L2 regularization into the gradient, because Adam's adaptive scaling reduces the effective weight decay disproportionately for parameters with large gradients.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the key distinction between Adam with L2 regularization and AdamW (Loshchilov and Hutter, 2017).\n\n**Step 1.** Analyze Adam with L2. In vanilla Adam, the L2 regularization term $\\lambda \\cdot \\theta$ is added to the gradient and then adaptively scaled by $1/\\sqrt{v_t}$. For parameters with large gradients, $v_t$ is large, so the effective weight decay is $\\lambda / \\sqrt{v_t}$ — much smaller than intended.\n\n**Step 2.** Understand AdamW's fix. AdamW decouples weight decay from gradient scaling:\n\n\\[\n\\theta \\leftarrow \\theta - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t}} - \\eta \\cdot \\lambda \\cdot \\theta.\n\\]\n\nThe decay step $-\\eta \\cdot \\lambda \\cdot \\theta$ is applied directly to the weights, completely independent of Adam's adaptive gradient scaling.\n\n**Step 3.** Recognize the benefit. With AdamW, every parameter receives the same fraction of weight decay $\\lambda$, regardless of its gradient history. This makes weight decay behave as theoretically intended — a simple $L_2$ penalty on the weights.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -435,8 +428,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Cosine annealing schedules reduce the learning rate following a cosine curve, and with warm restarts they periodically reset to a higher value, allowing the optimizer to escape local minima.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Cosine annealing with warm restarts (SGDR, Loshchilov and Hutter, 2017) decays the learning rate to near zero following a cosine schedule, then resets to a higher value.\n\n**Step 1.** Understand the basic cosine schedule. The cosine function smoothly decreases from 1 to 0 over a cycle of $T$ steps:\n\n\\[\n\\eta_t = \\eta_{\\min} + \\tfrac{1}{2}(\\eta_{\\max} - \\eta_{\\min})\\bigl(1 + \\cos(\\pi t / T)\\bigr).\n\\]\n\nThis produces a smooth, gradual LR decay — no abrupt drops as with step decay.\n\n**Step 2.** Understand warm restarts. After the LR reaches near-zero at the end of a cycle, it resets to a higher value. This allows the optimizer to escape shallow local minima it may have converged into during the previous cycle.\n\n**Step 3.** Recognize the practical benefit. Each restart explores the loss landscape from a different region (since the model weights have evolved), potentially finding better optima than a single long run with monotone decay.\n\nTherefore, the statement is **True**.",
       hints: [
@@ -493,8 +485,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Focal loss addresses class imbalance by down-weighting the loss contribution of easy, well-classified examples and focusing training on hard examples.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Focal loss (Lin et al., 2017) modifies cross-entropy to address class imbalance in dense prediction tasks like object detection.\n\n**Step 1.** Write the focal loss formula. For a binary classification with $p_t$ as the model's probability for the true class:\n\n\\[\n\\text{FL}(p_t) = -(1 - p_t)^\\gamma \\log(p_t).\n\\]\n\nThe modulating factor $(1 - p_t)^\\gamma$ is what creates the focus on hard examples.\n\n**Step 2.** Analyze the modulating effect. When the model is confidently correct ($p_t \\to 1$), the factor $(1 - p_t)^\\gamma \\to 0$, massively down-weighting the loss. When the model is wrong ($p_t \\to 0$), the factor is 1 and the loss is unchanged — hard examples dominate the gradient.\n\n**Step 3.** Quantify the effect with $\\gamma = 2$. An easy example with $p_t = 0.9$ contributes $(1 - 0.9)^2 = 0.01 \\times$ the original loss — a 100-fold reduction. This lets rare hard examples (e.g., small or occluded objects) dominate training.\n\nTherefore, the statement is **True**.",
       hints: [

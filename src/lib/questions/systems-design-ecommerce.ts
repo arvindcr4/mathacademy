@@ -386,8 +386,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Using a third-party tax calculation API like Avalara or TaxJar at checkout time is preferable to maintaining your own tax rate tables for most e-commerce platforms, because tax rules vary by product category, destination jurisdiction, and buyer exemption status and change frequently.",
-      options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "**Step 1: Assess the complexity of tax calculation.** US sales tax alone spans 10,000+ jurisdictions (state, county, city), each with different rates and rules. Product taxability varies by category (groceries vs clothing). Exemption status (reseller certificates, nonprofits) adds further complexity. Rules change with new legislation multiple times per year.\n\n**Step 2: Evaluate build vs buy.** Building and maintaining tax tables internally requires dedicated tax engineers and continuous legal monitoring. Any stale table creates compliance risk — charging the wrong tax rate can trigger audits and penalties.\n\n**Step 3: Select a third-party API.** Avalara and TaxJar handle all this complexity via API: they stay current with law changes, provide audit trails, handle compliance reporting (sales tax remittance), and support exemption certificates. For most platforms, the API cost is far less than the engineering and legal cost of maintaining this internally. The statement is **True**.",
       hints: [
         "How many US tax jurisdictions exist, and how often do their rates change?",

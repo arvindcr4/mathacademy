@@ -56,7 +56,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Two-Phase Commit (2PC) is a non-blocking protocol: if the coordinator crashes after sending 'prepare', participants can safely abort the transaction on their own.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: `**Step 1: Identify what happens after a 'yes' vote.**\nIn phase 1, each participant votes either "yes" (prepared to commit) or "no" (abort). Once a participant votes "yes," it enters a locked state — it cannot unilaterally commit or abort. It has promised to honor the coordinator's decision but has not yet received that decision.\n\n**Step 2: Analyze what happens if the coordinator crashes.**\nIf the coordinator crashes after the prepare phase and before sending commit or abort in phase 2, the participants are left waiting indefinitely. They lack the information needed to make a safe, unilateral decision.\n\n**Step 3: Confirm the blocking nature.**\nThis is why 2PC is classified as a blocking protocol. Three-Phase Commit (3PC) and Paxos-based commit protocols are designed to remove this blocking property by adding an extra phase that allows participants to timeout safely.`,
       hints: [
         "After voting 'yes', a participant has given up its right to abort unilaterally — what information is it missing if the coordinator disappears?",
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Read-your-writes consistency can be achieved by always routing a client's read requests to the same replica that received the client's writes.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: `**Step 1: Define read-your-writes consistency.**\nThis consistency model guarantees that after a client writes a value, any subsequent read by that same client reflects that write — the client always sees its own mutations.\n\n**Step 2: Explain the sticky sessions approach.**\nOne implementation is session affinity (sticky sessions): once a write is routed to replica $R$, all subsequent reads from that client are also routed to $R$. Since $R$ has the write in its local state (or will replicate it locally before responding), the read always sees the client's own writes.\n\n**Step 3: Note the alternative approach.**\nAnother implementation uses version-stamped reads: the client sends the write's version or timestamp with subsequent reads, and the replica waits until it has replicated up to that version before responding. Both approaches achieve the same guarantee.`,
       hints: [
         "Think about what 'sticky sessions' or 'session tokens' accomplish in terms of read routing.",

@@ -49,7 +49,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "According to d2l.ai §11.6.2's comparison of CNN, RNN, and self-attention, self-attention achieves O(1) maximum path length between any two positions - a key advantage over RNNs where path length is O(n).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "D2l.ai \\S 11.6.2 compares path lengths formally:\n\nRNNs: to communicate from position $i$ to position $j$ where $j > i$, the hidden state at position $j$ depends on the hidden state at $j-1$, which depends on $j-2$, and so on - requiring $j - i = \\mathcal{O}(n)$ sequential steps. Information must traverse the full chain.\n\nSelf-attention: every query $\\mathbf{q}_i$ attends directly to every key $\\mathbf{k}_j$ via $\\mathbf{q}_i \\cdot \\mathbf{k}_j$, producing attention weights $\\alpha_{ij}$ in a single parallel operation. The maximum path between any two positions is therefore $\\mathcal{O}(1)$. This direct connectivity also means gradients from any position can flow to any other position in one step, preventing vanishing gradients that plague deep RNNs.",
       hints: [
@@ -87,7 +87,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h \\times d_k = d_model) and then projected by a weight matrix W^O \\in \\mathbb{R}^{d_model \\times d_model} to produce the final output.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "D2l.ai \\S 11.5 defines the multi-head attention output as:\n\\[\n\\text{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)\\,\\mathbf{W}^\\text{O},\n\\]\nwhere each $\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{K}\\mathbf{W}_i^\\mathbf{K}, \\mathbf{V}\\mathbf{W}_i^\\mathbf{V}\\right)$. The concatenation $\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)$ produces a vector of length $h \\times d_v = h \\times (d_\\text{model}/h) = d_\\text{model}$. The weight matrix $\\mathbf{W}^\\text{O} \\in \\mathbb{R}^{d_\\text{model} \\times d_\\text{model}}$ then linearly combines the head outputs into a single $d_\\text{model}$-dimensional vector. Without $\\mathbf{W}^\\text{O}$, no information would flow between heads after concatenation, leaving each head's representation isolated.",
       hints: [
@@ -164,7 +164,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "RoPE (Rotary Position Embedding) encodes relative position directly into attention scores by rotating Q and K vectors by a position-dependent angle, so that the dot product q_i \\cdot k_j depends only on (i − j), not on i and j separately.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RoPE (Su et al., 2021) encodes position by rotating the query and key vectors. For a 2D subspace indexed by $j$, the rotation applied at position $m$ is:\n\\[\n\\mathbf{R}_j(m) = \\begin{pmatrix} \\cos(m\\theta_j) & -\\sin(m\\theta_j) \\\\ \\sin(m\\theta_j) & \\cos(m\\theta_j) \\end{pmatrix}.\n\\]\nThe key property is:\n\\[\n\\left(\\mathbf{R}_j(i)\\,\\mathbf{q}_j\\right)^\\top \\left(\\mathbf{R}_j(j)\\,\\mathbf{k}_j\\right) = \\mathbf{q}_j^\\top\\,\\mathbf{R}_j(j-i)\\,\\mathbf{k}_j,\n\\]\nso the dot product between positions $i$ and $j$ depends only on the relative displacement $(j-i)$, not on $i$ and $j$ separately. The rotation matrices satisfy $\\mathbf{R}(i)^\\top\\mathbf{R}(j) = \\mathbf{R}(j-i)$. This relative-position property is absent in absolute positional encodings (where the encoding for position $i$ is a fixed vector unrelated to position $j$), which is why RoPE enables better length extrapolation beyond the training context.",
       hints: [
@@ -221,7 +221,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,\\beta) = Swish_\\beta(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression - unlike ReLU\'s hard zero cutoff.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "SwiGLU (Shazeer, 2020) defines:\n\\[\n\\text{SwiGLU}(\\mathbf{x}, \\mathbf{W}, \\mathbf{V}, \\mathbf{b}, \\mathbf{c}, \\beta) = \\text{Swish}_\\beta(\\mathbf{x}\\mathbf{W} + \\mathbf{b}) \\otimes (\\mathbf{x}\\mathbf{V} + \\mathbf{c}),\n\\]\nwhere $\\otimes$ is element-wise multiplication and $\\text{Swish}_\\beta(z) = \\sigma(\\beta z)$ is a smooth activation with a learnable gating parameter $\\beta$.\n\nComparing to ReLU: ReLU$(\\mathbf{x}) = \\max(0, \\mathbf{x}\\mathbf{W} + \\mathbf{b})$, which applies a hard zero to all negative pre-activations. SwiGLU replaces this hard threshold with a learned sigmoid gate $(\\mathbf{x}\\mathbf{V} + \\mathbf{c})$ that scales each feature dimension by a value in $(0, 1)$. Since $\\sigma(z)$ is smooth and data-dependent, the gate value adapts per-input, providing soft, differentiable feature suppression rather than ReLU's all-or-nothing cutoff. This smoother gradient flow in the negative region consistently improves language model perplexity in experiments (LLaMA, PaLM).",
       hints: [
@@ -258,7 +258,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Pre-norm (applying LayerNorm before each sublayer rather than after, as in most modern LLMs) stabilizes training because at initialization, the residual branch output is near-zero, making the gradient signal flow cleanly through the skip connection.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "In Pre-norm (used by most modern LLMs), the residual branch input is normalized:\n\\[\n\\mathbf{x}_{\\ell+1} = \\mathbf{x}_\\ell + \\text{Sublayer}\\!\\left(\\text{LayerNorm}(\\mathbf{x}_\\ell)\\right).\n\\]\nAt initialization, the sublayer weights are small, so $\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x})) \\approx \\mathbf{0}$. The identity branch therefore carries the gradient directly: $\\nabla_{\\mathbf{x}_\\ell} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L}$, and the gradient through the sublayer is $\\nabla_{\\text{Sublayer}} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L} \\cdot \\nabla_{\\text{Sublayer}} \\approx \\text{small}$, giving stable gradients.\n\nIn Post-norm (original transformer):\n\\[\n\\mathbf{x}_{\\ell+1} = \\text{LayerNorm}\\!\\left(\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)\\right).\n\\]\nAt initialization, $\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)$ has large variance (sum of two independent random vectors), so the LayerNorm output has high variance. This produces large gradient magnitudes at early steps, requiring careful learning rate warmup to avoid destabilization.",
       hints: [
@@ -315,7 +315,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 \\times d_model rows - roughly 4\\times the size of GPT-2's 50,257-token vocabulary embedding table.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ - one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger - not $4\\times$ as the statement claims. The claim of \"roughly 4\\times\" is therefore incorrect. (The statement is False.)",
       hints: [
@@ -392,7 +392,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Emergent abilities in LLMs (Wei et al., 2022) - capabilities that appear abruptly above a parameter threshold - challenge the smooth power-law extrapolation from scaling laws, since they predict sudden non-linear improvements that pretraining loss alone does not anticipate.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Scaling laws predict smooth, continuous improvement in pretraining loss with scale. But emergent abilities like multi-step arithmetic or in-context learning appear suddenly at certain scales - the underlying capability may exist but remains below the benchmark threshold until the model crosses a critical scale, producing discontinuous benchmark curves.",
       hints: [
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Data mixing ratios (e.g., 80% web, 10% code, 10% academic text) are a critical training hyperparameter for LLMs because the relative frequency of each domain in pretraining directly shapes the model\'s capability distribution across tasks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The LLaMA 3 and Falcon papers both report that deliberate over-sampling of high-quality domains (code, math, books) improved performance on targeted benchmarks while slightly reducing performance on others - demonstrating that data mixture is a direct dial for capability tuning even before instruction fine-tuning.",
       hints: [
@@ -486,7 +486,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPT-style (decoder-only) models are now preferred over encoder-decoder architectures (like T5) for most tasks because they unify generation and understanding in a single autoregressive framework, and can perform tasks like classification via conditional generation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Decoder-only models generate text autoregressively and can perform any task through appropriately framed prompts - classification becomes "the sentiment of this review is [positive/negative]", summarization becomes "TL;DR:", etc. This in-context learning capability scales well and eliminates the need for a separate encoder.',
       hints: [
@@ -543,7 +543,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'The "lost in the middle" phenomenon (Liu et al., 2023) showed that LLMs exhibit a U-shaped recall curve: information at the beginning and end of a long context is retrieved well, but information in the middle is poorly utilized even when it fits within the context window.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Liu et al. (2023) demonstrated this with multi-document QA tasks where the relevant document was placed at varying positions within the context. Models showed primacy (beginning) and recency (end) effects - the middle portion was consistently underutilized regardless of context length, mirroring human serial position effects.",
       hints: [
@@ -600,7 +600,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FlashAttention computes mathematically identical results to standard attention - it is not an approximation - but uses the online softmax algorithm to compute softmax incrementally over tiles without seeing the entire row simultaneously.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The online softmax trick (Milakov & Gimelshein, 2018) maintains running max and sum statistics across tiles, enabling exact softmax computation without materializing the full row. FlashAttention uses this to compute exact attention in O(1) SRAM rather than O(n\\^2) HBM, with zero accuracy trade-off.",
       hints: [
@@ -657,7 +657,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "During autoregressive decoding, the KV cache allows each new token to be generated with a single forward pass through only the new token\'s position (not the entire prefix), because previous tokens' K and V representations are already cached and can be directly used in attention.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch - O(n\\^2) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
       hints: [
@@ -734,7 +734,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Beam search consistently outperforms sampling-based methods on open-ended creative generation tasks (stories, dialogue) according to human preference evaluations.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1: Understand beam search's optimization objective.**\n\nBeam search optimizes for sequences with the highest product of token-level probabilities: $P(\text{sequence}) = \prod_t p(x_t \mid x_{<t})$. This objective implicitly favors sequences where every token is individually likely given its context—which tends to produce common, average phrasings rather than distinctive ones.\n\n**Step 2: Understand why high-probability $\neq$ high-quality for creative tasks.**\n\nIn open-ended generation, there is no single 'correct' continuation. The most probable next token is often the most generic one ('the', 'said', 'and'). Repeatedly choosing the highest-probability token leads to the 'degeneration' problem: 'the company said the company said the company said...' as beam search maximizes $p(x_t \mid \text{prefix})$ locally at each step.\n\n**Step 3: Know where each method excels.**\n\nFor tasks with a well-defined correct output (translation, summarization, code generation), beam search excels because there exists a target that expert humans would agree on. For open-ended creative tasks (story writing, dialogue), human preference studies consistently prefer nucleus sampling, which introduces controlled randomness to escape predictable, generic continuations.",
       hints: [
@@ -771,7 +771,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Speculative decoding (Leviathan et al., 2023) guarantees that the output token distribution is identical to the target model\'s distribution - not the draft model\'s - through an acceptance-rejection mechanism that corrects draft tokens whenever they deviate from the target.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "For each draft token $x$ with draft probability $q(x)$ and target probability $p(x)$:\n\n**Acceptance**: if $q(x) \\leq p(x)$ (draft is less confident than target), the token is always accepted - min$(1, p/q) = 1$. The target model is more confident, so accepting is safe.\n\n**Rejection**: if $q(x) > p(x)$ (draft is more confident than target), the token is accepted with probability $p(x)/q(x)$. The correction token is sampled from the adjusted distribution:\n\\[\np_\\text{adj}(x) \\propto \\max\\left(0,\\; p(x) - q(x)\\right).\n\\]\nThis correction ensures the marginal distribution over accepted/rejected tokens exactly matches $p(x)$. Intuitively: the correction \"takes back\" the excess probability mass that the draft assigned to rejected tokens.\n\nLeviathan et al. (2023) prove that the resulting sequence is distributed exactly as the target model - no approximation, no distribution mismatch. The draft accelerates throughput; the correction guarantees correctness.",
       hints: [
@@ -828,7 +828,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPTQ quantizes weights to INT4 by minimizing per-layer quantization error using the inverse Hessian of the layer\'s input activations, compensating remaining weights for the error introduced by already-quantized weights.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "GPTQ (Frantar et al., 2022) applies the Optimal Brain Quantization framework layer-by-layer. For a weight row $\\mathbf{w} \\in \\mathbb{R}^{d_\\text{out}}$, the quantization error for quantizing weight $w_j$ to $\\hat{w}_j$ is:\n\\[\n\\text{error} = (\\mathbf{w} - \\hat{\\mathbf{w}})_i \\cdot x_j \\quad \\text{for output neuron } i.\n\\]\nThe Hessian of the layer loss w.r.t. $\\mathbf{w}$ is $\\mathbf{H} = 2\\mathbf{x}\\mathbf{x}^\\top$ (ignoring constants), where $\\mathbf{x}$ are the input activations. The OBQ update for remaining weights after quantizing $w_j$ is:\n\\[\nw_i \\leftarrow w_i - \\frac{H_{ij}}{H_{jj}} (\\hat{w}_j - w_j).\n\\]\nThis compensates for the quantization error of $w_j$ by adjusting all other weights in the row, using second-order sensitivity information ($H_{ij}/H_{jj}$). GPTQ applies this iteratively across all weights, achieving near-lossless INT4 quantization with < 1 perplexity point degradation on most models.",
       hints: [
@@ -885,7 +885,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "After LoRA fine-tuning, the adapter matrices B and A can be merged into the base model by computing W_new = W + BA, resulting in zero inference overhead compared to the original model.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Since W_new = W + BA is just matrix addition, the merged model has the exact same architecture and forward pass as the original - no adapter branching at inference time. The merge trades a one-time matrix addition (cheap) for zero per-inference overhead (critical for latency-sensitive serving).",
       hints: [
@@ -942,7 +942,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "When fine-tuning with instruction data, computing cross-entropy loss on prompt/instruction tokens as well as response tokens trains the model equally well as computing loss only on response tokens.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Including the prompt in the loss trains the model to predict given instructions - an uninformative signal that may cause instruction memorization. The InstructGPT and Alpaca papers both mask the loss on prompt tokens: only response tokens contribute to the gradient, focusing training on the generative objective of producing correct responses.",
       hints: [
@@ -999,7 +999,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "To convert a pretrained MHA model to GQA without full retraining, Ainslie et al. (2023) showed that mean-pooling the original H KV heads into G groups provides a strong initialization for subsequent GQA fine-tuning with modest compute.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'The GQA paper proposed "uptrained" conversion: group the H original KV head projections into G groups of H/G, mean-pool each group into a single KV head, and fine-tune on 5% of the original pretraining budget to recover nearly full MHA quality - making GQA accessible without full retraining from scratch.',
       hints: [
@@ -1056,7 +1056,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Without an auxiliary load balancing loss, MoE models collapse: the router learns to always route tokens to the same 1-2 experts, making most expert capacity permanently unused and eliminating the benefit of having multiple experts.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Router collapse is a well-documented MoE failure mode: a popular expert gets more gradient signal \\to improves faster \\to gets routed to more \\to gets even more signal (positive feedback loop). The load balancing loss (e.g., auxiliary cross-entropy over expert assignment uniformity) breaks this cycle by penalizing unequal routing.",
       hints: [
@@ -1113,7 +1113,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A model with L = 32 transformer layers using SWA with window size w = 4096 can propagate information from position 1 to position 131,073 (32 \\times 4096 = 131,072 positions), despite each layer attending to at most 4096 neighboring positions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the receptive field argument: layer 1 sees positions within w of each token; layer 2 sees positions within w of layer-1 representations (which already aggregate w-wide neighborhoods); after L layers, each position has an effective receptive field of L \\times w. Like deep CNNs, local attention layers compose into global context.",
       hints: [
@@ -1170,7 +1170,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RAG (Lewis et al., 2020) showed that jointly training the retriever and generator using non-differentiable retrieval (via marginalization over discrete retrieved documents) is possible through MIPS (Maximum Inner Product Search) and gradient approximation.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) \\times p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable - approximated via in-batch updates.",
       hints: [
@@ -1227,7 +1227,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Parallel tool calling - where the LLM outputs multiple tool call objects in a single response - reduces total latency for independent tool lookups by allowing concurrent execution rather than serial (one tool at a time) execution.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "If a task requires querying weather in 3 cities, serial tool calling requires 3 LLM calls (one per tool + response incorporation); parallel tool calling allows the LLM to output all 3 tool requests at once, the application executes them concurrently, and returns all results in a single tool message batch - reducing 3 round-trips to 1.",
       hints: [
@@ -1284,7 +1284,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "LLM agents with temperature = 0 (greedy decoding) are fully deterministic: given identical inputs and tool outputs, they always produce identical action sequences.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Step 1: Understand what temperature = 0 guarantees.**\n\nSetting temperature = 0 forces greedy decoding: at each token position, the model selects the token with the highest logit (highest probability). This removes sampling randomness—token selection is deterministic given the same logits.\n\n**Step 2: Identify three sources of remaining non-determinism.**\n\nEven with deterministic token selection, three factors introduce variability:\n\n1. **Floating-point non-determinism**: GPU matrix multiplications involve parallel reductions. Floating-point addition is not associative—$(a + b) + c \neq a + (b + c)$ in finite precision. Different GPU thread scheduling can produce slightly different results across runs.\n\n2. **External tool variability**: LLM agents use tools (web search, API calls) whose outputs vary over time.\n\n3. **API-level batching**: When multiple users' requests are batched on the server, softmax computation can differ from single-request inference.\n\n**Step 3: Know what reproducibility truly requires.**\n\nPerfect reproducibility requires: identical hardware (GPU model, firmware), identical software (CUDA version, PyTorch version, model weights), fixed random seeds, and deterministic tool outputs. In practice, cloud deployments make some of these impossible—hence even temperature = 0 agents are not fully deterministic.",
       hints: [
@@ -1341,7 +1341,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "LLM-as-judge evaluation (e.g., using GPT-4 to score model outputs) exhibits positional bias - preferring the response listed first - and verbosity bias - preferring longer responses even when length does not indicate quality.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "MT-Bench (Zheng et al., 2023) systematically studied LLM judge biases and confirmed both: positional bias (first/second position preference varies by model) and verbosity bias (LLM judges consistently prefer longer responses even when human evaluators do not). Standard mitigations include swapping response order and running both orderings, averaging results.",
       hints: [
@@ -1398,7 +1398,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'Constitutional AI (CAI, Anthropic 2022) trains helpful and harmless models without requiring human harm ratings by using the LLM itself to critique and revise its own outputs according to a set of principles (the "constitution").',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CAI\'s two-phase approach: (1) SL-CAI: the model generates a response, critiques it against constitutional principles, then revises it - supervised learning on the revised responses without human harm labels. (2) RL-CAI: use an AI preference model (trained on AI-generated comparison labels) instead of human raters to scale RLHF-style training.",
       hints: [
@@ -1455,7 +1455,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Mistral-7B-v0.1 achieves better benchmark performance than LLaMA-2-13B on many tasks, demonstrating that architectural choices (GQA, SWA) and training data quality can compensate for a 2\\times deficit in parameter count.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Jiang et al. (2023) showed Mistral-7B outperforms LLaMA-2-13B on commonsense reasoning, math, and code benchmarks. The key factors: sliding window attention enabling longer effective context, GQA for better inference efficiency, and aggressive data quality filtering - demonstrating that raw parameter count is not the dominant determinant of capability.",
       hints: [
@@ -1512,7 +1512,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPT-4V (and LLaVA-1.6) use dynamic high-resolution processing: low-resolution images are processed as a single 336\\times336 tile (576 tokens), while high-resolution images are divided into multiple 336\\times336 tiles (each producing 576 tokens), adaptively scaling visual token count with image complexity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Dynamic tiling addresses the resolution-context tradeoff: a fixed 336\\times336 encoding cannot capture fine text or small objects in high-resolution images. By tiling (e.g., a 672\\times672 image \\to 4 tiles), the model allocates more tokens to detail-rich images, trading context budget for visual fidelity. The total token count scales with the number of tiles used.",
       hints: [
@@ -1569,7 +1569,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'DeepSeek-R1 and OpenAI o1 train extended reasoning ("thinking") using pure outcome-based RL - they use no human-annotated reasoning traces, relying solely on final answer correctness as the reward signal.',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DeepSeek-R1 (2025) demonstrated that RL with sparse outcome rewards (correct/incorrect final answer) causes the model to spontaneously develop effective reasoning strategies including self-verification, backtracking, and exploration - without any human annotation of intermediate steps. The model discovers CoT-like reasoning as an emergent strategy for maximizing the outcome reward.",
       hints: [
@@ -1626,7 +1626,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HumanEval\'s 164 problems all involve standalone Python functions evaluated with unit tests - the benchmark does not test repository-level understanding, multi-file navigation, debugging existing code, or generating code in languages other than Python.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "HumanEval (Chen et al., 2021) is explicitly function-completion: given a Python function signature and docstring, complete the body. It measures atomic function-level coding ability but fails to capture real-world software engineering tasks like understanding dependencies across files, refactoring, or debugging - motivating benchmarks like SWE-bench, which uses real GitHub issues.",
       hints: [
@@ -1683,7 +1683,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SGLang\'s RadixAttention achieves KV cache reuse across requests sharing a common prompt prefix (e.g., the same system prompt) by indexing cached K/V states in a radix tree, allowing multiple requests to share prefix pages rather than recomputing them.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Zheng et al. (2023) showed that in production, many requests share long prefixes (system prompts, few-shot examples) that are recomputed wastefully per-request. RadixAttention\'s radix tree maps prefix token sequences to cached KV pages - a new request matching an existing prefix skips prefill for those tokens, dramatically reducing time-to-first-token for prefix-heavy workloads.",
       hints: [
@@ -1742,7 +1742,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "YaRN (Yet another RoPE extensioN) extends the context length of a RoPE-based LLM (e.g., from 4K to 128K tokens) without full retraining by adjusting the RoPE base frequency and applying NTK-aware interpolation, requiring only a small fine-tuning step on long-context data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "YaRN modifies the RoPE frequency spectrum - keeping high-frequency components (for short-range) unchanged and interpolating low-frequency components (for long-range) - combined with a temperature scaling of attention logits. After a brief fine-tuning on long-context documents, the model can handle sequences far beyond the original training length.",
       hints: [
@@ -1799,7 +1799,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Scratchpad reasoning - allowing a model to generate intermediate working text before the final answer - is beneficial even when the scratchpad content is not supervised by the training loss, because it extends the model's effective computational depth.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Scratchpad reasoning trades token generation (cheap) for additional transformer depth (fixed). Each generated token adds an implicit layer of computation: the model can think out loud using sequential token generation as extra compute steps, effectively performing more computation than a single forward pass allows.",
       hints: [
@@ -1856,7 +1856,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "LLaVA (Large Language and Vision Assistant) connects a frozen CLIP vision encoder to a large language model using a trainable MLP projection layer, where only the projection (and optionally the LLM) is fine-tuned on instruction-following visual QA data.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "LLaVA's two-stage training: (1) pre-training - freeze CLIP and LLM, train only the MLP projection on image-caption pairs to align visual tokens with text embedding space; (2) instruction fine-tuning - unfreeze the LLM (keep CLIP frozen) and train on visual instruction-following data.",
       hints: [
@@ -1913,7 +1913,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "DeepSeek-Coder and CodeLlama both use Fill-in-the-Middle (FIM) training, which enables them to infill code at cursor positions given both the preceding and following context - unlike standard left-to-right models that can only append to a prefix.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "FIM training rearranges training sequences as PRE-prefix, SUF-suffix, MID-middle tokens, teaching the model to predict the middle given both sides. This is essential for IDE autocomplete where the programmer has typed both before and after the cursor.",
       hints: [
@@ -1970,7 +1970,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Structured outputs (JSON mode) in LLM APIs guarantee syntactically valid JSON by constraining the token sampling process to only allow tokens that maintain valid JSON grammar at each generation step, not by post-processing or retrying failed parses.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Constrained decoding for structured outputs uses a grammar-constrained sampler: at each token position, only tokens consistent with the current partial JSON parse state are allowed. This guarantees syntactic validity by construction. Libraries like Outlines and llama.cpp implement this via JSON schema to finite-state-machine compilation.",
       hints: [
@@ -2027,7 +2027,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Benchmark contamination occurs when test set examples from an evaluation benchmark appear in an LLM's pretraining corpus, causing inflated benchmark scores that overestimate true generalization ability.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Since LLMs are trained on large web crawls and the internet contains many benchmarks, contamination is a real concern. Detection methods include n-gram overlap detection, canary insertion (checking if the model can complete withheld benchmark suffixes), and using newer benchmarks post-dating the training cutoff.",
       hints: [
@@ -2084,7 +2084,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Alpaca and Vicuna demonstrated that a 7B-parameter LLaMA model fine-tuned on GPT-4/ChatGPT outputs can achieve instruction-following quality comparable to much larger models - making teacher-student distillation from proprietary LLMs practical at low cost.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Alpaca (Stanford, 2023) fine-tuned LLaMA-7B on 52K GPT-3.5-generated instruction-following examples for under $100, producing a model competitive with GPT-3.5 on many conversational tasks. Vicuna fine-tuned LLaMA on ChatGPT conversations. Both demonstrated that high-quality output distillation can efficiently transfer instruction-following abilities from large proprietary models to small open models.",
       hints: [
@@ -2141,7 +2141,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Deduplication of pretraining data (exact and near-exact duplicate removal) is critical not only to prevent memorization but also to improve model quality on downstream tasks - deduplicated datasets produce better models even controlling for total training tokens.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Lee et al. (2022) and Penedo et al. (2023, RefinedWeb) demonstrated that deduplication consistently improves model quality: training on deduplicated data produces better models than training on the same data with duplicates, even at equal token count. Duplicates cause the model to disproportionately memorize repeated content and bias the data distribution.",
       hints: [
@@ -2198,7 +2198,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Schaeffer et al. (2023) argued that many reported emergent abilities are metric artifacts: when using nonlinear metrics such as exact match, smooth underlying capability improvements appear as sharp jumps, while switching to linear metrics such as token edit distance shows smooth scaling.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Schaeffer et al. challenged the emergence narrative: exact match requires every token to be correct (a step function of underlying accuracy), so smooth improvements appear as sharp phase transitions. When measured with continuous metrics such as BPB or edit distance, the same tasks show smooth scaling - suggesting emergence is often a measurement artifact.",
       hints: [
@@ -2252,7 +2252,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "easy",
       question: "FlashAttention avoids materializing the full n\\timesn attention matrix in GPU HBM by computing attention in tiles that fit in on-chip SRAM, reducing memory complexity from O(n^2) to O(n).",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n\\timesn attention matrix is never written to HBM - memory complexity drops from O(n^2) to O(n).",
       hints: [
         "Standard attention writes the full n\\timesn score matrix to HBM: O(n^2) memory writes at HBM bandwidth.",
@@ -2303,7 +2303,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "Sparse attention patterns (e.g., Longformer's local + global, BigBird's random + local + global) achieve sub-quadratic complexity by restricting which query-key pairs are computed, at the cost of potentially missing long-range interactions for tasks requiring dense all-to-all attention.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Sparse attention computes only O(n * w) pairs (w = window/global token count) instead of O(n^2). Tasks where every token genuinely needs to attend to every other (e.g., some global reasoning tasks) may degrade. However, most NLP tasks depend primarily on local structure, and global tokens provide sufficient long-range bridges - Longformer and BigBird show near-parity on most benchmarks with major compute savings.",
       hints: [
         "Sparse attention works because most useful interactions are local; global tokens act as information hubs for long-range signals.",
@@ -2354,7 +2354,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "Mamba can be computed efficiently during training using a parallel scan (prefix product) algorithm in O(n log n) time, even though autoregressive inference requires sequential O(n) recurrence with O(1) memory per step.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The parallel scan algorithm computes prefix products of SSM state matrices in O(n log n) parallel steps during training. At inference, the model runs in sequential recurrent mode: h_t = A_t h_{t-1} + B_t x_t, one token at a time, with constant-size hidden state h. This dual mode gives Mamba parallel training efficiency and fast autoregressive generation without the KV cache memory growth of Transformers.",
       hints: [
         "Parallel scan: tree-structured prefix product computation - O(log n) depth, O(n) work total.",
@@ -2423,7 +2423,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "hard",
       question: "In speculative decoding, the draft model must use the same architecture as the target model (just with fewer layers) for the token acceptance rate to be high enough to provide a net speedup.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "The acceptance criterion (Leviathan et al., 2023) compares draft and target token probabilities: accept if draft_prob <= target_prob, otherwise accept with probability target_prob/draft_prob. This is a token-level rejection sampling procedure that is mathematically correct regardless of draft architecture. In practice, same-family smaller models achieve higher acceptance rates, but architecturally different drafts (n-gram models, Medusa prediction heads, EAGLE self-drafting heads) also achieve substantial speedups.",
       hints: [
         "Mathematical guarantee: accepted tokens are distributed exactly as the target model - regardless of draft model architecture.",
@@ -2456,7 +2456,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "After LoRA fine-tuning, the adapter weights B and A can be merged into the base model (W = W_0 + BA) before deployment, eliminating any inference latency overhead compared to the original base model.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d\\timesk - identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically - a different deployment pattern.",
       hints: [
         "W_merged = W_0 + B@A. The result is a d\\timesk matrix - indistinguishable from any other weight matrix to the serving infrastructure.",
@@ -2507,7 +2507,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "easy",
       question: "Soft prompt tuning (Lester et al., 2021) becomes competitive with full fine-tuning at larger model scales (>11B parameters), suggesting large frozen models can effectively leverage gradient-optimized soft prompts for task conditioning.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Lester et al.'s key finding: at T5-Small (77M parameters), prompt tuning significantly underperforms full fine-tuning. At T5-XXL (11B), prompt tuning achieves near-parity. Larger frozen models have sufficient capacity to modulate their outputs strongly through attention on soft prompt tokens - the same scale effect seen in in-context learning improving with model size.",
       hints: [
         "Small frozen models cannot adapt enough via attention on soft prompts; large models have capacity to use the soft prompts as strong conditioning.",
@@ -2558,7 +2558,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "Neural scaling laws (Kaplan et al., 2020) show that LLM test loss decreases as a smooth power law in compute, model size, and dataset size, with no observed plateau across 6+ orders of magnitude of compute.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Kaplan et al. fit power law relationships: L(N) = (N_c/N)^alpha, L(D) = (D_c/D)^alpha, L(C) = (C_c/C)^alpha, all with alpha around 0.07-0.08. These clean power laws held across 6+ orders of magnitude with no observed saturation, supporting the view that more compute reliably yields better models. Chinchilla later showed the Kaplan laws slightly undervalued data relative to model size, but the power law form itself holds.",
       hints: [
         "Power law: every doubling of compute reduces loss by a fixed multiplicative factor - predictable and reliable.",
@@ -2609,7 +2609,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "easy",
       question: "During autoregressive generation, the KV cache grows by exactly one new K and V vector per layer per decode step, and attention computation scales O(n) with the current sequence length n.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "At decode step t, the KV cache holds keys/values for positions 1 through t-1. One new K and V are computed for position t and appended (O(1) per layer). The new query attends to all t cached keys: O(t * d) compute - linear in current sequence length t. Total decode cost grows linearly with sequence length, unlike prefill (O(n^2) over the full prompt).",
       hints: [
         "Prefill: process all n prompt tokens at once - O(n^2) attention. Decode: one token at a time - O(n) per step.",
@@ -2660,7 +2660,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "Speculative decoding requires that the draft model and target model share the same vocabulary and tokenizer, since token acceptance/rejection compares probability distributions over the same token IDs.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "The acceptance criterion compares target_prob(token_id) with draft_prob(token_id) at the same vocabulary position. If tokenizers differ, token ID 42 means different tokens in each model - the comparison is meaningless. All practical speculative decoding systems require identical tokenizers. This is why speculative decoding pairs models from the same family (GPT-4 + GPT-4o-mini share tokenizers) or uses architecture-agnostic drafters that operate on the shared token space.",
       hints: [
         "Acceptance: if draft_prob(x) <= target_prob(x), accept token x. Requires x to be the same token in both models.",
@@ -2711,7 +2711,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question: "Ring Attention (Liu et al., 2023) enables training on sequences longer than a single GPU's memory by distributing the sequence across GPUs in a ring, where each GPU holds a segment of Q, K, V and passes K, V to the next GPU while computing local attention blocks.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Ring Attention: GPU i holds Q_i (its segment of queries) and processes K_j, V_j blocks received from the ring. At each ring step, GPU i computes Q_i K_j^T V_j, accumulates into its output using online softmax, and passes K_j, V_j forward to the next GPU. After n_gpu ring steps, each GPU has its full attention output. Communication per step is proportional to segment_size - constant regardless of total sequence length, enabling sequences of 1M+ tokens.",
       hints: [
         "Ring step: receive K_j, V_j \\to compute partial attention \\to accumulate with online softmax \\to pass K_j, V_j to next GPU.",
@@ -2765,7 +2765,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question:
         "Constitutional AI (CAI) trains a model to be harmless using a list of principles without requiring human harm labels: the model critiques and revises its own outputs against the principles, and these revised outputs are used for supervised fine-tuning.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "CAI's SL-CAI phase: (1) sample an initial (potentially harmful) response; (2) ask the model to critique the response against a constitutional principle; (3) ask the model to revise the response; (4) fine-tune on the revised responses. No human labels are needed for the harm dimension - the model self-supervises using the constitution.",
       hints: [

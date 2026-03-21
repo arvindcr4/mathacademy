@@ -1730,7 +1730,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TTT++ (Liu et al., 2021) improves on standard test-time training by using contrastive self-supervised learning as the adaptation objective instead of rotation prediction, enabling better feature alignment between source and test distributions.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "TTT++ uses SimCLR-style contrastive learning: the auxiliary head minimizes the contrastive loss over augmented views of test examples. Advantages over rotation prediction: (1) Contrastive learning is more tightly coupled to the main task features. (2) Works for non-geometric distribution shifts where rotation prediction may not correlate with the main task. (3) TTT++ achieves better results on corruption robustness benchmarks (ImageNet-C) than rotation-based TTT.",
       hints: [
@@ -1787,7 +1787,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Negative transfer in multi-source domain adaptation occurs when including data from an unrelated source domain hurts performance on the target domain compared to using only the most related source domain.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C - but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.",
       hints: [
@@ -1844,7 +1844,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance \\approx 2(1 - 2\\cdoterror(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance \\approx 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance \\approx 2. A lower A-distance means greater domain similarity - more likely that domain adaptation will succeed without large error.",
       hints: [
@@ -1901,7 +1901,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Visual prompt tuning (VPT) applies prompt tuning to vision transformers (ViT) for domain adaptation, learning prepended visual token embeddings while keeping the ViT backbone frozen.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens \\times 12 layers = only 0.03% of ViT-Large parameters.",
       hints: [
@@ -1958,7 +1958,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Generative replay in source-free domain adaptation - generating synthetic source-like data from the source model and using it for domain alignment - is inspired by continual learning approaches to prevent catastrophic forgetting.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Generative replay for SFDA: train a generator G to produce synthetic source-like images from the source model. During adaptation, align target features with the generated pseudo-source features - without needing the real source data. Inspiration from continual learning: Experience Replay and Generative Replay (Shin et al., 2017) prevent catastrophic forgetting by replaying past task data (or generated approximations). Methods: GSFDA uses the source model\'s softmax outputs as class prototypes.",
       hints: [
@@ -2019,7 +2019,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In continual domain adaptation, using a larger learning rate for adapter layers while freezing the backbone is a standard technique to reduce catastrophic forgetting.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Freezing the backbone limits parameter updates to adapter layers (small fraction of total parameters), dramatically reducing catastrophic forgetting. The backbone retains general representations; adapters specialize per domain. L2-SP regularizes fine-tuned parameters toward pre-trained values - an alternative allowing gradual adaptation. Both are standard PEFT techniques for CDA.",
       hints: [
@@ -2075,7 +2075,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Naively combining all source datasets (source pooling) typically underperforms MSDA methods that explicitly model inter-source heterogeneity.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Source pooling ignores inter-source gaps. When sources have conflicting statistics, a pooled model learns domain-confounded representations. MSDA methods with per-source discriminators and weighting outperform source pooling on Office-31 and DomainNet by 2-8%. Domain-specific batch normalization separates source-specific distributions while enabling a shared feature extractor.",
       hints: [
@@ -2130,7 +2130,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Empirical Risk Minimization (ERM) with strong pre-trained backbones can sometimes match or outperform specialized DG algorithms on controlled benchmark evaluations.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Gulrajani & Lopez-Paz (2021): ERM with proper hyperparameter tuning matches or beats many specialized DG algorithms on DomainBed. Key reasons: (1) Many DG algorithms tune on target domain (leakage). (2) Strong backbone + ERM is a powerful baseline. (3) True gains require genuinely better OOD generalization, not just better hyperparameter selection. This paper prompted the community to adopt stricter evaluation protocols.",
       hints: [
@@ -2185,7 +2185,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Group DRO requires group annotations at training time to optimize worst-group performance.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Standard Group DRO requires knowing each training sample\'s group to compute per-group losses and minimize the maximum. Annotations may be unavailable, legally restricted (GDPR), or expensive. Methods without explicit annotations: JTT (uses model errors as proxy), EIIL (infers environment labels from model disagreement), CnC (uses contrastive signals). The requirement for demographic labels is a practical limitation for real-world deployment.",
       hints: [
@@ -2241,7 +2241,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Zero-shot cross-lingual transfer (fine-tuning mBERT/XLM-R on English, evaluating on Spanish) can be viewed as domain adaptation where language is the domain.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Cross-lingual transfer through DA lens: English = labeled source domain, Spanish = unlabeled target domain. Domain shift is both lexical and syntactic. DA methods applied to cross-lingual: (1) Language-adversarial training: make representations indistinguishable across languages. (2) Multilingual pre-training (XLM-R, mBERT): pre-trains on 100+ languages, learning cross-lingual invariances. XLM-R achieves near-English performance on XNLI for high-resource languages.",
       hints: [

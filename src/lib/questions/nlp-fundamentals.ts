@@ -50,7 +50,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "WordPiece (used in BERT) selects each merge by choosing the pair that maximises the likelihood of the training corpus under the language model, rather than the pair with the highest raw count.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "WordPiece scores each candidate merge by how much it increases the log-likelihood of the training data: score(A, B) = count(AB) / (count(A) \\times count(B)). This means a rare pair that always co-occurs (high PMI) can be preferred over a more frequent but less predictive pair, producing a vocabulary better suited to language modelling than BPE\'s raw-count criterion.",
       hints: [
@@ -108,7 +108,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GloVe trains on individual context-window co-occurrences like Word2Vec, processing one (word, context) pair at a time.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "GloVe (Global Vectors, Pennington et al. 2014) builds a global word-word co-occurrence matrix $\\mathbf{X}$ over the entire corpus first, where $X_{ij}$ counts how often word $i$ appears in the context of word $j$. It then factorises this matrix using a weighted least-squares objective:\n\\[\\mathcal{L} = \\sum_{i,j} f(X_{ij})\\bigl(\\mathbf{w}_i^\\top \\tilde{\\mathbf{w}}_j + b_i + \\tilde{b}_j - \\log X_{ij}\\bigr)^2.\\]\nThe weighting function $f(X_{ij})$ upweights mid-frequency co-occurrences and downweights very high-frequency pairs (which would otherwise dominate the loss). The word \"Global\" signals that GloVe uses corpus-wide aggregate statistics rather than local window samples like Word2Vec. Because the full co-occurrence matrix is available during training, GloVe extracts more signal from the same data than Skip-Gram's stochastic per-pair sampling, making it more data-efficient.\n\nKey contrast: Word2Vec samples individual (word, context) pairs on-the-fly; GloVe pre-counts all pairs into matrix $\\mathbf{X}$ and factorises those counts.",
       hints: [
@@ -166,7 +166,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In n-gram language modelling, storing and combining probabilities in log space (log-probabilities) is standard practice because multiplying many probabilities together causes numerical underflow.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Probabilities are \\leq 1, so multiplying N of them produces a number that shrinks exponentially. For a 100-word sentence with average per-word probability 0.01, the sentence probability is 0.01^100 = 10^-200, far below the smallest float64 value (~10^-308 near the limit). Working in log space converts products to sums: log P(w1...wN) = \\Sigma log P(wi|context), which stays in a manageable numeric range. The exp is taken only at the end if raw probabilities are needed.",
       hints: [
@@ -224,7 +224,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Seq2seq models with RNN encoders process all source tokens before the decoder generates any output token, making the encoder phase fully parallelisable across tokens.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "RNN encoders process tokens sequentially: h_t depends on h_{t-1}. This sequential dependency means you cannot compute h_3 until h_2 is done - the encoder phase is O(n) serial steps, not parallelisable. This is a key reason the Transformer replaced RNNs: its self-attention computes representations for all positions simultaneously in O(1) serial steps (though O(n\\^2) in compute).",
       hints: [
@@ -282,7 +282,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Luong attention (Luong et al., 2015) uses an additive (MLP) scoring function $\\text{score}(\\mathbf{h}_t, \\hat{\\mathbf{h}}_s) = \\mathbf{v}^\\top \\tanh(\\mathbf{W}[\\mathbf{h}_t; \\hat{\\mathbf{h}}_s])$, while Bahdanau attention uses a dot-product or bilinear scoring function $\\mathbf{h}_t^\\top \\mathbf{W} \\hat{\\mathbf{h}}_s$.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The naming is reversed from what the statement claims:\n\n**Bahdanau (2015)** introduced *additive/concat* attention:\n\\[e_{t,s} = \\mathbf{v}^\\top \\tanh(\\mathbf{W}_1 \\mathbf{h}_t + \\mathbf{W}_2 \\hat{\\mathbf{h}}_s)\\] \nwhich uses a small MLP (the $\\tanh$ non-linearity) to combine the decoder state $\\mathbf{h}_t$ and encoder state $\\hat{\\mathbf{h}}_s$.\n\n**Luong (2015)** introduced *multiplicative* (dot-product / bilinear) variants:\n\\[\n\\text{dot: } & \\mathbf{h}_t^\\top \\hat{\\mathbf{h}}_s, \\\\\n\\text{general: } & \\mathbf{h}_t^\\top \\mathbf{W} \\hat{\\mathbf{h}}_s, \\\\\n\\text{concat: } & \\mathbf{v}^\\top \\tanh(\\mathbf{W}[\\mathbf{h}_t; \\hat{\\mathbf{h}}_s])\n\\]\nThe dot-product form is faster because it avoids the $\\tanh$ and extra parameters. This is why the Transformer's scaled dot-product attention is sometimes called \"Luong-style\" - it uses the dot-product scoring function that Luong popularised.",
       hints: [
@@ -340,7 +340,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In a Transformer encoder, causal masking (setting attention scores to $-\\infty$ for future positions before softmax) prevents each token from attending to future tokens within the same encoder layer.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "**Encoder** blocks use **bidirectional** (full) self-attention: every position attends to every other position without any mask. This is why BERT, which uses only the encoder stack, can condition each token on both its left and right context simultaneously.\n\n**Decoder** blocks apply **causal masking** (also called look-ahead or upper-triangular masking): the attention score matrix is multiplied by a lower-triangular mask $\\mathbf{M}_{ij} = 0$ if $i < j$ (future), $+\\infty$ if $i \\geq j$ (past or self), before softmax. This forces $\\alpha_{ij} = 0$ for $i < j$, so position $t$ can only attend to positions $1, \\dots, t$ - preventing the model from \"seeing the future\" during autoregressive generation.\n\nDuring decoder training with teacher forcing: all target tokens $\\langle\\text{the}, \\text{cat}, \\text{sat}\\rangle$ are available simultaneously, but causal masking ensures each position's representation depends only on previous positions.",
       hints: [
@@ -398,7 +398,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RoBERTa (Liu et al., 2019) found that removing BERT\'s Next Sentence Prediction (NSP) task and training with longer sequences and larger batches consistently improves downstream performance.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RoBERTa's ablation study systematically removed each component of BERT's training setup and measured the effect. Key findings:\n\n1. **NSP removal improves or matches performance**: The NSP loss requires predicting whether two sentences are consecutive. RoBERTa found that NSP provides little benefit and can even hurt performance because it conflates two distinct signals: topic prediction (detecting whether both sentences come from the same document) and sentence-order coherence. The topic signal dominates, which means the model partially learns to solve NSP from [MASK] tokens in each sentence independently — a task already well-covered by the MLM objective. Training on this redundant signal wastes capacity and can even interfere with MLM learning.\n\n2. **Longer training + larger batches + more data**: RoBERTa trained on 160GB of data (vs BERT's 16GB) with batches of 8,192 sequences (vs 256), showing that scale was more impactful than the NSP auxiliary task.\n\n3. **Dynamic masking**: RoBERTa applies different masking patterns each time an epoch is processed, rather than using the same mask across epochs like BERT.\n\nThese changes collectively account for RoBERTa's superior performance on benchmarks like GLUE and SQuAD.",
       hints: [
@@ -456,7 +456,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         'GPT-style models can be used for text classification by framing classification as a text completion task (e.g., appending "The sentiment is:" and sampling the next token).',
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Because GPT generates the most likely continuation, framing classification as a prompt completion task allows zero-shot or few-shot classification without a classification head. For example: "Review: The food was awful. Sentiment: negative" teaches the pattern. A new review can then be classified by comparing the log-probabilities of "positive" and "negative" as continuations. This is the basis for many zero-shot benchmarks like SuperGLUE evaluated on GPT-3.',
       hints: [
@@ -514,7 +514,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Naive Bayes classifies text by assuming all words are conditionally independent given the class, which is linguistically false - yet it often performs surprisingly well in practice.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'The "naive" independence assumption is unrealistic: seeing "not" dramatically changes the meaning of "good" (making them dependent). Despite this, Naive Bayes often achieves 70-80% accuracy on sentiment tasks because the log-probability scores act as a linear classifier over word counts, and the feature interactions that matter most (bigrams, negation) are partially captured by the presence of individual words. The independence assumption mainly affects probability calibration, not the ranking of classes.',
       hints: [
@@ -572,7 +572,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         'A BiLSTM processes the input once left-to-right; "bidirectional" means it additionally includes the reverse input sequence as a separate feature concatenated at the start.',
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "A BiLSTM runs two separate LSTMs: one forward (left-to-right) and one backward (right-to-left). At each position t, the forward LSTM has seen w_1...w_t and the backward LSTM has seen w_n...w_t. Their hidden states are concatenated: h_t = [\\toh_t; \\leftarrowh_t]. This gives every token access to full left and right context without reordering the input. It is not a single reversed concatenation - it is two independent passes over the sequence.",
       hints: [
@@ -630,7 +630,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "SQuAD 2.0 adds unanswerable questions to SQuAD 1.1. A model trained only on SQuAD 1.1 would fail catastrophically on SQuAD 2.0 because it always predicts a span.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'SQuAD 1.1 always has an answer in the passage, so models are trained to always output a span. On SQuAD 2.0\'s ~50% unanswerable questions, such a model always predicts something - a guaranteed error for unanswerable examples. SQuAD 2.0 models must learn to abstain: predict a null span when the passage does not contain the answer. This requires an additional "has-answer" binary classification head or comparing the span score to a learned no-answer threshold.',
       hints: [
@@ -688,7 +688,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Beam search with large beam width guarantees higher-quality text than sampling because it finds higher-probability sequences, and higher probability always implies higher human-perceived quality.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "This conflates probability with quality. Beam search finds the highest-probability sequence under the LM by keeping the $b$ most promising partial sequences at each step (beam width $b$). For very large $b$, beam search approximates maximum a posteriori (MAP) decoding — finding the single highest-probability complete sequence. But high-probability sequences under an LM tend to be generic, repetitive, and safe — precisely because the model assigns high probability to common, predictable phrasings.\n\nHoltzman et al. (2020, The Curious Case of Neural Text Degeneration) demonstrated this empirically: as beam width increases, text quality (as rated by humans) peaks at moderate widths and then degrades, while n-gram repetition increases monotonically. Human-written text is not the most probable continuation at every step — we choose unexpected words for emphasis, style, and surprise. Maximising sequence probability explicitly penalises these creative deviations.\n\n\\[\n\\hat{y} = \\arg\\max_{y \\in \\mathcal{Y}} \\prod_{t=1}^{T} P(y_t | y_{<t})\\]\n\nThis maximisation rewards repeating safe, high-frequency phrases. Sampling methods (nucleus, temperature) introduce stochasticity that biases toward the high-probability mass while leaving room for unexpected choices, producing more diverse and human-like text.",
       hints: [
@@ -746,7 +746,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In abstractive summarisation, the model is allowed to copy word-for-word from the source document, whereas in extractive summarisation the model must paraphrase all content.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "The distinction is the opposite: extractive summarisation selects and concatenates whole sentences or passages verbatim from the source document — no generation is required. Abstractive summarisation generates new text that may paraphrase, compress, or rephrase the source content, potentially introducing words not present in the source. BART and T5 are abstractive models; SummaRuNer is an extractive model. Copy mechanisms in seq2seq models (copy pointers) blur this line by allowing abstractive models to also copy specific source spans verbatim when appropriate.",
       hints: [
@@ -804,7 +804,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Higher BLEU scores correlate well with human translation quality judgements at the sentence level, making BLEU a reliable metric for evaluating individual translations.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "BLEU was designed by Papineni et al. (2002) to evaluate entire translation corpora, not individual sentences. At the sentence level, BLEU has very high variance and poor correlation with human quality judgments for several reasons:\n\n1. **Small-sample problem**: BLEU averages n-gram precision over many sentences. A single sentence provides too small a sample for stable n-gram statistics, making BLEU scores at sentence level noisy and unreliable.\n\n2. **N-gram overlap does not capture meaning**: Two translations with identical n-gram sets but opposite meanings (e.g., \"The cat did not die\" vs. \"The cat died\") can receive similar BLEU scores because BLEU only measures surface overlap, not semantic content.\n\n3. **No fluency or adequacy assessment**: BLEU cannot judge grammaticality or whether a sentence faithfully conveys the source meaning.\n\n4. **Reference variability**: At the sentence level, a single reference may not capture all valid translations; BLEU penalises valid alternatives that differ from the reference in wording.\n\nFor sentence-level evaluation, metrics like METEOR, BERTScore, or human evaluation are preferred. BLEU remains useful for corpus-level ranking because averaging over many sentences smooths out the variance.",
       hints: [
@@ -862,7 +862,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         'Coreference resolution only handles pronoun-antecedent pairs (e.g., "he" \\to "John") and does not apply to definite noun phrase references (e.g., "the researcher" \\to "Dr. Smith").',
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Coreference resolution covers all referring expression types: pronouns (he, she, it), proper names (Barack Obama, the President), definite descriptions (the scientist, the company), demonstratives (this approach, those findings), and zero pronouns in pro-drop languages. The full task clusters all mentions of the same entity regardless of their syntactic form. Entity linking (connecting mentions to knowledge base entries) is a related but distinct task.",
       hints: [
@@ -920,7 +920,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In a projective dependency tree, no two dependency arcs can cross when the sentence is drawn with words in linear order on a line and arcs drawn above.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "A projective dependency tree is one where for every arc (head \\to dependent), all words between head and dependent also have head as an ancestor - equivalently, no arcs cross when drawn on a line. Most English sentences are projective. Non-projective dependencies (crossing arcs) occur in languages with freer word order (German, Czech, Dutch) and require algorithms beyond Eisner\'s O(n\\^3) projective parser, such as maximum spanning tree algorithms.",
       hints: [
@@ -978,7 +978,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Choosing the number of topics K in LDA is straightforward because perplexity on a held-out set always decreases monotonically as K increases, providing a clear stopping criterion.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Perplexity on held-out data does not provide a clear knee for LDA - it tends to keep decreasing (or plateauing) as K increases because more topics = more expressive model. The number of topics is typically chosen using human coherence judgements, automated coherence metrics (NPMI, C_v), or domain knowledge. This is a well-known challenge in topic modelling: the model selection problem has no single principled automatic solution.",
       hints: [
@@ -1036,7 +1036,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Mean pooling of all token embeddings from BERT\'s final layer tends to outperform using only the [CLS] embedding for sentence similarity tasks when BERT has not been fine-tuned for that task.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "The [CLS] token is only optimised for sentence-level representations during fine-tuning. For a pretrained-only BERT, [CLS] embedding quality for sentence similarity is poor - it has not been directly trained to aggregate sentence meaning. Mean pooling averages all non-[PAD] token embeddings, spreading the representation burden across all tokens. Empirically, mean pooling consistently outperforms [CLS] and max pooling on STS benchmarks when using pretrained (not fine-tuned) BERT.",
       hints: [
@@ -1094,7 +1094,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Zero-shot cross-lingual transfer means: fine-tune on English-labelled NLP data, then evaluate on the same task in the target language - with zero target-language labelled examples used during fine-tuning.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Zero-shot cross-lingual transfer (Hu et al., 2020 - XTREME benchmark) evaluates: train on English CoNLL NER \\to evaluate on Arabic/Hindi/Swahili NER with no Arabic/Hindi/Swahili labels. The model must leverage its multilingual representations to transfer syntactic and semantic knowledge. Performance degrades gracefully with linguistic distance from English. Few-shot transfer (adding 10-100 target-language examples) dramatically improves performance, motivating practical annotation strategies for new languages.",
       hints: [
@@ -1152,7 +1152,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Open-domain chatbots (like BlenderBot) are designed to complete specific tasks such as booking flights or making restaurant reservations.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Open-domain chatbots aim for engaging, general conversation across any topic; task-oriented systems are purpose-built to complete specific structured tasks using domain-restricted ontologies.",
       hints: [
@@ -1208,7 +1208,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Named Entity Recognition (NER) and relation extraction can be combined into a joint model that extracts entities and their relations simultaneously.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Joint entity and relation extraction models (e.g., SpERT, PFN) avoid the error propagation of pipeline systems by learning to predict entity spans and relation labels jointly, often achieving better performance.",
       hints: [
@@ -1265,7 +1265,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "BLEU score can be computed without any reference translations by comparing the output directly to the source sentence.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "BLEU is a reference-based metric that requires one or more human reference translations; it measures n-gram overlap between the hypothesis and these references, not the source sentence.",
       hints: [
@@ -1323,7 +1323,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "TinyBERT uses task-specific knowledge distillation only on the final classification layer, ignoring intermediate transformer layers.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "TinyBERT distills knowledge from all transformer layers - attention matrices, hidden states, and the final prediction layer - using a layer mapping strategy, which is why it outperforms simple output-only distillation.",
       hints: [
@@ -1381,7 +1381,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "RAG allows a language model to answer questions about information that was not in its training data, provided that the relevant information is stored in the retrieval index.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "This is the core motivation for RAG. A parametric language model (all weights) can only answer questions from knowledge encoded during pretraining. If the world changes after training (e.g., today's news, private documents, updated facts), the parametric model cannot reliably answer those questions. RAG addresses this by retrieving relevant documents at inference time from an external, mutable index. The index can be updated with new documents without retraining the language model. At query time, the retriever finds the most relevant documents, and the generator produces an answer conditioned on both the query and the retrieved content. This makes RAG a non-parametric approach to knowledge-intensive tasks.",
       hints: [
@@ -1439,7 +1439,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FlashAttention (Dao et al., 2022) reduces the theoretical FLOP count of attention from O(n\\^2) to O(n log n) by using a divide-and-conquer algorithm.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "FlashAttention performs the same O(n\\^2d) floating-point operations as standard attention - it does not reduce FLOPs. Its speedup comes from IO-awareness: instead of materialising the full n\\timesn attention matrix in GPU high-bandwidth memory (HBM), it tiles the computation in fast SRAM, avoiding the O(n\\^2) HBM reads/writes that are the actual bottleneck. GPU compute is usually faster than memory bandwidth. FlashAttention-2 and -3 further optimise parallelism and work partitioning for modern GPU architectures.",
       hints: [
@@ -1496,7 +1496,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Instruction tuning (supervised fine-tuning on instruction-response pairs) makes LLMs better at following zero-shot instructions because they learn the general pattern of responding to directives, not just memorising specific instruction-response pairs.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Wei et al. (2022) and subsequent work show that instruction tuning generalises beyond the training tasks. A model fine-tuned on hundreds of task types (summarisation, translation, QA) becomes better at zero-shot on new task types not seen during instruction tuning. This is because it learns a general "follow the instruction" behaviour - a form of meta-learning. Jurafsky & Martin (Ch. 9) discuss this as one reason post-training is so valuable: the model learns what helpful responding looks like.',
       hints: [
@@ -1553,7 +1553,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Chain-of-thought prompting was found to improve performance across all model sizes in the original Wei et al. (2022) paper, including models with fewer than 10 billion parameters.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Wei et al. (2022) found CoT is an emergent capability: it provides negligible or even negative gains for models below ~100B parameters (approximately). For smaller models, generating intermediate steps does not help because the model lacks the capability to perform coherent multi-step reasoning. The gains are observed primarily in PaLM 540B, GPT-3 175B, and similar scale models. This makes CoT a scale-dependent technique, unlike few-shot prompting which benefits smaller models too.",
       hints: [
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Tool-augmented LLMs can use any tool whose interface is described in the prompt, including tools developed after the LLM\'s training cutoff, because tool use is specified via context rather than baked into model weights.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         'Tools are defined via schema descriptions in the system prompt or message context at inference time. The LLM does not need to have "seen" a tool during training - it only needs to understand the API schema (name, parameters, description) well enough to call it correctly. A new API released in 2026 can be used by a model trained in 2024 simply by providing its schema in the prompt. This is analogous to how few-shot examples teach the model to use a new tool at inference time.',
       hints: [
@@ -1669,7 +1669,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Hallucination in LLMs occurs only when the model generates text about topics not covered in its training data.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "LLMs hallucinate even about topics extensively covered in training data. The fundamental cause is not a knowledge gap but a generation process that optimises for plausibility given the context, not factual accuracy. A model may have seen correct information about Napoleon but still generate a plausible-sounding but wrong birth date - because the generation objective rewards fluent, context-consistent tokens, not fact-verified tokens. Hallucination is most severe for specific numbers, dates, citations, and names where many plausible values exist.",
       hints: [
@@ -1727,7 +1727,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         'Gender bias in word embeddings (e.g., "doctor" embedding being closer to "man" than "woman") is fully eliminated by the hard debiasing method of Bolukbasi et al. (2016), which projects out the gender direction.',
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         'Bolukbasi et al. (2016) project embeddings away from the gender direction (PCA component separating male/female word sets), reducing explicit associations. But Gonen & Goldberg (2019) showed that residual bias persists: words like "nurse" and "engineer" cluster by gender stereotypes even after debiasing, because gender correlates with many other dimensions (occupation-related vocabulary, usage contexts). True debiasing would require retraining on debiased corpora or using contrastive objectives that enforce gender-neutral representations for role words.',
       hints: [
@@ -1765,7 +1765,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The unigram language-model tokeniser (used in SentencePiece) starts with a large vocabulary and iteratively removes tokens, whereas BPE starts with a small vocabulary and iteratively adds tokens.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "BPE is bottom-up: begin with characters, add merged symbols step by step. The unigram LM (Kudo, 2018) is top-down: start with a large over-complete vocabulary (all substrings up to some length), then prune tokens whose removal increases the corpus likelihood the least, until the target vocabulary size is reached. Both produce subword vocabularies, but via opposite directions of search.",
       hints: [
@@ -1843,7 +1843,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RAGAS is a framework for evaluating RAG pipelines that measures faithfulness (whether the answer is supported by retrieved context) and answer relevance separately from retrieval quality.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "RAGAS (Es et al., 2023) decomposes RAG evaluation into: (1) faithfulness - does the answer contain only claims entailed by retrieved documents? (2) answer relevance - does the answer address the question? (3) context precision/recall - did retrieval return the right documents? These components expose whether failures come from retrieval (wrong chunks) or generation (hallucination given correct chunks), enabling targeted debugging.",
       hints: [
@@ -1901,7 +1901,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Instruction tuning (FLAN, InstructGPT) trains a language model to follow natural-language task descriptions, improving zero-shot generalisation to unseen task types.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Instruction tuning fine-tunes pre-trained LLMs on a large collection of NLP tasks framed as natural-language instructions (e.g., 'Summarise the following article:', 'Translate to French:', 'Is this review positive or negative?'). FLAN (Wei et al., 2022) and T0 showed that models instruction-tuned on many tasks generalise better zero-shot to held-out tasks than base pre-trained models. InstructGPT adds RLHF on top of instruction tuning to align with human preferences.",
       hints: [
@@ -1939,7 +1939,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In multi-label text classification, a document can belong to zero or more classes simultaneously, so sigmoid (not softmax) activation is applied per class in the output layer.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Multi-label classification requires independent binary decisions per class (e.g., a news article tagged as both 'politics' and 'economy'). Softmax normalises probabilities across classes to sum to 1, which is appropriate for mutually exclusive classes (multi-class). Sigmoid independently squashes each class logit to (0,1), allowing any subset of classes to be predicted. Binary cross-entropy loss is used per class, and thresholds (typically 0.5, but tunable via F1 optimisation on a dev set) convert probabilities to binary labels.",
       hints: [
@@ -2017,7 +2017,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Event detection, a subtask of information extraction, involves identifying trigger words in text (e.g., the word 'exploded' signals an Attack event) and classifying them into predefined event types.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Event detection (as defined in ACE 2005 and TAC KBP benchmarks) has two subtasks: (1) trigger identification - finding the word or phrase that most clearly expresses the occurrence of an event; (2) trigger classification - labelling the trigger with an event type (e.g., Conflict:Attack, Life:Die). A full event extraction system additionally identifies the arguments (who, what, when, where) of each event, which is the argument extraction subtask.",
       hints: [
@@ -2055,7 +2055,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Open-domain dialogue systems (chatbots) and task-oriented dialogue systems share the same primary objective: completing a specific user task such as booking a flight or finding a restaurant.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Task-oriented dialogue systems have a clear end goal - successfully completing a transaction (booking, reservation, query). Success is measured by task completion rate and efficiency. Open-domain dialogue systems (e.g., Blenderbot, LaMDA) aim for engaging, coherent, and persona-consistent conversation without a fixed task. They are evaluated on human-judged naturalness, engagingness, and coherence rather than task completion. The two paradigms have different architectures, training data, and evaluation metrics.",
       hints: [
@@ -2113,7 +2113,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The MTEB (Massive Text Embedding Benchmark) evaluates text embedding models across a single task type - semantic textual similarity - using only English datasets.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "MTEB (Muennighoff et al., 2022) is a comprehensive benchmark with 56 datasets across 8 task categories: classification, clustering, pair classification, reranking, retrieval, STS, summarisation, and bitext mining. It covers 112 languages. The goal is to prevent models from overfitting to STS benchmarks by evaluating embedding quality across diverse downstream uses. Models like E5, GTE, and BGE are routinely compared on the MTEB leaderboard.",
       hints: [
@@ -2191,7 +2191,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In open-domain QA, the retriever-reader pipeline first retrieves relevant passages from a large corpus (e.g., Wikipedia) and then applies a reading comprehension model to extract or generate the answer from the retrieved passages.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "DrQA (Chen et al., 2017) introduced the retriever-reader paradigm for open-domain QA: (1) retriever: BM25 or DPR retrieves the top-k passages from a 5M-article Wikipedia corpus; (2) reader: a BERT/span-extraction model reads the top-k passages and predicts the answer span. This separates knowledge storage (indexed passages) from reasoning (reader model) and scales to any large text corpus. Modern RAG systems follow the same paradigm with generative readers.",
       hints: [
@@ -2249,7 +2249,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Pegasus (Zhang et al., 2020) uses a pre-training objective called Gap Sentence Generation (GSG) specifically designed for abstractive summarisation, where important sentences are masked and the model generates them.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Pegasus is pre-trained with GSG: whole sentences - selected by their importance (ROUGE score with the remaining document) - are masked from the document, and the model is trained to generate the masked sentences as if producing a summary. This directly mirrors the summarisation task (generate salient content from a document), making Pegasus particularly well-suited for fine-tuning on downstream summarisation benchmarks. Pegasus achieves state-of-the-art ROUGE scores on CNN/DailyMail, XSum, and other summarisation datasets with minimal fine-tuning.",
       hints: [
@@ -2307,7 +2307,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Jailbreaking attacks on LLMs, such as the 'DAN' (Do Anything Now) prompt, succeed by exploiting fine-tuning data poisoning vulnerabilities in the model's weights.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "Most jailbreaking attacks are inference-time prompt-based exploits, not attacks on model weights. Jailbreaks craft prompts that trick the model into abandoning safety constraints through role-play scenarios ('Pretend you are an AI with no restrictions'), hypothetical framings, or suffix optimisation (GCG - Zou et al., 2023 - appends adversarial token suffixes). They exploit the tension between helpfulness (following instructions) and harmlessness (refusing harmful requests) baked in during RLHF. Data poisoning is a separate threat model that requires access to the training pipeline.",
       hints: [
@@ -2343,7 +2343,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "The unigram language model tokeniser (Kudo, 2018) is guaranteed to produce a unique tokenisation for any input string, just like BPE.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Unlike BPE, the unigram language model tokeniser can produce multiple valid tokenisations for the same input string. It assigns probabilities to all possible segmentations using the Viterbi algorithm to find the most likely one, but can also sample from the distribution of tokenisations. This stochastic tokenisation (subword regularisation) is used as data augmentation during training, exposing the model to multiple segmentations and improving robustness.",
       hints: [
         "BPE deterministically applies merge rules left to right - unique output. Unigram LM uses a probabilistic model over all possible segmentations.",
@@ -2391,7 +2391,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Increasing the BPE vocabulary size always improves downstream NLP task performance because more vocabulary coverage means fewer tokenisation splits.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Vocabulary size involves a trade-off. A very large vocabulary reduces the number of tokens per sentence (good for attention complexity) but increases the embedding matrix size, reduces the frequency of each subword in training data (hurting embedding quality for rare tokens), and may cause vocabulary mismatch when transferring to new domains. The optimal vocabulary size depends on the languages, domain, and model architecture. GPT-4's ~100K vocabulary is larger than BERT's ~30K, balancing these considerations for multilingual and code data.",
       hints: [
         "Larger vocabulary: fewer tokens per sequence, larger embedding table, rarer individual tokens in training.",
@@ -2460,7 +2460,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In a RAG system, increasing the number of retrieved passages (top-k) always improves answer quality because more context is better.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "Increasing k has diminishing returns and can degrade performance. Problems: (1) Noise dilution - irrelevant passages distract the generator and may introduce false information. (2) Lost-in-the-middle effect (Liu et al., 2023) - LLMs attend better to content at the start and end of context; information in the middle of long contexts is often ignored. (3) Context length limits - each passage consumes tokens from the fixed context window. Optimal k is task-dependent, typically 3-10 for most QA tasks.",
       hints: [
         "Lost-in-the-middle: LLMs attend better to context at the beginning and end of their window.",
@@ -2508,7 +2508,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "ColBERT (Khattab & Zaharia, 2020) uses a late-interaction architecture where query and document token embeddings interact at retrieval time via MaxSim, giving higher retrieval quality than bi-encoders while maintaining efficiency through pre-computed document embeddings.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "ColBERT encodes queries and documents as matrices of token embeddings. Similarity: MaxSim(Q,D) = sum_{q in Q} max_{d in D} q\\cdotd - each query token finds its best matching document token. Documents are encoded offline; at query time only O(|Q|*|D|) dot products are needed. This late interaction captures fine-grained semantic matching that single-vector bi-encoders compress away. ColBERT outperforms bi-encoders and is competitive with cross-encoders at retrieval speed.",
       hints: [
         "Bi-encoder: one vector per document, cosine similarity. ColBERT: token-level matrix, MaxSim. Richer interaction.",
@@ -2559,7 +2559,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "BERT-CRF models for NER typically outperform BERT-softmax (predicting each token label independently) because the CRF layer enforces globally consistent label sequences, for example preventing invalid transitions like I-ORG following B-PER.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "BERT-CRF combines contextual BERT embeddings with CRF inference over the label sequence. The CRF transition matrix learns that I-ORG cannot follow B-PER, that I-X must follow B-X or I-X, etc. On CoNLL-2003 NER, BERT-CRF consistently achieves approximately 0.5-1 F1 higher than BERT-softmax. The improvement is especially large for rare entity types where local predictions are uncertain and global label constraints provide crucial guidance.",
       hints: [
         "BERT-softmax: each token classified independently. Errors are uncorrelated. BERT-CRF: globally optimal sequence - invalid transitions penalized.",
@@ -2607,7 +2607,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "The structured perceptron (Collins, 2002) for sequence labelling updates weights only when the predicted label sequence differs from the gold sequence, making it an online algorithm with convergence guarantees analogous to the standard perceptron.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Structured perceptron update: if predicted y_hat is different from gold y*: w = w + Phi(x, y*) - Phi(x, y_hat), increasing the score of the gold sequence and decreasing the score of the incorrect prediction. Convergence theorem: if a separating weight vector exists (data is linearly separable in feature space), the structured perceptron converges in a bounded number of mistakes. With averaged weights (Collins 2002), it is robust and competitive with CRFs on NLP tasks.",
       hints: [
         "Structured perceptron = perceptron over structured outputs. Update when prediction is wrong; no update when correct.",
@@ -2676,7 +2676,7 @@ const extra: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Multi-dimensional quality metrics (MQM, Freitag et al. 2021) for MT evaluation, which assign weighted error counts across error categories, correlate more strongly with human direct assessment than BLEU.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "MQM (Multidimensional Quality Metrics) asks annotators to mark specific errors (mistranslation, omission, addition, fluency) and assign severity (critical, major, minor). The MQM score sums weighted error penalties per sentence. Freitag et al. (2021, 2022) showed MQM annotations correlate much more strongly with human direct assessment than BLEU. Modern learned metrics (COMET, BLEURT) trained on DA scores also significantly outperform BLEU, motivating the shift away from BLEU in the MT community.",
       hints: [
         "BLEU is a surface-level n-gram metric. MQM captures semantic and fluency errors explicitly.",
@@ -2747,7 +2747,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The Spearman rank correlation coefficient is commonly used to assess the agreement between an automatic metric (like BLEU or COMET) and human evaluation scores, because it measures monotonic relationship without assuming a linear relationship.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "Spearman's rho measures whether the ranking of systems by an automatic metric agrees with the ranking by human evaluation. It does not assume the relationship is linear (unlike Pearson correlation). For system-level evaluation, Spearman's rho is appropriate because we care about whether the metric ranks systems the same way humans do, not whether the raw scores are proportional. A metric with high Spearman rho is considered a good proxy for human judgement.",
       hints: [
         "Spearman = Pearson applied to ranks. If A > B > C for humans and A > B > C for BLEU: perfect rank agreement.",
@@ -2795,7 +2795,7 @@ const extra2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "ROUGE-L is based on the longest common subsequence (LCS) between hypothesis and reference and does not require words to appear consecutively, making it more flexible than ROUGE-2 which requires consecutive bigrams.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation: "ROUGE-L computes the LCS between hypothesis H and reference R: ROUGE_L = LCS(H,R)/|R| (recall-based). LCS rewards shared word sequences even if non-consecutive: 'the cat sat mat' and 'the fluffy cat quietly sat on a mat' share LCS 'the cat sat mat' (length 4). ROUGE-2 only counts adjacent bigram matches. ROUGE-L captures sentence-level structure and in-sequence word order without requiring contiguous matches.",
       hints: [
         "LCS: longest sequence of words appearing in both H and R in the same order but not necessarily consecutively.",

@@ -44,8 +44,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In MQTT, a device's Last Will and Testament (LWT) message is sent by the broker on behalf of the device immediately when the device calls DISCONNECT cleanly.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Recall what LWT stands for: Last Will and Testament. Like a human will, it is only executed upon unexpected death, not a planned departure.\n\n**Step 2:** Understand when the broker sends LWT: ONLY on unexpected disconnection (TCP timeout, power loss, network failure), NOT on clean DISCONNECT.\n\n**Step 3:** Apply this to device liveness monitoring. Configure LWT as a retained 'offline' message. When a device connects, publish 'online'. If it drops unexpectedly, the broker sends the LWT 'offline' message.\n\n**Answer:** False. LWT is sent only on unexpected disconnection, not on clean DISCONNECT.",
       hints: [
         "LWT stands for Last Will and Testament — a will is only executed after an unexpected death, not a planned retirement.",
@@ -135,8 +134,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In the device shadow model, if an operator updates the desired state while the device is offline, the delta document is lost and the device must poll for the latest desired state when it reconnects.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Recognize that the shadow is a persistent cloud-side document, not an ephemeral message. It is stored in DynamoDB and persists regardless of device connectivity.\n\n**Step 2:** On reconnect, the device should GET the full shadow first to see any accumulated changes that occurred while offline.\n\n**Step 3:** Then subscribe to the delta topic for real-time updates. The state is never lost.\n\n**Answer:** False. The shadow persists desired state durably, and the device should GET the full shadow on reconnect to catch accumulated changes.",
       hints: [
         "The shadow is a cloud-side document, not an ephemeral message — it persists regardless of device connectivity.",
@@ -325,8 +323,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Fog computing and edge computing refer to the same architecture: processing happens on the end device itself (e.g., on the sensor or microcontroller) rather than in any intermediate layer.",
-      options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Clarify fog computing. Cisco coined this term for a distributed compute layer BETWEEN devices and cloud — a multi-tier hierarchy.\n\n**Step 2:** Clarify edge computing. Can mean on-device processing OR nearby infrastructure like cloudlets.\n\n**Step 3:** Distinguish examples. Raspberry Pi gateway = fog node. Microcontroller running TF Lite = on-device inference. AWS Wavelength = edge computing.\n\n**Answer:** False. Fog computing is a multi-tier hierarchy (device -> fog node -> cloud), not just two layers.",
       hints: [
         "Fog computing is a Cisco-coined term for a multi-tier hierarchy — device -> fog node -> cloud — not just two layers.",

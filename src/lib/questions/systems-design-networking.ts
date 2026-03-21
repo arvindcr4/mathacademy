@@ -49,7 +49,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Active health checks involve the load balancer proactively sending periodic pings or HTTP requests to backend servers to determine their health.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "Active health checks are initiated by the load balancer itself. It sends periodic requests (e.g., an HTTP $\\texttt{GET /health}$) to each backend on a configured interval and marks a server as unhealthy if it fails to respond or returns an error status code.\n\n**Step 1**\nDistinguish who initiates the health check.\n- Active: the load balancer initiates the check.\n- Passive: the load balancer monitors real production traffic.\n\n**Step 2**\nRecognize the trade-offs.\nActive checks detect failures quickly but add background traffic overhead to backends. Passive checks have zero overhead but may allow several failed real requests before detecting an unhealthy server.\n\n**Step 3**\nConfirm the statement.\nThe statement accurately describes active health checks: proactive, periodic probes from the load balancer. Therefore, it is true.",
       hints: [
@@ -146,7 +146,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "An origin shield is an intermediate CDN PoP placed between edge nodes and the origin server, designed to reduce the number of cache misses that reach the origin.",
-      correctAnswer: "True",
+      correctAnswer: "true",
       explanation:
         "An origin shield (called a regional edge cache in CloudFront) is an additional caching layer sitting between the edge PoPs and the origin server. When multiple edge nodes around the world experience a cache miss for the same object, instead of all independently hitting the origin, they all request from the single origin shield PoP.\n\n**Step 1**\nVisualize the request flow without an origin shield.\n\\[\n\\text{Edge (us-east)} \\rightarrow \\text{Origin} \\quad\\text{and}\\quad \\text{Edge (eu-west)} \\rightarrow \\text{Origin} \\quad\\text{both independently hit origin.}\n\\]\n\n**Step 2**\nVisualize the request flow with an origin shield.\n\\[\n\\text{Edge (us-east)} \\rightarrow \\text{Shield} \\leftarrow \\text{Edge (eu-west)} \\quad\\text{only one origin request if shield misses.}\n\\]\n\n**Step 3**\nConfirm the statement.\nThis is precisely the definition and purpose of an origin shield: reducing origin traffic by consolidating cache warm-up through a single intermediate layer.",
       hints: [
@@ -285,7 +285,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HTTP/2 multiplexing is functionally equivalent to WebSocket for building real-time bidirectional applications because both allow the server to push data to the client at any time.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "HTTP/2 multiplexes multiple request-response streams over one TCP connection, which dramatically reduces head-of-line blocking compared to HTTP/1.1. However, HTTP/2 is still fundamentally a request-response protocol—all communication is initiated by the client. Server push in HTTP/2 is limited to pushing resources proactively alongside a response (e.g., pushing CSS when the browser requests HTML), not for arbitrary server-to-client messaging.\n\n**Step 1**\nDistinguish the communication models.\n\\[\n\\begin{align}\n\\text{HTTP/2 multiplexing} &\\rightarrow \\text{client initiates all streams; server pushes resources as hints} \\\\\\[5pt]\n\\text{WebSocket} &\\rightarrow \\text{either side can send a frame independently at any time}\n\\end{align}\n\\]\n\n**Step 2**\nIdentify the key difference.\nHTTP/2 server push cannot be used for general-purpose bidirectional messaging (chat, gaming, live trading). It is a hint mechanism for associated resources only.\n\n**Step 3**\nConfirm the answer.\nThe statement is false. WebSocket is truly bidirectional; HTTP/2 multiplexing is not.",
       hints: [
@@ -362,7 +362,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "DNS round-robin with multiple A records reliably distributes traffic evenly across backends because clients always respect DNS TTLs and re-query after expiration.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation:
         "DNS round-robin is unreliable for even load distribution for two reasons. First, many clients (browsers, JVM-based applications, mobile apps) cache DNS responses much longer than the TTL—they ignore TTL expiration and keep using the same IP for minutes or hours. Second, even when TTLs are respected, the client's local DNS cache sticks to one IP for the duration of the TTL.\n\n**Step 1**\nIdentify the first failure mode: client-side DNS caching.\nThe JVM, for example, caches DNS results indefinitely by default unless explicitly configured. Browsers also hold DNS entries well past TTL expiration. This means a single IP address can serve the vast majority of requests regardless of the TTL set.\n\n**Step 2**\nIdentify the second failure mode: TTL-aligned client batches.\nIf many clients resolve at similar times (e.g., after a TTL expires at the top of the hour), they all get the same rotation slot. This creates a thundering herd effect.\n\n**Step 3**\nConfirm the answer.\nDNS-based load balancing cannot detect backend health without active integration with a health-aware DNS provider. Therefore, the statement is false.",
       hints: [

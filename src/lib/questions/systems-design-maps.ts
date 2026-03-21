@@ -254,7 +254,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "ETA prediction should rely only on real-time traffic data and ignore historical patterns, because current conditions always dominate travel time.",
-      correctAnswer: "False",
+      correctAnswer: "false",
       explanation: "**Step 1:** Understand what each data source provides. Real-time traffic captures current incidents, accidents, and congestion. Historical data provides baseline speed distributions for each segment by time-of-day and day-of-week.\n\n**Step 2:** Recognize when each source is critical. Historical data is essential when real-time probe data is sparse — for example, rural roads or late-night hours with few vehicles. A road might have no current probe data at 2 AM, but historical data tells the model the road is typically fast at that hour.\n\n**Step 3:** Combine them using Bayesian updating. Start with a historical prior (the typical speed at this time/day), then update with real-time observations as they arrive. Google Maps explicitly blends both sources rather than relying on either alone.",
       hints: [
         "What happens on a rural road with only 3 probe vehicles in the last 10 minutes — is that real-time sample reliable?",

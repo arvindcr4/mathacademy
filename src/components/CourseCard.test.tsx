@@ -1,4 +1,7 @@
-/** @jsxImportSource react */
+/**
+ * @vitest-environment jsdom
+ * @jsxImportSource react
+ */
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
 import CourseCard from "./CourseCard";
