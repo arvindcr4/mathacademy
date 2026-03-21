@@ -40,6 +40,7 @@ export interface KnowledgePoint {
 }
 
 export const categories = [
+  { id: "ai", name: "Artificial Intelligence", icon: "🧠" },
   { id: "reinforcement-learning", name: "Reinforcement Learning", icon: "🤖" },
   { id: "fine-tuning", name: "Fine-Tuning", icon: "🎛️" },
   { id: "software-engineering", name: "Software Engineering", icon: "💻" },
@@ -469,8 +470,8 @@ export const courses: Course[] = [
     ],
   },
   {
-    id: "gemini-multimodal",
-    slug: "gemini-multimodal",
+    id: "gemini-multimodal-dup1",
+    slug: "gemini-multimodal-dup1",
     name: "Google Gemini & Multimodal AI",
     description:
       "Master the Gemini ecosystem, multimodal foundation models, and the Gemini API.",
@@ -481,203 +482,203 @@ export const courses: Course[] = [
     estimatedHours: 15,
     topics: [
       {
-        id: "gemini-architecture",
-        slug: "gemini-architecture",
+        id: "gemini-architecture-dup1",
+        slug: "gemini-architecture-dup1",
         name: "Gemini Architecture",
         description:
           "Understand the native multimodal architecture of Gemini models.",
         knowledgePoints: [
           {
-            id: "gem-kp-1",
-            slug: "gemini-nano",
+            id: "gem-kp-1-dup1",
+            slug: "gemini-nano-dup1",
             name: "Gemini Nano & Edge AI",
           },
           {
-            id: "gem-kp-2",
-            slug: "gemini-flash",
+            id: "gem-kp-2-dup1",
+            slug: "gemini-flash-dup1",
             name: "Gemini Flash & Efficiency",
           },
           {
-            id: "gem-kp-3",
-            slug: "gemini-pro",
+            id: "gem-kp-3-dup1",
+            slug: "gemini-pro-dup1",
             name: "Gemini Pro & Reasoning",
           },
           {
-            id: "gem-kp-4",
-            slug: "gemini-ultra",
+            id: "gem-kp-4-dup1",
+            slug: "gemini-ultra-dup1",
             name: "Gemini Ultra Capabilities",
           },
           {
-            id: "gem-kp-5",
-            slug: "native-multimodality",
+            id: "gem-kp-5-dup1",
+            slug: "native-multimodality-dup1",
             name: "Native Multimodal Training",
           },
         ],
       },
       {
-        id: "prompting-gemini",
-        slug: "prompting-gemini",
+        id: "prompting-gemini-dup1",
+        slug: "prompting-gemini-dup1",
         name: "Prompting Gemini",
         description:
           "Best practices for writing effective prompts for Gemini models.",
         knowledgePoints: [
           {
-            id: "gem-kp-6",
-            slug: "system-instructions",
+            id: "gem-kp-6-dup1",
+            slug: "system-instructions-dup1",
             name: "System Instructions",
           },
           {
-            id: "gem-kp-7",
-            slug: "multimodal-prompting",
+            id: "gem-kp-7-dup1",
+            slug: "multimodal-prompting-dup1",
             name: "Multimodal Interleaved Prompts",
           },
           {
-            id: "gem-kp-8",
-            slug: "few-shot-gemini",
+            id: "gem-kp-8-dup1",
+            slug: "few-shot-gemini-dup1",
             name: "Few-Shot Examples in Gemini",
           },
           {
-            id: "gem-kp-9",
-            slug: "context-caching",
+            id: "gem-kp-9-dup1",
+            slug: "context-caching-dup1",
             name: "Context Caching Strategies",
           },
           {
-            id: "gem-kp-10",
-            slug: "json-schema-gemini",
+            id: "gem-kp-10-dup1",
+            slug: "json-schema-gemini-dup1",
             name: "Structured JSON Outputs",
           },
         ],
       },
       {
-        id: "gemini-api",
-        slug: "gemini-api",
+        id: "gemini-api-dup1",
+        slug: "gemini-api-dup1",
         name: "Gemini API Fundamentals",
         description:
           "Core concepts for integrating the Gemini API into applications.",
         knowledgePoints: [
           {
-            id: "gem-kp-11",
-            slug: "gemini-api-auth",
+            id: "gem-kp-11-dup1",
+            slug: "gemini-api-auth-dup1",
             name: "Authentication & Setup",
           },
           {
-            id: "gem-kp-12",
-            slug: "generate-content",
+            id: "gem-kp-12-dup1",
+            slug: "generate-content-dup1",
             name: "generateContent Method",
           },
           {
-            id: "gem-kp-13",
-            slug: "streaming-responses",
+            id: "gem-kp-13-dup1",
+            slug: "streaming-responses-dup1",
             name: "Streaming Responses",
           },
           {
-            id: "gem-kp-14",
-            slug: "token-counting",
+            id: "gem-kp-14-dup1",
+            slug: "token-counting-dup1",
             name: "Token Counting & Limits",
           },
           {
-            id: "gem-kp-15",
-            slug: "safety-settings",
+            id: "gem-kp-15-dup1",
+            slug: "safety-settings-dup1",
             name: "Configuring Safety Settings",
           },
         ],
       },
       {
-        id: "multimodal-generation",
-        slug: "multimodal-generation",
+        id: "multimodal-generation-dup1",
+        slug: "multimodal-generation-dup1",
         name: "Multimodal Generation",
         description: "Working with images, audio, and video using Gemini.",
         knowledgePoints: [
           {
-            id: "gem-kp-16",
-            slug: "image-understanding",
+            id: "gem-kp-16-dup1",
+            slug: "image-understanding-dup1",
             name: "Image Understanding & VQA",
           },
           {
-            id: "gem-kp-17",
-            slug: "video-processing",
+            id: "gem-kp-17-dup1",
+            slug: "video-processing-dup1",
             name: "Video Processing & Summarization",
           },
           {
-            id: "gem-kp-18",
-            slug: "audio-transcription",
+            id: "gem-kp-18-dup1",
+            slug: "audio-transcription-dup1",
             name: "Audio Transcription & Analysis",
           },
           {
-            id: "gem-kp-19",
-            slug: "file-api",
+            id: "gem-kp-19-dup1",
+            slug: "file-api-dup1",
             name: "Using the Gemini File API",
           },
           {
-            id: "gem-kp-20",
-            slug: "document-qa",
+            id: "gem-kp-20-dup1",
+            slug: "document-qa-dup1",
             name: "Document QA & PDF Parsing",
           },
         ],
       },
       {
-        id: "function-calling",
-        slug: "function-calling",
+        id: "function-calling-dup1",
+        slug: "function-calling-dup1",
         name: "Function Calling & Tools",
         description:
           "Enable Gemini to interact with external APIs and systems.",
         knowledgePoints: [
           {
-            id: "gem-kp-21",
-            slug: "tool-declarations",
+            id: "gem-kp-21-dup1",
+            slug: "tool-declarations-dup1",
             name: "Declaring Functions (Tools)",
           },
           {
-            id: "gem-kp-22",
-            slug: "function-execution",
+            id: "gem-kp-22-dup1",
+            slug: "function-execution-dup1",
             name: "Handling Function Calls",
           },
           {
-            id: "gem-kp-23",
-            slug: "parallel-function-calling",
+            id: "gem-kp-23-dup1",
+            slug: "parallel-function-calling-dup1",
             name: "Parallel Function Calling",
           },
           {
-            id: "gem-kp-24",
-            slug: "google-search-grounding",
+            id: "gem-kp-24-dup1",
+            slug: "google-search-grounding-dup1",
             name: "Grounding with Google Search",
           },
           {
-            id: "gem-kp-25",
-            slug: "code-execution",
+            id: "gem-kp-25-dup1",
+            slug: "code-execution-dup1",
             name: "Code Execution Tool",
           },
         ],
       },
       {
-        id: "advanced-gemini",
-        slug: "advanced-gemini",
+        id: "advanced-gemini-dup1",
+        slug: "advanced-gemini-dup1",
         name: "Advanced Gemini Workflows",
         description: "Complex architectures and optimizations with Gemini.",
         knowledgePoints: [
           {
-            id: "gem-kp-26",
-            slug: "gemini-agents",
+            id: "gem-kp-26-dup1",
+            slug: "gemini-agents-dup1",
             name: "Building Agentic Workflows",
           },
           {
-            id: "gem-kp-27",
-            slug: "rag-with-gemini",
+            id: "gem-kp-27-dup1",
+            slug: "rag-with-gemini-dup1",
             name: "RAG with Gemini & Vertex Vector Search",
           },
           {
-            id: "gem-kp-28",
-            slug: "model-tuning",
+            id: "gem-kp-28-dup1",
+            slug: "model-tuning-dup1",
             name: "Tuning Gemini Models",
           },
           {
-            id: "gem-kp-29",
-            slug: "evaluating-gemini",
+            id: "gem-kp-29-dup1",
+            slug: "evaluating-gemini-dup1",
             name: "Evaluating Gemini Responses",
           },
           {
-            id: "gem-kp-30",
-            slug: "vertex-vs-aistudio",
+            id: "gem-kp-30-dup1",
+            slug: "vertex-vs-aistudio-dup1",
             name: "Vertex AI vs. Google AI Studio",
           },
         ],
@@ -1793,7 +1794,7 @@ export const courses: Course[] = [
             slug: "dqn-atari",
             name: "Deep Q-Networks for Atari",
           },
-          { id: "rl-app-kp-5", slug: "alphago", name: "AlphaGo and AlphaZero" },
+          { id: "rl-app-kp-5", slug: "alphago-dup1", name: "AlphaGo and AlphaZero" },
         ],
       },
       {
@@ -2089,7 +2090,7 @@ export const courses: Course[] = [
           },
           {
             id: "ft-kp-36",
-            slug: "mixed-precision-training",
+            slug: "mixed-precision-training-dup1",
             name: "Mixed Precision Training (bf16/fp16)",
           },
           {
@@ -2437,16 +2438,16 @@ export const courses: Course[] = [
       },
       {
         id: "lora-training",
-        slug: "lora-training",
+        slug: "lora-training-dup1",
         name: "LoRA Training",
         description: "Memory-efficient training with Low-Rank Adaptation.",
         knowledgePoints: [
           {
             id: "oc-kp-12",
-            slug: "lora-intuition",
+            slug: "lora-intuition-dup1",
             name: "LoRA Intuition for RL",
           },
-          { id: "oc-kp-13", slug: "lora-config", name: "LoRA Configuration" },
+          { id: "oc-kp-13", slug: "lora-config-dup1", name: "LoRA Configuration" },
           {
             id: "oc-kp-39",
             slug: "lora-target-modules",
@@ -2600,8 +2601,8 @@ export const courses: Course[] = [
         ],
       },
       {
-        id: "evaluation",
-        slug: "evaluation",
+        id: "evaluation-dup1",
+        slug: "evaluation-dup1",
         name: "Evaluation",
         description: "Rigorous evaluation of trained agents.",
         knowledgePoints: [
@@ -2636,7 +2637,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "oc-kp-28",
-            slug: "distributed-training",
+            slug: "distributed-training-dup1",
             name: "Distributed Training",
           },
           { id: "oc-kp-29", slug: "model-serving", name: "Model Serving" },
@@ -2670,7 +2671,7 @@ export const courses: Course[] = [
     category: "software-engineering",
     icon: "💻",
     color: "#3B82F6",
-    topicCount: 14,
+    topicCount: 16,
     estimatedHours: 60,
     topics: [
       {
@@ -3073,22 +3074,22 @@ export const courses: Course[] = [
           },
           { id: "ci-kp-69", slug: "clone-graph", name: "Clone Graph" },
           {
-            id: "ci-kp-70",
+            id: "ci-kp-70-dup1",
             slug: "course-schedule",
             name: "Course Schedule (Topological Sort)",
           },
           {
-            id: "ci-kp-71",
+            id: "ci-kp-71-dup1",
             slug: "dijkstra-algorithm",
             name: "Dijkstra's Shortest Path",
           },
           {
-            id: "ci-kp-72",
+            id: "ci-kp-72-dup1",
             slug: "floyd-warshall",
             name: "Floyd-Warshall All-Pairs Shortest Path",
           },
           {
-            id: "ci-kp-73",
+            id: "ci-kp-73-dup1",
             slug: "bellman-ford",
             name: "Bellman-Ford Algorithm",
           },
@@ -3102,24 +3103,24 @@ export const courses: Course[] = [
           "String hashing, pattern matching, tries, and advanced string techniques.",
         knowledgePoints: [
           {
-            id: "ci-kp-74",
+            id: "ci-kp-74-dup1",
             slug: "string-hashing",
             name: "String Hashing (Rabin-Karp)",
           },
-          { id: "ci-kp-75", slug: "kmp-algorithm", name: "KMP Algorithm" },
+          { id: "ci-kp-75-dup1", slug: "kmp-algorithm", name: "KMP Algorithm" },
           {
-            id: "ci-kp-76",
+            id: "ci-kp-76-dup1",
             slug: "trie-data-structure",
             name: "Trie Data Structure",
           },
-          { id: "ci-kp-77", slug: "suffix-tree", name: "Suffix Tree" },
+          { id: "ci-kp-77-dup1", slug: "suffix-tree", name: "Suffix Tree" },
           {
-            id: "ci-kp-78",
+            id: "ci-kp-78-dup1",
             slug: "anagram-checking",
             name: "Anagram Checking",
           },
           {
-            id: "ci-kp-79",
+            id: "ci-kp-79-dup1",
             slug: "palindrome-checking",
             name: "Palindrome Checking",
           },
@@ -3130,13 +3131,13 @@ export const courses: Course[] = [
           },
           {
             id: "ci-kp-81",
-            slug: "longest-common-subsequence",
+            slug: "longest-common-subsequence-dup1",
             name: "Longest Common Subsequence",
           },
           { id: "ci-kp-82", slug: "regex-matching", name: "Regex Matching" },
           {
             id: "ci-kp-83",
-            slug: "minimum-window-substring",
+            slug: "minimum-window-substring-dup1",
             name: "Minimum Window Substring",
           },
         ],
@@ -3196,52 +3197,52 @@ export const courses: Course[] = [
           "Binary search, merge sort, quicksort, Strassen, closest pair, and more.",
         knowledgePoints: [
           {
-            id: "ci-kp-84",
+            id: "ci-kp-84-dup1",
             slug: "binary-search-divide",
             name: "Binary Search Variants & Rotated Array",
           },
           {
-            id: "ci-kp-85",
+            id: "ci-kp-85-dup1",
             slug: "merge-sort-divide",
             name: "Merge Sort & Counting Inversions",
           },
           {
-            id: "ci-kp-86",
+            id: "ci-kp-86-dup1",
             slug: "quick-sort-divide",
             name: "Quicksort & Pivot Selection",
           },
           {
-            id: "ci-kp-87",
+            id: "ci-kp-87-dup1",
             slug: "strassen-algorithm",
             name: "Strassen Matrix Multiplication",
           },
           {
-            id: "ci-kp-88",
+            id: "ci-kp-88-dup1",
             slug: "closest-pair",
             name: "Closest Pair of Points",
           },
           {
-            id: "ci-kp-89",
+            id: "ci-kp-89-dup1",
             slug: "majority-element",
             name: "Boyer-Moore Majority Vote",
           },
           {
-            id: "ci-kp-90",
+            id: "ci-kp-90-dup1",
             slug: "median-search",
             name: "Median of Two Sorted Arrays",
           },
           {
-            id: "ci-kp-91",
+            id: "ci-kp-91-dup1",
             slug: "exponentiation-divide",
             name: "Fast Exponentiation",
           },
           {
-            id: "ci-kp-92",
+            id: "ci-kp-92-dup1",
             slug: "karatsuba-multiplication",
             name: "Karatsuba Fast Multiplication",
           },
           {
-            id: "ci-kp-93",
+            id: "ci-kp-93-dup1",
             slug: "dp-divide-optimize",
             name: "Divide & Conquer DP Optimization",
           },
@@ -3281,7 +3282,7 @@ export const courses: Course[] = [
           { id: "sd-kp-4", slug: "partitioning", name: "Data Partitioning" },
           {
             id: "sd-kp-5",
-            slug: "consistent-hashing",
+            slug: "consistent-hashing-dup1",
             name: "Consistent Hashing",
           },
         ],
@@ -3400,7 +3401,7 @@ export const courses: Course[] = [
       },
       {
         id: "cdn",
-        slug: "cdn",
+        slug: "cdn-dup1",
         name: "CDN & DNS",
         description: "Content delivery networks and DNS resolution.",
         knowledgePoints: [
@@ -3692,7 +3693,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: "dp-kp-34", slug: "saga-pattern", name: "Saga Pattern" },
           { id: "dp-kp-35", slug: "cqrs-pattern", name: "CQRS Pattern" },
-          { id: "dp-kp-36", slug: "event-sourcing", name: "Event Sourcing" },
+          { id: "dp-kp-36", slug: "event-sourcing-dup1", name: "Event Sourcing" },
           {
             id: "dp-kp-37",
             slug: "two-phase-commit",
@@ -4617,7 +4618,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "ag-kp-6",
-            slug: "function-calling",
+            slug: "function-calling-dup2",
             name: "Function Calling (OpenAI, Claude Tool Use)",
           },
           {
@@ -4857,7 +4858,7 @@ export const courses: Course[] = [
           },
           {
             id: "dl-kp-10",
-            slug: "batch-normalization",
+            slug: "batch-normalization-dup1",
             name: "Batch Normalization",
           },
         ],
@@ -4979,7 +4980,7 @@ export const courses: Course[] = [
           },
           {
             id: "dl-kp-29",
-            slug: "gradient-accumulation",
+            slug: "gradient-accumulation-dup1",
             name: "Gradient Accumulation for Large Batches",
           },
           {
@@ -5074,7 +5075,7 @@ export const courses: Course[] = [
       },
       {
         id: "model-serving",
-        slug: "model-serving",
+        slug: "model-serving-dup1",
         name: "Model Serving",
         description:
           "Deploy models to production with low latency and high throughput.",
@@ -5226,7 +5227,7 @@ export const courses: Course[] = [
           },
           {
             id: "tr-kp-2",
-            slug: "multi-head-attention",
+            slug: "multi-head-attention-dup1",
             name: "Multi-Head Attention",
           },
           {
@@ -5270,7 +5271,7 @@ export const courses: Course[] = [
           },
           {
             id: "tr-kp-9",
-            slug: "residual-connections",
+            slug: "residual-connections-dup1",
             name: "Residual Connections & Skip Connections",
           },
           {
@@ -5425,7 +5426,7 @@ export const courses: Course[] = [
     name: "3D Vision & Scene Understanding",
     description:
       "Neural radiance fields, 3D reconstruction, depth estimation, point clouds, and 3D scene understanding.",
-    category: "ai",
+    category: "software-engineering",
     icon: "cube",
     color: "#7C3AED",
     topicCount: 6,
@@ -5638,7 +5639,7 @@ export const courses: Course[] = [
     name: "Robotics & Embodied AI",
     description:
       "Robot learning, manipulation, navigation, sim-to-real transfer, and embodied agents.",
-    category: "ai",
+    category: "software-engineering",
     icon: "cpu",
     color: "#DC2626",
     topicCount: 6,
@@ -5751,7 +5752,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "rob-kp-16",
-            slug: "motion-planning",
+            slug: "motion-planning-dup1",
             name: "Sampling-Based Motion Planning (RRT, PRM)",
           },
           {
@@ -5779,7 +5780,7 @@ export const courses: Course[] = [
       {
         id: "sim-to-real",
         name: "Sim-to-Real Transfer",
-        slug: "sim-to-real",
+        slug: "sim-to-real-dup1",
         description: "Bridging simulation and real-world robotics.",
         knowledgePoints: [
           {
@@ -5851,7 +5852,7 @@ export const courses: Course[] = [
     name: "AI for Climate & Energy",
     description:
       "Machine learning applications for climate modeling, renewable energy, carbon tracking, and sustainable systems.",
-    category: "ai",
+    category: "software-engineering",
     icon: "leaf",
     color: "#16A34A",
     topicCount: 6,
@@ -6064,7 +6065,7 @@ export const courses: Course[] = [
     name: "Quantum ML & Computing",
     description:
       "Quantum computing foundations, variational quantum circuits, quantum machine learning algorithms, and near-term applications.",
-    category: "ai",
+    category: "software-engineering",
     icon: "atom",
     color: "#06B6D4",
     topicCount: 6,
@@ -6277,7 +6278,7 @@ export const courses: Course[] = [
     name: "Speech & Audio Processing",
     description:
       "Automatic speech recognition, text-to-speech, audio ML, speaker recognition, and sound classification.",
-    category: "ai",
+    category: "software-engineering",
     icon: "microphone",
     color: "#9333EA",
     topicCount: 6,
@@ -6585,7 +6586,7 @@ export const courses: Course[] = [
           },
           {
             id: "fin-kp-13",
-            slug: "portfolio-optimization",
+            slug: "portfolio-optimization-dup1",
             name: "Modern Portfolio Theory & Black-Litterman",
           },
           {
@@ -7383,7 +7384,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "dat-kp-1",
-            slug: "transfer-learning-theory",
+            slug: "transfer-learning-theory-dup1",
             name: "Transfer Learning Theory & H-divergence",
           },
           {
@@ -7403,7 +7404,7 @@ export const courses: Course[] = [
           },
           {
             id: "dat-kp-5",
-            slug: "catastrophic-forgetting",
+            slug: "catastrophic-forgetting-dup1",
             name: "Catastrophic Forgetting & Stability-Plasticity",
           },
         ],
@@ -7460,7 +7461,7 @@ export const courses: Course[] = [
           },
           {
             id: "dat-kp-13",
-            slug: "experience-replay",
+            slug: "experience-replay-dup1",
             name: "Experience Replay & Episodic Memory",
           },
           {
@@ -8338,7 +8339,7 @@ export const courses: Course[] = [
           },
           {
             id: "evb-kp-14",
-            slug: "mt-bench",
+            slug: "mt-bench-dup1",
             name: "MT-Bench, AlpacaEval & Instruction Following",
           },
           {
@@ -8424,7 +8425,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "evb-kp-26",
-            slug: "agent-eval",
+            slug: "agent-eval-dup1",
             name: "Agent Evaluation (AgentBench, WebArena)",
           },
           {
@@ -8535,7 +8536,7 @@ export const courses: Course[] = [
       },
       {
         id: "data-quality",
-        slug: "data-quality",
+        slug: "data-quality-dup1",
         name: "Data Quality & Cleaning",
         description:
           "Data validation, deduplication, label noise, and dataset curation.",
@@ -8575,7 +8576,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "dc-kp-16",
-            slug: "dataset-distillation",
+            slug: "dataset-distillation-dup1",
             name: "Dataset Distillation & Learning to Summarize",
           },
           {
@@ -8787,7 +8788,7 @@ export const courses: Course[] = [
       },
       {
         id: "second-order-methods",
-        slug: "second-order-methods",
+        slug: "second-order-methods-dup1",
         name: "Second-Order & Curvature Methods",
         description: "K-FAC, Shampoo, and practical second-order optimization.",
         knowledgePoints: [
@@ -8950,12 +8951,12 @@ export const courses: Course[] = [
           },
           {
             id: "pme-kp-7",
-            slug: "vector-databases",
+            slug: "vector-databases-dup1",
             name: "Vector Databases (Pinecone, Weaviate, Qdrant)",
           },
           {
             id: "pme-kp-8",
-            slug: "hybrid-search",
+            slug: "hybrid-search-dup1",
             name: "Hybrid Search (Dense + Sparse Retrieval)",
           },
           {
@@ -9136,7 +9137,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml3-kp-2",
-            slug: "miniImageNet",
+            slug: "mini-imagenet",
             name: "miniImageNet, tieredImageNet & FS Benchmarks",
           },
           {
@@ -9232,7 +9233,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "ml3-kp-16",
-            slug: "in-context-learning",
+            slug: "in-context-learning-dup1",
             name: "In-Context Learning (ICL) in LLMs",
           },
           {
@@ -9242,7 +9243,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml3-kp-18",
-            slug: "prefix-tuning",
+            slug: "prefix-tuning-dup1",
             name: "Prefix Tuning & Prompt Tuning",
           },
           {
@@ -9736,7 +9737,7 @@ export const courses: Course[] = [
           },
           {
             id: "msaf-kp-27",
-            slug: "scalable-oversight",
+            slug: "scalable-oversight-dup1",
             name: "Scalable Oversight & Debate",
           },
           {
@@ -9769,7 +9770,7 @@ export const courses: Course[] = [
     category: "reinforcement-learning",
     icon: "📈",
     color: "#06B6D4",
-    topicCount: 8,
+    topicCount: 6,
     estimatedHours: 30,
     topics: [
       {
@@ -10030,7 +10031,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "rs-kp-6",
-            slug: "content-based-filtering",
+            slug: "content-based-filtering-dup1",
             name: "Content-Based Filtering & TF-IDF Profiles",
           },
           {
@@ -10226,7 +10227,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml2-kp-3",
-            slug: "visual-grounding",
+            slug: "visual-grounding-dup1",
             name: "Visual Grounding & Referring Expression",
           },
           {
@@ -10250,7 +10251,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "ml2-kp-6",
-            slug: "llava",
+            slug: "llava-dup1",
             name: "LLaVA & Visual Instruction Tuning",
           },
           {
@@ -10260,7 +10261,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml2-kp-8",
-            slug: "gemini-architecture",
+            slug: "gemini-architecture-dup2",
             name: "Gemini Architecture & Native Multimodality",
           },
           {
@@ -10294,7 +10295,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml2-kp-13",
-            slug: "music-generation",
+            slug: "music-generation-dup1",
             name: "Music Generation (MusicGen, AudioCraft)",
           },
           {
@@ -10328,7 +10329,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml2-kp-18",
-            slug: "pretraining-data",
+            slug: "pretraining-data-dup1",
             name: "Pretraining Data Curation & Quality",
           },
           {
@@ -10371,7 +10372,7 @@ export const courses: Course[] = [
           },
           {
             id: "ml2-kp-25",
-            slug: "sim-to-real",
+            slug: "sim-to-real-dup2",
             name: "Sim-to-Real Transfer & Domain Randomization",
           },
         ],
@@ -10484,7 +10485,7 @@ export const courses: Course[] = [
           },
           {
             id: "em-kp-9",
-            slug: "sparseGPT",
+            slug: "sparse-gpt",
             name: "SparseGPT & Wanda for LLM Pruning",
           },
           {
@@ -10496,7 +10497,7 @@ export const courses: Course[] = [
       },
       {
         id: "knowledge-distillation",
-        slug: "knowledge-distillation",
+        slug: "knowledge-distillation-dup1",
         name: "Knowledge Distillation",
         description:
           "Teacher-student training, logit distillation, and feature-level transfer.",
@@ -10542,7 +10543,7 @@ export const courses: Course[] = [
           { id: "em-kp-17", slug: "darts", name: "DARTS & Gradient-Based NAS" },
           {
             id: "em-kp-18",
-            slug: "efficientnet",
+            slug: "efficientnet-dup1",
             name: "EfficientNet & Compound Scaling",
           },
           {
@@ -10593,7 +10594,7 @@ export const courses: Course[] = [
       },
       {
         id: "inference-optimization",
-        slug: "inference-optimization",
+        slug: "inference-optimization-dup1",
         name: "Inference Optimization",
         description:
           "vLLM, Flash Attention, speculative decoding, and serving optimization.",
@@ -10605,7 +10606,7 @@ export const courses: Course[] = [
           },
           {
             id: "em-kp-27",
-            slug: "vllm-serving",
+            slug: "vllm-serving-dup1",
             name: "vLLM & PagedAttention for LLM Serving",
           },
           {
@@ -10863,27 +10864,27 @@ export const courses: Course[] = [
           "Correlation vs causation, potential outcomes, and structural causal models.",
         knowledgePoints: [
           {
-            id: "ci-kp-1",
+            id: "ci-kp-1-dup1",
             slug: "correlation-vs-causation",
             name: "Correlation vs Causation",
           },
           {
-            id: "ci-kp-2",
+            id: "ci-kp-2-dup1",
             slug: "potential-outcomes",
             name: "Potential Outcomes Framework (Rubin Causal Model)",
           },
           {
-            id: "ci-kp-3",
+            id: "ci-kp-3-dup1",
             slug: "structural-causal-models",
             name: "Structural Causal Models (SCMs)",
           },
           {
-            id: "ci-kp-4",
+            id: "ci-kp-4-dup1",
             slug: "causal-graphs-dags",
             name: "Causal Graphs & DAGs",
           },
           {
-            id: "ci-kp-5",
+            id: "ci-kp-5-dup1",
             slug: "do-calculus",
             name: "do-Calculus & Interventional Distributions",
           },
@@ -10897,27 +10898,27 @@ export const courses: Course[] = [
           "ATE, ATT, CATE, and methods for estimating causal effects from data.",
         knowledgePoints: [
           {
-            id: "ci-kp-6",
+            id: "ci-kp-6-dup1",
             slug: "ate-att",
             name: "ATE, ATT & Average Treatment Effects",
           },
           {
-            id: "ci-kp-7",
+            id: "ci-kp-7-dup1",
             slug: "randomized-experiments",
             name: "Randomized Controlled Trials & A/B Tests",
           },
           {
-            id: "ci-kp-8",
+            id: "ci-kp-8-dup1",
             slug: "propensity-score",
             name: "Propensity Score Matching & Weighting",
           },
           {
-            id: "ci-kp-9",
+            id: "ci-kp-9-dup1",
             slug: "instrumental-variables",
             name: "Instrumental Variables (IV)",
           },
           {
-            id: "ci-kp-10",
+            id: "ci-kp-10-dup1",
             slug: "difference-in-differences",
             name: "Difference-in-Differences (DiD)",
           },
@@ -10930,27 +10931,27 @@ export const courses: Course[] = [
         description: "Learning causal structure from observational data.",
         knowledgePoints: [
           {
-            id: "ci-kp-11",
+            id: "ci-kp-11-dup1",
             slug: "pc-algorithm",
             name: "PC Algorithm & Constraint-Based Methods",
           },
           {
-            id: "ci-kp-12",
+            id: "ci-kp-12-dup1",
             slug: "ges-algorithm",
             name: "GES & Score-Based Causal Discovery",
           },
           {
-            id: "ci-kp-13",
+            id: "ci-kp-13-dup1",
             slug: "lingam",
             name: "LiNGAM & Functional Causal Models",
           },
           {
-            id: "ci-kp-14",
+            id: "ci-kp-14-dup1",
             slug: "neural-causal-discovery",
             name: "Neural Causal Discovery (NOTEARS, DAG-GNN)",
           },
           {
-            id: "ci-kp-15",
+            id: "ci-kp-15-dup1",
             slug: "time-series-causality",
             name: "Granger Causality & Time Series Causal Discovery",
           },
@@ -10963,27 +10964,27 @@ export const courses: Course[] = [
         description: "CATE estimation, meta-learners, and causal forests.",
         knowledgePoints: [
           {
-            id: "ci-kp-16",
+            id: "ci-kp-16-dup1",
             slug: "cate-estimation",
             name: "CATE Estimation & Subgroup Analysis",
           },
           {
-            id: "ci-kp-17",
+            id: "ci-kp-17-dup1",
             slug: "meta-learners",
             name: "Meta-Learners (S, T, X, R-Learner)",
           },
           {
-            id: "ci-kp-18",
+            id: "ci-kp-18-dup1",
             slug: "causal-forests",
             name: "Causal Forests & Generalized Random Forests",
           },
           {
-            id: "ci-kp-19",
+            id: "ci-kp-19-dup1",
             slug: "double-ml",
             name: "Double/Debiased Machine Learning (DML)",
           },
           {
-            id: "ci-kp-20",
+            id: "ci-kp-20-dup1",
             slug: "regression-discontinuity",
             name: "Regression Discontinuity Design (RDD)",
           },
@@ -10997,27 +10998,27 @@ export const courses: Course[] = [
           "Learning disentangled, causal representations and domain generalization.",
         knowledgePoints: [
           {
-            id: "ci-kp-21",
+            id: "ci-kp-21-dup1",
             slug: "disentangled-representations",
             name: "Disentangled Causal Representations",
           },
           {
-            id: "ci-kp-22",
+            id: "ci-kp-22-dup1",
             slug: "independent-causal-mechanisms",
             name: "Independent Causal Mechanisms (ICM)",
           },
           {
-            id: "ci-kp-23",
+            id: "ci-kp-23-dup1",
             slug: "invariant-risk-minimization",
             name: "Invariant Risk Minimization (IRM)",
           },
           {
-            id: "ci-kp-24",
+            id: "ci-kp-24-dup1",
             slug: "counterfactual-reasoning",
             name: "Counterfactual Reasoning in ML",
           },
           {
-            id: "ci-kp-25",
+            id: "ci-kp-25-dup1",
             slug: "causal-ood",
             name: "Causal OOD Generalization",
           },
@@ -11030,27 +11031,27 @@ export const courses: Course[] = [
         description: "Uplift modeling, policy learning, and causal fairness.",
         knowledgePoints: [
           {
-            id: "ci-kp-26",
+            id: "ci-kp-26-dup1",
             slug: "uplift-modeling",
             name: "Uplift Modeling & Personalized Interventions",
           },
           {
-            id: "ci-kp-27",
+            id: "ci-kp-27-dup1",
             slug: "policy-learning",
             name: "Optimal Policy Learning & Decision Making",
           },
           {
-            id: "ci-kp-28",
+            id: "ci-kp-28-dup1",
             slug: "causal-fairness",
             name: "Causal Fairness & Algorithmic Bias",
           },
           {
-            id: "ci-kp-29",
+            id: "ci-kp-29-dup1",
             slug: "mediation-analysis",
             name: "Mediation Analysis & Path-Specific Effects",
           },
           {
-            id: "ci-kp-30",
+            id: "ci-kp-30-dup1",
             slug: "causal-llms",
             name: "Causal Reasoning in LLMs",
           },
@@ -11062,7 +11063,7 @@ export const courses: Course[] = [
   // DIFFUSION MODELS & GENERATIVE AI
   {
     id: "diffusion-models",
-    slug: "diffusion-models",
+    slug: "diffusion-models-dup1",
     name: "Diffusion Models & Generative AI",
     description:
       "Score-based models, DDPM, latent diffusion, and state-of-the-art image/audio/video generation.",
@@ -11125,7 +11126,7 @@ export const courses: Course[] = [
           },
           {
             id: "diff-kp-8",
-            slug: "controlnet",
+            slug: "controlnet-dup1",
             name: "ControlNet & Conditional Generation",
           },
           {
@@ -11188,7 +11189,7 @@ export const courses: Course[] = [
           },
           {
             id: "diff-kp-17",
-            slug: "audio-diffusion",
+            slug: "audio-diffusion-dup1",
             name: "Audio Diffusion (AudioLDM, Stable Audio)",
           },
           {
@@ -11282,7 +11283,7 @@ export const courses: Course[] = [
   // GRAPH NEURAL NETWORKS & GEOMETRIC DEEP LEARNING
   {
     id: "graph-neural-networks",
-    slug: "graph-neural-networks",
+    slug: "graph-neural-networks-dup1",
     name: "Graph Neural Networks & Geometric DL",
     description:
       "Message passing, graph convolutions, and geometric deep learning for structured data.",
@@ -11328,7 +11329,7 @@ export const courses: Course[] = [
       },
       {
         id: "message-passing",
-        slug: "message-passing",
+        slug: "message-passing-dup1",
         name: "Message Passing Neural Networks",
         description:
           "MPNN framework, aggregation functions, and graph convolution variants.",
@@ -11430,7 +11431,7 @@ export const courses: Course[] = [
       },
       {
         id: "knowledge-graphs",
-        slug: "knowledge-graphs",
+        slug: "knowledge-graphs-dup1",
         name: "Knowledge Graphs & Link Prediction",
         description:
           "Knowledge graph embeddings, relation learning, and reasoning.",
@@ -11547,7 +11548,7 @@ export const courses: Course[] = [
       },
       {
         id: "bayesian-inference",
-        slug: "bayesian-inference",
+        slug: "bayesian-inference-dup1",
         name: "Bayesian Inference",
         description:
           "Advanced techniques for Bayesian parameter estimation and inference.",
@@ -11649,14 +11650,14 @@ export const courses: Course[] = [
       },
       {
         id: "bayesian-optimization",
-        slug: "bayesian-optimization",
+        slug: "bayesian-optimization-dup1",
         name: "Bayesian Optimization",
         description:
           "Optimization techniques that use probabilistic models to guide search.",
         knowledgePoints: [
           {
             id: "pm-kp-21",
-            slug: "bayesian-optimization",
+            slug: "bayesian-optimization-dup2",
             name: "Bayesian Optimization (BO)",
           },
           {
@@ -11690,7 +11691,7 @@ export const courses: Course[] = [
         knowledgePoints: [
           {
             id: "pm-kp-26",
-            slug: "uncertainty-quantification",
+            slug: "uncertainty-quantification-dup1",
             name: "Uncertainty Quantification (UQ)",
           },
           {

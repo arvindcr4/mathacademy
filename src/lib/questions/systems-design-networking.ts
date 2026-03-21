@@ -323,16 +323,16 @@ const questions: Record<string, Question[]> = {
       question:
         "What is the correct order of servers contacted during a full (uncached) DNS resolution for a domain like www.example.com?",
       options: [
-        "Client → Authoritative NS → TLD NS → Root NS → Recursive resolver",
-        "Client → Recursive resolver → Root NS → TLD NS → Authoritative NS",
-        "Client → Root NS → Recursive resolver → Authoritative NS → TLD NS",
-        "Client → TLD NS → Root NS → Authoritative NS → Recursive resolver",
+        "Client $\\rightarrow$ Authoritative NS $\\rightarrow$ TLD NS $\\rightarrow$ Root NS $\\rightarrow$ Recursive resolver",
+        "Client $\\rightarrow$ Recursive resolver $\\rightarrow$ Root NS $\\rightarrow$ TLD NS $\\rightarrow$ Authoritative NS",
+        "Client $\\rightarrow$ Root NS $\\rightarrow$ Recursive resolver $\\rightarrow$ Authoritative NS $\\rightarrow$ TLD NS",
+        "Client $\\rightarrow$ TLD NS $\\rightarrow$ Root NS $\\rightarrow$ Authoritative NS $\\rightarrow$ Recursive resolver",
       ],
       correctAnswer: 1,
       explanation:
         "DNS resolution follows a hierarchical delegation chain. The client queries its configured recursive resolver. If not cached, the resolver asks a root nameserver which TLD nameserver (.com) to contact, then the .com TLD nameserver which authoritative nameserver holds records for example.com. Finally, the resolver queries the authoritative nameserver for the A record of www.example.com.\n\n**Step 1**\nMap the DNS hierarchy from top to bottom.\n\\[\n\\text{Root NS (.)} \\rightarrow \\text{TLD NS (.com)} \\rightarrow \\text{Authoritative NS (example.com)}\n\\]\n\n**Step 2**\nIdentify who drives the resolution.\nThe recursive resolver does the walking. The client only ever talks to its recursive resolver.\n\n**Step 3**\nConfirm the correct order.\nThe delegation chain is: client $\\rightarrow$ recursive resolver $\\rightarrow$ root NS $\\rightarrow$ TLD NS $\\rightarrow$ authoritative NS.",
       hints: [
-        "DNS is hierarchical: root → TLD → authoritative, each delegating to the next level.",
+        "DNS is hierarchical: root -> TLD -> authoritative, each delegating to the next level.",
         "The recursive resolver does the heavy lifting—the client only ever talks to it.",
       ],
     },
