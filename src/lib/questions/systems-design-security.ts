@@ -15,7 +15,7 @@ const questions: Record<string, Question[]> = {
         "The browser / user agent",
       ],
       correctAnswer: 2,
-      explanation: "The authorization server is the entity that authenticates the user, issues the authorization code to the redirect URI, and then exchanges that code for an access token when the client presents it along with its client secret. The resource server only validates the resulting token. This separation means the resource server never needs to handle user credentials.",
+      explanation: "**Step 1:** The resource owner authenticates with the authorization server, which issues an authorization code to the client's redirect URI.\n\n**Step 2:** The client (along with its client_secret) exchanges the authorization code for an access token at the authorization server's token endpoint.\n\n**Step 3:** The authorization server issues the access token. The resource server then validates this token on each request but plays no role in issuing it.\n\nThis separation of duties means the resource server never handles user credentials.",
       hints: [
         "Think about which server the client sends its client_secret to during the code exchange step.",
         "The resource server trusts tokens — it does not issue them.",
@@ -33,7 +33,7 @@ const questions: Record<string, Question[]> = {
         "Signature, Header, Payload",
       ],
       correctAnswer: 2,
-      explanation: "A JWT is structured as Header.Payload.Signature. The header contains the algorithm (e.g., RS256). The payload contains claims such as sub, iat, exp. The signature is computed over the encoded header and payload using the secret or private key, enabling any party with the public key to verify integrity without a network round-trip to an auth server.",
+      explanation: "**Step 1:** The header is Base64URL-encoded first, containing the algorithm type (e.g., RS256).\n\n**Step 2:** The payload is Base64URL-encoded second, containing the claims (sub, iat, exp).\n\n**Step 3:** The signature is computed over the encoded header and payload using the secret or private key. The final token is the concatenation: Header.Payload.Signature.\n\nAny party with the public key can verify integrity without calling an auth server.",
       hints: [
         "The acronym HPS — Header, Payload, Signature — matches the dot-separated order.",
         "Which part must be verified to trust the claims? That part logically comes last.",
@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
         "Opaque tokens have the same revocation limitation as JWTs.",
       ],
       correctAnswer: 1,
-      explanation: "Stateless JWTs are validated by checking the cryptographic signature and expiry claim locally — no network call to the auth server is required. This is their scalability advantage, but it also means there is nowhere to record 'this specific token is revoked.' Solutions include short expiry windows, a token blocklist (requiring a fast shared store like Redis, sacrificing some statefulness), or switching to opaque tokens with introspection. Okta and Auth0 both document this trade-off.",
+      explanation: "**Step 1:** When a client presents a JWT, the resource server validates it locally by checking the cryptographic signature against the public key and confirming the expiry (exp) claim.\n\n**Step 2:** This validation requires no network call to the authorization server — the server is stateless with respect to token state.\n\n**Step 3:** Because there is no shared state, there is no mechanism to record that a specific token has been revoked before its natural expiry.\n\nMitigations include short TTLs, token blocklists (Redis), or opaque tokens with introspection.",
       hints: [
         "Stateless means no per-request call to the auth server — what is the downside of that?",
         "Compare with opaque tokens: how does the resource server validate those?",
@@ -69,7 +69,7 @@ const questions: Record<string, Question[]> = {
         "The authorization server issues a new refresh token and ignores the reuse signal.",
       ],
       correctAnswer: 2,
-      explanation: "Refresh token rotation issues a new refresh token on every use and retires the old one. If an old token from the same family is ever replayed (a sign of theft), the server detects reuse and invalidates the entire family — all refresh tokens derived from the same root. This is the scheme used by Auth0 and described in OAuth 2.0 Security Best Current Practice (RFC 9700). It forces a re-login but prevents a stolen refresh token from granting indefinite access.",
+      explanation: "**Step 1:** On each refresh token use, the authorization server issues a new refresh token and retires the old one (rotation).\n\n**Step 2:** If a stolen token is replayed (the old token the attacker has), the server detects that it has already been used and identifies this as token theft.\n\n**Step 3:** The server immediately invalidates the entire token family — all refresh tokens derived from the same root — forcing a re-login and limiting the blast radius.\n\nThis approach, defined in RFC 9700, prevents indefinite access via stolen refresh tokens.",
       hints: [
         "What signal does a replayed refresh token send? An attacker has a copy — what is the safest response?",
         "Think 'family' — if one token is compromised, how does the blast radius stay contained?",
@@ -81,7 +81,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Server-side sessions are inherently more scalable than client-side JWTs because the server does not need to store any session data.",
       correctAnswer: "False",
-      explanation: "The statement is backwards. Server-side sessions require the server (or a shared store like Redis) to store session state for every logged-in user, which creates scaling and sticky-session challenges. Client-side JWTs carry all claims in the token itself, so validation is stateless and any server replica can verify the token without shared storage. The trade-off is that revocation is harder with JWTs because there is no server-side record to update.",
+      explanation: "**Step 1:** Server-side sessions store session state in a server-side store (memory, Redis, database) for every logged-in user.\n\n**Step 2:** Every request must query this session store to retrieve session data, creating a shared-state dependency that complicates horizontal scaling.\n\n**Step 3:** Client-side JWTs carry all claims in the token itself — validation is stateless and any server replica can verify the token without shared storage.\n\nThe trade-off is that revocation is harder with JWTs because there is no server-side record to update.",
       hints: [
         "Which approach requires a network call to a session store on every request?",
         "Horizontal scaling is easier when servers share no per-user state.",
@@ -102,7 +102,7 @@ const questions: Record<string, Question[]> = {
         "Resource servers that need to validate token signatures offline.",
       ],
       correctAnswer: 1,
-      explanation: "Public clients (SPAs, native mobile apps) cannot keep a client_secret confidential because their code runs on the user's device. PKCE replaces the client secret with a per-request cryptographic challenge: the client generates a random code_verifier, hashes it to code_challenge, sends the hash in the authorization request, then sends the plaintext verifier during the token exchange. An attacker who intercepts the authorization code cannot exchange it without knowing the verifier. RFC 7636 defines PKCE; it is now recommended for all OAuth flows.",
+      explanation: "**Step 1:** The client generates a random code_verifier and computes its SHA-256 hash (the code_challenge), then sends the hash to the authorization server during the authorization request.\n\n**Step 2:** The authorization server stores the code_challenge and issues an authorization code tied to it.\n\n**Step 3:** During token exchange, the client presents the original code_verifier. The server hashes it and compares to the stored code_challenge. An attacker with only the intercepted authorization code cannot complete the exchange without the verifier.\n\nPKCE (RFC 7636) is now recommended for all OAuth flows, not just public clients.",
       hints: [
         "Which clients cannot store secrets safely? Their code is visible to the end user.",
         "PKCE binds the code to the specific client instance that started the flow.",
@@ -120,7 +120,7 @@ const questions: Record<string, Question[]> = {
         "MAC (Mandatory Access Control) — a central authority assigns fixed classification levels.",
       ],
       correctAnswer: 2,
-      explanation: "ABAC evaluates policies using any combination of subject attributes (department, clearance), resource attributes (sensitivity label), and environmental attributes (time of day, location). This makes it far more expressive than RBAC, which only checks role membership. ABAC is used by AWS IAM condition keys, Google Cloud IAM conditions, and healthcare systems complying with HIPAA's minimum-necessary standard. The trade-off is increased policy complexity and evaluation latency.",
+      explanation: "**Step 1:** ABAC policies are evaluated at runtime using multiple attributes: subject attributes (department, role, clearance), resource attributes (sensitivity label, owner), and environmental attributes (time of day, location).\n\n**Step 2:** A policy engine (e.g., AWS IAM, Open Policy Agent) checks all applicable attributes against defined rules to reach a permit or deny decision.\n\n**Step 3:** This allows fine-grained access decisions like 'allow only if department=oncology AND resource.sensitivity=low AND time is business hours,' which RBAC's role-membership model cannot express.\n\nThe trade-off is increased policy complexity and evaluation latency compared to RBAC.",
       hints: [
         "RBAC answers 'what role does the user have?' — does that capture time-of-day or resource sensitivity?",
         "Which model can express 'allow only if department=oncology AND resource.sensitivity=low AND time is business hours'?",
@@ -138,7 +138,7 @@ const questions: Record<string, Question[]> = {
         "Trusted only if the source IP is on the allowlist for that subnet.",
       ],
       correctAnswer: 2,
-      explanation: "Zero trust's core principle is 'never trust, always verify.' Network location (inside or outside) confers no implicit trust. Every request must carry a verifiable identity (e.g., mTLS certificate or service account token), be authorized against policy (e.g., OPA or Google's BeyondProd), and travel over an encrypted channel. This model was formalized by NIST SP 800-207 and is the foundation of Google's BeyondCorp and Cloudflare Access. Lateral movement attacks that exploit perimeter trust are mitigated because compromising one internal machine does not grant access to others.",
+      explanation: "**Step 1:** Zero trust rejects the perimeter model where internal network location implies trust. Every request is treated as potentially hostile regardless of origin.\n\n**Step 2:** Every request must carry a verifiable identity (e.g., mTLS certificate, service account token, or OIDC token) and be explicitly authorized against policy before granting access.\n\n**Step 3:** All communication must be encrypted, and lateral movement is limited because access is granted per-request based on identity and policy, not network location.\n\nThis model (NIST SP 800-207) underpins Google's BeyondCorp and Cloudflare Access.",
       hints: [
         "Zero trust was created specifically because the perimeter model fails when an attacker is already inside.",
         "BeyondCorp moved Google's access control to the application layer — what replaces network location as the trust signal?",
@@ -156,7 +156,7 @@ const questions: Record<string, Question[]> = {
         "That the client's IP address matches the certificate's Subject Alternative Name.",
       ],
       correctAnswer: 1,
-      explanation: "In standard TLS, only the server presents a certificate; the client is anonymous from the TLS perspective. In mTLS, the server also requests a certificate from the client during the handshake. The client signs a challenge with its private key, and the server verifies the certificate chain to a trusted CA. This enables service-to-service authentication in service meshes (e.g., Istio, Linkerd) without embedding API keys or passwords in code. Cloudflare uses mTLS extensively for API Shield and authenticated origin pulls.",
+      explanation: "**Step 1:** In standard TLS, only the server presents a certificate; the client is anonymous from the TLS perspective.\n\n**Step 2:** In mTLS, the server also requests a certificate from the client during the TLS handshake.\n\n**Step 3:** The client signs a challenge with its private key, and the server verifies the certificate chain to a trusted CA — proving the client's identity.\n\nThis enables service-to-service authentication in service meshes (e.g., Istio, Linkerd) without embedding API keys in code.",
       hints: [
         "Standard TLS authenticates the server to the client. mTLS adds what direction?",
         "Service meshes like Istio inject sidecars that handle mTLS — what does the sidecar present to peer services?",
@@ -177,7 +177,7 @@ const questions: Record<string, Question[]> = {
         "Environment variables are inherently insecure because they are transmitted over HTTP.",
       ],
       correctAnswer: 1,
-      explanation: "Vault's dynamic secrets create a unique credential pair per request with a configurable TTL (e.g., 1 hour). When the lease expires, Vault revokes the credential in the target system. A leaked credential is usable only until its TTL and is tied to a specific Vault lease ID, providing an audit trail. Static credentials in env vars have no expiry, are often shared across services, and when leaked require manual rotation of all dependent systems. HashiCorp documented this pattern as a key differentiation of Vault over secret stores that only encrypt static values.",
+      explanation: "**Step 1:** Vault's dynamic secrets generate a unique credential pair per request with a configurable TTL (e.g., 1 hour).\n\n**Step 2:** When the lease expires, Vault revokes the credential in the target system automatically.\n\n**Step 3:** A leaked credential is usable only until its TTL and is tied to a specific Vault lease ID, providing an audit trail. Static credentials in env vars have no expiry and require manual rotation when leaked.\n\nThis short-lived, traceable approach is the key security advantage over static credentials.",
       hints: [
         "What happens to a leaked static password vs. a leaked dynamic credential with a 1-hour TTL?",
         "Vault leases link a credential to an entity and a time — what does that enable operationally?",
@@ -195,7 +195,7 @@ const questions: Record<string, Question[]> = {
         "The KEK is stored with the data so that the DEK can be reconstructed at any time.",
       ],
       correctAnswer: 1,
-      explanation: "Envelope encryption separates key management from data encryption. The DEK (a symmetric AES-256 key) encrypts the actual data locally — fast and efficient. The KMS-managed KEK then encrypts the DEK. Only the encrypted DEK (the 'envelope') is stored alongside the ciphertext. The plaintext KEK never leaves the KMS HSM. To decrypt, the application calls KMS to unwrap the DEK, then decrypts data locally. This limits KMS API calls (and cost) while keeping the most sensitive key material hardware-protected.",
+      explanation: "**Step 1:** The DEK (a symmetric AES-256 key) encrypts the actual data locally — fast and efficient.\n\n**Step 2:** The KMS-managed KEK then encrypts the DEK. Only the encrypted DEK (the 'envelope') is stored alongside the ciphertext.\n\n**Step 3:** The plaintext KEK never leaves the KMS HSM. To decrypt, the application calls KMS to unwrap the DEK, then decrypts data locally.\n\nThis limits KMS API calls (and cost) while keeping the most sensitive key material hardware-protected.",
       hints: [
         "Think of the 'envelope' as the encrypted DEK wrapped around the ciphertext.",
         "Why not encrypt all data directly with the KEK? Consider key rotation cost when you have terabytes of data.",
@@ -213,7 +213,7 @@ const questions: Record<string, Question[]> = {
         "To sign the server's certificate with a second authority to create a chain of trust.",
       ],
       correctAnswer: 1,
-      explanation: "Certificate Transparency (RFC 6962) requires CAs to log every issued certificate to public, cryptographically-verifiable, append-only logs. Browsers (Chrome since 2018) require all TLS certificates to have Signed Certificate Timestamps (SCTs) proving they were submitted to a CT log. Domain owners can monitor these logs to detect certificates fraudulently issued for their domains. CT does not encrypt or revoke — it provides auditability. Cloudflare and Google both operate CT logs.",
+      explanation: "**Step 1:** CAs must log every issued certificate to public, cryptographically-verifiable, append-only CT logs before issuance.\n\n**Step 2:** Browsers (Chrome since 2018) require all TLS certificates to have Signed Certificate Timestamps (SCTs) proving they were logged.\n\n**Step 3:** Domain owners can monitor these logs to detect fraudulently issued certificates for their domains.\n\nCT provides auditability — it does not encrypt, revoke, or create a chain of trust.",
       hints: [
         "What problem does CT solve that CRL and OCSP do not — rogue issuance before revocation is possible?",
         "CT logs are append-only and Merkle-tree structured — why does that make them tamper-evident?",
@@ -234,7 +234,7 @@ const questions: Record<string, Question[]> = {
         "All three layers are equally hard; the mitigation is identical.",
       ],
       correctAnswer: 2,
-      explanation: "Volumetric attacks are large but detectable by traffic rate and can be dropped upstream via anycast scrubbing (Cloudflare Magic Transit, AWS Shield). Protocol attacks exploit TCP state but can be countered with SYN cookies at the network edge without tracking state. L7 attacks are hardest: each request is a valid HTTP GET or POST from a real IP (often from a botnet). Distinguishing attacker from legitimate user requires behavioral heuristics, CAPTCHA challenges, bot fingerprinting, and ML models — all of which Cloudflare's Bot Management and Google Cloud Armor provide.",
+      explanation: "**Step 1:** Volumetric attacks are large but detectable by traffic rate and can be dropped upstream via anycast scrubbing.\n\n**Step 2:** Protocol attacks (SYN floods) exploit TCP state but can be countered with SYN cookies at the network edge without tracking state.\n\n**Step 3:** L7 attacks are hardest: each request is a valid HTTP GET or POST from a real IP. Distinguishing attacker from legitimate user requires behavioral heuristics, CAPTCHA, bot fingerprinting, and ML models.\n\nL7 mitigation requires HTTP awareness that network edge devices typically lack.",
       hints: [
         "At what layer does a router or firewall need to understand HTTP headers, cookies, or session behavior?",
         "Botnets send real TCP connections with real IPs — what signals differentiate them from humans?",
@@ -252,7 +252,7 @@ const questions: Record<string, Question[]> = {
         "Require API keys to be rotated every hour.",
       ],
       correctAnswer: 1,
-      explanation: "Per-key limits fail against distributed attacks because each key individually stays within limits. A global rate limit (or concurrency limit) caps total system load regardless of key count. Combining this with anomaly detection — unusual spike patterns, correlated timing, shared behavioral fingerprints — allows identifying and blocking credential-stuffing or coordinated API abuse. This is the defense-in-depth approach used by Cloudflare API Shield and AWS WAF managed rules. IP blocking (C) is ineffective against botnets with residential IPs spread across countries.",
+      explanation: "**Step 1:** Per-key limits fail against distributed attacks because each key individually stays within limits.\n\n**Step 2:** A global rate limit (or concurrency limit) caps total system load regardless of how many keys are used.\n\n**Step 3:** Combining this with anomaly detection — unusual spike patterns, correlated timing, shared behavioral fingerprints — allows identifying and blocking coordinated API abuse.\n\nThis defense-in-depth approach is used by Cloudflare API Shield and AWS WAF managed rules.",
       hints: [
         "If each of 10,000 keys sends 99 req/min, the total is 990,000 req/min — which limit catches that?",
         "What signals other than raw count might reveal that thousands of keys are acting in concert?",
@@ -273,7 +273,7 @@ const questions: Record<string, Question[]> = {
         "Validating that user input contains only alphanumeric characters.",
       ],
       correctAnswer: 1,
-      explanation: "Parameterized queries (prepared statements) separate SQL code from data. The database driver sends the query structure first and user-supplied values second; the database never parses data as code. This is the OWASP-recommended primary defense. Custom escaping (A) is error-prone and context-dependent. Network isolation (C) does not prevent injection via the application itself. Alphanumeric validation (D) breaks legitimate use cases like names with apostrophes. ORMs generally use parameterized queries under the hood, providing the same protection.",
+      explanation: "**Step 1:** Parameterized queries (prepared statements) separate SQL code from data. The database driver sends the query structure first.\n\n**Step 2:** User-supplied values are sent second and bound to the query parameters — the database never parses data as SQL code.\n\n**Step 3:** This is the OWASP-recommended primary defense. Custom escaping is error-prone; network isolation does not prevent injection via the application; alphanumeric validation breaks legitimate use cases.\n\nORMs generally use parameterized queries under the hood, providing the same protection.",
       hints: [
         "Parameterized queries: the SQL template is fixed, and values are bound separately — can the database misinterpret the data as SQL?",
         "Why does escaping fail? Think about encoding edge cases and non-string contexts like ORDER BY.",
@@ -309,7 +309,7 @@ const questions: Record<string, Question[]> = {
         "Encrypting the session cookie with AES-256.",
       ],
       correctAnswer: 1,
-      explanation: "CSRF exploits the browser's automatic inclusion of cookies in cross-origin requests. SameSite=Strict prevents the browser from sending cookies with cross-site requests entirely, breaking the attack for most modern browsers. A CSRF token (a random secret tied to the session, included in forms or headers) adds defense-in-depth for browsers that do not fully support SameSite or where Lax mode is used. HttpOnly (A) only prevents JavaScript from reading the cookie — it does not stop the browser from sending it. Content-Type validation (C) is bypassable. AES-256 encryption (D) does not affect how the browser sends the cookie.",
+      explanation: "**Step 1:** CSRF exploits the browser's automatic inclusion of cookies in cross-origin requests. SameSite=Strict prevents the browser from sending cookies with cross-site requests entirely.\n\n**Step 2:** A CSRF token (a random secret tied to the session, included in forms or headers) adds defense-in-depth for browsers with incomplete SameSite support.\n\n**Step 3:** HttpOnly only prevents JavaScript from reading the cookie — it does not stop the browser from sending it. Content-Type validation and encryption do not affect cookie transmission behavior.",
       hints: [
         "CSRF works because the browser automatically attaches cookies to any request to a domain — which mechanism stops that?",
         "The Double Submit Cookie pattern and synchronizer token pattern are two CSRF token strategies — what do they have in common?",
@@ -330,7 +330,7 @@ const questions: Record<string, Question[]> = {
         "Requiring all API clients to also send a username and password alongside the key.",
       ],
       correctAnswer: 1,
-      explanation: "Least-privilege scoping limits what a leaked key can do. Automated rotation (short key lifetimes or triggered rotation on exposure) limits how long it is valid. Rate limits cap the damage rate. Audit logs detect abuse and enable forensic investigation. This is the approach recommended by Stripe, Twilio, and described in the OWASP API Security Top 10. Key length (A) matters only against random guessing — a leaked key is already known. Centralized encrypted storage (C) is good hygiene but does not reduce blast radius post-leak. Adding passwords (D) weakens API usability without addressing the core issue.",
+      explanation: "**Step 1:** Least-privilege scoping limits what a leaked key can do — if the key can only read specific data, exfiltrating everything is impossible.\n\n**Step 2:** Automated rotation (short key lifetimes or triggered rotation on exposure) limits how long a leaked key remains valid.\n\n**Step 3:** Rate limits cap the damage rate per key, and audit logs detect abuse and enable forensic investigation.\n\nThis is the approach recommended by Stripe, Twilio, and OWASP API Security Top 10.",
       hints: [
         "What determines the damage if a key is leaked: its length, or what it is authorized to do?",
         "HashiCorp Vault and AWS Secrets Manager both support automatic key rotation — what does that limit?",
@@ -348,7 +348,7 @@ const questions: Record<string, Question[]> = {
         "SAML and OIDC are functionally identical — the only difference is vendor preference.",
       ],
       correctAnswer: 1,
-      explanation: "SAML 2.0 uses XML assertions signed with XML Signature and was designed for browser-based SSO between enterprises (e.g., corporate apps, Okta, ADFS). OIDC is a lightweight identity layer on top of OAuth 2.0, using JWTs (ID tokens) and REST/JSON APIs. OIDC is easier to implement on mobile and in SPAs, supports PKCE natively, and is the basis for Google Sign-In, Apple Sign-In, and Okta's modern federation. Both support IdP-initiated and SP-initiated flows. Okta supports both protocols but recommends OIDC for new integrations.",
+      explanation: "**Step 1:** SAML 2.0 uses XML assertions signed with XML Signature, designed for browser-based SSO between enterprises.\n\n**Step 2:** OIDC is a lightweight identity layer on top of OAuth 2.0, using JWTs (ID tokens) and REST/JSON APIs.\n\n**Step 3:** OIDC is easier to implement on mobile and in SPAs, supports PKCE natively, and is the basis for Google Sign-In and Okta's modern federation.\n\nBoth support IdP-initiated and SP-initiated flows.",
       hints: [
         "What format does each protocol use for identity assertions? That affects parsing complexity.",
         "OIDC adds an identity layer on top of which existing authorization framework?",

@@ -30,6 +30,11 @@ export interface Question {
   hints?: string[];
   codeSnippet?: string;
   testCases?: { input: string; output: string }[];
+  stepByStep?: {
+    step1?: string;
+    step2?: string;
+    step3?: string;
+  };
 }
 
 export interface KnowledgePoint {

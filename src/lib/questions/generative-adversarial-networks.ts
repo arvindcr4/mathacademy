@@ -1852,7 +1852,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "DALL-E 1 (OpenAI, 2021) is not a GAN but uses a two-stage approach. What is the first stage?",
+        "DALL-E 1 (OpenAI, 2021) uses a two-stage approach for text-to-image generation. Step 1: Images are high-dimensional pixel data - too large to process efficiently alongside text in a single Transformer. Step 2: The first stage compresses images into a compact discrete representation that a Transformer can handle efficiently. Step 3: The second stage learns to predict image tokens conditioned on text tokens autoregressively. What is the first stage?",
       options: [
         "A diffusion model that generates low-resolution images from text",
         "A discrete VAE (dVAE) that compresses images into discrete visual tokens",
@@ -1861,7 +1861,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DALL-E 1 first trains a discrete VAE (dVAE) to encode images into a grid of discrete tokens (8192-way codebook); then it trains a Transformer autoregressive model on text tokens followed by image tokens, enabling text-to-image generation by sampling image token sequences.",
+        "DALL-E 1's first stage is a discrete VAE (dVAE, a VQ-VAE-like model) that encodes images into a grid of 8192-way discrete tokens. This creates a 'visual vocabulary' of 8192 token types per spatial position. The second stage is a Transformer that autoregressively predicts image token sequences given text tokens, enabling text-to-image generation by sampling token sequences and decoding with the dVAE decoder.",
       hints: [
         "dVAE is the VQ-VAE-like component that converts images to discrete codes - a 'visual vocabulary'.",
         "Stage 2 is a Transformer that predicts image tokens given text tokens - like language modeling over image codes.",
@@ -1875,7 +1875,7 @@ const questions: Record<string, Question[]> = {
         "AttnGAN generates images from text descriptions by computing word-level attention to align specific words with specific spatial regions of the generated image at multiple resolutions.",
       correctAnswer: "True",
       explanation:
-        "AttnGAN uses a multi-stage generator where each stage applies word-level cross-attention, allowing the model to focus on specific words when generating corresponding image regions - e.g., 'red beak' guides the beak region specifically.",
+        "Step 1: Text descriptions contain multiple words describing different aspects of the desired image. Step 2: AttnGAN applies word-level cross-attention at each generation stage, computing attention weights between word tokens and spatial regions of the feature map. Step 3: This allows specific words like 'red beak' to guide the generation of the corresponding image region (the beak), rather than conditioning on a single sentence embedding for the whole image. Multiple stages progressively increase resolution with refined word alignment.",
       hints: [
         "Word-level attention is finer-grained than using a single sentence vector for the entire image.",
         "The multi-stage architecture generates progressively higher-resolution images with increasingly refined word alignment.",
@@ -1895,7 +1895,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "StackGAN++ uses a tree-like architecture where multiple generators at different scales are conditioned jointly, adding color consistency regularization that penalizes color distribution differences between scales, improving visual coherence.",
+        "Step 1: StackGAN Stage-1 produces a low-resolution image, Stage-2 refines it to higher resolution - a linear chain. Step 2: StackGAN++ replaces this linear chain with a tree structure where multiple generators at different scales are trained jointly, all conditioned on the same text embedding. Step 3: Color consistency regularization penalizes color distribution differences between scales, ensuring that early coarse images and later fine images have consistent color distributions, improving overall visual coherence.",
       hints: [
         "StackGAN++ is 'tree-structured' rather than just linear stage-1 to stage-2.",
         "Color consistency ensures that early (small) and late (large) stages produce consistent color distributions.",
@@ -1918,7 +1918,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Unlike voxels or images, point clouds are unordered sets of 3D coordinates; discriminators must be permutation-invariant. PointNet-based discriminators process point sets using shared MLPs and symmetric aggregation functions (max pooling) to handle this unordered nature.",
+        "Step 1: Point clouds are represented as a set of N 3D coordinates {(x_i, y_i, z_i)} - the same shape can be represented with points listed in any arbitrary order. Step 2: Convolutional networks assume spatial regularity (grids), which point clouds lack, and they process points in a fixed order that is meaningless for point sets. Step 3: Discriminators must be permutation-invariant: identical point sets in different orders must produce identical real/fake decisions. PointNet-based discriminators achieve this using shared MLPs and symmetric aggregation (max pooling) over all points.",
       hints: [
         "The order of points in a point cloud is arbitrary - the same shape can be represented with points in any order.",
         "Convolutional networks assume spatial regularity (grids), which point clouds don't have.",
@@ -1932,7 +1932,7 @@ const questions: Record<string, Question[]> = {
         "Implicit surface GANs (e.g., using implicit neural representations or occupancy networks) can generate arbitrarily high-resolution 3D shapes without the cubic memory cost of voxel grids.",
       correctAnswer: "True",
       explanation:
-        "Implicit representations define shape as a continuous function f(x, y, z) -> occupancy or SDF; resolution is determined at query time rather than fixed by a grid, eliminating the O(n^3) memory bottleneck of voxels and enabling high-fidelity shape generation.",
+        "Step 1: Voxel grids discretize 3D space into a fixed N x N x N grid; memory usage is O(N^3), making high-resolution voxel grids prohibitively expensive. Step 2: Implicit neural representations define a shape as a continuous function f(x, y, z) -> occupancy (or SDF), where f is a neural network. Step 3: Resolution is determined at query time - the network can be evaluated at any 3D coordinate regardless of a pre-discretized grid, eliminating the cubic memory cost and enabling high-fidelity shapes.",
       hints: [
         "An implicit function can be evaluated at any 3D point at query time - there is no discretization.",
         "Voxel resolution is fixed at training; implicit representations can be queried at any resolution.",
@@ -1952,7 +1952,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "pi-GAN represents each generated scene as a SIREN-based implicit neural radiance field conditioned on a style code from a mapping network; the GAN trains a distribution over such NeRFs, enabling multi-view consistent 3D generation from a single 2D discriminator.",
+        "Step 1: pi-GAN combines implicit neural representations with GANs for 3D-aware image synthesis. Step 2: Each generated scene is represented as a SIREN (sinusoidal activation MLP) that maps a 3D coordinate (x, y, z) to a density and color (NeRF-like radiance field). Step 3: A mapping network produces a style code that conditions the SIREN, enabling the GAN to learn a distribution over scene representations. The 2D discriminator evaluates rendered images from random camera angles, and the GAN learns which SIREN parameters produce realistic 3D scenes.",
       hints: [
         "SIREN uses sine activation functions that are well-suited for representing smooth 3D shapes and radiance fields.",
         "pi-GAN's key contribution is learning a distribution of NeRF scenes, not just a single scene.",
@@ -1975,7 +1975,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DVD-GAN's spatial discriminator (D_S) evaluates individual frames for photorealism while the temporal discriminator (D_T) evaluates a sparse subset of frames jointly for motion consistency, disentangling spatial quality from temporal coherence during training.",
+        "Step 1: Video generation has two distinct quality dimensions: spatial (each frame looks photorealistic) and temporal (frames flow together smoothly). Step 2: A single discriminator that processes all frames jointly cannot cleanly distinguish spatial from temporal failures. Step 3: DVD-GAN splits these into D_S (spatial discriminator, evaluates individual frames) and D_T (temporal discriminator, evaluates a sparse set of frames jointly for motion consistency), allowing each failure mode to be addressed separately during training.",
       hints: [
         "Spatial quality and temporal consistency are different properties - DVD-GAN uses specialized discriminators for each.",
         "The temporal discriminator receives multiple frames simultaneously to assess inter-frame coherence.",
@@ -1989,7 +1989,7 @@ const questions: Record<string, Question[]> = {
         "Temporal coherence in video GANs can be enforced by adding a loss that penalizes optical flow inconsistencies between consecutive generated frames.",
       correctAnswer: "True",
       explanation:
-        "Warp-based temporal consistency losses compute optical flow between adjacent frames and penalize the difference between the warped previous frame and the current frame, directly encouraging smooth, physically plausible motion in generated videos.",
+        "Step 1: Optical flow estimates the apparent motion vector field between two consecutive frames - where each pixel moved. Step 2: Warp-based temporal consistency computes flow from frame t to frame t+1, warps frame t by that flow, and compares the warped result to frame t+1. Step 3: Penalizing the difference between the warped frame and the actual frame directly discourages flickering, ghosting, or unnatural motion, encouraging physically plausible smooth transitions between consecutive generated frames.",
       hints: [
         "Optical flow estimates how pixels move between frames - inconsistency in flow means flickering or unnatural motion.",
         "This loss can be applied without a temporal discriminator as an additional regularizer.",
@@ -2009,7 +2009,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TGAN separates concerns: a recurrent temporal generator produces a sequence of latent codes encoding motion dynamics, then an image generator (shared across time steps) renders each code into a frame independently, enabling disentangled control of content and motion.",
+        "Step 1: TGAN's core idea is to separate motion (temporal dynamics) from appearance (individual frame content). Step 2: The temporal generator is a recurrent network that takes a single noise seed and produces a sequence of latent codes z_1, z_2, ..., z_T, each encoding the motion state at that timestep. Step 3: The image generator (shared across all timesteps) takes each z_t and renders it independently into a frame. Since the image generator is shared, all frames have consistent appearance (same character, scene) while the temporal generator controls motion dynamics.",
       hints: [
         "Separation of temporal (motion) and spatial (appearance) generation is a common design pattern in video GANs.",
         "The shared image generator ensures consistent appearance across frames given consistent latent codes.",
@@ -2032,7 +2032,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Encoder-based inversion can find z values that reconstruct the image but lie off the latent space manifold, making editing with semantic directions unreliable. In-domain inversion adds a discriminator-based regularizer to keep inverted codes within the generator's learned distribution.",
+        "Step 1: Standard encoders minimize reconstruction loss and can find z that produces a near-perfect reconstruction of x, but there is no guarantee that this z lies within the learned latent distribution. Step 2: Latent codes outside the learned distribution (off-manifold) behave unpredictably under semantic editing directions, which are trained on codes from the learned distribution. Step 3: In-domain GAN inversion adds a discriminator-based regularizer that penalizes codes that the discriminator identifies as atypical, keeping inverted codes on the manifold where editing directions remain effective.",
       hints: [
         "The latent space has a 'valid' region where the generator produces meaningful images; out-of-distribution codes behave unpredictably.",
         "Domain regularization penalizes codes that the discriminator identifies as atypical for the learned latent distribution.",
@@ -2046,7 +2046,7 @@ const questions: Record<string, Question[]> = {
         "GAN encoders trained with a perceptual loss (VGG feature matching) in addition to pixel reconstruction loss tend to produce higher-quality inversions than those trained with pixel loss alone.",
       correctAnswer: "True",
       explanation:
-        "Perceptual loss measures similarity in VGG feature space, capturing semantic and textural similarity that pixel-level L2 loss misses; this leads to inversions that better preserve perceptually important attributes like texture and structure.",
+        "Step 1: Pixel-level L2 loss treats all pixels equally - a slight shift in texture or structure that is perceptually obvious may have low pixel error. Step 2: Perceptual loss (VGG feature matching) measures similarity in the VGG feature space, capturing semantic content and textural patterns that pixel metrics miss. Step 3: Encoders trained with both losses produce inversions that better preserve perceptually important attributes (texture, structure, identity) while still maintaining pixel-level fidelity.",
       hints: [
         "Pixel loss treats all pixels equally; perceptual loss weights semantically important regions more.",
         "VGG features encode both low-level textures and high-level semantic content.",
@@ -2066,7 +2066,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Optimization-based inversion can minimize reconstruction error to near zero by using codes outside the learned W space, but such codes are 'out-of-distribution' and semantic editing directions (trained on W) do not transfer well - fidelity and editability are in tension.",
+        "Step 1: Lower reconstruction distortion means G(z) more closely matches the original image x. Step 2: Achieving lower distortion often requires using codes in less-regularized regions of the latent space (e.g., extreme values in W+). Step 3: Semantic editing directions (like +age or +smile) are discovered in the well-behaved W subspace, which may not transfer to off-manifold codes. Therefore, as distortion decreases, editability typically decreases - a fundamental tradeoff.",
       hints: [
         "Low distortion means the reconstructed image closely matches the original.",
         "High editability means that applying a semantic direction (e.g., +age) produces the expected change.",
@@ -2089,7 +2089,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Likelihood-based objectives penalize probability zero on real data - the model must assign positive density everywhere. GANs optimize an adversarial objective that has no such guarantee; a generator can collapse to a few modes that fool the discriminator without covering all real data modes.",
+        "Step 1: Likelihood-based objectives (ELBO for diffusion, log-likelihood for VAEs) penalize the model for assigning zero probability to any training example. To maximize likelihood, the model must assign positive density everywhere the data has mass - it cannot ignore modes. Step 2: GANs optimize an adversarial objective: the generator only needs to fool the current discriminator, not cover all modes. Mode collapse occurs when a few outputs reliably fool D, and there is no explicit penalty for ignoring other data modes. Step 3: This fundamental difference in training objectives gives diffusion models better mode coverage at the cost of computational efficiency.",
       hints: [
         "Likelihood-based training requires the model to explain every training example with non-zero probability.",
         "Mode collapse in GANs occurs because the adversarial loss does not explicitly penalize ignoring modes.",
@@ -2103,7 +2103,7 @@ const questions: Record<string, Question[]> = {
         "GANs generally generate samples faster than diffusion models because GANs require only a single forward pass through the generator, while diffusion models require hundreds of sequential denoising steps.",
       correctAnswer: "True",
       explanation:
-        "GAN generation is a single forward pass through G(z) - milliseconds per sample. DDPM requires T=1000 sequential denoising steps; even with accelerated samplers (DDIM, DPM-Solver, ~10-50 steps), diffusion sampling remains significantly slower than a single GAN forward pass.",
+        "Step 1: GAN generation is a single forward pass: sample noise z, pass through G(z), produce an image - one step. Step 2: DDPM generation requires T sequential denoising steps: x_T (noise) -> x_{T-1} -> x_{T-2} -> ... -> x_0, where T is typically 1000. Step 3: Even accelerated samplers (DDIM, DPM-Solver, ~10-50 steps) are significantly slower than a single GAN forward pass. This speed gap makes GANs preferable for real-time applications like interactive editing or video streaming.",
       hints: [
         "GAN generation: z -> G(z) is one step. DDPM: x_T -> x_{T-1} -> ... -> x_0 is T steps.",
         "This sampling speed advantage is a practical reason GANs are still preferred for real-time applications.",
@@ -2123,7 +2123,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard DDPM assumes each reverse step is Gaussian; Denoising Diffusion GAN uses a conditional GAN to model the complex multimodal reverse distribution at each step, allowing much larger steps (fewer total steps) without sacrificing accuracy.",
+        "Step 1: Standard DDPM assumes each reverse diffusion step p(x_{t-1} | x_t) is a Gaussian distribution. But the true reverse distribution for complex data (e.g., images) is multimodal (different plausible denoised outcomes). Step 2: Denoising Diffusion GAN replaces the Gaussian assumption with a conditional GAN that models the full multimodal distribution at each reverse step. Step 3: Because each conditional GAN can accurately model a large denoising step, only ~4 steps are needed instead of 1000, dramatically reducing sampling time while maintaining quality.",
       hints: [
         "The key insight: if each denoising step can be accurately modeled with a GAN, fewer steps are needed.",
         "The bottleneck in DDPM is that each step must be Gaussian-small to stay accurate - a GAN removes this constraint.",
@@ -2146,7 +2146,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GAN augmentation for rare classes supplements (not replaces) real data; the goal is to reduce class imbalance and improve classifier performance on underrepresented classes, but generated samples must be validated to ensure they are realistic and correctly labeled.",
+        "Step 1: Medical imaging datasets are often heavily imbalanced - rare conditions have far fewer examples than common ones, causing classifiers to underperform on rare classes. Step 2: GAN augmentation generates synthetic images of rare classes to supplement (not replace) real training data, increasing the effective sample size of the rare class. Step 3: A classifier trained on augmented data should have better sensitivity on the rare class, though generated samples must be validated for realism and correct labeling.",
       hints: [
         "Class imbalance causes classifiers to underperform on rare classes - augmentation directly addresses this.",
         "Supplementing real data with synthetic data is preferable to replacing it, since real data quality is verified.",
@@ -2160,7 +2160,7 @@ const questions: Record<string, Question[]> = {
         "CTGAN (Conditional Tabular GAN) is specifically designed to generate synthetic tabular data by modeling the complex non-Gaussian, multi-modal distributions of continuous and discrete columns jointly.",
       correctAnswer: "True",
       explanation:
-        "CTGAN uses mode-specific normalization (Variational Gaussian Mixture Model per column) to handle non-Gaussian continuous distributions and conditional generation to handle class imbalance in discrete columns, making it the standard approach for synthetic tabular data generation.",
+        "Step 1: Tabular data contains mixed types: continuous columns (e.g., age, income) with non-Gaussian multi-modal distributions, and discrete columns (e.g., category, zip code) with class imbalance. Standard GANs assume continuous unimodal data. Step 2: CTGAN uses mode-specific normalization (fitting a Variational Gaussian Mixture Model per continuous column) to capture multi-modal distributions, and conditional generation for discrete columns to handle imbalance. Step 3: These innovations allow CTGAN to model the full joint distribution of complex tabular datasets, making it the standard approach for synthetic tabular data generation.",
       hints: [
         "Tabular data has mixed types (numeric, categorical) and complex distributions - standard GANs assume continuous unimodal data.",
         "CTGAN's mode normalization explicitly models multi-modal distributions that standard batch normalization would distort.",
@@ -2180,7 +2180,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "3DMM fitting (using model-based computer vision) extracts pose and expression parameters from the driving video; the GAN synthesizes the face texture/appearance conditioned on these parameters. The 3D fitting is typically a classical optimization step, not a GAN component.",
+        "Step 1: Face reenactment needs two ingredients: the geometric information (head pose, expression) from the driving video, and the identity appearance from the source image. Step 2: 3DMM fitting is a classical computer vision optimization that fits a parametric 3D face model (e.g., Flame, FaceWarehouse) to video frames, extracting pose (rotation, translation) and expression parameters. Step 3: The GAN (or neural renderer) takes the source identity features and the 3DMM parameters as conditioning and synthesizes the reenacted face. 3DMM fitting is a model-based CV method, not a GAN component.",
       hints: [
         "Face reenactment pipelines combine classical 3D face fitting with neural rendering - not everything is a GAN.",
         "The 3DMM provides the geometric scaffold; the GAN provides the photorealistic appearance.",
@@ -2203,7 +2203,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID fits Gaussians to feature distributions (introducing approximation error) and has a finite-sample bias. KID uses polynomial MMD directly on features, is unbiased even with small sample sizes, and does not assume Gaussian feature distributions.",
+        "Step 1: FID fits a multivariate Gaussian to Inception features of real and generated images, then computes the Frechet (Wasserstein-2) distance between the two Gaussians. This fitting step introduces approximation error if the true feature distributions are not Gaussian. Step 2: KID avoids this assumption by computing the Maximum Mean Discrepancy (MMD) directly on the feature distributions using a kernel function. Step 3: KID is unbiased with any sample size, whereas FID has a systematic downward bias with small sample sizes, making KID more reliable for limited data evaluation.",
       hints: [
         "FID's Gaussian assumption can introduce errors when feature distributions are non-Gaussian.",
         "MMD is a kernel-based test of distributional equality that avoids parametric assumptions.",
@@ -2217,7 +2217,7 @@ const questions: Record<string, Question[]> = {
         "Inception Score (IS) measures both sample quality and diversity by evaluating the entropy of the marginal label distribution and the conditional label distribution over generated images.",
       correctAnswer: "True",
       explanation:
-        "IS = exp(E[KL(p(y|x) || p(y))]): high quality means p(y|x) is sharp (low entropy - one clear class); high diversity means p(y) is flat (high entropy - many classes generated). IS is high when each image looks like a clear object AND many different classes are generated.",
+        "Step 1: IS = exp(E[KL(p(y|x) || p(y))]). High quality requires p(y|x) to be sharp (low entropy) - each generated image looks like a clear, identifiable object. Step 2: High diversity requires p(y) to be uniform (high entropy) - the generated images span many classes. Step 3: Only when both conditions hold (sharp per-image predictions AND uniform marginal distribution) does IS become large, making IS a useful proxy for quality-diversity in the absence of reference real images.",
       hints: [
         "For a sharp image, the classifier is confident about its class - p(y|x) has low entropy.",
         "For diverse outputs, the marginal p(y) should be uniform - all classes generated equally.",
@@ -2237,7 +2237,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Precision (fidelity) and recall (diversity) are in tension: truncating the latent distribution improves sample quality (precision) but reduces coverage of real data modes (recall). This tradeoff is fundamental to generative modeling and motivates reporting both metrics alongside FID.",
+        "Step 1: Precision measures how much of the generated distribution overlaps with the real distribution (fidelity/quality). Recall measures how much of the real distribution is covered by the generated distribution (diversity/coverage). Step 2: The truncation trick in StyleGAN shrinks z toward the mean, biasing generation toward high-density regions - this increases precision (better quality samples) but decreases recall (fewer modes covered). Step 3: These objectives are inherently in tension: optimizing for one degrades the other. Reporting both precision and recall alongside FID captures this tradeoff that FID alone cannot reveal.",
       hints: [
         "The truncation trick in StyleGAN shows this tradeoff: truncating z improves image quality but reduces diversity.",
         "A model that generates only high-quality but repetitive images has high precision and low recall.",
@@ -2317,7 +2317,7 @@ const extra: Record<string, Question[]> = {
         "The cGAN generator only produces binary (black-and-white) outputs",
       ],
       correctAnswer: 1,
-      explanation: "In a cGAN (Mirza and Osindero, 2014), the conditioning information y is concatenated or injected into both G(z, y) and D(x, y), allowing the generator to produce outputs matching the specified condition and the discriminator to evaluate whether the output is realistic for that condition.",
+      explanation: "Step 1: In an unconditional GAN, both G and D receive only the noise z (or no input for D). Neither network has any control over the output. Step 2: In a cGAN (Mirza and Osindero, 2014), conditioning information y (class label, image, text) is fed to both G (as G(z, y)) and D (as D(x, y)). Step 3: This allows the generator to produce outputs matching the specified condition and the discriminator to evaluate whether the output is realistic for that condition, enabling controlled generation.",
       hints: [
         "The 'c' stands for conditional - both networks receive the condition as additional input.",
         "Without conditioning, the generator cannot control which class or attribute to produce.",
@@ -2335,7 +2335,7 @@ const extra: Record<string, Question[]> = {
         "PatchGAN uses attention mechanisms to focus only on the most discriminative image regions",
       ],
       correctAnswer: 1,
-      explanation: "PatchGAN runs the discriminator as a fully convolutional network producing a grid of real/fake decisions (one per patch); averaging these gives the final loss. This penalizes high-frequency artifacts locally and allows the discriminator to be applied to any image resolution, since its receptive field is a fixed-size patch.",
+      explanation: "Step 1: A standard image-level discriminator outputs a single real/fake probability for the entire image. Step 2: PatchGAN runs the discriminator as a fully convolutional network, producing a grid of independent real/fake decisions (one per NxN patch), then averaging them. Step 3: This focuses the discriminator on texture quality per local region rather than global composition, and because it is fully convolutional, it can process images of any size without a fixed-size input.",
       hints: [
         "A patch-level real/fake decision focuses on texture quality rather than global composition.",
         "Fully convolutional discriminators can handle variable image sizes - no fixed-size fully connected layer needed.",
@@ -2353,7 +2353,7 @@ const extra: Record<string, Question[]> = {
         "It prevents the discriminator from distinguishing translations from real target-domain images",
       ],
       correctAnswer: 1,
-      explanation: "Without paired supervision, a generator could map every input to a single output that fools the discriminator. Cycle consistency forces each generator to be approximately invertible - translating A to B then B to A should recover A - constraining the solution space to structure-preserving translations rather than arbitrary style mappings.",
+      explanation: "Step 1: With paired data, the ground truth (input, ground_truth_output) directly supervises the generator. Without pairs, there is no pixel-level target. Step 2: Without any such constraint, the generator could map every input to the same output that fools the discriminator (e.g., mapping every photo to the same painting). Step 3: Cycle consistency requires G_AB(G_BA(A)) approximates A and G_BA(G_AB(B)) approximates B. This forces each generator to be approximately invertible - mapping A to B then back gives A, not an arbitrary image - which constrains the solution to structure-preserving translations.",
       hints: [
         "If there is no paired ground truth, how do you prevent the generator from ignoring the content?",
         "Cycle consistency is analogous to requiring a translation model to be invertible - translate to French and back to English should give the original text.",
@@ -2365,7 +2365,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "StarGAN allows multi-domain image translation using a single generator, unlike CycleGAN which requires a separate generator pair for each domain pair.",
       correctAnswer: "True",
-      explanation: "CycleGAN requires a generator pair for each domain pair, scaling quadratically with the number of domains. StarGAN trains one generator G(x, c_target) that translates any input image to any target domain specified by the condition vector c_target, requiring only one model regardless of the number of domains.",
+      explanation: "Step 1: CycleGAN needs G_AB and G_BA for each domain pair A-B, so with N domains it needs N(N-1) generators. Step 2: StarGAN uses one generator G(x, c_target) where c_target is the target domain label vector. Step 3: With a single G, changing c_target changes the target domain - all domain pairs share the same generator. This reduces model count from quadratic to linear in the number of domains.",
       hints: [
         "CycleGAN: with 5 domains you need many generator pairs. StarGAN: always just 1.",
         "StarGAN injects the target domain as a condition - the same generator handles all domain pairs.",
@@ -2383,7 +2383,7 @@ const extra: Record<string, Question[]> = {
         "Supporting video-to-video translation by adding a temporal consistency constraint",
       ],
       correctAnswer: 1,
-      explanation: "StarGAN v2 introduces a mapping network and style encoder that produce domain-specific style codes from noise or reference images; within each domain, many different styles are possible rather than a single average domain style, enabling diverse, reference-guided generation.",
+      explanation: "Step 1: StarGAN v1 uses a single fixed domain label per translation - all 'happy' faces look similar. Step 2: StarGAN v2 introduces a mapping network (noise -> style code per domain) and a style encoder (reference image -> style code). Step 3: The style code provides a continuous, diverse representation of the target domain - with the same domain label you can generate many different styles. This enables reference-guided generation where a reference image's style is transferred to the input.",
       hints: [
         "StarGAN v1 maps everything in a domain to one style. StarGAN v2 generates a distribution of styles per domain.",
         "The style code is derived either from random noise (diverse generation) or a reference image (reference-guided generation).",
