@@ -182,7 +182,7 @@ const questions: Record<string, Question[]> = {
         "An agent follows policy \\pi in an MDP with \\gamma = 0.9. Starting from state s, it receives rewards 10, 0, 5 over the next three steps then reaches a terminal state. What is V^\\pi(s) (the exact discounted return for this trajectory)?",
       options: [
         "15",
-        "10 + 0.9 \cdot \left(0) + 0.81 \cdot \left(5) = 14.05",
+        "10 + 0.9 \cdot \left(0\right) + 0.81 \cdot \left(5\right) = 14.05",
         "10 + 0 + 5 = 15",
         "(10 + 0 + 5)/3 = 5",
       ],
@@ -236,7 +236,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In state s an agent commits to action a (which may not be selected by \\pi), then follows \\pi for all future steps. With \\gamma = 0.9, if the immediate reward is r = 5 and the next state has V^\\pi(s') = 20, what is Q^\\pi(s, a) (ignoring further uncertainty for this calculation)?",
-      options: ["25", "5 + 0.9 \cdot 20 = 23", "5 * 20 = 100", "0.9 \cdot 5 + 20 = 24.5"],
+      options: ["25", "5 + 0.9 \cdot 20 = 23", "5 \cdot 20 = 100", "0.9 \cdot 5 + 20 = 24.5"],
       correctAnswer: 1,
       explanation:
         "Q^\\pi(s,a) = E_\\pi[G_t | S_t=s, A_t=a] = E[R_{t+1} + \\gamma V^\\pi(S_{t+1}) | S_t=s, A_t=a]. For this single-step calculation: Q^\\pi(s,a) = 5 + 0.9 \cdot 20 = 23. Sutton & Barto §3.5 define Q^\\pi(s,a) as the expected return starting from s, taking a, then following \\pi.",
@@ -253,7 +253,7 @@ const questions: Record<string, Question[]> = {
         "For a deterministic policy \mu, V^\mu(s) = Q^\mu(s, \mu(s)) holds for all states s.",
       correctAnswer: "True",
       explanation:
-        'Sutton & Barto establish V^\\pi(s) = \sum_a \\pi(a|s) Q^\\pi(s,a). For a deterministic policy \mu, \\pi(\mu(s)|s) = 1 and \\pi(a|s) = 0 for all a \$\\neq\$ \mu(s). The sum collapses to: V^\mu(s) = 1\cdot Q^\mu(s,\mu(s)) = Q^\mu(s,\mu(s)). Spinning Up also states this identity: "V^\\pi(s) = Q^\\pi(s, \mu(s)) for a deterministic policy."',
+        'Sutton & Barto establish V^\\pi(s) = \sum_a \\pi(a|s) Q^\\pi(s,a). For a deterministic policy \mu, \\pi(\mu(s)|s) = 1 and \\pi(a|s) = 0 for all a \neq \mu(s). The sum collapses to: V^\mu(s) = 1\cdot Q^\mu(s,\mu(s)) = Q^\mu(s,\mu(s)). Spinning Up also states this identity: "V^\\pi(s) = Q^\\pi(s, \mu(s)) for a deterministic policy."',
       hints: [
         "Use the identity $V^\pi(s) = \sum_a \pi(a \mid s) Q^\pi(s, a)$ and substitute $\pi(a \mid s)$ for a deterministic policy.",
         "A deterministic policy puts all probability mass on one action, so only one term survives the sum.",
@@ -432,7 +432,7 @@ const questions: Record<string, Question[]> = {
         "With \\gamma = 0.9, starting from an arbitrary V\\_0, after k = 10 iterations of policy evaluation, the sup-norm error ‖V_k - V^\\pi‖_\\infty is bounded by:",
       options: [
         "0.9^10 * ‖V\\_0 - V^\\pi‖_\\infty \approx 0.349 * ‖V\\_0 - V^\\pi‖_\\infty",
-        "0.1 * k * ‖V\\_0 - V^\\pi‖_\\infty = 1.0 * ‖V\\_0 - V^\\pi‖_\\infty",
+        "0.1 \cdot k * ‖V\\_0 - V^\\pi‖_\\infty = 1.0 * ‖V\\_0 - V^\\pi‖_\\infty",
         "(0.9/k) * ‖V\\_0 - V^\\pi‖_\\infty = 0.09 * ‖V\\_0 - V^\\pi‖_\\infty",
         "‖V\\_0 - V^\\pi‖_\\infty / (1 - 0.9^k)",
       ],
@@ -986,7 +986,7 @@ const questions: Record<string, Question[]> = {
         "Ordinary importance sampling provides an unbiased estimate of V^\\pi(s) but can have infinite variance, while weighted importance sampling is biased but has finite variance and is strongly consistent.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.5-5.6: ordinary IS estimate V̂(s) = (\\Sigma \\rho_i G_i) / n is unbiased (E[V̂] = V^\\pi(s)) but its variance can be infinite if \\rho_i is heavy-tailed. Weighted IS normalizes by \\Sigma \\rho_i: V̂_w(s) = \\Sigma \\rho_i G_i / \\Sigma \\rho_i - this is biased (E[V̂_w] \$\\neq\$ V^\\pi(s) for finite n) but consistent (converges to V^\\pi(s)) and has dramatically lower variance.",
+        "Sutton & Barto §5.5-5.6: ordinary IS estimate V̂(s) = (\\Sigma \\rho_i G_i) / n is unbiased (E[V̂] = V^\\pi(s)) but its variance can be infinite if \\rho_i is heavy-tailed. Weighted IS normalizes by \\Sigma \\rho_i: V̂_w(s) = \\Sigma \\rho_i G_i / \\Sigma \\rho_i - this is biased (E[V̂_w] \neq V^\\pi(s) for finite n) but consistent (converges to V^\\pi(s)) and has dramatically lower variance.",
       hints: [
         "Ordinary IS: \\rho can be very large when b(a|s) is small but \\pi(a|s) is large. The product of T such ratios can be enormous.",
         'S&B §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred over ordinary importance sampling."',
@@ -1056,17 +1056,17 @@ const questions: Record<string, Question[]> = {
       question:
         "An agent observes: S\\_0 = s, R\\_1 = 2, S\\_1 = s'. Currently V(s) = 10 and V(s') = 8, with \\gamma = 0.9 and \\alpha = 0.1. After one TD(0) update, what is the new V(s)?",
       options: [
-        "10 + 0.1 \cdot \left(2 + 0.9 \cdot 8 - 10) = 10 + 0.1 \cdot \left(9.2 - 10) = 10 - 0.08 = 9.92",
-        "10 + 0.1 \cdot \left(2 + 8 - 10) = 10 + 0 = 10",
+        "10 + 0.1 \cdot \left(2 + 0.9 \cdot 8 - 10\right) = 10 + 0.1 \cdot \left(9.2 - 10\right) = 10 - 0.08 = 9.92",
+        "10 + 0.1 \cdot \left(2 + 8 - 10\right) = 10 + 0 = 10",
         "(2 + 0.9 \cdot 8) = 9.2",
-        "0.1 \cdot \left(2 + 0.9 \cdot 8) + 0.9 \cdot 10 = 9.92",
+        "0.1 \cdot \left(2 + 0.9 \cdot 8\right) + 0.9 \cdot 10 = 9.92",
       ],
       correctAnswer: 0,
       explanation:
         "TD target = R\\_1 + \\gamma V(S\\_1) = 2 + 0.9\\times8 = 2 + 7.2 = 9.2. TD error \\delta = 9.2 - 10 = -0.8. Update: V(s) \\leftarrow 10 + 0.1\\times(-0.8) = 10 - 0.08 = 9.92. The negative TD error tells us: V(s) was too high relative to the bootstrapped estimate. We decrease V(s) slightly.",
       hints: [
         "TD error = target - current = (R + \\gamma V(s')) - V(s) = 9.2 - 10 = -0.8.",
-        "Update V(s) \\leftarrow V(s) + \\alpha*\\delta = 10 + 0.1\\times(-0.8) = 9.92. A negative TD error means our current estimate was too optimistic.",
+        "Update V(s) \\leftarrow V(s) + \\alpha \cdot \\delta = 10 + 0.1\\times(-0.8) = 9.92. A negative TD error means our current estimate was too optimistic.",
       ],
     },
   ],
@@ -1234,7 +1234,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For constant reward R = 1 at every step: G\\_t = \\Sigma_{k=0}^\\infty \\gamma^k * 1 = 1/(1-\\gamma) = 1/(1-0.95) = 1/0.05 = 20. This is the geometric series formula. It confirms that \\gamma < 1 bounds the return: no matter how long the agent runs, G\\_t \\leq R_max/(1-\\gamma). With \\gamma = 0.95 and R_max = 1, the upper bound is 20.",
+        "For constant reward R = 1 at every step: G\\_t = \\Sigma_{k=0}^\\infty \\gamma^k \cdot 1 = 1/(1-\\gamma) = 1/(1-0.95) = 1/0.05 = 20. This is the geometric series formula. It confirms that \\gamma < 1 bounds the return: no matter how long the agent runs, G\\_t \\leq R_max/(1-\\gamma). With \\gamma = 0.95 and R_max = 1, the upper bound is 20.",
       hints: [
         "Geometric series: \\Sigma_{k=0}^\\infty \\gamma^k = 1/(1-\\gamma) for |\\gamma| < 1.",
         "This formula directly gives the worst-case return bound that DP convergence proofs rely on.",
@@ -1485,7 +1485,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The standard \\epsilon-greedy rule (Sutton & Barto §2.4): with probability 1-\\epsilon select the greedy action a*; with probability \\epsilon select uniformly at random over all |A| actions (including a*). So \\pi(a*|s) = 1-\\epsilon + \\epsilon/|A| = 0.9 + 0.025 = 0.925 and \\pi(a\$\\neq\$a*|s) = \\epsilon/|A| = 0.025. Total: 0.925 + 3\\times0.025 = 1 ✓. This ensures every action is tried with probability at least \\epsilon/|A| > 0.",
+        "The standard \\epsilon-greedy rule (Sutton & Barto §2.4): with probability 1-\\epsilon select the greedy action a*; with probability \\epsilon select uniformly at random over all |A| actions (including a*). So \\pi(a*|s) = 1-\\epsilon + \\epsilon/|A| = 0.9 + 0.025 = 0.925 and \\pi(a \\neq a*|s) = \\epsilon/|A| = 0.025. Total: 0.925 + 3\\times0.025 = 1 ✓. This ensures every action is tried with probability at least \\epsilon/|A| > 0.",
       hints: [
         "Careful: the random uniform draw includes the greedy action itself, so \\pi(a*|s) = 1-\\epsilon + \\epsilon/|A|, not simply 1-\\epsilon.",
         'S&B §2.4: \\epsilon-greedy "behaves greedily most of the time, but every once in a while...selects randomly from all the actions with equal probability."',
@@ -1542,7 +1542,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Ordinary IS: V̂ = (1/n)\\Sigma\\_i \\rho\\_iG\\_i is unbiased (E[V̂] = V^\\pi(s)) but \\rho\\_i can be very large, causing high variance. Weighted IS: V̂_w = \\Sigma\\_i \\rho\\_iG\\_i / \\Sigma\\_i \\rho\\_i is a self-normalizing (ratio) estimator - biased for finite n (E[V̂_w] \$\\neq\$ V^\\pi(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
+        'Ordinary IS: V̂ = (1/n)\\Sigma\\_i \\rho\\_iG\\_i is unbiased (E[V̂] = V^\\pi(s)) but \\rho\\_i can be very large, causing high variance. Weighted IS: V̂_w = \\Sigma\\_i \\rho\\_iG\\_i / \\Sigma\\_i \\rho\\_i is a self-normalizing (ratio) estimator - biased for finite n (E[V̂_w] \neq V^\\pi(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
       hints: [
         "The denominator \\Sigma\\_i \\rho\\_i instead of n is what distinguishes weighted from ordinary IS.",
         "If all \\rho\\_i = 1 (on-policy), both estimators reduce to the standard sample mean.",
@@ -1556,9 +1556,9 @@ const questions: Record<string, Question[]> = {
         "Weighted importance sampling is consistent: as the number of episodes n \\to \\infty, V̂_w(s) converges to V^\\pi(s) with probability 1, despite being biased for finite n.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)\\Sigma\\rho\\_i \\to E_b[\\rho] = 1 and (1/n)\\Sigma\\rho\\_iG\\_i \\to E_b[\\rhoG] = E_\\pi[G] = V^\\pi(s). The ratio converges to V^\\pi(s)/1 = V^\\pi(s). Bias for finite n arises because the ratio of averages \$\\neq\$ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
+        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)\\Sigma\\rho\\_i \\to E_b[\\rho] = 1 and (1/n)\\Sigma\\rho\\_iG\\_i \\to E_b[\\rhoG] = E_\\pi[G] = V^\\pi(s). The ratio converges to V^\\pi(s)/1 = V^\\pi(s). Bias for finite n arises because the ratio of averages \neq average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
       hints: [
-        "Slutsky\'s theorem: if X\\_n \\to X and Y\\_n \\to Y (in probability), then X\\_n/Y\\_n \\to X/Y as long as Y \$\\neq\$ 0.",
+        "Slutsky\'s theorem: if X\\_n \\to X and Y\\_n \\to Y (in probability), then X\\_n/Y\\_n \\to X/Y as long as Y \neq 0.",
         "The bias of weighted IS is O(1/n), which decreases with sample size - hence consistency despite finite-sample bias.",
       ],
     },
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "TD(\\lambda) with eligibility traces updates all visited states simultaneously using \\delta\\_t = R\\_t₊\\_1 + \\gamma V(S\\_t₊\\_1) - V(S\\_t): V(s) \\leftarrow V(s) + \\alpha*\\delta\\_t\cdot e\\_t(s). Compared to n-step TD, what is the key computational advantage of eligibility traces?",
+        "TD(\\lambda) with eligibility traces updates all visited states simultaneously using \\delta\\_t = R\\_t₊\\_1 + \\gamma V(S\\_t₊\\_1) - V(S\\_t): V(s) \\leftarrow V(s) + \\alpha \cdot \\delta\\_t\cdot e\\_t(s). Compared to n-step TD, what is the key computational advantage of eligibility traces?",
       options: [
         "Eligibility traces require less memory because they store only the current trace vector instead of the last n states and rewards",
         "Eligibility traces are computationally equivalent to n-step TD but numerically more stable due to the exponential weighting",
