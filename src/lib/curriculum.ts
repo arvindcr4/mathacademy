@@ -11719,4 +11719,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "rl-finetuning-platforms",
+    slug: "rl-finetuning-platforms",
+    name: "RL Fine-Tuning Platforms & Model Serving",
+    description:
+      "Compare platforms for RL fine-tuning (GRPO, PPO, RFT) and model hosting. Covers HUD, Tinker, AWS Bedrock, Together AI, RunPod, and infrastructure decisions.",
+    category: "fine-tuning",
+    icon: "🎛️",
+    color: "#8B5CF6",
+    topicCount: 6,
+    estimatedHours: 8,
+    topics: [
+      {
+        id: "rlft-fundamentals",
+        slug: "rlft-fundamentals",
+        name: "RL Fine-Tuning Fundamentals",
+        description:
+          "Understanding when and how to use reinforcement learning for fine-tuning LLMs.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-1",
+            slug: "rlft-vs-sft",
+            name: "RL Fine-Tuning vs SFT/DPO",
+          },
+          {
+            id: "rlft-kp-2",
+            slug: "grpo-algorithms",
+            name: "GRPO & Importance Sampling",
+          },
+          {
+            id: "rlft-kp-3",
+            slug: "rlft-use-cases",
+            name: "When to Use RL Fine-Tuning",
+          },
+          {
+            id: "rlft-kp-4",
+            slug: "lora-for-rl",
+            name: "LoRA for RL Training",
+          },
+          {
+            id: "rlft-kp-5",
+            slug: "reward-modeling",
+            name: "Reward Model Training",
+          },
+        ],
+      },
+      {
+        id: "end-to-end-rl-platforms",
+        slug: "end-to-end-rl-platforms",
+        name: "End-to-End RL Platforms",
+        description:
+          "Platforms that handle both RL training and model serving in one product.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-6",
+            slug: "hud-platform",
+            name: "HUD: RL Training + Inference",
+          },
+          {
+            id: "rlft-kp-7",
+            slug: "aws-bedrock-rft",
+            name: "AWS Bedrock Reinforcement Fine-Tuning",
+          },
+          {
+            id: "rlft-kp-8",
+            slug: "vertex-ai-rl",
+            name: "Google Vertex AI RL Training",
+          },
+          {
+            id: "rlft-kp-9",
+            slug: "anyscale-ray",
+            name: "Anyscale & Ray RLlib",
+          },
+          {
+            id: "rlft-kp-10",
+            slug: "platform-comparison",
+            name: "End-to-End Platform Comparison",
+          },
+        ],
+      },
+      {
+        id: "training-only-platforms",
+        slug: "training-only-platforms",
+        name: "RL Training Platforms (No Hosting)",
+        description:
+          "Platforms specialized for RL training that require separate hosting solutions.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-11",
+            slug: "tinker-platform",
+            name: "Tinker (Thinking Machines)",
+          },
+          {
+            id: "rlft-kp-12",
+            slug: "atropos-framework",
+            name: "Atropos RL Framework",
+          },
+          {
+            id: "rlft-kp-13",
+            slug: "verl-openrlhf",
+            name: "veRL & OpenRLHF",
+          },
+          {
+            id: "rlft-kp-14",
+            slug: "openclaw-rl",
+            name: "OpenClaw-RL",
+          },
+          {
+            id: "rlft-kp-15",
+            slug: "weight-export",
+            name: "Exporting & Merging LoRA Weights",
+          },
+        ],
+      },
+      {
+        id: "model-serving-hosting",
+        slug: "model-serving-hosting",
+        name: "Model Serving & Hosting",
+        description:
+          "Deploy and serve fine-tuned models with low latency and high throughput.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-16",
+            slug: "vllm-pagedattention",
+            name: "vLLM & PagedAttention",
+          },
+          {
+            id: "rlft-kp-17",
+            slug: "together-ai-serving",
+            name: "Together AI Model Hosting",
+          },
+          {
+            id: "rlft-kp-18",
+            slug: "fireworks-inference",
+            name: "Fireworks AI Sub-100ms Inference",
+          },
+          {
+            id: "rlft-kp-19",
+            slug: "runpod-serverless",
+            name: "RunPod Serverless Endpoints",
+          },
+          {
+            id: "rlft-kp-20",
+            slug: "ollama-local",
+            name: "Ollama for Local Deployment",
+          },
+        ],
+      },
+      {
+        id: "gpu-infrastructure",
+        slug: "gpu-infrastructure",
+        name: "GPU Infrastructure & Rental",
+        description:
+          "Cloud GPU providers for training and serving your own models.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-21",
+            slug: "lambda-labs",
+            name: "Lambda Labs GPU Cloud",
+          },
+          {
+            id: "rlft-kp-22",
+            slug: "runpod-gpu",
+            name: "RunPod GPU Rental",
+          },
+          {
+            id: "rlft-kp-23",
+            slug: "modal-serverless",
+            name: "Modal Serverless GPU",
+          },
+          {
+            id: "rlft-kp-24",
+            slug: "coreweave-k8s",
+            name: "CoreWeave Kubernetes GPU",
+          },
+          {
+            id: "rlft-kp-25",
+            slug: "spheron-decentralized",
+            name: "Spheron Decentralized GPU",
+          },
+        ],
+      },
+      {
+        id: "platform-decisions",
+        slug: "platform-decisions",
+        name: "Platform Selection & Trade-offs",
+        description:
+          "Architecture decisions based on cost, latency, compliance, and scale requirements.",
+        knowledgePoints: [
+          {
+            id: "rlft-kp-26",
+            slug: "cost-optimization",
+            name: "Training & Inference Cost Optimization",
+          },
+          {
+            id: "rlft-kp-27",
+            slug: "latency-requirements",
+            name: "Latency vs Throughput Trade-offs",
+          },
+          {
+            id: "rlft-kp-28",
+            slug: "compliance-security",
+            name: "Compliance (HIPAA, FedRAMP) & Security",
+          },
+          {
+            id: "rlft-kp-29",
+            slug: "scaling-decisions",
+            name: "Scaling from Prototype to Production",
+          },
+          {
+            id: "rlft-kp-30",
+            slug: "hybrid-architectures",
+            name: "Hybrid: Train Here, Host There",
+          },
+        ],
+      },
+    ],
+  },
 ];
