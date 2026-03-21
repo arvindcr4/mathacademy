@@ -488,7 +488,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Policy gradient methods directly optimize a parametric policy \\pi_\\theta(a|s), which can output continuous action distributions (e.g., Gaussian) - making them naturally suited for continuous action spaces where \argmax over Q-values is intractable.",
+        "First, let's recall that value-based methods like DQN learn a Q-function and then select actions by $\\argmax_a Q(s,a)$, which is intractable in continuous action spaces.\n\n**Step 1.** Policy gradient methods directly optimize a parametric policy $\\pi_\\theta(a|s)$, which can output continuous action distributions (e.g., Gaussian $\\pi(a|s) = \\mathcal{N}(\\mu_\\theta(s), \\sigma_\\theta(s))$).\n\n**Step 2.** With a policy that outputs a distribution, actions are sampled from that distribution - no $\\argmax$ is needed. Gradients can flow through the mean and variance parameters via the reparameterization trick.\n\n**Step 3.** Value-based methods cannot handle continuous actions because $\\argmax_a Q(s,a)$ requires enumerating an infinite set. Policy gradient methods naturally handle this by outputting a distribution over actions.\n\nTherefore, the answer is They can naturally represent stochastic policies and handle continuous action spaces.",
+      stepByStep: {
+        step1: "Value-based methods require $\\argmax_a Q(s,a)$, which is intractable in continuous action spaces with infinitely many actions.",
+        step2: "Policy gradient methods output a distribution $\\pi_\\theta(a|s)$ (e.g., Gaussian), from which actions are sampled - no $\\argmax$ needed.",
+        step3: "Gradients flow through the policy parameters via reparameterization, enabling optimization in continuous action spaces without enumeration.",
+      },
       hints: [
         "How does DQN handle continuous actions? What about a policy that outputs a Gaussian distribution?",
         "Stochastic policies are natural outputs of policy gradient methods.",
