@@ -876,6 +876,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // NATURAL LANGUAGE PROCESSING
+  {
+    id: 'nlp-fundamentals',
+    slug: 'nlp-fundamentals',
+    name: 'Natural Language Processing',
+    description: 'From text preprocessing to modern NLP: embeddings, sequence models, and applied NLP tasks.',
+    category: 'fine-tuning',
+    icon: '📝',
+    color: '#22C55E',
+    topicCount: 6,
+    estimatedHours: 28,
+    topics: [
+      {
+        id: 'text-preprocessing',
+        slug: 'text-preprocessing',
+        name: 'Text Preprocessing',
+        description: 'Clean, tokenize, and normalize text for NLP pipelines.',
+        knowledgePoints: [
+          { id: 'nlp-kp-1', slug: 'tokenization-nlp', name: 'Tokenization Strategies' },
+          { id: 'nlp-kp-2', slug: 'stemming-lemmatization', name: 'Stemming & Lemmatization' },
+          { id: 'nlp-kp-3', slug: 'stop-words', name: 'Stop Word Removal & Text Normalization' },
+          { id: 'nlp-kp-4', slug: 'regex-nlp', name: 'Regular Expressions for NLP' },
+          { id: 'nlp-kp-5', slug: 'text-cleaning', name: 'Text Cleaning & Unicode Handling' },
+        ]
+      },
+      {
+        id: 'word-embeddings',
+        slug: 'word-embeddings',
+        name: 'Word Embeddings',
+        description: 'Represent words as dense vectors capturing semantic meaning.',
+        knowledgePoints: [
+          { id: 'nlp-kp-6', slug: 'word2vec', name: 'Word2Vec (CBOW & Skip-gram)' },
+          { id: 'nlp-kp-7', slug: 'glove', name: 'GloVe: Global Vectors for Word Representation' },
+          { id: 'nlp-kp-8', slug: 'fasttext', name: 'FastText & Subword Embeddings' },
+          { id: 'nlp-kp-9', slug: 'contextual-embeddings', name: 'Contextual Embeddings (BERT, ELMo)' },
+          { id: 'nlp-kp-10', slug: 'sentence-embeddings', name: 'Sentence Embeddings (SBERT, E5)' },
+        ]
+      },
+      {
+        id: 'sequence-classification',
+        slug: 'sequence-classification',
+        name: 'Text Classification & Sentiment',
+        description: 'Classify text into categories using classical and deep learning approaches.',
+        knowledgePoints: [
+          { id: 'nlp-kp-11', slug: 'naive-bayes-text', name: 'Naive Bayes for Text Classification' },
+          { id: 'nlp-kp-12', slug: 'tfidf', name: 'TF-IDF Weighting' },
+          { id: 'nlp-kp-13', slug: 'bert-classification', name: 'BERT for Sequence Classification' },
+          { id: 'nlp-kp-14', slug: 'zero-shot-classification', name: 'Zero-Shot Text Classification' },
+          { id: 'nlp-kp-15', slug: 'sentiment-analysis', name: 'Sentiment Analysis & Opinion Mining' },
+        ]
+      },
+      {
+        id: 'named-entity-recognition',
+        slug: 'named-entity-recognition',
+        name: 'Named Entity Recognition',
+        description: 'Identify and classify named entities in text.',
+        knowledgePoints: [
+          { id: 'nlp-kp-16', slug: 'ner-basics', name: 'NER: People, Orgs, Locations' },
+          { id: 'nlp-kp-17', slug: 'bio-tagging', name: 'BIO/BIOES Tagging Scheme' },
+          { id: 'nlp-kp-18', slug: 'crf-ner', name: 'Conditional Random Fields (CRF) for NER' },
+          { id: 'nlp-kp-19', slug: 'bert-ner', name: 'BERT-Based NER' },
+          { id: 'nlp-kp-20', slug: 'relation-extraction', name: 'Relation Extraction' },
+        ]
+      },
+      {
+        id: 'machine-translation',
+        slug: 'machine-translation',
+        name: 'Machine Translation',
+        description: 'Translate text between languages with neural machine translation.',
+        knowledgePoints: [
+          { id: 'nlp-kp-21', slug: 'seq2seq-mt', name: 'Sequence-to-Sequence MT' },
+          { id: 'nlp-kp-22', slug: 'attention-mt', name: 'Attention Mechanism in MT' },
+          { id: 'nlp-kp-23', slug: 'transformer-mt', name: 'Transformer-Based MT' },
+          { id: 'nlp-kp-24', slug: 'bleu-score', name: 'BLEU Score & MT Evaluation' },
+          { id: 'nlp-kp-25', slug: 'low-resource-mt', name: 'Low-Resource Machine Translation' },
+        ]
+      },
+      {
+        id: 'question-answering',
+        slug: 'question-answering',
+        name: 'Question Answering & Summarization',
+        description: 'Extract answers and summarize long texts with neural models.',
+        knowledgePoints: [
+          { id: 'nlp-kp-26', slug: 'extractive-qa', name: 'Extractive QA (SQuAD-style)' },
+          { id: 'nlp-kp-27', slug: 'abstractive-qa', name: 'Abstractive QA with LLMs' },
+          { id: 'nlp-kp-28', slug: 'open-domain-qa', name: 'Open-Domain QA with Retrieval' },
+          { id: 'nlp-kp-29', slug: 'extractive-summarization', name: 'Extractive Summarization' },
+          { id: 'nlp-kp-30', slug: 'abstractive-summarization', name: 'Abstractive Summarization (BART, T5)' },
+        ]
+      },
+    ]
+  },
+
   // COMPUTER VISION
   {
     id: 'computer-vision',
