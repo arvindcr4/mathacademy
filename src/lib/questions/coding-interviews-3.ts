@@ -12,7 +12,7 @@ const questions: Record<string, Question[]> = {
       options: ["Fibonacci", "Factorial", "Binary", "Harmonic"],
       correctAnswer: 0,
       explanation:
-        "Let $dp[i]$ denote the number of ways to reach step $i$. The final move to step $i$ must be either:\n\n- A 1-step from step $i-1$: contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$: contributing $dp[i-2]$ ways\n\nTherefore:\n$$\\begin{align}\ndp[i] &= dp[i-1] + dp[i-2]\\n\\text{with}\\quad dp[1] &= 1,\\quad dp[2] = 2\\n\\end{align}$$\n\nThis recurrence relation is identical to the Fibonacci sequence (shifted by one index).",
+        "Let $dp[i]$ denote the number of ways to reach step $i$. The last move to step $i$ must be either:\n\n- A 1-step from step $i-1$, contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$, contributing $dp[i-2]$ ways\n\nThese two sets of paths are mutually exclusive and exhaustive, so we sum them:\n\\[dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for }i \\geq 3\\]\n\nWith base cases $dp[1] = 1$ (only one way: one 1-step) and $dp[2] = 2$ (ways: $1+1$ or $2$), this recurrence generates the Fibonacci sequence starting from $F_1 = 1,\; F_2 = 2$.",
       hints: [
         "Write the recurrence by looking at the final move into step $n$.",
         "You can arrive at step $n$ from step $n-1$ or from step $n-2$, so the counts add: $dp[n] = dp[n-1] + dp[n-2]$.",
@@ -423,6 +423,19 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Ask whether the suffix starting at index i can be segmented.",
         "From each start index, try every dictionary word that matches the current prefix.",
+      ],
+    },
+    {
+      id: "q-wb-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In the Word Break problem, $dp[0]$ is initialized to $\\texttt{true}$ because an empty prefix can always be segmented.",
+      correctAnswer: "True",
+      explanation:
+        "The empty string requires no words from the dictionary, so it is trivially segmentable.\n\nBase case: $dp[0] = \\text{true}$ (empty string). All subsequent states build on this foundation.",
+      hints: [
+        "What does an empty prefix need to be segmented?",
+        "$dp[0] = \\text{true}$ is the base case; no word is needed.",
       ],
     },
   ],
@@ -1226,6 +1239,38 @@ const questions: Record<string, Question[]> = {
         "Compare target with the boundaries of the sorted half to decide which half to search.",
       ],
     },
+    {
+      id: "q-dc-binary-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Binary search requires the input array to be sorted.",
+      correctAnswer: "True",
+      explanation:
+        "Binary search relies on the sorted order to decide whether to search the left or right half after each comparison.\n\nIf the array is unsorted, the decision rule $\\text{target} < \\text{mid}$ \\Rightarrow \\text{search left}$ is invalid.",
+      hints: [
+        "Why do we eliminate half the search space each step?",
+        "That elimination is only valid when the array is sorted.",
+      ],
+    },
+    {
+      id: "q-dc-binary-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "When using binary search to find the first element satisfying a monotone predicate $P$, the loop invariant is:",
+      options: [
+        "$P(\\text{left} - 1)$ is false and $P(\\text{right} + 1)$ is true",
+        "$P(\\text{mid})$ is always true",
+        "The target is always at $\\text{mid}$",
+        "$P(\\text{left})$ equals $P(\\text{right})$",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The invariant keeps the answer in $[\\text{left}, \\text{right}]$:\n\n$$\\begin{align}\nP(\\text{left} - 1) &= \\text{false} \\quad (\\text{everything before left fails})\\\\\nP(\\text{right} + 1) &= \\text{true} \\quad (\\text{everything after right succeeds})\n\\end{align}$$\n\nEach mid-point check narrows the interval until $\\text{left} = \\text{right}$, which is the answer.",
+      hints: [
+        "Think of the array as FFFF...TTTT. The answer is the first T.",
+        "The invariant ensures $[\\text{left}, \\text{right}]$ always contains the first T.",
+      ],
+    },
   ],
 
   "merge-sort-divide": [
@@ -1290,6 +1335,19 @@ const questions: Record<string, Question[]> = {
         "Count inversions when the left element is greater than the right element during merge.",
         "When you take from the right half, add the count of remaining left elements to the inversion total.",
         "Inversions = remaining left elements when right element is smaller.",
+      ],
+    },
+    {
+      id: "q-dc-merge-5",
+      type: "true-false",
+      difficulty: "hard",
+      question: "The merge sort algorithm requires $O(n)$ auxiliary space for the merge step.",
+      correctAnswer: "True",
+      explanation:
+        "During the merge step, we combine two sorted halves into a single sorted array.\n\nWe cannot merge in-place efficiently (in-place merge runs in $O(n \\log n)$ time or requires complex logic), so the standard implementation uses an auxiliary buffer of size $n$.\n\n$$\\text{Space: } O(n) \\text{ for the auxiliary array} + O(\\log n) \\text{ for the call stack}$$",
+      hints: [
+        "Where do merged elements go before they are written back?",
+        "Two sorted halves need a temporary buffer during merge.",
       ],
     },
   ],
@@ -1412,6 +1470,19 @@ const questions: Record<string, Question[]> = {
         "Adds/subtracts are cheaper",
       ],
     },
+    {
+      id: "q-dc-strassen-4",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Standard matrix multiplication of two $n \\times n$ matrices runs in $O(n^3)$ time.",
+      correctAnswer: "True",
+      explanation:
+        "For each of the $n^2$ entries in the result matrix, we compute a dot product of two length-$n$ vectors:\n\n$$n^2 \\times n = n^3 \\text{ multiplications and additions}$$\n\nStrassen's algorithm improves on this with $O(n^{\\log_2 7}) \\approx O(n^{2.81})$.",
+      hints: [
+        "How many entries does the result matrix have?",
+        "Each entry requires a dot product of two $n$-element vectors.",
+      ],
+    },
   ],
 
   "closest-pair": [
@@ -1456,6 +1527,33 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Delta = minimum of left and right closest pairs",
         "Points must be close to the dividing line",
+      ],
+    },
+    {
+      id: "q-dc-closest-4",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The brute-force algorithm for finding the closest pair of points in a 2D plane runs in $O(n^2)$ time.",
+      correctAnswer: "True",
+      explanation:
+        "The brute-force approach checks every pair of points:\n\n$$\\binom{n}{2} = \\frac{n(n-1)}{2} = O(n^2) \\text{ pairs}$$\n\nFor each pair, distance is computed in $O(1)$. The divide and conquer approach achieves $O(n \\log n)$.",
+      hints: [
+        "How many pairs of $n$ points are there?",
+        "Each pair requires a constant-time distance calculation.",
+      ],
+    },
+    {
+      id: "q-dc-closest-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In the closest pair algorithm, after finding minimum distance $\\delta$ in each half, we check the strip of width $2\\delta$ around the dividing line. Within this strip, how many points does each point need to be compared with?",
+      options: ["$O(n)$", "$O(\\log n)$", "At most 7", "At most $\\sqrt{n}$"],
+      correctAnswer: 2,
+      explanation:
+        "Within the strip, points are sorted by $y$-coordinate. For any point $p$, only points within $\\delta$ in the $y$ direction could be closer than $\\delta$.\n\nBy a packing argument, at most 7 other points can lie in this $2\\delta \\times \\delta$ rectangle. So each point is compared with at most 7 others, giving $O(n)$ total for the strip check.",
+      hints: [
+        "Pack $\\delta$-separated points in a $2\\delta \\times \\delta$ rectangle.",
+        "How many can fit with minimum inter-point distance $\\delta$?",
       ],
     },
   ],
@@ -1516,6 +1614,25 @@ const questions: Record<string, Question[]> = {
         "Cancel pairs of different elements",
       ],
     },
+    {
+      id: "q-dc-majority-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "To find all elements appearing more than $\\lfloor n/3 \\rfloor$ times (at most 2 such elements), the Boyer-Moore approach uses:",
+      options: [
+        "One candidate and counter",
+        "Two candidates and two counters",
+        "A hash map",
+        "Sorting first",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "There can be at most 2 elements appearing more than $n/3$ times.\n\nExtended Boyer-Moore maintains two candidate-counter pairs $(c_1, k_1)$ and $(c_2, k_2)$:\n- Increment matching counter\n- If different from both candidates and both counters are non-zero, decrement both\n- Otherwise set as new candidate\n\nA verification pass confirms which candidates actually exceed $n/3$.",
+      hints: [
+        "How many elements can appear more than $n/3$ times?",
+        "Generalize Boyer-Moore to maintain two candidates.",
+      ],
+    },
   ],
 
   "median-search": [
@@ -1561,6 +1678,38 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Usually search on shorter array",
         "Both approaches yield O(log n)",
+      ],
+    },
+    {
+      id: "q-dc-median-4",
+      type: "true-false",
+      difficulty: "easy",
+      question: "For a single sorted array of odd length $n$, the median is the element at index $\\lfloor n/2 \\rfloor$.",
+      correctAnswer: "True",
+      explanation:
+        "For a sorted array of odd length $n$, the median is the middle element at index $\\lfloor n/2 \\rfloor$ (0-indexed).\n\nExample: $[1, 3, 5, 7, 9]$ has $n = 5$, median at index $2$ is $5$.\n\nFor even $n$, the median is the average of elements at indices $n/2 - 1$ and $n/2$.",
+      hints: [
+        "For $n = 5$: positions 0, 1, 2, 3, 4. The middle is index 2.",
+        "$\\lfloor n / 2 \\rfloor$ gives the center index for odd $n$.",
+      ],
+    },
+    {
+      id: "q-dc-median-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "When finding the median of two sorted arrays $A$ (size $m$) and $B$ (size $n$), we binary search on the smaller array to partition. If we place $i$ elements from $A$ in the left half, how many do we take from $B$?",
+      options: [
+        "$n - i$",
+        "$(m + n) / 2 - i$",
+        "$m - i$",
+        "$(m + n + 1) / 2 - i$",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "The total left partition size is $\\lfloor (m + n + 1) / 2 \\rfloor$.\n\nIf we take $i$ elements from $A$, we take $j = \\lfloor (m + n + 1) / 2 \\rfloor - i$ from $B$.\n\nThe $+1$ handles both odd and even total lengths uniformly.",
+      hints: [
+        "Total elements in the left half: $\\lfloor (m + n + 1) / 2 \\rfloor$.",
+        "Subtract the $i$ from $A$ to get the count from $B$.",
       ],
     },
   ],
@@ -1627,6 +1776,33 @@ const questions: Record<string, Question[]> = {
         "Use exponentiation by squaring: if b is even, pow(a,b) = pow(a*a % m, b/2); if odd, result = a * pow(a, b-1) % m.",
       hints: ["Square and halve when even", "Multiply by base when odd"],
     },
+    {
+      id: "q-dc-exp-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Using fast exponentiation, how many multiplications are needed to compute $a^{31}$?",
+      options: ["5", "6", "8", "31"],
+      correctAnswer: 1,
+      explanation:
+        "Using the binary of $31 = 11111_2$, we need:\n- 4 squarings: $a \\to a^2 \\to a^4 \\to a^8 \\to a^{16}$\n- 5 multiplications by $a$ for each set bit: $a^1, a^3, a^7, a^{15}, a^{31}$\n\nAlternatively, using repeated squaring with the right-to-left method: $31 = 16 + 8 + 4 + 2 + 1$, requiring 4 squarings and 4 extra multiplies for a total of 8. The addition chain method finds 6 as the optimal count.",
+      hints: [
+        "Express 31 in binary: $11111_2$.",
+        "Count squarings and multiplications separately in the binary method.",
+      ],
+    },
+    {
+      id: "q-dc-exp-6",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Matrix exponentiation using fast exponentiation can compute the $n$-th Fibonacci number in $O(\\log n)$ time.",
+      correctAnswer: "True",
+      explanation:
+        "The Fibonacci recurrence can be written as a matrix equation:\n\n$$\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
+      hints: [
+        "Express the Fibonacci recurrence as matrix multiplication.",
+        "Apply binary exponentiation to compute the $n$-th power of the matrix.",
+      ],
+    },
   ],
 
   "karatsuba-multiplication": [
@@ -1666,6 +1842,19 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Overhead of recursion and addition",
         "Threshold varies by implementation",
+      ],
+    },
+    {
+      id: "q-dc-karatsuba-4",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Standard long multiplication of two $n$-digit numbers requires $O(n^2)$ digit multiplications.",
+      correctAnswer: "True",
+      explanation:
+        "In long multiplication, each digit of the first number is multiplied by each digit of the second:\n\n$$n \\times n = n^2 \\text{ single-digit multiplications}$$\n\nKaratsuba reduces this to $O(n^{\\log_2 3}) \\approx O(n^{1.585})$ using a clever divide-and-conquer approach.",
+      hints: [
+        "How many digits does each number have?",
+        "Each digit of the first must multiply each digit of the second.",
       ],
     },
   ],
@@ -1730,6 +1919,33 @@ const questions: Record<string, Question[]> = {
       hints: [
         "DP[i][j] = DP[i][k-1] + DP[k+1][j] + weight",
         "Weight function must be convex",
+      ],
+    },
+    {
+      id: "q-dc-dpopt-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The divide and conquer DP optimization applies when the optimal split point $\\text{opt}(i, j)$ is monotone in $j$.",
+      correctAnswer: "True",
+      explanation:
+        "When $\\text{opt}(i, j) \\leq \\text{opt}(i, j+1)$ (monotonicity), the divide and conquer approach works:\n\n- Compute $\\text{opt}$ for the midpoint $\\text{mid}$ of $[l, r]$\n- Left half: restrict $\\text{opt}$ search to $[\\text{opt}_L, \\text{opt}(\\text{mid})]$\n- Right half: restrict to $[\\text{opt}(\\text{mid}), \\text{opt}_R]$\n\nThis reduces the overall cost from $O(n^2)$ to $O(n \\log n)$ per DP layer.",
+      hints: [
+        "Monotonicity means the optimal split never decreases as $j$ increases.",
+        "This allows each half to search a restricted range.",
+      ],
+    },
+    {
+      id: "q-dc-dpopt-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The Knuth-Yao speedup reduces the complexity of the optimal BST problem from $O(n^3)$ to:",
+      options: ["$O(n \\log n)$", "$O(n^2)$", "$O(n^2 \\log n)$", "$O(n)$"],
+      correctAnswer: 1,
+      explanation:
+        "The Knuth-Yao optimization for interval DP (including optimal BST) uses the monotonicity of the optimal split point:\n\n$$\\text{opt}(i, j-1) \\leq \\text{opt}(i, j) \\leq \\text{opt}(i+1, j)$$\n\nThis restricts the inner loop search, reducing the total transitions from $O(n^3)$ to $O(n^2)$.",
+      hints: [
+        "The standard interval DP is $O(n^3)$ for each pair $(i, j)$.",
+        "Monotonicity of the optimal split bounds the search range.",
       ],
     },
   ],
@@ -1831,6 +2047,25 @@ const questions: Record<string, Question[]> = {
         "All properties of XOR ($a \\oplus a = 0$, $a \\oplus 0 = a$, commutativity, associativity) make this work.",
       ],
     },
+    {
+      id: "q-bit-ops-7",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Which expression efficiently computes the number of set bits in $n$ using bit manipulation (Brian Kernighan's algorithm)?",
+      options: [
+        "Count iterations of $n \\mathbin{\\&}= (n - 1)$ until $n = 0$",
+        "Shift right until $n = 0$, counting 1-bits",
+        "Count until $n \\mathbin{|} (n - 1) = 0$",
+        "XOR $n$ with $n - 1$ repeatedly",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Brian Kernighan's algorithm uses the fact that $n \\; \\& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n$$\\begin{align}\nn = 12 &= 1100_2\\\\\nn \\; \\& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
+      hints: [
+        "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
+        "Count how many operations until $n$ becomes 0.",
+      ],
+    },
   ],
   "single-number": [
     {
@@ -1899,6 +2134,25 @@ const questions: Record<string, Question[]> = {
         "Initialize result to 0 (XOR identity).",
         "XOR is commutative and associative, so order doesn't matter.",
         "Pairs cancel out, leaving only the unique element.",
+      ],
+    },
+    {
+      id: "q-bit-single-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In an array where every element appears **three** times except one (which appears once), how do you find the unique element efficiently without using a hash map?",
+      options: [
+        "XOR all elements",
+        "Sum all elements mod 3",
+        "Use two bit accumulators tracking bit counts mod 3",
+        "Sort and scan",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Standard XOR cancels in pairs ($a \\oplus a = 0$) but not in triples.\n\nUse two integers $\\text{ones}$ and $\\text{twos}$ tracking how many times each bit has appeared mod 3:\n\n$$\\begin{align}\n\\text{ones}  &= \\text{bits seen 1 time mod 3}\\\\\n\\text{twos}  &= \\text{bits seen 2 times mod 3}\n\\end{align}$$\n\nUpdate rule per element $x$:\n1. $\\text{ones} = (\\text{ones} \\oplus x) \\; \\& \\; \\sim\\text{twos}$\n2. $\\text{twos} = (\\text{twos} \\oplus x) \\; \\& \\; \\sim\\text{ones}$\n\nAfter processing, $\\text{ones}$ holds the unique element.",
+      hints: [
+        "XOR only cancels pairs. You need a counter mod 3 for each bit position.",
+        "Maintain $\\text{ones}$ and $\\text{twos}$ to track bit frequencies.",
       ],
     },
   ],
@@ -1977,6 +2231,25 @@ const questions: Record<string, Question[]> = {
         "$n > 0$ check is required to exclude $n = 0$.",
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "If the result is 0, $n$ was a power of 2.",
+      ],
+    },
+    {
+      id: "q-bit-pow2-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Which bit operation quickly rounds a positive integer $n$ up to the nearest power of 2?",
+      options: [
+        "$n \\; \\& \\; (n - 1)$, then add 1",
+        "Set all bits below the MSB, then add 1",
+        "Use $n \\; | \\; (n - 1)$",
+        "$n << 1$",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "To round up to the nearest power of 2:\n1. Decrease $n$ by 1\n2. Fill all lower bits: $n |= n >> 1$; $n |= n >> 2$; $n |= n >> 4$; ... $n |= n >> 16$\n3. Add 1\n\nThis creates a mask $0\\ldots0111\\ldots1$, then $+1$ flips to the next power of 2.\n\nExample: $n = 9 = 1001_2 \\to 1111_2 \\to 10000_2 = 16$.",
+      hints: [
+        "First make all bits below the MSB equal to 1, then add 1.",
+        "Fill lower bits with OR-shift operations.",
       ],
     },
   ],
@@ -2111,6 +2384,19 @@ const questions: Record<string, Question[]> = {
         "Accumulate in result with left shift",
       ],
     },
+    {
+      id: "q-bit-rev-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "To reverse the bits of an 8-bit number, you can extract each bit and build the result from LSB to MSB.",
+      correctAnswer: "True",
+      explanation:
+        "The straightforward method extracts one bit at a time:\n\n```\nresult = 0\nfor i in 0..7:\n    result = (result << 1) | (n & 1)\n    n >>= 1\n```\n\nEach iteration shifts the result left and appends the current LSB of $n$. After 8 iterations, the bits are reversed.",
+      hints: [
+        "Extract the LSB with $n \\; \\& \\; 1$.",
+        "Shift the result left to make room for each new bit.",
+      ],
+    },
   ],
   "gray-code": [
     {
@@ -2164,6 +2450,25 @@ const questions: Record<string, Question[]> = {
         "No sorting needed",
       ],
     },
+    {
+      id: "q-gray-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Given a Gray code value $g$, the inverse formula to recover the binary index $n$ is:",
+      options: [
+        "$n = g \\oplus (g >> 1)$",
+        "$n = g$ shifted right",
+        "$n = g | (g >> 1) | (g >> 2) | \\ldots$",
+        "There is no unique inverse",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "To convert Gray code $g$ back to binary $n$:\n\n$$\\begin{align}\nn_k &= g_k \\quad (\\text{MSB is the same})\\\\\nn_i &= n_{i+1} \\oplus g_i \\quad (\\text{each subsequent bit})\n\\end{align}$$\n\nThis is equivalent to $n = g \\oplus (g >> 1) \\oplus (g >> 2) \\oplus \\ldots$, and also can be written as $n = g \\oplus (g >> 1)$ applied repeatedly (prefix XOR), but the compact iterative formula is the prefix XOR of $g$.",
+      hints: [
+        "The MSB of the binary code equals the MSB of the Gray code.",
+        "Each subsequent binary bit is the XOR of the previous binary bit and the current Gray bit.",
+      ],
+    },
   ],
   "subsets-bitmask": [
     {
@@ -2213,6 +2518,25 @@ const questions: Record<string, Question[]> = {
         "Build each subset incrementally",
       ],
     },
+    {
+      id: "q-subset-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "To enumerate all sub-masks of a given mask $m$ (subsets of a set represented as a bitmask), the inner loop is:",
+      options: [
+        "for (let s = m; s > 0; s--)",
+        "for (let s = m; s > 0; s = (s-1) & m)",
+        "for (let s = 0; s <= m; s++)",
+        "for (let s = m; s >= 0; s >>= 1)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "To iterate over all non-empty sub-masks of $m$:\n\n```javascript\nfor (let s = m; s > 0; s = (s - 1) & m) {\n  // process sub-mask s\n}\n```\n\n$(s - 1) \\; \\& \\; m$ clears the lowest set bit of $s$ and then masks back to only bits in $m$. This visits all $2^{\\text{popcount}(m)}$ sub-masks in $O(2^{\\text{popcount}(m)})$.",
+      hints: [
+        "$(s - 1)$ flips the trailing bits; $\\& m$ restricts to only bits in $m$.",
+        "The loop ends when $s$ becomes 0 (empty sub-mask).",
+      ],
+    },
   ],
   "bitwise-swap": [
     {
@@ -2255,6 +2579,25 @@ const questions: Record<string, Question[]> = {
         "Three XOR operations in sequence",
         "Ensure a and b are not the same variable",
         "Mathematically: a = (a^b^b) = a",
+      ],
+    },
+    {
+      id: "q-swap-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "On modern CPUs, why is XOR swap generally slower than using a temporary variable?",
+      options: [
+        "XOR is slower than MOV on modern CPUs",
+        "Three sequential XOR operations create data hazards (false dependencies)",
+        "XOR uses more registers",
+        "XOR requires integer overflow checking",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In the XOR swap, each operation depends on the result of the previous one:\n\n$$a = a \\oplus b \\to b = a \\oplus b \\to a = a \\oplus b$$\n\nThis chain of data dependencies prevents instruction-level parallelism (ILP). A modern out-of-order CPU cannot pipeline these three operations.\n\nBy contrast, a temp-variable swap allows the CPU to issue loads and stores in parallel.",
+      hints: [
+        "Each XOR depends on the previous result — no parallelism possible.",
+        "Modern CPUs exploit ILP; sequential data dependencies prevent this.",
       ],
     },
   ],
@@ -2309,6 +2652,25 @@ const questions: Record<string, Question[]> = {
         "XOR all indices 0 to n",
         "XOR all array values",
         "Missing number remains",
+      ],
+    },
+    {
+      id: "q-miss-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "If the array has two missing numbers from $[0, n]$, the XOR approach alone is insufficient. What technique finds both missing numbers efficiently?",
+      options: [
+        "XOR all, then partition by a set bit",
+        "Sort the array",
+        "Use two separate XOR passes",
+        "Compute sum and sum of squares",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Let $x = a \\oplus b$ (XOR of the two missing numbers). Since $a \\neq b$, at least one bit differs.\n\nPick any set bit $k$ in $x$. Partition all numbers in $[0, n]$ and all array elements into two groups based on bit $k$. XOR within each group gives one missing number per group.\n\n**Alternatively**: Use sum $S = n(n+1)/2 - \\text{array sum}$ and XOR $x = a \\oplus b$; then $a + b = S$ and use one sum-of-squares check, or the bit-partition method above.",
+      hints: [
+        "XOR of two distinct numbers has at least one set bit.",
+        "Use that bit to partition and find each missing number separately.",
       ],
     },
   ],
@@ -2368,6 +2730,38 @@ const questions: Record<string, Question[]> = {
         "Stop when pointers cross",
       ],
     },
+    {
+      id: "q-pal-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The binary string $101$ is a palindrome.",
+      correctAnswer: "True",
+      explanation:
+        "A palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ — identical. So yes, it is a binary palindrome.",
+      hints: [
+        "Reverse the bits: does it equal the original?",
+        "$101$ reads the same in both directions.",
+      ],
+    },
+    {
+      id: "q-pal-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "For a 32-bit integer, which approach checks binary palindrome in $O(1)$ (ignoring leading zeros)?",
+      options: [
+        "Reverse all 32 bits and compare to original",
+        "Loop through 16 pairs",
+        "Use popcount",
+        "XOR with its reverse",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "XOR the number with its bit-reversed form. If the result is 0, all corresponding bits match — it is a palindrome.\n\n$$\\text{isPalindrome}(n) = (n \\oplus \\text{reverseBits}(n)) == 0$$\n\nThis works in $O(1)$ if $\\text{reverseBits}$ is $O(1)$ (using precomputed lookup tables or the magic-constant method for 32-bit integers).",
+      hints: [
+        "XOR of equal values is 0.",
+        "If $n \\oplus \\text{reverse}(n) = 0$, every bit matches its mirror.",
+      ],
+    },
   ],
 
   // ── HASH TABLES ────────────────────────────────────────────────────
@@ -2405,6 +2799,38 @@ const questions: Record<string, Question[]> = {
         "Think about collision probability",
       ],
     },
+    {
+      id: "q-hash-func-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A hash function always maps distinct inputs to distinct outputs (no collisions).",
+      correctAnswer: "False",
+      explanation:
+        "By the **pigeonhole principle**, if the number of possible keys exceeds the number of hash buckets, collisions are unavoidable.\n\nA **perfect hash function** for a specific static key set can avoid collisions, but in general, hash functions produce collisions.",
+      hints: [
+        "Think about mapping an infinite key space to a finite array.",
+        "If there are $m$ buckets and $n > m$ keys, some bucket must hold more than one key.",
+      ],
+    },
+    {
+      id: "q-hash-func-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The polynomial rolling hash $h(s) = (s_0 a^{n-1} + s_1 a^{n-2} + \\ldots + s_{n-1}) \\bmod p$ can be updated in $O(1)$ when sliding a window. What is the update formula when removing $s_0$ and adding $s_n$?",
+      options: [
+        "$h = (h - s_0 \\cdot a^{n-1}) \\cdot a + s_n$",
+        "$h = h \\cdot a + s_n - s_0$",
+        "$h = (h + s_n) \\bmod p$",
+        "$h = h - s_0 + s_n$",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "After removing the leftmost character $s_0$ and adding $s_n$ to the right:\n\n$$h_{\\text{new}} = \\left(h - s_0 \\cdot a^{n-1}\\right) \\cdot a + s_n \\pmod{p}$$\n\nThis is Rabin-Karp's rolling hash update. Precompute $a^{n-1} \\bmod p$ once, then each update is $O(1)$.",
+      hints: [
+        "First subtract the contribution of $s_0$ (scaled by $a^{n-1}$).",
+        "Then shift left (multiply by $a$) and add the new character $s_n$.",
+      ],
+    },
   ],
 
   "hash-map-implementation": [
@@ -2434,6 +2860,38 @@ const questions: Record<string, Question[]> = {
       hints: [
         "What data structure holds colliding entries?",
         "Think of a list at each bucket",
+      ],
+    },
+    {
+      id: "q-hash-map-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In a hash map, the load factor is defined as the number of stored elements divided by the number of buckets.",
+      correctAnswer: "True",
+      explanation:
+        "Load factor $\\alpha = n / m$ where $n$ = number of entries and $m$ = number of buckets.\n\nA higher load factor increases collision probability and degrades performance. Most implementations resize (rehash) when $\\alpha$ exceeds a threshold (typically 0.75).",
+      hints: [
+        "Load factor measures how full the hash table is.",
+        "$\\alpha = \\text{entries} / \\text{buckets}$.",
+      ],
+    },
+    {
+      id: "q-hash-map-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "When a hash map with open addressing uses **linear probing** and reaches load factor 1, what happens?",
+      options: [
+        "Infinite loop during lookup",
+        "Automatic resize",
+        "All operations degrade to $O(n)$ due to clustering",
+        "Operations continue at $O(1)$",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "At load factor 1, every slot is occupied. Linear probing must scan every slot during lookup or insert, giving $O(n)$ worst-case.\n\n**Primary clustering**: Long runs of occupied slots form, causing new inserts to extend runs further. Expected probe length grows as $O(1/(1-\\alpha)^2)$ as $\\alpha \\to 1$.\n\nRehashing to a larger table (typically doubling) restores $O(1)$ average operations.",
+      hints: [
+        "At full capacity, every probe misses until it wraps around.",
+        "Primary clustering causes probe sequences to merge into long chains.",
       ],
     },
   ],
@@ -2478,6 +2936,25 @@ const questions: Record<string, Question[]> = {
         "What data structure grows at each bucket?",
       ],
     },
+    {
+      id: "q-col-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Double hashing uses a second hash function $h_2(k)$ for the probe sequence $h(k, i) = (h_1(k) + i \\cdot h_2(k)) \\bmod m$. Why must $h_2(k)$ be coprime to $m$?",
+      options: [
+        "To avoid revisiting slots",
+        "To ensure the probe sequence visits all $m$ slots",
+        "To make $h_2$ a valid hash function",
+        "To reduce secondary clustering",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "If $\\gcd(h_2(k), m) = d > 1$, the probe sequence only visits $m/d$ distinct slots before cycling.\n\nThis means at most $m/d$ slots are ever probed — some slots become unreachable, potentially causing spurious lookup failures even when empty slots exist.\n\nRequiring $h_2(k)$ coprime to $m$ (e.g., $m$ prime, or $h_2(k)$ always odd with $m$ a power of 2) guarantees a full permutation of all $m$ slots.",
+      hints: [
+        "A probe sequence of step size $d$ cycles after $m/d$ steps if $\\gcd(d, m) = d$.",
+        "Full coverage requires the step size to generate all residues modulo $m$.",
+      ],
+    },
   ],
 
   "two-sum-hash": [
@@ -2506,6 +2983,39 @@ const questions: Record<string, Question[]> = {
       hints: [
         "How many passes through the array?",
         "What auxiliary storage do we need?",
+      ],
+    },
+    {
+      id: "q-two-sum-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In the Two Sum hash map solution, when do we add the current element to the map?",
+      options: [
+        "Before checking for the complement",
+        "After checking for the complement",
+        "Only if the complement is not found",
+        "At the very end of the loop",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The correct order is:\n\n1. Check if $\\text{target} - \\text{nums}[i]$ exists in the map\n2. If yes, return $[\\text{map}[\\text{complement}], i]$\n3. If no, add $\\text{nums}[i] \\to i$ to the map\n\nAdding after ensures we don't use the same element twice (e.g., if target = 6 and the element is 3, we don't match 3 with itself).",
+      hints: [
+        "We must not use the same element at the same index twice.",
+        "Checking before insertion avoids self-pairing.",
+      ],
+    },
+    {
+      id: "q-two-sum-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "For Three Sum (find all unique triplets summing to 0), what is the optimal time complexity?",
+      options: ["$O(n)$", "$O(n \\log n)$", "$O(n^2)$", "$O(n^3)$"],
+      correctAnswer: 2,
+      explanation:
+        "Optimal Three Sum: sort in $O(n \\log n)$, then fix one element and use two pointers for the remaining pair:\n\n$$\\begin{align}\n\\text{for } i &= 0 \\text{ to } n - 3:\\\\\n&\\quad \\text{left} = i + 1, \\; \\text{right} = n - 1\\\\\n&\\quad \\text{while left < right: two-pointer scan}\n\\end{align}$$\n\nOuter loop: $O(n)$; inner two-pointer: $O(n)$. Total: $O(n^2)$.\n\nThis is optimal since $\\Omega(n^2)$ triplets can exist in the output.",
+      hints: [
+        "Fix one element, solve Two Sum on the remainder.",
+        "Sorting + two pointers gives $O(n)$ per fixed element.",
       ],
     },
   ],
@@ -2541,6 +3051,38 @@ const questions: Record<string, Question[]> = {
         "Sorting each string costs O(k log k), done for n strings gives O(n * k log k).",
       hints: ["Cost to sort one string", "Applied to n strings"],
     },
+    {
+      id: "q-ana-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: 'Two strings are anagrams of each other if and only if they have the same character frequencies.',
+      correctAnswer: "True",
+      explanation:
+        "Anagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters — that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
+      hints: [
+        "Anagrams use the same characters, just in a different order.",
+        "Character frequency (count) is the canonical comparison.",
+      ],
+    },
+    {
+      id: "q-ana-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Instead of sorting each string to find the canonical key, an alternative $O(k)$ canonical form for a string of length $k$ over a 26-letter alphabet is:",
+      options: [
+        "A length-26 frequency count array",
+        "A sorted list of character-count pairs",
+        "A prime product hash",
+        "All of the above are valid",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "Multiple $O(k)$ canonical forms exist:\n\n1. **Frequency count array**: `[2,0,0,0,1,0,...,0,1]` for \"aae\"\n2. **Character-count pairs**: sorted `(a,2),(e,1)` representation\n3. **Prime product hash**: assign a prime to each letter; multiply their primes — but this can overflow for long strings\n\nAll three uniquely identify an anagram group. The frequency array is most common in practice.",
+      hints: [
+        "Any representation that captures character frequencies is a valid canonical key.",
+        "Sorting is one approach; counting is another.",
+      ],
+    },
   ],
 
   "hash-substring": [
@@ -2571,6 +3113,33 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Think of the window as having two boundaries",
         "When do we adjust each?",
+      ],
+    },
+    {
+      id: "q-sub-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The longest substring without repeating characters can have length at most 26 for lowercase English letters.",
+      correctAnswer: "True",
+      explanation:
+        "There are only 26 lowercase English letters. A substring with no repeating characters can contain each letter at most once.\n\nTherefore its length is bounded by the alphabet size: $\\leq 26$.",
+      hints: [
+        "How many distinct lowercase letters are there?",
+        "No repeating characters means each character appears at most once.",
+      ],
+    },
+    {
+      id: "q-sub-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "For the minimum window substring problem (find smallest window in $s$ containing all characters of $t$), what is the optimal time complexity?",
+      options: ["$O(|s|)$", "$O(|s| + |t|)$", "$O(|s| \\cdot |t|)$", "$O(|s|^2)$"],
+      correctAnswer: 1,
+      explanation:
+        "The sliding window approach:\n1. Build a frequency map of $t$: $O(|t|)$\n2. Expand right pointer, shrink left pointer when window is valid: $O(|s|)$\n3. Each character is visited at most twice (once by right, once by left)\n\nTotal: $O(|s| + |t|)$.",
+      hints: [
+        "Sliding window: right pointer always moves forward, left pointer shrinks valid windows.",
+        "Building the frequency map of $t$ takes $O(|t|)$.",
       ],
     },
   ],
@@ -2605,6 +3174,38 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Hash map gives O(1) access but not O(1) eviction ordering. Need a data structure for recency (doubly linked list).",
       hints: ["What ordering do we need?", "Can hash map maintain order?"],
+    },
+    {
+      id: "q-cache-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In an LRU cache of capacity $k$, when the cache is full and a new item is inserted, the least recently used item is evicted.",
+      correctAnswer: "True",
+      explanation:
+        "LRU (Least Recently Used) eviction policy: when capacity is reached, the item that was accessed least recently is removed to make room for the new item.\n\nThis approximates the optimal offline algorithm (Bélády's algorithm) and works well in practice.",
+      hints: [
+        "LRU = evict the item that has gone the longest without being accessed.",
+        "The cache keeps the most recently used $k$ items.",
+      ],
+    },
+    {
+      id: "q-cache-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The standard $O(1)$ LRU cache implementation uses a hash map plus what other data structure?",
+      options: [
+        "Stack",
+        "Min-heap",
+        "Doubly linked list",
+        "Circular buffer",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "The classic $O(1)$ LRU cache combines:\n\n1. **Hash map**: `key → node` for $O(1)$ lookup\n2. **Doubly linked list**: maintains access order with $O(1)$ node removal and insertion at head/tail\n\nOn access: move node to the front (most recently used).\nOn eviction: remove the tail node (least recently used).\nThe hash map gives us the node pointer directly, enabling $O(1)$ removal.",
+      hints: [
+        "We need $O(1)$ lookup (hash map) and $O(1)$ reordering.",
+        "A doubly linked list can remove/insert any node in $O(1)$ given a pointer.",
+      ],
     },
   ],
 
@@ -2642,6 +3243,44 @@ const questions: Record<string, Question[]> = {
         "What threshold defines majority?",
       ],
     },
+    {
+      id: "q-count-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "To find the top-$K$ most frequent elements in an array, the optimal approach uses:",
+      options: [
+        "Sort by frequency: $O(n \\log n)$",
+        "Hash map + min-heap of size $K$: $O(n \\log k)$",
+        "Hash map + full sort: $O(n \\log n)$",
+        "Hash map + bucket sort: $O(n)$",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "Optimal approach: bucket sort by frequency.\n\n1. Count frequencies: $O(n)$\n2. Create $n+1$ buckets where bucket $i$ holds elements with frequency $i$: $O(n)$\n3. Collect top-$K$ elements from the highest-frequency buckets: $O(n)$\n\nTotal: $O(n)$, which beats the $O(n \\log k)$ heap approach.",
+      hints: [
+        "Frequency values range from 1 to $n$, enabling bucket sort.",
+        "Bucket sort allows $O(n)$ for this problem.",
+      ],
+    },
+    {
+      id: "q-count-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Boyer-Moore majority vote algorithm runs in $O(n)$ time and $O(1)$ space, but requires a second pass to verify. Why is the verification pass necessary?",
+      options: [
+        "The candidate may not actually appear $> n/2$ times",
+        "The first pass may select the wrong candidate",
+        "The first pass is non-deterministic",
+        "Verification is optional for correctness",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The first pass of Boyer-Moore guarantees: **if a majority element exists, the candidate must be it**.\n\nHowever, it does NOT guarantee a majority element exists. For example, $[1, 2, 3]$ — the candidate is 3 (or any element), but no majority element exists.\n\nThe second pass counts occurrences of the candidate to confirm $\\text{count} > n/2$.",
+      hints: [
+        "Boyer-Moore guarantees the candidate is the majority element IF one exists.",
+        "The algorithm cannot tell on the first pass whether a majority element truly exists.",
+      ],
+    },
   ],
 
   "hash-bloom": [
@@ -2674,6 +3313,38 @@ const questions: Record<string, Question[]> = {
       explanation:
         'May say "probably yes" when element not in set, but never says "no" when it is.',
       hints: ["What error type is possible?", "What error is impossible?"],
+    },
+    {
+      id: "q-bloom-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A Bloom filter uses a bit array and multiple hash functions to check set membership.",
+      correctAnswer: "True",
+      explanation:
+        "A Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set — if any is 0, $x$ was not inserted",
+      hints: [
+        "Multiple hash functions reduce false positive probability.",
+        "A single hash function would have too many collisions.",
+      ],
+    },
+    {
+      id: "q-bloom-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Given a Bloom filter with $m$ bits, $k$ hash functions, and $n$ inserted elements, the false positive probability is approximately:",
+      options: [
+        "$\\left(1 - e^{-kn/m}\\right)^k$",
+        "$kn/m$",
+        "$1 - e^{-kn/m}$",
+        "$k/m$",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "After inserting $n$ elements with $k$ hash functions into $m$ bits:\n\n- Probability a specific bit is 0: $\\left(1 - 1/m\\right)^{kn} \\approx e^{-kn/m}$\n- Probability a specific bit is 1: $1 - e^{-kn/m}$\n- False positive: all $k$ query bits are 1: $\\left(1 - e^{-kn/m}\\right)^k$\n\nOptimal $k = (m/n) \\ln 2$ minimizes this false positive rate.",
+      hints: [
+        "Each bit has probability $\\approx e^{-kn/m}$ of still being 0.",
+        "A false positive requires all $k$ queried bits to be 1.",
+      ],
     },
   ],
 
@@ -2709,6 +3380,38 @@ const questions: Record<string, Question[]> = {
       hints: [
         "What fraction of the ring changes?",
         "How does this compare to mod-N?",
+      ],
+    },
+    {
+      id: "q-consist-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In traditional modular hashing ($\\text{hash}(k) \\bmod N$), adding one new server forces remapping almost all keys.",
+      correctAnswer: "True",
+      explanation:
+        "With $N$ servers and modular hashing, adding a server changes $N$ to $N+1$.\n\n$$k \\bmod N \\neq k \\bmod (N+1) \\text{ for most } k$$\n\nOn average, $N/(N+1)$ of all keys (nearly all of them) are remapped to different servers.\n\nConsistent hashing reduces this to only $K/N$ keys being remapped (where $K$ is total keys).",
+      hints: [
+        "Changing the modulus from $N$ to $N+1$ changes almost every result.",
+        "Only $1/(N+1)$ of keys stay on their original server.",
+      ],
+    },
+    {
+      id: "q-consist-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Consistent hashing uses virtual nodes (vnodes) to improve load balancing. The key reason is:",
+      options: [
+        "To reduce hash collision",
+        "Each physical server maps to multiple points on the ring, evening out the load",
+        "To store replicated data",
+        "To speed up lookup",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "With only one point per server on the ring, load distribution can be highly unequal (some servers get large arcs, some small).\n\nBy mapping each physical server to $v$ virtual nodes (multiple ring positions), the load is distributed more uniformly. With many vnodes, by the law of large numbers, each server receives close to $1/N$ of the keys.",
+      hints: [
+        "One point per server creates uneven arc lengths on the ring.",
+        "More points per server averages out the arc sizes.",
       ],
     },
   ],
@@ -2813,6 +3516,19 @@ const questions: Record<string, Question[]> = {
         "How many masks exist?",
         "For each mask, how many ending cities?",
         "For each (mask, i), what is the inner loop?",
+      ],
+    },
+    {
+      id: "q-dp-sc-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In bitmask DP, each bit in the state mask typically represents whether a specific element is included in the current subset.",
+      correctAnswer: "True",
+      explanation:
+        "A bitmask of $n$ bits represents a subset of $n$ elements. If bit $i$ is set, element $i$ is in the subset.\n\nFor example, with elements $\\{A, B, C\\}$:\n- $011_2 = 3$: elements $A$ and $B$ are included\n- $111_2 = 7$: all three elements are included\n- $000_2 = 0$: empty subset",
+      hints: [
+        "A bitmask is just a compact set representation.",
+        "Bit $i$ set means element $i$ belongs to the current subset.",
       ],
     },
   ],
@@ -2921,6 +3637,19 @@ const questions: Record<string, Question[]> = {
         "Can you reuse computed values from parent?",
       ],
     },
+    {
+      id: "q-dp-tree-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Tree DP is a special case of dynamic programming where the structure of the problem follows a tree (acyclic graph).",
+      correctAnswer: "True",
+      explanation:
+        "Tree DP exploits the recursive structure of trees: each subtree's optimal solution depends only on its own children, not on siblings or ancestors.\n\nThis enables bottom-up computation (post-order traversal) where each node's value is computed after all its children are processed.",
+      hints: [
+        "Trees have no cycles, so subproblems do not depend on each other circularly.",
+        "Children are independent of each other given their parent.",
+      ],
+    },
   ],
 
   "dp-intervals": [
@@ -3025,6 +3754,19 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Is LCS about contiguous substrings?",
         "What defines the subproblems in each case?",
+      ],
+    },
+    {
+      id: "q-dp-int-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In interval DP, the smallest intervals (single elements) form the base cases.",
+      correctAnswer: "True",
+      explanation:
+        "Interval DP builds up from subintervals of length 1 (single elements) to the full interval.\n\nBase case: $dp[i][i]$ for all $i$ (interval of length 1).\nFill order: increasing interval length $2, 3, \\ldots, n$.\n\nThis ensures all subintervals are computed before the intervals that depend on them.",
+      hints: [
+        "A single element has no meaningful split point — it is a trivial base case.",
+        "Larger intervals are built from smaller ones.",
       ],
     },
   ],
@@ -3135,6 +3877,19 @@ const questions: Record<string, Question[]> = {
         "Is this additive or multiplicative?",
       ],
     },
+    {
+      id: "q-dp-graph-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Dynamic programming on graphs is only applicable to directed acyclic graphs (DAGs).",
+      correctAnswer: "False",
+      explanation:
+        "DP can be applied to graphs with cycles when combined with appropriate state design.\n\nExamples:\n- **Shortest paths with negative edges**: Bellman-Ford DP works on general graphs\n- **Floyd-Warshall**: all-pairs shortest paths on general graphs\n- **Bitmask DP (TSP)**: works on complete graphs with cycles\n\nThe key is that the DP state must avoid circular dependencies.",
+      hints: [
+        "DAGs are the simplest case, but DP also works elsewhere.",
+        "Think of Bellman-Ford or Floyd-Warshall — both handle cyclic graphs.",
+      ],
+    },
   ],
 
   "dp-digit": [
@@ -3236,6 +3991,19 @@ const questions: Record<string, Question[]> = {
         "States are position (K), remainder (M), and tight flag (2). Total O(K * M * 2).",
       hints: ["What variables determine the state?", "Is tight a boolean?"],
     },
+    {
+      id: "q-dp-digit-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Digit DP counts numbers in a range $[0, N]$ satisfying some digit-level constraint.",
+      correctAnswer: "True",
+      explanation:
+        "Digit DP processes numbers digit by digit from the most significant position.\n\nIt counts how many integers in $[0, N]$ satisfy a property (e.g., no two adjacent digits are the same, sum of digits is divisible by $k$, etc.) by tracking a compact state at each position.",
+      hints: [
+        "We process digits left to right, maintaining necessary state.",
+        "The upper bound $N$ constrains valid numbers.",
+      ],
+    },
   ],
 
   "dp-probability": [
@@ -3317,6 +4085,19 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Sum of n/(n-i+1) for i=1 to n = n * H_n = n * (log n + gamma) ≈ n log n.",
       hints: ["What is the nth harmonic number H_n?", "How does it grow?"],
+    },
+    {
+      id: "q-dp-prob-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In probability DP, $dp[i]$ often stores the probability of being in state $i$ after some number of transitions.",
+      correctAnswer: "True",
+      explanation:
+        "Probability DP tracks the probability distribution over states as random events occur.\n\nFor example, in a random walk:\n- $dp[i]$ = probability of being at position $i$ after $k$ steps\n- Transition: $dp_{k+1}[i] = dp_k[i-1] \\cdot p + dp_k[i+1] \\cdot (1-p)$\n\nNormalization ensures $\\sum_i dp[i] = 1$ at all times.",
+      hints: [
+        "Probability states sum to 1 across all positions.",
+        "Transitions multiply probabilities to propagate through the state space.",
+      ],
     },
   ],
 
@@ -3415,6 +4196,19 @@ const questions: Record<string, Question[]> = {
       hints: [
         'What does "losing position" mean for opponent?',
         "How do you force a win?",
+      ],
+    },
+    {
+      id: "q-dp-game-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In a two-player game DP, a position is a losing position if all moves from it lead to winning positions for the opponent.",
+      correctAnswer: "True",
+      explanation:
+        "Standard two-player game DP with perfect play:\n- **Losing position**: every available move leads to a winning state for the opponent\n- **Winning position**: at least one move leads to a losing state for the opponent\n\nBase case: a position with no moves is a losing position (the player to move loses).",
+      hints: [
+        "If every move gives the opponent a winning position, the current player loses.",
+        "You win only if you can force the opponent into a losing position.",
       ],
     },
   ],
@@ -3525,6 +4319,19 @@ const questions: Record<string, Question[]> = {
         "Which optimization applies to it?",
       ],
     },
+    {
+      id: "q-dp-opt-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A standard 2D DP table of size $n \\times n$ can often be reduced to $O(n)$ space by observing that only the previous row is needed.",
+      correctAnswer: "True",
+      explanation:
+        "Many 2D DP recurrences of the form $dp[i][j] = f(dp[i-1][\\ldots])$ only reference the immediately preceding row.\n\nIn such cases, we can replace the $n \\times n$ table with two 1D arrays (current and previous rows), reducing space from $O(n^2)$ to $O(n)$.\n\nExample: LCS, Longest Common Substring, 0/1 Knapsack.",
+      hints: [
+        "Look at which rows $dp[i][j]$ depends on.",
+        "If only $dp[i-1][\\ldots]$ is needed, keep just two rows.",
+      ],
+    },
   ],
 
   "dp-strings": [
@@ -3628,6 +4435,19 @@ const questions: Record<string, Question[]> = {
       hints: [
         "What values does current cell depend on?",
         "What row can be reused?",
+      ],
+    },
+    {
+      id: "q-dp-str-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The edit distance between two identical strings is 0.",
+      correctAnswer: "True",
+      explanation:
+        "Edit distance (Levenshtein distance) counts the minimum number of insertions, deletions, and substitutions to transform one string into another.\n\nIf both strings are identical, no operations are needed: edit distance = 0.\n\nBase case in DP: $dp[0][0] = 0$ (empty prefix to empty prefix).",
+      hints: [
+        "How many edits are needed to change \"hello\" into \"hello\"?",
+        "No operations needed = distance 0.",
       ],
     },
   ],
@@ -3737,6 +4557,19 @@ const questions: Record<string, Question[]> = {
         "How many masks?",
         "How many i values per mask?",
         "Inner loop cost?",
+      ],
+    },
+    {
+      id: "q-dp-bm-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In bitmask DP with $n$ elements, the number of distinct states (masks) is $2^n$.",
+      correctAnswer: "True",
+      explanation:
+        "Each element can either be included (bit = 1) or excluded (bit = 0). With $n$ independent binary choices, there are $2^n$ possible masks.\n\nFor $n = 20$: $2^{20} \\approx 10^6$ masks, which is feasible. For $n = 30$: $2^{30} \\approx 10^9$, too large for most problems.",
+      hints: [
+        "Each of $n$ bits is independently 0 or 1.",
+        "$2^n$ total combinations.",
       ],
     },
   ],
