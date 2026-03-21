@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PINNs can solve both forward problems (simulating a known PDE) and inverse problems (inferring unknown parameters from observations) within the same framework.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in ∂u/∂t = ν∂²u/∂x²) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
       hints: [
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Fourier Neural Operator (FNO) achieves resolution invariance by performing convolution operations in Fourier space, allowing it to be evaluated at any spatial resolution at inference time.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "FNO applies linear transforms in Fourier space (equivalent to global convolutions in physical space), then truncates to a fixed number of modes. Because the Fourier transform is resolution-independent, FNO trained at 64×64 can be evaluated at 128×128 without retraining.",
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Data-driven PDE solvers trained on simulation data from one physical regime can perfectly generalize to radically different parameter regimes without any additional training.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Neural PDE solvers often exhibit poor generalization outside the training distribution — a model trained on low-Reynolds-number flows may fail at turbulent regimes. Active learning, meta-learning, and physics constraints help extend generalization.",
       hints: [
@@ -263,7 +263,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ML-based turbulence closure models that are trained on DNS data can guarantee physical realizability (e.g., non-negative turbulent kinetic energy) without explicit constraints.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Pure data-driven closure models can produce unphysical predictions (negative TKE, violated Galilean invariance) without hard physical constraints; embedding symmetries and realizability conditions into the model architecture or loss function is essential.",
       hints: [
@@ -320,7 +320,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Behler-Parrinello symmetry functions ensure that ML potentials are invariant to translation, rotation, and permutation of identical atoms.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Behler-Parrinello atom-centered symmetry functions (radial and angular) encode local chemical environments in a way that is invariant to rigid-body transformations and atom index permutation — physical symmetries that any valid potential energy surface must satisfy.",
       hints: [
@@ -377,7 +377,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Google DeepMind\'s GNoME model discovered millions of new stable crystal structures by combining GNN-based property prediction with high-throughput DFT validation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "GNoME (Graph Networks for Materials Exploration) used a GNN trained on existing crystal data to predict stable structures, then validated ~380,000 new stable materials with DFT — a 45-fold increase in known stable inorganic crystals.",
       hints: [
@@ -434,7 +434,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Scientific foundation models like ESM-2 demonstrate that self-supervised pre-training on large biological sequence databases can learn biologically meaningful representations without explicit structural or functional labels.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "ESM-2's representations encode secondary structure, contact maps, and functional sites even though training used only sequence prediction — evolutionary co-variation in sequences encodes 3D structural constraints implicitly captured by the language model.",
       hints: [
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Deep ensembles — training multiple neural networks with different random seeds — provide reliable estimates of predictive uncertainty without requiring Bayesian inference.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Deep ensembles have been shown empirically to produce well-calibrated uncertainty estimates, outperforming many approximate Bayesian methods on out-of-distribution detection, despite being a simple, non-Bayesian approach.",
       hints: [
@@ -547,7 +547,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Genetic programming is a classical approach to symbolic regression that evolves mathematical expression trees through selection, crossover, and mutation operations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Genetic programming represents equations as tree structures (operators as internal nodes, variables/constants as leaves) and evolves populations of trees using evolutionary operators — DEAP and PySR use this paradigm, often with physics-informed constraints.",
       hints: [
@@ -604,7 +604,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FourCastNet uses a Fourier-based vision transformer to model global atmospheric dynamics on a latitude-longitude grid.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "FourCastNet (NVIDIA) uses an Adaptive Fourier Neural Operator as its core layer, operating on the spherical grid of atmospheric variables (temperature, wind, humidity) at multiple pressure levels for short-to-medium range weather prediction.",
       hints: [
@@ -661,7 +661,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Neural networks have been used to emulate cosmological N-body simulations, enabling rapid generation of large-scale structure realizations without running expensive particle simulations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Emulators like CAMELS and EuclidEmulator train neural networks on N-body simulation outputs; given cosmological parameters, they predict power spectra or density fields in milliseconds vs. hours for a full N-body run — enabling MCMC posterior sampling.",
       hints: [
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Graph Neural Networks are particularly well-suited for particle physics event reconstruction because collision events naturally form variable-size sets of particle tracks and calorimeter clusters with pairwise interaction structure.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Collision events have variable numbers of particles with complex pairwise interactions (e.g., proximity in detector space, shared vertex) — GNNs operating on particle sets or k-NN graphs capture these interactions naturally, outperforming architectures that require fixed-size inputs.",
       hints: [
@@ -774,7 +774,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DimeNet improves upon SchNet by incorporating directional information (bond angles) in addition to interatomic distances, enabling more accurate property prediction.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DimeNet uses directional message passing that incorporates the angle between bonds — not just radial distances — capturing angular geometry of atomic environments, which is important for properties like molecular dipole moments and torsion barriers.",
       hints: [
@@ -830,7 +830,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Graph Network Simulators (GNS) can simulate fluid dynamics by treating fluid particles or mesh nodes as graph nodes and learning interaction rules via message passing.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "GNS (DeepMind) treats simulation particles as graph nodes connected by proximity edges; it learns position updates via message passing GNNs, enabling simulation of fluids, granular materials, and deformable bodies that generalize to unseen geometries.",
       hints: [
@@ -887,7 +887,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural network-based topology optimization methods can amortize the FEM solve cost by learning to predict optimal material distributions directly from load/boundary conditions, enabling real-time design exploration.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Approaches like TopNet and TopoGAN train neural networks on pairs of (boundary conditions, optimal topology) from classical TO runs; at inference, the network predicts near-optimal topologies without iterative FEM solves — enabling interactive design tools.",
       hints: [
@@ -943,7 +943,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Score-based diffusion models have been applied to inverse problems by using the learned prior score to regularize the likelihood gradient, enabling posterior sampling without retraining for each new measurement operator.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Methods like DPS and DDRM use the pre-trained diffusion score as an implicit prior; at inference, they combine the score with the measurement likelihood gradient to sample from the posterior p(x|y), enabling zero-shot adaptation to new inverse problems.",
       hints: [
@@ -1000,7 +1000,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Homogenization theory provides a mathematical foundation for deriving effective coarse-grained equations from fine-scale physics, and ML can learn these effective properties directly from micro-scale simulations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Computational homogenization uses micro-scale simulations (RVE analysis) to compute effective material properties (stiffness tensor, diffusivity); ML surrogates learn these property maps from fine-scale data, enabling rapid macro-scale simulations with micro-structure awareness.",
       hints: [
@@ -1057,7 +1057,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Bayesian optimization is a form of active learning that models the objective function with a Gaussian process and uses an acquisition function to select the next query point.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Bayesian optimization maintains a Gaussian process surrogate of the unknown objective; acquisition functions (Expected Improvement, UCB, Thompson sampling) balance exploration of uncertain regions and exploitation of known good regions to find the optimum efficiently.",
       hints: [
@@ -1113,7 +1113,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The PC algorithm for causal discovery is a constraint-based method that uses conditional independence tests to construct a causal graph skeleton and then orient edges using v-structure patterns.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PC algorithm starts with a fully connected graph, removes edges where conditional independence is detected (ci-tests), then orients remaining edges by identifying v-structures (A → C ← B where A and B are not adjacent) and applying orientation rules.",
       hints: [
@@ -1170,7 +1170,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "NequIP (Neural Equivariant Interatomic Potentials) achieves high data efficiency partly because its equivariant architecture does not need to learn rotational invariance from data — it is built into the model by construction.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "By encoding E(3)-equivariance into the architecture, NequIP never needs to learn that rotating a molecule does not change its energy from data — this prior reduces the effective learning problem, enabling accurate potentials from as few as hundreds of training structures.",
       hints: [
@@ -1227,7 +1227,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Invariant neural networks (like SchNet) and equivariant neural networks (like NequIP) are both useful in molecular simulation, but equivariant networks are generally needed when the output is a directional quantity like atomic forces.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Forces are vectors (directional) — a rotation-invariant model cannot directly output rotated forces. Equivariant models output quantities that transform correctly, enabling direct force prediction without finite-difference derivatives of the energy.",
       hints: [
@@ -1284,7 +1284,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Differentiable physics simulators enable end-to-end gradient-based optimization of physical system parameters by backpropagating loss gradients through the simulation itself.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Differentiable simulators (e.g., Brax, DiffTaichi, Warp) compute derivatives of simulation outputs with respect to physical parameters (initial conditions, material properties) via AD, enabling gradient-based inverse design without finite-difference approximations.",
       hints: [
@@ -1340,7 +1340,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural surrogate models are used within digital twins to replace expensive physics-based simulations that cannot run at the speeds required for real-time decision making.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "High-fidelity FEM or CFD simulations can take hours, incompatible with real-time twin operation; neural surrogates trained on simulation data provide predictions in milliseconds, enabling real-time state estimation, anomaly detection, and optimization within the twin.",
       hints: [
@@ -1397,7 +1397,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "AlphaFold2's impact on structural biology is a concrete example of accelerated scientific discovery, having predicted the structures of over 200 million proteins and depositing them in a public database.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DeepMind and EMBL-EBI released the AlphaFold Protein Structure Database with predicted structures for virtually all known proteins (~200M+), transforming structural biology by making structure prediction near-instantaneous rather than requiring months of X-ray crystallography.",
       hints: [
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "AlphaFold2's impact on structural biology is a concrete example of accelerated scientific discovery, having predicted the structures of over 200 million proteins and depositing them in a public database.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DeepMind and EMBL-EBI released the AlphaFold Protein Structure Database with predicted structures for virtually all known proteins (~200M+), transforming structural biology by making structure prediction near-instantaneous rather than requiring months of X-ray crystallography.",
       hints: [
@@ -1510,7 +1510,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The use of fixed random seeds and releasing complete training code and data is considered best practice for reproducible ML research in scientific domains.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Reproducibility best practices include: fixed seeds for all stochastic operations, full code release (training, evaluation, preprocessing), data release or specification, hardware/software environment documentation (requirements.txt, Dockerfile), and reporting variance over multiple runs.",
       hints: [
@@ -1567,7 +1567,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Deep learning-based compressed sensing reconstruction methods (e.g., unrolled iterative algorithms) can outperform classical L1-minimization (basis pursuit) by learning problem-specific priors from data.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Algorithm unrolling (LISTA, ISTA-Net) and end-to-end reconstruction networks (E2E-Var-Net) learn measurement-specific priors, achieving higher image quality at lower acceleration factors than classical CS for MRI and CT — at the cost of generalizability across protocols.",
       hints: [
@@ -1624,7 +1624,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "WeatherBench is a standardized benchmark for evaluating ML-based weather forecasting models that provides baseline scores from numerical weather prediction (NWP) models for comparison.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "WeatherBench (and WeatherBench 2) provides ERA5-based evaluation protocols, standard metrics (RMSE, ACC at specific pressure levels), and operational NWP (IFS, GFS) baseline scores — enabling fair comparison of ML weather models on a common test set.",
       hints: [
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Universal Differential Equation (UDE) framework combines mechanistic ODE/PDE models with neural networks by replacing unknown or uncertain model terms with neural network components that are learned from data.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "UDEs (Rackauckas et al.) embed neural networks inside differential equations: known physics is written explicitly while unknown terms (reaction rates, constitutive relations) are replaced by neural networks, trained end-to-end using differentiable ODE solvers.",
       hints: [
@@ -1737,7 +1737,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'A trained FNO model can be evaluated on a finer spatial grid than the one used during training without retraining, because the learned Fourier mode weights are discretisation-agnostic.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Resolution-invariance is a key FNO property: since the operator is parameterised in Fourier space (truncated modes), it can be applied to any resolution by simply running FFT at that resolution, multiplying the same learned weights, and inverse-FFT. This "zero-shot" super-resolution is widely used in PDE surrogate settings.',
       hints: [
         'The Fourier transform of a function at different resolutions still has the same low-frequency modes.',
@@ -1787,7 +1787,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'Conformal prediction provides distribution-free coverage guarantees: given a calibration set, it constructs prediction intervals that contain the true value with at least (1−α) probability, regardless of the underlying data distribution.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) ≤ q̂_{1−α}} achieves marginal coverage ≥ 1−α without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
       hints: [
         'Conformal methods use a held-out calibration set to set the score threshold.',
@@ -1837,7 +1837,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'In physics-informed active learning, collocation points for the PDE residual can be adaptively placed in regions of high residual loss, reducing the total number of collocation points needed for accurate solutions.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Adaptive collocation (e.g., RAR — Residual-based Adaptive Refinement) monitors the PDE residual across the domain and adds new collocation points where it is highest. This concentrates compute on difficult regions (sharp gradients, boundary layers) and dramatically reduces the total point budget compared to uniform sampling.',
       hints: [
         'Uniform collocation wastes points in easy regions; adaptive methods focus on hard regions.',
@@ -1887,7 +1887,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Message-passing GNNs are limited in their ability to distinguish certain non-isomorphic graphs (the Weisfeiler-Leman limitation), which can affect their expressiveness for PDE problems requiring global geometric reasoning.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Standard message passing (sum/mean aggregation) cannot distinguish all graph structures—it is at most as powerful as the 1-WL graph isomorphism test. For PDE tasks requiring global geometric properties (e.g., long-range pressure propagation), higher-order GNNs, transformer attention, or multi-scale architectures are needed to overcome this limitation.',
       hints: [
         'WL test: two graphs are "the same" if message passing cannot distinguish their node feature distributions.',
@@ -1937,7 +1937,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'Symbolic regression can recover exact closed-form equations (e.g., Newton\'s law F = ma) from noisy experimental data, making it a tool for scientific discovery rather than just prediction.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Symbolic regression searches for interpretable formulas rather than black-box models. Landmark examples include Udrescu & Tegmark\'s AI Feynman (2020), which recovered 100 physics equations from the Feynman symbolic regression benchmark, and Cranmer et al.\'s discovery of conservation laws from particle physics simulations.',
       hints: [
         'A neural network gives you a number; symbolic regression gives you a formula you can reason about.',
@@ -1987,7 +1987,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Galilean invariance and rotational equivariance are important physical constraints for ML turbulence closure models, because the Reynolds stress must transform correctly under coordinate changes.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Ling et al. (2016) showed that embedding tensor-basis representations (Pope\'s integrity basis for symmetric tensors) into neural networks enforces both Galilean invariance and frame-independence by construction. Unconstrained networks can learn invariant mappings accidentally but are not guaranteed to remain physically consistent outside the training distribution.',
       hints: [
         'The Reynolds stress is a rank-2 symmetric tensor; it must transform as T_ij → R_ik R_jl T_kl under rotation R.',
@@ -2037,7 +2037,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t₀), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t₀); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
       hints: [
         'RNNs require fixed-step inputs; Neural ODEs provide continuous-time dynamics—combine both.',
@@ -2087,7 +2087,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Quantum kernel methods encode classical data into quantum states and use the inner product between quantum states as a kernel for classical SVM, potentially offering an exponential feature space without explicitly computing it.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Quantum kernel: K(x_i, x_j) = |⟨φ(x_i)|φ(x_j)⟩|², where |φ(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
       hints: [
         'Classical kernel trick: implicitly compute in high-dimensional space without materialising feature vectors.',
@@ -2137,7 +2137,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = ∂H/∂p, ṗ = −∂H/∂q) to evolve dynamics, automatically conserving total energy by construction.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'HNNs (Greydanus et al., 2019) parameterise H_θ(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout—unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
       hints: [
         'Hamilton\'s equations preserve H as a constant of motion—this is a mathematical identity, not a learned property.',
@@ -2187,7 +2187,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Differentiable rendering (e.g., NeRF, NVDiffrast) enables gradient-based 3D reconstruction by making the rendering equation differentiable with respect to scene parameters such as geometry, materials, and lighting.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Differentiable rendering computes ∂(rendered pixel)/∂(scene parameters) via rasterisation or ray-marching, enabling gradient descent to fit scene parameters to observed images. NeRF uses differentiable volume rendering; NVDiffrast uses differentiable rasterisation with edge sampling to handle visibility discontinuities. This underpins inverse rendering, neural scene representations, and text-to-3D methods.',
       hints: [
         'Inverse rendering = given images, infer 3D scene—this is an optimisation problem requiring gradients.',

@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In meta-learning, the meta-train and meta-test sets contain the same individual classes or tasks.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Meta-learning requires a strict separation: classes/tasks seen at meta-train time must be disjoint from those seen at meta-test time, so generalisation to truly novel tasks can be measured.",
       hints: [
@@ -210,7 +210,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Prototypical Networks use softmax over negative squared Euclidean distances to the prototypes to produce class probabilities for a query.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The probability of a query x belonging to class k is p(y=k|x) = exp(−d(f_φ(x), c_k)) / Σ_{k'} exp(−d(f_φ(x), c_{k'})), where d is squared Euclidean distance. Snell et al. showed that squared Euclidean (not cosine) distance is crucial — it corresponds to a Bregman divergence under a Gaussian assumption.",
       hints: [
@@ -267,7 +267,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In Relation Networks, both the embedding module and the relation module are trained end-to-end using mean squared error between the relation score and the binary same/different label.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Relation Networks are fully differentiable and trained end-to-end: the embedding module maps inputs to feature vectors, the relation module predicts a similarity score, and MSE loss (treating same-class = 1, different-class = 0) trains both jointly.",
       hints: [
@@ -325,7 +325,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "MAML's meta-gradient computation requires differentiating through the inner loop gradient steps, resulting in second-order gradients (gradients of gradients).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The meta-objective $\\mathcal{L}_\\text{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$ depends on adapted parameters $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$. Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n$$\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss — a matrix of second derivatives. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
       hints: [
@@ -450,7 +450,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In Meta-SGD, the inner-loop update for parameter θ on task i is: θ'_i = θ - α ⊙ ∇L_i(θ), where ⊙ is element-wise multiplication and α is a learned vector.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The elementwise multiplication of the gradient by learned vector α allows each parameter to have its own learning rate and even sign of update, giving the meta-learner more expressive control over the inner-loop adaptation.\n\nSpecifically, each parameter component j is updated as: θ'_j = θ_j + α_j · (∇L)_j. If α_j is positive, the update follows the gradient; if α_j is negative, the update reverses the gradient direction. This is equivalent to learning a diagonal preconditioning matrix M = diag(α) applied to the gradient: θ' = θ + M · ∇L. The meta-learner learns α that generalizes across tasks, finding per-parameter learning rates that work well for the task distribution.",
       hints: [
@@ -508,7 +508,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "BOIL (Body Only Inner Loop) is the opposite of ANIL: it updates only the feature extractor (body) during inner-loop adaptation and freezes the head.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "BOIL updates the backbone (body) during the inner loop and freezes the classification head, investigating how much of MAML\'s success comes from adapting features vs. adapting the classifier, and finding that body updates can be beneficial in some settings.",
       hints: [
@@ -565,7 +565,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Neural Turing Machine (NTM) uses content-based and location-based addressing to read from and write to its external memory differentiably.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "NTM\'s read/write heads combine content-based addressing (attention over memory by key similarity) and location-based addressing (sequential shifts), allowing flexible, differentiable memory access trained end-to-end via backpropagation.",
       hints: [
@@ -621,7 +621,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Hypernetworks for weight generation must output all weights of the target network in a single forward pass, which limits them to small target networks.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Chunking and factorisation techniques allow hypernetworks to generate weights layer-by-layer or in compressed factored form (e.g., low-rank factors), enabling their application to large target networks without outputting every weight simultaneously.",
       hints: [
@@ -678,7 +678,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SNAIL (Simple Neural Attentive Learner) combines temporal convolutional layers and attention to process support sets in meta-learning, enabling it to capture both local and long-range dependencies.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "SNAIL interleaves causal temporal convolutional blocks (for efficient local aggregation) with attention blocks (for direct access to any previous position), allowing it to process variable-length support sets effectively for meta-learning.",
       hints: [
@@ -734,7 +734,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PLATIPUS explicitly models uncertainty over the meta-learned initialisation by learning a distribution over MAML initialisation parameters rather than a point estimate.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PLATIPUS extends MAML by representing the meta-initialisation as a distribution p(θ) rather than a point θ, enabling the model to express uncertainty about the initialisation and sample multiple adapted models for probabilistic prediction.",
       hints: [
@@ -791,7 +791,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Gradient-based meta-learning suffers from meta-overfitting when the number of meta-training tasks is small relative to the model complexity — analogous to standard overfitting when training examples are few.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "With too few meta-training tasks, the meta-learner overfits: the learned initialization adapts well to the specific training task distribution but fails on novel meta-test tasks. Regularization techniques (dropout in the inner loop, data augmentation, task augmentation) or limiting the number of inner-loop steps help prevent meta-overfitting.",
       hints: [
@@ -847,7 +847,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A well-designed task distribution for meta-learning should include sufficient diversity so that the meta-learner cannot solve tasks by memorising task-specific patterns rather than learning general adaptation strategies.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Diverse task distributions force the meta-learner to develop broadly applicable strategies for adaptation. If the distribution is too narrow, the model might overfit the task structure rather than learning to adapt.",
       hints: [
@@ -904,7 +904,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In the generalised zero-shot learning (GZSL) setting, the test set contains instances from both seen and unseen classes, making it harder than standard ZSL.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Standard ZSL tests only on unseen classes, while GZSL tests on both seen and unseen classes. Models tend to be biased toward seen classes (which they trained on), making GZSL a more challenging and realistic evaluation setting.",
       hints: [
@@ -960,7 +960,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In-context learning can be interpreted as implicit Bayesian inference, where the LLM approximates a posterior over task functions given the in-context demonstrations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Theoretical work (e.g., Xie et al. 2022) shows that ICL in LLMs trained on diverse tasks approximates Bayesian inference: the model infers the latent task from demonstrations and predicts accordingly — connecting ICL to meta-learning and Bayesian models.",
       hints: [
@@ -1017,7 +1017,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Meta-prompt tuning frameworks train a prompt initialisation across many tasks so that it can be rapidly adapted to new tasks with very few gradient steps, directly analogising MAML to the prompt space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Works like MAML applied to prompts (e.g., ATTEMPT, MetaPrompt) learn a shared prompt initialisation across meta-training tasks, enabling few-step adaptation of the prompt vectors to new tasks — a direct application of the MAML meta-learning algorithm to the prompt parameter space.",
       hints: [
@@ -1074,7 +1074,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Models pre-trained on large diverse datasets (e.g., ImageNet-21k) tend to produce more transferable features for cross-domain few-shot learning than models trained only on small domain-specific datasets.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Large-scale pre-training on diverse data produces feature representations that capture general visual concepts, making them more broadly transferable to target domains that differ from the training domain.",
       hints: [
@@ -1130,7 +1130,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Meta-learning can address catastrophic forgetting by learning an initialisation or update rule that inherently preserves prior task performance when adapting to new tasks.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Meta-learning approaches like OML (Online-aware Meta-Learning) and ANML explicitly meta-train for the ability to quickly learn new tasks without forgetting old ones, directly encoding anti-forgetting inductive bias into the initialisation or update rule.",
       hints: [
@@ -1187,7 +1187,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RL² (Reinforcement Learning squared) implements meta-RL by using a recurrent policy that treats the entire history of an episode (actions, observations, rewards, dones) as its input, enabling it to adapt its behaviour within a single trial.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "RL² uses an LSTM-based policy that processes the full interaction history within a multi-episode trial. The recurrent state encodes the task identity inferred from experience, allowing the policy to adapt its strategy without gradient updates.",
       hints: [
@@ -1244,7 +1244,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Meta-learning for Hyperparameter Optimisation (HPO) can use warm-starting: initialising the HPO search from hyperparameter configurations that performed well on similar past tasks, rather than starting from scratch.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Meta-learning across HPO tasks builds a prior over good hyperparameter configurations. For a new task, this prior warm-starts the search, finding good configurations faster than cold-start methods like random search or Bayesian optimisation from scratch.",
       hints: [
@@ -1302,7 +1302,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Multi-task pre-training (training a single model on many tasks jointly before fine-tuning) can serve as a strong alternative to explicit episodic meta-learning for few-shot generalisation.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "T5 (Raffel et al., 2020) and similar multi-task pre-trained models show strong few-shot transfer without episodic meta-training, because training on diverse tasks implicitly develops an inductive bias for task adaptation. The distinction between multi-task pre-training and meta-learning blurs at scale.",
       hints: [
@@ -1360,7 +1360,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In the Meta-Dataset benchmark, test episodes use variable-way variable-shot settings (the number of classes and examples per class vary), unlike miniImageNet which always uses fixed 5-way 1-shot or 5-shot episodes.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Meta-Dataset episodes randomly sample the number of ways (5–50) and the number of support examples per class (1–20) from each dataset, creating a more realistic and challenging evaluation that tests robustness to varying episode structure, not just performance at a fixed N-way K-shot setting.",
       hints: [
@@ -1418,7 +1418,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The PAC-Bayes framework has been applied to derive generalisation bounds for gradient-based meta-learning by treating the meta-initialisation as a prior p(θ) and the adapted parameters θ'_i as drawn from a posterior — bounding performance by KL(posterior || prior).",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PAC-Bayes bounds for meta-learning (Amit & Meir 2018) treat the meta-initialisation as a prior p(θ) and the task-adapted distribution q(θ'|S_i) as a posterior. The bound is: E_T[L_T(θ')] ≤ E_T[L_S(θ')] + sqrt[(KL(q||p) + log(n/δ)) / (2n)], connecting meta-generalisation to the information-theoretic distance between initialization and adapted parameters.",
       hints: [
@@ -1475,7 +1475,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Efficient meta-learning can be achieved by reducing the number of meta-training tasks required, such as through data augmentation strategies that synthesise additional task diversity.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Task augmentation (e.g., label permutation, mixing feature spaces, generating synthetic tasks) increases the effective meta-training task distribution without collecting new labelled data, improving meta-learner generalisation efficiency.",
       hints: [
@@ -1532,7 +1532,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Foundation models pre-trained on diverse data can be viewed as implicitly learning a task prior that enables fast few-shot adaptation, analogous to the meta-learned prior in Bayesian meta-learning.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The diverse pre-training distribution shapes the model\'s inductive bias (prior) over tasks. When few-shot prompted, the model uses this prior to rapidly identify and solve the new task — a functional analogue to a Bayesian meta-learned prior. This connection was formalized by Xie et al. (2022) who showed ICL approximates Bayesian inference under a mixture-of-tasks data generating process.",
       hints: [
@@ -1589,7 +1589,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Sim-to-real transfer in robotics can be combined with meta-learning by meta-training on a distribution of simulated environments so the robot can adapt quickly to the real world with few real trials.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Randomising simulation parameters (dynamics, friction, sensor noise) during meta-training forces the meta-learner to develop robust adaptation strategies. This "meta-sim" approach reduces the number of real-world trials needed for sim-to-real adaptation.',
       hints: [
@@ -1646,7 +1646,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Personalised federated learning (pFL) approaches like pFedMe cast personalization as a meta-learning problem where each client performs a few inner-loop adaptation steps to obtain a personalized model while the global model is optimized as the meta-initialisation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "pFedMe formulates per-client personalization as MAML: the global model θ is the meta-initialization; each client solves argmin_θ_i L_i(θ_i) + (λ/2)||θ_i − θ||² to get a personalized model θ_i close to but adapted from the global model. The global model is then updated based on the gradient toward each client\'s personalized model.",
       hints: [
@@ -1702,7 +1702,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Before applying meta-learning, a practitioner should consider whether strong pre-training baselines (e.g., a large pre-trained backbone with a linear probe) already solve the few-shot problem, since they are simpler and often competitive.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Multiple studies (e.g., Tian et al. 2020 "Rethinking Few-Shot Image Classification," Chen et al. 2019 "Closer Look") show that well-pretrained backbones with simple fine-tuning often match or exceed complex meta-learning methods. Checking this baseline avoids unnecessary algorithmic complexity and is good engineering practice.',
       hints: [
