@@ -8,18 +8,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + \\lambda_r\\cdotL_r + \\lambda_b\\cdotL_b. L_r is the physics residual loss defined as ___.",
+        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + \\lambda_r\\cdot L_r + \\lambda_b\\cdot L_b. L_r is the physics residual loss defined as ___.",
       options: [
-        "(1/N_r) \\Sigma |u_\\theta(x_i,t_i) − u_measured(x_i,t_i)|\\^2",
-        "(1/N_r) \\Sigma |N[u_\\theta](x_i,t_i)|\\^2 summed over collocation points",
+        "(1/N_r) \\sum |u_\\theta(x_i,t_i) − u_measured(x_i,t_i)|\\^2",
+        "(1/N_r) \\sum |N[u_\\theta](x_i,t_i)|\\^2 summed over collocation points",
         "KL divergence between the predicted and true solution distributions",
-        "(1/N_b) \\Sigma |\\partialu_\\theta/\\partialx − \\partialu/\\partialx|\\^2 at boundary points",
+        "(1/N_b) \\sum |\\partial u_\\theta/\\partial x − \\partial u/\\partial x|\\^2 at boundary points",
       ],
       correctAnswer: 1,
       explanation:
-        "The physics residual loss L_r = (1/N_r) \\Sigma_{i=1}^{N_r} |N[u_\\theta](x_i,t_i)|\\^2 evaluates how much the neural network u_\\theta violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_\\theta.",
+        "The physics residual loss L_r = (1/N_r) \\sum_{i=1}^{N_r} |N[u_\\theta](x_i,t_i)|\\^2 evaluates how much the neural network u_\\theta violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_\\theta.",
       hints: [
-        "N[u] is the PDE operator (e.g., \\partialu/\\partialt − ν\\partial\\^2u/\\partialx\\^2 for the heat equation). The residual is how far N[u_\\theta] is from zero.",
+        "N[u] is the PDE operator (e.g., \\partial u/\\partial t − ν\\partial\\^2u/\\partial x\\^2 for the heat equation). The residual is how far N[u_\\theta] is from zero.",
         "Collocation points are interior domain points where no labels are needed - only the PDE equation must be satisfied.",
       ],
     },
@@ -31,7 +31,7 @@ const questions: Record<string, Question[]> = {
         "PINNs can solve both forward problems (simulating a known PDE) and inverse problems (inferring unknown parameters from observations) within the same framework.",
       correctAnswer: "True",
       explanation:
-        "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in \\partialu/\\partialt = ν\\partial\\^2u/\\partialx\\^2) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
+        "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in \\partial u/\\partial t = ν\\partial\\^2u/\\partial x\\^2) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
       hints: [
         "Forward: given ν, find u. Inverse: given some measurements of u, find ν. Both fit naturally into the same loss function.",
         "Unknown parameters appear inside N[u_\\theta; ν] - they are simply extra learnable scalars in the optimisation.",
@@ -65,16 +65,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Neural ODEs define hidden state dynamics as dh/dt = f_\\theta(h(t), t). The hidden state at time t\\_1 is obtained by ___.",
+        "Neural ODEs define hidden state dynamics as dh/dt = f_\\theta(h(t), t). The hidden state at time t_{1} is obtained by ___.",
       options: [
-        "h(t\\_1) = h(t\\_0) + f_\\theta(h(t\\_0), t\\_0) \\cdot (t\\_1 − t\\_0)  [Euler step]",
-        "h(t\\_1) = ODESolve(f_\\theta, h(t\\_0), t\\_0, t\\_1)  [numerical ODE integration]",
-        "h(t\\_1) = sigmoid(W\\cdoth(t\\_0) + b)",
-        "h(t\\_1) = h(t\\_0) * exp(f_\\theta(t\\_1))",
+        "h(t_{1}) = h(t_{0}) + f_\\theta(h(t_{0}), t_{0}) \\cdot (t_{1} − t_{0})  [Euler step]",
+        "h(t_{1}) = ODESolve(f_\\theta, h(t_{0}), t_{0}, t_{1})  [numerical ODE integration]",
+        "h(t_{1}) = sigmoid(W\\cdot h(t_{0}) + b)",
+        "h(t_{1}) = h(t_{0}) * exp(f_\\theta(t_{1}))",
       ],
       correctAnswer: 1,
       explanation:
-        "The exact definition is h(t\\_1) = h(t\\_0) + \\int_{t\\_0}^{t\\_1} f_\\theta(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
+        "The exact definition is h(t_{1}) = h(t_{0}) + \\int_{t_{0}^{t_{1} f_\\theta(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
       hints: [
         "A ResNet layer computes h_{n+1} = h_n + f(h_n) - this is exactly one Euler step of the ODE dh/dt = f(h).",
         "Neural ODEs make this continuous: instead of discrete layers, the ODE solver integrates over a time interval.",
@@ -87,14 +87,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The adjoint sensitivity method for Neural ODEs computes gradients by solving a reverse-time ODE for the adjoint a(t) = dL/dh(t). The adjoint satisfies ___.",
       options: [
-        "da/dt = a(t)\\^T \\cdot \\partialf_\\theta/\\partialh(t)  [forward ODE for a]",
-        "da/dt = −a(t)\\^T \\cdot \\partialf_\\theta/\\partialh(t)  [backward ODE, run in reverse time]",
-        "da/dt = −\\partialL/\\partialh(t)  [gradient of loss]",
+        "da/dt = a(t)\^{T} \\cdot \\partial f_\\theta/\\partial h(t)  [forward ODE for a]",
+        "da/dt = −a(t)\^{T} \\cdot \\partial f_\\theta/\\partial h(t)  [backward ODE, run in reverse time]",
+        "da/dt = −\\partial L/\\partial h(t)  [gradient of loss]",
         "da/dt = f_\\theta(h(t), t)  [same as state ODE]",
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)\\^T (\\partialf_\\theta/\\partialh), integrated backwards from t\\_1 to t\\_0 starting from a(t\\_1) = dL/dh(t\\_1). Gradients w.r.t. \\theta are then \\int_{t\\_0}^{t\\_1} a(t)\\^T (\\partialf_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)\^{T} (\\partial f_\\theta/\\partial h), integrated backwards from t_{1} to t_{0} starting from a(t_{1}) = dL/dh(t_{1}). Gradients w.r.t. \\theta are then \\int_{t_{0}}^{t_{1}} a(t)\^{T} (\\partial f_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
         "The adjoint ODE runs backward in time - the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them - O(1) memory vs O(N) for BPTT.",
@@ -130,17 +130,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The Fourier Neural Operator (FNO) layer applies a linear transform in Fourier space. Given input v, the FNO layer computes ___.",
       options: [
-        "\\sigma(W\\cdotv + b)  [standard linear layer with activation]",
-        "\\sigma(F\\^{-1}(R \\cdot F(v)) + W\\cdotv)  [Fourier-space global conv + local linear, then activation]",
+        "\\sigma(W\\cdot v + b)  [standard linear layer with activation]",
+        "\\sigma(F\\^{-1}(R \\cdot F(v)) + W\\cdot v)  [Fourier-space global conv + local linear, then activation]",
         "\\sigma(Conv2D(v, kernel))  [standard spatial convolution]",
         "\\sigma(Attention(v, v, v))  [self-attention layer]",
       ],
       correctAnswer: 1,
       explanation:
-        "Each FNO layer computes \\sigma(F\\^{-1}(R\\cdotF\\_k(v)) + W\\cdotv), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and \\sigma is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
+        "Each FNO layer computes \\sigma(F\\^{-1}(R\\cdot F_{k}(v)) + W\\cdot v), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and \\sigma is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
       hints: [
         "FNO truncates to k Fourier modes (the low-frequency part), which captures global structure while being resolution-independent.",
-        "The local W\\cdotv term handles the high-frequency, local part of the transform that the truncated Fourier modes miss.",
+        "The local W\\cdot v term handles the high-frequency, local part of the transform that the truncated Fourier modes miss.",
       ],
     },
     {
@@ -171,10 +171,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DeepONet\'s branch net encodes the input function u at sensor points {u(x\\_1),...,u(xₘ)} \\to [b\\_1,...,bₚ]; its trunk net encodes the output query location y \\to [t\\_1,...,tₚ]; the operator output is G(u)(y) \\approx \\Sigma\\_i b\\_i\\cdott\\_i + bias. This is grounded in the universal approximation theorem for operators.",
+        "DeepONet\'s branch net encodes the input function u at sensor points {u(x_{1}),...,u(x_{m})} \\to [b_{1},...,b_{p}]; its trunk net encodes the output query location y \\to [t_{1},...,t_{p}]; the operator output is G(u)(y) \\approx \\sum_{i} b_{i} \\cdot t_{i} + bias. This is grounded in the universal approximation theorem for operators.",
       hints: [
         "Branch: what does the input function look like? Trunk: where do we want the output? They are combined by a dot product.",
-        "The inner product \\Sigma b\\_it\\_i acts like a learned basis expansion of the output function.",
+        "The inner product \\sum b_{i}t_{i} acts like a learned basis expansion of the output function.",
       ],
     },
   ],
@@ -739,7 +739,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint ODE satisfies da/dt = −a(t)\\^T (\\partialf_\\theta/\\partialh), integrated backwards from t\\_1 to t\\_0 starting from a(t\\_1) = dL/dh(t\\_1). Gradients w.r.t. \\theta are then \\int_{t\\_0}^{t\\_1} a(t)\\^T (\\partialf_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint ODE satisfies da/dt = −a(t)\^{T} (\\partial f_\\theta/\\partial h), integrated backwards from t_{1} to t_{0} starting from a(t_{1}) = dL/dh(t_{1}). Gradients w.r.t. \\theta are then \\int_{t_{0}}^{t_{1}} a(t)\^{T} (\\partial f_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
         "The adjoint ODE runs backward in time - the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them - O(1) memory vs O(N) for BPTT.",
@@ -779,7 +779,7 @@ const questions: Record<string, Question[]> = {
         "DimeNet uses directional message passing that incorporates the angle between bonds - not just radial distances - capturing angular geometry of atomic environments, which is important for properties like molecular dipole moments and torsion barriers.",
       hints: [
         "SchNet only uses distances (radial); DimeNet adds angles (directional). More geometric information means better accuracy.",
-        "Bond angles determine molecular geometry: water\'s 104.5° angle vs. CO\\_2's 180° linear structure have very different properties.",
+        "Bond angles determine molecular geometry: water\'s 104.5° angle vs. CO_{2}'s 180° linear structure have very different properties.",
       ],
     },
     {
@@ -1555,7 +1555,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CS theory (Candès, Romberg, Tao; Donoho) guarantees that an s-sparse signal in R^n can be exactly recovered from m = O(s\\cdotlog(n/s)) measurements if the measurement matrix satisfies RIP, via L1-minimization (basis pursuit).",
+        "CS theory (Candès, Romberg, Tao; Donoho) guarantees that an s-sparse signal in R^n can be exactly recovered from m = O(s\\cdot log(n/s)) measurements if the measurement matrix satisfies RIP, via L1-minimization (basis pursuit).",
       hints: [
         "Sparsity means the signal has only a few non-zero components in some representation basis.",
         "RIP (Restricted Isometry Property) ensures the measurement matrix does not distort the geometry of sparse vectors.",
@@ -1956,7 +1956,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'That symbolic regression results always overfit because they lack regularisation',
       ],
       correctAnswer: 1,
-      explanation: 'With k input variables and n operator types, the number of expression trees of depth d grows as O((k\\cdotn)^(2^d)). Beyond ~5 variables and moderate complexity, naive GP struggles. Modern approaches address this via: (1) neural-guided search (e.g., NeSymReS uses transformers to propose candidate expressions); (2) embedding dimensional analysis constraints; (3) parallelised island-model evolution.',
+      explanation: 'With k input variables and n operator types, the number of expression trees of depth d grows as O((k\\cdot n)^(2^d)). Beyond ~5 variables and moderate complexity, naive GP struggles. Modern approaches address this via: (1) neural-guided search (e.g., NeSymReS uses transformers to propose candidate expressions); (2) embedding dimensional analysis constraints; (3) parallelised island-model evolution.',
       hints: [
         'Depth 5 tree with 10 nodes and 10 operators: 10^10 possible trees-exhaustive search is hopeless.',
         'Neural guidance: a transformer trained on (data, formula) pairs can propose likely formula skeletons.',
@@ -2026,7 +2026,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Truncated backpropagation through time (TBPTT), which cuts gradients after a fixed number of steps',
       ],
       correctAnswer: 1,
-      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. \\theta and h(t\\_0) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T \\partialf/\\partialh. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
+      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. \\theta and h(t_{0}) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T \\partial f/\\partial h. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
       hints: [
         'Standard backprop through a discrete ODE solver stores all intermediate states-memory is O(N_steps).',
         'Adjoint method: store only the final state, then recompute states backward as needed during the reverse ODE solve.',
@@ -2036,9 +2036,9 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp37-2',
       type: 'true-false',
       difficulty: 'medium',
-      question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t\\_0), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
+      question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t_{0}), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
       correctAnswer: 'True',
-      explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t\\_0); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
+      explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t_{0}); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
       hints: [
         'RNNs require fixed-step inputs; Neural ODEs provide continuous-time dynamics-combine both.',
         'The latent trajectory z(t) is smooth and continuous, so querying at any t is simply integrating the ODE to that time.',
@@ -2056,7 +2056,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Neural ODEs only support autonomous (time-independent) dynamics, but chaotic systems are time-dependent',
       ],
       correctAnswer: 1,
-      explanation: 'In chaotic systems, the largest Lyapunov exponent \\lambda\\_1 > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(\\lambda\\_1T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
+      explanation: 'In chaotic systems, the largest Lyapunov exponent \\lambda_{1} > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^{(\\lambda_{1}T)}, causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
       hints: [
         'Lyapunov exponent: the rate at which infinitesimally separated trajectories diverge. Positive \\to chaos.',
         'If you cannot match the trajectory exactly (butterfly effect), can you match its statistics instead?',
@@ -2136,7 +2136,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp39-2',
       type: 'true-false',
       difficulty: 'easy',
-      question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = \\partialH/\\partialp, ṗ = −\\partialH/\\partialq) to evolve dynamics, automatically conserving total energy by construction.',
+      question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = \\partial H/\\partial p, ṗ = −\\partial H/\\partial q) to evolve dynamics, automatically conserving total energy by construction.',
       correctAnswer: 'True',
       explanation: 'HNNs (Greydanus et al., 2019) parameterise H_\\theta(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout-unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
       hints: [
@@ -2156,7 +2156,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'They use equivariant attention that scales as O(N) in the number of atoms rather than O(N\\^2)',
       ],
       correctAnswer: 1,
-      explanation: 'Molecular energy E must be invariant under rigid body transformations (E(3) symmetry), and forces F_i = −\\partialE/\\partialr_i are equivariant (rotate with the molecule). E(3)-equivariant GNNs (NequIP, MACE, Allegro) represent atomic features as irreducible representations of SO(3) and use Clebsch-Gordan products for equivariant message passing-achieving 10-100x better data efficiency than non-equivariant models.',
+      explanation: 'Molecular energy E must be invariant under rigid body transformations (E(3) symmetry), and forces F_i = −\\partial E/\\partial r_i are equivariant (rotate with the molecule). E(3)-equivariant GNNs (NequIP, MACE, Allegro) represent atomic features as irreducible representations of SO(3) and use Clebsch-Gordan products for equivariant message passing-achieving 10-100x better data efficiency than non-equivariant models.',
       hints: [
         'If you rotate a molecule, the energy is the same but the forces rotate with it-equivariance, not invariance.',
         'Irreducible representations (irreps) of SO(3) are the spherical harmonics-they transform predictably under rotation.',
@@ -2206,7 +2206,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The Jacobian of the rendering function with respect to the NeRF density field',
       ],
       correctAnswer: 1,
-      explanation: 'SDS gradient: \\nabla_\\theta L_SDS = E_{t,\\epsilon}[w(t)(\\epsilon_\\phi(x_t; y, t) − \\epsilon) \\cdot \\partialx/\\partial\\theta], where \\epsilon_\\phi is the diffusion model\'s predicted noise and \\epsilon is the actual noise added. The term (\\epsilon_\\phi − \\epsilon) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering \\partialx/\\partial\\theta, updates the 3D representation without needing a 3D dataset.',
+      explanation: 'SDS gradient: \\nabla_\\theta L_SDS = E_{t,\\epsilon}[w(t)(\\epsilon_\\phi(x_t; y, t) − \\epsilon) \\cdot \\partial x/\\partial\\theta], where \\epsilon_\\phi is the diffusion model\'s predicted noise and \\epsilon is the actual noise added. The term (\\epsilon_\\phi − \\epsilon) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering \\partial x/\\partial\\theta, updates the 3D representation without needing a 3D dataset.',
       hints: [
         'SDS: "if this rendered view doesn\'t look like it was sampled from the diffusion model, update the 3D scene to make it more likely."',
         'No 3D GT needed-the 2D diffusion model provides the supervisory signal via its score function.',
@@ -2271,15 +2271,15 @@ const extraScimlQuestions: Record<string, Question[]> = {
       id: "q-sciml-extra-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "For inverse problems using PINNs (e.g., inferring the diffusivity field nu(x) in \\partialu/\\partialt = nu(x) * \\partial\\^2u/\\partialx\\^2), what modification is required when nu(x) is a spatially varying unknown function rather than a scalar?",
+      question: "For inverse problems using PINNs (e.g., inferring the diffusivity field nu(x) in \\partial u/\\partial t = nu(x) * \\partial\\^2u/\\partial x\\^2), what modification is required when nu(x) is a spatially varying unknown function rather than a scalar?",
       options: [
         "nu(x) cannot be identified by PINNs - only scalar constants are learnable as PINN parameters",
-        "nu(x) is represented as a second neural network n_phi(x) trained jointly with u_theta(x,t), with the physics loss enforcing \\partialu_theta/\\partialt = n_phi(x) * \\partial\\^2u_theta/\\partialx\\^2 at collocation points",
+        "nu(x) is represented as a second neural network n_phi(x) trained jointly with u_theta(x,t), with the physics loss enforcing \\partial u_theta/\\partial t = n_phi(x) * \\partial\\^2u_theta/\\partial x\\^2 at collocation points",
         "nu(x) is approximated by piecewise constants on a user-defined spatial grid, with the grid values as learnable parameters",
         "nu(x) is inferred by symbolic regression on the residuals of a forward PINN trained with a guessed nu value",
       ],
       correctAnswer: 1,
-      explanation: "When the unknown is a function rather than a scalar, it is parameterized as a second neural network n_phi(x) (or a Gaussian process). The physics loss L_r = (1/N_r) sum |\\partialu_theta/\\partialt - n_phi(x) * \\partial\\^2u_theta/\\partialx\\^2|^2 is minimized jointly over theta and phi, with a data loss L_data anchoring u_theta to observations. This two-network approach can recover smooth spatially varying coefficient fields from sparse measurements.",
+      explanation: "When the unknown is a function rather than a scalar, it is parameterized as a second neural network n_phi(x) (or a Gaussian process). The physics loss L_r = (1/N_r) sum |\\partial u_theta/\\partial t - n_phi(x) * \\partial\\^2u_theta/\\partial x\\^2|^2 is minimized jointly over theta and phi, with a data loss L_data anchoring u_theta to observations. This two-network approach can recover smooth spatially varying coefficient fields from sparse measurements.",
       hints: [
         "The unknown function nu(x) must be parameterized - a neural network is the natural choice for a smooth, nonlinear function approximator.",
         "Joint optimization of both networks requires careful weighting between the physics loss and data loss to avoid trivial solutions.",
