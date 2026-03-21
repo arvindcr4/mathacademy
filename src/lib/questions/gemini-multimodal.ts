@@ -344,8 +344,7 @@ registerQuestions({
         "It only processes the first frame of the video.",
         "It converts the video into an animated GIF before processing.",
       ],
-      correctAnswer:
-        "It samples frames from the video at a specific frame rate and processes them sequentially along with the audio track.",
+      correctAnswer: 1,
       explanation:
         "Gemini processes video by sampling it as a sequence of image frames (e.g., 1 frame per second) and analyzing them in order, combined with the transcribed audio.",
       hints: [
@@ -367,8 +366,7 @@ registerQuestions({
         "It can directly reason over the audio (e.g., understanding tone, identifying speakers, summarizing) without needing an intermediate text transcript.",
         "It requires audio to be converted to MIDI format.",
       ],
-      correctAnswer:
-        "It can directly reason over the audio (e.g., understanding tone, identifying speakers, summarizing) without needing an intermediate text transcript.",
+      correctAnswer: 2,
       explanation:
         "Because Gemini is natively multimodal, it processes audio directly. This means it can capture nuances like tone, emotion, and overlapping voices that are often lost in standard text transcripts.",
       hints: [
@@ -389,8 +387,7 @@ registerQuestions({
         "To temporarily upload large files (like videos, large PDFs, or audio) to Google’s servers so they can be referenced in API prompts.",
         "To download training weights of the Gemini models.",
       ],
-      correctAnswer:
-        "To temporarily upload large files (like videos, large PDFs, or audio) to Google’s servers so they can be referenced in API prompts.",
+      correctAnswer: 2,
       explanation:
         "The File API allows developers to upload large files (up to 2GB per file) for temporary storage (usually 48 hours), returning a URI that can be used in `generateContent` requests without hitting payload size limits.",
       hints: [
@@ -428,8 +425,7 @@ registerQuestions({
         "By passing an array of `FunctionDeclaration` objects detailing the function name, description, and parameter schema.",
         "By executing the function locally before calling Gemini.",
       ],
-      correctAnswer:
-        "By passing an array of `FunctionDeclaration` objects detailing the function name, description, and parameter schema.",
+      correctAnswer: 2,
       explanation:
         "Tools are defined by passing `FunctionDeclaration` objects (which use OpenAPI JSON schema syntax) to the model. The model uses these descriptions to determine if and how to call the function.",
       hints: [

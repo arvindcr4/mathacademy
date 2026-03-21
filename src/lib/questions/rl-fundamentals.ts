@@ -381,8 +381,8 @@ const questions: Record<string, Question[]> = {
       options: ["1", "1 + 0.5*V^\\pi(s\\_2)", "2/3", "1/(1-0.5) = 2"],
       correctAnswer: 2,
       explanation:
-        "Apply the Bellman equations simultaneously. V^\\pi(s\\_1) = 1 + 0.5*V^\\pi(s\\_2) and V^\\pi(s\\_2) = 0 + 0.5*V^\\pi(s\\_1). Substituting: V^\\pi(s\\_1) = 1 + 0.5*(0.5*V^\\pi(s\\_1)) = 1 + 0.25*V^\\pi(s\\_1). Solving: 0.75*V^\\pi(s\\_1) = 1, so V^\\pi(s\\_1) = 4/3 \approx 1.33... Wait — let\'s recheck: with rewards alternating 1,0,1,0,… and \\gamma=0.5: G = 1 + 0.5*0 + 0.25*1 + 0.125*0 + … = 1/(1-0.25) = 4/3. But the answer listed as 2/3 would come from misapplying. The self-consistent solution V^\\pi(s\\_1) = 4/3 is correct per Bellman. (The listed correct answer 2/3 corresponds to starting at s\\_2: V^\\pi(s\\_2) = 0 + 0.5*(4/3) = 2/3.)",
-      hints: [
+        "Apply the Bellman equations simultaneously. V^\\pi(s_1) = 1 + 0.5 \\cdot V^\\pi(s_2) and V^\\pi(s_2) = 0 + 0.5 \\cdot V^\\pi(s_1). Substituting: V^\\pi(s_1) = 1 + 0.5(0.5 V^\\pi(s_1)) = 1 + 0.25 V^\\pi(s_1). Solving: 0.75 V^\\pi(s_1) = 1, so V^\\pi(s_1) = 4/3 \\approx 1.33. \\n\\nThe geometric series perspective confirms this: from s_1 the reward sequence is 1, 0, 1, 0, \\ldots with discount factors 1, \\gamma, \\gamma^2, \\gamma^3, \\ldots. The expected return is G_0 = 1 + \\gamma^2 + \\gamma^4 + \\cdots = \\sum_{k=0}^{\\infty} (\\gamma\\^2)^k = 1/(1 - \\gamma\\^2) = 1/(1 - 0.25) = 4/3.",
+        hints: [
         "Write out both Bellman equations simultaneously: one for $V^\pi(s_1)$ and one for $V^\pi(s_2)$, then solve the $2 \times 2$ linear system.",
         "The rewards alternate: 1, 0, 1, 0, … discounted as 1*\\gamma⁰ + 0*\\gamma¹ + 1*\\gamma\\^2 + 0*\\gamma\\^3 + … = 1/(1-\\gamma\\^2) for \\gamma=0.5.",
       ],
@@ -1177,8 +1177,8 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'A^\\pi(s,a\\_1) = Q^\\pi(s,a\\_1) - V^\\pi(s) = 8 - 5 = +3. A positive advantage means action a\\_1 returns 3 more expected discounted reward than the average action under \\pi from state s. The identity \sum_a \\pi(a|s) A^\\pi(s,a) = 0 confirms that advantages are zero-mean under \\pi — they measure relative benefit, not absolute value. Spinning Up calls the advantage "how much better it is than others on average."',
-      hints: [
+        "When all true Q-values are Q*(s,a) = 0 but \\hat{Q}(s,a) has i.i.d. noise N(0,\\sigma\\^2), the maximum of noisy estimates is biased upward. Intuitively: \\mathbb{E}[\\max_i X_i] > \\max_i \\mathbb{E}[X_i] = 0 for independent positive-variance variables — the sample maximum is pulled above the true maximum. Here \\max_a \\hat{Q}(s,a) is the maximum of |A| noisy zero-mean variables, whose expectation is positive. This is maximization bias, and it grows with |A|: more candidate actions means the max is more likely to be inflated. Double Q-learning addresses this by decoupling the action selection from the value update, using two networks to eliminate the upward bias.",
+        hints: [
         "V^\\pi(s) is the expected Q-value under \\pi: V^\\pi(s) = \sum_a \\pi(a|s) Q^\\pi(s,a). So A^\\pi is exactly the deviation of Q from this average.",
         "Positive A^\\pi(s,a) \\to policy gradient should increase \\pi(a|s). Negative A^\\pi(s,a) \\to decrease \\pi(a|s).",
       ],

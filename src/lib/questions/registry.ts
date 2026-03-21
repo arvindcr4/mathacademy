@@ -1,6 +1,6 @@
 import type { Question } from "@/lib/curriculum";
 
-// Registry: maps kp-slug → questions array
+// Registry: maps kp-slug  ->  questions array
 export type QuestionsMap = Record<string, Question[]>;
 
 const registry: QuestionsMap = {};
@@ -2084,6 +2084,39 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "Clip each gradient coordinate independently into [-c, c]",
       "Zero the largest gradient coordinates until the norm is c",
       "Rescale each layer separately to norm c",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ra-2": {
+    question:
+      "Using the three-reversal method, what are the time and extra-space complexities to rotate an array?",
+    options: [
+      "O(n) time, O(1) extra space",
+      "O(n) time, O(n) extra space",
+      "O(n log n) time, O(1) extra space",
+      "O(1) time, O(1) extra space",
+    ],
+    correctAnswer: 0,
+  },
+  "q-lcp-2": {
+    question:
+      "If there are n strings and the shortest has length m, what is the worst-case time of vertical LCP scanning?",
+    options: ["O(m)", "O(n + m)", "O(n * m)", "O(n log m)"],
+    correctAnswer: 2,
+  },
+  "q-iq-1": {
+    question: "In a queue built from two stacks, what is the amortized time per operation?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    correctAnswer: 0,
+  },
+  "q-av-1": {
+    question:
+      "For lowercase letters, what is the asymptotic cost of the optimal sliding-window solution for Find All Anagrams in a String?",
+    options: [
+      "O(n) time, O(1) space",
+      "O(n log k) time, O(1) space",
+      "O(nk) time, O(k) space",
+      "O(n^2) time, O(1) space",
     ],
     correctAnswer: 0,
   },

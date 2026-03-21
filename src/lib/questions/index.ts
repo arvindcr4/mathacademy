@@ -41,6 +41,10 @@ import "./fastai-deep-learning";
 import "./causal-inference";
 import "./diffusion-models";
 import "./graph-neural-networks";
+import "./systems-design-interview";
+import "./systems-design-databases";
+import "./systems-design-networking";
+import "./systems-design-distributed";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

@@ -19,8 +19,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The momentum anomaly documents that past 3–12 month winners tend to outperform past losers over the next month, contradicting the weak form of market efficiency.",
       hints: [
-        "Think about whether past performance has predictive power over future short-term returns.",
-        "The anomaly is named after the physical concept of a body continuing in its direction of motion.",
+        "Think about whether past performance has any predictive power over future short-term returns.",
+        "The name hints at a concept from classical mechanics — a body in motion tending to remain in motion in the same direction.",
       ],
     },
     {
@@ -52,10 +52,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Purging removes training samples whose labels overlap in time with test samples, while embargoing adds a gap after the test set, preventing information leakage across time in financial ML pipelines.",
+        "Look-ahead bias occurs when information from the test period leaks into the training set through temporally adjacent observations.\n\nPurging removes from the training set any observations whose labels overlap in time with test labels. Embargoing further adds a temporal gap \\(t_{\\text{gap}}\\) after the test set, ensuring no information flows across the boundary:\n\n\\[\n\\text{Train: } t \\in [0, \\, t_{\\text{start}} - t_{\\text{purge}} - t_{\\text{embargo}}) \\quad \\text{Test: } t \\in [t_{\\text{start}}, t_{\\text{end}}]\n\\]\n\nStandard \\(K\\)-fold with random shuffling ignores temporal ordering, allowing future data points to appear in training folds — a serious error in financial time series.",
       hints: [
-        "Standard k-fold shuffles data randomly; why might that be problematic for time-series financial data?",
-        "Consider how information from future periods could contaminate training labels if observations are adjacent in time.",
+        "Standard \\(K\\)-fold randomly shuffles data, so a training fold may contain 2022 observations while a test fold contains 2020 data — creating look-ahead bias.",
+        "Consider a scenario where a training observation at \\(t=5\\) and a test observation at \\(t=4\\) share information from an overlapping event window.",
       ],
     },
   ],
@@ -69,14 +69,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Sharpe ratio of a portfolio is defined as (E[Rₚ] − Rƒ) / \\sigmaₚ. If Portfolio A has an annualised excess return of 12% and annualised volatility of 20%, and Portfolio B has excess return 6% and volatility 8%, which has the higher Sharpe ratio?",
       options: [
-        "Portfolio A (Sharpe = 0.60) outperforms B (Sharpe = 0.75) — incorrect, A is higher",
         "Portfolio B, with Sharpe ratio 0.75, outperforms Portfolio A\'s Sharpe ratio of 0.60",
-        "Portfolio A, because it has higher absolute excess return",
-        "Both have identical Sharpe ratios of 0.60",
+        "Portfolio A, with Sharpe ratio 0.60, outperforms Portfolio B\'s Sharpe ratio of 0.75",
+        "Portfolio A, because it has a higher absolute excess return of 12%",
+        "Both portfolios have an identical Sharpe ratio of 0.60",
       ],
-      correctAnswer: 1,
+      correctAnswer: 0,
       explanation:
-        "Sharpe ratio = (excess return) / volatility. Portfolio A: 0.12/0.20 = 0.60. Portfolio B: 0.06/0.08 = 0.75. Portfolio B delivers more excess return per unit of risk. The Sharpe ratio rewards efficient risk-taking, not raw return, making it the standard metric for comparing risk-adjusted performance across strategies.",
+        "The Sharpe ratio measures risk-adjusted return: \\(\\text{SR} = \\dfrac{E[R_p] - R_f}{\\sigma_p}\\).\n\nFor Portfolio A: \\(0.12 / 0.20 = 0.60\\).\nFor Portfolio B: \\(0.06 / 0.08 = 0.75\\).\n\nPortfolio B achieves a higher Sharpe ratio of 0.75 versus 0.60 for Portfolio A, meaning it delivers more excess return per unit of risk. The Sharpe ratio rewards efficient risk-taking — not raw return — making it the standard metric for comparing risk-adjusted performance across strategies.",
       hints: [
         "Compute each portfolio\'s Sharpe: divide annualised excess return by annualised volatility.",
         "A higher Sharpe means more excess return earned per unit of risk taken — not necessarily a higher absolute return.",
