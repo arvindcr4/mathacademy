@@ -1695,5 +1695,567 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const extra: Record<string, import('@/lib/curriculum').Question[]> = {
+  'marl-cooperative-competitive': [
+    {
+      id: 'q-rla-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'In multi-agent RL, the key distinction between cooperative and competitive settings is:',
+      options: [
+        'Cooperative agents share a replay buffer; competitive agents do not',
+        'Cooperative agents share a common team reward; competitive agents have opposing rewards (zero-sum)',
+        'Cooperative agents always communicate; competitive agents are always silent',
+        'Competitive settings require more agents than cooperative settings',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'In cooperative MARL all agents maximize a shared global return, while in competitive (adversarial) settings one agent\'s gain is another\'s loss. Mixed cooperative-competitive games (e.g., team sports) combine both.',
+      hints: [
+        'Think about whether agents\' interests are aligned or opposed.',
+        'Zero-sum means the sum of all rewards is always zero.',
+      ],
+    },
+    {
+      id: 'q-rla-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'MADDPG (Multi-Agent DDPG) uses centralized training with decentralized execution: critics are conditioned on all agents\' observations and actions during training, but actors only use local observations at execution time.',
+      correctAnswer: 'True',
+      explanation:
+        'MADDPG\'s central critics can exploit global information to reduce non-stationarity during training, while decentralized actors ensure scalability at execution. This CTDE paradigm is widely adopted in cooperative MARL.',
+      hints: [
+        'CTDE = Centralized Training, Decentralized Execution.',
+        'Non-stationarity arises because each agent\'s environment changes as other agents learn.',
+      ],
+    },
+    {
+      id: 'q-rla-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Reward shaping in cooperative multi-agent RL using difference rewards (D_i = G − G_{−i}) addresses which core challenge?',
+      options: [
+        'It removes the need for a centralized critic by computing local gradients',
+        'It isolates each agent\'s individual contribution to the global reward, reducing the credit-assignment problem',
+        'It converts the cooperative task into a competitive one to drive exploration',
+        'It replaces the global reward with agent-specific shaped rewards that ignore teammates',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Difference rewards D_i = G(s,a) − G(s, a_{−i}) measure how much agent i contributes by comparing actual global return to counterfactual return without i\'s action. This gives a credit-assignment signal aligned with global objectives.',
+      hints: [
+        'The credit-assignment problem: in large teams, individual contributions to a shared reward are hard to isolate.',
+        'Counterfactual baselines subtract the expected contribution of other agents.',
+      ],
+    },
+  ],
+
+  'hierarchical-rl-options': [
+    {
+      id: 'q-rla-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'In hierarchical RL, the options framework decomposes a task using:',
+      options: [
+        'A fixed sequence of primitive actions chosen by the environment',
+        'High-level options (sub-policies with initiation sets and termination conditions) executed by a meta-policy',
+        'Separate neural networks for each skill that never share parameters',
+        'A lookup table mapping goals to primitive actions',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'An option o = (I_o, π_o, β_o) consists of an initiation set I_o (where option can start), intra-option policy π_o, and termination condition β_o. A meta-controller selects which option to execute, enabling temporal abstraction over many timesteps.',
+      hints: [
+        'Options generalize primitive actions to multi-step behaviors.',
+        'The meta-policy picks options; each option runs its own policy until termination.',
+      ],
+    },
+    {
+      id: 'q-rla-kp32-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'In goal-conditioned hierarchical RL, the high-level policy sets sub-goals for the low-level policy, and the low-level policy receives a dense intrinsic reward based on how close it gets to the sub-goal.',
+      correctAnswer: 'True',
+      explanation:
+        'Goal-conditioned HRL (e.g., HIRO) has a high-level controller that generates sub-goals g_t every k steps. The low-level controller receives intrinsic reward r_t = −‖s_{t+1} − g_t‖ encouraging it to reach g_t, while the high-level maximizes extrinsic reward.',
+      hints: [
+        'HIRO = HIerarchical Reinforcement learning with Off-policy correction.',
+        'Distance-based intrinsic reward provides a dense training signal for the low-level policy.',
+      ],
+    },
+    {
+      id: 'q-rla-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Hierarchical Actor-Critic (HAC) solves the non-stationarity problem in HRL by:',
+      options: [
+        'Freezing the low-level policy parameters while training the high-level policy',
+        'Using hindsight action transitions that replace sub-goals with the state actually achieved, allowing off-policy learning at all levels',
+        'Training each level with a separate environment simulator to isolate their dynamics',
+        'Applying proximal policy optimization independently at each hierarchy level',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'HAC uses hindsight action transitions: when the low-level policy fails to reach sub-goal g, HAC replaces g with the state actually reached s\'_t in the replay buffer. This makes transitions valid regardless of the current low-level policy, enabling stable off-policy updates at all hierarchy levels.',
+      hints: [
+        'Non-stationarity in HRL: as the low-level policy improves, transitions stored by the high-level become stale.',
+        'Hindsight experience replay (HER) replaces failed goals with achieved states — HAC applies this hierarchically.',
+      ],
+    },
+  ],
+
+  'model-based-rl-apps': [
+    {
+      id: 'q-rla-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The Dyna architecture improves sample efficiency in RL by:',
+      options: [
+        'Replacing real environment interactions with purely synthetic rollouts',
+        'Learning a model of the environment and using it to generate additional simulated transitions for policy updates',
+        'Sharing parameters between the environment model and the policy network',
+        'Pretraining the policy on demonstrations before real environment interaction',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Dyna-Q interleaves real environment steps with model-based planning: after each real transition, the agent updates the model, then performs k simulated planning steps using the model. This amortizes the cost of environment interaction.',
+      hints: [
+        'Sutton\'s Dyna framework combines model-free and model-based learning.',
+        'More planning steps (k) = better use of each real sample, at the cost of compute.',
+      ],
+    },
+    {
+      id: 'q-rla-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'World Models (Ha & Schmidhuber 2018) compress raw sensory observations into a latent representation using a VAE, then train a recurrent neural network (RNN/MDN) to predict future latent states.',
+      correctAnswer: 'True',
+      explanation:
+        'World Models consist of: V (Vision model — VAE encodes frames to z_t), M (Memory model — MDN-RNN predicts P(z_{t+1}|z_t, a_t, h_t)), and C (Controller — linear policy trained in the dream). The agent can learn entirely inside its own learned world model.',
+      hints: [
+        'V = Vision (VAE), M = Memory (MDN-RNN), C = Controller.',
+        'The "dream" is rollouts generated entirely inside the M model without real environment steps.',
+      ],
+    },
+    {
+      id: 'q-rla-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'MuZero differs from AlphaZero in which fundamental way?',
+      options: [
+        'MuZero uses policy gradient instead of MCTS for action selection',
+        'MuZero learns a latent dynamics model without knowing the environment\'s rules, while AlphaZero requires a perfect simulator',
+        'MuZero uses value iteration over the full state space; AlphaZero uses MCTS only at leaf nodes',
+        'MuZero is restricted to board games; AlphaZero works on both games and robotics',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'AlphaZero requires a perfect simulator of the environment (e.g., chess rules). MuZero learns a latent dynamics model f(h, a) → (h\', r, v, p) entirely from data, enabling MCTS planning in the learned latent space. This extends to Atari and other domains where rules are unknown.',
+      hints: [
+        'AlphaZero = perfect simulator given; MuZero = learns the simulator.',
+        'MuZero\'s latent dynamics model predicts reward, value, and policy — not literal next states.',
+      ],
+    },
+  ],
+
+  'rl-for-nlp': [
+    {
+      id: 'q-rla-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Reinforcement Learning from Human Feedback (RLHF) fine-tunes language models by:',
+      options: [
+        'Having humans label every token in the training corpus with a reward score',
+        'Training a reward model from human preference comparisons, then using PPO to maximize that reward',
+        'Replacing the cross-entropy loss with a human-specified utility function during pretraining',
+        'Using Q-learning over the vocabulary to select tokens that maximize user satisfaction',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'RLHF (InstructGPT, ChatGPT): (1) collect human preference data comparing pairs of responses, (2) train a reward model R(x,y) via Bradley-Terry regression, (3) fine-tune the LM with PPO to maximize E[R(x,y)] − β·KL(π || π_ref), keeping the policy close to the reference LM.',
+      hints: [
+        'The reward model learns to score outputs based on human pairwise preferences.',
+        'PPO is used because it is stable and clips large policy updates.',
+      ],
+    },
+    {
+      id: 'q-rla-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Reward hacking in RLHF occurs when the policy finds high-scoring outputs that satisfy the reward model but diverge from true human intent, typically because the reward model is an imperfect proxy.',
+      correctAnswer: 'True',
+      explanation:
+        'Reward hacking (Goodhart\'s Law): "When a measure becomes a target, it ceases to be a good measure." The LM can find adversarial inputs that exploit reward model blind spots — e.g., verbose or sycophantic responses that score highly but are unhelpful.',
+      hints: [
+        'Goodhart\'s Law applies: optimizing a proxy measure diverges from the true objective.',
+        'Examples: responses that are long and complimentary rather than accurate.',
+      ],
+    },
+    {
+      id: 'q-rla-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The KL penalty term β·KL(π_θ || π_ref) in the RLHF objective serves which dual purpose?',
+      options: [
+        'It speeds up training by reducing gradient variance and prevents the policy from memorizing training prompts',
+        'It prevents reward hacking by keeping the fine-tuned policy close to the reference LM, and ensures the policy retains general language capabilities',
+        'It replaces the need for a separate reward model by computing divergence from preferred responses',
+        'It enforces that the policy remains in the low-perplexity region of the reference distribution for computational efficiency',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The KL penalty β·KL(π || π_ref) acts as a regularizer: (1) it limits how far the policy drifts from the pretrained reference, preventing reward hacking exploitation of OOD inputs; (2) it preserves the general language model capabilities learned during pretraining. Higher β = more conservative fine-tuning.',
+      hints: [
+        'Without KL penalty, the policy can collapse to gibberish that happens to score high on the reward model.',
+        'β controls the trade-off: high β = stays close to reference; low β = more RL optimization.',
+      ],
+    },
+  ],
+
+  'rl-robotics': [
+    {
+      id: 'q-rla-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Continuous action spaces in robotics RL (e.g., joint torques) require algorithms that:',
+      options: [
+        'Discretize the action space into bins and apply standard DQN',
+        'Directly output action distributions (e.g., Gaussian) and optimize with policy gradient or actor-critic methods',
+        'Use lookup tables indexed by joint angles',
+        'Restrict actions to a finite set of keyframe poses',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Continuous control requires parameterizing action distributions (typically Gaussian π(a|s) = N(μ_θ(s), Σ_θ(s))) and using algorithms like PPO, SAC, or TD3 that can optimize over continuous action spaces without exhaustive enumeration.',
+      hints: [
+        'DQN requires argmax over actions — intractable for continuous spaces.',
+        'Gaussian policies output mean and variance, allowing reparameterization for gradients.',
+      ],
+    },
+    {
+      id: 'q-rla-kp35-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'SAC (Soft Actor-Critic) differs from TD3 (Twin Delayed Deep Deterministic) primarily in that SAC maximizes an entropy-augmented objective, leading to a stochastic policy, while TD3 uses a deterministic policy.',
+      correctAnswer: 'True',
+      explanation:
+        'SAC optimizes J = E[Σ r_t + α·H(π(·|s_t))], encouraging maximum entropy exploration. TD3 improves DDPG with twin critics and delayed policy updates but maintains a deterministic policy. SAC\'s stochastic policy provides natural exploration without explicit noise injection.',
+      hints: [
+        'SAC = maximum entropy RL → stochastic policy. TD3 = deterministic + noise for exploration.',
+        'α in SAC controls exploration-exploitation trade-off (temperature parameter).',
+      ],
+    },
+    {
+      id: 'q-rla-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Reward shaping for robotic manipulation (e.g., peg insertion) using potential-based shaping Φ(s) guarantees:',
+      options: [
+        'Faster convergence to the optimal policy regardless of Φ\'s accuracy',
+        'Policy invariance: the optimal policy for the shaped reward F(s,a,s\') = r + γΦ(s\') − Φ(s) is the same as for the original r',
+        'The shaped reward eliminates the need for any sparse terminal reward signal',
+        'Potential-based shaping forces exploration toward the goal state',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Ng et al. (1999) proved that F(s,a,s\') = r(s,a,s\') + γΦ(s\') − Φ(s) preserves the optimal policy for any potential function Φ. This allows injecting domain knowledge (e.g., Φ = −dist_to_goal) without distorting the RL solution, unlike arbitrary reward shaping.',
+      hints: [
+        'The shaping term γΦ(s\') − Φ(s) telescopes to zero over complete episodes.',
+        'Only potential-based shaping guarantees policy invariance — arbitrary bonuses can change the optimal policy.',
+      ],
+    },
+  ],
+
+  'rl-games': [
+    {
+      id: 'q-rla-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'DQN achieved human-level performance on Atari 2600 games by using which input representation?',
+      options: [
+        'Game state variables (score, positions) extracted by the game engine',
+        'Raw pixel frames stacked across 4 consecutive timesteps',
+        'Audio waveforms from the game sound card',
+        'Text descriptions of the game state',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'DQN (Mnih et al. 2015) takes as input 4 stacked grayscale frames (84×84 pixels each), giving the network temporal information about motion and velocity. The stack captures recent dynamics without requiring a recurrent network.',
+      hints: [
+        'Stacking frames provides velocity information (motion direction) that a single frame cannot.',
+        'DQN is the "end-to-end from pixels" breakthrough — no hand-engineered features.',
+      ],
+    },
+    {
+      id: 'q-rla-kp36-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'AlphaGo uses Monte Carlo Tree Search (MCTS) guided by a policy network (to select promising moves) and a value network (to evaluate board positions) trained from human expert games and self-play.',
+      correctAnswer: 'True',
+      explanation:
+        'AlphaGo combines: (1) policy network P(a|s) trained by supervised learning on expert games then refined by policy gradient self-play; (2) value network V(s) trained by regression on self-play outcomes; (3) MCTS that uses P for tree expansion and V for leaf evaluation, replacing expensive random rollouts.',
+      hints: [
+        'MCTS without neural guidance requires deep random rollouts — too slow for Go\'s branching factor.',
+        'Policy network prunes branches; value network evaluates leaf nodes without rollout.',
+      ],
+    },
+    {
+      id: 'q-rla-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'AlphaZero\'s key departure from AlphaGo is that it:',
+      options: [
+        'Replaces MCTS with policy gradient for move selection',
+        'Trains entirely from self-play using a single unified network with no human expert data',
+        'Uses a lookup table of 10^9 endgame positions for evaluation',
+        'Applies model-free Q-learning to the game tree rather than MCTS',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'AlphaZero uses a single f_θ(s) → (p, v) network trained purely from self-play with no human game data. MCTS uses p to guide search and v to evaluate positions. The network learns both move selection and position evaluation jointly, generalizing across chess, shogi, and Go.',
+      hints: [
+        'AlphaGo used human expert games for supervised pretraining — AlphaZero uses zero human data.',
+        'A single network outputs (policy, value) — no separate policy/value networks.',
+      ],
+    },
+  ],
+
+  'real-world-rl-challenges': [
+    {
+      id: 'q-rla-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Partial observability in RL means:',
+      options: [
+        'The agent observes only a subset of actions available in each state',
+        'The agent\'s observation o_t does not fully determine the true environment state s_t',
+        'The reward function is stochastic and not fully observable',
+        'Only some episodes are observed during training',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'In a Partially Observable MDP (POMDP), the agent receives observation o_t ~ O(·|s_t) rather than the full state s_t. The observation may be noisy or incomplete. Agents must maintain a belief state b(s_t) = P(s_t | o_1,...,o_t, a_1,...,a_{t-1}) or use memory (RNNs) to act optimally.',
+      hints: [
+        'A robot with a camera has partial observability — it cannot see behind itself.',
+        'POMDP = Partially Observable MDP. The O stands for Observation function.',
+      ],
+    },
+    {
+      id: 'q-rla-kp37-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'The credit assignment problem in RL refers to the difficulty of determining which specific actions in a long trajectory caused a delayed reward received many timesteps later.',
+      correctAnswer: 'True',
+      explanation:
+        'When a reward arrives at time T after a sequence of actions a_1,...,a_T, attributing the reward to the correct actions is the temporal credit assignment problem. Techniques like eligibility traces, advantage estimation, and attention mechanisms help propagate credit backward through time.',
+      hints: [
+        'If you win a chess game after 100 moves, which moves were most important?',
+        'Discounting (γ < 1) provides one heuristic: actions closer to reward get more credit.',
+      ],
+    },
+    {
+      id: 'q-rla-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Sparse reward environments (e.g., reward only on task completion) are challenging primarily because:',
+      options: [
+        'The policy gradient estimator becomes biased when rewards are sparse',
+        'With near-zero expected reward, the gradient signal ∇J(θ) ≈ 0 almost everywhere, making learning from random exploration extremely slow',
+        'Sparse rewards violate the Markov property required by standard RL algorithms',
+        'Neural networks cannot represent sparse functions, causing approximation error',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'In sparse reward settings, most trajectories receive r=0, so the policy gradient E[∇log π · G] ≈ 0. The agent cannot distinguish good from bad actions without ever reaching the goal. Solutions include reward shaping, hindsight experience replay (HER), intrinsic motivation (curiosity), and curriculum learning.',
+      hints: [
+        'If a robot never reaches the goal, it receives no learning signal from the environment.',
+        'HER, curriculum learning, and intrinsic rewards are the main tools for sparse reward settings.',
+      ],
+    },
+  ],
+
+  'safe-rl-cmdp': [
+    {
+      id: 'q-rla-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A Constrained MDP (CMDP) extends the standard MDP by adding:',
+      options: [
+        'A second agent that enforces safety constraints on the primary agent',
+        'Auxiliary cost functions C_i(s,a) with constraints E[Σ C_i] ≤ d_i that the policy must satisfy',
+        'Hard action masks that block unsafe actions at every timestep',
+        'A separate safe state space that the agent must stay within at all times',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'A CMDP is a tuple (S, A, P, r, C_1,...,C_k, d_1,...,d_k). The agent maximizes E[Σ r_t] subject to E[Σ C_i(s_t,a_t)] ≤ d_i for each constraint. This formulation covers safety constraints, resource limits, and fairness requirements.',
+      hints: [
+        'CMDPs add inequality constraints on expected cumulative costs to the standard RL objective.',
+        'The threshold d_i specifies the maximum allowable cumulative cost for constraint i.',
+      ],
+    },
+    {
+      id: 'q-rla-kp38-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Shielding in safe RL uses a verified safety monitor that intercepts the RL agent\'s actions and overrides any action that would provably violate a safety constraint.',
+      correctAnswer: 'True',
+      explanation:
+        'A shield is a reactive safety layer derived from formal verification (e.g., model checking): it computes for each state the set of safe actions and either blocks unsafe actions or replaces them with a safe fallback. The RL agent learns freely within the shield\'s safety envelope.',
+      hints: [
+        'The shield is verified offline using formal methods — it provides hard safety guarantees.',
+        'Unlike CMDP which relaxes constraints probabilistically, shielding provides deterministic safety guarantees.',
+      ],
+    },
+    {
+      id: 'q-rla-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Constrained Policy Optimization (CPO) extends TRPO to CMDPs by:',
+      options: [
+        'Adding a Lagrangian penalty to the TRPO objective and solving the dual problem',
+        'Solving a constrained optimization that simultaneously bounds the KL divergence and the change in constraint costs, using a linear approximation to the cost functions',
+        'Projecting the unconstrained TRPO update onto the feasible constraint set using quadratic programming',
+        'Using a separate safety critic to block constraint-violating gradient updates',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'CPO (Achiam et al. 2017) extends TRPO\'s trust region to include constraints on expected cumulative costs. It solves: max_π J(π) s.t. J_C_i(π) ≤ d_i, D_KL(π||π_k) ≤ δ. Using linear-quadratic approximations it finds the update direction within the trust region that satisfies cost constraints, with recovery steps when constraints are violated.',
+      hints: [
+        'TRPO constrains the KL divergence — CPO additionally constrains cumulative costs.',
+        'The linear cost approximation allows solving the constrained update as a quadratic program.',
+      ],
+    },
+  ],
+
+  'offline-rl-cql': [
+    {
+      id: 'q-rla-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Offline RL (batch RL) differs from standard (online) RL in that:',
+      options: [
+        'Offline RL uses neural networks while online RL uses tabular methods',
+        'Offline RL learns a policy from a fixed dataset of pre-collected transitions without any further environment interaction',
+        'Offline RL requires a perfect environment model to plan future trajectories',
+        'Offline RL uses supervised learning only, ignoring Bellman equations',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Offline RL (Levine et al. 2020) learns entirely from a static dataset D = {(s,a,r,s\')} without being able to interact with the environment. The key challenge is distribution shift: the learned policy may visit states not covered by the dataset, leading to extrapolation errors in Q-values.',
+      hints: [
+        'No environment interaction means no exploration — the dataset is fixed.',
+        'Distribution shift: Q(s,a) may be wildly wrong for (s,a) pairs not in the dataset.',
+      ],
+    },
+    {
+      id: 'q-rla-kp39-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Conservative Q-Learning (CQL) penalizes Q-values for out-of-distribution actions to prevent overestimation, while still supporting Bellman backups on in-distribution data.',
+      correctAnswer: 'True',
+      explanation:
+        'CQL minimizes E_{μ}[Q(s,a)] − E_{D}[Q(s,a)] + standard Bellman loss, where μ is a broad distribution over actions and D is the data distribution. This pushes down Q for OOD actions and pulls up Q for in-distribution actions, preventing the policy from exploiting Q-overestimation.',
+      hints: [
+        'CQL = Conservative Q-Learning. Conservative means: underestimate OOD Q-values for safety.',
+        'The penalty term lower-bounds the true Q-function under the data distribution.',
+      ],
+    },
+    {
+      id: 'q-rla-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Implicit Q-Learning (IQL) avoids querying Q-values at OOD actions during training by:',
+      options: [
+        'Using a learned policy to restrict action queries to the behavior distribution',
+        'Replacing the max_a Q(s\',a) Bellman backup with an expectile regression that approximates the maximum without sampling OOD actions',
+        'Applying importance sampling to reweight in-distribution actions to match the optimal policy',
+        'Clipping Q-values at the dataset\'s maximum observed return to prevent overestimation',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'IQL (Kostrikov et al. 2021) replaces max_a Q(s\',a) with V(s\') learned via expectile regression at a high quantile τ ≈ 0.7–0.9, approximating the max without querying OOD actions. Advantage-weighted regression then extracts a policy. This enables stable offline RL without any OOD action queries.',
+      hints: [
+        'Expectile regression at high τ approximates the maximum of a distribution.',
+        'IQL never evaluates Q(s\',a\') for actions a\' not in the dataset — no OOD extrapolation.',
+      ],
+    },
+  ],
+
+  'multi-task-rl': [
+    {
+      id: 'q-rla-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The main benefit of multi-task RL compared to training a separate policy for each task is:',
+      options: [
+        'Multi-task policies always achieve higher reward on individual tasks than single-task specialists',
+        'Sharing parameters across tasks enables transfer of representations, reducing sample complexity per task',
+        'Multi-task training avoids the need for reward functions entirely',
+        'Multi-task RL uses model-based methods while single-task RL is always model-free',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Multi-task RL trains a single policy π(a|s,z) conditioned on a task descriptor z. Shared representations capture common structure (e.g., object physics) that transfers across tasks, improving data efficiency. The trade-off is potential interference between dissimilar tasks.',
+      hints: [
+        'Parameter sharing = implicit transfer: representations learned for one task can help others.',
+        'Task descriptor z can be a one-hot vector, embedding, or natural language instruction.',
+      ],
+    },
+    {
+      id: 'q-rla-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Universal Value Function Approximators (UVFAs) extend value functions to V(s, g) conditioned on a goal g, enabling generalization across different goals without retraining.',
+      correctAnswer: 'True',
+      explanation:
+        'UVFAs (Schaul et al. 2015) represent V(s,g;θ) as a single network that generalizes across both states and goals. Trained on diverse (s,g) pairs, UVFAs can estimate value for unseen (s,g) combinations via generalization. Combined with HER, this enables efficient goal-conditioned RL.',
+      hints: [
+        'Standard V(s) is goal-specific; UVFA V(s,g) unifies all goals in one network.',
+        'Generalization across goals is the key advantage — no retraining needed for new goals.',
+      ],
+    },
+    {
+      id: 'q-rla-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Task embeddings in multi-task RL (e.g., PEARL, MAML) are inferred from context to enable fast adaptation. PEARL specifically differs from MAML by:',
+      options: [
+        'PEARL uses gradient-based meta-learning while MAML uses probabilistic context inference',
+        'PEARL infers a posterior over task embeddings z ~ q(z|context) using an encoder network, enabling adaptation in a single forward pass without gradient updates',
+        'PEARL requires knowing the task identity at test time; MAML infers it from observations',
+        'PEARL trains a separate policy per task; MAML shares all parameters across tasks',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'PEARL (Rakelly et al. 2019) uses an encoder E(z|{s,a,r,s\'}) to infer a probabilistic task embedding z ~ q(z|context) from recent transitions. The policy π(a|s,z) conditions on z, enabling fast adaptation by updating the posterior q(z|context) rather than gradient-updating policy parameters. MAML adapts via gradient steps at meta-test time.',
+      hints: [
+        'MAML = gradient-based adaptation at test time. PEARL = inference-based adaptation (no gradients).',
+        'PEARL\'s context encoder amortizes the adaptation cost: one forward pass replaces many gradient steps.',
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra);
+
 export default questions;
 registerQuestions(questions);

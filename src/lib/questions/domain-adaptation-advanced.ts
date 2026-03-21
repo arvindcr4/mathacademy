@@ -1733,7 +1733,7 @@ const questions: Record<string, Question[]> = {
 };
 
 const moreAdaptQuestions: Record<string, Question[]> = {
-  "test-time-adaptation": [
+  "test-time-adaptation-v2": [
     {
       id: "q-adapt-kp31-1",
       type: "multiple-choice",
@@ -1961,7 +1961,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     },
   ],
 
-  "source-free-da": [
+  "source-free-da-v2": [
     {
       id: "q-adapt-kp35-1",
       type: "multiple-choice",
@@ -2022,7 +2022,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
 Object.assign(questions, moreAdaptQuestions);
 
 const moreAdaptQ2: Record<string, Question[]> = {
-  "continual-da": [
+  "continual-da-v2": [
     {
       id: "q-adapt-kp36-1",
       type: "multiple-choice",
@@ -2078,7 +2078,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
     },
   ],
-  "multi-source-da": [
+  "multi-source-da-v2": [
     {
       id: "q-adapt-kp37-1",
       type: "multiple-choice",

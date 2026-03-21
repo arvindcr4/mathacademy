@@ -1594,7 +1594,7 @@ const questions: Record<string, Question[]> = {
 };
 
 const additionalVision3dQuestions: Record<string, Question[]> = {
-  'instant-ngp': [
+  'instant-ngp-v2': [
     {
       id: 'q-cv3d-kp31-1',
       type: 'multiple-choice',

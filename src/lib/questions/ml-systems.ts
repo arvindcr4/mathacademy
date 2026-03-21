@@ -17,7 +17,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A Feature Store centralizes precomputed features so that training and serving use identical transformations, eliminating training-serving skew. Without a feature store, the same feature (e.g., 'user_total_spend_30d') might be computed differently in Python training scripts vs. in the Java serving microservice — the classic skew problem. The feature store ensures both paths read from the same computed values stored in the same storage layer.",
+        "A Feature Store centralizes precomputed features so that training and serving use identical transformations, eliminating training-serving skew. Without a feature store, the same feature (e.g., 'user\\_total\\_spend\\_30d') might be computed differently in a Python training pipeline versus a Java serving microservice — the classic skew problem.\n\n" +
+        "The core issue: in a production ML system, feature computation often diverges across environments. The training pipeline computes features in a batch job using a Python library (e.g., pandas, scikit-learn), while the serving layer computes features in real-time using a different language (e.g., Java, C++). Subtle differences in library versions, floating-point rounding, or even the order of operations can cause the same feature to take different values in each environment.\n\n" +
+        "The Feature Store ensures both paths read from the same precomputed values stored in a shared storage layer (e.g., Redis for online serving, S3 for offline training). Concretely, the offline pipeline computes and materializes features; the online store serves them at inference time. This guarantees consistency: \\(P(\\text{training}) = P(\\text{serving})\\).",
       hints: [
         "Training-serving skew: the same feature computed differently offline (Python) vs. online (Java/Scala) — one of the most common ML production bugs.",
         'The key word is "consistency" — features should be identical in training and serving.',
@@ -144,13 +146,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Weights & Biases (W&B) can automatically log gradients and model topology without any additional code beyond `wandb.init()`.",
+        "In Weights & Biases (W&B), calling `wandb.init()` alone is sufficient to automatically log model gradients and topology.",
       correctAnswer: "False",
       explanation:
-        "Automatic gradient and topology logging requires calling `wandb.watch(model)` explicitly; `wandb.init()` alone only sets up the run context.",
+        "`wandb.init()` only establishes the run context (project name, run name, experiment metadata). Automatic logging of gradients and model topology requires an explicit call to `wandb.watch(model)`, which instruments the model to record gradients and topology information throughout training.",
       hints: [
-        "Automatic logging of specific model internals usually requires a dedicated call.",
-        "Read W&B docs carefully — initialization and watching are two separate steps.",
+        "In W&B, `wandb.init()` handles run setup, not model instrumentation.",
+        "`wandb.watch(model)` is the dedicated call for automatic gradient and topology logging.",
+        "Initialization and model watching are two distinct operations in the W&B API.",
       ],
     },
     {
@@ -217,20 +220,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In Triton Inference Server, what is the purpose of dynamic batching?",
+        "In NVIDIA Triton Inference Server, what does dynamic batching accomplish?",
       options: [
-        "To automatically resize model input tensors at runtime",
-        "To group multiple inference requests into a single batch to maximize GPU utilization",
-        "To distribute a single large model across multiple GPUs",
-        "To enable A/B testing between two model versions",
+        "Automatically resizing model input tensors at runtime to fit varying input shapes",
+        "Combining multiple individual inference requests that arrive within a configurable time window into a single batch for GPU processing",
+        "Partitioning a large model across multiple GPUs for distributed inference",
+        "Routing a percentage of live traffic to a new model version for evaluation",
       ],
       correctAnswer: 1,
       explanation:
-        "Dynamic batching collects individual client requests arriving within a configurable time window (e.g., 100 ms) and merges them into a single batch for GPU processing. Without batching, a single-request GPU kernel launch (1-2 ms overhead) dominates inference time for small inputs. With dynamic batching of 32 samples, the kernel launch overhead is amortized across 32 samples. Example: single request inference = 5 ms (mostly kernel launch overhead); batch of 32 = 15 ms total (0.47 ms per sample). That's a 10x per-sample throughput improvement with minimal latency impact on individual requests.",
+        "Dynamic batching collects individual client requests that arrive within a configurable time window (e.g., 100 ms) and merges them into a single batch before GPU execution. This amortizes the kernel launch overhead across many samples.\n\n" +
+        "Without batching, each individual request triggers a separate GPU kernel launch. For small inputs, the kernel launch overhead (1-2 ms) dominates the actual compute time. With dynamic batching, a single kernel launch processes many samples:\n\n" +
+        "\\[ \\text{Single request:} \\quad t_{\\text{total}} \\approx t_{\\text{launch}} + t_{\\text{compute}} \\approx 5 \\text{ ms} \\]\n" +
+        "\\[ \\text{Batch of 32:} \\quad t_{\\text{total}} \\approx t_{\\text{launch}} + 32 \\cdot t_{\\text{per-sample}} \\approx 15 \\text{ ms} \\]\n" +
+        "\\[ \\Rightarrow \\text{Throughput improvement: } \\frac{5}{0.47} \\approx 10\\times \\text{ per-sample speedup} \\]\n\n" +
+        "Triton's dynamic batcher waits up to the configured time window before executing — trading a small amount of added latency for a large throughput gain.",
       hints: [
-        "GPUs are most efficient when processing many samples in parallel — a single sample leaves thousands of CUDA cores idle.",
-        "Dynamic batching solves the tension between low latency (small batches) and high throughput (large batches).",
-        "Triton's dynamic batcher waits up to the configured window duration before executing — balancing latency vs. batch size.",
+        "GPUs achieve peak efficiency when many samples are processed in a single kernel launch — a single request leaves most CUDA cores idle.",
+        "Dynamic batching resolves the tension between low latency (desirable for individual requests) and high throughput (desirable for resource efficiency).",
+        "The time window parameter controls the trade-off: longer windows allow larger batches but add latency to individual requests.",
       ],
     },
   ],
@@ -493,11 +501,18 @@ const questions: Record<string, Question[]> = {
         "The Population Stability Index (PSI) can detect distribution drift even when ground-truth labels are unavailable.",
       correctAnswer: "True",
       explanation:
-        "PSI compares feature distributions between a reference dataset and current predictions using only the feature values, making it label-free and practical for online monitoring. PSI formula: $\\text{PSI} = \\sum_{i=1}^{n} (A_i - E_i) \\times \\ln(A_i / E_i)$ where $A_i$ is actual % and $E_i$ is expected % in bin $i$. Standard thresholds: PSI < 0.1 = no action, 0.1-0.25 = investigate, > 0.25 = significant drift requiring model retraining. PSI = 0 means identical distributions; PSI → ∞ means completely disjoint distributions.",
+        "PSI compares feature distributions between a reference (baseline) dataset and the current dataset using only the feature values — no labels required. It is computed by partitioning both distributions into \\(n\\) bins, then summing the weighted differences:\n\n" +
+        "\\[ \\text{PSI} = \\sum_{i=1}^{n} (A_i - E_i) \\times \\ln\\!\\left(\\frac{A_i}{E_i}\\right) \\]\n\n" +
+        "where \\(A_i\\) is the actual percentage of observations in bin \\(i\\) and \\(E_i\\) is the expected (reference) percentage.\n\n" +
+        "Standard interpretation thresholds:\n" +
+        "\\[ \\text{PSI} < 0.1 \\; \\Rightarrow \\; \\text{no action needed} \\]\n" +
+        "\\[ 0.1 \\leq \\text{PSI} < 0.25 \\; \\Rightarrow \\; \\text{investigate further} \\]\n" +
+        "\\[ \\text{PSI} \\geq 0.25 \\; \\Rightarrow \\; \\text{significant drift — retrain recommended} \\]\n\n" +
+        "PSI = 0 means identical distributions; PSI grows toward infinity as the distributions become more disjoint.",
       hints: [
-        "PSI = 0 means identical distributions; PSI = infinity means completely disjoint distributions.",
-        "PSI > 0.25 on a key feature (e.g., transaction_amount, user_age) should page the on-call ML engineer.",
-        "PSI is label-free because it only compares feature distributions — no labels needed.",
+        "PSI = 0 means the distributions are identical; PSI \\(\\to \\infty\\) means they are completely disjoint.",
+        "PSI > 0.25 on a key feature (e.g., transaction\\_amount, user\\_age) should trigger an ML on-call alert.",
+        "PSI is label-free — it only compares feature distributions, so no labeled data is needed for online monitoring.",
       ],
     },
     {
@@ -909,19 +924,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Structured pruning is preferred over unstructured pruning for production deployment because:",
+        "Why is structured pruning generally preferred over unstructured pruning for production deployment on standard GPUs?",
       options: [
-        "Structured pruning achieves higher sparsity ratios",
-        "Structured pruning removes entire neurons/channels/heads, producing dense tensors compatible with GPU hardware",
-        "Unstructured pruning requires retraining from scratch",
-        "Structured pruning has no impact on model accuracy",
+        "Structured pruning achieves higher overall sparsity ratios than unstructured pruning",
+        "Structured pruning removes entire neurons, channels, or attention heads, producing dense sub-networks that map efficiently to GPU hardware; unstructured pruning leaves random sparse patterns that require specialized hardware to accelerate",
+        "Unstructured pruning necessarily requires full model retraining from scratch",
+        "Structured pruning has no impact on model accuracy, whereas unstructured pruning always degrades accuracy",
       ],
       correctAnswer: 1,
       explanation:
-        "Unstructured (weight-level) sparsity requires specialized sparse hardware to realize speedups; structured pruning removes entire computational units (channels, heads), yielding dense subnetworks that run efficiently on standard GPUs.",
+        "The key distinction lies in what each method removes:\n\n" +
+        "Unstructured pruning zeroes out individual weights (connections) based on magnitude. This produces irregular, random sparse patterns that are computationally indistinguishable from dense matrices on standard GPUs — no speedup is realized without specialized sparse hardware (e.g., NVIDIA A100's sparse tensor cores).\n\n" +
+        "Structured pruning removes entire computational units — an attention head, a CNN channel, or a transformer layer. The result is a dense sub-network with regular structure that maps directly onto GPU tensor cores without any hardware modifications:\n\n" +
+        "\\[ W_{\\text{pruned}} \\in \\mathbb{R}^{d \\times d} \\quad \\text{(dense, GPU-accelerated)} \\]\n\n" +
+        "The trade-off: structured pruning may sacrifice some sparsity efficiency (cannot achieve the same compression ratios) but delivers practical speedups on commodity hardware.",
       hints: [
-        "GPUs are optimized for dense matrix operations, not arbitrary sparse patterns.",
-        '"Structured" means whole computational blocks are removed, not random individual weights.',
+        "Standard GPUs accelerate dense matrix multiplications — they do not natively accelerate arbitrary sparse patterns.",
+        "In structured pruning, what gets removed are entire attention heads, CNN channels, or layers — not individual weights.",
+        "The practical advantage: structured pruning works on any GPU without special hardware support.",
       ],
     },
   ],
@@ -1046,19 +1066,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "What is the core idea behind active learning for data labeling?",
+        "What is the core principle behind active learning for data labeling?",
       options: [
-        "Using a model to automatically label all unlabeled data",
-        "Querying a human annotator for labels on the examples where the model is most uncertain",
-        "Augmenting the training set with synthetic data",
-        "Training on all available data without any selection strategy",
+        "A model automatically assigns labels to all unlabeled data without human input",
+        "A human annotator is queried only for the specific data points on which the model has the highest prediction uncertainty",
+        "Synthetic data is generated and added to the training set to improve model robustness",
+        "All available unlabeled data is labeled uniformly without any selection strategy",
       ],
       correctAnswer: 1,
       explanation:
-        "Active learning selects the most informative samples — typically those with highest model uncertainty — for human annotation, minimizing labeling cost while maximizing model improvement per labeled sample.",
+        "Active learning is built on the insight that not all data points are equally valuable for improving a model. Instead of labeling data at random, the model identifies the examples about which it is most uncertain — those where its probability estimates are closest to a decision boundary.\n\n" +
+        "The standard uncertainty metric is entropy:\n" +
+        "\\[ H(x) = -\\sum_{c} p_c(x) \\log p_c(x) \\]\n" +
+        "where \\(p_c(x)\\) is the model's predicted probability for class \\(c\\) at input \\(x\\). High entropy (predictions near 0.5 for binary classification) indicates the model cannot distinguish confidently between classes — these are the most informative samples to label.\n\n" +
+        "This selectivity minimizes the labeling budget required to achieve a target model performance.",
       hints: [
-        "The goal is to get the most learning value per human annotation.",
-        "High uncertainty = the model has most to gain from seeing the correct label.",
+        "Active learning seeks to maximize model improvement per human annotation dollar — it is not designed to label everything automatically.",
+        "High model uncertainty (e.g., a binary classifier outputting ~0.5) means the model is confused — the correct label would be most informative here.",
+        "The uncertainty criterion is often measured by entropy or by the gap between top two class probabilities.",
       ],
     },
     {
@@ -1521,13 +1546,17 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Prefix caching in LLM serving (as used in vLLM) reuses KV cache for the common system prompt portion across requests, reducing time-to-first-token.",
+        "In LLM serving, prefix caching (as implemented in vLLM) works by reusing the KV cache generated for which portion of a request?",
       correctAnswer: "True",
       explanation:
-        "When multiple requests share a long system prompt prefix, prefix caching avoids recomputing the KV cache for that prefix, directly reducing prefill latency and compute cost.",
+        "LLM inference consists of two phases: (1) the prefill phase, which processes the full input prompt and populates the KV cache; and (2) the decode phase, which generates tokens autoregressively. When many requests share the same system prompt (e.g., \"You are a helpful assistant...\"), the prefill phase computes the same KV cache for that prefix repeatedly — an expensive and unnecessary computation.\n\n" +
+        "Prefix caching identifies the common prefix across requests (stored as a hash key) and reuses the already-computed KV cache for that portion. The prefill phase then only needs to process the unique user-specific portion:\n\n" +
+        "\\[ t_{\\text{prefill}} = t_{\\text{prefix}} + t_{\\text{user-specific}} \\]\n\n" +
+        "Since the system prompt may be hundreds to thousands of tokens, caching it can reduce time-to-first-token by 30-70% for typical chat workloads.",
       hints: [
-        "System prompts are often hundreds of tokens and identical across requests.",
-        "Recomputing the same prefix for every request is wasteful — cache it once.",
+        "System prompts are typically long (hundreds of tokens) and identical across all users — recomputing their KV cache on every request is the inefficiency prefix caching targets.",
+        "The KV cache is stored as a hash-keyed cache — if the hash of the prefix matches a prior request, the cached KV values are reused.",
+        "The prefill phase dominates latency for longer prompts; prefix caching directly reduces this component.",
       ],
     },
     {
@@ -1535,19 +1564,23 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "When implementing semantic caching for an LLM API, which similarity threshold consideration is most critical to get right?",
+        "When implementing semantic caching for an LLM API, which design decision is most critical to get right?",
       options: [
-        "Choosing between cosine and Euclidean distance metrics",
-        "Setting the similarity threshold: too high causes cache misses on paraphrases; too low causes incorrect cached responses for different questions",
-        "Choosing the number of dimensions for the embedding model",
-        "Deciding between Redis and Qdrant as the vector store backend",
+        "Whether to use cosine similarity versus Euclidean distance as the similarity metric",
+        "Calibrating the embedding similarity threshold: too high → cache misses on valid paraphrases; too low → incorrect cached responses for genuinely different queries",
+        "Selecting the embedding model's dimensionality",
+        "Choosing between Redis and Qdrant as the vector store backend",
       ],
       correctAnswer: 1,
       explanation:
-        "The similarity threshold is the critical calibration point: a threshold too strict misses valid cache opportunities, while a threshold too loose serves wrong answers for genuinely different questions, causing correctness failures.",
+        "The similarity threshold is the central calibration knob in semantic caching. After computing query embeddings and retrieving the nearest cached embedding, the system checks whether the similarity exceeds the threshold before returning a cached response:\n\n" +
+        "\\[ \\text{Hit} \\iff \\text{sim}(\\mathbf{q}, \\mathbf{q}_{\\text{cached}}) > \\tau \\]\n\n" +
+        "where \\(\\tau\\) is the threshold. Setting \\(\\tau\\) too high (e.g., 0.98) means even slight paraphrases — \"How do I reset my password?\" vs. \"How can I change my password?\" — will miss the cache. Setting \\(\\tau\\) too low (e.g., 0.75) risks returning cached answers to fundamentally different questions, producing incorrect responses.\n\n" +
+        "The optimal threshold is domain-dependent and should be tuned on a representative evaluation set of query pairs labeled as same-intent or different-intent.",
       hints: [
-        'The threshold determines what "similar enough" means — this is the core design decision.',
-        "Domain-specific evaluation sets should guide threshold selection.",
+        "The threshold answers: how similar must two queries be for one to stand in for the other? This is the core design trade-off.",
+        "Too high a threshold = cache misses (expensive LLM calls not avoided). Too low a threshold = correctness failures (wrong answers served).",
+        "Domain-specific evaluation sets — pairs of queries labeled as same or different intent — are the standard tool for calibrating this threshold.",
       ],
     },
   ],

@@ -1427,6 +1427,487 @@ explanation:
         "O(n). In the worst case (e.g., a strictly decreasing array like [5,4,3,2,1]), every element gets pushed onto the stack before any gets popped. The stack can hold all n elements simultaneously. The result array also uses O(n) space.",
     },
   ],
+  // ── NEW SECTIONS ─────────────────────────────────────────────────────────
+
+  "spiral-matrix": [
+    {
+      id: "q-sm-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "What is the time complexity of printing an m×n matrix in spiral order?",
+      options: ["O(m + n)", "O(m * n)", "O((m * n) log(m * n))", "O(m² + n²)"],
+      correctAnswer: 1,
+      hints: [
+        "Every element in the matrix must be visited exactly once",
+        "No element is revisited during the spiral traversal",
+      ],
+      explanation:
+        "Spiral order visits every element exactly once. With m rows and n columns there are m*n elements, giving O(m*n) time. Space is O(1) auxiliary if we update boundary pointers (top, bottom, left, right) in-place, or O(m*n) if we collect results in an output list.",
+    },
+    {
+      id: "q-sm-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In the boundary-shrinking approach for spiral traversal, after processing the top row we increment the `top` pointer.",
+      correctAnswer: "True",
+      hints: [
+        "The top row has been fully consumed, so we move the boundary inward",
+        "The same logic applies to each of the four boundaries after their row/column is processed",
+      ],
+      explanation:
+        "True. After traversing the top row left-to-right, we shrink the top boundary by doing top++. Similarly, after right column: right--; after bottom row: bottom--; after left column: left++. This keeps all four boundaries converging until top > bottom or left > right, giving O(1) extra space.",
+    },
+    {
+      id: "q-sm-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "When generating a spiral matrix (filling values 1..n² into an n×n grid), what is the direction rotation sequence?",
+      options: [
+        "right → down → left → up → repeat",
+        "up → right → down → left → repeat",
+        "right → left → up → down → repeat",
+        "down → right → up → left → repeat",
+      ],
+      correctAnswer: 0,
+      hints: [
+        "Spiral starts at top-left and moves right first",
+        "After hitting a boundary or visited cell, rotate 90° clockwise",
+      ],
+      explanation:
+        "The canonical clockwise spiral uses direction vectors: right (0,+1) → down (+1,0) → left (0,-1) → up (-1,0), repeating cyclically. When the next cell is out-of-bounds or already filled, rotate direction. Time: O(n²); Space: O(n²) for the output grid.",
+    },
+  ],
+
+  "rotate-image": [
+    {
+      id: "q-ri-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The in-place 90° clockwise rotation of an n×n matrix uses which two operations?",
+      options: [
+        "Transpose then reverse each column",
+        "Transpose then reverse each row",
+        "Reverse each row then transpose",
+        "Rotate each ring independently",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Transpose swaps matrix[i][j] with matrix[j][i]",
+        "After transposing, reversing each row produces a clockwise rotation",
+      ],
+      explanation:
+        "In-place clockwise rotation = transpose + reverse each row. Transpose: swap matrix[i][j] ↔ matrix[j][i] for i<j (O(n²/2) swaps). Reverse each row: O(n/2) per row × n rows = O(n²/2). Total: O(n²) time, O(1) space since both operations are in-place.",
+    },
+    {
+      id: "q-ri-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Rotating an image 90° counter-clockwise in-place can be done by transposing then reversing each column.",
+      correctAnswer: "True",
+      hints: [
+        "Counter-clockwise is the mirror of clockwise",
+        "Instead of reversing rows after transpose, reverse columns",
+      ],
+      explanation:
+        "True. Counter-clockwise rotation = transpose + reverse each column. Alternatively: reverse each row first, then transpose. Both achieve O(n²) time and O(1) space. Clockwise uses transpose → reverse rows; counter-clockwise uses transpose → reverse columns (or reverse rows → transpose).",
+    },
+    {
+      id: "q-ri-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A four-way cycle rotation (no transpose) rotates a ring of an n×n matrix with how many swaps per element group?",
+      options: ["2", "3", "4", "n"],
+      correctAnswer: 1,
+      hints: [
+        "One element from each of the four sides participates in each cycle",
+        "Moving 4 elements in a ring requires 3 swaps (like a 3-element rotation needing 2)",
+      ],
+      explanation:
+        "The four-way cycle approach saves a temp variable: temp = top-left, then shift left←bottom, bottom←right, right←top, top←temp. That is 3 assignment steps (3 swaps equivalent). Each group of 4 symmetric positions is handled in O(1). Total swaps: 3 × (n/2)² ≈ O(n²). Space: O(1).",
+    },
+  ],
+
+  "word-break": [
+    {
+      id: "q-wb-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "What is the time complexity of the tabulation DP solution for Word Break with string length n and dictionary size d?",
+      options: ["O(n * d)", "O(n² * d)", "O(n²)", "O(2ⁿ)"],
+      correctAnswer: 1,
+      hints: [
+        "We have n+1 DP states and for each state we check all words in the dictionary",
+        "Checking if a substring matches a word is O(word length) ≈ O(n) worst case",
+      ],
+      explanation:
+        "dp[i] = true if s[0..i-1] can be segmented. For each position i (0..n), we try every word in the dictionary (size d): check if s[i-len..i] matches the word — O(n) substring comparison. Overall: O(n * d * n) = O(n² * d). Using a trie reduces dictionary lookup to O(n), giving O(n²) total.",
+    },
+    {
+      id: "q-wb-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Memoized DFS (top-down) and tabulation DP (bottom-up) for Word Break have the same asymptotic time complexity.",
+      correctAnswer: "True",
+      hints: [
+        "Both explore the same subproblems: can we segment s[i..n-1]?",
+        "Memoization caches results to avoid recomputation, same as tabulation",
+      ],
+      explanation:
+        "True. Both approaches have O(n²) unique subproblems (start index i × end index j). Memoized DFS caches memo[i] = result for suffix s[i..n-1]. Tabulation fills dp[0..n] bottom-up. Both achieve O(n² * d) time and O(n) space for the memo/dp array, ignoring dictionary storage.",
+    },
+    {
+      id: "q-wb-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Word Break II (return all valid sentences) has what worst-case time complexity?",
+      options: ["O(n²)", "O(n³)", "O(2ⁿ)", "O(n * 2ⁿ)"],
+      correctAnswer: 3,
+      hints: [
+        "In the worst case, every partition of the string is valid",
+        "The number of sentences can be exponential",
+      ],
+      explanation:
+        "Word Break II must enumerate all valid segmentations. In the worst case (e.g., s = 'aaa...a' with dictionary {'a','aa','aaa',...}), the number of valid sentences is exponential — O(2ⁿ). Building each sentence takes O(n) time, so total is O(n * 2ⁿ). Memoization of intermediate lists helps prune but cannot improve the worst case.",
+    },
+  ],
+
+  "jump-game-variants": [
+    {
+      id: "q-jg-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Jump Game I greedy: what variable tracks the furthest reachable index?",
+      options: ["A queue of positions", "A 'maxReach' variable updated at each step", "A DP array of booleans", "A stack of jump lengths"],
+      correctAnswer: 1,
+      hints: [
+        "At each index i, you can jump up to nums[i] steps forward",
+        "Track the maximum index reachable so far with one variable",
+      ],
+      explanation:
+        "The greedy solution maintains maxReach = max(maxReach, i + nums[i]) for each i ≤ maxReach. If at any i we find i > maxReach, we cannot proceed. Return maxReach >= n-1. Time: O(n), Space: O(1).",
+    },
+    {
+      id: "q-jg-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Jump Game II (minimum jumps) greedy approach uses which key insight?",
+      options: [
+        "BFS layer-by-layer where each layer is one jump",
+        "DP recurrence: dp[i] = min(dp[j] + 1) for all reachable j",
+        "Sort indices by jump length",
+        "Binary search on the answer",
+      ],
+      correctAnswer: 0,
+      hints: [
+        "Treat each jump count as a BFS level",
+        "The 'frontier' at each BFS level is the range of reachable indices",
+      ],
+      explanation:
+        "Jump Game II greedy is isomorphic to BFS: current range [lo, hi] is one level. Scan [lo, hi] to find farthest reachable index (next hi). Increment jump count and set lo = hi+1. This is O(n) time, O(1) space — faster than O(n²) DP.",
+    },
+    {
+      id: "q-jg-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "For Jump Game II, the greedy approach is guaranteed to find the minimum number of jumps.",
+      correctAnswer: "True",
+      hints: [
+        "The greedy always extends the boundary as far as possible with each jump",
+        "No local choice can lead to a globally better solution",
+      ],
+      explanation:
+        "True. The greedy is optimal: at each jump, we choose the farthest reachable position. If an alternative sequence reaches position p in k jumps, the greedy reaches at least as far in k jumps (by induction on jump count). This exchange argument proves optimality. Time O(n), Space O(1).",
+    },
+  ],
+
+  "interval-scheduling": [
+    {
+      id: "q-is-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The Activity Selection Problem (maximize non-overlapping intervals) uses which greedy criterion?",
+      options: [
+        "Sort by start time, pick earliest start",
+        "Sort by end time, pick earliest finishing activity that doesn't conflict",
+        "Sort by duration, pick shortest activity",
+        "Sort by start time, pick latest start",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Picking the activity that finishes earliest leaves the most room for future activities",
+        "This is the classic greedy exchange argument for interval scheduling",
+      ],
+      explanation:
+        "Sort intervals by end time. Greedily select an interval if its start > last selected end. Time: O(n log n) for sort + O(n) scan = O(n log n). This maximizes the number of non-overlapping intervals. Proof by exchange argument: swapping any other choice with the earliest-finish choice never decreases the count.",
+    },
+    {
+      id: "q-is-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Weighted Job Scheduling (maximize total weight of non-overlapping jobs) is solved by:",
+      options: [
+        "Greedy by end time (same as activity selection)",
+        "DP with binary search: dp[i] = max(dp[i-1], w[i] + dp[p(i)]) where p(i) is latest non-overlapping job",
+        "Greedy by weight descending",
+        "BFS on an interval graph",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "When jobs have weights, greedy by finish time is no longer optimal",
+        "dp[i] represents best value using jobs sorted by finish time up to job i",
+      ],
+      explanation:
+        "Sort jobs by finish time. Define dp[i] = max weight using jobs 1..i. For each job i, find p(i) = latest job that doesn't overlap (binary search on start times). dp[i] = max(dp[i-1], weight[i] + dp[p(i)]). Time: O(n log n) sort + O(n log n) binary searches = O(n log n). Space: O(n).",
+    },
+    {
+      id: "q-is-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Merging overlapping intervals requires sorting by start time first.",
+      correctAnswer: "True",
+      hints: [
+        "If intervals are unsorted, we cannot efficiently find which ones overlap",
+        "After sorting by start, overlapping intervals are adjacent",
+      ],
+      explanation:
+        "True. Sort by start time: O(n log n). Then one linear pass merges adjacent overlapping intervals by comparing current interval's start with the last merged interval's end. If start <= last_end, extend last_end = max(last_end, current_end). Total: O(n log n) time, O(n) space for output.",
+    },
+  ],
+
+  "stock-profit-variants": [
+    {
+      id: "q-spv-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Best Time to Buy and Sell Stock with at most k transactions: what is the DP state space?",
+      options: ["O(n)", "O(k * n)", "O(k²)", "O(n²)"],
+      correctAnswer: 1,
+      hints: [
+        "We need to track both the day index and remaining transactions",
+        "dp[i][j] = max profit on day i with j transactions remaining",
+      ],
+      explanation:
+        "dp[i][j] = max profit on day i with at most j transactions. State space: O(k * n). Transition: dp[i][j] = max(dp[i-1][j], prices[i] + max over m<i of (dp[m][j-1] - prices[m])). Optimized with a running max: O(k * n) time, O(k * n) space (reducible to O(k) with rolling arrays).",
+    },
+    {
+      id: "q-spv-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Stock with cooldown (1-day cooldown after sell): the recurrence is best expressed as:",
+      options: [
+        "dp[i] = max(dp[i-1], dp[i-2] + prices[i] - prices[i-1])",
+        "Three states: held, sold, rest. held[i] = max(held[i-1], rest[i-1] - prices[i]); sold[i] = held[i-1] + prices[i]; rest[i] = max(rest[i-1], sold[i-1])",
+        "dp[i] = max profit on day i with exactly one cooldown",
+        "Greedy: buy low, sell high, skip one day after each sell",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Model three states: currently holding a stock, just sold (cooldown), or resting",
+        "Transitions between states capture the cooldown constraint",
+      ],
+      explanation:
+        "Three-state DP: held[i] = max profit while holding on day i = max(held[i-1], rest[i-1] - prices[i]); sold[i] = held[i-1] + prices[i] (sell today); rest[i] = max(rest[i-1], sold[i-1]). Answer = max(sold[n-1], rest[n-1]). Time: O(n), Space: O(1) with rolling variables.",
+    },
+    {
+      id: "q-spv-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Stock with transaction fee: adding a fee per transaction can be handled greedily in O(n) time.",
+      correctAnswer: "True",
+      hints: [
+        "DP with two states (hold, cash) handles the fee naturally",
+        "The fee is subtracted when selling, reducing effective profit",
+      ],
+      explanation:
+        "True. Two-state DP: cash = max profit without holding; hold = max profit while holding. Transitions: hold = max(hold, cash - prices[i]); cash = max(cash, hold + prices[i] - fee). Each day is O(1), total O(n) time, O(1) space. The fee is deducted on sell, naturally limiting unnecessary transactions.",
+    },
+  ],
+
+  "longest-palindrome-substring": [
+    {
+      id: "q-lps-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Expand-around-center approach for Longest Palindromic Substring has what complexity?",
+      options: ["O(n) time, O(1) space", "O(n²) time, O(1) space", "O(n²) time, O(n²) space", "O(n log n) time, O(n) space"],
+      correctAnswer: 1,
+      hints: [
+        "For each of n centers (including gaps between characters), we expand outward",
+        "Expansion at each center takes O(n) in the worst case",
+      ],
+      explanation:
+        "There are 2n-1 centers (n single chars + n-1 gaps). For each center, expand while characters match: O(n) worst case. Total: O(n²) time. No auxiliary array needed: O(1) space (just track best start/length). This beats the O(n²) space DP solution which builds an n×n table.",
+    },
+    {
+      id: "q-lps-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Manacher's algorithm finds the longest palindromic substring in:",
+      options: ["O(n log n) time, O(n) space", "O(n) time, O(n) space", "O(n²) time, O(1) space", "O(n) time, O(1) space"],
+      correctAnswer: 1,
+      hints: [
+        "Manacher's reuses previously computed palindrome radii",
+        "It processes each position amortized O(1) using a 'center' and 'right boundary' trick",
+      ],
+      explanation:
+        "Manacher's algorithm uses a transformed string (insert '#' between chars) and an array p[] where p[i] = palindrome radius at i. It maintains (center, right) — the rightmost palindrome's center and right boundary. For each i < right, mirror symmetry gives p[i] ≥ min(p[mirror], right-i), then expand. Each position is touched at most twice: O(n) time, O(n) space for p[] array.",
+    },
+    {
+      id: "q-lps-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A palindrome can be even-length (e.g., 'abba') or odd-length (e.g., 'aba').",
+      correctAnswer: "True",
+      hints: [
+        "Odd-length palindromes have a single center character",
+        "Even-length palindromes have a center between two characters",
+      ],
+      explanation:
+        "True. Palindromes exist in both forms. 'aba' is odd-length (center = 'b'); 'abba' is even-length (center is the gap between two b's). The expand-around-center algorithm handles both: for odd, expand from each character; for even, expand from each pair of adjacent characters. Both must be checked for completeness.",
+    },
+  ],
+
+  "anagram-variants": [
+    {
+      id: "q-av-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Find All Anagrams in a String (LeetCode 438) — optimal approach and complexity?",
+      options: [
+        "Sort each window: O(n * k log k) time",
+        "Sliding window with character count array: O(n) time, O(1) space",
+        "Hash map comparison per window: O(26n) time",
+        "Two-pointer with set: O(n log n) time",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Keep a fixed-size window of length |pattern| and slide it across the string",
+        "Maintain a frequency count; when counts match, record an anagram start",
+      ],
+      explanation:
+        "Sliding window: maintain a count array of size 26 for the pattern, and a window count array. Slide window of size |p| across s: add right char, remove left char. Compare counts in O(26) = O(1). Total: O(n) time, O(1) space (two fixed-size arrays of 26). Better than sorting each window (O(nk log k)).",
+    },
+    {
+      id: "q-av-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Two strings are anagrams if and only if their sorted character arrays are equal.",
+      correctAnswer: "True",
+      hints: [
+        "Sorting rearranges characters into canonical order",
+        "Anagrams contain the same characters with the same frequencies",
+      ],
+      explanation:
+        "True. Sorting is a correct but suboptimal anagram check: O(n log n). The optimal check uses a frequency array: count chars in s1 (increment) and s2 (decrement); if all counts are zero, they're anagrams. O(n) time, O(1) space (26-element array for lowercase letters).",
+    },
+    {
+      id: "q-av-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Group Anagrams: grouping n strings of average length k has what time complexity using sorted-key approach?",
+      options: ["O(n * k)", "O(n * k log k)", "O(n²)", "O(n * k²)"],
+      correctAnswer: 1,
+      hints: [
+        "Sorting each string takes O(k log k)",
+        "We do this for n strings and use the sorted string as a hash map key",
+      ],
+      explanation:
+        "For each of n strings, sort it in O(k log k) to get the canonical key, then insert into a hash map. Total: O(n * k log k) time. Alternative: use a frequency tuple as key (O(n * k) time but larger constant). Space: O(n * k) for storing all strings.",
+    },
+  ],
+
+  "string-compression": [
+    {
+      id: "q-sc-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Run-length encoding of 'aaabbc' produces:",
+      options: ["'a3b2c1'", "'3a2b1c'", "'3a2bc'", "'aaabbc6'"],
+      correctAnswer: 1,
+      hints: [
+        "Run-length encoding outputs count then character",
+        "Count of 1 is typically omitted in some variants, but standard RLE includes it",
+      ],
+      explanation:
+        "Standard run-length encoding: count followed by character. 'aaabbc' → 'a' appears 3 times → '3a', 'b' appears 2 times → '2b', 'c' appears 1 time → '1c'. Result: '3a2b1c'. Time: O(n), Space: O(n) for output. The compressed form is shorter only when runs are long enough.",
+    },
+    {
+      id: "q-sc-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In-place string compression (LeetCode 443) returns the new length with what space complexity?",
+      options: ["O(n)", "O(log n)", "O(1)", "O(n²)"],
+      correctAnswer: 2,
+      hints: [
+        "The problem asks to modify the char array in-place using only constant extra space",
+        "A write pointer tracks where to write the compressed result",
+      ],
+      explanation:
+        "In-place compression uses two pointers: read (scanning runs) and write (recording compressed output into chars[]). Count is written digit by digit (requiring O(log count) digits, but no extra array). Space: O(1) auxiliary. Time: O(n) — one pass to count runs, writing digits in-place.",
+    },
+    {
+      id: "q-sc-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Run-length encoding always reduces string size compared to the original.",
+      correctAnswer: "False",
+      hints: [
+        "What happens with a string like 'abcde' where each character appears once?",
+        "A count of 1 adds an extra character per unique char",
+      ],
+      explanation:
+        "False. For strings with no repeated consecutive characters (e.g., 'abcde'), RLE produces '1a1b1c1d1e' — twice as long. RLE is only beneficial when runs are sufficiently long (run length > 2 for single-digit counts). This is why compression algorithms use adaptive techniques.",
+    },
+  ],
+
+  "matrix-search": [
+    {
+      id: "q-ms-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Search a 2D Matrix where rows and columns are independently sorted (LeetCode 240) — best approach?",
+      options: [
+        "Binary search each row: O(m log n)",
+        "Staircase search from top-right corner: O(m + n)",
+        "Flatten and binary search: O(log(mn))",
+        "DFS from top-left: O(mn)",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Start at top-right: values to the left are smaller, values below are larger",
+        "Each comparison eliminates an entire row or column",
+      ],
+      explanation:
+        "Staircase search: start at matrix[0][n-1]. If target == val: found. If target < val: move left (col--). If target > val: move down (row++). Each step eliminates a row or column, giving O(m + n) time, O(1) space. This is optimal for independently sorted matrix; for row-major sorted (each row continues from prev), binary search gives O(log(mn)).",
+    },
+    {
+      id: "q-ms-2",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "For a strictly row-major sorted 2D matrix (row i's last element < row i+1's first element), binary search complexity is:",
+      options: ["O(m + n)", "O(log(m * n))", "O(m log n)", "O(log m + log n)"],
+      correctAnswer: 1,
+      hints: [
+        "The matrix can be treated as a flattened sorted array of m*n elements",
+        "Map 1D index mid to 2D: row = mid / n, col = mid % n",
+      ],
+      explanation:
+        "The matrix is a sorted array of m*n elements. Binary search: lo=0, hi=m*n-1. mid = (lo+hi)/2; map to 2D: row=mid/n, col=mid%n. Compare matrix[row][col] with target. Total: O(log(mn)) = O(log m + log n) time, O(1) space.",
+    },
+    {
+      id: "q-ms-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "The staircase search for a matrix with sorted rows and columns runs in O(m + n) regardless of matrix dimensions.",
+      correctAnswer: "True",
+      hints: [
+        "Each step moves either left or down, never backtracking",
+        "Starting from top-right, we can move at most n-1 times left and m-1 times down",
+      ],
+      explanation:
+        "True. Starting at position (0, n-1), each comparison either decrements col (at most n-1 times) or increments row (at most m-1 times). Total moves ≤ (m-1) + (n-1) = m+n-2, giving O(m+n) time. This holds for any m×n matrix with independently sorted rows and columns.",
+    },
+  ],
 };
 
 registerQuestions(questions);

@@ -2050,6 +2050,269 @@ const questionOverrides: Record<string, QuestionOverride> = {
     question:
       "High-frequency spectral artifacts (> 8 kHz) are often useful cues for detecting neural TTS spoofing, because some vocoders introduce oversmoothing or phase artifacts in those bands.",
   },
+  "q-qml-kp21-2": {
+    question:
+      "In a typical qGAN, the generator is a quantum circuit while the discriminator is classical.",
+    correctAnswer: "true",
+  },
+  "q-qml-kp17-2": {
+    question:
+      "QCNNs with local cost functions have been shown to avoid exponentially vanishing gradients because of their hierarchical local structure.",
+  },
+  "q-qml-kp26-1": {
+    question:
+      "Which of the following is a classical ML framework that PennyLane integrates with for automatic differentiation?",
+    options: ["Scikit-learn", "PyTorch", "OpenCV", "XGBoost"],
+    correctAnswer: 1,
+  },
+  "q-qml-kp8-2": {
+    question:
+      "Hardware-efficient ansatze are designed around a device's native gates and connectivity, even if the circuit structure is not tailored to the problem.",
+  },
+  "q-rob-kp12-2": {
+    question:
+      "Maximum Entropy IRL (MaxEnt IRL) resolves reward ambiguity by preferring a reward function whose induced trajectory distribution has maximum entropy while still matching the expert's observed feature expectations.",
+  },
+  "q-rob-kp7-4": {
+    question:
+      "Why is tactile sensing especially useful for dexterous in-hand object reorientation?",
+    options: [
+      "It reveals local contact forces and slip at fingertip-object contacts that cameras often cannot see during in-hand manipulation",
+      "It is mainly used to identify material properties before grasping, not to control manipulation",
+      "Vision alone can recover the hidden contact geometry during in-hand manipulation",
+      "A wrist force-torque sensor already provides the same local contact information",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp11-4": {
+    question: "Why do small mistakes in behavior cloning often compound during rollout?",
+    options: [
+      "Because the policy was trained on expert-visited states, and its own errors push it into unfamiliar states where its predictions get worse",
+      "Because the robot's hardware changes between training and deployment",
+      "Because the main issue is a visual domain shift between the demonstration environment and deployment environment",
+      "Because compounding errors mainly come from recurrent hidden-state drift",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp29-3": {
+    question:
+      "A truly embodiment-agnostic robot policy should work across very different robot bodies. What is the main obstacle to achieving that?",
+    options: [
+      "Different robots have incompatible action spaces, so a shared policy needs a common action vocabulary or explicit embodiment conditioning",
+      "The main problem is that task space is not well-defined for legged robots",
+      "The main problem is that each embodiment needs a different reward function",
+      "The main problem is the separate sim-to-real gap for each robot",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp31-3": {
+    question: "What makes ML-based demand response a hard optimization problem?",
+    options: [
+      "Finding one fixed schedule that every flexible load can follow",
+      "Coordinating many flexible loads while respecting user deadlines, device limits, and comfort preferences",
+      "Optimizing each asset independently without considering the aggregate load",
+      "Predicting annual demand growth instead of controlling short-term load timing",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp34-1": {
+    question:
+      "For large-scale ML floodplain mapping, which combination of inputs best supports accurate probabilistic flood-risk maps?",
+    options: [
+      "Historical flood records and social-media reports alone",
+      "LiDAR-derived terrain, observed flood extents from SAR, and precipitation or climate-frequency inputs",
+      "Low-resolution global elevation data alone",
+      "Parcel values and road-network maps alone",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp37-1": {
+    question:
+      "What makes climate-model emulation especially difficult for future climate projections?",
+    options: [
+      "The emulators run too slowly for long simulations",
+      "They must generalize to forcing scenarios outside the training distribution",
+      "They cannot represent gridded climate variables",
+      "They require no historical or simulated training data",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp40-3": {
+    question:
+      "Which set of predictors is most useful when ML augments Bass-style EV adoption models for climate policy?",
+    options: [
+      "Vehicle color preferences, dealership floor area, and crash-test ratings",
+      "Charging infrastructure density, electricity price and grid carbon intensity, battery cost trends, policy incentives, and range anxiety",
+      "Only gasoline prices and past national vehicle sales",
+      "Vehicle weight regulations and highway speed limits only",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp26-3": {
+    question:
+      "A neural network trained to price options can encode strike-based no-arbitrage constraints, such as lower-strike calls not being cheaper and call prices being convex in strike, by:",
+    options: [
+      "Adding L2 regularisation to penalise large weights",
+      "Constraining the network architecture so prices are monotonically decreasing in strike and second derivatives with respect to strike are non-negative (e.g., using monotone networks or penalty terms in the loss)",
+      "Using dropout to prevent overfitting to training strike-price combinations",
+      "Normalising the training targets to unit variance before fitting",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp21-3": {
+    question: "For a given bin/category, the Weight of Evidence (WoE) is defined as:",
+    options: [
+      "ln((% of all events in the bin) / (% of all non-events in the bin))",
+      "ln(P(event | bin) / P(non-event | bin))",
+      "The Gini coefficient of that category considered on its own",
+      "The Pearson correlation between that category and the default indicator",
+    ],
+    correctAnswer: 0,
+  },
+  "q-fin-kp27-3": {
+    question:
+      "SVI (Stochastic Volatility Inspired) is popular in implied-volatility calibration mainly because:",
+    options: [
+      "It is derived from a closed-form Heston solution under all parameter settings",
+      "It is arbitrage-free by construction across strikes",
+      "It is parsimonious and supports fast, tractable calibration while remaining flexible enough to fit market smiles",
+      "Its parameters are fixed by the risk-free rate and dividend yield, so no calibration is needed",
+    ],
+    correctAnswer: 2,
+  },
+  "q-fin-kp18-2": {
+    type: "multiple-choice",
+    question:
+      "Post-earnings announcement drift (PEAD) most directly contradicts which form of the Efficient Market Hypothesis?",
+    options: [
+      "Weak-form efficiency",
+      "Semi-strong efficiency",
+      "Strong-form efficiency only",
+      "None of the above",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp15-2": {
+    type: "multiple-choice",
+    question:
+      "What makes UltraFeedback different from a standard pairwise preference dataset?",
+    options: [
+      "It uses one human-written gold response per prompt.",
+      "GPT-4 scores multiple responses on several quality dimensions, and those scores are converted into preference pairs.",
+      "It contains only harmful prompts for safety training.",
+      "It stores only chosen/rejected labels with no rubric or per-dimension scoring.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp15-3": {
+    question:
+      "Which statement best describes annotator agreement in RLHF preference data?",
+    options: [
+      "Agreement is usually above 95%, so hard labels are almost noise-free.",
+      "Agreement is often around 60-75%, so reward models should treat labels as noisy rather than perfectly certain.",
+      "Agreement is about 50%, so preference data is too random to train on.",
+      "Agreement is rarely measured because majority vote removes the problem.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp19-3": {
+    question:
+      "Why can Chatbot Arena turn many pairwise votes into stable model rankings?",
+    options: [
+      "Because enough deterministic Elo updates always recover the exact ranking.",
+      "Because under a Bradley-Terry-style pairwise model, more comparisons make the estimated latent quality ordering more accurate.",
+      "Because every model pair is forced to be compared the same number of times.",
+      "Because the benchmark uses Bayesian posteriors instead of maximum likelihood.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp30-2": {
+    question:
+      "Position bias in LLM judges or reward models can make the first response look better just because it is shown first, rather than because it is actually better.",
+    correctAnswer: "true",
+  },
+  "q-gan-kp1-1": {
+    question:
+      "The original GAN game is min_G max_D V(D,G). At the global optimum, the value V(D*, G*) equals ___.",
+    correctAnswer: 2,
+  },
+  "q-gan-kp3-2": {
+    type: "multiple-choice",
+    question: "Which DCGAN layers typically omit Batch Normalization?",
+    options: [
+      "Generator output layer and discriminator input layer",
+      "Generator input layer and discriminator output layer",
+      "Both output layers",
+      "No layers; DCGAN uses BatchNorm everywhere",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gan-kp30-2": {
+    question:
+      "Optimization-based GAN inversion usually achieves more faithful reconstruction than a pure encoder-based inversion method, but it is slower and can reduce editability.",
+  },
+  "q-gan-kp12-2": {
+    question:
+      "If a generator simply reproduces training images so that its Inception feature distribution exactly matches the real training distribution, FID can be 0 even though the model is just memorizing.",
+  },
+  "q-cv3d-kp3-3": {
+    question: "On KITTI depth completion, where are RMSE and MAE computed?",
+    options: [
+      "Only at pixels where the accumulated ground-truth depth is valid",
+      "At every pixel after filling in the missing ground truth",
+      "Only at pixels from the current LiDAR sweep",
+      "Using 3D IoU on the reconstructed point cloud instead of per-pixel error",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp4-2": {
+    question:
+      "ZoeDepth gets metric depth by adding a metric binning head on top of a relative-depth backbone such as DPT/MiDaS.",
+  },
+  "q-cv3d-kp17-1": {
+    question:
+      "A 200m × 200m × 4m region is voxelized at 0.1m resolution. With about 100K LiDAR points, roughly what fraction of voxels are non-empty?",
+    options: ["About 0.02%", "About 0.06%", "About 2%", "About 20%"],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp19-1": {
+    question:
+      "A PointPillars BEV grid covers 70m × 80m with pillar size 0.16m × 0.16m. About how many pillar locations are in the grid?",
+    options: [
+      "About 219,000",
+      "About 560,000",
+      "About 140,000",
+      "About 35,000",
+    ],
+    correctAnswer: 0,
+  },
+  "q-agent-kp1-5": {
+    type: "multiple-choice",
+    question:
+      "An agent takes 50 steps, and each observation is about 200 tokens. About how many tokens do the observations alone add to the context?",
+    options: ["1,000", "5,000", "10,000", "20,000"],
+    correctAnswer: 2,
+  },
+  "q-agent-kp6-3": {
+    question:
+      "Which retrieval technique has the LLM generate a hypothetical answer passage, embed that passage, and use it to retrieve relevant documents?",
+  },
+  "q-agent-kp9-3": {
+    question:
+      "Which agent pattern best describes how top-performing SWE-Bench agents solve issues?",
+  },
+  "q-agent-kp2-9": {
+    type: "multiple-choice",
+    question:
+      "Which tool typically requires stricter sandboxing when exposed to an LLM agent?",
+    options: [
+      "A read-only web search tool",
+      "A Python code execution tool",
+      "Neither; their security risk is the same",
+      "The safer tool depends only on model size",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 function normalizeText(text: string): string {
@@ -2080,6 +2343,26 @@ function cleanExplanation(text: string): string {
   }
 
   return normalized;
+}
+
+function normalizeCorrectAnswer(question: Question): string | number {
+  if (question.type !== "true-false" || typeof question.correctAnswer !== "string") {
+    return question.correctAnswer;
+  }
+
+  const normalized = question.correctAnswer.trim().toLowerCase();
+  if (normalized !== "true" && normalized !== "false") {
+    return question.correctAnswer;
+  }
+
+  const usesTitleCaseOptions =
+    question.options?.includes("True") || question.options?.includes("False");
+
+  return usesTitleCaseOptions
+    ? normalized === "true"
+      ? "True"
+      : "False"
+    : normalized;
 }
 
 function firstSentence(text: string): string {
@@ -2218,6 +2501,7 @@ function normalizeQuestion(question: Question): Question {
 
   return {
     ...overriddenQuestion,
+    correctAnswer: normalizeCorrectAnswer(overriddenQuestion),
     explanation,
     hints: normalizeHints(overriddenQuestion, explanation),
   };

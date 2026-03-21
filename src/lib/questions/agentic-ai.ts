@@ -1492,6 +1492,590 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const questionsExtra: Record<string, Question[]> = {
+  "agent-benchmarks": [
+    {
+      id: "q-agent-kp11-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The GAIA benchmark (Mialon et al., 2023) evaluates agents on real-world assistant tasks. What distinguishes GAIA from earlier benchmarks?",
+      options: [
+        "It tests pure language modeling permeability without tool use",
+        "It requires multi-step reasoning, tool use, and information retrieval on tasks humans can solve in minutes but LLMs struggle with",
+        "It only tests coding agents on competitive programming problems",
+        "It measures single-turn question answering accuracy on trivia",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "GAIA tasks are designed to be conceptually simple for humans (solvable in under 5 minutes) but require agents to combine web browsing, file reading, and multi-step reasoning. This exposes gaps between human-level practical intelligence and current LLM capabilities.",
+      hints: [
+        "GAIA stands for General AI Assistants — the benchmark targets general-purpose assistant capabilities.",
+        "Tasks require chaining multiple tools and reasoning steps, not just single-hop retrieval.",
+      ],
+    },
+    {
+      id: "q-agent-kp11-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "AgentBench evaluates LLMs as agents across multiple environments including web browsing, coding, and database tasks in a unified scoring framework.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "AgentBench (Liu et al., 2023) is a systematic benchmark with 8 distinct environments — OS, database, knowledge graph, digital card game, lateral thinking puzzle, house-holding, web shopping, and web browsing — each with automatic evaluation. It revealed that open-source models lagged far behind GPT-4 on agentic tasks.",
+      hints: [
+        "AgentBench uses automatic reward functions so human graders are not needed for scoring.",
+        "The benchmark showed a large performance gap between open-source and proprietary models on multi-environment agent tasks.",
+      ],
+    },
+    {
+      id: "q-agent-kp11-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "WebArena (Zhou et al., 2023) scores agents on web navigation tasks. What is a key methodological advantage of its scoring approach?",
+      options: [
+        "It uses crowd-sourced human raters for every trajectory",
+        "It relies on functional correctness — checking whether the end state of the website matches the goal — rather than string matching the agent output",
+        "It evaluates agents purely on speed without checking correctness",
+        "It measures perplexity of the agent's text outputs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "WebArena verifies task completion by inspecting the actual web application state (e.g., checking the database, form submissions, shopping cart contents) rather than pattern-matching the agent's output text. This makes evaluation robust to surface-level variations in agent wording.",
+      hints: [
+        "Functional evaluation checks 'did the job get done?' rather than 'did the agent say the right words?'",
+        "WebArena hosts real web apps (Reddit, e-commerce, GitLab) and checks their state after the agent acts.",
+      ],
+    },
+  ],
+
+  "agent-reliability": [
+    {
+      id: "q-agent-kp12-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "An agent tool call fails transiently due to a network timeout. Which retry strategy is most appropriate for production agents?",
+      options: [
+        "Retry immediately in a tight loop until success",
+        "Exponential backoff with jitter — wait 2^n seconds plus random noise between retries",
+        "Fail permanently on first error to avoid duplicate side effects",
+        "Switch to a different LLM model on retry",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Exponential backoff with jitter prevents thundering-herd problems where many agents retry simultaneously, overloading the service. The random jitter desynchronizes retries. Tight loops amplify failures; permanent failure on first timeout is too aggressive for transient errors.",
+      hints: [
+        "AWS, Google, and AWS all recommend exponential backoff + jitter for distributed retry logic.",
+        "Jitter adds randomness to backoff delays so that concurrent agents don't all retry at the same moment.",
+      ],
+    },
+    {
+      id: "q-agent-kp12-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "An error budget for an agent system is the allowable fraction of failed tasks per period, and exceeding it should trigger a freeze on new deployments.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Error budgets (from Google SRE practice) define acceptable failure rates. When an agent system burns through its error budget, deploying new features increases risk — a deployment freeze allows the team to focus on reliability. This discipline applies directly to production agent pipelines.",
+      hints: [
+        "Google SRE defines error budget = 1 - SLO. Burn rate monitoring triggers alerts before the budget is exhausted.",
+        "Treating agent reliability like SRE treats services brings engineering discipline to AI deployments.",
+      ],
+    },
+    {
+      id: "q-agent-kp12-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which property best distinguishes a deterministic agent from a stochastic agent in production settings?",
+      options: [
+        "Deterministic agents are always faster because they skip sampling",
+        "Deterministic agents produce the same output given identical inputs, enabling exact replay and reproducible debugging; stochastic agents sample from a distribution each run",
+        "Stochastic agents always outperform deterministic agents on creative tasks",
+        "Deterministic agents cannot use LLMs as a component",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Determinism means identical inputs yield identical outputs — achieved with temperature=0 and fixed seeds. This makes debugging, regression testing, and trajectory replay exact. Stochastic agents (temperature>0) explore more diverse solutions but are harder to reproduce for debugging.",
+      hints: [
+        "Setting temperature=0 makes most LLM APIs deterministic (modulo hardware float differences).",
+        "Reproducibility is critical for debugging: if you can't replay a failure exactly, root-cause analysis is much harder.",
+      ],
+    },
+  ],
+
+  "agent-economics": [
+    {
+      id: "q-agent-kp13-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "An agent uses GPT-4o at $5/M input tokens and $15/M output tokens. A task consumes 8,000 input tokens and 2,000 output tokens on average. What is the cost per task?",
+      options: [
+        "$0.01",
+        "$0.07",
+        "$0.30",
+        "$1.00",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Input cost: 8,000 × ($5 / 1,000,000) = $0.04. Output cost: 2,000 × ($15 / 1,000,000) = $0.03. Total = $0.07 per task. Token budgeting requires tracking both input and output token usage separately because output tokens are typically 3× more expensive.",
+      hints: [
+        "Input and output tokens are priced differently — always calculate them separately.",
+        "8K input at $5/M = $0.04; 2K output at $15/M = $0.03.",
+      ],
+    },
+    {
+      id: "q-agent-kp13-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Running agent sub-tasks in parallel always reduces total cost compared to running them serially.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Parallel execution reduces wall-clock time but does not reduce total token consumption — if anything, parallel agents may produce redundant work or require additional coordination overhead that increases total cost. Serial execution can allow early stopping if one sub-task's result makes others unnecessary.",
+      hints: [
+        "Parallelism trades time for resources; total token cost is roughly the same unless some parallel branches are pruned.",
+        "Serial agents can short-circuit: once the answer is found, remaining steps are skipped, saving tokens.",
+      ],
+    },
+    {
+      id: "q-agent-kp13-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which token budgeting strategy best balances quality and cost for a complex multi-step agent task?",
+      options: [
+        "Always use the most capable (most expensive) model for every step",
+        "Route simple sub-tasks to cheaper models and reserve expensive frontier models for high-stakes reasoning steps",
+        "Use the cheapest model for all steps and accept lower quality",
+        "Increase context window size to avoid multiple API calls",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Model routing — using small models for extraction, classification, or simple lookups, and large models for complex planning or synthesis — can reduce costs by 5-10× with minimal quality loss. This is the approach taken by systems like LangGraph's model routing and Claude's subagent patterns.",
+      hints: [
+        "Not every step needs GPT-4 — extraction and formatting can often use GPT-3.5 or Claude Haiku.",
+        "Anthropic's research shows that routing easy sub-tasks to smaller models is a key cost optimization lever.",
+      ],
+    },
+  ],
+
+  "agent-context-management": [
+    {
+      id: "q-agent-kp14-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A sliding window context strategy for long agent trajectories keeps only the most recent N tokens. What is its main drawback?",
+      options: [
+        "It increases computational cost because older tokens must be reprocessed",
+        "It can silently discard critical early observations — such as the original task specification or key tool outputs — that are needed for correct completion",
+        "It is incompatible with transformer-based LLMs",
+        "It always produces worse results than full context",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Sliding window truncation is simple but can drop the system prompt, original goal, or pivotal early tool results. Without the task specification in context, the agent may drift. Selective retention (importance sampling) or summarization avoids this by keeping critical tokens regardless of age.",
+      hints: [
+        "If the task description is in the first 100 tokens and the window is 2,000 tokens for a 20,000-token trajectory, the task description gets silently dropped.",
+        "Always pin the system prompt and task statement — they must never be evicted from context.",
+      ],
+    },
+    {
+      id: "q-agent-kp14-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Importance sampling for agent context management scores each past observation by relevance to the current sub-goal and preferentially retains high-scoring observations.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Importance-weighted context retention uses a scoring function (often another LLM call or embedding similarity) to rank past trajectory steps by relevance to the current goal, retaining the most relevant ones. This is more expensive than a sliding window but preserves semantically important history.",
+      hints: [
+        "Generative Agents use importance scores when deciding which memories to surface in the context window.",
+        "The scoring function can be as simple as embedding cosine similarity between an observation and the current goal.",
+      ],
+    },
+    {
+      id: "q-agent-kp14-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Context compression techniques for agents include KV-cache distillation and learned token merging. What is the core intuition behind token merging for compression?",
+      options: [
+        "Token merging removes tokens whose attention weights are below a threshold from the KV cache",
+        "Token merging identifies groups of tokens with similar representations and replaces them with a single representative token, reducing sequence length while preserving information",
+        "Token merging converts all tokens to floating point 8-bit to reduce memory",
+        "Token merging is only applicable to vision transformers, not language models",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Token merging (ToMe and related work) finds redundant tokens with high cosine similarity and merges their representations, shortening the effective sequence length. For long agent trajectories, merging repeated or near-duplicate observations can dramatically reduce context usage without semantic loss.",
+      hints: [
+        "If two observations describe nearly the same state, one merged representation can carry both's information.",
+        "ToMe (Bolya et al., 2022) showed this works for vision; the principle extends to language contexts.",
+      ],
+    },
+  ],
+
+  "agent-security": [
+    {
+      id: "q-agent-kp15-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A prompt injection attack on an agent embeds malicious instructions inside a webpage the agent retrieves. Which defense is most effective?",
+      options: [
+        "Increasing model temperature to make the agent less predictable",
+        "Using a separate privileged system prompt that is structurally isolated from retrieved content, and treating all external data as untrusted user input",
+        "Limiting the agent to 10 tool calls maximum",
+        "Encrypting the system prompt with AES-256",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Prompt injection exploits the LLM's inability to distinguish instructions from data in the same context. Structural isolation — putting the system prompt in a separate API parameter (system vs. user messages) and treating retrieved content as data that cannot override system-level instructions — is the primary defense. The LLM must be trained to resist indirect injection.",
+      hints: [
+        "Indirect prompt injection: the attacker plants instructions in content the agent will read (emails, web pages).",
+        "Anthropic's Constitutional AI and instruction hierarchy research addresses this by ranking instruction sources by trust level.",
+      ],
+    },
+    {
+      id: "q-agent-kp15-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "The principle of least privilege applied to agents means granting the agent only the minimum set of tool permissions required to complete its assigned task.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Just as in computer security, agents should not have write access to databases if they only need to read, or internet access if all needed data is local. Restricting tool permissions limits the blast radius of a prompt injection or a reasoning error that causes unintended actions.",
+      hints: [
+        "An agent that can only read files cannot accidentally delete them — permission scoping contains failures.",
+        "The principle of least privilege is a foundational security principle applicable directly to agentic tool scopes.",
+      ],
+    },
+    {
+      id: "q-agent-kp15-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An agent executes code generated by an LLM. Which sandboxing approach provides the strongest isolation?",
+      options: [
+        "Running the code in a Python virtual environment on the host machine",
+        "Executing the code inside an ephemeral container (e.g., Docker) with network egress blocked and filesystem limited to a temporary directory",
+        "Using a Python subprocess with a 30-second timeout",
+        "Running the code in a web browser's JavaScript sandbox",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Ephemeral containers with blocked network egress and restricted filesystem mounts provide OS-level isolation. Even if the LLM generates malicious code (e.g., trying to exfiltrate data or spawn processes), the container limits damage to its isolated environment. venv isolation is insufficient — it shares the host filesystem and network.",
+      hints: [
+        "Docker seccomp profiles and network=none prevent container escape and data exfiltration.",
+        "E2B (Execution-to-Browser) and Modal are cloud services purpose-built for sandboxed code agent execution.",
+      ],
+    },
+  ],
+
+  "tool-design-patterns": [
+    {
+      id: "q-agent-kp16-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Why is it important for agent tools to be idempotent wherever possible?",
+      options: [
+        "Idempotent tools run faster because they cache their results",
+        "If an agent retries a failed tool call, an idempotent tool produces the same result without harmful side effects, preventing duplicate charges, duplicate records, or other unintended consequences",
+        "Idempotent tools require no authentication and are therefore simpler to implement",
+        "Idempotent tools automatically validate their inputs before execution",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Idempotency (f(f(x)) = f(x)) means calling the tool multiple times with the same arguments produces the same outcome as calling it once. This is essential for agent reliability: when a tool call times out and the agent retries, an idempotent tool (e.g., PUT instead of POST in REST) doesn't double-book or double-charge.",
+      hints: [
+        "HTTP PUT is idempotent (set value to X); HTTP POST is not (each call creates a new record).",
+        "Stripe's payment API uses idempotency keys so that retried charges don't double-bill customers.",
+      ],
+    },
+    {
+      id: "q-agent-kp16-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Tool versioning allows an agent system to upgrade a tool's implementation without breaking existing agent prompts that reference the tool by name.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "By versioning tool APIs (e.g., search_v1, search_v2 or using semantic versioning in tool schemas), agents can pin to a known-good version while new versions are developed and tested. This prevents breaking changes from silently corrupting agent behavior in production.",
+      hints: [
+        "If search_v2 changes argument names, agents using search_v1 continue working without modification.",
+        "Tool versioning is analogous to API versioning in web services — a best practice for backward compatibility.",
+      ],
+    },
+    {
+      id: "q-agent-kp16-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A tool call to an external API fails because the API is temporarily down. What does graceful degradation mean in this context?",
+      options: [
+        "The agent crashes and reports an error to the user immediately",
+        "The agent retries indefinitely until the API recovers",
+        "The agent falls back to an alternative tool or a cached result and continues the task with reduced functionality rather than failing completely",
+        "The agent skips the tool call and pretends it succeeded",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Graceful degradation means the system continues operating at reduced capacity when a dependency fails. For agents, this might mean falling back to a less accurate local tool, using a cached result, or informing the user of partial results — all better than complete failure. Silently pretending success is deceptive and dangerous.",
+      hints: [
+        "Graceful degradation is the opposite of brittle failure — the system degrades gracefully rather than crashing.",
+        "A web search agent might fall back to a local knowledge base if the search API is down.",
+      ],
+    },
+  ],
+
+  "agent-debugging": [
+    {
+      id: "q-agent-kp17-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Trajectory replay in agent debugging means replaying a recorded sequence of LLM inputs and tool outputs to reproduce a failure. What key information must be stored to enable exact replay?",
+      options: [
+        "Only the final answer the agent produced",
+        "The full sequence of LLM prompts, tool call arguments, tool responses, and the model/temperature settings used",
+        "Only the tool call names and their arguments",
+        "The user's original question and the system prompt",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Exact trajectory replay requires every input to every LLM call (prompt, model, temperature, seed) and every tool response. Missing any intermediate observation means the replay may diverge from the original trajectory. LangSmith, Phoenix, and Weave are observability platforms that capture full traces for replay.",
+      hints: [
+        "If you don't log intermediate tool responses, you can't replay the trajectory — the LLM's next decision depends on those responses.",
+        "LangSmith stores full traces including all intermediate steps, enabling exact replay and comparison.",
+      ],
+    },
+    {
+      id: "q-agent-kp17-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Logging intermediate states during an agent run (e.g., after each tool call) is unnecessary overhead that should be disabled in production.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Intermediate state logging is essential in production because agent failures are often non-reproducible without it. Unlike traditional software where a stack trace reveals the failure, agent failures depend on the full context trajectory — every thought, action, and observation. Structured logging of intermediate states enables post-hoc debugging.",
+      hints: [
+        "When an agent produces a wrong answer after 15 steps, you need all 15 steps logged to understand why.",
+        "Observability platforms like LangSmith are specifically designed for production agent trace logging.",
+      ],
+    },
+    {
+      id: "q-agent-kp17-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which failure classification is most useful for improving agent reliability over time?",
+      options: [
+        "Pass / Fail binary classification of task outcomes",
+        "Categorizing failures by root cause: tool error, hallucination, planning failure, context loss, or instruction misunderstanding",
+        "Classifying failures by the number of steps before failure",
+        "Grouping failures by the cost of the run in tokens",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Root-cause classification drives targeted improvements: tool errors → better error handling; hallucinations → retrieval grounding; planning failures → better prompting or MCTS; context loss → better memory management; instruction misunderstanding → clearer system prompts. Binary pass/fail gives no actionable signal.",
+      hints: [
+        "A hallucination fix (better RAG) is very different from a planning fix (better CoT prompting) — knowing the root cause is essential.",
+        "Anthropic's alignment research categorizes model failures by type to guide training interventions.",
+      ],
+    },
+  ],
+
+  "agent-human-collaboration": [
+    {
+      id: "q-agent-kp18-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In a human-in-the-loop agent system, what is an approval gate?",
+      options: [
+        "A rate limiter that prevents the agent from making more than N API calls per minute",
+        "A checkpoint where the agent pauses execution and requests explicit human approval before taking a high-stakes irreversible action",
+        "A validation step where the agent checks its own output for correctness",
+        "A login screen that authenticates the human operator",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Approval gates are explicit pause points where the agent surfaces a proposed action (e.g., 'send this email to 5,000 customers') and waits for human confirmation before proceeding. They are essential for irreversible, high-stakes, or expensive actions where an LLM mistake could cause significant harm.",
+      hints: [
+        "Before deleting files, sending emails, or making purchases, a well-designed agent should confirm with the human.",
+        "Approval gates implement the 'ask permission, not forgiveness' principle for consequential agent actions.",
+      ],
+    },
+    {
+      id: "q-agent-kp18-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Escalation triggers in an agent system automatically route a task to a human operator when the agent's confidence falls below a threshold or an unexpected error condition is detected.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Well-designed agents know their limits. Escalation triggers — based on confidence scores, error rates, or explicit uncertain signals — hand tasks off to humans rather than hallucinating through them. This improves overall system reliability by combining agent efficiency with human judgment on hard cases.",
+      hints: [
+        "A customer support agent might escalate to a human when the user's sentiment score is very negative or the query is out of distribution.",
+        "Uncertainty estimation enables smart escalation — the agent says 'I'm not sure' rather than guessing.",
+      ],
+    },
+    {
+      id: "q-agent-kp18-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which human-in-the-loop pattern provides the best balance of automation and safety for an agent performing financial transactions?",
+      options: [
+        "Full autonomy: the agent completes all transactions without human review",
+        "Full manual: a human reviews every single agent action before it executes",
+        "Bounded autonomy: the agent acts autonomously within pre-approved limits (e.g., transactions under $100) and escalates anything above the limit for human approval",
+        "Random sampling: a human reviews 10% of transactions chosen at random",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Bounded autonomy balances efficiency and safety by pre-defining the agent's authority envelope. Low-stakes actions within the envelope proceed automatically; high-stakes actions above the envelope trigger human review. This is analogous to delegated authority in organizations and is the recommended pattern for agentic financial systems.",
+      hints: [
+        "Corporate expense policies already implement this: employees can expense under $50 without approval.",
+        "The authority envelope (bounds) should be defined based on reversibility and cost of error.",
+      ],
+    },
+  ],
+
+  "agent-deployment": [
+    {
+      id: "q-agent-kp19-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the key difference between a stateless and a stateful agent architecture?",
+      options: [
+        "Stateless agents are faster because they use smaller models",
+        "Stateless agents reconstruct full context from persistent storage on each request; stateful agents maintain an in-memory session that persists between turns within the same interaction",
+        "Stateful agents cannot use external tools; stateless agents can",
+        "Stateless agents are only suitable for single-turn tasks",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Stateless agents store all state externally (database, vector store) and reload it on each request — this enables horizontal scaling and fault tolerance. Stateful agents keep session context in memory — simpler but tied to a single process instance, making scaling and failover harder.",
+      hints: [
+        "Kubernetes works best with stateless services — each pod can handle any request. Stateful agents break this assumption.",
+        "Storing conversation state in Redis or a database makes an agent stateless from the compute layer's perspective.",
+      ],
+    },
+    {
+      id: "q-agent-kp19-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Session management in agent APIs involves issuing a session ID that links multiple API calls to the same agent context, enabling multi-turn interactions.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Agent APIs (e.g., Claude's API with thread_id, OpenAI's Assistants API with thread IDs) use session identifiers to group multi-turn interactions. The backend stores the accumulated context under that session ID, so subsequent calls can continue the conversation without re-sending full history.",
+      hints: [
+        "OpenAI's Assistants API uses 'thread_id' to group messages; each new user turn appends to the same thread.",
+        "Session IDs are the glue that makes a stateless compute layer appear stateful to the user.",
+      ],
+    },
+    {
+      id: "q-agent-kp19-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An agent API receives 1,000 concurrent task requests. Which deployment pattern best handles this load while controlling costs?",
+      options: [
+        "Spawn one dedicated agent process per request, each with its own LLM connection",
+        "Process all requests sequentially in a single queue",
+        "Use a job queue with a worker pool of agent processes; dynamically scale workers based on queue depth",
+        "Cache the first 100 requests and reuse their answers for all subsequent similar requests",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "A job queue with auto-scaling worker pools is the standard pattern for handling variable concurrent load. Requests enter the queue; workers pull and process them; worker count scales with queue depth (e.g., using Celery, Ray, or cloud-native autoscaling). This avoids spawning unbounded processes and gracefully handles load spikes.",
+      hints: [
+        "Celery + Redis and Ray serve are common implementations of this pattern for agent workloads.",
+        "Queue depth is the key autoscaling metric — scale up when depth grows, scale down when it drains.",
+      ],
+    },
+  ],
+
+  "agent-evaluation": [
+    {
+      id: "q-agent-kp20-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "LLM-as-judge evaluation uses a separate LLM to score agent outputs. What is the primary risk of this approach?",
+      options: [
+        "It is too slow for use in automated evaluation pipelines",
+        "The judge LLM may share the same biases as the agent LLM, leading to systematically incorrect scores — especially if both are from the same model family",
+        "LLM judges cannot handle multi-step task evaluation",
+        "LLM-as-judge requires human annotation of every example to calibrate",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When the judge and the agent share training data or architecture, the judge may rate agent outputs highly even when they contain the same systematic errors, because the judge has the same biases. Mitigation includes using judges from different model families and calibrating against human labels.",
+      hints: [
+        "If GPT-4 judges GPT-4 agent outputs, it may prefer GPT-4-style reasoning even when it's wrong.",
+        "Liang et al. (2023) showed LLM judges favor outputs from models in the same family — a serious evaluation bias.",
+      ],
+    },
+    {
+      id: "q-agent-kp20-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Trajectory scoring evaluates not just the final answer but also the quality of intermediate reasoning steps and tool selections made by the agent.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Trajectory scoring credits agents for correct intermediate steps even if the final answer is wrong (partial credit), and penalizes agents that arrive at correct answers through flawed reasoning (lucky guesses). This provides a richer training signal and better captures agent capability than endpoint-only evaluation.",
+      hints: [
+        "Process-based evaluation (reward each step) vs. outcome-based (reward only the final answer) — trajectory scoring is process-based.",
+        "OpenAI's process reward models (PRMs) score mathematical reasoning at each step, not just the final answer.",
+      ],
+    },
+    {
+      id: "q-agent-kp20-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which automated evaluation metric is most appropriate for assessing an agent's web navigation task completion on WebArena-style benchmarks?",
+      options: [
+        "BLEU score computed against a reference trajectory",
+        "Exact string match of the agent's final text output",
+        "Functional evaluation: programmatically inspect the web application's state to verify whether the task goal was achieved",
+        "Human rating of the agent's confidence statements",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "For web navigation, the only reliable metric is whether the application state reflects task completion — e.g., the item is in the cart, the form was submitted, the message was sent. BLEU and string match evaluate text, not application state. This functional evaluation approach is used by WebArena, WorkArena, and OSWorld.",
+      hints: [
+        "A task 'add milk to the shopping cart' is correctly evaluated by checking the cart contents, not by scoring the agent's text.",
+        "WebArena uses Selenium or Playwright to inspect application state after each agent task.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, questionsExtra);
+
 registerQuestions(questions);
 
 export default questions;

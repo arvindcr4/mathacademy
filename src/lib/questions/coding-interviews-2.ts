@@ -28,14 +28,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "What is the inorder traversal of the BST below?\n\n```\n    4\n   / \\\\\n  2   5\n / \\\\\n1   3\n```",
+        "What is the inorder traversal of the BST shown below?\n\n```\n    4\n   / \\\n  2   5\n / \\\n1   3\n```",
       options: ["[1, 2, 3, 4, 5]", "[4, 2, 5, 1, 3]", "[1, 3, 2, 5, 4]", "[5, 4, 3, 2, 1]"],
       correctAnswer: 0,
       explanation:
-        "Applying the inorder rule recursively:\n\n\\[\n\\begin{align}\n\\text{inorder}(1) &= [1] \\\\\n\\text{inorder}(3) &= [3] \\\\\n\\text{inorder}(2) &= [1] + [2] + [3] = [1, 2, 3] \\\\\n\\text{inorder}(5) &= [5] \\\\\n\\text{inorder}(4) &= [1, 2, 3] + [4] + [5] = [1, 2, 3, 4, 5]\n\\end{align}\n\\]\n\nThe BST property guarantees this sorted output.",
+        "Inorder visits nodes in the order: left subtree, root, right subtree. Applying this recursively:\n\n\\[\n\\begin{aligned}\n\\text{inorder}(1) &= [1] &&\\text{(node 1 — leaf, no children)} \\\\\n\\text{inorder}(3) &= [3] &&\\text{(node 3 — leaf, no children)} \\\\\n\\text{inorder}(2) &= [1] + [2] + [3] = [1, 2, 3] &&\\text{(left=1, root=2, right=3)} \\\\\n\\text{inorder}(5) &= [5] &&\\text{(node 5 — leaf, no children)} \\\\\n\\text{inorder}(4) &= [1, 2, 3] + [4] + [5] = [1, 2, 3, 4, 5] &&\\text{(left=2, root=4, right=5)}\n\\end{aligned}\n\\]\n\nThe BST property (left \\lt root \\lt right at every node) guarantees that inorder traversal visits nodes in strictly ascending sorted order.",
       hints: [
-        "Apply inorder to each subtree from the bottom up.",
-        "For a BST, inorder is always sorted ascending.",
+        "Start from the bottom-left leaf and work your way up recursively.",
+        "For a BST, inorder traversal always produces nodes in ascending sorted order.",
       ],
     },
     {
@@ -159,14 +159,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Level order traversal (BFS on a tree) uses which data structure?",
-      options: ["Stack", "Queue", "Heap", "Recursion only"],
+        "Level order traversal (BFS on a tree) uses which underlying data structure?",
+      options: ["Stack", "Queue", "Heap", "Binary search tree"],
       correctAnswer: 1,
       explanation:
-        "A queue ensures FIFO order so nodes are processed level by level, left to right:\n\n\\[\n\\text{enqueue}(root);\; \\text{while } queue \\neq \\emptyset:\; \\{\\; n = \\text{dequeue}();\; \\text{visit}(n);\; \\text{enqueue}(n.\\text{left});\; \\text{enqueue}(n.\\text{right}) \\}\n\\]\n\nThis is the standard BFS pattern adapted for trees.",
+        "A queue enforces FIFO (first-in, first-out) order, which naturally processes nodes level by level, left to right:\n\n\\[\n\\begin{aligned}\n&\\text{enqueue}(root) \\\\[3pt]\n&\\text{while } queue \\neq \\emptyset: \\\\[3pt]\n&\\quad n = \\text{dequeue}();\\; \\text{visit}(n) \\\\[3pt]\n&\\quad \\text{if } n.\\text{left} \\neq null: \\text{enqueue}(n.\\text{left}) \\\\[3pt]\n&\\quad \\text{if } n.\\text{right} \\neq null: \\text{enqueue}(n.\\text{right})\n\\end{aligned}\n\\]\n\nEach node is enqueued once and dequeued once — O(n) total time. The queue holds at most one full level, so O(w) space where w is the maximum level width.",
       hints: [
-        "BFS uses a queue. DFS uses a stack.",
-        "FIFO order naturally processes level by level.",
+        "BFS = queue, DFS = stack. Breadth First Search uses a queue.",
+        "FIFO order ensures all nodes at depth d are processed before any node at depth d+1.",
       ],
     },
     {
