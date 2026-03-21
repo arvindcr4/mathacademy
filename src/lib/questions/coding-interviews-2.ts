@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Inorder traversal follows the recursive definition:\n\n\\[\n\\text{inorder}(T) = \\text{inorder}(T.\\text{left}) \\;\\to\\; T.\\text{root} \\;\\to\\; \\text{inorder}(T.\\text{right})\n\\]\n\nFor a Binary Search Tree (BST), this ordering produces nodes in strictly ascending sorted order - a fundamental property exploited by many BST algorithms.",
+        "Inorder traversal follows the recursive definition:\n\n\\\[\n\\text{inorder}(T) = \\text{inorder}(T.\\text{left}) \\;\\to\\; T.\\text{root} \\;\\to\\; \\text{inorder}(T.\\text{right})\n\\\]\n\nFor a Binary Search Tree (BST), this ordering produces nodes in strictly ascending sorted order - a fundamental property exploited by many BST algorithms.",
       hints: [
         "Think of 'inorder' as meaning 'in sorted order' for a BST.",
         'Mnemonic: "Left then Root then Right" - L before R.',
@@ -32,7 +32,7 @@ const questions: Record<string, Question[]> = {
       options: ["[1, 2, 3, 4, 5]", "[4, 2, 5, 1, 3]", "[1, 3, 2, 5, 4]", "[5, 4, 3, 2, 1]"],
       correctAnswer: 0,
       explanation:
-        "Inorder visits nodes in the order: left subtree, root, right subtree. Applying this recursively:\n\n\\[\n\\begin{aligned}\n\\text{inorder}(1) &= [1] &&\\text{(node 1 - leaf, no children)} \\\\\n\\text{inorder}(3) &= [3] &&\\text{(node 3 - leaf, no children)} \\\\\n\\text{inorder}(2) &= [1] + [2] + [3] = [1, 2, 3] &&\\text{(left=1, root=2, right=3)} \\\\\n\\text{inorder}(5) &= [5] &&\\text{(node 5 - leaf, no children)} \\\\\n\\text{inorder}(4) &= [1, 2, 3] + [4] + [5] = [1, 2, 3, 4, 5] &&\\text{(left=2, root=4, right=5)}\n\\end{aligned}\n\\]\n\nThe BST property (left \\lt root \\lt right at every node) guarantees that inorder traversal visits nodes in strictly ascending sorted order.",
+        "Inorder visits nodes in the order: left subtree, root, right subtree. Applying this recursively:\n\n\\\[\n\\begin{aligned}\n\\text{inorder}(1) &= [1] &&\\text{(node 1 - leaf, no children)} \\\\\n\\text{inorder}(3) &= [3] &&\\text{(node 3 - leaf, no children)} \\\\\n\\text{inorder}(2) &= [1] + [2] + [3] = [1, 2, 3] &&\\text{(left=1, root=2, right=3)} \\\\\n\\text{inorder}(5) &= [5] &&\\text{(node 5 - leaf, no children)} \\\\\n\\text{inorder}(4) &= [1, 2, 3] + [4] + [5] = [1, 2, 3, 4, 5] &&\\text{(left=2, root=4, right=5)}\n\\end{aligned}\n\\\]\n\nThe BST property (left \\lt root \\lt right at every node) guarantees that inorder traversal visits nodes in strictly ascending sorted order.",
       hints: [
         "Start from the bottom-left leaf and work your way up recursively.",
         "For a BST, inorder traversal always produces nodes in ascending sorted order.",
@@ -47,7 +47,7 @@ const questions: Record<string, Question[]> = {
       options: ["Inorder", "Preorder", "Postorder", "Level order"],
       correctAnswer: 1,
       explanation:
-        "Preorder is defined by the recurrence:\n\n\\[\n\\text{preorder}(T) = T.\\text{root} \\to \\text{preorder}(T.\\text{left}) \\to \\text{preorder}(T.\\text{right})\n\\]\n\nThe root is visited 'before' its subtrees. This order is critical for tree serialization and cloning (e.g., LeetCode 105, 226).",
+        "Preorder is defined by the recurrence:\n\n\\\[\n\\text{preorder}(T) = T.\\text{root} \\to \\text{preorder}(T.\\text{left}) \\to \\text{preorder}(T.\\text{right})\n\\\]\n\nThe root is visited 'before' its subtrees. This order is critical for tree serialization and cloning (e.g., LeetCode 105, 226).",
       hints: [
         '"Pre" = before. Root comes before subtrees.',
         "Preorder is useful when you need the root before its children.",
@@ -62,7 +62,7 @@ const questions: Record<string, Question[]> = {
       options: ["Queue", "Explicit stack", "Priority queue", "Deque"],
       correctAnswer: 1,
       explanation:
-        "The algorithm simulates the call stack explicitly:\n\n\\[\n\\begin{align}\n\\text{while }(stack \\neq \\emptyset \\text{ OR } curr \\neq null)&: \\\\\n\\quad &\\text{if } curr \\neq null: push(curr), curr = curr.\\text{left} \\quad &(\\text{go left})\\\\\n\\quad &\\text{else: } curr = pop(), \\text{visit}(curr), curr = curr.\\text{right} \\quad &(\\text{go right})\n\\end{align}\n\\]\n\nEach node is pushed once and popped once: O(n) time, O(h) space.",
+        "The algorithm simulates the call stack explicitly:\n\n\\\[\n\\begin{align}\n\\text{while }(stack \\neq \\emptyset \\text{ OR } curr \\neq null)&: \\\\\n\\quad &\\text{if } curr \\neq null: push(curr), curr = curr.\\text{left} \\quad &(\\text{go left})\\\\\n\\quad &\\text{else: } curr = pop(), \\text{visit}(curr), curr = curr.\\text{right} \\quad &(\\text{go right})\n\\end{align}\n\\\]\n\nEach node is pushed once and popped once: O(n) time, O(h) space.",
       hints: [
         "Inorder is a depth-first traversal. DFS uses a stack.",
         "Keep pushing left until null, then pop, visit, and go right.",
@@ -77,7 +77,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "A valid BST produces a strictly increasing inorder sequence. During traversal, track the previously visited node value (prev). At each step:\n\n\\[\n\\text{if } current.\\text{val} \\leq prev: \\text{invalid BST}\n\\]\n\nCounterexample: root=10, right.left=3. Each node passes the local check (left<root<right) but inorder gives [..., 3, 10, ...] where 3 < 10 - a violation.",
+        "A valid BST produces a strictly increasing inorder sequence. During traversal, track the previously visited node value (prev). At each step:\n\n\\\[\n\\text{if } current.\\text{val} \\leq prev: \\text{invalid BST}\n\\\]\n\nCounterexample: root=10, right.left=3. Each node passes the local check (left<root<right) but inorder gives [..., 3, 10, ...] where 3 < 10 - a violation.",
       hints: [
         "BST inorder is strictly ascending. Track prev and check current > prev.",
         "The moment you see a decrease, the tree is invalid.",
@@ -91,7 +91,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(log n)", "O(n)", "O(n log n)", "O(h) where h is height"],
       correctAnswer: 1,
       explanation:
-        "Each of the n nodes is visited exactly once:\n\n\\[\n\\#\\text{pushes} = \\#\\text{pops} = n \\implies O(n) \\text{ time}\n\\]\n\nThe stack holds at most h nodes (the leftmost root-to-leaf path):\n\n\\[\n\\text{space} = O(h) = O(\\log n) \\text{ (balanced)} \\dots O(n) \\text{ (skewed)}\n\\]",
+        "Each of the n nodes is visited exactly once:\n\n\\\[\n\\#\\text{pushes} = \\#\\text{pops} = n \\implies O(n) \\text{ time}\n\\\]\n\nThe stack holds at most h nodes (the leftmost root-to-leaf path):\n\n\\\[\n\\text{space} = O(h) = O(\\log n) \\text{ (balanced)} \\dots O(n) \\text{ (skewed)}\n\\\]",
       hints: [
         "Every node enters and leaves the stack exactly once.",
         "The stack depth equals the tree height.",
@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Morris traversal exploits threaded binary tree theory:\n\n\\[\n\\text{for each node } x:\\quad \\text{find inorder predecessor } p \\text{ (rightmost in left subtree)}\n\\]\n\n- If p has no right child: set p.right = x (thread), move to x.left\n- If p.right already points to x: remove thread (p.right = null), visit x, move to x.right\n\nEach edge traversed at most twice; no stack or recursion: O(n) time, O(1) space.",
+        "Morris traversal exploits threaded binary tree theory:\n\n\\\[\n\\text{for each node } x:\\quad \\text{find inorder predecessor } p \\text{ (rightmost in left subtree)}\n\\\]\n\n- If p has no right child: set p.right = x (thread), move to x.left\n- If p.right already points to x: remove thread (p.right = null), visit x, move to x.right\n\nEach edge traversed at most twice; no stack or recursion: O(n) time, O(1) space.",
       hints: [
         "Morris threading temporarily modifies right pointers to avoid the stack.",
         "Each node's predecessor is found by going right once, then left to the end.",
@@ -130,7 +130,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Two visit conditions:\n\n\\[\n\\begin{cases}\n\\text{Case 1 (no left subtree):} & \\text{visit now, go right} \\\\\n\\text{Case 2 (arrived via thread):} & \\text{visit now, remove thread, go right}\n\\end{cases}\n\\]\n\nThe thread from the inorder predecessor points back to the current node. Detecting Case 2: checking if p.right == x.",
+        "Two visit conditions:\n\n\\\[\n\\begin{cases}\n\\text{Case 1 (no left subtree):} & \\text{visit now, go right} \\\\\n\\text{Case 2 (arrived via thread):} & \\text{visit now, remove thread, go right}\n\\end{cases}\n\\\]\n\nThe thread from the inorder predecessor points back to the current node. Detecting Case 2: checking if p.right == x.",
       hints: [
         "Find the inorder predecessor (rightmost node in left subtree).",
         "If its right pointer is null, thread it to current. If it's already threaded, you've returned.",
@@ -145,7 +145,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Preorder's first element is always the root. Finding this root's index in inorder splits the tree:\n\n\\[\n\\underbrace{\\text{inorder}[0..i-1]}_{\\text{left subtree}} \\; \\underbrace{\\text{root } r}_{\\text{root}} \\; \\underbrace{\\text{inorder}[i+1..]}_{\\text{right subtree}}\n\\]\n\nRecurse on each subarray. The partition sizes match the preorder segments (LeetCode 105).\n\n\\[\n\\text{preorder}[0] = r, \\quad \\text{preorder}[1..i] = \\text{left preorder}, \\quad \\text{preorder}[i+1..] = \\text{right preorder}\n\\]",
+        "Preorder's first element is always the root. Finding this root's index in inorder splits the tree:\n\n\\\[\n\\underbrace{\\text{inorder}[0..i-1]}_{\\text{left subtree}} \\; \\underbrace{\\text{root } r}_{\\text{root}} \\; \\underbrace{\\text{inorder}[i+1..]}_{\\text{right subtree}}\n\\\]\n\nRecurse on each subarray. The partition sizes match the preorder segments (LeetCode 105).\n\n\\\[\n\\text{preorder}[0] = r, \\quad \\text{preorder}[1..i] = \\text{left preorder}, \\quad \\text{preorder}[i+1..] = \\text{right preorder}\n\\\]",
       hints: [
         "Preorder gives you the root (first element).",
         "Inorder tells you exactly which elements belong to the left vs. right subtree.",
@@ -163,7 +163,7 @@ const questions: Record<string, Question[]> = {
       options: ["Stack", "Queue", "Heap", "Binary search tree"],
       correctAnswer: 1,
       explanation:
-        "A queue enforces FIFO (first-in, first-out) order, which naturally processes nodes level by level, left to right:\n\n\\[\n\\begin{aligned}\n&\\text{enqueue}(root) \\\\[3pt]\n&\\text{while } queue \\neq \\emptyset: \\\\[3pt]\n&\\quad n = \\text{dequeue}();\\; \\text{visit}(n) \\\\[3pt]\n&\\quad \\text{if } n.\\text{left} \\neq null: \\text{enqueue}(n.\\text{left}) \\\\[3pt]\n&\\quad \\text{if } n.\\text{right} \\neq null: \\text{enqueue}(n.\\text{right})\n\\end{aligned}\n\\]\n\nEach node is enqueued once and dequeued once - O(n) total time. The queue holds at most one full level, so O(w) space where w is the maximum level width.",
+        "A queue enforces FIFO (first-in, first-out) order, which naturally processes nodes level by level, left to right:\n\n\\\[\n\\begin{aligned}\n&\\text{enqueue}(root) \\\\\[5pt]\n&\\text{while } queue \\neq \\emptyset: \\\\\[5pt]\n&\\quad n = \\text{dequeue}();\\; \\text{visit}(n) \\\\\[5pt]\n&\\quad \\text{if } n.\\text{left} \\neq null: \\text{enqueue}(n.\\text{left}) \\\\\[5pt]\n&\\quad \\text{if } n.\\text{right} \\neq null: \\text{enqueue}(n.\\text{right})\n\\end{aligned}\n\\\]\n\nEach node is enqueued once and dequeued once - O(n) total time. The queue holds at most one full level, so O(w) space where w is the maximum level width.",
       hints: [
         "BFS = queue, DFS = stack. Breadth First Search uses a queue.",
         "FIFO order ensures all nodes at depth d are processed before any node at depth d+1.",
@@ -178,7 +178,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "LeetCode array format: index 0 is the root, children of index i are at 2i+1 (left) and 2i+2 (right). This encodes the tree level by level, left to right - exactly BFS order:\n\n\\[\n[1, 2, 3, 4, 5] \\implies\n\\begin{array}{c}\n1\\\\\n2 \\quad 3\\\\\n4 \\quad 5\n\\end{array}\n\\]",
+        "LeetCode array format: index 0 is the root, children of index i are at 2i+1 (left) and 2i+2 (right). This encodes the tree level by level, left to right - exactly BFS order:\n\n\\\[\n[1, 2, 3, 4, 5] \\implies\n\\begin{array}{c}\n1\\\\\n2 \\quad 3\\\\\n4 \\quad 5\n\\end{array}\n\\\]",
       hints: [
         "The LeetCode array IS a level-order encoding of the tree.",
       ],
@@ -197,7 +197,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Level 0: [1] (root)\nLevel 1: [2, 3] (root's children)\nLevel 2: [4, 5] (children of node 2)\n\n\\[\n\\text{result} = [[1], [2, 3], [4, 5]]\n\\]",
+        "Level 0: [1] (root)\nLevel 1: [2, 3] (root's children)\nLevel 2: [4, 5] (children of node 2)\n\n\\\[\n\\text{result} = [[1], [2, 3], [4, 5]]\n\\\]",
       hints: [
         "Process level by level: root first, then root's children, then their children.",
       ],
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "All three methods are valid:\n\n\\[\n\\textbf{Method B (preferred): } \\text{At each level's start, } size = queue.length. \\text{ Process exactly } size \\text{ nodes before moving to the next level.}\n\\]\n\nMethod A: Two queues, drain one into the other per level. Method C: Enqueue a null marker after each level to detect boundaries.",
+        "All three methods are valid:\n\n\\\[\n\\textbf{Method B (preferred): } \\text{At each level's start, } size = queue.length. \\text{ Process exactly } size \\text{ nodes before moving to the next level.}\n\\\]\n\nMethod A: Two queues, drain one into the other per level. Method C: Enqueue a null marker after each level to detect boundaries.",
       hints: [
         "At the start of each level, the queue contains exactly all nodes at that level.",
         "Queue size at level start = number of nodes at that level.",
@@ -236,7 +236,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The simplest approach collects standard left-to-right BFS, then reverses odd-indexed levels:\n\n\\[\n\\text{for } level = 0..:\\quad \\{\\text{if } level \\% 2 == 1: \\text{reverse}(result[level])\\}\n\\]\n\nThis costs O(n) extra time but avoids complex deque logic or stack management.",
+        "The simplest approach collects standard left-to-right BFS, then reverses odd-indexed levels:\n\n\\\[\n\\text{for } level = 0..:\\quad \\{\\text{if } level \\% 2 == 1: \\text{reverse}(result[level])\\}\n\\\]\n\nThis costs O(n) extra time but avoids complex deque logic or stack management.",
       hints: [
         "Even levels: left\\toright. Odd levels: right\\toleft.",
         "Collect all left\\toright, then flip the odd levels.",
@@ -255,7 +255,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "\\[\n\\#\\text{enqueues} = \\#\\text{dequeues} = n \\implies O(n) \\text{ time}\n\\]\n\nThe queue holds at most one full level. A complete binary tree's widest level has n/2 nodes:\n\n\\[\n\\text{max queue size} = O(n) \\text{ (for a complete tree's bottom level)}\n\\]",
+        "\\\[\n\\#\\text{enqueues} = \\#\\text{dequeues} = n \\implies O(n) \\text{ time}\n\\\]\n\nThe queue holds at most one full level. A complete binary tree's widest level has n/2 nodes:\n\n\\\[\n\\text{max queue size} = O(n) \\text{ (for a complete tree's bottom level)}\n\\\]",
       hints: [
         "Each node is enqueued and dequeued exactly once.",
         "The widest level of a complete binary tree contains n/2 nodes.",
@@ -275,7 +275,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In left-to-right BFS, the last node processed at depth d is the rightmost node visible from the right side:\n\n\\[\n\\text{For each level: take } result[level][\\text{last}]\n\\]\n\nThis is equivalent to recording the last node seen at each depth during BFS.",
+        "In left-to-right BFS, the last node processed at depth d is the rightmost node visible from the right side:\n\n\\\[\n\\text{For each level: take } result[level][\\text{last}]\n\\\]\n\nThis is equivalent to recording the last node seen at each depth during BFS.",
       hints: [
         "In left-to-right BFS, what is the last node you process at each depth?",
         "That last node is the rightmost visible node.",
@@ -290,7 +290,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "A depth-parameterized DFS achieves the same grouping:\n\n\\[\n\\text{dfs}(node, depth):\; \\text{if } node:\\; \\text{append}(node.\\text{val}, result[depth]);\; \\text{dfs}(node.\\text{left}, depth+1);\; \\text{dfs}(node.\\text{right}, depth+1)\n\\]\n\nPre-order DFS visits left before right, but grouping by depth gives the same level array as BFS (different internal order within levels is acceptable).",
+        "A depth-parameterized DFS achieves the same grouping:\n\n\\\[\n\\text{dfs}(node, depth):\; \\text{if } node:\\; \\text{append}(node.\\text{val}, result[depth]);\; \\text{dfs}(node.\\text{left}, depth+1);\; \\text{dfs}(node.\\text{right}, depth+1)\n\\\]\n\nPre-order DFS visits left before right, but grouping by depth gives the same level array as BFS (different internal order within levels is acceptable).",
       hints: [
         "Pass depth as a parameter. Append node.val to result[depth].",
         "Pre-order DFS naturally groups by depth.",
@@ -310,7 +310,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Map each node to a heap-style position index:\n\n\\[\n\\text{root} = 1, \\quad \\text{left}(i) = 2i, \\quad \\text{right}(i) = 2i+1\n\\]\n\nThe width of a level is:\n\n\\[\nwidth = \\text{rightmost\\_index} - \\text{leftmost\\_index} + 1\n\\]\n\nThis correctly accounts for null gaps. Normalize by subtracting the minimum index per level to prevent overflow.",
+        "Map each node to a heap-style position index:\n\n\\\[\n\\text{root} = 1, \\quad \\text{left}(i) = 2i, \\quad \\text{right}(i) = 2i+1\n\\\]\n\nThe width of a level is:\n\n\\\[\nwidth = \\text{rightmost\\_index} - \\text{leftmost\\_index} + 1\n\\\]\n\nThis correctly accounts for null gaps. Normalize by subtracting the minimum index per level to prevent overflow.",
       hints: [
         "Treat the tree as a heap array. Each null is a 'gap' in the index sequence.",
         "Width = last_index - first_index + 1 includes all nulls between them.",
@@ -333,7 +333,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "All three conditions define BST validity and are mathematically equivalent:\n\n\\[\n\\text{BST property: } \\forall x \\in \\text{left subtree}: x < node.\\text{val} < \\forall y \\in \\text{right subtree}: y\n\\]\n\nThe local check (immediate children) is insufficient on its own - the constraint must hold for ALL descendants. Inorder being sorted ascending is a consequence of this property, not an alternative definition.",
+        "All three conditions define BST validity and are mathematically equivalent:\n\n\\\[\n\\text{BST property: } \\forall x \\in \\text{left subtree}: x < node.\\text{val} < \\forall y \\in \\text{right subtree}: y\n\\\]\n\nThe local check (immediate children) is insufficient on its own - the constraint must hold for ALL descendants. Inorder being sorted ascending is a consequence of this property, not an alternative definition.",
       hints: [
         'The naive "left child < root < right child" is insufficient - it must hold for ALL descendants.',
         "All three statements are equivalent formulations of the same BST property.",
@@ -353,7 +353,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Consider the counterexample tree:\n\n\\[\n\\begin{array}{c}\n\\phantom{1}10\\\\\n/ \\\\ \\\\\n5 \\quad 15\\\\\n\\phantom{1} \\backslash\\\\\n\\phantom{11}3\n\\end{array}\n\\]\n\nEach node passes the local check: 5<10 (left), 15>10 (right), and 3<15 (right.left). But 3 < 10 - violating the BST property since 3 is in the RIGHT subtree of 10.\n\nThe correct approach propagates min/max bounds down the tree.",
+        "Consider the counterexample tree:\n\n\\\[\n\\begin{array}{c}\n\\phantom{1}10\\\\\n/ \\\\ \\\\\n5 \\quad 15\\\\\n\\phantom{1} \\backslash\\\\\n\\phantom{11}3\n\\end{array}\n\\\]\n\nEach node passes the local check: 5<10 (left), 15>10 (right), and 3<15 (right.left). But 3 < 10 - violating the BST property since 3 is in the RIGHT subtree of 10.\n\nThe correct approach propagates min/max bounds down the tree.",
       hints: [
         "A node 3 in the right subtree of root 10 would pass local check but violate the global BST invariant.",
         "The constraint is not just about immediate children - it applies to all descendants.",
@@ -367,7 +367,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Base case: null is a valid BST (vacuously satisfies all properties):\n\n\\[\n\\forall x \\in \\emptyset: x < node.\\text{val} \\quad \\text{(true)}\n\\]\n\nEvery recursive BST algorithm returns true for null nodes. This is the terminating condition that stops the recursion.",
+        "Base case: null is a valid BST (vacuously satisfies all properties):\n\n\\\[\n\\forall x \\in \\emptyset: x < node.\\text{val} \\quad \\text{(true)}\n\\\]\n\nEvery recursive BST algorithm returns true for null nodes. This is the terminating condition that stops the recursion.",
       hints: [
         "An empty tree is a valid BST.",
         "Null satisfies all constraints vacuously.",
@@ -387,7 +387,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The root has no constraints - any value is valid. Recurse with tightening bounds:\n\n\\[\n\\text{isValid}(node, min, max):\\quad \\text{check } min < node.\\text{val} < max\n\\]\n\n\\[\n\\text{Left child: } (min, node.\\text{val}), \\quad \\text{Right child: } (node.\\text{val}, max)\n\\]\n\nUsing -Infinity and +Infinity as initial bounds avoids special-casing the root.",
+        "The root has no constraints - any value is valid. Recurse with tightening bounds:\n\n\\\[\n\\text{isValid}(node, min, max):\\quad \\text{check } min < node.\\text{val} < max\n\\\]\n\n\\\[\n\\text{Left child: } (min, node.\\text{val}), \\quad \\text{Right child: } (node.\\text{val}, max)\n\\\]\n\nUsing -Infinity and +Infinity as initial bounds avoids special-casing the root.",
       hints: [
         "The root can be any value. Children get tighter constraints based on the parent.",
         "-Infinity and +Infinity are sentinels representing 'no bound'.",
@@ -407,7 +407,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "During inorder traversal, the sequence must be strictly increasing. Track the previously visited node value (prev):\n\n\\[\n\\text{if } current.\\text{val} \\leq prev \\implies \\text{invalid BST}\n\\]\n\nThis works because inorder of a BST yields a sorted sequence. A strictly increasing check catches any violation.",
+        "During inorder traversal, the sequence must be strictly increasing. Track the previously visited node value (prev):\n\n\\\[\n\\text{if } current.\\text{val} \\leq prev \\implies \\text{invalid BST}\n\\\]\n\nThis works because inorder of a BST yields a sorted sequence. A strictly increasing check catches any violation.",
       hints: [
         "Inorder of BST is sorted ascending. Verify each step is strictly greater than the previous.",
         "Track prev. The moment current <= prev, the tree is invalid.",
@@ -427,7 +427,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Every node is visited exactly once: O(n) time.\n\n\\[\n\\text{Space} = \\text{recursion stack depth} = O(h)\n\\]\n\n- Balanced tree: h = O(log n)\n- Skewed tree: h = O(n)\n\nThis is the standard analysis for depth-first recursive tree algorithms.",
+        "Every node is visited exactly once: O(n) time.\n\n\\\[\n\\text{Space} = \\text{recursion stack depth} = O(h)\n\\\]\n\n- Balanced tree: h = O(log n)\n- Skewed tree: h = O(n)\n\nThis is the standard analysis for depth-first recursive tree algorithms.",
       hints: [
         "You visit each node once. The recursion depth equals tree height.",
         "O(h) where h = O(log n) for balanced, O(n) for skewed.",
@@ -447,7 +447,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LeetCode 98 (the canonical BST validation problem) uses strict inequalities:\n\n\\[\n\\text{valid BST: } \\forall x \\in \\text{left subtree}: x < node.\\text{val} \\quad \\text{and} \\quad \\forall y \\in \\text{right subtree}: y > node.\\text{val}\n\\]\n\nSome textbook BST definitions allow duplicates in the right subtree with left <= node <= right, but the coding interview standard is strict. Always check the problem constraints - when not specified, default to strict inequalities.",
+        "LeetCode 98 (the canonical BST validation problem) uses strict inequalities:\n\n\\\[\n\\text{valid BST: } \\forall x \\in \\text{left subtree}: x < node.\\text{val} \\quad \\text{and} \\quad \\forall y \\in \\text{right subtree}: y > node.\\text{val}\n\\\]\n\nSome textbook BST definitions allow duplicates in the right subtree with left <= node <= right, but the coding interview standard is strict. Always check the problem constraints - when not specified, default to strict inequalities.",
       hints: [
         "LeetCode 98 is the canonical BST problem. It enforces strict left < root < right with no duplicates allowed.",
         "When problem statements don't specify, assume strict inequality unless the problem context implies otherwise.",
@@ -462,7 +462,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The iterative inorder stack holds at most h nodes (the leftmost path from current node):\n\n\\[\n\\text{Stack holds nodes on the path: } root \\to node.\\text{left} \\to node.\\text{left}.\\text{left} \\to \\dots\n\\]\n\n- Balanced BST: O(log n)\n- Skewed tree: O(n)\n\nThis is O(h) in all cases, and O(h) = O(n) for skewed trees.",
+        "The iterative inorder stack holds at most h nodes (the leftmost path from current node):\n\n\\\[\n\\text{Stack holds nodes on the path: } root \\to node.\\text{left} \\to node.\\text{left}.\\text{left} \\to \\dots\n\\\]\n\n- Balanced BST: O(log n)\n- Skewed tree: O(n)\n\nThis is O(h) in all cases, and O(h) = O(n) for skewed trees.",
       hints: [
         "The stack at any point holds the path from root to current node (going left).",
         "Depth of leftmost path = tree height.",
@@ -482,7 +482,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Picking the median as root ensures the tree stays balanced:\n\n\\[\n\\text{Let } arr = [1,2,3,4,5,6,7],\\; mid = 4\n\\]\n\n\\[\n\\text{root} = 4, \\quad \\text{left} = \\text{build}([1,2,3]), \\quad \\text{right} = \\text{build}([5,6,7])\n\\]\n\nRecursing on each half gives O(n) time and O(h) = O(log n) height.\n\n\\[\n\\text{Height balance: } |h_\\text{left} - h_\\text{right}| \\leq 1\n\\]",
+        "Picking the median as root ensures the tree stays balanced:\n\n\\\[\n\\text{Let } arr = [1,2,3,4,5,6,7],\\; mid = 4\n\\\]\n\n\\\[\n\\text{root} = 4, \\quad \\text{left} = \\text{build}([1,2,3]), \\quad \\text{right} = \\text{build}([5,6,7])\n\\\]\n\nRecursing on each half gives O(n) time and O(h) = O(log n) height.\n\n\\\[\n\\text{Height balance: } |h_\\text{left} - h_\\text{right}| \\leq 1\n\\\]",
       hints: [
         "The root of a balanced BST from sorted array should be the median.",
         "Recursively pick medians of each subarray to maintain balance.",
@@ -504,7 +504,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Formally:\n\n\\[\n\\text{LCA}(p, q) = \\text{deepest } n \\text{ such that } p \\in \\text{descendants}(n) \\text{ AND } q \\in \\text{descendants}(n)\n\\]\n\nA node is a descendant of itself, so if p is an ancestor of q, then LCA(p, q) = p.",
+        "Formally:\n\n\\\[\n\\text{LCA}(p, q) = \\text{deepest } n \\text{ such that } p \\in \\text{descendants}(n) \\text{ AND } q \\in \\text{descendants}(n)\n\\\]\n\nA node is a descendant of itself, so if p is an ancestor of q, then LCA(p, q) = p.",
       hints: [
         "All ancestors of p, all ancestors of q - the deepest intersection is LCA.",
         "The deepest common ancestor is the one closest to p and q.",
@@ -518,7 +518,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "By definition, a node is a descendant of itself. If p is on the path from root to q:\n\n\\[\n\\text{root} \\to \\dots \\to p \\to \\dots \\to q\n\\]\n\nThen p is a common ancestor of p and q, and there is no deeper common ancestor (since p is above q). Hence LCA(p, q) = p.",
+        "By definition, a node is a descendant of itself. If p is on the path from root to q:\n\n\\\[\n\\text{root} \\to \\dots \\to p \\to \\dots \\to q\n\\\]\n\nThen p is a common ancestor of p and q, and there is no deeper common ancestor (since p is above q). Hence LCA(p, q) = p.",
       hints: [
         "Draw p above q - the deepest common ancestor is p itself.",
         "A node is its own descendant.",
@@ -538,7 +538,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Both values are less than root.val, so both nodes must be in the left subtree (BST property: left < root < right):\n\n\\[\n\\text{BST rule: } p < root \\text{ and } q < root \\implies p, q \\in \\text{left subtree}\n\\]\n\nTherefore, the LCA (which must also be in the left subtree) is found by recursing left.",
+        "Both values are less than root.val, so both nodes must be in the left subtree (BST property: left < root < right):\n\n\\\[\n\\text{BST rule: } p < root \\text{ and } q < root \\implies p, q \\in \\text{left subtree}\n\\\]\n\nTherefore, the LCA (which must also be in the left subtree) is found by recursing left.",
       hints: [
         "BST: values less than root go left. Both p and q go left means LCA is in left subtree.",
         "The BST property constrains where each node can be.",
@@ -558,7 +558,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If p and q are in different subtrees, the current node is the first point where their paths diverge - making it their LCA:\n\n\\[\n\\text{If } p < root < q \\text{ (or } q < root < p\\text{): } \\text{LCA} = root\n\\]\n\nAdditionally, if root.val == p.val or root.val == q.val, then root is the LCA (a node is its own descendant).",
+        "If p and q are in different subtrees, the current node is the first point where their paths diverge - making it their LCA:\n\n\\\[\n\\text{If } p < root < q \\text{ (or } q < root < p\\text{): } \\text{LCA} = root\n\\\]\n\nAdditionally, if root.val == p.val or root.val == q.val, then root is the LCA (a node is its own descendant).",
       hints: [
         "Walk from root: if both values go same direction, recurse that way. If they split, current is LCA.",
         "Different subtrees \\to current node is the LCA.",
@@ -578,7 +578,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "This is the key insight of the recursive formulation:\n\n\\[\n\\text{If } \\text{LCA}(p, q) \\text{ found in left AND in right } \\implies \\text{current node is LCA}\n\\]\n\n- left result \$\\neq\$ null: one of p or q is in the left subtree\n- right result \$\\neq\$ null: the other is in the right subtree\n- Since they split across subtrees, current = LCA",
+        "This is the key insight of the recursive formulation:\n\n\\\[\n\\text{If } \\text{LCA}(p, q) \\text{ found in left AND in right } \\implies \\text{current node is LCA}\n\\\]\n\n- left result \$\\neq\$ null: one of p or q is in the left subtree\n- right result \$\\neq\$ null: the other is in the right subtree\n- Since they split across subtrees, current = LCA",
       hints: [
         "p is in left subtree, q is in right subtree (or vice versa). Their LCA = current node.",
         "When both children return a valid result, current is the LCA.",
@@ -598,7 +598,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "One DFS traversal visiting each node at most once: O(n) time.\n\n\\[\n\\text{Space} = \\text{recursion stack} = O(h)\n\\]\n\n- Balanced tree: O(log n)\n- Skewed tree: O(n)\n\nThe recursion explores subtrees only until both p and q are found, but in the worst case (LCA = root) we visit all nodes.",
+        "One DFS traversal visiting each node at most once: O(n) time.\n\n\\\[\n\\text{Space} = \\text{recursion stack} = O(h)\n\\\]\n\n- Balanced tree: O(log n)\n- Skewed tree: O(n)\n\nThe recursion explores subtrees only until both p and q are found, but in the worst case (LCA = root) we visit all nodes.",
       hints: [
         "One DFS pass visits all n nodes; stack depth = height.",
         "Worst case: LCA = root, requiring full tree traversal.",
@@ -613,7 +613,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(1)", "O(log n)", "O(h) where h is height", "O(n^2)"],
       correctAnswer: 2,
       explanation:
-        "Algorithm:\n1. Walk from p to root, storing all ancestors in a hash set: O(h)\n2. Walk from q to root until hitting an ancestor in the set: O(h)\n\n\\[\n\\text{Total: } O(h), \\quad \\text{Space: } O(h)\n\\]\n\nWorst case h = n (completely skewed tree). For a balanced tree h = O(log n).",
+        "Algorithm:\n1. Walk from p to root, storing all ancestors in a hash set: O(h)\n2. Walk from q to root until hitting an ancestor in the set: O(h)\n\n\\\[\n\\text{Total: } O(h), \\quad \\text{Space: } O(h)\n\\\]\n\nWorst case h = n (completely skewed tree). For a balanced tree h = O(log n).",
       hints: [
         "Height of skewed tree is O(n). Balanced tree: O(log n).",
         "Two walks up the tree, each O(h).",
@@ -632,7 +632,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Euler Tour flattens the tree to 2n-1 nodes (each edge traversed twice). Sparse Table on depths answers Range Minimum Queries (RMQ) in O(1):\n\n\\[\n\\text{LCA}(u, v) = \\text{min-depth node on path from } u \\text{ to } v \\text{ in Euler Tour}\n\\]\n\nPreprocessing: O(n log n) to build Sparse Table.\nQuery: O(1) RMQ on the Euler Tour interval [first[u], first[v]].",
+        "Euler Tour flattens the tree to 2n-1 nodes (each edge traversed twice). Sparse Table on depths answers Range Minimum Queries (RMQ) in O(1):\n\n\\\[\n\\text{LCA}(u, v) = \\text{min-depth node on path from } u \\text{ to } v \\text{ in Euler Tour}\n\\\]\n\nPreprocessing: O(n log n) to build Sparse Table.\nQuery: O(1) RMQ on the Euler Tour interval [first[u], first[v]].",
       hints: [
         "LCA = minimum-depth node on the Euler Tour path between two nodes.",
         "Sparse Table converts depth array into a range minimum query structure.",
@@ -647,7 +647,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Two pointers pa and pb start at p and q. Each step:\n- Advance pa to parent(pa), or\n- Advance pb to parent(pb), or\n- If at null, switch to the other starting node\n\nThey meet at the LCA after traversing equal total distance (p\\toroot + q\\toroot). Analogous to the linked list cycle detection / intersection trick:\n\n\\[\n\\text{Total distance} = dist(p, LCA) + dist(LCA, root) + dist(q, LCA) = dist(p, root) + dist(q, root)\n\\]\n\nBoth pointers travel the same total distance, so they meet at the LCA.",
+        "Two pointers pa and pb start at p and q. Each step:\n- Advance pa to parent(pa), or\n- Advance pb to parent(pb), or\n- If at null, switch to the other starting node\n\nThey meet at the LCA after traversing equal total distance (p\\toroot + q\\toroot). Analogous to the linked list cycle detection / intersection trick:\n\n\\\[\n\\text{Total distance} = dist(p, LCA) + dist(LCA, root) + dist(q, LCA) = dist(p, root) + dist(q, root)\n\\\]\n\nBoth pointers travel the same total distance, so they meet at the LCA.",
       hints: [
         'Same trick as "intersection of two linked lists" - both pointers travel equal total distance.',
         "The sum of distances from p and q to LCA equals the sum from p and q to root.",
@@ -670,7 +670,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The BST invariant requires all values in the left subtree to be strictly less than the parent node's value. Starting from the root, we compare the target value with each node and descend left or right accordingly:\n\n\\[\n\\text{if } val < node.val: node = node.\\text{left} \\\\\n\\text{else: } node = node.\\text{right}\n\\]\n\nWe continue until reaching a null child, which becomes the insertion point - always as a leaf node.",
+        "The BST invariant requires all values in the left subtree to be strictly less than the parent node's value. Starting from the root, we compare the target value with each node and descend left or right accordingly:\n\n\\\[\n\\text{if } val < node.val: node = node.\\text{left} \\\\\n\\text{else: } node = node.\\text{right}\n\\\]\n\nWe continue until reaching a null child, which becomes the insertion point - always as a leaf node.",
       hints: [
         "BST invariant: all values in the left subtree must be strictly less than the parent node.",
         "Insertion always happens at a leaf position: traverse until reaching a null child.",
@@ -689,7 +689,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Standard BST insertion follows the BST invariant (left < node < right) from the root downward until reaching a null child:\n\n\\[\n\\text{while }(current \\neq null):\\quad \\{\\;parent = current;\\; current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\}\n\\]\n\nThe null position where traversal stops becomes the new leaf. No existing nodes are displaced or converted to internal nodes.",
+        "Standard BST insertion follows the BST invariant (left < node < right) from the root downward until reaching a null child:\n\n\\\[\n\\text{while }(current \\neq null):\\quad \\{\\;parent = current;\\; current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\}\n\\\]\n\nThe null position where traversal stops becomes the new leaf. No existing nodes are displaced or converted to internal nodes.",
       hints: [
         "Standard BST insertion never reorganizes existing nodes - it only adds a new leaf.",
         "Traverse from root, following the BST invariant left/right decision at each step, until hitting a null child.",
@@ -704,7 +704,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
-        "Sorted insertion into a standard BST produces a completely skewed (degenerate) chain:\n\n\\[\n\\text{Insert } 1 \\to \\text{tree}=1\\quad\n\\text{Insert } 2 \\to \\text{tree}=1 \\rightarrow 2\\quad\n\\text{Insert } 3 \\to \\text{tree}=1 \\rightarrow 2 \\rightarrow 3\\quad\n\\dots\n\\]\n\nEach new element becomes the right child of the previous leaf. Height = n − 1 = O(n). A balanced BST requires explicit rebalancing mechanisms such as AVL rotations or Red-Black tree rules.",
+        "Sorted insertion into a standard BST produces a completely skewed (degenerate) chain:\n\n\\\[\n\\text{Insert } 1 \\to \\text{tree}=1\\quad\n\\text{Insert } 2 \\to \\text{tree}=1 \\rightarrow 2\\quad\n\\text{Insert } 3 \\to \\text{tree}=1 \\rightarrow 2 \\rightarrow 3\\quad\n\\dots\n\\\]\n\nEach new element becomes the right child of the previous leaf. Height = n − 1 = O(n). A balanced BST requires explicit rebalancing mechanisms such as AVL rotations or Red-Black tree rules.",
       hints: [
         "Trace it out: inserting 1, then 2 (both go right since 2 > 1), then 3, etc. The tree becomes a right-skewed chain.",
         "Standard BSTs do not self-balance. Balanced variants (AVL, Red-Black) are needed to maintain O(log n) height.",
@@ -740,7 +740,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The recursive function either continues descending or creates a new node:\n\n\\[\n\\text{insert}(node, val) = \\begin{cases}\n\\text{new } TreeNode(val) & \\text{if } node = null \\\\\nnode.\\text{left} = \\text{insert}(node.\\text{left}, val) & \\text{if } val < node.val \\\\\nnode.\\text{right} = \\text{insert}(node.\\text{right}, val) & \\text{if } val > node.val\n\\end{cases}\n\\]\n\nThe base case (root == null) creates and returns the new TreeNode. The caller assigns it as either the left or right child of the previous node.",
+        "The recursive function either continues descending or creates a new node:\n\n\\\[\n\\text{insert}(node, val) = \\begin{cases}\n\\text{new } TreeNode(val) & \\text{if } node = null \\\\\nnode.\\text{left} = \\text{insert}(node.\\text{left}, val) & \\text{if } val < node.val \\\\\nnode.\\text{right} = \\text{insert}(node.\\text{right}, val) & \\text{if } val > node.val\n\\end{cases}\n\\\]\n\nThe base case (root == null) creates and returns the new TreeNode. The caller assigns it as either the left or right child of the previous node.",
       hints: [
         "The base case creates a new TreeNode and returns it upward to be linked as a child.",
         "After the recursive call returns, assign the result to root.left or root.right.",
@@ -759,7 +759,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Iterative insertion uses two pointers: current and parent. Descend the tree following the BST invariant:\n\n\\[\n\\begin{aligned}\n&parent = null;\\; current = root \\\\[3pt]\n&\\text{while }(current \\neq null): \\\\[3pt]\n&\\quad parent = current \\\\[3pt]\n&\\quad current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\\\[5pt]\n&\\text{// current is now null} \\\\[3pt]\n&\\text{if }(val < parent.val):\\; parent.\\text{left} = \\text{new } TreeNode(val) \\\\[3pt]\n&\\text{else: } parent.\\text{right} = \\text{new } TreeNode(val)\n\\end{aligned}\n\\]\n\nThis is O(h) time and O(1) extra space (no recursion stack).",
+        "Iterative insertion uses two pointers: current and parent. Descend the tree following the BST invariant:\n\n\\\[\n\\begin{aligned}\n&parent = null;\\; current = root \\\\\[5pt]\n&\\text{while }(current \\neq null): \\\\\[5pt]\n&\\quad parent = current \\\\\[5pt]\n&\\quad current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\\\\[5pt]\n&\\text{// current is now null} \\\\\[5pt]\n&\\text{if }(val < parent.val):\\; parent.\\text{left} = \\text{new } TreeNode(val) \\\\\[5pt]\n&\\text{else: } parent.\\text{right} = \\text{new } TreeNode(val)\n\\end{aligned}\n\\\]\n\nThis is O(h) time and O(1) extra space (no recursion stack).",
       hints: [
         "Use two pointers: one to track the current node and one to remember the parent.",
         "When current becomes null, the parent is where we attach the new node as a left or right child.",
@@ -812,7 +812,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The middle-first sequence (4, 2, 6, 1, 3, 5, 7) is the preorder traversal of a perfectly balanced BST:\n\n\\[\n\\text{Step 1: Insert 4} \\to 4\\quad \\text{root}\n\\]\n\\[\n\\text{Step 2: Insert 2} \\to \\text{goes left of 4}\\quad \\text{Step 3: Insert 6} \\to \\text{goes right of 4}\n\\]\n\\[\n\\text{Step 4: Insert 1} \\to \\text{left of 2}\\quad \\text{Step 5: Insert 3} \\to \\text{right of 2}\n\\]\n\\[\n\\text{Step 6: Insert 5} \\to \\text{left of 6}\\quad \\text{Step 7: Insert 7} \\to \\text{right of 6}\n\\]\n\nEach insertion places the median of the remaining elements at the root of the current subtree - giving height = floor(log2 n) = 3. Sorted order creates a chain (height = 7); random order has expected O(log n) height but is not guaranteed.",
+        "The middle-first sequence (4, 2, 6, 1, 3, 5, 7) is the preorder traversal of a perfectly balanced BST:\n\n\\\[\n\\text{Step 1: Insert 4} \\to 4\\quad \\text{root}\n\\\]\n\\\[\n\\text{Step 2: Insert 2} \\to \\text{goes left of 4}\\quad \\text{Step 3: Insert 6} \\to \\text{goes right of 4}\n\\\]\n\\\[\n\\text{Step 4: Insert 1} \\to \\text{left of 2}\\quad \\text{Step 5: Insert 3} \\to \\text{right of 2}\n\\\]\n\\\[\n\\text{Step 6: Insert 5} \\to \\text{left of 6}\\quad \\text{Step 7: Insert 7} \\to \\text{right of 6}\n\\\]\n\nEach insertion places the median of the remaining elements at the root of the current subtree - giving height = floor(log2 n) = 3. Sorted order creates a chain (height = 7); random order has expected O(log n) height but is not guaranteed.",
       hints: [
         "The median element of a sorted array should be the root of a balanced BST built from that array.",
         "Middle-first insertion mimics the recursive 'build from sorted array' strategy: median = root, recurse on halves.",
@@ -1141,7 +1141,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'BFS serialization encodes every node position, including absent children, using a sentinel so deserialization knows the exact tree shape:\n\n\\[\n\\text{Tree: } 1 \\to 2, 3 \\to 4, null, null, 5\n\\]\n\\[\n\\text{Serialized: "1,2,3,4,null,null,5"}\n\\]\n\nWithout sentinels the decoder cannot distinguish a missing left child from a present one.',
+        'BFS serialization encodes every node position, including absent children, using a sentinel so deserialization knows the exact tree shape:\n\n\\\[\n\\text{Tree: } 1 \\to 2, 3 \\to 4, null, null, 5\n\\\]\n\\\[\n\\text{Serialized: "1,2,3,4,null,null,5"}\n\\\]\n\nWithout sentinels the decoder cannot distinguish a missing left child from a present one.',
       hints: [
         "Think of the LeetCode array representation - it includes nulls to mark absent children.",
         "Null markers preserve structural information that pure value lists lose.",
@@ -1161,7 +1161,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The deserializer maintains a queue of nodes waiting for children. Each token from the string either creates a new node (non-null) or skips assignment (null):\n\n\\[\n\\text{while queue not empty: } parent = dequeue();\n\\]\n\\[\n\\text{left\\_token} \\to parent.\\text{left};\\ \\text{right\\_token} \\to parent.\\text{right};\\ \\text{enqueue non-null children}\n\\]\n\nTime: O(n), Space: O(n) for the queue (widest level).",
+        "The deserializer maintains a queue of nodes waiting for children. Each token from the string either creates a new node (non-null) or skips assignment (null):\n\n\\\[\n\\text{while queue not empty: } parent = dequeue();\n\\\]\n\\\[\n\\text{left\\_token} \\to parent.\\text{left};\\ \\text{right\\_token} \\to parent.\\text{right};\\ \\text{enqueue non-null children}\n\\\]\n\nTime: O(n), Space: O(n) for the queue (widest level).",
       hints: [
         "BFS serialization pairs naturally with a BFS deserialization queue.",
         "Each dequeued node is the parent of the next two tokens.",
@@ -1181,7 +1181,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Preorder DFS with null markers uniquely encodes any binary tree:\n\n\\[\n\\text{serialize}(node):\\; \\text{if null \\to emit \'#\';}\\; \\text{else emit val, recurse left, recurse right}\n\\]\n\nDeserialization consumes one token at a time via a pointer or iterator:\n\n\\[\n\\text{deserialize}(iter):\\; tok = next(iter);\\; \\text{if \'#\' \\to null;}\\; \\text{else node(tok, left=des(iter), right=des(iter))}\n\\]\n\nBoth BFS and DFS approaches are O(n) time and O(n) space. DFS is often simpler to code recursively.",
+        "Preorder DFS with null markers uniquely encodes any binary tree:\n\n\\\[\n\\text{serialize}(node):\\; \\text{if null \\to emit \'#\';}\\; \\text{else emit val, recurse left, recurse right}\n\\\]\n\nDeserialization consumes one token at a time via a pointer or iterator:\n\n\\\[\n\\text{deserialize}(iter):\\; tok = next(iter);\\; \\text{if \'#\' \\to null;}\\; \\text{else node(tok, left=des(iter), right=des(iter))}\n\\\]\n\nBoth BFS and DFS approaches are O(n) time and O(n) space. DFS is often simpler to code recursively.",
       hints: [
         "Preorder emits root before children - the first token is always the root during deserialization.",
         "Null markers in preorder serialization make the tree shape unambiguous without needing level information.",
@@ -1200,7 +1200,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
-        "The path can start and end at any nodes in the tree - it does not need to pass through the root:\n\n\\[\n\\text{answer} = \\max_{\\text{all paths}} \\sum_{v \\in path} v.\\text{val}\n\\]\n\nA path is any sequence of nodes where each adjacent pair shares an edge. The optimal path could be entirely within a subtree.",
+        "The path can start and end at any nodes in the tree - it does not need to pass through the root:\n\n\\\[\n\\text{answer} = \\max_{\\text{all paths}} \\sum_{v \\in path} v.\\text{val}\n\\\]\n\nA path is any sequence of nodes where each adjacent pair shares an edge. The optimal path could be entirely within a subtree.",
       hints: [
         "Consider a tree where all large values are in the left subtree - the best path stays there.",
         "The path must be contiguous along edges but can start and end anywhere.",
@@ -1220,7 +1220,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When a node n is used as an intermediate node in a path above it, only one branch (left or right) can extend upward. The maximum path through n combining both children is:\n\n\\[\n\\text{path\\_through\\_n} = \\text{left\\_gain} + n.\\text{val} + \\text{right\\_gain}\n\\]\n\nThis is recorded in the global max, but the return value to n\'s parent is:\n\n\\[\n\\text{return} = n.\\text{val} + \\max(\\text{left\\_gain},\\; \\text{right\\_gain})\n\\]\n\nTime: O(n), Space: O(h) recursion stack.",
+        "When a node n is used as an intermediate node in a path above it, only one branch (left or right) can extend upward. The maximum path through n combining both children is:\n\n\\\[\n\\text{path\\_through\\_n} = \\text{left\\_gain} + n.\\text{val} + \\text{right\\_gain}\n\\\]\n\nThis is recorded in the global max, but the return value to n\'s parent is:\n\n\\\[\n\\text{return} = n.\\text{val} + \\max(\\text{left\\_gain},\\; \\text{right\\_gain})\n\\\]\n\nTime: O(n), Space: O(h) recursion stack.",
       hints: [
         "A node can be the 'elbow' of a path (using both branches) but can only extend one branch upward.",
         "The global max is updated at every node; the return value extends only one branch.",
@@ -1240,7 +1240,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LeetCode 124 requires the path to contain at least one node, so an empty path is not valid:\n\n\\[\n\\text{If all values} < 0:\\; \\text{answer} = \\max_{v} v.\\text{val}\n\\]\n\nIn the DFS helper, gains from children are clamped to zero:\n\n\\[\n\\text{left\\_gain} = \\max(0,\\; \\text{dfs}(node.\\text{left}))\n\\]\n\nThis ensures that a subtree with negative sum is simply not included in the path. However, the node itself must still be counted, so the local max is initialized to the node\'s value (not 0).",
+        "LeetCode 124 requires the path to contain at least one node, so an empty path is not valid:\n\n\\\[\n\\text{If all values} < 0:\\; \\text{answer} = \\max_{v} v.\\text{val}\n\\\]\n\nIn the DFS helper, gains from children are clamped to zero:\n\n\\\[\n\\text{left\\_gain} = \\max(0,\\; \\text{dfs}(node.\\text{left}))\n\\\]\n\nThis ensures that a subtree with negative sum is simply not included in the path. However, the node itself must still be counted, so the local max is initialized to the node\'s value (not 0).",
       hints: [
         "Clamping child gains to zero (max(0, gain)) handles negative subtrees automatically.",
         "Initialize the global maximum to -Infinity (or the root\'s value) to handle all-negative cases.",
@@ -1259,7 +1259,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 1,
       explanation:
-        "Inorder traversal alone is insufficient to determine a unique tree. Many different tree shapes yield the same inorder sequence:\n\n\\[\n\\text{Inorder: } [1, 2, 3] \\text{ could be: root=2 (balanced) or root=1 (right-skewed) or root=3 (left-skewed)}\n\\]\n\nUniqueness requires inorder paired with EITHER preorder or postorder (not two copies of the same traversal type).",
+        "Inorder traversal alone is insufficient to determine a unique tree. Many different tree shapes yield the same inorder sequence:\n\n\\\[\n\\text{Inorder: } [1, 2, 3] \\text{ could be: root=2 (balanced) or root=1 (right-skewed) or root=3 (left-skewed)}\n\\\]\n\nUniqueness requires inorder paired with EITHER preorder or postorder (not two copies of the same traversal type).",
       hints: [
         "Inorder gives sorted order for BSTs but does not reveal the root position.",
         "You need at least two different traversal types to reconstruct a general binary tree.",
@@ -1279,7 +1279,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Preorder[0] is the root. Finding its index i in inorder:\n\n\\[\n\\text{inorder}[0..i-1] \\to \\text{left subtree} \\quad (i \\text{ nodes})\n\\]\n\\[\n\\text{inorder}[i+1..] \\to \\text{right subtree}\n\\]\n\nThe left subtree size i tells us the corresponding preorder slice:\n\n\\[\n\\text{preorder}[1..i] \\to \\text{left preorder}, \\quad \\text{preorder}[i+1..] \\to \\text{right preorder}\n\\]\n\nUsing a hash map for inorder index lookup: O(n) total time, O(n) space.",
+        "Preorder[0] is the root. Finding its index i in inorder:\n\n\\\[\n\\text{inorder}[0..i-1] \\to \\text{left subtree} \\quad (i \\text{ nodes})\n\\\]\n\\\[\n\\text{inorder}[i+1..] \\to \\text{right subtree}\n\\\]\n\nThe left subtree size i tells us the corresponding preorder slice:\n\n\\\[\n\\text{preorder}[1..i] \\to \\text{left preorder}, \\quad \\text{preorder}[i+1..] \\to \\text{right preorder}\n\\\]\n\nUsing a hash map for inorder index lookup: O(n) total time, O(n) space.",
       hints: [
         "The root splits inorder into left and right halves. The size of each half partitions preorder too.",
         "Use a HashMap<value, index> on inorder to avoid O(n) scans - reduces total to O(n).",
@@ -1299,7 +1299,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In postorder, the root is always the last element (vs. first in preorder):\n\n\\[\n\\text{postorder} = [\\ldots\\text{left subtree}\\ldots,\\;\\ldots\\text{right subtree}\\ldots,\\;\\text{root}]\n\\]\n\nThe algorithm mirrors preorder construction:\n1. root = postorder[end]\n2. Find root in inorder \\to i\n3. Right subtree size = len(inorder) - i - 1 (important: build right before left when iterating postorder in reverse)\n\nBoth approaches are O(n) with a hash map. Complexity analysis:\n\n\\[\nT(n) = 2T(n/2) + O(1) \\implies O(n)\n\\]",
+        "In postorder, the root is always the last element (vs. first in preorder):\n\n\\\[\n\\text{postorder} = [\\ldots\\text{left subtree}\\ldots,\\;\\ldots\\text{right subtree}\\ldots,\\;\\text{root}]\n\\\]\n\nThe algorithm mirrors preorder construction:\n1. root = postorder[end]\n2. Find root in inorder \\to i\n3. Right subtree size = len(inorder) - i - 1 (important: build right before left when iterating postorder in reverse)\n\nBoth approaches are O(n) with a hash map. Complexity analysis:\n\n\\\[\nT(n) = 2T(n/2) + O(1) \\implies O(n)\n\\\]",
       hints: [
         "Postorder root is at the END of the array, not the beginning.",
         "Build right subtree before left when consuming postorder array from right to left.",
@@ -1323,7 +1323,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A BST iterator simulates inorder traversal, which for a BST produces ascending sorted order:\n\n\\[\n\\text{Inorder}(BST) = \\text{sorted ascending sequence}\n\\]\n\nThis is LeetCode 173. The challenge is doing it lazily (one node per next() call) rather than materializing the full list.",
+        "A BST iterator simulates inorder traversal, which for a BST produces ascending sorted order:\n\n\\\[\n\\text{Inorder}(BST) = \\text{sorted ascending sequence}\n\\\]\n\nThis is LeetCode 173. The challenge is doing it lazily (one node per next() call) rather than materializing the full list.",
       hints: [
         "BST inorder = sorted order. The iterator exposes this one element at a time.",
         "Think of it as a lazy inorder traversal.",
@@ -1343,7 +1343,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The constructor pushes all nodes along the leftmost path (root, root.left, root.left.left, …) until null:\n\n\\[\n\\text{pushLeft}(node): \\text{while } node \\neq null:\\; \\text{push}(node);\\; node = node.\\text{left}\n\\]\n\nnext() pops the top node (smallest not yet returned), pushes its right child\'s leftmost path, and returns the value. Amortized O(1) per next(): each node is pushed and popped exactly once across all calls \\to O(n) total.",
+        "The constructor pushes all nodes along the leftmost path (root, root.left, root.left.left, …) until null:\n\n\\\[\n\\text{pushLeft}(node): \\text{while } node \\neq null:\\; \\text{push}(node);\\; node = node.\\text{left}\n\\\]\n\nnext() pops the top node (smallest not yet returned), pushes its right child\'s leftmost path, and returns the value. Amortized O(1) per next(): each node is pushed and popped exactly once across all calls \\to O(n) total.",
       hints: [
         "The stack top is always the next smallest element - the leftmost unprocessed node.",
         "After popping a node, push its right child\'s leftmost path to maintain the invariant.",
@@ -1363,7 +1363,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Morris inorder traversal achieves O(1) auxiliary space by temporarily creating threads (back-edges via right pointers) to the inorder successor:\n\n\\[\n\\text{For each node } x:\\; \\text{find predecessor } p = \\text{rightmost in } x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = null: \\text{thread } p.\\text{right} = x,\\; x = x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = x: \\text{remove thread},\\; \\text{visit } x,\\; x = x.\\text{right}\n\\]\n\nEach node is visited at most twice \\to O(n) total, O(1) space. The iterator state is just the current pointer.",
+        "Morris inorder traversal achieves O(1) auxiliary space by temporarily creating threads (back-edges via right pointers) to the inorder successor:\n\n\\\[\n\\text{For each node } x:\\; \\text{find predecessor } p = \\text{rightmost in } x.\\text{left}\n\\\]\n\\\[\n\\text{if } p.\\text{right} = null: \\text{thread } p.\\text{right} = x,\\; x = x.\\text{left}\n\\\]\n\\\[\n\\text{if } p.\\text{right} = x: \\text{remove thread},\\; \\text{visit } x,\\; x = x.\\text{right}\n\\\]\n\nEach node is visited at most twice \\to O(n) total, O(1) space. The iterator state is just the current pointer.",
       hints: [
         "Morris traversal modifies right pointers temporarily and restores them - no stack needed.",
         "O(1) space comes at the cost of temporarily mutating the tree structure.",
@@ -1387,7 +1387,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible:\n\n\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\]\n\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
+        "A complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible:\n\n\\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\\]\n\\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
       hints: [
         "Complete \$\\neq\$ perfect. Perfect means every level is fully filled.",
         "Heap arrays represent complete binary trees: parent at i, children at 2i+1 and 2i+2.",
@@ -1407,7 +1407,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Compare the leftmost height h_L (go left until null) and rightmost height h_R (go right until null):\n\n\\[\n\\text{if } h_L = h_R:\\; \\text{left subtree is perfect} \\implies \\text{count} = 2^{h_L} - 1 + 1 + \\text{count}(\\text{right})\n\\]\n\\[\n\\text{if } h_L \\neq h_R:\\; \\text{right subtree is perfect one level smaller} \\implies \\text{count} = 2^{h_R} - 1 + 1 + \\text{count}(\\text{left})\n\\]\n\nHeight computation: O(log n). Recursion depth: O(log n). Total: O(log^2 n) vs. O(n) brute force.",
+        "Compare the leftmost height h_L (go left until null) and rightmost height h_R (go right until null):\n\n\\\[\n\\text{if } h_L = h_R:\\; \\text{left subtree is perfect} \\implies \\text{count} = 2^{h_L} - 1 + 1 + \\text{count}(\\text{right})\n\\\]\n\\\[\n\\text{if } h_L \\neq h_R:\\; \\text{right subtree is perfect one level smaller} \\implies \\text{count} = 2^{h_R} - 1 + 1 + \\text{count}(\\text{left})\n\\\]\n\nHeight computation: O(log n). Recursion depth: O(log n). Total: O(log^2 n) vs. O(n) brute force.",
       hints: [
         "In a complete binary tree, at least one of the two subtrees must be a perfect binary tree.",
         "Perfect binary tree with height h has exactly 2^h - 1 nodes.",
@@ -1422,7 +1422,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\[\n\\text{Height } h = \\text{leftmost path length}\n\\]\n\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks \\to O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
+        "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\\[\n\\text{Height } h = \\text{leftmost path length}\n\\\]\n\\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks \\to O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
       hints: [
         "Position k on the last level can be checked by treating k\'s bits as left/right directions from root.",
         "O(log n) checks \\times O(log n) each = O(log^2 n).",
@@ -1446,7 +1446,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The problem requires flattening to a right-skewed linked list where the order matches the preorder traversal:\n\n\\[\n\\text{preorder: } root \\to \\text{left} \\to \\text{right}\n\\]\n\\[\n\\text{Flattened: } root.\\text{right} \\to \\text{left\\_subtree\\_preorder} \\to \\text{right\\_subtree\\_preorder}\n\\]\n\nAll left pointers are set to null; the list is encoded entirely through right pointers.",
+        "The problem requires flattening to a right-skewed linked list where the order matches the preorder traversal:\n\n\\\[\n\\text{preorder: } root \\to \\text{left} \\to \\text{right}\n\\\]\n\\\[\n\\text{Flattened: } root.\\text{right} \\to \\text{left\\_subtree\\_preorder} \\to \\text{right\\_subtree\\_preorder}\n\\\]\n\nAll left pointers are set to null; the list is encoded entirely through right pointers.",
       hints: [
         "Root comes first, then left subtree, then right subtree - that\'s preorder.",
         "The flattened tree has all nodes in the right spine with null left pointers.",
@@ -1466,7 +1466,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The in-place iterative algorithm (analogous to Morris traversal):\n\n\\[\n\\text{while } node \\neq null:\n\\]\n\\[\n\\text{if node.left} \\neq null:\n\\]\n\\[\n\\quad pred = \\text{rightmost}(node.\\text{left}) \\quad \\text{O(h) per node}\n\\]\n\\[\n\\quad pred.\\text{right} = node.\\text{right}\n\\]\n\\[\n\\quad node.\\text{right} = node.\\text{left};\\; node.\\text{left} = null\n\\]\n\\[\n\\text{node} = node.\\text{right}\n\\]\n\nTotal: O(n) time (each node\'s rightmost path traversed at most twice), O(1) space (no stack, no recursion).",
+        "The in-place iterative algorithm (analogous to Morris traversal):\n\n\\\[\n\\text{while } node \\neq null:\n\\\]\n\\\[\n\\text{if node.left} \\neq null:\n\\\]\n\\\[\n\\quad pred = \\text{rightmost}(node.\\text{left}) \\quad \\text{O(h) per node}\n\\\]\n\\\[\n\\quad pred.\\text{right} = node.\\text{right}\n\\\]\n\\\[\n\\quad node.\\text{right} = node.\\text{left};\\; node.\\text{left} = null\n\\\]\n\\\[\n\\text{node} = node.\\text{right}\n\\\]\n\nTotal: O(n) time (each node\'s rightmost path traversed at most twice), O(1) space (no stack, no recursion).",
       hints: [
         "Find the rightmost node of the left subtree - it becomes the predecessor of the original right subtree.",
         "This is the same threading idea as Morris traversal applied to flattening.",
@@ -1481,7 +1481,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Processing in reverse preorder (right \\to left \\to root) allows linking nodes using a trailing pointer:\n\n\\[\n\\text{flatten}(node):\\;\n\\]\n\\[\n\\text{if null \\to return;}\n\\]\n\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\]\n\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
+        "Processing in reverse preorder (right \\to left \\to root) allows linking nodes using a trailing pointer:\n\n\\\[\n\\text{flatten}(node):\\;\n\\\]\n\\\[\n\\text{if null \\to return;}\n\\\]\n\\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\\]\n\\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
       hints: [
         "Reverse preorder = right subtree first, then left, then root.",
         "Maintaining a \'prev\' pointer in reverse-preorder links each node to its preorder successor.",
@@ -1500,7 +1500,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Path Sum I specifically checks root-to-leaf paths:\n\n\\[\n\\text{leaf: both } node.\\text{left} = null \\text{ AND } node.\\text{right} = null\n\\]\n\\[\n\\text{hasPathSum}(node, target) = node.\\text{val} == target \\text{ (at leaf)}\n\\]\n\nPath Sum II (LeetCode 113) finds all such root-to-leaf paths. Path Sum III (LeetCode 437) allows paths between any two nodes (not necessarily root-to-leaf).",
+        "Path Sum I specifically checks root-to-leaf paths:\n\n\\\[\n\\text{leaf: both } node.\\text{left} = null \\text{ AND } node.\\text{right} = null\n\\\]\n\\\[\n\\text{hasPathSum}(node, target) = node.\\text{val} == target \\text{ (at leaf)}\n\\\]\n\nPath Sum II (LeetCode 113) finds all such root-to-leaf paths. Path Sum III (LeetCode 437) allows paths between any two nodes (not necessarily root-to-leaf).",
       hints: [
         "A leaf has no children. Check both left and right are null to confirm it\'s a leaf.",
         "Path Sum II and III relax this root-to-leaf constraint.",
@@ -1520,7 +1520,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At each node, the running prefix sum from root is curr_sum. Any path ending here with sum = target started from a node where prefix_sum = curr_sum - target:\n\n\\[\n\\text{count} += \\text{freq}[curr\\_sum - target]\n\\]\n\nThe hash map tracks how many times each prefix sum value has appeared on the current path (root-to-current):\n\n\\[\n\\text{freq}[0] = 1 \\quad (\\text{empty prefix - path starting from root})\n\\]\n\nO(n) time (one DFS), O(n) space (hash map + stack).",
+        "At each node, the running prefix sum from root is curr_sum. Any path ending here with sum = target started from a node where prefix_sum = curr_sum - target:\n\n\\\[\n\\text{count} += \\text{freq}[curr\\_sum - target]\n\\\]\n\nThe hash map tracks how many times each prefix sum value has appeared on the current path (root-to-current):\n\n\\\[\n\\text{freq}[0] = 1 \\quad (\\text{empty prefix - path starting from root})\n\\\]\n\nO(n) time (one DFS), O(n) space (hash map + stack).",
       hints: [
         "This is analogous to the subarray-sum-equals-k problem using prefix sums.",
         "freq[curr_sum - target] tells you how many valid path starts exist above the current node.",
@@ -1540,7 +1540,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The DFS visits all n nodes in O(n). However, when a leaf is reached, the current path is copied into the result:\n\n\\[\n\\text{copy cost} = O(h) \\text{ per leaf}\n\\]\n\nIn the worst case (a complete binary tree), there are O(n) leaves and h = O(log n), giving O(n log n). But for a skewed tree with one path, h = O(n) and one copy gives O(n). In the truly worst case for the copy operation (a complete tree with n/2 leaves of depth O(log n)):\n\n\\[\n\\frac{n}{2} \\times O(\\log n) = O(n \\log n)\n\\]\n\nHowever LeetCode marks this O(n^2) for the pathological case where height = O(n).",
+        "The DFS visits all n nodes in O(n). However, when a leaf is reached, the current path is copied into the result:\n\n\\\[\n\\text{copy cost} = O(h) \\text{ per leaf}\n\\\]\n\nIn the worst case (a complete binary tree), there are O(n) leaves and h = O(log n), giving O(n log n). But for a skewed tree with one path, h = O(n) and one copy gives O(n). In the truly worst case for the copy operation (a complete tree with n/2 leaves of depth O(log n)):\n\n\\\[\n\\frac{n}{2} \\times O(\\log n) = O(n \\log n)\n\\\]\n\nHowever LeetCode marks this O(n^2) for the pathological case where height = O(n).",
       hints: [
         "The DFS itself is O(n), but copying the path at each leaf adds O(h) per leaf.",
         "n/2 leaves \\times h path length = worst-case copy cost.",
@@ -1564,7 +1564,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The diameter is the number of edges on the longest path between any two nodes:\n\n\\[\n\\text{diameter} = \\max_{\\text{all node pairs } (u,v)} \\text{dist}(u, v)\n\\]\n\nThe path may or may not pass through the root. For a single-node tree, the diameter is 0 (no edges). LeetCode 543 measures edges, not nodes.",
+        "The diameter is the number of edges on the longest path between any two nodes:\n\n\\\[\n\\text{diameter} = \\max_{\\text{all node pairs } (u,v)} \\text{dist}(u, v)\n\\\]\n\nThe path may or may not pass through the root. For a single-node tree, the diameter is 0 (no edges). LeetCode 543 measures edges, not nodes.",
       hints: [
         "Diameter = edges on longest path. A single node has diameter 0.",
         "The longest path might bypass the root entirely.",
@@ -1584,7 +1584,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At each node n, the longest path passing through n goes:\n\n\\[\n\\text{deepest leaf in left} \\to n \\to \\text{deepest leaf in right}\n\\]\n\\[\n\\text{length} = \\text{left\\_height} + \\text{right\\_height} \\quad (\\text{edges})\n\\]\n\nThe return value to the parent (height) is:\n\n\\[\n\\text{height}(n) = 1 + \\max(\\text{left\\_height},\\; \\text{right\\_height})\n\\]\n\nUpdate global_max = max(global_max, left_height + right_height) at each node. O(n) time, O(h) space.",
+        "At each node n, the longest path passing through n goes:\n\n\\\[\n\\text{deepest leaf in left} \\to n \\to \\text{deepest leaf in right}\n\\\]\n\\\[\n\\text{length} = \\text{left\\_height} + \\text{right\\_height} \\quad (\\text{edges})\n\\\]\n\nThe return value to the parent (height) is:\n\n\\\[\n\\text{height}(n) = 1 + \\max(\\text{left\\_height},\\; \\text{right\\_height})\n\\\]\n\nUpdate global_max = max(global_max, left_height + right_height) at each node. O(n) time, O(h) space.",
       hints: [
         "Height = edges from node to deepest leaf (a leaf has height 0).",
         "Diameter through node = edges going left + edges going right.",
@@ -1599,7 +1599,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\[\n\\text{dfs}(node):\n\\]\n\\[\n\\text{if null \\to return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\]\n\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\]\n\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
+        "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\\[\n\\text{dfs}(node):\n\\\]\n\\\[\n\\text{if null \\to return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\\]\n\\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\\]\n\\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
       hints: [
         "The helper returns height AND updates global max as a side effect.",
         "Setting null height to -1 makes leaf height = 0 without a special case.",
@@ -1623,7 +1623,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The problem guarantees that exactly two nodes have been swapped:\n\n\\[\n\\text{Correct BST inorder: } [\\ldots, a, \\ldots, b, \\ldots] \\text{ where } a < b\n\\]\n\\[\n\\text{After swap: } [\\ldots, b, \\ldots, a, \\ldots] \\text{ - two inversions detected}\n\\]\n\nThe recovery is straightforward: identify the two misplaced nodes and swap their values back.",
+        "The problem guarantees that exactly two nodes have been swapped:\n\n\\\[\n\\text{Correct BST inorder: } [\\ldots, a, \\ldots, b, \\ldots] \\text{ where } a < b\n\\\]\n\\\[\n\\text{After swap: } [\\ldots, b, \\ldots, a, \\ldots] \\text{ - two inversions detected}\n\\\]\n\nThe recovery is straightforward: identify the two misplaced nodes and swap their values back.",
       hints: [
         "Two swapped nodes create either one or two inversions in the inorder sequence.",
         "Adjacent swap \\to one inversion pair. Non-adjacent swap \\to two inversion pairs.",
@@ -1643,7 +1643,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "During inorder traversal, track prev (the last visited node). An inversion occurs when current.val < prev.val:\n\n\\[\n\\text{First inversion:}\\; first = prev,\\; second = current\n\\]\n\\[\n\\text{Second inversion (if present):}\\; second = current \\quad (\\text{update second only})\n\\]\n\nAfter full traversal, swap first.val and second.val. If nodes are adjacent in inorder, only one inversion occurs (first != null, second is set once). O(n) time, O(h) space for the recursion stack.",
+        "During inorder traversal, track prev (the last visited node). An inversion occurs when current.val < prev.val:\n\n\\\[\n\\text{First inversion:}\\; first = prev,\\; second = current\n\\\]\n\\\[\n\\text{Second inversion (if present):}\\; second = current \\quad (\\text{update second only})\n\\\]\n\nAfter full traversal, swap first.val and second.val. If nodes are adjacent in inorder, only one inversion occurs (first != null, second is set once). O(n) time, O(h) space for the recursion stack.",
       hints: [
         "The first inversion: first = the larger node (prev), second = the smaller (current).",
         "For a second inversion, update only \'second\' (prev becomes the new candidate).",
@@ -1663,7 +1663,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard inorder recursion uses O(h) stack space (O(n) for a skewed tree). Morris traversal replaces the stack with temporary right-pointer threads:\n\n\\[\n\\text{Space: } O(1) \\text{ auxiliary (only first, second, prev pointers)}\n\\]\n\nThe same inversion-detection logic (tracking prev) is applied, but the traversal itself uses Morris threading. Time complexity remains O(n) since each node is visited at most twice (once when threading, once when unthreading). For a skewed BST of n nodes, this reduces space from O(n) to O(1).",
+        "Standard inorder recursion uses O(h) stack space (O(n) for a skewed tree). Morris traversal replaces the stack with temporary right-pointer threads:\n\n\\\[\n\\text{Space: } O(1) \\text{ auxiliary (only first, second, prev pointers)}\n\\\]\n\nThe same inversion-detection logic (tracking prev) is applied, but the traversal itself uses Morris threading. Time complexity remains O(n) since each node is visited at most twice (once when threading, once when unthreading). For a skewed BST of n nodes, this reduces space from O(n) to O(1).",
       hints: [
         "Morris threading avoids recursion entirely - the tree\'s right pointers serve as the implicit stack.",
         "Space O(1) means only a constant number of pointers regardless of n.",

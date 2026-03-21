@@ -3,7 +3,7 @@ import type { Question } from '@/lib/curriculum'
 import * as questionFiles from './index'
 
 // Non-ASCII characters that should not be used (use LaTeX instead)
-const NON_ASCII_PATTERNS = /[→←↔↕↑↓⇒⇔∀∃∈∉⊂⊃⊆⊇∪∩∞±×÷∑∏∂∇approx≠≤≥]/
+const NON_ASCII_PATTERNS = /[→←↔↕↑↓⇒⇔∀∃∈∉⊂⊃⊆⊇∪∩∞±×÷∑∏∂∇≈≠≤≥]/
 
 describe('Question Types', () => {
   it('should have valid question types', () => {

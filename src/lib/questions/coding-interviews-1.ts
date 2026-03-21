@@ -139,10 +139,10 @@ const questions: Record<string, Question[]> = {
         "At each element, we perform only a constant amount of work (one comparison and one max operation)."
       ],
       explanation:
-        "Kadane's algorithm makes a single left-to-right pass through the array, maintaining two variables:\n\n" +
-        "\\[\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, \\text{num})\\]\n" +
-        "\\[\\text{maxSoFar} = \\max(\\text{maxSoFar}, \\text{maxEndingHere})\\]\n\n" +
-        "Since we visit each of the $n$ elements exactly once and perform $\\mathrm{O}(1)$ work per element, the time complexity is $\\mathrm{O}(n)$. The space complexity is $\\mathrm{O}(1)$."
+        "**Step 1:** Kadane's algorithm makes a single left-to-right pass through the array, maintaining two variables:\n\n" +
+        "\\[\n\\text{maxEndingHere} = \\max\\bigl(\\text{maxEndingHere} + \\text{num},\\; \\text{num}\\bigr)\n\\]\n" +
+        "\\[\n\\text{maxSoFar} = \\max\\bigl(\\text{maxSoFar},\\; \\text{maxEndingHere}\\bigr)\n\\]\n\n" +
+        "**Step 2:** Since we visit each of the $n$ elements exactly once and perform $\\mathrm{O}(1)$ work per element, the time complexity is $\\mathrm{O}(n)$. The space complexity is $\\mathrm{O}(1)$."
     },
     {
       id: "q-ms-2",
@@ -157,10 +157,10 @@ const questions: Record<string, Question[]> = {
         "Consider the array $[-5, -3, -1]$. What does the standard algorithm return? What should it return?"
       ],
       explanation:
-        "The standard Kadane's algorithm resets $\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, 0)$, which assumes the maximum subarray never consists entirely of negative numbers. When all numbers are negative, this always resets to 0 and returns 0 - even though the correct answer is the largest (least negative) element.\n\n" +
-        "Example: for $[-5, -3, -1]$, the standard algorithm returns 0 (by picking nothing), but the correct answer is $-1$.\n\n" +
-        "The fix is to change the reset condition to:\n" +
-        "\\[\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, \\text{num})\\]\n" +
+        "**Step 1:** The standard Kadane's algorithm resets $\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, 0)$, which assumes the maximum subarray never consists entirely of negative numbers. When all numbers are negative, this always resets to 0 and returns 0 — even though the correct answer is the largest (least negative) element.\n\n" +
+        "**Step 2:** Example: for $[-5, -3, -1]$, the standard algorithm returns 0 (by picking nothing), but the correct answer is $-1$.\n\n" +
+        "**Step 3:** The fix is to change the reset condition to:\n" +
+        "\\[\n\\text{maxEndingHere} = \\max\\bigl(\\text{maxEndingHere} + \\text{num},\\; \\text{num}\\bigr)\n\\]\n" +
         "so that a single-element subarray is always a valid candidate."
     },
     {
@@ -175,9 +175,9 @@ const questions: Record<string, Question[]> = {
         "At position $i$, does $\\text{maxEndingHere}$ depend only on $\\text{maxEndingHere}$ at position $i-1$?"
       ],
       explanation:
-        "True. Kadane's algorithm is a DP algorithm because the optimal subarray ending at position $i$ depends only on the optimal subarray ending at position $i-1$:\n\n" +
-        "\\[\\text{maxEndingHere}_i = \\max\\big(\\text{maxEndingHere}_{i-1} + \\text{nums}[i],\\; \\text{nums}[i]\\big)\\]\n\n" +
-        "This recurrence satisfies the optimal substructure and overlapping subproblems properties. Each of the $n$ states is computed in $\\mathrm{O}(1)$, giving $\\mathrm{O}(n)$ total time."
+        "**Step 1:** Kadane's algorithm is a DP algorithm because the optimal subarray ending at position $i$ depends only on the optimal subarray ending at position $i-1$:\n\n" +
+        "\\[\n\\text{maxEndingHere}_i = \\max\\bigl(\\text{maxEndingHere}_{i-1} + \\text{nums}[i],\\; \\text{nums}[i]\\bigr)\n\\]\n\n" +
+        "**Step 2:** This recurrence satisfies the optimal substructure and overlapping subproblems properties. Each of the $n$ states is computed in $\\mathrm{O}(1)$, giving $\\mathrm{O}(n)$ total time."
     },
     {
       id: "q-ms-4",
@@ -192,7 +192,7 @@ const questions: Record<string, Question[]> = {
         "At $i=3$ (value 4), a new subarray begins with value 4 as the only element. At $i=4$ (value $-1$), $\\text{maxEndingHere}$ stays at 4 since $4 + (-1) = 3 < 4$."
       ],
       explanation:
-        "Tracing through the array with the standard (reset-to-0) version:\n\n" +
+        "**Step 1:** Trace through the array with the standard (reset-to-0) version:\n\n" +
         "\\[\n" +
         "\\begin{array}{c|c|c|c}\n" +
         "i & \\text{nums}[i] & \\text{maxEndingHere} & \\text{maxSoFar} \\\\\n" +
@@ -208,7 +208,8 @@ const questions: Record<string, Question[]> = {
         "8 & 4 & 5 & 6\n" +
         "\\end{array}\n" +
         "\\]\n\n" +
-        "The maximum subarray is $[4, -1, 2, 1]$ with sum $4 - 1 + 2 + 1 = 6$."
+        "**Step 2:** The maximum subarray is $[4, -1, 2, 1]$ with sum:\n" +
+        "\\[\n4 + (-1) + 2 + 1 = 6.\n\\]"
     },
     {
       id: "q-ms-5",
@@ -223,11 +224,12 @@ const questions: Record<string, Question[]> = {
         "Apply the Master Theorem: $a=2, b=2, f(n)=\\Theta(n)$. Since $\\log_b a = 1 = d$, we have $T(n) = \\Theta(n \\log n)$."
       ],
       explanation:
-        "The divide-and-conquer algorithm splits the array in half, recursively finds the maximum subarray in the left half, right half, and the crossing subarray. The crossing case requires $\\mathrm{O}(n)$ time to examine all elements that cross the midpoint.\n\n" +
-        "The recurrence relation is:\n" +
-        "\\[T(n) = 2T\\!\\left(\\frac{n}{2}\\right) + \\Theta(n)\\]\n\n" +
-        "Applying the Master Theorem: $a=2, b=2, f(n)=\\Theta(n)$, and $\\log_b a = 1$. Since $f(n) = \\Theta(n^1)$, we have $T(n) = \\Theta(n \\log n)$.\n\n" +
-        "This is asymptotically slower than Kadane's $\\mathrm{O}(n)$ solution, but it is a natural fit when the problem is part of a broader divide-and-conquer framework."
+        "**Step 1:** The divide-and-conquer algorithm splits the array in half, recursively finds the maximum subarray in the left half, right half, and the crossing subarray. The crossing case requires $\\mathrm{O}(n)$ time to examine all elements that cross the midpoint.\n\n" +
+        "**Step 2:** The recurrence relation is:\n" +
+        "\\[\nT(n) = 2T\\!\\left(\\frac{n}{2}\\right) + \\Theta(n)\n\\]\n\n" +
+        "**Step 3:** Applying the Master Theorem: $a = 2$, $b = 2$, $f(n) = \\Theta(n)$, and $\\log_b a = 1$. Since $f(n) = \\Theta\\bigl(n^1\\bigr)$, we have $T(n) = \\Theta(n \\log n)$.\n\n" +
+        "\\[\n\\text{Divide-and-conquer: } \\Theta(n \\log n) \\quad \\text{vs. Kadane's: } \\mathrm{O}(n)\n\\]\n\n" +
+        "The divide-and-conquer approach is asymptotically slower, but it is a natural fit when the problem is part of a broader divide-and-conquer framework."
     },
     {
       id: "q-ms-6",
@@ -241,13 +243,15 @@ const questions: Record<string, Question[]> = {
         "When $\\text{maxSoFar}$ is updated, which index marks the end of the current best subarray?"
       ],
       explanation:
-        "True. We maintain two additional variables alongside $\\text{maxEndingHere}$ and $\\text{maxSoFar}$:\n\n" +
-        "\\begin align*\n" +
-        "\\text{startTemp}: &\\quad \\text{the candidate start index (resets when a new subarray begins)}\\\\\n" +
-        "\\text{start}: &\\quad \\text{start index of the best subarray found so far}\\\\\n" +
-        "\\text{end}: &\\quad \\text{end index of the best subarray found so far}\n" +
-        "\\end align*\n\n" +
-        "When $\\text{maxEndingHere}$ resets (i.e., $\\text{maxEndingHere} + \\text{num} < \\text{num}$), we set $\\text{startTemp} = i$. When $\\text{maxSoFar}$ is updated, we set $\\text{start} = \\text{startTemp}$ and $\\text{end} = i$. Both operations are $\\mathrm{O}(1)$, so the overall algorithm remains $\\mathrm{O}(n)$ time and $\\mathrm{O}(1)$ space."
+        "**Step 1:** We maintain two additional variables alongside $\\text{maxEndingHere}$ and $\\text{maxSoFar}$:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{startTemp} &= \\text{the candidate start index (resets when a new subarray begins)},\\\\\n" +
+        "\\text{start} &= \\text{start index of the best subarray found so far},\\\\\n" +
+        "\\text{end} &= \\text{end index of the best subarray found so far}.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** When $\\text{maxEndingHere}$ resets (i.e., $\\text{maxEndingHere} + \\text{num} < \\text{num}$), we set $\\text{startTemp} = i$. When $\\text{maxSoFar}$ is updated, we set $\\text{start} = \\text{startTemp}$ and $\\text{end} = i$. Both operations are $\\mathrm{O}(1)$, so the overall algorithm remains $\\mathrm{O}(n)$ time and $\\mathrm{O}(1)$ space."
     },
   ],
 
@@ -270,10 +274,9 @@ const questions: Record<string, Question[]> = {
         "Can you compute all left-products in one pass and all right-products in another pass?"
       ],
       explanation:
-        "The prefix/suffix approach works as follows:\n\n" +
-        "**Pass 1 (left to right):** Compute $\\text{prefix}[i] = \\prod_{j=0}^{i-1} \\text{nums}[j]$, the product of all elements strictly to the left of $i$.\n\n" +
-        "**Pass 2 (right to left):** Compute $\\text{suffix}[i] = \\prod_{j=i+1}^{n-1} \\text{nums}[j]$, the product of all elements strictly to the right of $i$, and multiply it by $\\text{prefix}[i]$ to get the final result.\n\n" +
-        "\\[\\text{result}[i] = \\left(\\prod_{j=0}^{i-1} \\text{nums}[j]\\right) \\times \\left(\\prod_{j=i+1}^{n-1} \\text{nums}[j]\\right)\\]\n\n" +
+        "**Step 1:** Pass 1 (left to right). Compute $\\text{prefix}[i] = \\prod_{j=0}^{i-1} \\text{nums}[j]$, the product of all elements strictly to the left of $i$.\n\n" +
+        "**Step 2:** Pass 2 (right to left). Compute $\\text{suffix}[i] = \\prod_{j=i+1}^{n-1} \\text{nums}[j]$, the product of all elements strictly to the right of $i$, and multiply it by $\\text{prefix}[i]$ to get the final result:\n\n" +
+        "\\[\n\\text{result}[i] = \\left(\\prod_{j=0}^{i-1} \\text{nums}[j]\\right) \\cdot \\left(\\prod_{j=i+1}^{n-1} \\text{nums}[j]\\right)\n\\]\n\n" +
         "Two passes $\\Rightarrow \\mathrm{O}(n)$ time. Only $\\mathrm{O}(1)$ extra variables besides the output array."
     },
     {
@@ -305,15 +308,18 @@ const questions: Record<string, Question[]> = {
         "$\\text{result}[0] = 2 \\times 3 \\times 4 = 24$; $\\text{result}[1] = 1 \\times 3 \\times 4 = 12$; $\\text{result}[2] = 1 \\times 2 \\times 4 = 8$; $\\text{result}[3] = 1 \\times 2 \\times 3 = 6$."
       ],
       explanation:
-        "Using the prefix/suffix method:\n\n" +
-        "\\[\\text{result}[i] = \\left(\\prod_{j < i} \\text{nums}[j]\\right) \\times \\left(\\prod_{j > i} \\text{nums}[j]\\right)\\]\n\n" +
-        "\\begin{align*\n" +
-        "\\text{result}[0] &= 2 \\times 3 \\times 4 = 24 \\\\\n" +
-        "\\text{result}[1] &= 1 \\times 3 \\times 4 = 12 \\\\\n" +
-        "\\text{result}[2] &= 1 \\times 2 \\times 4 = 8 \\\\\n" +
-        "\\text{result}[3] &= 1 \\times 2 \\times 3 = 6\n" +
-        "\\end{align*}\n\n" +
-        "Answer: $[24, 12, 8, 6]$."
+        "**Step 1:** Using the prefix/suffix method:\n\n" +
+        "\\[\n\\text{result}[i] = \\left(\\prod_{j < i} \\text{nums}[j]\\right) \\cdot \\left(\\prod_{j > i} \\text{nums}[j]\\right)\n\\]\n\n" +
+        "**Step 2:** Compute each result:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{result}[0] &= 2 \\cdot 3 \\cdot 4 = 24,\\\\\n" +
+        "\\text{result}[1] &= 1 \\cdot 3 \\cdot 4 = 12,\\\\\n" +
+        "\\text{result}[2] &= 1 \\cdot 2 \\cdot 4 = 8,\\\\\n" +
+        "\\text{result}[3] &= 1 \\cdot 2 \\cdot 3 = 6.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Answer:** $[24, 12, 8, 6]$."
     },
     {
       id: "q-pe-4",
@@ -376,10 +382,10 @@ const questions: Record<string, Question[]> = {
         "The last $k=3$ elements ($5, 6, 7$) move to the front, preserving their internal order."
       ],
       explanation:
-        "A right rotation by $k$ moves the last $k$ elements to the front, preserving their relative order, and shifts the remaining elements to the right.\n\n" +
-        "For $[1, 2, 3, 4, 5, 6, 7]$ with $k = 3$:\n\n" +
-        "\\[\\underbrace{[1, 2, 3, 4]}_{\\text{shifts right}} \\;\\; \\underbrace{[5, 6, 7]}_{\\text{moves to front}}\\]\n\n" +
-        "Result: $[5, 6, 7, 1, 2, 3, 4]$."
+        "**Step 1:** A right rotation by $k$ moves the last $k$ elements to the front, preserving their relative order, and shifts the remaining elements to the right.\n\n" +
+        "**Step 2:** For $[1, 2, 3, 4, 5, 6, 7]$ with $k = 3$:\n\n" +
+        "\\[\n\\underbrace{[1, 2, 3, 4]}_{\\text{shifts right}} \\quad \\underbrace{[5, 6, 7]}_{\\text{moves to front}}\n\\]\n\n" +
+        "**Result:** $[5, 6, 7, 1, 2, 3, 4]$."
     },
     {
       id: "q-ra-2",
@@ -399,12 +405,13 @@ const questions: Record<string, Question[]> = {
         "No additional arrays are allocated - just pointer swaps within the existing array."
       ],
       explanation:
-        "The reversal algorithm rotates an array of length $n$ by $k$ in three steps:\n\n" +
-        "1. Reverse the entire array: $[1, 2, 3, 4, 5, 6, 7] \\rightarrow [7, 6, 5, 4, 3, 2, 1]$\n" +
-        "2. Reverse the first $k$ elements: $[7, 6, 5] \\rightarrow [5, 6, 7]$\n" +
-        "3. Reverse the remaining $n-k$ elements: $[4, 3, 2, 1] \\rightarrow [1, 2, 3, 4]$\n\n" +
-        "Result: $[5, 6, 7, 1, 2, 3, 4]$.\n\n" +
-        "Each reversal is $\\mathrm{O}(n)$, giving $\\mathrm{O}(n)$ total time. Only $\\mathrm{O}(1)$ extra space is used (the swaps are in-place)."
+        "**Step 1:** Reverse the entire array:\n" +
+        "\\[[1, 2, 3, 4, 5, 6, 7] \\longrightarrow [7, 6, 5, 4, 3, 2, 1]\\]\n\n" +
+        "**Step 2:** Reverse the first $k$ elements:\n" +
+        "\\[[7, 6, 5] \\longrightarrow [5, 6, 7]\\]\n\n" +
+        "**Step 3:** Reverse the remaining $n - k$ elements:\n" +
+        "\\[[4, 3, 2, 1] \\longrightarrow [1, 2, 3, 4]\\]\n\n" +
+        "**Result:** $[5, 6, 7, 1, 2, 3, 4]$. Each reversal is $\\mathrm{O}(n)$, giving $\\mathrm{O}(n)$ total time. Only $\\mathrm{O}(1)$ extra space is used (the swaps are in-place)."
     },
     {
       id: "q-ra-3",
@@ -424,9 +431,9 @@ const questions: Record<string, Question[]> = {
         "Rotation is periodic with period $n$. After $n$ steps, every element returns to its original position."
       ],
       explanation:
-        "Rotating by $k$ positions where $k \\geq n$ is equivalent to rotating by $k \\bmod n$ positions. This is because the array wraps around - after $n$ right rotations, every element is back in its original position.\n\n" +
-        "\\[k \\;\\text{effective} = k \\bmod n\\]\n\n" +
-        "For example, rotating $[1, 2, 3]$ by $k = 7$ is equivalent to $k = 7 \\bmod 3 = 1$. The reversal algorithm (and all standard implementations) should normalize $k$ this way before proceeding."
+        "**Step 1:** Rotating by $k$ positions where $k \\geq n$ is equivalent to rotating by $k \\bmod n$ positions. This is because the array wraps around — after $n$ right rotations, every element is back in its original position.\n\n" +
+        "\\[\nk_{\\text{effective}} = k \\bmod n\n\\]\n\n" +
+        "**Step 2:** For example, rotating $[1, 2, 3]$ by $k = 7$ is equivalent to $k = 7 \\bmod 3 = 1$. The reversal algorithm (and all standard implementations) should normalize $k$ this way before proceeding."
     },
     {
       id: "q-ra-4",
@@ -455,11 +462,10 @@ const questions: Record<string, Question[]> = {
         "Reversing a sequence twice restores its original order. Does each segment get reversed twice?"
       ],
       explanation:
-        "True. In the reversal algorithm:\n\n" +
-        "1. The entire array is reversed.\n" +
-        "2. The first $k$ elements are reversed again - restoring their original relative order.\n" +
-        "3. The remaining $n-k$ elements are reversed again - restoring their original relative order.\n\n" +
-        "Each segment is reversed twice, which returns it to its original order. The net effect is that the last $k$ elements are moved to the front as a block, and the first $n-k$ elements are moved to the back as a block, with internal order preserved."
+        "**Step 1:** The entire array is reversed.\n\n" +
+        "**Step 2:** The first $k$ elements are reversed again — restoring their original relative order.\n\n" +
+        "**Step 3:** The remaining $n - k$ elements are reversed again — restoring their original relative order.\n\n" +
+        "Each segment is reversed twice, which returns it to its original order. The net effect is that the last $k$ elements are moved to the front as a block, and the first $n - k$ elements are moved to the back as a block, with internal order preserved."
     },
     {
       id: "q-ra-6",
@@ -479,8 +485,9 @@ const questions: Record<string, Question[]> = {
         "After $n$ right rotations, where does each element end up?"
       ],
       explanation:
-        "The original array, unchanged. Since $k \\bmod n = 7 \\bmod 7 = 0$, rotating by 0 positions is a no-op - every element returns to its original position.\n\n" +
-        "In general, rotating by any integer multiple of $n$ (i.e., $k = m \\times n$) leaves the array unchanged."
+        "**Step 1:** Compute the effective rotation: $k \\bmod n = 7 \\bmod 7 = 0$.\n\n" +
+        "**Step 2:** Rotating by 0 positions is a no-op — every element returns to its original position.\n\n" +
+        "In general, rotating by any integer multiple of $n$ (i.e., $k = m \\cdot n$) leaves the array unchanged."
     },
   ],
 
@@ -612,9 +619,10 @@ const questions: Record<string, Question[]> = {
         "Vertical scanning examines each character at position $i$ across all $n$ strings until a mismatch is found."
       ],
       explanation:
-        "Vertical scanning examines character $i$ of every string, stopping when a mismatch is found. In the worst case (all strings are identical or the LCP is the entire shortest string), we examine every character of every string:\n\n" +
-        "\\[\\text{Worst case} = n \\times m \\quad \\text{where } m = \\text{length of the longest string}\\]\n\n" +
-        "Note: if the question specifies $m$ as the length of the shortest string, the bound becomes $\\mathrm{O}(n \\cdot m)$ where $m = \\min_i |s_i|$, which is also a valid characterization."
+        "**Step 1:** Vertical scanning examines character $i$ of every string, stopping when a mismatch is found.\n\n" +
+        "**Step 2:** In the worst case (all strings are identical or the LCP is the entire shortest string), we examine every character of every string:\n\n" +
+        "\\[\n\\text{Worst case} = n \\cdot m \\quad \\text{where } m = \\text{length of the longest string}\n\\]\n\n" +
+        "Note: if $m$ denotes the length of the shortest string, the bound becomes $\\mathrm{O}(n \\cdot m)$ where $m = \\min_i |s_i|$, which is also a valid characterization."
     },
     {
       id: "q-lcp-3",

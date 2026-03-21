@@ -94,10 +94,10 @@ const questions: Record<string, Question[]> = {
         "DDPM sampling requires exactly $T$ sequential denoising steps (one per timestep, from $T$ down to $0$) to generate a high-quality sample.",
       correctAnswer: "True",
       explanation:
-        "DDPM's reverse process is Markovian: given $x_t$, the model predicts the noise $\\varepsilon_\\theta(x_t, t)$ and samples:\n\n\\[\nx_{t-1} \\sim p_\\theta(x_{t-1} \\mid x_t) = \\mathcal{N}\\!\\left(x_{t-1}; \\mu_\\theta(x_t, t),\\; \\sigma_t^2 I\\right).\n\\]\n\nEach step $t \\to t-1$ requires one forward pass of the neural network, so generating one sample requires $T$ sequential passes. In the original DDPM paper, $T = 1000$.\n\nThis is DDPM's primary practical limitation: 1000 sequential neural network evaluations make generation slow. DDIM (Song et al., 2020) and other accelerated samplers break the Markovian structure to skip steps, reducing generation to 10-50 steps while maintaining quality.",
+        "DDPM's reverse process is Markovian: given $x_t$, the model predicts the noise $\\varepsilon_\\theta(x_t, t)$ and samples:\n\n**Step 1**\n\n\\[\nx_{t-1} \\sim p_\\theta(x_{t-1} \\mid x_t) = \\mathcal{N}\\!\\left(x_{t-1}; \\mu_\\theta(x_t, t),\\; \\sigma_t^2 I\\right).\n\\]\n\n**Step 2**\n\nEach step $t \\to t-1$ requires one forward pass of the neural network, so generating one sample requires $T$ sequential passes. In the original DDPM paper, $T = 1000$.\n\n**Step 3**\n\nThis is DDPM's primary practical limitation: 1000 sequential neural network evaluations make generation slow. DDIM (Song et al., 2020) and other accelerated samplers break the Markovian structure to skip steps, reducing generation to 10-50 steps while maintaining quality.",
       hints: [
-        "Each denoising step requires one neural network forward pass - $T$ steps means $T$ forward passes per generated sample.",
-        "DDIM exploits the fact that the same noise-prediction network $\\varepsilon_\\theta$ can be used with a non-Markovian reverse process, allowing steps to be skipped without retraining.",
+        "Think about the computational cost: if each denoising step requires one network forward pass, how many passes are needed for $T$ steps?",
+        "DDIM uses the same noise-prediction network but changes the sampling procedure - what property of the reverse process allows steps to be skipped?",
       ],
     },
     {
@@ -114,10 +114,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The ELBO for DDPM is:\n\n\\[\n\\mathcal{L} = \\mathcal{L}_T + \\sum_{t=1}^{T-1} \\mathcal{L}_t + \\mathcal{L}_0,\n\\]\n\nwhere each $\\mathcal{L}_t = \\mathrm{KL}\\big(q(x_t \\mid x_{t+1}, x_0) \\;\\|\\; p_\\theta(x_t \\mid x_{t+1})\\big)$.\n\nThe $\\mathcal{L}_T$ term is:\n\n\\[\n\\mathcal{L}_T = \\mathrm{KL}\\big(q(x_T \\mid x_0) \\;\\|\\; p(x_T)\\big), \\quad p(x_T) = \\mathcal{N}(0, I).\n\\]\n\nWith a well-designed schedule ($\\bar{\\alpha}_T \\approx 0$), we have $q(x_T \\mid x_0) \\approx \\mathcal{N}(0, I) = p(x_T)$, so $\\mathcal{L}_T \\approx 0$. Moreover, $p(x_T)$ has no learnable parameters - backpropagating through $\\mathcal{L}_T$ would not update $\\varepsilon_\\theta$. Hence it is safely dropped from training.",
+        "The ELBO for DDPM decomposes across all timesteps.\n\n**Step 1**\n\n\\[\n\\mathcal{L} = \\mathcal{L}_T + \\sum_{t=1}^{T-1} \\mathcal{L}_t + \\mathcal{L}_0,\n\\]\n\nwhere each $\\mathcal{L}_t = \\mathrm{KL}\\big(q(x_t \\mid x_{t+1}, x_0) \\;\\|\\; p_\\theta(x_t \\mid x_{t+1})\\big)$.\n\n**Step 2**\n\nThe $\\mathcal{L}_T$ term measures the divergence between the final noisy distribution and the prior:\n\n\\[\n\\mathcal{L}_T = \\mathrm{KL}\\big(q(x_T \\mid x_0) \\;\\|\\; p(x_T)\\big), \\quad p(x_T) = \\mathcal{N}(0, I).\n\\]\n\n**Step 3**\n\nWith a well-designed schedule ($\\bar{\\alpha}_T \\approx 0$), we have $q(x_T \\mid x_0) \\approx \\mathcal{N}(0, I) = p(x_T)$, so $\\mathcal{L}_T \\approx 0$. Moreover, $p(x_T)$ has no learnable parameters - backpropagating through $\\mathcal{L}_T$ would not update $\\varepsilon_\\theta$. Hence it is safely dropped from training.",
       hints: [
-        "The prior $p(x_T) = \\mathcal{N}(0, I)$ is fixed with no parameters - gradient signals from $\\mathcal{L}_T$ cannot update $\\varepsilon_\\theta$.",
-        "Choosing $T$ large enough that $\\bar{\\alpha}_T \\approx 0$ ensures $q(x_T \\mid x_0) \\approx p(x_T)$, making $\\mathcal{L}_T$ negligible.",
+        "The prior $p(x_T)$ is a standard Gaussian with fixed parameters - can gradients flow through it to update the model?",
+        "As $T \\to \\infty$, what happens to $\\bar{\\alpha}_T$? What does $q(x_T \\mid x_0)$ approach in this limit?",
       ],
     },
   ],
@@ -137,10 +137,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The score $\\nabla_x \\log p(x)$ points in the direction of steepest increase in log-probability. Starting from arbitrary initialization (e.g., pure noise), we can sample from $p(x)$ using Langevin dynamics:\n\n\\[\nx_{t+1} = x_t + \\frac{\\varepsilon}{2}\\,\\nabla_x \\log p(x_t) + \\sqrt{\\varepsilon}\\,z_t, \\qquad z_t \\sim \\mathcal{N}(0, I).\n\\]\n\nUnder mild conditions, as $\\varepsilon \\to 0$ and $t \\to \\infty$, the chain converges to samples from $p(x)$. Score-based models (Song & Ermon, 2019) learn $s_\\theta(x) \\approx \\nabla_x \\log p(x)$ and use annealed Langevin dynamics at multiple noise scales to handle multi-modal distributions. This directly connects score matching to diffusion models.",
+        "The score $\\nabla_x \\log p(x)$ points in the direction of steepest increase in log-probability.\n\n**Step 1**\n\nStarting from arbitrary initialization (e.g., pure noise), we can sample from $p(x)$ using Langevin dynamics:\n\n\\[\nx_{t+1} = x_t + \\frac{\\varepsilon}{2}\\,\\nabla_x \\log p(x_t) + \\sqrt{\\varepsilon}\\,z_t, \\qquad z_t \\sim \\mathcal{N}(0, I).\n\\]\n\n**Step 2**\n\nUnder mild conditions, as $\\varepsilon \\to 0$ and $t \\to \\infty$, the chain converges to samples from $p(x)$.\n\n**Step 3**\n\nScore-based models (Song & Ermon, 2019) learn $s_\\theta(x) \\approx \\nabla_x \\log p(x)$ and use annealed Langevin dynamics at multiple noise scales to handle multi-modal distributions. This directly connects score matching to diffusion models.",
       hints: [
-        "Langevin dynamics is like gradient ascent on $\\log p(x)$ with added noise to escape local modes.",
-        "The score does not require knowing the partition function $Z$ - unlike the energy-based model $E(x) = -\\log p(x) + \\log Z$.",
+        "Langevin dynamics combines gradient ascent with injected noise - what is the purpose of the noise term?",
+        "The score is the gradient of log-probability - why might this be easier to learn than the probability itself?",
       ],
     },
     {
@@ -157,10 +157,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vanilla score matching requires differentiating through the log-density $\\nabla_x \\log p(x)$, which is intractable for implicit models. Denoising score matching avoids this by instead learning the score of a corrupted distribution.\n\nFor Gaussian noise corruption $\\tilde{x} = x + \\sigma\\,\\varepsilon$, the score of the noisy distribution has a simple closed form:\n\n\\[\n\\nabla_{\\tilde{x}} \\log q_\\sigma(\\tilde{x}) = -\\frac{\\varepsilon}{\\sigma} = \\frac{x - \\tilde{x}}{\\sigma^2}.\n\\]\n\nThe denoising score matching objective is:\n\n\\[\n\\mathbb{E}_{x,\\,\\tilde{x}}\\big[\\|s_\\theta(\\tilde{x}) - (x - \\tilde{x})/\\sigma^2\\|^2\\big],\n\\]\n\nwhich is tractable - no density or partition function needed. This connects directly to DDPM: noise prediction $\\varepsilon_\\theta$ is proportional to the negative score estimation.",
+        "Vanilla score matching requires differentiating through the log-density $\\nabla_x \\log p(x)$, which is intractable for implicit models. Denoising score matching avoids this by instead learning the score of a corrupted distribution.\n\n**Step 1**\n\nFor Gaussian noise corruption $\\tilde{x} = x + \\sigma\\,\\varepsilon$, the score of the noisy distribution has a simple closed form:\n\n\\[\n\\nabla_{\\tilde{x}} \\log q_\\sigma(\\tilde{x}) = -\\frac{\\varepsilon}{\\sigma} = \\frac{x - \\tilde{x}}{\\sigma^2}.\n\\]\n\n**Step 2**\n\nThe denoising score matching objective is:\n\n\\[\n\\mathbb{E}_{x,\\,\\tilde{x}}\\big[\\|s_\\theta(\\tilde{x}) - (x - \\tilde{x})/\\sigma^2\\|^2\\big],\n\\]\n\nwhich is tractable - no density or partition function needed.\n\n**Step 3**\n\nThis connects directly to DDPM: noise prediction $\\varepsilon_\\theta$ is proportional to the negative score estimation.",
       hints: [
-        "For Gaussian corruption, the score of the noisy distribution points directly from $\\tilde{x}$ back toward the clean $x$.",
-        "DDPM's noise prediction and score matching are equivalent up to scaling: $s_\\theta(x_t, t) \\approx -\\varepsilon_\\theta(x_t, t)/\\sqrt{1-\\bar{\\alpha}_t}$.",
+        "For Gaussian noise, the score points from the noisy point back toward the clean point - can you see why from the formula $\\nabla \\log q_\\sigma = (x - \\tilde{x})/\\sigma^2$?",
+        "If $\\varepsilon_\\theta$ is proportional to the score, what is the proportionality constant in terms of the noise schedule?",
       ],
     },
     {
@@ -177,10 +177,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The SDE framework (Song et al., 2021) generalizes both the discrete DDPM and SMLD models. Any It\\^o SDE:\n\n\\[\ndx = f(x, t)\\,dt + g(t)\\,dw\n\\]\n\nhas a corresponding reverse-time SDE (Anderson, 1982):\n\n\\[\ndx = \\big[f(x, t) - g(t)^2 \\nabla_x \\log p_t(x)\\big]\\,dt + g(t)\\,d\\bar{w}.\n\\]\n\nGiven a learned time-dependent score function $s_\\theta(x, t) \\approx \\nabla_x \\log p_t(x)$, we can simulate this reverse SDE to generate samples from $p_0$ (the data distribution). DDPM corresponds to the variance-preserving (VP) SDE; SMLD corresponds to the variance-exploding (VE) SDE. This unification shows why score matching and DDPM are fundamentally equivalent.",
+        "The SDE framework (Song et al., 2021) generalizes both the discrete DDPM and SMLD models.\n\n**Step 1**\n\nAny It\\^o SDE:\n\n\\[\ndx = f(x, t)\\,dt + g(t)\\,dw\n\\]\n\nhas a corresponding reverse-time SDE (Anderson, 1982):\n\n\\[\ndx = \\big[f(x, t) - g(t)^2 \\nabla_x \\log p_t(x)\\big]\\,dt + g(t)\\,d\\bar{w}.\n\\]\n\n**Step 2**\n\nGiven a learned time-dependent score function $s_\\theta(x, t) \\approx \\nabla_x \\log p_t(x)$, we can simulate this reverse SDE to generate samples from $p_0$ (the data distribution).\n\n**Step 3**\n\nDDPM corresponds to the variance-preserving (VP) SDE; SMLD corresponds to the variance-exploding (VE) SDE. This unification shows why score matching and DDPM are fundamentally equivalent.",
       hints: [
-        "Anderson (1982) first derived the reverse-time SDE; Song et al. showed this is the unifying principle of modern diffusion models.",
-        "The probability flow ODE (a deterministic counterpart to the reverse SDE) enables exact likelihood computation and fast DDIM-like sampling.",
+        "The reverse-time SDE depends on the score function - what does this tell us about what we need to learn to reverse the forward process?",
+        "VP-SDE and VE-SDE differ in how they add noise - what are the implications for the corresponding reverse processes?",
       ],
     },
   ],
@@ -200,10 +200,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDIM replaces DDPM's Markovian reverse chain with a generalized, non-Markovian process. The key property is that the reverse process is designed to produce the same forward marginals $q(x_t \\mid x_0)$ - so the model still sees the correct noise levels during training.\n\nBecause the reverse process is non-Markovian, the transition from $x_t$ to $x_{t-1}$ depends on the entire trajectory, not just $x_t$. This allows skipping directly from $x_t$ to $x_{t'}$ for $t' \\ll t$, using the same noise-prediction network $\\varepsilon_\\theta$ without any retraining. High-quality generation in 10-50 steps (instead of 1000) becomes possible.",
+        "DDIM replaces DDPM's Markovian reverse chain with a generalized, non-Markovian process.\n\n**Step 1**\n\nThe key property is that the reverse process is designed to produce the same forward marginals $q(x_t \\mid x_0)$ - so the model still sees the correct noise levels during training.\n\n**Step 2**\n\nBecause the reverse process is non-Markovian, the transition from $x_t$ to $x_{t-1}$ depends on the entire trajectory, not just $x_t$. This allows skipping directly from $x_t$ to $x_{t'}$ for $t' \\ll t$.\n\n**Step 3**\n\nThis enables high-quality generation in 10-50 steps (instead of 1000) using the same trained noise-prediction network $\\varepsilon_\\theta$ without any retraining.",
       hints: [
-        "DDIM uses the same $\\varepsilon_\\theta$ as DDPM - no retraining is needed, only a different sampling algorithm.",
-        "With $\\eta = 0$, DDIM is fully deterministic (ODE-based sampling); with $\\eta = 1$, it recovers DDPM's stochastic sampling.",
+        "What constraint ensures that DDIM's reverse process is consistent with DDPM's forward marginals? Think about what must be preserved.",
+        "The parameter $\\eta$ controls the stochasticity of DDIM - at $\\eta = 0$ we get deterministic ODE-based sampling. What happens at $\\eta = 1$?",
       ],
     },
     {
@@ -214,10 +214,10 @@ const questions: Record<string, Question[]> = {
         "DDIM with $\\eta = 0$ (fully deterministic sampling) enables exact image reconstruction from its latent representation $x_T$, making the generative process invertible.",
       correctAnswer: "True",
       explanation:
-        "With $\\eta = 0$, DDIM uses a deterministic mapping from the initial noise $x_T$ to the generated image $x_0$. Running the reverse DDIM in the forward direction - called DDIM inversion - maps a real image $x_0$ to its corresponding $x_T$.\n\nThis invertibility is the foundation of many image editing methods. A real image is inverted to $x_T$, the latent is edited by modifying the denoising trajectory (e.g., changing text conditioning or latents), and then DDIM regeneration produces the edited image. Methods such as SDEdit, Prompt-to-Prompt, and Null-Text Inversion all rely on DDIM inversion.",
+        "With $\\eta = 0$, DDIM uses a deterministic mapping from the initial noise $x_T$ to the generated image $x_0$.\n\n**Step 1**\n\nRunning the reverse DDIM in the forward direction - called DDIM inversion - maps a real image $x_0$ to its corresponding $x_T$.\n\n**Step 2**\n\nThis invertibility is the foundation of many image editing methods. A real image is inverted to $x_T$, the latent is edited by modifying the denoising trajectory, and then DDIM regeneration produces the edited image.\n\n**Step 3**\n\nMethods such as SDEdit, Prompt-to-Prompt, and Null-Text Inversion all rely on DDIM inversion to map real images into the latent space for editing.",
       hints: [
-        "DDIM inversion is used in image editing: SDEdit, Prompt-to-Prompt, and Null-Text Inversion all invert real images to $x_T$ before editing.",
-        "The deterministic forward-backward pass is only approximate due to discretization error, but works well in practice.",
+        "If DDIM is deterministic at $\\eta = 0$, running it forward from $x_0$ and backward from $x_T$ should give back the original images - why is this useful for editing?",
+        "What would happen if DDIM were stochastic (non-zero $\\eta$)? Would inversion still work?",
       ],
     },
     {
@@ -234,10 +234,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDIM reparameterizes the reverse update in terms of a predicted clean image $\\hat{x}_0(x_t)$. This is obtained by inverting the forward marginal relation:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon \\quad \\Longrightarrow \\quad\n\\hat{x}_0(x_t) = \\frac{x_t - \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon_\\theta(x_t, t)}{\\sqrt{\\bar{\\alpha}_t}}.\n\\]\n\nThis is the $x_0$ prediction implied by the current noise estimate - also known as the Tweedie denoising estimate. The full DDIM step then interpolates between $\\hat{x}_0$ and the direction toward $x_t$, taking a larger step than DDPM would allow. This $\\hat{x}_0$ reparameterization is also used in modern distillation methods such as consistency models.",
+        "DDIM reparameterizes the reverse update in terms of a predicted clean image $\\hat{x}_0(x_t)$.\n\n**Step 1**\n\nThis is obtained by inverting the forward marginal relation:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon \\quad \\Longrightarrow \\quad\n\\hat{x}_0(x_t) = \\frac{x_t - \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon_\\theta(x_t, t)}{\\sqrt{\\bar{\\alpha}_t}}.\n\\]\n\n**Step 2**\n\nThis is the $x_0$ prediction implied by the current noise estimate - also known as the Tweedie denoising estimate.\n\n**Step 3**\n\nThe full DDIM step then interpolates between $\\hat{x}_0$ and the direction toward $x_t$, taking a larger step than DDPM would allow. This $\\hat{x}_0$ reparameterization is also used in modern distillation methods such as consistency models.",
       hints: [
-        "The $\\hat{x}_0$ prediction is the conditional expectation $\\mathbb{E}[x_0 \\mid x_t]$ under the Gaussian approximation - also called the Tweedie estimate.",
-        "This reparameterization is foundational in modern distillation: consistency models and progressive distillation both use $\\hat{x}_0$ reparameterization.",
+        "If you know the noise $\\varepsilon$ and the noisy image $x_t$, can you solve for the estimated clean image $\\hat{x}_0$?",
+        "The Tweedie estimate is the mean of the conditional distribution $p(x_0 \\mid x_t)$ - why might predicting the clean image be useful for sampling?",
       ],
     },
   ],
@@ -257,10 +257,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CFG extrapolates in score space. The guided estimate is:\n\n\\[\n\\tilde{\\varepsilon}_\\theta(x_t, c) = (1+w)\\,\\varepsilon_\\theta(x_t, c) - w\\,\\varepsilon_\\theta(x_t, \\emptyset).\n\\]\n\nWhen $w = 0$, we recover standard conditional sampling. When $w > 0$, the direction toward the conditioning signal $c$ is amplified relative to the unconditional estimate. This improves prompt adherence (better FID-like metrics for specific concepts) but reduces diversity (worse recall). Typical guidance weights for DALL-E/Stable Diffusion are $w = 7$-$15$.",
+        "CFG extrapolates in score space.\n\n**Step 1**\n\nThe guided estimate is:\n\n\\[\n\\tilde{\\varepsilon}_\\theta(x_t, c) = (1+w)\\,\\varepsilon_\\theta(x_t, c) - w\\,\\varepsilon_\\theta(x_t, \\emptyset).\n\\]\n\n**Step 2**\n\nWhen $w = 0$, we recover standard conditional sampling. When $w > 0$, the direction toward the conditioning signal $c$ is amplified relative to the unconditional estimate.\n\n**Step 3**\n\nThis improves prompt adherence but reduces diversity. Typical guidance weights for DALL-E/Stable Diffusion are $w = 7$-$15$.",
       hints: [
-        "CFG = extrapolation in score space: go further in the conditional direction than the model alone would.",
-        "Too high $w$ leads to oversaturation and artifacts; too low $w$ causes the model to ignore the text prompt.",
+        "The CFG formula can be rewritten as $\\varepsilon_\\theta + w(\\varepsilon_\\theta(x_t, c) - \\varepsilon_\\theta(x_t, \\emptyset))$ - what does the term in parentheses represent?",
+        "As $w$ increases, the guidance amplifies the conditional direction. What happens to diversity as $w$ gets very large?",
       ],
     },
     {

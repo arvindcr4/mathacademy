@@ -321,7 +321,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In PER, the stochastic priority P(i) \\propto (|\\delta\\_i| + \\epsilon)^\\alpha uses the exponent \\alpha to:",
+        "In PER, the stochastic priority P(i) \\propto (|\\delta\_i| + \\epsilon)^\\alpha uses the exponent \\alpha to:",
       options: [
         "Normalize the priorities so they sum to 1",
         "Control the degree of prioritization: \\alpha=0 gives uniform sampling, \\alpha=1 gives fully proportional sampling",
@@ -405,7 +405,7 @@ const questions: Record<string, Question[]> = {
         "The gradient of the reward function with respect to the environment dynamics",
         "E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)]",
         "The sum of TD errors over the entire episode",
-        "\\nabla_\\theta V^{\\pi_\\theta}(s\\_0) computed by backpropagation through time",
+        "\\nabla_\\theta V^{\\pi_\\theta}(s\_0) computed by backpropagation through time",
       ],
       correctAnswer: 1,
       explanation:
@@ -459,13 +459,13 @@ const questions: Record<string, Question[]> = {
       question: "The REINFORCE algorithm updates the policy parameters using:",
       options: [
         "The TD error from a learned value function",
-        "The complete Monte Carlo return G_t scaled by the log-probability gradient \\nabla_\\theta log \\pi_\\theta(a\\_t|s\\_t)",
+        "The complete Monte Carlo return G_t scaled by the log-probability gradient \\nabla_\\theta log \\pi_\\theta(a\_t|s\_t)",
         "The advantage function estimated by a separate neural network",
         "Importance sampling weights from a behavior policy",
       ],
       correctAnswer: 1,
       explanation:
-        "REINFORCE computes the policy gradient as \\Sigma_t \\nabla_\\theta log \\pi_\\theta(a\\_t|s\\_t) \\cdot G\\_t using the full Monte Carlo return, then updates \\theta \\leftarrow \\theta + \\alpha \\cdot gradient to maximize expected return.",
+        "REINFORCE computes the policy gradient as \\Sigma_t \\nabla_\\theta log \\pi_\\theta(a\_t|s\_t) \\cdot G\_t using the full Monte Carlo return, then updates \\theta \\leftarrow \\theta + \\alpha \\cdot gradient to maximize expected return.",
       hints: [
         "REINFORCE is a Monte Carlo policy gradient method - it uses complete episode returns.",
         "The update increases the probability of actions that led to high returns.",
@@ -499,7 +499,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "REINFORCE assigns the full episode return G\\_t to every action in the trajectory, but individual actions may have contributed very differently to the outcome - making it hard to identify which actions were truly responsible for the reward.",
+        "REINFORCE assigns the full episode return G\_t to every action in the trajectory, but individual actions may have contributed very differently to the outcome - making it hard to identify which actions were truly responsible for the reward.",
       hints: [
         "If an episode has 100 steps and ends with a reward, which of the 100 actions deserves credit?",
         "This is the temporal credit assignment problem - a fundamental challenge in RL.",
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The PPO objective L^{CLIP}(\\theta) = E[min(r\\_t(\\theta)A\\_t, clip(r\\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\\_t)] uses the min operation to:",
+        "The PPO objective L^{CLIP}(\\theta) = E[min(r\_t(\\theta)A\_t, clip(r\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\_t)] uses the min operation to:",
       options: [
         "Average the clipped and unclipped objectives for a smoother gradient",
         "Pessimistically bound the objective, preventing the policy from benefiting from going outside the trust region",
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
+        "The min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
       hints: [
         "When A > 0 and r > 1+\\epsilon, which term (clipped or unclipped) gives a smaller value under min?",
         "The min ensures no benefit from making the policy update too large.",
@@ -920,7 +920,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TD3 trains two independent critic networks Q\\_1 and Q\\_2 and uses min(Q\\_1, Q\\_2) for the target, penalizing overestimated Q-values - analogous to Double DQN\'s decoupling of selection and evaluation.",
+        "TD3 trains two independent critic networks Q\_1 and Q\_2 and uses min(Q\_1, Q\_2) for the target, penalizing overestimated Q-values - analogous to Double DQN\'s decoupling of selection and evaluation.",
       hints: [
         "Two critics both estimate the same Q - which estimate is safer to use as a target?",
         "Taking the minimum is a conservative approach - why does this help with overestimation?",
@@ -1679,14 +1679,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Lagrangian relaxation applied to CMDP optimization converts the constrained problem into an unconstrained one by:",
       options: [
-        "Adding a penalty term \\lambda\\_i \\cdot max(0, E[C_i] − d\\_i) to the objective and optimizing jointly over policy and \\lambda",
+        "Adding a penalty term \\lambda\_i \\cdot max(0, E[C_i] − d\_i) to the objective and optimizing jointly over policy and \\lambda",
         "Projecting the policy gradient onto the constraint manifold at each step",
         "Running a separate safety critic that blocks unsafe actions before they are executed",
         "Solving a linear program over the space of occupancy measures",
       ],
       correctAnswer: 0,
       explanation:
-        "Lagrangian relaxation introduces multipliers \\lambda\\_i \\geq 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) − \\Sigma\\_i \\lambda\\_i(E[C\\_i(\\pi)] − d\\_i). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
+        "Lagrangian relaxation introduces multipliers \\lambda\_i \\geq 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) − \\Sigma\_i \\lambda\_i(E[C\_i(\\pi)] − d\_i). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
       hints: [
         "Lagrangian relaxation moves constraints into the objective with penalty multipliers.",
         "The multiplier \\lambda is large when the constraint is violated, penalizing the policy heavily.",

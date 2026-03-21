@@ -303,7 +303,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In MAML's inner loop, the task-adapted parameters $\\theta'_i$ are computed via one gradient step as: $$\\theta'_i = \\theta - \\alpha \\nabla_\\theta \\mathcal{L}_{T_i}(f_\\theta).$$ What does $\\alpha$ represent?",
+        "In MAML's inner loop, the task-adapted parameters $\\theta'_i$ are computed via one gradient step as: \\[\\theta'_i = \\theta - \\alpha \\nabla_\\theta \\mathcal{L}_{T_i}(f_\\theta).\\] What does $\\alpha$ represent?",
       options: [
         "The meta-learning rate for the outer loop update",
         "The inner-loop task-specific learning rate (a fixed hyperparameter, distinct from the outer-loop meta-learning rate $\\beta$)",
@@ -312,11 +312,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MAML uses a two-level optimization structure with two distinct learning rates: $\\alpha$ (inner loop, task-level) and $\\beta$ (outer loop, meta-level, optimized with Adam/SGD). The inner-loop update $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$ adapts parameters to task $T_i$ using the support-set loss $\\mathcal{L}_{T_i}$. The outer loop then evaluates how well the adapted parameters $\\theta'_i$ generalize to the query set and updates $\\theta$ accordingly.",
+        "**Step 1:** MAML uses a two-level optimization structure with two distinct learning rates: $\\alpha$ (inner loop, task-level) and $\\beta$ (outer loop, meta-level, optimized with Adam/SGD).\n\n**Step 2:** The inner-loop update adapts parameters to task $T_i$ using the support-set loss. Specifically, $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$.\n\n**Step 3:** The outer loop then evaluates how well the adapted parameters $\\theta'_i$ generalize to the query set and updates $\\theta$ accordingly.",
       hints: [
         "MAML has a two-level optimization structure: the inner loop adapts to each task, the outer loop improves the initialization based on post-adaptation query-set performance.",
         "$\\alpha$ is the step size for task adaptation (typically 0.01-0.1); $\\beta$ is the step size for meta-optimization (typically 0.001-0.01).",
-        "The notation $\\nabla_\\theta$ denotes the gradient with respect to the meta-parameters $\\theta$.",
       ],
     },
     {
@@ -327,11 +326,10 @@ const questions: Record<string, Question[]> = {
         "MAML's meta-gradient computation requires differentiating through the inner loop gradient steps, resulting in second-order gradients (gradients of gradients).",
       correctAnswer: "True",
       explanation:
-        "The meta-objective $\\mathcal{L}_\\text{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$ depends on adapted parameters $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$. Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n$$\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss - a matrix of second derivatives. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
+        "**Step 1:** The meta-objective is $\\mathcal{L}_\\textrm{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$, where $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$ are the task-adapted parameters.\n\n**Step 2:** Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n\\[\n\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot \\bigl(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)\\bigr).\n\\]\n\n**Step 3:** The term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
       hints: [
         "Chain rule: $\\frac{\\partial \\mathcal{L}(\\theta')}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}}{\\partial \\theta'} \\cdot \\frac{\\partial \\theta'}{\\partial \\theta}$.",
         "Since $\\theta' = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}$, we have $\\frac{\\partial \\theta'}{\\partial \\theta} = I - \\alpha\\nabla^2_\\theta\\mathcal{L}$. The $\\nabla^2$ is the Hessian (second derivative).",
-        "Second-order derivatives are computationally expensive - this is precisely why first-order approximations like FOMAML were developed.",
       ],
     },
     {
@@ -348,11 +346,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MAML's default (Finn et al., 2017) uses $K=1$ inner-loop gradient step on the support set to compute $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}(f_\\theta)$, then evaluates the meta-loss on the query set:\n$$\\theta \\leftarrow \\theta - \\beta \\nabla_\\theta \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta'_i}).$$\nThe support/query split is critical: using the same data for inner and outer loops would let the meta-learner overfit to specific examples rather than learning a generalizable initialization. The support set provides the adaptation signal; the query set measures generalization.",
+        "**Step 1:** MAML's default (Finn et al., 2017) uses $K=1$ inner-loop gradient step on the support set to compute $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}^\\textrm{support}(f_\\theta)$.\n\n**Step 2:** The meta-loss is then evaluated on the query set:\n\\[\n\\theta \\leftarrow \\theta - \\beta \\nabla_\\theta \\sum_i \\mathcal{L}_{T_i}^\\textrm{query}(f_{\\theta'_i}).\n\\]\n\n**Step 3:** The support/query split is critical: using the same data for inner and outer loops would let the meta-learner overfit to specific examples rather than learning a generalizable initialization. The support set provides the adaptation signal; the query set measures generalization.",
       hints: [
-        "In the episode $(T_i, \\mathcal{D}_i^\\text{supp}, \\mathcal{D}_i^\\text{query})$ structure: inner loop uses $\\mathcal{D}_i^\\text{supp}$, outer loop uses $\\mathcal{D}_i^\\text{query}$.",
+        "In the episode $(T_i, \\mathcal{D}_i^\\textrm{supp}, \\mathcal{D}_i^\\textrm{query})$ structure: inner loop uses $\\mathcal{D}_i^\\textrm{supp}$, outer loop uses $\\mathcal{D}_i^\\textrm{query}$.",
         "Why not use the same data for both? If adaptation and evaluation share the same examples, the meta-learner can memorize them instead of learning a broadly useful initialization.",
-        "Finn et al. (2017) report results with $K=1$ and $K=5$ inner steps; $K=1$ is the default reported in the main paper.",
       ],
     },
   ],
@@ -372,11 +369,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FOMAML drops the second-order Hessian terms from the meta-gradient, approximating:\n$$\\nabla_\\theta^\\text{FOMAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\approx \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nas opposed to the full second-order expression:\n$$\\nabla_\\theta^\\text{MAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe FOMAML approximation ignores the $(I - \\alpha\\nabla^2_\\theta\\mathcal{L})$ factor. Empirically this retains most of MAML's performance while eliminating the expensive Hessian-vector product computation.",
+        "**Step 1:** The full MAML meta-gradient is second-order:\n\\[\n\\nabla_\\theta^\\textrm{MAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot \\bigl(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)\\bigr).\n\\]\n\n**Step 2:** FOMAML drops the Hessian term, approximating:\n\\[\n\\nabla_\\theta^\\textrm{FOMAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\approx \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta).\n\\]\n\n**Step 3:** Empirically this retains most of MAML's performance while eliminating the expensive Hessian-vector product computation.",
       hints: [
         "Second-order gradients are the expensive part of MAML - what happens if you simply drop them?",
         "Think about the trade-off: FOMAML is faster but the gradient estimate is less accurate.",
-        "The chain rule gives \\partialL(\\theta')/\\partial\\theta = (\\partialL/\\partial\\theta') \\cdot (\\partial\\theta'/\\partial\\theta) = \\nabla_{\\theta'}L \\cdot (I − \\alpha\\nabla\\^2_\\thetaL). Dropping (I − \\alpha\\nabla\\^2_\\thetaL) is the FOMAML approximation.",
       ],
     },
     {

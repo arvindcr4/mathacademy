@@ -155,7 +155,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Most applications are read-heavy; the query path has very different performance requirements than the command path. CQRS splits these: commands go through a write-optimized model (normalized, transactional), while queries hit a read-optimized model (denormalized, cached, potentially read replicas or separate data stores). This lets you scale reads and writes independently, optimize schemas differently, and add query-side caching without affecting write consistency. The trade-off is eventual consistency between the two models.\n\n**Step 1:** Identify the mismatch. If reads are 100 times more frequent than writes, why should both use the same normalized relational schema optimized for writes? The query path is starved.\n\n**Step 2:** Apply the split. The command side stays normalized and transactional. The query side is denormalized, cached, and served from read replicas or a specialized data store (e.g., Elasticsearch).\n\n**Step 3:** Note the consistency trade-off. Because the read model is updated asynchronously from the event stream, there is a brief window where the read model may show stale data.",
       hints: [
-        "If reads are 100\times more frequent than writes, why should both share the same normalized relational schema?",
+        "If reads are 100 times more frequent than writes, why should both share the same normalized relational schema?",
         "CQRS often pairs with event sourcing: commands produce events, events update the read model projection.",
       ],
     },
@@ -293,7 +293,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "L1 in-process caches (e.g., a LRU HashMap inside the application) are accessed in nanoseconds - no serialization, no network, no I/O. Redis L2 requires a TCP round-trip (~0.1-1ms). For high-frequency reads of small, stable data (config, feature flags, user roles), L1 is orders of magnitude faster. The trade-off is that L1 caches are per-instance (inconsistency across instances) and limited by heap memory, while Redis is shared and larger.",
       hints: [
-        "Memory access: ~100ns. Redis network round-trip: ~500μs. The L1 cache is ~5000\times faster for a cache hit.",
+        "Memory access: ~100ns. Redis network round-trip: ~500μs. The L1 cache is ~5000 times faster for a cache hit.",
         "L1 works best for rarely-changing data; for user-specific or frequently-updated data, the staleness risk increases.",
       ],
     },
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       id: "q-sdi-scale-32",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "A service has 1 million users, each making 10 requests per day on average. What is the average requests per second (RPS), and what peak RPS should you plan for assuming an 8-hour peak window with 3\times peak-to-average ratio?",
+      question: "A service has 1 million users, each making 10 requests per day on average. What is the average requests per second (RPS), and what peak RPS should you plan for assuming an 8-hour peak window with 3 times peak-to-average ratio?",
       options: [
         "Average: 116 RPS; Peak: ~348 RPS (plan for ~400 RPS with headroom).",
         "Average: 10 RPS; Peak: 30 RPS.",
@@ -566,8 +566,8 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: "This back-of-envelope calculation converts daily request volume to per-second throughput and then applies a peak multiplier.\n\n**Step 1:** Convert daily requests to average RPS.\n\n\\[\n1{,}000{,}000 \\text{ users} \\cdot 10 \\frac{\\text{requests}}{\\text{user} \\cdot \\text{day}} = 10{,}000{,}000 \\frac{\\text{requests}}{\\text{day}}\n\\]\n\n\\[\n\\frac{10{,}000{,}000}{86{,}400 \\text{ seconds/day}} \\approx 115.7 \\text{ RPS (average)}\n\\]\n\n**Step 2:** Apply the peak multiplier. If traffic during the 8-hour peak window is 3 times the daily average:\n\n\\[\n115.7 \\text{ RPS} \\times 3 \\approx 347 \\text{ RPS (peak)}\n\\]\n\n**Step 3:** Add headroom. Plan for 400–500 RPS to absorb variability above the modeled peak.",
       hints: [
-        "Seconds in a day: 60 \times 60 \times 24 = 86,400. Memorize this for estimation interviews.",
-        "Peak multiplier depends on usage patterns - consumer apps often see 5-10\times daily peak vs trough; enterprise apps may be flatter.",
+        "Seconds in a day: 60 * 60 * 24 = 86,400. Memorize this for estimation interviews.",
+        "Peak multiplier depends on usage patterns — consumer apps often see 5–10 times daily peak vs trough; enterprise apps may be flatter.",
       ],
     },
     {
@@ -585,7 +585,7 @@ const questions: Record<string, Question[]> = {
       explanation: "This back-of-envelope calculation converts user count and per-user size to total storage.\n\n**Step 1:** Calculate raw storage.\n\n\\[\n10{,}000{,}000 \\text{ users} \\cdot 2 \\text{ KB/user} = 20{,}000{,}000 \\text{ KB} = 20{,}000 \\text{ MB} = 20 \\text{ GB}\n\\]\n\nThis is surprisingly small — a single commodity server has 1–8 TB of SSD storage, so 20 GB fits easily on one node.\n\n**Step 2:** Apply replication and overhead. With a 3\\times replication factor and indexes, the total grows to approximately 60 GB — still well within a single server's capacity.\n\n**Step 3:** Stress-test your assumptions. If each profile also stores a 1 MB profile photo, the same calculation yields 10 TB, which decidedly requires distributed storage. Always clarify what data is included in the 'profile' estimate.",
       hints: [
         "1KB = 1,000 bytes. 1MB = 1,000KB. 1GB = 1,000MB. 1TB = 1,000GB. Build a mental ladder for quick estimation.",
-        "Always state your assumptions: what is a 'profile'? Text only or including profile photos? The answer changes by 500\times.",
+        "Always state your assumptions: what is a 'profile'? Text only or including profile photos? The answer changes by 500 times.",
       ],
     },
     {
@@ -595,14 +595,14 @@ const questions: Record<string, Question[]> = {
       question: "A product has 50 million monthly active users (MAU). Which is the most accurate estimate of daily active users (DAU) for capacity planning, and what does the DAU/MAU ratio signify?",
       options: [
         "DAU = MAU / 30 \approx 1.67M; assumes users are perfectly evenly distributed across days with no engagement patterns.",
-        "DAU = MAU \times DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU \approx 10M.",
+        "DAU = MAU * DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU ≈ 10M.",
         "DAU = MAU because all monthly active users are also daily active users.",
         "DAU cannot be estimated from MAU without real traffic data.",
       ],
       correctAnswer: 1,
       explanation: "The DAU/MAU ratio (also called the 'stickiness ratio') measures how often monthly users return daily. Highly engaging social apps (Facebook, TikTok) achieve 0.5–0.65 (50–65% of MAU are active on any given day). Moderate apps: 0.2–0.3. Low-engagement apps: 0.05–0.1. MAU/30 assumes uniform distribution and a ratio of approximately 0.033, drastically underestimating daily load for sticky apps.\n\n**Step 1:** Apply the correct formula. DAU = MAU \\times DAU/MAU ratio. For 50 million MAU with DAU/MAU = 0.2:\n\n\\[\n\\text{DAU} = 50{,}000{,}000 \\times 0.2 = 10{,}000{,}000 \\text{ users/day}\n\\]\n\n**Step 2:** Recognize the magnitude of error. Using MAU/30 gives 1.67 M — a 6\\times underestimate compared with DAU/MAU = 0.2. This leads to drastically under-provisioned infrastructure.\n\n**Step 3:** Use benchmarks. Compare your app's engagement category to industry ratios rather than assuming uniform distribution.",
       hints: [
-        "If MAU = 50M and DAU/MAU = 0.5 (Facebook-like), then DAU = 25M. MAU/30 gives 1.67M - 15\times underestimate.",
+        "If MAU = 50M and DAU/MAU = 0.5 (Facebook-like), then DAU = 25M. MAU/30 gives 1.67M — a 15 times underestimate.",
         "DAU/MAU is also a key investor metric: above 0.5 is considered excellent engagement for a consumer app.",
       ],
     },
