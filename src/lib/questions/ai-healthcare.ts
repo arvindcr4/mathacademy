@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "medical-image-classification": [
@@ -1638,6 +1638,576 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Handcrafted radiomics requires domain experts to define which features to extract; deep learning automates this.",
         "The trade-off is interpretability: we know what a texture feature measures, but a deep feature may be opaque.",
+      ],
+    },
+  ],
+
+  "clinical-nlp-advanced": [
+    {
+      id: "q-hc-kp31-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "MIMIC-III is a widely used clinical NLP benchmark dataset that contains:",
+      options: [
+        "Annotated radiology images from 50 US hospitals",
+        "De-identified ICU clinical notes, lab results, and waveforms from Beth Israel Deaconess Medical Center",
+        "Genomic sequences from the 1000 Genomes Project",
+        "Transcribed patient–physician conversations from primary care clinics",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MIMIC-III (Medical Information Mart for Intensive Care) contains de-identified data for over 40,000 ICU patients, including nursing notes, discharge summaries, lab values, and vital signs, making it the gold standard for clinical NLP research.",
+      hints: [
+        "MIMIC-III is from a single large academic medical center — Beth Israel Deaconess in Boston.",
+        "The dataset is de-identified to allow broad research access while protecting patient privacy.",
+      ],
+    },
+    {
+      id: "q-hc-kp31-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "De-identification of clinical notes using NLP rule-based systems alone is sufficient to meet HIPAA Safe Harbor requirements for all 18 protected health information (PHI) categories.",
+      correctAnswer: "False",
+      explanation:
+        "Rule-based PHI de-identification often misses rare or ambiguous identifiers; hybrid approaches combining rule-based systems with ML named entity recognition are needed to reliably suppress all 18 HIPAA PHI categories, and residual risk still exists.",
+      hints: [
+        "HIPAA Safe Harbor requires removal of 18 specific PHI categories including dates, locations, and unique identifiers.",
+        "Clinical text contains highly varied PHI formats that rule-based systems struggle to cover exhaustively.",
+      ],
+    },
+    {
+      id: "q-hc-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Medical named entity recognition (NER) in clinical notes differs from general-domain NER primarily because:",
+      options: [
+        "Clinical NER uses a smaller vocabulary than general NER",
+        "Clinical text contains heavy use of abbreviations, negations, and implicit temporal context that require domain-specific models trained on clinical corpora",
+        "Medical entities are always explicitly labeled by clinicians in EHR systems",
+        "Clinical NER does not need to handle misspellings because notes are typed by professionals",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Clinical notes are rife with abbreviations (SOB = shortness of breath), negations ('no fever'), section-dependent context, and non-standard spelling — models like ClinicalBERT or BioBERT fine-tuned on MIMIC outperform general BERT on these tasks.",
+      hints: [
+        "Consider that 'SOB' means shortness of breath in a clinical note, but abbreviation resolution requires clinical context.",
+        "Negation detection ('denies chest pain') is critical for clinical NER but rare in general text.",
+      ],
+    },
+  ],
+
+  "drug-discovery-admet": [
+    {
+      id: "q-hc-kp32-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In computational drug discovery, ADMET refers to which set of molecular properties?",
+      options: [
+        "Accuracy, Diversity, Mechanism, Efficacy, Toxicity",
+        "Absorption, Distribution, Metabolism, Excretion, and Toxicity",
+        "Activity, Docking, Molecular weight, Entropy, Thermostability",
+        "Affinity, Dissociation, Metabolism, Elimination, Tolerance",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "ADMET describes the pharmacokinetic and safety profile of drug candidates: how well a compound is absorbed, distributed through the body, metabolized, excreted, and whether it is toxic — all critical for clinical viability.",
+      hints: [
+        "Think of ADMET as describing what the body does to a drug, and what the drug does to the body.",
+        "Most drug candidates fail in clinical trials due to ADMET problems, not lack of target activity.",
+      ],
+    },
+    {
+      id: "q-hc-kp32-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Virtual screening with ML models can replace wet-lab high-throughput screening entirely in modern drug discovery pipelines.",
+      correctAnswer: "False",
+      explanation:
+        "ML-based virtual screening dramatically narrows the chemical space to prioritize candidates, but experimental validation (binding assays, cell-based assays) remains essential because computational models are imperfect proxies for biological activity.",
+      hints: [
+        "Virtual screening reduces the number of compounds to test, but cannot eliminate experimental validation.",
+        "ML models predict activity based on learned patterns — any model errors propagate to false positives.",
+      ],
+    },
+    {
+      id: "q-hc-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Graph Neural Networks (GNNs) are preferred over fingerprint-based ML for molecular property prediction because:",
+      options: [
+        "GNNs are computationally cheaper than computing Morgan fingerprints",
+        "GNNs operate on the raw molecular graph, learning task-relevant atom and bond features end-to-end without manual feature engineering",
+        "GNNs can process protein sequences directly without 3D structure",
+        "GNNs enforce the Lipinski Rule of Five as an architectural constraint",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "GNNs represent molecules as graphs with atoms as nodes and bonds as edges, propagating information via message-passing to learn representations tailored to the prediction task, unlike fixed Morgan fingerprints that cannot be adapted during training.",
+      hints: [
+        "Morgan fingerprints are fixed representations; GNNs learn representations from the task signal.",
+        "The molecular graph captures bond topology directly, which is what determines chemical properties.",
+      ],
+    },
+  ],
+
+  "genomics-variant-calling": [
+    {
+      id: "q-hc-kp33-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Polygenic Risk Scores (PRS) in genomics aggregate:",
+      options: [
+        "The expression levels of thousands of genes from RNA-seq data",
+        "The weighted sum of effect sizes of thousands of common SNPs associated with a trait from GWAS",
+        "The number of rare pathogenic variants in a patient's exome",
+        "The methylation status of CpG sites in cancer samples",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "PRS sums the allele dosages of trait-associated SNPs weighted by their GWAS effect sizes (log odds ratios), providing a continuous genetic liability score for complex diseases like type 2 diabetes or coronary artery disease.",
+      hints: [
+        "GWAS identifies SNPs associated with a trait; PRS aggregates many small effects into a single score.",
+        "PRS captures common polygenic architecture — many variants each with tiny effects.",
+      ],
+    },
+    {
+      id: "q-hc-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Deep learning models like DeepVariant improve variant calling accuracy by framing the problem as image classification over pileup images of sequencing reads.",
+      correctAnswer: "True",
+      explanation:
+        "DeepVariant (Google) encodes read pileups as multi-channel images and applies an Inception-based CNN to classify sites as homozygous reference, heterozygous, or homozygous alternate, achieving state-of-the-art SNP and indel calling accuracy.",
+      hints: [
+        "Pileup images visualize how sequencing reads stack up at each genomic position — DeepVariant treats this as a 2D image.",
+        "The image classification framing allows DeepVariant to leverage pre-trained vision architectures.",
+      ],
+    },
+    {
+      id: "q-hc-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A key limitation of PRS transferability across populations is:",
+      options: [
+        "PRS requires whole genome sequencing and cannot be computed from genotyping arrays",
+        "GWAS summary statistics used to derive PRS are predominantly from European-ancestry cohorts, causing lower predictive accuracy in non-European populations due to LD pattern differences",
+        "PRS can only predict binary disease outcomes, not quantitative traits",
+        "SNP effect sizes are unstable across different sequencing platforms",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Linkage disequilibrium (LD) patterns, allele frequencies, and environmental interactions differ across ancestries; PRS derived from European GWAS underperform in African, East Asian, or South Asian populations, raising health equity concerns.",
+      hints: [
+        "LD patterns determine which SNPs tag causal variants — these differ by ancestry due to population history.",
+        "The lack of diversity in genomic research is a recognized barrier to equitable PRS applications.",
+      ],
+    },
+  ],
+
+  "radiology-workflow-ai": [
+    {
+      id: "q-hc-kp34-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The first FDA De Novo–authorized autonomous AI diagnostic system for diabetic retinopathy screening was:",
+      options: [
+        "CheXNet by Stanford",
+        "IDx-DR by Digital Diagnostics",
+        "Viz.ai stroke detection AI",
+        "Paige.AI prostate cancer pathology system",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "IDx-DR received FDA De Novo authorization in 2018 as the first AI device authorized to provide a screening decision for diabetic retinopathy without a clinician reviewing the image — a landmark for autonomous AI diagnostics.",
+      hints: [
+        "This system operates without a specialist needing to review the image — it gives a binary screen result directly.",
+        "It was cleared via the De Novo pathway, meaning there was no predicate device.",
+      ],
+    },
+    {
+      id: "q-hc-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "AI triage systems for chest X-rays that prioritize worklists (e.g., flagging urgent findings) are considered high-risk FDA Class III devices requiring Premarket Approval.",
+      correctAnswer: "False",
+      explanation:
+        "Worklist prioritization AI that flags potential findings for radiologist review — rather than providing a standalone diagnosis — is typically cleared as Class II via 510(k), as a radiologist remains in the diagnostic loop and the AI functions as decision support.",
+      hints: [
+        "The risk classification depends on whether the AI makes autonomous clinical decisions or assists a clinician.",
+        "Triage tools that surface cases for human review are lower risk than systems that autonomously diagnose.",
+      ],
+    },
+    {
+      id: "q-hc-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The 'AI-induced automation bias' concern in radiology refers to:",
+      options: [
+        "AI models that are biased against certain demographic groups in image quality",
+        "Radiologists over-trusting AI recommendations and failing to critically evaluate AI errors, potentially missing findings the AI missed",
+        "AI systems that systematically over-diagnose rare conditions to maximize sensitivity",
+        "Faster radiologist reading speed when AI is absent compared to when it is present",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Automation bias occurs when clinicians defer to AI outputs rather than applying independent judgment; studies show radiologists may miss findings the AI missed because they anchor on AI-negative results, paradoxically reducing performance despite using AI.",
+      hints: [
+        "Automation bias is a human factors problem — over-reliance on automated systems.",
+        "If a radiologist trusts AI completely, the human provides no additional value beyond the AI alone.",
+      ],
+    },
+  ],
+
+  "digital-pathology-ml": [
+    {
+      id: "q-hc-kp35-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Whole Slide Image (WSI) analysis using deep learning is challenging primarily because:",
+      options: [
+        "Pathology slides contain too few cells to learn meaningful features",
+        "WSIs are gigapixel images (often 100,000×100,000+ pixels) that cannot be processed as a single tensor on current hardware",
+        "Digital pathology images lack color information compared to histological stains",
+        "Pathology labels are always at the pixel level, making annotation inexpensive",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A single WSI scanned at 40x magnification can exceed 100,000x100,000 pixels; this requires patch-based analysis, multiple instance learning (MIL), or hierarchical approaches rather than treating the whole slide as a single image.",
+      hints: [
+        "GPU memory limits how large an image can be processed — a gigapixel image far exceeds any GPU.",
+        "The solution is to divide the slide into smaller patches and aggregate predictions.",
+      ],
+    },
+    {
+      id: "q-hc-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Multiple Instance Learning (MIL) for pathology allows training cancer detection models using only slide-level labels (e.g., 'tumor present') without pixel-level annotations.",
+      correctAnswer: "True",
+      explanation:
+        "In MIL, a slide is a 'bag' of patches (instances); the bag label is positive if any patch contains tumor. Models like CLAM and DSMIL learn to identify which patches drive the bag-level prediction without patch-level supervision.",
+      hints: [
+        "MIL operates at the bag level — you know the slide has cancer but not which patches contain it.",
+        "This is valuable because pixel-level annotation of pathology slides requires expert pathologists and is expensive.",
+      ],
+    },
+    {
+      id: "q-hc-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The CLAM (Clustering-constrained Attention Multiple Instance Learning) model improves upon basic attention MIL by:",
+      options: [
+        "Using a recurrent network to process patches sequentially in scan order",
+        "Adding instance-level clustering constraints that encourage attention scores to separate tumor from normal patches within the bag",
+        "Replacing attention pooling with global average pooling for computational efficiency",
+        "Using a GAN to generate additional synthetic pathology patches during training",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CLAM adds SVM-based instance-level discriminative loss that pushes high-attention instances toward the correct class cluster, improving the quality of attention maps and enabling interpretable patch-level localization without patch labels.",
+      hints: [
+        "CLAM uses the attention mechanism to identify which patches are most informative, then adds a constraint to make those patches semantically consistent.",
+        "The clustering constraint is applied at training time, not at inference — it regularizes the learned attention.",
+      ],
+    },
+  ],
+
+  "clinical-trials-adaptive": [
+    {
+      id: "q-hc-kp36-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "ML-assisted patient cohort selection for clinical trials aims to:",
+      options: [
+        "Replace informed consent with automated eligibility screening",
+        "Identify eligible patients from EHR data by matching clinical trial inclusion/exclusion criteria automatically",
+        "Randomize patients to treatment arms using ML instead of traditional randomization",
+        "Design the trial protocol by predicting which outcomes will be statistically significant",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Cohort selection ML models parse trial eligibility criteria (often expressed in natural language) and match them against structured and unstructured EHR data to identify eligible patients, dramatically accelerating enrollment.",
+      hints: [
+        "Trial eligibility criteria are complex — a patient must meet many criteria simultaneously.",
+        "EHR data contains structured data (labs, diagnoses) and unstructured notes that NLP can mine.",
+      ],
+    },
+    {
+      id: "q-hc-kp36-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Adaptive clinical trial designs use interim data analyses with pre-specified rules for modifying the trial (e.g., sample size, arms) without inflating the type I error rate.",
+      correctAnswer: "True",
+      explanation:
+        "Pre-specified adaptive designs (sample size re-estimation, arm dropping, population enrichment) allow modifications based on accumulating data while maintaining overall type I error control through pre-planned alpha-spending functions or simulation-based error rates.",
+      hints: [
+        "The key word is 'pre-specified' — adaptations must be planned before the trial starts to control error rates.",
+        "Unplanned modifications based on interim results are a serious source of inflated false positive rates.",
+      ],
+    },
+    {
+      id: "q-hc-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "ML models for predicting clinical trial dropout (participant non-compliance or early withdrawal) are valuable because:",
+      options: [
+        "They can be used to exclude likely dropouts from randomization before trial start",
+        "They enable proactive retention interventions for high-risk participants, reducing attrition bias and improving statistical power",
+        "Dropout prediction models replace the need for intention-to-treat analysis",
+        "They are required by FDA regulations before any Phase III trial can begin",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "High dropout rates reduce statistical power and introduce attrition bias; ML dropout prediction allows trial coordinators to target retention resources (extra check-ins, transport assistance) toward participants most likely to withdraw, protecting trial integrity.",
+      hints: [
+        "Dropout reduces the analyzable sample size, requiring more participants to achieve the same power.",
+        "Proactive intervention is more effective than reactive rescue — you need to identify high-risk participants early.",
+      ],
+    },
+  ],
+
+  "mental-health-digital-biomarkers": [
+    {
+      id: "q-hc-kp37-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The PHQ-9 is a validated clinical instrument used to screen for:",
+      options: [
+        "Post-traumatic stress disorder (PTSD) severity",
+        "Depression severity using 9 questions based on DSM-5 criteria",
+        "Anxiety disorder using the Hamilton Anxiety Scale",
+        "Bipolar disorder using the Young Mania Rating Scale",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The Patient Health Questionnaire-9 (PHQ-9) consists of 9 items mapping to DSM depressive episode criteria; scores range 0-27, with validated cutoffs for mild, moderate, moderately-severe, and severe depression.",
+      hints: [
+        "The '9' in PHQ-9 refers to the number of questions, each scoring 0-3.",
+        "The DSM-5 has 9 diagnostic criteria for a major depressive episode — PHQ-9 maps directly to these.",
+      ],
+    },
+    {
+      id: "q-hc-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Digital biomarkers derived from smartphone sensor data (GPS, accelerometer, screen time) have been validated as FDA-cleared clinical endpoints for antidepressant trials.",
+      correctAnswer: "False",
+      explanation:
+        "As of 2025, digital biomarkers for mental health show research promise but have not been approved as primary clinical endpoints in FDA-regulated trials; they are primarily used as exploratory secondary endpoints or in digital therapeutics research contexts.",
+      hints: [
+        "FDA clearance as a clinical endpoint requires extensive validation evidence and regulatory review.",
+        "Digital biomarkers are research tools — promising but not yet fully validated for regulatory decision-making.",
+      ],
+    },
+    {
+      id: "q-hc-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A key ethical challenge specific to mental health AI applications compared to other medical AI is:",
+      options: [
+        "Mental health AI requires more computational resources than imaging AI",
+        "Mental health data is uniquely sensitive — stigmatization risks, vulnerability of the population, and potential for coercive use (e.g., predicting suicidality for legal purposes) require heightened privacy and consent protections",
+        "Mental health conditions cannot be reliably diagnosed from any data source",
+        "Mental health AI must always use reinforcement learning because conditions change over time",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Mental health data carries exceptional stigma risks; people with mental illness are a vulnerable population requiring special protections; and predictions about suicidality or psychosis could be misused by employers, insurers, or legal systems — requiring especially rigorous ethical frameworks.",
+      hints: [
+        "Mental health stigma remains pervasive — unauthorized disclosure of a mental health prediction could harm someone's employment or relationships.",
+        "Vulnerability of the population studied raises the bar for ethical conduct and informed consent.",
+      ],
+    },
+  ],
+
+  "health-equity-sdoh": [
+    {
+      id: "q-hc-kp38-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Social Determinants of Health (SDOH) features in clinical ML models refer to:",
+      options: [
+        "Genetic variants associated with socially defined racial categories",
+        "Non-medical factors like housing stability, food security, income, education, and neighborhood environment that influence health outcomes",
+        "Social media usage patterns linked to mental health",
+        "Hospital social work documentation from discharge planning notes only",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SDOH encompasses the conditions in which people are born, grow, work, live, and age — including economic stability, education, social context, health systems access, and neighborhood environment — which explain significant variation in health outcomes.",
+      hints: [
+        "SDOH is about the social context of a patient's life, not their biology.",
+        "Examples include food deserts, housing insecurity, and transportation barriers to healthcare access.",
+      ],
+    },
+    {
+      id: "q-hc-kp38-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Including race as a variable in clinical ML models always improves model fairness and reduces health disparities.",
+      correctAnswer: "False",
+      explanation:
+        "Including race can encode historical discrimination into predictions (perpetuating disparities) or mask the underlying SDOH causes; some race-adjusted calculators (e.g., eGFR, VBAC risk) have been criticized for biasing care. The appropriate use of race in models requires careful causal reasoning.",
+      hints: [
+        "Race is a social construct, not a biological category — it often proxies for racism and structural inequity.",
+        "Using race as a feature can perpetuate discrimination if the feature encodes historical inequities rather than causal biology.",
+      ],
+    },
+    {
+      id: "q-hc-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Disparate performance of a clinical ML model across demographic groups can arise even when protected attributes (race, sex) are excluded from the model due to:",
+      options: [
+        "Numerical precision errors in floating-point arithmetic on different hardware",
+        "Proxy variables correlated with protected attributes (e.g., zip code, insurance type) and underrepresentation of minority groups in training data",
+        "Differences in hospital EHR vendor systems used by different demographic groups",
+        "The model architecture's inability to handle class-imbalanced data",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Even without explicit protected attributes, correlated proxies (zip code ~ race, insurance ~ income) allow bias to re-enter; underrepresentation in training data causes worse calibration and discrimination in minority groups — a phenomenon called 'fairness through unawareness' failure.",
+      hints: [
+        "Removing the sensitive attribute is not sufficient if other features are correlated with it.",
+        "Underrepresentation means the model sees fewer examples from certain groups, reducing its accuracy for those groups.",
+      ],
+    },
+  ],
+
+  "cdss-integration": [
+    {
+      id: "q-hc-kp39-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Interruptive vs. non-interruptive CDS alerts differ in that:",
+      options: [
+        "Interruptive alerts appear in a separate dashboard while non-interruptive alerts appear inline",
+        "Interruptive alerts halt clinical workflow and require acknowledgment before proceeding, while non-interruptive alerts display passively without blocking the workflow",
+        "Interruptive alerts use ML models while non-interruptive alerts use rule-based logic",
+        "Non-interruptive alerts are only shown to nurses, not physicians",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Interruptive (hard-stop) alerts pause the clinician's workflow and require a response before proceeding — high specificity is critical because low-value interruptions contribute severely to alert fatigue. Non-interruptive (passive) alerts provide ambient information without disrupting workflow.",
+      hints: [
+        "Hard-stop alerts are like a pop-up dialog that must be dismissed — they interrupt whatever the clinician is doing.",
+        "The design choice (interruptive vs. non-interruptive) should match the urgency and consequence of the alert.",
+      ],
+    },
+    {
+      id: "q-hc-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Studies show that physicians override more than 90% of drug-drug interaction alerts in some EHR systems, primarily because these alerts have low clinical relevance for most patients.",
+      correctAnswer: "True",
+      explanation:
+        "Multiple studies across major EHRs show override rates of 90-96% for drug-drug interaction alerts; most fire for interactions that are clinically irrelevant for the specific patient context, training clinicians to dismiss alerts reflexively — the classic alert fatigue paradox.",
+      hints: [
+        "If nearly every alert is a false alarm, the rational response is to stop paying attention to alerts.",
+        "This is an unintended consequence of overly sensitive alerting systems.",
+      ],
+    },
+    {
+      id: "q-hc-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The 5 Rights framework for CDS (Osheroff et al.) specifies that effective CDS must deliver the right information to the right person at the right time through the right channel in the right format. Which failure mode violates the 'right time' criterion?",
+      options: [
+        "Showing a sepsis alert on a cardiology dashboard that cardiologists never check",
+        "Triggering a drug allergy alert hours after a medication has already been administered",
+        "Displaying a complex risk score without any clinical interpretation guidance",
+        "Sending a critical lab alert to the ordering nurse instead of the responsible physician",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The 'right time' criterion means alerts must fire when action is still possible; a drug allergy alert after the medication has been given is clinically useless — the intervention window has passed. Timely integration with ordering workflows is essential.",
+      hints: [
+        "Timeliness is about whether the alert arrives when the clinician can still act on it.",
+        "A retrospective alert that fires after an irreversible action has been taken cannot prevent harm.",
+      ],
+    },
+  ],
+
+  "federated-health-privacy": [
+    {
+      id: "q-hc-kp40-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Under HIPAA, federated learning in healthcare is valuable primarily because it:",
+      options: [
+        "Encrypts all patient data using AES-256 before storage in the EHR",
+        "Allows model training across institutions without transmitting PHI, since only model gradients or weights leave each site",
+        "Replaces IRB approval for multi-site research studies",
+        "Enables cloud storage of de-identified patient records compliant with Safe Harbor",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "HIPAA restricts transmission of Protected Health Information (PHI) across covered entities; federated learning sidesteps this by keeping PHI on-premises at each institution and sharing only derived model updates — a key enabler of multi-institutional healthcare AI.",
+      hints: [
+        "HIPAA's core concern is preventing unauthorized PHI disclosure — federated learning keeps PHI local.",
+        "Model weights and gradients are not PHI, making their transmission potentially HIPAA-compliant.",
+      ],
+    },
+    {
+      id: "q-hc-kp40-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Differential privacy (DP) guarantees that the inclusion or exclusion of any single patient's data in federated training cannot be detected from the published model with more than a small probability bound epsilon.",
+      correctAnswer: "True",
+      explanation:
+        "Epsilon-differential privacy provides a formal mathematical guarantee: the probability of any outcome (including model weights) changes by at most e^epsilon when any one individual's data is added or removed, bounding individual information leakage.",
+      hints: [
+        "Differential privacy is a formal mathematical definition — it bounds how much one person's data affects the output.",
+        "Smaller epsilon means stronger privacy but typically at the cost of model utility.",
+      ],
+    },
+    {
+      id: "q-hc-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Fully Homomorphic Encryption (FHE) in federated healthcare ML allows:",
+      options: [
+        "Training ML models on plaintext data with post-training encryption of the model weights",
+        "Performing computation (including gradient computation) directly on encrypted data without ever decrypting it on the server side",
+        "Encrypting only the identifiable fields in EHR while leaving clinical values in plaintext",
+        "Generating encryption keys from model gradients to secure the communication channel",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "FHE allows arithmetic operations on ciphertext; a federated server can aggregate encrypted gradients without seeing the underlying data, providing stronger guarantees than standard federated learning — at significant computational cost that remains a practical barrier.",
+      hints: [
+        "Homomorphic means 'structure-preserving': operations on encrypted data produce encrypted results that decrypt to the correct answer.",
+        "FHE eliminates the need to trust the aggregating server because it never sees unencrypted data.",
       ],
     },
   ],
