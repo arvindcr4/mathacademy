@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   // ── cv-kp-1: Image Fundamentals ───────────────────────────────────────────
@@ -1747,6 +1747,586 @@ const questions: Record<string, Question[]> = {
       hints: [
         "CLIP learns a shared image-text embedding space where matching pairs are close — class names can act as label embeddings.",
         '"Zero-shot" means no labelled images of the test class are needed — the text description substitutes.',
+      ],
+    },
+  ],
+
+  // ── cv-kp-31: Video Understanding ─────────────────────────────────────────
+  "video-understanding-advanced": [
+    {
+      id: "q-cv-kp31-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Two-stream networks for video action recognition process which two complementary input streams?",
+      options: [
+        "RGB frames and depth maps captured by an RGBD sensor",
+        "RGB frames (spatial stream) and optical flow frames (temporal stream), which are then fused for action classification",
+        "Audio waveforms and RGB frames, fused via a cross-modal attention layer",
+        "Low-resolution keyframes and high-resolution crops around detected persons",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Two-stream networks (Simonyan & Zisserman, 2014) split video understanding into appearance (spatial stream: individual RGB frames) and motion (temporal stream: stacked optical flow frames). Each stream is a CNN independently trained for action classification; predictions are fused by late fusion (averaging or SVM). The spatial stream captures object appearance; the temporal stream captures motion patterns. This decomposition achieved state-of-the-art on UCF-101 and HMDB-51.",
+      hints: [
+        "Action recognition needs both what objects look like (RGB) and how they move (optical flow).",
+        "Optical flow encodes pixel displacement between consecutive frames as a 2D vector field — a natural motion descriptor.",
+      ],
+    },
+    {
+      id: "q-cv-kp31-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "3D convolutional networks (C3D, I3D) extend 2D CNNs to video by doing what?",
+      options: [
+        "Processing each frame independently with a 2D CNN and aggregating features with an LSTM",
+        "Applying 3D convolution kernels of shape (T × H × W) that convolve across both spatial dimensions and a temporal dimension simultaneously, learning spatio-temporal features jointly",
+        "Using 3D pooling only (not 3D convolution) to downsample the temporal dimension while keeping spatial convolutions 2D",
+        "Extracting 3D point clouds from video depth maps and processing them with PointNet",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "C3D (Tran et al., 2015) replaces all 2D conv kernels (H×W) with 3D kernels (T×H×W = 3×3×3), allowing the network to jointly learn spatial and temporal features. I3D (Carreira & Zisserman, 2017) inflates Inception-v1 2D kernels to 3D and initialises them by repeating 2D weights along the time axis (exploiting ImageNet pre-training). 3D CNNs capture local motion patterns better than RNN-based approaches and are the backbone of modern video models (SlowFast, Video Swin Transformer).",
+      hints: [
+        "A 2D conv kernel slides over H×W. A 3D kernel slides over T×H×W — it sees multiple frames at once.",
+        "I3D's inflation trick: copy each 2D kernel T times along the temporal axis so it starts with ImageNet-level representations.",
+      ],
+    },
+    {
+      id: "q-cv-kp31-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Optical flow estimation computes the apparent motion of pixels between consecutive video frames and is represented as a 2D vector field (dx, dy) per pixel.",
+      correctAnswer: "True",
+      explanation:
+        "Optical flow assigns each pixel in frame t a 2D displacement vector (dx, dy) pointing to where that pixel moved in frame t+1. Classical methods: Lucas-Kanade (sparse, patch-based), Horn-Schunck (dense, regularised). Deep learning methods: FlowNet, PWC-Net, RAFT (Teed & Deng, 2020 — state-of-the-art on KITTI and MPI-Sintel). Optical flow is used in two-stream action recognition, video stabilisation, and frame interpolation.",
+      hints: [
+        "Optical flow is a dense vector field: every pixel gets an (x, y) displacement, not just feature keypoints.",
+        "A moving car: pixels in the car region have large dx (horizontal displacement); stationary background has near-zero flow.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-32: 3D Object Detection ─────────────────────────────────────────
+  "3d-object-detection": [
+    {
+      id: "q-cv-kp32-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "LiDAR-based 3D object detection differs from camera-based detection primarily because LiDAR data is what?",
+      options: [
+        "A dense RGB image captured with a scanning mechanism rather than a lens",
+        "A sparse, unordered set of 3D points (point cloud) with x, y, z coordinates and optionally intensity, rather than a dense 2D pixel grid",
+        "A sequence of depth maps with per-pixel dense depth values similar to a depth camera",
+        "A structured voxel grid with uniform point density captured by a rotating sensor",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A LiDAR sensor emits laser pulses and measures the return time to produce a set of 3D points — a point cloud. Unlike camera images (dense, ordered H×W grid), point clouds are sparse (e.g., 100K points covering a 360-degree scene), unordered (no fixed grid structure), and irregular (point density varies with distance and occlusion). This requires special processing methods: PointNet operates directly on points; VoxelNet/SECOND voxelise first; PointPillars uses vertical column (pillar) compression for efficiency.",
+      hints: [
+        "A camera captures all pixels in an H×W grid. A LiDAR returns only points where the laser hit a surface — sparse and irregular.",
+        "Point clouds have no inherent ordering — row 5, column 12 has no meaning in a LiDAR scan.",
+      ],
+    },
+    {
+      id: "q-cv-kp32-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "PointPillars (Lang et al., 2019) achieves fast LiDAR 3D detection by voxelising the point cloud into vertical pillars. What is the key efficiency advantage of pillars over full 3D voxels?",
+      options: [
+        "Pillars use a smaller voxel size in the xy-plane than full voxelisation, increasing spatial resolution",
+        "Pillars collapse the z-dimension into a learned feature, producing a 2D pseudo-image that can be processed with a standard 2D CNN backbone — avoiding expensive 3D sparse convolutions",
+        "Pillars discard ground-plane points, reducing the input point count by approximately 50% before any further processing",
+        "Pillars use fixed average pooling per column, which is faster than learned PointNet aggregation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "PointPillars partitions the LiDAR point cloud into vertical columns (pillars) in the Bird's Eye View (BEV) plane. Within each pillar, a small PointNet aggregates all points into a fixed-length feature vector. The pillar features are then scattered back to a 2D BEV grid, creating a pseudo-image. A standard 2D SSD-style detection head runs on this pseudo-image. By eliminating 3D convolutions entirely, PointPillars achieves ~62 Hz inference on a single GPU — 2-4x faster than SECOND/VoxelNet — while maintaining competitive mAP on KITTI.",
+      hints: [
+        "VoxelNet uses 3D sparse convolutions (slow). PointPillars collapses the vertical (z) axis first, then uses 2D convolutions (fast).",
+        "The output of PointPillars' encoding is a 2D BEV feature map — exactly the input a standard 2D detection head expects.",
+      ],
+    },
+    {
+      id: "q-cv-kp32-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In autonomous driving 3D detection, the Bird's Eye View (BEV) representation is preferred over perspective view because it preserves metric scale and avoids the scale ambiguity inherent to monocular perspective projections.",
+      correctAnswer: "True",
+      explanation:
+        "In a camera perspective image, a distant large object and a nearby small object can have identical pixel footprints — monocular depth is ambiguous without additional cues. BEV (top-down) maps derived from LiDAR or camera-based depth estimation preserve actual metric positions. Objects at different distances are not confused by scale: a pedestrian 50m away occupies a different BEV region from one 5m away. BEV also enables straightforward ego-motion integration over time. The BEV representation is the cornerstone of modern end-to-end autonomous driving stacks (BEVFusion, BEVDet).",
+      hints: [
+        "In perspective images, a truck at 100m can appear smaller than a bicycle at 5m. BEV encodes actual metric positions — no scale ambiguity.",
+        "Think of a map vs. a photograph: a map preserves distances, a photo distorts them by perspective projection.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-33: Medical Imaging ──────────────────────────────────────────────
+  "medical-imaging-advanced": [
+    {
+      id: "q-cv-kp33-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Domain shift in medical imaging AI refers to what common problem?",
+      options: [
+        "The model overfitting to the training set because medical datasets are too small",
+        "A model trained on images from one scanner, institution, or population performing significantly worse on images from a different source due to distribution differences",
+        "Radiologists disagreeing on ground-truth labels, making the training signal noisy",
+        "The inability of CNNs to process 3D medical volumes like CT scans without modification",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Medical images vary substantially across acquisition sites: different MRI field strengths (1.5T vs. 3T), CT reconstruction kernels, scanner manufacturers, and patient demographics create distribution shifts. A model trained on data from Hospital A may fail on Hospital B due to these shifts — even though the underlying anatomy is the same. Mitigations: domain adaptation, domain generalisation, federated learning (training across sites without sharing data), and test-time adaptation.",
+      hints: [
+        "A chest X-ray model trained on Siemens scanners may produce different intensity distributions than a Philips scanner — same anatomy, different pixel statistics.",
+        "Domain shift is analogous to a model trained on US English performing poorly on British English — distribution mismatch, not task change.",
+      ],
+    },
+    {
+      id: "q-cv-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Self-supervised learning (SSL) methods like SimCLR and MAE are particularly valuable in medical imaging because they can leverage large amounts of unlabelled medical images to learn useful representations before fine-tuning on scarce labelled datasets.",
+      correctAnswer: "True",
+      explanation:
+        "Medical image annotation is expensive and slow — it requires domain expert radiologists or pathologists. SSL pre-training on large unlabelled medical image databases (CheXpert, MIMIC-CXR, or large private hospitals) produces representations that transfer well with few labelled examples. Studies (e.g., MoCo/SimCLR pre-training on radiology images) consistently show SSL representations outperform ImageNet pre-training for medical tasks, as the learned features are domain-specific rather than natural-image-specific.",
+      hints: [
+        "Unlabelled medical images are abundant (hospitals generate millions); labelled images are scarce (radiologist annotation bottleneck).",
+        "SSL pre-training requires no labels: it learns from augmented views of the same image (contrastive) or masked patches (MAE).",
+      ],
+    },
+    {
+      id: "q-cv-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The nnU-Net framework (Isensee et al., 2021) became a strong baseline for medical image segmentation. What is its key design principle?",
+      options: [
+        "It uses a fixed U-Net architecture with ResNet encoder for all medical segmentation tasks",
+        "It automatically configures all architectural, pre-processing, and training hyper-parameters based on dataset fingerprinting (image spacing, size, intensity statistics), requiring no manual hyper-parameter tuning",
+        "It applies dataset-specific data augmentation policies found by neural architecture search",
+        "It trains an ensemble of 10 independently initialised U-Nets and averages their predictions at test time",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "nnU-Net ('no-new-Net') (Isensee et al., NMI 2021) outperforms most task-specific methods without manual architecture engineering. It analyses a new dataset's fingerprint (image dimensions, voxel spacing, modality, target structure size) and automatically selects: architecture variant (2D/3D/cascade U-Net), patch size, batch size, normalisation strategy, and resampling parameters. This automated configuration has won numerous Medical Segmentation Decathlon tasks, demonstrating that engineering effort on data representation often matters more than novel architectures.",
+      hints: [
+        "Most segmentation papers propose new architectures. nnU-Net's insight: a well-configured baseline beats architectural novelty on most medical tasks.",
+        "Dataset fingerprinting: if images are isotropic 3D, use 3D U-Net. If highly anisotropic (thin 2D slices), use 2D U-Net. All automatic.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-34: Contrastive Vision-Language ─────────────────────────────────
+  "contrastive-vision-language": [
+    {
+      id: "q-cv-kp34-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "CLIP (Radford et al., 2021) is trained using a contrastive objective on image-text pairs. During training, which pairs are treated as positives and which as negatives?",
+      options: [
+        "Positives: augmented views of the same image; negatives: images from different classes in ImageNet",
+        "Positives: matching (image, caption) pairs in the batch; negatives: all other (image, caption) cross-pairings within the batch",
+        "Positives: images paired with manually curated captions; negatives: images paired with automatically generated captions",
+        "Positives: image-text pairs with high cosine similarity; negatives: pairs below a fixed similarity threshold",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CLIP constructs an N-by-N similarity matrix for a batch of N (image, text) pairs. The N diagonal entries (i-th image with i-th text) are positives. All N(N-1) off-diagonal entries are negatives — the i-th image paired with every other text, and vice versa. The InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image-to-text and text-to-image directions. Using large batch sizes (N=32,768) provides abundant in-batch negatives, which is critical for the quality of learned representations.",
+      hints: [
+        "In a batch of N pairs, there are N correct matches (diagonal) and N squared minus N incorrect pairings (off-diagonal).",
+        "Large batches are essential: more negatives = harder contrastive task = better representations.",
+      ],
+    },
+    {
+      id: "q-cv-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "ALIGN (Jia et al., 2021) demonstrated that noisy image-text pairs scraped from the web (without expensive curation) can be used effectively for contrastive vision-language pre-training when scale is sufficiently large.",
+      correctAnswer: "True",
+      explanation:
+        "ALIGN (Google, 2021) scales contrastive image-text training to 1.8 billion noisy image-text pairs scraped from the web using only minimal frequency-based filtering — no expensive human curation. Despite the noise, the sheer scale compensates, and ALIGN matches or exceeds CLIP performance on zero-shot classification and image-text retrieval. This demonstrates a 'scale is all you need' principle for noisy web data in vision-language learning.",
+      hints: [
+        "CLIP used 400M carefully filtered pairs. ALIGN used 1.8B noisy pairs with minimal filtering — scale outweighs curation at sufficient size.",
+        "Noise robustness at scale: individual noisy examples are outvoted by the consistent signal in billions of correctly matched pairs.",
+      ],
+    },
+    {
+      id: "q-cv-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "For zero-shot image classification with CLIP, prompt engineering (e.g., using 'a photo of a {class}' instead of just '{class}') improves performance. Why?",
+      options: [
+        "The extra words reduce the cosine similarity between negative pairs, sharpening the decision boundary",
+        "CLIP was trained on image captions (natural sentences) rather than bare class names; prompt templates shift the text embedding distribution closer to the training distribution of actual captions",
+        "Prompt templates make the text embeddings longer, giving the text encoder more tokens to compute a richer representation",
+        "The phrase 'a photo of' explicitly tells the image encoder to expect a photograph rather than a painting or drawing",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CLIP's text encoder was trained on image captions from the internet, which are natural sentences ('a photo of a dog running in a park'), not bare class labels ('dog'). When doing zero-shot classification, using a prompt template that mimics this caption style (e.g., 'a photo of a {class}') shifts the text embedding into the region of the embedding space that CLIP associates with image content, improving alignment. Prompt ensembling (averaging embeddings across multiple templates) further improves results.",
+      hints: [
+        "CLIP never saw bare class names during training — it saw captions. Template prompts mimic caption style.",
+        "Think of distribution mismatch: 'cat' as text vs. 'a photo of a cat' as text — which better matches what CLIP saw during pre-training?",
+      ],
+    },
+  ],
+
+  // ── cv-kp-35: Diffusion Models for Images ─────────────────────────────────
+  "diffusion-models": [
+    {
+      id: "q-cv-kp35-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In a Denoising Diffusion Probabilistic Model (DDPM), what is the forward process and what does the model learn to reverse?",
+      options: [
+        "Forward process: the model generates an image from noise; the model learns to add noise to a clean image",
+        "Forward process: a fixed Markov chain gradually adds Gaussian noise to a clean image until it becomes pure noise; the model learns a reverse denoising process to recover clean images from noisy ones",
+        "Forward process: the model encodes an image into a latent vector; the model learns to decode the latent vector back to an image",
+        "Forward process: image pixels are randomly masked; the model learns to predict the masked pixels given the unmasked context",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "DDPM (Ho et al., 2020) defines a forward process q(x_t | x_{t-1}) that incrementally adds small amounts of Gaussian noise over T steps (typically T=1000) until x_T approximates N(0,I). The model p_theta(x_{t-1} | x_t) is a U-Net trained to predict and remove the noise added at each step. At inference, sampling starts from pure Gaussian noise x_T and iteratively denoises for T steps to produce a clean image x_0. The ELBO objective reduces to predicting the noise epsilon added at each forward step.",
+      hints: [
+        "Forward = add noise (fixed, no parameters). Reverse = remove noise (learned U-Net).",
+        "The model predicts the noise epsilon that was added — so given noisy x_t, predict epsilon, subtract it to get x_{t-1}.",
+      ],
+    },
+    {
+      id: "q-cv-kp35-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Classifier-free guidance (Ho & Salimans, 2022) improves conditional image generation in diffusion models by doing what?",
+      options: [
+        "Training a separate image classifier and using its gradient to steer the diffusion process toward the target class at inference time",
+        "Training the diffusion model jointly on conditional and unconditional generation (by randomly dropping condition labels), then at inference mixing the unconditional and conditional noise predictions with a guidance scale",
+        "Using a CLIP model to re-rank generated images and selecting the one with the highest text-image similarity score",
+        "Adding a classification loss term to the diffusion ELBO objective to force the model to learn class-discriminative features",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Classifier-free guidance (CFG, Ho & Salimans, 2022) trains a single model both with (conditional) and without (unconditional) the class/text condition — the condition is dropped with probability p_uncond during training, forcing the model to also learn unconditional generation. At inference, the noise prediction is: epsilon_guided = epsilon_uncond + w*(epsilon_cond - epsilon_uncond) where w > 1 is the guidance scale. Higher w increases fidelity/alignment but reduces diversity. CFG underpins Stable Diffusion, DALL-E 2, and Imagen.",
+      hints: [
+        "Classifier guidance needs a separate noisy-image classifier (hard to train). CFG bakes guidance into the diffusion model itself.",
+        "The linear combination amplifies the difference between conditional and unconditional predictions — pushing generation toward the condition.",
+      ],
+    },
+    {
+      id: "q-cv-kp35-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Latent diffusion models (LDMs), such as Stable Diffusion, perform the diffusion process in the latent space of a pre-trained VAE rather than in pixel space, making training and inference substantially faster.",
+      correctAnswer: "True",
+      explanation:
+        "Rombach et al. (2022) showed that a VAE can compress images into a spatially smaller latent space (e.g., 512x512 pixels to 64x64 latents) while preserving perceptual quality. Running DDPM in this compressed latent space reduces compute substantially compared to pixel-space diffusion. The VAE decoder then maps the denoised latent back to pixel space. LDMs achieve competitive image quality at much lower computational cost, democratising high-resolution image generation.",
+      hints: [
+        "Pixel-space diffusion on 512x512 images requires the U-Net to process many pixels per step. Latent-space reduces spatial size by roughly 8x.",
+        "The VAE in Stable Diffusion encodes 512x512 to 64x64x4 latents — the diffusion U-Net operates on the smaller 64x64 tensors.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-36: Object Tracking ──────────────────────────────────────────────
+  "object-tracking": [
+    {
+      id: "q-cv-kp36-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "SORT (Simple Online and Realtime Tracking) associates detections across frames using which two components?",
+      options: [
+        "A deep re-identification network to match appearance features and a graph neural network to resolve ID switches",
+        "A Kalman filter to predict object positions and the Hungarian algorithm to match predicted tracks to new detections based on IoU",
+        "An LSTM to model long-term motion trajectories and cosine similarity between bounding box embeddings",
+        "Optical flow estimation to propagate bounding boxes frame-to-frame without any detection matching",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SORT (Bewley et al., 2016) is a classical but highly effective MOT (multi-object tracking) framework: (1) a Kalman filter models each track's state (position, velocity) and predicts its location in the next frame; (2) the Hungarian algorithm (linear assignment) matches predicted track locations to new detector bounding boxes using IoU as the cost. Despite its simplicity, SORT achieves real-time performance. Its main limitation: it lacks appearance features, so identity switches occur when objects are occluded.",
+      hints: [
+        "SORT = Kalman prediction (where will the object be?) + Hungarian matching (which detection matches which track?).",
+        "Kalman filter = motion model; Hungarian algorithm = optimal assignment between predicted and observed boxes.",
+      ],
+    },
+    {
+      id: "q-cv-kp36-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "DeepSORT extends SORT by adding what component to reduce identity switches during occlusions?",
+      options: [
+        "A 3D pose estimator to predict object orientation and resolve left-right symmetry ambiguities",
+        "A deep appearance embedding (re-identification CNN) that computes appearance descriptors for each detection, enabling assignment based on both IoU and appearance similarity",
+        "A recurrent LSTM motion model that replaces the Kalman filter for longer-term trajectory modelling",
+        "A depth estimation module that uses apparent size change to predict occlusion events before they occur",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "DeepSORT (Wojke et al., 2017) adds a CNN-based appearance model: each detection is embedded into a 128-dimensional descriptor via a ReID network trained on a person re-identification dataset. When matching detections to tracks, the cost matrix combines IoU distance (motion model) with cosine distance between appearance descriptors. The appearance similarity allows re-association after long occlusions when IoU alone fails. DeepSORT is widely used for pedestrian tracking in surveillance and autonomous driving.",
+      hints: [
+        "SORT uses only IoU for matching. DeepSORT adds appearance similarity — 'does this detected person look like track #3?'",
+        "ReID networks learn identity-preserving embeddings: the same person at different times/views maps to similar descriptors.",
+      ],
+    },
+    {
+      id: "q-cv-kp36-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Multi-object tracking (MOT) is typically evaluated using MOTA (Multiple Object Tracking Accuracy), which combines false positives, false negatives, and identity switches into a single metric.",
+      correctAnswer: "True",
+      explanation:
+        "MOTA (Bernardin & Stiefelhagen, 2008) = 1 minus (FP + FN + IDSW) / GT, where GT is total ground-truth detections. It penalises missed detections (FN), false alarms (FP), and identity switches (IDSW). MOTA can be negative. A complementary metric, MOTP, measures localisation precision (IoU between matched tracks and ground truth). IDF1 (Ristani et al., 2016) focuses specifically on identification continuity. The MOTChallenge benchmark uses all these metrics.",
+      hints: [
+        "MOTA = 1 minus the sum of three error types divided by total ground-truth objects — lower errors yield higher MOTA.",
+        "Identity switch: a tracker says 'that's person #2' in frame 50, then switches to 'that's person #5' in frame 51 for the same person.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-37: Pose Estimation ──────────────────────────────────────────────
+  "pose-estimation": [
+    {
+      id: "q-cv-kp37-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The heatmap-based approach to human pose estimation (used in Hourglass, HRNet) represents each joint as what?",
+      options: [
+        "A 3D bounding box around the joint with soft probability scores at each vertex",
+        "A 2D Gaussian-shaped activation map centred at the joint location, with the model predicting one heatmap per keypoint",
+        "A sparse set of pixel coordinates (x, y) directly regressed by a fully connected layer",
+        "A graph node connected to adjacent body joints, with edge weights representing limb lengths",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Heatmap-based pose estimation (Newell et al., 2016 — Stacked Hourglass; Sun et al., 2019 — HRNet) represents each of K keypoints as a 2D Gaussian activation map of shape H-by-W. The peak location gives the keypoint coordinates; the Gaussian spread provides spatial uncertainty. L2 loss is computed between predicted and ground-truth Gaussians. This avoids the difficulty of directly regressing pixel coordinates with a linear head and produces spatially precise predictions. The final keypoint location is obtained by argmax over the heatmap.",
+      hints: [
+        "Heatmap = one map per joint, with a Gaussian blob centred at the true joint pixel location.",
+        "Regressing (x,y) directly is hard. Predicting a spatial probability map with the peak at the joint is easier for the model.",
+      ],
+    },
+    {
+      id: "q-cv-kp37-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "OpenPose (Cao et al., 2017) introduced Part Affinity Fields (PAFs) for multi-person pose estimation. What do PAFs encode?",
+      options: [
+        "The probability that each pixel belongs to a particular body part (e.g., left arm, right leg)",
+        "2D vector fields that encode the direction and location of limbs between body joints, enabling bottom-up grouping of keypoints to individual persons",
+        "Depth offsets between different body joints to enable 3D pose estimation from a monocular image",
+        "Attention weights indicating which detected keypoints the model is most confident about",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "OpenPose uses a bottom-up strategy: first detect all keypoints (heatmaps) across all persons in the image, then group them into individuals. PAFs encode, for each limb (e.g., right shoulder to right elbow), a 2D unit vector field pointing from one joint to the other at pixels along the limb. During association, the dot product between the PAF direction and the vector connecting two candidate keypoints determines whether they belong to the same limb — enabling correct grouping even in crowded scenes without person bounding boxes.",
+      hints: [
+        "OpenPose is bottom-up: detect all joints, then connect them into skeletons. PAFs provide the connecting information.",
+        "PAF at a pixel on a limb points from joint A to joint B — high dot product with the A-to-B direction confirms they are connected.",
+      ],
+    },
+    {
+      id: "q-cv-kp37-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "ViTPose (Xu et al., 2022) applies a plain Vision Transformer (ViT) backbone for human pose estimation and demonstrates that simple ViT backbones are competitive with highly engineered CNNs on COCO Keypoint Detection.",
+      correctAnswer: "True",
+      explanation:
+        "ViTPose uses a plain ViT (no hierarchical structure, no task-specific modifications) as a pose estimation backbone, with a lightweight decoder head predicting heatmaps. It achieves state-of-the-art on COCO Keypoint Detection, outperforming HRNet and other CNN-based methods. Key findings: ViT backbones benefit from pre-training with MAE; model scalability is excellent (larger ViT = better pose). This demonstrated that transformer backbones can excel at dense prediction tasks like pose estimation.",
+      hints: [
+        "ViTPose uses a standard ViT with no task-specific architectural changes — just a different decoder head for heatmap prediction.",
+        "ViTPose + MAE pre-training achieves state-of-the-art on COCO — showing pre-training strategy matters more than architecture engineering.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-38: Image Segmentation Advanced ─────────────────────────────────
+  "segmentation-advanced": [
+    {
+      id: "q-cv-kp38-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Mask2Former (Cheng et al., 2022) unifies semantic, instance, and panoptic segmentation in a single architecture. What is its core mechanism for producing per-segment masks?",
+      options: [
+        "A sliding window that classifies every NxN image patch independently into one of K semantic categories",
+        "Learned mask queries that cross-attend to image features via a Transformer decoder, producing per-query binary masks and class predictions — each query corresponds to one predicted segment",
+        "A separate branch for each task (semantic, instance, panoptic) with shared early encoder features",
+        "A graph neural network that groups superpixels into segments using learned edge weights",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Mask2Former uses a universal architecture: a pixel decoder (multi-scale deformable attention) produces high-resolution features; a Transformer decoder with N learned queries cross-attends to these features. Each query learns to represent one segment (thing or stuff); it predicts a binary mask (via dot product with pixel features) and a class label. The same architecture handles semantic, instance, and panoptic segmentation. Masked attention restricts each query's attention to its predicted mask region, improving training efficiency.",
+      hints: [
+        "Think of each query as a slot that competes to represent one segment. The query cross-attends to image features to fill its slot.",
+        "Masked attention = the query can only attend to pixels within its current predicted mask region — focusing the gradient signal.",
+      ],
+    },
+    {
+      id: "q-cv-kp38-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The Segment Anything Model (SAM, Kirillov et al., 2023) supports which types of user prompts to specify what to segment?",
+      options: [
+        "Only free-form text descriptions (e.g., 'segment the red car on the left')",
+        "Points (clicks), bounding boxes, and coarse masks — but not free-form text",
+        "Only bounding boxes — SAM requires a bounding box around the target region",
+        "Only semantic category names from a pre-defined vocabulary of 80 COCO classes",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SAM's prompt encoder accepts: (1) sparse prompts — foreground/background point clicks encoded as learned position and type embeddings, and bounding boxes; (2) dense prompts — low-resolution mask inputs (e.g., from a previous prediction). SAM does NOT natively accept text prompts. Text-prompted segmentation requires grounding the text to image regions first (e.g., Grounding DINO) before passing resulting boxes to SAM. SAM's mask decoder generates up to 3 candidate masks with confidence scores, handling ambiguous prompts.",
+      hints: [
+        "SAM's three prompt types: points (click here), boxes (frame this region), and masks (rough prior). No text.",
+        "For text-to-segment pipelines, Grounding DINO detects the region and SAM segments it — two models in sequence.",
+      ],
+    },
+    {
+      id: "q-cv-kp38-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Panoptic segmentation assigns every pixel in an image to either a semantic category (for background 'stuff' regions like sky or road) or a specific object instance (for foreground 'thing' classes like cars or people).",
+      correctAnswer: "True",
+      explanation:
+        "Panoptic segmentation (Kirillov et al., 2019) unifies semantic segmentation (assigning category labels to 'stuff' — amorphous regions like grass, road, sky) and instance segmentation (detecting and delineating individual 'things' — countable objects like cars, people, animals with unique instance IDs). Every pixel receives both a class label and (for 'things') an instance ID. The Panoptic Quality (PQ) metric = DQ times SQ evaluates joint performance on both stuff and thing categories.",
+      hints: [
+        "Stuff: background regions (sky, road, grass) — no instance distinction. Things: countable objects (car #1, car #2, person #1) — each instance is unique.",
+        "Panoptic segmentation output: each pixel has a (class, instance_id) pair such as (sky, 0), (car, 1), (car, 2), (person, 3).",
+      ],
+    },
+  ],
+
+  // ── cv-kp-39: Visual Question Answering ───────────────────────────────────
+  "visual-question-answering": [
+    {
+      id: "q-cv-kp39-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Early VQA models used 'early fusion' of image and text features. In the context of VQA, what does early fusion mean?",
+      options: [
+        "Pre-training the image encoder and text encoder jointly before task-specific fine-tuning on VQA data",
+        "Concatenating or element-wise multiplying image and text feature vectors at the input or early layers, so that cross-modal interaction happens before the classification head",
+        "Processing the image first with a CNN and passing its output as context to the question encoder's self-attention layers",
+        "Fusing the final prediction logits from separately-trained image and text classification heads",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In early fusion VQA (the baseline of Antol et al., 2015 — VQA v1), the image (CNN global feature vector) and question (LSTM encoding) are combined immediately (e.g., concatenation or element-wise product) and fed to a classifier. Late fusion trains separate image and text streams and combines them only at prediction time (e.g., ensembling softmax outputs). Early fusion allows the combined representation to be jointly optimised for VQA, but simpler fusion operations can miss fine-grained cross-modal reasoning needed for spatial and relational questions.",
+      hints: [
+        "Early fusion = combine modalities early in the pipeline. Late fusion = keep modalities separate until the final prediction.",
+        "Simple early fusion (concat + MLP) struggles with spatial relational questions — it lacks precise spatial reasoning over combined features.",
+      ],
+    },
+    {
+      id: "q-cv-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The VQA v2 dataset was designed to reduce language bias in VQA by balancing answer distributions, so that a model cannot achieve high accuracy on the test set by ignoring the image entirely.",
+      correctAnswer: "True",
+      explanation:
+        "VQA v1 suffered from language priors: 'Is there a...' questions were almost always answered 'yes'; sports questions were answered 'tennis'. Goyal et al. (2017) designed VQA v2 by adding complementary image pairs — for each question, a second image is paired where the correct answer is different. This balancing ensures that question-only models (which ignore images) achieve only ~50% accuracy on balanced pairs, forcing models to actually look at the image to answer correctly.",
+      hints: [
+        "VQA v1 flaw: language models without seeing any image achieved ~50% accuracy by exploiting question-answer statistics.",
+        "VQA v2 fix: for every (question, image, answer) triple, add (question, image', different_answer) — now language bias cannot help.",
+      ],
+    },
+    {
+      id: "q-cv-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Visual grounding in VQA refers to which capability?",
+      options: [
+        "Training the model on ground-level (street view) images rather than aerial imagery for better scene understanding",
+        "The ability of a VQA model to localise the image region relevant to answering the question, enabling interpretable attention over spatial image features",
+        "Connecting a VQA model to a geographic database so it can answer location-specific questions using GPS coordinates",
+        "Using grounded language models (trained on both text and visual data) as the language encoder in VQA",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Visual grounding in VQA means the model learns to attend to or localise the specific image region(s) needed to answer the question. Attention-based models (BAN, UpDown — Anderson et al., 2018) compute cross-attention between question tokens and image region features (from Faster R-CNN) to ground question tokens to relevant objects. Grounding is evaluated explicitly in benchmarks like RefCOCO (referring expression comprehension) where the model must produce a bounding box corresponding to the question's referent.",
+      hints: [
+        "Visual grounding: 'What color is the car?' causes the model to attend to the car region, not the background.",
+        "Grounding produces interpretable models: you can visualise where the model looked when producing its answer.",
+      ],
+    },
+  ],
+
+  // ── cv-kp-40: Self-Supervised Visual Learning ──────────────────────────────
+  "self-supervised-visual-learning": [
+    {
+      id: "q-cv-kp40-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Masked Autoencoders (MAE, He et al., 2022) pre-train a Vision Transformer by masking patches and reconstructing them. Which masking ratio did MAE find optimal, and why is this ratio much higher than BERT's 15% masking ratio?",
+      options: [
+        "15% masking ratio, same as BERT, because visual and linguistic redundancy are similar",
+        "75% masking ratio, because images have high spatial redundancy — nearby patches are strongly correlated — making it too easy to reconstruct masked patches from their immediate neighbours at lower masking ratios",
+        "50% masking ratio, balancing the reconstruction difficulty with sufficient visible context for the encoder",
+        "90% masking ratio, because ViT encoders are powerful enough to reconstruct images from only 10% of patches",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MAE uses a 75% masking ratio — far higher than BERT's 15% token masking. Images are spatially redundant: a masked patch can be trivially reconstructed from adjacent visible patches by interpolation at low masking ratios. By masking 75%, MAE forces the encoder to learn high-level semantic understanding rather than low-level texture interpolation. The MAE decoder operates only on the masked tokens (efficient), and reconstruction is in pixel space. This pre-training scales excellently with ViT-Large and ViT-Huge.",
+      hints: [
+        "At 15% masking, an image encoder can reconstruct patches by averaging adjacent visible patches — no semantic understanding needed.",
+        "75% masking = only 25% visible patches. The model must understand object structure to reconstruct missing regions.",
+      ],
+    },
+    {
+      id: "q-cv-kp40-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "SimCLR (Chen et al., 2020) is a contrastive self-supervised learning method. Which two components were identified as most critical for SimCLR's strong performance?",
+      options: [
+        "A large momentum encoder and a memory bank of negative embeddings",
+        "A non-linear projection head (MLP applied after the encoder before contrastive loss) and strong data augmentation (random cropping + colour jitter + grayscale)",
+        "Asymmetric network architecture (online vs. target network) and an exponential moving average update rule",
+        "Hard negative mining and a cross-entropy loss over a fixed set of cluster centroids",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SimCLR (Chen et al., 2020) showed that two components dramatically improve representation quality: (1) a non-linear projection head — a 2-layer MLP applied after the ResNet encoder before computing the NT-Xent loss. The contrastive loss is applied in projection space, preserving the encoder's representations for downstream tasks. (2) Composition of strong augmentations — random resized cropping, colour distortion, and Gaussian blur — creates hard positive pairs that force the encoder to learn invariant features. Ablating either component significantly drops downstream accuracy.",
+      hints: [
+        "Why a projection head? The features used for the contrastive loss are shaped by the auxiliary objective — the head absorbs this, keeping encoder features clean for transfer.",
+        "Strong augmentation: two different crops of the same image look very different but must map to similar embeddings — forcing semantic invariance.",
+      ],
+    },
+    {
+      id: "q-cv-kp40-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "DINO (Caron et al., 2021) applies self-supervised knowledge distillation to Vision Transformers and, without any supervision, produces CLS token features that directly perform well at nearest-neighbour image retrieval and k-NN classification.",
+      correctAnswer: "True",
+      explanation:
+        "DINO (Self-DIstillation with NO labels) trains a student ViT to match the output distribution of a teacher ViT (exponential moving average of student). The student sees different augmented views from the teacher; the teacher's output is sharpened via a centering operation to prevent collapse. A key emergent property: DINO CLS tokens encode rich semantic features — k-NN classification on ImageNet with frozen DINO features achieves ~78% top-1 accuracy without any fine-tuning. Additionally, DINO's attention maps segment objects without supervision, revealing that ViTs learn semantic segmentation as a byproduct of self-distillation.",
+      hints: [
+        "DINO's k-NN classification: take frozen CLS embeddings, find 20 nearest training neighbours, majority-vote — no linear head, no fine-tuning.",
+        "DINO attention maps show the model focusing on the subject and ignoring the background — emergent unsupervised segmentation.",
       ],
     },
   ],
