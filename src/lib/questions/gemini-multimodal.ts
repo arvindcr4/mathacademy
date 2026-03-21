@@ -279,8 +279,7 @@ registerQuestions({
         "Images are processed by a vision encoder and consume a fixed, predetermined number of tokens (e.g., 258 tokens per image).",
         "Images are billed by megabyte, not by tokens.",
       ],
-      correctAnswer:
-        "Images are processed by a vision encoder and consume a fixed, predetermined number of tokens (e.g., 258 tokens per image).",
+      correctAnswer: 2,
       explanation:
         "In the Gemini API, an image is encoded into a specific number of tokens (typically 258 tokens for standard images) regardless of its pixel dimensions, making token estimation predictable.",
       hints: [

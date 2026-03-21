@@ -273,7 +273,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'A^\\pi(s,a\\_1) = Q^\\pi(s,a\\_1) - V^\\pi(s) = 8 - 5 = +3. A positive advantage means action a\\_1 returns 3 more expected discounted reward than the average action under \\pi from state s. The identity \sum_a \\pi(a|s) A^\\pi(s,a) = 0 confirms that advantages are zero-mean under \\pi — they measure relative benefit, not absolute value. Spinning Up calls the advantage "how much better it is than others on average."',
+        'When all true Q-values are Q*(s,a) = 0 but \\hat{Q}(s,a) has i.i.d. noise N(0,\\sigma\\^2), the maximum of noisy estimates is biased upward. Intuitively: \\mathbb{E}[\\max_i X_i] > \\max_i \\mathbb{E}[X_i] = 0 for independent positive-variance variables — the sample maximum is pulled above the true maximum. Here \\max_a \\hat{Q}(s,a) is the maximum of |A| noisy zero-mean variables, whose expectation is positive. This is maximization bias, and it grows with |A|: more candidate actions means the max is more likely to be inflated. Double Q-learning addresses this by decoupling the action selection from the value update, using two networks to eliminate the upward bias.',
       hints: [
         "$V^\pi(s)$ is the expected Q-value under $\pi$: $V^\pi(s) = \sum_a \pi(a \mid s) Q^\pi(s, a)$. So $A^\pi$ is exactly the deviation of $Q^\pi$ from this average.",
         "Positive $A^\pi(s, a) \rightarrow$ policy gradient should increase $\pi(a \mid s)$. Negative $A^\pi(s, a) \rightarrow$ decrease $\pi(a \mid s)$.",
