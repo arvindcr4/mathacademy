@@ -15,11 +15,16 @@ const questions: Record<string, Question[]> = {
         "Thought -> Observation -> Action",
       ],
       correctAnswer: 1,
-      explanation: "The ReAct-style agent loop (Yao et al., 2023) cycles: Thought (the LLM reasons about the current state), Action (the LLM emits a tool call or final answer), Observation (the environment returns the tool result). This Thought->Action->Observation triplet repeats until a stopping condition is met.",
+      explanation: "**Step 1:** The ReAct-style agent loop (Yao et al., 2023) begins with Thought, where the LLM reasons about the current state. **Step 2:** The LLM then emits an Action, which is either a tool call or a final answer. **Step 3:** The environment returns an Observation (the tool result), and this Thought->Action->Observation triplet repeats until a stopping condition is met.",
       hints: [
         "Think of the agent as first forming a plan (Thought), then doing something (Action), then seeing what happened (Observation).",
         "The LLM generates the first two; the external environment supplies the third.",
       ],
+      stepByStep: {
+        step1: "The LLM first forms a Thought, reasoning about the current state of the task.",
+        step2: "The LLM then emits an Action, either a tool call or a final answer.",
+        step3: "The environment returns an Observation (tool result), and the cycle repeats until the stopping condition is met.",
+      },
     },
     {
       id: "q-agent-kp1-2",
@@ -27,11 +32,16 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "An agent loop terminates after a fixed, pre-specified number of steps regardless of whether the task is complete.",
       correctAnswer: "false",
-      explanation: "Agent loops use configurable stopping conditions: a task-complete action emitted by the LLM, a max-step safety limit, a human interrupt, or a heuristic (e.g., Reflexion detects repeated identical actions). A hard step count is a guard, not the normal termination criterion.",
+      explanation: "**Step 1:** Agent loops use configurable stopping conditions. **Step 2:** These include a task-complete action emitted by the LLM, a max-step safety limit, a human interrupt, or a heuristic such as Reflexion detecting repeated identical actions. **Step 3:** A hard step count is a guard, not the normal termination criterion.",
       hints: [
         "Reflexion (Shinn & Labash, 2023) adds a heuristic that can reset a stuck trajectory -- not a fixed counter.",
         "Stopping conditions are configurable; the agent signals completion through its action space.",
       ],
+      stepByStep: {
+        step1: "Identify the various stopping conditions available in an agent loop.",
+        step2: "Understand that a task-complete action or heuristic terminates the loop, not a fixed step count.",
+        step3: "Recognize that max-step limits are safety guards rather than normal termination criteria.",
+      },
     },
     {
       id: "q-agent-kp1-3",
@@ -45,11 +55,16 @@ const questions: Record<string, Question[]> = {
         "Switch to a smaller model once the context exceeds 50% capacity",
       ],
       correctAnswer: 1,
-      explanation: "Memory consolidation via summarization (used in Generative Agents, Park et al. 2023) compresses completed episodes into higher-level summaries, freeing context space while retaining key information. Silent truncation loses critical observations; temperature has no effect on context length.",
+      explanation: "**Step 1:** Memory consolidation via summarization (used in Generative Agents, Park et al. 2023) compresses completed episodes into higher-level summaries. **Step 2:** This frees context space while retaining key information. **Step 3:** Silent truncation loses critical observations, and temperature has no effect on context length.",
       hints: [
         "Generative Agents (Park et al., 2023) store a memory stream and surface condensed reflections rather than raw event logs.",
         "The goal is to keep the most relevant context within the token budget -- summarization preserves semantics, truncation does not.",
       ],
+      stepByStep: {
+        step1: "Recognize that context windows have finite capacity in agent loops.",
+        step2: "Understand that summarization compresses episodes into higher-level summaries to free context space.",
+        step3: "Note that silent truncation loses critical observations and temperature does not affect context length.",
+      },
     },
     {
       id: "q-agent-kp1-4",
@@ -63,11 +78,16 @@ const questions: Record<string, Question[]> = {
         "The context window fills up completely",
       ],
       correctAnswer: 1,
-      explanation: "The agent emits a final answer action when it determines the task is complete. A max-step guard exists as a safety limit but is not the normal termination criterion.",
+      explanation: "**Step 1:** The agent evaluates whether the task is complete. **Step 2:** When the task is complete, the agent emits a final answer action. **Step 3:** A max-step guard exists as a safety limit but is not the normal termination criterion.",
       hints: [
         "The agent signals completion through its action space, not by external timer.",
         "The ReAct paper defines a dedicated Finish action that the model emits when done.",
       ],
+      stepByStep: {
+        step1: "The agent determines whether the task is complete.",
+        step2: "The agent emits a final answer action when it determines completion.",
+        step3: "A max-step guard exists as a safety limit but is not the normal termination criterion.",
+      },
     },
     {
       id: "q-agent-kp1-5",
@@ -75,11 +95,16 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "An agent loop running for 50 steps with 200-token observations will consume roughly 10,000 tokens in total context.",
       correctAnswer: "true",
-      explanation: "Context accumulates linearly: each step adds Thought + Action + roughly 200-token Observation. Managing this growth is the long-context challenge in agent design.",
+      explanation: "**Step 1:** Context accumulates linearly in an agent loop. **Step 2:** Each step adds Thought + Action + roughly 200-token Observation. **Step 3:** Managing this growth is the long-context challenge in agent design.",
       hints: [
         "Context is append-only in a typical agent loop. Each step adds to the total.",
         "50 steps x 200 tokens each = 10,000 tokens, before accounting for Thought/Action tokens.",
       ],
+      stepByStep: {
+        step1: "Understand that context accumulates linearly in an agent loop.",
+        step2: "Recognize that each step adds Thought + Action + ~200-token Observation.",
+        step3: "Managing this linear growth is the long-context challenge in agent design.",
+      },
     },
     {
       id: "q-agent-kp1-6",
@@ -93,11 +118,16 @@ const questions: Record<string, Question[]> = {
         "Resetting the context window to empty",
       ],
       correctAnswer: 1,
-      explanation: "Reflexion (Shinn et al., 2023) prompts the agent to reflect on why a trajectory failed and store verbal feedback in memory, then re-attempts with that feedback.",
+      explanation: "**Step 1:** Reflexion (Shinn et al., 2023) prompts the agent to reflect on why a trajectory failed. **Step 2:** The agent stores verbal feedback in memory. **Step 3:** The agent re-attempts the task with that feedback as a corrective signal.",
       hints: [
         "Reflexion = reflect on failure + update memory + retry with updated strategy.",
         "The verbal feedback from self-reflection becomes the corrective signal for the next attempt.",
       ],
+      stepByStep: {
+        step1: "Reflexion prompts the agent to reflect on why a trajectory failed.",
+        step2: "The agent stores verbal feedback in memory.",
+        step3: "The agent re-attempts with that feedback as a corrective signal.",
+      },
     },
     {
       id: "q-agent-kp1-7",
@@ -111,11 +141,16 @@ const questions: Record<string, Question[]> = {
         "It is a legacy term for the context window before transformer architectures",
       ],
       correctAnswer: 1,
-      explanation: "Chain-of-thought research shows generating intermediate reasoning steps improves accuracy. The Thought step lets the model plan before committing to an action.",
+      explanation: "**Step 1:** Chain-of-thought research shows that generating intermediate reasoning steps improves accuracy. **Step 2:** The Thought step allows the model to plan before committing to an action. **Step 3:** This intermediate reasoning serves as working memory that the model conditions its final output on.",
       hints: [
         "Why does writing out math steps help humans? The same principle applies to LLMs.",
         "Intermediate tokens serve as working memory that the model conditions its final output on.",
       ],
+      stepByStep: {
+        step1: "Chain-of-thought research shows generating intermediate reasoning steps improves accuracy.",
+        step2: "The Thought step lets the model plan before committing to an action.",
+        step3: "Intermediate tokens serve as working memory that the model conditions its final output on.",
+      },
     },
     {
       id: "q-agent-kp1-8",
@@ -123,11 +158,16 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Adding more tools to an agent always improves its task performance.",
       correctAnswer: "false",
-      explanation: "Too many tools increase selection complexity and can distract from the correct approach. Tool selection quality degrades with very large tool sets. Careful curation and clear descriptions are essential.",
+      explanation: "**Step 1:** Adding more tools does not always improve agent performance. **Step 2:** Too many tools increase selection complexity and can distract from the correct approach. **Step 3:** Tool selection quality degrades with very large tool sets, making careful curation and clear descriptions essential.",
       hints: [
         "More choices can lead to worse decisions. This applies to LLMs selecting tools too.",
         "Research shows tool-selection accuracy drops as the number of available tools grows.",
       ],
+      stepByStep: {
+        step1: "Recognize that adding more tools does not always improve agent performance.",
+        step2: "Understand that too many tools increase selection complexity.",
+        step3: "Tool selection quality degrades with large tool sets; careful curation is essential.",
+      },
     },
     {
       id: "q-agent-kp1-9",
