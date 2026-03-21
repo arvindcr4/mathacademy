@@ -284,6 +284,66 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-cv-kp5-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "YOLOv1 predicts bounding boxes directly from a grid of cells. If the grid is 7×7 and each cell predicts 2 boxes with 5 values each plus 20 class probabilities, what is the total output tensor size?",
+      options: [
+        "7×7×30 = 1470",
+        "7×7×25 = 1225",
+        "7×7×40 = 1960",
+        "7×7×10 = 490",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Each of the 7×7 grid cells outputs: 2 boxes × 5 values (x, y, w, h, confidence) + 20 class probabilities = 10 + 20 = 30 values. Total tensor = 7 × 7 × 30 = 1470. YOLO frames detection as a single regression problem, enabling real-time detection at ~45 FPS.",
+      hints: [
+        "Each box has 5 values: center (x, y), size (w, h), and objectness confidence.",
+        "2 boxes × 5 + 20 classes = 30 values per cell; 7×7 cells gives 7×7×30.",
+      ],
+    },
+    {
+      id: "q-cv-kp5-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Faster R-CNN uses anchor boxes at each spatial location. If the backbone produces a 50×38 feature map and 9 anchors are placed at each location (3 scales × 3 aspect ratios), how many anchor boxes are generated in total?",
+      options: [
+        "2,700 anchors (50×38×9/…via stride only)",
+        "17,100 anchors (50×38×9)",
+        "1,900 anchors (50×38)",
+        "38,000 anchors (50×38×20)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Total anchors = feature-map height × width × anchors-per-location = 50 × 38 × 9 = 17,100. The Region Proposal Network (RPN) classifies each anchor as foreground/background and regresses offsets; non-maximum suppression then retains the top ~2000 proposals for the detection head.",
+      hints: [
+        "Anchors are placed at every spatial location in the feature map — multiply H × W × anchors-per-location.",
+        "50 × 38 = 1900 locations; 1900 × 9 anchors each = 17100.",
+      ],
+    },
+    {
+      id: "q-cv-kp5-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Feature Pyramid Networks (FPN) build a multi-scale feature pyramid. What is the key operation that allows FPN to create high-resolution feature maps with strong semantics?",
+      options: [
+        "Dilated convolutions that expand receptive fields without losing resolution",
+        "Top-down pathway with lateral connections: semantically strong coarse features are upsampled and merged with high-resolution bottom-up features",
+        "Global average pooling across all scales followed by channel-wise concatenation",
+        "Applying separate classifiers at each scale of a standard image pyramid at test time",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "FPN combines a bottom-up pathway (standard backbone forward pass, losing resolution but gaining semantics) with a top-down pathway that upsamples coarse, high-semantic features by 2× and adds them element-wise to same-resolution bottom-up features via 1×1 lateral connections. This gives every scale both high resolution and rich semantic content — enabling detectors like Faster R-CNN to detect both small and large objects accurately.",
+      hints: [
+        "Coarse feature maps have strong semantics but low resolution; fine maps have high resolution but weak semantics — how does FPN get both?",
+        "Lateral connections feed high-resolution early features into the top-down pathway at each scale.",
+      ],
+    },
+    {
       id: "q-cv-kp5-3",
       type: "multiple-choice",
       difficulty: "medium",
@@ -464,6 +524,40 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-cv-kp8-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "When fine-tuning an ImageNet-pretrained CNN for a small medical imaging dataset, which strategy typically gives the best results?",
+      options: [
+        "Training only the randomly initialised classification head while freezing all pretrained layers, regardless of dataset size",
+        "Unfreezing and fine-tuning all layers with a small learning rate (e.g., 1e-4), often using a lower LR for early layers than later layers (discriminative fine-tuning)",
+        "Re-initialising all weights from scratch and training with a large learning rate to fit the medical domain",
+        "Freezing all layers except the last batch normalisation, which is fine-tuned to adapt to the new domain",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "For a small target dataset, the best strategy is typically to fine-tune all layers with a small global learning rate, using lower learning rates for early layers (which contain general features like edges) and higher rates for later layers (which contain task-specific features). This discriminative fine-tuning (introduced in ULMFiT) prevents catastrophic forgetting of useful low-level features while adapting high-level representations to the new domain.",
+      hints: [
+        "Early conv layers detect universal features (edges, textures) — do these need large updates for a new domain?",
+        "Using a smaller LR for pretrained layers and larger LR for new layers is called discriminative fine-tuning.",
+      ],
+    },
+    {
+      id: "q-cv-kp8-5",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Transfer learning from a model pretrained on a large dataset (e.g., ImageNet) always degrades performance compared to training from scratch when the target dataset is large and very different in domain from the source dataset.",
+      correctAnswer: "false",
+      explanation:
+        "Even when the target domain is very different from the source (e.g., satellite imagery vs. natural photos), transfer learning almost always matches or exceeds training from scratch — especially with large pretrained models. Low-level features (edges, textures, Gabor-like filters) are universally useful across domains, providing a better initialisation and faster convergence even if the final performance is similar.",
+      hints: [
+        "What do the earliest convolutional layers of any image network learn, regardless of the specific dataset?",
+        "Training from scratch requires more data and compute to reach the same loss level — does pretraining help even in a different domain?",
+      ],
+    },
+    {
       id: "q-cv-kp8-3",
       type: "true-false",
       difficulty: "easy",
@@ -519,6 +613,26 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Apply the formula ỹ = λyᵢ + (1−λ)yⱼ with λ=0.7, yᵢ=[1,0], yⱼ=[0,1].",
         "0.7×[1,0] + 0.3×[0,1] = [0.7, 0] + [0, 0.3] = [0.7, 0.3].",
+      ],
+    },
+    {
+      id: "q-cv-kp9-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "AutoAugment searches for optimal augmentation policies using reinforcement learning. What does a policy consist of, and what is the main practical drawback?",
+      options: [
+        "A single global scale factor for all augmentations; the drawback is it only works on grayscale images",
+        "A sequence of (operation, probability, magnitude) triplets selected by a controller RNN; the drawback is the search cost (thousands of GPU-hours on the target dataset)",
+        "A fixed set of 20 standard augmentations applied in random order; the drawback is it doubles training time",
+        "A neural network that generates augmented images; the drawback is it requires paired original and augmented labels",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "AutoAugment defines a policy as K sub-policies, each consisting of two (operation, probability, magnitude) triplets. A controller RNN proposes policies evaluated on a proxy task via RL. The searched CIFAR-10 policy achieves SOTA but requires ~5000 GPU-hours of search — making it impractical for new datasets. RandAugment later showed that randomly sampling operations with a single shared magnitude achieves similar accuracy without any search.",
+      hints: [
+        "Each sub-policy is a pair of (transform, probability, magnitude) — what does the RL controller optimise?",
+        "The search runs thousands of child model evaluations — how does RandAugment avoid this cost?",
       ],
     },
     {
@@ -1504,6 +1618,26 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-cv-kp28-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "COCO mAP is reported as the mean of AP values computed across 10 IoU thresholds (0.50, 0.55, …, 0.95). A model achieves AP₀.₅₀=0.72 and AP₀.₇₅=0.52 but very low AP at stricter thresholds. Which statement best explains why COCO mAP (AP[.50:.95]) might be around 0.48 while VOC mAP (AP@0.5) is 0.72?",
+      options: [
+        "COCO mAP is lower because COCO has more object categories than Pascal VOC",
+        "Averaging AP over thresholds 0.50–0.95 penalises imprecise localisation; a model with loose bounding boxes scores well at IoU=0.5 but poorly at IoU=0.75–0.95, dragging the average below AP@0.5",
+        "COCO mAP uses a different P-R interpolation method that always produces lower values than the 11-point VOC interpolation",
+        "COCO mAP subtracts the FID score from AP@0.5, which reduces the reported metric",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "COCO mAP = (1/10) × Σ AP@IoU_threshold for thresholds 0.50, 0.55, …, 0.95. A model that localises objects loosely will achieve high AP@0.5 (50% overlap suffices) but low AP@0.75 and near-zero AP@0.90–0.95 (tight overlap required). The average over all 10 thresholds rewards precise box localisation, encouraging detectors to produce tighter boxes rather than just the correct class.",
+      hints: [
+        "Higher IoU thresholds demand that the predicted box nearly perfectly overlaps the ground truth — loose boxes fail these stricter thresholds.",
+        "mAP[.50:.95] is the unweighted mean of 10 AP values — if most values above IoU=0.6 are near zero, the mean will be much lower than AP@0.5.",
+      ],
+    },
+    {
       id: "q-cv-kp28-3",
       type: "true-false",
       difficulty: "easy",
@@ -1559,6 +1693,46 @@ const questions: Record<string, Question[]> = {
       hints: [
         "DINOv2 is purely self-supervised — it uses no text pairs (unlike CLIP) and no manual labels.",
         "Combining DINO (CLS-level) and iBOT (patch-level) objectives encourages both global and local feature quality.",
+      ],
+    },
+    {
+      id: "q-cv-kp30-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "SAM (Segment Anything Model) accepts multiple types of prompts to generate segmentation masks. Which of the following is NOT a supported prompt type in SAM?",
+      options: [
+        "A point (x, y) with a foreground/background label",
+        "A bounding box (x1, y1, x2, y2) specifying a region of interest",
+        "A free-form text description of the object to segment",
+        "A rough mask from a previous prediction used to refine the segmentation",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "SAM\'s prompt encoder accepts points, bounding boxes, and low-resolution masks as geometric prompts — it does NOT natively accept free-form text descriptions. Text-prompted segmentation requires an additional text-grounding module (e.g., Grounding DINO + SAM). SAM\'s mask decoder then generates up to 3 candidate masks with confidence scores from any combination of supported prompts.",
+      hints: [
+        "SAM\'s prompt encoder converts sparse (points, boxes) and dense (masks) inputs — which input format is it missing?",
+        "Text-to-segmentation requires first grounding the text to image regions, which SAM itself does not do.",
+      ],
+    },
+    {
+      id: "q-cv-kp30-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "CLIP is trained with a contrastive (InfoNCE) loss on a batch of N image-text pairs. For a batch of N=4 pairs, how many positive and negative pairs does the loss use?",
+      options: [
+        "4 positives and 4 negatives (one negative per positive pair)",
+        "4 positives and 12 negatives (N positives, N²−N negatives)",
+        "4 positives and 8 negatives (2 negatives per positive)",
+        "4 positives and 16 negatives (N² total pairs)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CLIP builds an N×N similarity matrix. Each of the N diagonal entries is a positive pair (matching image-text). The remaining N²−N = N(N−1) off-diagonal entries are negative pairs. For N=4: 4 positives and 4×3 = 12 negatives. The InfoNCE loss maximises the similarity of diagonal entries relative to all negatives in both image→text and text→image directions. Large batch sizes (N=32768) provide many negatives, which is crucial for CLIP\'s performance.",
+      hints: [
+        "An N×N matrix has N diagonal (positive) and N²−N off-diagonal (negative) entries.",
+        "For N=4: 4² = 16 total pairs, 4 positives on diagonal, 16−4 = 12 negatives.",
       ],
     },
     {
