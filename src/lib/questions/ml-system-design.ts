@@ -2265,4 +2265,178 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const sysdesign: Record<string, Question[]> = {
+  "sysdesign-rate-limiting": [
+    {
+      id: "q-msd-sd-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A public API must enforce 100 requests/second per user. Requests arrive in bursts. Which rate-limiting algorithm best handles bursts while strictly enforcing the average rate?",
+      options: [
+        "Fixed window counter — increment a counter each second, reject when it hits 100. Simple and exact.",
+        "Token bucket — tokens accumulate at 100/sec up to a burst capacity (e.g., 200 tokens). Requests consume tokens; excess requests are dropped. Allows short bursts up to bucket size while enforcing the 100 req/s average.",
+        "Leaky bucket — requests enter a queue processed at 100/sec, excess requests are immediately dropped. Smooths output but does not allow any bursting.",
+        "Sliding window log — store timestamps of each request; reject if the count in the last 1 s window exceeds 100. Accurate but memory-intensive.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Token bucket is the standard answer for burst-tolerant rate limiting. Tokens accumulate at the configured rate (100/s) up to a maximum bucket size. A burst of 200 requests can be served instantly if tokens are available, then the client is throttled until more tokens accrue. Leaky bucket enforces a strictly smooth output rate — it does not allow bursting. Fixed window allows up to 2x the rate at window boundaries. Sliding window log is accurate but requires O(requests) memory per user.",
+      hints: [
+        "Burst allowance = bucket capacity. If bucket holds 200 tokens, a client can send 200 requests instantly after being idle for 2 seconds.",
+        "Leaky bucket fills a queue and processes it at a fixed rate — this is an output-rate limiter, not a burst-tolerant one.",
+      ],
+    },
+    {
+      id: "q-msd-sd-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In a distributed system with multiple API gateway nodes, a local (in-process) rate limiter on each node guarantees that the global per-user request rate is enforced accurately.",
+      correctAnswer: "False",
+      explanation:
+        "Local rate limiters enforce per-node limits, not global limits. If a user sends requests to 5 nodes with a local limit of 100 req/s each, they can achieve 500 req/s globally. Accurate global rate limiting requires either (a) a centralized store (Redis with atomic INCR/EXPIRE) that all nodes consult, or (b) a consistent-hash load balancer that routes each user to exactly one node. Centralized Redis with Lua scripting is the most common production approach, accepting the latency trade-off of a network hop per request.",
+      hints: [
+        "Sticky sessions (routing user X always to node Y) make local rate limiting accurate — but require consistent hashing or session affinity.",
+        "Redis INCR + EXPIRE with a Lua script is atomic and safe for distributed rate limiting.",
+      ],
+    },
+  ],
+  "sysdesign-caching": [
+    {
+      id: "q-msd-sd-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A social media feed system caches user timelines in Redis. When a celebrity with 10 million followers posts, all cached timelines become stale simultaneously. What pattern avoids the resulting thundering-herd cache miss storm?",
+      options: [
+        "Increase Redis memory so all timelines fit — eliminates eviction and staleness.",
+        "Use write-around caching — on celebrity post, skip updating the cache entirely and let reads populate it lazily from the DB.",
+        "Fanout-on-write with probabilistic early expiration: pre-compute and push the new post to followers' cached timelines, and use jittered TTLs plus a 'soft TTL' (background refresh before hard expiry) to prevent simultaneous expiry.",
+        "Add a read-through cache layer with a 5-second lock: when cache misses, one thread fetches from DB while others wait behind a mutex.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "The celebrity problem (hot key / thundering herd) has two sub-problems: (1) computing the fan-out (pushing to 10M followers) and (2) cache stampede when all timeline caches expire together. Fanout-on-write pre-computes and pushes the post to each follower's cached feed asynchronously (message queue), so reads are always cache hits. Jittered TTLs prevent synchronized expiry. Probabilistic early expiration (PER / XFetch algorithm) refreshes cache entries slightly before their TTL expires using a probabilistic formula, eliminating the stampede. Option D (mutex lock) serializes but does not scale — 10M users waiting on one lock.",
+      hints: [
+        "XFetch early expiration formula: refresh if current_time - fetch_time * beta * log(rand()) > expiry_time. With beta=1 and rand()~U(0,1), refreshes happen more often as TTL approaches.",
+        "Twitter uses fanout-on-write for normal users but fanout-on-read for celebrities (hybrid approach), trading write throughput for read latency.",
+      ],
+    },
+    {
+      id: "q-msd-sd-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A database-backed web service uses a cache-aside (lazy loading) pattern. After a cache miss, the service fetches from the DB and writes to cache. Under high concurrency, two threads both miss the cache for the same key simultaneously. What is this problem called, and what is the standard fix?",
+      options: [
+        "Cache stampede (dog-pile effect). Fix: use a distributed lock (e.g., Redis SET NX EX) so only one thread fetches from DB while others wait or serve stale data.",
+        "Cache poisoning. Fix: validate all data before writing to cache.",
+        "Cache eviction storm. Fix: increase cache TTL so items stay longer.",
+        "Read-your-writes inconsistency. Fix: route the user to a replica with synchronous replication.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Cache stampede (also called dog-pile or thundering herd) occurs when many concurrent requests miss the same key and all attempt to rebuild the cache simultaneously, overwhelming the database. The standard fix is a distributed lock: SET key:lock 1 NX EX 5 in Redis — only the first thread acquires it, fetches from DB, and populates the cache. Other threads either (a) wait and retry, or (b) serve stale data if a previous value exists (stale-while-revalidate). Alternatively, probabilistic early expiration proactively refreshes before the TTL expires, preventing the mass-miss scenario entirely.",
+      hints: [
+        "Redis SET NX EX is atomic — SET if Not eXists with an EXpiry. This creates a distributed mutex with automatic lock release on timeout.",
+        "Stale-while-revalidate: return the old cached value immediately while asynchronously refreshing in the background.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, sysdesign);
+
+const famous: Record<string, Question[]> = {
+  "sysdesign-url-shortener": [
+    {
+      id: "q-msd-famous-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Design TinyURL: you need to generate a unique 7-character short code for each long URL, handling 100M URLs total and 10K write requests/second. Which ID generation + encoding approach is most appropriate?",
+      options: [
+        "Use MD5(long_url) and take the first 7 characters. Pros: deterministic (same URL always gets same code). Cons: MD5 collisions occur at ~100M entries; truncating to 7 chars makes collisions near-certain.",
+        "Auto-increment a 64-bit integer in the DB and encode it in base62 (a-z, A-Z, 0-9). A 7-char base62 string encodes up to 62^7 ≈ 3.5 trillion unique IDs, far more than 100M. Pros: no collisions, short codes, simple. Cons: single-point auto-increment bottleneck — mitigate with Twitter Snowflake-style distributed ID generation.",
+        "Generate a random UUID (128-bit) for each URL. Store UUID→long_url in DynamoDB. Short code = first 7 hex characters of UUID.",
+        "Use a consistent hash of the long URL across 10 DB shards. The shard ID + row ID form the short code.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Base62 encoding of an auto-incremented integer is the canonical answer: 62^7 ≈ 3.5 trillion > 100M, guaranteed no collisions, and 7 characters is short enough. At 10K writes/s, a single auto-increment DB becomes a bottleneck — solutions include: (a) Twitter Snowflake (41-bit timestamp + 10-bit machine ID + 12-bit sequence = 64-bit globally unique monotone IDs with no coordination), or (b) a ticket server (dedicated sequence DB with batch pre-allocation). MD5 truncation has collisions. UUIDs are 32 hex chars, too long if not encoded, and random UUIDs are unordered (bad for B-tree DB performance).",
+      hints: [
+        "62^7 = 3,521,614,606,208 — always compute this to confirm the ID space is large enough.",
+        "Twitter Snowflake format: 1 unused | 41-bit ms timestamp | 10-bit machine | 12-bit sequence. Allows 4096 IDs/ms/machine with no coordination.",
+      ],
+    },
+  ],
+  "sysdesign-consistent-hashing": [
+    {
+      id: "q-msd-famous-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A distributed cache has 4 nodes. Using simple modulo hashing (key % 4), you add a 5th node. Approximately what fraction of keys must be remapped? Using consistent hashing with 100 virtual nodes per server, approximately what fraction is remapped?",
+      options: [
+        "Modulo: ~80% remapped. Consistent hashing: ~20% remapped.",
+        "Modulo: ~80% remapped. Consistent hashing: ~20% remapped — same formula, the only difference is which keys move.",
+        "Modulo: 80% remapped (4/5 of keys change their target node). Consistent hashing: ~1/5 = 20% remapped (only keys owned by the new node's range move).",
+        "Modulo: 100% remapped (every key's hash % N changes). Consistent hashing: ~1/(N+1) ≈ 20% remapped.",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "With modulo hashing and N→N+1 nodes, almost every key maps to a different node (key % N ≠ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
+      hints: [
+        "Consistent hashing invariant: adding node X only remaps keys in X's arc on the ring — no other nodes are affected.",
+        "Virtual nodes: each physical server owns V points on the ring. Larger V → more uniform load distribution but higher coordination overhead.",
+      ],
+    },
+  ],
+  "sysdesign-message-queue": [
+    {
+      id: "q-msd-famous-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "You are designing a Kafka-like message queue for an event pipeline processing 1M events/second with exactly-once semantics and 7-day retention. A consumer falls behind and is 2 hours behind real-time. Which architecture choice is most critical for allowing it to catch up without impacting other consumers?",
+      options: [
+        "Increase the number of brokers so reads are distributed and the slow consumer gets dedicated bandwidth.",
+        "Partition the topic and assign the slow consumer group its own independent offset pointer per partition. Consumers read sequentially from the log; each consumer group tracks its own offset independently, so a slow group does not block fast groups and can catch up by reading its log segment without coordination.",
+        "Switch to a push-based model where the broker pushes messages to consumers at a controlled rate, throttling fast consumers to match the slowest.",
+        "Use a dead-letter queue: when a consumer falls behind by more than 30 minutes, discard events older than that and log them to a separate DLQ topic for offline reprocessing.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Kafka's key insight: the log is immutable and consumer groups track offsets independently. A slow consumer group simply has a lower offset than a fast group — they read from the same partitioned log at their own pace, with zero coordination between groups. The slow consumer can parallelize catch-up by adding consumer instances up to the number of partitions (each partition is assigned to exactly one consumer in a group). Retention (7 days of disk) ensures old segments are available. This offset-per-consumer-group design is why Kafka can serve 10+ consumer groups from the same topic with no interference — fundamentally different from traditional queues where consuming removes the message.",
+      hints: [
+        "Consumer group = independent cursor on the log. Adding consumers to a group parallelizes consumption (one consumer per partition max).",
+        "Retention: Kafka keeps all messages until retention.ms or retention.bytes is exceeded — consumers can re-read old messages, enabling replay and catch-up.",
+      ],
+    },
+  ],
+  "sysdesign-chat-realtime": [
+    {
+      id: "q-msd-famous-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Design WhatsApp: for real-time 1-to-1 messaging with 2 billion users, how should the server push new messages to a recipient's mobile device, and how should you handle offline recipients?",
+      options: [
+        "Short polling: client polls every 1 second. Simple to implement; scales poorly — 2B devices × 1 req/s = 2B req/s server load even when no messages arrive.",
+        "Long polling: client holds an HTTP connection open; server responds only when a message arrives (or on timeout). Better than polling but still wastes one HTTP connection per client and has high reconnect overhead on mobile.",
+        "WebSocket (persistent bidirectional TCP connection) for online users, maintained by a stateful connection server (chat service). For offline users: store the message in a DB (e.g., Cassandra) keyed by recipient; on reconnect, the client fetches missed messages via REST. Mobile push (APNs/FCM) wakes offline apps.",
+        "Server-sent events (SSE): server streams messages over HTTP/2 to the client. Bidirectional by using REST for client→server. Simpler than WebSocket.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "WhatsApp uses persistent WebSocket connections to a fleet of connection servers (Erlang/OTP for massive concurrency — 2M connections per server). Online message flow: sender → connection server → message router → recipient's connection server → recipient via WebSocket. For offline recipients: store message in Cassandra (optimized for write-heavy, keyed by recipient+timestamp); on reconnect, client syncs missed messages. Mobile push (APNs for iOS, FCM for Android) provides the initial wake-up signal. This architecture cleanly separates connection management from message storage, allowing each to scale independently.",
+      hints: [
+        "Erlang/OTP: each WebSocket connection = one lightweight Erlang process. 2M processes per server is feasible due to Erlang's green threads and preemptive scheduler.",
+        "Message storage key design: (recipient_id, timestamp) → allows efficient range scan for 'messages since last seen timestamp' on reconnect.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, famous);
+
 registerQuestions(questions);

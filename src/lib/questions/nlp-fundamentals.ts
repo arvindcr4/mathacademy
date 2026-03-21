@@ -2320,5 +2320,512 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const extra: Record<string, Question[]> = {
+  "advanced-tokenization": [
+    {
+      id: "q-nlp-kp41-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Byte-level BPE (used in GPT-2) differs from standard BPE in that its base vocabulary consists of:",
+      options: [
+        "The 26 lowercase ASCII letters plus punctuation",
+        "All 256 possible byte values, enabling lossless encoding of any Unicode text without an unknown-token symbol",
+        "A fixed set of 1000 common English words",
+        "All Unicode codepoints up to U+FFFF (65,536 symbols)",
+      ],
+      correctAnswer: 1,
+      explanation: "Byte-level BPE starts with a vocabulary of 256 bytes. Any UTF-8 encoded text can be represented as a sequence of bytes, so byte-level BPE eliminates the need for an <UNK> token entirely. Rare Unicode characters or emojis may require many bytes, but they will always be tokenised. GPT-2, GPT-3, and GPT-4 use byte-level BPE, allowing the tokeniser to handle any text in any language or script.",
+      hints: [
+        "UTF-8 encodes any Unicode character as 1-4 bytes. With 256 base symbols, every character can be represented.",
+        "No <UNK> token needed: every possible byte sequence is representable as a sequence of merge rules.",
+      ],
+    },
+    {
+      id: "q-nlp-kp41-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The unigram language model tokeniser (Kudo, 2018) is guaranteed to produce a unique tokenisation for any input string, just like BPE.",
+      correctAnswer: "False",
+      explanation: "Unlike BPE, the unigram language model tokeniser can produce multiple valid tokenisations for the same input string. It assigns probabilities to all possible segmentations using the Viterbi algorithm to find the most likely one, but can also sample from the distribution of tokenisations. This stochastic tokenisation (subword regularisation) is used as data augmentation during training, exposing the model to multiple segmentations and improving robustness.",
+      hints: [
+        "BPE deterministically applies merge rules left to right — unique output. Unigram LM uses a probabilistic model over all possible segmentations.",
+        "Subword regularisation: randomly sample tokenisations during training instead of always using the argmax — unique to unigram LM.",
+      ],
+    },
+    {
+      id: "q-nlp-kp41-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "SentencePiece encodes whitespace as the special character ▁. What property does this give the tokeniser compared to systems that use whitespace as a delimiter?",
+      options: [
+        "It causes SentencePiece to always split on whitespace before applying merge rules, identical to BPE",
+        "It makes tokenisation fully reversible: joining tokens and replacing ▁ with a space exactly recovers the original string, without requiring a separate detokenisation step",
+        "It compresses text more efficiently because spaces are removed from the byte stream entirely",
+        "It forces SentencePiece to normalise to lowercase before processing since ▁ replaces case information",
+      ],
+      correctAnswer: 1,
+      explanation: "SentencePiece treats text as a raw Unicode stream with no pre-tokenisation whitespace split. Whitespace is replaced by ▁ before segmentation, making it part of the token (e.g., ▁world). This encoding is reversible: concatenate all tokens and replace ▁ with a space to recover the original string exactly, including original whitespace positions. This is critical for generation tasks that need to produce correctly spaced output.",
+      hints: [
+        "▁world means 'world that starts after a space'. It is a single token, not two.",
+        "Reversible tokenisation: tokens → join → replace ▁ with space → original string. Used in T5, mT5, XLNet.",
+      ],
+    },
+    {
+      id: "q-nlp-kp41-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "When a new technical term like 'ChatGPT' appears in text, how does a BPE tokeniser trained before this word existed handle it?",
+      options: [
+        "It produces a single <UNK> token because the word is not in the vocabulary",
+        "It splits the word into known subword units using the learned merge rules, falling back to base characters if needed",
+        "It refuses to process the input and raises an error",
+        "It maps the entire word to the most similar vocabulary entry using cosine similarity of character n-grams",
+      ],
+      correctAnswer: 1,
+      explanation: "BPE handles out-of-vocabulary words by decomposing them into known subword units. 'ChatGPT' would be split based on which merges are in the vocabulary — common substrings like 'Chat', 'G', 'PT' or further decomposed to characters if no merge rules apply. The worst case is character-level tokenisation. This is why BPE eliminates <UNK>: any string is representable as a sequence of base characters (or bytes for byte-level BPE).",
+      hints: [
+        "Apply merges greedily: find the longest vocabulary entry matching the current position.",
+        "New words get decomposed into familiar parts. No <UNK> needed.",
+      ],
+    },
+    {
+      id: "q-nlp-kp41-5",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Increasing the BPE vocabulary size always improves downstream NLP task performance because more vocabulary coverage means fewer tokenisation splits.",
+      correctAnswer: "False",
+      explanation: "Vocabulary size involves a trade-off. A very large vocabulary reduces the number of tokens per sentence (good for attention complexity) but increases the embedding matrix size, reduces the frequency of each subword in training data (hurting embedding quality for rare tokens), and may cause vocabulary mismatch when transferring to new domains. The optimal vocabulary size depends on the languages, domain, and model architecture. GPT-4's ~100K vocabulary is larger than BERT's ~30K, balancing these considerations for multilingual and code data.",
+      hints: [
+        "Larger vocabulary: fewer tokens per sequence, larger embedding table, rarer individual tokens in training.",
+        "For code-heavy models, a larger vocabulary is beneficial to represent keywords and identifiers as single tokens.",
+      ],
+    },
+    {
+      id: "q-nlp-kp41-6",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Which tokenisation approach is used by the T5 model?",
+      options: [
+        "Character-level tokenisation with a fixed vocabulary of ASCII characters",
+        "SentencePiece with the unigram language model, using a vocabulary of 32,000 tokens",
+        "WordPiece with a vocabulary of 30,522 tokens (same as BERT)",
+        "Byte-level BPE with a vocabulary of 50,257 tokens (same as GPT-2)",
+      ],
+      correctAnswer: 1,
+      explanation: "T5 (Raffel et al., 2020) uses SentencePiece with the unigram language model trained on a large text corpus (C4 — Colossal Clean Crawled Corpus). The 32,000-token vocabulary is shared across all tasks. mT5 extends this to 250,000 tokens for 101 languages. SentencePiece's language-agnostic segmentation without pre-tokenisation makes it well-suited for multilingual models and text-to-text frameworks.",
+      hints: [
+        "BERT: WordPiece, 30,522 tokens. GPT-2: byte-level BPE, 50,257 tokens. T5: SentencePiece unigram, 32,000 tokens.",
+        "T5 frames all NLP tasks as text-to-text — the same vocabulary handles both input and output for all tasks.",
+      ],
+    },
+  ],
+
+  "rag-advanced": [
+    {
+      id: "q-nlp-kp42-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Dense Passage Retrieval (DPR, Karpukhin et al. 2020) encodes queries and passages with separate BERT models and uses inner product similarity. How is DPR trained?",
+      options: [
+        "DPR is trained with unsupervised contrastive learning on pairs of documents from the same Wikipedia article",
+        "DPR is trained with in-batch negatives: for a batch of (question, positive passage) pairs, other positive passages in the batch serve as negatives, plus hard negatives mined from BM25 top-k results that are not the gold passage",
+        "DPR is trained with a cross-encoder reranker that labels positive and negative passages, then distils the labels to the bi-encoder",
+        "DPR is pretrained with masked passage modelling where question tokens are masked and the model reconstructs them from the passage",
+      ],
+      correctAnswer: 1,
+      explanation: "DPR requires supervised training on labelled (question, positive passage, negative passages) triples. In-batch negatives: for a batch of B question-passage pairs, each question treats the other B-1 positive passages as negatives — efficient with large batches. Hard negatives from BM25 (retrieved but wrong passages) teach the model to distinguish semantically related but incorrect passages from the true answer passage. This supervised signal allows DPR to capture semantic relevance beyond keyword overlap.",
+      hints: [
+        "In-batch negatives: B pairs → B questions × (B-1) negatives each. Efficient use of GPU memory.",
+        "Hard negatives: BM25 top-k that look relevant but are wrong answers. These 'confusable' examples most improve retrieval quality.",
+      ],
+    },
+    {
+      id: "q-nlp-kp42-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Reciprocal Rank Fusion (RRF) combines results from multiple retrievers. For a document ranked r_s by BM25 and r_d by DPR, its RRF score is:",
+      options: [
+        "RRF(d) = BM25_score(d) + DPR_score(d) (linear combination of raw scores)",
+        "RRF(d) = 1/(k + r_s) + 1/(k + r_d) where k is a constant (typically 60)",
+        "RRF(d) = max(r_s, r_d) (best rank across retrievers)",
+        "RRF(d) = r_s × r_d (product of ranks; lower is better)",
+      ],
+      correctAnswer: 1,
+      explanation: "RRF (Cormack et al., 2009): score(d) = sum over retrievers of 1/(k + rank_i(d)). k=60 is standard: rank 1 gives 1/61≈0.016; rank 10 gives 1/70≈0.014. RRF is robust to score distribution differences between systems (BM25 scores in [0,30] vs. dense scores in [-1,1]) because it uses only rank order, not raw scores. Documents ranked highly by both retrievers receive high combined scores.",
+      hints: [
+        "RRF avoids normalising scores from different retrievers — rank is comparable; raw scores are not.",
+        "k=60 prevents top-ranked documents from dominating: 1/(1+60) vs 1/(60+60) is only a 2× difference.",
+      ],
+    },
+    {
+      id: "q-nlp-kp42-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In a RAG system, increasing the number of retrieved passages (top-k) always improves answer quality because more context is better.",
+      correctAnswer: "False",
+      explanation: "Increasing k has diminishing returns and can degrade performance. Problems: (1) Noise dilution — irrelevant passages distract the generator and may introduce false information. (2) Lost-in-the-middle effect (Liu et al., 2023) — LLMs attend better to content at the start and end of context; information in the middle of long contexts is often ignored. (3) Context length limits — each passage consumes tokens from the fixed context window. Optimal k is task-dependent, typically 3-10 for most QA tasks.",
+      hints: [
+        "Lost-in-the-middle: LLMs attend better to context at the beginning and end of their window.",
+        "More passages = more noise. A perfect retriever with k=1 (always correct passage) would be ideal.",
+      ],
+    },
+    {
+      id: "q-nlp-kp42-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Iterative RAG systems like IRCoT (Trivedi et al., 2022) interleave retrieval and reasoning. What problem do they solve that single-step RAG cannot?",
+      options: [
+        "Multi-hop RAG reduces retrieval cost by reusing cached passages across queries",
+        "Multi-hop reasoning questions require evidence chains: answering requires fact F1 which enables a new retrieval query to find fact F2 — single retrieval cannot identify F2 without first knowing F1",
+        "Multi-hop RAG eliminates the need for a vector index by using the LLM itself as a retriever",
+        "Multi-hop RAG only applies to structured knowledge graphs, not free-text corpora",
+      ],
+      correctAnswer: 1,
+      explanation: "Bridge questions require chained reasoning: 'What is the capital of the country where X was born?' needs (1) retrieve X's birthplace, (2) retrieve that country's capital. Single-step RAG cannot retrieve the second document without knowing the answer to the first sub-question. IRCoT interleaves CoT reasoning steps with retrieval: each reasoning step generates a new query, retrieves new evidence, and informs the next reasoning step.",
+      hints: [
+        "Bridge question: answer requires an intermediate fact not discoverable from the original query alone.",
+        "IRCoT: reason → retrieve → reason further → retrieve again. Each retrieval is conditioned on previously gathered evidence.",
+      ],
+    },
+    {
+      id: "q-nlp-kp42-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Which approximate nearest-neighbour (ANN) index is most commonly used for efficient dense retrieval in production RAG systems?",
+      options: [
+        "Brute-force exact search (computing inner product with all corpus vectors)",
+        "FAISS (Facebook AI Similarity Search), particularly IVF-PQ (Inverted File Index with Product Quantization)",
+        "Binary search trees partitioning the embedding space by coordinate",
+        "Locality-sensitive hashing with random projections",
+      ],
+      correctAnswer: 1,
+      explanation: "FAISS (Johnson et al., 2017) is the standard library for billion-scale dense retrieval. IVF partitions vectors into Voronoi cells; at query time only the nearest cells are searched. PQ compresses each vector from 768 floats to ~64 bytes using product quantization, reducing memory 10-100x. Together IVF-PQ achieves sub-millisecond retrieval over 100M+ vectors with modest recall loss. DPR and RAG papers use FAISS as the ANN backend.",
+      hints: [
+        "Brute force O(N) per query — infeasible for N > 10M. FAISS IVF-PQ achieves O(sqrt(N)) probe cost.",
+        "Product quantization: split 768-dim vector into 8 subspaces of 96 dims, quantize each to 256 centroids. 8 bytes instead of 3072.",
+      ],
+    },
+    {
+      id: "q-nlp-kp42-6",
+      type: "true-false",
+      difficulty: "hard",
+      question: "ColBERT (Khattab & Zaharia, 2020) uses a late-interaction architecture where query and document token embeddings interact at retrieval time via MaxSim, giving higher retrieval quality than bi-encoders while maintaining efficiency through pre-computed document embeddings.",
+      correctAnswer: "True",
+      explanation: "ColBERT encodes queries and documents as matrices of token embeddings. Similarity: MaxSim(Q,D) = sum_{q in Q} max_{d in D} q·d — each query token finds its best matching document token. Documents are encoded offline; at query time only O(|Q|*|D|) dot products are needed. This late interaction captures fine-grained semantic matching that single-vector bi-encoders compress away. ColBERT outperforms bi-encoders and is competitive with cross-encoders at retrieval speed.",
+      hints: [
+        "Bi-encoder: one vector per document, cosine similarity. ColBERT: token-level matrix, MaxSim. Richer interaction.",
+        "MaxSim: each query token votes for the document it matches best. Sum over query tokens — weighted voting across all query terms.",
+      ],
+    },
+  ],
+
+  "structured-prediction": [
+    {
+      id: "q-nlp-kp43-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A linear-chain CRF models P(y|x) proportional to exp(sum of potential functions). What does it capture that a token-level softmax (MEMM) does not?",
+      options: [
+        "CRF models the joint distribution over the entire label sequence globally, avoiding the label bias problem that affects MEMMs which normalise locally at each step",
+        "CRF requires fewer parameters than MEMM because it does not model transition probabilities",
+        "CRF can handle variable-length inputs while MEMM requires fixed-length sequences",
+        "CRF uses gradient-free inference while MEMM requires backpropagation",
+      ],
+      correctAnswer: 0,
+      explanation: "The label bias problem in MEMMs: local normalisation means the model may ignore input features if transitions are dominated by the label prior. CRFs globally normalise over all label sequences via the partition function Z(x), so every label sequence competes directly. This allows CRFs to consider the entire observation sequence when making each labelling decision, typically outperforming MEMMs on NER and POS tagging.",
+      hints: [
+        "MEMM: P(y_t|y_{t-1}, x) normalized locally at each step. CRF: joint P(y|x) normalized globally over all sequences.",
+        "Label bias: in MEMM, a state with few outgoing transitions channels probability regardless of input. CRF avoids this.",
+      ],
+    },
+    {
+      id: "q-nlp-kp43-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Viterbi algorithm finds the most likely label sequence in a linear-chain CRF. For sequence length T and label set of size K, its time complexity is:",
+      options: [
+        "O(T * K) — linear in both T and K",
+        "O(T * K^2) — quadratic in K because each step considers all K^2 transitions",
+        "O(K^T) — exponential, by exhaustive enumeration",
+        "O(T^2 * K) — dynamic programming over all pairs of positions",
+      ],
+      correctAnswer: 1,
+      explanation: "Viterbi applies dynamic programming: at each time step t, for each label k, compute the maximum score over all previous labels k': delta_t(k) = max_{k'} [delta_{t-1}(k') + Psi(k, k', x_t)]. Each step requires K^2 operations (all K-to-K transitions). Total: O(T * K^2). For NER with K=17 BIO labels: 289*T operations — tractable. Compared to exhaustive search O(K^T): Viterbi is exponentially faster.",
+      hints: [
+        "At each step, maximise over K previous states x K current states = K^2 operations. T steps total.",
+        "Same structure as HMM Viterbi. The CRF version uses unnormalised scores instead of log-probabilities.",
+      ],
+    },
+    {
+      id: "q-nlp-kp43-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "BERT-CRF models for NER typically outperform BERT-softmax (predicting each token label independently) because the CRF layer enforces globally consistent label sequences, for example preventing invalid transitions like I-ORG following B-PER.",
+      correctAnswer: "True",
+      explanation: "BERT-CRF combines contextual BERT embeddings with CRF inference over the label sequence. The CRF transition matrix learns that I-ORG cannot follow B-PER, that I-X must follow B-X or I-X, etc. On CoNLL-2003 NER, BERT-CRF consistently achieves approximately 0.5-1 F1 higher than BERT-softmax. The improvement is especially large for rare entity types where local predictions are uncertain and global label constraints provide crucial guidance.",
+      hints: [
+        "BERT-softmax: each token classified independently. Errors are uncorrelated. BERT-CRF: globally optimal sequence — invalid transitions penalized.",
+        "BIO constraints: I-ORG must follow B-ORG or I-ORG. CRF can learn this exactly; softmax relies on training data statistics.",
+      ],
+    },
+    {
+      id: "q-nlp-kp43-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Constrained beam search (CBS) for sequence generation guarantees that specific n-grams appear in the output. How does it track constraint satisfaction?",
+      options: [
+        "By adjusting the temperature during sampling to increase the probability of desired tokens",
+        "By maintaining a (beam_hypothesis, constraint_state) tuple: each hypothesis tracks which required n-grams have been satisfied, and extensions that cannot satisfy all remaining constraints are pruned",
+        "By post-processing the output to insert required n-grams at the most grammatical positions",
+        "By fine-tuning the model on examples containing the required n-grams before each generation call",
+      ],
+      correctAnswer: 1,
+      explanation: "CBS (Hokamp & Liu, 2017; Anderson et al., 2017) extends beam search with a constraint state machine. Each beam hypothesis is paired with a constraint state indicating which required lexical constraints have been satisfied. At each step, the beam only extends in ways that can still lead to all constraints being satisfied. This enables guaranteed inclusion of required terms — crucial for controlled MT, data-to-text generation, and enforcing terminology.",
+      hints: [
+        "Constrained beam search tracks a finite state machine over required n-grams alongside each beam hypothesis.",
+        "Grid beam search: partition beams by number of satisfied constraints. Ensures diverse constraint-completion states in the beam.",
+      ],
+    },
+    {
+      id: "q-nlp-kp43-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "In the IOB (Inside-Outside-Begin) tagging scheme for NER, a token tagged 'B-ORG' means:",
+      options: [
+        "The token is outside any named entity (O = Outside)",
+        "The token begins a named entity of type ORG (organization)",
+        "The token is inside (a continuation of) an ORG named entity",
+        "The token marks the boundary between two consecutive ORG entities",
+      ],
+      correctAnswer: 1,
+      explanation: "IOB tagging: B-TYPE = Begin a new entity of TYPE; I-TYPE = Inside (continuation of) an entity of TYPE; O = Outside (not part of any entity). 'Apple Inc. released' → B-ORG I-ORG O. The B tag is crucial for distinguishing adjacent entities of the same type: 'John Smith John Doe' → B-PER I-PER B-PER I-PER — without B, consecutive I tags would merge two separate people into one entity.",
+      hints: [
+        "B = Begin (first token of entity). I = Inside (subsequent tokens). O = Outside (non-entity).",
+        "Adjacent same-type entities need B to separate them: B-PER I-PER B-PER I-PER for 'John Smith John Doe'.",
+      ],
+    },
+    {
+      id: "q-nlp-kp43-6",
+      type: "true-false",
+      difficulty: "hard",
+      question: "The structured perceptron (Collins, 2002) for sequence labelling updates weights only when the predicted label sequence differs from the gold sequence, making it an online algorithm with convergence guarantees analogous to the standard perceptron.",
+      correctAnswer: "True",
+      explanation: "Structured perceptron update: if predicted y_hat is different from gold y*: w = w + Phi(x, y*) - Phi(x, y_hat), increasing the score of the gold sequence and decreasing the score of the incorrect prediction. Convergence theorem: if a separating weight vector exists (data is linearly separable in feature space), the structured perceptron converges in a bounded number of mistakes. With averaged weights (Collins 2002), it is robust and competitive with CRFs on NLP tasks.",
+      hints: [
+        "Structured perceptron = perceptron over structured outputs. Update when prediction is wrong; no update when correct.",
+        "Averaged perceptron: average weights over all updates. Reduces overfitting to training data order.",
+      ],
+    },
+  ],
+
+  "evaluation-metrics-advanced": [
+    {
+      id: "q-nlp-kp44-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "BLEU score applies a brevity penalty (BP) to discourage short translations. Which formula correctly describes BP?",
+      options: [
+        "BP = min(1, |hypothesis| / |reference|)",
+        "BP = min(1, exp(1 - |reference| / |hypothesis|))",
+        "BP = |hypothesis| / max(|hypothesis|, |reference|)",
+        "BP = 1 - |reference - hypothesis| / |reference|",
+      ],
+      correctAnswer: 1,
+      explanation: "BLEU brevity penalty: BP = 1 if |hyp| >= |ref|, else exp(1 - |ref|/|hyp|). If hypothesis is half as long as reference: BP = exp(1-2) = exp(-1) approx 0.37. BLEU = BP * exp(sum w_n log p_n) where p_n is clipped n-gram precision, w_n = 1/N (typically N=4). The brevity penalty prevents the trivial strategy of outputting a single high-precision word.",
+      hints: [
+        "Without BP: a 1-word output matching a reference word would have 100% unigram precision. BP penalises short outputs.",
+        "BP < 1 only when hypothesis is shorter than reference. BLEU is precision-based; recall is handled only implicitly via BP.",
+      ],
+    },
+    {
+      id: "q-nlp-kp44-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "BERTScore (Zhang et al., 2020) computes precision, recall, and F1 using contextual BERT embeddings. Given hypothesis tokens {h_i} and reference tokens {r_j}, BERTScore Recall is defined as:",
+      options: [
+        "R = (1/|H|) sum_i max_j cosine(h_i, r_j)",
+        "R = (1/|R|) sum_j max_i cosine(h_i, r_j)",
+        "R = cosine(mean(h_i), mean(r_j))",
+        "R = sum_i sum_j cosine(h_i, r_j) / (|H| * |R|)",
+      ],
+      correctAnswer: 1,
+      explanation: "BERTScore Precision P = (1/|H|) sum_i max_j cosine(h_i, r_j): each hypothesis token matched to best reference token. Recall R = (1/|R|) sum_j max_i cosine(h_i, r_j): each reference token matched to best hypothesis token. F1 = 2PR/(P+R). Recall measures how well the hypothesis covers reference content. BERTScore correlates better with human judgements than BLEU/ROUGE on translation and summarisation.",
+      hints: [
+        "Recall: for each reference token, find the best matching hypothesis token. Average over reference tokens.",
+        "Precision: for each hypothesis token, find the best matching reference token. Average over hypothesis tokens.",
+      ],
+    },
+    {
+      id: "q-nlp-kp44-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "ROUGE-2 is computed as the bigram recall of the generated summary against reference summaries. For generated summary G and reference R, ROUGE-2 is:",
+      options: [
+        "ROUGE-2 = |bigrams(G) intersect bigrams(R)| / |bigrams(G)| (bigram precision)",
+        "ROUGE-2 = sum_{bigrams in R} count_match(bigram) / sum_{bigrams in R} count(bigram) (bigram recall)",
+        "ROUGE-2 = 2 * precision * recall / (precision + recall) (F1 over bigrams)",
+        "ROUGE-2 = LCS(G, R) / |R| (longest common subsequence recall)",
+      ],
+      correctAnswer: 1,
+      explanation: "ROUGE-N (Lin, 2004) is a recall-oriented metric: ROUGE_N = sum_{n-grams in ref} count_match(n-gram) / sum_{n-grams in ref} count(n-gram). Count_match = min(count in hypothesis, count in reference), preventing credit for repeated n-grams. ROUGE-2 captures fluency better than ROUGE-1 because bigrams encode local word order. In practice, the F1 version (combining ROUGE precision and recall) is often reported.",
+      hints: [
+        "ROUGE-N: how many reference bigrams appear in the hypothesis? Precision would ask the reverse.",
+        "ROUGE-2 rewards summaries that share common word pairs with the reference in the same order.",
+      ],
+    },
+    {
+      id: "q-nlp-kp44-4",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Multi-dimensional quality metrics (MQM, Freitag et al. 2021) for MT evaluation, which assign weighted error counts across error categories, correlate more strongly with human direct assessment than BLEU.",
+      correctAnswer: "True",
+      explanation: "MQM (Multidimensional Quality Metrics) asks annotators to mark specific errors (mistranslation, omission, addition, fluency) and assign severity (critical, major, minor). The MQM score sums weighted error penalties per sentence. Freitag et al. (2021, 2022) showed MQM annotations correlate much more strongly with human direct assessment than BLEU. Modern learned metrics (COMET, BLEURT) trained on DA scores also significantly outperform BLEU, motivating the shift away from BLEU in the MT community.",
+      hints: [
+        "BLEU is a surface-level n-gram metric. MQM captures semantic and fluency errors explicitly.",
+        "The WMT shared task has shifted from BLEU to human DA and learned metrics as primary evaluation.",
+      ],
+    },
+    {
+      id: "q-nlp-kp44-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "In human evaluation of NLG systems, direct assessment (DA) asks annotators to:",
+      options: [
+        "Compare two system outputs side-by-side and pick the better one (pairwise preference)",
+        "Rate the quality of a single output on a numeric scale (e.g., 0-100) without comparing to other systems",
+        "Identify specific errors by category and severity (like MQM)",
+        "Rank all system outputs from best to worst simultaneously",
+      ],
+      correctAnswer: 1,
+      explanation: "Direct assessment (Graham et al., 2013) presents each annotator with a single output and asks for an absolute quality score on a continuous scale (0-100). Scores are z-normalised per annotator to account for different rating styles. Advantages over pairwise comparison: more scalable (no need to compare all pairs), allows fine-grained quality measurement, and aggregates well. DA is the primary human evaluation method in WMT MT evaluation campaigns.",
+      hints: [
+        "Pairwise: which is better? DA: how good is this single output? Two different experimental designs.",
+        "Z-normalisation corrects for annotators who always score high or low: subtract annotator mean, divide by annotator std.",
+      ],
+    },
+    {
+      id: "q-nlp-kp44-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The METEOR metric for machine translation evaluation differs from BLEU by including:",
+      options: [
+        "Character-level n-gram matching instead of word-level n-gram matching",
+        "Recall as well as precision, synonym and stem matching, and a fragmentation penalty for non-consecutive matches",
+        "Perplexity under a language model as a fluency component",
+        "BERTScore-style contextual embedding matching for semantic similarity",
+      ],
+      correctAnswer: 1,
+      explanation: "METEOR (Banerjee & Lavie, 2005) computes an F-score combining unigram precision and recall (harmonic mean), uses synonym dictionaries and Porter stemmer to match morphological variants and synonyms beyond exact matches, and applies a fragmentation penalty for non-contiguous matches. METEOR correlates better with human judgements than BLEU at the sentence level precisely because it captures recall and semantic equivalence that pure precision-based BLEU misses.",
+      hints: [
+        "BLEU: precision-only, exact match. METEOR: F1 (precision+recall), stems, synonyms, fragmentation penalty.",
+        "Fragmentation: 'the big red car' matching 'the car big red' (same words, wrong order) gets penalised by the fragmentation penalty.",
+      ],
+    },
+  ],
+};
+
+const extra2: Record<string, Question[]> = {
+  "bleu-detail-and-human-eval": [
+    {
+      id: "q-nlp-kp45-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "BLEU uses clipped n-gram precision. What does 'clipping' mean in this context?",
+      options: [
+        "Long translations are clipped to the length of the reference before scoring",
+        "The count of each n-gram in the hypothesis is clipped to the maximum count of that n-gram in any single reference, preventing credit for repeating n-grams more times than they appear in references",
+        "N-grams beyond order 4 are clipped and not counted",
+        "Hypothesis words that do not appear in any reference are clipped (removed) before scoring",
+      ],
+      correctAnswer: 1,
+      explanation: "BLEU clipping prevents a degenerate hypothesis like 'the the the the' from scoring 100% unigram precision against a reference containing one 'the'. The count of each n-gram in the hypothesis is capped at its maximum count in any single reference. Modified precision p_n = sum_ngrams min(count_hyp, max_count_ref) / sum_ngrams count_hyp. This ensures a system cannot game BLEU by repeating high-frequency words.",
+      hints: [
+        "Without clipping: 'the the the' against reference 'the cat sat' → 3/3 = 100% unigram precision. With clipping: min(3,1)/3 = 1/3.",
+        "Clipping is applied before summing counts across the entire test set.",
+      ],
+    },
+    {
+      id: "q-nlp-kp45-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The Spearman rank correlation coefficient is commonly used to assess the agreement between an automatic metric (like BLEU or COMET) and human evaluation scores, because it measures monotonic relationship without assuming a linear relationship.",
+      correctAnswer: "True",
+      explanation: "Spearman's rho measures whether the ranking of systems by an automatic metric agrees with the ranking by human evaluation. It does not assume the relationship is linear (unlike Pearson correlation). For system-level evaluation, Spearman's rho is appropriate because we care about whether the metric ranks systems the same way humans do, not whether the raw scores are proportional. A metric with high Spearman rho is considered a good proxy for human judgement.",
+      hints: [
+        "Spearman = Pearson applied to ranks. If A > B > C for humans and A > B > C for BLEU: perfect rank agreement.",
+        "System-level vs. segment-level correlation: metrics like BLEU are much more reliable at system level than at the sentence level.",
+      ],
+    },
+    {
+      id: "q-nlp-kp45-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "COMET (Rei et al., 2020) is a learned MT evaluation metric trained on human quality judgements. What type of human annotation does COMET-DA use?",
+      options: [
+        "Pairwise preference annotations (annotators choose the better of two translations)",
+        "Direct assessment scores (annotators rate each translation on a 0-100 scale without comparison)",
+        "MQM error annotations (annotators mark and categorize errors in each translation)",
+        "Relative ranking of all system outputs for each source sentence simultaneously",
+      ],
+      correctAnswer: 1,
+      explanation: "COMET-DA (Direct Assessment) is trained on DA scores: annotators rate each translation independently on a 0-100 scale, which are then z-normalised. COMET uses a cross-lingual encoder (XLM-R) to jointly encode the source, hypothesis, and reference (for reference-based versions). It outperforms BLEU significantly on segment-level correlation with human judgement. COMET-QE (Quality Estimation) is a reference-free variant using source and hypothesis only.",
+      hints: [
+        "COMET-DA uses 0-100 DA scores. COMET-MQM uses MQM error annotations. Both trained on WMT human evaluation data.",
+        "COMET takes (source, hypothesis, reference) as input — it can use reference information the MT system did not have access to.",
+      ],
+    },
+    {
+      id: "q-nlp-kp45-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Inter-annotator agreement (IAA) is important in NLP annotation projects. Cohen's kappa is preferred over raw percent agreement because it:",
+      options: [
+        "Measures agreement faster than computing raw percent agreement",
+        "Corrects for chance agreement: two annotators randomly guessing the same distribution would agree some fraction of the time, and kappa normalises this out",
+        "Is always higher than raw percent agreement, making results look better",
+        "Can only be applied to binary annotations, making it simpler to compute",
+      ],
+      correctAnswer: 1,
+      explanation: "Cohen's kappa: k = (P_o - P_e) / (1 - P_e) where P_o is observed agreement and P_e is expected agreement by chance. If labels are unbalanced (e.g., 90% of examples are negative), two random annotators would agree 81% (0.9×0.9) of the time. Kappa normalises this: k=0 means agreement at chance level, k=1 means perfect agreement. For NLP tasks, kappa > 0.8 is generally considered high agreement.",
+      hints: [
+        "P_e: if annotators independently sample from the label distribution, what fraction would match by chance?",
+        "Kappa for NER: annotators often agree on O tags (most tokens) but disagree on entity boundaries, giving misleadingly high raw agreement.",
+      ],
+    },
+    {
+      id: "q-nlp-kp45-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "ROUGE-L is based on the longest common subsequence (LCS) between hypothesis and reference and does not require words to appear consecutively, making it more flexible than ROUGE-2 which requires consecutive bigrams.",
+      correctAnswer: "True",
+      explanation: "ROUGE-L computes the LCS between hypothesis H and reference R: ROUGE_L = LCS(H,R)/|R| (recall-based). LCS rewards shared word sequences even if non-consecutive: 'the cat sat mat' and 'the fluffy cat quietly sat on a mat' share LCS 'the cat sat mat' (length 4). ROUGE-2 only counts adjacent bigram matches. ROUGE-L captures sentence-level structure and in-sequence word order without requiring contiguous matches.",
+      hints: [
+        "LCS: longest sequence of words appearing in both H and R in the same order but not necessarily consecutively.",
+        "ROUGE-L handles paraphrases better than ROUGE-2 because synonymous insertions/deletions don't break LCS as they break bigrams.",
+      ],
+    },
+    {
+      id: "q-nlp-kp45-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "SummEval (Fabbri et al., 2021) is a benchmark that evaluates summarisation metrics. Which four dimensions of summary quality does it cover with human annotations?",
+      options: [
+        "BLEU, ROUGE-1, ROUGE-2, ROUGE-L (the four standard automatic metrics)",
+        "Coherence, consistency (faithfulness), fluency, and relevance",
+        "Precision, recall, F1, and accuracy relative to the reference summary",
+        "Grammaticality, lexical diversity, length appropriateness, and factual density",
+      ],
+      correctAnswer: 1,
+      explanation: "SummEval (Fabbri et al., 2021) collected expert human annotations on four dimensions for CNN/DailyMail summaries: (1) Coherence — logical structure and organisation; (2) Consistency/Faithfulness — factual alignment with the source; (3) Fluency — grammatical quality of individual sentences; (4) Relevance — coverage of important information. These dimensions allow evaluating whether automatic metrics capture each aspect of quality, revealing that ROUGE correlates poorly with consistency — the dimension most important for practical use.",
+      hints: [
+        "Consistency (faithfulness) is the most practically important dimension — hallucinated summaries can score well on ROUGE.",
+        "SummEval revealed that NLI-based metrics correlate better with consistency than n-gram metrics like ROUGE.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra, extra2);
+
 registerQuestions(questions);
 export default questions;

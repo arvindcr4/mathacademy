@@ -66,19 +66,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In a neural network with L layers, backpropagation computes the gradient of the loss with respect to layer-l weights as a product of L − l matrices. What mathematical rule makes this possible?",
+        "In a neural network with L layers, backpropagation computes the gradient of the loss with respect to layer-ℓ weights as a product of L − ℓ Jacobians. What mathematical property of calculus makes this possible?",
       options: [
         "Fourier Transform",
-        "The chain rule of calculus: d(f∘g)/dx = (df/dg) × (dg/dx)",
+        "The chain rule of calculus: $\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x)$",
         "Bayes' theorem",
         "Gaussian elimination",
       ],
       correctAnswer: 1,
       explanation:
-        "Backpropagation applies the chain rule recursively. As described in d2l.ai §5.3, the gradient of the loss with respect to layer l\'s weights equals the product of all Jacobians from layer l+1 to the output times the local gradient — a chain of derivatives applied backward through the computational graph. Concretely: ∂L/∂W⁽ˡ⁾ = (∂L/∂hᴸ) · (∂hᴸ/∂hᴸ⁻¹) · ... · (∂h⁽ˡ⁺¹⁾/∂h⁽ˡ⁾) · (∂h⁽ˡ⁾/∂W⁽ˡ⁾).",
+        "Backpropagation applies the chain rule of calculus recursively. As described in d2l.ai §5.3, the gradient of the loss with respect to layer ℓ\'s weights equals the product of all Jacobians from layer ℓ+1 to the output, multiplied by the local gradient — a chain of derivatives applied backward through the computational graph. Concretely:\n\n\\[\n\\frac{\\partial L}{\\partial W^{(\\ell)}} = \\frac{\\partial L}{\\partial h^{(L)}} \\cdot \\frac{\\partial h^{(L)}}{\\partial h^{(L-1)}} \\cdot \\cdots \\cdot \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\cdot \\frac{\\partial h^{(\\ell)}}{\\partial W^{(\\ell)}}.\n\\]\n\nEach factor in the product is a Jacobian matrix; their sequential multiplication is exactly the chain rule applied recursively through the network.",
       hints: [
-        "To find how a small change in a weight at layer 1 affects the final loss in a 10-layer network, you must chain together 9 intermediate derivatives.",
-        "∂L/∂W₁ = (∂L/∂h₁₀) · (∂h₁₀/∂h₉) · ... · (∂h₂/∂h₁) · (∂h₁/∂W₁). Each factor is a Jacobian; their product is the chain rule applied recursively.",
+        "To find how a small change in a weight at layer 1 affects the final loss in a 10-layer network, you must chain together the derivatives through all 9 intermediate layers.",
+        "The gradient factorizes as: ∂L/∂W₁ = (∂L/∂h₁₀) · (∂h₁₀/∂h₉) · ... · (∂h₂/∂h₁) · (∂h₁/∂W₁). Each factor is a Jacobian; their product is the chain rule applied recursively.",
       ],
     },
     {
@@ -101,19 +101,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In a network using sigmoid activations, the vanishing gradient problem occurs because sigmoid\'s maximum derivative is 0.25. If a network has 10 sigmoid layers, the gradient magnitude at the first layer is at most:",
+        "In a deep network using sigmoid activations, gradients are multiplied through each layer during backpropagation. If sigmoid\'s derivative satisfies σ'(x) ≤ 0.25 for all x, and a network has 10 sigmoid layers, then the gradient magnitude at the earliest layer is at most:",
       options: [
-        "0.25 × 10 = 2.5",
-        "0.25^10 ≈ 9.5 × 10⁻⁷ (shrinks exponentially)",
-        "0.25 / 10 = 0.025",
-        "10 × 0.25 = 2.5 (linear reduction)",
+        "$0.25 \\times 10 = 2.5$",
+        "$0.25^{10} \\approx 9.5 \\times 10^{-7}$, shrinking exponentially with depth",
+        "$0.25 / 10 = 0.025$",
+        "$10 \\times 0.25 = 2.5$, a linear reduction",
       ],
       correctAnswer: 1,
       explanation:
-        "As noted in d2l.ai §12.1.2.3, sigmoid\'s derivative is σ(x)(1−σ(x)), with maximum value 0.25 at x=0. During backpropagation, the gradient signal is multiplied through each layer: |∂L/∂h⁽ˡ⁾| ≤ |∂h⁽ˡ⁺¹⁾/∂h⁽ˡ⁾| · |∂L/∂h⁽ˡ⁺¹⁾|. With σ'(x) ≤ 0.25, after 10 layers: 0.25¹⁰ ≈ 9.5 × 10⁻⁷. Early layers receive a gradient signal ~10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs (σ'(x) = 1 if x > 0, else 0), avoiding this multiplicative shrinkage.",
+        "During backpropagation, the gradient signal is multiplied through each layer:\n\n\\[\n\\left\\| \\frac{\\partial L}{\\partial h^{(\\ell)}} \\right\\| \\leq \\left\\| \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\right\\| \\cdot \\left\\| \\frac{\\partial L}{\\partial h^{(\\ell+1)}} \\right\\|.\n\\]\n\nWith σ'(x) = σ(x)(1 − σ(x)) and σ'(x) ≤ 0.25 for all x, each layer multiplies the gradient by at most 0.25. After 10 layers:\n\n\\[\n0.25^{10} \\approx 9.5 \\times 10^{-7}.\n\\]\n\nEarly layers receive a gradient signal roughly 10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs and 0 otherwise, avoiding this multiplicative shrinkage entirely.",
       hints: [
-        "Each layer multiplies the gradient by at most 0.25. After 10 layers: 0.25¹⁰ ≈ 10⁻⁶ — the gradient is essentially zero.",
-        "ReLU\'s gradient is either 0 or 1 — no multiplicative shrinkage for active neurons.",
+        "Each layer applies a multiplicative factor of at most 0.25 to the gradient. After 10 layers: 0.25¹⁰ ≈ 10⁻⁶ — the gradient is essentially zero.",
+        "ReLU\'s gradient is either 0 or 1 for active neurons — no multiplicative shrinkage, so gradients flow unchanged through the network.",
       ],
     },
   ],
@@ -124,19 +124,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "As shown in d2l.ai §5.1, ReLU(x) = max(x, 0). What is the gradient of ReLU with respect to x when x = 3.5? When x = -2.1?",
+        "As shown in d2l.ai §5.1, ReLU is defined as ReLU(x) = max(x, 0). What is the derivative of ReLU with respect to x at x = 3.5? At x = −2.1?",
       options: [
-        "gradient = 0.5 for x=3.5; gradient = -0.5 for x=-2.1",
-        "gradient = 1 for x=3.5; gradient = 0 for x=-2.1",
-        "gradient = 3.5 for x=3.5; gradient = 0 for x=-2.1",
-        "gradient = 1 for x=3.5; gradient = -1 for x=-2.1",
+        "$\\frac{d}{dx}$ReLU$\\big|_{x=3.5} = 0.5$; $\\frac{d}{dx}$ReLU$\\big|_{x=-2.1} = -0.5$",
+        "$\\frac{d}{dx}$ReLU$\\big|_{x=3.5} = 1$; $\\frac{d}{dx}$ReLU$\\big|_{x=-2.1} = 0$",
+        "$\\frac{d}{dx}$ReLU$\\big|_{x=3.5} = 3.5$; $\\frac{d}{dx}$ReLU$\\big|_{x=-2.1} = 0$",
+        "$\\frac{d}{dx}$ReLU$\\big|_{x=3.5} = 1$; $\\frac{d}{dx}$ReLU$\\big|_{x=-2.1} = -1$",
       ],
       correctAnswer: 1,
       explanation:
-        "ReLU\'s derivative is 1 when x > 0 and 0 when x < 0 (undefined at x=0, but conventionally set to 0). This property — gradients are either 0 or 1 for positive inputs — prevents vanishing gradients unlike sigmoid (max gradient 0.25), making ReLU the default hidden-layer activation (d2l.ai §5.1.2.1).",
+        "ReLU is piecewise linear:\n\n\\[\n\\frac{d}{dx}\\text{ReLU}(x) =\n\\begin{cases}\n1 & \\text{if } x > 0, \\\\\n0 & \\text{if } x < 0.\n\\end{cases}\n\\]\n\nAt x = 3.5 (> 0): the derivative is 1. At x = −2.1 (< 0): the derivative is 0. At x = 0 the derivative is undefined; in practice it is set to 0.\n\nThis binary gradient (0 or 1) prevents vanishing gradients: unlike sigmoid, whose peak gradient is only 0.25, ReLU\'s gradient is either 1 (full signal passed) or 0 (no signal passed). This simplicity is why ReLU became the default hidden-layer activation (d2l.ai §5.1.2.1).",
       hints: [
-        "ReLU is piecewise linear: it passes the input through unchanged (slope 1) when positive, zeros it when negative.",
-        "Contrast with sigmoid: even at x=0 (peak), sigmoid\'s gradient is only 0.25 — four times smaller than ReLU\'s gradient.",
+        "ReLU is piecewise linear with slope 1 when x > 0 (passing the input through unchanged) and slope 0 when x < 0 (zeroing it out).",
+        "Contrast with sigmoid: even at x = 0 (its peak), sigmoid\'s gradient is only 0.25 — four times smaller than ReLU\'s maximum gradient of 1.",
       ],
     },
     {
@@ -159,19 +159,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Sigmoid\'s gradient is given by σ(x)(1 − σ(x)). At x = 5, σ(5) ≈ 0.993. What is the gradient, and why does this cause problems in deep networks?",
+        "Sigmoid\'s derivative is given by σ'(x) = σ(x)(1 − σ(x)). At x = 5, σ(5) ≈ 0.993. What is the gradient σ'(5), and why does this cause problems in deep networks?",
       options: [
-        "Gradient ≈ 0.007; multiplied across 10 saturated layers gives ≈ 7×10⁻²⁰ — essentially zero gradient at early layers",
-        "Gradient ≈ 0.5; this is the maximum gradient and causes exploding gradients",
-        "Gradient ≈ 0.993; this is large and causes exploding gradients at deep layers",
-        "Gradient = 1; sigmoid has unit gradient at all positive values",
+        "σ'(5) ≈ 0.007; after 10 saturated sigmoid layers the gradient is ≈ 7×10⁻²⁰ — essentially zero at early layers, causing vanishing gradients",
+        "σ'(5) ≈ 0.5; this is the maximum possible sigmoid gradient and causes exploding gradients",
+        "σ'(5) ≈ 0.993; this large gradient causes exploding gradients in deep networks",
+        "σ'(5) = 1; sigmoid has unit gradient for all positive values",
       ],
       correctAnswer: 0,
       explanation:
-        "At x=5: σ(5)(1−σ(5)) ≈ 0.993 × 0.007 ≈ 0.007. The gradient signal shrinks multiplicatively through each layer: after 10 saturated sigmoid layers, |∂L/∂h⁽¹⁾| ≤ (0.007)¹⁰ ≈ 2.8×10⁻²¹. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x=0) and is much smaller for |x| > 2 — meaning the gradient vanishes both in saturation and exponentially with network depth. This makes training deep networks with sigmoid activations extremely difficult.",
+        "At x = 5, the sigmoid output is σ(5) ≈ 0.993 (saturated near 1). The gradient is:\n\n\\[\n\\sigma'(5) = \\sigma(5)\\,(1 - \\sigma(5)) \\approx 0.993 \\times 0.007 \\approx 0.007.\n\\]\n\nThis is already very small — the neuron is in saturation. During backpropagation, the gradient signal is multiplied through each layer. After 10 saturated sigmoid layers:\n\n\\[\n\\bigl\\| \\frac{\\partial L}{\\partial h^{(1)}} \\bigr\\| \\leq (0.007)^{10} \\approx 2.8 \\times 10^{-21}.\n\\]\n\nThe gradient vanishes exponentially with depth. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x = 0) and is already small for |x| > 2. In deep networks, early layers receive effectively zero gradient — they cannot learn.",
       hints: [
-        "σ(x)(1 − σ(x)) is maximum (0.25) only at x=0. For |x| > 2, gradient < 0.1. At x=5, gradient ≈ 0.007.",
-        "Even at the peak (0.25 per layer), after 10 layers: 0.25¹⁰ ≈ 10⁻⁶. With saturated sigmoid (0.007), it\'s effectively zero.",
+        "σ'(x) = σ(x)(1 − σ(x)) is maximum (0.25) only at x = 0. For |x| > 2, σ'(x) < 0.1. At x = 5, σ'(5) ≈ 0.007 — the neuron is saturated.",
+        "Even at the theoretical peak (0.25 per layer), after 10 layers: 0.25¹⁰ ≈ 10⁻⁶. With saturated sigmoid (0.007 per layer), it drops to ~10⁻²¹ — effectively zero.",
       ],
     },
   ],
@@ -191,10 +191,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'As d2l.ai §5.4.1.3 explains: "all the elements of W⁽¹⁾ still take the same value" after any update because all neurons receive the same inputs and identical gradients. The network behaves as if it had only one neuron per layer — symmetry is never broken. Random initialization is essential to break this symmetry.',
+        "As d2l.ai §5.4.1.3 explains, if all weights in a layer are initialized to the same constant, then all neurons in that layer receive identical inputs and produce identical outputs. Consequently, they all receive identical gradients during backpropagation, so every weight updates by the same amount. After any number of updates, all neurons remain identical — the hidden layer effectively has only one neuron regardless of its width. Random initialization is essential to break this symmetry so that each neuron learns to detect different features.",
       hints: [
         "If all neurons start identical and receive identical gradients, they will always remain identical — the hidden layer has effectively one neuron regardless of width.",
-        'd2l.ai notes: "Such iterations would never break the symmetry on their own and we might never realize the network\'s expressive power."',
+        "d2l.ai notes: without breaking symmetry, the network might never realize its expressive power, since all hidden units compute the same function.",
       ],
     },
     {
@@ -240,7 +240,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Batch Normalization normalizes activations by computing mean μ and variance σ² across the mini-batch, then applies: x̂ = (x − μ)/√(σ² + ε). What do the learnable parameters γ and β do?",
+        "Batch Normalization normalizes activations by computing the mini-batch mean μ and variance σ², then applying: \\(\\hat{x} = (x - \\mu) / \\sqrt{\\sigma^2 + \\varepsilon}.\\) What do the learnable parameters γ and β do?",
       options: [
         "γ scales the learning rate; β controls the dropout rate",
         "γ (scale) and β (shift) allow the network to undo the normalization if needed, preserving representational power",
@@ -249,10 +249,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "After normalizing to zero mean and unit variance, γ and β are learnable parameters that allow the layer to output any mean and scale: y = γ·x̂ + β. Without them, normalization could harm the network — for instance, sigmoid near zero is approximately linear, losing non-linearity. γ and β restore full expressiveness.",
+        "After normalizing to zero mean and unit variance, the learnable parameters γ and β allow the layer to output any mean and scale:\n\n\\[\ny = \\gamma \\cdot \\hat{x} + \\beta.\n\\]\n\nWithout γ and β, the normalized output is constrained to have mean 0 and variance 1. This can harm the network: for example, sigmoid near zero is approximately linear, so normalization would make the sigmoid layer nearly linear, losing its non-linearity. γ and β restore full representational flexibility — if the identity transformation is optimal, the network can learn γ = σ and β = μ to undo the normalization.",
       hints: [
-        "If γ=1 and β=0, BN passes through the normalized activation. If γ=σ and β=μ, it completely undoes the normalization.",
-        "The learnable parameters ensure BN can represent the identity transformation — the network can learn to bypass normalization if helpful.",
+        "If γ = 1 and β = 0, BN passes through the normalized activation unchanged. If γ = σ and β = μ, it completely undoes the normalization.",
+        "The learnable parameters ensure BN can represent the identity transformation — the network can learn to bypass normalization if doing so is beneficial.",
       ],
     },
     {
@@ -307,10 +307,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'As stated in d2l.ai §5.6: "By design, the expectation remains unchanged, i.e., E[h\'] = h." If a neuron survives (probability 1−p) and is scaled by 1/(1−p), then E[h\'] = (1−p)·h/(1−p) + p·0 = h. This "inverted dropout" means at test time, no scaling is needed — all neurons are simply left active.',
+        "If a neuron survives with probability (1−p) and is scaled by 1/(1−p), then its expected value is:\n\n\\[\n\\mathbb{E}[h'] = (1-p) \\cdot \\frac{h}{1-p} + p \\cdot 0 = h.\n\\]\n\nThis \"inverted dropout\" design ensures that the expected activation at training time equals the activation at test time (when all neurons are active and no scaling is applied). Without this scaling, the expected training activation would be (1−p)·h, creating a train-test mismatch.",
       hints: [
-        "Compute E[h\'] = Pr(survive)·h/(1−p) + Pr(drop)·0 = (1−p)·h/(1−p) + 0 = h. The expected value is preserved.",
-        "Without scaling: E[h\'] = (1−p)·h. At test time (all neurons active): E[h\'] = h. Train-test mismatch in expected activation magnitude.",
+        "E[h'] = Pr(survive) · h/(1−p) + Pr(drop) · 0 = (1−p) · h/(1−p) + 0 = h. The expected value is preserved.",
+        "Without scaling: E[h'] = (1−p) · h. At test time (all neurons active): E[h'] = h. This train-test mismatch in expected activation magnitude is avoided by inverted dropout.",
       ],
     },
     {
@@ -356,19 +356,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Adam maintains two moment estimates per parameter: m_t (first moment, mean of gradients) and v_t (second moment, uncentered variance of gradients). What is the effective learning rate for a parameter whose gradient is consistently 0.01?",
+        "Adam maintains two moment estimates per parameter: m_t (first moment, mean of gradients) and v_t (second moment, uncentered variance of gradients). What is the effective learning rate for a parameter whose gradient is consistently g = 0.01?",
       options: [
         "Exactly the base learning rate α, since the gradient is constant",
-        "α × m_t/√v_t ≈ α × 0.01/√(0.0001) = α × 1.0 — the ratio normalizes the learning rate regardless of gradient scale",
+        "α · m̂_t / √v̂_t ≈ α (the ratio normalizes the learning rate to a consistent magnitude regardless of gradient scale)",
         "α × 0.01 (scaled down by gradient magnitude)",
         "α / 0.01 (scaled up when gradient is small)",
       ],
       correctAnswer: 1,
       explanation:
-        "Adam\'s update rule is: θ_{t+1} = θ_t − α · m̂_t / √(v̂_t + ε), where m̂_t and v̂_t are bias-corrected first and second moment estimates. For a constant gradient g: m̂_t = g and v̂_t = g² (after bias correction). The effective step size is α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude cancels out — Adam\'s step direction is ±α in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
+        "Adam\'s update rule is:\n\n\\[\n\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t} + \\varepsilon},\n\\]\n\nwhere \\(\\hat{m}_t\\) and \\(\\hat{v}_t\\) are bias-corrected first and second moment estimates. For a constant gradient g: \\(\\hat{m}_t = g\\) and \\(\\hat{v}_t = g^2\\) (after bias correction). The effective step size is:\n\n\\[\n\\alpha \\cdot \\frac{g}{\\sqrt{g^2}} = \\alpha \\cdot \\frac{g}{|g|} = \\alpha \\cdot \\operatorname{sgn}(g).\n\\]\n\nThe gradient magnitude cancels in the ratio \\(\\hat{m}_t / \\sqrt{\\hat{v}_t}\\). Adam\'s step size is approximately ±α in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
       hints: [
-        "Adam\'s update: θ ← θ − α · m̂_t/√(v̂_t + ε). With constant gradient g: m̂_t = g, v̂_t = g².",
-        "Step = α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
+        "Adam\'s update: θ ← θ − α · m̂_t / √(v̂_t + ε). With constant gradient g: m̂_t = g, v̂_t = g².",
+        "The step is α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
       ],
     },
     {
@@ -394,15 +394,15 @@ const questions: Record<string, Question[]> = {
         "d2l.ai §12.6 shows that SGD with momentum updates: v_t = β·v_{t-1} + g_t, then θ ← θ − α·v_t. For β = 0.9, how many effective past gradient steps does momentum approximately integrate?",
       options: [
         "0.9 steps (just less than 1)",
-        "10 steps (≈ 1/(1−0.9) = 10)",
+        "≈ 10 steps (from the geometric series sum 1/(1 − β) = 1/(1 − 0.9) = 10)",
         "90 steps (100 × 0.9)",
         "1 step — momentum just smooths the current gradient",
       ],
       correctAnswer: 1,
       explanation:
-        "The momentum velocity v_t = β·v_{t-1} + g_t unrolls as a geometric series: v_t = g_t + β·g_{t-1} + β²·g_{t-2} + ... + β^{t-1}·g_1. The sum of the decay weights is: Σ_{k=0}^{∞} β^k = 1/(1−β). With β=0.9: effective window ≈ 1/(1−0.9) = 10 steps. Each past gradient g_{t-k} contributes β^k to the current velocity, with weight decaying exponentially at rate β^k.",
+        "The momentum velocity v_t = β·v_{t-1} + g_t unrolls by substitution into a geometric series:\n\n\\[\nv_t = g_t + \\beta \\cdot g_{t-1} + \\beta^2 \\cdot g_{t-2} + \\cdots + \\beta^{t-1} \\cdot g_1.\n\\]\n\nEach past gradient g_{t-k} contributes β^k to the current velocity, with weight decaying exponentially at rate β^k. The effective window is the sum of the decay weights:\n\n\\[\n\\sum_{k=0}^{\\infty} \\beta^k = \\frac{1}{1-\\beta}.\n\\]\n\nWith β = 0.9: effective window ≈ 1/(1 − 0.9) = 10 steps. A gradient from 10 steps ago carries weight β¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago carries β²⁰ ≈ 0.12.",
       hints: [
-        "Geometric series: 1 + β + β² + ... = 1/(1−β). For β=0.9: 1/(1−0.9) = 10. So momentum integrates ~10 past gradients.",
+        "Geometric series: 1 + β + β² + ... = 1/(1−β). For β = 0.9: 1/(1 − 0.9) = 10. So momentum integrates ~10 past gradients.",
         "A gradient from 10 steps ago is weighted by β¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago: β²⁰ ≈ 0.12.",
       ],
     },
@@ -472,19 +472,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Cross-entropy loss for classification is L = −log(p_correct). If the model predicts probability 0.01 for the correct class, what is the loss? If it predicts 0.99?",
+        "Cross-entropy loss for classification is \\(L = -\\log(p_{\\text{correct}})\\). If the model predicts probability 0.01 for the correct class, what is the loss? If it predicts 0.99?",
       options: [
-        "L = 0.01 when p=0.01; L = 0.99 when p=0.99",
-        "L = −log(0.01) ≈ 4.6 when p=0.01; L = −log(0.99) ≈ 0.01 when p=0.99",
-        "L = 1/0.01 = 100 when p=0.01; L = 1/0.99 ≈ 1 when p=0.99",
-        "L = 0 when p=0.01 (correct); L = 1 when p=0.99 (wrong)",
+        "$L = 0.01$ when $p=0.01$; $L = 0.99$ when $p=0.99$",
+        "$L = -\\log(0.01) \\approx 4.6$ when $p=0.01$; $L = -\\log(0.99) \\approx 0.01$ when $p=0.99$",
+        "$L = 1/0.01 = 100$ when $p=0.01$; $L = 1/0.99 \\approx 1$ when $p=0.99$",
+        "$L = 0$ when $p=0.01$ (correct); $L = 1$ when $p=0.99$ (wrong)",
       ],
       correctAnswer: 1,
       explanation:
-        'Cross-entropy L = −log(p_correct) goes to infinity as p_correct → 0 and to 0 as p_correct → 1. When confidently wrong (p=0.01), the loss is large (≈4.6) producing strong gradients. When confidently correct (p=0.99), the loss is near zero (≈0.01). MSE\'s gradient near 0 and 1 with sigmoid shrinks badly — cross-entropy avoids this "neuron saturation" problem.',
+        "Cross-entropy \\(L = -\\log(p_{\\text{correct}})\\) goes to infinity as \\(p_{\\text{correct}} \\to 0\\) and to 0 as \\(p_{\\text{correct}} \\to 1\\).\n\nWhen confidently wrong (\\(p = 0.01\\)):\n\n\\[\nL = -\\log(0.01) = -\\log(10^{-2}) = 2 \\cdot \\log(10) \\approx 4.6,\n\\]\n\na large loss producing strong gradients to correct the error.\n\nWhen confidently correct (\\(p = 0.99\\)):\n\n\\[\nL = -\\log(0.99) \\approx -(-0.01005) \\approx 0.01,\n\\]\n\na near-zero loss. MSE\'s gradient shrinks badly near 0 and 1 with sigmoid — cross-entropy avoids this neuron saturation problem.",
       hints: [
-        "log(0.01) = log(10^{-2}) = -2·log(10) ≈ -4.6. So -log(0.01) ≈ 4.6 — a large penalty for confident wrong answers.",
-        "Cross-entropy is the natural loss because it directly maximizes log-likelihood of the correct class label.",
+        "$\\log(0.01) = \\log(10^{-2}) = -2 \\cdot \\log(10) \\approx -4.6$. So $-\\log(0.01) \\approx 4.6$ — a large penalty for confident wrong answers.",
+        "Cross-entropy directly maximizes the log-likelihood of the correct class label, avoiding the saturation problem that afflicts MSE with sigmoid.",
       ],
     },
     {
@@ -506,19 +506,20 @@ const questions: Record<string, Question[]> = {
       id: "q-dl-kp9-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Contrastive loss (e.g., used in SimCLR) trains a network to:",
+      question:
+        "Contrastive loss (e.g., used in SimCLR) trains a network to:",
       options: [
         "Minimize the cross-entropy of predicted vs. true class labels.",
-        "Pull embeddings of similar pairs together and push embeddings of dissimilar pairs apart in the representation space.",
-        "Maximize the KL divergence between the model\'s predictions and a uniform prior.",
-        "Minimize the L2 distance between the model\'s weights and their initialization.",
+        "Pull embeddings of similar pairs (positive pairs) closer together and push embeddings of dissimilar pairs (negative pairs) apart in the representation space.",
+        "Maximize the KL divergence between the model's predictions and a uniform prior.",
+        "Minimize the L2 distance between the model's weights and their initialization.",
       ],
       correctAnswer: 1,
       explanation:
-        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are close and negative pairs (different samples) are far apart — learning representations without explicit labels. SimCLR uses NT-Xent loss, which is a softmax-normalized contrastive objective over a batch of negative pairs.",
+        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are pulled close together and negative pairs (different samples) are pushed far apart. The objective is:\n\n\\[\nL = -\\log\\frac{\\exp(\\text{sim}(z_i, z_j)/\\tau)}{\\sum_{k=1}^{2N} \\mathbb{1}_{[k \\neq i]} \\exp(\\text{sim}(z_i, z_k)/\\tau)},\n\\]\n\nwhere sim(·,·) is cosine similarity, τ is a temperature hyperparameter, and the sum is over all negative pairs in the batch. This is the NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR — learning rich representations without any explicit class labels.",
       hints: [
-        "Contrastive = contrasting similar vs. different things — the loss reflects this directly.",
-        "SimCLR uses two augmented views of the same image as a positive pair and all other images in the batch as negatives.",
+        "Contrastive = contrasting similar vs. different things. The loss directly reflects this: pull positive pairs together, push negative pairs apart.",
+        "SimCLR uses two augmented views of the same image as a positive pair and all other images in the batch as negatives, normalized by temperature τ.",
       ],
     },
   ],
@@ -760,7 +761,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In scaled dot-product attention, the formula is: Attention(Q, K, V) = softmax(QK^T / √d_k) · V. If d_k = 64 and Q, K are random unit-variance vectors, what is the variance of a single dot product q·k before scaling?",
+        "In scaled dot-product attention, the formula is: Attention(Q, K, V) = softmax\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right) · V. If d_k = 64 and Q, K are random unit-variance vectors, what is the variance of a single dot product q · k before scaling?",
       options: [
         "Variance = 1 (unchanged by dimensionality)",
         "Variance = d_k = 64 (grows linearly with dimension)",
@@ -769,10 +770,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For random unit-variance vectors q, k ∈ ℝ^{d_k}, each dimension i has Var(q_i) = Var(k_i) = 1 and E[q_i] = E[k_i] = 0. Assuming independence across dimensions: Var(q·k) = Var(Σ_i q_i·k_i) = Σ_i Var(q_i·k_i) = Σ_i (Var(q_i)·Var(k_i)) = Σ_i 1·1 = d_k. So the dot product variance grows linearly with d_k. Dividing by √d_k gives Var(q·k/√d_k) = d_k/d_k = 1, restoring unit variance so softmax operates in a regime with meaningful gradients.",
+        "For random unit-variance vectors \\(\\mathbf{q}, \\mathbf{k} \\in \\mathbb{R}^{d_k}\\), each dimension i has \\(\\mathbb{E}[q_i] = \\mathbb{E}[k_i] = 0\\) and \\(\\operatorname{Var}(q_i) = \\operatorname{Var}(k_i) = 1\\). Assuming independence across dimensions:\n\n\\[\n\\operatorname{Var}(\\mathbf{q} \\cdot \\mathbf{k}) = \\operatorname{Var}\\left(\\sum_{i=1}^{d_k} q_i k_i\\right) = \\sum_{i=1}^{d_k} \\operatorname{Var}(q_i k_i) = \\sum_{i=1}^{d_k} 1 \\cdot 1 = d_k.\n\\]\n\nSo the dot product variance grows linearly with \\(d_k\\). Dividing by \\(\\sqrt{d_k}\\) restores unit variance:\n\n\\[\n\\operatorname{Var}\\left(\\frac{\\mathbf{q} \\cdot \\mathbf{k}}{\\sqrt{d_k}}\\right) = \\frac{d_k}{d_k} = 1,\n\\]\n\nensuring softmax operates in a regime with meaningful gradients.",
       hints: [
-        "Dot product: q·k = Σ_i q_i·k_i. Var(q·k) = Σ_i Var(q_i·k_i) = Σ_i (Var(q_i)·Var(k_i)) = d_k × 1 = d_k.",
-        "Without scaling: std(q·k) = √64 = 8. Softmax exp(8) ≈ 2981, exp(-8) ≈ 0.0003 — probabilities saturate to one-hot with zero gradients.",
+        "Dot product: q · k = Σ_i q_i k_i. Var(q · k) = Σ_i Var(q_i k_i) = Σ_i (Var(q_i) · Var(k_i)) = d_k × 1 = d_k.",
+        "Without scaling: std(q · k) = √64 = 8. softmax(exp(8) ≈ 2981, exp(−8) ≈ 0.0003) saturates to one-hot with near-zero gradients.",
       ],
     },
     {
@@ -838,14 +839,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        'Residual connections improve gradient flow because ∂L/∂x = ∂L/∂H × (∂F/∂x + 1), where the "+1" term ensures a gradient of at least 1 flows along the skip path regardless of the transformation\'s gradient.',
+        "Residual connections improve gradient flow because, by the chain rule, \\(\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot (\\frac{\\partial F}{\\partial x} + 1)\\), where the \"+1\" term ensures a gradient of at least 1 flows along the skip path regardless of how small \\(\\frac{\\partial F}{\\partial x}\\) is.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        'The gradient of H(x) = F(x) + x with respect to x is ∂H/∂x = ∂F/∂x + 1. Even if ∂F/∂x = 0 (vanishing gradient through the transformation), the "+1" from the skip connection ensures the gradient remains at least 1. This additive identity gradient is why ResNets can be trained at depths of 100–1000+ layers.',
+        "For a residual block \\(H(x) = F(x) + x\\), the gradient with respect to \\(x\\) is:\n\n\\[\n\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\frac{\\partial H}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\left(\\frac{\\partial F}{\\partial x} + 1\\right).\n\\]\n\nEven if \\(\\frac{\\partial F}{\\partial x} = 0\\) (e.g., due to ReLU saturation or vanishing gradients in deep networks), the \"+1\" from the skip connection ensures the gradient signal through the shortcut path is exactly \\(\\frac{\\partial L}{\\partial H}\\). This additive identity gradient is why ResNets can be trained at depths of 100–1000+ layers without vanishing gradients.",
       hints: [
-        "H(x) = F(x) + x. By chain rule: ∂L/∂x = ∂L/∂H · ∂H/∂x = ∂L/∂H · (∂F/∂x + 1). The skip path contributes exactly 1, regardless of ∂F/∂x.",
-        "If ∂F/∂x = 0 (e.g., due to ReLU saturation or vanishing gradients), the skip connection still carries ∂L/∂H · 1 = ∂L/∂H — the gradient signal passes through unchanged.",
+        "H(x) = F(x) + x. By the chain rule: ∂L/∂x = ∂L/∂H · ∂H/∂x = ∂L/∂H · (∂F/∂x + 1). The skip path contributes exactly 1, regardless of how small ∂F/∂x is.",
+        "If ∂F/∂x = 0 (vanishing gradient through the transformation), the skip connection still carries ∂L/∂H · 1 = ∂L/∂H — the gradient signal passes through the shortcut unchanged.",
       ],
     },
     {
@@ -1000,10 +1001,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Gradient clipping prevents exploding gradients (common in RNNs and some deep networks) by rescaling the gradient vector when its norm exceeds a threshold. Without clipping, a single large gradient update can push parameters to NaN or to regions far from the loss minimum, causing training to diverge.",
+        "Gradient clipping directly addresses exploding gradients — common in RNNs and some deep networks — by rescaling the gradient vector when its L2 norm exceeds a threshold:\n\n\\[\n\\mathbf{g} \\leftarrow \\mathbf{g} \\cdot \\frac{\\text{clip\\_value}}{\\|\\mathbf{g}\\|_2} \\quad \\text{if } \\|\\mathbf{g}\\|_2 > \\text{clip\\_value}.\n\\]\n\nWithout clipping, a single large gradient update can push parameters to NaN or to regions far from the loss minimum, causing training to diverge. Clipping acts as a safety bound on the maximum update magnitude.",
       hints: [
-        "Exploding gradients cause loss spikes and NaN values — clipping prevents updates from being catastrophically large.",
-        "Think of it as a speed limiter: gradients can\'t push the parameters faster than the clip threshold allows.",
+        "Exploding gradients cause loss spikes and NaN values — clipping prevents any single update from being catastrophically large.",
+        "Think of it as a speed limiter: gradients cannot push the parameters faster than the clip threshold allows, preventing divergence.",
       ],
     },
     {
@@ -1015,10 +1016,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Global norm clipping: if ||g||₂ > clip_value, then g ← g × (clip_value / ||g||₂). This scales the entire gradient vector by a scalar, shrinking its magnitude to clip_value while preserving its direction. Unlike per-parameter clipping (which clips each independently, distorting the direction), global norm clipping maintains the relative magnitudes of all gradients.",
+        "Global norm clipping applies:\n\n\\[\n\\mathbf{g} \\leftarrow \\mathbf{g} \\cdot \\frac{\\text{clip\\_value}}{\\|\\mathbf{g}\\|_2}.\n\\]\n\nThis scales the entire gradient vector by a positive scalar, shrinking its magnitude to clip_value while preserving its direction (all relative angles between parameters are maintained). Unlike per-parameter clipping (which clips each element independently, distorting the update direction), global norm clipping maintains the geometric integrity of the gradient direction — which is why it is the standard approach for training transformers and RNNs.",
       hints: [
         "Rescaling a vector by a positive scalar preserves its direction (angle) while changing only its magnitude.",
-        "This is why global norm clipping is preferred over element-wise clipping for training stability.",
+        "Per-parameter clipping distorts the gradient direction because it clips each element independently. Global norm clipping scales all elements by the same factor, preserving the update direction.",
       ],
     },
     {
@@ -1110,16 +1111,16 @@ const questions: Record<string, Question[]> = {
         "What advantage does random search have over grid search for hyperparameter tuning?",
       options: [
         "Random search always finds better hyperparameters than grid search.",
-        "Random search explores hyperparameter space more efficiently when few hyperparameters actually matter — covering more unique values of the important dimensions per trial.",
+        "Random search explores hyperparameter space more efficiently when only a subset of hyperparameters significantly affect performance — covering more unique values of the important dimensions per trial.",
         "Random search requires fewer total experiments than grid search.",
         "Random search guarantees finding the global optimum given enough trials.",
       ],
       correctAnswer: 1,
       explanation:
-        "Bergstra & Bengio (2012) showed that if only 2 of 5 hyperparameters are important, grid search wastes trials repeating the same values of unimportant parameters in different combinations. Random search samples unique values for all hyperparameters on every trial, exploring the important dimensions more thoroughly with the same number of total trials.",
+        "Bergstra & Bengio (2012) showed that if only 2 of 5 hyperparameters are important, grid search wastes trials repeating the same values of the 3 unimportant parameters in different combinations. With grid search, the same value of an unimportant hyperparameter appears in every trial — it is tested once in combination with all values of the important ones. Random search samples unique values for all hyperparameters on every trial, exploring the important dimensions more thoroughly with the same total number of trials.",
       hints: [
-        "If only 2 of 5 hyperparameters matter, grid search repeats many equivalent combinations on the unimportant 3.",
-        "Random search explores different values for all hyperparameters on every trial — more efficient coverage.",
+        "If only 2 of 5 hyperparameters matter, grid search repeats the same value of the other 3 in every trial — wasting exploration on dimensions that don't affect performance.",
+        "Random search samples different values for all 5 hyperparameters on every trial, giving more diverse coverage of the important dimensions.",
       ],
     },
     {
@@ -1837,19 +1838,19 @@ const questionsExtra: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "RetNet (Sun et al., 2023) introduces a 'retention' mechanism as an alternative to attention. What is the key computational property of retention that distinguishes it from standard attention?",
+        "RetNet (Sun et al., 2023) introduces a 'retention' mechanism as an alternative to standard softmax attention. What is the key computational property that distinguishes it?",
       options: [
-        "Retention uses sparse connections between tokens to reduce compute",
-        "Retention allows three computation modes: parallel (like attention), recurrent (O(1) inference), and chunkwise-recurrent (balancing training efficiency and sequence length)",
+        "Retention uses sparse connections between tokens to reduce computation",
+        "Retention allows three computation modes: parallel (like transformers for training), recurrent (O(1) per token for inference), and chunkwise-recurrent (balancing training efficiency and sequence length)",
         "Retention replaces softmax with a linear activation to save memory",
         "Retention uses relative positional bias instead of absolute positional encoding",
       ],
       correctAnswer: 1,
       explanation:
-        "RetNet's key innovation is the 'dual form' property: the same model can be computed in parallel mode for training (like transformers), recurrent mode for inference (like RNNs with O(1) per token), and chunkwise mode for long-sequence training efficiency. This eliminates the training/inference architecture mismatch of traditional RNNs.",
+        "RetNet\'s key innovation is the \"dual-form\" property: the same model parameters admit three computation modes:\n\n- **Parallel mode**: computes all positions simultaneously (like standard attention), used during training for efficient parallelization.\n- **Recurrent mode**: computes each token sequentially with O(1) memory and computation per step, used during inference for linear-time decoding.\n- **Chunkwise mode**: processes chunks of the sequence at a time, balancing long-sequence training efficiency with recurrent efficiency.\n\nThis eliminates the traditional trade-off where transformers are efficient for training but inefficient for inference, and RNNs are efficient for inference but hard to parallelize for training.",
       hints: [
-        "The three modes of RetNet: parallel (GPT-style training), recurrent (RNN-style inference), chunkwise (long-doc processing).",
-        "This parallelism-recurrence duality is the key insight: one model, multiple execution strategies.",
+        "The three modes of RetNet: parallel (GPT-style training), recurrent (RNN-style inference), chunkwise (long-document processing).",
+        "This parallelism-recurrence duality means one model supports both efficient training (parallel) and efficient inference (recurrent) — eliminating the architecture mismatch of standard transformers vs. RNNs.",
       ],
     },
   ],
@@ -2320,5 +2321,377 @@ const questionsExtra: Record<string, Question[]> = {
 };
 
 Object.assign(questions, questionsExtra);
+
+const extraDL: Record<string, Question[]> = {
+  // ── dl-kp-extra-1: Normalization Techniques ───────────────────────────────
+  "normalization-techniques": [
+    {
+      id: "q-dl-ext1-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "During training, Batch Normalization normalises activations using statistics computed over the mini-batch. During inference, what statistics are used instead and why?",
+      options: [
+        "The statistics of the current inference batch, same as during training",
+        "Running estimates of the population mean and variance accumulated during training via an exponential moving average, because test batches may be small or single-sample and batch statistics would be noisy",
+        "Zero mean and unit variance (standard normal) as a fixed prior, because the actual statistics are unknown at inference",
+        "The statistics of the last training batch, saved as a checkpoint alongside the model weights",
+      ],
+      correctAnswer: 1,
+      explanation: "BatchNorm tracks running statistics mu_running and sigma_running during training using EMA: mu_running = (1-momentum) * mu_running + momentum * mu_batch. At inference, these fixed population estimates are used instead of mini-batch statistics. This is crucial: at test time, a single-sample inference would have undefined batch statistics, and using batch statistics from a small test batch introduces noise. The running statistics approximate E[x] and Var[x] over the full training dataset.",
+      hints: [
+        "Single-sample inference: a batch of size 1 has no variance. BatchNorm must use pre-computed population statistics instead.",
+        "The running mean/variance are NOT parameters (not updated by gradient descent) — they are buffer statistics updated via EMA during training.",
+      ],
+    },
+    {
+      id: "q-dl-ext1-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Layer Normalization (Ba et al., 2016) normalises activations over the feature dimension rather than the batch dimension. Why is LayerNorm preferred over BatchNorm in transformer models?",
+      options: [
+        "LayerNorm is computationally cheaper than BatchNorm on GPUs due to fewer memory accesses",
+        "LayerNorm is independent of batch size — it normalises each sample using statistics over its own feature dimension, making it well-suited for sequence models where batch sizes vary and each position has different semantics",
+        "LayerNorm eliminates the need for learnable gamma and beta parameters, reducing parameter count",
+        "LayerNorm produces better-calibrated probabilities in the output distribution than BatchNorm",
+      ],
+      correctAnswer: 1,
+      explanation: "In transformers, each sequence position has different semantics (e.g., token 1 is a verb, token 5 is a noun), making batch normalisation across positions inappropriate. LayerNorm normalises over the feature dimension (all d_model features) for each token independently: y = gamma * (x - mu) / sigma + beta, where mu and sigma are computed over the d_model features of that single token. This is invariant to batch size (works for batch=1 and RNN-style sequential inference) and respects the independence of positions.",
+      hints: [
+        "BatchNorm: normalise over the batch dimension (N samples) for each feature. LayerNorm: normalise over the feature dimension for each sample.",
+        "Sequence models need per-token normalisation — the 'batch' for BatchNorm would mix different tokens, which have different distributions.",
+      ],
+    },
+    {
+      id: "q-dl-ext1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "GroupNorm (Wu and He, 2018) divides channels into G groups and normalises within each group. What problem does it solve that BatchNorm cannot handle well?",
+      options: [
+        "GroupNorm solves the dying ReLU problem by normalising negative activations within each group",
+        "GroupNorm works well at very small batch sizes (e.g., 1-2 images per GPU) common in object detection and segmentation training, where BatchNorm statistics become inaccurate due to small batch sampling noise",
+        "GroupNorm eliminates the need for weight decay by normalising weights rather than activations",
+        "GroupNorm reduces overfitting by randomly grouping channels at each training step",
+      ],
+      correctAnswer: 1,
+      explanation: "BatchNorm requires sufficiently large batches (typically 32-128) for accurate mini-batch statistics. In object detection and segmentation, GPU memory limits force small batch sizes (1-2 images per GPU), where BatchNorm statistics are extremely noisy. GroupNorm normalises over spatial locations and channel group members for each sample independently — its statistics are batch-size-independent. GroupNorm with G=32 groups maintains performance from batch size 2 to 32+ on COCO detection, whereas BatchNorm degrades sharply below batch size 4.",
+      hints: [
+        "Detection training: batch size 2 images/GPU is common. BatchNorm needs 32+ for stable statistics. GroupNorm needs only 1.",
+        "GroupNorm axes: normalise over (H, W, C/G) for each (N, group) pair. Fully batch-independent.",
+      ],
+    },
+    {
+      id: "q-dl-ext1-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "RMSNorm (Root Mean Square Layer Normalization) is used in LLaMA and GPT models instead of standard LayerNorm. What simplification does it make and why is this beneficial?",
+      options: [
+        "RMSNorm removes the learnable gain parameter gamma, relying only on the normalisation for training stability",
+        "RMSNorm removes the mean subtraction step, normalising by RMS only: y_i = x_i / sqrt(mean(x^2)) * gamma. This reduces computation while achieving comparable performance because re-centering is less important than re-scaling for training stability",
+        "RMSNorm normalises across the batch dimension rather than the feature dimension, making it equivalent to a fast BatchNorm",
+        "RMSNorm uses the L1 norm instead of L2 norm, making it more robust to outlier activations",
+      ],
+      correctAnswer: 1,
+      explanation: "Standard LayerNorm: y = gamma * (x - mean(x)) / sqrt(var(x) + eps) + beta. RMSNorm (Zhang and Sennrich, 2019): y = gamma * x / RMS(x) where RMS(x) = sqrt(mean(x^2)). It drops both mean subtraction and the learnable beta offset. The authors found that the re-centering (mean subtraction) is less critical for training stability than re-scaling (dividing by RMS). RMSNorm is ~10-15% faster than LayerNorm, and at LLM scale this matters. LLaMA, Mistral, and other modern LLMs use RMSNorm as the default normalisation.",
+      hints: [
+        "RMSNorm = LayerNorm without mean subtraction and without beta. Just scale by the inverse RMS.",
+        "At LLaMA-7B scale: every 1% speedup per layer compounds across 32 layers and billions of tokens. RMSNorm's savings are significant.",
+      ],
+    },
+    {
+      id: "q-dl-ext1-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Batch Normalization acts as a regularizer during training, reducing the need for Dropout, because the randomness in mini-batch statistics introduces noise that prevents the model from overfitting to exact training samples.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "BatchNorm introduces stochasticity through mini-batch statistics: the normalisation of each sample depends on which other samples are in the batch. This randomness acts as a form of regularisation — the model cannot overfit to any specific sample's exact activation values. The original BatchNorm paper (Ioffe and Szegedy, 2015) reported that adding BatchNorm often allowed reducing or eliminating Dropout without increased overfitting, particularly in image classification networks like Inception.",
+      hints: [
+        "Each sample is normalised using its batch's statistics — these statistics change every batch, adding noise to activations.",
+        "This stochasticity is analogous to Dropout (random neuron zeroing) but operates at the normalisation level.",
+      ],
+    },
+  ],
+
+  // ── dl-kp-extra-2: Residual Connections ──────────────────────────────────
+  "residual-connections-ext": [
+    {
+      id: "q-dl-ext2-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "DenseNet (Huang et al., 2017) connects each layer to every subsequent layer via dense skip connections. Compared to ResNet's additive skip connections, DenseNet uses concatenation. What is the key advantage of this design?",
+      options: [
+        "Dense connections reduce the number of parameters compared to ResNet by eliminating redundant feature maps",
+        "Dense connections enable explicit feature reuse: each layer receives the feature maps of ALL preceding layers, encouraging reuse of low-level features throughout the network and providing an implicit deep supervision signal to early layers",
+        "Dense connections make the network equivalent to an ensemble of shallow networks of different depths",
+        "Dense connections allow the network to dynamically select which skip connections to use based on input content",
+      ],
+      correctAnswer: 1,
+      explanation: "In DenseNet, layer l receives concatenated feature maps from layers 0, 1, ..., l-1: H_l = F_l([H_0, H_1, ..., H_{l-1}]). Unlike ResNet's addition (which modifies the feature map), concatenation preserves all features — every layer can directly access all preceding features. This enables feature reuse (deep layers can use low-level edge detectors without rediscovering them) and provides implicit deep supervision (gradients flow directly from the loss to early layers). DenseNet achieves competitive accuracy with fewer parameters than ResNet by exploiting this reuse.",
+      hints: [
+        "ResNet: x_l = F_l(x_{l-1}) + x_{l-1} (addition, same-size). DenseNet: x_l = F_l(concat(x_0, x_1, ..., x_{l-1})) (concatenation, growing channels).",
+        "Feature reuse means later layers can rely on early layers' edge detectors without learning redundant copies — fewer parameters needed.",
+      ],
+    },
+    {
+      id: "q-dl-ext2-2",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Veit et al. (2016) showed that ResNets behave like an ensemble of shallow paths: unrolling the residual connections reveals 2^L exponentially many paths through an L-block ResNet, with most gradient flowing through short paths.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "Veit et al. proved that an L-block ResNet with skip connections is mathematically equivalent to a sum over 2^L subnetworks of varying depths (all subsets of layers). During backpropagation, the gradient is a sum over all these paths. Because each skip path passes through the addition (gradient multiplied by 1) while non-skip paths pass through residual functions (gradient potentially diminished), shorter paths contribute stronger gradient signal. This interpretation explains why ResNets train easily despite being very deep — effective depth is the average path length, not L.",
+      hints: [
+        "An L-block ResNet: each block can be skipped (skip path) or traversed (residual path). 2^L combinations = 2^L paths.",
+        "Gradient from output to input = sum of gradients over all paths. Short paths have fewer matrix multiplications and stronger gradient signal.",
+      ],
+    },
+    {
+      id: "q-dl-ext2-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "When a residual connection requires matching dimensions (e.g., the number of channels changes), a 1x1 convolution is used as the projection shortcut. Why is a 1x1 convolution preferred over zero-padding for this projection?",
+      options: [
+        "1x1 convolutions are computationally free (zero FLOPs) unlike zero-padding",
+        "1x1 convolutions are learnable projections that can be trained to find the optimal linear mapping between the input and output feature spaces, whereas zero-padding fixes new channels to zero and cannot learn cross-channel relationships",
+        "1x1 convolutions enable the skip connection to introduce non-linearity, whereas zero-padding is a linear operation",
+        "1x1 convolutions compress the spatial dimensions of the feature map, which is required when stride > 1",
+      ],
+      correctAnswer: 1,
+      explanation: "When channel dimensions differ (e.g., from 64 to 128 channels), zero-padding adds zeros for the new channels — the skip path contributes no information from old channels to the new ones. A 1x1 convolution learns a C_in x C_out linear projection, finding the optimal linear mapping of old features to new feature space. He et al. (2016) found that a learned projection shortcut outperforms zero-padded shortcuts, particularly when the dimension change is significant. The 1x1 conv can also handle spatial downsampling by using stride=2.",
+      hints: [
+        "Zero-padding: new channels in the skip path are fixed at 0 — the network gets no cross-channel information from the shortcut.",
+        "1x1 conv: a learnable W_s x (H_in, W_in, C_in) -> (H_out, W_out, C_out) projection. All input channels contribute to all output channels.",
+      ],
+    },
+    {
+      id: "q-dl-ext2-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Why were networks deeper than ~20 layers performing worse than shallower networks BEFORE residual connections were introduced, despite having more capacity?",
+      options: [
+        "Overfitting — deeper networks memorise training data more easily than shallow ones",
+        "Optimisation difficulty — adding layers without residual connections worsens vanishing gradients, making very deep networks harder to train than shallow ones and causing higher training error (not just test error)",
+        "Underfitting — deeper networks have too many parameters for the available training data",
+        "Computational bottleneck — deeper networks are too slow to converge within a fixed training budget",
+      ],
+      correctAnswer: 1,
+      explanation: "He et al. (2016) observed the 'degradation problem': a 56-layer plain CNN had higher training error than a 20-layer one on CIFAR-10 — the extra layers were not helping even on training data. This is not overfitting (which appears only in test error). The cause was optimisation difficulty: vanishing gradients prevented deep layers from learning anything useful. Residual connections directly solved this by providing gradient highways, enabling 100+ layer networks to achieve lower training error than shallow counterparts.",
+      hints: [
+        "Degradation = higher training error with more layers. This rules out overfitting (which increases test error, not training error).",
+        "ResNets solve the identity mapping problem: with skip connections, extra layers can learn F(x) = 0 (identity) if they are not needed.",
+      ],
+    },
+    {
+      id: "q-dl-ext2-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In practice, initialising the weights of residual branches near zero (e.g., setting the last BatchNorm gamma to 0) can improve training stability of very deep ResNets by making residual blocks start as near-identity functions.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "The 'zero-init residual' trick (FixRes, Goyal et al., 2017; also in T-fixup, ReZero): by initialising the last layer of each residual block (e.g., the final BN's gamma parameter) to zero, the initial forward pass produces H(x) = F(x) + x ≈ 0 + x = x — the block is initially an identity function. This means a 100-layer network starts as effectively a shallow network, then gradually increases depth as training progresses. This dramatically stabilises early training dynamics and enables higher learning rates.",
+      hints: [
+        "If F(x) = gamma * BN_output + x and gamma = 0 initially, then F(x) = x — pure identity mapping at initialisation.",
+        "ReZero (Bachlechner et al., 2020) formalises this: H(x) = F(x) * alpha + x with alpha initialised to 0, enabling very deep networks without warmup.",
+      ],
+    },
+  ],
+
+  // ── dl-kp-extra-3: Loss Functions ─────────────────────────────────────────
+  "loss-functions-advanced": [
+    {
+      id: "q-dl-ext3-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Focal loss (Lin et al., 2017) was introduced to address class imbalance in one-stage object detection. How does it modify the standard cross-entropy loss?",
+      options: [
+        "It multiplies the cross-entropy loss by the inverse class frequency, upweighting rare classes",
+        "It adds a modulating factor (1 - p_t)^gamma that downweights easy examples (high p_t) and focuses training on hard, misclassified examples (low p_t)",
+        "It replaces the softmax normalisation with a sigmoid to allow multi-label prediction across all object categories",
+        "It clips the gradient of the cross-entropy loss for confident predictions to prevent exploding gradients",
+      ],
+      correctAnswer: 1,
+      explanation: "Focal loss = -alpha_t * (1 - p_t)^gamma * log(p_t). The modulating factor (1 - p_t)^gamma reduces the loss contribution of easy examples exponentially. With gamma=2: an example with p_t=0.9 (easy, well-classified) gets a factor of (0.1)^2 = 0.01 — its contribution is 100x less than a hard example with p_t=0.1. This focuses training on hard negatives and misclassified examples, addressing the extreme class imbalance in one-stage detectors (e.g., ~100K background proposals vs ~10 foreground objects per image). alpha_t provides class-level re-weighting.",
+      hints: [
+        "Standard CE: if p_t=0.9 (easy), the loss is -log(0.9)=0.1 — still contributes to gradient. Focal: (1-0.9)^2 * 0.1 = 0.001 — much smaller.",
+        "One-stage detectors evaluate ~100K candidate boxes. Without focal loss, the training signal is dominated by easy background boxes.",
+      ],
+    },
+    {
+      id: "q-dl-ext3-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Label smoothing replaces hard one-hot targets y_hard with soft targets y_smooth = (1-epsilon)*y_hard + epsilon/K where K is the number of classes. What are the two main benefits of this technique?",
+      options: [
+        "It increases model accuracy by providing more information per training sample and reduces training time by stabilising the loss surface",
+        "It prevents the model from becoming overconfident (output probabilities near 1.0) — reducing overfitting and improving calibration — and provides a small regularisation signal toward the uniform distribution that discourages the model from assigning zero probability to incorrect classes",
+        "It eliminates the vanishing gradient problem for saturated softmax outputs and reduces memory usage during training",
+        "It directly controls the trade-off between precision and recall by setting the epsilon parameter based on class frequency",
+      ],
+      correctAnswer: 1,
+      explanation: "Label smoothing with epsilon: the target is epsilon/K for wrong classes and 1-epsilon+epsilon/K for the correct class. Two benefits: (1) Calibration: hard labels push the model toward infinite logit for the correct class; smoothed labels target finite probabilities, preventing overconfidence and improving calibration (predicted probabilities better reflect true likelihoods). (2) Regularisation: the uniform component discourages the model from learning to assign high confidence to training examples, improving generalisation. Szegedy et al. (2016) showed label smoothing consistently improves accuracy and calibration across image classification tasks.",
+      hints: [
+        "Hard label target: [0, 1, 0, 0]. With eps=0.1, K=4: [0.025, 0.925, 0.025, 0.025]. The model no longer tries to push p_correct -> 1.0.",
+        "Overconfident models: p(correct class)=0.99999 but test accuracy is 90% — poorly calibrated. Label smoothing reduces this gap.",
+      ],
+    },
+    {
+      id: "q-dl-ext3-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Triplet loss (Hoffer and Ailon, 2015; Schroff et al., 2015) trains embedding networks by minimising the distance between an anchor and positive (same class) while maximising distance to a negative (different class). The loss is: L = max(0, d(a,p) - d(a,n) + margin). Why is hard negative mining critical for effective triplet training?",
+      options: [
+        "Without hard negative mining, the model wastes compute on easy negatives (d(a,n) >> d(a,p) + margin) where the loss is already zero, learning nothing from most triplets",
+        "Without hard negative mining, the model learns to use the entire margin for all triplets, causing overconfident embeddings",
+        "Hard negative mining prevents the anchor from collapsing to the same embedding as all positives",
+        "Without hard negative mining, the triplet loss degenerates to cross-entropy loss, defeating the purpose of metric learning",
+      ],
+      correctAnswer: 0,
+      explanation: "Random triplet sampling in large datasets produces mostly easy negatives where d(a,n) > d(a,p) + margin — the loss is already 0 (max clipped). Training on these trivial triplets produces zero gradient and no learning. Hard negative mining selects the negative n that is closest to the anchor (semi-hard: just outside the margin, or hard: inside the margin). Hard negatives provide non-zero loss and informative gradients. FaceNet (Schroff et al., 2015) found that full hard negative mining (hardest negatives) caused instability; semi-hard negatives (d(a,n) > d(a,p) but d(a,n) < d(a,p) + margin) provided the best training signal.",
+      hints: [
+        "Easy negative: d(a,n) = 5.0, d(a,p) = 0.5, margin = 1.0 -> loss = max(0, 0.5 - 5.0 + 1.0) = 0. Zero gradient. No learning.",
+        "Hard negative: d(a,n) = 0.8, d(a,p) = 0.5, margin = 1.0 -> loss = max(0, 0.5 - 0.8 + 1.0) = 0.7. Non-zero gradient. Actual learning.",
+      ],
+    },
+    {
+      id: "q-dl-ext3-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Supervised Contrastive Learning (Khosla et al., 2020) extends NT-Xent contrastive loss to the supervised setting. How does it differ from standard cross-entropy and from self-supervised contrastive loss (SimCLR)?",
+      options: [
+        "SupCon uses hard negative mining from the hardest incorrect-class examples, whereas SimCLR uses all in-batch negatives",
+        "SupCon treats all samples from the same class as positives (not just augmentations of the same image), allowing multiple positives per anchor and producing more semantically coherent clusters than cross-entropy",
+        "SupCon trains two separate encoders (one per class) and aligns them via cosine similarity, unlike the shared encoder in cross-entropy",
+        "SupCon replaces softmax with sigmoid to enable multi-label learning across all class combinations",
+      ],
+      correctAnswer: 1,
+      explanation: "Self-supervised contrastive loss (SimCLR): each anchor has exactly 1 positive (its augmented view) and 2(N-1) negatives. Cross-entropy: trains against hard one-hot labels. Supervised contrastive: treats ALL samples of the same class in the batch as positives — if the batch has 10 images of cats, each cat is a positive for every other cat. Loss = -sum over positives of [log(exp(z_i . z_j/tau) / sum over all negatives)]. This encourages semantically coherent clusters rather than just decision boundary separation. SupCon consistently outperforms cross-entropy on ImageNet by 0.5-2%, with better robustness and calibration.",
+      hints: [
+        "SimCLR positive: only the augmented view of anchor. SupCon positive: all images of the same class in the batch.",
+        "Cross-entropy optimizes decision boundaries. SupCon optimizes the embedding space geometry — clusters by class, regardless of boundary.",
+      ],
+    },
+    {
+      id: "q-dl-ext3-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The Huber loss (smooth L1 loss) combines the benefits of L1 loss (robust to outliers) and L2 loss (smooth gradients near zero) by behaving quadratically for small errors and linearly for large errors.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "Huber loss: L_delta(y, f) = 0.5*(y-f)^2 for |y-f| <= delta, else delta*(|y-f| - delta/2). For small errors (< delta): quadratic, like L2 — smooth gradients near zero, stable convergence. For large errors (> delta): linear, like L1 — bounded gradient, robust to outliers. This makes it ideal for regression tasks with occasional outlier labels (e.g., bounding box regression in Faster R-CNN, depth estimation). The delta hyperparameter controls the transition point.",
+      hints: [
+        "L2 loss gradient: 2*(y-f). For large errors, this becomes huge — one outlier can dominate the gradient. L1 gradient is bounded to +-1.",
+        "Huber combines: quadratic near zero (L2 behaviour) + linear far from zero (L1 behaviour). Best of both.",
+      ],
+    },
+    {
+      id: "q-dl-ext3-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR has a temperature hyperparameter tau. What is the effect of a very small tau (e.g., 0.01) vs a large tau (e.g., 1.0)?",
+      options: [
+        "Small tau increases the learning rate effectively; large tau reduces it",
+        "Small tau makes the loss focus more on hard negatives by sharpening the softmax distribution over negatives (concentrating gradient on the nearest wrong-class embedding), while large tau produces a more uniform loss over all negatives",
+        "Small tau produces a uniform gradient over all negatives; large tau concentrates gradient on easy negatives",
+        "Temperature has no effect on which negatives receive gradient — it only scales the total loss magnitude",
+      ],
+      correctAnswer: 1,
+      explanation: "NT-Xent: L = -log[exp(sim(z_i, z_j)/tau) / sum_k exp(sim(z_i, z_k)/tau)]. At small tau (sharp softmax): the denominator is dominated by the closest negative, concentrating the gradient signal on hard negatives. At large tau (flat softmax): gradient is spread uniformly across all negatives. Optimal tau (typically 0.05-0.1 for SimCLR) balances focusing on hard negatives while avoiding instability from extremely hard negatives that dominate the loss. MoCo uses tau=0.07; SimCLR uses tau=0.1.",
+      hints: [
+        "Small tau -> sharp softmax -> loss dominated by hardest negative. Large tau -> flat softmax -> uniform gradient over all negatives.",
+        "Analogy: tau=0.01 means only the nearest neighbour matters. tau=1.0 means all negatives contribute equally regardless of distance.",
+      ],
+    },
+  ],
+
+  // ── dl-kp-extra-4: Hyperparameter Tuning ──────────────────────────────────
+  "hyperparameter-tuning-advanced": [
+    {
+      id: "q-dl-ext4-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The one-cycle learning rate policy (Smith and Touvron, 2018) cycles from a low LR to a high LR and back, then decays to a very low LR. What are the three phases of the one-cycle policy?",
+      options: [
+        "Warmup phase (LR increases), constant phase (LR fixed at max), decay phase (LR decreases to zero)",
+        "Ascent phase (LR linearly increases from base_lr to max_lr), descent phase (LR linearly or cosine decreases from max_lr to base_lr), annealing phase (LR decreases to near-zero base_lr/div_factor)",
+        "Exploration phase (random LR sampling), exploitation phase (LR fixed at best found value), convergence phase (LR decays)",
+        "Batch size warmup (small batch -> large batch), LR decay, and momentum increase phases",
+      ],
+      correctAnswer: 1,
+      explanation: "One-cycle LR (Smith, 2018; popularised by fast.ai): (1) Ascent: LR linearly increases from base_lr to max_lr over 30-45% of training — this phase explores the loss landscape. (2) Descent: LR decreases from max_lr back to base_lr over the remaining 45-70% of training — this phase converges. (3) Annealing: LR drops to a very small value (base_lr/div_factor, often 1/100 of base_lr) over the final 10% — this phase settles into a flat minimum. Momentum is inversely cycled (high when LR is low, low when LR is high). One-cycle enables 'super-convergence' — training in 1/5 to 1/10 of standard epochs.",
+      hints: [
+        "One-cycle trains in 3 phases: ramp up (explore) -> ramp down (converge) -> anneal (finalise). Total = 1 cycle.",
+        "Inverse momentum cycling: high LR with low momentum = aggressive, exploratory updates. Low LR with high momentum = fine-grained convergence.",
+      ],
+    },
+    {
+      id: "q-dl-ext4-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Weight decay (L2 regularisation) and the AdamW optimizer (Loshchilov and Hutter, 2019) are often confused. What is the key difference between L2 regularisation applied to Adam and AdamW?",
+      options: [
+        "L2 regularisation adds lambda*theta to the gradient before Adam's update; AdamW applies weight decay directly to the weights after Adam's update, bypassing gradient scaling by the second moment",
+        "L2 regularisation with Adam applies weight decay only to the final layer; AdamW applies it uniformly to all layers",
+        "L2 regularisation with Adam is applied per-sample; AdamW applies it per-batch",
+        "L2 regularisation and AdamW are mathematically equivalent for Adam — the distinction only matters for SGD",
+      ],
+      correctAnswer: 0,
+      explanation: "L2 regularisation: adds lambda*theta to gradient g_t, so Adam's update uses g_t + lambda*theta. Adam then adapts this modified gradient by dividing by sqrt(v_t) (second moment estimate) — so the effective weight decay is lambda*theta/sqrt(v_t), which varies per parameter based on gradient history. AdamW (decoupled weight decay): subtracts lambda*theta directly from weights AFTER Adam's gradient update: theta = theta - lr*(Adam_update(g_t)) - lr*lambda*theta. This decoupling means all weights decay by the same fraction lambda*lr per step, regardless of gradient history. AdamW is theoretically cleaner and empirically outperforms Adam+L2 on language model training.",
+      hints: [
+        "Adam+L2: decay is scaled by 1/sqrt(v_t) — parameters with large gradients are decayed less than parameters with small gradients.",
+        "AdamW: theta -= lr * lambda * theta (after gradient step). Every parameter decays by the same fraction — no gradient history dependence.",
+      ],
+    },
+    {
+      id: "q-dl-ext4-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Increasing batch size from 256 to 4096 (16x larger) while linearly scaling the learning rate (16x) maintains approximately the same training dynamics and final model quality as training with the smaller batch.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "The linear scaling rule (Goyal et al., 2017; Krizhevsky, 2014): when multiplying batch size by k, multiply learning rate by k. The intuition: with k-times more samples per gradient step, each step has k-times less variance — scaling LR by k restores the effective noise level. Goyal et al. trained ResNet-50 on ImageNet with batch size 8192 (using LR scaled from 0.1 at BS=256 to 3.2 at BS=8192) with a brief 5-epoch warmup, achieving the same accuracy in 1 hour as standard 256-batch training in 29 hours. The warmup is needed to avoid instability from the large initial updates.",
+      hints: [
+        "Key insight: larger batch -> lower gradient variance -> more 'confident' updates -> can use larger LR to match the stochastic noise level.",
+        "Linear scaling fails at very large batch sizes (beyond ~8192 for most tasks) due to the 'generalization gap' of large-batch training.",
+      ],
+    },
+    {
+      id: "q-dl-ext4-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Dropout with rate p randomly zeroes p fraction of neurons during training. When is a dropout rate of p=0.5 typically NOT appropriate, and what rate should be used instead?",
+      options: [
+        "p=0.5 is never appropriate — it always should be p=0.1 or p=0.2 for any architecture",
+        "p=0.5 is too strong for convolutional layers (which already benefit from spatial pooling and weight sharing as regularisers); spatial dropout or lower rates (p=0.1-0.2) are more appropriate for CNNs, reserving p=0.5 for fully connected layers",
+        "p=0.5 should be replaced with p=0.99 in the final layer to ensure maximum regularisation near the output",
+        "p=0.5 is only appropriate for models with fewer than 10 layers — deep models require p close to 0",
+      ],
+      correctAnswer: 1,
+      explanation: "Dropout at p=0.5 (50% neurons zeroed) is the standard for large fully connected layers where redundancy is high. Convolutional layers have built-in regularisation: weight sharing (each filter applied at every position) and spatial pooling reduce overfitting. Applying p=0.5 to conv layers typically hurts accuracy. SpatialDropout2D (dropping entire feature maps rather than individual activations) works better for conv layers. The first VGG-style architectures used p=0.5 only in the FC layers following the conv stack. Modern CNNs (ResNet, EfficientNet) typically use no dropout in conv layers and instead rely on BatchNorm and data augmentation.",
+      hints: [
+        "CNN: weight sharing across all spatial positions provides built-in regularisation. Dropping 50% of activations per position is often too aggressive.",
+        "SpatialDropout: drop entire feature maps (all H x W activations for a channel) instead of random individual activations — better for conv layers.",
+      ],
+    },
+    {
+      id: "q-dl-ext4-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The learning rate finder (LR Range Test, Smith 2017) helps identify a good learning rate before training. What does the test do, and how do you select the optimal learning rate from its results?",
+      options: [
+        "It runs multiple full training sessions with different fixed LRs and selects the one with the lowest validation loss",
+        "It linearly or exponentially increases the learning rate from very small to very large over one pass through training data, plotting loss vs LR. The optimal LR is chosen just before the loss starts to increase or diverge — where the loss decreases most steeply",
+        "It uses Bayesian optimisation to search over learning rates in log space, fitting a Gaussian process to the loss surface",
+        "It performs K-fold cross-validation with 10 different learning rates and selects the one with lowest mean validation loss",
+      ],
+      correctAnswer: 1,
+      explanation: "LR Range Test: start with a very small LR (e.g., 1e-7), increase it exponentially per mini-batch to a large value (e.g., 10), and record training loss at each step. The resulting LR-loss curve typically shows: (1) a flat or slowly decreasing region (LR too small, slow learning), (2) a steep descent (good range), (3) divergence (LR too large). The optimal LR for training is typically the one where loss decreases most steeply. For one-cycle policy, this steepest-descent point becomes max_lr and base_lr = max_lr / 10. This takes only 1-2 minutes vs hours of full hyperparameter grid search.",
+      hints: [
+        "The LR-loss curve: plot loss (y-axis) vs LR (x-axis, log scale). The sweet spot is where the line is steepest (fastest descent) before it turns up.",
+        "fastai's lr_find() implements this: train for 1 epoch with exponentially increasing LR, plot the curve, pick max_lr at the steepest descent.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extraDL);
 
 registerQuestions(questions);

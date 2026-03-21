@@ -35,8 +35,7 @@ registerQuestions({
         "Speed and cost-efficiency for high-volume, lightweight multimodal tasks.",
         "Generating photorealistic 3D environments.",
       ],
-      correctAnswer:
-        "Speed and cost-efficiency for high-volume, lightweight multimodal tasks.",
+      correctAnswer: 2,
       explanation:
         "Gemini Flash is designed to be a lightweight, fast, and cost-effective model, optimizing inference speed while retaining strong multimodal capabilities.",
       hints: [

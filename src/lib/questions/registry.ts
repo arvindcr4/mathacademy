@@ -864,6 +864,238 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-rob-kp1-1": {
+    question: "What computational bottleneck makes EKF-SLAM scale poorly to large maps?",
+    options: [
+      "The number of laser scan points per frame exceeds GPU memory",
+      "The covariance matrix grows as O(N^2) in the number of landmarks N, making updates O(N^2) per step",
+      "EKF requires computing the Jacobian of the neural network policy at each step",
+      "The linearization error accumulates multiplicatively, not additively, with map size",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rob-kp1-3": {
+    question:
+      "After a loop-closure constraint is added in pose-graph SLAM, which algorithm is used to optimize the poses?",
+    options: [
+      "Gauss-Newton or Levenberg-Marquardt nonlinear least-squares minimizing the sum of squared pose-constraint residuals",
+      "A* search to find the shortest path through the pose graph",
+      "Particle filter with loop closure likelihood weighting",
+      "Expectation-Maximization over Gaussian mixture pose distributions",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp11-3": {
+    question:
+      "What is the main practical challenge of applying DAgger to physical robot learning?",
+    options: [
+      "Compounding errors cannot occur in physical robots because proprioception corrects drift automatically",
+      "Physical expert querying requires a human operator to provide correct actions at every state the robot visits, which is time-consuming and burdensome, making fully interactive DAgger impractical for long-horizon tasks",
+      "DAgger cannot be applied to continuous action spaces such as robot joint torques",
+      "The aggregated dataset always overfits to early demonstrations, preventing the policy from improving",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rob-kp13-3": {
+    question:
+      "For robot deployment, what is the main practical advantage of using DDIM instead of DDPM in Diffusion Policy?",
+    options: [
+      "DDIM allows deterministic sampling with far fewer denoising steps (e.g., 10 vs 100), greatly reducing inference latency for real-time robot control",
+      "DDPM produces higher-quality actions than DDIM at the cost of more GPU memory",
+      "DDIM requires a separate value function to score action candidates, whereas DDPM does not",
+      "DDPM supports continuous action spaces while DDIM is limited to discrete action tokens",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp31-2": {
+    type: "multiple-choice",
+    question:
+      "In DeepMind's data center cooling work, what did the RL system learn to optimize?",
+    options: [
+      "Chiller, cooling tower, and pump setpoints to reduce cooling energy",
+      "The location of new data centers",
+      "Server CPU clock speeds for each workload",
+      "Fiber network routing between regions",
+      "Wholesale electricity prices in nearby markets",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp32-2": {
+    type: "multiple-choice",
+    question:
+      "Why may ML models trained only on historical climate-yield data underestimate future climate impacts on crop yields?",
+    options: [
+      "Future climate conditions can fall outside the model's training distribution",
+      "Crop yields are independent of weather once soil is known",
+      "Satellite sensors stop measuring vegetation under high CO2",
+      "Historical data always contains more extreme heat than future scenarios",
+      "Yield models cannot use precipitation as an input",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp37-2": {
+    type: "multiple-choice",
+    question:
+      "What is the main risk of applying naive ML bias correction to climate model outputs?",
+    options: [
+      "It can distort the climate change signal and introduce spurious trends",
+      "It forces all model outputs to match the historical mean exactly",
+      "It removes all extremes from the corrected series",
+      "It makes climate projections impossible beyond 2030",
+      "It guarantees better extrapolation to new forcing scenarios",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp40-2": {
+    type: "multiple-choice",
+    question: "What does ML predict in contrail-avoidance routing for aviation?",
+    options: [
+      "The probability that a flight segment will produce persistent contrails",
+      "The number of passengers likely to miss connections",
+      "The resale value of the aircraft after the flight",
+      "The price of jet fuel at destination airports",
+      "The probability of runway congestion during landing",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp4-2": {
+    type: "true-false",
+    question:
+      "ZoeDepth produces metric monocular depth by adding a metric binning head on top of a DPT/MiDaS relative-depth backbone.",
+    correctAnswer: "true",
+  },
+  "q-cv3d-kp7-1": {
+    type: "multiple-choice",
+    question:
+      "An Instant-NGP hash encoding has 16 levels, 2^19 entries per level, and 2 features per entry. How many trainable parameters does the encoding have in total?",
+    correctAnswer: 1,
+  },
+  "q-cv3d-kp19-2": {
+    type: "true-false",
+    question:
+      "CenterPoint detects 3D objects with a BEV center heatmap and regresses size, orientation, and velocity at each detected center instead of using rotated anchors.",
+    correctAnswer: "true",
+  },
+  "q-cv3d-kp31-2": {
+    type: "true-false",
+    question:
+      "Instant-NGP's multiresolution hash encoding can tolerate hash collisions without explicit conflict resolution because repeated gradient updates let shared entries encode the dominant queried signal.",
+    correctAnswer: "true",
+  },
+  "q-dl-kp7-1": {
+    question:
+      "In Adam, if m_hat = 0.01 and v_hat = 0.0001, what is m_hat / sqrt(v_hat)?",
+    options: ["0.001", "0.01", "0.1", "1", "100"],
+    correctAnswer: 3,
+  },
+  "q-dl-kp14-3": {
+    question:
+      "In one self-attention layer, what is the maximum path length between token 1 and token 100?",
+    options: ["1", "2", "10", "99", "It depends on d_model"],
+    correctAnswer: 0,
+  },
+  "q-dl-kp15-2": {
+    type: "multiple-choice",
+    question: "If H(x)=F(x)+x and F'(x)=0 at a point, what is H'(x) there?",
+    options: ["0", "1", "F(x)", "x", "F'(x)"],
+    correctAnswer: 1,
+  },
+  "q-dl-kp30-2": {
+    question: "If GELU(x)=x*Phi(x) and Phi(2)~=0.977, what is GELU(2) closest to?",
+    options: ["0.023", "0.046", "0.98", "1.95", "2.98"],
+    correctAnswer: 3,
+  },
+  "q-msd-kp10-6": {
+    type: "multiple-choice",
+    question:
+      "A fraud model's recall falls from 85% on test to 60% in production within 3 months, with no change in fraud rate. Which option best explains the drop?",
+    options: [
+      "The test set was too small; retrain with more data.",
+      "Adversarial concept drift: fraudsters are adapting their behavior patterns to evade the model. Corrective action: continuous model monitoring with adversarial feature drift detection, frequent retraining on recent data, and active collection of new fraud patterns.",
+      "The serving infrastructure has bugs causing wrong predictions.",
+      "The model was overfitted to the test set; apply stronger regularization.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp11-6": {
+    type: "multiple-choice",
+    question:
+      "An ads pCTR model is overpredicting observed CTR by about 2x. What is the most efficient post-hoc fix without retraining the model?",
+    options: [
+      "Retrain the full two-tower model with a calibration objective.",
+      "Apply Platt scaling: train a logistic regression on (model output, observed label) pairs using recent production data, then use the regression to map raw model outputs to calibrated probabilities.",
+      "Multiply all pCTR predictions by 0.5 uniformly.",
+      "Filter out low-pCTR predictions below 0.01.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-kp13-6": {
+    type: "multiple-choice",
+    question:
+      "After global rollout, recall drops on non-English content and false positives spike in some languages. Which option best explains the failure?",
+    options: [
+      "Underfitting on non-English languages (fix: larger model) and distribution shift (fix: more test data).",
+      "Cross-lingual transfer failure (recall drops because the English-trained model does not generalize to other languages - fix: multilingual fine-tuning with target-language examples) and cultural/linguistic false positive bias (the model flags culturally-specific idioms as harmful - fix: adversarial debiasing with native-language annotators).",
+      "The model is overfitting to English training data (fix: add L2 regularization) and has high false positive rate globally (fix: increase the classification threshold).",
+      "Insufficient training data (fix: collect more English examples) and annotation errors (fix: re-annotate the test set).",
+    ],
+    correctAnswer: 1,
+  },
+  "q-msd-rt1-3": {
+    type: "multiple-choice",
+    question:
+      "A serving pipeline has p50 latency of 62 ms but p99 latency of 130 ms against an 80 ms SLA. What best explains the tail-latency spike?",
+    options: [
+      "The model inference is too slow at p99 - replace the model with a smaller one.",
+      "Tail latency amplification: at p99, sequential steps compound slow tails (GC pause, Redis eviction, network jitter). Mitigation: hedged requests to the feature store, per-step timeouts with cached fallbacks, and request-level retries with backoff.",
+      "The ANN retrieval step needs more replicas to reduce p99.",
+      "Response serialization at 5 ms is the bottleneck - switch from JSON to protobuf.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp1-1": {
+    question:
+      "Trying larger models changes F1 from 72% to 73-74%, but fixing mislabeled training examples raises it to 85%. What does this show?",
+    options: [
+      "Trying larger architectures is the main source of improvement",
+      "Improving label quality matters more than swapping architectures here",
+      "Relabeling is just another form of fine-tuning",
+      "The gain is mainly a regularization effect",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp3-2": {
+    type: "multiple-choice",
+    question:
+      "At the same average noise rate, which kind of label noise usually harms training more?",
+    options: [
+      "Symmetric noise, because both classes are corrupted equally",
+      "Asymmetric noise, because it systematically pushes the decision boundary toward one class",
+      "They are equally harmful if the average flip rate is the same",
+      "Neither type matters once the dataset is large enough",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp6-1": {
+    question: "Why can active learning outperform random sampling when labels are expensive?",
+    options: [
+      "It should match random sampling until nearly all unlabeled data is labeled",
+      "It spends labels on the examples likely to teach the model the most",
+      "It works by automatically labeling the rest of the unlabeled pool",
+      "It helps only when the model architecture changes each round",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp7-1": {
+    question: "Why can starting training with easier examples improve a model's final performance?",
+    options: [
+      "Easy examples always create the largest gradients",
+      "They let the model learn broad structure first, then use hard examples to refine it",
+      "Hard examples are usually mislabeled and should be delayed",
+      "It is basically the same as gradient clipping",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

@@ -11,17 +11,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A standard 8-bit grayscale image stores one intensity value per pixel in the range 0–255. How many distinct intensity levels does a 16-bit grayscale image provide?",
       options: [
-        "512 levels (2 × 256)",
-        "4096 levels (16 × 256)",
-        "65536 levels (2¹⁶)",
-        "32768 levels (2¹⁵)",
+        "512 levels ($2 \\times 256$)",
+        "4096 levels ($16 \\times 256$)",
+        "65536 levels ($2^{16}$)",
+        "32768 levels ($2^{15}$)",
       ],
       correctAnswer: 2,
       explanation:
-        "An n-bit image stores 2ⁿ intensity levels per channel. A 16-bit grayscale image provides 2¹⁶ = 65536 distinct levels, enabling finer precision in medical imaging and HDR photography compared to the 256 levels of 8-bit.",
+        "An $n$-bit image stores $2^n$ intensity levels per channel.  \n\nFor a 16-bit image:\n\\[\n2^{16} = 65536\n\\]\nThis equals $2 \\times 2^{15} = 2 \\times 32768 = 65536$ distinct levels, enabling finer precision in medical imaging and HDR photography compared to the 256 levels of an 8-bit image.",
       hints: [
-        "Each bit doubles the number of representable values: 8 bits → 256, 16 bits → ?",
-        "Apply 2ⁿ where n = 16.",
+        "Each additional bit doubles the number of representable values: $2^8 = 256$, so $2^{16} = 2^8 \\times 2^8$.",
+        "Apply the formula $2^n$ with $n = 16$.",
       ],
     },
     {
@@ -29,19 +29,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Histogram equalisation maps pixel intensities through the CDF of the original histogram. If an image has CDF value 0.6 at intensity 128, what output intensity does histogram equalisation assign to pixels with value 128 (assuming 8-bit output)?",
+        "Histogram equalisation maps pixel intensities through the CDF of the original histogram. If an image has CDF value 0.6 at intensity $r = 128$, what output intensity does histogram equalisation assign to pixels with value 128 (assuming 8-bit output)?",
       options: [
         "128 (no change)",
-        "153 (0.6 × 255 ≈ 153)",
-        "76 (0.6 × 128)",
+        "153 ($\\lfloor 0.6 \\times 255 \\rceil = 153$)",
+        "76 ($0.6 \\times 128$)",
         "200 (fixed midpoint mapping)",
       ],
       correctAnswer: 1,
       explanation:
-        "Histogram equalisation applies the transform T(r) = round((L-1) × CDF(r)) where L = 256. With CDF(128) = 0.6: T(128) = round(255 × 0.6) = round(153) = 153. This stretches the intensity range so the histogram approximates uniform.",
+        "Histogram equalisation applies the transform\n\\[\nT(r) = \\lfloor (L-1) \\cdot \\text{CDF}(r) \\rceil,\n\\]\nwhere $L = 256$ is the number of possible output levels and $\\text{CDF}(r)$ is the cumulative distribution function value at intensity $r$.\n\nSubstituting the given values:\n\\[\nT(128) = \\lfloor 255 \\times 0.6 \\rceil = \\lfloor 153.0 \\rceil = 153.\n\\]\nThis stretches the intensity range so the output histogram approximates a uniform distribution.",
       hints: [
-        "The equalisation formula is T(r) = (L-1) × CDF(r). Substitute L=256, CDF=0.6.",
-        "Multiplying the CDF (0.6) by the max output value (255) gives the output intensity.",
+        "The equalisation formula is $T(r) = (L-1) \\cdot \\text{CDF}(r)$. With $L = 256$ and $\\text{CDF}(r) = 0.6$, compute $255 \\times 0.6$.",
+        "The maximum output value is $L - 1 = 255$ (for 8-bit), not 256.",
       ],
     },
     {
@@ -49,7 +49,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "An RGB image is 1920 × 1080 pixels with 8 bits per channel. What is its uncompressed size in megabytes (MB)?",
+        "An RGB image is $1920 \\times 1080$ pixels with 8 bits per channel. What is its uncompressed size in megabytes (MB)?",
       options: [
         "Approximately 2.1 MB",
         "Approximately 6.2 MB",
@@ -58,10 +58,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Uncompressed size = width × height × channels × bytes-per-channel = 1920 × 1080 × 3 × 1 = 6,220,800 bytes ≈ 6.2 MB. This is why JPEG compression (typically 10–20× reduction) is essential for storing and transmitting photographs.",
+        "Each pixel has 3 channels (R, G, B), each stored as 8 bits $= 1$ byte.\n\n\\[\n\\text{Total bytes} = 1920 \\times 1080 \\times 3 = 6{,}220{,}800 \\text{ bytes}.\n\\]\n\nConverting to megabytes ($1 \\text{ MB} = 2^{20} = 1{,}048{,}576$ bytes):\n\\[\n\\frac{6{,}220{,}800}{1{,}048{,}576} \\approx 5.93 \\approx 6.2 \\text{ MB}.\n\\]\n\nJPEG compression typically achieves 10–20$\\times$ reduction, making it essential for storing and transmitting photographs.",
       hints: [
-        "Three channels (R, G, B), each 8 bits = 1 byte. Total = 1920 × 1080 × 3 bytes.",
-        "1 MB = 1,048,576 bytes. Divide the total byte count to get MB.",
+        "Compute the total byte count: width $\\times$ height $\\times$ channels $\\times$ bytes-per-channel = $1920 \\times 1080 \\times 3 \\times 1$.",
+        "Divide by $2^{20} = 1{,}048{,}576$ to convert bytes to MB.",
       ],
     },
   ],
@@ -73,14 +73,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A convolutional layer applies a 3×3 filter with stride 2 and no padding to a 7×7 input feature map. Using the formula output_size = ⌊(W − F + 2P)/S⌋ + 1, what is the output spatial dimension?",
-      options: ["5×5", "4×4", "3×3", "2×2"],
+        "A convolutional layer applies a $3 \\times 3$ filter with stride $S = 2$ and no padding ($P = 0$) to a $7 \\times 7$ input feature map. Using the formula\n\\[\n\\text{output size} = \\left\\lfloor \\frac{W - F + 2P}{S} \\right\\rfloor + 1,\n\\]\nwhat is the output spatial dimension?",
+      options: ["$5 \\times 5$", "$4 \\times 4$", "$3 \\times 3$", "$2 \\times 2$"],
       correctAnswer: 2,
       explanation:
-        "Applying the formula: (7 − 3 + 2×0)/2 + 1 = 4/2 + 1 = 2 + 1 = 3. The output is 3×3. This formula from CS231n defines the spatial size produced by any conv layer: W=input size, F=filter size, P=padding, S=stride.",
+        "Substituting $W = 7$, $F = 3$, $P = 0$, and $S = 2$ into the formula:\n\\[\n\\left\\lfloor \\frac{7 - 3 + 2 \\cdot 0}{2} \\right\\rfloor + 1 = \\left\\lfloor \\frac{4}{2} \\right\\rfloor + 1 = 2 + 1 = 3.\n\\]\nThe output is $3 \\times 3$.\n\nHere $W$ is the input size, $F$ is the filter size, $P$ is the padding, and $S$ is the stride.",
       hints: [
-        "The formula is ⌊(W − F + 2P) / S⌋ + 1. Substitute W=7, F=3, P=0, S=2.",
-        "(7 − 3) / 2 + 1 = 4/2 + 1 = 3.",
+        "The formula is $\\left\\lfloor \\frac{W - F + 2P}{S} \\right\\rfloor + 1$. Substitute $W = 7$, $F = 3$, $P = 0$, $S = 2$.",
+        "Compute the numerator: $W - F + 2P = 7 - 3 + 0 = 4$. Then divide by $S = 2$ and apply the floor.",
       ],
     },
     {
@@ -88,19 +88,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A convolutional layer has 64 filters of size 3×3 applied to a 32-channel input with a bias per filter. How many learnable parameters does this layer have?",
+        "A convolutional layer has 64 filters of size $3 \\times 3$ applied to a 32-channel input with one bias per filter. How many learnable parameters does this layer have?",
       options: [
-        "576 (3 × 3 × 64)",
-        "18432 (3 × 3 × 32 × 64)",
-        "18496 (3 × 3 × 32 × 64 + 64)",
-        "36928 (3 × 3 × 32 × 64 × 2)",
+        "$576$ ($(3 \\times 3 \\times 64$)?)",
+        "$18432$ ($3 \\times 3 \\times 32 \\times 64$)",
+        "$18496$ ($3 \\times 3 \\times 32 \\times 64 + 64$)",
+        "$36928$ ($3 \\times 3 \\times 32 \\times 64 \\times 2$)?",
       ],
       correctAnswer: 2,
       explanation:
-        "Each filter has shape 3×3×32 (height × width × input_channels) = 288 weights, plus 1 bias = 289 per filter. With 64 filters: 64 × (3×3×32 + 1) = 64 × 289 = 18,496 parameters. Note that parameter count is independent of output spatial size.",
+        "Each filter has shape $3 \\times 3 \\times 32$ (height $\\times$ width $\\times$ input channels), giving:\n\\[\n3 \\times 3 \\times 32 = 288 \\text{ weights per filter}.\n\\]\n\nAdding the bias: $288 + 1 = 289$ parameters per filter.\n\nWith 64 filters:\n\\[\n64 \\times 289 = 18{,}496 \\text{ parameters}.\n\\]\n\nNote: parameter count depends only on filter shape and number of filters, not on the output spatial size.",
       hints: [
-        "Each filter spans all input channels: 3×3×32 weights per filter.",
-        "Add 1 bias per filter: 64 × (3×3×32 + 1) = 64 × 289.",
+        "Each filter spans all input channels: weights per filter = $3 \\times 3 \\times 32 = 288$.",
+        "Add 1 bias per filter: total per filter = $288 + 1 = 289$. Multiply by 64 filters.",
       ],
     },
     {
@@ -108,19 +108,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'What is "same" padding in a convolutional layer, and what padding P is needed to maintain spatial size for a 3×3 filter with stride 1?',
+        'What is "same" padding in a convolutional layer, and what padding $P$ is needed to maintain spatial size for a $3 \\times 3$ filter with stride $S = 1$?',
       options: [
-        '"Same" padding adds zeros so the output has the same size as input; for a 3×3 filter with stride 1, P=1 is required',
-        '"Same" padding adds the same value as the nearest border pixel; P=0 is used',
-        '"Same" padding duplicates the filter weights symmetrically; P=2 is required for a 3×3 filter',
-        '"Same" padding adds zeros so the output size is exactly half the input; P=1 is required',
+        '"Same" padding adds zeros so the output has the same spatial size as the input; for a $3 \\times 3$ filter with $S = 1$, $P = 1$ is required.',
+        '"Same" padding replicates the nearest border pixel value; $P = 0$ is used.',
+        '"Same" padding duplicates the filter weights symmetrically; $P = 2$ is required for a $3 \\times 3$ filter.',
+        '"Same" padding adds zeros so the output size is exactly half the input; $P = 1$ is required.',
       ],
       correctAnswer: 0,
       explanation:
-        '"Same" padding ensures output size = ⌈W/S⌉. For stride 1, output = input size requires P = (F−1)/2. For F=3: P = (3−1)/2 = 1. Each border is padded by 1 zero, so a 7×7 input with 3×3 filter, S=1, P=1 produces (7−3+2)/1+1 = 7×7 output.',
+        '"Same" padding ensures the output spatial size equals the input size. From the output size formula:\n\\[\n\\left\\lfloor \\frac{W - F + 2P}{S} \\right\\rfloor + 1 = W,\n\\]\nsetting $S = 1$ and solving for $P$:\n\\[\nW - F + 2P + 1 = W \\implies -F + 2P + 1 = 0 \\implies P = \\frac{F - 1}{2}.\n\\]\nFor $F = 3$:\n\\[\nP = \\frac{3 - 1}{2} = 1.\n\\]\nSo each border is padded with 1 zero pixel, and a $7 \\times 7$ input with $3 \\times 3$ filter, $S = 1$, $P = 1$ produces $(7 - 3 + 2)/1 + 1 = 7 \\times 7$ output.',
       hints: [
-        "Setting output = input requires (W − F + 2P)/S + 1 = W, solve for P with S=1.",
-        "For F=3: P = (F-1)/2 = 1.",
+        "Set output size = input size in the formula $\\left\\lfloor \\frac{W - F + 2P}{S} \\right\\rfloor + 1 = W$, and solve for $P$ with $S = 1$.",
+        "For $F = 3$: $P = (F - 1)/2 = 1$.",
       ],
     },
   ],
@@ -132,19 +132,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        'ResNet-50 uses "bottleneck" residual blocks with three conv layers (1×1, 3×3, 1×1). What is the purpose of the two 1×1 convolutions flanking the 3×3 conv?',
+        'ResNet-50 uses "bottleneck" residual blocks with three conv layers ($1 \\times 1$, $3 \\times 3$, $1 \\times 1$). What is the purpose of the two $1 \\times 1$ convolutions flanking the $3 \\times 3$ conv?',
       options: [
-        "They perform spatial downsampling to reduce the 3×3 conv input size",
-        "The first 1×1 reduces channel depth before the 3×3 conv (lowering cost), and the second 1×1 restores it, significantly cutting FLOPs",
-        "They act as attention gates that selectively pass information to the 3×3 conv",
-        "They replace batch normalisation by normalising channel statistics to unit variance",
+        "They perform spatial downsampling to reduce the $3 \\times 3$ conv input spatial size.",
+        "The first $1 \\times 1$ reduces channel depth before the $3 \\times 3$ conv (lowering computational cost), and the second $1 \\times 1$ restores it, significantly cutting FLOPs.",
+        "They act as attention gates that selectively pass information to the $3 \\times 3$ conv.",
+        "They replace batch normalisation by normalising channel statistics to unit variance.",
       ],
       correctAnswer: 1,
       explanation:
-        "The bottleneck reduces channels from, say, 256 → 64 with a 1×1 conv before the 3×3, then expands back 64 → 256 with another 1×1. This means the expensive 3×3 conv operates on 64 channels instead of 256, reducing FLOPs by (256/64)² = 16× for the 3×3, at the cost of two cheap 1×1 convs — a net saving of ~4× over a plain block.",
+        "The bottleneck design reduces channels from, for example, $256 \\to 64$ with a $1 \\times 1$ conv before the $3 \\times 3$, then expands back $64 \\to 256$ with another $1 \\times 1$.\n\nThe FLOPs of a $3 \\times 3$ conv scale as $\\text{channels}_{\\text{in}} \\times \\text{channels}_{\\text{out}}$. Reducing from 256 to 64 channels cuts the $3 \\times 3$ cost by a factor of $(256/64)^2 = 16\\times$, at the cost of two inexpensive $1 \\times 1$ convs. The net saving is approximately $4\\times$ compared to a plain residual block.",
       hints: [
-        "The 3×3 conv is the expensive operation. Reducing its input channels drops the cost quadratically.",
-        "Bottleneck = narrow in the middle: 256→64→64→256.",
+        "The $3 \\times 3$ conv is the expensive operation. Its FLOPs scale quadratically with channel count — reducing input channels drops cost dramatically.",
+        "Bottleneck structure: $256 \\to 64 \\to 64 \\to 256$. The middle is narrow, reducing the expensive $3 \\times 3$ computation.",
       ],
     },
     {
@@ -152,19 +152,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Inception module in GoogLeNet applies 1×1, 3×3, and 5×5 convolutions in parallel. Why are 1×1 convolutions inserted before the 3×3 and 5×5 branches?",
+        "The Inception module in GoogLeNet applies $1 \\times 1$, $3 \\times 3$, and $5 \\times 5$ convolutions in parallel. Why are $1 \\times 1$ convolutions inserted before the $3 \\times 3$ and $5 \\times 5$ branches?",
       options: [
-        "To apply non-linear activation before the larger filters, acting as a learned preprocessing step",
-        "To reduce the number of input channels (dimensionality reduction) before the expensive larger convolutions, significantly cutting FLOPs",
-        "To ensure the output of each branch has the same spatial size for concatenation",
-        "To share weights between branches so that all three filter sizes learn the same features",
+        "To apply non-linear activation before the larger filters, acting as a learned preprocessing step.",
+        "To reduce the number of input channels (dimensionality reduction) before the expensive larger convolutions, significantly cutting FLOPs.",
+        "To ensure the output of each branch has the same spatial size for concatenation.",
+        "To share weights between branches so that all three filter sizes learn the same features.",
       ],
       correctAnswer: 1,
       explanation:
-        'Without 1×1 bottlenecks, a 5×5 conv on 256 input channels costs 5×5×256×256 ≈ 1.6M multiply-adds per spatial location. A 1×1 reducing to 32 channels first costs 1×1×256×32 + 5×5×32×256 ≈ 213K — about 7.5× fewer FLOPs. This is the "Network in Network" dimensionality reduction that made GoogLeNet practical.',
+        "The FLOPs of a convolution scale as $F \\times F \\times C_{\\text{in}} \\times C_{\\text{out}}$. Without $1 \\times 1$ bottlenecks, a $5 \\times 5$ conv on 256 input channels costs:\n\\[\n5 \\times 5 \\times 256 \\times 256 \\approx 1.6 \\text{M FLOPs}.\n\\]\n\nAdding a $1 \\times 1$ reduction to 32 channels first:\n\\[\n1 \\times 1 \\times 256 \\times 32 + 5 \\times 5 \\times 32 \\times 256 \\approx 213\\text{K FLOPs},\n\\]\nwhich is approximately $7.5\\times$ fewer. This \"Network in Network\" dimensionality reduction was key to making GoogLeNet computationally practical.",
       hints: [
-        "FLOPs for a conv scale as F×F×C_in×C_out. Reducing C_in with a 1×1 first drops the cost of larger filters.",
-        "EfficientNet-B7 uses φ=7, giving a 600×600 input and ~66M parameters with state-of-the-art accuracy.",
+        "FLOPs for a conv scale as $F \\times F \\times C_{\\text{in}} \\times C_{\\text{out}}$. Reducing $C_{\\text{in}}$ with a $1 \\times 1$ first drops the cost of larger filters quadratically.",
+        "The $1 \\times 1$ conv acts as a bottleneck: it reduces channel count before the expensive spatial convolutions.",
       ],
     },
     {
@@ -172,13 +172,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "EfficientNet uses a compound scaling coefficient φ to jointly scale depth (d = 1.2^φ), width (w = 1.1^φ), and resolution (r = 1.15^φ) so that total FLOPs grow as approximately 2^φ.",
+        "EfficientNet uses a compound scaling coefficient $\\phi$ to jointly scale depth ($d = \\alpha^\\phi$), width ($w = \\beta^\\phi$), and resolution ($r = \\gamma^\\phi$) so that total FLOPs grow approximately as $2^\\phi$.",
       correctAnswer: "True",
       explanation:
-        "EfficientNet\'s compound scaling multiplies depth by α·β²·γ² ≈ 2 (so FLOPs ≈ 2φ). The coefficients α=1.2, β=1.1, γ=1.15 were found by grid search on EfficientNet-B0, giving a principled multi-dimensional scaling law outperforming single-dimension scaling at equal FLOPs.",
+        "EfficientNet's compound scaling is designed so that FLOPs double with each unit increase in $\\phi$. Since FLOPs scale as:\n\\[\n\\text{FLOPs} \\propto d \\cdot w^2 \\cdot r^2,\n\\]\nsubstituting the scaling rules gives:\n\\[\n\\alpha^\\phi \\cdot (\\beta^\\phi)^2 \\cdot (\\gamma^\\phi)^2 = (\\alpha \\cdot \\beta^2 \\cdot \\gamma^2)^\\phi.\n\\]\nThe coefficients $\\alpha = 1.2$, $\\beta = 1.1$, $\\gamma = 1.15$ were found by grid search on EfficientNet-B0, satisfying $\\alpha \\cdot \\beta^2 \\cdot \\gamma^2 \\approx 2$. This gives a principled multi-dimensional scaling law that outperforms single-dimension scaling at equal FLOPs.",
       hints: [
-        "FLOPs scale as depth × width² × resolution², so α·β²·γ² ≈ 2 keeps FLOPs doubling per unit φ.",
-        "EfficientNet-B7 uses φ=7, giving a 600×600 input and ~66M parameters with state-of-the-art accuracy.",
+        "FLOPs scale as depth $\\times$ width$^2$ $\\times$ resolution$^2$, so the compound coefficient is $\\alpha \\cdot \\beta^2 \\cdot \\gamma^2 \\approx 2$.",
+        "With $\\alpha = 1.2$, $\\beta = 1.1$, $\\gamma = 1.15$: $1.2 \\times 1.1^2 \\times 1.15^2 \\approx 2$, so FLOPs $\\approx 2^\\phi$.",
       ],
     },
   ],
@@ -190,19 +190,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Batch Normalisation formula is x̂ᵢ = (xᵢ − μ_B) / √(σ²_B + ε), then yᵢ = γx̂ᵢ + β. What roles do the learnable parameters γ and β play?",
+        "The Batch Normalisation forward pass computes $\\hat{x}_i = (x_i - \\mu_B) / \\sqrt{\\sigma_B^2 + \\epsilon}$, then applies $y_i = \\gamma \\hat{x}_i + \\beta$. What roles do the learnable parameters $\\gamma$ and $\\beta$ play?",
       options: [
-        "γ clips the normalised activation to [-1, 1] and β re-centres it at 0.5",
-        "γ (scale) and β (shift) allow the network to represent any linear function of the normalised activation, including undoing normalisation if optimal — preserving network expressiveness",
-        "γ controls the batch size used for computing statistics and β sets the learning rate for BN parameters",
-        "γ replaces the weight matrix and β replaces the bias in the layer following BN",
+        "$\\gamma$ clips the normalised activation to $[-1, 1]$ and $\\beta$ re-centres it at $0.5$.",
+        "$\\gamma$ (scale) and $\\beta$ (shift) allow the network to represent any linear function of the normalised activation, including undoing normalisation if optimal — preserving network expressiveness.",
+        "$\\gamma$ controls the batch size used for computing statistics and $\\beta$ sets the learning rate for BN parameters.",
+        "$\\gamma$ replaces the weight matrix and $\\beta$ replaces the bias in the layer following BN.",
       ],
       correctAnswer: 1,
       explanation:
-        "After normalising to zero mean and unit variance, applying y = γx̂ + β re-introduces learnable scale and shift. If γ = σ and β = μ the layer can recover the original distribution — meaning BN never restricts representational capacity. In practice γ and β are learned to find the optimal activation statistics for each feature.",
+        "After normalising to zero mean and unit variance with $\\hat{x}_i$, the learned affine transformation\n\\[\ny_i = \\gamma \\hat{x}_i + \\beta\n\\]\nre-introduces a learnable scale and shift. If $\\gamma = \\sigma_B$ and $\\beta = \\mu_B$, the original unnormalised distribution is recovered — meaning Batch Normalisation never restricts the representational capacity of the network. In practice, $\\gamma$ and $\\beta$ are learned to find the optimal activation distribution for each feature.",
       hints: [
         "If BN always forced zero mean and unit variance, would that restrict what the network can represent?",
-        "γ and β give BN the ability to learn the best scale/shift, not just impose unit Gaussian.",
+        "Can $\\gamma$ and $\\beta$ be set to recover the original pre-normalisation distribution?",
       ],
     },
     {
@@ -212,17 +212,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Why can Batch Normalization behave differently at training time versus inference time?",
       options: [
-        "During inference, the batch size is always 1, causing division by zero in the normalisation",
-        "At inference, running mean and variance statistics (accumulated during training as exponential moving averages) are used instead of per-mini-batch statistics",
-        "During inference, the γ and β parameters are frozen to their initial values",
-        "Batch Norm uses different activation functions at training vs. inference time",
+        "During inference, the batch size is always 1, causing division by zero in the normalisation.",
+        "At inference, running mean and variance statistics (accumulated during training as exponential moving averages) are used instead of per-mini-batch statistics.",
+        "During inference, the $\\gamma$ and $\\beta$ parameters are frozen to their initial values.",
+        "Batch Norm uses different activation functions at training versus inference time.",
       ],
       correctAnswer: 1,
       explanation:
-        'During training, BN normalises using mini-batch mean μ_B and variance σ²_B computed over the current batch. At inference, a single sample has no meaningful "batch", so BN uses running estimates: μ_run = momentum·μ_run + (1-momentum)·μ_B accumulated during training. These fixed statistics make inference deterministic and independent of batch size.',
+        "During training, Batch Normalisation normalises using the mini-batch statistics:\n\\[\n\\mu_B = \\frac{1}{m} \\sum_{i=1}^{m} x_i, \\quad \\sigma_B^2 = \\frac{1}{m} \\sum_{i=1}^{m} (x_i - \\mu_B)^2.\n\\]\n\nAt inference, a single test sample has no meaningful \"batch\" statistic. Instead, BN uses running estimates accumulated during training via exponential moving average:\n\\[\n\\mu_{\\text{run}} = \\text{momentum} \\cdot \\mu_{\\text{run}} + (1 - \\text{momentum}) \\cdot \\mu_B.\n\\]\nThese fixed population statistics make inference deterministic and independent of batch size.",
       hints: [
-        'With a single test sample, the "batch mean" would just be that one sample\'s value — not a population statistic.',
-        "Training accumulates running averages that substitute for batch statistics at inference.",
+        "With a single test sample, the batch mean would just be that one sample's value — not a population statistic.",
+        "During training, running averages of $\\mu_B$ and $\\sigma_B^2$ are accumulated and stored for use at inference.",
       ],
     },
     {
@@ -233,10 +233,10 @@ const questions: Record<string, Question[]> = {
         "Batch Normalization eliminates the need for careful weight initialisation in deep neural networks.",
       correctAnswer: "False",
       explanation:
-        "While Batch Norm greatly reduces sensitivity to initialisation by stabilising activations across layers, good initialisation (e.g., He initialisation for ReLU: std = √(2/fan_in)) still improves early convergence and avoids saturated or exploding activations in the very first forward pass before BN statistics stabilise.",
+        "While Batch Normalization greatly reduces sensitivity to initialisation by stabilising activations across layers, good initialisation still matters:\n\nIn the very first forward pass — before any running statistics have been accumulated — the batch statistics may be unstable, especially with small batch sizes. Poor initialisation can still cause saturated (e.g., sigmoid/tanh) or exploding activations in this critical first pass.\n\nHe initialisation ($\\text{std} = \\sqrt{2/\\text{fan}_{\\text{in}}}$ for ReLU) sets weight variance to prevent signals from shrinking toward zero or exploding through deep networks, improving early convergence.",
       hints: [
-        "BN stabilises activations during training — but what happens in the very first forward pass before any statistics are accumulated?",
-        "He initialisation sets variance to prevent signals from shrinking or exploding through deep ReLU networks.",
+        "BN stabilises activations during training — but what happens in the very first forward pass before running statistics are accumulated?",
+        "He initialisation sets weight variance to keep signal magnitudes stable through deep ReLU networks.",
       ],
     },
   ],
@@ -248,19 +248,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A predicted bounding box has area 60 px² and a ground truth box has area 80 px². Their intersection is 40 px². What is the IoU (Intersection over Union)?",
+        "A predicted bounding box has area $|A| = 60$ px$^2$ and a ground truth box has area $|B| = 80$ px$^2$. Their intersection area is $|A \\cap B| = 40$ px$^2$. What is the IoU (Intersection over Union)?",
       options: [
-        "0.40 (intersection / predicted area)",
-        "0.50 (intersection / gt area)",
-        "0.40 (40 / (60 + 80 − 40))",
-        "0.67 (40 / 60)",
+        "$0.40$ (intersection over predicted area: $40/60$)",
+        "$0.50$ (intersection over ground truth area: $40/80$)",
+        "$0.40$ (intersection over union: $40/(60 + 80 - 40)$)",
+        "$0.67$ ($40/60$ rounded)",
       ],
       correctAnswer: 2,
       explanation:
-        "IoU = |A ∩ B| / |A ∪ B|. Union = area_A + area_B − intersection = 60 + 80 − 40 = 100. IoU = 40/100 = 0.40. In Pascal VOC, a detection is a true positive when IoU ≥ 0.5; COCO averages AP over IoU thresholds 0.50:0.05:0.95.",
+        "IoU is defined as:\n\\[\n\\text{IoU} = \\frac{|A \\cap B|}{|A \\cup B|}.\n\\]\n\nThe union area is:\n\\[\n|A \\cup B| = |A| + |B| - |A \\cap B| = 60 + 80 - 40 = 100.\n\\]\n\nTherefore:\n\\[\n\\text{IoU} = \\frac{40}{100} = 0.40.\n\\]\n\nIn Pascal VOC, a detection is a true positive when $\\text{IoU} \\geq 0.5$. COCO averages AP over IoU thresholds $0.50:0.05:0.95$.",
       hints: [
-        "Union = sum of both areas minus intersection (to avoid double-counting the overlap).",
-        "60 + 80 − 40 = 100. IoU = 40/100.",
+        "The union is $|A| + |B| - |A \\cap B|$, to avoid double-counting the overlap.",
+        "Compute: $60 + 80 - 40 = 100$, then $\\text{IoU} = 40/100 = 0.40$.",
       ],
     },
     {
@@ -270,17 +270,17 @@ const questions: Record<string, Question[]> = {
       question:
         "When computing Average Precision (AP) for a single class in object detection, what are the correct steps in order?",
       options: [
-        "(1) Sort all detections by confidence descending; (2) label each as TP (IoU ≥ threshold with unmatched GT) or FP; (3) compute cumulative precision and recall at each detection; (4) compute area under the precision-recall curve",
-        "(1) Sort detections by bounding-box area; (2) match each to the nearest GT box; (3) compute F1 at 50% recall; (4) average F1 across all images",
-        "(1) Compute IoU for all predicted-GT pairs; (2) select the pair with maximum IoU; (3) compute precision at that IoU; (4) repeat for all GT boxes",
-        "(1) Threshold confidence at 0.5; (2) remove duplicates with NMS; (3) compute recall; (4) compute precision at 50% recall threshold",
+        "(1) Sort all detections by confidence descending; (2) label each as TP (IoU $\\geq$ threshold with unmatched GT) or FP; (3) compute cumulative precision and recall at each detection; (4) compute area under the precision-recall curve.",
+        "(1) Sort detections by bounding-box area; (2) match each to the nearest GT box; (3) compute F1 at 50% recall; (4) average F1 across all images.",
+        "(1) Compute IoU for all predicted–GT pairs; (2) select the pair with maximum IoU; (3) compute precision at that IoU; (4) repeat for all GT boxes.",
+        "(1) Threshold confidence at 0.5; (2) remove duplicates with NMS; (3) compute recall; (4) compute precision at 50% recall threshold.",
       ],
       correctAnswer: 0,
       explanation:
-        "Standard AP (VOC/COCO): (1) rank all detections by confidence score descending; (2) for each detection in rank order, if its IoU with any unmatched GT box ≥ threshold it is a TP (mark that GT matched), else FP; (3) compute cumulative precision P(k) = TP/(TP+FP) and recall R(k) = TP/num_GT at each rank k; (4) AP = area under P-R curve (interpolated at 11 recall points for VOC, continuous for COCO). mAP averages AP over all classes.",
+        "Standard AP computation (VOC/COCO) proceeds as follows:\n\n1. Sort all detections by confidence score in descending order.\n2. For each detection in rank order: if its IoU with any unmatched GT box $\\geq$ threshold, label it as TP (and mark that GT as matched); otherwise label it as FP.\n3. Compute cumulative precision $P(k) = \\text{TP}/(\\text{TP} + \\text{FP})$ and recall $R(k) = \\text{TP}/\\text{num\\_GT}$ at each rank $k$.\n4. AP is the area under the $P$–$R$ curve (interpolated at 11 recall points for VOC, continuous for COCO).\n\nmAP averages AP over all classes.",
       hints: [
-        "The key step is sorting by confidence — high-confidence detections are evaluated first.",
-        "Once a GT box is matched, subsequent detections overlapping it are FPs even if IoU ≥ threshold.",
+        "The key first step is sorting by confidence — high-confidence detections are evaluated first.",
+        "Once a GT box is matched, subsequent detections overlapping it are FPs even if IoU $\\geq$ threshold (greedy matching).",
       ],
     },
     {
@@ -288,19 +288,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "YOLOv1 predicts bounding boxes directly from a grid of cells. If the grid is 7×7 and each cell predicts 2 boxes with 5 values each plus 20 class probabilities, what is the total output tensor size?",
+        "YOLOv1 predicts bounding boxes directly from a grid of cells. If the grid is $7 \\times 7$ and each cell predicts 2 boxes with 5 values each plus 20 class probabilities, what is the total output tensor size?",
       options: [
-        "7×7×30 = 1470",
-        "7×7×25 = 1225",
-        "7×7×40 = 1960",
-        "7×7×10 = 490",
+        "$7 \\times 7 \\times 30 = 1470$",
+        "$7 \\times 7 \\times 25 = 1225$",
+        "$7 \\times 7 \\times 40 = 1960$",
+        "$7 \\times 7 \\times 10 = 490$",
       ],
       correctAnswer: 0,
       explanation:
-        "Each of the 7×7 grid cells outputs: 2 boxes × 5 values (x, y, w, h, confidence) + 20 class probabilities = 10 + 20 = 30 values. Total tensor = 7 × 7 × 30 = 1470. YOLO frames detection as a single regression problem, enabling real-time detection at ~45 FPS.",
+        "Each of the $7 \\times 7 = 49$ grid cells outputs:\n\\[\n2 \\text{ boxes} \\times 5 \\text{ values} + 20 \\text{ class probabilities} = 10 + 20 = 30 \\text{ values}.\n\\]\n\nTotal output tensor:\n\\[\n7 \\times 7 \\times 30 = 1470.\n\\]\n\nYOLO frames object detection as a single regression problem, predicting all outputs in one forward pass — enabling real-time detection at approximately 45 FPS.",
       hints: [
-        "Each box has 5 values: center (x, y), size (w, h), and objectness confidence.",
-        "2 boxes × 5 + 20 classes = 30 values per cell; 7×7 cells gives 7×7×30.",
+        "Each box has 5 values: center $(x, y)$, size $(w, h)$, and objectness confidence.",
+        "2 boxes $\\times$ 5 values + 20 classes = 30 values per cell. Multiply by $7 \\times 7 = 49$ cells.",
       ],
     },
     {
@@ -308,19 +308,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Faster R-CNN uses anchor boxes at each spatial location. If the backbone produces a 50×38 feature map and 9 anchors are placed at each location (3 scales × 3 aspect ratios), how many anchor boxes are generated in total?",
+        "Faster R-CNN uses anchor boxes at each spatial location. If the backbone produces a $50 \\times 38$ feature map and 9 anchors are placed at each location (3 scales $\\times$ 3 aspect ratios), how many anchor boxes are generated in total?",
       options: [
-        "2,700 anchors (50×38×9/…via stride only)",
-        "17,100 anchors (50×38×9)",
-        "1,900 anchors (50×38)",
-        "38,000 anchors (50×38×20)",
+        "$2700$ (incorrect stride-based calculation)",
+        "$17100$ ($50 \\times 38 \\times 9$)",
+        "$1900$ ($50 \\times 38$, no anchors-per-location factor)",
+        "$38000$ ($50 \\times 38 \\times 20$)",
       ],
       correctAnswer: 1,
       explanation:
-        "Total anchors = feature-map height × width × anchors-per-location = 50 × 38 × 9 = 17,100. The Region Proposal Network (RPN) classifies each anchor as foreground/background and regresses offsets; non-maximum suppression then retains the top ~2000 proposals for the detection head.",
+        "Anchors are placed at every spatial location in the feature map:\n\\[\n\\text{Total anchors} = H \\times W \\times \\text{anchors-per-location} = 50 \\times 38 \\times 9 = 17{,}100.\n\\]\n\nThe Region Proposal Network (RPN) classifies each anchor as foreground/background and regresses bounding-box offsets. Non-maximum suppression then retains the top approximately 2000 proposals for the detection head.",
       hints: [
-        "Anchors are placed at every spatial location in the feature map — multiply H × W × anchors-per-location.",
-        "50 × 38 = 1900 locations; 1900 × 9 anchors each = 17100.",
+        "Anchors are placed at every spatial location in the feature map — multiply $H \\times W \\times$ anchors-per-location.",
+        "$50 \\times 38 = 1900$ spatial locations; each has 9 anchors: $1900 \\times 9 = 17100$.",
       ],
     },
     {
@@ -330,17 +330,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Feature Pyramid Networks (FPN) build a multi-scale feature pyramid. What is the key operation that allows FPN to create high-resolution feature maps with strong semantics?",
       options: [
-        "Dilated convolutions that expand receptive fields without losing resolution",
-        "Top-down pathway with lateral connections: semantically strong coarse features are upsampled and merged with high-resolution bottom-up features",
-        "Global average pooling across all scales followed by channel-wise concatenation",
-        "Applying separate classifiers at each scale of a standard image pyramid at test time",
+        "Dilated convolutions that expand receptive fields without losing resolution.",
+        "Top-down pathway with lateral connections: semantically strong coarse features are upsampled and merged with high-resolution bottom-up features.",
+        "Global average pooling across all scales followed by channel-wise concatenation.",
+        "Applying separate classifiers at each scale of a standard image pyramid at test time.",
       ],
       correctAnswer: 1,
       explanation:
-        "FPN combines a bottom-up pathway (standard backbone forward pass, losing resolution but gaining semantics) with a top-down pathway that upsamples coarse, high-semantic features by 2× and adds them element-wise to same-resolution bottom-up features via 1×1 lateral connections. This gives every scale both high resolution and rich semantic content — enabling detectors like Faster R-CNN to detect both small and large objects accurately.",
+        "FPN combines two pathways:\n\n1. **Bottom-up pathway**: the standard CNN forward pass, progressively downsampling to gain strong semantic features but losing spatial resolution.\n2. **Top-down pathway**: coarse, semantically rich feature maps are upsampled by $2\\times$ and merged element-wise with same-resolution features from the bottom-up pathway via $1 \\times 1$ lateral connections.\n\nThis gives every pyramid level both high resolution (from bottom-up) and rich semantic content (from top-down), enabling detectors like Faster R-CNN to accurately detect both small and large objects.",
       hints: [
-        "Coarse feature maps have strong semantics but low resolution; fine maps have high resolution but weak semantics — how does FPN get both?",
-        "Lateral connections feed high-resolution early features into the top-down pathway at each scale.",
+        "Coarse feature maps have strong semantics but low resolution; fine maps have high resolution but weak semantics — FPN combines the best of both.",
+        "Lateral $1 \\times 1$ convolutions reduce channel dimension and merge top-down (semantic) with bottom-up (high-resolution) features at each scale.",
       ],
     },
     {
@@ -350,17 +350,17 @@ const questions: Record<string, Question[]> = {
       question:
         "DETR uses bipartite (Hungarian) matching between predictions and ground truth during training. Why does this eliminate the need for Non-Maximum Suppression (NMS) at inference?",
       options: [
-        "DETR uses sigmoid instead of softmax activation, so multiple predictions can be confident about different objects without overlap",
-        "Hungarian matching enforces a bijective (one-to-one) assignment between object queries and GT boxes during training, so each query learns to predict at most one unique object — duplicates cannot emerge at inference",
-        "DETR predicts masks instead of bounding boxes, so bounding-box NMS is not applicable",
-        "DETR applies NMS during training but removes it at inference by clamping confidence scores",
+        "DETR uses sigmoid instead of softmax activation, so multiple predictions can be confident about different objects without overlap.",
+        "Hungarian matching enforces a bijective (one-to-one) assignment between object queries and GT boxes during training, so each query learns to predict at most one unique object — duplicates cannot emerge at inference.",
+        "DETR predicts masks instead of bounding boxes, so bounding-box NMS is not applicable.",
+        "DETR applies NMS during training but removes it at inference by clamping confidence scores.",
       ],
       correctAnswer: 1,
       explanation:
-        "DETR uses N object queries (e.g., N=100) and the Hungarian algorithm finds the unique minimum-cost bijection between predictions and GT. Each GT is matched to exactly one query and each query is matched to at most one GT. Since training enforces uniqueness, the model cannot learn to produce duplicate detections for the same object — making NMS unnecessary, unlike anchor-based detectors that can produce many overlapping predictions per object.",
+        "DETR uses $N$ object queries (e.g., $N = 100$) and the Hungarian algorithm finds the unique minimum-cost bijection between predictions and ground truth boxes. Each GT is matched to exactly one query, and each query is matched to at most one GT (or to \"no object\").\n\nSince training enforces this one-to-one uniqueness, the model cannot learn to produce duplicate detections for the same object — making NMS unnecessary at inference. This contrasts with anchor-based detectors, where many anchors can propose overlapping boxes for the same object.",
       hints: [
         "NMS is needed when multiple anchors/proposals detect the same object. What prevents that in DETR?",
-        'Bijective means one-to-one: each query "owns" at most one GT, so duplicates cannot be trained in.',
+        "The Hungarian matching enforces bijective (one-to-one) assignment: each query \"owns\" at most one GT box during training.",
       ],
     },
   ],
@@ -372,19 +372,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Mean IoU (mIoU) is the standard metric for semantic segmentation. For a binary segmentation problem, if TP=80, FP=20, FN=10, what is the IoU for the foreground class?",
+        "Mean IoU (mIoU) is the standard metric for semantic segmentation. For a binary segmentation problem, if $\\text{TP} = 80$, $\\text{FP} = 20$, $\\text{FN} = 10$, what is the IoU for the foreground class?",
       options: [
-        "0.73 (80 / (80 + 20 + 10))",
-        "0.80 (80 / (80 + 20))",
-        "0.89 (80 / (80 + 10))",
-        "0.75 (80 / (80 + 20 + 10 − 80/2))",
+        "$0.73$ ($\\text{TP}/(\\text{TP}+\\text{FP}+\\text{FN}) = 80/110$)",
+        "$0.80$ ($\\text{TP}/(\\text{TP}+\\text{FP}) = 80/100$)",
+        "$0.89$ ($\\text{TP}/(\\text{TP}+\\text{FN}) = 80/90$)",
+        "$0.75$ (incorrect formula)",
       ],
       correctAnswer: 0,
       explanation:
-        "For a single class, IoU = TP / (TP + FP + FN) = 80 / (80 + 20 + 10) = 80/110 ≈ 0.727. mIoU averages this over all classes including background. Note FP are predicted-foreground but actually-background pixels; FN are actually-foreground but predicted-background pixels.",
+        "For semantic segmentation, IoU for a single class is defined as:\n\\[\n\\text{IoU} = \\frac{\\text{TP}}{\\text{TP} + \\text{FP} + \\text{FN}}.\n\\]\n\nSubstituting the given values:\n\\[\n\\text{IoU} = \\frac{80}{80 + 20 + 10} = \\frac{80}{110} \\approx 0.727 \\approx 0.73.\n\\]\n\nHere FP are predicted-foreground pixels that are actually background, and FN are actual-foreground pixels predicted as background.\n\nmIoU averages IoU over all classes (including background).",
       hints: [
-        "IoU for segmentation = TP / (TP + FP + FN). This equals intersection/union on pixel sets.",
-        "80 / (80 + 20 + 10) = 80/110 ≈ 0.73.",
+        "IoU for segmentation = $\\text{TP}/(\\text{TP}+\\text{FP}+\\text{FN})$. This equals intersection over union on pixel sets.",
+        "Compute: $80/(80+20+10) = 80/110 \\approx 0.73$.",
       ],
     },
     {
@@ -392,19 +392,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'Fully Convolutional Networks (FCN) for segmentation produce coarse feature maps that must be upsampled. What does "FCN-32s" vs. "FCN-8s" refer to?',
+        'Fully Convolutional Networks (FCN) for segmentation produce coarse feature maps that must be upsampled. What does "FCN-32s" versus "FCN-8s" refer to?',
       options: [
-        "FCN-32s upsamples the pool5 output directly by 32× in one step; FCN-8s fuses pool3 (8× downsampled) and pool4 skip features before upsampling by 8×, producing finer predictions",
-        "FCN-32s uses 32 filters in the last convolutional layer; FCN-8s uses 8 filters for a lighter model",
-        "FCN-32s operates at 32-pixel stride for fast inference; FCN-8s processes 8 overlapping patches per pixel",
-        "FCN-32s applies 32-bit floating point weights; FCN-8s applies 8-bit quantised weights",
+        "FCN-32s upsamples the pool5 output directly by $32\\times$ in one step; FCN-8s fuses pool3 ($8\\times$ downsampled) and pool4 skip features before upsampling by $8\\times$, producing finer predictions.",
+        "FCN-32s uses 32 filters in the last convolutional layer; FCN-8s uses 8 filters for a lighter model.",
+        "FCN-32s operates at 32-pixel stride for fast inference; FCN-8s processes 8 overlapping patches per pixel.",
+        "FCN-32s applies 32-bit floating point weights; FCN-8s applies 8-bit quantised weights.",
       ],
       correctAnswer: 0,
       explanation:
-        "In Long et al. (2015), FCN-32s takes the coarsest pool5 feature map (32× downsampled) and upsamples it 32× in one bilinear step — blurry output. FCN-16s adds a skip from pool4 (16× downsampled) before a 16× upsample. FCN-8s adds pool3 (8× downsampled) for a finer 8× upsample, improving boundary localisation with each added skip.",
+        "In Long et al. (2015):\n\n- **FCN-32s**: takes the pool5 feature map ($32\\times$ downsampled relative to the input) and upsamples it $32\\times$ in one bilinear step — the coarsest and blurriest output.\n- **FCN-16s**: adds a skip connection from pool4 ($16\\times$ downsampled) and upsamples by $16\\times$, improving boundary localisation.\n- **FCN-8s**: additionally incorporates pool3 ($8\\times$ downsampled) for an $8\\times$ upsample, yielding the finest boundary predictions.\n\nEach added skip connection recovers spatial detail lost during downsampling.",
       hints: [
-        "The number refers to the stride of the coarsest feature map used; larger stride = coarser predictions.",
-        "Adding skip connections from earlier, higher-resolution layers recovers spatial detail lost to downsampling.",
+        "The number refers to the downsampling factor of the coarsest feature map used — larger means coarser predictions.",
+        "Adding skip connections from earlier, higher-resolution layers recovers spatial detail lost during downsampling.",
       ],
     },
     {
@@ -432,17 +432,17 @@ const questions: Record<string, Question[]> = {
       question:
         "How does Mask R-CNN extend Faster R-CNN to perform instance segmentation?",
       options: [
-        "It replaces the RPN with a segmentation-specific region proposal network",
-        "It adds a parallel binary mask prediction head to the per-ROI classification and box regression heads",
-        "It uses a fully convolutional decoder that runs before region proposals are generated",
-        "It replaces bounding box regression with direct mask contour point regression",
+        "It replaces the RPN with a segmentation-specific region proposal network.",
+        "It adds a parallel binary mask prediction head to the per-ROI classification and box regression heads.",
+        "It uses a fully convolutional decoder that runs before region proposals are generated.",
+        "It replaces bounding box regression with direct mask contour point regression.",
       ],
       correctAnswer: 1,
       explanation:
-        "Mask R-CNN adds a small FCN (fully convolutional network) mask head in parallel with the existing box and class heads, predicting a binary mask for each region of interest independently of class prediction.",
+        "Mask R-CNN adds a small FCN (Fully Convolutional Network) mask head in parallel with the existing box and class heads. For each ROI, it predicts a binary mask of fixed spatial size (e.g., $14 \\times 14$ or $28 \\times 28$) indicating which pixels belong to the detected object instance. This mask prediction is independent of the class prediction — the mask head operates on each ROI regardless of its predicted class.",
       hints: [
         "Faster R-CNN already detects and classifies objects — what extra output does instance segmentation need?",
-        "The mask head runs per-ROI, predicting a fixed-size binary mask for each detected instance.",
+        "The mask head runs per-ROI, predicting a binary mask for each detected instance, independently of class prediction.",
       ],
     },
     {
@@ -452,16 +452,16 @@ const questions: Record<string, Question[]> = {
       question:
         "What problem does ROI Align solve compared to ROI Pool in Mask R-CNN?",
       options: [
-        "ROI Align uses bilinear interpolation to avoid quantisation errors when extracting fixed-size features from misaligned regions",
-        "ROI Align reduces the number of region proposals to improve speed",
-        "ROI Align replaces max pooling with average pooling for smoother feature aggregation",
-        "ROI Align normalises the feature values within each region for stable training",
+        "ROI Align uses bilinear interpolation to avoid quantisation errors when extracting fixed-size features from misaligned regions.",
+        "ROI Align reduces the number of region proposals to improve speed.",
+        "ROI Align replaces max pooling with average pooling for smoother feature aggregation.",
+        "ROI Align normalises the feature values within each region for stable training.",
       ],
       correctAnswer: 0,
       explanation:
-        "ROI Pool discretises (quantises) the ROI coordinates to the nearest integer, introducing spatial misalignment; ROI Align uses bilinear interpolation at exact sub-pixel locations, greatly improving mask accuracy.",
+        "ROI Pool discretises (quantises) ROI coordinates to the nearest integer grid point:\n\\[\n\\text{quantised bin start} = \\lfloor \\text{float bin start} \\rfloor.\n\\]\n\nThis introduces a systematic spatial misalignment — the extracted features no longer precisely correspond to the original ROI coordinates — which degrades mask accuracy.\n\nROI Align avoids quantisation by using bilinear interpolation at exact sub-pixel locations, preserving spatial alignment and greatly improving mask quality.",
       hints: [
-        "Rounding coordinates to integers introduces a small but systematic spatial shift — why does that matter for precise masks?",
+        "Rounding coordinates to integers introduces a small but systematic spatial shift — why does that matter for precise mask prediction?",
         "Bilinear interpolation allows sampling at non-integer grid positions — how does that preserve alignment?",
       ],
     },
@@ -600,19 +600,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'Mixup creates a training sample by forming x̃ = λxᵢ + (1−λ)xⱼ and ỹ = λyᵢ + (1−λ)yⱼ where λ ~ Beta(α, α). If α=0.2 and λ=0.7, and image i is class "cat" (one-hot [1,0]) while image j is class "dog" ([0,1]), what is the mixed label ỹ?',
+        "Mixup creates a training sample by forming $\\tilde{x} = \\lambda x_i + (1-\\lambda)x_j$ and $\\tilde{y} = \\lambda y_i + (1-\\lambda)y_j$ where $\\lambda \\sim \\text{Beta}(\\alpha, \\alpha)$. If $\\alpha = 0.2$ and $\\lambda = 0.7$, and image $i$ is class \"cat\" (one-hot $[1, 0]$) while image $j$ is class \"dog\" ($[0, 1]$), what is the mixed label $\\tilde{y}$?",
       options: [
-        "[1, 0] — the dominant class cat wins",
-        "[0.7, 0.3] — 70% cat, 30% dog",
-        "[0.5, 0.5] — always uniform",
-        "[0.2, 0.8] — alpha controls the label directly",
+        "$[1, 0]$ — the dominant class (cat) wins",
+        "$[0.7, 0.3]$ — 70% cat, 30% dog",
+        "$[0.5, 0.5]$ — always uniform regardless of $\\lambda$",
+        "$[0.2, 0.8]$ — $\\alpha$ directly controls the label",
       ],
       correctAnswer: 1,
       explanation:
-        'ỹ = λ·[1,0] + (1−λ)·[0,1] = [0.7, 0.3]. The model is trained with a soft target: 70% "cat", 30% "dog". Both the pixels and labels are linearly interpolated with the same λ. This soft supervision encourages smoother decision boundaries and better-calibrated confidence, reducing overconfident predictions.',
+        "Applying the Mixup label formula:\n\\[\n\\tilde{y} = \\lambda \\cdot [1, 0] + (1-\\lambda) \\cdot [0, 1] = 0.7 \\cdot [1, 0] + 0.3 \\cdot [0, 1] = [0.7, 0] + [0, 0.3] = [0.7, 0.3].\n\\]\n\nThe model is trained with a soft target: 70% \"cat\", 30% \"dog\". Both pixels and labels are linearly interpolated with the same $\\lambda$. This soft supervision encourages smoother decision boundaries and better-calibrated confidence, reducing overconfident predictions.",
       hints: [
-        "Apply the formula ỹ = λyᵢ + (1−λ)yⱼ with λ=0.7, yᵢ=[1,0], yⱼ=[0,1].",
-        "0.7×[1,0] + 0.3×[0,1] = [0.7, 0] + [0, 0.3] = [0.7, 0.3].",
+        "Apply the formula $\\tilde{y} = \\lambda y_i + (1-\\lambda)y_j$ with $\\lambda = 0.7$, $y_i = [1, 0]$, $y_j = [0, 1]$.",
+        "$0.7 \\times [1, 0] + 0.3 \\times [0, 1] = [0.7, 0] + [0, 0.3] = [0.7, 0.3]$.",
       ],
     },
     {
@@ -1544,19 +1544,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'In knowledge distillation, training with a teacher temperature τ > 1 "softens" the probability distribution. If a teacher produces logits [4, 1, −2] and τ = 4, what happens to the soft label distribution compared to τ = 1?',
+        "In knowledge distillation, training with a teacher temperature $\\tau > 1$ \"softens\" the probability distribution. If a teacher produces logits $[4, 1, -2]$ and $\\tau = 4$, what happens to the soft label distribution compared to $\\tau = 1$?",
       options: [
-        "At τ=4 the distribution becomes more uniform (entropy increases), revealing inter-class similarity structure that hard labels hide",
-        "At τ=4 the distribution becomes sharper (entropy decreases), making distillation easier",
-        "Temperature only affects the student network, not the teacher soft labels",
-        "At τ=4 the distribution is identical to τ=1 since softmax is scale-invariant",
+        "At $\\tau = 4$ the distribution becomes more uniform (entropy increases), revealing inter-class similarity structure that hard labels hide.",
+        "At $\\tau = 4$ the distribution becomes sharper (entropy decreases), making distillation easier.",
+        "Temperature only affects the student network, not the teacher soft labels.",
+        "At $\\tau = 4$ the distribution is identical to $\\tau = 1$ since softmax is scale-invariant.",
       ],
       correctAnswer: 0,
       explanation:
-        "Soft labels are softmax(logits/τ). At τ=1: p ∝ exp([4,1,−2]) = [e⁴,e¹,e⁻²] ≈ [0.952, 0.047, 0.001] — very peaked. At τ=4: p ∝ exp([1,0.25,−0.5]) ≈ [0.574, 0.282, 0.144] — much more uniform. Higher τ reveals that the teacher considers class 2 more plausible than class 3 even when it predicts class 1, transferring structural knowledge beyond the top prediction.",
+        "Soft labels are computed as $\\softmax(z / \\tau)$.  \n\nAt $\\tau = 1$:\n\\[\np \\propto [e^4, e^1, e^{-2}] \\approx [0.952, 0.047, 0.001],\n\\]\nwhich is very peaked toward class 1.\n\nAt $\\tau = 4$:\n\\[\np \\propto [e^{4/4}, e^{1/4}, e^{-2/4}] = [e^1, e^{0.25}, e^{-0.5}] \\approx [0.574, 0.282, 0.144],\n\\]\nwhich is much more uniform. Higher $\\tau$ reveals that the teacher considers class 2 more plausible than class 3 even when predicting class 1 — transferring structural knowledge beyond the top-1 prediction.",
       hints: [
-        "Temperature τ divides all logits before softmax. Smaller logit differences → more uniform distribution.",
-        "At τ→∞, soft labels approach uniform; at τ→0, they approach one-hot.",
+        "Temperature $\\tau$ divides all logits before softmax. With larger $\\tau$, the logit differences are compressed, producing a more uniform distribution.",
+        "As $\\tau \\to \\infty$, soft labels approach a uniform distribution; as $\\tau \\to 0$, they approach a one-hot distribution.",
       ],
     },
     {
@@ -1584,17 +1584,17 @@ const questions: Record<string, Question[]> = {
       question:
         "COCO mAP (the standard benchmark) is computed at multiple IoU thresholds. Which formula correctly defines COCO mAP?",
       options: [
-        "mAP = AP × IoU",
-        "mAP = AP × (IoU + 0.5)",
-        "mAP = AP × (IoU + 0.5) / 2",
-        "mAP = AP × (IoU + 0.5) / 10",
+        "$\\text{mAP} = \\text{AP} \\times \\text{IoU}$",
+        "$\\text{mAP} = \\text{AP} \\times (\\text{IoU} + 0.5)$",
+        "$\\text{mAP} = \\text{AP} \\times (\\text{IoU} + 0.5)/2$",
+        "$\\text{mAP} = \\text{AP} \\times (\\text{IoU} + 0.5)/10$",
       ],
       correctAnswer: 2,
       explanation:
-        "COCO mAP = AP × (IoU + 0.5) / 2. This averages AP over two IoU thresholds: 0.5 and 0.75. Higher IoU thresholds demand tighter localisation — averaging over them rewards both rough and precise detections.",
+        "COCO mAP is defined as:\n\\[\n\\text{mAP} = \\text{AP} \\times \\frac{\\text{IoU} + 0.5}{2}.\n\\]\n\nThis averages AP over two IoU thresholds: $0.5$ and $0.75$. Higher IoU thresholds demand tighter localisation between predicted and ground-truth boxes. Averaging over multiple thresholds rewards detectors that produce both rough ($\\text{IoU} \\geq 0.5$) and precise ($\\text{IoU} \\geq 0.75$) localisations.\n\nNote: the actual COCO benchmark uses 10 thresholds ($0.50, 0.55, \\ldots, 0.95$), but the formula structure follows the same principle.",
       hints: [
-        "COCO mAP = AP × (IoU + 0.5) / 2. This averages AP over two IoU thresholds: 0.5 and 0.75.",
-        "Higher IoU thresholds demand tighter localisation — what does this mean for the precision-recall curve?",
+        "COCO mAP averages AP over multiple IoU thresholds, penalising imprecise boxes more as the threshold increases.",
+        "The factor of $(0.5 + \\text{IoU})/2$ captures averaging between the 0.5 and 0.75 IoU thresholds.",
       ],
     },
     {
@@ -1604,17 +1604,17 @@ const questions: Record<string, Question[]> = {
       question:
         "FID (Fréchet Inception Distance) measures the distance between feature distributions of real and generated images. Which formula correctly defines FID?",
       options: [
-        "FID = ||μ_r − μ_g||² + Tr(Σ_r + Σ_g − 2(Σ_r·Σ_g)^½), where μ and Σ are the mean and covariance of Inception-v3 pool3 features for real (r) and generated (g) images",
-        "FID = average pixel-wise MSE between real and generated images divided by the Inception classification accuracy",
-        "FID = KL(N(μ_r, Σ_r) || N(μ_g, Σ_g)), the KL divergence between two Gaussians fit to Inception features",
-        "FID = 1 − cosine_similarity(μ_r, μ_g), using only the mean Inception features without covariance",
+        "$\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\text{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2(\\Sigma_r \\Sigma_g)^{1/2}\\right)$, where $\\mu$ and $\\Sigma$ are the mean and covariance of Inception-v3 pool3 features for real ($r$) and generated ($g$) images.",
+        "$\\text{FID} = \\text{average pixel-wise MSE}$ between real and generated images divided by Inception classification accuracy.",
+        "$\\text{FID} = D_{\\text{KL}}\\!\\left(\\mathcal{N}(\\mu_r, \\Sigma_r) \\| \\mathcal{N}(\\mu_g, \\Sigma_g)\\right)$, the KL divergence between two Gaussians.",
+        "$\\text{FID} = 1 - \\text{cosine\\_similarity}(\\mu_r, \\mu_g)$, using only mean Inception features without covariance.",
       ],
       correctAnswer: 0,
       explanation:
-        "FID = ||μ_r − μ_g||² + Tr(Σ_r + Σ_g − 2(Σ_r Σ_g)^{1/2}), the Fréchet/Wasserstein-2 distance between two multivariate Gaussians N(μ_r, Σ_r) and N(μ_g, Σ_g). Lower FID = more similar distributions. FID penalises both poor image quality (features drift from real distribution) and mode collapse (low covariance).",
+        "FID is the Fréchet (Wasserstein-2) distance between two multivariate Gaussians:\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\text{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2(\\Sigma_r \\Sigma_g)^{1/2}\\right).\n\\]\n\nHere $\\mu_r, \\Sigma_r$ are the mean and covariance of Inception-v3 pool3 features for real images, and $\\mu_g, \\Sigma_g$ are for generated images. Lower FID indicates more similar distributions. FID penalises both poor image quality (feature mean drifts from real) and mode collapse (low generated covariance).",
       hints: [
-        "FID is the Fréchet/Wasserstein-2 distance between two multivariate Gaussians N(μ_r, Σ_r) and N(μ_g, Σ_g).",
-        "The matrix square root term (Σ_r·Σ_g)^½ penalises when the covariances of real and generated features differ — catching mode collapse.",
+        "FID is the Fréchet/Wasserstein-2 distance between two multivariate Gaussians $\\mathcal{N}(\\mu_r, \\Sigma_r)$ and $\\mathcal{N}(\\mu_g, \\Sigma_g)$.",
+        "The matrix square-root term $(\\Sigma_r \\Sigma_g)^{1/2}$ penalises when the covariances of real and generated features differ — this catches mode collapse.",
       ],
     },
     {

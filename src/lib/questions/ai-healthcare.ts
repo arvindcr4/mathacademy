@@ -2270,5 +2270,489 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const extra: Record<string, Question[]> = {
+  "fda-regulation-samd": [
+    {
+      id: "q-hc-ex1-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "FDA's Software as a Medical Device (SaMD) framework classifies AI software by which primary criterion?",
+      options: [
+        "The programming language used to implement the software",
+        "The significance of the information provided by the software and the state of the healthcare situation",
+        "Whether the software is deployed on-premise or in the cloud",
+        "The number of parameters in the underlying machine learning model",
+      ],
+      correctAnswer: 1,
+      explanation: "SaMD risk classification is based on two axes: significance of the information (treat/diagnose/drive vs. inform) and state of the situation (critical vs. serious vs. non-serious), yielding a three-tier risk framework where higher significance in critical situations is Class III.",
+      hints: [
+        "Think about what the software does with its output and how serious the clinical context is.",
+        "FDA cares about consequences of wrong information, not technical implementation details.",
+      ],
+    },
+    {
+      id: "q-hc-ex1-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A 510(k) clearance for a medical AI device requires the manufacturer to demonstrate that the device is substantially equivalent to an existing legally marketed predicate device.",
+      correctAnswer: "True",
+      explanation: "The 510(k) pathway compares a new device to a predicate: if the new device has the same intended use and substantially equivalent technological characteristics (or different characteristics that do not raise new safety questions), it can be cleared without full clinical trials.",
+      hints: [
+        "510(k) is a comparative pathway — you need a previously cleared predicate to compare against.",
+        "Substantial equivalence can be based on intended use alone, or intended use plus technology.",
+      ],
+    },
+    {
+      id: "q-hc-ex1-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Under FDA's Pre-Submission (Q-Sub) program, an AI medical device developer can:",
+      options: [
+        "Submit a complete PMA application anonymously before committing to a product name",
+        "Request written feedback from FDA on proposed study designs and regulatory strategies before submitting a formal application",
+        "Obtain provisional FDA clearance to market the device while a full 510(k) is pending",
+        "Bypass IRB requirements for early feasibility studies with fewer than 10 participants",
+      ],
+      correctAnswer: 1,
+      explanation: "The Pre-Submission program allows developers to engage FDA early — submitting a briefing document and proposed questions to receive written FDA feedback on study design, data collection plans, and regulatory pathways before investing in a full clinical study.",
+      hints: [
+        "Pre-Submission is a risk-reduction mechanism — you get FDA's perspective before expensive commitments.",
+        "FDA responds in writing, giving developers informal but valuable guidance on their development plan.",
+      ],
+    },
+    {
+      id: "q-hc-ex1-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "FDA's Predetermined Change Control Plan (PCCP) framework for AI/ML-based SaMD is designed to address which unique challenge of AI medical devices?",
+      options: [
+        "The high computational cost of running inference on medical-grade hardware",
+        "AI models that learn and change after deployment, potentially requiring new premarket submissions for every model update",
+        "The lack of interpretability in black-box models used for life-critical decisions",
+        "Data privacy requirements when models are retrained on new patient populations",
+      ],
+      correctAnswer: 1,
+      explanation: "Traditional medical device regulation treats devices as static; AI models may need continuous updates to maintain performance. PCCP allows manufacturers to pre-specify anticipated changes (within defined bounds) so that routine model updates do not each require a new 510(k), while still ensuring safety.",
+      hints: [
+        "Think about what makes AI devices fundamentally different from a scalpel or a blood pressure cuff.",
+        "PCCP pre-approves the types of changes that are allowed without a new submission — not the changes themselves.",
+      ],
+    },
+    {
+      id: "q-hc-ex1-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The De Novo pathway is the appropriate FDA regulatory route for novel, low-to-moderate risk AI devices when no predicate device exists.",
+      correctAnswer: "True",
+      explanation: "De Novo is used for novel device types that are not substantially equivalent to any predicate but pose low-to-moderate risk; FDA evaluates the novel device and may create a new device classification that can serve as a predicate for future similar devices.",
+      hints: [
+        "Without a predicate, 510(k) cannot be used. De Novo fills the gap for low-risk novel devices.",
+        "IDx-DR (autonomous diabetic retinopathy screening) was the first AI device to receive De Novo authorization.",
+      ],
+    },
+    {
+      id: "q-hc-ex1-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "FDA's draft guidance on AI-enabled device software functions identifies which key element that should be included in a device's labeling to ensure safe use of an AI diagnostic tool?",
+      options: [
+        "The model architecture and number of training parameters",
+        "Intended use population, performance characteristics by subgroup, known limitations, and instructions on how clinicians should integrate the AI output into clinical decisions",
+        "The source code and training dataset to enable independent validation",
+        "Cloud computing infrastructure details and uptime guarantees",
+      ],
+      correctAnswer: 1,
+      explanation: "FDA requires labeling that clearly specifies the intended patient population, validated performance metrics (including subgroup performance to reveal disparities), known failure modes, and guidance on appropriate clinical use — enabling clinicians to understand when to trust or override the AI.",
+      hints: [
+        "Labeling is the interface between the device and its users — clinicians need to know when the device works and when it does not.",
+        "Subgroup performance disclosure helps prevent automation bias in populations where the device underperforms.",
+      ],
+    },
+  ],
+
+  "clinical-validation-ai": [
+    {
+      id: "q-hc-ex2-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "The CONSORT-AI extension to the CONSORT reporting guideline was developed to ensure that:",
+      options: [
+        "AI algorithms are always compared to human expert performance as a control arm",
+        "Randomized trials evaluating AI interventions report details specific to AI (training data, model version, human-AI interaction) enabling reproducibility and critical appraisal",
+        "Clinical AI trials always use a crossover design to control for temporal confounding",
+        "AI diagnostic tools are validated in prospective studies before any retrospective analysis is published",
+      ],
+      correctAnswer: 1,
+      explanation: "CONSORT-AI adds AI-specific reporting items to the standard CONSORT checklist: description of the AI system version, training data, how the AI output was integrated into clinical workflow, and human-AI interaction details — critical for reproducibility and evidence synthesis.",
+      hints: [
+        "CONSORT is a checklist for reporting randomized trials; CONSORT-AI adds items specific to AI.",
+        "Without knowing which model version was used and how it was applied, trial results cannot be reproduced or generalized.",
+      ],
+    },
+    {
+      id: "q-hc-ex2-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Prospective clinical validation of an AI diagnostic model always provides stronger evidence of real-world efficacy than a large retrospective study on held-out test data.",
+      correctAnswer: "True",
+      explanation: "Retrospective studies use historical data collected under conditions that may not reflect how the AI will be deployed (different acquisition protocols, patient selection, labeling quality); prospective studies collect data in the actual deployment workflow, revealing operational challenges like covariate shift and workflow integration issues.",
+      hints: [
+        "Retrospective data was collected in the past for a different purpose — it may not represent the future deployment environment.",
+        "Prospective studies can capture workflow factors (how clinicians interact with the AI) that retrospective studies cannot.",
+      ],
+    },
+    {
+      id: "q-hc-ex2-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A common pitfall in AI clinical validation studies is 'spectrum bias.' This refers to:",
+      options: [
+        "The tendency for AI models to perform better on high-quality images than low-quality images in the same test set",
+        "Using a test set with a different mix of disease severity than the real clinical population, inflating performance estimates",
+        "Overfitting to a specific imaging spectrum (e.g., CT Hounsfield units) during training",
+        "Evaluating the AI across a spectrum of thresholds when reporting a single AUC",
+      ],
+      correctAnswer: 1,
+      explanation: "Spectrum bias occurs when the validation set contains proportionally more clear-cut cases (obvious positives and negatives) than the real clinical setting, inflating sensitivity and specificity; a diagnostically challenging mix representative of actual clinical caseload is required for valid performance estimates.",
+      hints: [
+        "If your test set has only obvious cancers and clear normals, performance will look better than in real practice where borderline cases are common.",
+        "The 'spectrum' refers to the range of disease severity — from subtle early findings to obvious advanced disease.",
+      ],
+    },
+    {
+      id: "q-hc-ex2-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In a randomized trial comparing AI-assisted versus unaided radiologist reading, which study design best isolates the effect of the AI tool on patient outcomes rather than just reader performance metrics?",
+      options: [
+        "A cross-sectional study measuring radiologist AUC with and without AI on the same images",
+        "A randomized cluster trial where patients are randomized to AI-assisted or standard workflow, with patient-level outcomes (missed diagnoses, time-to-treatment) as endpoints",
+        "A case-control study comparing patients who received AI-assisted reads to historical controls",
+        "A retrospective analysis of sites that adopted AI versus sites that did not",
+      ],
+      correctAnswer: 1,
+      explanation: "Patient-randomized trials with patient-level clinical outcomes (missed cancers, treatment delays, mortality) are the gold standard; reader performance studies (AUC) do not measure whether better discrimination actually translates to patient benefit, and site-level comparisons suffer from confounding.",
+      hints: [
+        "The ultimate goal of diagnostic AI is improving patient outcomes, not radiologist AUC.",
+        "Randomizing patients ensures comparable groups and allows causal inference about the AI's effect.",
+      ],
+    },
+    {
+      id: "q-hc-ex2-5",
+      type: "true-false",
+      difficulty: "hard",
+      question: "An AI model that achieves 95% sensitivity and 90% specificity on internal validation will typically achieve similar performance when externally validated at a different institution.",
+      correctAnswer: "False",
+      explanation: "External validation routinely reveals substantial performance drops due to covariate shift: differences in imaging equipment, patient population demographics, disease prevalence, acquisition protocols, and labeling conventions between training and deployment sites. Published studies show median AUC drops of 0.05-0.15 on external validation.",
+      hints: [
+        "Performance drops between internal and external validation are a well-documented phenomenon in medical AI.",
+        "Different hospitals use different scanner models, protocols, and patient populations — all of which can shift the input distribution.",
+      ],
+    },
+  ],
+
+  "medical-imaging-advanced": [
+    {
+      id: "q-hc-ex3-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Uncertainty quantification in medical AI models is clinically important because:",
+      options: [
+        "Higher uncertainty always indicates model failure and triggers automatic reprocessing",
+        "Reliable uncertainty estimates allow the model to flag low-confidence predictions for human review, preventing high-stakes errors on out-of-distribution inputs",
+        "Uncertainty quantification reduces computational cost by skipping difficult cases",
+        "FDA requires all Class II medical devices to output calibrated confidence intervals",
+      ],
+      correctAnswer: 1,
+      explanation: "A model that knows what it does not know can defer uncertain cases to radiologists, concentrating AI efficiency gains on clear cases while preserving human oversight for ambiguous or out-of-distribution inputs — improving overall safety without sacrificing throughput.",
+      hints: [
+        "A model that is confidently wrong is dangerous; a model that flags its uncertainty enables human-AI collaboration.",
+        "Out-of-distribution inputs (unusual pathology, image artifacts) are exactly where AI models fail most — uncertainty should be high for these.",
+      ],
+    },
+    {
+      id: "q-hc-ex3-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Monte Carlo Dropout (MC Dropout) is commonly used for uncertainty estimation in medical image models. It works by:",
+      options: [
+        "Training multiple models with different architectures and averaging their predictions",
+        "Keeping dropout active at test time and running multiple stochastic forward passes to estimate the variance of predictions as an uncertainty proxy",
+        "Adding Gaussian noise to input images at test time and measuring output sensitivity",
+        "Training a separate uncertainty head alongside the main prediction head",
+      ],
+      correctAnswer: 1,
+      explanation: "MC Dropout treats dropout as approximate Bayesian inference: at test time, dropout is left on, and T forward passes produce a distribution of predictions. The variance of this distribution approximates predictive uncertainty — high variance signals uncertain, potentially out-of-distribution inputs.",
+      hints: [
+        "Standard dropout is turned off at test time; MC Dropout keeps it on to generate a distribution of outputs.",
+        "Running the model T times with different random dropout masks gives T different predictions — their spread is the uncertainty.",
+      ],
+    },
+    {
+      id: "q-hc-ex3-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Detection tasks in medical imaging AI (e.g., finding a nodule) are generally easier to evaluate than prognosis tasks (e.g., predicting 5-year survival) because detection has objective ground truth labels.",
+      correctAnswer: "True",
+      explanation: "Detection ground truth comes from radiologist annotations or biopsy confirmation; prognosis requires long follow-up, suffers from censoring, and involves outcomes shaped by treatments received after imaging — making label quality, evaluation metrics (concordance index), and confounding far more complex.",
+      hints: [
+        "Detection: is the nodule there? Prognosis: will the patient survive 5 years? — these have very different ground truth challenges.",
+        "Prognosis labels are subject to censoring (patients lost to follow-up) and treatment confounding.",
+      ],
+    },
+    {
+      id: "q-hc-ex3-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Calibration in medical AI models refers to the alignment between predicted probabilities and observed event rates. A model is perfectly calibrated when:",
+      options: [
+        "Its AUC equals 1.0 on the test set",
+        "Among all patients for whom it predicts p% probability of disease, exactly p% actually have the disease",
+        "The model's sensitivity and specificity are equal at the optimal operating threshold",
+        "Its predictions are invariant to changes in image acquisition parameters",
+      ],
+      correctAnswer: 1,
+      explanation: "Calibration means predicted probabilities reflect true event frequencies: if the model says '70% risk of malignancy' for 1000 nodules, roughly 700 of them should be malignant. Modern deep learning models are often overconfident (poorly calibrated) and require post-hoc calibration (Platt scaling, temperature scaling).",
+      hints: [
+        "AUC measures ranking (discrimination), not probability accuracy (calibration) — a model can have high AUC but be poorly calibrated.",
+        "Calibration curves plot predicted probability (x-axis) against observed frequency (y-axis) — a perfect diagonal means perfect calibration.",
+      ],
+    },
+    {
+      id: "q-hc-ex3-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The AI task taxonomy for medical imaging distinguishes 'diagnosis' from 'prognosis.' Which statement correctly characterizes the key difference?",
+      options: [
+        "Diagnosis uses imaging only; prognosis always requires genomic data",
+        "Diagnosis classifies the current state (what disease is present now); prognosis predicts future outcomes (what will happen to this patient over time)",
+        "Prognosis models are always trained with survival analysis while diagnosis models use cross-entropy loss",
+        "Diagnosis is a binary classification task; prognosis is always a regression task",
+      ],
+      correctAnswer: 1,
+      explanation: "Diagnosis infers the current pathological state from the image (e.g., 'this lesion is malignant'); prognosis predicts future outcomes (e.g., 'this patient has 60% 5-year survival') — requiring different labels, evaluation metrics (Kaplan-Meier, concordance index), and handling of time-dependent confounders.",
+      hints: [
+        "Diagnosis answers 'what is wrong now?' Prognosis answers 'what will happen next?'",
+        "Prognosis requires longitudinal follow-up data and must deal with censoring — patients who leave the study before the endpoint.",
+      ],
+    },
+  ],
+
+  "health-nlp-advanced": [
+    {
+      id: "q-hc-ex4-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "FHIR (Fast Healthcare Interoperability Resources) is significant for clinical NLP because:",
+      options: [
+        "It provides a standardized format for imaging data as a DICOM replacement",
+        "It defines a standard for representing and exchanging electronic health records as web-based API-accessible resources, enabling NLP pipelines to access structured and unstructured clinical data uniformly",
+        "It is an FDA-mandated encryption standard for PHI in transit",
+        "It is a clinical annotation schema for labeling NLP training data",
+      ],
+      correctAnswer: 1,
+      explanation: "FHIR standardizes clinical data as RESTful resources (Patient, Observation, Condition, etc.) accessible via HTTP APIs; NLP pipelines can query FHIR endpoints to retrieve clinical notes, lab results, and medication lists programmatically, enabling scalable, interoperable clinical AI systems.",
+      hints: [
+        "FHIR makes EHR data accessible via APIs — think of it as a standard programming interface to any EHR system.",
+        "NLP pipelines need to ingest clinical text reliably; FHIR provides a standardized way to retrieve it.",
+      ],
+    },
+    {
+      id: "q-hc-ex4-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Automatic ICD-10 coding from clinical notes is a multi-label classification problem because a single patient encounter can warrant multiple diagnosis codes simultaneously.",
+      correctAnswer: "True",
+      explanation: "A hospitalization may involve heart failure, pneumonia, type 2 diabetes, and chronic kidney disease — each coded separately with its own ICD-10 code. Models must predict a set of codes, not a single label, making it multi-label rather than multi-class, with strong class imbalance (rare codes vs. common ones).",
+      hints: [
+        "Multi-class means one correct class; multi-label means multiple correct labels simultaneously.",
+        "Think about a complex hospital admission — many diagnoses can be documented and coded at once.",
+      ],
+    },
+    {
+      id: "q-hc-ex4-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Clinical trial matching using NLP involves which core technical challenge?",
+      options: [
+        "Generating synthetic patient records to expand enrollment",
+        "Mapping free-text patient characteristics from EHR notes to the structured inclusion/exclusion criteria of clinical trials, requiring reasoning over negation, temporality, and medical equivalences",
+        "Predicting which treatment arm a patient will be randomized to",
+        "Detecting adverse events in trial participant notes for safety reporting",
+      ],
+      correctAnswer: 1,
+      explanation: "Trial eligibility criteria are complex logical expressions over clinical concepts; matching them to EHR notes requires recognizing negated conditions ('no prior stroke'), temporal relationships ('diagnosed within the last 6 months'), and medical concept normalization (aspirin = acetylsalicylic acid) — combining NER, negation detection, and temporal reasoning.",
+      hints: [
+        "Eligibility criteria say things like 'no prior MI in the last 3 months' — this requires understanding negation and time.",
+        "Medical concept normalization maps surface text variants ('heart attack', 'MI', 'myocardial infarction') to the same concept.",
+      ],
+    },
+    {
+      id: "q-hc-ex4-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The HIPAA Safe Harbor de-identification method requires removal of which category of identifiers from clinical text that is particularly challenging for rule-based NLP systems?",
+      options: [
+        "Patient names, which are always in a predictable 'FirstName LastName' format",
+        "Geographic data smaller than state, dates (other than year), phone numbers, and unique identifiers — many of which appear in highly variable, context-dependent formats in free text",
+        "ICD diagnosis codes, which can uniquely identify rare disease patients",
+        "Medication lists, which are structured and easy to extract",
+      ],
+      correctAnswer: 1,
+      explanation: "HIPAA Safe Harbor lists 18 PHI categories; the hardest for NLP include dates (written in many formats), zip codes, phone numbers in narrative context, and quasi-identifiers like unique diagnoses that can re-identify rare disease patients through external data linkage.",
+      hints: [
+        "Dates in clinical notes appear in many formats ('follow-up in 3 months', '12/15', 'last Tuesday') that challenge pattern matching.",
+        "Some identifiers (zip code + age + rare diagnosis) can uniquely identify a patient even after standard de-identification.",
+      ],
+    },
+    {
+      id: "q-hc-ex4-5",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Clinical NLP models trained on MIMIC-III data (Beth Israel Deaconess Medical Center) will generally generalize without performance loss to clinical notes from other hospital systems.",
+      correctAnswer: "False",
+      explanation: "Clinical notes vary substantially by institution: documentation culture, specialty mix, EHR template structures, abbreviation conventions, and patient population demographics all differ. Models trained on a single-site academic ICU corpus typically show significant performance degradation on community hospitals, pediatric centers, or notes from different EHR systems.",
+      hints: [
+        "Every hospital has its own note-writing culture and EHR template structure — these create site-specific NLP challenges.",
+        "MIMIC is ICU-focused and from a single academic center — community hospitals and other specialties have very different notes.",
+      ],
+    },
+    {
+      id: "q-hc-ex4-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Large language models like GPT-4 or Med-PaLM 2 applied to clinical decision support differ from traditional clinical NLP models primarily in their ability to:",
+      options: [
+        "Process DICOM imaging data directly alongside text",
+        "Perform multi-step reasoning across heterogeneous clinical context (notes, lab values, guidelines) in a zero-shot or few-shot manner without task-specific fine-tuning",
+        "Guarantee factual accuracy because they are trained on medical textbooks",
+        "Operate within HIPAA-compliant environments by default without additional security measures",
+      ],
+      correctAnswer: 1,
+      explanation: "LLMs enable flexible, instruction-following clinical reasoning — answering complex clinical questions, summarizing records, or synthesizing guidelines without dedicated fine-tuning. However, they hallucinate, lack guaranteed factual accuracy, require careful prompt engineering, and raise deployment challenges around privacy and liability.",
+      hints: [
+        "Traditional clinical NLP models are task-specific; LLMs can generalize across tasks with prompts.",
+        "Zero-shot means no task-specific training examples — just a description of the task.",
+      ],
+    },
+  ],
+
+  "fda-pma-samd-advanced": [
+    {
+      id: "q-hc-ex5-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Under FDA's SaMD risk classification framework, an AI model that interprets cardiac rhythms from an implanted device and autonomously delivers a defibrillation shock would be classified as:",
+      options: [
+        "Class I (low risk, exempt from premarket review)",
+        "Class III (high risk), requiring Premarket Approval because it treats a critical condition and drives clinical management autonomously",
+        "Class II (moderate risk), requiring only 510(k) clearance as decision support",
+        "Not regulated as SaMD because the hardware device is already FDA-approved",
+      ],
+      correctAnswer: 1,
+      explanation: "FDA SaMD classification is determined by significance (treat/drive) times situation (critical); autonomously treating a life-threatening cardiac arrhythmia is the highest risk combination. Class III requires a PMA with clinical evidence of safety and effectiveness, unlike Class II which uses the 510(k) substantial equivalence pathway.",
+      hints: [
+        "Autonomous treatment of a critical condition is the highest-risk SaMD category.",
+        "The SaMD framework distinguishes 'inform' from 'drive clinical management' — autonomous treatment is the highest significance.",
+      ],
+    },
+    {
+      id: "q-hc-ex5-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "FDA's Total Product Life Cycle (TPLC) approach to AI device regulation requires manufacturers to monitor real-world performance after clearance and report significant performance degradation to FDA.",
+      correctAnswer: "True",
+      explanation: "TPLC extends regulatory oversight beyond premarket clearance to post-market surveillance; manufacturers must establish monitoring programs to detect distribution shift, performance degradation, and unexpected failure modes in deployed AI models, reporting significant issues through the Medical Device Reporting (MDR) system.",
+      hints: [
+        "TPLC is 'total' because it spans the whole product lifecycle, not just the premarket review.",
+        "AI models can degrade over time as patient populations, imaging equipment, or clinical practices change.",
+      ],
+    },
+    {
+      id: "q-hc-ex5-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The concept of a 'predicate device' in the 510(k) pathway creates a challenge for novel AI diagnostic tools because:",
+      options: [
+        "Predicate devices must use the same programming language and hardware as the new device",
+        "For truly novel AI tasks with no prior cleared device, there may be no appropriate predicate, forcing developers toward the more burdensome De Novo or PMA pathway",
+        "Predicate devices are only acceptable if they were cleared within the past 5 years",
+        "AI-based devices cannot use software-only predicates and must compare to physical device predicates",
+      ],
+      correctAnswer: 1,
+      explanation: "The 510(k) pathway requires a substantially equivalent predicate; AI applications that address entirely new clinical problems (e.g., predicting a condition no prior device detected) have no predicate. De Novo creates a new classification category for these novel-but-low-risk devices, while truly high-risk novel devices require PMA.",
+      hints: [
+        "If no prior device did what yours does, you cannot claim substantial equivalence to a predicate.",
+        "De Novo was specifically created for this gap: novel devices that pose low-to-moderate risk but have no predicate.",
+      ],
+    },
+    {
+      id: "q-hc-ex5-4",
+      type: "true-false",
+      difficulty: "easy",
+      question: "IRB (Institutional Review Board) approval is required for clinical studies that prospectively collect patient data to validate an AI diagnostic model, even if the model itself is not yet FDA-cleared.",
+      correctAnswer: "True",
+      explanation: "IRB oversight applies to human subjects research involving data collection (including medical records, images, and biological specimens); prospective collection of patient data for AI validation constitutes human subjects research requiring IRB review of consent procedures, data privacy protections, and study design.",
+      hints: [
+        "IRB approval protects research participants — any prospective human subjects study requires it.",
+        "The regulatory status of the AI being evaluated does not affect whether IRB oversight is needed for the study.",
+      ],
+    },
+  ],
+
+  "imaging-calibration-uncertainty": [
+    {
+      id: "q-hc-ex6-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Temperature scaling is a common post-hoc calibration method for neural network classifiers. It adjusts model logits before the final softmax by a single scalar parameter T. When T > 1, the effect on predicted probabilities is:",
+      options: [
+        "Probabilities become more extreme (sharper distribution), increasing model confidence",
+        "Probabilities become softer (closer to uniform), reducing overconfidence by distributing probability mass more evenly across classes",
+        "The argmax prediction changes for borderline cases, improving accuracy on uncertain examples",
+        "The model is retrained on the calibration set to adjust weights, not just logits",
+      ],
+      correctAnswer: 1,
+      explanation: "Temperature scaling divides logits by T before softmax; T > 1 reduces logit magnitudes, softening the distribution and pulling predicted probabilities toward 0.5 for binary — correcting the overconfidence common in deep networks. T < 1 sharpens predictions. Crucially, argmax is unchanged, so accuracy is preserved.",
+      hints: [
+        "Logits divided by T > 1 are smaller in magnitude — smaller logits mean softer softmax outputs.",
+        "Temperature scaling changes confidence levels but not the predicted class — accuracy is unaffected.",
+      ],
+    },
+    {
+      id: "q-hc-ex6-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "A model with high AUC-ROC but poor calibration is problematic for clinical decision support because clinicians using the predicted probability to make threshold-based decisions will receive unreliable risk estimates.",
+      correctAnswer: "True",
+      explanation: "AUC measures ranking ability (can the model order patients by risk?); calibration measures accuracy of probabilities (does a 70% prediction mean 70% event rate?). A poorly calibrated model with high AUC correctly orders patients but gives misleading absolute probabilities, causing clinicians to misestimate true event rates when setting thresholds.",
+      hints: [
+        "AUC = 0.9 means the model ranks patients well, but it does not mean 90% predicted probability really means 90% event rate.",
+        "If a model says 40% risk for all patients but orders them correctly, AUC is fine but calibration is terrible.",
+      ],
+    },
+    {
+      id: "q-hc-ex6-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Deep Ensembles for uncertainty quantification in medical AI train multiple models with different random seeds. Compared to MC Dropout, Deep Ensembles typically provide:",
+      options: [
+        "Lower computational cost because individual models are smaller than a single full model",
+        "Better-calibrated and more reliable uncertainty estimates because ensemble disagreement captures model uncertainty more faithfully than approximate Bayesian inference via dropout",
+        "Identical uncertainty estimates because both methods approximate the same Bayesian posterior",
+        "Worse out-of-distribution detection because ensemble members are trained on the same data and tend to agree even on OOD inputs",
+      ],
+      correctAnswer: 1,
+      explanation: "Deep Ensembles are empirically found to produce better-calibrated uncertainties and superior OOD detection than MC Dropout; different random initializations cause models to explore different local minima, capturing function space diversity. MC Dropout is a cruder approximation to Bayesian inference and tends to underestimate uncertainty.",
+      hints: [
+        "Multiple independently trained models explore different hypotheses; their disagreement is a strong uncertainty signal.",
+        "MC Dropout approximates a specific Bayesian model; Deep Ensembles implicitly integrate over more diverse hypotheses.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra);
+
 registerQuestions(questions);
 export default questions;

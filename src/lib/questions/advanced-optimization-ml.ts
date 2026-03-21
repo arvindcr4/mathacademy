@@ -8,7 +8,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Stochastic Gradient Descent (SGD) with mini-batches differs from full-batch gradient descent primarily by:",
+        "SGD with mini-batches differs from full-batch (batch) gradient descent primarily in that:",
       options: [
         "Using a different loss function for each parameter update",
         "Computing gradient estimates on a random subset of examples, introducing noise that can aid generalization",
@@ -17,10 +17,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mini-batch SGD estimates the true gradient from a small random subset of the data, introducing gradient noise that acts as implicit regularization and enables processing datasets too large to fit in memory.",
+        "Mini-batch SGD estimates the true gradient from a small random subset (mini-batch) of the training data, rather than the full dataset.\n\n" +
+        "Given a loss function \\(L(\\theta) = \\frac{1}{n}\\sum_{i=1}^{n} \\ell_i(\\theta)\\), full-batch gradient descent computes:\n" +
+        "\\[\\nabla L(\\theta) = \\frac{1}{n}\\sum_{i=1}^{n} \\nabla\\ell_i(\\theta)\\]\n\n" +
+        "Mini-batch SGD approximates this with:\n" +
+        "\\[\\nabla L_B(\\theta) = \\frac{1}{|B|}\\sum_{i \\in B} \\nabla\\ell_i(\\theta)\\]\n\n" +
+        "where \\(B\\) is a randomly sampled mini-batch of examples. This introduces gradient noise (variance \\(\\propto 1/\\sqrt{|B|}\\) ) that acts as implicit regularization, helping the model generalize better. Additionally, since only \\(|B| \\ll n\\) examples are needed per step, datasets that are too large to fit in memory can be processed efficiently.",
       hints: [
-        "Full-batch gradient descent is exact but slow and memory-intensive — what tradeoff does SGD make?",
-        'The "stochastic" in SGD refers to the randomness introduced by sampling a mini-batch.',
+        "Full-batch gradient descent computes the exact gradient using ALL n examples per step — what are the drawbacks of this?",
+        'The word "stochastic" refers to the randomness from sampling a mini-batch at each step.',
       ],
     },
     {
@@ -31,10 +36,17 @@ const questions: Record<string, Question[]> = {
         "Momentum in gradient descent helps accelerate optimization by accumulating a velocity vector in directions of persistent gradient.",
       correctAnswer: "True",
       explanation:
-        "Momentum maintains a running average (exponential moving average) of past gradients, allowing the optimizer to build speed in consistent gradient directions and dampening oscillations in directions where gradients change sign frequently.",
+        "Standard gradient descent updates parameters as:\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\eta \\nabla L(\\theta_t)\\]\n\n" +
+        "Momentum accumulates a velocity vector \\(v_t\\):\n" +
+        "\\[v_t = \\beta v_{t-1} + (1-\\beta)\\nabla L(\\theta_t)\\]\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
+        "where \\(0 \\le \\beta < 1\\) is the momentum coefficient (typically \\(\\beta = 0.9\\)).\n\n" +
+        "In directions of persistent gradient (e.g., a steady downhill slope), the velocity accumulates, causing the optimizer to accelerate. In directions where gradients oscillate (change sign frequently), positive and negative contributions to \\(v_t\\) partially cancel, dampening oscillations.\n\n" +
+        "This is analogous to a ball rolling down a hilly surface: it builds up speed in consistent directions while smoothing out erratic movements.",
       hints: [
-        "Think of a ball rolling down a hill — momentum lets it pick up speed in the direction of descent.",
-        "In directions where gradients oscillate, momentum cancels out; in consistent directions, it amplifies.",
+        "Think of momentum as a ball rolling downhill — it picks up speed in the direction of descent.",
+        "When gradients oscillate back and forth, momentum causes them to cancel out; when they consistently point the same direction, momentum causes them to add up.",
       ],
     },
     {
@@ -51,10 +63,21 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'NAG computes the gradient at θ + γv (where v is the current velocity), a "lookahead" position, rather than at the current θ; this "corrective" gradient provides better convergence and reduces oscillation compared to classical momentum.',
+        "Classical momentum computes the gradient at the current position \\(\\theta_t\\) and then applies the momentum update:\n" +
+        "\\[v_t = \\beta v_{t-1} + \\nabla L(\\theta_t)\\]\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
+        "Nesterov Accelerated Gradient (NAG) evaluates the gradient at the anticipated future position \\(\\theta_t + \\gamma v_t\\) instead:\n" +
+        "\\[v_t = \\beta v_{t-1} + \\nabla L(\\theta_t + \\gamma v_t)\\]\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
+        "where \\(\\gamma = \\beta\\) is the momentum coefficient.\n\n" +
+        "This 'lookahead' gradient is corrective: it measures how the gradient will change after the momentum step, reducing overshoot and oscillation compared to classical momentum.\n\n" +
+        "\\[\\begin{align}" +
+        "\\theta_{t+1} &= \\theta_t - \\eta \\nabla L(\\theta_t + \\beta v_t) - \\eta \\beta v_t\\" +
+        "\\end{align}\\]\n\n" +
+        "The second term (\\( -\\eta \\beta v_t \\)) is a correction that dampens the momentum when the gradient is increasing.",
       hints: [
-        "Standard momentum applies the gradient at the current position, then moves. NAG changes what position it evaluates the gradient at.",
-        "If you already know momentum will move you forward, why not evaluate the gradient from that future point?",
+        "Standard momentum evaluates the gradient at \\(\\theta_t\\); NAG evaluates it at \\(\\theta_t + \\beta v_t\\) — the position momentum will carry you to.",
+        "If you already know the momentum will move you forward, why not look ahead from that future position to compute the gradient?",
       ],
     },
   ],

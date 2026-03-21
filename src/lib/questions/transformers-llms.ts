@@ -2228,6 +2228,516 @@ Object.assign(questions, {
     },
   ],
 
+  "flash-attention-mechanics": [
+    {
+      id: "q-tr-ex1-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "FlashAttention-2 (Dao, 2023) achieves ~2x speedup over FlashAttention-1 primarily through which improvement?",
+      options: [
+        "Using INT8 quantization for the attention matrix computation",
+        "Reducing non-matmul FLOPs and parallelizing across the sequence length dimension in addition to batch and head dimensions",
+        "Replacing softmax with a linear approximation to avoid exponential computation",
+        "Caching the attention matrix in L2 cache instead of SRAM"
+      ],
+      correctAnswer: 1,
+      explanation: "FlashAttention-2 improves on FA-1 by: (1) reducing non-matmul FLOPs that dominated runtime (rescaling operations), (2) parallelizing the forward pass across the sequence length dimension — not just batch and head dimensions — for better GPU utilization, and (3) better partitioning work between warps. The core tiling strategy (Q/K/V blocks in SRAM) is unchanged, but execution efficiency improves substantially.",
+      hints: [
+        "FlashAttention-1 parallelized across batch and heads only; FA-2 also parallelizes across sequence length for better occupancy.",
+        "Non-matmul FLOP reduction: FA-2 reorganizes the online softmax rescaling to reduce the number of operations per block."
+      ]
+    },
+    {
+      id: "q-tr-ex1-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "FlashAttention avoids materializing the full n×n attention matrix in GPU HBM by computing attention in tiles that fit in on-chip SRAM, reducing memory complexity from O(n^2) to O(n).",
+      correctAnswer: "True",
+      explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n×n attention matrix is never written to HBM — memory complexity drops from O(n^2) to O(n).",
+      hints: [
+        "Standard attention writes the full n×n score matrix to HBM: O(n^2) memory writes at HBM bandwidth.",
+        "Online softmax allows correct normalization across tiles without ever materializing the full attention matrix."
+      ]
+    },
+    {
+      id: "q-tr-ex1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The online softmax trick in FlashAttention maintains running statistics (m_i = running max score, l_i = running sum of exp(score - m_i)) across tiles. Why is tracking the running max m_i necessary?",
+      options: [
+        "To avoid numerical overflow: exp(x - max) is always in (0, 1], preventing float32 overflow from large dot products",
+        "To speed up softmax by replacing division with subtraction",
+        "To allow attention scores to be stored in INT8 format",
+        "To enable parallel tile computation without any cross-tile synchronization"
+      ],
+      correctAnswer: 0,
+      explanation: "Softmax requires exp(x_i) / sum(exp(x_j)). For large x_i, exp(x_i) overflows float32. The log-sum-exp trick subtracts the running max: exp(x_i - max) is always in (0, 1]. In FlashAttention the running max m_i must be updated as new tiles reveal larger scores, requiring rescaling of the accumulated sum: l_new = exp(m_old - m_new) * l_old + new_sum. Without this, early tiles produce unstable partial results.",
+      hints: [
+        "exp(88) overflows float32. exp(88 - 88) = exp(0) = 1: perfectly stable. Max subtraction is for numerical stability.",
+        "When tile 2 reveals a larger score than tile 1's max, the running sum from tile 1 must be rescaled by exp(m1 - m2)."
+      ]
+    }
+  ],
+
+  "linear-sparse-attention": [
+    {
+      id: "q-tr-ex2-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Linear attention replaces the softmax kernel with a function phi(x) and uses associativity of matrix multiplication: phi(Q)(phi(K)^T V) instead of softmax(QK^T)V. What complexity does this achieve for a sequence of length n with head dimension d?",
+      options: [
+        "O(n^2 d) — same as standard attention, just reorganized differently",
+        "O(n d^2) — linear in sequence length n, quadratic in head dimension d",
+        "O(n log n d) — sub-quadratic via divide-and-conquer",
+        "O(d^3) — independent of sequence length entirely"
+      ],
+      correctAnswer: 1,
+      explanation: "Standard attention: (QK^T)V costs O(n^2 d) because QK^T is n×n. With kernel phi: compute phi(K)^T V first — a d×d matrix at cost O(n d^2) — then multiply phi(Q) by it at cost O(n d^2). Total O(n d^2) — linear in n. For typical values (d=64, n=4096), this reduces from 4096^2 * 64 = 1.07B to 4096 * 64^2 = 16.8M operations — a 64x reduction.",
+      hints: [
+        "Key identity: (phi(Q) phi(K)^T) V = phi(Q) (phi(K)^T V). The right-to-left evaluation costs O(n d^2) not O(n^2 d).",
+        "Linear attention trades the n×n bottleneck for a constant-size d×d context matrix — linear in n for fixed d."
+      ]
+    },
+    {
+      id: "q-tr-ex2-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Sparse attention patterns (e.g., Longformer's local + global, BigBird's random + local + global) achieve sub-quadratic complexity by restricting which query-key pairs are computed, at the cost of potentially missing long-range interactions for tasks requiring dense all-to-all attention.",
+      correctAnswer: "True",
+      explanation: "Sparse attention computes only O(n * w) pairs (w = window/global token count) instead of O(n^2). Tasks where every token genuinely needs to attend to every other (e.g., some global reasoning tasks) may degrade. However, most NLP tasks depend primarily on local structure, and global tokens provide sufficient long-range bridges — Longformer and BigBird show near-parity on most benchmarks with major compute savings.",
+      hints: [
+        "Sparse attention works because most useful interactions are local; global tokens act as information hubs for long-range signals.",
+        "Tasks requiring verbatim cross-reference of all pairs (e.g., complex deduction over all tokens) may see quality loss."
+      ]
+    },
+    {
+      id: "q-tr-ex2-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Multi-Query Attention (MQA, Shazeer 2019) uses a single shared K and V head for all H query heads. During autoregressive decoding, is the primary speedup due to reduced compute or reduced memory bandwidth?",
+      options: [
+        "Reduced compute: MQA performs H times fewer dot products per token",
+        "Reduced memory bandwidth: the KV cache is H times smaller, so loading K and V per decode step consumes H times less memory bandwidth — the dominant bottleneck during the decode phase",
+        "Reduced parameter count: fewer parameters means faster model execution on all hardware",
+        "Reduced attention computation: shared KV enables batching all H heads into one large matmul"
+      ],
+      correctAnswer: 1,
+      explanation: "During autoregressive decoding (one token at a time), compute per step is low (one row of Q × KV cache), but memory bandwidth is the bottleneck: loading the entire KV cache from HBM per step. MQA reduces KV cache size by H times (1 K and 1 V vs. H), directly cutting memory bandwidth per decode step by H times. Compute FLOPs are only marginally affected — bandwidth is the binding constraint.",
+      hints: [
+        "Decode phase: compute = O(1 × n × d) — tiny. Loading KV cache = O(n × d) per layer — this is the bottleneck.",
+        "MQA benefit is almost entirely bandwidth reduction: H times less KV data transferred from HBM per decode step."
+      ]
+    }
+  ],
+
+  "mamba-ssm": [
+    {
+      id: "q-tr-ex3-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Mamba (Gu and Dao, 2023) is a selective state space model (SSM) that processes sequences in O(n) time and O(1) memory per step during inference. What mechanism allows Mamba to selectively remember or forget information based on content?",
+      options: [
+        "Mamba uses gating identical to LSTMs with forget and input gates applied element-wise",
+        "Mamba's SSM parameters (delta, B, C) are functions of the input token, allowing the model to selectively integrate or suppress information based on the current token's content",
+        "Mamba replaces attention with a fixed convolutional filter applied globally to the full sequence",
+        "Mamba uses sparse activation where only 2 of 8 experts process each token"
+      ],
+      correctAnswer: 1,
+      explanation: "Classical SSMs use fixed (input-independent) transition parameters. Mamba's key innovation: the discretized SSM parameters (delta, B, C) are computed from the input token via linear projections. Large delta integrates the current input heavily into the state (remember); small delta lets the state decay without integrating (forget). This input-dependent selectivity gives content-based gating that fixed SSMs cannot achieve.",
+      hints: [
+        "Fixed SSM: same A, B, C for every token — cannot selectively ignore tokens based on content.",
+        "Large delta = long integration window (strongly remember this input). Small delta = state decays quickly (ignore this input)."
+      ]
+    },
+    {
+      id: "q-tr-ex3-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Mamba can be computed efficiently during training using a parallel scan (prefix product) algorithm in O(n log n) time, even though autoregressive inference requires sequential O(n) recurrence with O(1) memory per step.",
+      correctAnswer: "True",
+      explanation: "The parallel scan algorithm computes prefix products of SSM state matrices in O(n log n) parallel steps during training. At inference, the model runs in sequential recurrent mode: h_t = A_t h_{t-1} + B_t x_t, one token at a time, with constant-size hidden state h. This dual mode gives Mamba parallel training efficiency and fast autoregressive generation without the KV cache memory growth of Transformers.",
+      hints: [
+        "Parallel scan: tree-structured prefix product computation — O(log n) depth, O(n) work total.",
+        "Inference recurrence: h_t = A_t h_{t-1} + B_t x_t. State h has fixed dimension regardless of sequence length."
+      ]
+    },
+    {
+      id: "q-tr-ex3-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Mamba's theoretical disadvantage for tasks requiring precise retrieval of specific tokens from very long contexts compared to Transformers is:",
+      options: [
+        "Mamba is slower at training than Transformers due to parallel scan overhead",
+        "Mamba's SSM state is a fixed-dimension compressed summary of the entire past — specific information about distant tokens may be compressed away, while Transformer KV cache stores exact key/value vectors for every past token enabling direct retrieval",
+        "Mamba cannot handle variable-length sequences unlike Transformers with padding masks",
+        "Mamba requires significantly more parameters than Transformers for equivalent quality"
+      ],
+      correctAnswer: 1,
+      explanation: "The SSM hidden state h has fixed dimension (e.g., 16) regardless of sequence length — compressing all past context into a fixed-size vector. For tasks requiring exact recall of a specific value from thousands of tokens ago, that information must have been retained through all subsequent state updates. Transformers maintain an explicit KV cache that stores each past token's exact key/value vectors, enabling direct O(1) retrieval via attention.",
+      hints: [
+        "SSM state: 16-dimensional vector summarizing all past context — 'needle in a haystack' facts may be compressed away.",
+        "Transformer KV cache: every past token's exact K and V vectors are stored — direct attention retrieval with no compression loss."
+      ]
+    }
+  ],
+
+  "llm-inference-optimization": [
+    {
+      id: "q-tr-ex4-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Continuous batching (Orca, Yu et al., 2022) improves LLM serving throughput compared to static batching. What is the fundamental difference between the two approaches?",
+      options: [
+        "Continuous batching uses larger batch sizes by compressing multiple requests together",
+        "Static batching waits for all requests in a batch to finish before accepting new ones; continuous batching replaces completed requests with new ones at each iteration, eliminating GPU idle time from waiting for the slowest sequence",
+        "Continuous batching processes one request at a time to reduce memory pressure",
+        "Static batching uses speculative decoding while continuous batching does not"
+      ],
+      correctAnswer: 1,
+      explanation: "Static batching: form a batch, run to completion for all sequences, then start the next batch. Requests that finish early idle until the slowest sequence completes. Continuous batching (iteration-level scheduling): at each decode step, sequences that have finished (hit EOS) are removed and new requests are added. GPU utilization jumps from ~30% to ~90% in production workloads by eliminating these idle periods.",
+      hints: [
+        "Static: a 10-token request waits for a 200-token request in the same batch — 190 idle decode steps wasted.",
+        "Continuous: the 10-token request finishes, immediately replaced by a new request from the queue — no idle steps."
+      ]
+    },
+    {
+      id: "q-tr-ex4-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "PagedAttention (vLLM, Kwon et al., 2023) manages the KV cache like OS virtual memory using pages. What specific problem does it solve that naive contiguous KV cache allocation cannot?",
+      options: [
+        "External fragmentation: requests reserve max_seq_len KV blocks upfront regardless of actual output length, wasting large contiguous memory regions that cannot be reused by other requests",
+        "Internal fragmentation from storing KV cache values in float32 instead of float16",
+        "Temporal fragmentation from requests arriving at unpredictable times",
+        "Head fragmentation from multi-head attention storing each head's KV separately"
+      ],
+      correctAnswer: 0,
+      explanation: "Naive allocation: each request pre-allocates max_seq_len KV slots contiguously. A 100-token response occupying a 4096-token allocation wastes 3996 slots that cannot be used by other requests. PagedAttention divides the KV cache into fixed-size pages (e.g., 16 tokens/page), allocating on-demand via a page table. Non-contiguous physical pages serve a single sequence. Memory waste drops from ~30% to ~4%, enabling 2-4x higher batch concurrency.",
+      hints: [
+        "OS analogy: virtual memory pages eliminate contiguous physical allocation — same principle applied to LLM KV caches.",
+        "Page table: maps logical token positions to physical page addresses — sequences use non-contiguous physical pages safely."
+      ]
+    },
+    {
+      id: "q-tr-ex4-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "In speculative decoding, the draft model must use the same architecture as the target model (just with fewer layers) for the token acceptance rate to be high enough to provide a net speedup.",
+      correctAnswer: "False",
+      explanation: "The acceptance criterion (Leviathan et al., 2023) compares draft and target token probabilities: accept if draft_prob <= target_prob, otherwise accept with probability target_prob/draft_prob. This is a token-level rejection sampling procedure that is mathematically correct regardless of draft architecture. In practice, same-family smaller models achieve higher acceptance rates, but architecturally different drafts (n-gram models, Medusa prediction heads, EAGLE self-drafting heads) also achieve substantial speedups.",
+      hints: [
+        "Mathematical guarantee: accepted tokens are distributed exactly as the target model — regardless of draft model architecture.",
+        "EAGLE trains a single-layer head on top of the target model's own hidden states — no separate architecture required."
+      ]
+    }
+  ],
+
+  "lora-mechanics": [
+    {
+      id: "q-tr-ex5-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "LoRA (Hu et al., 2021) parameterizes a weight update as W = W_0 + BA where B is d×r and A is r×k. For a 7B model with d=k=4096 and rank r=16, how many trainable parameters does one LoRA adapter for a single weight matrix add?",
+      options: [
+        "4096 * 4096 = 16.8M — same as the full weight matrix",
+        "2 * 4096 * 16 = 131,072 — about 128x fewer than the full 16.8M parameter matrix",
+        "16 * 16 = 256 — only the inner rank-r core",
+        "4096 * 16 = 65,536 — only the down-projection B matrix"
+      ],
+      correctAnswer: 1,
+      explanation: "LoRA trainable params: d*r + r*k = 4096*16 + 16*4096 = 131,072 (plus tiny biases). Full matrix: d*k = 16.77M. Reduction ratio: ~128x. A 7B LLM applies LoRA to ~224 matrices (Q, K, V, O, 2 FFN per 32 layers). Full LoRA adapters for all matrices total ~29M trainable params vs. 7B frozen — a ~240x reduction in trainable parameters.",
+      hints: [
+        "LoRA params per matrix: r*(d + k). For r=16, d=k=4096: 16*(4096+4096) = 131,072.",
+        "Initialization: A is random Gaussian, B is zero — so BA = 0 at step 0, preserving pretrained behavior."
+      ]
+    },
+    {
+      id: "q-tr-ex5-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "After LoRA fine-tuning, the adapter weights B and A can be merged into the base model (W = W_0 + BA) before deployment, eliminating any inference latency overhead compared to the original base model.",
+      correctAnswer: "True",
+      explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d×k — identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically — a different deployment pattern.",
+      hints: [
+        "W_merged = W_0 + B@A. The result is a d×k matrix — indistinguishable from any other weight matrix to the serving infrastructure.",
+        "Adapter switching for multi-tenant serving: keep B and A separate and add them dynamically per request — no merge needed."
+      ]
+    },
+    {
+      id: "q-tr-ex5-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "QLoRA (Dettmers et al., 2023) trains LoRA adapters in BF16 on top of a 4-bit NF4 quantized base model. What does 'double quantization' in QLoRA refer to?",
+      options: [
+        "Quantizing both the weight matrices and the LoRA adapter gradients to 4-bit",
+        "Quantizing the quantization constants (FP32 scale factors) themselves to INT8, reducing the memory overhead of the per-block scale factors by ~75% — a secondary savings on top of the NF4 weight quantization",
+        "Applying 4-bit quantization twice in sequence to achieve effective 2-bit precision",
+        "Quantizing the activation tensors during the forward pass in addition to the weights"
+      ],
+      correctAnswer: 1,
+      explanation: "NF4 quantization groups weights into blocks of 64, each with an FP32 scale factor (32 bits per 64 weights = 0.5 bits/weight overhead). QLoRA's double quantization quantizes these FP32 scale factors to INT8 with their own block scale factors — reducing the constant overhead from 0.5 to ~0.125 bits/weight. On a 65B model this saves ~3 GB, which is the difference between fitting and not fitting on a single 48 GB GPU.",
+      hints: [
+        "Scale factors are FP32 constants shared across 64 weights. Double quantization compresses these constants to INT8.",
+        "Savings: ~3 GB on a 65B model — significant when every GB matters for single-GPU fine-tuning."
+      ]
+    }
+  ],
+
+  "prefix-and-prompt-tuning": [
+    {
+      id: "q-tr-ex6-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Prefix tuning (Li and Liang, 2021) prepends trainable vectors to K and V at every transformer layer, while prompt tuning (Lester et al., 2021) prepends trainable soft tokens only at the input embedding layer. What is the key advantage of prefix tuning?",
+      options: [
+        "Prefix tuning uses fewer trainable parameters than prompt tuning for equivalent control",
+        "Prefix tuning directly conditions K and V at every layer, giving the prefix direct influence over attention patterns at each depth — prompt tuning's soft tokens must propagate their influence through all L layers via the first layer's attention only",
+        "Prefix tuning is faster to optimize because it does not require backpropagation through the transformer",
+        "Prefix tuning works with fully frozen models while prompt tuning requires unfreezing some attention layers"
+      ],
+      correctAnswer: 1,
+      explanation: "Prompt tuning: soft tokens at the input only — task conditioning must propagate through L layers of frozen transformer via self-attention, a weak signal at depth. Prefix tuning: trainable K/V at every layer directly steer attention patterns at that depth. This richer per-layer control enables better adaptation, especially at smaller model sizes where Li and Liang showed prefix tuning significantly outperforms prompt tuning.",
+      hints: [
+        "Prompt tuning's tokens compete with content tokens at layer 1 only; their gradient must traverse L frozen layers to reach output.",
+        "Prefix tuning's K/V influence: every head at every layer attends to prefix keys — direct top-down control at every depth."
+      ]
+    },
+    {
+      id: "q-tr-ex6-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Soft prompt tuning (Lester et al., 2021) becomes competitive with full fine-tuning at larger model scales (>11B parameters), suggesting large frozen models can effectively leverage gradient-optimized soft prompts for task conditioning.",
+      correctAnswer: "True",
+      explanation: "Lester et al.'s key finding: at T5-Small (77M parameters), prompt tuning significantly underperforms full fine-tuning. At T5-XXL (11B), prompt tuning achieves near-parity. Larger frozen models have sufficient capacity to modulate their outputs strongly through attention on soft prompt tokens — the same scale effect seen in in-context learning improving with model size.",
+      hints: [
+        "Small frozen models cannot adapt enough via attention on soft prompts; large models have capacity to use the soft prompts as strong conditioning.",
+        "This scaling property makes prompt tuning attractive for very large proprietary models where weight updates are expensive or impossible."
+      ]
+    },
+    {
+      id: "q-tr-ex6-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Adapter layers (Houlsby et al., 2019) insert bottleneck FFN modules inside each transformer block. For d_model=1024 and bottleneck r=64, what is the parameter overhead per adapter relative to the original FFN with d_ff=4096?",
+      options: [
+        "Adapter: 2 * 1024 * 64 = 131,072 params; original FFN: 2 * 1024 * 4096 = 8.4M — adapter is ~1.6% overhead per layer",
+        "Adapter: 1024 * 64 = 65,536 params — same order as the FFN",
+        "Adapter: 64 * 64 = 4,096 params — negligible compared to the FFN",
+        "Adapter: 2 * 4096 * 64 = 524,288 params — about 6% of the FFN"
+      ],
+      correctAnswer: 0,
+      explanation: "Each adapter: down-project (d_model × r) + up-project (r × d_model) = 2 * 1024 * 64 = 131,072 params plus biases. Original FFN: 2 * (1024 * 4096) = 8.39M params. Ratio: 131K / 8.39M ≈ 1.56%. Houlsby et al. insert adapters after both attention and FFN sublayers (2 per transformer block), achieving near fine-tuning quality at only ~3% total parameter overhead per layer.",
+      hints: [
+        "Adapter: down (d_model → r) + nonlinearity + up (r → d_model) with residual. Two matrices: d_model×r and r×d_model.",
+        "Per-layer overhead ratio: 2*d_model*r / (2*d_model*d_ff) = r/d_ff = 64/4096 = 1.56%."
+      ]
+    }
+  ],
+
+  "scaling-laws-emergent": [
+    {
+      id: "q-tr-ex7-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "The Chinchilla scaling law (Hoffmann et al., 2022) prescribes compute-optimal training. What is the recommended ratio of training tokens D to model parameters N?",
+      options: [
+        "D = N — equal parameters and tokens (1:1 ratio)",
+        "D ≈ 20 * N — roughly 20 training tokens per model parameter",
+        "D ≈ 100 * N — 100 tokens per parameter",
+        "D is fixed at 300B tokens regardless of model size"
+      ],
+      correctAnswer: 1,
+      explanation: "Chinchilla's key finding: compute-optimal training uses D* ≈ 20 * N* (tokens ≈ 20x parameters). This contrasts with GPT-3 (175B params, 300B tokens ≈ 1.7 tokens/param) and Gopher (280B params, 300B tokens). For 10B params: use 200B tokens. For 70B params: use 1.4T tokens. LLaMA-1 applied this rule. The 6ND approximation for total FLOPs means doubling N and D proportionally keeps optimal efficiency.",
+      hints: [
+        "Pre-Chinchilla: scale N, hold D roughly fixed. Post-Chinchilla: scale both N and D proportionally.",
+        "Practical rule: 20 tokens per parameter. 7B model → 140B tokens compute-optimal."
+      ]
+    },
+    {
+      id: "q-tr-ex7-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Neural scaling laws (Kaplan et al., 2020) show that LLM test loss decreases as a smooth power law in compute, model size, and dataset size, with no observed plateau across 6+ orders of magnitude of compute.",
+      correctAnswer: "True",
+      explanation: "Kaplan et al. fit power law relationships: L(N) = (N_c/N)^alpha, L(D) = (D_c/D)^alpha, L(C) = (C_c/C)^alpha, all with alpha around 0.07-0.08. These clean power laws held across 6+ orders of magnitude with no observed saturation, supporting the view that more compute reliably yields better models. Chinchilla later showed the Kaplan laws slightly undervalued data relative to model size, but the power law form itself holds.",
+      hints: [
+        "Power law: every doubling of compute reduces loss by a fixed multiplicative factor — predictable and reliable.",
+        "No plateau observed up to 10^23 FLOPs in the original Kaplan study — loss kept decreasing smoothly."
+      ]
+    },
+    {
+      id: "q-tr-ex7-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A team wants to maximize model quality at a fixed inference budget (fixed FLOPs per token at serving time, i.e., fixed model size N). According to the inference-optimal training perspective used in LLaMA-1, what is the right training strategy?",
+      options: [
+        "Train for exactly Chinchilla-optimal tokens (20 * N) and stop — adding more tokens is wasteful",
+        "Train on far more tokens than Chinchilla-optimal — the quality of a fixed-N model keeps improving with more tokens, so overtrain relative to Chinchilla to maximize serving quality at fixed inference cost",
+        "Use a larger N and fewer tokens to hit the same compute budget — N dominates quality",
+        "Chinchilla-optimal and inference-optimal prescribe identical training runs at all scales"
+      ],
+      correctAnswer: 1,
+      explanation: "Chinchilla optimizes for training compute efficiency. But if inference cost dominates (billions of requests), the correct objective is: given fixed N (fixed inference cost), maximize quality by training on as many tokens as practically possible. LLaMA-1-7B trained on 1T tokens vs. Chinchilla's ~140B optimal — the overtraining produced better quality per inference FLOP. This is the training-vs-inference cost trade-off formalized by Touvron et al.",
+      hints: [
+        "Chinchilla: for fixed training FLOPs, what (N, D) minimizes loss? LLaMA: for fixed N (inference cost), what D maximizes quality?",
+        "Overtraining (D >> 20N) reduces training efficiency but improves the deployed model's quality for every inference call."
+      ]
+    }
+  ],
+
+  "kv-cache-advanced": [
+    {
+      id: "q-tr-ex8-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "For LLaMA-3-70B (80 layers, 8 KV heads, head_dim=128) serving a batch of 32 requests each with 8,192-token context in BF16 (2 bytes/element), what is the approximate KV cache memory requirement?",
+      options: [
+        "2 * 80 * 8 * 128 * 8192 * 32 * 2 bytes ≈ 43 GB",
+        "2 * 80 * 64 * 128 * 8192 * 32 * 2 bytes ≈ 344 GB",
+        "80 * 8 * 128 * 8192 * 2 bytes ≈ 1.3 GB per request only",
+        "8 * 128 * 8192 * 32 * 2 bytes ≈ 0.5 GB total"
+      ],
+      correctAnswer: 0,
+      explanation: "KV cache formula: 2 (K+V) * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes = 2 * 80 * 8 * 128 * 8192 * 32 * 2 = ~42.9 GB. Without GQA (using 64 Q heads as KV): 2 * 80 * 64 * 128 * 8192 * 32 * 2 = ~344 GB — impossible on a single A100. GQA's 8-KV-head design is what makes 70B models practical: 344 GB → 43 GB, an 8x reduction.",
+      hints: [
+        "KV cache: 2 * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes_per_element.",
+        "GQA-8 vs. MHA-64: 8/64 = 1/8 the KV heads → 1/8 the KV cache. 344 GB → 43 GB for this configuration."
+      ]
+    },
+    {
+      id: "q-tr-ex8-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "During autoregressive generation, the KV cache grows by exactly one new K and V vector per layer per decode step, and attention computation scales O(n) with the current sequence length n.",
+      correctAnswer: "True",
+      explanation: "At decode step t, the KV cache holds keys/values for positions 1 through t-1. One new K and V are computed for position t and appended (O(1) per layer). The new query attends to all t cached keys: O(t * d) compute — linear in current sequence length t. Total decode cost grows linearly with sequence length, unlike prefill (O(n^2) over the full prompt).",
+      hints: [
+        "Prefill: process all n prompt tokens at once — O(n^2) attention. Decode: one token at a time — O(n) per step.",
+        "KV cache avoids recomputing K and V for previous tokens — trading O(n) memory growth for O(n) per-step compute."
+      ]
+    },
+    {
+      id: "q-tr-ex8-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "KV cache eviction methods (H2O, StreamingLLM, SnapKV) limit cache size by dropping less important tokens. What signal do most eviction policies use, and what is the 'attention sink' phenomenon that must be handled specially?",
+      options: [
+        "Token position: evict oldest tokens; no special handling needed for any position",
+        "Cumulative attention score: tokens with consistently low attention scores are evicted; initial tokens (positions 0-3) receive disproportionately high attention (attention sinks) regardless of content and must always be retained or quality collapses",
+        "Token embedding norm: evict tokens with small embedding magnitudes",
+        "Token frequency: evict the most common tokens since they are informationally redundant"
+      ],
+      correctAnswer: 1,
+      explanation: "H2O and StreamingLLM track cumulative attention scores. Tokens receiving low total attention across recent decode steps are eviction candidates. The critical finding (StreamingLLM, Xiao et al.): initial token positions (0-3) act as 'attention sinks' — softmax must sum to 1, and initial tokens accumulate excess probability mass as a normalization artifact. Evicting these sink tokens causes quality collapse even if many more recent tokens are retained. Fix: always keep the first few tokens plus the most recent window.",
+      hints: [
+        "Attention sink: softmax forces probability to sum to 1; initial tokens absorb excess probability when no other token is relevant.",
+        "StreamingLLM: retain first 4 sink tokens + sliding window of recent tokens → infinite context with constant cache size."
+      ]
+    }
+  ],
+
+  "batching-and-scheduling": [
+    {
+      id: "q-tr-ex9-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In vLLM's continuous batching implementation, the prefill phase (processing all input tokens) and the decode phase (one token per step) have very different GPU utilization profiles. What technique does chunked prefill address?",
+      options: [
+        "Chunked prefill allows multiple full prefills to run simultaneously on separate GPU streams",
+        "Chunked prefill splits large prefill requests into smaller chunks interleaved with decode steps, preventing a single large prefill from blocking decode for streaming requests and bounding time-to-first-token (TTFT) variance",
+        "Chunked prefill compresses the KV cache for prefill tokens using lossy compression",
+        "Chunked prefill deduplicates shared prefixes across requests to reduce redundant computation"
+      ],
+      correctAnswer: 1,
+      explanation: "Prefill-decode interference: a single 32K-token prefill can occupy the GPU for 200+ ms, spiking decode latency for all concurrent requests. Chunked prefill splits the prefill into chunks (e.g., 512 tokens) interleaved between decode steps. A 32K prefill becomes 64 chunks of ~3ms each, interleaved with decode steps. The worst-case TTFT latency impact is bounded to one chunk's processing time rather than the full prefill duration.",
+      hints: [
+        "Prefill is compute-bound (dense matmuls). Decode is memory-bandwidth-bound (loads KV cache). Interleaving them uses complementary GPU resources.",
+        "Without chunking: one long prefill monopolizes the GPU for hundreds of ms, spiking p99 decode latency for streaming users."
+      ]
+    },
+    {
+      id: "q-tr-ex9-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Speculative decoding requires that the draft model and target model share the same vocabulary and tokenizer, since token acceptance/rejection compares probability distributions over the same token IDs.",
+      correctAnswer: "True",
+      explanation: "The acceptance criterion compares target_prob(token_id) with draft_prob(token_id) at the same vocabulary position. If tokenizers differ, token ID 42 means different tokens in each model — the comparison is meaningless. All practical speculative decoding systems require identical tokenizers. This is why speculative decoding pairs models from the same family (GPT-4 + GPT-4o-mini share tokenizers) or uses architecture-agnostic drafters that operate on the shared token space.",
+      hints: [
+        "Acceptance: if draft_prob(x) <= target_prob(x), accept token x. Requires x to be the same token in both models.",
+        "Different vocabulary = different token IDs = incomparable probability distributions = broken acceptance criterion."
+      ]
+    },
+    {
+      id: "q-tr-ex9-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "EAGLE (speculative decoding with a single auto-regressive draft head on the target model's hidden states) achieves higher acceptance rates than using a separate smaller draft model. What is the fundamental reason?",
+      options: [
+        "EAGLE's single-layer head is 100x faster to execute than any separate draft model",
+        "EAGLE drafts tokens conditioned on the target model's exact internal representations — capturing the same features the target uses — producing distributions more aligned with the target than a separately trained model operating on different learned representations",
+        "EAGLE eliminates the tokenizer compatibility requirement by operating on raw embeddings",
+        "EAGLE can draft all next tokens in parallel across all positions simultaneously"
+      ],
+      correctAnswer: 1,
+      explanation: "Separate draft models have a representation gap: they produce probability distributions based on their own learned features, which may diverge from the target model's features even for the same input. EAGLE's draft head takes the target model's last-layer hidden states as input — it conditions on exactly the features the target uses, producing tightly aligned distributions. This raises acceptance rates from ~70% (small separate model) to ~80-85%, achieving 3-4x speedup vs. 2x for typical separate-model speculative decoding.",
+      hints: [
+        "EAGLE head input: target model's hidden state h_t. It predicts the distribution the target model would produce from those exact features.",
+        "Higher acceptance rate = more draft tokens accepted per verification step = fewer expensive target model forward passes needed."
+      ]
+    }
+  ],
+
+  "attention-variants": [
+    {
+      id: "q-tr-ex10-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Grouped Query Attention (GQA) with G=4 groups applied to a model with H=32 query heads means:",
+      options: [
+        "4 separate Q, K, and V projections total — the same as MHA with 4 heads",
+        "32 Q heads organized into 4 groups, each group sharing 1 K head and 1 V head — so there are 4 K matrices and 4 V matrices total, giving a KV cache 8x smaller than MHA",
+        "All 32 query heads share a single K and V — equivalent to Multi-Query Attention",
+        "4 separate transformer blocks each with independent attention mechanisms"
+      ],
+      correctAnswer: 1,
+      explanation: "GQA-4 with H=32 Q heads: 4 KV groups, each serving 32/4 = 8 query heads with one shared K and one shared V. Total: 32 Q heads, 4 K heads, 4 V heads. KV cache reduction vs. MHA: H/G = 32/4 = 8x. LLaMA-3-8B uses GQA-8 (32 Q heads, 8 KV heads), giving a 4x KV cache reduction vs. full MHA.",
+      hints: [
+        "GQA-G: G KV groups, each with 1 K and 1 V, shared by H/G query heads. KV cache is G/H of MHA.",
+        "MHA = GQA with G=H (each Q head has its own K, V). MQA = GQA with G=1 (all Q heads share one K, V)."
+      ]
+    },
+    {
+      id: "q-tr-ex10-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Ring Attention (Liu et al., 2023) enables training on sequences longer than a single GPU's memory by distributing the sequence across GPUs in a ring, where each GPU holds a segment of Q, K, V and passes K, V to the next GPU while computing local attention blocks.",
+      correctAnswer: "True",
+      explanation: "Ring Attention: GPU i holds Q_i (its segment of queries) and processes K_j, V_j blocks received from the ring. At each ring step, GPU i computes Q_i K_j^T V_j, accumulates into its output using online softmax, and passes K_j, V_j forward to the next GPU. After n_gpu ring steps, each GPU has its full attention output. Communication per step is proportional to segment_size — constant regardless of total sequence length, enabling sequences of 1M+ tokens.",
+      hints: [
+        "Ring step: receive K_j, V_j → compute partial attention → accumulate with online softmax → pass K_j, V_j to next GPU.",
+        "Total communication: n_gpu steps × (seq/n_gpu) × d_model — same as total sequence processing, no overhead from ring topology."
+      ]
+    },
+    {
+      id: "q-tr-ex10-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "ALiBi (Attention with Linear Biases, Press et al., 2021) adds a negative linear penalty m*|i-j| to attention scores based on query-key distance. What key inference property does this enable that RoPE and absolute positional embeddings do not provide?",
+      options: [
+        "ALiBi enables faster attention computation by linearizing the attention score function",
+        "ALiBi provides length extrapolation: the linear bias extends smoothly to positions beyond training length — models trained at 1024 tokens can generalize to 2048+ tokens without fine-tuning, since the penalty at unseen distances is a smooth extension of the trained range",
+        "ALiBi eliminates the need for the 1/sqrt(d_k) scaling factor in attention",
+        "ALiBi forces uniform attention patterns across all heads, improving training stability"
+      ],
+      correctAnswer: 1,
+      explanation: "RoPE and absolute learned embeddings fail at positions beyond training context (the model encounters out-of-distribution rotation angles or unseen position IDs). ALiBi's penalty m*|i-j| has no learned parameters and extends naturally: positions beyond training length simply receive a larger negative bias — smoothly discouraging very long-range attention without any out-of-distribution discontinuity. Press et al. showed ALiBi trained at 1024 tokens achieves reasonable perplexity at 2048+ tokens with zero fine-tuning.",
+      hints: [
+        "RoPE at positions > training length: unseen rotation angles — model has never learned to interpret these rotations.",
+        "ALiBi at position 2000 (trained to 1024): penalty = m * 2000 — a smooth extrapolation of the m * 1024 training maximum."
+      ]
+    }
+  ],
+
   "constitutional-llms": [
     {
       id: "q-tr-kp40-1",

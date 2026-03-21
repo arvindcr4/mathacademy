@@ -1446,11 +1446,29 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "Normalizing gradients during backpropagation",
       ],
       correctAnswer: 1,
-      explanation:
-        "Convolutional filters are 4-way tensors; Tucker decomposition factors them into a core tensor and mode matrices, reducing parameter count and FLOPs while preserving most model accuracy — enabling model compression for edge deployment.",
+      explanation: `Convolutional neural networks apply 4-dimensional filter tensors to input feature maps. A typical convolutional layer has weight tensors of shape:
+
+$$\\mathcal{W} \\in \\mathbb{R}^{C_{\\text{out}} \\times C_{\\text{in}} \\times k_H \\times k_W}$$
+
+**Step 1: The parameter count problem.** For a layer with 256 output channels, 128 input channels, and $3 \\times 3$ kernels:
+$$\\text{Parameters} = 256 \\times 128 \\times 3 \\times 3 \\approx 295{,}000$$
+
+This is expensive for edge deployment.
+
+**Step 2: Tucker decomposition as compression.** Tucker decomposition factorizes the 4-way tensor $\\mathcal{W}$ as:
+$$\\mathcal{W} \\approx \\mathcal{G} \\times_1 U_1 \\times_2 U_2 \\times_3 U_3 \\times_4 U_4$$
+
+where $\\mathcal{G}$ is a small **core tensor** and $U_1, U_2, U_3, U_4$ are orthogonal factor matrices.
+
+**Step 3: Compression ratio.** If the core tensor has shape $(r_1, r_2, r_3, r_4)$ with $r_i \\ll$ the original dimension, the compressed parameter count is:
+$$\\text{Compressed} = r_1 r_2 r_3 r_4 + C_{\\text{out}} r_1 + C_{\\text{in}} r_2 + k_H r_3 + k_W r_4 \\ll 295{,}000$$
+
+**Step 4: Why this works.** The filters in CNNs often have low Tucker rank — they can be accurately approximated by low-rank factors. This is the foundation of methods like **Tucker Compression** (used in TensorFlow Model Optimization Toolkit) and **CP decomposition** (used inMobileNet-v3).
+
+Therefore, $\\boxed{\\text{Option 1}}$ — tensor decomposition compresses CNN weight tensors for efficient inference.`,
       hints: [
-        "A conv layer with 256 output channels, 128 input channels, and 3×3 kernels has 256×128×3×3 ≈ 300K parameters.",
-        "Think about how Tucker decomposition reduces the 4D filter tensor to smaller factor matrices.",
+        "A conv layer with 256 output channels, 128 input channels, and $3 \\times 3$ kernels has $256 \\times 128 \\times 3 \\times 3 \\approx 295{,}000$ parameters. Tucker decomposition approximates this with a small core tensor and factor matrices.",
+        "Tucker decomposition expresses $\\mathcal{W} \\approx \\mathcal{G} \\times_1 U_1 \\times_2 U_2 \\times_3 U_3 \\times_4 U_4$. The compressed model stores $\\mathcal{G}$ and the factor matrices instead of the full 4D tensor.",
       ],
     },
   ],

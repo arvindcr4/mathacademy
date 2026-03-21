@@ -88,10 +88,10 @@ const questions: Record<string, Question[]> = {
         "Multiple imputation is preferred over single mean/median imputation because it correctly propagates the uncertainty of imputed values into downstream statistical inferences.",
       correctAnswer: "True",
       explanation:
-        "Single imputation (e.g., replacing missing values with the column mean) treats the imputed value as if it were observed with certainty, artificially deflating variance estimates. Multiple Imputation (MI, Rubin 1987) generates m complete datasets with different plausible imputations drawn from the posterior predictive distribution P(Y_mis | Y_obs). Each dataset is analyzed separately, and the results are pooled using Rubin\'s combining rules: point estimate = mean of m estimates; variance = within-imputation variance + between-imputation variance (the extra term propagates imputation uncertainty). With m = 20 imputations and 30% missing data, MI confidence intervals are properly calibrated; single imputation intervals are too narrow.",
+        "Single imputation (e.g., replacing missing values with the column mean) treats imputed values as observed with certainty, artificially deflating variance estimates. Multiple Imputation (MI, Rubin 1987) generates $m$ complete datasets with different plausible imputations drawn from the posterior predictive distribution $\\mathrm{P}(Y_{\\text{mis}} \\mid Y_{\\text{obs}})$. Each dataset is analyzed separately, and results are pooled using Rubin's combining rules:\n\\[\n\\begin{align}\n\\bar{\\theta} &= \\frac{1}{m} \\sum_{j=1}^{m} \\hat{\\theta}_j \\quad \\text{(point estimate)} \\\\\n\\mathrm{Var}(\\bar{\\theta}) &= \\bar{W} + \\left(1 + \\frac{1}{m}\\right) \\cdot B \\quad \\text{(total variance)}\n\\end{align}\n\\]\nwhere $\\bar{W}$ is the average within-imputation variance and $B$ is the between-imputation variance. The extra $B$ term propagates imputation uncertainty. With $m = 20$ and 30% missing data, MI confidence intervals are properly calibrated; single imputation intervals are too narrow.",
       hints: [
         "If you impute with the mean, every imputed value is identical — you have added no variance. But the true missing values are not all equal to the mean.",
-        "Rubin\'s formula: total variance = W̄ + (1 + 1/m)·B, where B = between-imputation variance, the term that single imputation sets to zero.",
+        "Rubin's formula: total variance $= \\bar{W} + (1 + 1/m) \\cdot B$. Single imputation sets $B = 0$, underestimating variance.",
       ],
     },
     {
@@ -108,10 +108,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Under MNAR, the fact of missingness encodes information about the missing value (high earners are missing → high income is more likely). Two actions are needed: (1) Impute a plausible value to fill the gap so no row is dropped — median avoids being pulled by extreme values. (2) Add a binary indicator "income_was_missing" ∈ {0, 1} as a feature. The model can then learn: when income_was_missing = 1, adjust the prediction upward, effectively capturing the MNAR signal. Listwise deletion (A) discards 40% of data and biases the remaining sample toward low earners. Mean imputation (C) has the same deletion bias without even preserving the distribution. MICE (D) assumes MAR, which is violated here.',
+        "Under MNAR, the fact of missingness encodes information about the missing value: high earners are missing, so income is likely high. Two actions are needed: (1) Impute a plausible value to fill the gap — median avoids being pulled by extreme values. (2) Add a binary indicator \"income_was_missing\" $\\in \\{0, 1\\}$ as a feature. The model can then learn: when income_was_missing = 1, adjust the prediction upward, capturing the MNAR signal.\n\nListwise deletion (A) discards 40% of data and biases the remaining sample toward low earners. Mean imputation (C) has the same deletion bias without preserving the distribution. MICE (D) assumes MAR, which is violated here.",
       hints: [
-        'The missingness indicator trick: if "high income → missing", then the indicator "was_missing" is positively correlated with income, giving the model a proxy for the missing signal.',
-        "MICE assumes P(R | Y_obs) — missingness depends only on observed data. MNAR violates this: P(R | Y_mis) depends on the unobserved income itself.",
+        'The missingness indicator trick: if "high income → missing", then "was_missing" is positively correlated with income, giving the model a proxy for the missing signal.',
+        "MICE assumes $\\mathrm{P}(R \\mid Y_{\\text{obs}})$ — missingness depends only on observed data. MNAR violates this: $\\mathrm{P}(R \\mid Y_{\\text{mis}})$ depends on the unobserved income itself.",
       ],
     },
   ],
@@ -131,10 +131,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "OHE creates one binary indicator column per unique value. For k = 1,000 cities you get 1,000 binary columns. However, in a model with an intercept term, one column is perfectly predicted by the other 999 (multicollinearity: they sum to 1), causing a singular design matrix. Dropping one reference category leaves 999 columns and removes perfect collinearity. This is a general rule: for OHE with k categories, use k-1 columns in a model with an intercept.",
+        "OHE creates one binary indicator column per unique value. For $k = 1000$ cities, you get 1000 binary columns. However, in a model with an intercept term, one column is perfectly predicted by the other 999 — they sum to 1, creating perfect multicollinearity and a singular design matrix. Dropping one reference category leaves $k - 1 = 999$ columns and removes this collinearity. General rule: for OHE with $k$ categories in a model with an intercept, use $k - 1$ columns.",
       hints: [
-        'The "dummy variable trap": if all k indicator columns are included and the model has an intercept, the design matrix X is rank-deficient.',
-        "With pandas get_dummies(drop_first=True) you get k-1 columns; without, you get k.",
+        'The "dummy variable trap": if all $k$ indicator columns are included with an intercept, the design matrix $\\mathbf{X}$ is rank-deficient (perfect collinearity).',
+        "With pandas `get_dummies(drop_first=True)`, you get $k - 1$ columns; without it, you get $k$.",
       ],
     },
     {
@@ -145,10 +145,10 @@ const questions: Record<string, Question[]> = {
         "Target encoding must use out-of-fold (leave-one-out) encoding during training to avoid target leakage, even though the same data is used to compute mean target values.",
       correctAnswer: "True",
       explanation:
-        "Naive target encoding computes enc(cᵢ) = mean(y | category = cᵢ) using all training rows, including row i itself. When category cᵢ appears only once (or rarely), enc(cᵢ) ≈ yᵢ, so the encoded feature directly contains the target — severe leakage that inflates training AUC. Out-of-fold encoding computes the mean for row i using only the other folds (e.g., in 5-fold CV: enc(cᵢ) = mean(y | category = cᵢ, fold ≠ fold(i))). This adds noise that mimics test-time behavior, where the mean is estimated from training data the model did not see for that sample.",
+        "Naive target encoding computes $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i)$ using all training rows, including row $i$ itself. When $c_i$ appears only once, $\\mathrm{enc}(c_i) \\approx y_i$ — the encoded feature directly contains the target (severe leakage). Out-of-fold encoding computes the mean for row $i$ using only the other folds (e.g., in 5-fold CV: $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i, \\text{fold} \\neq \\text{fold}(i))$). This mimics test-time behavior, where the mean is estimated from data the model did not see for that sample.",
       hints: [
-        "Extreme case: a category with one sample gets encoded as exactly that sample\'s target. What happens at training time vs. test time?",
-        "Kaggle\'s winning solutions almost always use out-of-fold target encoding inside their CV loop.",
+        "Extreme case: a singleton category gets encoded as exactly that sample's target. The model sees the target in its own features at training time — but not at test time.",
+        "Kaggle winning solutions almost always use out-of-fold target encoding inside their CV loop.",
       ],
     },
     {
@@ -165,10 +165,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "OHE with 2M columns creates a 2M-dimensional sparse input — impractical for memory and gradient computation. Label encoding (integers) is worse: it imposes an arbitrary order (ID 500,000 > ID 1 means nothing), and the dense layer treats them as ordinal, producing nonsensical embeddings. Hash encoding loses identity through collisions. Learned embeddings (the same technique as word2vec/word embeddings) map each ID to a trainable ℝᵈ vector. The embedding matrix has size 2M × d parameters — with d = 50, that is 100M parameters, which is large but feasible. IDs that co-occur in similar contexts learn similar embeddings. At inference, any ID lookup is O(1).",
+        "OHE with 2M columns creates a 2M-dimensional sparse input — impractical for memory and gradient computation. Label encoding (integers) is worse: it imposes an arbitrary order (ID 500,000 > ID 1 means nothing), and the dense layer treats them as ordinal, producing nonsensical embeddings. Hash encoding loses identity through collisions. Learned embeddings (same technique as word2vec) map each ID to a trainable $\\mathbb{R}^d$ vector. The embedding matrix has shape $2M \\times d$ — with $d = 50$, that is 100M parameters, large but feasible. IDs that co-occur in similar contexts learn similar embeddings. At inference, any ID lookup is $O(1)$.",
       hints: [
-        "Entity embeddings (Guo & Berkhahn 2016) showed learned embeddings for categorical features often match or beat OHE for neural tabular models.",
-        "Embedding dimension d is a hyperparameter; a rule of thumb is d ≈ min(50, (k + 1) / 2) where k is the cardinality.",
+        "Entity embeddings (Guo & Berkhahn 2016): learned embeddings for categorical features often match or beat OHE for neural tabular models.",
+        "Embedding dimension rule of thumb: $d \\approx \\min\\bigl(50, (k+1)/2\\bigr)$ where $k$ is the cardinality.",
       ],
     },
   ],
@@ -179,7 +179,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "SMOTE generates a synthetic minority-class example between sample xᵢ and neighbor xⱼ as x̃ = xᵢ + λ(xⱼ − xᵢ) where λ ~ Uniform(0, 1). This differs from simple oversampling (random duplication) because:",
+        "SMOTE generates a synthetic minority-class example between sample $x_i$ and neighbor $x_j$ as $\\tilde{x} = x_i + \\lambda(x_j - x_i)$ where $\\lambda \\sim \\text{Uniform}(0, 1)$. This differs from simple oversampling (random duplication) because:",
       options: [
         "SMOTE samples from the majority class to balance counts",
         "SMOTE creates new points along line segments between existing minority samples, adding diversity rather than exact duplicates",
@@ -188,10 +188,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Random oversampling duplicates existing minority examples — the model sees the same xᵢ multiple times. SMOTE interpolates: x̃ = xᵢ + λ(xⱼ − xᵢ) for λ ∈ [0, 1] creates a point anywhere along the segment between two real minority neighbors. This fills the feature-space region around the minority cluster with novel examples, producing a smoother decision boundary and reducing overfitting to the duplicated points. The k nearest minority neighbors (default k = 5) define which directions are "safe" to interpolate in.',
+        "Random oversampling duplicates existing minority examples — the model sees the same $x_i$ multiple times. SMOTE interpolates:\n\\[\n\\tilde{x} = x_i + \\lambda(x_j - x_i), \\quad \\lambda \\in [0, 1]\n\\]\nThis creates a point anywhere on the segment between two real minority neighbors. It fills the feature-space region around the minority cluster with novel examples, producing a smoother decision boundary and reducing overfitting to duplicated points. The $k$ nearest minority neighbors (default $k = 5$) define which directions are \"safe\" to interpolate in.",
       hints: [
-        "Draw two minority points A and B. SMOTE generates points on the segment AB. Random oversampling only generates copies of A or copies of B.",
-        "SMOTE can create problematic samples near the decision boundary if minority and majority classes overlap; SMOTE-ENN and BorderlineSMOTE address this.",
+        "Draw two minority points A and B. SMOTE generates points on segment AB. Random oversampling only generates copies of A or copies of B.",
+        "SMOTE can create problematic samples near the decision boundary when classes overlap; SMOTE-ENN and BorderlineSMOTE address this.",
       ],
     },
     {
@@ -202,9 +202,9 @@ const questions: Record<string, Question[]> = {
         'Setting class_weight="balanced" in scikit-learn is exactly equivalent in effect to oversampling the minority class to the majority class count.',
       correctAnswer: "False",
       explanation:
-        'class_weight="balanced" computes wₖ = n_samples / (n_classes × n_k) and scales each sample\'s loss contribution by its class weight. This rescales the gradient from minority samples without changing the training dataset. Oversampling replicates minority samples, changing the training distribution seen by the optimizer — each mini-batch now sees a different class ratio, which affects batch normalization statistics, dropout patterns, and the frequency of minority gradient updates. Practically: class weighting is simpler and avoids inflating the dataset; oversampling can interact differently with regularization. They are not equivalent.',
+        'class_weight="balanced" computes $w_k = n_{\\text{samples}} / (n_{\\text{classes}} \\times n_k)$ and scales each sample\'s loss contribution by its class weight. This rescales the gradient from minority samples without changing the training dataset. Oversampling replicates minority samples, changing the training distribution seen by the optimizer — each mini-batch now sees a different class ratio, which affects batch normalization statistics, dropout patterns, and the frequency of minority gradient updates. Class weighting is simpler and avoids inflating the dataset; oversampling can interact differently with regularization. They are not equivalent.',
       hints: [
-        "With balanced weights, the model still sees n minority samples per epoch; with oversampling it sees more. Does this matter for batch-level operations?",
+        "With balanced weights, the model still sees $n$ minority samples per epoch; with oversampling it sees more. Does this matter for batch-level operations?",
         "For SGD with large imbalance ratios (1:1000), oversampling ensures minority examples appear in most mini-batches; class weighting does not guarantee that.",
       ],
     },
@@ -213,19 +213,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Focal loss FL(pₜ) = −(1 − pₜ)^γ log(pₜ) was introduced by Lin et al. (2017) for dense object detection. With γ = 2, a well-classified example with pₜ = 0.9 is down-weighted by a factor of:",
+        "Focal loss $\\mathrm{FL}(p_t) = -(1 - p_t)^\\gamma \\log(p_t)$ was introduced by Lin et al. (2017) for dense object detection. With $\\gamma = 2$, a well-classified example with $p_t = 0.9$ is down-weighted by a factor of:",
       options: [
-        "(1 − 0.9)² = 0.01 relative to standard cross-entropy",
-        "0.9² = 0.81 relative to standard cross-entropy",
-        "(1 − 0.9)^0.5 ≈ 0.316",
-        "There is no down-weighting; γ only controls the shape of the loss curve",
+        "$(1 - 0.9)^2 = 0.01$ relative to standard cross-entropy",
+        "$0.9^2 = 0.81$ relative to standard cross-entropy",
+        "$(1 - 0.9)^{0.5} \\approx 0.316$",
+        "There is no down-weighting; $\\gamma$ only controls the shape of the loss curve",
       ],
       correctAnswer: 0,
       explanation:
-        "Standard cross-entropy for a positive example with predicted probability p is −log(p). Focal loss multiplies by (1 − p)^γ: FL = −(1 − p)^γ log(p). For pₜ = 0.9 and γ = 2: modulating factor = (1 − 0.9)² = 0.1² = 0.01. The well-classified example contributes only 1% of its original loss. For a hard example with pₜ = 0.2: (1 − 0.2)² = 0.64 — it retains 64% of its loss. This ensures the gradient signal is dominated by hard misclassified examples rather than the abundant easy negatives in imbalanced detection tasks.",
+        "Standard cross-entropy for a positive example with predicted probability $p$ is $-\\log(p)$. Focal loss multiplies by $(1 - p)^\\gamma$:\n\\[\n\\mathrm{FL} = -(1 - p)^\\gamma \\log(p)\n\\]\nFor $p_t = 0.9$ and $\\gamma = 2$: modulating factor $= (1 - 0.9)^2 = 0.1^2 = 0.01$. The well-classified example contributes only 1% of its original loss. For a hard example with $p_t = 0.2$: $(1 - 0.2)^2 = 0.64$ — it retains 64% of its loss. This ensures the gradient is dominated by hard misclassified examples rather than abundant easy negatives.",
       hints: [
-        "Compute (1 − pₜ)^γ for pₜ = 0.9, γ = 2. This multiplicative factor is applied to the standard log-loss.",
-        "The intuition: if the model is 90% confident and correct, training on this example provides little useful gradient — focal loss makes this precise.",
+        "Compute $(1 - p_t)^\\gamma$ for $p_t = 0.9$, $\\gamma = 2$. This multiplicative factor is applied to the standard log-loss.",
+        "If the model is 90% confident and correct, training on this example provides little useful gradient — focal loss quantifies this.",
       ],
     },
   ],

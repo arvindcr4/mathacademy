@@ -2282,5 +2282,511 @@ const additionalSslQuestions: Record<string, Question[]> = {
 
 Object.assign(questions, additionalSslQuestions);
 
+const extraSsl: Record<string, Question[]> = {
+  "infonce-theory": [
+    {
+      id: "q-ssl-kp41-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The InfoNCE loss (Oord et al., 2018) used in contrastive learning is formally a lower bound on which quantity?",
+      options: [
+        "The conditional entropy H(x | z) between input x and its representation z",
+        "The mutual information I(x; c) between the input x and the context representation c",
+        "The KL divergence DKL(p(z|x) || p(z)) between the posterior and prior in a VAE",
+        "The cross-entropy between the model's predictions and the true data distribution",
+      ],
+      correctAnswer: 1,
+      explanation: "InfoNCE provides a lower bound on mutual information I(x; c): L_InfoNCE <= I(x; c) - log(N), where N is the number of negative samples. The bound is achieved when the critic f(x, c) = p(x|c)/p(x) (the density ratio). Because log(N) grows with N, using more negatives tightens the bound and provides a more accurate estimate of MI. The connection to MI is the theoretical justification for why maximizing InfoNCE leads to representations that capture maximally informative features about the context.",
+      hints: [
+        "Mutual information I(x;c) = E[log(p(x,c)/p(x)p(c))] — it measures statistical dependence between x and c.",
+        "More negatives N tightens the bound but also increases memory requirements (larger batch or memory bank).",
+      ],
+    },
+    {
+      id: "q-ssl-kp41-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Wang and Isola (2020) decompose contrastive learning objectives into two components: uniformity and alignment. Which statement correctly describes the trade-off?",
+      options: [
+        "Perfect uniformity maximizes downstream task accuracy; alignment only prevents trivial collapse",
+        "Alignment encourages augmentation-invariant embeddings (pulling positive pairs together), while uniformity encourages embeddings to be spread across the hypersphere — maximizing both jointly produces optimal representations",
+        "Uniformity encourages memorization of training examples; alignment encourages generalization to new classes",
+        "High alignment implies high uniformity because pulling positives together automatically pushes negatives apart",
+      ],
+      correctAnswer: 1,
+      explanation: "Wang and Isola (2020) show that a good contrastive loss balances: (1) alignment — loss = E[||f(x) - f(x')||^2] over positive pairs (x, x'), encouraging augmentation-invariant embeddings; (2) uniformity — loss = log E[exp(-2||f(x) - f(y)||^2)] over random pairs, encouraging a uniform distribution of embeddings on the unit hypersphere (maximizing entropy). A perfectly aligned model puts all positive pairs at the same point (zero diversity), violating uniformity. A perfectly uniform model distributes points maximally but ignores augmentation invariance. The contrastive objective naturally balances both.",
+      hints: [
+        "Think of alignment as 'pull same-class embeddings together' and uniformity as 'spread all embeddings evenly'.",
+        "Collapse (all embeddings at one point) has perfect alignment but zero uniformity — the worst case.",
+      ],
+    },
+    {
+      id: "q-ssl-kp41-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Increasing the number of negative samples N in InfoNCE always improves the quality of the learned representations, with no diminishing returns.",
+      correctAnswer: "False",
+      explanation: "While more negatives tighten the MI lower bound and generally improve representation quality in practice, there are important caveats: (1) false negatives — with large N, some negatives may be semantically similar to the anchor (especially in large batches from datasets with many similar images), corrupting the gradient signal; (2) memory constraints — larger N requires larger batches or memory banks, which is computationally expensive; (3) diminishing returns — empirical gains plateau after sufficient negatives (e.g., MoCo uses 65536 but SimCLR plateaus around 4096-8192). The optimal N is dataset- and task-dependent.",
+      hints: [
+        "False negatives: when a 'negative' sample is actually semantically similar to the anchor, treating it as negative misleads the model.",
+        "MoCo's memory bank and SimCLR's large batch are both solutions to the 'need many negatives' problem.",
+      ],
+    },
+  ],
+  "byol-collapse-prevention": [
+    {
+      id: "q-ssl-kp42-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "BYOL (Grill et al., 2020) prevents representational collapse without negative samples primarily through:",
+      options: [
+        "A reconstruction loss that forces the encoder to retain pixel-level information",
+        "An asymmetric architecture where an online network predicts the output of a momentum (EMA) target network, and only the online network is updated by gradient",
+        "A uniformity regularizer that explicitly penalizes low variance in the embedding space",
+        "A VQ-VAE codebook that discretizes embeddings and prevents them from collapsing to a single code",
+      ],
+      correctAnswer: 1,
+      explanation: "BYOL's collapse prevention relies on two asymmetries: (1) architecture asymmetry — only the online network has a predictor MLP on top; the target network has no predictor, so the online network must 'predict' a strictly simpler target; (2) gradient asymmetry — the target network is updated by exponential moving average (EMA) of online weights, not by gradient, acting as a slowly-moving target that is always slightly ahead of the online network. This combination creates a stable bootstrap target. The stop-gradient on the target network is critical: without it, both networks would collapse to the same constant.",
+      hints: [
+        "BYOL has two networks: online (trained by gradient) and target (updated by EMA). Only the online has a predictor.",
+        "Stop-gradient through the target network prevents the trivial solution where both networks output the same constant.",
+      ],
+    },
+    {
+      id: "q-ssl-kp42-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The EMA (Exponential Moving Average) update for BYOL's target network is theta_t <- m * theta_t + (1-m) * theta_o. What happens as the momentum coefficient m approaches 1.0?",
+      options: [
+        "The target network becomes identical to the online network at each step, causing training to be equivalent to training with the same network twice",
+        "The target network updates extremely slowly, becoming nearly static and providing a very stable but lagged prediction target",
+        "The target network diverges because its weights grow without bound when m > 0.5",
+        "The online network stops learning because its gradient signal from the target becomes zero",
+      ],
+      correctAnswer: 1,
+      explanation: "As m -> 1, the EMA update theta_t <- m*theta_t + (1-m)*theta_o gives (1-m) -> 0 weight to the current online network, so the target changes extremely slowly. In the limit m=1, the target is completely frozen (never updated). This creates a very stable but stale target — the online network must predict outputs from an essentially fixed network. In practice, BYOL uses m that increases from 0.996 to 1.0 during training (cosine schedule), providing increasingly stable targets as representations mature.",
+      hints: [
+        "EMA with m=0.999 vs m=0.99: the first decays toward online weights 10x slower than the second.",
+        "A completely frozen target (m=1) is just supervised learning with fixed pseudo-labels — too stable, no self-improvement.",
+      ],
+    },
+    {
+      id: "q-ssl-kp42-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "SimSiam (Chen and He, 2021) demonstrates that the stop-gradient operation on the target branch (not the EMA mechanism itself) is the essential ingredient for preventing collapse in BYOL-style methods.",
+      correctAnswer: "True",
+      explanation: "SimSiam simplifies BYOL by removing the EMA target network entirely — both branches share the same encoder weights. The only difference is that one branch uses stop-gradient. Despite having no EMA and no negative samples, SimSiam achieves competitive performance. This demonstrates that stop-gradient, not EMA, is the critical collapse-prevention mechanism. The stop-gradient creates an implicit EM-like alternation: one branch provides fixed targets while the other optimizes, analogous to the E-step (fix cluster centers) and M-step (assign points) in k-means.",
+      hints: [
+        "SimSiam = Siamese network with stop-gradient. No EMA, no negatives, no separate target network weights.",
+        "The EM interpretation: stop-gradient makes one branch a 'fixed' target (E-step), the other optimizes (M-step).",
+      ],
+    },
+  ],
+  "mae-masking": [
+    {
+      id: "q-ssl-kp43-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "MAE (He et al., 2021) uses a very high masking ratio (typically 75%) compared to BERT's 15%. The primary justification for this high ratio is:",
+      options: [
+        "Higher masking ratios reduce GPU memory usage by processing fewer tokens in the encoder",
+        "Predicting 15% of patches from 85% visible context is too easy for vision — 75% masking creates a task hard enough to require genuine semantic understanding",
+        "75% masking exactly matches the compression ratio of JPEG encoding, providing a natural information bottleneck",
+        "Higher masking prevents the decoder from learning identity mappings by ensuring no patch is always visible",
+      ],
+      correctAnswer: 1,
+      explanation: "He et al. extensively ablate masking ratio and show 75% is optimal for ImageNet. Image patches have high spatial redundancy — adjacent patches are strongly correlated. At 15% masking, the model can reconstruct masked patches using simple interpolation from nearby visible patches without learning deep semantics. At 75%, nearby context for most masked patches is also masked, forcing the model to reason about long-range semantic structure. This creates a sufficiently challenging task that drives learning of rich representations. BERT uses 15% because text tokens are individually informative and less redundant.",
+      hints: [
+        "Spatial redundancy in images: adjacent pixels are highly correlated. Text tokens are much less predictable from neighbors.",
+        "At high masking ratios, the model cannot rely on local texture interpolation — it must understand global structure.",
+      ],
+    },
+    {
+      id: "q-ssl-kp43-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "MAE applies the ViT encoder only to the unmasked tokens. The key efficiency advantage of this design is:",
+      options: [
+        "The encoder processes only ~25% of the input tokens, reducing encoder compute by approximately 4x compared to encoding all tokens",
+        "The decoder can be made much larger than the encoder because it only needs to process masked tokens",
+        "Encoding only unmasked tokens prevents the encoder from learning to ignore mask tokens, improving representation quality",
+        "The sparse attention pattern over unmasked tokens allows use of locality-sensitive hashing for O(n log n) attention",
+      ],
+      correctAnswer: 0,
+      explanation: "With 75% masking and 196 total patches (14x14 for 224x224 images, 16x16 patches), the encoder processes only 49 tokens (~25%). Since transformer attention scales as O(n^2) in sequence length, this reduces encoder FLOPs by approximately 16x (not 4x, since it's quadratic) and reduces memory by 16x. A lightweight decoder then processes all tokens (masked positions receive learnable mask tokens) to reconstruct pixels. This asymmetric encoder-decoder design makes MAE pre-training 3x faster than processing all tokens with the full encoder.",
+      hints: [
+        "ViT attention complexity: O((num_tokens)^2 * d). With 1/4 the tokens, quadratic scaling gives 1/16 the compute.",
+        "MAE's decoder is intentionally shallow (e.g., 8 transformer blocks vs. ViT-L's 24) since it is discarded after pre-training.",
+      ],
+    },
+    {
+      id: "q-ssl-kp43-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "MAE reconstructs raw pixel values (normalized per patch) rather than predicting discrete visual tokens like BEiT. This choice results in lower linear probing accuracy but higher fine-tuning accuracy than token-based reconstruction targets.",
+      correctAnswer: "True",
+      explanation: "MAE predicts normalized pixel values (mean and std computed per patch) rather than discrete visual tokens (as in BEiT which predicts dVAE token ids). He et al. find that pixel reconstruction with MAE gives slightly lower linear probing accuracy (~73.5% for ViT-L with linear probe) compared to BEiT (~73.5% too) but substantially higher fine-tuning accuracy (MAE ViT-L reaches 85.9% vs BEiT's 85.2% on ImageNet). This is because the encoder learns richer, more holistic representations optimized for reconstruction rather than discrete tokenization, which transfers better when the full model is fine-tuned.",
+      hints: [
+        "Linear probing evaluates representation quality when the encoder is frozen; fine-tuning updates all parameters.",
+        "Discrete token prediction (BEiT) is more like a classification task — it may learn more linearly separable features.",
+      ],
+    },
+  ],
+  "bert-pretraining-deep": [
+    {
+      id: "q-ssl-kp44-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "BERT's Masked Language Modeling (MLM) pre-training uses a specific token replacement strategy: 80% [MASK], 10% random word, 10% unchanged. Why are 10% of masked positions replaced with random words rather than always using [MASK]?",
+      options: [
+        "Random replacement adds noise that prevents the model from memorizing the training corpus",
+        "If only [MASK] tokens were used, the model would learn to attend only to non-[MASK] positions at fine-tune time, causing a train-test mismatch since [MASK] never appears in downstream tasks",
+        "Random words force the model to learn a uniform distribution over the vocabulary, preventing degenerate solutions",
+        "10% random words match the natural token error rate in web-crawled pre-training text, making the task realistic",
+      ],
+      correctAnswer: 1,
+      explanation: "BERT's 10% random replacement and 10% unchanged positions address the pre-training/fine-tuning discrepancy. If all masked positions received [MASK] tokens, the model would learn: 'attend to non-[MASK] tokens only, ignore [MASK] positions since they carry no information about the original token.' At fine-tuning, no [MASK] tokens appear, but the model has never been trained to extract useful representations from non-masked positions. The 10% random words force the model to maintain useful representations of every token, since any token might be a corrupted version of another. The 10% unchanged positions let the model learn to represent actual context tokens too.",
+      hints: [
+        "The key problem: if the model sees [MASK] only during pre-training, it learns [MASK] = 'something to predict'. At fine-tune time, there are no [MASK] tokens.",
+        "By sometimes keeping the original word, the model must also learn good representations for non-corrupted tokens.",
+      ],
+    },
+    {
+      id: "q-ssl-kp44-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "BERT's Next Sentence Prediction (NSP) objective has been shown by RoBERTa and ALBERT to be beneficial for all downstream NLP tasks and should be retained in all BERT-style pre-training.",
+      correctAnswer: "False",
+      explanation: "RoBERTa (Liu et al., 2019) ablated NSP and found it hurts downstream performance on most tasks — removing NSP and using longer contiguous text sequences (instead of sentence pairs) improves GLUE, SQuAD, and RACE scores. ALBERT (Lan et al., 2020) replaced NSP with Sentence Order Prediction (SOP), which predicts whether two consecutive sentences are in the correct order (harder than NSP). The hypothesis is that NSP is too easy (documents from different sources are trivially distinguishable by topic) and encourages the model to learn topic differentiation rather than coherence modeling.",
+      hints: [
+        "NSP negative pairs are sampled from different documents — the model learns to detect topic switches, not true discourse coherence.",
+        "SOP (ALBERT) uses the same document for both positive and negative pairs, requiring genuine order understanding.",
+      ],
+    },
+    {
+      id: "q-ssl-kp44-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The RoBERTa paper (Liu et al., 2019) identified that BERT was significantly undertrained. Which combination of changes most improved performance over BERT-base?",
+      options: [
+        "Larger vocabulary, bidirectional attention, and layer normalization before each sublayer",
+        "Training longer with larger batches, removing NSP, using dynamic masking, and training on more data with longer sequences",
+        "Replacing WordPiece tokenization with Byte-Pair Encoding and adding a mean-pooling head",
+        "Using a relative positional encoding scheme and a deeper architecture with 24 layers instead of 12",
+      ],
+      correctAnswer: 1,
+      explanation: "RoBERTa's key improvements over BERT: (1) longer training (1M steps vs 1M but with much larger batches of 8K sequences), (2) more training data (160GB vs BERT's 16GB), (3) longer sequence training (always using 512 tokens, not 50% at 128), (4) dynamic masking (regenerate masks each epoch rather than static masked corpus), (5) removal of NSP (using only MLM with full documents). Crucially, RoBERTa showed that most gains come from longer training with more data and larger batches — BERT's architecture was already well-designed, it was just undertrained.",
+      hints: [
+        "RoBERTa = Robustly Optimized BERT Pretraining Approach — the emphasis is on the training recipe, not the architecture.",
+        "Dynamic masking means each training example sees different masked positions each epoch, providing more training signal.",
+      ],
+    },
+  ],
+  "wav2vec-audio-ssl": [
+    {
+      id: "q-ssl-kp45-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "wav2vec 2.0 (Baevski et al., 2020) uses a quantization module during pre-training. What is the role of this module?",
+      options: [
+        "It compresses audio waveforms to reduce storage requirements before training",
+        "It discretizes continuous audio features into a finite set of learned quantized representations (codebook entries) that serve as the contrastive learning targets",
+        "It applies vector quantization to the model gradients to reduce communication overhead in distributed training",
+        "It converts raw audio to mel-spectrograms and then quantizes them to match ASR phoneme categories",
+      ],
+      correctAnswer: 1,
+      explanation: "wav2vec 2.0 uses a product quantization module with G codebooks each containing V entries. The continuous CNN-encoded audio features are quantized to produce discrete targets q_t for the masked positions. The model then solves a contrastive task: given the context representation c_t (from the transformer), identify the correct quantized target q_t among K distractors (other quantized representations from the same utterance). This gives a discrete, finite target space without requiring any phoneme labels, enabling fully self-supervised speech representation learning.",
+      hints: [
+        "Product quantization: use G separate codebooks, sample one entry from each, and concatenate them to form the target.",
+        "The quantizer is trained jointly with the rest of the model using a straight-through gradient estimator (Gumbel-softmax).",
+      ],
+    },
+    {
+      id: "q-ssl-kp45-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "wav2vec 2.0 trained with just 10 minutes of labeled speech data, when used for fine-tuning, achieves word error rates competitive with the best supervised models trained on 960 hours of labeled LibriSpeech data from 2019.",
+      correctAnswer: "True",
+      explanation: "Baevski et al. (2020) demonstrate that wav2vec 2.0 pre-trained on 960h of unlabeled LibriSpeech and fine-tuned on just 10 minutes of labeled data achieves 4.8% WER on the test-clean split and 8.2% on test-other. This is competitive with the best supervised-only baselines from 2019 that used the full 960h of labeled data. The SSL pre-training provides such rich speech representations that only minimal labeled data is needed for ASR fine-tuning — a compelling demonstration of SSL's label efficiency.",
+      hints: [
+        "960 hours of labeled speech vs. 10 minutes: a 5760x reduction in labeled data requirement.",
+        "The key: wav2vec 2.0 learns phonetic and linguistic structure from unlabeled audio; fine-tuning just maps this to transcriptions.",
+      ],
+    },
+    {
+      id: "q-ssl-kp45-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The diversity loss in wav2vec 2.0's training objective serves to:",
+      options: [
+        "Maximize the entropy of the quantized code assignments across the batch, preventing codebook collapse where most codes are never used",
+        "Minimize the variance of the representations within each codebook entry to ensure compact clusters",
+        "Penalize the model for using the same context representation for different masked positions",
+        "Regularize the CNN feature extractor to produce smooth temporal features",
+      ],
+      correctAnswer: 0,
+      explanation: "The diversity loss in wav2vec 2.0 is L_d = -H(p) = sum_i p_i * log(p_i) (negative entropy of codebook usage), encouraging uniform usage of all V codebook entries. Without it, the Gumbel-softmax quantizer can collapse: most audio frames get assigned to a handful of popular codes, leaving most codebook entries unused (codebook collapse). The diversity loss encourages the model to distribute assignments uniformly across all codes, ensuring the quantized target space is fully utilized and diverse.",
+      hints: [
+        "Codebook collapse: if one code represents 99% of frames, the contrastive task becomes trivial (always predict that code).",
+        "Maximizing entropy of code assignments = uniform usage = each code represents an equal share of the audio.",
+      ],
+    },
+  ],
+  "dino-self-distillation": [
+    {
+      id: "q-ssl-kp46-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "DINO (Caron et al., 2021) uses a 'centering' operation on the teacher's output distribution. The purpose of centering is to:",
+      options: [
+        "Normalize the teacher outputs to have zero mean across the batch, preventing one dominant dimension from saturating the softmax",
+        "Reduce the variance of the teacher's predictions to stabilize training",
+        "Center the student network's predictions around the teacher's mean to improve gradient signal",
+        "Apply a temperature reduction to the teacher's softmax to sharpen the prediction targets",
+      ],
+      correctAnswer: 0,
+      explanation: "DINO's centering subtracts a running mean c (updated by EMA: c <- m*c + (1-m)*mean_batch(g_theta(x))) from the teacher's logits before softmax. Without centering, the teacher's softmax can collapse to a uniform distribution (mode collapse where all images map to the same representation) or to a one-hot distribution. Centering prevents both: if one dimension is always large, centering reduces it, preventing dominance. Crucially, centering is applied only to the teacher (not the student), creating the asymmetry needed for stable self-distillation.",
+      hints: [
+        "Mode collapse in DINO without centering: teacher outputs the same distribution for all inputs (uniform collapse) or always predicts one class.",
+        "Centering + sharpening (low teacher temperature) together enforce: diverse but confident predictions.",
+      ],
+    },
+    {
+      id: "q-ssl-kp46-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "DINO's use of multi-crop augmentation (2 global crops + 6-8 local crops) creates a specific training objective. How are global and local crops used differently?",
+      options: [
+        "Global crops are passed to both teacher and student; local crops are passed only to the student, encouraging the student to match the teacher's global view from a local perspective",
+        "Local crops are passed to the teacher to provide a harder prediction target; global crops are used only for the contrastive negative samples",
+        "Both global and local crops are passed to both networks, with global crops weighted more in the loss",
+        "Global crops update the teacher via EMA; local crops update the student via gradient descent",
+      ],
+      correctAnswer: 0,
+      explanation: "In DINO's multi-crop strategy, the teacher only sees the two large global crops (224x224), while the student sees all crops including 6-8 small local crops (96x96). The student must predict the teacher's output from local crop inputs — it must recognize local patch content and match it to the global semantic representation. This local-to-global correspondence forces the student to learn that a local patch (e.g., an eye) should be embedded consistently with the global object context (e.g., a face). This is why DINO ViT features have remarkable localization properties without any explicit segmentation supervision.",
+      hints: [
+        "Teacher = global view (full scene context). Student = local view (small patch). Student must predict teacher's global understanding from a local patch.",
+        "This is why DINO's attention maps show semantic object segmentation — the network learns what global concept a local patch belongs to.",
+      ],
+    },
+    {
+      id: "q-ssl-kp46-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "DINO's self-attention maps in the final ViT layer can be directly used as unsupervised object segmentation masks without any fine-tuning on segmentation data.",
+      correctAnswer: "True",
+      explanation: "One of DINO's remarkable emergent properties is that the [CLS] token's self-attention maps in the final transformer layer produce high-quality, semantically meaningful attention patterns that closely match foreground object masks. Querying the attention of the [CLS] token with respect to all patch tokens reveals which patches the model considers most relevant to the global image representation — these patches correspond to semantic objects. Thresholding these attention maps provides surprisingly accurate unsupervised segmentation, demonstrated on VOC2012 and COCO without any segmentation supervision.",
+      hints: [
+        "[CLS] token attends to the most semantically relevant patches — in DINO, this correlates with object foregrounds.",
+        "This property is unique to DINO among SSL methods; it does not appear in contrastive methods like MoCo or SimCLR.",
+      ],
+    },
+  ],
+  "contrastive-theory-depth": [
+    {
+      id: "q-ssl-kp47-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The 'dimensional collapse' problem in SSL representations (Hua et al., 2021) refers to:",
+      options: [
+        "The model learning to output zero-dimensional (scalar) representations instead of vectors",
+        "The effective rank of the representation matrix collapsing to much fewer dimensions than the embedding space, causing many embedding dimensions to be redundant or correlated",
+        "Individual embedding dimensions collapsing to zero due to ReLU saturation in the projection head",
+        "The batch normalization statistics collapsing to identical means and variances across all layers",
+      ],
+      correctAnswer: 1,
+      explanation: "Dimensional collapse occurs when the representation matrix (rows are embeddings for each sample) has low effective rank — many dimensions carry redundant information or are highly correlated. Even if individual samples don't collapse to the same point (feature collapse is avoided), the representations may span only a low-dimensional subspace of the embedding space. This is harmful because it wastes representational capacity and can make downstream linear probing ineffective. Barlow Twins and VICReg explicitly address this by encouraging unit-variance and decorrelated embedding dimensions.",
+      hints: [
+        "Effective rank = exp(entropy of singular value distribution). Low effective rank = few dominant directions.",
+        "Dimensional collapse is distinct from feature collapse (all samples mapping to same point). Both are failure modes.",
+      ],
+    },
+    {
+      id: "q-ssl-kp47-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "VICReg (Bardes et al., 2022) uses three loss terms. Which combination correctly identifies them and their roles?",
+      options: [
+        "Variance (prevent individual dimension collapse), Invariance (encourage augmentation invariance), Covariance (decorrelate embedding dimensions)",
+        "Variance (maximize total embedding variance), Independence (enforce statistical independence via ICA), Correlation (maximize cross-view correlation)",
+        "Variational (KL regularization), Information (maximize MI), Contrastive (push negatives apart)",
+        "Vector (L2 norm regularization), Invariance (cosine similarity), Redundancy (Barlow-style cross-correlation penalty)",
+      ],
+      correctAnswer: 0,
+      explanation: "VICReg = Variance-Invariance-Covariance Regularization. Three loss terms: (1) Invariance: MSE between embeddings of two views of the same image, encouraging augmentation invariance (like the alignment term in contrastive learning); (2) Variance: hinge loss on per-dimension standard deviation, ensuring each dimension has variance >= 1 (preventing dimensional collapse for each individual dimension); (3) Covariance: sum of squared off-diagonal terms of the covariance matrix, penalizing correlations between dimensions (preventing redundancy). VICReg achieves competitive ImageNet accuracy without any negative samples or stop-gradient tricks.",
+      hints: [
+        "VICReg applies these three losses to both branches independently — no asymmetry, no stop-gradient needed.",
+        "The variance term is a hinge: std(d) = max(0, 1 - std(d)) — it penalizes dimensions with std < 1 but doesn't penalize large variance.",
+      ],
+    },
+    {
+      id: "q-ssl-kp47-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The Barlow Twins objective (Zbontar et al., 2021) is equivalent to minimizing the squared Frobenius distance between the cross-correlation matrix of the two views' embeddings and the identity matrix.",
+      correctAnswer: "True",
+      explanation: "Barlow Twins computes C_ij = sum_b z_bi * z_bj / N (the cross-correlation matrix between the two views' embeddings, normalized across the batch). The loss is L = sum_i (1 - C_ii)^2 + lambda * sum_{i != j} C_ij^2. The first term encourages C_ii = 1 (the two views of the same image produce correlated embeddings — invariance). The second term encourages C_ij = 0 for i != j (different embedding dimensions are decorrelated between views — reducing redundancy). Together, this is exactly minimizing ||C - I||_F^2 (with the lambda weighting off-diagonal terms), where I is the identity matrix.",
+      hints: [
+        "Cross-correlation matrix C: C_ii = 1 means dimension i is perfectly correlated across the two views.",
+        "C_ij = 0 for i != j means dimensions i and j are independent across views — no redundancy.",
+      ],
+    },
+  ],
+  "ssl-projection-head": [
+    {
+      id: "q-ssl-kp48-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "SimCLR (Chen et al., 2020) showed that adding a nonlinear projection head (MLP) on top of the representation before computing the contrastive loss significantly improves linear probing accuracy. The best explanation for this is:",
+      options: [
+        "The projection head increases the model's capacity, allowing it to memorize more training examples",
+        "The projection head allows the contrastive loss to discard information that is useful for downstream tasks but harmful for contrastive optimization (e.g., augmentation-invariant nuisances), protecting the representation",
+        "The projection head acts as a regularizer that prevents the backbone from overfitting to the pre-training dataset",
+        "The projection head converts the backbone representations to the same dimensionality as the contrastive embedding space, resolving a dimensionality mismatch",
+      ],
+      correctAnswer: 1,
+      explanation: "Chen et al. hypothesize that the contrastive loss encourages augmentation invariance at the cost of discarding information. The projection head serves as a 'sacrificial' layer: the contrastive loss acts on the projection head output (where augmentation-invariant but downstream-irrelevant information is discarded), while the backbone representation retains richer information that benefits downstream tasks. The projection head absorbs the 'damage' from augmentation invariance pressure, protecting the backbone. This is supported by the finding that representations from before the projection head always outperform those from after it for linear probing.",
+      hints: [
+        "Without projection head: contrastive loss directly pressures the backbone to discard any non-augmentation-invariant information, including useful class structure.",
+        "With projection head: the backbone can retain class-discriminative info that the projection head then discards for contrastive alignment.",
+      ],
+    },
+    {
+      id: "q-ssl-kp48-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The projection head used for contrastive loss computation is typically discarded after pre-training, and only the backbone encoder is used for downstream task fine-tuning or linear probing.",
+      correctAnswer: "True",
+      explanation: "The projection head (usually a 2-3 layer MLP) is used only during contrastive pre-training to compute the loss. After pre-training is complete, the projection head is discarded. Only the backbone encoder (e.g., ResNet-50 or ViT) is retained. For evaluation, either a linear classifier is trained on top of frozen backbone features (linear probing) or the entire backbone is fine-tuned on the downstream labeled dataset. The projection head's purpose is solely to provide a better optimization target for the contrastive objective during pre-training.",
+      hints: [
+        "SimCLR, MoCo, BYOL, DINO — all discard their projection/prediction heads after pre-training.",
+        "The backbone is the 'general-purpose feature extractor' that is reused; the head is task/objective-specific.",
+      ],
+    },
+    {
+      id: "q-ssl-kp48-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "When comparing linear probing vs. full fine-tuning for evaluating SSL representations, which scenario reveals a disconnect between the two evaluation protocols?",
+      options: [
+        "Linear probing always overestimates SSL quality because the linear classifier is too powerful for few-shot tasks",
+        "MAE shows much lower linear probing accuracy (~73%) but much higher fine-tuning accuracy (~87%) compared to contrastive methods (MoCo v3: ~76% linear, ~83% fine-tuning), suggesting MAE's features are not linearly separable but are highly adaptable",
+        "Full fine-tuning always exactly predicts linear probing rank ordering across SSL methods — the two protocols never disagree",
+        "Linear probing overestimates performance on small datasets but underestimates on large datasets where fine-tuning saturates",
+      ],
+      correctAnswer: 1,
+      explanation: "MAE demonstrates a striking disconnect: its linear probing accuracy (~73.5% for ViT-L) is significantly lower than MoCo v3 (~76.7%), but its fine-tuning accuracy (~85.9% for ViT-L) substantially exceeds MoCo v3 (~84.1%). This reveals that linear probing and fine-tuning measure different things: linear probing measures whether features are immediately linearly separable (useful for direct linear classification), while fine-tuning measures the capacity and richness of features when the full model adapts. MAE's reconstructive features are holistic and rich but not linearly organized; contrastive features are linearly separable by design but may have lower ceiling performance.",
+      hints: [
+        "Linear probing freezes the backbone — it can only use features as-is. Fine-tuning can reorganize features via backprop.",
+        "MAE's objective (pixel reconstruction) does not explicitly push class-discriminative structure into the representation space.",
+      ],
+    },
+  ],
+  "ssl-negative-sampling": [
+    {
+      id: "q-ssl-kp49-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "MoCo (Momentum Contrast, He et al., 2020) introduces a momentum encoder and a queue to solve which specific problem in contrastive learning?",
+      options: [
+        "The gradient explosion problem when the negative samples come from the same batch as the anchor",
+        "The requirement for a very large batch to provide sufficient negatives, making training infeasible on single GPUs",
+        "The slow convergence of the encoder when trained with only a small number of epochs",
+        "The mode collapse problem where the encoder outputs the same representation for all inputs",
+      ],
+      correctAnswer: 1,
+      explanation: "SimCLR requires very large batches (4096-8192) to have enough negatives per anchor — this is memory-prohibitive on standard hardware. MoCo solves this by: (1) a queue of encoded keys that stores N=65536 negative encodings from previous mini-batches, providing many negatives without requiring them all in the current batch; (2) a momentum encoder (EMA of the query encoder) that generates the keys — ensuring consistency between current and past keys despite encoder evolution. The momentum encoder is crucial: if the key encoder updated by gradient, old queue entries from many steps ago would be generated by a very different encoder, making them inconsistent targets.",
+      hints: [
+        "Large batch is needed for negatives, but large batch requires more GPUs and memory. MoCo decouples the two.",
+        "Queue of 65536 keys provides ~16x more negatives than a batch of 4096 without needing 16x more memory.",
+      ],
+    },
+    {
+      id: "q-ssl-kp49-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Hard negative mining — preferentially selecting negative samples that are semantically similar to the anchor — consistently improves contrastive learning performance when implemented correctly.",
+      correctAnswer: "True",
+      explanation: "Hard negatives are negative samples close to the anchor in embedding space (semantically similar but different class). They provide stronger gradient signal than easy negatives (far from the anchor) because the loss contribution of far negatives approaches zero after the model learns to separate them. Methods like MoCHi (He et al., 2020) synthesize hard negatives by interpolating or mixing anchor and negative embeddings. RingLoss and hard negative sampling strategies consistently improve contrastive representations. The key challenge is avoiding false negatives (hard samples that are actually semantically similar to the anchor but in different augmented views) — these corrupt the gradient signal.",
+      hints: [
+        "Easy negatives: loss contribution ~ 0 after training, providing no gradient. Hard negatives: loss contribution remains high.",
+        "The hardest possible negative is a false negative — semantically identical to the anchor but treated as negative.",
+      ],
+    },
+    {
+      id: "q-ssl-kp49-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The 'uniformity on the hypersphere' interpretation of contrastive learning explains why Gaussian kernel-based uniformity loss log E[exp(-2||z_i - z_j||^2)] has a direct information-theoretic interpretation. This is because:",
+      options: [
+        "The Gaussian kernel computes the maximum likelihood of the data under an isotropic Gaussian distribution",
+        "Minimizing this log-sum-exp expression is equivalent to maximizing the differential entropy of the feature distribution on the unit hypersphere, encouraging maximum spread",
+        "The Gaussian kernel is the only kernel that induces a metric on the hypersphere consistent with geodesic distance",
+        "This expression equals the negative log-likelihood of a von Mises-Fisher distribution with unit concentration",
+      ],
+      correctAnswer: 1,
+      explanation: "Wang and Isola's uniformity loss G_uniform(Z) = log E_{x,y~p_data}[exp(-2||f(x) - f(y)||^2)] has a direct connection to differential entropy. The Gaussian kernel exp(-2||z_i - z_j||^2) is a positive definite kernel on R^d. Minimizing the log-expected kernel value encourages the feature distribution p(z) on the hypersphere to maximize the negative kernel energy — which corresponds to maximizing the spread (differential entropy) of the distribution. In the limit of a large dataset, the optimal distribution under uniformity loss is the uniform distribution on the unit hypersphere, which has maximum entropy among all distributions on S^{d-1}.",
+      hints: [
+        "Maximum entropy distribution on a bounded set (the hypersphere) is the uniform distribution.",
+        "Uniformity loss penalizes pairs of points that are close together (high Gaussian kernel value), pushing points apart.",
+      ],
+    },
+  ],
+  "ssl-modalities-advanced": [
+    {
+      id: "q-ssl-kp50-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Data2Vec (Baevski et al., 2022) proposes a unified SSL framework for vision, language, and audio. Its key innovation over modality-specific SSL is:",
+      options: [
+        "Using a shared tokenizer that converts all modalities into the same discrete token space before training",
+        "Predicting contextualized latent representations of the full input (from a teacher/EMA network) rather than modality-specific targets like pixels or tokens",
+        "Training a single model that processes raw bytes directly, bypassing modality-specific preprocessing",
+        "Applying the same fixed data augmentation pipeline (random crop, color jitter, Gaussian blur) to all modalities",
+      ],
+      correctAnswer: 1,
+      explanation: "Data2Vec's unifying insight: instead of predicting modality-specific targets (pixels for MAE, discrete tokens for BERT, codebook entries for wav2vec), predict the top-K average hidden representations from a teacher (EMA) network that processes the full (unmasked) input. This produces 'contextualized' targets: the representation of a masked patch/token/frame incorporates global context from the teacher, making the targets richer than raw pixels or discrete tokens. The same masking-and-predicting framework applies identically to vision, language, and audio — only the initial tokenization step differs.",
+      hints: [
+        "Data2Vec target = EMA teacher's hidden states averaged over top-K layers. Same framework for image patches, text tokens, and audio frames.",
+        "Contextualized targets capture not just local patch appearance but the role of that patch in the global representation.",
+      ],
+    },
+    {
+      id: "q-ssl-kp50-2",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Contrastive Language-Image Pre-training (CLIP) can be categorized as self-supervised learning because its training signal (image-text pairing) is automatically derived from the structure of the data (scraped image-alt-text pairs) rather than human-annotated class labels.",
+      correctAnswer: "True",
+      explanation: "CLIP (Radford et al., 2021) trains on 400M image-text pairs scraped from the internet, where the supervisory signal is the natural co-occurrence of images and their alt-text descriptions — no human annotation is performed. This satisfies the SSL definition: the training signal is derived automatically from data structure. CLIP is sometimes called 'weakly supervised' or 'naturally supervised' because the alt-text is noisier than human labels, but it is fundamentally self-supervised in that no human labeling effort was performed on the training data. The contrastive objective (match image to its text among N pairs in a batch) is the SSL objective.",
+      hints: [
+        "The alt-text accompanying internet images was written by humans, but not as annotation for ML — it is naturally occurring paired data.",
+        "CLIP's 400M pairs are never manually labeled with ImageNet categories — the signal is purely image-text co-occurrence.",
+      ],
+    },
+    {
+      id: "q-ssl-kp50-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In the context of SSL for graphs (e.g., GraphCL, You et al., 2020), which augmentation strategy has been shown to be most task-sensitive — potentially helping or hurting depending on the downstream graph property to be predicted?",
+      options: [
+        "Node feature masking, which always improves performance by forcing structural feature learning",
+        "Subgraph sampling (dropping random subgraphs as views), which can remove semantically critical substructures for property prediction tasks",
+        "Edge perturbation (randomly adding or dropping edges), which is always domain-agnostic and safe",
+        "Node degree-based subsampling, which works only for social network graphs but not molecular graphs",
+      ],
+      correctAnswer: 1,
+      explanation: "Subgraph sampling creates views by extracting random subgraphs from the original graph. While this provides good augmentations for social networks (where random subgraphs preserve community structure), it can be catastrophic for molecular graphs: removing a subgraph may eliminate a functional group (e.g., hydroxyl, carboxyl) that determines the molecule's chemical property being predicted. If the contrastive task requires predicting from subgraphs, the model learns that these missing groups don't matter — directly contradicting the downstream task. This is a key insight from GraphCL: augmentation choice is not modality-agnostic but must be tailored to the graph semantics.",
+      hints: [
+        "For molecules: a subgraph might omit the active site that determines drug binding — the model then learns to ignore it.",
+        "For social networks: random subgraphs preserve community structure (Ego network properties). No semantic units are destroyed.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extraSsl);
+
+Object.assign(questions, additionalSslQuestions);
+
 registerQuestions(questions);
 export default questions;

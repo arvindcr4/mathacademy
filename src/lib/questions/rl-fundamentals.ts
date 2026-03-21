@@ -19,8 +19,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Per Sutton & Barto (Chapter 3), a policy $\\pi$ is a mapping from each state $s \\in S$ and action $a \\in A(s)$ to the probability $\\pi(a|s)$ of taking action a when in state s. It fully specifies the agent's behavior at every state.",
       hints: [
-        'Sutton & Barto write: "A policy is a mapping from states to probabilities of selecting each possible action."',
-        "A stochastic policy assigns a probability to every action; a deterministic policy assigns probability 1 to one action and 0 to all others.",
+        "The definition involves probabilities of actions given states. Which option expresses a conditional probability distribution over actions?",
+        "Think about the type signature: input = state, output = probabilities over actions.",
       ],
     },
     {
@@ -253,7 +253,7 @@ const questions: Record<string, Question[]> = {
         "For a deterministic policy μ, V^μ(s) = Q^μ(s, μ(s)) holds for all states s.",
       correctAnswer: "True",
       explanation:
-        'Sutton & Barto establish V^π(s) = Σ_a π(a|s) Q^π(s,a). For a deterministic policy μ, π(μ(s)|s) = 1 and π(a|s) = 0 for all a ≠ μ(s). The sum collapses to: V^μ(s) = 1·Q^μ(s,μ(s)) = Q^μ(s,μ(s)). Spinning Up also states this identity: "V^π(s) = Q^π(s, μ(s)) for a deterministic policy."',
+        'Sutton & Barto establish V^pi(s) = sum_a pi(a|s) Q^pi(s,a). For a deterministic policy mu, pi(mu(s)|s) = 1 and pi(a|s) = 0 for all a != mu(s). The sum collapses to: V^mu(s) = 1*Q^mu(s,mu(s)) = Q^mu(s,mu(s)). Spinning Up also states this identity: "V^pi(s) = Q^pi(s, mu(s)) for a deterministic policy."',
       hints: [
         "Use the identity V^π(s) = Σ_a π(a|s) Q^π(s,a) and substitute π(a|s) for a deterministic policy.",
         "A deterministic policy puts all probability mass on one action, so only one term survives the sum.",

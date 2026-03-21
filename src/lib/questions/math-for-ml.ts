@@ -2638,7 +2638,42 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
   ],
 };
 
-Object.assign(questions, extra2);
+const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
+  "svd-applications": [
+    {
+      id: "q-mfml-kp46-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Principal Component Analysis (PCA) applied to a centred data matrix X of shape (n samples x d features) computes the top-k principal components. These components are:",
+      options: [
+        "The top-k rows of X with the largest L2 norm",
+        "The top-k right singular vectors of X (equivalently, the top-k eigenvectors of the covariance matrix XᵀX/n)",
+        "The top-k left singular vectors of X (the n-dimensional representations)",
+        "The top-k columns of X with the largest variance",
+      ],
+      correctAnswer: 1,
+      explanation: "PCA via SVD: X = UΣVᵀ. The principal directions are columns of V (right singular vectors). The top-k right singular vectors v₁,...,vₖ ∈ ℝᵈ are the directions of maximum variance. They are also the eigenvectors of the covariance matrix C = XᵀX/n with eigenvalues σᵢ²/n. The projected data is Z = XVₖ ∈ ℝⁿˣᵏ (the top-k left singular vectors scaled by singular values).",
+      hints: [
+        "PCA = SVD on centred data. Principal directions = right singular vectors V. Scores = XV = UΣ.",
+        "Eigenvalues of XᵀX/n = σᵢ²/n. Variance explained by component i = σᵢ²/Σσⱼ².",
+      ],
+    },
+    {
+      id: "q-mfml-kp46-2",
+      type: "true-false",
+      difficulty: "hard",
+      question: "In a Gaussian mixture model (GMM) fit with the EM algorithm, the E-step computes the posterior probability that each data point belongs to each component, and the M-step updates the component parameters (means, covariances, weights) to maximize the expected complete-data log-likelihood.",
+      correctAnswer: "True",
+      explanation: "EM for GMM: E-step: rᵢₖ = P(zᵢ=k|xᵢ, θ) = πₖN(xᵢ|μₖ,Σₖ)/Σⱼπⱼ N(xᵢ|μⱼ,Σⱼ) (soft cluster assignments). M-step: πₖ = (1/n)Σᵢrᵢₖ, μₖ = Σᵢrᵢₖxᵢ/Σᵢrᵢₖ, Σₖ = Σᵢrᵢₖ(xᵢ−μₖ)(xᵢ−μₖ)ᵀ/Σᵢrᵢₖ. EM monotonically increases the marginal log-likelihood log p(X|θ) and converges to a local maximum.",
+      hints: [
+        "E-step: soft assignment rᵢₖ = responsibility of component k for point i. M-step: update parameters using weighted statistics.",
+        "EM does not guarantee global optimum — multiple random restarts are used to find a good local maximum.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra2, extra3);
 
 registerQuestions(questions);
 export default questions;

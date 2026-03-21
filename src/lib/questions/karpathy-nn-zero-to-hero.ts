@@ -35,9 +35,11 @@ registerQuestions({
         "df/dx = dg/dh / dh/dx",
         "df/dx = dg/dx * dh/dx",
       ],
-      correctAnswer: "(dg/dh) * (dh/dx)",
+      correctAnswer: "\\(\\frac{dg}{dh} \\cdot \\frac{dh}{dx}\\)",
       explanation:
-        "The chain rule states that the derivative of a composed function is the product of the local derivatives: the derivative of the outer function evaluated at the inner function, times the derivative of the inner function.",
+        "The chain rule states that for a composed function \\(f(x) = g(h(x))\\), the derivative with respect to \\(x\\) is:\n" +
+        "\\[\\frac{df}{dx} = \\frac{dg}{dh} \\cdot \\frac{dh}{dx}\\]" +
+        "The derivative of the outer function \\(g\\) evaluated at \\(h(x)\\), multiplied by the derivative of the inner function \\(h\\) with respect to \\(x\\).",
       hints: [
         "The chain rule multiplies derivatives along the chain of compositions.",
         "Each intermediate variable contributes its own local derivative.",
