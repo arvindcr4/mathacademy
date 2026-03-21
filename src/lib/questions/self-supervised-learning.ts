@@ -1642,7 +1642,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp31-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'DINO (Self-DIstillation with NO labels) uses a teacher-student framework. What prevents the student from collapsing to trivial constant representations?',
       options: [
         'A contrastive loss that explicitly pushes different-crop embeddings apart',
@@ -1660,7 +1660,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp31-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'DINOv2 introduced several improvements over DINO. Which combination of changes was most responsible for its superior performance?',
       options: [
         'Larger ViT backbone only — DINOv2 uses ViT-G/14 while DINO used ViT-B/8',
@@ -1678,7 +1678,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp31-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'DINO\'s teacher network is trained using backpropagation, with gradients flowing from the cross-entropy loss between student and teacher outputs.',
       options: ['True', 'False'],
       correctAnswer: 'false',
@@ -1693,7 +1693,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp32-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'CLIP (Contrastive Language-Image Pre-Training) is trained on 400M image-text pairs. What is its training objective?',
       options: [
         'Minimize cross-entropy between predicted image captions and ground-truth captions (generation)',
@@ -1711,7 +1711,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp32-2',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What enables CLIP to perform zero-shot image classification without any task-specific training?',
       options: [
         'CLIP\'s image encoder is pre-trained on ImageNet-21K, which covers all classification categories',
@@ -1729,7 +1729,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp32-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'CLIP performs comparably to supervised ResNet-50 on ImageNet zero-shot classification without seeing any ImageNet training images.',
       options: ['True', 'False'],
       correctAnswer: 'true',
@@ -1744,7 +1744,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp33-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Masked Autoencoders (MAE, He et al., 2022) use an asymmetric encoder-decoder design. Why is the encoder applied only to visible (unmasked) patches?',
       options: [
         'To prevent the encoder from seeing masked tokens and thus learning their content from context',
@@ -1762,7 +1762,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp33-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'BEiT (BERT Pre-Training of Image Transformers) differs from MAE in its reconstruction target. What does BEiT predict for masked patches?',
       options: [
         'The raw pixel values of the masked patches (same as MAE)',
@@ -1780,7 +1780,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp33-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'MAE\'s pre-training objective of reconstructing raw pixel values for masked patches is suboptimal compared to reconstructing higher-level features (like CLIP embeddings), and pixel reconstruction has been shown to produce worse downstream representations than feature reconstruction targets.',
       options: ['True', 'False'],
       correctAnswer: 'false',
@@ -1795,7 +1795,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp34-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'ImageBind (Girdhar et al., 2023) learns a joint embedding space across 6 modalities. What is its key training insight that enables modalities without paired training data to align?',
       options: [
         'ImageBind trains all 6 modalities jointly using a single contrastive loss across all pairs simultaneously',
@@ -1813,7 +1813,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp34-2',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Which of the following tasks can ImageBind perform zero-shot, without any task-specific training, due to its joint embedding space?',
       options: [
         'Image super-resolution and denoising',
@@ -1831,7 +1831,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp34-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'ImageBind requires paired training data for every combination of its 6 modalities (e.g., audio-text pairs, audio-depth pairs, thermal-IMU pairs) to learn its joint embedding space.',
       options: ['True', 'False'],
       correctAnswer: 'false',
@@ -1846,7 +1846,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp36-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'BERT uses Masked Language Modeling (MLM) and Next Sentence Prediction (NSP) for pre-training. RoBERTa (Liu et al., 2019) found that one of these was harmful and removed it. Which one, and why?',
       options: [
         'MLM was removed because it causes the model to over-rely on bidirectional context, hurting generalization',
@@ -1864,7 +1864,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp36-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'ELECTRA (Clark et al., 2020) uses a generator-discriminator architecture for SSL pre-training. What is ELECTRA\'s training objective?',
       options: [
         'Generator: generates fake tokens; Discriminator: produces realistic tokens to fool the generator (standard GAN)',
@@ -1882,7 +1882,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp36-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'GPT-style causal language modeling (predicting the next token) is a form of self-supervised learning because the supervision signal (the next token) is derived from the data itself without human annotation.',
       correctAnswer: 'true',
       explanation: 'Causal language modeling (CLM) is self-supervised: the input text provides both input (tokens 1..t) and label (token t+1) without any human labels. This is why GPT-series models can be pre-trained on vast amounts of raw internet text. Self-supervised learning is the broader category encompassing both BERT-style MLM and GPT-style CLM — both derive training signal from the data structure itself.',
@@ -1896,7 +1896,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp37-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'SimCLR (Chen et al., 2020) identified several components critical for contrastive learning performance. Which combination did it find most important?',
       options: [
         'Momentum encoder + memory bank + large backbone',
@@ -1914,7 +1914,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp37-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'Barlow Twins (Zbontar et al., 2021) avoids collapse through a redundancy-reduction objective inspired by neuroscience. What is its loss function?',
       options: [
         'Minimize cosine similarity between all pairs of batch embeddings (force all embeddings apart)',
@@ -1932,7 +1932,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp37-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'BYOL (Bootstrap Your Own Latent) requires negative pairs or explicit decorrelation objectives to prevent representational collapse, similar to SimCLR.',
       correctAnswer: 'false',
       explanation: 'BYOL uses no negative pairs, no memory bank, no explicit decorrelation. It uses only an online and a target (EMA) network with a stop-gradient on the target branch. Theoretical understanding of why BYOL does not collapse has been debated — key factors include the stop-gradient preventing the target from being directly optimized, the BatchNorm in the predictor creating implicit negative samples through batch statistics, and the EMA providing slowly-moving targets.',
@@ -1946,7 +1946,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp38-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Graph-level SSL for molecular property prediction uses strategies analogous to image augmentation. Which augmentation strategy is most appropriate for molecular graphs?',
       options: [
         'Random pixel dropout — remove random atoms with probability p and predict their properties',
@@ -1964,7 +1964,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp38-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'GNNs trained with self-supervised pre-training on large molecular datasets followed by fine-tuning often outperform GNNs trained from scratch on small labeled datasets. Which SSL objective is most commonly used in molecular GNN pre-training?',
       options: [
         'Predicting the full 3D conformation of a molecule from its 2D graph (generative)',
@@ -1982,7 +1982,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp38-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Self-supervised pre-training on large unlabeled molecular datasets consistently helps molecular property prediction, even when the pre-training and fine-tuning target properties are chemically unrelated.',
       correctAnswer: 'false',
       explanation: 'GNN pre-training benefits are task-dependent. Hu et al. (2020) found that pre-training helps for some tasks (especially those needing structural/chemical context) but can hurt for others. The benefit is largest when pre-training data distribution is similar to fine-tuning targets, and smallest when properties are highly specific and unrelated to general structural patterns. Negative transfer — pre-training hurting fine-tuning — has been documented in molecular GNN pre-training.',
@@ -1996,7 +1996,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp39-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'wav2vec 2.0 (Baevski et al., 2020) uses a contrastive objective for speech SSL. What is the key element that makes this work for continuous audio?',
       options: [
         'Treating speech as a sequence of mel-spectrogram frames and applying a standard contrastive loss between augmented versions',
@@ -2014,7 +2014,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp39-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'HuBERT (Hidden-Unit BERT, Hsu et al., 2021) improves over wav2vec 2.0 by using an offline clustering step. What is HuBERT\'s training procedure?',
       options: [
         'HuBERT trains an online quantizer jointly with the transformer, like wav2vec 2.0 but with a larger codebook',
@@ -2032,7 +2032,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp39-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'SSL-pretrained speech models like wav2vec 2.0 can achieve near-human performance on automatic speech recognition with only 10 minutes of labeled data, compared to hundreds of hours needed by supervised baselines.',
       correctAnswer: 'true',
       explanation: 'Baevski et al. (2020) showed wav2vec 2.0 fine-tuned on 10 minutes of labeled LibriSpeech data achieves WER comparable to previous best results using 100 hours of labeled data. With 1 hour of labels, it surpasses the previous best trained on 960 hours. This dramatic label efficiency improvement is the defining practical advantage of SSL for speech: high-quality ASR in low-resource languages without large transcribed speech corpora.',
@@ -2046,7 +2046,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp40-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Linear probing is a standard SSL evaluation protocol. What does it measure, and why is it sometimes a poor proxy for fine-tuning performance?',
       options: [
         'Linear probing measures whether a frozen backbone\'s representations are linearly separable for a downstream task; it can be a poor proxy because some SSL methods learn nonlinear representations that are excellent for fine-tuning but not linearly separable',
@@ -2064,7 +2064,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp40-2',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'What is the "uniformity-alignment" framework for evaluating SSL representations (Wang & Isola, 2020)?',
       options: [
         'Evaluate alignment as how close same-class representations are, and uniformity as how spread representations are across the unit hypersphere — good SSL should maximize both',
@@ -2082,7 +2082,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
     {
       id: 'q-ssl-kp40-3',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'k-nearest neighbor (kNN) classification on frozen SSL features is a valid evaluation protocol that requires no training of any additional parameters beyond the SSL pre-training.',
       correctAnswer: 'true',
       explanation: 'kNN evaluation: extract features for all labeled training images using the frozen SSL backbone, then for each test image compute its embedding and find the k nearest training embeddings by cosine distance — the majority label among neighbors is the prediction. No parameters are trained. This is even simpler than linear probing and evaluates raw feature quality. DINO and DINOv2 report kNN accuracy as a primary evaluation metric. High kNN accuracy indicates that the embedding space has a natural neighborhood structure aligned with semantic labels.',

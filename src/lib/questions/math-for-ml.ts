@@ -1035,7 +1035,7 @@ const questions: Record<string, Question[]> = {
       explanation: "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x−z) = ∫p(ω)e^(iω^T(x−z))dω for some spectral density p(ω). Sampling ω₁,…,ωD ~ p(ω) and bⱼ ~ Uniform(0,2π), the feature map z(x) = √(2/D)[cos(ω₁ᵀx+b₁),…,cos(ωDᵀx+bD)] satisfies E[z(x)ᵀz(z)] = k(x,z).",
       hints: [
         'RFF reduces kernel machines from O(n²) kernel matrix to O(nD) feature matrix, enabling scalability.',
-        "Bochner's theorem: PD shift-invariant kernel ↔ Fourier transform of a non-negative measure (spectral density p(ω)).",
+        "Bochner\'s theorem: PD shift-invariant kernel ↔ Fourier transform of a non-negative measure (spectral density p(ω)).",
       ],
     },
   ],
@@ -1165,7 +1165,7 @@ const questions: Record<string, Question[]> = {
       explanation: 'Example: a = 1.000000001, b = 1.000000000 (both representable to 10 significant digits). a−b = 0.000000001 = 1×10⁻⁹ — only 1 significant digit! The leading digits cancel, leaving only the noisy low-order bits. This affects the naive variance formula E[X²]−(E[X])² when mean >> std.',
       hints: [
         'If a ≈ b with 15 significant digits each, a−b may have only 1 significant digit.',
-        "Welford's online algorithm computes variance without catastrophic cancellation by updating incrementally.",
+        "Welford\'s online algorithm computes variance without catastrophic cancellation by updating incrementally.",
       ],
     },
     {

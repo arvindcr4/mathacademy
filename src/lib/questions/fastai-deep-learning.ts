@@ -299,7 +299,7 @@ registerQuestions({
         "When the servers take too long to boot up.",
         "The difficulty in providing accurate recommendations for new users or new items that have no prior interaction history.",
         "When the learning rate is initially set too low.",
-        "When the model's weights are initialized to zero."
+        "When the model\'s weights are initialized to zero."
       ],
       correctAnswer: "The difficulty in providing accurate recommendations for new users or new items that have no prior interaction history.",
       explanation: "Collaborative filtering relies on past user-item interactions. A 'cold start' occurs when a new user joins or a new item is added, making it impossible to recommend based on historical data until interactions occur."
@@ -475,7 +475,7 @@ registerQuestions({
         "Because ethical models always run faster on GPUs.",
         "To prevent models from amplifying existing societal biases present in the training data, which can lead to unfair or harmful outcomes.",
         "It is only required by law; there is no technical reason.",
-        "Because it reduces the size of the model's weights."
+        "Because it reduces the size of the model\'s weights."
       ],
       correctAnswer: "To prevent models from amplifying existing societal biases present in the training data, which can lead to unfair or harmful outcomes.",
       explanation: "Machine learning models learn from historical data. If that data contains biases, the model will likely learn and automate those biases, potentially causing harm when deployed in real-world systems."

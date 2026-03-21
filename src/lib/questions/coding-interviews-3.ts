@@ -1217,7 +1217,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Use XOR accumulator. Iterate through nums, accumulate ^= element, return result.',
       codeSnippet: 'function singleNumber(nums) {\n  let result = 0;\n  for (const num of nums) {\n    result ^= num;\n  }\n  return result;\n}',
-      solution: 'function singleNumber(nums) { return nums.reduce((a, b) => a ^ b, 0); }',
       hints: ['Initialize result to 0', 'XOR is commutative and associative', 'Pairs cancel out'],
     },
   ],
@@ -1267,7 +1266,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Return n > 0 && (n & (n - 1)) === 0.',
       codeSnippet: 'function isPowerOfTwo(n) {\n  return n > 0 && (n & (n - 1)) === 0;\n}',
-      solution: 'function isPowerOfTwo(n) { return n > 0 && (n & (n - 1)) === 0; }',
       hints: ['n > 0 check is required', '(n & n-1) clears the lowest set bit', 'If result is 0, n was power of 2'],
     },
   ],
@@ -1317,7 +1315,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Brian Kernighan: while(n){count++; n&=n-1;} return count;',
       codeSnippet: 'function countBits(n) {\n  let count = 0;\n  while (n) {\n    count++;\n    n &= n - 1;\n  }\n  return count;\n}',
-      solution: 'function countBits(n) { let c = 0; while(n){ c++; n&=n-1; } return c; }',
       hints: ['Use n &= n-1 to clear lowest set bit', 'Count how many times until n becomes 0', 'O(k) where k = number of set bits'],
     },
   ],
@@ -1358,7 +1355,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Iterate 32 times: result = (result<<1) | (n&1); n>>=1;',
       codeSnippet: 'function reverseBits(n) {\n  let result = 0;\n  for (let i = 0; i < 32; i++) {\n    result = (result << 1) | (n & 1);\n    n >>= 1;\n  }\n  return result >>> 0;\n}',
-      solution: 'function reverseBits(n) { let r=0; for(let i=0;i<32;i++){ r=(r<<1)|(n&1); n>>=1; } return r; }',
       hints: ['Use >>> 0 for unsigned 32-bit', 'Extract LSB with n&1', 'Accumulate in result with left shift'],
     },
   ],
@@ -1399,7 +1395,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Generate Gray codes: for i in [0, 2^n): result.push(i ^ (i >> 1));',
       codeSnippet: 'function grayCode(n) {\n  const result = [];\n  for (let i = 0; i < (1 << n); i++) {\n    result.push(i ^ (i >> 1));\n  }\n  return result;\n}',
-      solution: 'function grayCode(n) { return Array.from({length: 1<<n}, (_, i) => i ^ (i >> 1)); }',
       hints: ['Result length is 2^n', 'Use formula: i ^ (i >> 1)', 'No sorting needed'],
     },
   ],
@@ -1440,7 +1435,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'For each mask 0 to (1<<n)-1, build subset by checking set bits.',
       codeSnippet: 'function subsets(nums) {\n  const n = nums.length;\n  const result = [];\n  for (let mask = 0; mask < (1 << n); mask++) {\n    const subset = [];\n    for (let i = 0; i < n; i++) {\n      if (mask & (1 << i)) subset.push(nums[i]);\n    }\n    result.push(subset);\n  }\n  return result;\n}',
-      solution: 'function subsets(nums){ const n=nums.length,r=[]; for(let m=0;m<1<<n;m++){r.push([]);for(let i=0;i<n;i++)if(m&1<<i)r[r.length-1].push(nums[i]);}return r;}',
       hints: ['Iterate mask from 0 to 2^n - 1', 'Check (mask >> i) & 1 or mask & (1 << i)', 'Build each subset incrementally'],
     },
   ],
@@ -1472,7 +1466,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'a = a ^ b; b = a ^ b; a = a ^ b; return [a, b];',
       codeSnippet: 'function swapBits(a, b) {\n  a = a ^ b;\n  b = a ^ b;\n  a = a ^ b;\n  return [a, b];\n}',
-      solution: 'function swapBits(a, b) { a ^= b; b ^= a; a ^= b; return [a, b]; }',
       hints: ['Three XOR operations in sequence', 'Ensure a and b are not the same variable', 'Mathematically: a = (a^b^b) = a'],
     },
   ],
@@ -1513,7 +1506,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'XOR 0..n and all elements. Result = missing (others cancel).',
       codeSnippet: 'function findMissing(nums) {\n  let xor = 0;\n  for (let i = 0; i <= nums.length; i++) xor ^= i;\n  for (const num of nums) xor ^= num;\n  return xor;\n}',
-      solution: 'function findMissing(nums) { let x=0; for(let i=0;i<=nums.length;i++)x^=i; for(const n of nums)x^=n; return x; }',
       hints: ['XOR all indices 0 to n', 'XOR all array values', 'Missing number remains'],
     },
   ],
@@ -1554,7 +1546,6 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: 'Use two-pointer: left = MSB, right = LSB. Move inward, compare.',
       codeSnippet: 'function isBitPalindrome(n) {\n  const isPal = (left, right) => {\n    if (left >= right) return true;\n    const l = (n >> left) & 1;\n    const r = (n >> right) & 1;\n    if (l !== r) return false;\n    return isPal(left + 1, right - 1);\n  };\n  return isPal(31, 0);\n}',
-      solution: 'function isBitPalindrome(n) { let l=31,r=0; while(l>r){ if(((n>>l)&1)!=((n>>r)&1))return false; l--;r++; } return true; }',
       hints: ['Use two pointers from MSB and LSB', 'Extract bit at position i with (n >> i) & 1', 'Stop when pointers cross'],
     },
   ],
@@ -1839,7 +1830,6 @@ const questions: Record<string, Question[]> = {
   const fullMask = (1 << n) - 1;
   return Math.min(...dp[fullMask].slice(1));
 }`,
-      solution: 'function tsp(dist) { const n = dist.length; const dp = Array(1<<n).fill(null).map(()=>Array(n).fill(Infinity)); dp[1][0]=0; for(let mask=1; mask<(1<<n); mask++){ for(let i=0;i<n;i++){ if(!(mask&(1<<i)))continue; const prev=mask^(1<<i); for(let j=0;j<n;j++){ if(!(prev&(1<<j)))continue; dp[mask][i]=Math.min(dp[mask][i], dp[prev][j]+dist[j][i]); } } } return Math.min(...dp[(1<<n)-1].slice(1)); }',
       hints: ['Start with dp[1][0] = 0 (only city 0 visited)', 'For each state, try all previous cities', 'Remove current city from mask to get previous state'],
     },
     {
@@ -1899,7 +1889,6 @@ const questions: Record<string, Question[]> = {
   dfs(root);
   return maxDiameter;
 }`,
-      solution: 'function diameter(root){let max=0;function dfs(n){if(!n)return 0;let a=0,b=0;for(const c of n.children||[]){const h=dfs(c);if(h>a){b=a;a=h}else if(h>b)b=h;}max=Math.max(max,a+b);return a+1;}dfs(root);return max;}',
       hints: ['For each node, find the two tallest child heights', 'Diameter through node = sum of two tallest + 2', 'Track global maximum diameter'],
     },
     {
@@ -1968,7 +1957,6 @@ const questions: Record<string, Question[]> = {
   }
   return dp[0][n - 1];
 }`,
-      solution: 'function optimalBST(keys,freq){const n=keys.length;const dp=Array(n).fill(null).map(()=>Array(n).fill(0));for(let len=2;len<=n;len++){for(let i=0;i<=n-len;i++){const j=i+len-1;dp[i][j]=Infinity;let sum=freq.slice(i,j+1).reduce((a,b)=>a+b,0);for(let k=i;k<=j;k++){const cost=(k>i?dp[i][k-1]:0)+(k<j?dp[k+1][j]:0)+sum;dp[i][j]=Math.min(dp[i][j],cost);}}}return dp[0][n-1];}',
       hints: ['Try each key as root', 'Cost = left cost + right cost + sum of all frequencies in range', 'Build from smaller to larger intervals'],
     },
     {
@@ -2038,7 +2026,6 @@ const questions: Record<string, Question[]> = {
   }
   return Math.max(...dp);
 }`,
-      solution: 'function longestPathDAG(n,edges){const adj=Array.from({length:n},()=>[]);const indeg=Array(n).fill(0);for(const [u,v,w] of edges){adj[u].push([v,w]);indeg[v]++;}const topo=[];const q=[];for(let i=0;i<n;i++)if(indeg[i]===0)q.push(i);while(q.length){const u=q.shift();topo.push(u);for(const [v,w] of adj[u]){indeg[v]--;if(indeg[v]===0)q.push(v);}}const dp=Array(n).fill(-Infinity);dp[0]=0;for(const u of topo){for(const [v,w] of adj[u]){dp[v]=Math.max(dp[v],dp[u]+w);}}return Math.max(...dp);}',
       hints: ['Topological sort first', 'dp[v] = max over all incoming edges of dp[u] + weight', 'Initialize source nodes with 0'],
     },
     {
@@ -2119,7 +2106,6 @@ const questions: Record<string, Question[]> = {
   }
   return dp(0, 0, true);
 }`,
-      solution: 'function countDivisible(N,K){const digits=N.toString().split("").map(Number);const memo={};function dp(pos,rem,tight){if(pos===digits.length)return rem===0?1:0;const key=pos+","+rem+","+tight;if(memo[key]!==undefined)return memo[key];const limit=tight?digits[pos]:9;let count=0;for(let d=0;d<=limit;d++){count+=dp(pos+1,(rem*10+d)%K, tight&&d===limit);}memo[key]=count;return count;}return dp(0,0,true);}',
       hints: ['Track remainder modulo K at each position', 'New remainder = (old * 10 + digit) % K', 'Base case: at end, check if remainder is 0'],
     },
     {
@@ -2180,7 +2166,6 @@ const questions: Record<string, Question[]> = {
   }
   return dp[n];
 }`,
-      solution: 'function couponCollector(n){const dp=Array(n+1).fill(0);dp[1]=1;for(let i=2;i<=n;i++){dp[i]=dp[i-1]+n/(n-(i-1));}return dp[n];}',
       hints: ['When you have i-1 coupons, probability of new one is (n-i+1)/n', 'Expected draws for next coupon = n/(n-i+1)', 'Sum expectations from 1 to n'],
     },
     {
@@ -2240,7 +2225,6 @@ const questions: Record<string, Question[]> = {
   }
   return dp[n];
 }`,
-      solution: 'function canWin(n){const dp=Array(n+5).fill(false);dp[0]=false;for(let i=1;i<=n;i++){dp[i]=(i>=1&&!dp[i-1])||(i>=3&&!dp[i-3])||(i>=4&&!dp[i-4]);}return dp[n];}',
       hints: ['Base case: dp[0] = false (nothing to take = losing)', 'Check moves of 1, 3, 4 stones', 'Position is winning if ANY move leads to losing for opponent'],
     },
     {
@@ -2313,7 +2297,6 @@ const questions: Record<string, Question[]> = {
   compute(1, n, 1, n);
   return dp[n];
 }`,
-      solution: 'function divideConquerDP(n,getCost){const dp=Array(n+1).fill(0);const opt=Array(n+1).fill(0);function compute(l,r,optL,optR){if(l>r)return;const mid=(l+r)>>1;let bestK=-1,bestVal=Infinity;for(let k=optL;k<=Math.min(mid,optR);k++){const val=dp[k]+getCost(k,mid);if(val<bestVal){bestVal=val;bestK=k;}}dp[mid]=bestVal;opt[mid]=bestK;compute(l,mid-1,optL,bestK);compute(mid+1,r,bestK,optR);}compute(1,n,1,n);return dp[n];}',
       hints: ['Assume opt is monotonic', 'For dp[mid], only try k in valid range', 'Recurse on left with updated opt bounds'],
     },
     {
@@ -2368,7 +2351,6 @@ const questions: Record<string, Question[]> = {
   }
   return prev[n];
 }`,
-      solution: 'function lcs(s,t){if(s.length<t.length)[s,t]=[t,s];const m=s.length,n=t.length;let prev=Array(n+1).fill(0),curr=Array(n+1).fill(0);for(let i=1;i<=m;i++){for(let j=1;j<=n;j++){curr[j]=s[i-1]===t[j-1]?prev[j-1]+1:Math.max(prev[j],curr[j-1]);}[prev,curr]=[curr,prev];}return prev[n];}',
       hints: ['Only need previous row to compute current row', 'When characters match, extend diagonal value', 'When they differ, take max of top and left'],
     },
     {
@@ -2452,7 +2434,6 @@ const questions: Record<string, Question[]> = {
   }
   return minCycle;
 }`,
-      solution: 'function minHamiltonian(dist){const n=dist.length;const dp=Array(1<<n).fill(null).map(()=>Array(n).fill(Infinity));dp[1][0]=0;for(let mask=1;mask<(1<<n);mask++){for(let i=0;i<n;i++){if(!(mask&(1<<i)))continue;const prev=mask^(1<<i);if(prev===0)continue;for(let j=0;j<n;j++){if(!(prev&(1<<j)))continue;dp[mask][i]=Math.min(dp[mask][i],dp[prev][j]+dist[j][i]);}}}const full=(1<<n)-1;let min=Infinity;for(let i=1;i<n;i++)min=Math.min(min,dp[full][i]+dist[i][0]);return min;}',
       hints: ['Start from node 0', 'Build up subsets by adding one node at a time', 'Close the cycle by returning to node 0'],
     },
     {

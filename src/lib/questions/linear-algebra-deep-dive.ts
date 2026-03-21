@@ -475,7 +475,7 @@ const questions: Record<string, Question[]> = {
         'All eigenvalues of $A$ are non-negative',
       ],
       correctAnswer: 1,
-      explanation: `First, let's recall what a symmetric matrix is: a matrix where $A = A^T$.
+      explanation: `First, let\'s recall what a symmetric matrix is: a matrix where $A = A^T$.
 
 The defining property of positive definiteness involves the **quadratic form** $\\mathbf{x}^T A \\mathbf{x}$.
 
@@ -509,7 +509,7 @@ Therefore, $\\boxed{\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all nonzero } \\
       difficulty: 'medium',
       question: 'The Cholesky decomposition $A = LL^T$ exists for any symmetric positive definite matrix.',
       correctAnswer: 'true',
-      explanation: `First, let's recall what the Cholesky decomposition claims.
+      explanation: `First, let\'s recall what the Cholesky decomposition claims.
 
 For a symmetric positive definite matrix $A$, we seek a lower triangular matrix $L$ such that:
 $$A = LL^T$$
@@ -553,7 +553,7 @@ Therefore, $\\boxed{\\text{True}}$ — every symmetric PD matrix has a unique Ch
         'Because covariance matrices are always diagonal with non-negative entries',
       ],
       correctAnswer: 1,
-      explanation: `First, let's recall the definition of a covariance matrix.
+      explanation: `First, let\'s recall the definition of a covariance matrix.
 
 For a random vector $\\mathbf{x}$ with mean $\\boldsymbol{\\mu} = \\mathbb{E}[\\mathbf{x}]$, the covariance matrix is:
 $$\\Sigma = \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T]$$
@@ -588,8 +588,8 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
 
 **Why the other options are wrong:**
 - Option 0: Covariance entries can be negative! Covariance of negatively correlated variables is negative.
-- Option 2: Data values don't need to be positive — covariance is about deviations from the mean.
-- Option 3: This doesn't explain PSD; eigenvalues of PSD matrices are $\\geq 0$, but this is a consequence, not a cause.
+- Option 2: Data values don\'t need to be positive — covariance is about deviations from the mean.
+- Option 3: This doesn\'t explain PSD; eigenvalues of PSD matrices are $\\geq 0$, but this is a consequence, not a cause.
 - Option 4: Covariance matrices are generally NOT diagonal unless variables are uncorrelated.`,
       hints: [
         'Write out $\\mathbf{v}^T \\Sigma \\mathbf{v}$ explicitly and recognize it as an expectation of a squared scalar.',

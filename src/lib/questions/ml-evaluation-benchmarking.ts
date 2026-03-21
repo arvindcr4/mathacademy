@@ -773,7 +773,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp31-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is the difference between demographic parity and equalized odds as fairness criteria for a binary classifier?',
       options: [
         'Demographic parity requires equal accuracy across groups; equalized odds requires equal sample sizes across groups',
@@ -787,7 +787,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp31-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'The Chouldechova (2017) impossibility theorem proves that demographic parity, equalized odds, and calibration cannot all be simultaneously satisfied when group base rates differ.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -796,7 +796,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp31-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'How does counterfactual fairness differ from observational fairness metrics like demographic parity?',
       options: [
         'Counterfactual fairness compares model outputs on real vs. synthetic data; observational fairness only uses real data',
@@ -812,7 +812,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp32-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What does the Word Embedding Association Test (WEAT) measure, and what has it revealed about word embeddings?',
       options: [
         'WEAT measures the semantic similarity between word pairs using cosine distance; it revealed that word embeddings capture synonym relationships',
@@ -826,7 +826,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp32-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Debiasing word embeddings by projecting out the gender direction (Bolukbasi et al. 2016) completely eliminates gender bias from downstream NLP tasks trained on those embeddings.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -835,7 +835,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp32-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'How is the "Winogender" benchmark used to evaluate gender bias in coreference resolution systems?',
       options: [
         'Winogender measures the fraction of female pronouns resolved correctly as the primary metric',
@@ -847,11 +847,11 @@ const questions: Record<string, Question[]> = {
       explanation: 'Rudinger et al. (2018) Winogender uses 120 sentence templates (e.g., "The nurse asked the patient what bothered him. {He/She/They} said...") with occupations. The key metric is the difference in pronoun resolution accuracy between gender-stereotype-consistent and inconsistent conditions. Gaps indicate the model is using occupational gender stereotypes rather than purely syntactic cues.',
     },
   ],
-  'calibration-eval': [
+  'calibration-eval-duplicate': [
     {
       id: 'q-eval-kp33-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is the Expected Calibration Error (ECE) and how is it computed?',
       options: [
         'ECE is the mean squared error between predicted probabilities and observed class frequencies, computed over all training examples',
@@ -865,7 +865,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp33-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Temperature scaling is the most effective calibration method for deep neural networks because it modifies the model\'s learned features to be less overconfident.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -874,7 +874,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp33-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Overconfidence is common in deep networks trained with cross-entropy loss. What architectural or training choice is most directly linked to this phenomenon?',
       options: [
         'Deep networks use ReLU activations, which cause dead neurons and overconfident outputs',
@@ -886,11 +886,11 @@ const questions: Record<string, Question[]> = {
       explanation: 'Cross-entropy loss is minimized as the logit for the correct class → +∞, creating perfectly peaked (overconfident) distributions. In overparameterized networks that achieve near-zero training loss, this translates to very high-confidence predictions on training data. Without explicit calibration (label smoothing, temperature scaling, regularization), this overconfidence generalizes to test data.',
     },
   ],
-  'robustness-eval': [
+  'robustness-eval-duplicate': [
     {
       id: 'q-eval-kp34-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is the distinction between adversarial robustness and distribution shift robustness in model evaluation?',
       options: [
         'Adversarial robustness measures performance on examples perturbed to maximize model error by a bounded adversary; distribution shift robustness measures performance when the test distribution differs from training distribution in a non-adversarial way',
@@ -904,7 +904,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp34-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Adversarially trained models (e.g., using PGD adversarial training) are also more robust to natural distribution shifts like image corruptions.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -913,7 +913,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp34-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'The WILDS benchmark (Koh et al. 2021) evaluates models under what type of distribution shift, and why is it more challenging than ImageNet-C?',
       options: [
         'WILDS evaluates synthetic corruption robustness at higher severity levels than ImageNet-C',
@@ -929,7 +929,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp35-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What does FLOPs measure in the context of neural network efficiency, and why is it an imperfect proxy for inference latency?',
       options: [
         'FLOPs measures total memory usage; it is imperfect because memory access patterns depend on hardware',
@@ -943,7 +943,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp35-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'The "accuracy vs. efficiency" Pareto frontier is a useful tool for comparing model families (e.g., EfficientNet vs. ResNet) because it shows which models achieve the best accuracy for a given computational budget.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -952,7 +952,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp35-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'How does the MLPerf benchmark standardize efficiency evaluation across hardware platforms?',
       options: [
         'MLPerf reports only FLOPs/second throughput on a fixed reference GPU (NVIDIA A100)',
@@ -968,7 +968,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp36-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Why is BLEU score considered insufficient for evaluating neural machine translation in modern research?',
       options: [
         'BLEU is computationally too expensive for large-scale evaluation',
@@ -982,7 +982,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp36-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'In medical AI evaluation, AUC-ROC is always sufficient to determine whether a model is clinically useful.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -991,7 +991,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp36-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What evaluation framework does the HELM benchmark (Liang et al. 2022) use that differs from single-metric benchmarks like GLUE?',
       options: [
         'HELM focuses on a single capability (language understanding) but tests it on 100× more examples than GLUE',
@@ -1007,7 +1007,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp37-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is the XTREME benchmark and what gap does it address?',
       options: [
         'XTREME is an extreme-scale version of GLUE with 100× more examples per task',
@@ -1021,7 +1021,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp37-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Models that achieve high English GLUE/SuperGLUE scores consistently achieve proportionally high XTREME scores across all 40 languages.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -1030,7 +1030,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp37-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'In multilingual model evaluation, what is "language contamination" and how does it affect benchmark validity?',
       options: [
         'Language contamination occurs when test sentences are mixed from multiple languages; it is addressed by language detection filtering',
@@ -1046,11 +1046,11 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp38-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is "data contamination" in the context of LLM evaluation, and why is it a significant concern?',
       options: [
         'Contamination refers to mislabeled examples in benchmark datasets that skew evaluation results',
-        'Contamination occurs when benchmark test examples appear in the LLM's pre-training corpus, causing the model to "memorize" rather than "generalize" to those examples — resulting in inflated benchmark scores that do not reflect true capabilities',
+        'Contamination occurs when benchmark test examples appear in the LLM\'s pre-training corpus, causing the model to "memorize" rather than "generalize" to those examples — resulting in inflated benchmark scores that do not reflect true capabilities',
         'Contamination refers to adversarial examples inserted into benchmarks by malicious actors',
         'Contamination occurs when multiple benchmarks share the same test examples, leading to correlated evaluation errors',
       ],
@@ -1060,7 +1060,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp38-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Generating new evaluation benchmarks with LLMs as authors risks introducing a form of benchmark contamination because the generating model may have influenced the test distribution.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1069,7 +1069,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp38-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'The "benchmark treadmill" problem refers to what challenge in NLP evaluation?',
       options: [
         'Running benchmark evaluations on large models is computationally expensive, slowing research progress',
@@ -1085,7 +1085,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp39-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is "evaluation harness" design and what are its key components for large-scale LLM evaluation?',
       options: [
         'A harness is a hardware monitoring framework that measures GPU utilization during model inference',
@@ -1099,7 +1099,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp39-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Prompt sensitivity — where small changes in prompt wording cause large changes in LLM benchmark scores — is a systematic concern that undermines comparisons between models evaluated with different prompt formats.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1108,7 +1108,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp39-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'When designing an evaluation pipeline for a deployed ML system, what is the key difference between "offline evaluation" and "online evaluation"?',
       options: [
         'Offline evaluation uses GPUs; online evaluation uses CPUs due to lower latency requirements',
@@ -1124,7 +1124,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp40-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What does the TruthfulQA benchmark (Lin et al. 2022) measure, and how does it differ from standard factual QA benchmarks?',
       options: [
         'TruthfulQA measures LLM accuracy on Wikipedia factual questions, similar to TriviaQA but with stricter answer matching',
@@ -1138,7 +1138,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp40-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Red-teaming evaluations for LLM safety rely exclusively on automated attack methods (e.g., adversarial suffixes, jailbreak templates) and do not require human testers.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -1147,7 +1147,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-eval-kp40-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What is the "evaluation goodhart" problem specific to safety benchmarks for LLMs?',
       options: [
         'Safety benchmarks are too small to provide statistically significant results for large model comparisons',

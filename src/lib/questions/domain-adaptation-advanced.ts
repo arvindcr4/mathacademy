@@ -1576,7 +1576,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp31-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Test-Time Adaptation (TTA) differs from standard unsupervised domain adaptation in that:',
       options: [
@@ -1596,7 +1596,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp31-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'TTT++ (Liu et al., 2021) improves on standard test-time training by using contrastive self-supervised learning as the adaptation objective instead of rotation prediction, enabling better feature alignment between source and test distributions.',
       correctAnswer: 'true',
@@ -1610,7 +1610,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp31-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question:
         'Continual test-time adaptation faces "error accumulation" where the model degrades over time. The method used in EATA (Niu et al., 2022) to address this is:',
       options: [
@@ -1633,7 +1633,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp32-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Few-shot domain adaptation uses a small number of labeled target examples to:',
       options: [
@@ -1653,7 +1653,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp32-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Negative transfer in multi-source domain adaptation occurs when including data from an unrelated source domain hurts performance on the target domain compared to using only the most related source domain.',
       correctAnswer: 'true',
@@ -1667,7 +1667,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp32-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question:
         'Mixture of Experts (MoE) architecture for domain adaptation enables adaptive domain handling by:',
       options: [
@@ -1690,7 +1690,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp33-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'The Ben-David et al. (2010) theory bound for domain adaptation states that target error is bounded by:',
       options: [
@@ -1710,7 +1710,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp33-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.',
       correctAnswer: 'true',
@@ -1724,7 +1724,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp33-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question:
         'Conditional domain adaptation (vs. marginal adaptation) aligns:',
       options: [
@@ -1747,7 +1747,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp34-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Prompt tuning for domain adaptation adapts a frozen pre-trained language model to a new domain by:',
       options: [
@@ -1767,7 +1767,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp34-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Visual prompt tuning (VPT) applies prompt tuning to vision transformers (ViT) for domain adaptation, learning prepended visual token embeddings while keeping the ViT backbone frozen.',
       correctAnswer: 'true',
@@ -1781,7 +1781,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp34-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question:
         'CLIP-based domain adaptation (CoOp, CoCoOp) adapts CLIP to downstream domains. CoCoOp improves over CoOp by:',
       options: [
@@ -1804,7 +1804,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp35-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Source-free domain adaptation (SFDA) addresses the practical constraint that:',
       options: [
@@ -1824,7 +1824,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp35-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question:
         'Generative replay in source-free domain adaptation — generating synthetic source-like data from the source model and using it for domain alignment — is inspired by continual learning approaches to prevent catastrophic forgetting.',
       correctAnswer: 'true',
@@ -1838,7 +1838,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
     {
       id: 'q-adapt-kp35-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question:
         'In source-free domain adaptation, the "information maximization" objective (combining entropy minimization with diversity regularization) addresses what specific failure mode?',
       options: [

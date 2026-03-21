@@ -12,7 +12,7 @@ const difficultyRank: Record<Question['difficulty'], number> = {
 }
 
 type QuestionOverride = Partial<
-  Pick<Question, 'question' | 'options' | 'correctAnswer' | 'explanation' | 'hints'>
+  Pick<Question, 'question' | 'options' | 'correctAnswer' | 'explanation' | 'hints' | 'codeSnippet'>
 >
 
 const questionOverrides: Record<string, QuestionOverride> = {
@@ -165,6 +165,165 @@ const questionOverrides: Record<string, QuestionOverride> = {
   'q-ana-2': {
     hints: ['For one string of length k, the expensive step is sorting its characters.', 'Doing that for n strings gives O(n * k log k) time in the max-length form.'],
   },
+  'q-swap-1': {
+    explanation: 'XOR swap relies on the facts that XOR is associative and that x ^ x = 0 and x ^ 0 = x. After a ^= b, b ^= a, a ^= b, the two values exchange without a temporary variable when the storage locations are distinct.',
+    hints: ['Track the values after each XOR step, not just the final line.', 'The key cancellations are x ^ x = 0 and x ^ 0 = x.'],
+  },
+  'q-swap-2': {
+    hints: ['Pretend both names refer to the same storage cell.', 'The first XOR becomes x ^ x, so the original value is destroyed immediately.'],
+  },
+  'q-miss-1': {
+    explanation: 'XOR the full range 0 ^ 1 ^ 2 ^ 3 and then XOR the array values 3 ^ 0 ^ 1. Every present value cancels, leaving 0 ^ 1 ^ 2 ^ 3 ^ 3 ^ 0 ^ 1 = 2.',
+    hints: ['XOR the full range 0..n, then XOR every array value.', 'Every value that appears in both places cancels, leaving the missing one.'],
+  },
+  'q-miss-2': {
+    question: 'For an array of n numbers drawn from [0, n] with one missing value, what sum formula recovers the missing number?',
+    hints: ['Compute the expected sum 0 + 1 + ... + n first.', 'The missing value is the gap between the expected sum and the actual array sum.'],
+  },
+  'q-miss-3': {
+    explanation: 'Compute (0 ^ 1 ^ ... ^ n) ^ (array XOR). Every value in 0..n except the missing one appears once in each group and cancels, so the remaining value is the missing number.',
+    hints: ['Group the expression as (0 ^ 1 ^ ... ^ n) ^ (array XOR).', 'Every present value appears twice overall and disappears.'],
+  },
+  'q-pal-1': {
+    hints: ['Compare the first and last bit before worrying about the middle.', 'In 10001, the outer 1s match and the inside is symmetric.'],
+  },
+  'q-pal-2': {
+    question: 'One way to check whether a binary representation is a palindrome is to reverse the significant bits and compare the result to the original.',
+    explanation: 'Yes. Explicitly reversing the significant bits and comparing works. It takes O(n) time over n bits, and if you materialize the reversed form explicitly it can use O(n) extra space.',
+    hints: ['Reversing the significant bits and comparing is one valid approach.', 'A two-pointer bit check avoids building the reversed form explicitly.'],
+  },
+  'q-pal-3': {
+    question: 'In a fixed 32-bit representation, you can check bit-palindrome by comparing bits at positions i and 31 - i.',
+    explanation: 'For a fixed 32-bit view, a palindrome means bit i must match bit 31 - i for every i. A two-pointer scan from both ends correctly checks that condition.',
+    hints: ['This works only after you fix the representation width.', 'In a fixed 32-bit view, bit i must match bit 31 - i.'],
+  },
+  'q-pal-4': {
+    question: 'Write isBitPalindrome(n) to check whether the significant-bit binary representation of n is a palindrome.',
+    explanation: 'Start from the highest set bit, not automatically from bit 31. Then compare mirrored significant bits while moving inward until the pointers cross.',
+    codeSnippet: `function isBitPalindrome(n) {
+  if (n === 0) return true;
+  let left = 31;
+  while (left > 0 && ((n >>> left) & 1) === 0) left--;
+  let right = 0;
+  while (left > right) {
+    const leftBit = (n >>> left) & 1;
+    const rightBit = (n >>> right) & 1;
+    if (leftBit !== rightBit) return false;
+    left--;
+    right++;
+  }
+  return true;
+}`,
+    hints: ['Start from the highest set bit, not automatically from bit 31.', 'Compare mirrored significant bits while moving inward.'],
+  },
+  'q-dp-sc-2': {
+    correctAnswer: 'false',
+    explanation: 'There are 2^20 subsets and 20 possible ending cities, so the state count is 20 * 2^20 = 20,971,520, which is about 21 million, not 400 million.',
+    hints: ['Count states as (visited subset, last city) pairs.', '2^20 is about one million, so multiplying by 20 gives about 21 million states.'],
+  },
+  'q-dp-sc-3': {
+    options: ['Bitwise AND', 'Set / clear / test bit operations', 'Modulo arithmetic', 'Floating point ops'],
+    correctAnswer: 1,
+    explanation: 'Bitmask DP repeatedly tests membership with mask & (1 << i), sets bits with |, and clears bits with & ~ or XOR when appropriate. Those set / clear / test operations are the core transition tools.',
+    hints: ['A subset state is just bits inside one integer.', 'Transitions need three primitives: set a bit, clear a bit, and test a bit.'],
+  },
+  'q-dp-sc-4': {
+    question: 'Implement bitmask DP for the minimum-cost Hamiltonian path that starts at city 0.',
+    explanation: 'Let dp[mask][i] be the minimum cost to start at city 0, visit exactly the cities in mask, and finish at city i. Transition from a previous city j in mask \\ {i}.',
+    hints: ['Let dp[mask][i] be the best cost to end at city i after visiting exactly mask.', 'Decide up front whether the task is a path or a cycle, because the final return step changes the recurrence.'],
+  },
+  'q-dp-tree-3': {
+    explanation: 'At each node, keep the two largest child heights. The best path through that node is their sum, and the recursive return value is the largest child height plus 1.',
+    codeSnippet: `function diameter(root) {
+  let maxDiameter = 0;
+  function dfs(node) {
+    if (!node) return 0;
+    let longest = 0;
+    let secondLongest = 0;
+    for (const child of node.children || []) {
+      const h = dfs(child);
+      if (h > longest) {
+        secondLongest = longest;
+        longest = h;
+      } else if (h > secondLongest) {
+        secondLongest = h;
+      }
+    }
+    maxDiameter = Math.max(maxDiameter, longest + secondLongest);
+    return longest + 1;
+  }
+  dfs(root);
+  return maxDiameter;
+}`,
+    hints: ['At each node, only the two largest child depths matter.', 'Keep one unit throughout: either measure both height and diameter in edges, or both in nodes.'],
+  },
+  'q-dp-int-2': {
+    options: ['dp[i][j] = min_k(dp[i][k] + dp[k+1][j] + p[i-1]*p[k]*p[j])', 'dp[i][j] = min(dp[i-1][j], dp[i][j-1])', 'dp[i][j] = dp[i][j/2] * 2', 'dp[i][j] = max(dp[i-1][j], dp[i][j-1])'],
+    explanation: 'For matrix chain A_i...A_j split at k, the cost is dp[i][k] + dp[k+1][j] + p[i-1] * p[k] * p[j]. The scalar multiplication term uses the outer dimensions of the two subchains.',
+    hints: ['Split the chain at k, then pay left cost + right cost + one final matrix multiply.', 'That final multiply uses the outer dimensions of the two subchains.'],
+  },
+  'q-dp-int-3': {
+    question: 'Implement DP to compute the minimum search cost of an optimal BST.',
+    explanation: 'Let dp[i][j] be the minimum search cost for keys i..j. Try each key k as root, pay left cost + right cost + sum(freq[i..j]), and use dp[i][i] = freq[i] as the single-key base case.',
+    codeSnippet: `function optimalBST(keys, freq) {
+  const n = keys.length;
+  const dp = Array.from({ length: n }, () => Array(n).fill(0));
+  const prefix = [0];
+  for (const f of freq) prefix.push(prefix[prefix.length - 1] + f);
+  const rangeSum = (i, j) => prefix[j + 1] - prefix[i];
+  for (let i = 0; i < n; i++) dp[i][i] = freq[i];
+  for (let len = 2; len <= n; len++) {
+    for (let i = 0; i + len - 1 < n; i++) {
+      const j = i + len - 1;
+      dp[i][j] = Infinity;
+      const sum = rangeSum(i, j);
+      for (let k = i; k <= j; k++) {
+        const left = k > i ? dp[i][k - 1] : 0;
+        const right = k < j ? dp[k + 1][j] : 0;
+        dp[i][j] = Math.min(dp[i][j], left + right + sum);
+      }
+    }
+  }
+  return dp[0][n - 1];
+}`,
+    hints: ['Define dp[i][j] as the minimum search cost for keys i..j.', 'Use prefix sums so the total frequency of an interval is O(1) to query.'],
+  },
+  'q-dp-graph-2': {
+    question: 'Implement longest path from node 0 in a DAG using topological sort.',
+    explanation: 'After topological sorting, process nodes in that order and relax outgoing edges. In this single-source version, initialize dp[0] = 0 and all other nodes to -Infinity.',
+    hints: ['Topologically sort first so every predecessor is settled before you relax outgoing edges.', 'Be explicit about whether paths may start at any source or only at node 0.'],
+  },
+  'q-dp-prob-1': {
+    correctAnswer: 2,
+    explanation: 'Probability DP often uses expectation recurrences or probability-mass transitions between states. In problems like expected trials or coupon collector, the key recurrence is usually an expectation formula rather than Bayesian updating.',
+    hints: ['Probability DP usually pushes mass across transitions weighted by their probabilities.', 'If the target is expected steps, write an expectation recurrence.'],
+  },
+  'q-dp-prob-3': {
+    question: 'Implement the expected number of draws needed to collect all N coupons.',
+    explanation: 'Let dp[i] be the expected draws needed to reach i distinct coupons. When you already have i - 1 distinct coupons, the probability the next draw is new is (n - (i - 1)) / n, so the expected waiting time for that next new coupon is n / (n - (i - 1)).',
+    hints: ['The natural state is how many distinct coupons you already have.', 'The wait for the next new coupon is geometric with success probability (n - i) / n.'],
+  },
+  'q-dp-opt-3': {
+    question: 'Implement one divide-and-conquer DP layer using a fixed previous DP row.',
+    explanation: 'Divide-and-conquer optimization computes currDp[mid] from a fixed prevDp row by searching k in [optL, optR]. The monotone argmin property then narrows the candidate range for the left and right recursive calls.',
+    codeSnippet: `function divideConquerDP(prevDp, currDp, left, right, optL, optR, getCost) {
+  if (left > right) return;
+  const mid = (left + right) >> 1;
+  let bestK = -1;
+  let bestVal = Infinity;
+  for (let k = optL; k <= Math.min(mid, optR); k++) {
+    const val = prevDp[k] + getCost(k, mid);
+    if (val < bestVal) {
+      bestVal = val;
+      bestK = k;
+    }
+  }
+  currDp[mid] = bestVal;
+  divideConquerDP(prevDp, currDp, left, mid - 1, optL, bestK, getCost);
+  divideConquerDP(prevDp, currDp, mid + 1, right, bestK, optR, getCost);
+}`,
+    hints: ['Divide-and-conquer DP optimization computes a new DP row from a fixed previous row.', 'Monotone argmins let you recurse left and right with narrower candidate ranges.'],
+  },
 }
 
 function normalizeText(text: string): string {
@@ -178,7 +337,16 @@ function ensureSentence(text: string): string {
 function cleanExplanation(text: string): string {
   let normalized = normalizeText(text)
 
-  for (const marker of ['Wait - let me reconsider:', 'Wait, let me reconsider:']) {
+  for (const marker of [
+    'Wait - let me reconsider:',
+    'Wait, let me reconsider:',
+    "Wait - let's recheck:",
+    "Wait, let's recheck:",
+    "Wait: let's recompute.",
+    'Wait:',
+    'Correction:',
+    'Let me restate:',
+  ]) {
     const markerIndex = normalized.lastIndexOf(marker)
     if (markerIndex !== -1) {
       normalized = normalized.slice(markerIndex + marker.length).trim()

@@ -1658,7 +1658,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp31-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Which approach does DALL-E 3 / Imagen-style models use that resembles few-shot generalization?',
       options: [
         'K-nearest neighbor retrieval from the training set',
@@ -1672,7 +1672,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp31-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Generative models trained with meta-learning objectives (e.g., "generate images of unseen categories given one example") can learn to perform visual imagination for truly novel categories.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1681,7 +1681,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp31-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What is the main challenge of applying meta-learning to few-shot image generation (as opposed to few-shot classification)?',
       options: [
         'The lack of suitable datasets; there are no few-shot generation benchmarks',
@@ -1697,7 +1697,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp32-1',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'In PAC-Bayes meta-learning theory, what does the "meta-prior" represent?',
       options: [
         'A prior over model architectures chosen by the practitioner',
@@ -1711,7 +1711,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp32-2',
       type: 'true-false',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Theoretical analyses of MAML show that the number of inner-loop gradient steps directly controls the task-complexity tradeoff: more steps increase expressivity but worsen meta-generalization bounds.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1720,7 +1720,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp32-3',
       type: 'multiple-choice',
-      difficulty: 'expert',
+      difficulty: 'hard',
       question: 'What does "task diversity" formally mean in the context of meta-learning sample complexity bounds?',
       options: [
         'The number of distinct classes across all meta-training tasks',
@@ -1736,7 +1736,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp33-1',
       type: 'multiple-choice',
-      difficulty: 'beginner',
+      difficulty: 'easy',
       question: 'What is the primary purpose of a Siamese network in few-shot learning?',
       options: [
         'To classify images using a single forward pass through two separate classifiers',
@@ -1750,7 +1750,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp33-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Siamese networks and Matching Networks both use contrastive or pair-based training and produce identical outputs at inference time.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -1759,7 +1759,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp33-3',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Which loss function is most commonly used to train Siamese networks for verification tasks?',
       options: [
         'Cross-entropy loss on predicted class probabilities',
@@ -1775,7 +1775,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp34-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'How do Graph Neural Networks (GNNs) improve few-shot learning over standard metric-learning approaches?',
       options: [
         'GNNs replace the backbone CNN with a graph convolutional backbone, reducing parameters',
@@ -1789,7 +1789,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp34-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Meta-learning on graph-structured data (e.g., molecular property prediction) is more challenging than on image data partly because task-specific graph structures vary in size and topology.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1798,7 +1798,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp34-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'In the context of few-shot molecular property prediction, what is a key advantage of MAML-based approaches over traditional fingerprint-based ML?',
       options: [
         'MAML requires fewer atoms per molecule to function correctly',
@@ -1814,7 +1814,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp35-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is a hypernetwork in the context of meta-learning?',
       options: [
         'A very large neural network trained on many tasks simultaneously',
@@ -1828,7 +1828,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp35-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Hypernetwork-based meta-learning methods are generally faster at test-time adaptation than MAML because they replace iterative gradient steps with a single forward pass through the hypernetwork.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1837,7 +1837,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp35-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'CNAPs (Conditional Neural Adaptive Processes) use a hypernetwork-style approach for few-shot classification. What is the key architectural choice that distinguishes CNAPs from standard hypernetworks?',
       options: [
         'CNAPs use convolutional hypernetworks while standard hypernetworks are fully connected',
@@ -1853,7 +1853,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp36-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'How does self-supervised pre-training complement meta-learning for few-shot image classification?',
       options: [
         'Self-supervised training directly optimizes for few-shot accuracy, making meta-training redundant',
@@ -1867,7 +1867,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp36-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'ANIL (Almost No Inner Loop) demonstrated that most of the benefit in MAML comes from adapting the body (feature extractor) rather than just the head (classifier).',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -1876,7 +1876,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp36-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What is the "feature reuse" hypothesis in meta-learning, and what empirical finding supports it?',
       options: [
         'Meta-learners share feature extractors across tasks; supported by finding that removing task-specific layers hurts performance',
@@ -1892,7 +1892,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp37-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What does Meta-SGD learn in addition to the initial parameters compared to MAML?',
       options: [
         'The architecture of the inner-loop network',
@@ -1906,7 +1906,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp37-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Reptile can be interpreted as a first-order approximation to MAML that avoids computing second-order derivatives.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1915,7 +1915,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp37-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'Reptile\'s update rule is: θ ← θ + ε(φ_i − θ) where φ_i are the post-inner-loop parameters for task i. What does this geometrically represent?',
       options: [
         'A projection of θ onto the feasible set of task-optimal parameters',
@@ -1931,7 +1931,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp38-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is "task augmentation" in meta-learning, and why is it useful?',
       options: [
         'Augmenting the support set images with standard transformations (flips, crops) to increase sample count',
@@ -1945,7 +1945,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp38-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Mixing support examples from different classes (cross-class feature interpolation) during meta-training is a valid form of task augmentation that improves few-shot performance.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1954,7 +1954,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp38-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What problem does "meta-dataset curriculum" address in task augmentation?',
       options: [
         'The computational cost of sampling too many tasks per batch',
@@ -1970,7 +1970,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp39-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'How does GPT-3\'s "in-context learning" relate to meta-learning?',
       options: [
         'GPT-3 was explicitly meta-trained on N-way K-shot NLP episode tasks',
@@ -1984,7 +1984,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp39-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'MAML has been directly applied to NLP few-shot tasks like text classification and relation extraction, yielding improvements over standard fine-tuning in very-low-data regimes.',
       options: ['True', 'False'],
       correctAnswer: 'True',
@@ -1993,7 +1993,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp39-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'What is the "meta-training data" used in few-shot NLP meta-learning, and why is its choice critical?',
       options: [
         'The model is meta-trained on the same dataset as the target task, split into episodes — the split strategy is critical',
@@ -2009,7 +2009,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp40-1',
       type: 'multiple-choice',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'What is the "sim-to-real transfer" problem in robot meta-learning, and how can meta-learning help?',
       options: [
         'Robots cannot learn in simulation; meta-learning helps by replacing simulation with real-world data collection',
@@ -2023,7 +2023,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp40-2',
       type: 'true-false',
-      difficulty: 'intermediate',
+      difficulty: 'medium',
       question: 'Meta-learning for robot manipulation tasks is easier than for locomotion because manipulation tasks have lower-dimensional state spaces.',
       options: ['True', 'False'],
       correctAnswer: 'False',
@@ -2032,7 +2032,7 @@ const questions: Record<string, Question[]> = {
     {
       id: 'q-meta-kp40-3',
       type: 'multiple-choice',
-      difficulty: 'advanced',
+      difficulty: 'hard',
       question: 'In "Learning to Learn by Self-Play" approaches for robotics (e.g., POET, AMG), what is the outer-loop meta-optimization objective?',
       options: [
         'Maximizing the reward on a fixed set of held-out test environments',

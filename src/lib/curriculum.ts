@@ -1986,7 +1986,6 @@ export const courses: Course[] = [
         name: 'Depth Estimation & Stereo Vision',
         slug: 'depth-estimation',
         description: 'Monocular and stereo depth prediction.',
-        order: 1,
         knowledgePoints: [
           { id: 'cv3d-kp-1', slug: 'monocular-depth', name: 'Monocular Depth Estimation with Self-Supervision' },
           { id: 'cv3d-kp-2', slug: 'stereo-matching', name: 'Stereo Matching and Disparity Estimation' },
@@ -2000,7 +1999,6 @@ export const courses: Course[] = [
         name: 'Neural Radiance Fields',
         slug: 'neural-radiance-fields',
         description: 'NeRF, Gaussian splatting, and novel view synthesis.',
-        order: 2,
         knowledgePoints: [
           { id: 'cv3d-kp-6', slug: 'nerf-fundamentals', name: 'NeRF: Volume Rendering and Positional Encoding' },
           { id: 'cv3d-kp-7', slug: 'instant-ngp', name: 'Instant Neural Graphics Primitives (Instant-NGP)' },
@@ -2014,7 +2012,6 @@ export const courses: Course[] = [
         name: '3D Reconstruction & Pose Estimation',
         slug: '3d-reconstruction',
         description: 'Structure from motion, MVS, and pose estimation.',
-        order: 3,
         knowledgePoints: [
           { id: 'cv3d-kp-11', slug: 'sfm', name: 'Structure from Motion (SfM) and COLMAP' },
           { id: 'cv3d-kp-12', slug: 'mvs', name: 'Multi-View Stereo and Dense Reconstruction' },
@@ -2028,7 +2025,6 @@ export const courses: Course[] = [
         name: 'Point Cloud Learning',
         slug: 'point-cloud-learning',
         description: 'Deep learning on 3D point clouds.',
-        order: 4,
         knowledgePoints: [
           { id: 'cv3d-kp-16', slug: 'pointnet', name: 'PointNet and PointNet++ for Point Cloud Processing' },
           { id: 'cv3d-kp-17', slug: 'voxel-methods', name: 'Voxel-Based and Sparse Convolution Methods' },
@@ -2042,7 +2038,6 @@ export const courses: Course[] = [
         name: 'Scene Graphs & Spatial Reasoning',
         slug: 'scene-graphs',
         description: 'Relational scene understanding and spatial reasoning.',
-        order: 5,
         knowledgePoints: [
           { id: 'cv3d-kp-21', slug: 'scene-graph-generation', name: 'Scene Graph Generation from Images' },
           { id: 'cv3d-kp-22', slug: 'spatial-relations', name: 'Spatial Relation Detection and Visual Reasoning' },
@@ -2056,7 +2051,6 @@ export const courses: Course[] = [
         name: '3D Perception for Autonomous Driving',
         slug: 'autonomous-driving-3d',
         description: 'End-to-end 3D scene understanding for self-driving.',
-        order: 6,
         knowledgePoints: [
           { id: 'cv3d-kp-26', slug: 'bev-perception', name: 'Bird-Eye-View Perception and BEVFusion' },
           { id: 'cv3d-kp-27', slug: 'occupancy-prediction', name: 'Occupancy Prediction and 3D Scene Completion' },

@@ -1511,4 +1511,4 @@ const questions: Record<string, Question[]> = {
   ],
 }
 
-registerQuestions('deep-learning-fundamentals', questions)
+registerQuestions(questions)
