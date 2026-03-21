@@ -1,6 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   output: 'export',
+  basePath: '/mathacademy',
   images: { unoptimized: true },
   experimental: {
     serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
