@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A policy must always be represented as a finite lookup table — one row per state, one column per action.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Policies can be represented in many ways: lookup tables (tabular RL), linear function approximators, or deep neural networks (deep RL). What matters is that the representation maps states (or observations) to action probabilities. Sutton & Barto discuss function approximation in Chapters 9–11 precisely because tables become infeasible for large state spaces.",
       hints: [
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For any finite MDP with a known model, there always exists a deterministic optimal policy π* — a stochastic policy cannot do strictly better.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Sutton & Barto (§3.6) prove that for any finite MDP there is always at least one deterministic optimal policy. This follows from the policy improvement theorem: given V^π, acting greedily (deterministically) yields a policy at least as good as any mixed strategy. Stochastic policies offer no benefit in fully observed MDPs.",
       hints: [
@@ -143,7 +143,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a finite MDP with γ = 0.9, if V*(s₀) = 50 and we follow a suboptimal policy π from s₀ with V^π(s₀) = 45, then the policy improvement theorem guarantees that the greedy policy π' w.r.t. V^π satisfies V^{π'}(s₀) ≥ 45.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Policy Improvement Theorem (Sutton & Barto §4.2) states that if π' is greedy with respect to V^π (i.e., π'(s) = argmax_a Q^π(s,a)), then V^{π'}(s) ≥ V^π(s) for all s. So the greedy policy can only be at least as good — possibly better — than the policy it was derived from.",
       hints: [
@@ -199,7 +199,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "V^π(s) = 0 for all terminal states s, for any policy π.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "By convention (Sutton & Barto §3.4), terminal states yield no future rewards: once the agent transitions into a terminal state, the episode ends. V^π(terminal) = E_π[G_t | S_t = terminal] = E[0] = 0, since no rewards are received after termination. This holds regardless of π.",
       hints: [
@@ -251,7 +251,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a deterministic policy μ, V^μ(s) = Q^μ(s, μ(s)) holds for all states s.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Sutton & Barto establish V^π(s) = Σ_a π(a|s) Q^π(s,a). For a deterministic policy μ, π(μ(s)|s) = 1 and π(a|s) = 0 for all a ≠ μ(s). The sum collapses to: V^μ(s) = 1·Q^μ(s,μ(s)) = Q^μ(s,μ(s)). Spinning Up also states this identity: "V^π(s) = Q^π(s, μ(s)) for a deterministic policy."',
       hints: [
@@ -307,7 +307,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The expected advantage under a policy is always zero: Σ_a π(a|s) A^π(s,a) = 0 for all states s.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Σ_a π(a|s) A^π(s,a) = Σ_a π(a|s) [Q^π(s,a) − V^π(s)] = Σ_a π(a|s) Q^π(s,a) − V^π(s) Σ_a π(a|s) = V^π(s) − V^π(s)·1 = 0. This confirms that advantages are zero-mean — they are a centered version of Q^π, measuring relative rather than absolute value.",
       hints: [
@@ -364,7 +364,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality equation for V*(s) uses an expectation over actions (like V^π), replacing π(a|s) with the optimal policy distribution.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "The Bellman optimality equation uses a max over actions, NOT an expectation: V*(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV*(s')]. Sutton & Barto §3.6 emphasize that the max replaces the weighted average because the optimal agent always picks the best action — it does not hedge over suboptimal actions.",
       hints: [
@@ -416,7 +416,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Banach fixed-point theorem guarantees that the Bellman operator T^π has a unique fixed point, and that unique fixed point is exactly V^π.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Banach fixed-point theorem states: any contraction mapping on a complete metric space has a unique fixed point, and iterating the mapping from any starting point converges to that fixed point. Since T^π is a γ-contraction (γ < 1) on the complete metric space of bounded functions with sup-norm, there is a unique V such that T^π V = V. By definition of the Bellman equation, that unique fixed point is V^π.",
       hints: [
@@ -472,7 +472,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Iterative policy evaluation with γ = 1 always converges to V^π, as long as the MDP is finite and every state is reachable.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "The convergence proof for iterative policy evaluation requires γ < 1 OR that the policy guarantees eventual termination (episodic tasks). With γ = 1 in a continuing (non-terminating) task, the Bellman operator is not a contraction — the sup-norm of V can grow without bound, and the algorithm may diverge or fail to converge.",
       hints: [
@@ -529,7 +529,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Policy Improvement Theorem guarantees V^{π'}(s) ≥ V^π(s) for all s, where π' is greedy with respect to V^π.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Sutton & Barto §4.2 state and prove this theorem: if π' is the greedy policy w.r.t. Q^π, then V^{π'}(s) ≥ V^π(s) for all s. The proof proceeds by showing Q^π(s, π'(s)) ≥ V^π(s) (greedy selects at least as good an action), then unrolling this inequality over time. Equality holds iff both π and π' are already optimal.",
       hints: [
@@ -586,7 +586,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Policy iteration is guaranteed to converge to the optimal policy π* in a finite number of iterations for any finite MDP with γ < 1.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "For a finite MDP with |S| states and |A| actions, there are at most |A|^|S| deterministic policies. Each policy iteration step either strictly improves the policy or terminates. Since policies are strictly improving and there are finitely many, the algorithm must terminate — and at termination, π = π*. Sutton & Barto §4.3 establish this result.",
       hints: [
@@ -643,7 +643,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Value iteration requires maintaining an explicit policy representation π(s) that is updated alongside V(s) at each sweep.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass π*(s) = argmax_a Σ_{s'} P[R + γV*(s')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.",
       hints: [
@@ -700,7 +700,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Both policy iteration and value iteration are guaranteed to find the exact optimal policy π* for any finite MDP with γ < 1 and known transition model.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "For finite MDPs with γ < 1 and complete model knowledge, both algorithms converge to V* and π* with probability 1. Sutton & Barto §4.3–4.4 prove this: policy iteration terminates in finitely many steps at π*, and value iteration\'s V_k converges to V* as k → ∞ (from which π* is extracted by greedy).",
       hints: [
@@ -757,7 +757,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Asynchronous DP is guaranteed to converge to V* as long as every state is updated infinitely often (no state is permanently skipped).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Sutton & Barto §4.5 prove that asynchronous DP converges to V* under the condition that all states continue to receive updates. The contraction property of the Bellman operator holds regardless of update order — what matters is that no state\'s value becomes permanently stale. This justifies focusing updates on "important" states.',
       hints: [
@@ -814,7 +814,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "First-visit Monte Carlo is an unbiased estimator of V^π(s): the expected value of the first-visit return equals V^π(s).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Each first-visit return G_t (where t is the first time S_t = s in an episode) is an independent, unbiased sample of V^π(s) = E_π[G_t|S_t=s]. By the strong law of large numbers, the average of these samples converges to V^π(s). Sutton & Barto §5.1 prove this unbiasedness and convergence.",
       hints: [
@@ -871,7 +871,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Every-visit Monte Carlo is a biased but consistent estimator of V^π(s) — unlike first-visit MC which is unbiased.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Every-visit MC is biased because returns from later visits to s within the same episode are not independent of the return from the first visit — they are correlated through the shared trajectory up to that point. However, every-visit MC is still consistent: as the number of episodes approaches infinity, the estimate converges to V^π(s). Sutton & Barto §5.1 discuss these properties.",
       hints: [
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Monte Carlo control with exploring starts is guaranteed to converge to the optimal policy π* in the limit of infinitely many episodes.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "With exploring starts (every state-action pair has nonzero probability of being the initial (s,a) of each episode), all Q(s,a) are updated infinitely often. Sutton & Barto §5.3 prove that Monte Carlo ES (exploring starts) converges to Q* and π*. Without exploring starts, convergence requires ε → 0 (GLIE policies).",
       hints: [
@@ -984,7 +984,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Ordinary importance sampling provides an unbiased estimate of V^π(s) but can have infinite variance, while weighted importance sampling is biased but has finite variance and is strongly consistent.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (Σ ρ_i G_i) / n is unbiased (E[V̂] = V^π(s)) but its variance can be infinite if ρ_i is heavy-tailed. Weighted IS normalizes by Σ ρ_i: V̂_w(s) = Σ ρ_i G_i / Σ ρ_i — this is biased (E[V̂_w] ≠ V^π(s) for finite n) but consistent (converges to V^π(s)) and has dramatically lower variance.",
       hints: [
@@ -1041,7 +1041,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TD(0) can update V after every single step of environment interaction, making it applicable to continuing (non-episodic) tasks.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'TD(0) requires only (Sₜ, Rₜ₊₁, Sₜ₊₁) to update — one transition. It does not need a complete episode. This makes TD(0) applicable to continuing tasks that never terminate, unlike Monte Carlo which requires complete episodes to compute G_t. Sutton & Barto §6.1 call TD learning "one of the most fundamental and novel ideas in reinforcement learning" partly for this reason.',
       hints: [
@@ -1098,7 +1098,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SARSA is on-policy because it updates Q(s,a) using the action Aₜ₊₁ actually selected by the current behavior policy (e.g., ε-greedy), not the greedy maximizing action.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Sutton & Barto §6.4: SARSA is on-policy because the Q-values it learns correspond to the behavior policy being followed — including its exploration actions. The target Q(Sₜ₊₁, Aₜ₊₁) uses the actual next action. In contrast, Q-learning is off-policy: its target max_a Q(Sₜ₊₁, a) uses the greedy action — regardless of which action the behavior policy actually takes.",
       hints: [
@@ -1155,7 +1155,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Tabular Q-learning converges to Q* with probability 1, given that all state-action pairs are visited infinitely often and step sizes satisfy the Robbins-Monro conditions (Σ αₜ = ∞ and Σ αₜ² < ∞).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Watkins and Dayan (1992) proved this convergence result for tabular Q-learning. The Robbins-Monro conditions (standard conditions from stochastic approximation theory) ensure step sizes decrease at the right rate: large enough to overcome noise (Σ α = ∞) but small enough to converge (Σ α² < ∞). Sutton & Barto §6.5 state this result directly.",
       hints: [
@@ -1212,7 +1212,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Setting γ = 1 is valid and produces a well-defined (finite) expected return in all continuing (non-terminating) MDPs, as long as rewards are bounded.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "With γ = 1 and a non-terminating task, Gₜ = Σ_{k=0}^∞ Rₜ₊ₖ₊₁ is an infinite sum that diverges unless rewards eventually reach zero — which they generally do not. Sutton & Barto §3.3 restrict γ < 1 for continuing tasks precisely to guarantee convergence: |Gₜ| ≤ R_max/(1−γ). γ = 1 is only valid for episodic tasks where the sum terminates at the end of the episode.",
       hints: [
@@ -1269,7 +1269,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality equation V*(s) = max_a Q*(s,a) is a system of nonlinear equations (because of the max operation), so it cannot in general be solved by simple matrix inversion unlike the Bellman expectation equation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Bellman expectation equation for V^π is a linear system: V^π = R^π + γP^πV^π, solvable as V^π = (I − γP^π)^{-1}R^π. The Bellman optimality equation V*(s) = max_a[...] is nonlinear due to the max operator. This expresses the fundamental difference between the two equations: one linear, one nonlinear. The linear system has a closed-form matrix solution; the nonlinear system typically requires iterative methods.",
       hints: [
@@ -1326,7 +1326,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a finite MDP, the optimal value function V* is unique (there is exactly one V* satisfying the Bellman optimality equation), but there may be multiple optimal policies π* that all achieve V*.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Bellman optimality equation T*V = V is a contraction mapping with a unique fixed point V* (by the Banach fixed-point theorem). However, multiple optimal policies may exist whenever V*(s) = Q*(s,a) for more than one action a in some state — ties in the greedy argmax. All such tie-breaking choices yield optimal policies. V* is unique; π* need not be.",
       hints: [
@@ -1383,7 +1383,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Bellman optimality operator T* is defined as (T* V)(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV(s')]. T* is also a γ-contraction in the sup-norm, and its unique fixed point is V*.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The proof that T* is a γ-contraction uses the inequality |max_a f(a) − max_a g(a)| ≤ max_a |f(a) − g(a)|: ‖T*V − T*U‖_∞ = max_s |max_a[...V...] − max_a[...U...]| ≤ γ max_s max_a|V(s') − U(s')| = γ‖V − U‖_∞. By Banach fixed-point theorem, the unique fixed point exists, and substituting T*V = V yields the Bellman optimality equation — so the fixed point is V*.",
       hints: [
@@ -1440,7 +1440,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Modified policy iteration with any finite m ≥ 1 is still guaranteed to converge to the optimal policy π* for finite MDPs with γ < 1.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Modified policy iteration generates a sequence of improving policies. Each policy improvement step produces a policy at least as good as the previous (by the Policy Improvement Theorem applied to the partially-evaluated value estimate). Since policies are strictly improving and there are finitely many, the algorithm must terminate — and at termination, π = π*. The convergence guarantee holds for all m ≥ 1; the number of outer iterations may vary, but the algorithm converges to the same π*.",
       hints: [
@@ -1497,7 +1497,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "An ε-greedy policy with fixed ε > 0 always converges to the globally optimal policy π* as the number of interactions → ∞.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "A fixed ε > 0 permanently assigns probability ε/|A| to suboptimal actions, so the agent never fully commits to the greedy-optimal policy. The ε-greedy policy converges to the best ε-soft policy (the optimal policy among all policies that satisfy π(a|s) ≥ ε/|A|), not π*. To converge to π*, ε must be decayed to 0 (e.g., εₙ = 1/n) while satisfying GLIE conditions. Sutton & Barto §5.4 discuss this distinction.",
       hints: [
@@ -1554,7 +1554,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Weighted importance sampling is consistent: as the number of episodes n → ∞, V̂_w(s) converges to V^π(s) with probability 1, despite being biased for finite n.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)Σρᵢ → E_b[ρ] = 1 and (1/n)ΣρᵢGᵢ → E_b[ρG] = E_π[G] = V^π(s). The ratio converges to V^π(s)/1 = V^π(s). Bias for finite n arises because the ratio of averages ≠ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
       hints: [
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "An ε-greedy policy with ε = 0.05 (constant) satisfies GLIE because every state-action pair is visited infinitely often (since ε > 0 ensures exploration forever).",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Constant ε = 0.05 satisfies the first GLIE condition (infinite exploration — all (s,a) pairs are visited infinitely often) but fails the second (greedy in the limit — the policy never converges to greedy, it always explores with probability 0.05). Both conditions are required for GLIE. Without ε → 0, MC control converges to the optimal ε-soft policy, not π*.",
       hints: [
@@ -1668,7 +1668,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TD(λ = 0) is equivalent to TD(0), and TD(λ = 1) is equivalent to every-visit Monte Carlo in the offline (batch) setting.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Sutton & Barto §12.1 establish the "λ-return" forward view: TD(λ) uses a weighted combination of n-step returns Gₜ^(n) with exponential weights (1−λ)λ^{n-1}. At λ=0: only G^(1) (the 1-step TD return) contributes → TD(0). At λ=1: the trace decays only by γ per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate λ gives a weighted combination.',
       hints: [
