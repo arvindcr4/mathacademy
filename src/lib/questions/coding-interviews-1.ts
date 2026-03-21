@@ -641,10 +641,11 @@ const questions: Record<string, Question[]> = {
         "Vertical scanning examines each character at position $i$ across all $n$ strings until a mismatch is found."
       ],
       explanation:
-        "**Step 1:** Vertical scanning examines character $i$ of every string, stopping when a mismatch is found.\n\n" +
-        "**Step 2:** In the worst case (all strings are identical or the LCP is the entire shortest string), we examine every character of every string:\n\n" +
-        "\\[\n\\text{Worst case} = n \\cdot m \\quad \\text{where } m = \\text{length of the longest string}\n\\]\n\n" +
-        "Note: if $m$ denotes the length of the shortest string, the bound becomes $\\mathrm{O}(n \\cdot m)$ where $m = \\min_i |s_i|$, which is also a valid characterization."
+        "**First, let's recall** how vertical scanning works: we check character $i$ of every string, stopping when a mismatch is found.\n\n" +
+        "**Step 1:** In the worst case (all strings are identical, or LCP equals the entire shortest string), we examine every character of every string.\n\n" +
+        "**Step 2:** There are $n$ strings, and in the worst case we examine all $m$ characters of each string (where $m$ is the longest string length).\n\n" +
+        "\\[\n\\text{Worst case time} = n \\cdot m \\quad \\text{where } m = \\text{length of longest string}\n\\]\n\n" +
+        "**Therefore**, the complexity is $\\mathrm{O}(n \\cdot m)$."
     },
     {
       id: "q-lcp-3",
@@ -666,7 +667,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "**Step 1:** Sorting $n$ strings with maximum length $m$ costs $\\mathrm{O}(n \\log n)$ string comparisons. Each comparison may cost up to $\\mathrm{O}(m)$, giving $\\mathrm{O}(n \\log n \\cdot m)$ for sorting.\n\n" +
         "**Step 2:** After sorting, the most divergent pair is the first and last strings in lexicographic order. Their LCP is the LCP of the entire array. Comparing these two strings costs $\\mathrm{O}(m)$.\n\n" +
-        "\\[\n\\text{Total: } \\mathrm{O}(n \\log n \\cdot m) + \\mathrm{O}(m) = \\mathrm{O}(n \\log n \\cdot m).\n\\]"
+        "\\[\n\\mathrm{O}(n \\log n \\cdot m) + \\mathrm{O}(m) = \\mathrm{O}(n \\log n \\cdot m)\n\\]"
     },
     {
       id: "q-lcp-4",

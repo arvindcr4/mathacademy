@@ -20,7 +20,7 @@ const questions: Record<string, Question[]> = {
         "Under the Bradley-Terry preference model, the probability that a human prefers $y_w$ over $y_l$ given prompt $x$ is:\n\\[ P(y_w \\succ y_l \\mid x) = \\sigma\\big(r_\\theta(x, y_w) - r_\\theta(x, y_l)\\big) \\]\nwhere $\\sigma$ is the logistic sigmoid. The reward model minimizes the negative log-likelihood:\n\\[ \\mathcal{L}_\\text{RM} = -\\mathbb{E}_{(x, y_w, y_l) \\sim \\mathcal{D}}\\left[ \\log \\sigma\\big(r_\\theta(x, y_w) - r_\\theta(x, y_l)\\big) \\right] \\]\nThis is equivalent to maximizing the log probability that the winning response outranks the losing response. InstructGPT used 50K prompts generating 300K-1.8M preference pairs.",
       hints: [
         "The sigmoid $\\sigma(r(y_w) - r(y_l))$ outputs a probability between 0 and 1 - it is high when $r(y_w) > r(y_l)$.",
-        "When $r(y_l) > r(y_w)$, the sigmoid argument is negative, so predicted probability drops below 0.5 - the model is penalized."
+        "The loss function penalizes the model when it assigns higher reward to the losing response - this drives the reward difference to be positive for winning responses."
       ],
     },
     {
@@ -40,7 +40,7 @@ const questions: Record<string, Question[]> = {
         "First, let's recall that the reward model's job is to score (prompt, response) pairs by predicting how humans would rate them. A reward model that cannot understand nuanced language cannot reliably judge whether a response is helpful or harmful.\n\nWhen initializing from the SFT model, we start with a backbone that already understands grammar, context, reasoning, and domain knowledge - all the linguistic prerequisites for evaluating response quality. A randomly initialized network would need to learn language understanding from scratch, which is wasteful since the SFT model already acquired this knowledge during its own training.\n\nThe architecture is straightforward: the SFT model's Transformer backbone is preserved, and a single scalar regression head is added atop the final hidden state to output a reward score. The SFT weights provide a high-quality initialization that jumpstarts reward learning.\n\nTherefore, initializing the RM from SFT rather than random weights is essential because it gives the RM strong language understanding as a foundation for learning what humans consider high-quality responses.",
       hints: [
         "If the RM cannot parse complex sentences, it cannot reliably score whether a response is truly helpful or harmful - language understanding is a prerequisite for quality judgment.",
-        "The SFT model learned rich representations during its training on demonstration data - these representations transfer directly to reward prediction, which is why random initialization is strictly worse."
+        "Starting from the SFT model means you begin with weights that already understand language, rather than starting from scratch."
       ],
     },
     {
@@ -97,7 +97,7 @@ const questions: Record<string, Question[]> = {
         "Constitutional AI\'s dataset comprises 135K human-labeled comparisons and 183K AI-generated comparisons produced through the CAI critique-revision cycle. The 57% AI-sourced share dramatically reduces labeling costs while maintaining alignment quality - a key CAI contribution.",
       hints: [
         "CAI\'s AI-generated comparisons come from the model critiquing its own responses against constitutional principles.",
-        "Human labels remain for helpfulness; CAI primarily automates harmlessness labeling."
+        "Consider which aspect of alignment (helpfulness vs harmlessness) is more subjective and requires human judgment."
       ],
     },
     {
@@ -279,10 +279,10 @@ const questions: Record<string, Question[]> = {
         "Constitutional AI completely eliminates the need for any human-labeled data in the alignment pipeline.",
       correctAnswer: "false",
       explanation:
-        "CAI reduces but does not eliminate human labeling. Human feedback is still used for helpfulness training (SL-HF and RL-HF stages). Anthropic\'s 318K comparison dataset includes 135K human-generated comparisons. CAI primarily replaces human harmlessness labels with AI-generated constitutional critiques - a major cost reduction, but human data remains essential for helpfulness alignment.",
+        "First, let's recall that Constitutional AI targets two alignment dimensions: helpfulness and harmlessness. The key innovation of CAI is replacing human harmlessness labels with AI-generated labels through the constitutional critique process.\n\nHowever, CAI does not eliminate human labeling entirely. Anthropic's 318K comparison dataset (Bai et al., 2022) consists of 135K human-generated comparisons and 183K AI-generated comparisons - meaning 43% of the data still requires human annotators.\n\nHuman labels remain essential for helpfulness because helpfulness judgments are inherently subjective and context-dependent. Determining whether a response optimally helps a user requires understanding the user's specific intent and needs - something AI critics struggle with reliably.\n\nTherefore, CAI is not a complete replacement for human labels. It primarily automates the more mechanical harmlessness labeling task (detecting whether a response violates safety principles) while preserving human involvement for the nuanced helpfulness judgments where human judgment is irreplaceable.",
       hints: [
-        "Helpfulness labels are harder to automate because they require subjective judgment about user needs.",
-        "CAI\'s 57% AI-sourced comparisons still leave 43% human-sourced - human data is not eliminated."
+        "Helpfulness labels are harder to automate than harmlessness labels because they require understanding user intent and context - information that AI critics cannot reliably access without human input.",
+        "Anthropic's dataset has 135K human + 183K AI comparisons = 318K total. The 57% AI-sourced share still means 43% human labels are required - human data is not eliminated."
       ],
     },
   ],
@@ -316,10 +316,10 @@ const questions: Record<string, Question[]> = {
         "DPO is guaranteed to achieve identical performance to PPO-RLHF given the same preference data, since they optimize the same theoretical objective.",
       correctAnswer: "false",
       explanation:
-        "DPO and PPO-RLHF share the same theoretical optimum under the KL-regularized objective, but differ critically in practice. DPO is offline: it trains on a fixed dataset and cannot sample new on-policy completions. PPO generates on-policy rollouts during training, allowing exploration and adaptation to the current policy distribution. This distributional difference means PPO can outperform DPO, especially on complex tasks.",
+        "First, let's recall that DPO and PPO-RLHF both optimize the same KL-regularized preference objective, which means they share the same theoretical optimal policy in the limit of infinite data and perfect optimization.\n\nHowever, they differ critically in how they collect training data. PPO-RLHF is an online algorithm: during each iteration, it generates new responses from the current policy, collects human preferences on these on-policy responses, and updates the policy. This means PPO always trains on preferences that match the current policy distribution.\n\nDPO is an offline algorithm: it trains on a fixed dataset of (prompt, y_w, y_l) triples collected from an earlier policy (typically the SFT model). The policy never sees preferences over its own outputs during training.\n\nThis distinction matters because as DPO training progresses, the policy's outputs diverge from the fixed dataset's distribution. The preferences become increasingly off-policy - they represent what humans preferred when the SFT model generated the responses, not what they would prefer for the DPO-trained model's different outputs.\n\nTherefore, DPO and PPO-RLHF are not guaranteed to achieve identical performance. PPO's on-policy adaptation gives it an advantage on complex tasks where the policy distribution evolves significantly during training.",
       hints: [
-        "DPO is trained on (y_w, y_l) pairs generated by an earlier policy - not the current one.",
-        "As the policy improves, the fixed DPO dataset becomes increasingly off-policy."
+        "DPO trains on preference pairs generated by the SFT model (or an earlier policy version) - these pairs become progressively off-policy as the DPO-trained policy improves and generates different responses.",
+        "PPO's on-policy data collection means it always trains on preferences that reflect the current policy distribution, enabling continuous adaptation that DPO's static dataset cannot provide."
       ],
     },
     {
@@ -373,10 +373,10 @@ const questions: Record<string, Question[]> = {
         "Reward hacking becomes more severe as the amount of RL optimization (measured by KL divergence from the reference) increases beyond the optimal point.",
       correctAnswer: "true",
       explanation:
-        "This is precisely what Gao et al. (2023) demonstrated. Past the optimal KL point, the policy has moved far enough from the reference distribution that it can exploit gaps in the reward model - generating text that scores high on the proxy RM but low on true human preference. The inverted-U shape confirms increasing hacking with increasing optimization.",
+        "First, let's recall the inverted-U relationship discovered by Gao et al. (2023): as KL divergence from the reference policy increases, gold-standard human reward first increases (genuine alignment improvement) then decreases (reward hacking). The peak of this curve is the optimal KL point.\n\nPast this optimal point, the policy has deviated far enough from the reference distribution that it can find exploitable gaps in the reward model. The RM was trained on comparisons from earlier, less-refined policies. The current policy's more sophisticated outputs may trigger RM biases or patterns that were not present in the training data.\n\nThe policy learns to generate text that scores high on the proxy RM - exploiting systematic biases in how human preferences were approximated - without genuinely being preferred by humans. This is Goodhart's Law in action: the measure (RM score) becomes the target, ceasing to be a good measure of true human preferences.\n\nTherefore, as RL optimization continues beyond the optimal KL point, reward hacking becomes increasingly severe. The policy finds deeper exploits in the RM's approximation, and gold-standard human reward degrades monotonically.",
       hints: [
-        "The RM was trained on data generated by earlier policies - the current policy has moved out of distribution.",
-        "More KL means more deviation from the reference, more opportunity to find RM exploits."
+        "Gao et al. (2023) measured actual human preferences alongside RM scores - past the optimal KL point, human preference drops while RM score may still climb, revealing the hacking pattern.",
+        "The RM was trained on comparisons from earlier policy versions - as the policy evolves, its outputs become increasingly out-of-distribution for the RM, creating exploitable gaps."
       ],
     },
     {
@@ -1604,7 +1604,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'MT-Bench (Zheng et al., 2023): GPT-4 evaluates responses to 80 multi-turn questions across writing, roleplay, reasoning, math, coding, extraction. Agreement with human experts is ~80% (comparable to inter-human agreement). The main benefit: running 1000 model comparisons with GPT-4 costs approximately 50 USD and 30 minutes vs. weeks and thousands of dollars for human annotation.',
       hints: [
-        'Cost: GPT-4 API at \\$0.03/1K tokens × 1000 comparisons × ~1K tokens each = \\$30. Human annotation: much more.',
+        'Cost: GPT-4 API at \\$0.03/1K tokens x 1000 comparisons x ~1K tokens each = \\$30. Human annotation: much more.',
         'Agreement with humans: ~80% - not perfect, but sufficient for ranking models during development.'
       ],
     },

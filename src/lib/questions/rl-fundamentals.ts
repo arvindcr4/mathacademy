@@ -74,7 +74,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "A deterministic policy $\\mu: S \\to A$ outputs one specific action per state. A stochastic policy $\\pi: S \\times A \\to [0,1]$ outputs a probability distribution over actions, satisfying $\\sum_a \\pi(a|s) = 1$. Deterministic policies are a special case with all probability mass on one action.",
+        "First, let's recall the type signatures from Spinning Up: a deterministic policy $\\mu: S \\to A$ outputs one specific action per state, while a stochastic policy $\\pi: S \\times A \\to [0,1]$ outputs a probability distribution over actions, satisfying $\\sum_a \\pi(a|s) = 1$. Step-by-step: to execute a deterministic policy, you simply evaluate $\\mu(s)$ to get an action. To execute a stochastic policy, you sample from the distribution $\\pi(\\cdot|s)$. Deterministic policies are a special case of stochastic policies where all probability mass is on one action. Therefore, the key structural difference is that $\\mu(s)$ outputs a single action while $\\pi(a|s)$ outputs a probability distribution over actions.",
       hints: [
         "Think about what you need to execute each policy: $\\mu(s)$ gives you an action directly; $\\pi(a|s)$ requires sampling.",
         "Spinning Up notes that deterministic policies are written $\\mu(s) = a$, while stochastic ones satisfy $\\pi(a|s) = P[A=a|S=s]$.",
@@ -131,7 +131,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The optimal policy simultaneously maximizes V^\\pi(s) for every state s. Crucially, S&B prove that in finite MDPs there always exists a single \\pi* that is optimal everywhere at once - you do not need different policies for different starting states. V^{\\pi*} = V*, the unique optimal value function.",
+        "First, let's recall the definition from Sutton & Barto (§3.6): $\\pi^*$ satisfies $V^{\\pi^*}(s) \\geq V^\\pi(s)$ for all $s \\in S$ and all policies $\\pi$. Step-by-step: this means $\\pi^*$ simultaneously maximizes the expected discounted return from every possible starting state. Crucially, S&B prove that in finite MDPs there always exists a single $\\pi^*$ that is optimal everywhere at once - you do not need different policies for different starting states. This is non-trivial: it could theoretically be that different states prefer different policies. The proof relies on the Bellman optimality equations having a unique solution $V^*$. Therefore, $\\pi^*$ is the policy that maximizes the expected discounted return simultaneously from every state.",
       hints: [
         "S&B §3.6: \"A policy \\pi is defined to be better than or equal to a policy \\pi' if its expected return is greater than or equal to that of \\pi' for all states.\"",
         "S&B §3.6 proves that a single policy can be optimal everywhere at once. This is the existence theorem for $\pi^*取.",
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "V^\\pi(s) = E_\\pi[G_t | S_t = s] where G_t = \\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}. For this trajectory: G = 10 + 0.9 \\cdot 0 + 0.9^2 \\cdot 5 = 10 + 0 + 0.81 \\cdot 5 = 10 + 4.05 = 14.05. S&B (3.3) define V^\\pi(s) as the expected return of G_t when starting in s and following \\pi.",
+        "First, let's recall the definition from Sutton & Barto (§3.3): $V^\\pi(s) = E_\\pi[G_t | S_t = s]$ where $G_t = \\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}$. Step-by-step: for this trajectory with rewards 10, 0, 5 and $\\gamma = 0.9$: $G = R_{t+1} + \\gamma R_{t+2} + \\gamma^2 R_{t+3} = 10 + 0.9 \\cdot 0 + 0.9^2 \\cdot 5 = 10 + 0 + 0.81 \\cdot 5 = 10 + 4.05 = 14.05$. Note how each successive reward is discounted more heavily: the reward at step 2 gets multiplied by $\\gamma^2 = 0.81$ because it is two steps in the future. Therefore, the exact discounted return for this trajectory is 14.05.",
       hints: [
         "G_t = R_{t+1} + \\gamma R_{t+2} + $\\gamma^2$R_{t+3} + ... Apply \\gamma = 0.9 to each reward, weighted by time step.",
         'S&B §3.3: "The value of a state s under a policy \\pi, denoted V^\\pi(s), is the expected return when starting in s and following \\pi thereafter."',
@@ -295,7 +295,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Spinning Up defines A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s): how much better action a is than the average action under \\pi from state s. Note: max_a Q^\\pi(s,a) - V^\\pi(s) would be the advantage of the best action, not of an arbitrary action a.",
+        "First, let's recall what $V^\\pi(s)$ represents: it is the expected return when starting in state $s$ and following policy $\\pi$. This is the average or baseline return from that state. Now consider a specific action $a$ taken in state $s$: $Q^\\pi(s,a)$ is the expected return when taking $a$ and then following $\\pi$.\n\nStep-by-step: if $Q^\\pi(s,a) > V^\\pi(s)$, then action $a$ is better than the average action under $\\pi$ - it yields higher expected return. If $Q^\\pi(s,a) < V^\\pi(s)$, action $a$ is worse than average. The difference $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$ quantifies exactly how much better or worse $a$ is relative to the baseline.\n\nTherefore: $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. Note that $\\max_a A^\\pi(s,a) = \\max_a Q^\\pi(s,a) - V^\\pi(s)$ would be the advantage of the best action, not of an arbitrary action $a$.",
       hints: [
         'V^\\pi(s) is the "baseline" - the average return under \\pi. A^\\pi measures the deviation above or below that baseline.',
         "If $a$ is exactly the average action under $\pi$, $A^\pi(s, a) = 0$. Better-than-average $\rightarrow$ positive; worse-than-average $\rightarrow$ negative.",
@@ -1371,7 +1371,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "T^\\pi is a \\gamma-contraction: ‖T^\\pi V - T^\\pi U‖_\\infty \\leq \\gamma‖V - U‖_\\infty for all V, U. The space of bounded functions with sup-norm is complete, so by Banach fixed-point theorem, T^\\pi has a unique fixed point - which is exactly V^\\pi (the solution of the Bellman expectation equation). Starting from any V\\_0, iterating V_{k+1} = T^\\pi V_k converges geometrically: ‖V_k - V^\\pi‖_\\infty \\leq \\gamma^k‖V\\_0 - V^\\pi‖_\\infty.",
+        "First, let's recall what it means to iterate $T^\\pi$: starting from an arbitrary $V_0$, we compute $V_1 = T^\\pi V_0$, $V_2 = T^\\pi V_1$, and so on. For this to converge to $V^\\pi$, the operator $T^\\pi$ must have a special property.\n\nStep-by-step: the key property is that $T^\\pi$ is a $\\gamma$-contraction in the sup-norm: $\|T^\\pi V - T^\\pi U\|_\\infty \\leq \\gamma \|V - U\|_\\infty$ for all bounded $V, U$. The proof uses the $\\gamma$ factor inside the expectation: taking the difference $T^\\pi V(s) - T^\\pi U(s)$, the reward terms cancel and only $\\gamma V(s') - \\gamma U(s')$ remains, giving at most $\\gamma \\cdot \\max_{s'}|V(s') - U(s')|$ for each $s$. Taking $\\max_s$ yields the contraction bound.\n\nBy the Banach fixed-point theorem: on a complete metric space, any contraction has a unique fixed point. The space of bounded functions with sup-norm is complete, and $V^\\pi$ (the solution of the Bellman expectation equation) is that unique fixed point. Starting from any $V_0$, iterating $V_{k+1} = T^\\pi V_k$ converges geometrically: $\|V_k - V^\\pi\|_\\infty \\leq \\gamma^k \|V_0 - V^\\pi\|_\\infty$.",
       hints: [
         "The contraction factor is exactly \\gamma, the discount factor. This is why \\gamma < 1 is a convergence requirement.",
         "Fixed point of T^\\pi means T^\\pi V = V - substituting the definition gives exactly the Bellman expectation equation.",
@@ -1385,7 +1385,7 @@ const questions: Record<string, Question[]> = {
         "The Bellman optimality operator T* is defined as (T* V)(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gamma V(s')]. T* is also a \\gamma-contraction in the sup-norm, and its unique fixed point is V*.",
       correctAnswer: "true",
       explanation:
-        "The proof that T* is a \\gamma-contraction uses the inequality |max_a f(a) - max_a g(a)| \\leq max_a |f(a) - g(a)|: ‖T\cdot V - T\cdot U‖_\\infty = max_s |max_a[...V...] - max_a[...U...]| \\leq \\gamma max_s max_a|V(s') - U(s')| = \\gamma‖V - U‖_\\infty. By Banach fixed-point theorem, the unique fixed point exists, and substituting T\cdot V = V yields the Bellman optimality equation - so the fixed point is V*.",
+        "First, let's recall the proof strategy for showing $T^*$ is a contraction: we need to bound $\|T^* V - T^* U\|_\\infty \\leq \\gamma \|V - U\|_\\infty$. The key difficulty is that $T^*$ uses a $\\max$ over actions, unlike $T^\\pi$ which uses an expectation.\n\nStep-by-step: for any states $s$, define $f(a) = \\sum_{s'} P(s'|s,a)[R + \\gamma V(s')]$ and $g(a) = \\sum_{s'} P(s'|s,a)[R + \\gamma U(s')]$. Then $\|T^* V - T^* U\|_\\infty = \\max_s |\\max_a f(a) - \\max_a g(a)|$. A fundamental inequality from real analysis states: $|\\max_a f(a) - \\max_a g(a)| \\leq \\max_a |f(a) - g(a)|$. Applying this and the triangle inequality gives $|f(a) - g(a)| \\leq \\gamma \\cdot \\max_{s'}|V(s') - U(s')|$. Taking $\\max_s \\max_a$ yields $\|T^* V - T^* U\|_\\infty \\leq \\gamma \\|V - U\|_\\infty$.\n\nTherefore, $T^*$ is a $\\gamma$-contraction. By the Banach fixed-point theorem, it has a unique fixed point. Substituting $T^* V = V$ gives exactly the Bellman optimality equation, so that fixed point is $V^*$.",
       hints: [
         "Key inequality: |max f - max g| \\leq max |f - g|. Apply this to bound ‖T\cdot V - T\cdot U‖_\\infty.",
         "Both T^\\pi and T* are \\gamma-contractions but with different fixed points: T^\\pi \\to V^\\pi, T* \\to V*.",

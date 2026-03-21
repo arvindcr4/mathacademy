@@ -1117,7 +1117,12 @@ const questions: Record<string, Question[]> = {
         "Prime sequence",
       ],
       correctAnswer: 1,
-      explanation: "This is the standard Fibonacci sequence definition.",
+      explanation:
+        "First, let's recall the Fibonacci sequence definition.\n\nThe recurrence relation F_n = F_{n-1} + F_{n-2} with base cases F_0 = 0 and F_1 = 1 generates the Fibonacci sequence:\n\nF_0 = 0\nF_1 = 1\nF_2 = F_1 + F_0 = 1\nF_3 = F_2 + F_1 = 2\nF_4 = F_3 + F_2 = 3\nF_5 = F_4 + F_3 = 5\n...\n\nThis produces the famous sequence: 0, 1, 1, 2, 3, 5, 8, 13, 21, ...\n\n**Therefore**, this recurrence defines the Fibonacci sequence, named after Leonardo of Pisa who introduced it to Western mathematics.",
+      hints: [
+        "Apply the recurrence starting from F_0 = 0 and F_1 = 1.",
+        "What sequence do you get: 0, 1, 1, 2, 3, 5, ...?",
+      ],
     },
     {
       id: "q-nt-fib-2",
@@ -1127,7 +1132,11 @@ const questions: Record<string, Question[]> = {
         "F_n \\approx \\phi^n / sqrt(5) where \\phi = (1 + sqrt(5)) / 2 is Binet formula.",
       correctAnswer: "true",
       explanation:
-        "Binet\'s formula expresses Fibonacci numbers using the golden ratio \\phi.",
+        "First, let's recall Binet's formula for Fibonacci numbers.\n\n**Step 1**: Solve the characteristic equation x^2 = x + 1, which gives:\n- \\phi = (1 + sqrt(5)) / 2 (the golden ratio, approximately 1.618)\n- \\hat{\\phi} = (1 - sqrt(5)) / 2 (approximately -0.618)\n\n**Step 2**: The closed form solution is:\nF_n = (\\phi^n - \\hat{\\phi}^n) / sqrt(5)\n\n**Step 3**: Since |\\hat{\\phi}| < 1, as n grows, \\hat{\\phi}^n approaches 0, giving:\nF_n \\approx \\phi^n / sqrt(5)\n\n**Therefore**, Binet's formula expresses Fibonacci numbers using the golden ratio, showing why Fibonacci numbers grow like \\phi^n.",
+      hints: [
+        "Solve the characteristic equation x^2 = x + 1.",
+        "The dominant root is the golden ratio \\phi = (1 + sqrt(5)) / 2.",
+      ],
     },
     {
       id: "q-nt-fib-3",
@@ -1137,7 +1146,11 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(2^n)", "O(n^2)"],
       correctAnswer: 2,
       explanation:
-        "Naive recursion computes the same Fibonacci numbers exponentially many times.",
+        "First, let's analyze the naive recursive approach for computing F_n.\n\nThe recursive formula is:\nF_n = F_{n-1} + F_{n-2}\n\n**Step 1**: Draw the recursion tree for F_5:\n- F_5 calls F_4 and F_3\n- F_4 calls F_3 and F_2\n- F_3 calls F_2 and F_1\n- etc.\n\n**Step 2**: Notice that F_3 is computed twice, F_2 is computed three times, etc. The number of calls grows exponentially.\n\n**Step 3**: The number of recursive calls T(n) satisfies:\nT(n) = T(n-1) + T(n-2) + 1\n\nThis is essentially the Fibonacci recurrence itself, giving T(n) = O(2^n).\n\n**Therefore**, naive recursion is O(2^n) because the same subproblems are solved exponentially many times.",
+      hints: [
+        "Draw the recursion tree for F_5 and count how many times each value is computed.",
+        "The recurrence T(n) = T(n-1) + T(n-2) grows like the Fibonacci sequence itself.",
+      ],
     },
     {
       id: "q-nt-fib-4",
@@ -1147,7 +1160,11 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(2^n)", "O(n^2)"],
       correctAnswer: 1,
       explanation:
-        "Matrix [[1,1],[1,0]]^n gives F_n in O(log n) using exponentiation.",
+        "First, let's recall the matrix representation of Fibonacci:\n\n[[F_{n+1}, F_n], [F_n, F_{n-1}]] = [[1, 1], [1, 0]]^n\n\n**Step 1**: We need to compute [[1,1],[1,0]]^n efficiently using binary exponentiation.\n\n**Step 2**: Binary exponentiation reduces the power to O(log n) matrix multiplications.\n\n**Step 3**: Each 2x2 matrix multiplication is O(1), so total time is O(log n).\n\n**Therefore**, F_n can be computed in O(log n) time using matrix exponentiation, a significant improvement over naive recursion.",
+      hints: [
+        "The matrix [[1,1],[1,0]] raised to power n gives F_n in its entries.",
+        "Use binary exponentiation on the matrix, which takes O(log n) multiplications.",
+      ],
     },
     {
       id: "q-nt-fib-5",
@@ -1156,7 +1173,11 @@ const questions: Record<string, Question[]> = {
       question: "The sum of first n Fibonacci numbers equals F_{n+2} - 1.",
       correctAnswer: "true",
       explanation:
-        "Sum_{i=0}^{n} F_i = F_{n+2} - 1 can be proven by induction.",
+        "First, let's verify this identity for small values and then understand why it holds.\n\n**Step 1**: Check with small n:\n- n=0: F_0 = 0, F_2 - 1 = 1 - 1 = 0 ✓\n- n=1: F_0 + F_1 = 0 + 1 = 1, F_3 - 1 = 2 - 1 = 1 ✓\n- n=2: F_0 + F_1 + F_2 = 0 + 1 + 1 = 2, F_4 - 1 = 3 - 1 = 2 ✓\n\n**Step 2**: Use the recurrence property. Consider F_{n+2} = F_{n+1} + F_n, and telescoping sum.\n\n**Step 3**: We can prove by induction:\n- Base case: n=0, F_0 = 0 = F_2 - 1 ✓\n- Inductive step: Assume sum_{i=0}^{n} F_i = F_{n+2} - 1\n  Then sum_{i=0}^{n+1} F_i = (F_{n+2} - 1) + F_{n+1} = F_{n+3} - 1 ✓\n\n**Therefore**, the sum of the first n Fibonacci numbers equals F_{n+2} - 1.",
+      hints: [
+        "Verify for small values: F_0 + F_1 + F_2 = 0 + 1 + 1 = 2, and F_4 - 1 = 3 - 1 = 2.",
+        "Try proof by induction using the recurrence F_{n+2} = F_{n+1} + F_n.",
+      ],
     },
   ],
   "power-algorithms": [
@@ -1168,7 +1189,11 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(sqrt(n))", "O(1)"],
       correctAnswer: 1,
       explanation:
-        "Binary exponentiation halves the exponent at each step, giving O(log n).",
+        "First, let's recall how binary exponentiation works.\n\n**Step 1**: Write n in binary. For example, n = 13 = 1101_2.\n\n**Step 2**: Use the recurrence:\n- If n is even: a^n = (a^{n/2})^2\n- If n is odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2\n\n**Step 3**: Each step halves the exponent (when even) or reduces it by 1 (then halves). The number of steps is proportional to the number of bits in n, which is O(log n).\n\n**Therefore**, binary exponentiation computes a^n in O(log n) time by exploiting the binary representation of the exponent.",
+      hints: [
+        "Each step halves the exponent when it is even.",
+        "How many bits does n have? Each bit requires at most one step.",
+      ],
     },
     {
       id: "q-nt-power-2",
@@ -1178,7 +1203,11 @@ const questions: Record<string, Question[]> = {
         "In binary exponentiation, if n is even we square the base; if odd we multiply by base and reduce exponent.",
       correctAnswer: "true",
       explanation:
-        "Even: a^n = (a^{n/2})^2. Odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2.",
+        "First, let's recall the mathematical basis for binary exponentiation.\n\n**Step 1**: If n is even:\na^n = (a^{n/2})^2\nThis works because a^{n/2} \\times a^{n/2} = a^{n/2 + n/2} = a^n.\n\n**Step 2**: If n is odd:\na^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2\n\nWe reduce the odd case to an even case by extracting one factor of a.\n\n**Therefore**, the algorithm alternates between squaring (when even) and multiplying by base then squaring (when odd), reducing the exponent until we reach 1.",
+      hints: [
+        "When even: a^n = (a^{n/2})^2 - just square and halve.",
+        "When odd: a^n = a \\times a^{n-1} - multiply by a once, then treat as even case.",
+      ],
     },
     {
       id: "q-nt-power-3",
@@ -1193,7 +1222,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "3^13 = 1594323 - binary exponentiation computes this efficiently in ~5 multiplications.",
+        "First, let's recall that binary exponentiation computes a^n efficiently by using the binary representation of n.\n\n**Step 1**: Write 13 in binary: 13 = 1101_2 = 8 + 4 + 1\n\n**Step 2**: Precompute powers:\n- 3^1 = 3\n- 3^2 = 9\n- 3^4 = 9^2 = 81\n- 3^8 = 81^2 = 6561\n\n**Step 3**: Combine only the powers corresponding to 1-bits:\n3^13 = 3^8 \\times 3^4 \\times 3^1 = 6561 \\times 81 \\times 3 = 1594323\n\nThis required only about 5 multiplications (squarings + the three multiplications for set bits).\n\n**Therefore**, 3^13 = 1594323, computed efficiently through binary exponentiation.",
+      hints: [
+        "Write 13 = 8 + 4 + 1 in binary: 13 = 1101_2.",
+        "Use 3^8 \\times 3^4 \\times 3^1, precomputing with repeated squaring.",
+      ],
     },
     {
       id: "q-nt-power-4",
@@ -1208,7 +1241,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "To prevent overflow, apply modulo after each multiplication: (a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m.",
+        "First, let's recall the modular multiplication property:\n\n(a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m\n\n**Step 1**: When computing a^n, intermediate values can become very large (overflow).\n\n**Step 2**: By applying mod after each multiplication, we keep intermediate values bounded:\n- result = (result \\times base) mod m\n\n**Step 3**: This works because:\n(result \\times base) mod m = ((result mod m) \\times (base mod m)) mod m\n\n**Therefore**, to compute a^n mod m efficiently and avoid overflow, apply modulo after each multiplication. This is the key insight behind modular exponentiation.",
+      hints: [
+        "Apply the property: (a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m.",
+        "Keep intermediate results small by taking mod after each multiplication.",
+      ],
     },
     {
       id: "q-nt-power-5",
@@ -1218,7 +1255,11 @@ const questions: Record<string, Question[]> = {
         "Matrix exponentiation uses the same binary exponentiation principle as scalar exponentiation.",
       correctAnswer: "true",
       explanation:
-        "Matrix multiplication is associative, so we can apply binary exponentiation to matrices.",
+        "First, let's recall that binary exponentiation relies on the associativity of multiplication.\n\nFor scalars: (a \\times b) \\times c = a \\times (b \\times c)\nFor matrices: (A \\times B) \\times C = A \\times (B \\times C)\n\n**Step 1**: Binary exponentiation splits the power:\na^{13} = a^8 \\times a^4 \\times a^1\n\n**Step 2**: This works because multiplication is associative:\na^{2 \\times 4} = (a^4)^2 = a^4 \\times a^4\n\n**Step 3**: Matrix multiplication is also associative, so the same splitting works:\nA^{13} = A^8 \\times A^4 \\times A^1\n\n**Therefore**, matrix exponentiation uses the same binary exponentiation principle because matrix multiplication is associative.",
+      hints: [
+        "Binary exponentiation requires associativity of the multiplication operation.",
+        "Matrix multiplication is associative: (AB)C = A(BC).",
+      ],
     },
   ],
 

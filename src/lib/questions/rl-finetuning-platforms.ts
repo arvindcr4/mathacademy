@@ -430,10 +430,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tinker specializes in LoRA-based RL training using GRPO (Group Relative Policy Optimization) and importance sampling. This memory-efficient approach allows training on larger models without requiring full parameter updates, making RL fine-tuning practical for consumer use.",
+        "First, let's recall that Tinker is a training-only platform, so the key question is: what algorithms does it support? Step-by-step: (1) Tinker specializes in LoRA-based RL training—meaning it doesn't require full parameter fine-tuning. (2) The core algorithm is GRPO (Group Relative Policy Optimization), which we discussed earlier—it estimates advantages by comparing outputs within a group rather than using a value function. (3) Tinker also uses importance sampling, allowing gradient updates from older samples (more sample-efficient). (4) This combination—LoRA + GRPO + importance sampling—makes RL fine-tuning practical on consumer GPUs with limited memory. Therefore, Tinker supports modern memory-efficient RL algorithms.",
       hints: [
-        "LoRA = Low-Rank Adaptation for efficient fine-tuning",
-        "GRPO is a variant of policy gradient methods",
+        "LoRA = Low-Rank Adaptation: instead of training all weights, only train small 'adapter' matrices (~0.1-1% of parameters)",
+        "GRPO is a policy gradient method that avoids the value function by comparing samples within each group",
       ],
     },
   ],
@@ -453,10 +453,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Atropos is an open-source RL framework that you run on your own infrastructure (Lambda Labs, RunPod, etc.). Unlike managed platforms, it requires setting up the training environment yourself but offers complete control over the training loop, custom reward functions, and model architectures.",
+        "First, let's recall the open-source vs managed service trade-off: managed platforms are easier but less flexible; open-source frameworks give you control but require more setup. Step-by-step: (1) Atropos is an open-source RL framework—you download and run it on your own infrastructure. (2) Infrastructure options include Lambda Labs, RunPod, or any GPU provider. (3) You set up the training environment yourself, which means installing dependencies, configuring distributed training, etc. (4) In return, you get complete control: custom reward functions, modified training loops, different model architectures. Therefore, Atropos suits teams with ML infrastructure expertise who need maximum flexibility.",
       hints: [
-        "Open-source = more control, more setup",
-        "What do you trade for flexibility?",
+        "Open-source RL frameworks are like owning your own lab equipment—you can modify everything, but you also maintain everything",
+        "Consider the 'total cost': infrastructure costs + your engineering time for setup vs just paying for managed service",
       ],
     },
   ],
@@ -476,10 +476,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "veRL (from VolcEngine) and OpenRLHF are open-source libraries providing implementations of RLHF algorithms (PPO, DPO, etc.) that you run on your own infrastructure. They're building blocks for creating custom RL training pipelines, not managed services.",
+        "First, let's clarify what veRL and OpenRLHF are: they're not cloud services you sign up for, but code libraries you use in your own infrastructure. Step-by-step: (1) veRL (from VolcEngine, a Chinese cloud provider) and OpenRLHF are open-source libraries implementing RLHF algorithms. (2) They provide building blocks: PPO, DPO, GRPO, and other RLHF components you can compose. (3) You run these on your own infrastructure (Lambda Labs, RunPod, etc.)—they're frameworks, not services. (4) Think of them like PyTorch or TensorFlow, but specifically for RLHF rather than general deep learning. Therefore, use these when you want to build custom RL training pipelines with full control.",
       hints: [
-        "These are code libraries, not cloud services",
-        "Think PyTorch/TensorFlow but for RLHF",
+        "These are 'code libraries' you integrate into your training pipeline, not 'platforms' with web interfaces",
+        "Consider the analogy: just as you use PyTorch to build custom neural networks, you use veRL/OpenRLHF to build custom RLHF training",
       ],
     },
   ],
@@ -499,10 +499,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "OpenClaw-RL is designed specifically for training agentic AI systems that use tools, plan multi-step actions, and perform complex reasoning. Unlike general RLHF frameworks, it includes environment abstractions for tool integration and reward shaping for agentic behaviors.",
+        "First, let's recall the difference between single-turn RLHF and agentic RL: single-turn RLHF improves responses to one prompt, while agentic RL trains models to use tools and plan multi-step actions. Step-by-step: (1) General RLHF frameworks (like veRL, OpenRLHF) are designed for improving single-turn responses. (2) OpenClaw-RL specializes in agentic AI—systems that use tools (web search, calculators, code execution), plan sequences of actions, and handle multi-step reasoning. (3) It includes environment abstractions for tool integration—ways to connect RL training to external tools. (4) It provides reward shaping specifically for agentic behaviors—rewarding successful tool use and planning. Therefore, OpenClaw-RL is the right choice for building agents, not just better chat responses.",
       hints: [
-        "Claw suggests grasping/using tools",
-        "What makes agentic RL different from single-turn RLHF?",
+        "The 'Claw' in OpenClaw suggests grasping and using tools—think robotic arm picking up objects",
+        "Agentic RL differs from single-turn RLHF the way a chef differs from a taste tester: one plans and executes sequences, the other evaluates single responses",
       ],
     },
   ],
@@ -522,10 +522,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tinker provides weights at tinker://<run_id>/sampler_weights/final which you download, merge with the base model using HuggingFace PEFT, convert to your target format (GGUF for Ollama, or deploy via vLLM/Together/Fireworks). This workflow gives flexibility but requires additional steps.",
+        "First, let's recall the Tinker workflow: training happens on Tinker's infrastructure, but hosting doesn't. Step-by-step deployment process: (1) After training, Tinker makes weights available at tinker://<run_id>/sampler_weights/final. (2) You download the LoRA weights—these are small adapter matrices (~100MB for a 70B model). (3) You merge these LoRA weights with the base model using HuggingFace PEFT library. (4) Finally, convert to your target format: GGUF for Ollama local deployment, or deploy via vLLM/Together/Fireworks for cloud hosting. This workflow gives flexibility in hosting choice but requires additional DevOps steps.",
       hints: [
-        "Tinker doesn't host - what comes after training?",
-        "LoRA weights need to be merged with the base model",
+        "LoRA weights are 'deltas' to the base model—think of them as improvement patches you apply to get a specialized version",
+        "The conversion step matters: Ollama expects GGUF format, cloud providers may have their own format requirements",
       ],
     },
   ],
@@ -546,10 +546,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PagedAttention manages the KV cache like virtual memory: attention keys/values are stored in non-contiguous blocks that can be allocated on-demand. This eliminates memory fragmentation and allows serving more concurrent requests with the same GPU memory, dramatically improving throughput.",
+        "First, let's recall the KV cache bottleneck: during LLM inference, each token generates key and value vectors stored in GPU memory. With many concurrent requests, this cache becomes fragmented and inefficient. Step-by-step: (1) Traditional attention requires storing all KV pairs contiguously in GPU memory. (2) When memory is fragmented (partially filled blocks), you can't use it efficiently. (3) PagedAttention solves this by borrowing OS virtual memory concepts: KV cache is stored in non-contiguous blocks allocated on-demand. (4) Like how OS virtual memory maps physical memory pages to virtual addresses, PagedAttention maps logical cache positions to physical GPU memory blocks. Therefore, PagedAttention dramatically improves throughput by eliminating memory fragmentation.",
       hints: [
-        "Think about how OS virtual memory works",
-        "KV cache is the bottleneck for serving multiple requests",
+        "Think of PagedAttention like a smart memory manager: instead of requiring large contiguous memory blocks, it uses smaller blocks that can be allocated flexibly",
+        "The KV cache bottleneck is why serving many requests simultaneously was impossible before PagedAttention—the memory fragmentation made it impractical",
       ],
     },
     {
@@ -566,10 +566,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "vLLM is popular for production serving because it handles the efficiency challenges of LLM inference (PagedAttention for memory, continuous batching), supports loading LoRA adapters, and integrates directly with HuggingFace model formats that RL training tools produce.",
+        "First, let's clarify vLLM's role: it's a serving solution, not a training platform. After RL fine-tuning produces weights, vLLM helps deploy them. Step-by-step why vLLM is recommended: (1) It handles efficiency challenges: PagedAttention for memory management and continuous batching for throughput. (2) It supports loading LoRA adapters directly—the same format that RL training tools (Tinker, Atropos) produce. (3) It integrates with HuggingFace model formats out of the box. (4) Production deployment requires reliability: vLLM is battle-tested at scale. Therefore, vLLM is the natural choice for hosting RL-fine-tuned models.",
       hints: [
-        "vLLM is a serving solution, not a training one",
-        "Think about what matters for production deployment",
+        "vLLM is the 'deployment' piece after you've done the 'training'—think of it as the engine that serves predictions, not trains models",
+        "Consider what's critical for production: memory efficiency (PagedAttention), high throughput (continuous batching), and LoRA support for the weights your training produced",
       ],
     },
   ],
@@ -589,10 +589,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Together AI allows uploading your fine-tuned model weights and serving them through their inference API at competitive rates (~$0.20/M tokens). This is ideal for teams who've done custom fine-tuning and want production hosting without managing GPU infrastructure.",
+        "First, let's recall the hosting challenge: after fine-tuning, you need to serve your model in production, which requires GPU infrastructure and engineering. Step-by-step: (1) Together AI is an inference platform—not a training platform. (2) You upload your fine-tuned weights (from Tinker, Atropos, etc.) to Together's servers. (3) They provide a simple API to serve your model at competitive rates (~$0.20/M tokens). (4) You avoid managing GPU infrastructure—just call the API. This is ideal for teams who've invested in custom fine-tuning and want production hosting without the DevOps overhead.",
       hints: [
-        "Together = community + custom models",
-        "What do you need after fine-tuning?",
+        "Together AI bridges 'model trained' to 'model in production'—they handle the infrastructure, you handle the API calls",
+        "Consider the cost model: per-token pricing means you pay proportionally to usage, not for idle GPU time",
       ],
     },
   ],

@@ -254,7 +254,7 @@ const questions: Record<string, Question[]> = {
         "In Dueling DQN, the advantage stream A(s,a) is directly added to V(s) without any normalization to produce Q(s,a).",
       correctAnswer: "false",
       explanation:
-        "Without normalization, V and A are not identifiable - the same Q can arise from infinitely many V/A combinations. The standard fix subtracts the mean advantage: Q(s,a) = V(s) + A(s,a) − (1/|A|)\\Sigma_a A(s,a).",
+        "Without normalization, V and A are not identifiable - the same Q can arise from infinitely many V/A combinations. The standard fix subtracts the mean advantage: Q(s,a) = V(s) + A(s,a) - (1/|A|)\\Sigma_a A(s,a).",
       hints: [
         "If Q = V + A, then V and A could each shift by \\pmc and cancel - is V then uniquely determined?",
         "Identifiability requires anchoring A - the mean subtraction centers it at zero.",
@@ -269,7 +269,7 @@ const questions: Record<string, Question[]> = {
         "Every action has a dramatically different outcome from every state",
         "Many states have similar values regardless of the action taken (action choice matters little)",
         "The state space is very small and fully observable",
-        "The reward is always +1 or −1",
+        "The reward is always +1 or -1",
       ],
       correctAnswer: 1,
       explanation:
@@ -518,11 +518,11 @@ const questions: Record<string, Question[]> = {
         "Introduce bias that speeds convergence",
         "Reduce variance of the gradient estimate without changing its expected value",
         "Ensure the policy stays close to the behavior policy",
-        "Normalize rewards to the range [−1, 1]",
+        "Normalize rewards to the range [-1, 1]",
       ],
       correctAnswer: 1,
       explanation:
-        "Subtracting a state-dependent baseline b(s) from the return gives \\nabla_\\theta log \\pi_\\theta(a|s) \\cdot (G_t − b(s)). Since E[\\nabla_\\theta log \\pi_\\theta \\cdot b(s)] = 0, the gradient remains unbiased while the variance is reduced.",
+        "Subtracting a state-dependent baseline b(s) from the return gives \\nabla_\\theta log \\pi_\\theta(a|s) \\cdot (G_t - b(s)). Since E[\\nabla_\\theta log \\pi_\\theta \\cdot b(s)] = 0, the gradient remains unbiased while the variance is reduced.",
       hints: [
         "If E[b(s)] doesn\'t affect the gradient expectation, adding/subtracting it doesn\'t introduce bias.",
         "A good baseline b(s) \\approx V^\\pi(s) centers the return around zero, reducing large positive/negative fluctuations.",
@@ -547,7 +547,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "When using V^\\pi(s) as the baseline, the policy gradient update becomes proportional to the advantage function A^\\pi(s,a) = Q^\\pi(s,a) − V^\\pi(s). Actions with positive advantage are:",
+        "When using V^\\pi(s) as the baseline, the policy gradient update becomes proportional to the advantage function A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s). Actions with positive advantage are:",
       options: [
         "Made less probable to increase entropy",
         "Made more probable because they performed better than average for that state",
@@ -603,10 +603,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The one-step actor-critic update uses the TD error \\delta = r + \\gammaV(s') − V(s) as the advantage estimate. This introduces bias compared to using the true advantage because:",
+        "The one-step actor-critic update uses the TD error \\delta = r + \\gammaV(s') - V(s) as the advantage estimate. This introduces bias compared to using the true advantage because:",
       options: [
         "The TD error is always positive, biasing the policy toward recent actions",
-        "V(s') is an approximation, so \\delta = r + \\gammaV(s') − V(s) is a biased estimate of A^\\pi(s,a)",
+        "V(s') is an approximation, so \\delta = r + \\gammaV(s') - V(s) is a biased estimate of A^\\pi(s,a)",
         "The discount factor \\gamma is applied to the wrong term",
         "One-step returns have too low variance to be useful",
       ],
@@ -614,7 +614,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The advantage function is $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. We would ideally compute this using Monte Carlo returns, but that has high variance. The one-step TD error provides an alternative.\n\n**Step 1.** The one-step TD error is:\n\\[\\delta = r + \\gamma V(s') - V(s).\\]\nThis uses bootstrapping: instead of the full return $G_t$, it uses $r + \\gamma V(s')$ as a one-step estimate.\n\n**Step 2.** Relating $\\delta$ to the advantage: if $V(s')$ were exact, then $r + \\gamma V(s') \\approx Q^\\pi(s,a)$, so $\\delta \\approx Q^\\pi(s,a) - V(s) = A^\\pi(s,a)$. In that case, $\\delta$ would be an unbiased estimate of the advantage.\n\n**Step 3.** In practice, $V(s')$ is an approximation (learned by function approximation), so $\\delta$ is biased: the bias comes from the error in $V(s')$. However, bootstrapping dramatically reduces variance compared to Monte Carlo, at the cost of some bias. This bias-variance tradeoff is fundamental to TD methods.",
       hints: [
-        "If V(s') were exact, would \\delta be an unbiased estimate of Q(s,a) − V(s)?",
+        "If V(s') were exact, would \\delta be an unbiased estimate of Q(s,a) - V(s)?",
         "Bootstrapping trades bias for variance reduction - what is the source of the bias?",
       ],
     },
@@ -686,7 +686,7 @@ const questions: Record<string, Question[]> = {
         "Proximal Policy Optimization (PPO) constrains policy updates by:",
       options: [
         "Solving a constrained optimization problem with a KL divergence constraint each step",
-        "Clipping the probability ratio r_t(\\theta) = \\pi_\\theta(a|s)/\\pi_{\\theta_old}(a|s) to stay within [1−\\epsilon, 1+\\epsilon]",
+        "Clipping the probability ratio r_t(\\theta) = \\pi_\\theta(a|s)/\\pi_{\\theta_old}(a|s) to stay within [1-\\epsilon, 1+\\epsilon]",
         "Projecting the new policy back onto the trust region after each gradient step",
         "Limiting the gradient norm to a fixed maximum value",
       ],
@@ -743,7 +743,7 @@ const questions: Record<string, Question[]> = {
         "Trust Region Policy Optimization (TRPO) constrains updates by solving:",
       options: [
         "Minimize the expected KL divergence subject to a lower bound on improvement",
-        "Maximize the surrogate objective subject to KL(\\pi_{\\theta_old} ‖ \\pi_\\theta) \\leq \\delta",
+        "Maximize the surrogate objective subject to KL(\\pi_{\\theta_old} || \\pi_\\theta) \\leq \\delta",
         "Minimize the TD error subject to the policy staying within the replay buffer distribution",
         "Maximize returns subject to the policy entropy staying above a threshold",
       ],
@@ -806,7 +806,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The natural gradient \\nablãJ = F(\\theta)\\^{-1}\\nablaJ steepest ascends in the space of policy distributions (under KL divergence) rather than parameter space, making it invariant to policy parameterization.",
+        "The natural gradient \\nablaJ = F(\\theta)\\^{-1}\\nablaJ steepest ascends in the space of policy distributions (under KL divergence) rather than parameter space, making it invariant to policy parameterization.",
       hints: [
         "The Fisher information matrix defines the curvature of the KL divergence between policies.",
         "Preconditioned gradient descent is faster when the loss surface is poorly scaled.",
@@ -836,7 +836,7 @@ const questions: Record<string, Question[]> = {
         "F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot (\\nabla_\\theta log \\pi_\\theta(a|s))\\^T]",
         "F(\\theta) = \\nabla\\^2_\\theta J(\\theta) (the Hessian of expected return)",
         "F(\\theta) = E[(Q^\\pi(s,a))\\^2 \\nabla_\\theta log \\pi_\\theta(a|s)]",
-        "F(\\theta) = \\nabla_\\theta KL(\\pi_{\\theta+\\epsilon} ‖ \\pi_\\theta) / \\epsilon",
+        "F(\\theta) = \\nabla_\\theta KL(\\pi_{\\theta+\\epsilon} || \\pi_\\theta) / \\epsilon",
       ],
       correctAnswer: 0,
       explanation:
@@ -897,7 +897,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The reparameterization trick expresses sampled actions as a = tanh(\\mu_\\theta(s) + \\sigma_\\theta(s) ⊙ \\epsilon) where \\epsilon ~ N(0,I). This makes the gradient of the expected return flow through the deterministic function f_\\theta, giving lower variance than REINFORCE-style log-derivative estimators.",
+        "The reparameterization trick expresses sampled actions as a = tanh(\\mu_\\theta(s) + \\sigma_\\theta(s) \\odot \\epsilon) where \\epsilon ~ N(0,I). This makes the gradient of the expected return flow through the deterministic function f_\\theta, giving lower variance than REINFORCE-style log-derivative estimators.",
       hints: [
         "The reparameterization trick moves stochasticity outside the function being differentiated.",
         "This is the same trick used in VAEs for the latent variable.",
@@ -1047,7 +1047,7 @@ const questions: Record<string, Question[]> = {
         "Model-based RL is always more sample efficient than model-free RL because simulated data is free to generate.",
       correctAnswer: "false",
       explanation:
-        "First, let's recall what 'sample efficient' means: the number of real environment interactions needed to reach a target performance level.\n\n**Step 1.** Model-based RL uses a learned model to simulate transitions. If the model is accurate, simulated data is indeed cheap to generate, and the agent can learn faster from simulated rollouts than from slow real-world interactions.\n\n**Step 2.** However, if the learned dynamics model P̂(s'|s,a) contains systematic errors — which is common, especially early in training — then planning with this flawed model amplifies those errors. Each simulated step compounds the error: an error in step 1 leads to a wrong state s₁, which then leads to an even more wrong state s₂, and so on.\n\n**Step 3.** This is called model bias: the agent optimizes against its model of reality, not against reality itself. A policy that exploits model errors may appear optimal during planning but fail catastrophically in the real environment.\n\nTherefore, model-based RL is not always more sample efficient — a poor model can make it worse than model-free RL, where learning relies directly on real experience without model-based distortions.",
+        "First, let's recall what 'sample efficient' means: the number of real environment interactions needed to reach a target performance level.\n\n**Step 1.** Model-based RL uses a learned model to simulate transitions. If the model is accurate, simulated data is indeed cheap to generate, and the agent can learn faster from simulated rollouts than from slow real-world interactions.\n\n**Step 2.** However, if the learned dynamics model P(s'|s,a) contains systematic errors -- which is common, especially early in training -- then planning with this flawed model amplifies those errors. Each simulated step compounds the error: an error in step 1 leads to a wrong state s_1, which then leads to an even more wrong state s_2, and so on.\n\n**Step 3.** This is called model bias: the agent optimizes against its model of reality, not against reality itself. A policy that exploits model errors may appear optimal during planning but fail catastrophically in the real environment.\n\nTherefore, model-based RL is not always more sample efficient -- a poor model can make it worse than model-free RL, where learning relies directly on real experience without model-based distortions.",
       hints: [
         "What happens if the learned dynamics model makes systematic errors?",
         "Planning with an inaccurate model could lead the agent to exploit model errors rather than truly good behaviors.",
@@ -1066,7 +1066,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A learned model enables cheap simulated rollouts (improving sample efficiency) but introduces model bias - errors in P̂(s'|s,a) compound over long horizons, potentially leading to poor policies. This bias-efficiency tradeoff governs model-based RL algorithm design.",
+        "A learned model enables cheap simulated rollouts (improving sample efficiency) but introduces model bias - errors in P(s'|s,a) compound over long horizons, potentially leading to poor policies. This bias-efficiency tradeoff governs model-based RL algorithm design.",
       hints: [
         "More simulated experience helps, but only if the model is accurate.",
         "How do model errors accumulate over a multi-step rollout?",
@@ -1117,7 +1117,7 @@ const questions: Record<string, Question[]> = {
         "Dyna+ extends Dyna-Q to handle non-stationary environments by:",
       options: [
         "Using importance sampling to correct for distribution shift",
-        "Adding a bonus reward \\tau\\cdot√(time since last visited) to encourage revisiting states and detecting changes",
+        "Adding a bonus reward \\tau\\cdot\sqrt{}(time since last visited) to encourage revisiting states and detecting changes",
         "Periodically resetting the world model to forget outdated transitions",
         "Running a separate change detection algorithm on the reward signal",
       ],
@@ -1180,7 +1180,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The KL loss KL[posterior ‖ prior] ensures that the learned prior p(z'|z,a) (used during imagination without observations) matches the posterior q(z'|z,a,o') (trained with observations), making dream rollouts from the prior realistic.",
+        "The KL loss KL[posterior || prior] ensures that the learned prior p(z'|z,a) (used during imagination without observations) matches the posterior q(z'|z,a,o') (trained with observations), making dream rollouts from the prior realistic.",
       hints: [
         "During imagination, you use the prior (no observations). During training, you use the posterior.",
         "If prior and posterior diverge, imagined rollouts won\'t match reality.",
@@ -1350,7 +1350,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall what a strategy profile means: a specification of each player's chosen strategy (possibly mixed, i.e., a probability distribution over actions).\n\n**Step 1.** Consider two players with strategy profile (π₁, π₂). If player 1 deviates to a different strategy while player 2's strategy stays fixed, and this deviation increases player 1's expected payoff, then player 1 has an incentive to deviate.\n\n**Step 2.** A Nash equilibrium is defined as a strategy profile where no player has such an incentive — equivalently, each player's strategy is a best response to all other players' strategies.\n\n**Step 3.** In zero-sum games (payoff matrices where one player's gain is the other's loss), the Nash equilibrium has a special form: each player plays a minimax strategy, meaning they choose the action distribution that minimizes their maximum possible loss assuming the opponent also plays optimally.\n\nTherefore, in zero-sum games, the Nash equilibrium implies that neither player can improve their expected payoff by unilaterally changing their strategy — each is already playing a best response to the other.",
+        "First, let's recall what a strategy profile means: a specification of each player's chosen strategy (possibly mixed, i.e., a probability distribution over actions).\n\n**Step 1.** Consider two players with strategy profile (\pi_1, \pi_2). If player 1 deviates to a different strategy while player 2's strategy stays fixed, and this deviation increases player 1's expected payoff, then player 1 has an incentive to deviate.\n\n**Step 2.** A Nash equilibrium is defined as a strategy profile where no player has such an incentive -- equivalently, each player's strategy is a best response to all other players' strategies.\n\n**Step 3.** In zero-sum games (payoff matrices where one player's gain is the other's loss), the Nash equilibrium has a special form: each player plays a minimax strategy, meaning they choose the action distribution that minimizes their maximum possible loss assuming the opponent also plays optimally.\n\nTherefore, in zero-sum games, the Nash equilibrium implies that neither player can improve their expected payoff by unilaterally changing their strategy -- each is already playing a best response to the other.",
       hints: [
         "Nash equilibrium is a fixed point where no player wants to deviate - why?",
         "In rock-paper-scissors, what strategy profile satisfies this condition?",
@@ -1439,7 +1439,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Potential-based reward shaping F(s,s') = \\gamma\\Phi(s') − \\Phi(s) is guaranteed to preserve the optimal policy of the original MDP.",
+        "Potential-based reward shaping F(s,s') = \\gamma\\Phi(s') - \\Phi(s) is guaranteed to preserve the optimal policy of the original MDP.",
       correctAnswer: "true",
       explanation:
         "Ng, Harada & Russell (1999) proved that potential-based shaping is the only class of shaping functions that preserves all optimal policies. The shaped MDP R' = R + F(s,s') has the same set of optimal policies as the original.",
@@ -1553,7 +1553,7 @@ const questions: Record<string, Question[]> = {
         "Standard off-policy RL algorithms (like Q-learning with a replay buffer) can be applied directly to offline RL datasets without modification.",
       correctAnswer: "false",
       explanation:
-        "First, let's recall why off-policy RL with a replay buffer normally works: the buffer stores transitions collected by the behavior policy, and the algorithm (e.g., Q-learning) can learn from these off-policy samples because the agent continues to interact with the environment, exploring and correcting Q-value errors over time.\n\n**Step 1.** In online off-policy RL, when the Q-function overestimates some action a that isn't actually good, the agent will eventually try that action in the real environment, observe the low reward, and correct the Q-value. This self-correcting property keeps Q-values grounded in reality.\n\n**Step 2.** In offline RL, there is no further environment interaction. The dataset D is fixed. If the Q-function overestimates an out-of-distribution (OOD) action — one that never appears in D — there is no way to correct this error.\n\n**Step 3.** The problem compounds because the learned policy π(a|s) selects actions by maximizing Q(s,a). If Q(s, a_ood) is overestimated, the policy will select a_ood, leading to catastrophic failures in the real environment.\n\nTherefore, standard off-policy RL cannot be applied directly to offline settings — the absence of environment interaction breaks the self-correction mechanism, and offline-specific methods (CQL, IQL, TD3+BC) are needed to constrain Q-values or policy deviations.",
+        "First, let's recall why off-policy RL with a replay buffer normally works: the buffer stores transitions collected by the behavior policy, and the algorithm (e.g., Q-learning) can learn from these off-policy samples because the agent continues to interact with the environment, exploring and correcting Q-value errors over time.\n\n**Step 1.** In online off-policy RL, when the Q-function overestimates some action a that isn't actually good, the agent will eventually try that action in the real environment, observe the low reward, and correct the Q-value. This self-correcting property keeps Q-values grounded in reality.\n\n**Step 2.** In offline RL, there is no further environment interaction. The dataset D is fixed. If the Q-function overestimates an out-of-distribution (OOD) action -- one that never appears in D -- there is no way to correct this error.\n\n**Step 3.** The problem compounds because the learned policy \pi(a|s) selects actions by maximizing Q(s,a). If Q(s, a_ood) is overestimated, the policy will select a_ood, leading to catastrophic failures in the real environment.\n\nTherefore, standard off-policy RL cannot be applied directly to offline settings -- the absence of environment interaction breaks the self-correction mechanism, and offline-specific methods (CQL, IQL, TD3+BC) are needed to constrain Q-values or policy deviations.",
       hints: [
         "In online RL, the agent can explore and correct overestimated Q-values. What happens offline?",
         "The policy may want to take actions not in the dataset - what happens to Q(s,a) for those?",
@@ -1573,7 +1573,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CQL augments the standard Bellman error loss with min_a E_{a~\\pi}[Q(s,a)] − E_{a~D}[Q(s,a)], penalizing high Q-values for actions outside the dataset while allowing high values for actions in the data - preventing exploitation of overestimated OOD Q-values.",
+        "CQL augments the standard Bellman error loss with min_a E_{a~\\pi}[Q(s,a)] - E_{a~D}[Q(s,a)], penalizing high Q-values for actions outside the dataset while allowing high values for actions in the data - preventing exploitation of overestimated OOD Q-values.",
       hints: [
         "The problem is Q-values are too high for unobserved actions. How do you directly penalize this?",
         "CQL adds a Q-value penalty term to the loss - for which actions?",
@@ -1679,14 +1679,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Lagrangian relaxation applied to CMDP optimization converts the constrained problem into an unconstrained one by:",
       options: [
-        "Adding a penalty term \\lambda\_i \\cdot \max(0, E[C_i] − d\_i) to the objective and optimizing jointly over policy and \\lambda",
+        "Adding a penalty term \\lambda\_i \\cdot \max(0, E[C_i] - d\_i) to the objective and optimizing jointly over policy and \\lambda",
         "Projecting the policy gradient onto the constraint manifold at each step",
         "Running a separate safety critic that blocks unsafe actions before they are executed",
         "Solving a linear program over the space of occupancy measures",
       ],
       correctAnswer: 0,
       explanation:
-        "Lagrangian relaxation introduces multipliers \\lambda\_i \\geq 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) − \\Sigma\_i \\lambda\_i(E[C\_i(\\pi)] − d\_i). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
+        "Lagrangian relaxation introduces multipliers \\lambda\_i \\geq 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) - \\Sigma\_i \\lambda\_i(E[C\_i(\\pi)] - d\_i). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
       hints: [
         "Lagrangian relaxation moves constraints into the objective with penalty multipliers.",
         "The multiplier \\lambda is large when the constraint is violated, penalizing the policy heavily.",
@@ -1735,7 +1735,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'Reward shaping in cooperative multi-agent RL using difference rewards (D_i = G − G_{−i}) addresses which core challenge?',
+        'Reward shaping in cooperative multi-agent RL using difference rewards (D_i = G - G_{-i}) addresses which core challenge?',
       options: [
         'It removes the need for a centralized critic by computing local gradients',
         'It isolates each agent\'s individual contribution to the global reward, reducing the credit-assignment problem',
@@ -1744,7 +1744,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Difference rewards D_i = G(s,a) − G(s, a_{−i}) measure how much agent i contributes by comparing actual global return to counterfactual return without i\'s action. This gives a credit-assignment signal aligned with global objectives.',
+        'Difference rewards D_i = G(s,a) - G(s, a_{-i}) measure how much agent i contributes by comparing actual global return to counterfactual return without i\'s action. This gives a credit-assignment signal aligned with global objectives.',
       hints: [
         'The credit-assignment problem: in large teams, individual contributions to a shared reward are hard to isolate.',
         'Counterfactual baselines subtract the expected contribution of other agents.',
@@ -1780,7 +1780,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'In goal-conditioned hierarchical RL, the high-level policy sets sub-goals for the low-level policy, and the low-level policy receives a dense intrinsic reward based on how close it gets to the sub-goal.',
       correctAnswer: 'true',
       explanation:
-        'Goal-conditioned HRL (e.g., HIRO) has a high-level controller that generates sub-goals g_t every k steps. The low-level controller receives intrinsic reward r_t = −‖s_{t+1} − g_t‖ encouraging it to reach g_t, while the high-level maximizes extrinsic reward.',
+        'Goal-conditioned HRL (e.g., HIRO) has a high-level controller that generates sub-goals g_t every k steps. The low-level controller receives intrinsic reward r_t = -||s_{t+1} - g_t|| encouraging it to reach g_t, while the high-level maximizes extrinsic reward.',
       hints: [
         'HIRO = HIerarchical Reinforcement learning with Off-policy correction.',
         'Distance-based intrinsic reward provides a dense training signal for the low-level policy.',
@@ -1877,7 +1877,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'RLHF (InstructGPT, ChatGPT): (1) collect human preference data comparing pairs of responses, (2) train a reward model R(x,y) via Bradley-Terry regression, (3) fine-tune the LM with PPO to maximize E[R(x,y)] − \\beta\\cdotKL(\\pi || \\pi_ref), keeping the policy close to the reference LM.',
+        'RLHF (InstructGPT, ChatGPT): (1) collect human preference data comparing pairs of responses, (2) train a reward model R(x,y) via Bradley-Terry regression, (3) fine-tune the LM with PPO to maximize E[R(x,y)] - \\beta\\cdotKL(\\pi || \\pi_ref), keeping the policy close to the reference LM.',
       hints: [
         'Human preferences are captured as pairwise comparisons - which response did humans prefer?',
         'PPO is used because it is stable and clips large policy updates.',
@@ -1891,7 +1891,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Reward hacking in RLHF occurs when the policy finds high-scoring outputs that satisfy the reward model but diverge from true human intent, typically because the reward model is an imperfect proxy.',
       correctAnswer: 'true',
       explanation:
-        'Reward hacking (Goodhart\'s Law): "When a measure becomes a target, it ceases to be a good measure." The LM can find adversarial inputs that exploit reward model blind spots - e.g., verbose or sycophantic responses that score highly but are unhelpful.',
+        "First, let's recall that the reward model R(x, y) in RLHF is trained on a finite set of human preference comparisons. It is an imperfect proxy for the true human preference -- the model sees only a small sample of possible (prompt, response) pairs and learns to generalize from them.\n\n**Step 1.** The RL fine-tuning phase then optimizes the policy \pi to maximize E[R(x, y)] for y ~ \pi(\cdot|x). This is a standard RL problem where R is the reward signal.\n\n**Step 2.** Because R is a learned proxy (not the true objective), there exist outputs y that score high under R but low under true human preference. The policy can find these outputs if they increase expected reward.\n\n**Step 3.** This is Goodhart's Law in action: \"When a measure becomes a target, it ceases to be a good measure.\" The policy exploits the gap between R and true preference, finding \"reward hacking\" outputs -- verbose responses that sound confident, sycophantic answers that flatter the user, or adversarial strings that trick the reward model.\n\nTherefore, reward hacking in RLHF occurs when the policy finds outputs that satisfy the reward model's learned preferences but diverge from actual human intent -- exploiting systematic errors in the proxy reward.",
       hints: [
         'Goodhart\'s Law applies: optimizing a proxy measure diverges from the true objective.',
         'Examples: responses that are long and complimentary rather than accurate.',
@@ -1961,15 +1961,15 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Reward shaping for robotic manipulation (e.g., peg insertion) using potential-based shaping \\Phi(s) guarantees:',
       options: [
         'Faster convergence to the optimal policy regardless of \\Phi\'s accuracy',
-        'Policy invariance: the optimal policy for the shaped reward F(s,a,s\') = r + \\gamma\\Phi(s\') − \\Phi(s) is the same as for the original r',
+        'Policy invariance: the optimal policy for the shaped reward F(s,a,s\') = r + \\gamma\\Phi(s\') - \\Phi(s) is the same as for the original r',
         'The shaped reward eliminates the need for any sparse terminal reward signal',
         'Potential-based shaping forces exploration toward the goal state',
       ],
       correctAnswer: 1,
       explanation:
-        'Ng et al. (1999) proved that F(s,a,s\') = r(s,a,s\') + \\gamma\\Phi(s\') − \\Phi(s) preserves the optimal policy for any potential function \\Phi. This allows injecting domain knowledge (e.g., \\Phi = −dist_to_goal) without distorting the RL solution, unlike arbitrary reward shaping.',
+        "First, let's recall potential-based shaping: the shaping reward is F(s, a, s') = r(s, a, s') + \\gamma\Phi(s') - \Phi(s), where \Phi(s) is the potential function depending only on the state.\n\n**Step 1.** The key theorem by Ng, Harada & Russell (1999) states: for any potential function \Phi(s), the shaped MDP with reward R' = R + F has exactly the same optimal policy as the original MDP with reward R.\n\n**Step 2.** To see why, consider the return under shaping. Over a complete episode of length T:\n\\[ \\sum_{t=0}^{T-1} \\gamma^t F(s_t, a_t, s_{t+1}) = \\sum_{t=0}^{T-1} \\gamma^t [r_t + \\gamma\\Phi(s_{t+1}) - \\Phi(s_t)] = -\\Phi(s_0) + \\sum_{t=0}^{T-1} \\gamma^t r_t + \\lim_{T \\to \\infty} \\gamma^T \\Phi(s_T).\n\\]\nThe terms -\Phi(s_0) and the limit cancel out (assuming bounded \Phi and \\gamma < 1), leaving only the original return plus a constant offset independent of the policy.\n\n**Step 3.** Since all policies receive the same constant offset from shaping, their relative ordering by cumulative reward is unchanged -- the optimal policy is identical.\n\nTherefore, potential-based shaping guarantees policy invariance: the optimal policy under the shaped reward F(s,a,s') = r + \\gamma\Phi(s') - \Phi(s) is the same as for the original reward r, for any potential function \Phi. This allows injecting domain knowledge (e.g., \Phi = -dist_to_goal) without distorting the RL solution.",
       hints: [
-        'The shaping term \\gamma\\Phi(s\') − \\Phi(s) telescopes to zero over complete episodes.',
+        'The shaping term \\gamma\\Phi(s\') - \\Phi(s) telescopes to zero over complete episodes.',
         'Only potential-based shaping guarantees policy invariance - arbitrary bonuses can change the optimal policy.',
       ],
     },
@@ -2058,7 +2058,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'The credit assignment problem in RL refers to the difficulty of determining which specific actions in a long trajectory caused a delayed reward received many timesteps later.',
       correctAnswer: 'true',
       explanation:
-        "First, let's recall the structure of RL tasks: an agent executes a sequence of actions a₁, a₂, ..., aₜ, ..., aₜ₋₁, aₜ, ..., aₜ₋₁, aₜ, ..., aₜ₋ₙ, receiving rewards r₁, r₂, ..., rₜ, ..., rₜ₋₁, rₜ, ..., rₜ₋ₙ, with the final reward rₜ₋ₙ arriving at the end of the episode.\n\n**Step 1.** Suppose the agent finally receives r = +1 at time T, indicating success. Which of the T actions actually caused this? Was it action a₁₋₁ (early in the episode) or action aₜ₋₁ (just before the reward)? Both contributed to the trajectory, but they contributed differently.\n\n**Step 2.** The temporal credit assignment problem is the difficulty of determining how much each action aᵢ contributed to the final outcome, especially when rewards are delayed and sparse.\n\n**Step 3.** Without solving this, the policy gradient ∇_θ J(θ) cannot correctly attribute credit: if aₜ₋₁ was critical but a₁₋₁ was irrelevant, updating based on the undifferentiated return Gₜ treats them equally — a poor signal.\n\nTherefore, the credit assignment problem refers to determining which specific actions caused a delayed reward, and techniques like eligibility traces (γλᵗ⁻ᵢ), advantage estimation (A(sₜ, aₜ) = Q(sₜ, aₜ) − V(sₜ)), and attention mechanisms all propagate reward credit backward through time to give each action its proper weight.",
+        "First, let's recall the structure of RL tasks: an agent executes a sequence of actions $a_1, a_2, ..., a_t$, receiving rewards $r_1, r_2, ..., r_t$, with the final reward arriving at the end of the episode.\n\n**Step 1.** Suppose the agent finally receives r = +1 at time T, indicating success. Which of the T actions actually caused this? Was it an action early in the episode or an action just before the reward? Both contributed to the trajectory, but they contributed differently.\n\n**Step 2.** The temporal credit assignment problem is the difficulty of determining how much each action $a_i$ contributed to the final outcome, especially when rewards are delayed and sparse.\n\n**Step 3.** Without solving this, the policy gradient $\\nabla_\\theta J(\\theta)$ cannot correctly attribute credit: if an action was critical but another was irrelevant, updating based on the undifferentiated return $G_t$ treats them equally - a poor signal.\n\nTherefore, the credit assignment problem refers to determining which specific actions caused a delayed reward, and techniques like eligibility traces ($\\gamma\\lambda^{t-i}$), advantage estimation ($A(s_t, a_t) = Q(s_t, a_t) - V(s_t)$), and attention mechanisms all propagate reward credit backward through time to give each action its proper weight.",
       hints: [
         'If you win a chess game after 100 moves, which moves were most important?',
         'Discounting (\\gamma < 1) provides one heuristic: actions closer to reward get more credit.',
@@ -2170,7 +2170,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Conservative Q-Learning (CQL) penalizes Q-values for out-of-distribution actions to prevent overestimation, while still supporting Bellman backups on in-distribution data.',
       correctAnswer: 'true',
       explanation:
-        'CQL minimizes E_{\\mu}[Q(s,a)] − E_{D}[Q(s,a)] + standard Bellman loss, where \\mu is a broad distribution over actions and D is the data distribution. This pushes down Q for OOD actions and pulls up Q for in-distribution actions, preventing the policy from exploiting Q-overestimation.',
+        'CQL minimizes E_{\\mu}[Q(s,a)] - E_{D}[Q(s,a)] + standard Bellman loss, where \\mu is a broad distribution over actions and D is the data distribution. This pushes down Q for OOD actions and pulls up Q for in-distribution actions, preventing the policy from exploiting Q-overestimation.',
       hints: [
         'CQL = Conservative Q-Learning. Conservative means: underestimate OOD Q-values for safety.',
         'The penalty term lower-bounds the true Q-function under the data distribution.',
@@ -2246,7 +2246,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the goal of meta-RL: given a distribution of tasks, learn a policy that can adapt quickly to a new task with minimal experience.\n\n**Step 1.** MAML (Model-Agnostic Meta-Learning) achieves fast adaptation via gradient: at test time, given a new task, MAML performs several gradient steps on the task-specific loss to adjust the policy parameters θ. This is computationally expensive — each adaptation step requires a forward and backward pass through the entire network.\n\n**Step 2.** PEARL (Probabilistic Embedding Architectures for Reinforcement Learning) takes a different approach. Instead of adapting the policy parameters θ via gradients, PEARL adapts the task embedding z.\n\n**Step 3.** PEARL uses a context encoder E(z|{sₜ, aₜ, rₜ, sₜ₊₁}) that takes recent transitions from the new task and produces a probabilistic posterior q(z|context) — a distribution over task embeddings. This is inference, not optimization.\n\n**Step 4.** At test time, PEARL runs the policy π(a|s, z) with z sampled from the inferred posterior. As more data is collected, the posterior updates, and the policy automatically adapts — no gradient steps needed, just a forward pass through the encoder.\n\nTherefore, PEARL specifically differs from MAML by enabling adaptation in a single forward pass without gradient updates: it infers a posterior over task embeddings via an encoder network rather than modifying policy parameters via gradient descent.",
+        "First, let's recall the goal of meta-RL: given a distribution of tasks, learn a policy that can adapt quickly to a new task with minimal experience.\n\n**Step 1.** MAML (Model-Agnostic Meta-Learning) achieves fast adaptation via gradient: at test time, given a new task, MAML performs several gradient steps on the task-specific loss to adjust the policy parameters theta. This is computationally expensive -- each adaptation step requires a forward and backward pass through the entire network.\n\n**Step 2.** PEARL (Probabilistic Embedding Architectures for Reinforcement Learning) takes a different approach. Instead of adapting the policy parameters theta via gradients, PEARL adapts the task embedding z.\n\n**Step 3.** PEARL uses a context encoder E(z|{s_t, a_t, r_t, s_t+1_1}) that takes recent transitions from the new task and produces a probabilistic posterior q(z|context) -- a distribution over task embeddings. This is inference, not optimization.\n\n**Step 4.** At test time, PEARL runs the policy \pi(a|s, z) with z sampled from the inferred posterior. As more data is collected, the posterior updates, and the policy automatically adapts -- no gradient steps needed, just a forward pass through the encoder.\n\nTherefore, PEARL specifically differs from MAML by enabling adaptation in a single forward pass without gradient updates: it infers a posterior over task embeddings via an encoder network rather than modifying policy parameters via gradient descent.",
       hints: [
         'MAML = gradient-based adaptation at test time. PEARL = inference-based adaptation (no gradients).',
         'PEARL\'s context encoder amortizes the adaptation cost: one forward pass replaces many gradient steps.',
@@ -2475,7 +2475,7 @@ const extra2: Record<string, Question[]> = {
         "DPO trains the reward model and policy simultaneously in a single optimization step",
       ],
       correctAnswer: 1,
-      explanation: "The RLHF objective $J(\\pi) = \\mathbb{E}[R(x,y)] - \\beta \\cdot \\text{KL}(\\pi||\\pi_{\\text{ref}})$ has optimal solution $\\pi^* \\propto \\pi_{\\text{ref}} \\cdot \\exp(R^*/\\beta)$, giving $R^* = \\beta \\cdot \\log(\\pi^*/\\pi_{\\text{ref}}) + Z(x)$. Plugging into the Bradley-Terry preference model $P(y_w \\succ y_l) = \\sigma(R(x,y_w) - R(x,y_l))$, the reward difference becomes $\\beta \\cdot (\\log(\\pi^*/\\pi_{\\text{ref}})(y_w) - \\log(\\pi^*/\\pi_{\\text{ref}})(y_l))$. DPO directly minimizes\n\\[\n-\\log \\sigma\\big(\\beta \\cdot (\\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_w) - \\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_l))\\big)\n\\]\nover the policy $\\pi_\\theta$ — no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
+      explanation: "The RLHF objective $J(\\pi) = \\mathbb{E}[R(x,y)] - \\beta \\cdot \\text{KL}(\\pi||\\pi_{\\text{ref}})$ has optimal solution $\\pi^* \\propto \\pi_{\\text{ref}} \\cdot \\exp(R^*/\\beta)$, giving $R^* = \\beta \\cdot \\log(\\pi^*/\\pi_{\\text{ref}}) + Z(x)$. Plugging into the Bradley-Terry preference model $P(y_w \\succ y_l) = \\sigma(R(x,y_w) - R(x,y_l))$, the reward difference becomes $\\beta \\cdot (\\log(\\pi^*/\\pi_{\\text{ref}})(y_w) - \\log(\\pi^*/\\pi_{\\text{ref}})(y_l))$. DPO directly minimizes\n\\[\n-\\log \\sigma\\big(\\beta \\cdot (\\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_w) - \\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_l))\\big)\n\\]\nover the policy $\\pi_\\theta$ -- no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
       hints: [
         "The optimal RL policy satisfies \\pi* \\propto \pi_{\text{ref}} \cdot \exp(R/\beta). Can we express R in terms of \\pi* and \\pi_ref?",
         "If R appears in the preference model P(y_w > y_l), and R can be expressed in terms of \\pi, can we optimize \\pi directly on the preference data?",

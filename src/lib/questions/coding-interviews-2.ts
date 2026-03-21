@@ -770,9 +770,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Find inorder successor (smallest in right subtree). Copy its value to current node. Recursively delete the successor (which has at most one child - it has no left child).",
+        "First, let's recall why deletion of a two-child node is tricky: replacing the node with either its left or right child would break BST ordering.\n\nThe standard approach uses the inorder successor:\n\nStep 1: Find the inorder successor - the leftmost (smallest) node in the right subtree\nStep 2: Copy the successor's value to the current node (preserving BST value ordering)\nStep 3: Recursively delete the successor node from the right subtree\n\nTherefore, this works because the successor has at most one child (no left child by definition), making deletion straightforward. The BST property is maintained because the successor is the next larger value in sorted order.",
       hints: [
-        "Inorder successor = leftmost node in right subtree. After copying, delete it (simpler case).",
+        "Inorder successor = leftmost node in the right subtree. It's the next larger value in sorted order.",
+        "After copying the successor's value to the current node, delete the successor. Since it's leftmost, it has at most one child (no left child).",
       ],
     },
     {
@@ -853,9 +854,10 @@ const questions: Record<string, Question[]> = {
         "Inserting a word of length L into a Trie takes O(L) time regardless of how many words are already stored.",
       correctAnswer: "true",
       explanation:
-        "Each of L characters creates or traverses one node. Existing words share prefixes but do not slow insertion - we always visit exactly L nodes.",
+        "First, let's recall how Trie insertion works: at each character, we either find an existing node (traverse) or create a new one (create).\n\nStep 1: Start at the root node\nStep 2: For each character in the word, check if a child node exists for that character\nStep 3: If yes, move to that child (traverse). If no, create a new node (create)\nStep 4: After processing all L characters, mark the final node as a word ending\n\nTherefore, insertion always visits exactly L nodes regardless of how many words are already in the Trie. Shared prefixes make storage efficient but don't affect insertion time complexity.\n\nExisting words sharing prefixes actually helps: we skip creating new nodes when prefixes already exist, but even in the worst case (no sharing), we traverse exactly L nodes.",
       hints: [
-        "You touch exactly one node per character: L characters = L nodes.",
+        "You touch exactly one node per character: L characters = L nodes visited.",
+        "Shared prefixes mean we traverse existing nodes rather than create new ones, but the number of steps is always L.",
       ],
     },
     {
@@ -904,9 +906,10 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n * L)", "O(n * L * A)", "O(A^L)"],
       correctAnswer: 2,
       explanation:
-        "Worst case (no shared prefixes): n * L nodes, each with A child pointers. O(n * L * A). In practice shared prefixes reduce this significantly.",
+        "First, let's recall how Trie space is structured: each node contains an array of A child pointers (one for each possible next character).\n\nStep 1: In the worst case with no shared prefixes, each of n words creates L separate nodes\nStep 2: Total nodes = n * L\nStep 3: Each node stores A child pointers (alphabet size)\nStep 4: Space per node = O(A)\n\nTherefore, worst-case space complexity = (n * L nodes) * O(A) = O(n * L * A). In practice, shared prefixes between words significantly reduce the actual space usage since many nodes are consolidated.",
       hints: [
-        "Each node stores A child pointers. Worst case: n words, each L nodes, no sharing.",
+        "Each node stores A child pointers (one for each possible next character). With no shared prefixes, we have n*L nodes.",
+        "Space = number of nodes times the size per node = O(n * L * A).",
       ],
     },
     {

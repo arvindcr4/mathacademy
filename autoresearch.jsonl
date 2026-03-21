@@ -34,3 +34,5 @@
 {"run":50,"commit":"7ac14c7c","metric":1615,"metrics":{"new_courses":1,"new_kps":30,"ts_errors":0},"status":"keep","description":"Add Data Engineering for AI/ML course (30 KPs)","timestamp":1774115040,"segment":0}
 {"run":47,"commit":"current","metric":203,"metrics":{"tests_passed":203,"ts_errors":0},"status":"keep","description":"Tests auto-expanded to 203, all passing. No new bugs found.","timestamp":1774115168,"segment":0}
 {"run":48,"commit":"current","metric":213,"metrics":{"tests_passed":213,"ts_errors":0},"status":"keep","description":"Add CourseClient.test.tsx with 10 tests for course page component. All tests pass.","timestamp":1774115389,"segment":0}
+{"run":51,"commit":"7598d223","metric":1615,"metrics":{"linter_fixes":9,"ts_errors":0},"status":"keep","description":"Linter fixes and question file updates","timestamp":1774115557,"segment":0}
+{"run":49,"commit":"current","metric":213,"metrics":{"tests_passed":213,"ts_errors":0},"status":"keep","description":"Fix ai-healthcare.ts duplicate content, replace non-ASCII chars in rl-applications.ts. All tests pass.","timestamp":1774115676,"segment":0}
