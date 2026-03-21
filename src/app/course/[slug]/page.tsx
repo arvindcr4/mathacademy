@@ -85,6 +85,90 @@ export default function CoursePage() {
     'bellman-equations': [
       { q: 'The Bellman equation expresses V(s) in terms of:', a: 'V(s\') for successor states and immediate reward', hints: ['It decomposes recursively', 'Think about the next state and reward'] },
     ],
+    'bellman-recursion': [
+      { q: 'Bootstrapping in TD learning means:', a: 'Updating estimates based on other estimates (not waiting for final outcome)', hints: ['Compare to Monte Carlo', 'TD uses the next state\'s value estimate'] },
+    ],
+    'contraction-mapping': [
+      { q: 'Why does the Bellman backup operator guarantee convergence?', a: 'It is a γ-contraction mapping in the sup-norm, so iteration converges to the unique fixed point', hints: ['Think about the discount factor γ < 1', 'Fixed point theorem'] },
+    ],
+    'dp-convergence': [
+      { q: 'What is the time complexity of value iteration with |S| states and |A| actions?', a: 'O(|S|² × |A|) per iteration', hints: ['For each state-action pair you update all next states', 'Multiply state count squared by action count'] },
+    ],
+    'asynchronous-dp': [
+      { q: 'An advantage of asynchronous DP over synchronous DP is:', a: 'It can update states in any order, allowing focus on relevant states and faster practical convergence', hints: ['Not all states need equal attention', 'Think about real-time problems'] },
+    ],
+    'first-visit-mc': [
+      { q: 'In first-visit MC, the return G_t is used:', a: 'Only for the first time state s is visited in an episode', hints: ['Contrast with every-visit MC', 'Each state counted at most once per episode'] },
+    ],
+    'importance-sampling': [
+      { q: 'Off-policy MC uses importance sampling to:', a: 'Correct for the difference in distribution between behavior policy and target policy', hints: ['We act under μ but want to learn about π', 'Weight returns by π(a|s)/μ(a|s)'] },
+    ],
+    'target-networks': [
+      { q: 'Why does DQN use a separate target network?', a: 'To stabilize training by providing fixed TD targets during updates', hints: ['Without it, targets shift with every update', 'The target network is updated less frequently'] },
+    ],
+    'double-dqn': [
+      { q: 'Double DQN reduces overestimation bias by:', a: 'Using the online network to select actions and the target network to evaluate them', hints: ['Max operation causes overestimation in standard DQN', 'Two separate networks for selection and evaluation'] },
+    ],
+    'baseline-variance': [
+      { q: 'Adding a baseline b(s) to REINFORCE:', a: 'Reduces variance without introducing bias', hints: ['The expected value of baseline term is zero', 'Advantage = R - b(s)'] },
+    ],
+    'natural-policy-gradient': [
+      { q: 'The natural policy gradient uses the _____ to account for the geometry of the policy space.', a: 'Fisher information matrix', hints: ['Standard gradient ignores policy geometry', 'NPG preconditions gradient by F⁻¹'] },
+    ],
+    'rainbow-dqn': [
+      { q: 'Rainbow DQN combines how many improvements over vanilla DQN?', a: '6 improvements: Double DQN, Dueling, Prioritized Replay, Multi-step, Distributional, Noisy Nets', hints: ['It is the combination paper', 'Each improvement was validated separately first'] },
+    ],
+    'model-based-rl': [
+      { q: 'A key advantage of model-based RL over model-free RL is:', a: 'Higher sample efficiency — the agent can plan and simulate experiences without real environment interaction', hints: ['Think about data efficiency', 'Models let you generate synthetic rollouts'] },
+    ],
+    'vectors-matrices': [
+      { q: 'What is the result of multiplying a 3×4 matrix by a 4×2 matrix?', a: 'A 3×2 matrix', hints: ['(m×n) × (n×p) = (m×p)', 'Inner dimensions must match'] },
+    ],
+    'eigenvalues-eigenvectors': [
+      { q: 'If Av = λv, what does λ represent?', a: 'The eigenvalue — a scalar showing how much the eigenvector v is scaled by matrix A', hints: ['The eigenvector direction is preserved', 'λ scales the vector'] },
+    ],
+    'svd': [
+      { q: 'SVD decomposes matrix A into:', a: 'A = UΣVᵀ where U, V are orthogonal and Σ is diagonal with singular values', hints: ['Three matrices', 'The middle matrix contains singular values'] },
+    ],
+    'scaled-dot-product': [
+      { q: 'Why do we scale dot products by √d_k in attention?', a: 'To prevent vanishing gradients — dot products grow large in high dimensions, pushing softmax into saturation regions', hints: ['Think about variance of dot products', 'Large values → flat softmax gradients'] },
+    ],
+    'multi-head-attention': [
+      { q: 'What is the benefit of using h attention heads instead of 1?', a: 'Different heads can attend to different positions and representation subspaces simultaneously', hints: ['Diversity of attention patterns', 'Each head learns different relationships'] },
+    ],
+    'positional-encoding': [
+      { q: 'RoPE (Rotary Position Embedding) encodes position by:', a: 'Rotating query and key vectors in 2D planes by angles proportional to position, enabling relative position capture', hints: ['It modifies Q and K before attention', 'Used in Llama, PaLM, and many modern LLMs'] },
+    ],
+    'scaling-laws': [
+      { q: 'The Chinchilla scaling law states that for optimal training, model size and training tokens should be scaled:', a: 'Roughly equally — a model with N parameters should be trained on ~20N tokens', hints: ['GPT-3 was undertrained relative to this', 'Chinchilla beat Gopher at 70B vs 280B'] },
+    ],
+    'mixture-of-experts': [
+      { q: 'In a Mixture of Experts (MoE) model, the router assigns each token to:', a: 'A subset of experts (typically top-2), activating only those parameters for that token', hints: ['Sparse activation — not all experts fire', 'Mixtral 8×7B uses MoE'] },
+    ],
+    'kv-cache': [
+      { q: 'The KV cache speeds up autoregressive inference by:', a: 'Storing key and value tensors from previous tokens, avoiding recomputing them at each generation step', hints: ['Attention needs past K and V', 'Without it, each step reprocesses the full sequence'] },
+    ],
+    'speculative-decoding': [
+      { q: 'Speculative decoding uses a small draft model to:', a: 'Propose multiple tokens that the large target model then verifies in parallel, achieving >1 token per forward pass', hints: ['The target model checks draft tokens in one pass', 'Speedup comes from batch verification'] },
+    ],
+    'wandb-basics': [
+      { q: 'In W&B, a "run" corresponds to:', a: 'A single training experiment with its own config, metrics, and artifacts', hints: ['Projects contain many runs', 'Each call to wandb.init() creates a run'] },
+    ],
+    'data-drift': [
+      { q: 'Which statistical test is commonly used to detect distribution shift between training and serving data?', a: 'Kolmogorov-Smirnov (KS) test or Population Stability Index (PSI)', hints: ['You compare two distributions', 'PSI is common in finance/ML monitoring'] },
+    ],
+    'lora-rank-selection': [
+      { q: 'A higher LoRA rank r means:', a: 'More trainable parameters and more expressive updates, but higher memory cost', hints: ['Rank determines size of A and B matrices', 'r=64 > r=8 in expressiveness'] },
+    ],
+    'lora-merge': [
+      { q: 'After training, LoRA weights are merged into the base model by:', a: 'Adding W₀ + BA (where B and A are the low-rank matrices) to produce the final weight matrix', hints: ['The update is BA, not B×A separately', 'Merged model has no inference overhead'] },
+    ],
+    'double-quantization': [
+      { q: 'In QLoRA, double quantization reduces memory by:', a: 'Quantizing the quantization constants themselves (from 32-bit to 8-bit), saving ~0.37 bits per parameter', hints: ['The quantization constants for each block are also quantized', 'Saves memory on the quantization metadata'] },
+    ],
+    'constitutional-ai': [
+      { q: 'In Constitutional AI (CAI), the model is trained to be helpful/harmless using:', a: 'A set of principles (constitution) where the model critiques and revises its own outputs — no human labels needed', hints: ['Anthropic\'s approach to RLHF without human preference labels', 'The model self-critiques based on principles'] },
+    ],
   }
 
   const currentExamples = currentKp ? exampleProblems[currentKp.slug] || [

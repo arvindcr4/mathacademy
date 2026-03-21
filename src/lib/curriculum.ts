@@ -876,6 +876,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // DEEP LEARNING FUNDAMENTALS
+  {
+    id: 'deep-learning-fundamentals',
+    slug: 'deep-learning-fundamentals',
+    name: 'Deep Learning Fundamentals',
+    description: 'Core neural network concepts: backpropagation, CNNs, RNNs, regularization, and training best practices.',
+    category: 'fine-tuning',
+    icon: '🧠',
+    color: '#EC4899',
+    topicCount: 6,
+    estimatedHours: 28,
+    topics: [
+      {
+        id: 'neural-networks-basics',
+        slug: 'neural-networks-basics',
+        name: 'Neural Network Basics',
+        description: 'Perceptrons, activation functions, and forward propagation.',
+        knowledgePoints: [
+          { id: 'dl-kp-1', slug: 'perceptron', name: 'Perceptron & Linear Threshold Unit' },
+          { id: 'dl-kp-2', slug: 'activation-functions', name: 'Activation Functions (ReLU, GELU, Sigmoid)' },
+          { id: 'dl-kp-3', slug: 'forward-propagation', name: 'Forward Propagation' },
+          { id: 'dl-kp-4', slug: 'universal-approximation', name: 'Universal Approximation Theorem' },
+          { id: 'dl-kp-5', slug: 'network-depth-width', name: 'Depth vs Width Tradeoffs' },
+        ]
+      },
+      {
+        id: 'backpropagation',
+        slug: 'backpropagation',
+        name: 'Backpropagation',
+        description: 'Compute gradients efficiently through automatic differentiation.',
+        knowledgePoints: [
+          { id: 'dl-kp-6', slug: 'chain-rule-backprop', name: 'Chain Rule in Backpropagation' },
+          { id: 'dl-kp-7', slug: 'computation-graph', name: 'Computation Graphs & Autograd' },
+          { id: 'dl-kp-8', slug: 'vanishing-gradient', name: 'Vanishing & Exploding Gradients' },
+          { id: 'dl-kp-9', slug: 'gradient-clipping', name: 'Gradient Clipping' },
+          { id: 'dl-kp-10', slug: 'batch-normalization', name: 'Batch Normalization' },
+        ]
+      },
+      {
+        id: 'convolutional-networks',
+        slug: 'convolutional-networks',
+        name: 'Convolutional Neural Networks',
+        description: 'CNNs for image processing and spatial pattern recognition.',
+        knowledgePoints: [
+          { id: 'dl-kp-11', slug: 'convolution-operation', name: 'Convolution Operation & Filters' },
+          { id: 'dl-kp-12', slug: 'pooling-layers', name: 'Pooling Layers (Max, Average)' },
+          { id: 'dl-kp-13', slug: 'cnn-architectures', name: 'CNN Architectures (ResNet, EfficientNet)' },
+          { id: 'dl-kp-14', slug: 'transfer-learning-cnn', name: 'Transfer Learning with CNNs' },
+          { id: 'dl-kp-15', slug: 'object-detection', name: 'Object Detection (YOLO, RCNN)' },
+        ]
+      },
+      {
+        id: 'recurrent-networks',
+        slug: 'recurrent-networks',
+        name: 'Recurrent Neural Networks',
+        description: 'Sequence modeling with RNNs, LSTMs, and GRUs.',
+        knowledgePoints: [
+          { id: 'dl-kp-16', slug: 'rnn-basics', name: 'RNN Architecture & Hidden State' },
+          { id: 'dl-kp-17', slug: 'lstm', name: 'LSTM: Forget, Input, Output Gates' },
+          { id: 'dl-kp-18', slug: 'gru', name: 'GRU: Simplified Gating Mechanism' },
+          { id: 'dl-kp-19', slug: 'bptt', name: 'Backpropagation Through Time (BPTT)' },
+          { id: 'dl-kp-20', slug: 'seq2seq', name: 'Sequence-to-Sequence with Encoder-Decoder' },
+        ]
+      },
+      {
+        id: 'regularization-techniques',
+        slug: 'regularization-techniques',
+        name: 'Regularization',
+        description: 'Prevent overfitting with dropout, weight decay, and early stopping.',
+        knowledgePoints: [
+          { id: 'dl-kp-21', slug: 'dropout', name: 'Dropout Regularization' },
+          { id: 'dl-kp-22', slug: 'weight-decay', name: 'L1/L2 Weight Decay' },
+          { id: 'dl-kp-23', slug: 'early-stopping', name: 'Early Stopping & Model Selection' },
+          { id: 'dl-kp-24', slug: 'data-augmentation', name: 'Data Augmentation Strategies' },
+          { id: 'dl-kp-25', slug: 'label-smoothing', name: 'Label Smoothing & Mixup' },
+        ]
+      },
+      {
+        id: 'training-best-practices',
+        slug: 'training-best-practices',
+        name: 'Training Best Practices',
+        description: 'Practical techniques for training deep networks efficiently.',
+        knowledgePoints: [
+          { id: 'dl-kp-26', slug: 'weight-initialization', name: 'Weight Initialization (Xavier, He)' },
+          { id: 'dl-kp-27', slug: 'learning-rate-finder', name: 'Learning Rate Finder & Cyclical LR' },
+          { id: 'dl-kp-28', slug: 'warmup-schedules', name: 'Warmup Schedules & Cosine Annealing' },
+          { id: 'dl-kp-29', slug: 'gradient-accumulation', name: 'Gradient Accumulation for Large Batches' },
+          { id: 'dl-kp-30', slug: 'loss-landscape', name: 'Loss Landscape & Sharp vs Flat Minima' },
+        ]
+      },
+    ]
+  },
+
   // ML SYSTEMS & MLOps
   {
     id: 'ml-systems',
