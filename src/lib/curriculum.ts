@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // SELF-SUPERVISED & CONTRASTIVE LEARNING
+  {
+    id: 'self-supervised-learning',
+    slug: 'self-supervised-learning',
+    name: 'Self-Supervised & Contrastive Learning',
+    description: 'Learn representations without labels: contrastive learning, masked autoencoders, and SSL foundations.',
+    topics: [
+      {
+        id: 'ssl-foundations',
+        name: 'Self-Supervised Learning Foundations',
+        description: 'Pretext tasks, augmentation strategies, and SSL taxonomy.',
+        knowledgePoints: [
+          { id: 'ssl-kp-1', slug: 'ssl-overview', name: 'SSL Overview & Pretext Task Design' },
+          { id: 'ssl-kp-2', slug: 'data-augmentation-ssl', name: 'Data Augmentation for SSL' },
+          { id: 'ssl-kp-3', slug: 'instance-discrimination', name: 'Instance Discrimination & Memory Banks' },
+          { id: 'ssl-kp-4', slug: 'ssl-evaluation', name: 'Linear Probing & SSL Evaluation Protocols' },
+          { id: 'ssl-kp-5', slug: 'ssl-scaling', name: 'Scaling SSL: Data, Model & Compute' },
+        ]
+      },
+      {
+        id: 'contrastive-methods',
+        name: 'Contrastive Learning Methods',
+        description: 'SimCLR, MoCo, and InfoNCE-based contrastive representation learning.',
+        knowledgePoints: [
+          { id: 'ssl-kp-6', slug: 'simclr', name: 'SimCLR & NT-Xent Loss' },
+          { id: 'ssl-kp-7', slug: 'moco', name: 'MoCo & Momentum Encoders' },
+          { id: 'ssl-kp-8', slug: 'infonce-loss', name: 'InfoNCE Loss & Mutual Information Maximization' },
+          { id: 'ssl-kp-9', slug: 'supcon', name: 'Supervised Contrastive Learning (SupCon)' },
+          { id: 'ssl-kp-10', slug: 'nnclr', name: 'NNCLR & Nearest Neighbor Positives' },
+        ]
+      },
+      {
+        id: 'non-contrastive-ssl',
+        name: 'Non-Contrastive Self-Supervised Methods',
+        description: 'BYOL, SimSiam, Barlow Twins, and VICReg without negative pairs.',
+        knowledgePoints: [
+          { id: 'ssl-kp-11', slug: 'byol', name: 'BYOL & Bootstrap Without Negatives' },
+          { id: 'ssl-kp-12', slug: 'simsiam', name: 'SimSiam & Stop-Gradient Trick' },
+          { id: 'ssl-kp-13', slug: 'barlow-twins', name: 'Barlow Twins & Redundancy Reduction' },
+          { id: 'ssl-kp-14', slug: 'vicreg', name: 'VICReg & Variance-Invariance-Covariance' },
+          { id: 'ssl-kp-15', slug: 'dino', name: 'DINO & Self-Distillation with Vision Transformers' },
+        ]
+      },
+      {
+        id: 'masked-pretraining',
+        name: 'Masked & Generative Pretraining',
+        description: 'MAE, BEiT, and masked language/image modeling.',
+        knowledgePoints: [
+          { id: 'ssl-kp-16', slug: 'mae', name: 'Masked Autoencoders (MAE) for Vision' },
+          { id: 'ssl-kp-17', slug: 'beit', name: 'BEiT & DALL-E Tokenizer Pretraining' },
+          { id: 'ssl-kp-18', slug: 'data2vec', name: 'data2vec & Unified SSL Across Modalities' },
+          { id: 'ssl-kp-19', slug: 'ibot', name: 'iBOT & Online Tokenizer SSL' },
+          { id: 'ssl-kp-20', slug: 'masked-audio-ssl', name: 'Masked Audio Modeling (wav2vec 2.0, HuBERT)' },
+        ]
+      },
+      {
+        id: 'ssl-for-nlp',
+        name: 'SSL for NLP & Language Models',
+        description: 'BERT, GPT, and self-supervised pretraining objectives for language.',
+        knowledgePoints: [
+          { id: 'ssl-kp-21', slug: 'bert-mlm', name: 'BERT & Masked Language Modeling' },
+          { id: 'ssl-kp-22', slug: 'gpt-clm', name: 'GPT & Causal Language Modeling' },
+          { id: 'ssl-kp-23', slug: 'electra', name: 'ELECTRA & Replaced Token Detection' },
+          { id: 'ssl-kp-24', slug: 'span-bert', name: 'SpanBERT & Span Masking' },
+          { id: 'ssl-kp-25', slug: 'sentence-ssl', name: 'Sentence Transformers & SimCSE' },
+        ]
+      },
+      {
+        id: 'ssl-applications',
+        name: 'SSL Applications & Transfer',
+        description: 'SSL for medical imaging, few-shot learning, and low-data regimes.',
+        knowledgePoints: [
+          { id: 'ssl-kp-26', slug: 'ssl-medical', name: 'SSL for Medical Imaging & Healthcare' },
+          { id: 'ssl-kp-27', slug: 'ssl-few-shot', name: 'SSL for Few-Shot & Low-Data Learning' },
+          { id: 'ssl-kp-28', slug: 'ssl-graphs', name: 'SSL for Graphs & Molecular Data' },
+          { id: 'ssl-kp-29', slug: 'ssl-tabular', name: 'SSL for Tabular Data (SCARF, SubTab)' },
+          { id: 'ssl-kp-30', slug: 'ssl-rl', name: 'SSL for Reinforcement Learning (CURL, SPR)' },
+        ]
+      },
+    ]
+  },
+
   // ML SAFETY, INTERPRETABILITY & ROBUSTNESS
   {
     id: 'ml-safety-interpretability',
