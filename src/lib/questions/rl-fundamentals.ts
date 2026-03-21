@@ -44,10 +44,10 @@ const questions: Record<string, Question[]> = {
       question:
         "A robot uses policy \\pi(a | s\\_1, s\\_2, …, s\\_t) - it selects actions based on its entire history of visited states. According to the Markov property underlying MDPs (Sutton & Barto §3.1), why is this unnecessary for an optimal policy in a fully observed MDP?",
       options: [
-        "Because \\pi must always be deterministic",
-        "Because the current state s\\_t already summarizes all relevant history: P(s\\_t₊\\_1|s\\_t,a\\_t) = P(s\\_t₊\\_1|s\\_1,…,s\\_t,a\\_t)",
-        "Because using history would make the action space continuous",
-        "Because storing history violates the reward-maximization objective",
+        "\\pi must always be deterministic in an MDP",
+        "The current state s\\_t already summarizes all relevant history: P(s\\_t₊\\_1|s\\_t,a\\_t) = P(s\\_t₊\\_1|s\\_1,…,s\\_t,a\\_t)",
+        "Using history would make the action space continuous",
+        "Storing history violates the reward-maximization objective",
       ],
       correctAnswer: 1,
       explanation:
