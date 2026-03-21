@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // GENERATIVE ADVERSARIAL NETWORKS
+  {
+    id: 'generative-adversarial-networks',
+    slug: 'generative-adversarial-networks',
+    name: 'Generative Adversarial Networks',
+    description: 'GAN theory, training stability, advanced architectures, and applications in image synthesis.',
+    topics: [
+      {
+        id: 'gan-foundations',
+        name: 'GAN Foundations',
+        description: 'Original GAN, minimax game, mode collapse, and training challenges.',
+        knowledgePoints: [
+          { id: 'gan-kp-1', slug: 'gan-original', name: 'Original GAN & Minimax Game Theory' },
+          { id: 'gan-kp-2', slug: 'mode-collapse', name: 'Mode Collapse & Training Instability' },
+          { id: 'gan-kp-3', slug: 'dcgan', name: 'DCGAN & Convolutional GAN Architecture' },
+          { id: 'gan-kp-4', slug: 'conditional-gan', name: 'Conditional GAN & Class-Conditional Generation' },
+          { id: 'gan-kp-5', slug: 'pix2pix', name: 'Pix2Pix & Image-to-Image Translation' },
+        ]
+      },
+      {
+        id: 'improved-gan-training',
+        name: 'Improved GAN Training Methods',
+        description: 'Wasserstein GAN, spectral normalization, and gradient penalty.',
+        knowledgePoints: [
+          { id: 'gan-kp-6', slug: 'wgan', name: 'Wasserstein GAN & Earth Mover Distance' },
+          { id: 'gan-kp-7', slug: 'wgan-gp', name: 'WGAN-GP & Gradient Penalty' },
+          { id: 'gan-kp-8', slug: 'spectral-norm', name: 'Spectral Normalization & Lipschitz Constraint' },
+          { id: 'gan-kp-9', slug: 'progressive-growing', name: 'Progressive Growing of GANs' },
+          { id: 'gan-kp-10', slug: 'r1-r2-penalty', name: 'R1 & R2 Regularization for GANs' },
+        ]
+      },
+      {
+        id: 'high-fidelity-gans',
+        name: 'High-Fidelity Image Synthesis GANs',
+        description: 'StyleGAN, BigGAN, and state-of-the-art image generation.',
+        knowledgePoints: [
+          { id: 'gan-kp-11', slug: 'stylegan', name: 'StyleGAN & Style-Based Generator' },
+          { id: 'gan-kp-12', slug: 'stylegan2-3', name: 'StyleGAN2 & StyleGAN3' },
+          { id: 'gan-kp-13', slug: 'biggan', name: 'BigGAN & Large-Scale Conditional Generation' },
+          { id: 'gan-kp-14', slug: 'gan-vs-diffusion', name: 'GAN vs Diffusion: Strengths & Tradeoffs' },
+          { id: 'gan-kp-15', slug: 'gan-inversion', name: 'GAN Inversion & Image Editing' },
+        ]
+      },
+      {
+        id: 'video-3d-gans',
+        name: 'Video & 3D GANs',
+        description: 'Temporal consistency, 3D-aware GANs, and NeRF-GAN hybrids.',
+        knowledgePoints: [
+          { id: 'gan-kp-16', slug: 'video-gan', name: 'Video GANs & Temporal Consistency' },
+          { id: 'gan-kp-17', slug: 'eg3d', name: 'EG3D & 3D-Aware Image Synthesis' },
+          { id: 'gan-kp-18', slug: 'pi-gan', name: 'pi-GAN & Implicit Neural Representations' },
+          { id: 'gan-kp-19', slug: 'deepfake-ethics', name: 'DeepFakes & Ethical Considerations' },
+          { id: 'gan-kp-20', slug: 'text-to-image-gan', name: 'Text-to-Image GANs (StackGAN, AttnGAN)' },
+        ]
+      },
+      {
+        id: 'gan-applications',
+        name: 'GAN Applications',
+        description: 'Data augmentation, domain transfer, and creative applications.',
+        knowledgePoints: [
+          { id: 'gan-kp-21', slug: 'cyclegan', name: 'CycleGAN & Unpaired Image Translation' },
+          { id: 'gan-kp-22', slug: 'super-resolution-gan', name: 'SRGAN & Super-Resolution' },
+          { id: 'gan-kp-23', slug: 'inpainting-gan', name: 'GAN Inpainting & Image Restoration' },
+          { id: 'gan-kp-24', slug: 'data-augment-gan', name: 'GAN-Based Data Augmentation' },
+          { id: 'gan-kp-25', slug: 'medical-gan', name: 'Medical Image Synthesis with GANs' },
+        ]
+      },
+      {
+        id: 'gan-theory',
+        name: 'GAN Evaluation & Theory',
+        description: 'FID, precision/recall for generative models, and GAN game theory.',
+        knowledgePoints: [
+          { id: 'gan-kp-26', slug: 'fid-gan', name: 'FID for Generative Models' },
+          { id: 'gan-kp-27', slug: 'precision-recall-gen', name: 'Precision & Recall for Generative Models' },
+          { id: 'gan-kp-28', slug: 'nash-equilibrium', name: 'Nash Equilibrium & GAN Game Theory' },
+          { id: 'gan-kp-29', slug: 'gan-convergence', name: 'GAN Convergence & Training Dynamics' },
+          { id: 'gan-kp-30', slug: 'f-gan', name: 'f-GAN & Generalized Divergence Objectives' },
+        ]
+      },
+    ]
+  },
+
   // DOMAIN ADAPTATION & TRANSFER LEARNING ADVANCED
   {
     id: 'domain-adaptation-advanced',
