@@ -1757,6 +1757,700 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
+
+  'dp-state-compression': [
+    {
+      id: 'q-dp-sc-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'State compression DP is used when:',
+      options: ['Number of states is very large', 'Transition function is complex', 'DP table is sparse', 'State can be represented as bitmask'],
+      correctAnswer: 3,
+      explanation: 'State compression represents multiple related states as bits in a single integer, enabling O(1) state transitions.',
+      hints: ['Think about representing subsets as bits', 'What can fit in a 64-bit integer?'],
+    },
+    {
+      id: 'q-dp-sc-2',
+      type: 'true-false',
+      difficulty: 'hard',
+      question: 'In a TSP bitmask DP with 20 cities, the state space is 2^20 * 20 = ~400M entries.',
+      correctAnswer: 'true',
+      explanation: 'For each subset (2^n subsets) and each ending city (n cities), we have O(n * 2^n) states.',
+      hints: ['How many subsets of n elements?', 'What is the memory footprint?'],
+    },
+    {
+      id: 'q-dp-sc-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Which operation is key to bitmask DP transitions?',
+      options: ['Bitwise AND', 'Bitwise OR and subtraction', 'Modulo arithmetic', 'Floating point ops'],
+      correctAnswer: 1,
+      explanation: 'Setting (s | (1 << i)), clearing (s & ~(1 << i)), and checking (s & (1 << i)) bits are fundamental operations.',
+      hints: ['How do you add an element to a set?', 'How do you check membership?'],
+    },
+    {
+      id: 'q-dp-sc-4',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement bitmask TSP with dp[mask][i] = min cost to visit set mask ending at city i.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'Classic DP: dp[mask][i] = min over j in mask, j != i of dp[mask ^ {i}][j] + dist[j][i]',
+      codeSnippet: `function tsp(dist) {
+  const n = dist.length;
+  const dp = Array(1 << n).fill(null).map(() => Array(n).fill(Infinity));
+  dp[1][0] = 0;
+  for (let mask = 1; mask < (1 << n); mask++) {
+    for (let i = 0; i < n; i++) {
+      if (!(mask & (1 << i))) continue;
+      const prevMask = mask ^ (1 << i);
+      for (let j = 0; j < n; j++) {
+        if (!(prevMask & (1 << j))) continue;
+        dp[mask][i] = Math.min(dp[mask][i], dp[prevMask][j] + dist[j][i]);
+      }
+    }
+  }
+  const fullMask = (1 << n) - 1;
+  return Math.min(...dp[fullMask].slice(1));
+}`,
+      solution: 'function tsp(dist) { const n = dist.length; const dp = Array(1<<n).fill(null).map(()=>Array(n).fill(Infinity)); dp[1][0]=0; for(let mask=1; mask<(1<<n); mask++){ for(let i=0;i<n;i++){ if(!(mask&(1<<i)))continue; const prev=mask^(1<<i); for(let j=0;j<n;j++){ if(!(prev&(1<<j)))continue; dp[mask][i]=Math.min(dp[mask][i], dp[prev][j]+dist[j][i]); } } } return Math.min(...dp[(1<<n)-1].slice(1)); }',
+      hints: ['Start with dp[1][0] = 0 (only city 0 visited)', 'For each state, try all previous cities', 'Remove current city from mask to get previous state'],
+    },
+    {
+      id: 'q-dp-sc-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'What is the time complexity of the standard bitmask DP for Hamiltonian Path?',
+      options: ['O(n!)', 'O(n^2 * 2^n)', 'O(n * 2^n)', 'O(2^n)'],
+      correctAnswer: 1,
+      explanation: 'We have O(2^n) states, each considering O(n) possible transitions to other cities, resulting in O(n^2 * 2^n).',
+      hints: ['How many masks exist?', 'For each mask, how many ending cities?', 'For each (mask, i), what is the inner loop?'],
+    },
+  ],
+
+  'dp-tree-dp': [
+    {
+      id: 'q-dp-tree-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Tree DP typically processes nodes in what order?',
+      options: ['BFS level order', 'Post-order (bottom-up)', 'Pre-order (top-down)', 'Random order'],
+      correctAnswer: 1,
+      explanation: 'Tree DP computes child subtree results first (post-order) before combining them at the parent.',
+      hints: ['Why do children need to be computed first?', 'What does bottom-up mean?'],
+    },
+    {
+      id: 'q-dp-tree-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In rerooting DP, the transition from parent to child involves:',
+      options: ['Recomputing entire subtree', 'Adjusting counts while excluding the child subtree', 'Swapping root and child', 'No transition needed'],
+      correctAnswer: 1,
+      explanation: 'Rerooting adjusts dp values by subtracting the child contribution and adding the parent contribution without recomputing everything.',
+      hints: ['What changes when root moves to a child?', 'How do you avoid double counting?'],
+    },
+    {
+      id: 'q-dp-tree-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement tree diameter using DP: find longest path in tree.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'Tree diameter = max of (height of left subtree + height of right subtree + 2) for each node.',
+      codeSnippet: `function diameter(root) {
+  let maxDiameter = 0;
+  function dfs(node) {
+    if (!node) return 0;
+    let longestChild = 0, secondLongest = 0;
+    for (const child of node.children) {
+      const h = dfs(child);
+      if (h > longestChild) { secondLongest = longestChild; longestChild = h; }
+      else if (h > secondLongest) secondLongest = h;
+    }
+    maxDiameter = Math.max(maxDiameter, longestChild + secondLongest);
+    return longestChild + 1;
+  }
+  dfs(root);
+  return maxDiameter;
+}`,
+      solution: 'function diameter(root){let max=0;function dfs(n){if(!n)return 0;let a=0,b=0;for(const c of n.children||[]){const h=dfs(c);if(h>a){b=a;a=h}else if(h>b)b=h;}max=Math.max(max,a+b);return a+1;}dfs(root);return max;}',
+      hints: ['For each node, find the two tallest child heights', 'Diameter through node = sum of two tallest + 2', 'Track global maximum diameter'],
+    },
+    {
+      id: 'q-dp-tree-4',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In tree DP, each node can be independent root and we compute subtree sizes/bottoms-up.',
+      correctAnswer: 'true',
+      explanation: 'Tree DP treats each node as root of its own subtree and computes information in O(size of subtree).',
+      hints: ['Is a leaf node a valid subtree?', 'What does post-order mean for trees?'],
+    },
+    {
+      id: 'q-dp-tree-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'What is the key advantage of rerooting DP over naive tree DP?',
+      options: ['Lower time complexity', 'O(1) transition between roots instead of O(n) recompute', 'Less memory', 'Simpler code'],
+      correctAnswer: 1,
+      explanation: 'Rerooting allows O(1) transition when changing root by using prefix/suffix techniques to avoid O(n) recomputation.',
+      hints: ['If you move root from parent to child, what changes?', 'Can you reuse computed values from parent?'],
+    },
+  ],
+
+  'dp-intervals': [
+    {
+      id: 'q-dp-int-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Interval DP is typically solved using what approach?',
+      options: ['Recursion on intervals of increasing length', 'Binary search', 'Divide and conquer on split point', 'Memoization with (i,j) keys'],
+      correctAnswer: 0,
+      explanation: 'Interval DP fills the DP table by increasing interval length, ensuring subproblems are solved before larger intervals.',
+      hints: ['What property ensures optimal substructure?', 'How do you ensure subintervals are computed first?'],
+    },
+    {
+      id: 'q-dp-int-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In the classic matrix chain multiplication, the recurrence is:',
+      options: ['dp[i][j] = min_k(dp[i][k] + dp[k+1][j] + p[i]*p[k]*p[j])', 'dp[i][j] = min(dp[i-1][j], dp[i][j-1])', 'dp[i][j] = dp[i][j/2] * 2', 'dp[i][j] = max(dp[i-1][j], dp[i][j-1])'],
+      correctAnswer: 0,
+      explanation: 'For matrix chain A_i...A_j split at k, cost = cost(left) + cost(right) + multiply dimensions p[i-1]*p[k]*p[j].',
+      hints: ['Where is the split point?', 'What dimensions determine multiplication cost?'],
+    },
+    {
+      id: 'q-dp-int-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement optimal BST insertion order using DP.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'dp[i][j] = min cost of optimal BST for keys i..j, trying each key as root.',
+      codeSnippet: `function optimalBST(keys, freq) {
+  const n = keys.length;
+  const dp = Array(n).fill(null).map(() => Array(n).fill(0));
+  for (let len = 2; len <= n; len++) {
+    for (let i = 0; i <= n - len; i++) {
+      const j = i + len - 1;
+      dp[i][j] = Infinity;
+      let sum = freq.slice(i, j + 1).reduce((a, b) => a + b, 0);
+      for (let k = i; k <= j; k++) {
+        const cost = (k > i ? dp[i][k - 1] : 0) + (k < j ? dp[k + 1][j] : 0) + sum;
+        dp[i][j] = Math.min(dp[i][j], cost);
+      }
+    }
+  }
+  return dp[0][n - 1];
+}`,
+      solution: 'function optimalBST(keys,freq){const n=keys.length;const dp=Array(n).fill(null).map(()=>Array(n).fill(0));for(let len=2;len<=n;len++){for(let i=0;i<=n-len;i++){const j=i+len-1;dp[i][j]=Infinity;let sum=freq.slice(i,j+1).reduce((a,b)=>a+b,0);for(let k=i;k<=j;k++){const cost=(k>i?dp[i][k-1]:0)+(k<j?dp[k+1][j]:0)+sum;dp[i][j]=Math.min(dp[i][j],cost);}}}return dp[0][n-1];}',
+      hints: ['Try each key as root', 'Cost = left cost + right cost + sum of all frequencies in range', 'Build from smaller to larger intervals'],
+    },
+    {
+      id: 'q-dp-int-4',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Interval DP always processes intervals in increasing order of length.',
+      correctAnswer: 'true',
+      explanation: 'To use optimal substructure, all subintervals must be computed before larger intervals that depend on them.',
+      hints: ['What interval lengths do you start with?', 'How do you know subproblems are ready?'],
+    },
+    {
+      id: 'q-dp-int-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Which problem is NOT typically solved with interval DP?',
+      options: ['Matrix chain multiplication', 'Optimal BST', 'Longest common subsequence', 'Palindrome partitioning'],
+      correctAnswer: 2,
+      explanation: 'LCS is solved with 2D DP on string positions, not interval DP. Matrix chain, BST, and palindrome partitioning all have optimal substructure over contiguous intervals.',
+      hints: ['Is LCS about contiguous substrings?', 'What defines the subproblems in each case?'],
+    },
+  ],
+
+  'dp-graphs': [
+    {
+      id: 'q-dp-graph-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'DAG DP works because:',
+      options: ['Graph has no cycles', 'Topological order guarantees dependencies come first', 'All DAGs have O(1) indegree nodes', 'DP on DAGs uses BFS'],
+      correctAnswer: 1,
+      explanation: 'Topological sort ensures when we process a node, all its predecessors (dependencies) have already been processed.',
+      hints: ['What makes DAGs special for DP?', 'Why does order matter?'],
+    },
+    {
+      id: 'q-dp-graph-2',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement longest path in DAG using topological sort.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'After topological sorting, dp[v] = max(dp[u] + weight(u,v)) for all incoming edges u->v.',
+      codeSnippet: `function longestPathDAG(n, edges) {
+  const adj = Array.from({ length: n }, () => []);
+  const indeg = Array(n).fill(0);
+  for (const [u, v, w] of edges) {
+    adj[u].push([v, w]);
+    indeg[v]++;
+  }
+  const topo = [];
+  const q = [];
+  for (let i = 0; i < n; i++) if (indeg[i] === 0) q.push(i);
+  while (q.length) {
+    const u = q.shift();
+    topo.push(u);
+    for (const [v, w] of adj[u]) {
+      indeg[v]--;
+      if (indeg[v] === 0) q.push(v);
+    }
+  }
+  const dp = Array(n).fill(-Infinity);
+  dp[0] = 0;
+  for (const u of topo) {
+    for (const [v, w] of adj[u]) {
+      dp[v] = Math.max(dp[v], dp[u] + w);
+    }
+  }
+  return Math.max(...dp);
+}`,
+      solution: 'function longestPathDAG(n,edges){const adj=Array.from({length:n},()=>[]);const indeg=Array(n).fill(0);for(const [u,v,w] of edges){adj[u].push([v,w]);indeg[v]++;}const topo=[];const q=[];for(let i=0;i<n;i++)if(indeg[i]===0)q.push(i);while(q.length){const u=q.shift();topo.push(u);for(const [v,w] of adj[u]){indeg[v]--;if(indeg[v]===0)q.push(v);}}const dp=Array(n).fill(-Infinity);dp[0]=0;for(const u of topo){for(const [v,w] of adj[u]){dp[v]=Math.max(dp[v],dp[u]+w);}}return Math.max(...dp);}',
+      hints: ['Topological sort first', 'dp[v] = max over all incoming edges of dp[u] + weight', 'Initialize source nodes with 0'],
+    },
+    {
+      id: 'q-dp-graph-3',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In DAG DP, if there are multiple topological orders, the result is always the same.',
+      correctAnswer: 'true',
+      explanation: 'All topological sorts produce valid processing orders because they respect dependencies.',
+      hints: ['Do different orders change dependencies?', 'What matters about the order?'],
+    },
+    {
+      id: 'q-dp-graph-4',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'What is the time complexity of DAG shortest path with V vertices and E edges?',
+      options: ['O(V^2)', 'O(V + E)', 'O(V * E)', 'O(E log V)'],
+      correctAnswer: 1,
+      explanation: 'Topological sort is O(V+E), DP pass is O(E), total O(V+E).',
+      hints: ['What is the cost of topological sort?', 'How many edges do you process in DP?'],
+    },
+    {
+      id: 'q-dp-graph-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'For counting paths in a DAG, the recurrence is:',
+      options: ['dp[v] = sum of dp[u] for all u pointing to v', 'dp[v] = dp[v-1] * 2', 'dp[v] = min(dp[u])', 'dp[v] = 1 for all v'],
+      correctAnswer: 0,
+      explanation: 'Number of paths to v = sum of number of paths to all predecessors u that have edges to v.',
+      hints: ['How do paths to v relate to paths to its predecessors?', 'Is this additive or multiplicative?'],
+    },
+  ],
+
+  'dp-digit': [
+    {
+      id: 'q-dp-digit-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Digit DP processes digits from:',
+      options: ['Left (most significant) to right', 'Right (least significant) to left', 'Random order', 'Both simultaneously'],
+      correctAnswer: 0,
+      explanation: 'Digit DP typically processes from most significant digit, maintaining tight/loose constraints as it goes.',
+      hints: ['Which digit is most constrained first?', 'How do constraints propagate?'],
+    },
+    {
+      id: 'q-dp-digit-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In digit DP, the "tight" flag means:',
+      options: ['All previous digits match the upper bound exactly', 'Digit can be anything 0-9', 'Overflow is allowed', 'We are in the most significant position'],
+      correctAnswer: 0,
+      explanation: 'Tight=true means the prefix so far equals the bound prefix, so current digit cannot exceed the bound digit.',
+      hints: ['What constrains the current digit when tight?', 'When does tight become false?'],
+    },
+    {
+      id: 'q-dp-digit-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement count of numbers divisible by K in range [0, N] using digit DP.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'dp[pos][rem][tight] counts valid numbers from pos to end with remainder rem.',
+      codeSnippet: `function countDivisible(N, K) {
+  const digits = N.toString().split('').map(Number);
+  const memo = {};
+  function dp(pos, rem, tight) {
+    if (pos === digits.length) return rem === 0 ? 1 : 0;
+    const key = pos + ',' + rem + ',' + tight;
+    if (memo[key] !== undefined) return memo[key];
+    const limit = tight ? digits[pos] : 9;
+    let count = 0;
+    for (let d = 0; d <= limit; d++) {
+      const newTight = tight && d === limit;
+      count += dp(pos + 1, (rem * 10 + d) % K, newTight);
+    }
+    memo[key] = count;
+    return count;
+  }
+  return dp(0, 0, true);
+}`,
+      solution: 'function countDivisible(N,K){const digits=N.toString().split("").map(Number);const memo={};function dp(pos,rem,tight){if(pos===digits.length)return rem===0?1:0;const key=pos+","+rem+","+tight;if(memo[key]!==undefined)return memo[key];const limit=tight?digits[pos]:9;let count=0;for(let d=0;d<=limit;d++){count+=dp(pos+1,(rem*10+d)%K, tight&&d===limit);}memo[key]=count;return count;}return dp(0,0,true);}',
+      hints: ['Track remainder modulo K at each position', 'New remainder = (old * 10 + digit) % K', 'Base case: at end, check if remainder is 0'],
+    },
+    {
+      id: 'q-dp-digit-4',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In digit DP, leading zeros are typically skipped using a "started" flag.',
+      correctAnswer: 'true',
+      explanation: 'The started flag tracks whether we have encountered a non-zero digit, allowing proper handling of leading zeros.',
+      hints: ['How do you distinguish between 0 and 00042?', 'What does started=false mean?'],
+    },
+    {
+      id: 'q-dp-digit-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The number of states in digit DP for N with K digits and modulo M is:',
+      options: ['O(K * M)', 'O(K * M * 2)', 'O(2^K * M)', 'O(K + M)'],
+      correctAnswer: 1,
+      explanation: 'States are position (K), remainder (M), and tight flag (2). Total O(K * M * 2).',
+      hints: ['What variables determine the state?', 'Is tight a boolean?'],
+    },
+  ],
+
+  'dp-probability': [
+    {
+      id: 'q-dp-prob-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Probability DP typically uses:',
+      options: ['Uniform probability distribution', 'Bayesian updating', 'Expectation formulas', 'Only discrete states'],
+      correctAnswer: 1,
+      explanation: 'Probability DP updates beliefs using Bayes theorem as new random events are observed.',
+      hints: ['How do you update probability of state after observation?', 'What formula governs this?'],
+    },
+    {
+      id: 'q-dp-prob-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: "For gambler's ruin problem with fair coin, probability of reaching N before 0 starting from i is:",
+      options: ['i/N', '1 - i/N', '0.5', 'Depends on step size'],
+      correctAnswer: 0,
+      explanation: 'For fair coin in symmetric random walk, P(reach N before 0 | start i) = i/N.',
+      hints: ['Symmetric random walk property', 'Expected position is linear'],
+    },
+    {
+      id: 'q-dp-prob-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement probability of collecting all N coupons using DP.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'dp[i] = expected draws to collect i coupons. Transition accounts for new vs duplicate draws.',
+      codeSnippet: `function couponCollector(n) {
+  const dp = Array(n + 1).fill(0);
+  dp[1] = 1;
+  for (let i = 2; i <= n; i++) {
+    dp[i] = dp[i - 1] + n / (n - (i - 1));
+  }
+  return dp[n];
+}`,
+      solution: 'function couponCollector(n){const dp=Array(n+1).fill(0);dp[1]=1;for(let i=2;i<=n;i++){dp[i]=dp[i-1]+n/(n-(i-1));}return dp[n];}',
+      hints: ['When you have i-1 coupons, probability of new one is (n-i+1)/n', 'Expected draws for next coupon = n/(n-i+1)', 'Sum expectations from 1 to n'],
+    },
+    {
+      id: 'q-dp-prob-4',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In probability DP, the sum of probabilities over all states should always equal 1.',
+      correctAnswer: 'true',
+      explanation: 'Normalization ensures the probability distribution is valid at each step.',
+      hints: ['What does a probability distribution sum to?', 'When does this property help?'],
+    },
+    {
+      id: 'q-dp-prob-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The expected number of trials for coupon collector is:',
+      options: ['n log n', 'n', 'n^2', 'n!'],
+      correctAnswer: 0,
+      explanation: 'Sum of n/(n-i+1) for i=1 to n = n * H_n = n * (log n + gamma) ≈ n log n.',
+      hints: ['What is the nth harmonic number H_n?', 'How does it grow?'],
+    },
+  ],
+
+  'dp-games': [
+    {
+      id: 'q-dp-game-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In impartial combinatorial games, the Sprague-Grundy theorem states:',
+      options: ['Every position has a unique mex value', 'Grundy numbers combine via XOR', 'Winning positions have Grundy > 0', 'All of the above'],
+      correctAnswer: 3,
+      explanation: 'The mex of reachable Grundy values defines the Grundy number. Positions with Grundy=0 are losing; non-zero are winning. Combined games use XOR.',
+      hints: ['What is mex?', 'How do you combine subgames?', 'Who wins if Grundy is 0?'],
+    },
+    {
+      id: 'q-dp-game-2',
+      type: 'true-false',
+      difficulty: 'hard',
+      question: 'In game DP with perfect play, dp[i] = true if any move leads to a losing position for opponent.',
+      correctAnswer: 'true',
+      explanation: 'This is the standard minimax DP: winning = exists move to losing; losing = all moves lead to winning.',
+      hints: ['What is the base case?', 'How do winning/losing alternate?'],
+    },
+    {
+      id: 'q-dp-game-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement optimal play for stone game: remove 1, 3, or 4 stones, player who takes last wins.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'dp[n] = winning if any of dp[n-1], dp[n-3], dp[n-4] is losing (for opponent).',
+      codeSnippet: `function canWin(n) {
+  const dp = Array(n + 5).fill(false);
+  dp[0] = false;  // losing: no stones to take
+  for (let i = 1; i <= n; i++) {
+    dp[i] = (i >= 1 && !dp[i - 1]) || (i >= 3 && !dp[i - 3]) || (i >= 4 && !dp[i - 4]);
+  }
+  return dp[n];
+}`,
+      solution: 'function canWin(n){const dp=Array(n+5).fill(false);dp[0]=false;for(let i=1;i<=n;i++){dp[i]=(i>=1&&!dp[i-1])||(i>=3&&!dp[i-3])||(i>=4&&!dp[i-4]);}return dp[n];}',
+      hints: ['Base case: dp[0] = false (nothing to take = losing)', 'Check moves of 1, 3, 4 stones', 'Position is winning if ANY move leads to losing for opponent'],
+    },
+    {
+      id: 'q-dp-game-4',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The Grundy number for a composite game (sum of independent games) is:',
+      options: ['Sum of Grundy numbers', 'Maximum of Grundy numbers', 'XOR of Grundy numbers', 'Minimum of Grundy numbers'],
+      correctAnswer: 2,
+      explanation: 'The Sprague-Grundy theorem: G = G1 XOR G2 XOR ... XOR Gn for independent subgames.',
+      hints: ['XOR is to nim-sum what addition is to what?', 'What makes XOR special for impartial games?'],
+    },
+    {
+      id: 'q-dp-game-5',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In two-player perfect information games, the recurrence dp[state] = winning if:',
+      options: ['All moves lead to winning states', 'At least one move leads to losing state', 'No moves available', 'Random chance involved'],
+      correctAnswer: 1,
+      explanation: 'If there exists a move to a losing position, current is winning (you can force opponent into losing state).',
+      hints: ['What does "losing position" mean for opponent?', 'How do you force a win?'],
+    },
+  ],
+
+  'dp-optimization': [
+    {
+      id: 'q-dp-opt-1',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Divide and Conquer DP optimization requires:',
+      options: ['Monge array property', 'Quadrangle inequality', 'Both monotonicity and opt monotonic', 'No special property'],
+      correctAnswer: 2,
+      explanation: 'The opt(i,j) must be monotonic: opt(i,j) <= opt(i,j+1) and opt(i,j) <= opt(i+1,j). This ensures correct divide and conquer.',
+      hints: ['What property ensures the recurrence is well-behaved?', 'Is this always required?'],
+    },
+    {
+      id: 'q-dp-opt-2',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Knuth optimization applies when the cost function satisfies:',
+      options: ['Monge property: c(i,j-1) + c(i+1,j) <= c(i,j) + c(i+1,j-1)', 'Triangle inequality', 'Commutativity', 'Associativity'],
+      correctAnswer: 0,
+      explanation: 'The quadrangle inequality (Monge property) + monotonicity of opt enables Knuth optimization with O(n^2) instead of O(n^3).',
+      hints: ['What inequality defines the Monge property?', 'What is the key consequence for opt?'],
+    },
+    {
+      id: 'q-dp-opt-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement divide and conquer DP for O(n log n) optimization.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'Recursively compute dp for range [l,r] with opt in [optL, optR].',
+      codeSnippet: `function divideConquerDP(n, getCost) {
+  const dp = Array(n + 1).fill(0);
+  const opt = Array(n + 1).fill(0);
+  function compute(l, r, optL, optR) {
+    if (l > r) return;
+    const mid = (l + r) >> 1;
+    let bestK = -1, bestVal = Infinity;
+    for (let k = optL; k <= Math.min(mid, optR); k++) {
+      const val = dp[k] + getCost(k, mid);
+      if (val < bestVal) { bestVal = val; bestK = k; }
+    }
+    dp[mid] = bestVal;
+    opt[mid] = bestK;
+    compute(l, mid - 1, optL, bestK);
+    compute(mid + 1, r, bestK, optR);
+  }
+  compute(1, n, 1, n);
+  return dp[n];
+}`,
+      solution: 'function divideConquerDP(n,getCost){const dp=Array(n+1).fill(0);const opt=Array(n+1).fill(0);function compute(l,r,optL,optR){if(l>r)return;const mid=(l+r)>>1;let bestK=-1,bestVal=Infinity;for(let k=optL;k<=Math.min(mid,optR);k++){const val=dp[k]+getCost(k,mid);if(val<bestVal){bestVal=val;bestK=k;}}dp[mid]=bestVal;opt[mid]=bestK;compute(l,mid-1,optL,bestK);compute(mid+1,r,bestK,optR);}compute(1,n,1,n);return dp[n];}',
+      hints: ['Assume opt is monotonic', 'For dp[mid], only try k in valid range', 'Recurse on left with updated opt bounds'],
+    },
+    {
+      id: 'q-dp-opt-4',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Monotone queue optimization is used for DP of the form dp[i] = min/max over j in sliding window.',
+      correctAnswer: 'true',
+      explanation: 'When the valid range for j is a moving window, monotone queue maintains candidate minima/maxima in O(1) amortized.',
+      hints: ['What is the structure of valid j for each i?', 'How does a deque help?'],
+    },
+    {
+      id: 'q-dp-opt-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Which optimization reduces O(n^3) to O(n^2) for optimal BST?',
+      options: ['Knuth optimization', 'Divide and conquer', 'Monotone queue', 'None can reduce it further'],
+      correctAnswer: 0,
+      explanation: 'Knuth optimization reduces O(n^3) to O(n^2) when cost satisfies quadrangle inequality.',
+      hints: ['What is the complexity of naive optimal BST?', 'Which optimization applies to it?'],
+    },
+  ],
+
+  'dp-strings': [
+    {
+      id: 'q-dp-str-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Edit distance (Levenshtein) DP recurrence is:',
+      options: ['dp[i][j] = min of 3 options: insert, delete, replace', 'dp[i][j] = dp[i-1][j-1] if match else 1', 'dp[i][j] = max(dp[i-1][j], dp[i][j-1])', 'dp[i][j] = LCS length'],
+      correctAnswer: 0,
+      explanation: 'Edit distance considers 3 operations: insert (dp[i][j-1]+1), delete (dp[i-1][j]+1), replace (dp[i-1][j-1]+cost).',
+      hints: ['What are the 3 fundamental string operations?', 'When do you add 0 vs 1 for replace?'],
+    },
+    {
+      id: 'q-dp-str-2',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement longest common subsequence with O(m*n) time and O(min(m,n)) space.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'Use two rows: dp[j] = LCS length using previous row and current row.',
+      codeSnippet: `function lcs(s, t) {
+  if (s.length < t.length) [s, t] = [t, s];
+  const m = s.length, n = t.length;
+  let prev = Array(n + 1).fill(0), curr = Array(n + 1).fill(0);
+  for (let i = 1; i <= m; i++) {
+    for (let j = 1; j <= n; j++) {
+      curr[j] = s[i-1] === t[j-1] ? prev[j-1] + 1 : Math.max(prev[j], curr[j-1]);
+    }
+    [prev, curr] = [curr, prev];
+  }
+  return prev[n];
+}`,
+      solution: 'function lcs(s,t){if(s.length<t.length)[s,t]=[t,s];const m=s.length,n=t.length;let prev=Array(n+1).fill(0),curr=Array(n+1).fill(0);for(let i=1;i<=m;i++){for(let j=1;j<=n;j++){curr[j]=s[i-1]===t[j-1]?prev[j-1]+1:Math.max(prev[j],curr[j-1]);}[prev,curr]=[curr,prev];}return prev[n];}',
+      hints: ['Only need previous row to compute current row', 'When characters match, extend diagonal value', 'When they differ, take max of top and left'],
+    },
+    {
+      id: 'q-dp-str-3',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In string DP, dp[i][j] typically represents optimal solution for prefixes of length i and j.',
+      correctAnswer: 'true',
+      explanation: 'The 2D DP table is built incrementally, where cell (i,j) represents the optimal answer for s1[0..i-1] and s2[0..j-1].',
+      hints: ['Why i-1 and j-1 and not i and j?', 'What does dp[0][j] or dp[i][0] represent?'],
+    },
+    {
+      id: 'q-dp-str-4',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'For wildcard pattern matching with * and ?, the DP has states:',
+      options: ['dp[i][j] only', 'dp[i][j] + isAllWildcards flag', 'dp[i][j] + isExactMatch flag', 'dp[i][j] + position tracker'],
+      correctAnswer: 0,
+      explanation: 'Standard wildcard matching: dp[i][j] = can pattern[0..j-1] match string[0..i-1]. Transitions handle * (0+ or 1+) and ? (any single).',
+      hints: ['What does * mean?', 'What does ? mean?', 'How do you handle them in DP?'],
+    },
+    {
+      id: 'q-dp-str-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The space complexity of standard LCS can be reduced from O(mn) to O(min(m,n)) by:',
+      options: ['Using only 2 rows instead of full table', 'Storing only non-zero values', 'Using suffix arrays', 'Compression with run-length encoding'],
+      correctAnswer: 0,
+      explanation: 'Since dp[i][j] only depends on dp[i-1][j-1], dp[i-1][j], and dp[i][j-1], only previous row is needed.',
+      hints: ['What values does current cell depend on?', 'What row can be reused?'],
+    },
+  ],
+
+  'dp-bitmask': [
+    {
+      id: 'q-dp-bm-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Bitmask DP is particularly useful for problems where:',
+      options: ['Elements can be in only 2 states (in/out)', 'Set cover, TSP, Hamiltonian path', 'All answers are powers of 2', 'Bitwise operations are required'],
+      correctAnswer: 1,
+      explanation: 'Bitmask DP excels at combinatorial optimization on subsets: TSP, Hamiltonian Path, set cover all fit this pattern.',
+      hints: ['What does a bitmask represent?', 'How many subsets of n elements?'],
+    },
+    {
+      id: 'q-dp-bm-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A subset mask with all bits set (1..1) means all elements are included.',
+      correctAnswer: 'true',
+      explanation: '(1 << n) - 1 in binary is n ones, representing the full set.',
+      hints: ['What is (1 << 3) - 1 in binary?', 'How do you represent a full set?'],
+    },
+    {
+      id: 'q-dp-bm-3',
+      type: 'coding',
+      difficulty: 'hard',
+      question: 'Implement minimum Hamiltonian cycle visiting all nodes exactly once using bitmask DP.',
+      options: [],
+      correctAnswer: 0,
+      explanation: 'dp[mask][i] = min cost to visit set mask ending at i. dp[mask | (1<<j)][j] = min(dp[mask][i] + dist[i][j]).',
+      codeSnippet: `function minHamiltonian(dist) {
+  const n = dist.length;
+  const dp = Array(1 << n).fill(null).map(() => Array(n).fill(Infinity));
+  dp[1][0] = 0; // Start at node 0 with only node 0 visited
+  for (let mask = 1; mask < (1 << n); mask++) {
+    for (let i = 0; i < n; i++) {
+      if (!(mask & (1 << i))) continue;
+      const prevMask = mask ^ (1 << i);
+      if (prevMask === 0) continue;
+      for (let j = 0; j < n; j++) {
+        if (!(prevMask & (1 << j))) continue;
+        dp[mask][i] = Math.min(dp[mask][i], dp[prevMask][j] + dist[j][i]);
+      }
+    }
+  }
+  const fullMask = (1 << n) - 1;
+  let minCycle = Infinity;
+  for (let i = 1; i < n; i++) {
+    minCycle = Math.min(minCycle, dp[fullMask][i] + dist[i][0]);
+  }
+  return minCycle;
+}`,
+      solution: 'function minHamiltonian(dist){const n=dist.length;const dp=Array(1<<n).fill(null).map(()=>Array(n).fill(Infinity));dp[1][0]=0;for(let mask=1;mask<(1<<n);mask++){for(let i=0;i<n;i++){if(!(mask&(1<<i)))continue;const prev=mask^(1<<i);if(prev===0)continue;for(let j=0;j<n;j++){if(!(prev&(1<<j)))continue;dp[mask][i]=Math.min(dp[mask][i],dp[prev][j]+dist[j][i]);}}}const full=(1<<n)-1;let min=Infinity;for(let i=1;i<n;i++)min=Math.min(min,dp[full][i]+dist[i][0]);return min;}',
+      hints: ['Start from node 0', 'Build up subsets by adding one node at a time', 'Close the cycle by returning to node 0'],
+    },
+    {
+      id: 'q-dp-bm-4',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'For Hamiltonian Path (not cycle), the final answer is:',
+      options: ['dp[fullMask][any_i]', 'dp[fullMask][0] only', 'min over dp[fullMask][i]', 'max over dp[fullMask][i]'],
+      correctAnswer: 2,
+      explanation: 'Path can end at any node, so answer is min over all dp[fullMask][i] for valid endpoints.',
+      hints: ['Does a path have fixed start and end?', 'Can the path end anywhere?'],
+    },
+    {
+      id: 'q-dp-bm-5',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'What is the time complexity of bitmask DP for TSP/Hamiltonian?',
+      options: ['O(n!)', 'O(n^2 * 2^n)', 'O(2^n)', 'O(n * 2^n)'],
+      correctAnswer: 1,
+      explanation: 'We have 2^n masks, n ending cities, and O(n) transition per state: O(n^2 * 2^n).',
+      hints: ['How many masks?', 'How many i values per mask?', 'Inner loop cost?'],
+    },
+  ],
+
 }
 
 registerQuestions(questions)
