@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  passwordHash  String
+  xp            Int       @default(0)
+  dailyXpGoal   Int       @default(100)
+  league        String    @default("bronze")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  topicProgress TopicProgress[]
+  quizAttempts QuizAttempt[]
+  xpHistory    XpHistory[]
+}
+
+model Course {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  category    String   // "reinforcement-learning" | "fine-tuning" | "software-engineering"
+  icon        String   @default("book")
+  color       String   @default("#3B82F6")
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  topics      Topic[]
+}
+
+model Topic {
+  id          String   @id @default(cuid())
+  slug        String
+  name        String
+  description String
+  courseId    String
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+
+  course      Course           @relation(fields: [courseId], references: [id])
+  knowledgePoints KnowledgePoint[]
+  topicProgress  TopicProgress[]
+  prerequisites  TopicPrerequisite[] @relation("TopicRequiring")
+  requiredFor    TopicPrerequisite[] @relation("TopicRequired")
+
+  @@unique([courseId, slug])
+}
+
+model TopicPrerequisite {
+  id           String @id @default(cuid())
+  topicId      String
+  prerequisite String
+
+  topic Topic @relation("TopicRequiring", fields: [topicId], references: [id])
+
+  @@unique([topicId, prerequisite])
+}
+
+model KnowledgePoint {
+  id          String   @id @default(cuid())
+  slug        String
+  name        String
+  content     String   // JSON content for the lesson
+  examples    String   // JSON array of worked examples
+  topicId     String
+  order       Int      @default(0)
+  xpReward    Int      @default(10)
+  createdAt   DateTime @default(now())
+
+  topic       Topic    @relation(fields: [topicId], references: [id])
+  problems    Problem[]
+
+  @@unique([topicId, slug])
+}
+
+model Problem {
+  id              String   @id @default(cuid())
+  type            String   // "practice" | "quiz"
+  question        String
+  solution         String
+  hints           String   // JSON array of hints
+  knowledgePointId String
+  createdAt       DateTime @default(now())
+
+  knowledgePoint KnowledgePoint @relation(fields: [knowledgePointId], references: [id])
+  quizAttempts   QuizAttempt[]
+}
+
+model TopicProgress {
+  id            String   @id @default(cuid())
+  userId        String
+  topicId       String
+  masteryLevel  Float    @default(0) // 0-1
+  timesReviewed Int      @default(0)
+  lastReviewed  DateTime?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+  topic Topic @relation(fields: [topicId], references: [id])
+
+  @@unique([userId, topicId])
+}
+
+model QuizAttempt {
+  id        String   @id @default(cuid())
+  userId    String
+  problemId String
+  answer    String
+  correct   Boolean
+  xpEarned  Int      @default(0)
+  timeSpent Int      @default(0) // seconds
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id])
+  problem Problem @relation(fields: [problemId], references: [id])
+}
+
+model XpHistory {
+  id        String   @id @default(cuid())
+  userId    String
+  amount    Int
+  reason    String
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}

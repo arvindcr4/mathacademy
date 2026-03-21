@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --xp-gold: #FFD700;
+  --mastery-blue: #3B82F6;
+  --league-bronze: #CD7F32;
+}
+
+body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  min-height: 100vh;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a2e;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3B82F6;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #60A5FA;
+}
+
+/* XP bar animation */
+.xp-bar {
+  background: linear-gradient(90deg, #FFD700 0%, #FFA500 100%);
+  transition: width 0.5s ease-out;
+}
+
+/* Knowledge graph node styles */
+.knowledge-node {
+  transition: all 0.2s ease;
+}
+
+.knowledge-node:hover {
+  transform: scale(1.05);
+  filter: brightness(1.1);
+}
+
+/* Mastery level indicator colors */
+.mastery-none { background-color: #374151; }
+.mastery-low { background-color: #EF4444; }
+.mastery-medium { background-color: #F59E0B; }
+.mastery-high { background-color: #10B981; }
+.mastery-mastered { background-color: #3B82F6; }
