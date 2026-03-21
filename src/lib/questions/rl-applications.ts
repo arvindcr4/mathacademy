@@ -2477,7 +2477,7 @@ const extra2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The RLHF objective $J(\\pi) = \\mathbb{E}[R(x,y)] - \\beta \\cdot \\text{KL}(\\pi||\\pi_{\\text{ref}})$ has optimal solution $\\pi^* \\propto \\pi_{\\text{ref}} \\cdot \\exp(R^*/\\beta)$, giving $R^* = \\beta \\cdot \\log(\\pi^*/\\pi_{\\text{ref}}) + Z(x)$. Plugging into the Bradley-Terry preference model $P(y_w \\succ y_l) = \\sigma(R(x,y_w) - R(x,y_l))$, the reward difference becomes $\\beta \\cdot (\\log(\\pi^*/\\pi_{\\text{ref}})(y_w) - \\log(\\pi^*/\\pi_{\\text{ref}})(y_l))$. DPO directly minimizes\n\\[\n-\\log \\sigma\\big(\\beta \\cdot (\\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_w) - \\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_l))\\big)\n\\]\nover the policy $\\pi_\\theta$ — no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
       hints: [
-        "The optimal RL policy satisfies \\pi* \\propto \\pi_ref \cdot exp(R/\\beta). Can we express R in terms of \\pi* and \\pi_ref?",
+        "The optimal RL policy satisfies \\pi* \\propto \pi_{\text{ref}} \cdot \exp(R/\beta). Can we express R in terms of \\pi* and \\pi_ref?",
         "If R appears in the preference model P(y_w > y_l), and R can be expressed in terms of \\pi, can we optimize \\pi directly on the preference data?",
       ],
     },
