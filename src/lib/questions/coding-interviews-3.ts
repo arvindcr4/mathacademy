@@ -2308,7 +2308,7 @@ const questions: Record<string, Question[]> = {
       id: "q-bit-count-4",
       type: "true-false",
       difficulty: "hard",
-      question: "\)n \\; \\& \\; (-n)\( isolates the lowest set bit.",
+      question: "The expression $n \\& (-n)$ isolates the lowest set bit.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:

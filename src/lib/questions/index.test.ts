@@ -274,4 +274,46 @@ describe('Question Files Validation', () => {
       }
     }
   })
+
+  it('should have consistent difficulty levels across all question types', () => {
+    const validDifficulties = ['easy', 'medium', 'hard']
+
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        expect(
+          validDifficulties.includes(q.difficulty),
+          `${bankName}: ${q.id} has invalid difficulty "${q.difficulty}"`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have question text starting with valid character', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        const firstChar = q.question.trim()[0]
+        // Allow letters, numbers, $, [, (, ", ', \ (LaTeX), * (markdown), - (list)
+        const validStart = /[A-Za-z0-9$\[("'*\\\-]/
+        expect(
+          validStart.test(firstChar),
+          `${bankName}: ${q.id} question should start with valid character, got "${firstChar}"`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have reasonable question lengths', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        expect(
+          q.question.length,
+          `${bankName}: ${q.id} question too short (< 10 chars)`
+        ).toBeGreaterThanOrEqual(10)
+        expect(
+          q.question.length,
+          `${bankName}: ${q.id} question too long (> 2000 chars)`
+        ).toBeLessThanOrEqual(2000)
+      }
+    }
+  })
 })

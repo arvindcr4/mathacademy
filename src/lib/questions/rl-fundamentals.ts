@@ -1724,7 +1724,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "n-step Tree Backup extends n-step TD to off-policy learning without importance sampling weights. How does it achieve this?",
+        "N-step Tree Backup extends n-step TD to off-policy learning without importance sampling weights. How does it achieve this?",
       options: [
         "It uses a different discount factor for off-policy corrections.",
         "It weights each step by the probability of taking the greedy action under the current policy (\\pi(a|s) instead of \mu(a|s)/\\pi(a|s) importance sampling), effectively averaging over all non-selected actions at each step while following the tree of full policy probabilities.",
