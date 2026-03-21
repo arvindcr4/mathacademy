@@ -763,13 +763,15 @@ const questions: Record<string, Question[]> = {
         "When you encounter ')', what is on top of the stack? Does it match?"
       ],
       explanation:
-        '"([)]" is NOT valid.\n\n' +
-        "\\begin align*\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } ( \\\\\n" +
-        "\\text{Read } '[': &\\quad \\text{push } \\[ \\quad &\\quad \\text{Stack: } ( \\[ \\\\\n" +
-        "\\text{Read } ')': &\\quad \\text{Top of stack is } \\[ \\neq ( \\Rightarrow \\text{MISMATCH}\n" +
-        "\\end align*\n\n" +
-        "The stack reveals the error immediately: when ')' appears, the top of the stack is '[', not '('. The other three strings are all valid."
+        "**Step 1:** Trace through \"([)]\" character by character with a stack.\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '('\\\\\n" +
+        "\\text{Read } '[': &\\quad \\text{push } '[' \\quad &\\quad \\text{Stack: } '( \\; ['\\\\\n" +
+        "\\text{Read } ')': &\\quad \\text{Top of stack is } '[' \\neq '(' \\; \\Rightarrow \\text{MISMATCH}.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** The stack reveals the error immediately: when ')' appears, the top of the stack is '[', not '('. The other three strings are all valid."
     },
     {
       id: "q-vp-5",
@@ -800,15 +802,16 @@ const questions: Record<string, Question[]> = {
         "Each unmatched ')' needs one '(' inserted before it; each unmatched '(' needs one ')' inserted after it."
       ],
       explanation:
-        "3 insertions are needed.\n\n" +
-        "Scanning the string:\n\n" +
-        "\\begin align*\n" +
-        "\\text{Read } ')': &\\quad \\text{stack empty - unmatched closer, add 1 opening bracket} \\Rightarrow \\text{total} = 1 \\\\\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } ( \\\\\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } (( \\\\\n" +
-        "\\text{End}: &\\quad \\text{2 unmatched openers in stack} \\Rightarrow \\text{add 2 closers} \\Rightarrow \\text{total} = 3\n" +
-        "\\end align*\n\n" +
-        "General formula: minimum insertions = (number of unmatched closers) + (number of unmatched openers) at the end of a single left-to-right scan."
+        "**Step 1:** Scan the string left to right, counting unmatched closers and openers:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } ')': &\\quad \\text{stack empty — unmatched closer, add 1 opener} \\Rightarrow \\text{total} = 1,\\\\\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '(',\\\\\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '( \\; (',\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** At the end: 2 unmatched openers remain, so add 2 closers. Total insertions = $1 + 2 = 3$.\n\n" +
+        "\\[\n\\text{Minimum insertions} = \\text{unmatched closers} + \\text{unmatched openers}.\n\\]"
     },
   ],
 
@@ -828,12 +831,12 @@ const questions: Record<string, Question[]> = {
         "When we reverse the current node's next pointer, what do we lose? What must we save?"
       ],
       explanation:
-        "Three pointers are needed: $\\text{prev}$, $\\text{curr}$, and $\\text{next}$.\n\n" +
-        "At each step, we:\n" +
+        "**Step 1:** Three pointers are needed: $\\text{prev}$, $\\text{curr}$, and $\\text{next}$.\n\n" +
+        "**Step 2:** At each step, we:\n" +
         "1. Save $\\text{next} = \\text{curr.next}$ (otherwise we lose the rest of the list)\n" +
         "2. Reverse: $\\text{curr.next} = \\text{prev}$\n" +
         "3. Advance: $\\text{prev} = \\text{curr}$, $\\text{curr} = \\text{next}$\n\n" +
-        "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\\]"
+        "\\[\n\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\n\\]"
     },
     {
       id: "q-rll-2",
@@ -898,11 +901,10 @@ const questions: Record<string, Question[]> = {
         "After reversing the sublist portion, how do you reconnect it to the rest of the list?"
       ],
       explanation:
-        "True. The key steps are:\n\n" +
-        "1. Locate the node $\\text{beforeStart}$ immediately before the sublist's start node.\n" +
-        "2. Disconnect the sublist: $\\text{beforeStart.next} = \\text{null}$.\n" +
-        "3. Reverse the sublist in place using the standard three-pointer technique.\n" +
-        "4. Reconnect: $\\text{beforeStart.next}$ now points to the new head of the reversed sublist, and the sublist's tail points to the node that originally followed it.\n\n" +
+        "**Step 1:** Locate the node $\\text{beforeStart}$ immediately before the sublist's start node.\n\n" +
+        "**Step 2:** Disconnect the sublist: $\\text{beforeStart.next} = \\text{null}$.\n\n" +
+        "**Step 3:** Reverse the sublist in place using the standard three-pointer technique.\n\n" +
+        "**Step 4:** Reconnect: $\\text{beforeStart.next}$ now points to the new head of the reversed sublist, and the sublist's tail points to the node that originally followed it.\n\n" +
         "Example: reversing nodes $2$ to $4$ in $1 \\rightarrow 2 \\rightarrow 3 \\rightarrow 4 \\rightarrow 5$ gives $1 \\rightarrow 4 \\rightarrow 3 \\rightarrow 2 \\rightarrow 5$."
     },
     {
