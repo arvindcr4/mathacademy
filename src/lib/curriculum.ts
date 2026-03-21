@@ -1552,6 +1552,11 @@ export const courses: Course[] = [
     slug: 'time-series-forecasting',
     name: 'Time Series Analysis & Forecasting',
     description: 'Classical statistical models, deep learning for sequences, and foundation models for time series.',
+    category: 'reinforcement-learning',
+    icon: '📈',
+    color: '#06B6D4',
+    topicCount: 8,
+    estimatedHours: 30,
     topics: [
       {
         id: 'classical-time-series',
@@ -1640,6 +1645,11 @@ export const courses: Course[] = [
     slug: 'recommender-systems',
     name: 'Recommender Systems & Ranking',
     description: 'Collaborative filtering, deep learning recommenders, and learning-to-rank for search and feeds.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'collaborative-filtering',
@@ -1728,6 +1738,11 @@ export const courses: Course[] = [
     slug: 'multimodal-learning',
     name: 'Multimodal Learning & Foundation Models',
     description: 'Vision-language models, audio-visual learning, and large multimodal foundation models.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'vision-language-models',
@@ -1816,6 +1831,11 @@ export const courses: Course[] = [
     slug: 'efficient-ml',
     name: 'Efficient ML & Model Compression',
     description: 'Quantization, pruning, distillation, and hardware-aware ML for edge and production deployment.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'quantization',
@@ -1904,6 +1924,11 @@ export const courses: Course[] = [
     slug: 'federated-learning',
     name: 'Federated Learning & Privacy-Preserving ML',
     description: 'Train ML models across distributed data without centralization, using privacy guarantees.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'federated-foundations',
@@ -1992,6 +2017,11 @@ export const courses: Course[] = [
     slug: 'causal-inference',
     name: 'Causal Inference & Causal ML',
     description: 'Causal reasoning, treatment effect estimation, and causal machine learning methods.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'causal-foundations',
@@ -2080,6 +2110,11 @@ export const courses: Course[] = [
     slug: 'diffusion-models',
     name: 'Diffusion Models & Generative AI',
     description: 'Score-based models, DDPM, latent diffusion, and state-of-the-art image/audio/video generation.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'diffusion-foundations',
@@ -2168,6 +2203,11 @@ export const courses: Course[] = [
     slug: 'graph-neural-networks',
     name: 'Graph Neural Networks & Geometric DL',
     description: 'Message passing, graph convolutions, and geometric deep learning for structured data.',
+    category: 'fine-tuning',
+    icon: '📚',
+    color: '#8B5CF6',
+    topicCount: 6,
+    estimatedHours: 25,
     topics: [
       {
         id: 'graph-foundations',
