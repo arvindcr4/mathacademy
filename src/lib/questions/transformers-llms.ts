@@ -132,10 +132,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "As shown in d2l.ai §11.6.3, at position i = 0: sin(0/...) = sin(0) = 0 for all even dimensions, and cos(0/...) = cos(0) = 1 for all odd dimensions. This gives the first token a unique all-{0,1} encoding that differs from all other positions.",
+        "As shown in d2l.ai \\S 11.6.3, the sinusoidal positional encoding is defined dimension-by-dimension:\n\\[\np_{i,2j} = \\sin\\!\\left(\\frac{i}{10000^{2j/d}}\\right),\\quad\np_{i,2j+1} = \\cos\\!\\left(\\frac{i}{10000^{2j/d}}\\right).\n\\]\nAt position $i = 0$, the argument of both $\\sin$ and $\\cos$ is always 0 regardless of $j$. Therefore:\n\\[\np_{0,2j} = \\sin(0) = 0 \\quad \\text{for all even dimensions},\\]\np_{0,2j+1} = \\cos(0) = 1 \\quad \\text{for all odd dimensions}.\n\\]\nThis gives the position-0 encoding vector $\\mathbf{p}_0 = [0, 1, 0, 1, 0, 1, \\ldots]$ — a unique binary signature that differs from every other position's encoding.",
       hints: [
-        "Substitute i = 0 into the formula: sin(0) = 0 and cos(0) = 1 regardless of j.",
-        "This consistent baseline at i = 0 is one reason the formula uniquely identifies every position.",
+        "At $i = 0$: the argument $i/10000^{2j/d} = 0$ for every dimension $j$, so $\\sin(0) = 0$ and $\\cos(0) = 1$ for all $j$.",
+        "The result is the binary vector $[0, 1, 0, 1, \\ldots]$ — a distinctive signature for position 0 unlike any other position.",
       ],
     },
     {
@@ -152,10 +152,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "D2l.ai §11.6.3 notes that sinusoidal encodings are fixed, not learned — the formula applies to any position i, including i > training_length. By contrast, learned position embeddings have no defined representation for unseen positions, making sinusoidal encodings theoretically more length-generalizable.",
+        "D2l.ai \\S 11.6.3 notes that sinusoidal encodings are fixed, not learned — the formula applies to any position $i$, including $i > \\text{training\\_length}$. By contrast, learned position embeddings have no defined representation for unseen positions: a lookup table indexed by position has no entry for positions it never encountered during training. The sinusoidal formula produces a valid encoding vector for any integer position without any training, making it theoretically generalizable to longer sequences.",
       hints: [
-        "Learned embeddings require a row in a lookup table — if position 2048 was never trained, there\'s no learned embedding.",
-        "The sinusoidal formula computes a valid vector for any integer i without any training.",
+        "Learned embeddings: a lookup table indexed by position. If position 2048 was never in the training data, there is no learned embedding for it.",
+        "The sinusoidal formula computes a valid $\\mathbb{R}^d$ vector for any integer $i$ — no lookup table required.",
       ],
     },
     {
@@ -588,10 +588,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Dao et al. (2022) showed that standard attention is memory-bandwidth bound, not compute bound — the bottleneck is reading/writing the n×n matrix to/from HBM. FlashAttention tiles attention into SRAM-sized blocks (~20–40MB), computing softmax incrementally (online softmax trick) without materializing the full matrix in HBM, yielding 2–4× wall-clock speedup.",
+        "For standard attention, the full $n \\times n$ attention matrix $\\mathbf{A}$ must be materialized in HBM to compute the softmax and the final output. At $n = 4096$ and FP16 (2 bytes):\n\\[\n\\text{HBM for } \\mathbf{A} = 4096 \\times 4096 \\times 2 \\approx 33.6 \\text{ MB per layer}.\n\\]\nWith 32 layers: over 1 GB just for the attention matrices. This HBM read/write is the bottleneck: the GPU spends most of its time moving data, not performing FLOPs.\n\nFlashAttention avoids this by tiling the computation into SRAM-sized blocks. For each row, the online softmax algorithm maintains running statistics:\n\\[\nm_j = \\max(m_{j-1}, x_j),\\quad s_j = s_{j-1} \\cdot e^{m_{j-1} - m_j} + e^{x_j - m_j},\n\\]\nenabling exact softmax computation tile-by-tile without ever materializing the full row. This reduces HBM accesses from $\\mathcal{O}(n^2)$ to $\\mathcal{O}(n)$ per layer, yielding 2–4× wall-clock speedup.",
       hints: [
-        "33.6 MB per layer, times 32 layers = over 1GB just for attention matrices at n = 4096.",
-        "SRAM is ~10–100× faster than HBM but much smaller; keeping computation in SRAM avoids the bandwidth bottleneck.",
+        "Standard attention: write $n^2$ entries to HBM, read them back for softmax. FlashAttention: keep tiles in SRAM (~20–40 MB capacity) and compute softmax incrementally.",
+        "The online softmax tracks $m_j = \\max(x_1, \\ldots, x_j)$ and $s_j = \\sum_{i=1}^j e^{x_i - m_j}$ — the softmax denominator — across tiles.",
       ],
     },
     {
@@ -645,9 +645,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KV cache = 2 (K and V) × n_layers × n_KV_heads × head_dim × seq_len × bytes = 2 × 80 × 8 × 128 × 4096 × 2 = 5,368,709,120 bytes ≈ 5.4 GB. This is substantial — a 70B FP16 model weighs ~140 GB, so the KV cache is ~4% of model size per 4k tokens, growing linearly with context.",
+        "The KV cache stores key and value representations for every cached token position. For a single layer, one KV head requires head_dim × seq_len × bytes. With 8 KV heads and both K and V:\n\\[\n\\text{KV cache per layer} = 2 \\times 8 \\times 128 \\times 4096 \\times 2 \\text{ bytes}.\n\\]\nMultiplying by 80 layers:\n\\[\n\\text{KV cache} = 2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2\n= 5{,}368{,}709{,}120 \\text{ bytes} \\approx 5.4 \\text{ GB}.\n\\]\nA 70B model in FP16 is ~140 GB, so the KV cache for 4096 tokens is ~4% of model weight per sequence — growing linearly with context length and potentially dominating memory for long prompts.",
       hints: [
-        "KV cache formula: 2 × layers × KV_heads × head_dim × seq_len × bytes_per_element.",
+        "Formula: 2 (K and V) × n_layers × n_KV_heads × head_dim × seq_len × bytes_per_element.",
         "With GQA (8 KV heads vs. 64 Q heads), the cache is already 8× smaller than standard MHA would be.",
       ],
     },
@@ -873,10 +873,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "LoRA adapter parameters: |B| + |A| = d×r + r×k = 4096×16 + 16×4096 = 65,536 + 65,536 = 131,072 params. The full W has 4096² = 16.8M params. LoRA reduces trainable parameters to 131K/16.8M ≈ 0.78% — enabling fine-tuning on consumer hardware.",
+        "The LoRA update is $\\Delta\\mathbf{W} = \\mathbf{B}\\mathbf{A}$, where $\\mathbf{B} \\in \\mathbb{R}^{d \\times r}$ and $\\mathbf{A} \\in \\mathbb{R}^{r \\times k}$. For $\\mathbf{W} \\in \\mathbb{R}^{4096 \\times 4096}$ with rank $r = 16$:\n\\[\n|\\mathbf{B}| = 4096 \\times 16 = 65{,}536, \\quad |\\mathbf{A}| = 16 \\times 4096 = 65{,}536,\n\\]\n\\[\n|\\mathbf{B}| + |\\mathbf{A}| = 65{,}536 + 65{,}536 = 131{,}072 \\text{ params}.\n\\]\nThe full matrix $\\mathbf{W}$ has $4096^2 = 16{,}777{,}216$ params. The ratio:\n\\[\n\\frac{131{,}072}{16{,}777{,}216} \\approx 0.0078 = 0.78\\%,\n\\]\nenabling fine-tuning on consumer GPUs with minimal memory overhead.",
       hints: [
-        "B: d × r matrix; A: r × k matrix. Both are trained; W is frozen.",
-        "r is the bottleneck dimension — low rank means very few parameters in the update.",
+        "$\\mathbf{B} \\in \\mathbb{R}^{d \\times r}$: $4096 \\times 16 = 65{,}536$ params. $\\mathbf{A} \\in \\mathbb{R}^{r \\times k}$: $16 \\times 4096 = 65{,}536$ params.",
+        "The rank $r = 16$ is the bottleneck: only $d \\times r + r \\times k$ params in the update, not $d \\times k$.",
       ],
     },
     {
@@ -964,10 +964,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "β in DPO controls the KL divergence penalty between the fine-tuned policy π_θ and the reference π_ref. High β means high penalty for deviating from the reference model — the model learns preferences while staying close to the base model. Low β allows larger departures from the reference distribution.",
+        "The DPO loss is:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log \\sigma\\bigl(\\beta \\ln \\frac{\\pi_\\theta(y_w|x)}{\\pi_\\text{ref}(y_w|x)} - \\beta \\ln \\frac{\\pi_\\theta(y_l|x)}{\\pi_\\text{ref}(y_l|x)}\\bigr).\n\\]\nThe term $\\beta \\ln \\frac{\\pi_\\theta(y|x)}{\\pi_\\text{ref}(y|x)}$ is $\\beta$ times the log-ratio of the policy to the reference. This is proportional to the KL divergence $D_\\text{KL}(\\pi_\\theta \\| \\pi_\\text{ref})$ between the fine-tuned and reference policies.\n\nIncreasing $\\beta$ scales up the KL penalty: the optimizer strongly minimizes the difference $\\pi_\\theta - \\pi_\\text{ref}$, keeping the model close to the reference. Decreasing $\\beta$ reduces the KL penalty, allowing $\\pi_\\theta$ to deviate further in order to maximize preference alignment — trading off proximity to the base model against preference accuracy.",
       hints: [
-        "DPO implicitly optimizes reward minus β × KL(π_θ || π_ref) — β controls this trade-off.",
-        "High β = conservative (stay close to base model); low β = aggressive (maximize reward, ignore KL cost).",
+        "The argument of $\\sigma$ is $\\beta \\times (\\text{log pref for } y_w - \\text{log pref for } y_l)$. High $\\beta$ amplifies this signal.",
+        "High $\\beta$: strong KL penalty — model stays close to base. Low $\\beta$: weak KL penalty — model maximizes preference signal at the cost of diverging from base.",
       ],
     },
   ],
@@ -1044,10 +1044,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mixtral\'s total params: ~46.7B (attention + all 8 FFN experts × layers). Attention parameters (~7B-equivalent) are always active. Each FFN expert ≈ 1B parameters; 2/8 experts active ≈ 2B of expert params per layer × 32 layers ≈ 6B expert params. Total active ≈ 7B + 6B ≈ 13B — similar to dense 13B model performance at dense 7B inference cost.",
+        "Mixtral 8×7B has 8 FFN expert blocks per layer, each the size of a standard 7B model's FFN. With 32 layers:\n\\[\n\\text{total params} \\approx 46.7B = \\underbrace{7B}_{\\text{attention}} + \\underbrace{8 \\times 7B}_{8 \\times \\text{FFN expert} \\times 32 \\text{ layers}}.\n\\]\nAt inference, the router activates $k = 2$ experts per token per layer. Breaking down active parameters:\n\\[\n\\underbrace{7B}_{\\text{attention (always-on)}} + \\underbrace{2}_{\\text{active experts}} \\times \\underbrace{\\frac{1}{8}}_{\\text{fraction}} \\times \\underbrace{8 \\times 7B}_{\\text{total FFN params}} \\approx 7B + 6B = 13B.\n\\]\nThis gives Mixtral quality comparable to a dense 13B model at the inference cost of a dense 7B model (only ~13B parameters processed per forward pass).",
       hints: [
-        "Active = always-on (attention) + 2/8 × FFN experts.",
-        "Mixtral\'s key claim: 46.7B total params but ~13B active = better quality than dense 13B at similar inference cost.",
+        "Always-on: attention parameters (~7B). Active FFN: $k/8$ of the total FFN params per layer.",
+        "Mixtral's MoE magic: 46.7B total params, but only ~13B active per token — 2 experts per 8 × 7B experts × 32 layers + 7B attention.",
       ],
     },
     {
@@ -1329,10 +1329,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MMLU\'s multiple-choice format tests knowledge recognition, not generation. 90% MMLU indicates broad knowledge coverage across domains (STEM, law, medicine, etc.), but says nothing about the model\'s ability to explain reasoning, handle novel formats, or complete multi-step tasks — all critical for real-world utility.",
+        "MMLU's 57 subjects include STEM, law, medicine, and humanities. The format is strictly multiple-choice: for each question, the model picks one of 4 options. This tests knowledge recognition — whether the model can identify the correct answer when it is explicitly listed.\n\n90% MMLU tells us the model can correctly identify the answer from a list in 90% of cases. It does NOT tell us whether the model can:\n- Generate explanations (open-ended, no options given)\n- Perform multi-step reasoning (MMLU tests single-step knowledge retrieval)\n- Follow instructions in novel formats (no instruction-following required)\n- Complete practical tasks (benchmark tests closed-book knowledge, not real-world task completion)\n\nThis is a critical distinction: recognition is much easier than generation, and choosing from 4 options is much easier than producing an answer from scratch.",
       hints: [
-        'Multiple-choice recognition ("which answer is correct?") differs from open-ended generation ("explain why X is correct").',
-        "MMLU is a good proxy for breadth of training knowledge, but not for reasoning depth or instruction-following quality.",
+        "Recognition (choose from 4 options) is fundamentally easier than generation (produce the answer unprompted).",
+        "MMLU tests: \"Which is correct?\" It does not test: \"Explain why X is correct.\"",
       ],
     },
     {
@@ -1363,10 +1363,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If you naively run k = 10 samples and check if any pass, this estimates pass@10 with very high variance (1 run ≠ the true probability). By generating n = 200 samples and using the combinatorial formula, you get a lower-variance estimate of pass@k for any k ≤ n simultaneously, without the optimistic bias of selecting the single best k samples from n.",
+        "The naive approach — generate $k$ samples and check if any pass — has very high variance because a single run of $k$ samples either succeeds (if at least one is correct) or fails (if all are wrong). Repeating this experiment gives different results each time.\n\nThe unbiased estimator uses all $n$ generated samples. Let $c$ be the number of correct samples among $n$. The probability that $k$ new samples would all fail is:\n\\[\nP(\\text{all } k \\text{ fail}) = \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nTherefore:\n\\[\n\\widehat{\\text{pass}@k} = 1 - \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nThis uses the fraction $c/n$ of correct samples to estimate the probability that a batch of $k$ samples contains at least one correct. It is unbiased because it does not cherry-pick the single best $k$ from $n$ — it conditions on the observed correct rate $c/n$ and computes the expected pass rate for any $k$.",
       hints: [
-        "Running 1 set of 10 samples is extremely noisy — some sets have 5 correct, others have 0.",
-        "The combinatorial formula uses the actual fraction of correct samples across n attempts to estimate the probability that any k would include at least one correct.",
+        "The key insight: if $c/n$ of samples are correct, then a fresh batch of $k$ samples has $(1 - c/n)^k$ probability of all being wrong.",
+        "The combinatorial formula $1 - \\binom{n-c}{k}/\\binom{n}{k}$ implements this logic without actually running multiple independent batches.",
       ],
     },
   ],

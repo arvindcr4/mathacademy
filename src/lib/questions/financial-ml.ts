@@ -1762,4 +1762,586 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+Object.assign(questions, {
+  // ── fin-kp-31: Risk Management ML ────────────────────────────────────────
+  "risk-management-ml": [
+    {
+      id: "q-fin-kp31-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Historical simulation for VaR computes the portfolio loss distribution by repricing the portfolio under the last T days of actual market returns. What is the primary limitation of this approach?",
+      options: [
+        "Historical simulation requires matrix inversion, which is numerically unstable",
+        "Historical simulation is anchored to the specific historical window and cannot capture loss scenarios worse than any day in that window, understating tail risk when the history lacks extreme events",
+        "Historical simulation overestimates VaR because it always uses the worst day as the estimate",
+        "Historical simulation requires normally distributed returns, which rarely holds in practice",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Historical simulation uses the empirical distribution of past returns, so it can only model losses observed in the historical window (typically 250-500 days). If the lookback period does not include a crisis, extreme tail risk is invisible. Historical simulation VaR is exactly the empirical quantile of past P&L — no extrapolation beyond observed history.",
+      hints: [
+        "If the history covers 2012-2022 and excludes the 2008 crisis, how would 2008-style shocks appear in the VaR?",
+        "Historical simulation VaR is exactly the empirical quantile of past P&L — no extrapolation beyond observed history.",
+      ],
+    },
+    {
+      id: "q-fin-kp31-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "CVaR (Conditional Value at Risk) is a coherent risk measure while VaR is not, because CVaR satisfies sub-additivity: CVaR(A+B) is at most CVaR(A) + CVaR(B), ensuring that diversification is always rewarded.",
+      correctAnswer: "True",
+      explanation:
+        "Artzner et al. (1999) defined coherent risk measures via four axioms: monotonicity, sub-additivity, homogeneity, and translation invariance. VaR fails sub-additivity in general (VaR(A+B) can exceed VaR(A) + VaR(B) for non-normal distributions). CVaR satisfies all four axioms, making it a coherent measure suitable for portfolio optimization.",
+      hints: [
+        "Sub-additivity violation for VaR: two bonds each with 1% default probability — their combined VaR can exceed the sum.",
+        "CVaR is the expected loss in the tail region — averaging over extreme outcomes satisfies sub-additivity.",
+      ],
+    },
+    {
+      id: "q-fin-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Monte Carlo simulation for portfolio VaR requires generating correlated multi-asset return scenarios given a covariance matrix. Which technique correctly generates N correlated asset returns?",
+      options: [
+        "Generate independent standard normals Z and multiply by the covariance matrix directly",
+        "Compute the Cholesky decomposition of the covariance matrix as L times L-transpose, generate independent standard normals Z, and compute r = L times Z — the resulting vector has the target covariance",
+        "Generate uniform random variables and apply the inverse CDF for each asset independently",
+        "Generate correlated returns by sorting independent samples to match the Spearman rank correlation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The Cholesky method for correlated sampling: if Z is a vector of i.i.d. N(0,1) variables and L is the lower triangular Cholesky factor of the covariance matrix (sigma = L * L^T), then r = L * Z has covariance L * I * L^T = sigma. Multiplying by sigma directly is incorrect — you need the matrix square root, not sigma itself.",
+      hints: [
+        "Cholesky: L * L^T = sigma where L is lower triangular. Then r = mu + L * Z gives Cov(r) = sigma.",
+        "Multiplying by sigma directly is wrong: you need the square root of the covariance matrix, not sigma itself.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-32: Credit Scoring ML Advanced ────────────────────────────────
+  "credit-scoring-ml": [
+    {
+      id: "q-fin-kp32-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A traditional credit scorecard maps raw features to points using bins and Weight of Evidence transforms, then sums points to a final score. What is the primary regulatory advantage of this approach over a gradient boosted tree model?",
+      options: [
+        "Scorecards always achieve higher AUC than GBMs on credit datasets",
+        "Scorecards are fully transparent and monotone: each feature's contribution is explicit, signed, and interpretable as points, satisfying regulatory requirements for adverse action notices and model documentation",
+        "Scorecards require less training data than GBMs, making them preferable for small lenders",
+        "Scorecards are immune to overfitting because they use only linear combinations of features",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Regulators (OCC, CFPB, FDIC) require lenders to provide adverse action notices explaining why an applicant was denied. A scorecard can directly state individual feature contributions. GBMs cannot produce such simple reason codes without post-hoc approximation (SHAP values), which may not satisfy strict regulatory interpretability requirements.",
+      hints: [
+        "Adverse action notice requires feature-level attribution: 'denied due to these specific reasons'.",
+        "A scorecard's contribution for each feature is explicit and invariant across applicants — easy to audit and explain.",
+      ],
+    },
+    {
+      id: "q-fin-kp32-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Fair lending laws in the US (ECOA and FHA) can be violated by a credit model even if race, gender, and other protected characteristics are not included as explicit model features, if the model produces disparate impact on protected classes.",
+      correctAnswer: "True",
+      explanation:
+        "Disparate impact doctrine holds that facially neutral practices that disproportionately harm protected groups are discriminatory absent business necessity justification. Proxy variables (zip code, social network features) correlated with race can produce disparate impact even without explicit race inputs. ML models must be tested for disparate impact across protected classes under the 80% rule.",
+      hints: [
+        "The four-fifths rule: if the approval rate for a protected group is less than 80% of the highest group's rate, disparate impact is flagged.",
+        "Zip code is highly correlated with race due to residential segregation — using it can create disparate impact.",
+      ],
+    },
+    {
+      id: "q-fin-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "SR 11-7 (OCC Supervisory Guidance on Model Risk Management) requires lenders to maintain model documentation and conduct ongoing model validation. Which of the following is NOT a required component of model documentation under SR 11-7?",
+      options: [
+        "Description of the model's purpose, assumptions, and limitations",
+        "Validation results including out-of-sample performance metrics and stability tests",
+        "A guarantee that the model will achieve at least 75% AUC on future data",
+        "Data quality assessments and feature selection rationale",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "SR 11-7 requires: purpose/theory documentation, data lineage, assumptions and limitations, validation results, and ongoing performance monitoring. It does NOT require performance guarantees — such guarantees are impossible since future data distributions can shift. Model validation must be performed by an independent team including out-of-time testing and sensitivity analysis.",
+      hints: [
+        "SR 11-7 is about process and rigor, not about promising performance outcomes.",
+        "Validation must include out-of-time testing, stress testing, and sensitivity analysis performed by an independent team.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-33: Insurance ML ───────────────────────────────────────────────
+  "insurance-ml": [
+    {
+      id: "q-fin-kp33-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In auto insurance telematics, a Usage-Based Insurance (UBI) model uses GPS and accelerometer data. Which driving feature is most directly predictive of accident risk?",
+      options: [
+        "Total miles driven per month — higher mileage correlates with more exposure",
+        "Hard braking events per mile — a direct behavioral proxy for aggressive driving strongly correlated with at-fault accident frequency",
+        "Number of unique roads driven — more road diversity indicates geographic risk",
+        "Time of first engine start each day — proxy for commuting behavior",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Telematics research consistently identifies hard braking frequency as a top predictor of accident risk: it captures aggressive driving behavior, poor following distance, and slow reaction to hazards. It is causal (aggressive braking is a risk behavior) rather than a mere proxy, making it both predictive and legally defensible in most jurisdictions.",
+      hints: [
+        "Exposure (miles driven) explains when accidents can happen; hard braking explains how likely they are given exposure.",
+        "Hard braking is directly observable and available in real time from accelerometers — ideal for UBI scoring.",
+      ],
+    },
+    {
+      id: "q-fin-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Insurance claims fraud detection is a highly imbalanced classification problem where fraudulent claims typically represent less than 5% of all claims, requiring techniques such as oversampling, undersampling, or cost-sensitive learning to achieve useful fraud detection rates.",
+      correctAnswer: "True",
+      explanation:
+        "Fraud rates of 1-5% mean a naive model predicting all claims as legitimate achieves 95%+ accuracy but detects no fraud. SMOTE (Synthetic Minority Over-sampling Technique) generates synthetic fraud examples to balance training data; cost-sensitive learning assigns higher misclassification cost to missed fraud cases. Precision-recall curves are more informative than ROC curves for this imbalanced setting.",
+      hints: [
+        "A model with 99% accuracy but 0% fraud recall is useless for fraud detection despite high accuracy.",
+        "SMOTE creates synthetic minority class examples by interpolating between existing minority samples in feature space.",
+      ],
+    },
+    {
+      id: "q-fin-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Generalized Linear Models (GLMs) with log link and Tweedie distributions are the actuarial standard for claims severity modeling. What is the primary advantage over ordinary least squares regression for insurance loss modeling?",
+      options: [
+        "GLMs are faster to train than OLS because they use gradient descent rather than matrix inversion",
+        "GLMs with log link enforce non-negative predictions and model multiplicative interactions between rating factors, matching the multiplicative structure of insurance tariffs and the right-skewed, zero-inflated nature of insurance losses",
+        "GLMs always achieve higher predictive accuracy than OLS because they use regularization by default",
+        "GLMs are preferred because they can handle more than 100 features without overfitting",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Insurance pricing uses multiplicative rating factors (base rate times age factor times vehicle factor). A log-link GLM models log(E[Y]) = X*beta, equivalent to a multiplicative structure on expected loss. OLS models additive structure and can predict negative losses. Tweedie distributions handle the right-skewed, zero-inflated nature of insurance loss data.",
+      hints: [
+        "Multiplicative tariff: premium = base * f_age * f_vehicle * f_region. Log-link GLM models exactly this structure.",
+        "Insurance losses are non-negative and right-skewed — Gaussian OLS is inappropriate; Tweedie handles zero-inflated positives.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-34: Trading Signals ────────────────────────────────────────────
+  "trading-signals": [
+    {
+      id: "q-fin-kp34-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The Information Coefficient (IC) is defined as the Spearman rank correlation between predicted returns and realized returns. An IC of 0.05 is considered useful for a quantitative equity strategy. Why is IC so low in practice?",
+      options: [
+        "IC is computed on monthly returns, which are inherently noisy compared to daily predictions",
+        "Financial markets are highly competitive: most alpha signals are arbitraged away, leaving IC near zero. The residual IC of 0.05, applied with high breadth via the Fundamental Law of Active Management, compounds into economically significant returns",
+        "IC of 0.05 means the model is wrong 95% of the time and should be discarded",
+        "Low IC is caused by transaction costs that reduce gross alpha to near zero",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Grinold's Fundamental Law: IR = IC times sqrt(Breadth). An IC of 0.05 applied across 500 stocks per month (breadth = 6000 trades per year) gives IR = 0.05 times sqrt(6000) approximately 3.87 — an excellent information ratio. Low IC is expected because markets incorporate obvious signals; persistent small IC from novel signals is very valuable when applied at scale.",
+      hints: [
+        "Fundamental Law: IR = IC times sqrt(N), where N is the number of independent bets per year.",
+        "IC = 0.05 means signals are barely better than random, but systematic application at high breadth amplifies even tiny edges.",
+      ],
+    },
+    {
+      id: "q-fin-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Signal decay (alpha decay) refers to the decrease in predictive power of a trading signal as the holding period increases. Momentum signals typically have longer alpha decay (weeks to months) while microstructure signals decay within seconds to minutes.",
+      correctAnswer: "True",
+      explanation:
+        "Alpha decay depends on how quickly arbitrageurs can detect and trade against a signal. Microstructure signals (order flow imbalance, bid-ask spread) are observable by many HFT participants and decay in milliseconds to minutes. Momentum signals from slower price discovery mechanisms persist for weeks to months. Optimal holding period should match signal half-life.",
+      hints: [
+        "Signal half-life = time until IC decays to half its peak value. Match rebalancing frequency to the signal half-life.",
+        "Overstaying a signal past its half-life means holding a position with no longer positive expected alpha.",
+      ],
+    },
+    {
+      id: "q-fin-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A strategy shows CAPM alpha of 2% per year with t-statistic 1.8 over 5 years of monthly data. How should a quantitative analyst interpret this result?",
+      options: [
+        "Alpha is statistically significant at the 95% level and the strategy is clearly generating excess returns",
+        "A t-stat of 1.8 falls below the conventional 2.0 threshold for 95% significance; with only 60 monthly observations the alpha estimate is imprecise and the strategy may not have reliably positive alpha — more data or out-of-sample evidence is needed",
+        "The strategy should be immediately deployed because any positive alpha is worth capturing",
+        "A t-stat of 1.8 implies the strategy has negative Sharpe ratio and should be abandoned",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "t-stat = 1.8 corresponds to p-value approximately 0.075 — not significant at 95%. With 60 monthly observations, the standard error of the alpha estimate is large. Harvey, Liu, and Zhu (2016) argue that given the multiple comparison problem in quant research, a minimum t-stat of 3.0 should be required for credible alphas.",
+      hints: [
+        "t-stat less than 2 means the p-value exceeds 5% — conventional threshold for statistical significance is not met.",
+        "Harvey et al. (2016): with thousands of strategies tested historically, the threshold for a real alpha should be t-stat greater than 3.0.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-35: Portfolio Construction ML ─────────────────────────────────
+  "portfolio-construction-ml": [
+    {
+      id: "q-fin-kp35-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Mean-variance optimization (MVO) is often called an 'error maximizer.' What causes the extreme sensitivity of MVO portfolio weights to small changes in expected return estimates?",
+      options: [
+        "MVO is a non-convex optimization problem with many local minima",
+        "MVO inverts the covariance matrix, which amplifies estimation errors in expected returns into extreme portfolio weights — the optimizer exploits estimation error rather than true signal",
+        "MVO fails to account for transaction costs, causing frequent rebalancing",
+        "MVO assumes normally distributed returns, which causes it to underweight tail risk assets",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "MVO optimal weights: w* = (1/lambda) * Sigma^{-1} * mu. Inverting the covariance matrix amplifies noise: small errors in mu become large errors in w* scaled by the condition number of Sigma. Michaud (1989) called MVO an error maximizer — it overweights assets with overestimated expected returns, concentrating risk in estimation error.",
+      hints: [
+        "The condition number of the covariance matrix determines how much input errors are amplified in the optimal weights.",
+        "Solutions: regularize Sigma (Ledoit-Wolf shrinkage), constrain weights, or use the Black-Litterman prior.",
+      ],
+    },
+    {
+      id: "q-fin-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The Black-Litterman model uses Bayesian updating to combine equilibrium market returns (implied by market capitalization weights via reverse optimization) with investor views, producing more stable and diversified portfolio allocations than unconstrained MVO.",
+      correctAnswer: "True",
+      explanation:
+        "Black-Litterman solves MVO instability by: (1) using equilibrium returns Pi = delta * Sigma * w_mkt as the prior (market-implied, well-diversified); (2) combining Pi with subjective views using Bayesian updating to get posterior returns mu_BL. Portfolios derived from mu_BL are more stable because they start from a sensible prior rather than noisy historical returns.",
+      hints: [
+        "Equilibrium prior: if market weights are mean-variance optimal, what expected returns do they imply?",
+        "Bayesian updating: posterior mu_BL balances the market prior and investor views proportional to their confidence.",
+      ],
+    },
+    {
+      id: "q-fin-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML-enhanced portfolio construction pipeline uses a neural network to predict factor tilts conditioned on macroeconomic state. What is the key overfitting risk specific to this approach?",
+      options: [
+        "Neural networks cannot model non-linear relationships between macro variables and factor returns",
+        "The model may fit to spurious correlations because the number of macro variables is large relative to the number of independent market cycles in the historical data — leading to near-zero out-of-sample predictability",
+        "Factor tilts are bounded between -1 and +1, which causes gradient vanishing in deep networks",
+        "The model will always recommend 100% allocation to the highest-performing historical factor",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Economic cycle data is scarce: there have been only 10-15 complete business cycles since 1945. With dozens of macro variables, a neural network can easily find combinations that appear predictive in sample but fail out-of-sample. This is the curse of dimensionality applied to regime-conditional factor timing — requiring strong regularization, walk-forward validation, and economic priors.",
+      hints: [
+        "Economic cycle scarcity: roughly 10 recessions in 80 years gives very few independent regime-transition events for training.",
+        "With 50 macro variables and 10 regime transitions, the model has many more parameters than regimes to learn from.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-36: Market Regime Detection ───────────────────────────────────
+  "market-regime-detection": [
+    {
+      id: "q-fin-kp36-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A Hidden Markov Model (HMM) applied to daily equity returns uses two hidden states representing bull and bear regimes. What property of HMMs makes them appropriate for financial regime detection?",
+      options: [
+        "HMMs guarantee that the detected regimes are statistically independent",
+        "HMMs model returns as draws from regime-specific distributions with Markov transition probabilities between regimes, capturing the persistence of market conditions and the occasional regime shifts observed in financial data",
+        "HMMs can detect exactly how many distinct regimes exist in any financial time series",
+        "HMMs assume regimes change at a fixed calendar frequency such as monthly",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "HMMs are appropriate for markets because: (1) regimes have different statistical properties — different means, volatilities, and correlations; (2) regimes persist — high transition probability to the same state captures momentum; (3) regime shifts are latent (unobservable) — HMMs infer them probabilistically from observed returns. The Baum-Welch algorithm estimates parameters; Viterbi finds the most likely state sequence.",
+      hints: [
+        "HMM key properties: latent states, state-conditional emission distributions, Markov transition structure.",
+        "Financial regimes are persistent — high transition probability to the same state captures regime persistence.",
+      ],
+    },
+    {
+      id: "q-fin-kp36-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Volatility clustering in financial markets — the tendency for large price changes to be followed by large price changes of either sign — is the empirical motivation for GARCH models, which model conditional volatility as a function of past squared returns and past conditional variance.",
+      correctAnswer: "True",
+      explanation:
+        "Mandelbrot (1963) and Fama (1965) documented that financial returns exhibit volatility clustering. GARCH(1,1): sigma_t^2 = omega + alpha * r_{t-1}^2 + beta * sigma_{t-1}^2 directly models this: high absolute past return increases current volatility, and high past conditional variance persists into current variance. Volatility clustering means absolute returns are autocorrelated even though returns themselves are not.",
+      hints: [
+        "Volatility clustering: large changes tend to be followed by large changes, small by small — Mandelbrot (1963).",
+        "GARCH persistence: if alpha + beta is close to 1, volatility shocks die out slowly — matching observed slow decay of realized volatility autocorrelation.",
+      ],
+    },
+    {
+      id: "q-fin-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A regime-conditional strategy uses the current market regime (bull/bear/high-vol) to switch between momentum and defensive minimum-variance strategies. The backtest shows significantly better Sharpe ratio than either strategy alone. What is the primary concern?",
+      options: [
+        "Momentum and minimum-variance strategies are always positively correlated, making regime switching redundant",
+        "The regime labels used in backtesting are based on the full historical data, creating look-ahead bias: in real time, regime detection lags true regime transitions, and switching too late means participating in the worst days of a bear market before recognizing the regime",
+        "The strategy cannot be implemented because regime detection requires future return data",
+        "Regime-conditional strategies always underperform the market due to higher transaction costs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Regime detection latency is the key practical problem: HMMs detect regime changes with delay after they occur. During a crash, by the time the model confidently labels it a bear regime, the portfolio may have already suffered significant drawdown. The backtest using hindsight-optimal regime labels overstates real-time performance by assuming perfect regime knowledge.",
+      hints: [
+        "In live trading, the regime can only be known in real time with some lag — but the backtest assumes perfect real-time regime knowledge.",
+        "HMM smoothed probabilities (using future data) look cleaner than filtered probabilities (real-time) which are noisier and lag.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-37: ESG ML ─────────────────────────────────────────────────────
+  "esg-ml": [
+    {
+      id: "q-fin-kp37-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "ESG scores from different data providers (MSCI, Sustainalytics, Refinitiv) have surprisingly low cross-provider correlation — often below 0.5. What is the primary reason for this disagreement?",
+      options: [
+        "Data providers use different corporate databases which have reporting errors",
+        "ESG scores aggregate many subjective indicators with no agreed-upon weighting scheme: different providers weight environmental, social, and governance pillars differently, include different metrics, and use different methodologies — making scores incomparable across providers",
+        "ESG scores are deliberately made proprietary so investors must subscribe to all providers",
+        "ESG ratings are primarily driven by company size, so only large-cap companies have consistent ratings",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Berg, Kolbel, and Rigobon (2022) documented that ESG provider disagreement stems from scope differences (which issues to include), measurement differences (how to measure the same issue), and weighting differences (how much each issue matters). There is no universal standard, unlike financial data which follows GAAP/IFRS.",
+      hints: [
+        "Unlike financial metrics such as EPS and P/E with standardized accounting rules, ESG has no GAAP equivalent.",
+        "Berg et al. (2022) decomposed ESG provider disagreement into scope, measurement, and weighting components.",
+      ],
+    },
+    {
+      id: "q-fin-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Satellite imagery and natural language processing of corporate disclosures are examples of alternative data sources used to independently estimate ESG metrics, reducing reliance on self-reported corporate data that may be subject to greenwashing.",
+      correctAnswer: "True",
+      explanation:
+        "Greenwashing risk: companies control their own ESG disclosures and have incentives to overstate environmental and social performance. Satellite imagery can measure actual carbon emissions, land use, and deforestation; NLP of regulatory filings, news, and NGO reports can identify discrepancies between corporate claims and third-party observations.",
+      hints: [
+        "Satellite data measures actual methane flares, ship traffic, factory activity — not what companies report.",
+        "NLP of 10-K filings versus sustainability reports: inconsistencies between disclosure documents can signal greenwashing.",
+      ],
+    },
+    {
+      id: "q-fin-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML model trained to predict future ESG score upgrades uses historical ESG scores, financial data, and news sentiment as features. What is the key methodological concern when backtesting this strategy?",
+      options: [
+        "ESG scores are not correlated with financial returns so the strategy cannot be profitable",
+        "ESG score provider methodologies change over time — point-in-time ESG data must be used in the backtest, as the scores available today for historical dates often reflect retrospective revisions not available at the time of investment",
+        "The model needs at least 10 years of data to be statistically valid, and ESG data only dates to 2019",
+        "ESG scores are integer-valued and cannot be used as continuous features in ML models",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Point-in-time ESG data is critical: data providers frequently revise historical scores as they refine methodologies, add new metrics, or receive corrected company disclosures. Using the current database for historical backtesting introduces look-ahead bias — the model is trained on scores that were not available to investors at the historical decision point.",
+      hints: [
+        "ESG providers silently revise historical scores — a company's 2018 score in today's database may differ from what was published in 2018.",
+        "Point-in-time data: use only the score actually published on each historical date, not the current database value.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-38: Crypto ML Advanced ────────────────────────────────────────
+  "crypto-ml-advanced": [
+    {
+      id: "q-fin-kp38-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The Network Value to Transactions (NVT) ratio compares a cryptocurrency's market cap to daily transaction volume flowing through the network. NVT is analogous to which traditional equity valuation metric?",
+      options: [
+        "Earnings per share (EPS)",
+        "The Price-to-Earnings (P/E) ratio — NVT compares market value to network utility (transaction volume), just as P/E compares market value to earnings",
+        "Dividend yield — NVT measures the yield from staking rewards",
+        "Book value — NVT measures the ratio of market cap to on-chain assets",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "NVT = Market Cap / Daily Transaction Volume (30-day moving average). Just as P/E compares price to earnings power, NVT compares network value to transaction throughput. A high NVT suggests the market cap is high relative to actual usage, potentially indicating overvaluation. Woo (2017) introduced NVT as a fundamental on-chain valuation tool.",
+      hints: [
+        "P/E = Price divided by Earnings. NVT = Market Cap divided by Transaction Volume. Both compare price to a measure of fundamental value generation.",
+        "High NVT = expensive relative to current network usage; low NVT = potentially undervalued or transitioning to higher usage.",
+      ],
+    },
+    {
+      id: "q-fin-kp38-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Miner revenue and miner selling behavior are useful on-chain features for predicting Bitcoin price movements because miners have high fixed costs (electricity, hardware) and may be forced to sell holdings when prices fall below their break-even cost, creating predictable supply pressure.",
+      correctAnswer: "True",
+      explanation:
+        "Bitcoin mining economics: miners earn block rewards and transaction fees but have ongoing electricity costs. When BTC price falls near miners' cost of production, economically stressed miners must sell reserves to fund operations. The Puell Multiple (daily miner revenue divided by 365-day moving average of daily revenue) has shown predictive power at historical price inflection points.",
+      hints: [
+        "Miner cost floor: below a certain price, mining is unprofitable and miners sell holdings to survive.",
+        "Puell Multiple extremes have historically coincided with Bitcoin price inflection points in academic research.",
+      ],
+    },
+    {
+      id: "q-fin-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "DeFi protocol analysis using on-chain data reveals that Total Value Locked (TVL) is commonly cited but has significant limitations. What is the primary criticism of TVL as a standalone metric?",
+      options: [
+        "TVL is measured in USD, which is not a meaningful unit for decentralized finance",
+        "TVL can be artificially inflated by recursive leverage: users deposit collateral, borrow against it, redeposit the borrowed funds, and repeat — counting the same underlying capital multiple times across protocols",
+        "TVL is a lagging indicator that always follows price changes with a 6-month delay",
+        "TVL only measures ETH deposits and excludes stablecoin TVL",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "TVL double-counting via recursive leverage is well-documented in DeFi: deposit 100 ETH, borrow 80 ETH worth of stablecoins, deposit those stablecoins in another protocol — TVL shows 180 ETH equivalent locked, but only 100 ETH is underlying capital. TVL also mechanically rises with token price appreciation, creating a false signal of growing adoption.",
+      hints: [
+        "Recursive lending: deposit A, borrow B, deposit B, borrow C — each cycle adds to TVL but underlying capital is the same.",
+        "TVL also rises when token prices rise (more USD value of same locked tokens) — not reflecting new capital inflows.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-39: Derivatives ML ─────────────────────────────────────────────
+  "derivatives-ml": [
+    {
+      id: "q-fin-kp39-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The Black-Scholes delta of a European call option is N(d1). For an at-the-money call with very short time to expiry, delta approaches which value?",
+      options: [
+        "Delta approaches 0 because the option has no intrinsic value at-the-money",
+        "Delta approaches 0.5 because an at-the-money option has approximately 50% probability of expiring in-the-money, corresponding to N(d1) where d1 approaches 0",
+        "Delta approaches 1.0 because all short-dated options are treated as forward contracts",
+        "Delta approaches N(0) = 0 because d1 goes to infinity when time approaches 0",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "For an at-the-money option (S = K), as T approaches 0: d1 = (ln(S/K) + (r + sigma^2/2)T) / (sigma * sqrt(T)) approaches 0 since ln(S/K) = 0. N(d1) approaches N(0) = 0.5. Economically: with zero time remaining, an at-the-money option has a 50% probability of expiring in-the-money.",
+      hints: [
+        "For S = K (at-the-money): d1 = (r + sigma^2/2) * sqrt(T) / sigma, which approaches 0 as T approaches 0.",
+        "N(0) = 0.5 exactly. Delta for ATM short-dated options converges to 0.5.",
+      ],
+    },
+    {
+      id: "q-fin-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Neural networks trained to estimate option Greeks (delta, gamma, vega) can produce more accurate Greeks than finite-difference estimation from noisy market prices, because the network learns a smooth function of inputs and analytical differentiation via autograd avoids numerical differentiation noise.",
+      correctAnswer: "True",
+      explanation:
+        "Market price-based finite differences amplify noise: (V(S+h) - V(S-h)) divided by 2h is noisy because market prices include bid-ask spread and microstructure noise. A neural network trained on option prices learns a smooth surface; automatic differentiation through the network gives analytical Greeks of the fitted surface, avoiding numerical differentiation noise.",
+      hints: [
+        "Finite difference delta from noisy prices amplifies noise: dividing a small price difference by a small h.",
+        "Neural network Greeks: fit a smooth surface V_theta, then compute the partial derivative analytically via autograd.",
+      ],
+    },
+    {
+      id: "q-fin-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A neural network volatility surface model interpolates implied volatility across strikes and maturities. What arbitrage constraint must the fitted surface satisfy, and how is it typically enforced in neural network architectures?",
+      options: [
+        "The surface must be constant across all strikes — a flat surface is arbitrage-free",
+        "The surface must satisfy butterfly and calendar spread no-arbitrage conditions: implied total variance must be non-decreasing in maturity and the local volatility derived from the surface must be non-negative. These are enforced via penalty terms in the loss or by constraining the network to be monotone in maturity and convex in strike",
+        "No arbitrage constraints are needed — neural networks automatically learn arbitrage-free surfaces from market data",
+        "The surface must be arbitrage-free only at strikes within one standard deviation of the current spot price",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Arbitrage conditions: (1) Calendar spread no-arb: total implied variance w(k,T) = sigma_impl^2 * T must be non-decreasing in T for each strike k. (2) Butterfly no-arb: the local volatility derived via Dupire's formula must be non-negative everywhere. These conditions are enforced via penalty terms or monotone and convex network architectures in arbitrage-free neural vol surface models.",
+      hints: [
+        "Calendar spread: selling a near-dated option and buying a far-dated option of same strike should not give free money — requires w non-decreasing in T.",
+        "Butterfly no-arb: the call price surface must be convex in strike — enforced via non-negative second derivative penalties.",
+      ],
+    },
+  ],
+
+  // ── fin-kp-40: ML Backtesting ─────────────────────────────────────────────
+  "ml-backtesting": [
+    {
+      id: "q-fin-kp40-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Walk-forward validation is preferred over standard k-fold cross-validation for backtesting financial ML models. What is the key reason?",
+      options: [
+        "Walk-forward validation uses more data, giving lower variance estimates of model performance",
+        "Walk-forward validation respects the temporal ordering of data: the model is always trained on past data and tested on future data, preventing future information from contaminating training — unlike k-fold which randomly mixes past and future observations",
+        "Walk-forward validation is computationally faster because it reuses the same trained model across all test folds",
+        "Walk-forward validation automatically handles non-stationarity by using shorter training windows",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard k-fold randomly shuffles observations into folds, so training data can include future observations relative to test data. For financial time series, this introduces look-ahead bias: the model effectively sees future information during training. Walk-forward validation maintains strict temporal ordering: train on past, test on future, maintaining realistic evaluation conditions.",
+      hints: [
+        "K-fold shuffling: a training fold may contain 2022 observations while a test fold contains 2020 data — look-ahead bias.",
+        "Walk-forward: at each step, training data is always earlier than test data — no future information contaminates training.",
+      ],
+    },
+    {
+      id: "q-fin-kp40-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Look-ahead bias in financial backtesting occurs when a strategy uses information at time t that was not actually available until time t+k, such as using end-of-day closing prices to determine trades that are placed at the start of that same day's trading session.",
+      correctAnswer: "True",
+      explanation:
+        "Look-ahead bias is a pervasive backtesting error: (1) using closing price to generate a signal, then assuming the position was entered at that same closing price; (2) using financial data reported with delay (earnings announced after close, used as if available at open); (3) using survivor-biased index constituents. Each form makes the backtest appear better than live trading.",
+      hints: [
+        "Classic look-ahead: use today's close price to generate signal, assume filled at today's close. In reality, signal can only be acted on at tomorrow's open.",
+        "Delayed reporting bias: Q4 earnings are often published in February; using them as available in December creates look-ahead bias.",
+      ],
+    },
+    {
+      id: "q-fin-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A backtested equity strategy shows a gross Sharpe ratio of 2.5 before transaction costs. With two-way turnover of 200% per year and assumed transaction costs of 10 basis points per trade, what is the approximate net impact and how should it be estimated?",
+      options: [
+        "Transaction costs have no impact because 10 bps per trade is negligibly small",
+        "Cost drag equals 200% turnover times 10 bps = 200 bps = 2% per year in return drag; if gross annualized return was 20% with 8% volatility, net return becomes 18% and net Sharpe falls to 2.25 — a meaningful but manageable reduction that must be validated with realistic cost assumptions",
+        "Net Sharpe cannot be estimated without knowing the exact order sizes and market impact",
+        "200% turnover means the entire portfolio is turned over twice, so all positions incur infinite transaction costs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Transaction cost modeling: two-way turnover of 200% times 10 bps one-way cost = 200 bps = 2% return drag per year. If gross Sharpe = 2.5 with 20% return and 8% vol: net return = 18%, net Sharpe = 18/8 = 2.25. Market impact (price impact from large orders) must also be modeled separately — for high-capacity strategies, market impact often dominates fixed transaction costs.",
+      hints: [
+        "Cost drag = annual turnover (two-way) times cost per unit of turnover. Keep units consistent in percent.",
+        "Market impact adds to transaction cost beyond the bid-ask spread — larger orders move prices adversely.",
+      ],
+    },
+  ],
+});
+
 export default questions;
