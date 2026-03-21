@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // SCIENTIFIC ML & PHYSICS-INFORMED NEURAL NETWORKS
+  {
+    id: 'scientific-ml',
+    slug: 'scientific-ml',
+    name: 'Scientific ML & Physics-Informed Neural Networks',
+    description: 'Neural networks for scientific computing: PINNs, neural operators, and ML for PDEs.',
+    topics: [
+      {
+        id: 'pinns',
+        name: 'Physics-Informed Neural Networks (PINNs)',
+        description: 'Embedding physical laws as loss terms for scientific simulation.',
+        knowledgePoints: [
+          { id: 'sml-kp-1', slug: 'pinn-intro', name: 'PINNs: Physics as Loss Functions' },
+          { id: 'sml-kp-2', slug: 'pde-solver-nn', name: 'Neural PDE Solvers & Boundary Conditions' },
+          { id: 'sml-kp-3', slug: 'automatic-diff-pde', name: 'Automatic Differentiation for PDE Constraints' },
+          { id: 'sml-kp-4', slug: 'pinn-training', name: 'PINN Training & Residual Collocation Points' },
+          { id: 'sml-kp-5', slug: 'pinn-applications', name: 'PINNs for Fluid Dynamics & Heat Transfer' },
+        ]
+      },
+      {
+        id: 'neural-operators',
+        name: 'Neural Operators',
+        description: 'FNO, DeepONet, and operator learning for function spaces.',
+        knowledgePoints: [
+          { id: 'sml-kp-6', slug: 'fno', name: 'Fourier Neural Operator (FNO)' },
+          { id: 'sml-kp-7', slug: 'deeponet', name: 'DeepONet & Operator Learning Theory' },
+          { id: 'sml-kp-8', slug: 'graph-neural-operators', name: 'Graph Neural Operators' },
+          { id: 'sml-kp-9', slug: 'universal-operator', name: 'Universal Approximation for Operators' },
+          { id: 'sml-kp-10', slug: 'weather-forecasting-ml', name: 'Neural Weather Forecasting (GraphCast, Pangu)' },
+        ]
+      },
+      {
+        id: 'molecular-ml',
+        name: 'ML for Molecular Simulation',
+        description: 'Force fields, molecular dynamics, and ML for chemistry.',
+        knowledgePoints: [
+          { id: 'sml-kp-11', slug: 'neural-force-fields', name: 'Neural Network Force Fields' },
+          { id: 'sml-kp-12', slug: 'ml-molecular-dynamics', name: 'ML-Accelerated Molecular Dynamics' },
+          { id: 'sml-kp-13', slug: 'equivariant-nn-mol', name: 'Equivariant Neural Networks for Molecules' },
+          { id: 'sml-kp-14', slug: 'quantum-ml-chem', name: 'Quantum Chemistry with ML' },
+          { id: 'sml-kp-15', slug: 'material-discovery', name: 'Materials Discovery with ML' },
+        ]
+      },
+      {
+        id: 'ml-inverse-problems',
+        name: 'ML for Inverse Problems',
+        description: 'Solving inverse problems with neural networks and regularization.',
+        knowledgePoints: [
+          { id: 'sml-kp-16', slug: 'inverse-problems-ml', name: 'Inverse Problems & Neural Network Solutions' },
+          { id: 'sml-kp-17', slug: 'compressed-sensing-nn', name: 'Compressed Sensing with Deep Learning' },
+          { id: 'sml-kp-18', slug: 'seismic-imaging', name: 'Seismic Imaging & Tomography with ML' },
+          { id: 'sml-kp-19', slug: 'mri-reconstruction', name: 'MRI Reconstruction with Diffusion Models' },
+          { id: 'sml-kp-20', slug: 'score-based-inverse', name: 'Score-Based Priors for Inverse Problems' },
+        ]
+      },
+      {
+        id: 'scientific-foundation-models',
+        name: 'Scientific Foundation Models',
+        description: 'Large pretrained models for biology, chemistry, and physics.',
+        knowledgePoints: [
+          { id: 'sml-kp-21', slug: 'esm-protein', name: 'ESM & Protein Language Models' },
+          { id: 'sml-kp-22', slug: 'genomics-llm', name: 'Genomics LLMs (Nucleotide Transformer)' },
+          { id: 'sml-kp-23', slug: 'chembert', name: 'ChemBERT & Molecular Property Prediction' },
+          { id: 'sml-kp-24', slug: 'climate-foundation', name: 'Climate Foundation Models (ClimaX, Aurora)' },
+          { id: 'sml-kp-25', slug: 'scientific-text-mining', name: 'Scientific Literature ML & Text Mining' },
+        ]
+      },
+      {
+        id: 'neuro-ml',
+        name: 'ML for Neuroscience',
+        description: 'Neural decoding, brain-computer interfaces, and computational neuroscience.',
+        knowledgePoints: [
+          { id: 'sml-kp-26', slug: 'neural-decoding', name: 'Neural Decoding & Brain-Computer Interfaces' },
+          { id: 'sml-kp-27', slug: 'spiking-nets', name: 'Spiking Neural Networks & Neuromorphic Computing' },
+          { id: 'sml-kp-28', slug: 'fmri-ml', name: 'fMRI Analysis & Brain Representational Similarity' },
+          { id: 'sml-kp-29', slug: 'neuroai', name: 'NeuroAI: Brain-Inspired ML Architectures' },
+          { id: 'sml-kp-30', slug: 'connectome-analysis', name: 'Connectome Analysis & Graph ML for Brains' },
+        ]
+      },
+    ]
+  },
+
   // GENERATIVE ADVERSARIAL NETWORKS
   {
     id: 'generative-adversarial-networks',
