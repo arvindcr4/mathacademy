@@ -370,7 +370,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The exponent \\alpha interpolates between uniform sampling (\\alpha=0, no prioritization) and pure greedy prioritization (\\alpha=1). Intermediate values balance exploration of all experiences with focus on high-error transitions.",
+        "First, let's recall the priority formula in PER: $P(i) \\propto (|\\delta_i| + \\epsilon)^\\alpha$, where $|\\delta_i|$ is the TD error magnitude and $\\epsilon$ is a small constant.\n\n**Step 1.** When $\\alpha = 0$: $(|\\delta_i| + \\epsilon)^0 = 1$ for all transitions, so all priorities are equal - this is exactly uniform sampling (no prioritization).\n\n**Step 2.** When $\\alpha = 1$: $P(i) \\propto |\\delta_i| + \\epsilon$, meaning priorities are directly proportional to TD error magnitude - this is pure greedy prioritization where the highest-error transitions dominate.\n\n**Step 3.** Intermediate values of $\\alpha$ interpolate between these extremes: $\\alpha \\in (0,1)$ balances exploration of all experiences with a focus on high-error transitions.\n\nTherefore, the answer is Control the degree of prioritization: $\\alpha=0$ gives uniform sampling, $\\alpha=1$ gives fully proportional sampling.",
+      stepByStep: {
+        step1: "When $\\alpha = 0$: $(|\\delta_i| + \\epsilon)^0 = 1$ for all transitions, giving uniform sampling (no prioritization).",
+        step2: "When $\\alpha = 1$: $P(i) \\propto |\\delta_i| + \\epsilon$, meaning pure greedy prioritization where highest-error transitions dominate.",
+        step3: "Values $\\alpha \\in (0,1)$ interpolate between these extremes, balancing exploration of all experiences with focus on high-error transitions.",
+      },
       hints: [
         "What does \\alpha=0 do to (|\\delta|+\\epsilon)^\\alpha? What about \\alpha=1?",
         'Think of \\alpha as a temperature controlling how "peaky" the priority distribution is.',
