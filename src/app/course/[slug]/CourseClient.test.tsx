@@ -46,6 +46,7 @@ vi.mock("@/lib/curriculum", () => ({
       ],
     },
   ],
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Topic: {} as any,
 }));
 

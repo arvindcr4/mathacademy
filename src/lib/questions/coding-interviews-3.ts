@@ -959,7 +959,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "C(n, k) = C(n, n-k) follows from the symmetry of binomial coefficients.",
+        "First, let's recall that C(n, k) represents the number of ways to choose k elements from a set of n elements.\n\nWhen we choose k elements to include, we simultaneously choose n-k elements to exclude. These two perspectives count the same subsets from different angles, so the counts must be equal:\n\nC(n, k) = number of ways to choose k items from n\n        = number of ways to exclude n-k items from n\n        = C(n, n-k)\n\n**Therefore**, C(n, k) = C(n, n-k) is called Pascal's symmetry identity. It allows us to always work with the smaller of k and n-k, reducing computation.",
+      hints: [
+        "Think about what it means to 'choose k from n' versus 'not choose k from n'.",
+        "These two perspectives count the same subsets from different angles.",
+      ],
     },
     {
       id: "q-nt-binom-2",
@@ -969,7 +973,11 @@ const questions: Record<string, Question[]> = {
         "C(n, k) = C(n-1, k-1) + C(n-1, k) is the Pascal triangle recurrence.",
       correctAnswer: "true",
       explanation:
-        "This is the fundamental recurrence that generates Pascal triangle.",
+        "First, let's recall that Pascal's triangle arranges binomial coefficients in rows where row n contains C(n, 0), C(n, 1), ..., C(n, n).\n\nTo derive this recurrence, consider a specific element x. There are two mutually exclusive cases:\n\n1. **x is included**: Then we need to choose k-1 more from the other n-1 elements, giving C(n-1, k-1) ways.\n\n2. **x is excluded**: Then we need to choose all k from the other n-1 elements, giving C(n-1, k) ways.\n\nSince these cases cover all possibilities:\n\nC(n, k) = C(n-1, k-1) + C(n-1, k)\n\n**Therefore**, this recurrence generates Pascal's triangle, where each entry is the sum of the two entries directly above it.",
+      hints: [
+        "Focus on a specific element - either it is in the subset or it is not.",
+        "These two mutually exclusive cases should sum to the total count.",
+      ],
     },
     {
       id: "q-nt-binom-3",
@@ -978,7 +986,12 @@ const questions: Record<string, Question[]> = {
       question: "What is C(5, 2)?",
       options: ["5", "10", "15", "20"],
       correctAnswer: 1,
-      explanation: "C(5, 2) = 5! / (2! \\times 3!) = 120 / (2 \\times 6) = 10.",
+      explanation:
+        "First, let's recall the formula for binomial coefficients:\n\nC(n, k) = n! / (k! \\times (n-k)!)\n\n**Step 1**: Compute the factorials:\n- 5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120\n- 2! = 2 \\times 1 = 2\n- 3! = 3 \\times 2 \\times 1 = 6\n\n**Step 2**: Apply the formula:\nC(5, 2) = 5! / (2! \\times 3!)\n        = 120 / (2 \\times 6)\n        = 120 / 12\n        = 10\n\n**Therefore**, C(5, 2) = 10. This represents the 10 ways to choose 2 items from 5 distinct items.",
+      hints: [
+        "Apply the formula C(n, k) = n! / (k! * (n-k)!).",
+        "Compute the factorials: 5! = 120, 2! = 2, 3! = 6.",
+      ],
     },
     {
       id: "q-nt-binom-4",
@@ -987,7 +1000,12 @@ const questions: Record<string, Question[]> = {
       question: "The sum of all binomial coefficients for (a + b)^n is:",
       options: ["2^n", "n^2", "n!", "2n"],
       correctAnswer: 0,
-      explanation: "Setting a = b = 1: (1+1)^n = 2^n = sum of all C(n, k).",
+      explanation:
+        "First, let's recall the binomial theorem:\n\n(a + b)^n = C(n, 0)a^n b^0 + C(n, 1)a^{n-1}b^1 + ... + C(n, n)a^0 b^n\n\n**Step 1**: Set a = 1 and b = 1 in the binomial expansion:\n(1 + 1)^n = C(n, 0)(1)^n(1)^0 + C(n, 1)(1)^{n-1}(1)^1 + ... + C(n, n)(1)^0(1)^n\n\n**Step 2**: Simplify each term (since 1 raised to any power is 1):\n(1 + 1)^n = C(n, 0) + C(n, 1) + C(n, 2) + ... + C(n, n)\n\n**Step 3**: Evaluate the left side:\n2^n = sum_{k=0}^{n} C(n, k)\n\n**Therefore**, the sum of all binomial coefficients for (a + b)^n is 2^n.",
+      hints: [
+        "Set a = 1 and b = 1 in the binomial expansion.",
+        "What does (1 + 1)^n simplify to?",
+      ],
     },
     {
       id: "q-nt-binom-5",
@@ -996,7 +1014,11 @@ const questions: Record<string, Question[]> = {
       question: "Computing C(n, k) using dynamic programming is O(n \\times k).",
       correctAnswer: "true",
       explanation:
-        "DP builds Pascal triangle row by row, requiring O(n \\times k) time and space.",
+        "First, let's recall that using Pascal's recurrence C(n, k) = C(n-1, k-1) + C(n-1, k), we can build the coefficients row by row.\n\n**Step 1**: Build Pascal's triangle using DP. We only need to compute entries up to row n and column k.\n\n**Step 2**: For each row i from 1 to n, we compute columns j from 1 to min(i, k). Each entry requires O(1) time (just adding two numbers).\n\n**Step 3**: Count the operations:\n- Number of rows: n\n- Columns per row (up to k): at most k\n- Total entries: O(n \\times k)\n- Each entry: O(1) time\n\n**Therefore**, computing C(n, k) using dynamic programming requires O(n \\times k) time and O(k) space (we only need to keep two rows at a time).",
+      hints: [
+        "Using Pascal's recurrence, each entry depends on two entries above it.",
+        "We only need to compute up to row n and column k, giving O(n \\times k) entries.",
+      ],
     },
   ],
   "catalan-numbers": [
@@ -1013,7 +1035,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Catalan numbers count binary trees, parenthesizations, Dyck paths, and many more structures.",
+        "First, let's recall that Catalan numbers C_n form a sequence of natural numbers with many combinatorial applications.\n\nThe nth Catalan number appears in diverse counting problems:\n\n1. **Binary trees**: C_n is the number of distinct binary trees with n+1 leaves\n2. **Parenthesizations**: C_n is the number of ways to correctly parenthesize n+1 factors\n3. **Dyck paths**: C_n is the number of paths from (0,0) to (2n,0) staying above the diagonal\n4. **Many more**: stack-sortable permutations, non-crossing partitions, etc.\n\n**Therefore**, Catalan numbers count all of the above structures, making them fundamental in combinatorics.",
+      hints: [
+        "Each of these structures has a recursive definition that leads to the Catalan recurrence.",
+        "Try drawing the binary trees or Dyck paths for small n to see the pattern.",
+      ],
     },
     {
       id: "q-nt-catalan-2",
@@ -1023,7 +1049,11 @@ const questions: Record<string, Question[]> = {
         "C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers.",
       correctAnswer: "true",
       explanation:
-        "This is the binomial coefficient formula: C_n = C(2n, n) / (n+1).",
+        "First, let's recall that Catalan numbers can be expressed in closed form.\n\n**Step 1**: Start from the binomial coefficient formula:\nC_n = C(2n, n) / (n+1)\n\n**Step 2**: Expand the binomial coefficient:\nC(2n, n) = (2n)! / (n! \\times n!)\n\n**Step 3**: Divide by (n+1):\nC_n = (2n)! / (n! \\times n!) \\times 1/(n+1)\n     = (2n)! / ((n+1)! \\times n!) \\times (n+1)\n     = (2n)! / (n! \\times (n+1)!)\n\n**Therefore**, C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers, which can also be written as C(2n, n) / (n+1).",
+      hints: [
+        "Start from C(2n, n) / (n+1) and simplify.",
+        "Remember that (n+1)! = (n+1) \\times n!.",
+      ],
     },
     {
       id: "q-nt-catalan-3",
@@ -1032,7 +1062,12 @@ const questions: Record<string, Question[]> = {
       question: "What is C_3 (third Catalan number)?",
       options: ["3", "4", "5", "6"],
       correctAnswer: 2,
-      explanation: "C_3 = C(6, 3) / 4 = 20 / 4 = 5.",
+      explanation:
+        "First, let's recall the closed form formula for Catalan numbers:\n\nC_n = C(2n, n) / (n+1) = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: For C_3, substitute n = 3:\nC_3 = C(6, 3) / (3+1) = C(6, 3) / 4\n\n**Step 2**: Compute C(6, 3):\nC(6, 3) = 6! / (3! \\times 3!) = 720 / (6 \\times 6) = 720 / 36 = 20\n\n**Step 3**: Divide by 4:\nC_3 = 20 / 4 = 5\n\n**Therefore**, the third Catalan number C_3 = 5. The sequence begins: C_0 = 1, C_1 = 1, C_2 = 2, C_3 = 5, C_4 = 14, ...",
+      hints: [
+        "Use the formula C_n = C(2n, n) / (n+1).",
+        "Compute C(6, 3) = 20, then divide by 4.",
+      ],
     },
     {
       id: "q-nt-catalan-4",
@@ -1047,7 +1082,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The Catalan recurrence uses convolution of previous Catalan numbers.",
+        "First, let's recall the Catalan recurrence relation:\n\nC_n = sum_{i=0}^{n-1} C_i \\times C_{n-1-i}\n\n**Step 1**: Understand why this recurrence arises. Consider building a binary tree or a Dyck path. The key insight is that the structure can be decomposed at the root or peak into two smaller structures of the same type.\n\n**Step 2**: For each split point i, we multiply:\n- C_i: number of ways to form the left structure\n- C_{n-1-i}: number of ways to form the right structure\n\n**Step 3**: This is the convolution of the Catalan sequence with itself (shifted by 1). The term \"convolution\" describes this pattern of multiplying corresponding terms and summing.\n\n**Therefore**, the recurrence C_n = sum(C_i \\times C_{n-1-i}) is called the convolution recurrence for Catalan numbers.",
+      hints: [
+        "The recurrence multiplies terms from two smaller Catalan numbers that sum to n-1.",
+        "Convolution means taking two sequences, reversing one, and multiplying corresponding terms.",
+      ],
     },
     {
       id: "q-nt-catalan-5",
@@ -1057,7 +1096,11 @@ const questions: Record<string, Question[]> = {
         "Catalan numbers grow exponentially as ~4^n / (n^(3/2) \\times sqrt(pi)).",
       correctAnswer: "true",
       explanation:
-        "Catalan numbers have exponential growth rate approximately 4^n / (n^(3/2) \\times sqrt(pi)).",
+        "First, let's recall the closed form of Catalan numbers:\n\nC_n = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: Use Stirling's approximation for factorials:\nn! ~ sqrt(2\\pi n) \\times (n/e)^n\n\n**Step 2**: Substitute into the Catalan formula:\nC_n ~ sqrt(4\\pi n) \\times (2n)^{2n} / (e^{2n}) / [sqrt(2\\pi (n+1)) \\times ((n+1)/e)^{n+1} \\times sqrt(2\\pi n) \\times (n/e)^n]\n\n**Step 3**: After simplification, the dominant term is 4^n, with corrections for the sub-exponential factor:\n\nC_n ~ 4^n / (n^{3/2} \\times sqrt(\\pi))\n\n**Therefore**, Catalan numbers grow exponentially as approximately 4^n / (n^{3/2} \\times sqrt(\\pi)), which is faster than any polynomial but slower than exponential with base > 4.",
+      hints: [
+        "Apply Stirling's approximation n! ~ sqrt(2\\pi n) (n/e)^n.",
+        "Track the dominant 4^n term and the sub-exponential correction factor.",
+      ],
     },
   ],
   fibonacci: [

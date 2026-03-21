@@ -1278,10 +1278,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Preorder[0] is the root. Finding its index i in inorder:\n\n\\\[\n\\text{inorder}[0..i-1] \\to \\text{left subtree} \\quad (i \\text{ nodes})\n\\\]\n\\\[\n\\text{inorder}[i+1..] \\to \\text{right subtree}\n\\\]\n\nThe left subtree size i tells us the corresponding preorder slice:\n\n\\\[\n\\text{preorder}[1..i] \\to \\text{left preorder}, \\quad \\text{preorder}[i+1..] \\to \\text{right preorder}\n\\\]\n\nUsing a hash map for inorder index lookup: O(n) total time, O(n) space.",
+        "First, let's recall the key insight: preorder gives us the root first, and inorder tells us which nodes belong to the left vs. right subtree.\n\nStep 1: The first element of preorder is always the root\nStep 2: Find this root's index i in the inorder array\nStep 3: Everything before i in inorder is the left subtree (i nodes), everything after i is the right subtree\nStep 4: Use the left subtree size i to partition preorder: preorder[1..i] is left subtree, preorder[i+1..] is right subtree\n\nTherefore, the root's index in inorder splits both arrays into left and right portions, determining how many nodes belong to each subtree.\n\nUsing a HashMap for O(1) inorder index lookups reduces total time to O(n).",
       hints: [
-        "The root splits inorder into left and right halves. The size of each half partitions preorder too.",
-        "Use a HashMap<value, index> on inorder to avoid O(n) scans - reduces total to O(n).",
+        "In inorder, the root splits the array into left subtree elements (before it) and right subtree elements (after it).",
+        "The number of elements in each half tells us exactly how to split preorder: preorder[1..i] for left, preorder[i+1..] for right.",
       ],
     },
     {
@@ -1386,10 +1386,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible:\n\n\\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\\]\n\\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
+        "First, let's recall the definition by visualizing filling a complete binary tree level by level:\n\nStep 1: Fill level 0 (root) completely\nStep 2: Fill level 1 left to right completely\nStep 3: Continue until all levels except possibly the last are full\nStep 4: On the last level, fill nodes from left to right (no gaps in the middle)\n\nTherefore, a complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible. This is why heap arrays work: parent at index i has children at 2i+1 (left) and 2i+2 (right).\n\n\\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\\]\n\\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
       hints: [
-        "Complete \$\\neq\$ perfect. Perfect means every level is fully filled.",
-        "Heap arrays represent complete binary trees: parent at i, children at 2i+1 and 2i+2.",
+        "Complete \\$\\neq\\$ perfect. Perfect means every level including the last is fully filled. A complete tree's last level may be partially filled.",
+        "Think of filling a grid row by row from left to right - that's the complete binary tree pattern.",
       ],
     },
     {

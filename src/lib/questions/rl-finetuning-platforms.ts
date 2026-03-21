@@ -297,10 +297,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Bedrock RFT is enterprise-grade with HIPAA, FedRAMP, and other compliance certifications. The premium pricing (30-50% more than alternatives) is justified for organizations in healthcare, finance, or government that need data sovereignty, audit trails, and regulatory compliance.",
+        "First, let's recall what compliance requirements mean in cloud ML: regulated industries (healthcare, finance, government) have strict rules about data handling, audit trails, and security certifications. Step-by-step: (1) HIPAA is required for handling protected health information (PHI) in the US—violations can result in millions in fines. (2) FedRAMP authorizes cloud services for government workloads, requiring rigorous security assessments. (3) Bedrock RFT provides these certifications out-of-the-box along with data sovereignty features. (4) The premium pricing (30-50% more than alternatives) covers the cost of maintaining compliance infrastructure. Therefore, for organizations in healthcare, finance, or government, Bedrock RFT's compliance features justify the higher cost.",
       hints: [
-        "Think about what enterprises prioritize over cost",
-        "What certifications matter for regulated industries?",
+        "HIPAA violations can cost millions in fines; FedRAMP is mandatory for US government cloud workloads—these aren't optional for regulated industries",
+        "Consider what 'data sovereignty' means: keeping your data within specific geographic/legal boundaries",
       ],
     },
     {
@@ -317,10 +317,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Bedrock provides end-to-end service: after RFT training, models are served via Provisioned Throughput endpoints within your AWS VPC. This maintains data sovereignty (traffic never leaves your network) and provides consistent latency with reserved capacity, unlike training-only platforms where you'd need to set up separate hosting.",
+        "First, let's recall the distinction between training-only platforms and end-to-end platforms: training-only means you must build your own deployment pipeline after training. Step-by-step comparison: (1) With training-only platforms, after training you download weights and set up separate hosting, requiring additional DevOps work. (2) Bedrock RFT provides end-to-end service—after RL fine-tuning, models are served via Provisioned Throughput endpoints within your AWS VPC. (3) VPC (Virtual Private Cloud) keeps all traffic within AWS's network, never exposing it to the public internet. (4) Provisioned Throughput guarantees capacity, providing consistent latency. Therefore, Bedrock maintains data sovereignty while eliminating the need for separate hosting setup.",
       hints: [
-        "Bedrock is a full-service platform, not just training",
-        "VPC = Virtual Private Cloud",
+        "VPC deployment ensures data never leaves the customer's own secure network infrastructure—think of it as your own private section of AWS",
+        "Consider the advantage of 'Provisioned Throughput' over 'on-demand': you're buying reserved capacity, not competing for shared resources",
       ],
     },
   ],
@@ -340,10 +340,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vertex AI RL fine-tuning integrates natively with GCP infrastructure, uses TPUs for efficient training via MaxText, and provides exclusive access to Gemini model fine-tuning. For GCP-native teams, the integration with BigQuery, Cloud Storage, and existing IAM provides operational simplicity.",
+        "First, let's recall that each major cloud provider offers an ML platform optimized for their ecosystem: AWS has Bedrock, Azure has Azure ML, and GCP has Vertex AI. Step-by-step analysis: (1) Vertex AI RL fine-tuning integrates natively with GCP infrastructure—no need to configure cloud settings separately. (2) It uses TPUs (Tensor Processing Units) for efficient training via MaxText, Google's training framework. (3) It provides exclusive access to Gemini model fine-tuning—you can only RL fine-tune Gemini through Vertex. (4) For GCP-native teams already using BigQuery, Cloud Storage, and existing IAM permissions, there's significant operational simplicity. Therefore, Vertex AI is most advantageous for teams already invested in the GCP ecosystem.",
       hints: [
-        "Each cloud provider has their ML platform",
-        "What's unique to Google Cloud?",
+        "Google's TPUs are specialized hardware for ML training—think of them as Google's secret weapon for efficient computation",
+        "Consider what 'native integration' means: you can use existing GCP tools, permissions, and data sources without reconfiguration",
       ],
     },
   ],
@@ -363,10 +363,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Anyscale provides the Ray distributed computing framework and Ray Serve for hosting, but requires you to implement your own training logic using RLlib. This offers maximum flexibility for research or custom RL algorithms but has a steeper learning curve than managed services like HUD.",
+        "First, let's recall the spectrum of RL fine-tuning options: at one end are managed services (HUD) that handle everything; at the other end are frameworks you run yourself. Step-by-step analysis: (1) Anyscale is the company behind Ray, a distributed computing framework, and Ray Serve for model hosting. (2) Unlike HUD (managed service), Anyscale doesn't provide pre-built RLHF training—you must implement training logic yourself using RLlib (Ray's RL library). (3) This gives you maximum flexibility: custom algorithms, reward functions, and training loops. (4) The trade-off is steeper learning curve—you need ML engineering expertise to set up and maintain the infrastructure. Therefore, choose Anyscale when you need flexibility for research or custom RL algorithms.",
       hints: [
-        "Anyscale = Ray, which is a framework not a managed service",
-        "Think 'infrastructure' vs 'managed service'",
+        "Anyscale provides 'infrastructure' (Ray framework), not 'managed service'—think of it as giving you building blocks rather than a finished house",
+        "Consider: do you want to build custom RL algorithms, or do you want someone else to handle the complexity?",
       ],
     },
   ],
@@ -386,10 +386,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HUD provides the simplest end-to-end experience with RL training and inference hosting in one product. AWS Bedrock is overkill for a startup, Anyscale requires deep ML expertise, and Lambda Labs requires building the entire infrastructure yourself. HUD abstracts away infrastructure complexity.",
+        "First, let's recall the startup's constraints: limited ML infrastructure experience means they want managed solutions that handle complexity. Step-by-step analysis of each option: (1) AWS Bedrock offers enterprise-grade RL fine-tuning, but comes with AWS complexity and premium pricing—overkill for a startup. (2) HUD provides end-to-end simplicity: one platform handles RL training AND inference hosting, abstracting away infrastructure. (3) Anyscale requires implementing your own training logic with RLlib—requires deep ML expertise. (4) Lambda Labs provides raw GPU instances, leaving you to build all infrastructure yourself. Therefore, for a startup with limited infrastructure experience, HUD provides the best balance of simplicity and functionality.",
       hints: [
-        "Limited infrastructure experience = want managed service",
-        "Which option is both end-to-end and user-friendly?",
+        "Consider what 'end-to-end' means: HUD handles the entire lifecycle from training to serving, no extra integrations needed",
+        "Think about DevOps overhead: how many different services/platforms does your team need to learn and manage?",
       ],
     },
   ],
@@ -410,10 +410,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tinker handles RL training on their infrastructure (no GPU needed from you) but doesn't provide persistent hosting. After training completes, you download the LoRA weights from tinker://<run_id>/sampler_weights/final and deploy them using your own hosting solution like RunPod, Together AI, or local vLLM.",
+        "First, let's recall what 'training-only' means in the RL platform landscape: some platforms handle training, others handle hosting, and some do both. Step-by-step workflow: (1) Tinker handles the compute-intensive RL training on their infrastructure—no GPU needed from you. (2) However, Tinker doesn't provide persistent hosting—after training, you must download your weights. (3) The weights are available at tinker://<run_id>/sampler_weights/final. (4) You then deploy them using your own solution: RunPod, Together AI, local vLLM, or Ollama. Therefore, Tinker is ideal for teams who want managed training but flexibility in hosting.",
       hints: [
-        "Tinker = training only, not hosting",
-        "What happens after training finishes?",
+        "Tinker handles training compute, but what happens after training completes? You get weights to deploy wherever you want",
+        "LoRA weights are small (compared to full model) and portable—think of them as 'patches' you apply to the base model",
       ],
     },
     {

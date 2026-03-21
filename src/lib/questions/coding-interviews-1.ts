@@ -611,15 +611,17 @@ const questions: Record<string, Question[]> = {
         '"flow" and "flight" match on "fl" but diverge at position 2: "o" vs "i".'
       ],
       explanation:
-        "**Step 1:** Scan character by character:\n\n" +
+        "**First, let's recall** what a longest common prefix means: the longest string that is a prefix of ALL strings in the array.\n\n" +
+        "**Step 1:** Compare characters at each position across all strings:\n\n" +
         "\\[\n" +
         "\\begin{aligned}\n" +
-        "\\text{Position 0:} &\\quad f, f, f \\; \\checkmark, \\\\\n" +
-        "\\text{Position 1:} &\\quad l, l, l \\; \\checkmark, \\\\\n" +
-        "\\text{Position 2:} &\\quad o, o, i \\; \\text{(mismatch: } o \\neq i \\text{)}.\n" +
+        "\\text{Position 0:} &\\quad f, f, f \\; \\checkmark \\\\\n" +
+        "\\text{Position 1:} &\\quad l, l, l \\; \\checkmark \\\\\n" +
+        "\\text{Position 2:} &\\quad o, o, i \\; \\text{(mismatch: } o \\neq i \\text{)}\n" +
         "\\end{aligned}\n" +
         "\\]\n\n" +
-        "**Step 2:** The common prefix stops at position 2. The LCP is \"fl\"."
+        "**Step 2:** The common prefix stops at position 2 (where 'o' and 'i' differ).\n\n" +
+        "**Therefore**, the LCP is \"fl\", since \"flower\", \"flow\", and \"flight\" all start with \"fl\" but diverge afterward."
     },
     {
       id: "q-lcp-2",
@@ -719,9 +721,12 @@ const questions: Record<string, Question[]> = {
         "When we encounter a closing bracket, which opening bracket should it match - the most recent or the oldest unmatched one?"
       ],
       explanation:
-        "The **stack** is the optimal data structure. Its LIFO (Last In, First Out) property matches the semantics of bracket matching: the most recently seen opening bracket must be matched by the next closing bracket.\n\n" +
-        "Algorithm: push each opening bracket onto the stack; when a closing bracket is encountered, pop the top and verify it is the corresponding opener. If at any point the stack is empty on a close or the types don't match, the string is invalid.\n\n" +
-        "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(n) \\text{ (worst case, all openers)}.\]"
+        "**First, let's recall** the bracket-matching rule: the most recently seen opening bracket must be matched by the next closing bracket.\n\n" +
+        "The **stack** is the optimal data structure. Its LIFO (Last In, First Out) property matches this requirement perfectly.\n\n" +
+        "**Step 1:** Push each opening bracket onto the stack.\n\n" +
+        "**Step 2:** When a closing bracket is encountered, pop the top and verify it is the corresponding opener.\n\n" +
+        "**Step 3:** If at any point the stack is empty on a close, or the types don't match, the string is invalid.\n\n" +
+        "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(n) \\text{ (worst case, all openers)}.\\]"
     },
     {
       id: "q-vp-2",
@@ -846,17 +851,18 @@ const questions: Record<string, Question[]> = {
       options: ["$1$", "$2$", "$3$", "$4$"],
       correctAnswer: 2,
       hints: [
-        "We need a pointer to track the node before the current one (for reversing the link).",
-        "We need a pointer to the current node being processed.",
+        "We need to track the node before the current one to reverse its link, and we need to save the rest of the list when we modify the current node's next pointer.",
         "When we reverse the current node's next pointer, what do we lose? What must we save?"
       ],
       explanation:
+        "**First, let's recall** the three-pointer technique for iterative list reversal.\n\n" +
         "**Step 1:** Three pointers are needed: $\\text{prev}$, $\\text{curr}$, and $\\text{next}$.\n\n" +
         "**Step 2:** At each step, we:\n" +
         "1. Save $\\text{next} = \\text{curr.next}$ (otherwise we lose the rest of the list)\n" +
         "2. Reverse: $\\text{curr.next} = \\text{prev}$\n" +
         "3. Advance: $\\text{prev} = \\text{curr}$, $\\text{curr} = \\text{next}$\n\n" +
-        "\\[\n\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\n\\]"
+        "\\[\n\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\n\\]\n\n" +
+        "Therefore, iterative linked list reversal uses exactly 3 pointer variables."
     },
     {
       id: "q-rll-2",
@@ -959,8 +965,12 @@ const questions: Record<string, Question[]> = {
         "If there is a cycle, the faster pointer eventually laps the slower one."
       ],
       explanation:
-        "Two pointers (Floyd's algorithm, also called the Tortoise and Hare algorithm). The slow pointer advances one node at a time; the fast pointer advances two nodes at a time. If a cycle exists, the fast pointer laps the slow pointer - they must meet inside the cycle.\n\n" +
-        "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\\]"
+        "**First, let's recall** Floyd's cycle detection algorithm (also called the Tortoise and Hare algorithm).\n\n" +
+        "**Step 1:** Use two pointers: the slow pointer advances one node at a time, while the fast pointer advances two nodes at a time.\n\n" +
+        "**Step 2:** If a cycle exists, the fast pointer will eventually lap the slow pointer — they must meet inside the cycle.\n\n" +
+        "**Step 3:** If the fast pointer reaches null, there is no cycle.\n\n" +
+        "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\\]\n\n" +
+        "Therefore, Floyd's algorithm uses two pointers."
     },
     {
       id: "q-dc-2",

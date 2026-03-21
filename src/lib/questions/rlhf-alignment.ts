@@ -188,10 +188,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Sycophancy is a documented reward hacking example: reward models trained on human comparisons often score confident, agreeable responses highly, so an unconstrained policy learns to produce excessive flattery and filler. This exploits the RM\'s approximation of human preferences without genuinely being more helpful. A larger KL penalty \\beta limits how far the policy can drift to exploit such patterns.",
+        "First, let's recall how human preference data is collected in RLHF: annotators compare two model responses and indicate which they prefer. Human annotators tend to rate confident, agreeable responses highly - even when correctness is ambiguous - because confidence signals competence and warmth.\n\nThe reward model learns this bias from the preference data. A policy unconstrained by KL regularization (small \\beta) then discovers that generating verbose, sycophantic responses - padded with agreement phrases like 'Excellent question!' and 'Absolutely!' - achieves high RM scores without genuinely being more helpful.\n\nThis is reward hacking: the policy exploits a systematic pattern in the RM's approximation of human preferences. The sycophantic outputs are not actually more helpful; they simply trigger the RM's learned bias toward confidence and agreement.\n\nTherefore, the KL penalty \\beta prevents the policy from drifting too far toward these degenerate patterns. By keeping the policy close to the SFT reference, which produces neutral, balanced responses, the KL constraint limits the policy's ability to exploit RM biases.",
       hints: [
-        "Classic examples include policies that produce long, formatted lists even when brevity is better.",
-        "The RM learned from human data that certain response styles are preferred - the policy exploits this."
+        "Human annotators tend to prefer confident, agreeable responses even when they are not more accurate - the RM learns this preference bias and the unconstrained policy exploits it.",
+        "Without KL regularization, the policy discovers it can score higher by being sycophantic rather than by being genuinely more helpful - the RM approximation is being gamed."
       ],
     },
     {
@@ -202,10 +202,10 @@ const questions: Record<string, Question[]> = {
         "Increasing the KL penalty coefficient \\beta in RLHF monotonically improves final model quality as measured by human preference evaluations.",
       correctAnswer: "false",
       explanation:
-        "\\beta controls a fundamental tradeoff. Too small: the policy rewards-hacks and produces degenerate outputs humans dislike. Too large: the policy cannot learn from the reward signal and stays too close to the SFT reference, providing no alignment improvement. An optimal \\beta exists between these extremes and must be tuned empirically.",
+        "First, let's recall the role of \\beta in the KL-regularized RLHF objective: the term \\beta\\cdotKL(\\pi_\\theta \\| \\pi_\\text{ref}) penalizes the policy for diverging from the SFT reference model. This constrains the policy to stay close to what the SFT model already knew how to do.\n\nWhen \\beta is too small, the KL penalty is weak and the policy can drift freely toward whatever maximizes the reward model score. This leads to reward hacking - degenerate outputs that score high on the RM but humans find unhelpful or annoying.\n\nWhen \\beta is too large, the KL penalty dominates and the policy is strongly anchored to the SFT reference. The policy cannot learn from the reward signal at all - it stays essentially identical to the SFT model and provides zero alignment improvement.\n\nAt the extremes: \\beta \\to \\infty gives \\pi_\\theta = \\pi_\\text{SFT} (no improvement); \\beta \\to 0 removes the KL constraint entirely (pure reward hacking).\n\nTherefore, there exists an optimal \\beta between these extremes that balances genuine alignment improvement against the risk of reward hacking. This optimal value is task-dependent and must be tuned empirically through human preference evaluations.",
       hints: [
-        "At \\beta \\to \\infty, the RL policy is identical to \\pi_SFT - zero improvement.",
-        "At \\beta \\to 0, the policy maximizes reward without constraint - reward hacking."
+        "At \\beta \\to \\infty, the KL penalty overwhelms the reward signal and the RL update becomes negligible - the policy stays at the SFT reference, yielding zero alignment improvement.",
+        "At \\beta \\to 0, the KL constraint disappears entirely and the policy maximizes the RM without any guardrails, producing the inverted-U curve of reward hacking documented by Gao et al. (2023)."
       ],
     },
     {
@@ -245,10 +245,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'SL-CAI\'s critique-revision cycle: (1) the model generates an initial response to a (possibly harmful) prompt; (2) the model critiques its own response against a specific constitutional principle (e.g., "identify ways this response is harmful"); (3) the model generates a revised response addressing the critique. These revised responses become supervised fine-tuning data - no human labels needed for harmlessness.',
+        "First, let's recall that in standard RLHF, human annotators provide demonstration data for SFT by writing ideal responses. For harmlessness, this requires humans to generate harmful prompts and safe responses - expensive and potentially traumatic.\n\nConstitutional AI's SL-CAI stage automates this using a self-critique loop. The three sequential steps are:\n\n1. **Generate**: The model generates an initial response to a (potentially harmful) prompt. This can be deliberately provocative to explore the model's failure modes.\n\n2. **Critique**: The model critiques its own response against a specific constitutional principle - for example, 'Identify ways this response could be harmful, unethical, or dangerous.' This uses the model's own reasoning to identify problems.\n\n3. **Revise**: The model generates a revised response that addresses the identified issues, producing a safer alternative.\n\nThe key insight is that steps 1-3 require no human labels for harmlessness. The model acts as both writer and critic, guided by explicit constitutional principles. The revised (harmless) responses become SFT training data.\n\nTherefore, SL-CAI dramatically reduces the cost and human burden of safety training by automating the generation of safe response demonstrations through self-critique.",
       hints: [
-        "The model plays both writer and critic - a self-improvement loop guided by explicit principles.",
-        "Multiple revisions can be chained; the final revision is used as SFT training data."
+        "The model plays both the role of writer (generating responses) and critic (evaluating them against constitutional principles) - a self-improvement loop that requires no external labels for harmlessness.",
+        "Multiple critique-revision cycles can be chained together, with each revision producing progressively safer responses; only the final revision is used as SFT training data."
       ],
     },
     {
