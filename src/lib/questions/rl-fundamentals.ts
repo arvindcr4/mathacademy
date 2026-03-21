@@ -53,7 +53,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'The Markov property (Sutton & Barto §3.1) states that the state sₜ is a sufficient statistic of the history: the future is independent of the past given the present. Therefore, a policy conditioned only on sₜ can be optimal — there is never any benefit to conditioning on earlier states in a fully observed MDP.',
       hints: [
-        'S&B write: "The state must include information about all aspects of the past agent–environment interaction that make a difference for the future."',
+        'Sutton & Barto write: "The state must include information about all aspects of the past agent–environment interaction that make a difference for the future."',
         'If sₜ truly summarizes history, knowing s₁,...,s_{t-1} adds no predictive power about sₜ₊₁.',
       ],
     },
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'V^π(s) = E_π[G_t | S_t = s] where G_t = Σ_{k=0}^∞ γ^k R_{t+k+1}. For this trajectory: G = 10 + 0.9·0 + 0.9²·5 = 10 + 0 + 0.81·5 = 10 + 4.05 = 14.05. S&B (§3.3) define V^π(s) as the expected value of G_t given the agent starts in s and follows π.',
+        'V^π(s) = E_π[G_t | S_t = s] where G_t = Σ_{k=0}^∞ γ^k R_{t+k+1}. For this trajectory: G = 10 + 0.9·0 + 0.9²·5 = 10 + 0 + 0.81·5 = 10 + 4.05 = 14.05. S&B (§3.3) define V^π(s) as the expected return of G_t when starting in s and following π.',
       hints: [
         'G_t = R_{t+1} + γR_{t+2} + γ²R_{t+3} + … Apply γ = 0.9 to each reward, weighted by time step.',
         'S&B §3.3: "The value of a state s under a policy π, denoted V^π(s), is the expected return when starting in s and following π thereafter."',
@@ -450,7 +450,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        'Each application of T^π multiplies the error by at most γ. After k applications: ‖V_k − V^π‖_∞ ≤ γ^k · ‖V₀ − V^π‖_∞. With γ = 0.9 and k = 10: 0.9^10 ≈ 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with γ = 0.9, the error is at most 0.9^100 ≈ 2.66 × 10⁻⁵ of the initial error.',
+        'Each application of T^π multiplies the error by at most γ. After k applications: ‖V_k − V^π‖_∞ ≤ γ^k · ‖V₀ − V^π‖_∞. With γ = 0.9 and k = 10: 0.9^10 ≈ 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with γ = 0.9, the error is at most 0.9^100 ≈ 2.66 × 10⁻⁵⁵ the initial error.',
       hints: [
         'The contraction factor γ is applied once per iteration. After k iterations it has been applied k times: γ × γ × … × γ = γ^k.',
         'With γ = 0.9: 0.9^10 ≈ 0.35, 0.9^20 ≈ 0.12, 0.9^100 ≈ 2.7×10⁻⁵. The convergence is geometric, not linear.',
@@ -644,7 +644,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Value iteration applies the Bellman optimality operator T* at every sweep: V_{k+1}(s) = max_a Σ_{s\'} P(s\'|s,a)[R + γV_k(s\')]. The max over actions embeds policy improvement directly into the value update — unlike policy evaluation (which uses a fixed π\'s average). S&B §4.4: "Value iteration effectively combines, in each of its sweeps, one sweep of policy evaluation and one sweep of policy improvement."',
+        'Value iteration applies the Bellman optimality operator T* at every sweep: V_{k+1}(s) = max_a Σ_{s\'} P(s\'|s,a)[R + γV_k(s\')]. The max over actions embeds policy improvement directly into the value update — unlike policy evaluation (which uses a fixed π\'s average). S&B §4.4 note that this "truncated" evaluation in value iteration is a key algorithmic insight.',
       hints: [
         'The crucial difference from policy evaluation: max_a replaces Σ_a π(a|s)·[...]. No fixed policy is needed.',
         'T* is the Bellman optimality operator — it has V* as its unique fixed point, just as T^π has V^π as its fixed point.',
@@ -658,7 +658,7 @@ const questions: Record<string, Question[]> = {
         'Value iteration requires maintaining an explicit policy representation π(s) that is updated alongside V(s) at each sweep.',
       correctAnswer: 'false',
       explanation:
-        'Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass π*(s) = argmax_a Σ_{s\'} P(s\'|s,a)[R + γV*(s\')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.',
+        'Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass π*(s) = argmax_a Σ_{s\'} P[R + γV*(s\')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.',
       hints: [
         'What does value iteration\'s update formula look like? It involves V(s) ← max_a [...]. Where does π appear?',
         'The policy is "implicitly" the greedy policy at any point: π_implicit(s) = argmax_a Σ_{s\'} P[R + γV(s\')].',
@@ -703,7 +703,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Both T^π (expectation) and T* (optimality) are γ-contractions: ‖T^π V − T^π U‖_∞ ≤ γ‖V − U‖_∞ and ‖T* V − T* U‖_∞ ≤ γ‖V − U‖_∞. By the Banach fixed-point theorem, repeated application converges geometrically to the unique fixed point (V^π or V* respectively). The discount factor γ < 1 is what ensures this contraction.',
       hints: [
-        'The proof that T* is a contraction appears in Puterman\'s book and is referenced by Sutton & Barto. The bound |max_a f(a) − max_a g(a)| ≤ max_a |f(a) − g(a)| ≤ ‖V − U‖_∞ is the key step.',
+        'The proof that T* is a contraction appears in Puterman\'s book and is referenced by Sutton & Barto. The bound |max_a f(a) − max_a g(a)| ≤ ‖V − U‖_∞ is the key step.',
         'If γ = 1, the contraction argument breaks. This is why γ < 1 (or guaranteed termination) is required.',
       ],
     },
@@ -851,7 +851,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'MC estimates G_t = R_{t+1} + γR_{t+2} + γ²R_{t+3} + … which requires knowing all future rewards — i.e., the episode must end first. This makes MC inapplicable to non-terminating (continuing) tasks. TD methods, by contrast, use bootstrapping (R_{t+1} + γV(S_{t+1})) and can update after every single step. Sutton & Barto §6.1 highlight this as the fundamental advantage of TD over MC.',
       hints: [
-        'To compute G_t, you must wait until the episode ends to sum all future rewards.',
+        'If Rₜ = 1 at every step and γ = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.',
         'S&B §6.1: "TD methods can learn before knowing the final outcome. In this sense, TD methods are fully online methods, whereas MC methods wait until the end of an episode."',
       ],
     },
@@ -986,9 +986,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Sutton & Barto §5.5: "Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values under one distribution given samples from another." Returns generated by b are biased estimates of E_π[G_t]: b may select different actions with different probabilities than π, changing the distribution of trajectories. IS reweights each return by ρ = Π π(aₜ|sₜ)/b(aₜ|sₜ) to account for this.',
+        'Sutton & Barto §5.5: "Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values under one distribution given samples from another." Returns generated by b are biased estimates of E_π[G_t]: b may select different actions with different probabilities than π, changing the distribution of trajectories. IS reweights each return by ρ = Π π(a)/b(a) along the trajectory to account for this.',
       hints: [
-        'E_π[G] = E_b[ρ·G] where ρ = Π π(a)/b(a) along the trajectory. This identity is the foundation of off-policy MC.',
+        'E_π[G] = E_b[ρ·G] where ρ = Π π(a)/b(a). This identity is the foundation of off-policy MC.',
         'If you use returns from b to estimate E_π[G] directly (without IS), you get a biased estimate proportional to E_b[G], not E_π[G].',
       ],
     },
@@ -1003,7 +1003,7 @@ const questions: Record<string, Question[]> = {
         'Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (Σ ρ_i G_i) / n is unbiased (E[V̂] = V^π(s)) but its variance can be infinite if ρ_i is heavy-tailed. Weighted IS normalizes by Σ ρ_i: V̂_w(s) = Σ ρ_i G_i / Σ ρ_i — this is biased (E[V̂_w] ≠ V^π(s) for finite n) but consistent (converges to V^π(s)) and has dramatically lower variance.',
       hints: [
         'Ordinary IS: ρ can be very large when b(a|s) is small but π(a|s) is large. The product of T such ratios can be enormous.',
-        'S&B §5.6: "In practice, weighted importance sampling is strongly preferred over ordinary importance sampling."',
+        'S&B §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred over ordinary importance sampling."',
       ],
     },
     {
@@ -1020,10 +1020,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'When both policies choose the same action a* at time t, π assigns probability 1 (greedy) while b assigns probability 1−ε+ε/|A| = 1−0.1+0.025 = 0.925 (ε-greedy). The per-step ratio is 1/0.925 ≈ 1.081. Over T=20 steps: ρ ≈ 1.081^20 ≈ 4.84. (The option "1/0.975^20" uses a slightly different approximation but the correct mechanism is the same — ρ grows multiplicatively.) This illustrates how ρ can grow exponentially with trajectory length even when the policies mostly agree.',
+        'When both policies choose the same action a* at time t, π assigns probability 1 (greedy) while b assigns probability 1−ε+ε/|A| = 1−0.1+0.025 = 0.925 (ε-greedy). The per-step ratio is 1/0.925 ≈ 1.081. Over T=20 steps: ρ ≈ 1.081^20 ≈ 4.84. (The option "1/0.975^20" uses a slightly different approximation but the correct mechanism is the same — ρ grows exponentially.) This illustrates how ρ can grow exponentially with trajectory length even when the policies mostly agree.',
       hints: [
         'ε-greedy with ε=0.1 and |A|=4: probability of the greedy action = 1 − 0.1 + 0.1/4 = 0.925. The IS ratio per step = 1/0.925 ≈ 1.081.',
-        'Products of numbers > 1 grow exponentially: 1.081^20 ≈ 4.8. Products of numbers < 1 shrink exponentially. Both pathologies make long-horizon off-policy MC unstable.',
+        'Products of numbers > 1 grow exponentially; products of numbers < 1 shrink exponentially. Both pathologies make long-horizon off-policy MC unstable.',
       ],
     },
   ],
@@ -1038,7 +1038,7 @@ const questions: Record<string, Question[]> = {
       options: [
         'V(Sₜ) ← V(Sₜ) + α [G_t − V(Sₜ)]  where G_t is the full Monte Carlo return',
         'V(Sₜ) ← V(Sₜ) + α [Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ)]',
-        'V(Sₜ) ← max_a Σ_{s\'} P(s\'|Sₜ,a)[R + γV(s\')]',
+        'V(Sₜ) ← max_a Σ_{s\'} P(s\'|s,a)[R + γV(s\')]',
         'V(Sₜ) ← (1/n) Σᵢ Gᵢ   averaged over all past episodes',
       ],
       correctAnswer: 1,
@@ -1080,7 +1080,7 @@ const questions: Record<string, Question[]> = {
         'TD target = R₁ + γV(S₁) = 2 + 0.9×8 = 2 + 7.2 = 9.2. TD error δ = 9.2 − 10 = −0.8. Update: V(s) ← 10 + 0.1×(−0.8) = 10 − 0.08 = 9.92. The negative TD error tells us: V(s) was too high relative to the bootstrapped estimate. We decrease V(s) slightly.',
       hints: [
         'TD error = target − current = (R + γV(s\')) − V(s) = 9.2 − 10 = −0.8.',
-        'Update V(s) ← V(s) + α·δ = 10 + 0.1·(−0.8) = 9.92. A negative TD error means our current estimate was too optimistic.',
+        'Update V(s) ← V(s) + α·δ = 10 + 0.1×(−0.8) = 9.92. A negative TD error means our current estimate was too optimistic.',
       ],
     },
   ],
@@ -1114,7 +1114,7 @@ const questions: Record<string, Question[]> = {
         'SARSA is on-policy because it updates Q(s,a) using the action Aₜ₊₁ actually selected by the current behavior policy (e.g., ε-greedy), not the greedy maximizing action.',
       correctAnswer: 'true',
       explanation:
-        'Sutton & Barto §6.4: SARSA is on-policy because the Q-values it learns correspond to the behavior policy being followed — including its exploration actions. The target Q(Sₜ₊₁, Aₜ₊₁) uses the actual next action. In contrast, Q-learning is off-policy: its target max_a Q(Sₜ₊₁, a) uses the greedy action regardless of what the behavior policy does.',
+        'Sutton & Barto §6.4: SARSA is on-policy because the Q-values it learns correspond to the behavior policy being followed — including its exploration actions. The target Q(Sₜ₊₁, Aₜ₊₁) uses the actual next action. In contrast, Q-learning is off-policy: its target max_a Q(Sₜ₊₁, a) uses the greedy action — regardless of which action the behavior policy actually takes.',
       hints: [
         'Key question: does the SARSA target use the action actually taken next, or the best possible action? It uses the action taken.',
         'S&B §6.4: "Sarsa is an on-policy TD control method because it uses the action that is actually chosen by the behavior policy."',
@@ -1137,7 +1137,7 @@ const questions: Record<string, Question[]> = {
         'S&B §6.5: SARSA learns the value of the ε-greedy policy being followed, which includes the occasional random action. Near the cliff, a random action can fall off (reward −100). SARSA correctly estimates that being near the cliff is costly under ε-greedy. Q-learning learns the optimal greedy policy value — near the cliff is fine if greedy never falls — but incurs cliff penalties during training. SARSA\'s safer path is "online performance" optimal for the ε-greedy policy.',
       hints: [
         'SARSA includes the random action risk in its Q-value estimates. Q-learning assumes optimal (greedy) behavior in its estimates.',
-        'S&B §6.5: "Q-learning learns the values of the optimal policy, whereas Sarsa learns the values of the near-optimal policy...Sarsa takes the longer but safer path."',
+        'S&B §6.5: "Sarsa is an on-policy TD control method because it uses the action that is actually chosen by the behavior policy."',
       ],
     },
   ],
@@ -1160,7 +1160,7 @@ const questions: Record<string, Question[]> = {
         'Q-learning update: Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ max_a Q(Sₜ₊₁,a) − Q(Sₜ,Aₜ)]. The target uses max_a Q(Sₜ₊₁,a) — the greedy action — not the action Aₜ₊₁ selected by the behavior policy. This makes Q-learning off-policy: it learns about the greedy policy π* while behaving under ε-greedy. S&B §6.5: "Q-learning directly approximates q*, the optimal action-value function."',
       hints: [
         'Compare with SARSA\'s target: Q(Sₜ₊₁, Aₜ₊₁) — actual next action. Q-learning uses max_a Q(Sₜ₊₁, a) — best possible next action.',
-        '"Off-policy" = the policy being evaluated (greedy/optimal) differs from the policy generating data (ε-greedy).',
+        'Off-policy means the policy being evaluated (greedy/optimal) differs from the policy generating data (ε-greedy).',
       ],
     },
     {
@@ -1191,10 +1191,523 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'E[max_a Q̂(s,a)] > max_a E[Q̂(s,a)] = max_a Q*(s,a) = 0 in general. Taking the maximum of noisy unbiased estimates is a biased (upward) estimator of the true maximum — this is the "maximization bias" described in Sutton & Barto §6.7. The expected maximum of k standard normal variables is O(√(log k)) > 0. Double Q-learning (S&B §6.7) addresses this by decoupling action selection from value estimation.',
+        'A^π(s,a₁) = Q^π(s,a₁) − V^π(s) = 8 − 5 = +3. A positive advantage means action a₁ returns 3 more expected discounted reward than the average action under π from state s. The identity Σ_a π(a|s) A^π(s,a) = 0 confirms that advantages are zero-mean under π — they measure relative benefit, not absolute value. Spinning Up calls the advantage "how much better it is than others on average."',
       hints: [
-        'Suppose two actions have Q̂(s,a₁) ~ N(0,1) and Q̂(s,a₂) ~ N(0,1). E[max(Q̂₁, Q̂₂)] > 0 even though both expectations are 0.',
-        'S&B §6.7: "The max operation in Q-learning uses the same samples both to determine the maximizing action and to estimate its value. This is what leads to maximization bias."',
+        'V^π(s) is the expected Q-value under π: V^π(s) = Σ_a π(a|s) Q^π(s,a). So A^π is exactly the deviation of Q from this average.',
+        'Positive A^π(s,a) → policy gradient should increase π(a|s). Negative A^π(s,a) → decrease π(a|s).',
+      ],
+    },
+  ],
+
+  'discount-factor': [
+    {
+      id: 'q-rl-kp27-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question:
+        'Sutton & Barto (§3.3) define the discounted return as Gₜ = Rₜ₊₁ + γRₜ₊₂ + γ²Rₜ₊₃ + … = Σ_{k=0}^∞ γ^k Rₜ₊ₖ₊₁. What is the role of the discount factor γ ∈ [0, 1)?',
+      options: [
+        'γ controls the learning rate of the value function update',
+        'γ weights future rewards so that rewards received k steps in the future are worth γ^k times an immediate reward — making the agent prefer sooner rewards when γ < 1',
+        'γ normalizes the reward signal to lie in [0, 1]',
+        'γ determines the probability of the episode terminating at each step',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The discount factor γ ∈ [0,1) controls how much the agent values future rewards relative to immediate ones. A reward k steps away contributes γ^k × R to the return. When γ = 0, the agent is myopic (only immediate reward matters). When γ → 1, the agent values all future rewards nearly equally. S&B §3.3 also note that γ < 1 guarantees the infinite sum converges whenever rewards are bounded: |Gₜ| ≤ R_max/(1−γ).',
+      hints: [
+        'Think of γ as a "patience" parameter: γ close to 1 = patient; γ close to 0 = impatient.',
+        'S&B §3.3: "The discount rate determines the present value of future rewards: a reward received k time steps in the future is worth only γ^{k-1} times what it would be worth if it were received immediately."',
+      ],
+    },
+    {
+      id: 'q-rl-kp27-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Setting γ = 1 is valid and produces a well-defined (finite) expected return in all continuing (non-terminating) MDPs, as long as rewards are bounded.',
+      correctAnswer: 'false',
+      explanation:
+        'With γ = 1 and a non-terminating task, Gₜ = Σ_{k=0}^∞ Rₜ₊ₖ₊₁ is an infinite sum that diverges unless rewards eventually reach zero — which they generally do not. Sutton & Barto §3.3 restrict γ < 1 for continuing tasks precisely to guarantee convergence: |Gₜ| ≤ R_max/(1−γ). γ = 1 is only valid for episodic tasks where the sum terminates at the end of the episode.',
+      hints: [
+        'If Rₜ = 1 at every step and γ = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.',
+        'S&B §3.3 explicitly state: "If γ < 1, the infinite sum [converges] as long as the reward sequence {Rₖ} is bounded."',
+      ],
+    },
+    {
+      id: 'q-rl-kp27-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'An agent in a continuing task receives a constant reward of R = 1 per step and uses γ = 0.95. Starting from any state s, what is the maximum possible discounted return Gₜ?',
+      options: [
+        '∞ — the sum of an infinite geometric series diverges',
+        '1/(1−0.95) = 20 — the geometric series sum for constant reward',
+        '1/0.95 ≈ 1.053',
+        '0.95/(1−0.95) = 19 — the present value of future-only rewards',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'For constant reward R = 1 at every step: Gₜ = Σ_{k=0}^∞ γ^k · 1 = 1/(1−γ) = 1/(1−0.95) = 1/0.05 = 20. This is the geometric series formula. It confirms that γ < 1 bounds the return: no matter how long the agent runs, Gₜ ≤ R_max/(1−γ). With γ = 0.95 and R_max = 1, the upper bound is 20.',
+      hints: [
+        'Geometric series: Σ_{k=0}^∞ γ^k = 1/(1−γ) for |γ| < 1.',
+        'This formula directly gives the worst-case return bound that DP convergence proofs rely on.',
+      ],
+    },
+  ],
+
+  'bellman-optimality': [
+    {
+      id: 'q-rl-kp28-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question:
+        'The Bellman optimality equation for V* (Sutton & Barto §3.6) is:',
+      options: [
+        'V*(s) = Σ_a π*(a|s) Σ_{s\'} P(s\'|s,a)[R(s,a,s\') + γV*(s\')]',
+        'V*(s) = max_a Σ_{s\'} P(s\'|s,a)[R(s,a,s\') + γV*(s\')]',
+        'V*(s) = max_a R(s,a) + γ max_{s\'} V*(s\')',
+        'V*(s) = max_{π} V^π(s) summed over all states',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Sutton & Barto §3.6: V*(s) = max_a Σ_{s\',r} p(s\',r|s,a)[r + γV*(s\')]. The key difference from the Bellman expectation equation for V^π is the max over actions instead of a weighted sum over the policy π. This expresses: the optimal value of state s is the value of the best action available, averaging over next states weighted by transition probabilities.',
+      hints: [
+        'Bellman expectation: uses Σ_a π(a|s)[...] — weighted average over the policy. Bellman optimality: uses max_a[...] — the best case.',
+        'S&B §3.6: "Because π* is greedy with respect to V*, V* must satisfy the Bellman optimality equation."',
+      ],
+    },
+    {
+      id: 'q-rl-kp28-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'The Bellman optimality equation V*(s) = max_a Q*(s,a) is a system of nonlinear equations (because of the max operation), so it cannot in general be solved by simple matrix inversion unlike the Bellman expectation equation.',
+      correctAnswer: 'true',
+      explanation:
+        'The Bellman expectation equation for V^π is a linear system: V^π = R^π + γP^πV^π, solvable as V^π = (I − γP^π)^{-1}R^π. The Bellman optimality equation V*(s) = max_a[...] is nonlinear due to the max operator. This expresses the fundamental difference between the two equations: one linear, one nonlinear. The linear system has a closed-form matrix solution; the nonlinear system typically requires iterative methods.',
+      hints: [
+        'Linear system: V = AV + b → V = (I−A)^{-1}b. Nonlinear system: V = max_a f(V, a) — no closed form in general.',
+        'Value iteration iteratively applies the nonlinear Bellman optimality operator until convergence.',
+      ],
+    },
+    {
+      id: 'q-rl-kp28-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The Bellman optimality equation for Q* is: Q*(s,a) = Σ_{s\'} P(s\'|s,a)[R(s,a,s\') + γ max_{a\'} Q*(s\',a\')]. How does this relate to the Q-learning update rule Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ max_{a\'} Q(Sₜ₊₁,a\') − Q(Sₜ,Aₜ)]?',
+      options: [
+        'Q-learning solves a different equation — it minimizes temporal-difference error, which is unrelated to Bellman optimality',
+        'The Q-learning update moves Q(Sₜ,Aₜ) toward the sampled Bellman optimality target Rₜ₊₁ + γ max_{a\'} Q(Sₜ₊₁,a\'), implementing stochastic approximation of the Bellman optimality equation',
+        'Q-learning solves the Bellman expectation equation (for π*), not the Bellman optimality equation',
+        'The connection is only approximate; Q-learning converges to a different fixed point than Q*',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Q-learning is a stochastic approximation method for solving the Bellman optimality equation for Q*. At each step, the sample Rₜ₊₁ + γ max_{a\'} Q(Sₜ₊₁,a\') is an unbiased estimate of the Bellman optimality target Σ_{s\'} P(s\'|s,a)[R + γ max_{a\'} Q*(s\',a\')]. The update moves Q(Sₜ,Aₜ) toward this target with step size α. Watkins & Dayan (1992) proved that under Robbins-Monro conditions, Q → Q*, the unique solution of the Bellman optimality equation.',
+      hints: [
+        'Stochastic approximation: replace the expectation E_s\'[...] with a single sample (Rₜ₊₁, Sₜ₊₁). The step size α controls how much weight the new sample gets.',
+        'The "fixed point" of the Q-learning iteration (when the update is zero on average) is exactly the Bellman optimality equation.',
+      ],
+    },
+  ],
+
+  'optimal-policy-existence': [
+    {
+      id: 'q-rl-kp29-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question:
+        'Sutton & Barto §3.6 prove that for any finite MDP, there always exists at least one policy π* such that V^{π*}(s) ≥ V^π(s) for all states s and all policies π. What is this result called?',
+      options: [
+        'The Bellman convergence theorem',
+        'The existence of an optimal policy — there is always at least one policy simultaneously optimal in every state',
+        'The policy gradient theorem — optimal policies are found by gradient ascent',
+        'The No Free Lunch theorem — no single policy can be optimal for all MDPs',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Sutton & Barto §3.6 establish the existence theorem: for finite MDPs, there always exists an optimal policy π* that simultaneously maximizes V^π(s) for every state s. This is non-trivial because the ordering of policies must be consistent across all states — it could in principle be the case that different states prefer different policies. The proof relies on the Bellman optimality equations having a unique solution V*.',
+      hints: [
+        'S&B §3.6: "There is always at least one policy that is better than or equal to all other policies. This is an optimal policy."',
+        'The proof shows V* (the unique fixed point of T*) is achievable: there exists π* that attains V*(s) simultaneously for all s.',
+      ],
+    },
+    {
+      id: 'q-rl-kp29-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'For a finite MDP, the optimal value function V* is unique (there is exactly one V* satisfying the Bellman optimality equation), but there may be multiple optimal policies π* that all achieve V*.',
+      correctAnswer: 'true',
+      explanation:
+        'The Bellman optimality equation T*V = V is a contraction mapping with a unique fixed point V* (by the Banach fixed-point theorem). However, multiple optimal policies may exist whenever V*(s) = Q*(s,a) for more than one action a in some state — ties in the greedy argmax. All such tie-breaking choices yield optimal policies. V* is unique; π* need not be.',
+      hints: [
+        'Uniqueness of V*: the Banach fixed-point theorem guarantees the unique fixed point of T* (a contraction).',
+        'Non-uniqueness of π*: consider s with two actions a₁, a₂ where Q*(s,a₁) = Q*(s,a₂) = V*(s). Any mixture or choice between them is optimal.',
+      ],
+    },
+    {
+      id: 'q-rl-kp29-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Consider a finite MDP with |S| = 100 states, |A| = 5 actions, and γ = 0.99. Why does the existence theorem (existence of π*) require finite |S| and |A| — and what breaks for infinite state or action spaces?',
+      options: [
+        'Infinite spaces require probability measures that violate the Kolmogorov axioms, making rewards undefined',
+        'The existence proof relies on V* being the fixed point of T* on a finite-dimensional space; for infinite spaces, T* may not be well-defined or its fixed point may not correspond to a measurable policy',
+        'Infinite action spaces always have γ = 1 by construction, breaking the contraction',
+        'The optimal policy theorem only applies to discrete-time MDPs, and infinite spaces are always continuous-time',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'For finite MDPs, T* maps ℝ^|S| to ℝ^|S| — a finite-dimensional complete metric space — and the Banach fixed-point theorem applies directly. For infinite state/action spaces, complications arise: the sup over actions may not be achieved (no argmax exists), the fixed point may not yield a measurable policy, and regularity conditions (e.g., Borel measurability, compactness of action sets) must be imposed. Continuous MDPs require measure-theoretic extensions of the existence result (see Bertsekas & Shreve).',
+      hints: [
+        'The argmax in π*(s) = argmax_a Q*(s,a) is guaranteed to exist when |A| is finite. With infinite A, the sup may not be achieved.',
+        'Sutton & Barto restrict to finite MDPs in Chapters 3–6. Later chapters and research papers handle continuous spaces with function approximation and different theoretical tools.',
+      ],
+    },
+  ],
+
+  'bellman-operator': [
+    {
+      id: 'q-rl-kp30-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question:
+        'The Bellman expectation operator T^π is defined as (T^π V)(s) = Σ_a π(a|s) Σ_{s\'} P(s\'|s,a)[R(s,a,s\') + γV(s\')]. Which property makes iterating T^π a valid algorithm for computing V^π?',
+      options: [
+        'T^π is linear and its eigenvalues are all ≤ γ < 1',
+        'T^π is a γ-contraction in the sup-norm, so by the Banach fixed-point theorem it has a unique fixed point V^π and iterating T^π from any V₀ converges to V^π',
+        'T^π maps any non-negative function to a smaller non-negative function',
+        'T^π is the gradient of the value function with respect to policy parameters',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'T^π is a γ-contraction: ‖T^π V − T^π U‖_∞ ≤ γ‖V − U‖_∞ for all V, U. The space of bounded functions with sup-norm is complete, so by Banach fixed-point theorem, T^π has a unique fixed point — which is exactly V^π (the solution of the Bellman expectation equation). Starting from any V₀, iterating V_{k+1} = T^π V_k converges geometrically: ‖V_k − V^π‖_∞ ≤ γ^k‖V₀ − V^π‖_∞.',
+      hints: [
+        'The contraction factor is exactly γ, the discount factor. This is why γ < 1 is a convergence requirement.',
+        'Fixed point of T^π means T^π V = V — substituting the definition gives exactly the Bellman expectation equation.',
+      ],
+    },
+    {
+      id: 'q-rl-kp30-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'The Bellman optimality operator T* is defined as (T* V)(s) = max_a Σ_{s\'} P(s\'|s,a)[R(s,a,s\') + γV(s\')]. T* is also a γ-contraction in the sup-norm, and its unique fixed point is V*.',
+      correctAnswer: 'true',
+      explanation:
+        'The proof that T* is a γ-contraction uses the inequality |max_a f(a) − max_a g(a)| ≤ max_a |f(a) − g(a)|: ‖T*V − T*U‖_∞ = max_s |max_a[...V...] − max_a[...U...]| ≤ γ max_s max_a|V(s\') − U(s\')| = γ‖V − U‖_∞. By Banach fixed-point theorem, the unique fixed point exists, and substituting T*V = V yields the Bellman optimality equation — so the fixed point is V*.',
+      hints: [
+        'Key inequality: |max f − max g| ≤ max |f − g|. Apply this to bound ‖T*V − T*U‖_∞.',
+        'Both T^π and T* are γ-contractions but with different fixed points: T^π → V^π, T* → V*.',
+      ],
+    },
+    {
+      id: 'q-rl-kp30-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The generalized policy iteration (GPI) framework (Sutton & Barto §4.6) unifies policy evaluation and policy improvement by showing they are applications of two operators. Which pair of operators does GPI alternate between?',
+      options: [
+        'T^π (Bellman expectation) for evaluation; T* (Bellman optimality) for improvement',
+        'Gradient ascent on V^π for evaluation; softmax update for improvement',
+        'Monte Carlo sampling for evaluation; ε-greedy update for improvement',
+        'Forward recursion for evaluation; backward induction for improvement',
+      ],
+      correctAnswer: 0,
+      explanation:
+        'GPI alternates between: (1) applying T^π repeatedly (policy evaluation — converges to V^π for current π) and (2) acting greedily w.r.t. V^π, which is exactly one application of T* at the policy level: π\' = greedy(V^π) ≡ argmax_a Q^π(s,a). Sutton & Barto §4.6: "The evaluation and improvement processes in GPI can be viewed as both competing and cooperating." The two steps can be of any granularity — one sweep each (value iteration) or full convergence each (policy iteration).',
+      hints: [
+        'Policy evaluation ≡ iterating T^π until convergence. Policy improvement ≡ one application of the greedy operator (related to T*).',
+        'GPI is the unifying principle: all DP and many model-free algorithms (TD, Q-learning) fit within the GPI framework.',
+      ],
+    },
+  ],
+
+  'modified-policy-iteration': [
+    {
+      id: 'q-rl-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question:
+        'Modified policy iteration (also called truncated policy iteration) differs from standard policy iteration in that:',
+      options: [
+        'It uses Monte Carlo rollouts instead of dynamic programming for policy evaluation',
+        'Policy evaluation is stopped after m Bellman sweeps (m ≥ 1) rather than waiting for full convergence, then policy improvement is performed immediately',
+        'It modifies the policy by adding random noise rather than performing greedy improvement',
+        'It alternates between policy evaluation and value iteration within each outer loop',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Modified/truncated policy iteration runs exactly m sweeps of policy evaluation (applying T^π m times) before performing a policy improvement step, rather than iterating to convergence. When m = 1, it is equivalent to value iteration; when m → ∞, it is standard policy iteration. This provides a continuum between the two extremes and allows trading off computation per policy update vs. quality of the value estimate. Sutton & Barto §4.6 (GPI) provides the framework; Puterman (1994) formalizes modified policy iteration.',
+      hints: [
+        'm = 1: one sweep then improve = value iteration. m = ∞: evaluate fully then improve = policy iteration.',
+        'The key insight: you don\'t need V^π exactly — approximate V^π (from partial evaluation) still enables policy improvement.',
+      ],
+    },
+    {
+      id: 'q-rl-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Modified policy iteration with any finite m ≥ 1 is still guaranteed to converge to the optimal policy π* for finite MDPs with γ < 1.',
+      correctAnswer: 'true',
+      explanation:
+        'Modified policy iteration generates a sequence of improving policies. Each policy improvement step produces a policy at least as good as the previous (by the Policy Improvement Theorem applied to the partially-evaluated value estimate). Since policies are strictly improving and there are finitely many, the algorithm must terminate — and at termination, π = π*. The convergence guarantee holds for all m ≥ 1; the number of outer iterations may vary, but the algorithm converges to the same π*.',
+      hints: [
+        'Each outer iteration (m sweeps + improvement) is non-decreasing in value. With finitely many policies, monotone improvement implies finite termination at optimality.',
+        'The m sweeps need not converge fully — even an approximate V estimate improves the policy when used for greedy improvement.',
+      ],
+    },
+    {
+      id: 'q-rl-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Which statement about the computational efficiency tradeoff in modified policy iteration with m sweeps is most accurate?',
+      options: [
+        'Larger m always results in fewer total Bellman sweeps to reach optimality',
+        'Smaller m (fewer evaluation sweeps) requires more policy improvement steps but each is cheaper; larger m requires fewer policy improvement steps but more total sweeps per step — optimal m depends on the MDP structure',
+        'Modified policy iteration with m = 1 (value iteration) always requires the most total computation',
+        'The optimal m is always |S|, the number of states',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'There is no universally optimal m. Small m (e.g., value iteration with m=1) uses many outer iterations but very cheap inner loops. Large m (e.g., standard policy iteration) uses few outer iterations but expensive inner evaluation. The total work depends on the MDP: for MDPs where few policy updates suffice (policy iteration terminates in ~5 outer iterations), large m is efficient. For MDPs requiring many policy changes, smaller m amortizes evaluation cost better. This tradeoff is studied in Puterman (1994) "Markov Decision Processes."',
+      hints: [
+        'Total sweeps ≈ (outer iterations) × m. Outer iterations decrease as m increases (better V estimate), but not necessarily proportionally.',
+        'In practice, m is often set heuristically or based on available computation budget, not theoretically optimized.',
+      ],
+    },
+  ],
+
+  'epsilon-greedy': [
+    {
+      id: 'q-rl-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question:
+        'An ε-greedy policy with ε = 0.1 and |A| = 4 actions selects actions as follows. In state s where the greedy action is a*:',
+      options: [
+        'a* is selected with probability 1 − ε = 0.9; each non-greedy action is selected with probability ε/|A| = 0.025',
+        'a* is selected with probability 1 − ε = 0.9; each non-greedy action is selected with probability ε/(|A|−1) ≈ 0.033',
+        'a* is selected with probability ε = 0.1; each other action is selected with probability (1−ε)/3 ≈ 0.3',
+        'All actions are selected with equal probability ε/|A| = 0.025; no action is favored',
+      ],
+      correctAnswer: 0,
+      explanation:
+        'The standard ε-greedy rule (Sutton & Barto §2.4): with probability 1−ε select the greedy action a*; with probability ε select uniformly at random over all |A| actions (including a*). So π(a*|s) = 1−ε + ε/|A| = 0.9 + 0.025 = 0.925 and π(a≠a*|s) = ε/|A| = 0.025. Total: 0.925 + 3×0.025 = 1 ✓. This ensures every action is tried with probability at least ε/|A| > 0.',
+      hints: [
+        'Careful: the random uniform draw includes the greedy action itself, so π(a*|s) = 1−ε + ε/|A|, not simply 1−ε.',
+        'S&B §2.4: ε-greedy "behaves greedily most of the time, but every once in a while...selects randomly from all the actions with equal probability."',
+      ],
+    },
+    {
+      id: 'q-rl-kp32-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'An ε-greedy policy with fixed ε > 0 always converges to the globally optimal policy π* as the number of interactions → ∞.',
+      correctAnswer: 'false',
+      explanation:
+        'A fixed ε > 0 permanently assigns probability ε/|A| to suboptimal actions, so the agent never fully commits to the greedy-optimal policy. The ε-greedy policy converges to the best ε-soft policy (the optimal policy among all policies that satisfy π(a|s) ≥ ε/|A|), not π*. To converge to π*, ε must be decayed to 0 (e.g., εₙ = 1/n) while satisfying GLIE conditions. Sutton & Barto §5.4 discuss this distinction.',
+      hints: [
+        'ε-greedy with fixed ε is always "exploring" — it can never be purely greedy, so it cannot match the performance of π*.',
+        'The best ε-soft policy achieves V within O(ε) of V*. Only as ε → 0 does it converge to V*.',
+      ],
+    },
+    {
+      id: 'q-rl-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'UCB (Upper Confidence Bound) action selection selects Aₜ = argmax_a [Q(s,a) + c √(ln t / Nₜ(a))], where Nₜ(a) is the count of action a selections. How does UCB compare to ε-greedy for the exploration–exploitation tradeoff?',
+      options: [
+        'UCB explores actions uniformly like ε-greedy but uses a larger effective ε',
+        'UCB exploration is directed: actions with high uncertainty (low Nₜ(a)) get an exploration bonus that decreases as they are tried — achieving logarithmic regret vs. linear regret for ε-greedy with fixed ε',
+        'UCB is only valid for continuous action spaces, while ε-greedy works for discrete actions',
+        'UCB and ε-greedy have identical regret bounds when c = ε',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'UCB exploration is uncertainty-directed: the bonus c√(ln t / Nₜ(a)) is large for rarely-tried actions and shrinks as Nₜ(a) grows. This concentrates exploration on promising uncertain actions rather than random ones. UCB achieves O(ln T) cumulative regret (Auer et al., 2002), while ε-greedy with fixed ε has O(T·ε) linear regret because it wastes a constant fraction of pulls on random actions. Sutton & Barto §2.7 discuss UCB as a more principled exploration strategy.',
+      hints: [
+        'ε-greedy: every action is equally likely to be explored, regardless of how much you know about it.',
+        'UCB: the exploration bonus √(ln t / Nₜ(a)) is high for actions tried few times and low for well-estimated actions. Exploration "naturally" shifts to less-known actions.',
+      ],
+    },
+  ],
+
+  'weighted-importance-sampling': [
+    {
+      id: 'q-rl-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question:
+        'Weighted importance sampling estimates V^π(s) as V̂_w(s) = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ, where ρᵢ is the importance sampling ratio for episode i. How does this differ from ordinary importance sampling V̂(s) = (1/n)Σᵢ ρᵢGᵢ?',
+      options: [
+        'Weighted IS uses a different ratio: ρᵢ = b(Aₜ|Sₜ)/π(Aₜ|Sₜ) instead of π/b',
+        'Weighted IS normalizes by the sum of ratios Σᵢ ρᵢ rather than the count n, making it a self-normalizing estimator that is biased but has much lower variance',
+        'Weighted IS only uses trajectories where ρᵢ ≥ 1, discarding downweighted samples',
+        'Weighted IS multiplies G by ρ twice (ρᵢ²) to account for the non-stationarity of b',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Ordinary IS: V̂ = (1/n)Σᵢ ρᵢGᵢ is unbiased (E[V̂] = V^π(s)) but ρᵢ can be very large, causing high variance. Weighted IS: V̂_w = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ is a self-normalizing (ratio) estimator — biased for finite n (E[V̂_w] ≠ V^π(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
+      hints: [
+        'The denominator Σᵢ ρᵢ instead of n is what distinguishes weighted from ordinary IS.',
+        'If all ρᵢ = 1 (on-policy), both estimators reduce to the standard sample mean.',
+      ],
+    },
+    {
+      id: 'q-rl-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Weighted importance sampling is consistent: as the number of episodes n → ∞, V̂_w(s) converges to V^π(s) with probability 1, despite being biased for finite n.',
+      correctAnswer: 'true',
+      explanation:
+        'Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)Σρᵢ → E_b[ρ] = 1 and (1/n)ΣρᵢGᵢ → E_b[ρG] = E_π[G] = V^π(s). The ratio converges to V^π(s)/1 = V^π(s). Bias for finite n arises because the ratio of averages ≠ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.',
+      hints: [
+        'Slutsky\'s theorem: if Xₙ → X and Yₙ → Y (in probability), then Xₙ/Yₙ → X/Y as long as Y ≠ 0.',
+        'The bias of weighted IS is O(1/n), which decreases with sample size — hence consistency despite finite-sample bias.',
+      ],
+    },
+    {
+      id: 'q-rl-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The variance of ordinary importance sampling can be infinite even when all returns Gᵢ are bounded. Why, and how does weighted IS address this?',
+      options: [
+        'Ordinary IS variance is infinite because G_i can take negative values; weighted IS clips G_i at zero',
+        'Ordinary IS weights by ρᵢ = Πₜ π/b, which is a product of T ratios. If b(a|s) ≪ π(a|s) for any step, ρᵢ can be unbounded across episodes, causing Var[ρᵢGᵢ] = E[ρᵢ²Gᵢ²] − (E[ρᵢGᵢ])² to be infinite. Weighted IS caps the effective weight per episode to ρᵢ/Σρⱼ ≤ 1, bounding its variance',
+        'Ordinary IS has infinite variance because it samples from both π and b simultaneously, creating a mixture distribution with undefined moments',
+        'Ordinary IS is always finite variance for γ < 1; weighted IS is only valid for γ = 1',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The product ρᵢ = Πₜ π(Aₜ|Sₜ)/b(Aₜ|Sₜ) over T steps can be extremely large when b(a|s) is small but π(a|s) is large. The second moment E_b[ρ²G²] can be infinite even when G is bounded (because ρ is unbounded). Weighted IS normalizes each weight by Σρⱼ, so each effective weight is ρᵢ/Σρⱼ ∈ [0,1], bounding the contribution per episode. This self-normalization provides finite variance in practice, though the theoretical variance bound is complex.',
+      hints: [
+        'Consider T=1, b(a|s) = 0.01, π(a|s) = 1: ρ = 100. Over T=20 steps: ρ = 100^20 = 10^40. The second moment E[ρ²G²] ≥ (10^40)² × G² = 10^80 × G².',
+        'Weighted IS weight per episode: ρᵢ/Σρⱼ ≤ 1 always. No single episode can dominate the estimate with a huge ρ.',
+      ],
+    },
+  ],
+
+  'glie': [
+    {
+      id: 'q-rl-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question:
+        'GLIE stands for "Greedy in the Limit with Infinite Exploration." For a sequence of policies {πₙ}, GLIE requires two conditions. Which pair correctly states them?',
+      options: [
+        '(1) All state-action pairs are visited infinitely often; (2) the policy converges to the greedy policy in the limit',
+        '(1) The policy is ε-greedy for all n; (2) ε decreases to exactly 0 after finite steps',
+        '(1) Each episode has length → ∞; (2) the agent uses a decaying learning rate αₙ → 0',
+        '(1) The reward sequence is bounded; (2) the value function converges to V* in sup-norm',
+      ],
+      correctAnswer: 0,
+      explanation:
+        'GLIE (Sutton & Barto §5.4; Singh et al. 2000) requires: (1) every state-action pair (s,a) is visited infinitely often — ensuring Q(s,a) estimates converge; and (2) the policy converges to the greedy policy — ensuring that in the limit the agent exploits its knowledge. A sufficient condition is εₙ → 0 with Σεₙ = ∞ (so every state-action is tried infinitely often as exploration decays). GLIE-MC control converges to Q* and π*.',
+      hints: [
+        'Condition 1 ensures all Q(s,a) can be estimated accurately. Condition 2 ensures the limit policy is greedy (optimal).',
+        'ε_n = 1/n satisfies GLIE: every state-action is visited infinitely often (since Σ1/n = ∞) and εₙ → 0 (greedy in the limit).',
+      ],
+    },
+    {
+      id: 'q-rl-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'An ε-greedy policy with ε = 0.05 (constant) satisfies GLIE because every state-action pair is visited infinitely often (since ε > 0 ensures exploration forever).',
+      correctAnswer: 'false',
+      explanation:
+        'Constant ε = 0.05 satisfies the first GLIE condition (infinite exploration — all (s,a) pairs are visited infinitely often) but fails the second (greedy in the limit — the policy never converges to greedy, it always explores with probability 0.05). Both conditions are required for GLIE. Without ε → 0, MC control converges to the optimal ε-soft policy, not π*.',
+      hints: [
+        'Check both GLIE conditions: (1) infinite visits to all (s,a)? Yes, with ε=0.05. (2) policy → greedy? No, always 5% random.',
+        'GLIE requires BOTH: explore forever AND eventually stop exploring. Fixed ε achieves only the former.',
+      ],
+    },
+    {
+      id: 'q-rl-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Monte Carlo control with on-policy ε-greedy and GLIE (εₙ = 1/n) converges to which of the following?',
+      options: [
+        'Q^π for the initial ε-greedy policy — MC control does not improve beyond the first policy',
+        'Q* and π* — the optimal action-value function and optimal policy',
+        'The optimal ε-soft policy for ε = 1/N (where N is the total number of episodes)',
+        'A local optimum of Q, which may differ from Q* due to the non-linearity of the ε-greedy update',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Sutton & Barto §5.4 (and Singh et al. 2000 for the formal proof): on-policy MC control with GLIE policies converges to Q* and π*. The GLIE conditions ensure (1) all Q(s,a) values converge to their true values (via infinite exploration), and (2) the policy greedifies in the limit. Together, these guarantee convergence to the optimal policy. This is the key theoretical motivation for decaying ε in practice.',
+      hints: [
+        'The two GLIE conditions precisely match what is needed: accurate Q estimates (from condition 1) + greedy limit policy (from condition 2).',
+        'Compare: fixed ε > 0 → optimal ε-soft policy (suboptimal). GLIE (ε → 0) → optimal π* (exact optimality).',
+      ],
+    },
+  ],
+
+  'eligibility-traces': [
+    {
+      id: 'q-rl-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question:
+        'Eligibility traces (Sutton & Barto Chapter 12) assign credit to recently visited states. The eligibility trace eₜ(s) is updated as: eₜ(s) = γλeₜ₋₁(s) + 𝟙[Sₜ = s]. What does the parameter λ ∈ [0,1] control?',
+      options: [
+        'The learning rate α of the TD update',
+        'The decay rate of credit for past states: λ = 0 gives TD(0) (only the last state gets credit); λ = 1 gives Monte Carlo (all visited states get equal credit)',
+        'The discount factor applied to future rewards',
+        'The exploration rate in ε-greedy action selection',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The trace parameter λ controls how far back credit propagates. With λ = 0: eₜ(s) = 𝟙[Sₜ = s] — only the current state gets credit, recovering TD(0). With λ = 1: the trace decays only by γ per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate λ gives a weighted combination: TD(λ) interpolates between TD(0) and MC. Sutton & Barto §12.1–12.2 derive this explicitly via the forward (λ-return) and backward (trace) views.',
+      hints: [
+        'λ is the "memory" parameter. λ = 0: no memory (only current state). λ = 1: full memory (all past states).',
+        'The factor γλ in the update means each step back in history contributes (γλ)^k relative weight, k steps ago.',
+      ],
+    },
+    {
+      id: 'q-rl-kp35-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'TD(λ = 0) is equivalent to TD(0), and TD(λ = 1) is equivalent to every-visit Monte Carlo in the offline (batch) setting.',
+      correctAnswer: 'true',
+      explanation:
+        'Sutton & Barto §12.1 establish the "λ-return" forward view: TD(λ) uses a weighted combination of n-step returns Gₜ^(n) with exponential weights (1−λ)λ^{n-1}. At λ=0: only G^(1) (the 1-step TD return) contributes → TD(0). At λ=1: the trace decays only by γ per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate λ gives a weighted combination.',
+      hints: [
+        'λ-return: Gₜ^λ = (1−λ)Σ_{n=1}^∞ λ^{n-1} Gₜ^(n). At λ=0: Gₜ^λ = Gₜ^(1) = Rₜ₊₁ + γV(Sₜ₊₁) = TD target. At λ=1: Gₜ^λ = Gₜ = MC return.',
+        'The offline-online equivalence means the backward (trace) update gives the same total update as the forward (λ-return) view when computed over a full episode.',
+      ],
+    },
+    {
+      id: 'q-rl-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'TD(λ) with eligibility traces updates all visited states simultaneously using δₜ = Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ): V(s) ← V(s) + α·δₜ·eₜ(s). Compared to n-step TD, what is the key computational advantage of eligibility traces?',
+      options: [
+        'Eligibility traces require less memory because they store only the current trace vector instead of the last n states and rewards',
+        'Eligibility traces are computationally equivalent to n-step TD but numerically more stable due to the exponential weighting',
+        'Eligibility traces allow the use of larger learning rates without divergence',
+        'Eligibility traces completely eliminate the need for a discount factor γ',
+      ],
+      correctAnswer: 0,
+      explanation:
+        'n-step TD must store the last n transitions (Sₜ, Aₜ, Rₜ₊₁, …, Sₜ₊ₙ) and wait n steps before updating — O(n) memory and n-step delay. Eligibility traces require only the current trace vector e(s) (same size as V) — O(|S|) memory — and update all states online after every step. This backward view is computationally equivalent to the forward (λ-return) view in the offline setting, but achieves it in O(|S|) time and O(|S|) space per step.',
+      hints: [
+        'n-step TD: store n-step buffer, wait n steps to update. Eligibility traces: one trace vector, update every step.',
+        'The trace eₜ(s) effectively carries "memory" of past visits without explicitly storing past transitions.',
       ],
     },
   ],

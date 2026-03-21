@@ -248,7 +248,7 @@ const questions: Record<string, Question[]> = {
         'MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder θ_k is updated by EMA: θ_k ← 0.999·θ_k + 0.001·θ_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.',
       hints: [
         'The queue stores 65,536 negatives — far more than any feasible batch size.',
-        'Momentum 0.999 means the key encoder changes very slowly, keeping queue representations consistent.',
+        'Momentum 0.999 means the momentum encoder slowly tracks the query encoder without gradients.',
       ],
     },
     {
@@ -349,16 +349,15 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp7-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'SimSiam differs from BYOL by not using a momentum encoder, yet still avoids collapse. What is the key mechanism?',
+      question: 'SimSiam (Chen & He, 2021) avoids collapse without negative pairs or a momentum encoder. The SimSiam loss for a pair of views (z_1, z_2) is: L = −(1/2)[D(p_1, stopgrad(z_2)) + D(p_2, stopgrad(z_1))], where D is negative cosine similarity. What is the crucial role of stopgrad?',
       options: [
-        'SimSiam uses a very large batch size to provide implicit negatives',
-        'SimSiam applies a stop-gradient operation on one branch, preventing trivial solutions without needing a momentum encoder or negative pairs',
-        'SimSiam uses a contrastive loss with hard negative mining',
-        'SimSiam uses a variational encoder that adds noise to prevent collapse',
+        'stopgrad freezes the projection head weights so only the encoder is trained',
+        'stopgrad prevents gradients from flowing through one branch, breaking the trivial solution where both networks converge to output identical constant vectors',
+        'stopgrad clips the gradient norm to prevent exploding gradients',
+        'stopgrad is equivalent to adding L2 regularization on the target embeddings',
       ],
       correctAnswer: 1,
-      explanation:
-        'SimSiam\'s stop-gradient operator prevents gradients from flowing through the target branch, breaking the symmetric feedback loop that would lead to collapse. This simple trick allows negative-free SSL without a momentum encoder.',
+      explanation: 'Without stopgrad, minimizing −cosine_sim(p_1, z_2) can be trivially solved by collapsing both p_1 and z_2 to the same constant. stopgrad breaks the gradient symmetry: when computing ∂L/∂θ, z_2 is treated as constant (no gradient), so the network cannot exploit the shortcut. Chen & He analyze this as an EM-like alternating optimization.',
       hints: [
         'The stop-gradient is the key difference from BYOL — what happens to backpropagation when you stop gradients?',
         'If gradients can\'t flow through the target branch, the loss can\'t trivially collapse both branches together.',
@@ -369,32 +368,31 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'Representation collapse in SimSiam occurs when the encoder maps all inputs to the same constant embedding, making the cosine similarity always 1 and the loss always 0.',
+        'Representation collapse in SimSiam occurs when the encoder maps all inputs to the same constant embedding, making the cosine similarity always 1 and the loss always −1 (the minimum possible value).',
       correctAnswer: 'true',
       explanation:
-        'Collapsed representations are a failure mode where the encoder outputs a constant vector for all inputs — a trivial solution that achieves zero loss but provides no useful features. SimSiam\'s stop-gradient prevents this specific failure mode.',
+        'A collapsed SimSiam produces p_i = z_j = constant for all inputs, giving cosine_sim = 1 and loss = −1 trivially. This is a degenerate global minimum of the loss without stopgrad, but stopgrad prevents gradients from exploiting this solution.',
       hints: [
         'A constant embedding satisfies the "similar outputs for similar inputs" objective trivially.',
-        'If all embeddings are the same, cosine similarity = 1 everywhere — what does the loss look like?',
+        'If all embeddings are the same, cosine similarity = 1 everywhere — the loss reaches its minimum without learning.',
       ],
     },
     {
       id: 'q-ssl-kp7-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'Chen & He (SimSiam) interpret the stop-gradient as making the algorithm behave like Expectation-Maximization (EM). What is the analogy?',
+      question: 'Chen & He (SimSiam) show that stopgrad makes SimSiam behave like Expectation-Maximization. What are the E-step and M-step analogues?',
       options: [
-        'The E-step computes the contrastive loss; the M-step updates the momentum encoder',
-        'The E-step holds the target (stop-gradient branch) fixed and optimises the online network; the M-step (implicit) updates the target via the EMA — alternating optimisation like EM',
-        'The E-step computes positive pair embeddings; the M-step computes negative pair embeddings',
-        'The E-step selects augmentations; the M-step trains the projection head',
+        'E-step: compute positive pair embeddings; M-step: compute negative pair embeddings',
+        'E-step: fix z (stopgrad branch, treat as cluster centers) and optimize p (predictor branch) — analogous to the E-step assigning data to clusters; M-step: update θ to improve the predictor — analogous to the M-step updating variables',
+        'E-step: compute contrastive loss; M-step: update the momentum encoder',
+        'E-step: select hard negatives; M-step: update the projection head using those negatives',
       ],
       correctAnswer: 1,
-      explanation:
-        'With stop-gradient, one branch is fixed while the other is optimised — analogous to EM\'s E-step (fix latent variables, optimise parameters) and M-step (update variables). SimSiam alternates between these, giving it the EM interpretation.',
+      explanation: 'With stopgrad, the SimSiam update alternates: (1) fix the target representations z (E-step: treat them as fixed targets like cluster assignments) and update the predictor p to match them; (2) update θ to improve z for the next iteration (M-step). This alternating optimization provably converges and does not degenerate to collapse, unlike the simultaneous update without stopgrad.',
       hints: [
         'EM alternates between fixing and optimising two sets of variables.',
-        'In SimSiam, the stop-gradient branch is the "fixed" variable; the predictor branch is the "optimised" variable.',
+        'The "stop-gradient branch" plays the role of fixed latent variables in the E-step.',
       ],
     },
   ],
@@ -404,18 +402,17 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp8-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'The Barlow Twins loss encourages what property in the cross-correlation matrix of the two view embeddings?',
+      question: 'The Barlow Twins loss (Zbontar et al., 2021) is L_BT = Σ_i (1−C_{ii})² + λ Σ_i Σ_{j≠i} C_{ij}², where C_{ij} = Σ_b z^A_{b,i} z^B_{b,j} / (||z^A_{.,i}|| ||z^B_{.,j}||) is the cross-correlation matrix. What do the two terms separately enforce?',
       options: [
-        'All entries of the cross-correlation matrix to be 1',
-        'The cross-correlation matrix to be as close as possible to the identity matrix — diagonal entries close to 1 (invariance) and off-diagonal entries close to 0 (decorrelation)',
-        'The cross-correlation matrix to be as close as possible to zero (maximum diversity)',
-        'The determinant of the cross-correlation matrix to be maximised',
+        'First term enforces decorrelation; second term enforces invariance across augmentations',
+        'First term (invariance): push diagonal entries to 1 so each feature dimension is consistent across augmented views; second term (redundancy reduction): push off-diagonal entries to 0 so different embedding dimensions are decorrelated',
+        'First term minimizes L2 distance between embeddings; second term maximizes cosine similarity',
+        'First term prevents collapse; second term prevents mode dropping',
       ],
       correctAnswer: 1,
-      explanation:
-        'Barlow Twins pushes diagonal entries to 1 (each embedding dimension is consistent across views) and off-diagonal entries to 0 (embedding dimensions are decorrelated), preventing collapse and redundant representations.',
+      explanation: 'The diagonal terms C_{ii} measure the correlation of embedding dimension i between the two views — pushing to 1 enforces view-invariance. The off-diagonal terms C_{ij} (i≠j) measure redundancy between dimensions — pushing to 0 decorrelates them, following Horace Barlow\'s redundancy reduction hypothesis (1961). The hyperparameter λ trades off these two objectives.',
       hints: [
-        'An identity cross-correlation means: same feature is consistent, different features are independent.',
+        'An identity cross-correlation means: same feature is consistent across views (diagonal=1), different features are independent (off-diagonal=0).',
         'Think about what the identity matrix looks like — ones on diagonal, zeros off diagonal.',
       ],
     },
@@ -424,10 +421,9 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'Barlow Twins is inspired by H. Barlow\'s redundancy reduction principle, which suggests efficient neural coding should minimise redundancy between neurons.',
+        'Barlow Twins is inspired by H. Barlow\'s redundancy reduction principle (1961), which suggests that efficient neural coding should minimise redundancy between neurons to maximise the information capacity of the representation.',
       correctAnswer: 'true',
-      explanation:
-        'Yann LeCun\'s Barlow Twins directly draws from Horace Barlow\'s 1961 "redundancy reduction" hypothesis about efficient sensory coding in the brain — neurons should encode independent features to maximise information per neuron.',
+      explanation: 'Horace Barlow\'s "redundancy reduction" hypothesis proposes that the visual system encodes information with minimal redundancy between neurons — each neuron should convey independent information. Barlow Twins operationalizes this as decorrelating embedding dimensions (off-diagonal C_{ij} → 0), with the Barlow Twins name explicitly honoring this connection.',
       hints: [
         'The paper\'s name "Barlow Twins" references Horace Barlow, the neuroscientist who proposed redundancy reduction.',
         'Decorrelated embeddings encode independent features — minimal redundancy.',
@@ -437,19 +433,18 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp8-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'Barlow Twins is less sensitive to batch size than SimCLR. What property of its loss function explains this?',
+      question: 'Barlow Twins is empirically less sensitive to batch size than SimCLR. The cross-correlation matrix C has dimensions d×d where d is the embedding dimension. This explains reduced batch-size sensitivity because:',
       options: [
         'Barlow Twins does not use a softmax normalisation, which is batch-size-sensitive',
-        'The cross-correlation matrix is computed within the batch and its dimensionality is fixed by the embedding size, not the batch size — so the loss signal is stable across batch sizes',
+        'The cross-correlation matrix C is d×d regardless of batch size N; the signal quality improves with larger N (better correlation estimates) but the loss landscape does not sharply depend on N, unlike NT-Xent which has N−1 explicit negatives per anchor',
         'Barlow Twins uses a momentum encoder that reduces batch size sensitivity',
         'The off-diagonal decorrelation term is always zero regardless of batch size',
       ],
       correctAnswer: 1,
-      explanation:
-        'The cross-correlation matrix has dimensions d×d (embedding dimension), not N×N (batch size). While larger batches improve the estimate, the loss landscape is not as sharply dependent on batch size as NT-Xent, which directly scores N−1 negatives.',
+      explanation: 'In NT-Xent, each sample uses exactly 2(N−1) negatives — the loss directly collapses if N is too small. In Barlow Twins, the cross-correlation matrix always has d×d entries; N only affects the statistical quality of the correlation estimate. Empirically, Barlow Twins works with batch sizes as small as 256, while SimCLR needs 4096+.',
       hints: [
         'SimCLR\'s NT-Xent explicitly uses all other batch items as negatives — the loss changes dramatically with N.',
-        'Barlow Twins\' cross-correlation matrix size is determined by embedding dimension, not batch size.',
+        'Barlow Twins\' cross-correlation matrix size is determined by embedding dimension d, not batch size N.',
       ],
     },
   ],
@@ -514,16 +509,15 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp10-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'DINO uses a self-distillation framework. What does "self-distillation with no labels" mean?',
+      question: 'DINO (Self-DIstillation with NO labels, Caron et al., 2021) trains a student to match the output of a teacher network. The teacher parameters ξ are updated by:',
       options: [
-        'The model distils knowledge from a large labelled teacher model into a smaller student model',
-        'The student network learns to match the output distribution of a teacher network that is an EMA copy of the student — no labels required',
-        'The model distils its own predictions into compressed label-free embeddings',
-        'DINO uses a different student and teacher architecture trained on separate datasets',
+        'Backpropagating the cross-entropy loss between student and teacher softmax outputs',
+        'Exponential moving average of the student parameters: ξ ← λξ + (1−λ)θ, with no gradient flowing through the teacher — the student minimizes H(P_t(x), P_s(x\')), where x and x\' are different crops',
+        'Random re-initialization every 100 epochs to prevent teacher collapse',
+        'Training the teacher on a separate labeled dataset and distilling to the student',
       ],
       correctAnswer: 1,
-      explanation:
-        'In DINO, the teacher is an EMA copy of the student. The student is trained to match the teacher\'s softmax output for the same image under different augmentations — a form of knowledge distillation that requires no external labels.',
+      explanation: 'DINO\'s teacher is a momentum copy: ξ ← λξ + (1−λ)θ (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_ξ(x) − c)/τ_t), using the teacher\'s output with centering vector c and teacher temperature τ_t < τ_s. Different global/local crops create the view pair — a form of knowledge distillation requiring no labels.',
       hints: [
         '"Self" distillation: the teacher comes from the student itself via exponential moving average.',
         'No labels: the training signal is the teacher\'s output distribution, not a human-assigned class.',
@@ -534,12 +528,11 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'DINO with ViT encoders produces attention maps that unsupervisedly segment objects in images, a property not typically seen in CNNs trained with standard supervised or SSL methods.',
+        'DINO with ViT encoders produces attention maps that unsupervisedly segment objects in images — the [CLS] token\'s self-attention heads attend to semantically coherent foreground regions without any segmentation supervision.',
       correctAnswer: 'true',
-      explanation:
-        'DINO-ViT\'s self-attention heads naturally attend to semantically consistent object regions, producing meaningful segmentation masks without any segmentation supervision — an emergent property observed by Caron et al.',
+      explanation: 'DINO-ViT\'s self-attention from the [CLS] token naturally concentrates on semantically relevant object regions, producing sharp segmentation-like attention maps without any pixel-level annotation. This emergent property (Caron et al., 2021) is not observed in supervised ViTs or CNN-based SSL — it requires the DINO multi-crop objective with ViT architecture.',
       hints: [
-        'ViT attention is computed globally across patches — what happens when SSL trains this attention without labels?',
+        'ViT attention is computed globally across patches — SSL trains this attention to focus on semantically consistent object regions.',
         'The attention maps from the [CLS] token show which patches are semantically relevant — without any label guidance.',
       ],
     },
@@ -547,19 +540,18 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp10-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'DINO uses a "centering" operation on the teacher\'s outputs to prevent collapse. What does centering do?',
+      question: 'DINO uses two mechanisms to prevent collapse: "centering" and "sharpening." What do these operations do to the teacher\'s output, and why are both needed?',
       options: [
-        'It centres the student\'s gradient to zero mean for training stability',
-        'It subtracts a running mean of the teacher\'s output from each batch, preventing the teacher from always outputting one dominant dimension (mode collapse)',
-        'It normalises the teacher\'s embeddings to unit sphere before computing the loss',
-        'It centres the positive pair embeddings at the origin of the representation space',
+        'Centering subtracts the batch mean from teacher outputs (prevents one dimension from dominating); sharpening uses a low temperature τ_t for the teacher softmax (prevents uniform collapse). Both are needed because centering alone leads to a uniform distribution, and sharpening alone leads to a single-class collapse',
+        'Centering normalizes embeddings to unit sphere; sharpening applies L1 regularization to the output',
+        'Centering computes the running mean of gradients for stability; sharpening amplifies the top-k logits by 10×',
+        'Centering removes the bias term from the teacher projection head; sharpening applies ReLU to teacher outputs',
       ],
-      correctAnswer: 1,
-      explanation:
-        'Centering subtracts a running batch-average of the teacher\'s output, preventing any single output dimension from dominating. Combined with sharpening (temperature scaling), it maintains a diverse, non-collapsed output distribution for the teacher.',
+      correctAnswer: 0,
+      explanation: 'Centering: P_t = softmax((g_ξ(x) − c)/τ_t), where c ← m·c + (1−m)·E[g_ξ(x)] (running mean). Without centering, the teacher may collapse to one dominant output dimension (mode collapse). Sharpening via low τ_t (e.g., 0.04 vs student τ_s=0.1) makes the teacher distribution peaked, preventing uniform collapse. The two mechanisms counteract opposite failure modes.',
       hints: [
-        'Mode collapse in the teacher\'s output means it always assigns high probability to one "class" — centering counteracts this.',
-        'Think of centering as preventing the teacher from becoming over-confident in a single direction.',
+        'Mode collapse → centering prevents it (subtracts running mean to keep outputs balanced).',
+        'Uniform distribution → sharpening prevents it (low temperature makes predictions peaked).',
       ],
     },
   ],
@@ -569,32 +561,29 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp11-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'In Masked Autoencoders (MAE), what is the model trained to do?',
+      question: 'In Masked Autoencoders (MAE, He et al., 2022), the model is trained on ImageNet by masking ___ of image patches and reconstructing the ___ of masked patches.',
       options: [
-        'Predict the class label of the masked image region',
-        'Reconstruct the pixel values of randomly masked image patches from the visible (unmasked) patches',
-        'Generate a completely new image conditioned on the visible patches',
-        'Predict the augmentation applied to the masked patches',
+        '75% of patches; the normalized pixel values (mean/std per patch)',
+        '15% of patches; the original pixel values',
+        '50% of patches; the discrete token IDs from a dVAE codebook',
+        '90% of patches; the frequency-domain (FFT) representation',
       ],
-      correctAnswer: 1,
-      explanation:
-        'MAE masks a high fraction (e.g., 75%) of image patches and trains a ViT encoder-decoder to reconstruct the original pixel values of the masked patches from the remaining visible patches — a generative self-supervised pre-text task.',
+      correctAnswer: 0,
+      explanation: 'MAE masks 75% of 16×16 patches and trains a ViT encoder-decoder to reconstruct the normalized pixel values (mean and std computed per patch) of masked patches. The ViT encoder processes only the 25% visible patches (no mask tokens), and a lightweight Transformer decoder reconstructs the full image. This asymmetric design makes pre-training 3× faster than encoding all patches.',
       hints: [
         'Think of MAE as a vision equivalent of BERT: mask some tokens, predict what was masked.',
-        'The signal is pixel reconstruction, not a class label — it\'s fully unsupervised.',
+        'The encoder only processes visible patches (~25%) — greatly reducing compute compared to encoding everything.',
       ],
     },
     {
       id: 'q-ssl-kp11-2',
       type: 'true-false',
       difficulty: 'medium',
-      question:
-        'MAE applies the ViT encoder only to the unmasked (visible) patches, making it computationally efficient during pre-training compared to encoding all patches including masked ones.',
+      question: 'MAE applies the ViT encoder only to the unmasked (visible) patches and does NOT include [MASK] tokens in the encoder input — [MASK] tokens are only added in the decoder, making the encoder asymmetrically lightweight.',
       correctAnswer: 'true',
-      explanation:
-        'By encoding only the visible patches (~25% of the image), MAE reduces the encoder\'s computational cost dramatically. The lightweight decoder then takes encoder outputs plus mask tokens to reconstruct the full image.',
+      explanation: 'By excluding [MASK] tokens from the encoder (unlike BEiT), MAE\'s encoder processes only ~25% of patches at full ViT depth. Mask tokens are added only in the lightweight decoder, which reconstructs the full image. This design is key to MAE\'s 3× training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.',
       hints: [
-        'If you mask 75% of patches and only encode the rest, how does that affect encoder compute vs. encoding all patches?',
+        'If you mask 75% of patches and only encode the rest, the encoder sees 4× fewer tokens — huge compute savings.',
         'The decoder handles the masked positions — keeping it lightweight enables efficient pretraining.',
       ],
     },
@@ -602,19 +591,18 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp11-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'MAE uses a very high masking ratio (75%) compared to BERT\'s 15% word masking. Why is a much higher ratio beneficial for images?',
+      question: 'MAE uses a very high masking ratio (75%) compared to BERT\'s 15% word masking. The authors justify this because:',
       options: [
         'Images have fewer total tokens than text, so a higher ratio is needed for sufficient signal',
-        'Images have high spatial redundancy — nearby patches are correlated, so a high mask ratio forces the model to use global semantic understanding rather than local interpolation',
-        'Higher masking prevents the decoder from overfitting to training images',
-        'A 75% ratio ensures the encoder sees fewer patches, reducing computational cost to match BERT\'s efficiency',
+        'Images have high spatial redundancy — neighboring patches are highly correlated — so a low masking ratio allows the model to solve the task by simple interpolation rather than high-level semantic understanding; 75% forces the model to reason about global scene structure',
+        'Higher masking enables the decoder to hallucinate realistic-looking textures from noise',
+        'A 75% ratio reduces the encoder compute to match BERT\'s token count per forward pass',
       ],
       correctAnswer: 1,
-      explanation:
-        'Images have high spatial redundancy (nearby pixels are similar), requiring high masking to create non-trivial prediction tasks. Time series may exhibit lower autocorrelation depending on the domain (e.g., financial data vs. ECG), so the optimal masking ratio must be tuned per application.',
+      explanation: 'He et al. ablated masking ratios from 25% to 90% and found 75% optimal: below 50%, the task is too easy (local interpolation suffices); above 80%, too little context makes reconstruction ill-posed. High redundancy in image pixels is the key reason a much higher ratio than text masking is needed to create a non-trivial learning task.',
       hints: [
-        'The right masking ratio depends on the data\'s autocorrelation structure — how similar are adjacent time steps?',
-        'For ECG signals, adjacent beats are very similar (high redundancy); for stock returns, they may not be.',
+        'Adjacent pixels/patches are correlated in images — with 15% masking, a model can "paint over" masked patches trivially.',
+        'High masking forces the encoder to build a global, semantic model of the scene.',
       ],
     },
   ],
@@ -798,7 +786,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'data2vec trains a student to predict the top-K averaged encoder states (from the EMA teacher) for masked positions — a unified continuous target that applies the same framework to images, text, and speech without modality-specific discretisation.',
+        'data2vec trains a student to predict the top-K averaged encoder states (from the EMA teacher) for masked positions — a unified continuous target that applies the same framework to all modalities without modality-specific discretisation.',
       hints: [
         'Instead of predicting discrete tokens (BERT-style) or pixels (MAE-style), data2vec predicts the teacher\'s continuous representations.',
         'One objective, one architecture template — applied to all modalities.',
@@ -944,7 +932,7 @@ const questions: Record<string, Question[]> = {
         'Tian et al. and others formalised that SSL benefits downstream tasks if augmentations are "label-preserving" — an augmented view retains the same label as the original. Under this assumption, SSL representations that are invariant to augmentations are also informative for the downstream task.',
       hints: [
         'If the augmentation changes the label (e.g., flipping "left" and "right" for a chirality task), SSL would hurt.',
-        'Think about the role of augmentations: they define what information SSL is forced to capture (augmentation-invariant) and discard (augmentation-specific).',
+        'Think about the role of augmentations: they define what information SSL is forced to capture (augmentation-invariance) and discard (augmentation-specific).',
       ],
     },
   ],
@@ -1020,7 +1008,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Negative-free SSL methods achieve strong representations using only positive pairs (augmented views of the same image) and various collapse-prevention mechanisms — no explicit repulsion between different images is used.',
       hints: [
-        '"Negative" here refers to negative pairs (different images), not numerical negativity.',
+        'Not all methods are truly negative-free — they may use implicit negative signals.',
         'These methods show you don\'t need to explicitly repel different images to learn good representations.',
       ],
     },
@@ -1155,7 +1143,7 @@ const questions: Record<string, Question[]> = {
       question: 'Applying masking-based SSL (MAE-style) to time series requires adapting the high masking ratio from vision. Why might a much higher masking ratio (e.g., 75%) be less effective for time series than for images?',
       options: [
         'Time series have fewer total time steps than images have patches, so masking fewer is needed',
-        'Time series often have lower spatial (temporal) redundancy than images — nearby time steps may be less correlated than nearby pixels — making moderate masking already challenging without requiring 75%',
+        'Time series often have lower temporal (temporal) redundancy than images — nearby time steps may be less correlated than nearby pixels — making moderate masking already challenging without requiring 75%',
         'Time series models are shallower than ViTs and cannot handle high masking ratios',
         'Masking is not differentiable for time series data',
       ],
@@ -1469,13 +1457,13 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'V-JEPA (Video Joint Embedding Predictive Architecture) predicts abstract representations of masked video regions rather than reconstructing raw pixels, following the JEPA framework.',
+        'V-JEPA (Video Joint Embedding Predictive Architecture) predicts abstract representations of masked video regions rather than reconstruct raw pixels, following the JEPA framework.',
       correctAnswer: 'true',
       explanation:
         'V-JEPA trains a predictor to predict the encoder\'s representations of masked spatio-temporal regions from visible context — not raw pixels. This avoids learning irrelevant low-level details (noise, texture) that pixel reconstruction requires, leading to more semantic representations.',
       hints: [
         'JEPA (Joint Embedding Predictive Architecture) predicts in representation space, not pixel space.',
-        'Think about why predicting pixel values might be wasteful: the model spends capacity on reconstructing noise and texture.',
+        'Think about why predicting pixel values might be wasteful: the model spends capacity on reconstructinging noise and texture.',
       ],
     },
     {
@@ -1656,7 +1644,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'JEPA argues that predicting raw pixels (MAE) or tokens (GPT) forces the model to model irrelevant low-level details. Predicting in abstract representation space focuses learning on semantic, task-relevant structure — potentially more efficient and scalable for AI systems that must reason about the world.',
+        'JEPA argues that predicting raw pixels (MAE) or tokens (GPT) forces the model to model irrelevant low-level details. Predicting in abstract representation space avoids this by focusing learning on semantic, task-relevant structure — potentially more efficient and scalable for AI systems that must reason about the world.',
       hints: [
         'What does predicting raw pixels require that predicting representations avoids?',
         'Representations abstract away details (noise, texture) irrelevant to semantics — predicting them is a harder but more focused task.',
