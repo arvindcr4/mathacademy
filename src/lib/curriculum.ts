@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // EVALUATION & BENCHMARKING OF ML SYSTEMS
+  {
+    id: 'ml-evaluation-benchmarking',
+    slug: 'ml-evaluation-benchmarking',
+    name: 'Evaluation & Benchmarking of ML Systems',
+    description: 'Statistical evaluation methods, LLM benchmarks, and robust ML model assessment.',
+    topics: [
+      {
+        id: 'statistical-evaluation',
+        name: 'Statistical Evaluation Methods',
+        description: 'Significance testing, confidence intervals, and evaluation pitfalls.',
+        knowledgePoints: [
+          { id: 'evb-kp-1', slug: 'cross-validation-eval', name: 'Cross-Validation Strategies & Hold-Out Sets' },
+          { id: 'evb-kp-2', slug: 'bootstrap-ci', name: 'Bootstrap & Confidence Intervals for Metrics' },
+          { id: 'evb-kp-3', slug: 'significance-testing', name: 'Statistical Significance Testing (McNemar, t-test)' },
+          { id: 'evb-kp-4', slug: 'multiple-comparison', name: 'Multiple Comparison Correction (Bonferroni, FDR)' },
+          { id: 'evb-kp-5', slug: 'evaluation-bias', name: 'Evaluation Bias & Data Contamination' },
+        ]
+      },
+      {
+        id: 'classification-regression-eval',
+        name: 'Classification & Regression Metrics',
+        description: 'Precision/recall, ROC-AUC, calibration, and regression scoring.',
+        knowledgePoints: [
+          { id: 'evb-kp-6', slug: 'precision-recall-f1', name: 'Precision, Recall, F1 & Confusion Matrix' },
+          { id: 'evb-kp-7', slug: 'roc-auc', name: 'ROC Curve, AUC & PR-AUC' },
+          { id: 'evb-kp-8', slug: 'calibration-eval', name: 'Calibration Curves & Brier Score' },
+          { id: 'evb-kp-9', slug: 'regression-metrics', name: 'MAE, RMSE, MAPE & Regression Metrics' },
+          { id: 'evb-kp-10', slug: 'imbalanced-eval', name: 'Evaluation with Imbalanced Datasets' },
+        ]
+      },
+      {
+        id: 'llm-benchmarks',
+        name: 'LLM Benchmarks & Leaderboards',
+        description: 'MMLU, HellaSwag, HumanEval, and comprehensive LLM evaluation.',
+        knowledgePoints: [
+          { id: 'evb-kp-11', slug: 'mmlu-benchmark', name: 'MMLU & Multi-Task Language Understanding' },
+          { id: 'evb-kp-12', slug: 'hellaswag-arc', name: 'HellaSwag, ARC & Common Sense Reasoning' },
+          { id: 'evb-kp-13', slug: 'humaneval-mbpp', name: 'HumanEval, MBPP & Coding Benchmarks' },
+          { id: 'evb-kp-14', slug: 'mt-bench', name: 'MT-Bench, AlpacaEval & Instruction Following' },
+          { id: 'evb-kp-15', slug: 'lm-harness', name: 'LM Evaluation Harness & HELM' },
+        ]
+      },
+      {
+        id: 'generative-eval',
+        name: 'Generative Model Evaluation',
+        description: 'FID, CLIP score, BLEU, ROUGE, and human evaluation.',
+        knowledgePoints: [
+          { id: 'evb-kp-16', slug: 'fid-is', name: 'FID, IS & Generative Image Quality Metrics' },
+          { id: 'evb-kp-17', slug: 'clip-score-eval', name: 'CLIP Score & Text-Image Alignment' },
+          { id: 'evb-kp-18', slug: 'bleu-rouge', name: 'BLEU, ROUGE & BERTScore for Text Generation' },
+          { id: 'evb-kp-19', slug: 'human-eval-protocols', name: 'Human Evaluation Protocols & Annotation' },
+          { id: 'evb-kp-20', slug: 'llm-as-judge', name: 'LLM-as-a-Judge & GPT-4 Evaluation' },
+        ]
+      },
+      {
+        id: 'safety-eval',
+        name: 'Safety & Red-Teaming Evaluation',
+        description: 'Toxicity detection, jailbreak testing, and bias benchmarks.',
+        knowledgePoints: [
+          { id: 'evb-kp-21', slug: 'toxicity-eval', name: 'Toxicity Detection & Content Safety Metrics' },
+          { id: 'evb-kp-22', slug: 'bias-benchmarks', name: 'Bias Benchmarks (WinoBias, BBQ, StereoSet)' },
+          { id: 'evb-kp-23', slug: 'red-teaming-eval', name: 'Red-Teaming & Automated Jailbreak Testing' },
+          { id: 'evb-kp-24', slug: 'truthfulness-eval', name: 'TruthfulQA & Hallucination Evaluation' },
+          { id: 'evb-kp-25', slug: 'privacy-eval', name: 'Privacy Leakage & Memorization Evaluation' },
+        ]
+      },
+      {
+        id: 'system-eval',
+        name: 'System-Level & End-to-End Evaluation',
+        description: 'Agent evaluation, RAG assessment, and production system metrics.',
+        knowledgePoints: [
+          { id: 'evb-kp-26', slug: 'agent-eval', name: 'Agent Evaluation (AgentBench, WebArena)' },
+          { id: 'evb-kp-27', slug: 'rag-eval-metrics', name: 'RAG Evaluation (Faithfulness, Relevance, RAGAS)' },
+          { id: 'evb-kp-28', slug: 'latency-throughput', name: 'Latency, Throughput & SLO Evaluation' },
+          { id: 'evb-kp-29', slug: 'ab-test-eval', name: 'A/B Testing & Online Evaluation Methodology' },
+          { id: 'evb-kp-30', slug: 'eval-infrastructure-prod', name: 'Evaluation Infrastructure & CI Eval Pipelines' },
+        ]
+      },
+    ]
+  },
+
   // DATA-CENTRIC AI & DATASET ENGINEERING
   {
     id: 'data-centric-ai',
