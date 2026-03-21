@@ -46,7 +46,7 @@ registerQuestions({
         "To speed up the forward pass by skipping zero weights."
       ],
       correctAnswer: "To ensure that the gradient for a node is only calculated after all nodes that depend on it have calculated their gradients.",
-      explanation: "In a DAG, a node's gradient depends on the gradients of the nodes it outputs to. A topological sort guarantees we traverse the graph backward in the correct dependency order."
+      explanation: "In a DAG, a node\'s gradient depends on the gradients of the nodes it outputs to. A topological sort guarantees we traverse the graph backward in the correct dependency order."
     }
   ],
   'neuron-implementation': [
@@ -86,7 +86,7 @@ registerQuestions({
       id: 'q-k-kp-6',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: "In a character-level language model, what constitutes the model's vocabulary?",
+      question: "In a character-level language model, what constitutes the model\'s vocabulary?",
       options: [
         "A dictionary of common English words.",
         "The unique set of characters present in the training dataset.",
@@ -150,7 +150,7 @@ registerQuestions({
       id: 'q-k-kp-10',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: "How is a categorical integer (like a character index) typically represented before being fed into a neural network's linear layer?",
+      question: "How is a categorical integer (like a character index) typically represented before being fed into a neural network\'s linear layer?",
       options: [
         "As a continuous float.",
         "As a one-hot encoded vector.",
@@ -174,7 +174,7 @@ registerQuestions({
         "Calculating the cross entropy."
       ],
       correctAnswer: "Indexing into the rows of the weight matrix, commonly implemented as an Embedding layer.",
-      explanation: "Multiplying a one-hot vector by matrix `W` simply extracts the i-th row of `W`. PyTorch's `nn.Embedding` optimizes this by skipping the matrix multiplication and directly indexing into the parameter matrix."
+      explanation: "Multiplying a one-hot vector by matrix `W` simply extracts the i-th row of `W`. PyTorch\'s `nn.Embedding` optimizes this by skipping the matrix multiplication and directly indexing into the parameter matrix."
     }
   ],
   'hidden-layers': [
@@ -198,7 +198,7 @@ registerQuestions({
       id: 'q-k-kp-13',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: "Why is it generally better to use PyTorch's `F.cross_entropy` instead of manually computing `softmax` followed by `nll_loss`?",
+      question: "Why is it generally better to use PyTorch\'s `F.cross_entropy` instead of manually computing `softmax` followed by `nll_loss`?",
       options: [
         "Because `cross_entropy` has no mathematical relation to softmax.",
         "It is numerically more stable (avoids NaN due to exp(large_numbers)), handles extreme values safely, and is computationally faster due to fused kernels.",
@@ -302,7 +302,7 @@ registerQuestions({
         "It uses the exact same batch mean and variance for every single inference request."
       ],
       correctAnswer: "During training, it uses the batch mean/variance; during inference, it uses a running mean/variance calculated during training.",
-      explanation: "At inference time, you might process a single example (batch size 1), where batch statistics don't make sense. Thus, BatchNorm tracks an exponentially moving average of means and variances during training to use later during inference."
+      explanation: "At inference time, you might process a single example (batch size 1), where batch statistics don\'t make sense. Thus, BatchNorm tracks an exponentially moving average of means and variances during training to use later during inference."
     }
   ],
   'pytorch-hooks': [
@@ -350,7 +350,7 @@ registerQuestions({
         "To make the attention matrix symmetric."
       ],
       correctAnswer: "To prevent tokens from 'looking ahead' into the future, ensuring they only attend to previous context.",
-      explanation: "In autoregressive training, the model predicts the *next* token. If the attention mask didn't block future tokens, the model would simply 'cheat' by looking at the answer during training."
+      explanation: "In autoregressive training, the model predicts the *next* token. If the attention mask didn\'t block future tokens, the model would simply 'cheat' by looking at the answer during training."
     }
   ],
   'multi-head-attention': [
@@ -382,7 +382,7 @@ registerQuestions({
         "Because it is required to normalize the data."
       ],
       correctAnswer: "Because the self-attention mechanism is a set operation (permutation equivariant) and has no inherent notion of sequence order.",
-      explanation: "Unlike Recurrent Neural Networks (RNNs) that process tokens sequentially, attention processes all tokens simultaneously. Without adding positional information, the model wouldn't know if a word is at the beginning or end of a sentence."
+      explanation: "Unlike Recurrent Neural Networks (RNNs) that process tokens sequentially, attention processes all tokens simultaneously. Without adding positional information, the model wouldn\'t know if a word is at the beginning or end of a sentence."
     }
   ],
   'residual-connections': [
@@ -438,7 +438,7 @@ registerQuestions({
       id: 'q-k-kp-28',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: "In PyTorch's Distributed Data Parallel (DDP), how are model gradients synchronized across multiple GPUs?",
+      question: "In PyTorch\'s Distributed Data Parallel (DDP), how are model gradients synchronized across multiple GPUs?",
       options: [
         "Only the main GPU calculates gradients, the others only do forward passes.",
         "Each GPU computes gradients on its own data split, and an All-Reduce operation averages the gradients across all GPUs before the optimizer step.",

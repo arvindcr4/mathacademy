@@ -50,6 +50,121 @@ const questionOverrides: Record<string, QuestionOverride> = {
     correctAnswer: 'true',
     explanation: 'MRR only uses the rank of the first relevant result for each query. If the first relevant result is at rank 3, the reciprocal rank is 1/3, and later relevant documents at ranks 5 and 7 do not affect that query\'s MRR contribution.',
   },
+  'q-bit-single-1': {
+    hints: ['Use the facts a ^ a = 0 and x ^ 0 = x.', 'XOR the entire array; every paired value cancels and the leftover value is the answer.'],
+  },
+  'q-bit-single-2': {
+    hints: ['XOR is commutative and associative, so you can regroup equal values.', 'Cancel 2 ^ 2 and 3 ^ 3 first, then read the single value that remains.'],
+  },
+  'q-bit-single-3': {
+    correctAnswer: 1,
+    explanation: 'The XOR trick works whenever every non-unique value appears an even number of times. Values that appear 2, 4, or 6 times still cancel to 0, so the statement is false.',
+    hints: ['XOR cancels values that appear an even number of times.', 'Test a value appearing four times: a ^ a ^ a ^ a still reduces to 0.'],
+  },
+  'q-bit-pow2-1': {
+    hints: ['A power of 2 has exactly one 1 bit in binary.', 'Look for the option whose binary form is 1000...0.'],
+  },
+  'q-bit-pow2-2': {
+    hints: ['Write 16 and 15 in binary before you AND them.', 'n & (n - 1) clears the lowest set bit, so a pure power of 2 becomes 0.'],
+  },
+  'q-bit-pow2-3': {
+    question: 'For a positive integer n, which test correctly checks whether n is a power of 2?',
+    options: ['n & (n-1) == n', 'n > 0 && (n & (n-1)) == 0', 'n | (n-1) == n', 'n has an odd number of 1 bits'],
+    correctAnswer: 1,
+    explanation: 'A positive power of 2 has exactly one set bit. Subtracting 1 turns that bit into 0 and fills the lower bits with 1s, so n & (n - 1) becomes 0 only for positive one-set-bit numbers.',
+    hints: ['For positive n, a power of 2 has exactly one set bit.', 'The expression n & (n - 1) removes the lowest set bit, so it becomes 0 only when there was exactly one.'],
+  },
+  'q-bit-pow2-4': {
+    hints: ['Powers of 2 start at 1 = 2^0, not at 0.', '0 has no set bits, so it does not match the one-set-bit pattern.'],
+  },
+  'q-bit-count-1': {
+    hints: ['Count only the 1 bits, not the total number of binary digits.', 'In 100100, exactly two positions are set.'],
+  },
+  'q-bit-count-2': {
+    hints: ['Track what one n & (n - 1) operation does to the binary representation.', 'Each iteration removes one lowest set bit, so the loop count equals the number of 1s.'],
+  },
+  'q-bit-count-3': {
+    hints: ['Rewrite 15 in binary first.', 'Brian Kernighan runs once per set bit, and 1111 contains four of them.'],
+  },
+  'q-bit-count-4': {
+    explanation: "In two\'s complement, -n equals ~n + 1, so all higher bits flip and the lowest set bit stays aligned. As a result, n & (-n) keeps only the least significant 1 bit.",
+    hints: ["Use the two\'s-complement identity -n = ~n + 1.", 'n & (-n) zeroes out every other set bit and leaves only the least significant 1.'],
+  },
+  'q-bit-rev-1': {
+    hints: ['Reverse the 8-bit string exactly left to right.', 'The trailing 000 become the leading 000 after reversal.'],
+  },
+  'q-bit-rev-2': {
+    hints: ['Think about swapping 1-bit blocks, then 2-bit blocks, then 4-bit blocks.', 'The standard O(1) method uses fixed masks and shifts to swap groups in parallel.'],
+  },
+  'q-bit-rev-3': {
+    correctAnswer: 1,
+    explanation: 'That expression swaps byte positions, but it does not reverse the bit order inside each byte. Bit reversal must also reverse the order within every byte, so the statement is false.',
+    hints: ['Shifting by 8 moves a byte; it does not reverse the bits inside that byte.', 'Test the low byte 00000011: reversed, it should become 11000000, not just shift to another byte position.'],
+  },
+  'q-bit-rev-4': {
+    explanation: 'Iterate exactly 32 times. Each step shifts result left, appends the current least significant bit of n, then unsigned-shifts n right; return result >>> 0 so the final value is treated as unsigned.',
+    hints: ['Take the current least significant bit with n & 1 and append it onto result.', 'Run exactly 32 iterations, then use >>> 0 so the returned 32-bit value is unsigned.'],
+  },
+  'q-gray-1': {
+    hints: ['Compare consecutive codes, not their numeric order.', 'The defining rule is that each step flips exactly one bit.'],
+  },
+  'q-gray-2': {
+    correctAnswer: 1,
+    explanation: 'Use the conversion g = n ^ (n >> 1). For n = 3, binary 11 ^ 01 = 10, so the Gray code is 10.',
+    hints: ['Use the formula g = n ^ (n >> 1).', 'For n = 3, compute 11 ^ 01 to get 10.'],
+  },
+  'q-gray-3': {
+    hints: ['Test the formula on a small input such as i = 2 or i = 3.', 'i ^ (i >> 1) is the standard binary-to-Gray conversion.'],
+  },
+  'q-gray-4': {
+    hints: ['There are 2^n Gray codes, one for each integer i from 0 to 2^n - 1.', 'Append i ^ (i >> 1) for each i in order.'],
+  },
+  'q-subset-1': {
+    hints: ['Each element has two choices: in or out.', 'Three independent choices produce 2^3 subsets.'],
+  },
+  'q-subset-2': {
+    hints: ['Read each bit as include this index or skip it.', 'In 101, bits 0 and 2 are set, so those two positions are included.'],
+  },
+  'q-subset-3': {
+    hints: ['A 1 bit means that element is selected.', 'If every bit is 0, no elements are selected, so the subset is empty.'],
+  },
+  'q-subset-4': {
+    hints: ['Iterate masks from 0 to 2^n - 1.', 'For each mask, include nums[i] exactly when bit i is 1.'],
+  },
+  'q-hash-func-1': {
+    hints: ['Arrays are fast only after you know the index; string keys are not indices.', 'A hash function turns a key into a bucket number so lookup can start in constant time.'],
+  },
+  'q-hash-func-2': {
+    hints: ['If too many keys pile into the same few buckets, lookup stops behaving like O(1).', 'Uniform spread keeps chains or probe sequences short, which is why good hash functions aim for it.'],
+  },
+  'q-hash-map-1': {
+    hints: ['You do not scan the full table; you jump directly to one bucket from the key.', 'If the load factor stays controlled, the remaining work inside that bucket is constant on average.'],
+  },
+  'q-hash-map-2': {
+    question: 'One common collision-resolution strategy is separate chaining.',
+    explanation: 'Separate chaining stores colliding entries in a per-bucket container such as a linked list. It is a common strategy, although open addressing is another valid collision-resolution approach.',
+    hints: ['A collision means one bucket must hold multiple entries somehow.', 'If those entries hang off the bucket in a linked list or similar container, that method is separate chaining.'],
+  },
+  'q-col-1': {
+    hints: ['Different keys can still land in the same bucket.', 'That shared-bucket event is a collision, not a lookup miss or a broken table.'],
+  },
+  'q-col-2': {
+    hints: ['Linear probing, quadratic probing, and double hashing search other array slots.', 'The strategy that keeps multiple entries at one bucket in a linked list is separate chaining.'],
+  },
+  'q-two-sum-1': {
+    hints: ['At index i, ask whether target - nums[i] was seen earlier.', 'You need a structure that can answer that lookup quickly and remember the earlier index.'],
+  },
+  'q-two-sum-2': {
+    hints: ['In the one-pass solution, each element is queried once and inserted once.', 'The map can grow to size n, so both time and extra space are linear.'],
+  },
+  'q-ana-1': {
+    question: 'In the sorting-based approach, what canonical form is used to identify anagram groups?',
+    explanation: 'In the sorting-based solution, each word is sorted so every anagram in the same group shares the same key. For example, "eat" and "ate" both sort to "aet".',
+    hints: ['Anagrams may differ in order, but they share the same letters with the same counts.', 'In the sorting-based approach, sorting each word makes every member of a group share one canonical key.'],
+  },
+  'q-ana-2': {
+    hints: ['For one string of length k, the expensive step is sorting its characters.', 'Doing that for n strings gives O(n * k log k) time in the max-length form.'],
+  },
 }
 
 function normalizeText(text: string): string {

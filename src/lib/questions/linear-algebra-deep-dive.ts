@@ -466,15 +466,38 @@ const questions: Record<string, Question[]> = {
       id: 'q-alg-kp10-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'A symmetric matrix A is positive definite if and only if:',
+      question: 'A symmetric matrix $A$ is positive definite if and only if:',
       options: [
-        'All entries of A are positive',
-        'xᵀAx > 0 for all nonzero vectors x',
-        'All diagonal entries of A are positive',
-        'The trace of A is positive',
+        'All entries of $A$ are positive',
+        '$\\mathbf{x}^T A \\mathbf{x} > 0$ for all nonzero vectors $\\mathbf{x}$',
+        'All diagonal entries of $A$ are positive',
+        'The trace of $A$ is positive',
+        'All eigenvalues of $A$ are non-negative',
       ],
       correctAnswer: 1,
-      explanation: 'Positive definiteness is defined by the quadratic form condition xᵀAx > 0 for all nonzero x; equivalently, all eigenvalues are strictly positive.',
+      explanation: `First, let's recall what a symmetric matrix is: a matrix where $A = A^T$.
+
+The defining property of positive definiteness involves the **quadratic form** $\\mathbf{x}^T A \\mathbf{x}$.
+
+For any vector $\\mathbf{x} = \\begin{pmatrix} x_1 \\\\ x_2 \\\\ \\vdots \\\\ x_n \\end{pmatrix}$, the quantity $\\mathbf{x}^T A \\mathbf{x}$ is a scalar.
+
+**Step 1:** A symmetric matrix $A$ is **positive definite** if and only if:
+$$\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all } \\mathbf{x} \\neq \\mathbf{0}$$
+
+**Step 2:** This is NOT equivalent to:
+- All entries being positive (a matrix can have all positive entries but not be PD)
+- Diagonal entries being positive (necessary but not sufficient)
+- Trace being positive (only means sum of eigenvalues is positive)
+
+**Step 3:** An equivalent characterization: all eigenvalues of $A$ are strictly positive ($\\lambda_i > 0$ for all $i$).
+
+**Why the other options are wrong:**
+- Option 0: Counterexample: $\\begin{pmatrix} 1 & 2 \\\\ 2 & 1 \\end{pmatrix}$ has all positive entries but determinant $= -3 < 0$, so not PD.
+- Option 2: Necessary but not sufficient: $\\begin{pmatrix} 1 & 10 \\\\ 10 & 1 \\end{pmatrix}$ has positive diagonal but is not PD.
+- Option 3: $\\text{tr}(A) > 0$ only means $\\sum \\lambda_i > 0$, but PD requires each $\\lambda_i > 0$.
+- Option 4: "Non-negative" eigenvalues would make it **positive semi-definite**, not positive definite.
+
+Therefore, $\\boxed{\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all nonzero } \\mathbf{x}}$ is the correct characterization.`,
       hints: [
         'The definition is about the quadratic form, not individual entries.',
         'A diagonal matrix is PD iff all diagonal entries are positive — but this generalizes via the quadratic form.',
@@ -484,9 +507,34 @@ const questions: Record<string, Question[]> = {
       id: 'q-alg-kp10-2',
       type: 'true-false',
       difficulty: 'medium',
-      question: 'The Cholesky decomposition A = LLᵀ exists for any symmetric positive definite matrix.',
+      question: 'The Cholesky decomposition $A = LL^T$ exists for any symmetric positive definite matrix.',
       correctAnswer: 'true',
-      explanation: 'Every symmetric positive definite matrix has a unique Cholesky decomposition into a lower triangular matrix L with positive diagonal entries; this is the stable, efficient alternative to LU for PD systems.',
+      explanation: `First, let's recall what the Cholesky decomposition claims.
+
+For a symmetric positive definite matrix $A$, we seek a lower triangular matrix $L$ such that:
+$$A = LL^T$$
+
+**Step 1: Existence by induction.**
+
+For a $1 \\times 1$ matrix $A = [a_{11}]$: Since $A$ is PD, we have $a_{11} > 0$. Set $L = [\\sqrt{a_{11}}]$.
+
+**Step 2: Inductive step.**
+
+Write $A = \\begin{pmatrix} a_{11} & \\mathbf{b}^T \\\\ \\mathbf{b} & C \\end{pmatrix}$ where $C$ is $(n-1) \\times (n-1)$.
+
+Since $A$ is PD: $a_{11} > 0$ and the Schur complement $C - \\frac{1}{a_{11}}\\mathbf{b}\\mathbf{b}^T$ is also PD.
+
+By induction hypothesis, this Schur complement has a Cholesky factorization.
+
+**Step 3: Uniqueness.**
+
+The factor $L$ is unique when we require positive diagonal entries.
+
+**Step 4: Computational advantage.**
+
+Cholesky requires $\\frac{n^3}{3}$ operations vs. $\\frac{2n^3}{3}$ for LU — a factor of 2 savings.
+
+Therefore, $\\boxed{\\text{True}}$ — every symmetric PD matrix has a unique Cholesky decomposition with $L$ having positive diagonal entries.`,
       hints: [
         'The proof proceeds by induction on matrix size, using the positive definiteness at each step.',
         'Cholesky requires half the operations of LU decomposition for symmetric systems.',
@@ -499,14 +547,52 @@ const questions: Record<string, Question[]> = {
       question: 'Why are covariance matrices always positive semi-definite (PSD)?',
       options: [
         'Because all their entries are non-negative probabilities',
-        'Because Σ = Eₓ[(x − μ)(x − μ)ᵀ] and for any v: vᵀΣv = E[‖(x − μ)ᵀv‖²] ≥ 0',
+        'Because $\\Sigma = \\mathbb{E}_{\\mathbf{x}}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T]$ and for any $\\mathbf{v}$: $\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbb{E}[\\| (\\mathbf{x} - \\boldsymbol{\\mu})^T \\mathbf{v}\\|^2] \\geq 0$',
         'Because they are computed using only positive data values',
         'Because their eigenvalues are bounded by the variance of the data',
+        'Because covariance matrices are always diagonal with non-negative entries',
       ],
       correctAnswer: 1,
-      explanation: 'For any vector v, vᵀΣv = E[(vᵀ(x − μ))²] is the expected value of a squared quantity, which is always ≥ 0; this proves PSD by the definition of the quadratic form.',
+      explanation: `First, let's recall the definition of a covariance matrix.
+
+For a random vector $\\mathbf{x}$ with mean $\\boldsymbol{\\mu} = \\mathbb{E}[\\mathbf{x}]$, the covariance matrix is:
+$$\\Sigma = \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T]$$
+
+**Step 1: Test the quadratic form.**
+
+To prove $\\Sigma$ is PSD, we need to show $\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0$ for any vector $\\mathbf{v}$.
+
+**Step 2: Expand the quadratic form.**
+
+$$\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbf{v}^T \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T] \\mathbf{v}$$
+
+Since expectation is linear, we can bring $\\mathbf{v}$ inside:
+$$= \\mathbb{E}[\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T \\mathbf{v}]$$
+
+**Step 3: Recognize this as a squared scalar.**
+
+Note that $\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu})$ is a scalar, and for any scalar $s$:
+$$s \\cdot s = s^2$$
+
+So:
+$$\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2]$$
+
+**Step 4: The key insight.**
+
+The quantity $(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2$ is a **squared real number**, which is always $\\geq 0$.
+
+Since the expectation of a non-negative quantity is non-negative:
+$$\\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2] \\geq 0$$
+
+Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathbf{v}$, proving $\\Sigma$ is PSD.
+
+**Why the other options are wrong:**
+- Option 0: Covariance entries can be negative! Covariance of negatively correlated variables is negative.
+- Option 2: Data values don't need to be positive — covariance is about deviations from the mean.
+- Option 3: This doesn't explain PSD; eigenvalues of PSD matrices are $\\geq 0$, but this is a consequence, not a cause.
+- Option 4: Covariance matrices are generally NOT diagonal unless variables are uncorrelated.`,
       hints: [
-        'Write out vᵀΣv explicitly and recognize it as an expectation of a squared scalar.',
+        'Write out $\\mathbf{v}^T \\Sigma \\mathbf{v}$ explicitly and recognize it as an expectation of a squared scalar.',
         'A squared real number is always non-negative — how does that imply PSD?',
       ],
     },

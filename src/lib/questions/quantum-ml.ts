@@ -166,10 +166,10 @@ const questions: Record<string, Question[]> = {
       id: 'q-qml-kp4-1',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: "Grover's algorithm searches an unsorted database of N items. What is its query complexity?",
+      question: "Grover\'s algorithm searches an unsorted database of N items. What is its query complexity?",
       options: ['O(log N)', 'O(N)', 'O(√N)', 'O(N²)'],
       correctAnswer: 2,
-      explanation: "Grover's algorithm achieves a quadratic speedup over classical linear search, requiring O(√N) oracle queries to find a marked item with high probability.",
+      explanation: "Grover\'s algorithm achieves a quadratic speedup over classical linear search, requiring O(√N) oracle queries to find a marked item with high probability.",
       hints: [
         'Classical brute-force search is O(N); quantum algorithms can do better by a polynomial factor.',
         'The amplitude amplification technique at the heart of Grover repeats roughly √N times.',
@@ -179,9 +179,9 @@ const questions: Record<string, Question[]> = {
       id: 'q-qml-kp4-2',
       type: 'true-false',
       difficulty: 'easy',
-      question: "Shor's algorithm can factor large integers exponentially faster than the best known classical algorithms.",
+      question: "Shor\'s algorithm can factor large integers exponentially faster than the best known classical algorithms.",
       correctAnswer: 'true',
-      explanation: "Shor's algorithm runs in polynomial time O((log N)³) using quantum phase estimation and the quantum Fourier transform, versus sub-exponential but super-polynomial classical factoring algorithms.",
+      explanation: "Shor\'s algorithm runs in polynomial time O((log N)³) using quantum phase estimation and the quantum Fourier transform, versus sub-exponential but super-polynomial classical factoring algorithms.",
       hints: [
         'The best classical factoring algorithms (e.g., general number field sieve) are sub-exponential but not polynomial.',
         'Shor reduces factoring to period-finding, which quantum Fourier transform solves efficiently.',
@@ -191,7 +191,7 @@ const questions: Record<string, Question[]> = {
       id: 'q-qml-kp4-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: "Which subroutine is central to Shor's algorithm for finding the period of a modular function?",
+      question: "Which subroutine is central to Shor\'s algorithm for finding the period of a modular function?",
       options: [
         'Grover diffusion operator',
         'Quantum Fourier Transform (QFT)',
@@ -199,7 +199,7 @@ const questions: Record<string, Question[]> = {
         'Variational Quantum Eigensolver (VQE)',
       ],
       correctAnswer: 1,
-      explanation: "The Quantum Fourier Transform allows Shor's algorithm to extract the period of f(x) = aˣ mod N from a superposition of values, reducing integer factoring to order-finding.",
+      explanation: "The Quantum Fourier Transform allows Shor\'s algorithm to extract the period of f(x) = aˣ mod N from a superposition of values, reducing integer factoring to order-finding.",
       hints: [
         'Period-finding is equivalent to detecting periodicity in a function — which transform is classically used for this?',
         'The quantum analogue of the discrete Fourier transform is a key building block in many quantum algorithms.',

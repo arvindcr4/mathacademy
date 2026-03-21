@@ -596,9 +596,9 @@ const questions: Record<string, Question[]> = {
       id: 'q-mfml-kp13-3',
       type: 'true-false',
       difficulty: 'hard',
-      question: "Newton's method for optimization uses the update θ ← θ − H⁻¹∇f, and achieves quadratic convergence near a minimum.",
+      question: "Newton\'s method for optimization uses the update θ ← θ − H⁻¹∇f, and achieves quadratic convergence near a minimum.",
       correctAnswer: 'true',
-      explanation: "Newton's update θₜ₊₁ = θₜ − H(θₜ)⁻¹∇f(θₜ) uses second-order curvature to take a more accurate step. Near a minimum, the error satisfies ‖θₜ₊₁ − θ*‖ ≤ C·‖θₜ − θ*‖², meaning the number of correct decimal digits doubles per iteration — unlike gradient descent's linear convergence.",
+      explanation: "Newton\'s update θₜ₊₁ = θₜ − H(θₜ)⁻¹∇f(θₜ) uses second-order curvature to take a more accurate step. Near a minimum, the error satisfies ‖θₜ₊₁ − θ*‖ ≤ C·‖θₜ − θ*‖², meaning the number of correct decimal digits doubles per iteration — unlike gradient descent\'s linear convergence.",
       hints: [
         'Gradient descent: ‖error_{t+1}‖ ≤ r·‖error_t‖ for r < 1 (linear). Newton: ‖error_{t+1}‖ ≤ C·‖error_t‖² (quadratic).',
         'Newton\'s method is exact for quadratic objectives, converging in one step. For general objectives, it is quadratic locally.',
@@ -785,7 +785,7 @@ const questions: Record<string, Question[]> = {
       id: 'q-mfml-kp17-3',
       type: 'true-false',
       difficulty: 'hard',
-      question: "Hoeffding's inequality gives an exponential tail bound for bounded random variables, making it much tighter than Chebyshev's 1/k² bound for large deviations.",
+      question: "Hoeffding\'s inequality gives an exponential tail bound for bounded random variables, making it much tighter than Chebyshev\'s 1/k² bound for large deviations.",
       correctAnswer: 'true',
       explanation: "For bounded i.i.d. Xᵢ ∈ [0,1] with mean μ, Hoeffding gives P(|X̄−μ| ≥ t) ≤ 2exp(−2nt²). Chebyshev gives 1/(nt/σ)². For n=100, t=0.1: Hoeffding ≤ 2e⁻² ≈ 0.27 while Chebyshev gives σ²/(n·t²) — much looser. The exponential decay enables PAC learning sample complexity bounds.",
       hints: [
@@ -963,7 +963,7 @@ const questions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'A function k(x,z) is a valid Mercer kernel iff the kernel (Gram) matrix K with Kᵢⱼ = k(xᵢ,xⱼ) is positive semi-definite for any finite input set.',
       correctAnswer: 'true',
-      explanation: "Mercer's theorem: k is a valid kernel (i.e., ∃ feature map φ such that k(x,z) = ⟨φ(x),φ(z)⟩) iff for all finite sets {x₁,…,xₙ} and all vectors c: Σᵢⱼ cᵢcⱼk(xᵢ,xⱼ) ≥ 0, i.e., the Gram matrix is PSD.",
+      explanation: "Mercer\'s theorem: k is a valid kernel (i.e., ∃ feature map φ such that k(x,z) = ⟨φ(x),φ(z)⟩) iff for all finite sets {x₁,…,xₙ} and all vectors c: Σᵢⱼ cᵢcⱼk(xᵢ,xⱼ) ≥ 0, i.e., the Gram matrix is PSD.",
       hints: [
         'PSD Gram matrix iff all eigenvalues ≥ 0. This is the kernel validity condition.',
         'To verify a new kernel: construct a random Gram matrix K for sample points, check if PSD (all eigenvalues ≥ 0).',
@@ -1032,7 +1032,7 @@ const questions: Record<string, Question[]> = {
         'Replacing the kernel with a polynomial approximation',
       ],
       correctAnswer: 1,
-      explanation: "By Bochner's theorem, any continuous positive-definite shift-invariant kernel k(x−z) = ∫p(ω)e^(iω^T(x−z))dω for some spectral density p(ω). Sampling ω₁,…,ωD ~ p(ω) and bⱼ ~ Uniform(0,2π), the feature map z(x) = √(2/D)[cos(ω₁ᵀx+b₁),…,cos(ωDᵀx+bD)] satisfies E[z(x)ᵀz(z)] = k(x,z).",
+      explanation: "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x−z) = ∫p(ω)e^(iω^T(x−z))dω for some spectral density p(ω). Sampling ω₁,…,ωD ~ p(ω) and bⱼ ~ Uniform(0,2π), the feature map z(x) = √(2/D)[cos(ω₁ᵀx+b₁),…,cos(ωDᵀx+bD)] satisfies E[z(x)ᵀz(z)] = k(x,z).",
       hints: [
         'RFF reduces kernel machines from O(n²) kernel matrix to O(nD) feature matrix, enabling scalability.',
         "Bochner's theorem: PD shift-invariant kernel ↔ Fourier transform of a non-negative measure (spectral density p(ω)).",
