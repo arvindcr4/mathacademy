@@ -371,7 +371,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Stable Diffusion's U-Net combines three types of layers:\n1. ResNet/convolution blocks for local feature extraction.\n2. Self-attention within the spatial feature map for long-range spatial dependencies.\n3. Cross-attention for conditioning (text embeddings attend to spatial queries).\n\nThis architecture is applied at multiple resolutions via the encoder-decoder with skip connections. The timestep $t$ is embedded via sinusoidal positional encodings and an MLP, then added to the residual block activations. Cross-attention at multiple U-Net resolutions allows text to influence both coarse (global structure) and fine (local details) image features.",
+        "Stable Diffusion's U-Net combines three types of layers.\n\n**Step 1**\n\n1. ResNet/convolution blocks for local feature extraction.\n2. Self-attention within the spatial feature map for long-range spatial dependencies.\n3. Cross-attention for conditioning (text embeddings attend to spatial queries).\n\n**Step 2**\n\nThis architecture is applied at multiple resolutions via the encoder-decoder with skip connections. The timestep $t$ is embedded via sinusoidal positional encodings and an MLP, then added to the residual block activations.\n\n**Step 3**\n\nCross-attention at multiple U-Net resolutions allows text to influence both coarse (global structure) and fine (local details) image features.",
       hints: [
         "The timestep $t$ is embedded via sinusoidal encodings + MLP and added to the residual block activations at each resolution.",
         "Cross-attention at multiple U-Net resolutions allows text to influence both the overall composition and fine details of the generated image.",
@@ -391,7 +391,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CLIP's contrastive training objective aligns global image and text representations, but it is not optimized for fine-grained compositional reasoning. Known failure modes include:\n- Attribute binding errors (wrong color-object pairs).\n- Spatial relationship errors ('a dog to the left of a cat' may not preserve left-right orientation).\n- Counting errors.\n- Rare entity handling.\n\nSDXL and later models address these limitations by using T5 encoders (SDXL uses CLIP + T5-XXL), which have better compositional understanding due to their language modeling pre-training.",
+        "CLIP's contrastive training objective aligns global image and text representations, but it is not optimized for fine-grained compositional reasoning.\n\n**Step 1**\n\nKnown failure modes include:\n- Attribute binding errors (wrong color-object pairs).\n- Spatial relationship errors ('a dog to the left of a cat' may not preserve left-right orientation).\n- Counting errors.\n- Rare entity handling.\n\n**Step 2**\n\nSDXL and later models address these limitations by using T5 encoders (SDXL uses CLIP + T5-XXL), which have better compositional understanding due to their language modeling pre-training.",
       hints: [
         "CLIP was trained to match images and captions globally, not to understand fine-grained compositional descriptions like attribute binding or counting.",
         "T5 and other language model encoders (e.g., in FLUX) have better compositional understanding because they are pre-trained with next-token prediction objectives.",
@@ -411,7 +411,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The VAE decoder is the final step in image generation - its reconstruction quality sets an upper bound on image quality. If the VAE cannot accurately decode fine details (e.g., small text, hair strands, fabric textures), no amount of improvement in the diffusion U-Net can recover them. They are lost in the encode-decode bottleneck.\n\nThis is why text rendering remains challenging in diffusion models: text requires precise high-frequency spatial structure that the VAE typically cannot faithfully reconstruct from a $64 \\times 64 \\times 4$ latent. SDXL and later models use improved VAEs (more channels, better training) to address this. SD3 and FLUX use VAEs with 16 latent channels for better fine-detail representation.",
+        "The VAE decoder is the final step in image generation - its reconstruction quality sets an upper bound on image quality.\n\n**Step 1**\n\nIf the VAE cannot accurately decode fine details (e.g., small text, hair strands, fabric textures), no amount of improvement in the diffusion U-Net can recover them. They are lost in the encode-decode bottleneck.\n\n**Step 2**\n\nThis is why text rendering remains challenging in diffusion models: text requires precise high-frequency spatial structure that the VAE typically cannot faithfully reconstruct from a $64 \\times 64 \\times 4$ latent.\n\n**Step 3**\n\nSDXL and later models use improved VAEs (more channels, better training) to address this. SD3 and FLUX use VAEs with 16 latent channels for better fine-detail representation.",
       hints: [
         "SDXL's improved VAE shows noticeably better text rendering and fine-detail reconstruction compared to SD1.5's VAE.",
         "This bottleneck is why improving VAE quality is a primary research direction alongside improving diffusion models.",
@@ -434,7 +434,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ControlNet creates a trainable copy of the U-Net encoder blocks. The conditioning image (edge map, depth, pose, segmentation, etc.) is processed by this trainable copy, and its outputs are added to the corresponding decoder blocks of the original frozen U-Net via zero-initialized $1 \\times 1$ convolutions.\n\nThe zero-initialization is critical: at the start of training, ControlNet's contribution is exactly zero - the original U-Net's generation capability is fully preserved. The model then learns incrementally to inject spatial conditioning without catastrophic forgetting of the pre-trained weights.",
+        "ControlNet creates a trainable copy of the U-Net encoder blocks. The conditioning image (edge map, depth, pose, segmentation, etc.) is processed by this trainable copy, and its outputs are added to the corresponding decoder blocks of the original frozen U-Net via zero-initialized $1 \\times 1$ convolutions.\n\n**Step 1**\n\nThe zero-initialization is critical: at the start of training, ControlNet's contribution is exactly zero - the original U-Net's generation capability is fully preserved.\n\n**Step 2**\n\nThe model then learns incrementally to inject spatial conditioning without catastrophic forgetting of the pre-trained weights.",
       hints: [
         "The 'zero convolutions' ensure ControlNet starts as a no-op (identity) and learns incrementally without disrupting the frozen backbone.",
         "This architecture allows training on relatively small conditioning datasets without losing the pre-trained generation capability.",
@@ -468,7 +468,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ControlNet strength scales the additive contribution of the control signal to the U-Net decoder. When set very high, the generated image is dominated by the conditioning geometry - the text prompt and creative prior are overwhelmed.\n\nThis can cause 'ControlNet hallucinations': the control map imposes unnatural or over-precise structure, the generated image loses fine detail, and adherence to the text prompt weakens. Conversely, very low strength gives minimal control.\n\nThe optimal balance (typically $0.5$-$1.2$) achieves both structural fidelity to the conditioning image and text adherence. This is analogous to the guidance scale vs. diversity trade-off in CFG.",
+        "ControlNet strength scales the additive contribution of the control signal to the U-Net decoder.\n\n**Step 1**\n\nWhen set very high, the generated image is dominated by the conditioning geometry - the text prompt and creative prior are overwhelmed.\n\n**Step 2**\n\nThis can cause 'ControlNet hallucinations': the control map imposes unnatural or over-precise structure, the generated image loses fine detail, and adherence to the text prompt weakens. Conversely, very low strength gives minimal control.\n\n**Step 3**\n\nThe optimal balance (typically $0.5$-$1.2$) achieves both structural fidelity to the conditioning image and text adherence. This is analogous to the guidance scale vs. diversity trade-off in CFG.",
       hints: [
         "Control strength is a practical hyperparameter - excessively high values can cause the control signal to override the generative prior, creating unnatural images.",
         "This trade-off is analogous to CFG guidance scale: both tune the balance between conditioning adherence and overall generation quality/diversity.",

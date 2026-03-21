@@ -142,7 +142,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the InfoNCE loss L = −log[exp(sim(z_i,z_j)/\\tau) / \\Sigma_{k\$\\neq\$i} exp(sim(z_i,z_k)/\\tau)], what is the role of the temperature parameter \\tau, and what value does SimCLR use?",
+        "In the InfoNCE loss \\[ L = -\\log\\frac{\\exp(\\sim(z_i,z_j)/\\tau)}{\\sum_{k \\neq i} \\exp(\\sim(z_i,z_k)/\\tau)} \\], what is the role of the temperature parameter \\tau, and what value does SimCLR use?",
       options: [
         "\\tau controls learning rate; SimCLR uses \\tau = 1.0",
         "\\tau sharpens or smooths the similarity distribution: low \\tau (e.g., 0.07 in SimCLR) focuses more on hard negatives; high \\tau treats all negatives more uniformly",

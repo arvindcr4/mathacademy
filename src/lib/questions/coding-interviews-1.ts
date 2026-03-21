@@ -1500,16 +1500,18 @@ const questions: Record<string, Question[]> = {
         "Track the minimum after each push. After push(5): min=5. After push(3): min=3. After push(7): min=3. After push(2): min=2."
       ],
       explanation:
-        "Step-by-step:\n\n" +
-        "\\begin align*\n" +
-        "\\text{push}(5): &\\quad \\text{min} = 5 \\\\\n" +
-        "\\text{push}(3): &\\quad \\text{min} = 3 \\quad (3 < 5) \\\\\n" +
-        "\\text{push}(7): &\\quad \\text{min} = 3 \\quad (7 \\geq 3, \\text{no change}) \\\\\n" +
-        "\\text{getMin}(): &\\quad \\text{returns } 3 \\\\\n" +
-        "\\text{push}(2): &\\quad \\text{min} = 2 \\quad (2 < 3) \\\\\n" +
-        "\\text{getMin}(): &\\quad \\text{returns } 2\n" +
-        "\\end align*\n\n" +
-        "Results: $3$, then $2$."
+        "**Step 1:** Track the minimum after each push operation:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{push}(5): &\\quad \\text{min} = 5, \\\\\n" +
+        "\\text{push}(3): &\\quad \\text{min} = 3 \\quad (3 < 5), \\\\\n" +
+        "\\text{push}(7): &\\quad \\text{min} = 3 \\quad (7 \\geq 3, \\text{no change}), \\\\\n" +
+        "\\text{getMin}(): &\\quad \\text{returns } 3, \\\\\n" +
+        "\\text{push}(2): &\\quad \\text{min} = 2 \\quad (2 < 3), \\\\\n" +
+        "\\text{getMin}(): &\\quad \\text{returns } 2.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Result:** the two $\\text{getMin}()$ calls return $3$, then $2$."
     },
     {
       id: "q-mns-4",
@@ -1671,13 +1673,15 @@ const questions: Record<string, Question[]> = {
         "1 is not greater than 2. 5 is greater than 2. The first greater element wins."
       ],
       explanation:
-        "Scanning right from index 0:\n\n" +
-        "\\begin align*\n" +
+        "**Step 1:** Scanning right from index 0:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
         "\\text{Index 0, value 2:} &\\quad \\text{check } 1 \\; (1 < 2, \\text{skip}) \\\\\n" +
         "                           &\\quad \\text{check } 5 \\; (5 > 2, \\text{found}) \\\\\n" +
-        "\\Rightarrow \\text{NGE}(2) &\\quad = 5\n" +
-        "\\end align*\n\n" +
-        "The answer is 5."
+        "\\Rightarrow \\text{NGE}(2) &\\quad = 5.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Answer:** 5."
     },
     {
       id: "q-nge-3",
@@ -1706,15 +1710,16 @@ const questions: Record<string, Question[]> = {
         "What about the last element?"
       ],
       explanation:
-        "$[2, 3, 4, -1]$.\n\n" +
-        "For a strictly increasing array:\n\n" +
-        "\\begin align*\n" +
-        "\\text{NGE}(1) &= 2 \\quad (\\text{next element}) \\\\\n" +
-        "\\text{NGE}(2) &= 3 \\quad (\\text{next element}) \\\\\n" +
-        "\\text{NGE}(3) &= 4 \\quad (\\text{next element}) \\\\\n" +
-        "\\text{NGE}(4) &= -1 \\quad (\\text{no element to the right})\n" +
-        "\\end align*\n\n" +
-        "The last element has no next greater, so it gets $-1$."
+        "**Step 1:** For a strictly increasing array $[1, 2, 3, 4]$, each element's next greater is the immediately following element:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{NGE}(1) &= 2 \\quad (\\text{next element}), \\\\\n" +
+        "\\text{NGE}(2) &= 3 \\quad (\\text{next element}), \\\\\n" +
+        "\\text{NGE}(3) &= 4 \\quad (\\text{next element}), \\\\\n" +
+        "\\text{NGE}(4) &= -1 \\quad (\\text{no element to the right}).\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Answer:** $[2, 3, 4, -1]$."
     },
     {
       id: "q-nge-5",
