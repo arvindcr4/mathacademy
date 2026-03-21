@@ -1915,7 +1915,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
   "q-aud-kp24-2": {
     question:
       "In Mean Teacher training for semi-supervised sound event detection, the student matches an EMA teacher on unlabeled audio.",
-    correctAnswer: "True",
+    correctAnswer: "true",
   },
   "q-clim-kp34-3": {
     question:
@@ -1951,7 +1951,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
   "q-rob-kp12-4": {
     question:
       "In inverse reinforcement learning, the recovered reward is usually more useful than the recovered policy because it can transfer to new environments and changed dynamics.",
-    correctAnswer: "True",
+    correctAnswer: "true",
   },
   "q-cv3d-kp6-3": {
     question: "After the coarse NeRF pass, how are the fine samples chosen?",
@@ -2270,4 +2270,3 @@ import "./coding-interviews-2";
 import "./coding-interviews-3";
 import "./gemini-multimodal";
 import "./karpathy-nn-zero-to-hero";
-import "./fastai-deep-learning";
