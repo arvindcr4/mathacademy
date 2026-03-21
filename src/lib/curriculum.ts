@@ -136,6 +136,96 @@ export const courses: Course[] = [
         ]
       }
     ]
+  },  {
+    id: 'gemini-multimodal',
+    slug: 'gemini-multimodal',
+    name: 'Google Gemini & Multimodal AI',
+    description: 'Master the Gemini ecosystem, multimodal foundation models, and the Gemini API.',
+    category: 'software-engineering',
+    icon: '✨',
+    color: '#4285F4',
+    topicCount: 6,
+    estimatedHours: 15,
+    topics: [
+      {
+        id: 'gemini-architecture',
+        slug: 'gemini-architecture',
+        name: 'Gemini Architecture',
+        description: 'Understand the native multimodal architecture of Gemini models.',
+        knowledgePoints: [
+          { id: 'gem-kp-1', slug: 'gemini-nano', name: 'Gemini Nano & Edge AI' },
+          { id: 'gem-kp-2', slug: 'gemini-flash', name: 'Gemini Flash & Efficiency' },
+          { id: 'gem-kp-3', slug: 'gemini-pro', name: 'Gemini Pro & Reasoning' },
+          { id: 'gem-kp-4', slug: 'gemini-ultra', name: 'Gemini Ultra Capabilities' },
+          { id: 'gem-kp-5', slug: 'native-multimodality', name: 'Native Multimodal Training' }
+        ]
+      },
+      {
+        id: 'prompting-gemini',
+        slug: 'prompting-gemini',
+        name: 'Prompting Gemini',
+        description: 'Best practices for writing effective prompts for Gemini models.',
+        knowledgePoints: [
+          { id: 'gem-kp-6', slug: 'system-instructions', name: 'System Instructions' },
+          { id: 'gem-kp-7', slug: 'multimodal-prompting', name: 'Multimodal Interleaved Prompts' },
+          { id: 'gem-kp-8', slug: 'few-shot-gemini', name: 'Few-Shot Examples in Gemini' },
+          { id: 'gem-kp-9', slug: 'context-caching', name: 'Context Caching Strategies' },
+          { id: 'gem-kp-10', slug: 'json-schema-gemini', name: 'Structured JSON Outputs' }
+        ]
+      },
+      {
+        id: 'gemini-api',
+        slug: 'gemini-api',
+        name: 'Gemini API Fundamentals',
+        description: 'Core concepts for integrating the Gemini API into applications.',
+        knowledgePoints: [
+          { id: 'gem-kp-11', slug: 'gemini-api-auth', name: 'Authentication & Setup' },
+          { id: 'gem-kp-12', slug: 'generate-content', name: 'generateContent Method' },
+          { id: 'gem-kp-13', slug: 'streaming-responses', name: 'Streaming Responses' },
+          { id: 'gem-kp-14', slug: 'token-counting', name: 'Token Counting & Limits' },
+          { id: 'gem-kp-15', slug: 'safety-settings', name: 'Configuring Safety Settings' }
+        ]
+      },
+      {
+        id: 'multimodal-generation',
+        slug: 'multimodal-generation',
+        name: 'Multimodal Generation',
+        description: 'Working with images, audio, and video using Gemini.',
+        knowledgePoints: [
+          { id: 'gem-kp-16', slug: 'image-understanding', name: 'Image Understanding & VQA' },
+          { id: 'gem-kp-17', slug: 'video-processing', name: 'Video Processing & Summarization' },
+          { id: 'gem-kp-18', slug: 'audio-transcription', name: 'Audio Transcription & Analysis' },
+          { id: 'gem-kp-19', slug: 'file-api', name: 'Using the Gemini File API' },
+          { id: 'gem-kp-20', slug: 'document-qa', name: 'Document QA & PDF Parsing' }
+        ]
+      },
+      {
+        id: 'function-calling',
+        slug: 'function-calling',
+        name: 'Function Calling & Tools',
+        description: 'Enable Gemini to interact with external APIs and systems.',
+        knowledgePoints: [
+          { id: 'gem-kp-21', slug: 'tool-declarations', name: 'Declaring Functions (Tools)' },
+          { id: 'gem-kp-22', slug: 'function-execution', name: 'Handling Function Calls' },
+          { id: 'gem-kp-23', slug: 'parallel-function-calling', name: 'Parallel Function Calling' },
+          { id: 'gem-kp-24', slug: 'google-search-grounding', name: 'Grounding with Google Search' },
+          { id: 'gem-kp-25', slug: 'code-execution', name: 'Code Execution Tool' }
+        ]
+      },
+      {
+        id: 'advanced-gemini',
+        slug: 'advanced-gemini',
+        name: 'Advanced Gemini Workflows',
+        description: 'Complex architectures and optimizations with Gemini.',
+        knowledgePoints: [
+          { id: 'gem-kp-26', slug: 'gemini-agents', name: 'Building Agentic Workflows' },
+          { id: 'gem-kp-27', slug: 'rag-with-gemini', name: 'RAG with Gemini & Vertex Vector Search' },
+          { id: 'gem-kp-28', slug: 'model-tuning', name: 'Tuning Gemini Models' },
+          { id: 'gem-kp-29', slug: 'evaluating-gemini', name: 'Evaluating Gemini Responses' },
+          { id: 'gem-kp-30', slug: 'vertex-vs-aistudio', name: 'Vertex AI vs. Google AI Studio' }
+        ]
+      }
+    ]
   },  // REINFORCEMENT LEARNING
   {
     id: 'rl-fundamentals',

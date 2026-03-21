@@ -19,6 +19,19 @@ function ensureSentence(text: string): string {
   return /[.!?]$/.test(text) ? text : `${text}.`
 }
 
+function cleanExplanation(text: string): string {
+  let normalized = normalizeText(text)
+
+  for (const marker of ['Wait - let me reconsider:', 'Wait, let me reconsider:']) {
+    const markerIndex = normalized.lastIndexOf(marker)
+    if (markerIndex !== -1) {
+      normalized = normalized.slice(markerIndex + marker.length).trim()
+    }
+  }
+
+  return normalized
+}
+
 function firstSentence(text: string): string {
   const normalized = normalizeText(text)
   const match = normalized.match(/^.*?[.!?](?=\s|$)/)
@@ -46,50 +59,93 @@ function dedupeHints(hints: string[]): string[] {
   return normalizedHints
 }
 
-function buildReasoningHint(question: Question, explanation: string): string {
+function hasConcreteExample(questionText: string): boolean {
+  return /\[[^\]]+\]|"[^"]+"|\bgiven\b|\bfor input\b|\bfor nums\b|\bfor coins\b|\bfor tree\b|\bfor\s+[A-Za-z0-9_]+\s*=/.test(questionText)
+}
+
+function buildRecallHint(question: Question, explanation: string): string {
   const haystack = `${question.question} ${explanation}`.toLowerCase()
 
   if (question.type === 'true-false') {
-    return 'Test the statement on a concrete example or counterexample before deciding.'
+    return 'Recall the exact rule the statement is claiming before you try to confirm or disprove it.'
   }
 
-  if (/\[[^\]]+\]/.test(question.question) || /\bfor input\b/i.test(question.question) || /\bgiven\b/i.test(question.question)) {
-    return 'Work through the concrete example in the prompt by hand before comparing the answer choices.'
+  if (/(dynamic programming|dp|recurrence|stairs|coin change|house robber|word break|subsequence)/i.test(haystack)) {
+    return 'Define the state clearly first, then ask how the current answer depends on smaller subproblems.'
+  }
+
+  if (/(hash map|hash set|complement|duplicate)/i.test(haystack)) {
+    return 'Ask what value must be remembered from earlier elements so each new element can be checked in O(1) time.'
+  }
+
+  if (/(stack|parentheses|bracket|queue)/i.test(haystack)) {
+    return 'Track the order in which items must be matched or removed; that usually identifies the right data structure.'
+  }
+
+  if (/(linked list|pointer|cycle|node)/i.test(haystack)) {
+    return 'Sketch the pointer positions before and after one move so you can see which references must be preserved.'
+  }
+
+  if (/(tree|bst|inorder|ancestor|level order|traversal)/i.test(haystack)) {
+    return 'Start from the tree property or traversal order that must stay true at every node.'
+  }
+
+  if (/(binary search|sorted|pivot|divide and conquer|half)/i.test(haystack)) {
+    return 'Identify the condition that lets you discard half of the remaining search space.'
+  }
+
+  if (/(prime|factor|gcd|lcm|mod|totient|fibonacci|binomial|catalan|logarithm)/i.test(haystack)) {
+    return 'Recall the defining identity or recurrence first, then apply it to the specific numbers in the prompt.'
+  }
+
+  return 'Pin down the core invariant or rule first, then compare the answer choices against it.'
+}
+
+function buildWorkHint(question: Question, explanation: string): string {
+  const haystack = `${question.question} ${explanation}`.toLowerCase()
+
+  if (question.type === 'true-false') {
+    return 'Test the claim on the smallest confirming example or counterexample you can build.'
+  }
+
+  if (hasConcreteExample(question.question)) {
+    return 'Work the exact example in the prompt step by step before you choose an answer.'
   }
 
   if (/time complexity|space complexity|optimal/i.test(haystack)) {
-    return 'Identify the best-known approach first, then compare the dominant time or space cost.'
+    return 'Count how many elements, states, or levels the best-known approach has to process.'
   }
 
-  if (/(stack|queue|heap|hash|tree|graph|pointer|window|dynamic programming|dp|greedy|binary search)/i.test(haystack)) {
-    return 'Focus on the core invariant the algorithm or data structure must preserve.'
-  }
-
-  return 'Translate the prompt into the core algorithmic idea before evaluating the choices.'
+  return 'Write down one intermediate step by hand; the right choice should match that state change.'
 }
 
 function buildConceptHint(question: Question, explanation: string): string {
   const summary = clip(
     firstSentence(explanation).replace(/\boption\s+[0-9A-D]+\b/gi, 'the correct choice'),
-    140
+    160
   )
   const prefix = question.difficulty === 'hard' ? 'Key checkpoint' : 'Core idea'
   return `${prefix}: ${summary}`
 }
 
 function normalizeHints(question: Question, explanation: string): string[] {
-  if (question.hints && question.hints.length > 0) {
-    return dedupeHints(question.hints)
-  }
-
-  return dedupeHints([
-    buildReasoningHint(question, explanation),
+  const authoredHints = question.hints ? dedupeHints(question.hints) : []
+  const fallbackHints = dedupeHints([
+    buildRecallHint(question, explanation),
+    buildWorkHint(question, explanation),
     buildConceptHint(question, explanation),
   ])
+
+  if (authoredHints.length === 0) {
+    return fallbackHints
+  }
+
+  const combinedHints = dedupeHints([...authoredHints, ...fallbackHints])
+  return combinedHints.slice(0, Math.max(3, authoredHints.length))
 }
 
 function normalizeQuestion(question: Question): Question {
-  const explanation = ensureSentence(normalizeText(question.explanation))
+  const explanation = ensureSentence(cleanExplanation(question.explanation))
 
   return {
     ...question,
@@ -157,3 +213,4 @@ import './self-supervised-learning'
 import './coding-interviews-1'
 import './coding-interviews-2'
 import './coding-interviews-3'
+import './gemini-multimodal'

@@ -1652,7 +1652,7 @@ const questions: Record<string, Question[]> = {
         'More inner-loop steps generally improve test performance but are not used during meta-training (1 step is typical).',
       ],
     },
-  ],,
+  ],
 
   'few-shot-generative': [
     {
@@ -1676,7 +1676,7 @@ const questions: Record<string, Question[]> = {
       question: 'Generative models trained with meta-learning objectives (e.g., "generate images of unseen categories given one example") can learn to perform visual imagination for truly novel categories.',
       options: ['True', 'False'],
       correctAnswer: 'True',
-      explanation: 'Work such as Lake et al.'s Omniglot few-shot generation and more recent approaches (e.g., LAFITE, Parti) show that meta-training generative models on episode-structured tasks enables generation of novel categories from one or a few examples, demonstrating learned inductive biases for imagination.',
+      explanation: 'Work such as Lake et al.\'s Omniglot few-shot generation and more recent approaches (e.g., LAFITE, Parti) show that meta-training generative models on episode-structured tasks enables generation of novel categories from one or a few examples, demonstrating learned inductive biases for imagination.',
     },
     {
       id: 'q-meta-kp31-3',
@@ -1871,7 +1871,7 @@ const questions: Record<string, Question[]> = {
       question: 'ANIL (Almost No Inner Loop) demonstrated that most of the benefit in MAML comes from adapting the body (feature extractor) rather than just the head (classifier).',
       options: ['True', 'False'],
       correctAnswer: 'False',
-      explanation: 'ANIL (Raghu et al. 2020) showed the opposite: nearly all of MAML's benefit comes from the rapid learning of the head (final linear classifier), not the feature extractor body. The body features can be frozen after pre-training with minimal performance loss, suggesting that the inner loop is primarily serving as a head-adaptation mechanism.',
+      explanation: 'ANIL (Raghu et al. 2020) showed the opposite: nearly all of MAML\'s benefit comes from the rapid learning of the head (final linear classifier), not the feature extractor body. The body features can be frozen after pre-training with minimal performance loss, suggesting that the inner loop is primarily serving as a head-adaptation mechanism.',
     },
     {
       id: 'q-meta-kp36-3',
@@ -1885,7 +1885,7 @@ const questions: Record<string, Question[]> = {
         'Self-supervised pre-training reuses features across both supervised and unsupervised tasks; supported by linear probing accuracy',
       ],
       correctAnswer: 1,
-      explanation: 'The feature reuse hypothesis (Raghu et al. 2020, ANIL paper) states that MAML's meta-learned initialization already contains reusable features. Evidence: tracking gradient magnitudes and representation changes during inner-loop adaptation shows that body layer representations change minimally while the head adapts significantly — supporting the view that the body is reusing meta-learned features.',
+      explanation: 'The feature reuse hypothesis (Raghu et al. 2020, ANIL paper) states that MAML\'s meta-learned initialization already contains reusable features. Evidence: tracking gradient magnitudes and representation changes during inner-loop adaptation shows that body layer representations change minimally while the head adapts significantly — supporting the view that the body is reusing meta-learned features.',
     },
   ],
   'meta-sgd-reptile': [
