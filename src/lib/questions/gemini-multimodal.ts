@@ -508,8 +508,7 @@ registerQuestions({
         "It compiles C++ code into an executable binary.",
         "It debugs syntax errors in the developer’s application.",
       ],
-      correctAnswer:
-        "It allows Gemini to write and execute Python code in a secure sandbox on Google’s servers to solve complex math or logic problems.",
+      correctAnswer: 1,
       explanation:
         "The Code Execution tool enables the model to autonomously write and execute Python code in a secure Google sandbox, which is incredibly useful for math, data analysis, and deterministic logic tasks.",
       hints: [
