@@ -308,7 +308,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When many states are inherently good or bad regardless of the action (e.g., empty road in a racing game), learning V(s) separately allows efficient generalization - the network doesn\'t need to evaluate all actions in states where action choice is nearly irrelevant.",
+        "First, let's recall that Dueling DQN separates the Q-value into $V(s)$ (state value) and $A(s,a)$ (advantage), with a shared feature extractor.\n\n**Step 1.** In many environments, some states are inherently good or bad regardless of the action chosen. For example, in a racing game, when the road ahead is clear and empty, the state is good whether you steer left or right.\n\n**Step 2.** In such states, the $V(s)$ stream can learn that the state is good by itself, without needing to evaluate every action. The advantage stream only needs to learn action-specific deviations from $V(s)$.\n\n**Step 3.** This separation is most beneficial when action choice matters little in many states: the network avoids redundant action evaluations and can generalize $V(s)$ efficiently across all states where the action doesn't matter much.\n\nTherefore, the answer is Many states have similar values regardless of the action taken (action choice matters little).",
+      stepByStep: {
+        step1: "In many environments, some states are inherently good or bad regardless of the action chosen.",
+        step2: "In such states, $V(s)$ can learn that the state is good without evaluating every action, while $A(s,a)$ only learns action-specific deviations.",
+        step3: "This separation avoids redundant action evaluations and allows efficient generalization of $V(s)$ across states where action choice matters little.",
+      },
       hints: [
         "In some game states, any action leads to roughly the same outcome - what stream captures this?",
         "The advantage stream is most informative when actions really differ in their consequences.",
