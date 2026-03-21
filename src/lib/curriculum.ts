@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // FEDERATED LEARNING & PRIVACY-PRESERVING ML
+  {
+    id: 'federated-learning',
+    slug: 'federated-learning',
+    name: 'Federated Learning & Privacy-Preserving ML',
+    description: 'Train ML models across distributed data without centralization, using privacy guarantees.',
+    topics: [
+      {
+        id: 'federated-foundations',
+        name: 'Federated Learning Foundations',
+        description: 'FL setup, FedAvg, and the challenges of distributed training.',
+        knowledgePoints: [
+          { id: 'fl-kp-1', slug: 'federated-learning-intro', name: 'Federated Learning Setup & Motivation' },
+          { id: 'fl-kp-2', slug: 'fedavg', name: 'FedAvg & Federated Optimization' },
+          { id: 'fl-kp-3', slug: 'non-iid-data', name: 'Non-IID Data & Statistical Heterogeneity' },
+          { id: 'fl-kp-4', slug: 'communication-efficiency', name: 'Communication Efficiency & Compression' },
+          { id: 'fl-kp-5', slug: 'federated-evaluation', name: 'Federated Evaluation & Model Aggregation' },
+        ]
+      },
+      {
+        id: 'differential-privacy',
+        name: 'Differential Privacy',
+        description: 'DP fundamentals, DP-SGD, and privacy accounting.',
+        knowledgePoints: [
+          { id: 'fl-kp-6', slug: 'dp-definition', name: 'Differential Privacy Definition & Composition' },
+          { id: 'fl-kp-7', slug: 'dp-sgd', name: 'DP-SGD & Gradient Clipping' },
+          { id: 'fl-kp-8', slug: 'privacy-accounting', name: 'Privacy Accounting (Rényi DP, Moments Accountant)' },
+          { id: 'fl-kp-9', slug: 'local-dp', name: 'Local Differential Privacy & Randomized Response' },
+          { id: 'fl-kp-10', slug: 'dp-fine-tuning', name: 'DP Fine-Tuning for LLMs' },
+        ]
+      },
+      {
+        id: 'secure-computation',
+        name: 'Secure Multi-Party Computation',
+        description: 'Cryptographic protocols for privacy-preserving ML.',
+        knowledgePoints: [
+          { id: 'fl-kp-11', slug: 'secure-aggregation', name: 'Secure Aggregation Protocols' },
+          { id: 'fl-kp-12', slug: 'homomorphic-encryption', name: 'Homomorphic Encryption for ML' },
+          { id: 'fl-kp-13', slug: 'secret-sharing', name: 'Secret Sharing & MPC Protocols' },
+          { id: 'fl-kp-14', slug: 'trusted-execution', name: 'Trusted Execution Environments (TEE)' },
+          { id: 'fl-kp-15', slug: 'smpc-inference', name: 'SMPC for Private Inference' },
+        ]
+      },
+      {
+        id: 'robust-federated',
+        name: 'Robust & Byzantine-Tolerant FL',
+        description: 'Defending against poisoning attacks and Byzantine clients in FL.',
+        knowledgePoints: [
+          { id: 'fl-kp-16', slug: 'byzantine-attacks', name: 'Byzantine Attacks & Poisoning in FL' },
+          { id: 'fl-kp-17', slug: 'robust-aggregation', name: 'Robust Aggregation (Krum, Trimmed Mean)' },
+          { id: 'fl-kp-18', slug: 'membership-inference', name: 'Membership Inference & Reconstruction Attacks' },
+          { id: 'fl-kp-19', slug: 'model-poisoning', name: 'Model Poisoning & Backdoor Attacks' },
+          { id: 'fl-kp-20', slug: 'fairness-federated', name: 'Fairness in Federated Learning' },
+        ]
+      },
+      {
+        id: 'personalized-fl',
+        name: 'Personalized Federated Learning',
+        description: 'Per-client adaptation, meta-learning in FL, and hybrid approaches.',
+        knowledgePoints: [
+          { id: 'fl-kp-21', slug: 'personalized-fl-intro', name: 'Personalized FL & Client Drift' },
+          { id: 'fl-kp-22', slug: 'maml-federated', name: 'MAML for Federated Meta-Learning' },
+          { id: 'fl-kp-23', slug: 'fedprox', name: 'FedProx & Heterogeneity-Robust FL' },
+          { id: 'fl-kp-24', slug: 'split-learning', name: 'Split Learning & Vertical FL' },
+          { id: 'fl-kp-25', slug: 'fl-llm', name: 'Federated Learning for LLMs' },
+        ]
+      },
+      {
+        id: 'privacy-ml-applications',
+        name: 'Privacy-Preserving ML Applications',
+        description: 'Healthcare, finance, and industry applications of privacy-preserving ML.',
+        knowledgePoints: [
+          { id: 'fl-kp-26', slug: 'healthcare-fl', name: 'FL in Healthcare & Medical Imaging' },
+          { id: 'fl-kp-27', slug: 'finance-fl', name: 'FL in Finance & Fraud Detection' },
+          { id: 'fl-kp-28', slug: 'gdpr-ml', name: 'GDPR, CCPA & ML Compliance' },
+          { id: 'fl-kp-29', slug: 'machine-unlearning', name: 'Machine Unlearning & Right to be Forgotten' },
+          { id: 'fl-kp-30', slug: 'synthetic-data', name: 'Synthetic Data Generation for Privacy' },
+        ]
+      },
+    ]
+  },
+
   // CAUSAL INFERENCE & CAUSAL ML
   {
     id: 'causal-inference',
