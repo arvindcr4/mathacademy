@@ -1716,6 +1716,11 @@ export const courses: Course[] = [
     slug: 'linear-algebra-deep-dive',
     name: 'Applied Math for AI: Linear Algebra Deep Dive',
     description: 'Advanced linear algebra for ML practitioners: matrix decompositions, tensor operations, and geometry.',
+    category: 'fine-tuning',
+    icon: '📐',
+    color: '#8b5cf6',
+    topicCount: 6,
+    estimatedHours: 35,
     topics: [
       {
         id: 'matrix-decompositions',
