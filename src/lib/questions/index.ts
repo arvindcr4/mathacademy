@@ -60,6 +60,11 @@ import "./systems-design-realtime";
 import "./systems-design-gaming";
 import "./systems-design-ml-platform";
 import "./systems-design-fintech";
+import "./systems-design-iot";
+import "./systems-design-ridesharing";
+import "./systems-design-api-gateway";
+import "./systems-design-healthcare";
+import "./systems-design-video";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

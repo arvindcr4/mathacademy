@@ -184,7 +184,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "The scalar W[i, i].",
       "The zero vector.",
     ],
-    correctAnswer: "The i-th row of W, extracted as a vector.",
+    correctAnswer: 0,
   },
   "q-k-kp-17": {
     question:
