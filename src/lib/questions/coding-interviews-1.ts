@@ -642,9 +642,9 @@ const questions: Record<string, Question[]> = {
         "After sorting, only two strings (first and last) are compared for the LCP. How much does that comparison cost?"
       ],
       explanation:
-        "Sorting $n$ strings with maximum length $m$ costs $\\mathrm{O}(n \\log n)$ string comparisons. Each comparison may cost up to $\\mathrm{O}(m)$, giving $\\mathrm{O}(n \\log n \\cdot m)$ for sorting.\n\n" +
-        "After sorting, the most divergent pair is the first and last strings in lexicographic order. Their LCP is the LCP of the entire array. Comparing these two strings costs $\\mathrm{O}(m)$.\n\n" +
-        "Total: $\\mathrm{O}(n \\log n \\cdot m) + \\mathrm{O}(m) = \\mathrm{O}(n \\log n \\cdot m)$."
+        "**Step 1:** Sorting $n$ strings with maximum length $m$ costs $\\mathrm{O}(n \\log n)$ string comparisons. Each comparison may cost up to $\\mathrm{O}(m)$, giving $\\mathrm{O}(n \\log n \\cdot m)$ for sorting.\n\n" +
+        "**Step 2:** After sorting, the most divergent pair is the first and last strings in lexicographic order. Their LCP is the LCP of the entire array. Comparing these two strings costs $\\mathrm{O}(m)$.\n\n" +
+        "\\[\n\\text{Total: } \\mathrm{O}(n \\log n \\cdot m) + \\mathrm{O}(m) = \\mathrm{O}(n \\log n \\cdot m).\n\\]"
     },
     {
       id: "q-lcp-4",
@@ -714,16 +714,23 @@ const questions: Record<string, Question[]> = {
         "At the end, is the stack empty?"
       ],
       explanation:
-        'True. Step-by-step:\n\n' +
-        "\\begin align*\n" +
-        "\\text{Read } '{': &\\quad \\text{push } \\{ \\quad &\\quad \\text{Stack: } \\{ \\\\\n" +
-        "\\text{Read } '[': &\\quad \\text{push } \\[ \\quad &\\quad \\text{Stack: } \\{ \\[ \\\\\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } \\{ \\[ ( \\\\\n" +
-        "\\text{Read } ')': &\\quad \\text{pop } (, \\text{ matches } ) \\quad &\\quad \\text{Stack: } \\{ \\[ \\\\\n" +
-        "\\text{Read } ']': &\\quad \\text{pop } \\[ , \\text{ matches } ] \\quad &\\quad \\text{Stack: } \\{ \\\\\n" +
-        "\\text{Read } '}': &\\quad \\text{pop } \\{, \\text{ matches } \\} \\quad &\\quad \\text{Stack: } \\epsilon\n" +
-        "\\end align*\n\n" +
-        "Stack is empty at the end - the string is valid."
+        "**Step 1:** Push each opener onto the stack:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } '\\{': &\\quad \\text{push } '\\{', &&\\quad \\text{Stack: } '\\{',\\\\\n" +
+        "\\text{Read } '[': &\\quad \\text{push } '[', &&\\quad \\text{Stack: } '\\{ \\; [',\\\\\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(', &&\\quad \\text{Stack: } '\\{ \\; [ \\; ('.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** Pop and match on each closer:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } ')': &\\quad \\text{pop } '(', \\; \\text{matches } ')', &&\\quad \\text{Stack: } '\\{ \\; [',\\\\\n" +
+        "\\text{Read } ']': &\\quad \\text{pop } '[', \\; \\text{matches } ']', &&\\quad \\text{Stack: } '\\{',\\\\\n" +
+        "\\text{Read } '}': &\\quad \\text{pop } '\\{', \\; \\text{matches } '\\}', &&\\quad \\text{Stack: } \\epsilon.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "Stack is empty at the end — the string is valid."
     },
     {
       id: "q-vp-3",

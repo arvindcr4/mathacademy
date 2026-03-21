@@ -595,7 +595,7 @@ const questions: Record<string, Question[]> = {
       question: "A product has 50 million monthly active users (MAU). Which is the most accurate estimate of daily active users (DAU) for capacity planning, and what does the DAU/MAU ratio signify?",
       options: [
         "DAU = MAU / 30 \approx 1.67M; assumes users are perfectly evenly distributed across days with no engagement patterns.",
-        "DAU = MAU * DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU ≈ 10M.",
+        "DAU = MAU * DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU \\approx 10M.",
         "DAU = MAU because all monthly active users are also daily active users.",
         "DAU cannot be estimated from MAU without real traffic data.",
       ],

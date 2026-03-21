@@ -129,7 +129,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The target network Q(s,a;\\theta\\^{-) is a periodically-copied snapshot of the online network, kept fixed for many steps to provide stable targets y = R + \\gamma max_a Q(s',a;\\theta\\^{-) and prevent oscillating or diverging training.",
+        "The target network Q(s,a;\\theta\\^\{-\} is a periodically-copied snapshot of the online network, kept fixed for many steps to provide stable targets y = R + \\gamma max_a Q(s',a;\\theta\\^\{-\} and prevent oscillating or diverging training.",
       hints: [
         "If the target keeps changing as you update the network, what problem does this create?",
         "The target network provides a fixed (temporarily) goal to optimize toward.",
@@ -185,7 +185,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Double DQN selects the best action using the online network argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', argmax_a Q(s',a;\\theta); \\theta\\^{-), reducing the upward bias from using one network for both.",
+        "Double DQN selects the best action using the online network argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', argmax_a Q(s',a;\\theta); \\theta\\^\{-\}, reducing the upward bias from using one network for both.",
       hints: [
         "The bias in Q-learning comes from using the same values for both selection and evaluation.",
         "What if you use one network to pick the action and another to judge its value?",

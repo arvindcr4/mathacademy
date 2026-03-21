@@ -410,11 +410,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In practice, the Hessian-vector products (second-order terms) tend to be small relative to first-order gradient magnitudes, and stochastic gradient noise dominates the error introduced by the first-order approximation - making FOMAML nearly as good as full MAML at much lower cost.\n\nThe full MAML gradient is \\nabla_\\theta^MAML = \\nabla_{\\theta'}L \\cdot (I − \\alpha\\nabla\\^2_\\thetaL), while FOMAML uses \\nabla_\\theta^FOMAML \\approx \\nabla_\\thetaL. The approximation error from dropping (I − \\alpha\\nabla\\^2_\\thetaL) is small when: (1) \\alpha\\nabla\\^2_\\thetaL \\approx 0 (small curvature relative to the identity), and (2) the mini-batch gradient noise Var[\\nabla_\\thetaL] dominates the curvature term. Empirically both conditions hold in the low-shot regime where MAML operates.",
+        "**Step 1:** The full MAML gradient is $\\nabla_\\theta^\\textrm{MAML} = \\nabla_{\\theta'}L \\cdot (I - \\alpha\\nabla^2_\\theta L)$, while FOMAML approximates this as $\\nabla_\\theta^\\textrm{FOMAML} \\approx \\nabla_\\theta L$ by dropping the $(I - \\alpha\\nabla^2_\\theta L)$ factor.\n\n**Step 2:** The approximation error is small when: (1) $\\alpha\\nabla^2_\\theta L \\approx 0$ (small curvature relative to the identity), and (2) the mini-batch gradient noise $\\operatorname{Var}[\\nabla_\\theta L]$ dominates the curvature term.\n\n**Step 3:** In the few-shot regime where MAML operates, both conditions tend to hold: gradients change slowly with respect to parameters (small curvature), and the stochastic noise from small support sets dominates — making FOMAML nearly as effective as full MAML at much lower computational cost.",
       hints: [
         "If the Hessian terms are very small, dropping them introduces very little error.",
         "Think about what dominates the gradient signal in mini-batch SGD: the mini-batch noise or the curvature terms?",
-        "The Hessian \\nabla\\^2L captures how the gradient changes with position in parameter space. In MAML's few-shot regime, gradients change slowly (small curvature), and mini-batch noise (\\propto 1/batch_size) dominates.",
       ],
     },
   ],
