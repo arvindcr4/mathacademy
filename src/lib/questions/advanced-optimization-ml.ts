@@ -17,12 +17,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mini-batch SGD estimates the true gradient from a small random subset (mini-batch) of the training data, rather than the full dataset.\n\n" +
-        "Given a loss function \\(L(\\theta) = \\frac{1}{n}\\sum_{i=1}^{n} \\ell_i(\\theta)\\), full-batch gradient descent computes:\n" +
+        "**Step 1:** Full-batch gradient descent computes the exact gradient using all $n$ examples:\n" +
         "\\[\\nabla L(\\theta) = \\frac{1}{n}\\sum_{i=1}^{n} \\nabla\\ell_i(\\theta)\\]\n\n" +
-        "Mini-batch SGD approximates this with:\n" +
+        "**Step 2:** Mini-batch SGD estimates this gradient from a randomly sampled subset $B$:\n" +
         "\\[\\nabla L_B(\\theta) = \\frac{1}{|B|}\\sum_{i \\in B} \\nabla\\ell_i(\\theta)\\]\n\n" +
-        "where \\(B\\) is a randomly sampled mini-batch of examples. This introduces gradient noise (variance \\(\\propto 1/\\sqrt{|B|}\\) ) that acts as implicit regularization, helping the model generalize better. Additionally, since only \\(|B| \\ll n\\) examples are needed per step, datasets that are too large to fit in memory can be processed efficiently.",
+        "**Step 3:** The gradient noise (variance $\\propto 1/\\sqrt{|B|}$) acts as implicit regularization, and only $|B| \\ll n$ examples are needed per step, enabling efficient processing of large datasets.",
       hints: [
         "Full-batch gradient descent computes the exact gradient using ALL n examples per step - what are the drawbacks of this?",
         'The word "stochastic" refers to the randomness from sampling a mini-batch at each step.',
@@ -36,14 +35,13 @@ const questions: Record<string, Question[]> = {
         "Momentum in gradient descent helps accelerate optimization by accumulating a velocity vector in directions of persistent gradient.",
       correctAnswer: "True",
       explanation:
-        "Standard gradient descent updates parameters as:\n" +
+        "**Step 1:** Standard gradient descent takes steps in the direction of the negative gradient:\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\eta \\nabla L(\\theta_t)\\]\n\n" +
-        "Momentum accumulates a velocity vector \\(v_t\\):\n" +
+        "**Step 2:** Momentum accumulates a velocity vector $v_t$ that averages past gradients:\n" +
         "\\[v_t = \\beta v_{t-1} + (1-\\beta)\\nabla L(\\theta_t)\\]\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
-        "where \\(0 \\le \\beta < 1\\) is the momentum coefficient (typically \\(\\beta = 0.9\\)).\n\n" +
-        "In directions of persistent gradient (e.g., a steady downhill slope), the velocity accumulates, causing the optimizer to accelerate. In directions where gradients oscillate (change sign frequently), positive and negative contributions to \\(v_t\\) partially cancel, dampening oscillations.\n\n" +
-        "This is analogous to a ball rolling down a hilly surface: it builds up speed in consistent directions while smoothing out erratic movements.",
+        "where $0 \\le \\beta < 1$ is the momentum coefficient (typically $\\beta = 0.9$).\n\n" +
+        "**Step 3:** In directions of persistent gradient, the velocity accumulates (accelerating the optimizer); in oscillating directions, positive and negative contributions to $v_t$ partially cancel (dampening oscillations). This is analogous to a ball rolling downhill: it builds up speed in consistent directions while smoothing out erratic movements.",
       hints: [
         "Think of momentum as a ball rolling downhill - it picks up speed in the direction of descent.",
         "When gradients oscillate back and forth, momentum causes them to cancel out; when they consistently point the same direction, momentum causes them to add up.",
@@ -63,18 +61,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Classical momentum computes the gradient at the current position \\(\\theta_t\\) and then applies the momentum update:\n" +
+        "**Step 1:** Classical momentum evaluates the gradient at the current position and then applies the update:\n" +
         "\\[v_t = \\beta v_{t-1} + \\nabla L(\\theta_t)\\]\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
-        "Nesterov Accelerated Gradient (NAG) evaluates the gradient at the anticipated future position \\(\\theta_t + \\gamma v_t\\) instead:\n" +
-        "\\[v_t = \\beta v_{t-1} + \\nabla L(\\theta_t + \\gamma v_t)\\]\n" +
+        "**Step 2:** NAG evaluates the gradient at the anticipated future position $\\theta_t + \\beta v_t$ instead:\n" +
+        "\\[v_t = \\beta v_{t-1} + \\nabla L(\\theta_t + \\beta v_t)\\]\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
-        "where \\(\\gamma = \\beta\\) is the momentum coefficient.\n\n" +
-        "This 'lookahead' gradient is corrective: it measures how the gradient will change after the momentum step, reducing overshoot and oscillation compared to classical momentum.\n\n" +
+        "**Step 3:** This 'lookahead' gradient is corrective: it measures how the gradient will change after the momentum step. Rewriting the update shows the correction term $-\\eta\\beta v_t$ that dampens the momentum when the gradient is increasing, reducing overshoot and oscillation.\n\n" +
         "\\begin{align}\n" +
         "\\theta_{t+1} &= \\theta_t - \\eta \\nabla L(\\theta_t + \\beta v_t) - \\eta \\beta v_t\n" +
-        "\\end{align}\n\n" +
-        "The second term (\\( -\\eta \\beta v_t \\)) is a correction that dampens the momentum when the gradient is increasing.",
+        "\\end{align}",
       hints: [
         "Standard momentum evaluates the gradient at \\(\\theta_t\\); NAG evaluates it at \\(\\theta_t + \\beta v_t\\) - the position momentum will carry you to.",
         "If you already know the momentum will move you forward, why not look ahead from that future position to compute the gradient?",
@@ -96,17 +92,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Adam (Adaptive Moment Estimation) combines two key ideas from prior optimizers:\n\n" +
-        "1. **First moment (from momentum):** Maintains an exponential moving average of gradients:\n" +
+        "**Step 1:** Adam maintains two exponential moving averages of the gradient. First moment (from momentum):\n" +
         "\\[m_t = \\beta_1 m_{t-1} + (1-\\beta_1) g_t\\]\n\n" +
-        "2. **Second moment (from RMSProp/AdaGrad):** Maintains an exponential moving average of squared gradients:\n" +
+        "**Step 2:** Second moment (from RMSProp/AdaGrad):\n" +
         "\\[v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2\\]\n\n" +
-        "where \\(g_t = \\nabla L(\\theta_t)\\) is the gradient at step \\(t\\).\n\n" +
-        "Bias correction is applied because \\(m_0 = v_0 = 0\\) causes estimates to be biased toward zero early in training:\n" +
+        "where $g_t = \\nabla L(\\theta_t)$ is the gradient at step $t$.\n\n" +
+        "**Step 3:** Bias correction is applied because $m_0 = v_0 = 0$ causes estimates to be biased toward zero early in training:\n" +
         "\\[\\hat{m}_t = \\frac{m_t}{1-\\beta_1^t}, \\qquad \\hat{v}_t = \\frac{v_t}{1-\\beta_2^t}\\]\n\n" +
-        "The parameter update is:\n" +
+        "**Step 4:** The parameter update is:\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{\\hat{v}_t} + \\epsilon} \\hat{m}_t\\]\n\n" +
-        "This adapts the learning rate per parameter: \\(\\hat{m}_t\\) provides the direction (like momentum), while \\(\\sqrt{\\hat{v}_t}\\) inversely scales the step size (dividing out the gradient magnitude).",
+        "This adapts the learning rate per parameter: $\\hat{m}_t$ provides the direction (like momentum), while $\\sqrt{\\hat{v}_t}$ inversely scales the step size (dividing out the gradient magnitude).",
       hints: [
         "Adam = Adaptive Moment Estimation - what are the two moments it estimates?",
         "Think of Adam as combining momentum (1st moment) with RMSProp (2nd moment).",
@@ -120,14 +115,14 @@ const questions: Record<string, Question[]> = {
         "AdamW fixes Adam\'s weight decay implementation by decoupling weight decay from the gradient update, applying it directly to the weights rather than including it in the gradient.",
       correctAnswer: "True",
       explanation:
-        "In standard Adam with L2 regularization, the weight decay term \\(\\lambda \\theta\\) is added to the gradient:\n" +
-        "\\[g_t = \\nabla L(\\theta_t) + \\lambda \\theta_t\\]\n\n" +
-        "The adaptive update divides by \\(\\sqrt{v_t}\\):\n" +
-        "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t}} (\\nabla L(\\theta_t) + \\lambda \\theta_t)\\]\n\n" +
-        "The problem: parameters with small historical gradients (rarely-activated features) have small \\(v_t\\), so the \\(\\lambda\\theta_t\\) term gets amplified. Parameters with large \\(v_t\\) have their regularization weakened. The effective regularization strength varies unpredictably.\n\n" +
-        "AdamW (Decoupled Weight Decay) applies weight decay directly after the gradient step:\n" +
-        "\\[\\theta_{t+1} = (1 - \\eta \\lambda) \\theta_t - \\frac{\\eta}{\\sqrt{v_t}} m_t\\]\n\n" +
-        "This ensures the regularization strength \\(\\lambda\\) is independent of the adaptive learning rate, giving consistent regularization across all parameters.",
+        "**Step 1:** In standard Adam with L2 regularization, the weight decay term $\\lambda\\theta$ is added to the gradient:\n" +
+        "\\[g_t = \\nabla L(\\theta_t) + \\lambda\\theta_t\\]\n\n" +
+        "The adaptive update divides by $\\sqrt{v_t}$:\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t}}\\bigl(\\nabla L(\\theta_t) + \\lambda\\theta_t\\bigr)\\]\n\n" +
+        "**Step 2:** The problem: parameters with small historical gradients (rarely-activated features) have small $v_t$, so the $\\lambda\\theta_t$ term gets amplified. Parameters with large $v_t$ have their regularization weakened. The effective regularization strength varies unpredictably.\n\n" +
+        "**Step 3:** AdamW (Decoupled Weight Decay) applies weight decay directly after the gradient step:\n" +
+        "\\[\\theta_{t+1} = (1 - \\eta\\lambda)\\theta_t - \\frac{\\eta}{\\sqrt{v_t}} m_t\\]\n\n" +
+        "This ensures the regularization strength $\\lambda$ is independent of the adaptive learning rate, giving consistent regularization across all parameters.",
       hints: [
         "In Adam with L2, the weight decay term gets divided by \\(\\sqrt{v_t}\\) - so parameters with small \\(v_t\\) get over-regularized, and those with large \\(v_t\\) get under-regularized.",
         "AdamW applies weight decay separately from the gradient update, so regularization strength is uniform across all parameters.",
@@ -147,15 +142,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AdaGrad accumulates the sum of all historical squared gradients:\n" +
+        "**Step 1:** AdaGrad accumulates the sum of all historical squared gradients:\n" +
         "\\[v_t = v_{t-1} + g_t^2 = \\sum_{i=1}^{t} g_i^2\\]\n\n" +
         "The parameter update is:\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t} + \\epsilon} g_t\\]\n\n" +
-        "The issue: \\(v_t\\) is a monotonically increasing sum - it only grows, never shrinks. As \\(v_t \\to \\infty\\), the effective learning rate \\(\\eta/\\sqrt{v_t} \\to 0\\), effectively stopping learning.\n\n" +
-        "RMSProp fixes this by replacing the sum with an exponential moving average:\n" +
+        "**Step 2:** The issue: $v_t$ is a monotonically increasing sum -- it only grows, never shrinks. As $v_t \\to \\infty$, the effective learning rate $\\eta/\\sqrt{v_t} \\to 0$, effectively stopping learning.\n\n" +
+        "**Step 3:** RMSProp fixes this by replacing the sum with an exponential moving average:\n" +
         "\\[v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\]\n\n" +
-        "This is a rolling average that forgets old gradients: \\(v_t \\approx \\frac{1}{1-\\beta}\\) times the average squared gradient from the recent window, not the entire history. The effective learning rate remains bounded away from zero.\n\n" +
-        "Adam similarly uses exponential moving averages of squared gradients (with additional bias correction).",
+        "This is a rolling average that forgets old gradients: $v_t \\approx \\frac{1}{1-\\beta}$ times the average squared gradient from the recent window, not the entire history. The effective learning rate remains bounded away from zero. Adam similarly uses exponential moving averages of squared gradients (with additional bias correction).",
       hints: [
         "AdaGrad\'s \\(v_t = \\sum_{i=1}^{t} g_i^2\\) is a sum that grows without bound - what happens to \\(\\eta/\\sqrt{v_t}\\) as \\(v_t \\to \\infty\\)?",
         "RMSProp and Adam use \\(v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\) - an exponential moving average that forgets old gradients, keeping \\(v_t\\) bounded.",
@@ -178,14 +172,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Lion's update rule is:\n" +
+        "**Step 1:** Lion's update rule:\n" +
         "\\[m_t = \\beta_1 m_{t-1} + (1-\\beta_1) g_t\\]  (momentum update)\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\eta \\cdot \\text{sign}(\\beta_1 m_t + (1-\\beta_1) g_t)\\]  (parameter update)\n\n" +
-        "Key observations:\n\n" +
-        "1. **Sign operation:** The sign(\\cdot) function maps each element to {-1, 0, +1}. This collapses all gradient magnitudes to a fixed step size of \\pm\\(\\eta\\).\n\n" +
-        "2. **Memory savings:** Adam stores TWO additional vectors (\\(m_t\\) and \\(v_t\\)), each of size equal to the parameters. Lion stores only ONE (\\(m_t\\)), cutting optimizer state memory in half.\n\n" +
-        "3. **Decoupled weight decay:** Lion uses AdamW-style decoupled weight decay for proper regularization.\n\n" +
-        "The fixed step size from sign() is beneficial for training large models with large batch sizes, as it provides uniform updates across all parameters regardless of gradient magnitude.",
+        "**Step 2:** Key observations: The $\\text{sign}(\\cdot)$ function maps each element to $\\{-1, 0, +1\\}$. This collapses all gradient magnitudes to a fixed step size of $\\pm\\eta$.\n\n" +
+        "**Step 3:** Memory savings: Adam stores TWO additional vectors ($m_t$ and $v_t$), each of size equal to the parameters. Lion stores only ONE ($m_t$), cutting optimizer state memory in half.\n\n" +
+        "**Step 4:** Decoupled weight decay: Lion uses AdamW-style decoupled weight decay for proper regularization. The fixed step size from $\\text{sign}(\\cdot)$ is beneficial for training large models with large batch sizes, as it provides uniform updates across all parameters regardless of gradient magnitude.",
       hints: [
         "The sign(\\cdot) operation maps any gradient magnitude to \\pm1, so every parameter moves the same distance per step - \\(\\eta\\) in each direction.",
         "Adam needs two state vectors (\\(m\\) and \\(v\\)); Lion needs only one (\\(m\\)), halving the optimizer memory footprint.",
@@ -242,16 +234,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Adam's second-moment estimate is:\n" +
+        "**Step 1:** Adam's second-moment estimate is:\n" +
         "\\[v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2\\]\n\n" +
-        "With \\(v_0 = 0\\) and \\(\\beta_2 = 0.999\\), the estimate grows very slowly. Early in training:\n" +
+        "With $v_0 = 0$ and $\\beta_2 = 0.999$, the estimate grows very slowly. Early in training:\n" +
         "\\[\\hat{v}_t = \\frac{v_t}{1-\\beta_2^t} \\approx \\frac{(1-\\beta_2) \\sum_{i=1}^{t} \\beta_2^{t-i} g_i^2}{1-\\beta_2^t}\\]\n\n" +
-        "At \\(t=1\\): \\(\\hat{v}_1 \\approx g_1^2/0.999 \\approx g_1^2\\), but as \\(t\\) increases, \\(\\hat{v}_t\\) stabilizes to a meaningful scale.\n\n" +
-        "The problem: Adam's effective step size is \\(\\eta/\\sqrt{\\hat{v}_t}\\). When \\(\\hat{v}_t\\) is small (underestimated), the effective step is too large, causing instability.\n\n" +
-        "Warmup keeps the learning rate low during the first \\(T_{\\text{warmup}}\\) steps, allowing \\(\\hat{v}_t\\) to build up reliable estimates before the full learning rate is applied.\n\n" +
-        "For the original Transformer schedule:\n" +
+        "**Step 2:** The problem: Adam's effective step size is $\\eta/\\sqrt{\\hat{v}_t}$. When $\\hat{v}_t$ is underestimated (small), the effective step is too large, causing instability.\n\n" +
+        "**Step 3:** Warmup keeps the learning rate low during the first $T_{\\text{warmup}}$ steps, allowing $\\hat{v}_t$ to build up reliable estimates before the full learning rate is applied. For the original Transformer schedule:\n" +
         "\\[\\eta_t = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot T_{\\text{warmup}}^{-1.5}\\right)\\]\n\n" +
-        "The learning rate increases linearly for the first \\(T_{\\text{warmup}}\\) steps, then decays as \\(t^{-0.5}\\).",
+        "The learning rate increases linearly for the first $T_{\\text{warmup}}$ steps, then decays as $t^{-0.5}$.",
       hints: [
         "When \\(\\hat{v}_t\\) is small (underestimated early in training), the effective step size \\(\\eta/\\sqrt{\\hat{v}_t}\\) becomes too large.",
         "Warmup gives the exponential moving average \\(v_t\\) time to accumulate reliable statistics before large learning rate steps are taken.",
