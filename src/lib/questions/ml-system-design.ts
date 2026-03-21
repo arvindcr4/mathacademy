@@ -196,7 +196,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A ride-sharing company wants to predict surge pricing multipliers (1.0\\times, 1.5\\times, 2.0\\times, 2.5\\times, 3.0\\times). What is the most appropriate ML framing?",
+        "A ride-sharing company wants to predict surge pricing multipliers (1.0\\cdot, 1.5\\cdot, 2.0\\cdot, 2.5\\cdot, 3.0\\cdot). What is the most appropriate ML framing?",
       options: [
         "Binary classification: surge vs. no surge.",
         "Multi-class classification with 5 ordered classes, or ordinal regression - since the classes have a meaningful order.",
@@ -205,7 +205,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The 5 surge multipliers are discrete but ordered (1.0 < 1.5 < 2.0 < 2.5 < 3.0). Multi-class classification ignores the ordering; ordinal regression exploits it. Regression to a continuous value is also valid if the downstream system can threshold to the 5 levels. The key is that the ordered nature of the output should inform model design.",
+        "**Step 1**: Recognize the ordered nature of surge multipliers.\nThe 5 surge multipliers (1.0, 1.5, 2.0, 2.5, 3.0) are discrete but ordered: 1.0 < 1.5 < 2.0 < 2.5 < 3.0.\n\n**Step 2**: Choose the appropriate model class.\nMulti-class classification ignores the ordering; ordinal regression exploits it. Regression to a continuous value is also valid if the downstream system can threshold to the 5 levels.\n\n**Step 3**: Conclude that ordering should inform model design.\nThe key is that the ordered nature of the output should guide the choice of model architecture.",
       hints: [
         "Ordinal classes have a natural order - predicting 2.0 when the truth is 1.5 is a smaller error than predicting 3.0.",
         "Standard cross-entropy loss treats all misclassifications equally - it ignores the ordering.",
