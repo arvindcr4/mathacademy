@@ -384,3 +384,110 @@ describe('Registry Edge Cases', () => {
     expect(Array.isArray(questions)).toBe(true)
   })
 })
+
+describe('Question Difficulty Distribution', () => {
+  it('should have questions across all difficulty levels', () => {
+    const allQuestions = getAllQuestions()
+    const difficulties = new Set<string>()
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        difficulties.add(q.difficulty)
+      }
+    }
+
+    expect(difficulties.has('easy'), 'Should have easy questions').toBe(true)
+    expect(difficulties.has('medium'), 'Should have medium questions').toBe(true)
+    expect(difficulties.has('hard'), 'Should have hard questions').toBe(true)
+  })
+
+  it('should have valid difficulty ordering in banks', () => {
+    const allQuestions = getAllQuestions()
+    const difficultyRank = { easy: 0, medium: 1, hard: 2 }
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      if (questions.length < 2) continue
+
+      for (let i = 1; i < questions.length; i++) {
+        const prevRank = difficultyRank[questions[i - 1].difficulty]
+        const currRank = difficultyRank[questions[i].difficulty]
+
+        // Questions should be sorted by difficulty (non-decreasing)
+        expect(
+          prevRank <= currRank,
+          `${bankName}: Questions should be sorted by difficulty (index ${i - 1} to ${i})`
+        ).toBe(true)
+      }
+    }
+  })
+})
+
+describe('Question Type Distribution', () => {
+  it('should have multiple question types across all banks', () => {
+    const allQuestions = getAllQuestions()
+    const types = new Set<string>()
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        types.add(q.type)
+      }
+    }
+
+    expect(types.size, 'Should have multiple question types').toBeGreaterThan(1)
+  })
+
+  it('should have multiple-choice questions', () => {
+    const allQuestions = getAllQuestions()
+    let hasMC = false
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'multiple-choice') {
+          hasMC = true
+          break
+        }
+      }
+      if (hasMC) break
+    }
+
+    expect(hasMC, 'Should have at least one multiple-choice question').toBe(true)
+  })
+
+  it('should have true-false questions', () => {
+    const allQuestions = getAllQuestions()
+    let hasTF = false
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'true-false') {
+          hasTF = true
+          break
+        }
+      }
+      if (hasTF) break
+    }
+
+    expect(hasTF, 'Should have at least one true-false question').toBe(true)
+  })
+})
+
+describe('Bank Statistics', () => {
+  it('should have reasonable number of questions per bank', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      // Most banks should have at least 3 questions
+      if (questions.length > 0 && questions.length < 3) {
+        // This is a warning, not an error
+        console.log(`Warning: ${bankName} has only ${questions.length} question(s)`)
+      }
+    }
+
+    // At least check that we have a reasonable total
+    let totalQuestions = 0
+    for (const questions of Object.values(allQuestions)) {
+      totalQuestions += questions.length
+    }
+    expect(totalQuestions, 'Should have at least 100 total questions').toBeGreaterThan(100)
+  })
+})
