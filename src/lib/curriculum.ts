@@ -1546,6 +1546,498 @@ export const courses: Course[] = [
       },
     ]
   },
+  // MULTIMODAL LEARNING & FOUNDATION MODELS
+  {
+    id: 'multimodal-learning',
+    slug: 'multimodal-learning',
+    name: 'Multimodal Learning & Foundation Models',
+    description: 'Vision-language models, audio-visual learning, and large multimodal foundation models.',
+    topics: [
+      {
+        id: 'vision-language-models',
+        name: 'Vision-Language Models',
+        description: 'CLIP, ALIGN, and contrastive vision-language pretraining.',
+        knowledgePoints: [
+          { id: 'ml2-kp-1', slug: 'clip-model', name: 'CLIP & Contrastive Language-Image Pretraining' },
+          { id: 'ml2-kp-2', slug: 'align-coca', name: 'ALIGN, CoCa & Scaling VLP' },
+          { id: 'ml2-kp-3', slug: 'visual-grounding', name: 'Visual Grounding & Referring Expression' },
+          { id: 'ml2-kp-4', slug: 'image-text-retrieval', name: 'Image-Text Retrieval & Cross-Modal Search' },
+          { id: 'ml2-kp-5', slug: 'zero-shot-vision', name: 'Zero-Shot Image Classification with VLMs' },
+        ]
+      },
+      {
+        id: 'large-multimodal-models',
+        name: 'Large Multimodal Models (LMMs)',
+        description: 'GPT-4V, LLaVA, Gemini, and instruction-tuned multimodal LLMs.',
+        knowledgePoints: [
+          { id: 'ml2-kp-6', slug: 'llava', name: 'LLaVA & Visual Instruction Tuning' },
+          { id: 'ml2-kp-7', slug: 'flamingo', name: 'Flamingo & Few-Shot Multimodal Learning' },
+          { id: 'ml2-kp-8', slug: 'gemini-architecture', name: 'Gemini Architecture & Native Multimodality' },
+          { id: 'ml2-kp-9', slug: 'gpt4v-capabilities', name: 'GPT-4V & Vision Capabilities' },
+          { id: 'ml2-kp-10', slug: 'multimodal-rag', name: 'Multimodal RAG & Document Understanding' },
+        ]
+      },
+      {
+        id: 'audio-speech-models',
+        name: 'Audio, Speech & Music Models',
+        description: 'Whisper, speech synthesis, music generation, and audio-visual models.',
+        knowledgePoints: [
+          { id: 'ml2-kp-11', slug: 'whisper-asr', name: 'Whisper & End-to-End ASR' },
+          { id: 'ml2-kp-12', slug: 'tts-models', name: 'TTS (VITS, NaturalSpeech, Bark)' },
+          { id: 'ml2-kp-13', slug: 'music-generation', name: 'Music Generation (MusicGen, AudioCraft)' },
+          { id: 'ml2-kp-14', slug: 'audio-visual-learning', name: 'Audio-Visual Learning & Video Understanding' },
+          { id: 'ml2-kp-15', slug: 'speech-llm', name: 'Speech LLMs & Voice Assistants' },
+        ]
+      },
+      {
+        id: 'foundation-model-theory',
+        name: 'Foundation Model Theory & Scaling',
+        description: 'Scaling laws, emergent abilities, and foundation model training.',
+        knowledgePoints: [
+          { id: 'ml2-kp-16', slug: 'scaling-laws-mm', name: 'Scaling Laws for Multimodal Models' },
+          { id: 'ml2-kp-17', slug: 'emergent-abilities', name: 'Emergent Abilities & Phase Transitions' },
+          { id: 'ml2-kp-18', slug: 'pretraining-data', name: 'Pretraining Data Curation & Quality' },
+          { id: 'ml2-kp-19', slug: 'modality-alignment', name: 'Modality Alignment & Cross-Modal Fusion' },
+          { id: 'ml2-kp-20', slug: 'mixture-of-experts-mm', name: 'Mixture of Experts for Multimodal Models' },
+        ]
+      },
+      {
+        id: 'embodied-ai',
+        name: 'Embodied AI & Robotics Foundation Models',
+        description: 'RT-2, Gato, and foundation models for robot control.',
+        knowledgePoints: [
+          { id: 'ml2-kp-21', slug: 'rt2-model', name: 'RT-2 & Vision-Language-Action Models' },
+          { id: 'ml2-kp-22', slug: 'gato-generalist', name: 'Gato & Generalist Agent Models' },
+          { id: 'ml2-kp-23', slug: 'embodied-qa', name: 'Embodied QA & Visual Navigation' },
+          { id: 'ml2-kp-24', slug: 'world-model-robotics', name: 'World Models for Robot Planning' },
+          { id: 'ml2-kp-25', slug: 'sim-to-real', name: 'Sim-to-Real Transfer & Domain Randomization' },
+        ]
+      },
+      {
+        id: 'multimodal-evaluation',
+        name: 'Multimodal Evaluation & Benchmarks',
+        description: 'Benchmarks for VQA, image captioning, and multimodal reasoning.',
+        knowledgePoints: [
+          { id: 'ml2-kp-26', slug: 'vqa-benchmarks', name: 'VQA, GQA & Visual Reasoning Benchmarks' },
+          { id: 'ml2-kp-27', slug: 'mmmu-benchmark', name: 'MMMU & Multi-Discipline Multimodal Benchmarks' },
+          { id: 'ml2-kp-28', slug: 'hallucination-multimodal', name: 'Hallucination in Multimodal Models' },
+          { id: 'ml2-kp-29', slug: 'multimodal-safety', name: 'Multimodal Safety & Red-Teaming' },
+          { id: 'ml2-kp-30', slug: 'eval-infrastructure', name: 'Evaluation Infrastructure & Leaderboards' },
+        ]
+      },
+    ]
+  },
+
+  // EFFICIENT ML & MODEL COMPRESSION
+  {
+    id: 'efficient-ml',
+    slug: 'efficient-ml',
+    name: 'Efficient ML & Model Compression',
+    description: 'Quantization, pruning, distillation, and hardware-aware ML for edge and production deployment.',
+    topics: [
+      {
+        id: 'quantization',
+        name: 'Quantization',
+        description: 'Post-training and quantization-aware training for efficient inference.',
+        knowledgePoints: [
+          { id: 'em-kp-1', slug: 'quantization-basics', name: 'Quantization Fundamentals (INT8, INT4, FP8)' },
+          { id: 'em-kp-2', slug: 'post-training-quantization', name: 'Post-Training Quantization (PTQ)' },
+          { id: 'em-kp-3', slug: 'quantization-aware-training', name: 'Quantization-Aware Training (QAT)' },
+          { id: 'em-kp-4', slug: 'gptq-gguf', name: 'GPTQ, GGUF & LLM Quantization' },
+          { id: 'em-kp-5', slug: 'awq-squeezellm', name: 'AWQ, SqueezeLLM & Activation-Aware Quantization' },
+        ]
+      },
+      {
+        id: 'pruning',
+        name: 'Neural Network Pruning',
+        description: 'Magnitude pruning, structured pruning, and sparse neural networks.',
+        knowledgePoints: [
+          { id: 'em-kp-6', slug: 'magnitude-pruning', name: 'Magnitude Pruning & Weight Sparsity' },
+          { id: 'em-kp-7', slug: 'structured-pruning', name: 'Structured Pruning (Channel, Head, Layer)' },
+          { id: 'em-kp-8', slug: 'lottery-ticket', name: 'Lottery Ticket Hypothesis' },
+          { id: 'em-kp-9', slug: 'sparseGPT', name: 'SparseGPT & Wanda for LLM Pruning' },
+          { id: 'em-kp-10', slug: 'dynamic-sparse', name: 'Dynamic Sparse Training (DST, RiGL)' },
+        ]
+      },
+      {
+        id: 'knowledge-distillation',
+        name: 'Knowledge Distillation',
+        description: 'Teacher-student training, logit distillation, and feature-level transfer.',
+        knowledgePoints: [
+          { id: 'em-kp-11', slug: 'hinton-distillation', name: 'Hinton\'s Knowledge Distillation & Soft Labels' },
+          { id: 'em-kp-12', slug: 'feature-distillation', name: 'Feature-Level & Intermediate Distillation' },
+          { id: 'em-kp-13', slug: 'self-distillation', name: 'Self-Distillation & Born-Again Networks' },
+          { id: 'em-kp-14', slug: 'llm-distillation', name: 'LLM Distillation (MiniLLM, Distil-Whisper)' },
+          { id: 'em-kp-15', slug: 'task-agnostic-distillation', name: 'Task-Agnostic vs Task-Specific Distillation' },
+        ]
+      },
+      {
+        id: 'neural-architecture-search',
+        name: 'Neural Architecture Search',
+        description: 'AutoML, NAS methods, and efficient architecture design.',
+        knowledgePoints: [
+          { id: 'em-kp-16', slug: 'nas-intro', name: 'NAS Overview & Search Spaces' },
+          { id: 'em-kp-17', slug: 'darts', name: 'DARTS & Gradient-Based NAS' },
+          { id: 'em-kp-18', slug: 'efficientnet', name: 'EfficientNet & Compound Scaling' },
+          { id: 'em-kp-19', slug: 'once-for-all', name: 'Once-For-All & Slimmable Networks' },
+          { id: 'em-kp-20', slug: 'hardware-aware-nas', name: 'Hardware-Aware NAS & Latency Constraints' },
+        ]
+      },
+      {
+        id: 'hardware-ml',
+        name: 'Hardware Acceleration & Edge ML',
+        description: 'GPU/TPU/NPU optimization, CUDA programming, and edge deployment.',
+        knowledgePoints: [
+          { id: 'em-kp-21', slug: 'gpu-programming-ml', name: 'GPU Architecture & CUDA for ML' },
+          { id: 'em-kp-22', slug: 'tpu-xla', name: 'TPU Architecture & XLA Compilation' },
+          { id: 'em-kp-23', slug: 'operator-fusion', name: 'Operator Fusion & Kernel Optimization' },
+          { id: 'em-kp-24', slug: 'tflite-coreml', name: 'TFLite, Core ML & Edge Deployment' },
+          { id: 'em-kp-25', slug: 'tensor-parallelism', name: 'Tensor & Pipeline Parallelism' },
+        ]
+      },
+      {
+        id: 'inference-optimization',
+        name: 'Inference Optimization',
+        description: 'vLLM, Flash Attention, speculative decoding, and serving optimization.',
+        knowledgePoints: [
+          { id: 'em-kp-26', slug: 'flash-attention-opt', name: 'Flash Attention & Memory-Efficient Attention' },
+          { id: 'em-kp-27', slug: 'vllm-serving', name: 'vLLM & PagedAttention for LLM Serving' },
+          { id: 'em-kp-28', slug: 'speculative-decoding-opt', name: 'Speculative Decoding & Draft Models' },
+          { id: 'em-kp-29', slug: 'batching-strategies', name: 'Dynamic Batching & Continuous Batching' },
+          { id: 'em-kp-30', slug: 'mlc-llm', name: 'MLC-LLM & Universal LLM Deployment' },
+        ]
+      },
+    ]
+  },
+
+  // FEDERATED LEARNING & PRIVACY-PRESERVING ML
+  {
+    id: 'federated-learning',
+    slug: 'federated-learning',
+    name: 'Federated Learning & Privacy-Preserving ML',
+    description: 'Train ML models across distributed data without centralization, using privacy guarantees.',
+    topics: [
+      {
+        id: 'federated-foundations',
+        name: 'Federated Learning Foundations',
+        description: 'FL setup, FedAvg, and the challenges of distributed training.',
+        knowledgePoints: [
+          { id: 'fl-kp-1', slug: 'federated-learning-intro', name: 'Federated Learning Setup & Motivation' },
+          { id: 'fl-kp-2', slug: 'fedavg', name: 'FedAvg & Federated Optimization' },
+          { id: 'fl-kp-3', slug: 'non-iid-data', name: 'Non-IID Data & Statistical Heterogeneity' },
+          { id: 'fl-kp-4', slug: 'communication-efficiency', name: 'Communication Efficiency & Compression' },
+          { id: 'fl-kp-5', slug: 'federated-evaluation', name: 'Federated Evaluation & Model Aggregation' },
+        ]
+      },
+      {
+        id: 'differential-privacy',
+        name: 'Differential Privacy',
+        description: 'DP fundamentals, DP-SGD, and privacy accounting.',
+        knowledgePoints: [
+          { id: 'fl-kp-6', slug: 'dp-definition', name: 'Differential Privacy Definition & Composition' },
+          { id: 'fl-kp-7', slug: 'dp-sgd', name: 'DP-SGD & Gradient Clipping' },
+          { id: 'fl-kp-8', slug: 'privacy-accounting', name: 'Privacy Accounting (Rényi DP, Moments Accountant)' },
+          { id: 'fl-kp-9', slug: 'local-dp', name: 'Local Differential Privacy & Randomized Response' },
+          { id: 'fl-kp-10', slug: 'dp-fine-tuning', name: 'DP Fine-Tuning for LLMs' },
+        ]
+      },
+      {
+        id: 'secure-computation',
+        name: 'Secure Multi-Party Computation',
+        description: 'Cryptographic protocols for privacy-preserving ML.',
+        knowledgePoints: [
+          { id: 'fl-kp-11', slug: 'secure-aggregation', name: 'Secure Aggregation Protocols' },
+          { id: 'fl-kp-12', slug: 'homomorphic-encryption', name: 'Homomorphic Encryption for ML' },
+          { id: 'fl-kp-13', slug: 'secret-sharing', name: 'Secret Sharing & MPC Protocols' },
+          { id: 'fl-kp-14', slug: 'trusted-execution', name: 'Trusted Execution Environments (TEE)' },
+          { id: 'fl-kp-15', slug: 'smpc-inference', name: 'SMPC for Private Inference' },
+        ]
+      },
+      {
+        id: 'robust-federated',
+        name: 'Robust & Byzantine-Tolerant FL',
+        description: 'Defending against poisoning attacks and Byzantine clients in FL.',
+        knowledgePoints: [
+          { id: 'fl-kp-16', slug: 'byzantine-attacks', name: 'Byzantine Attacks & Poisoning in FL' },
+          { id: 'fl-kp-17', slug: 'robust-aggregation', name: 'Robust Aggregation (Krum, Trimmed Mean)' },
+          { id: 'fl-kp-18', slug: 'membership-inference', name: 'Membership Inference & Reconstruction Attacks' },
+          { id: 'fl-kp-19', slug: 'model-poisoning', name: 'Model Poisoning & Backdoor Attacks' },
+          { id: 'fl-kp-20', slug: 'fairness-federated', name: 'Fairness in Federated Learning' },
+        ]
+      },
+      {
+        id: 'personalized-fl',
+        name: 'Personalized Federated Learning',
+        description: 'Per-client adaptation, meta-learning in FL, and hybrid approaches.',
+        knowledgePoints: [
+          { id: 'fl-kp-21', slug: 'personalized-fl-intro', name: 'Personalized FL & Client Drift' },
+          { id: 'fl-kp-22', slug: 'maml-federated', name: 'MAML for Federated Meta-Learning' },
+          { id: 'fl-kp-23', slug: 'fedprox', name: 'FedProx & Heterogeneity-Robust FL' },
+          { id: 'fl-kp-24', slug: 'split-learning', name: 'Split Learning & Vertical FL' },
+          { id: 'fl-kp-25', slug: 'fl-llm', name: 'Federated Learning for LLMs' },
+        ]
+      },
+      {
+        id: 'privacy-ml-applications',
+        name: 'Privacy-Preserving ML Applications',
+        description: 'Healthcare, finance, and industry applications of privacy-preserving ML.',
+        knowledgePoints: [
+          { id: 'fl-kp-26', slug: 'healthcare-fl', name: 'FL in Healthcare & Medical Imaging' },
+          { id: 'fl-kp-27', slug: 'finance-fl', name: 'FL in Finance & Fraud Detection' },
+          { id: 'fl-kp-28', slug: 'gdpr-ml', name: 'GDPR, CCPA & ML Compliance' },
+          { id: 'fl-kp-29', slug: 'machine-unlearning', name: 'Machine Unlearning & Right to be Forgotten' },
+          { id: 'fl-kp-30', slug: 'synthetic-data', name: 'Synthetic Data Generation for Privacy' },
+        ]
+      },
+    ]
+  },
+
+  // CAUSAL INFERENCE & CAUSAL ML
+  {
+    id: 'causal-inference',
+    slug: 'causal-inference',
+    name: 'Causal Inference & Causal ML',
+    description: 'Causal reasoning, treatment effect estimation, and causal machine learning methods.',
+    topics: [
+      {
+        id: 'causal-foundations',
+        name: 'Causal Reasoning Foundations',
+        description: 'Correlation vs causation, potential outcomes, and structural causal models.',
+        knowledgePoints: [
+          { id: 'ci-kp-1', slug: 'correlation-vs-causation', name: 'Correlation vs Causation' },
+          { id: 'ci-kp-2', slug: 'potential-outcomes', name: 'Potential Outcomes Framework (Rubin Causal Model)' },
+          { id: 'ci-kp-3', slug: 'structural-causal-models', name: 'Structural Causal Models (SCMs)' },
+          { id: 'ci-kp-4', slug: 'causal-graphs-dags', name: 'Causal Graphs & DAGs' },
+          { id: 'ci-kp-5', slug: 'do-calculus', name: 'do-Calculus & Interventional Distributions' },
+        ]
+      },
+      {
+        id: 'treatment-effects',
+        name: 'Treatment Effect Estimation',
+        description: 'ATE, ATT, CATE, and methods for estimating causal effects from data.',
+        knowledgePoints: [
+          { id: 'ci-kp-6', slug: 'ate-att', name: 'ATE, ATT & Average Treatment Effects' },
+          { id: 'ci-kp-7', slug: 'randomized-experiments', name: 'Randomized Controlled Trials & A/B Tests' },
+          { id: 'ci-kp-8', slug: 'propensity-score', name: 'Propensity Score Matching & Weighting' },
+          { id: 'ci-kp-9', slug: 'instrumental-variables', name: 'Instrumental Variables (IV)' },
+          { id: 'ci-kp-10', slug: 'difference-in-differences', name: 'Difference-in-Differences (DiD)' },
+        ]
+      },
+      {
+        id: 'causal-discovery',
+        name: 'Causal Discovery',
+        description: 'Learning causal structure from observational data.',
+        knowledgePoints: [
+          { id: 'ci-kp-11', slug: 'pc-algorithm', name: 'PC Algorithm & Constraint-Based Methods' },
+          { id: 'ci-kp-12', slug: 'ges-algorithm', name: 'GES & Score-Based Causal Discovery' },
+          { id: 'ci-kp-13', slug: 'lingam', name: 'LiNGAM & Functional Causal Models' },
+          { id: 'ci-kp-14', slug: 'neural-causal-discovery', name: 'Neural Causal Discovery (NOTEARS, DAG-GNN)' },
+          { id: 'ci-kp-15', slug: 'time-series-causality', name: 'Granger Causality & Time Series Causal Discovery' },
+        ]
+      },
+      {
+        id: 'heterogeneous-effects',
+        name: 'Heterogeneous Treatment Effects',
+        description: 'CATE estimation, meta-learners, and causal forests.',
+        knowledgePoints: [
+          { id: 'ci-kp-16', slug: 'cate-estimation', name: 'CATE Estimation & Subgroup Analysis' },
+          { id: 'ci-kp-17', slug: 'meta-learners', name: 'Meta-Learners (S, T, X, R-Learner)' },
+          { id: 'ci-kp-18', slug: 'causal-forests', name: 'Causal Forests & Generalized Random Forests' },
+          { id: 'ci-kp-19', slug: 'double-ml', name: 'Double/Debiased Machine Learning (DML)' },
+          { id: 'ci-kp-20', slug: 'regression-discontinuity', name: 'Regression Discontinuity Design (RDD)' },
+        ]
+      },
+      {
+        id: 'causal-representation',
+        name: 'Causal Representation Learning',
+        description: 'Learning disentangled, causal representations and domain generalization.',
+        knowledgePoints: [
+          { id: 'ci-kp-21', slug: 'disentangled-representations', name: 'Disentangled Causal Representations' },
+          { id: 'ci-kp-22', slug: 'independent-causal-mechanisms', name: 'Independent Causal Mechanisms (ICM)' },
+          { id: 'ci-kp-23', slug: 'invariant-risk-minimization', name: 'Invariant Risk Minimization (IRM)' },
+          { id: 'ci-kp-24', slug: 'counterfactual-reasoning', name: 'Counterfactual Reasoning in ML' },
+          { id: 'ci-kp-25', slug: 'causal-ood', name: 'Causal OOD Generalization' },
+        ]
+      },
+      {
+        id: 'causal-applications',
+        name: 'Causal ML Applications',
+        description: 'Uplift modeling, policy learning, and causal fairness.',
+        knowledgePoints: [
+          { id: 'ci-kp-26', slug: 'uplift-modeling', name: 'Uplift Modeling & Personalized Interventions' },
+          { id: 'ci-kp-27', slug: 'policy-learning', name: 'Optimal Policy Learning & Decision Making' },
+          { id: 'ci-kp-28', slug: 'causal-fairness', name: 'Causal Fairness & Algorithmic Bias' },
+          { id: 'ci-kp-29', slug: 'mediation-analysis', name: 'Mediation Analysis & Path-Specific Effects' },
+          { id: 'ci-kp-30', slug: 'causal-llms', name: 'Causal Reasoning in LLMs' },
+        ]
+      },
+    ]
+  },
+
+  // DIFFUSION MODELS & GENERATIVE AI
+  {
+    id: 'diffusion-models',
+    slug: 'diffusion-models',
+    name: 'Diffusion Models & Generative AI',
+    description: 'Score-based models, DDPM, latent diffusion, and state-of-the-art image/audio/video generation.',
+    topics: [
+      {
+        id: 'diffusion-foundations',
+        name: 'Diffusion Model Foundations',
+        description: 'Forward process, reverse denoising, and the DDPM framework.',
+        knowledgePoints: [
+          { id: 'diff-kp-1', slug: 'forward-diffusion-process', name: 'Forward Diffusion Process & Noise Scheduling' },
+          { id: 'diff-kp-2', slug: 'ddpm', name: 'Denoising Diffusion Probabilistic Models (DDPM)' },
+          { id: 'diff-kp-3', slug: 'score-matching', name: 'Score Matching & Score-Based Models' },
+          { id: 'diff-kp-4', slug: 'ddim', name: 'DDIM & Accelerated Sampling' },
+          { id: 'diff-kp-5', slug: 'classifier-free-guidance', name: 'Classifier-Free Guidance (CFG)' },
+        ]
+      },
+      {
+        id: 'latent-diffusion',
+        name: 'Latent Diffusion & Stable Diffusion',
+        description: 'Latent space diffusion, text-to-image, and Stable Diffusion architecture.',
+        knowledgePoints: [
+          { id: 'diff-kp-6', slug: 'latent-diffusion-models', name: 'Latent Diffusion Models (LDM)' },
+          { id: 'diff-kp-7', slug: 'stable-diffusion-arch', name: 'Stable Diffusion Architecture (VAE + UNet + CLIP)' },
+          { id: 'diff-kp-8', slug: 'controlnet', name: 'ControlNet & Conditional Generation' },
+          { id: 'diff-kp-9', slug: 'lora-diffusion', name: 'LoRA Fine-Tuning for Diffusion Models' },
+          { id: 'diff-kp-10', slug: 'inpainting-outpainting', name: 'Inpainting, Outpainting & Image Editing' },
+        ]
+      },
+      {
+        id: 'advanced-diffusion',
+        name: 'Advanced Diffusion Architectures',
+        description: 'DiT, flow matching, consistency models, and rectified flow.',
+        knowledgePoints: [
+          { id: 'diff-kp-11', slug: 'dit', name: 'Diffusion Transformers (DiT)' },
+          { id: 'diff-kp-12', slug: 'flow-matching', name: 'Flow Matching & Rectified Flow' },
+          { id: 'diff-kp-13', slug: 'consistency-models', name: 'Consistency Models & Distillation' },
+          { id: 'diff-kp-14', slug: 'sdxl', name: 'SDXL & High-Resolution Generation' },
+          { id: 'diff-kp-15', slug: 'flux-model', name: 'FLUX & Next-Gen Diffusion Models' },
+        ]
+      },
+      {
+        id: 'video-audio-generation',
+        name: 'Video & Audio Generation',
+        description: 'Temporal diffusion, text-to-video, and audio synthesis models.',
+        knowledgePoints: [
+          { id: 'diff-kp-16', slug: 'video-diffusion', name: 'Video Diffusion Models (Sora, CogVideo)' },
+          { id: 'diff-kp-17', slug: 'audio-diffusion', name: 'Audio Diffusion (AudioLDM, Stable Audio)' },
+          { id: 'diff-kp-18', slug: '3d-generation', name: '3D Generation (NeRF, Gaussian Splatting)' },
+          { id: 'diff-kp-19', slug: 'motion-generation', name: 'Motion & Avatar Generation' },
+          { id: 'diff-kp-20', slug: 'world-models', name: 'World Models & Simulation' },
+        ]
+      },
+      {
+        id: 'diffusion-training',
+        name: 'Training & Fine-Tuning Diffusion Models',
+        description: 'DreamBooth, textual inversion, RLHF for diffusion, and efficient training.',
+        knowledgePoints: [
+          { id: 'diff-kp-21', slug: 'dreambooth', name: 'DreamBooth & Few-Shot Personalization' },
+          { id: 'diff-kp-22', slug: 'textual-inversion', name: 'Textual Inversion & Concept Embedding' },
+          { id: 'diff-kp-23', slug: 'rlhf-diffusion', name: 'RLHF for Diffusion (DDPO, DPO-Diffusion)' },
+          { id: 'diff-kp-24', slug: 'distillation-diffusion', name: 'Knowledge Distillation for Fast Inference' },
+          { id: 'diff-kp-25', slug: 'diffusion-eval', name: 'Evaluation Metrics (FID, CLIP Score, IS)' },
+        ]
+      },
+      {
+        id: 'diffusion-applications',
+        name: 'Diffusion Applications & Multimodal',
+        description: 'Real-world applications in science, medicine, and multimodal generation.',
+        knowledgePoints: [
+          { id: 'diff-kp-26', slug: 'molecular-generation', name: 'Molecular Generation with Diffusion' },
+          { id: 'diff-kp-27', slug: 'medical-imaging-diffusion', name: 'Medical Imaging & Anomaly Detection' },
+          { id: 'diff-kp-28', slug: 'image-restoration', name: 'Image Restoration & Super-Resolution' },
+          { id: 'diff-kp-29', slug: 'multimodal-diffusion', name: 'Multimodal Diffusion (Image + Text + Audio)' },
+          { id: 'diff-kp-30', slug: 'diffusion-agents', name: 'Diffusion Models as World Model Agents' },
+        ]
+      },
+    ]
+  },
+
+  // GRAPH NEURAL NETWORKS & GEOMETRIC DEEP LEARNING
+  {
+    id: 'graph-neural-networks',
+    slug: 'graph-neural-networks',
+    name: 'Graph Neural Networks & Geometric DL',
+    description: 'Message passing, graph convolutions, and geometric deep learning for structured data.',
+    topics: [
+      {
+        id: 'graph-foundations',
+        name: 'Graph Theory & Representations',
+        description: 'Graph data structures, adjacency matrices, and graph properties for ML.',
+        knowledgePoints: [
+          { id: 'gnn-kp-1', slug: 'graph-representations', name: 'Graph Representations & Adjacency Matrices' },
+          { id: 'gnn-kp-2', slug: 'graph-laplacian', name: 'Graph Laplacian & Spectral Properties' },
+          { id: 'gnn-kp-3', slug: 'graph-features', name: 'Node, Edge & Graph-Level Features' },
+          { id: 'gnn-kp-4', slug: 'heterogeneous-graphs', name: 'Heterogeneous & Dynamic Graphs' },
+          { id: 'gnn-kp-5', slug: 'graph-datasets', name: 'Graph Datasets & Benchmarks (OGB, TU)' },
+        ]
+      },
+      {
+        id: 'message-passing',
+        name: 'Message Passing Neural Networks',
+        description: 'MPNN framework, aggregation functions, and graph convolution variants.',
+        knowledgePoints: [
+          { id: 'gnn-kp-6', slug: 'mpnn-framework', name: 'Message Passing Neural Network (MPNN) Framework' },
+          { id: 'gnn-kp-7', slug: 'gcn', name: 'Graph Convolutional Networks (GCN)' },
+          { id: 'gnn-kp-8', slug: 'graphsage', name: 'GraphSAGE & Inductive Learning' },
+          { id: 'gnn-kp-9', slug: 'gat', name: 'Graph Attention Networks (GAT)' },
+          { id: 'gnn-kp-10', slug: 'gin', name: 'Graph Isomorphism Networks (GIN)' },
+        ]
+      },
+      {
+        id: 'graph-transformers',
+        name: 'Graph Transformers & Scalable GNNs',
+        description: 'Attention mechanisms on graphs, scalable training, and graph foundation models.',
+        knowledgePoints: [
+          { id: 'gnn-kp-11', slug: 'graph-transformer', name: 'Graph Transformers & Global Attention' },
+          { id: 'gnn-kp-12', slug: 'positional-encoding-graphs', name: 'Positional Encoding for Graphs' },
+          { id: 'gnn-kp-13', slug: 'scalable-gnn', name: 'Scalable GNNs (Cluster-GCN, GraphBELL)' },
+          { id: 'gnn-kp-14', slug: 'over-smoothing', name: 'Over-Smoothing & Over-Squashing' },
+          { id: 'gnn-kp-15', slug: 'gnn-expressiveness', name: 'GNN Expressiveness & WL Test' },
+        ]
+      },
+      {
+        id: 'graph-generative',
+        name: 'Graph Generation & Molecular ML',
+        description: 'Generating graphs, molecular property prediction, and drug discovery.',
+        knowledgePoints: [
+          { id: 'gnn-kp-16', slug: 'graph-vae', name: 'Graph VAE & Generative Models' },
+          { id: 'gnn-kp-17', slug: 'mol-property-prediction', name: 'Molecular Property Prediction' },
+          { id: 'gnn-kp-18', slug: 'drug-discovery-gnn', name: 'Drug Discovery with GNNs' },
+          { id: 'gnn-kp-19', slug: 'diffusion-graphs', name: 'Diffusion Models for Graph Generation' },
+          { id: 'gnn-kp-20', slug: 'protein-structure', name: 'Protein Structure Prediction (AlphaFold)' },
+        ]
+      },
+      {
+        id: 'knowledge-graphs',
+        name: 'Knowledge Graphs & Link Prediction',
+        description: 'Knowledge graph embeddings, relation learning, and reasoning.',
+        knowledgePoints: [
+          { id: 'gnn-kp-21', slug: 'knowledge-graph-embeddings', name: 'Knowledge Graph Embeddings (TransE, RotatE)' },
+          { id: 'gnn-kp-22', slug: 'link-prediction', name: 'Link Prediction & Graph Completion' },
+          { id: 'gnn-kp-23', slug: 'relation-networks', name: 'Relational Networks & Reasoning' },
+          { id: 'gnn-kp-24', slug: 'graph-rag', name: 'Graph RAG & Knowledge-Augmented LLMs' },
+          { id: 'gnn-kp-25', slug: 'temporal-knowledge-graphs', name: 'Temporal Knowledge Graphs' },
+        ]
+      },
+      {
+        id: 'geometric-dl',
+        name: 'Geometric Deep Learning',
+        description: 'Symmetry, equivariance, and learning on manifolds and point clouds.',
+        knowledgePoints: [
+          { id: 'gnn-kp-26', slug: 'equivariance-symmetry', name: 'Equivariance & Symmetry in Neural Networks' },
+          { id: 'gnn-kp-27', slug: 'point-clouds', name: 'Point Cloud Learning (PointNet, PointNet++)' },
+          { id: 'gnn-kp-28', slug: 'mesh-neural-networks', name: 'Mesh & Surface Neural Networks' },
+          { id: 'gnn-kp-29', slug: 'se3-equivariant', name: 'SE(3)-Equivariant Networks' },
+          { id: 'gnn-kp-30', slug: 'topological-dl', name: 'Topological Deep Learning & TDA' },
+        ]
+      },
+    ]
+  },
+
   {
     id: 'probabilistic-ml',
     slug: 'probabilistic-ml',
