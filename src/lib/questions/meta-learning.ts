@@ -212,7 +212,7 @@ const questions: Record<string, Question[]> = {
         "Prototypical Networks use softmax over negative squared Euclidean distances to the prototypes to produce class probabilities for a query.",
       correctAnswer: "True",
       explanation:
-        "The probability of a query x belonging to class k is p(y=k|x) = exp(−d(f_\\phi(x), c_k)) / \\Sigma_{k'} exp(−d(f_\\phi(x), c_{k'})), where d is squared Euclidean distance. Snell et al. showed that squared Euclidean (not cosine) distance is crucial - it corresponds to a Bregman divergence under a Gaussian assumption.",
+        "The probability of a query x belonging to class k is p(y=k|x) = exp(-d(f_\\phi(x), c_k)) / \\Sigma_{k'} exp(-d(f_\\phi(x), c_{k'})), where d is squared Euclidean distance. Snell et al. showed that squared Euclidean (not cosine) distance is crucial - it corresponds to a Bregman divergence under a Gaussian assumption.",
       hints: [
         "Smaller distance \\to higher score \\to higher probability - the negative sign converts distance to similarity.",
         "Softmax turns these scores into a proper probability distribution over classes.",
@@ -380,20 +380,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Reptile (Nichol et al., 2018) updates the meta-parameters by the rule: \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta), where \\phi is the result of k SGD steps on a sampled task. What is the Reptile gradient when k=1?",
+        "Reptile (Nichol et al., 2018) updates the meta-parameters by the rule: \\theta \\leftarrow \\theta + \\epsilon(\\phi - \\theta), where \\phi is the result of k SGD steps on a sampled task. What is the Reptile gradient when k=1?",
       options: [
         "Identical to the standard SGD gradient on the task loss - no meta-learning occurs",
         "The Reptile gradient equals the task loss gradient, same as FOMAML with k=1 inner steps",
-        "The Reptile gradient is zero because \\phi − \\theta cancels with the learning rate",
+        "The Reptile gradient is zero because \\phi - \\theta cancels with the learning rate",
         "The Reptile gradient averages gradients across all tasks seen so far",
       ],
       correctAnswer: 1,
       explanation:
-        "When k=1, \\phi = \\theta − \\alpha\\nabla\mathcal{L}_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla\mathcal{L}_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta − \\epsilon\\alpha\\nabla\mathcal{L}_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta) = \\theta − \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss - the same as FOMAML with one inner step. For k > 1, \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta) − \\alpha\\nabla_\\thetaL_i(\\theta − \\alpha\\nabla_\\thetaL_i(\\theta)) − ... (k compositions), giving Reptile its distinct behaviour.",
+        "When k=1, \\phi = \\theta - \\alpha\\nabla\mathcal{L}_i(\\theta), so \\phi - \\theta = -\\alpha\\nabla\mathcal{L}_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta - \\epsilon\\alpha\\nabla\mathcal{L}_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta - \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi - \\theta = -\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi - \\theta) = \\theta - \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss - the same as FOMAML with one inner step. For k > 1, \\phi = \\theta - \\alpha\\nabla_\\thetaL_i(\\theta) - \\alpha\\nabla_\\thetaL_i(\\theta - \\alpha\\nabla_\\thetaL_i(\\theta)) - ... (k compositions), giving Reptile its distinct behaviour.",
       hints: [
         'Reptile\'s update is "move \\theta toward where the task gradient took you" - a form of interpolation.',
         "Think about what \\theta'_i - \\theta represents when k=1: just one gradient descent step.",
-        "For k > 1, \\phi = \\theta after k composed SGD steps. Reptile moves \\theta toward this \\phi, averaging over tasks: \\theta \\leftarrow \\theta + \\epsilon(\\phī − \\theta) where \\phī is the average post-adaptation parameter.",
+        "For k > 1, \\phi = \\theta after k composed SGD steps. Reptile moves \\theta toward this \\phi, averaging over tasks: \\theta \\leftarrow \\theta + \\epsilon(\\phī - \\theta) where \\phī is the average post-adaptation parameter.",
       ],
     },
     {
@@ -766,14 +766,14 @@ const questions: Record<string, Question[]> = {
       question:
         "In gradient-based meta-learning, the bi-level optimization has an inner and outer loop. Using MAML notation, the complete outer-loop update is:",
       options: [
-        "\\theta \\leftarrow \\theta − \\beta\\nabla_\\theta \\Sigma\\_i L_{T_i}(f_{\\theta'_i}), where \\theta'_i = \\theta − \\alpha\\nabla_\\theta L_{T_i}(f_\\theta) and \\beta is the meta-learning rate",
-        "\\theta \\leftarrow \\theta − \\alpha\\nabla_\\theta \\Sigma\\_i L_{T_i}(f_\\theta), treating each task independently without inner-loop adaptation",
-        "\\theta \\leftarrow \\theta − \\beta \\Sigma\\_i \\nabla_{\\theta'_i} L_{T_i}(f_{\\theta'_i}), where gradients are taken with respect to the adapted parameters only",
-        "\\theta \\leftarrow \\theta + \\beta(\\theta'_i − \\theta), the Reptile update using the difference between adapted and original parameters",
+        "\\theta \\leftarrow \\theta - \\beta\\nabla_\\theta \\Sigma\\_i L_{T_i}(f_{\\theta'_i}), where \\theta'_i = \\theta - \\alpha\\nabla_\\theta L_{T_i}(f_\\theta) and \\beta is the meta-learning rate",
+        "\\theta \\leftarrow \\theta - \\alpha\\nabla_\\theta \\Sigma\\_i L_{T_i}(f_\\theta), treating each task independently without inner-loop adaptation",
+        "\\theta \\leftarrow \\theta - \\beta \\Sigma\\_i \\nabla_{\\theta'_i} L_{T_i}(f_{\\theta'_i}), where gradients are taken with respect to the adapted parameters only",
+        "\\theta \\leftarrow \\theta + \\beta(\\theta'_i - \\theta), the Reptile update using the difference between adapted and original parameters",
       ],
       correctAnswer: 0,
       explanation:
-        "The MAML bi-level optimization: inner loop computes \\theta'_i = \\theta − \\alpha\\nabla\mathcal{L}_{T_i}(\\theta) on the support set; outer loop evaluates the meta-loss on the query set and updates: \\theta \\leftarrow \\theta − \\beta\\nabla_\\theta \\Sigma_i L_{T_i}(f_{\\theta'_i}). The gradient \\nabla_\\theta L(f_{\\theta'_i}) requires differentiating through the inner loop (second-order), giving terms involving the Hessian \\partial\\^2L/\\partial\\theta\\^2.",
+        "The MAML bi-level optimization: inner loop computes \\theta'_i = \\theta - \\alpha\\nabla\mathcal{L}_{T_i}(\\theta) on the support set; outer loop evaluates the meta-loss on the query set and updates: \\theta \\leftarrow \\theta - \\beta\\nabla_\\theta \\Sigma_i L_{T_i}(f_{\\theta'_i}). The gradient \\nabla_\\theta L(f_{\\theta'_i}) requires differentiating through the inner loop (second-order), giving terms involving the Hessian \\partial\\^2L/\\partial\\theta\\^2.",
       hints: [
         "Inner loop: adapt to each task; outer loop: update the initialization based on post-adaptation performance.",
         "\\alpha is the inner learning rate (task-level); \\beta is the outer/meta learning rate.",
@@ -798,19 +798,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The exact MAML meta-gradient \\nabla_\\theta L_{T_i}(f_{\\theta'_i}) involves a Hessian term. Using the chain rule with \\theta'_i = \\theta − \\alpha\\nabla\mathcal{L}_{T_i}(\\theta), the full expression is:",
+        "The exact MAML meta-gradient \\nabla_\\theta L_{T_i}(f_{\\theta'_i}) involves a Hessian term. Using the chain rule with \\theta'_i = \\theta - \\alpha\\nabla\mathcal{L}_{T_i}(\\theta), the full expression is:",
       options: [
-        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} \\cdot (I − \\alpha\\nabla\\^2_\\theta L_{T_i}(\\theta)) - requiring a Hessian-vector product computation",
+        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} \\cdot (I - \\alpha\\nabla\\^2_\\theta L_{T_i}(\\theta)) - requiring a Hessian-vector product computation",
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta} L_{T_i}(f_\\theta) - the same as the pre-adaptation gradient (FOMAML approximation)",
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} / \\alpha - the gradient divided by the inner learning rate",
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = 0 when one inner step is used, requiring at least two steps for a non-zero gradient",
       ],
       correctAnswer: 0,
       explanation:
-        "By chain rule: \\partialL(f_{\\theta'_i})/\\partial\\theta = \\partialL/\\partial\\theta'_i \\cdot \\partial\\theta'_i/\\partial\\theta = \\nabla_{\\theta'_i}L \\cdot (I − \\alpha\\nabla\\^2L_{T_i}(\\theta)). The Hessian \\nabla\\^2L_{T_i}(\\theta) makes this second-order. FOMAML drops this term, using only \\nabla_{\\theta'_i}L (first order). The Hessian-vector product can be computed via reverse-mode autodiff without materializing the full Hessian.",
+        "By chain rule: \\partialL(f_{\\theta'_i})/\\partial\\theta = \\partialL/\\partial\\theta'_i \\cdot \\partial\\theta'_i/\\partial\\theta = \\nabla_{\\theta'_i}L \\cdot (I - \\alpha\\nabla\\^2L_{T_i}(\\theta)). The Hessian \\nabla\\^2L_{T_i}(\\theta) makes this second-order. FOMAML drops this term, using only \\nabla_{\\theta'_i}L (first order). The Hessian-vector product can be computed via reverse-mode autodiff without materializing the full Hessian.",
       hints: [
         "Use chain rule: dL(\\theta'(\\theta))/d\\theta = dL/d\\theta' \\cdot d\\theta'/d\\theta.",
-        "d\\theta'/d\\theta = d(\\theta − \\alpha\\nabla\mathcal{L})/d\\theta = I − \\alpha\\nabla\\^2L - this is the Hessian term.",
+        "d\\theta'/d\\theta = d(\\theta - \\alpha\\nabla\mathcal{L})/d\\theta = I - \\alpha\\nabla\\^2L - this is the Hessian term.",
       ],
     },
   ],
@@ -1642,9 +1642,9 @@ const questions: Record<string, Question[]> = {
         "Personalised federated learning (pFL) approaches like pFedMe cast personalization as a meta-learning problem where each client performs a few inner-loop adaptation steps to obtain a personalized model while the global model is optimized as the meta-initialisation.",
       correctAnswer: "True",
       explanation:
-        "pFedMe formulates per-client personalization as MAML: the global model \\theta is the meta-initialization; each client solves argmin_\\theta_i L_i(\\theta_i) + (\\lambda/2)||\\theta_i − \\theta||\\^2 to get a personalized model \\theta_i close to but adapted from the global model. The global model is then updated based on the gradient toward each client\'s personalized model.",
+        "pFedMe formulates per-client personalization as MAML: the global model \\theta is the meta-initialization; each client solves argmin_\\theta_i L_i(\\theta_i) + (\\lambda/2)||\\theta_i - \\theta||\\^2 to get a personalized model \\theta_i close to but adapted from the global model. The global model is then updated based on the gradient toward each client\'s personalized model.",
       hints: [
-        "The regularization term ||\\theta_i − \\theta||\\^2 keeps the personalized model close to the global initialization.",
+        "The regularization term ||\\theta_i - \\theta||\\^2 keeps the personalized model close to the global initialization.",
         "This is analogous to MAML\'s inner loop with an L2 proximity constraint instead of a fixed number of gradient steps.",
       ],
     },
@@ -1742,6 +1742,11 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Large text-to-image models generalize to novel concept combinations by conditioning on text prompts at inference time. The textual conditioning space is rich enough that combinations of concepts unseen during training can still produce coherent outputs - a form of compositional few-shot generalization.",
+      hints: [
+        "Text-to-image models never see concept combinations during training — they must generalize from the textual conditioning space at inference time.",
+        "The conditioning space is compositional: novel text prompts combine learned concepts in new ways.",
+      ],
+
     },
     {
       id: "q-meta-kp31-2",
@@ -2026,11 +2031,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n\[\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\textrm{where } \\phi_i = \\textrm{SGD}^K(\\theta, \\mathcal{D}_i^\\textrm{support}).\]\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
+        "**Step 1:** Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after $K$ inner-loop SGD steps on each task:\n\[\theta \leftarrow \theta + \varepsilon(\phi_i - \theta), \quad \textrm{where } \phi_i = \textrm{SGD}^K(\theta, \mathcal{D}_i^\textrm{support}).\]\n\n        **Step 2:** The MAML gradient is \mathbb{E}_i[\nabla_\theta\mathcal{L}_{T_i}(f_{\theta'_i})] \cdot (I - \alpha\nabla^2\mathcal{L}) — it requires second-order derivatives. Reptile's gradient \mathbb{E}_i[\theta'_i - \theta] can be computed without any second-order derivatives.\n\n        **Step 3:** For $K=1$, \theta'_i = \theta - \alpha\nabla\mathcal{L}$, so \theta'_i - \theta = -\alpha\nabla\mathcal{L}$, equivalent to FOMAML. For $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima, but via a different update trajectory.",
       hints: [
-        "The MAML gradient is $\\mathbb{E}_i[\\nabla_{\\theta}\\mathcal{L}_{T_i}(f_{\\theta'_i})] \\cdot (I - \\alpha\\nabla^2\\mathcal{L})$ - it requires second-order derivatives.",
-        "Reptile's gradient $\\mathbb{E}_i[\\theta'_i - \\theta]$ can be computed without any second-order derivatives - just the difference between adapted and original parameters.",
-        "For K=1, $\\theta'_i = \\theta - \\alpha\\nabla\\mathcal{L}$, so $\\theta'_i - \\theta = -\\alpha\\nabla\\mathcal{L}$, equivalent to FOMAML.",
+        "The MAML gradient involves second-order derivatives; Reptile's gradient \mathbb{E}_i[\theta'_i - \theta] does not.",
+        "For $K=1$, Reptile's update \theta \leftarrow \theta + \varepsilon(\phi_i - \theta)$ is equivalent to FOMAML.",
       ],
     },
     {
@@ -2038,7 +2042,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Reptile\'s update rule is: \\theta \\leftarrow \\theta + \\epsilon(\\phi_i − \\theta) where \\phi_i are the post-inner-loop parameters for task i. What does this geometrically represent?",
+        "Reptile\'s update rule is: \\theta \\leftarrow \\theta + \\epsilon(\\phi_i - \\theta) where \\phi_i are the post-inner-loop parameters for task i. What does this geometrically represent?",
       options: [
         "A projection of \\theta onto the feasible set of task-optimal parameters",
         "A step towards the centroid of task-optimal parameter solutions, which MAML theory shows corresponds to an initialization that is close to many task optima simultaneously",
@@ -2047,9 +2051,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Reptile moves the meta-parameters towards the task-specific optimal parameters \\phi_i obtained after inner-loop adaptation. Averaged over tasks, this moves \\theta towards the "average optimal solution" across tasks - a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.\n\nGeometrically, the Reptile update \\theta \\leftarrow \\theta + \\epsilon(\\phi_i − \\theta) interpolates between the current initialization \\theta and the task-adapted parameters \\phi_i. Averaged over N tasks: \\theta_new = \\theta + (\\epsilon/N)\\Sigma_i(\\phi_i − \\theta) = (1 − \\epsilon)\\theta + (\\epsilon/N)\\Sigma_i\\phi_i. This is a weighted average of \\theta and the task optima \\phi_i, pulling \\theta toward their centroid. MAML\'s theory shows that an initialization near all task manifolds enables few-shot adaptation because the distance to any task optimum is small from such a point.',
+        'Reptile moves the meta-parameters towards the task-specific optimal parameters \\phi_i obtained after inner-loop adaptation. Averaged over tasks, this moves \\theta towards the "average optimal solution" across tasks - a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.\n\nGeometrically, the Reptile update \\theta \\leftarrow \\theta + \\epsilon(\\phi_i - \\theta) interpolates between the current initialization \\theta and the task-adapted parameters \\phi_i. Averaged over N tasks: \\theta_new = \\theta + (\\epsilon/N)\\Sigma_i(\\phi_i - \\theta) = (1 - \\epsilon)\\theta + (\\epsilon/N)\\Sigma_i\\phi_i. This is a weighted average of \\theta and the task optima \\phi_i, pulling \\theta toward their centroid. MAML\'s theory shows that an initialization near all task manifolds enables few-shot adaptation because the distance to any task optimum is small from such a point.',
       hints: [
-        "The Reptile update is \\theta_new = (1 − \\epsilon)\\theta + \\epsilon \\cdot (1/N)\\Sigma_i\\phi_i - a convex combination of the current \\theta and the task-optimal parameters.",
+        "The Reptile update is \\theta_new = (1 - \\epsilon)\\theta + \\epsilon \\cdot (1/N)\\Sigma_i\\phi_i - a convex combination of the current \\theta and the task-optimal parameters.",
         "Think of \\phi_i as the \"task-specific solution\" after adaptation. Reptile averages these solutions and moves \\theta toward their centroid.",
         "The goal is an initialization from which any task optimum is reachable in a few gradient steps - minimizing the maximum distance to any task manifold.",
       ],

@@ -2317,7 +2317,7 @@ const extra2: Record<string, Question[]> = {
       question: "Conservative Q-Learning (CQL, Kumar et al., 2020) penalizes Q-values for out-of-distribution (OOD) actions. What is the specific penalty CQL adds to the standard Bellman loss?",
       options: [
         "CQL subtracts the Q-value of the most likely dataset action from the objective",
-        "CQL minimizes E_{s~D}[log \\Sigma_a exp(Q(s,a))] - E_{(s,a)~D}[Q(s,a)], pushing down Q-values for actions not in the dataset while pushing up Q-values for dataset actions",
+        "CQL minimizes $E_{s \sim D}[\log \\Sigma_a \exp(Q(s,a))]$ - E_{(s,a)~D}[Q(s,a)], pushing down Q-values for actions not in the dataset while pushing up Q-values for dataset actions",
         "CQL adds an L2 regularizer on Q-values to prevent them from growing too large",
         "CQL clips Q-values at zero for any action not observed in the offline dataset",
       ],
@@ -2340,7 +2340,7 @@ const extra2: Record<string, Question[]> = {
         "Expectile regression adds a monotone transformation to make Q-values more stable numerically",
       ],
       correctAnswer: 1,
-      explanation: "IQL's key insight: to find V*(s) = max_a Q*(s,a) without querying OOD actions, use expectile regression on the value function V(s). The expectile loss L_\\tau^2(u) = |\\tau - 1(u<0)| * u^2 with \\tau close to 1 asymmetrically penalizes underestimation, fitting V(s) to the upper quantile of Q(s,a) over dataset actions. The policy is then extracted via advantage-weighted regression: \\pi(a|s) \\propto exp(\\beta * (Q(s,a) - V(s))). IQL outperforms CQL on many benchmarks and scales better to complex function approximators.",
+      explanation: "IQL's key insight: to find V*(s) = max_a Q*(s,a) without querying OOD actions, use expectile regression on the value function V(s). The expectile loss L_\\tau^2(u) = |\\tau - 1(u<0)| * u^2 with \\tau close to 1 asymmetrically penalizes underestimation, fitting V(s) to the upper quantile of Q(s,a) over dataset actions. The policy is then extracted via advantage-weighted regression: \\pi(a|s) \propto \exp(\beta * (Q(s,a) - V(s))). IQL outperforms CQL on many benchmarks and scales better to complex function approximators.",
       hints: [
         "Expectile \\tau=0.5 recovers the mean (like L2 regression). What does \\tau \\to 1.0 compute?",
         "IQL never evaluates Q at OOD actions - it only uses (s,a) pairs from the dataset. How does it still approximate the policy improvement step?",
@@ -2470,7 +2470,7 @@ const extra2: Record<string, Question[]> = {
       question: "Direct Preference Optimization (DPO, Rafailov et al., 2023) eliminates the separate reward model training phase of RLHF. What is the key mathematical insight that enables this?",
       options: [
         "DPO replaces pairwise comparisons with absolute ratings, making reward model training unnecessary",
-        "The optimal RLHF policy \\pi* has a closed-form expression as \\pi*(y|x) \\propto \\pi_ref(y|x) \cdot exp(R*(x,y)/\\beta). Inverting this gives R*(x,y) = \\beta \cdot log(\\pi*(y|x)/\\pi_ref(y|x)) + const. Substituting into the Bradley-Terry preference model yields a loss directly in terms of the policy \\pi, bypassing reward model training.",
+        "The optimal RLHF policy $\pi^*$ has a closed-form expression as $\pi^*(y|x) \propto \pi_{\text{ref}}(y|x) \cdot \exp(R^*(x,y)/\beta)$. Inverting this gives $R^*(x,y) = \beta \cdot \log(\pi^*(y|x)/\pi_{\text{ref}}(y|x)) + const$. Substituting into the Bradley-Terry preference model yields a loss directly in terms of the policy $\pi$, bypassing reward model training.",
         "DPO uses model-based RL to simulate preference comparisons internally without human feedback",
         "DPO trains the reward model and policy simultaneously in a single optimization step",
       ],
@@ -2490,14 +2490,14 @@ const extra2: Record<string, Question[]> = {
       explanation: "RLHF with PPO is an online RL method: at each training step, the LLM generates new completions (samples from \\pi_\\theta), which are scored by the reward model, and PPO updates are computed. This requires inference during training, making it expensive. DPO is offline: the loss is computed entirely from a fixed dataset of (prompt, preferred, rejected) triples. No LLM inference is needed during training, only forward passes through the policy and reference model. This makes DPO 2-3x faster to train than PPO-based RLHF.",
       hints: [
         "PPO's policy gradient requires computing E_{y~\\pi_\\theta}[R(x,y)*\\nablalog \\pi_\\theta(y|x)]. Does this require sampling from \\pi_\\theta?",
-        "DPO's loss -log \\sigma(\\beta*(log(\\pi_\\theta/\\pi_ref)(y_w) - log(\\pi_\\theta/\\pi_ref)(y_l))) requires only forward passes through \\pi_\\theta and \\pi_ref. Does this require sampling?",
+        "DPO's loss $-\log \sigma(\beta \cdot (\log(\pi_\theta/\pi_{\text{ref}})(y_w) - \log(\pi_\theta/\pi_{\text{ref}})(y_l)))$ requires only forward passes through \pi_\theta and \pi_{\text{ref}}. Does this require sampling?",
       ],
     },
     {
       id: "q-rla-kp45-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "In RLHF fine-tuning with PPO, the combined reward used for policy updates is typically R_total(x,y) = R_model(x,y) - \\beta \cdot log(\\pi_\\theta(y|x) / \\pi_ref(y|x)). Why is the log ratio term included per token rather than as a single episode-level penalty?",
+      question: "In RLHF fine-tuning with PPO, the combined reward used for policy updates is typically $R_{\text{total}}(x,y) = R_{\text{model}}(x,y) - \beta \cdot \log(\\pi_\\theta(y|x) / \\pi_{\text{ref}}(y|x))$. Why is the log ratio term included per token rather than as a single episode-level penalty?",
       options: [
         "Per-token KL is easier to implement than episode-level KL",
         "Per-token KL provides a dense reward signal at each token, reducing the credit assignment problem. It keeps the per-step optimization well-defined and prevents degenerate length-based exploits (e.g., generating very long responses to dilute the KL penalty).",

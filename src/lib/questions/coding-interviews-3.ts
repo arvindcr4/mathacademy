@@ -350,7 +350,7 @@ const questions: Record<string, Question[]> = {
 
   "word-break": [
     {
-      id: "q-wb-1",
+      id: "q-wb-ci3-1",
       type: "multiple-choice",
       difficulty: "medium",
       question: "Word Break recurrence:",
@@ -369,7 +369,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-wb-2",
+      id: "q-wb-ci3-2",
       type: "multiple-choice",
       difficulty: "medium",
       question: '"leetcode" with wordDict=["leet","code"] is:',
@@ -383,7 +383,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-wb-3",
+      id: "q-wb-ci3-3",
       type: "true-false",
       difficulty: "medium",
       question: "Using trie can optimize word break dictionary lookup.",
@@ -396,7 +396,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-wb-4",
+      id: "q-wb-ci3-4",
       type: "multiple-choice",
       difficulty: "hard",
       question: "DP solution time complexity:",
@@ -410,7 +410,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-wb-5",
+      id: "q-wb-ci3-5",
       type: "multiple-choice",
       difficulty: "hard",
       question: "Without DP, recursive approach with memoization solves by:",
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-wb-6",
+      id: "q-wb-ci3-6",
       type: "true-false",
       difficulty: "easy",
       question: "In the Word Break problem, $dp[0]$ is initialized to $\\texttt{true}$ because an empty prefix can always be segmented.",
