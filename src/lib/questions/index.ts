@@ -38,6 +38,9 @@ import "./coding-interviews-3";
 import "./gemini-multimodal";
 import "./karpathy-nn-zero-to-hero";
 import "./fastai-deep-learning";
+import "./causal-inference";
+import "./diffusion-models";
+import "./graph-neural-networks";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";
