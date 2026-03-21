@@ -1471,7 +1471,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`F.cross_entropy` fuses the log, softmax, and negative log-likelihood operations. By subtracting the maximum logit before exponentiating, it ensures numerical stability, avoiding 'inf' and 'NaN' errors while being highly optimized.",
+        "**Step 1:** `F.cross_entropy` fuses log, softmax, and NLL operations into a single call.\n\n**Step 2:** It uses the log-sum-exp trick (subtracting max logit) for numerical stability.\n\n**Step 3:** This avoids 'inf' and 'NaN' errors while being highly optimized.",
       hints: [
         "The log-sum-exp trick subtracts max(logits) before exponentiating to prevent overflow.",
         "Using F.cross_entropy directly on logits is always preferred over manual softmax + log + nll.",
@@ -1493,7 +1493,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Minibatches provide a noisy but computationally cheap estimate of the true gradient. Taking many small, fast steps generally leads to much faster convergence than taking a single perfectly accurate step that requires scanning the whole dataset.",
+        "**Step 1:** Full-batch GD computes exact gradients but is very slow per update.\n\n**Step 2:** Minibatches provide noisy but cheap gradient estimates.\n\n**Step 3:** Many small steps generally lead to faster convergence than one slow, accurate step.",
       hints: [
         "A minibatch of 32 is 1000x faster to process than a dataset of 32000.",
         "The noise in minibatch gradients can even help escape sharp local minima.",
@@ -1515,7 +1515,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Learning rate decay allows the model to make large updates early on to rapidly descend the loss landscape, and then take smaller, precise steps later to converge smoothly to the bottom of the minimum without overshooting.",
+        "**Step 1:** Initially, a high learning rate enables rapid descent down the loss landscape.\n\n**Step 2:** Later, a decaying learning rate allows smaller, precise steps.\n\n**Step 3:** This helps converge smoothly to the minimum without overshooting.",
       hints: [
         "Karpathy uses a learning rate finder and step decay in the makemore lectures.",
         "Cosine annealing and step decay are two popular learning rate schedules.",
@@ -1537,7 +1537,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If weights are initialized randomly without proper scaling, the variance of the outputs shrinks or grows exponentially with each layer. Kaiming initialization scales weights by a factor of `sqrt(gain / fan_in)` to maintain a stable variance.",
+        "**Step 1:** Without proper initialization, variance of outputs can shrink or grow exponentially with depth.\n\n**Step 2:** Kaiming initialization scales weights by sqrt(gain / fan_in) to maintain stable variance.\n\n**Step 3:** For ReLU, gain = sqrt(2) compensates for the zero-ing of negative inputs.",
       hints: [
         "For ReLU, Kaiming uses gain=sqrt(2); for Tanh, gain \\approx 5/3.",
         "fan_in is the number of input connections to a neuron.",
@@ -1559,7 +1559,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "For ReLU, negative inputs give 0 output and 0 gradient. For Tanh, inputs far from 0 saturate at 1 or -1, where the gradient is completely flat (0). In both cases, if a neuron always hits these flat regions, it receives no gradients to update its weights.",
+        "**Step 1:** ReLU gives 0 output and 0 gradient for negative inputs; Tanh saturates for extreme inputs.\n\n**Step 2:** In both cases, the local gradient becomes 0 in flat regions.\n\n**Step 3:** If a neuron always hits these regions, it receives no gradients and stops learning.",
       hints: [
         "Plot the gradient of tanh - it is highest near 0 and approaches 0 for large |x|.",
         "Karpathy visualizes the fraction of dead neurons using histograms of pre-activations.",
@@ -1581,7 +1581,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "BatchNorm computes the mean and variance of the batch and normalizes the activations. It then applies a learned scale and shift (`gamma` and `beta`), ensuring activations stay in a stable range, which dramatically smooths gradient flow.",
+        "**Step 1:** BatchNorm computes the mean and variance of activations over the current minibatch.\n\n**Step 2:** It normalizes to zero mean and unit variance.\n\n**Step 3:** Learned gamma and beta allow the network to shift and scale normalized values for stability.",
       hints: [
         "BatchNorm reduces sensitivity to weight initialization.",
         "gamma and beta are learned parameters that allow the network to undo the normalization if needed.",
@@ -1603,7 +1603,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "At inference time, you might process a single example (batch size 1), where batch statistics don't make sense. Thus, BatchNorm tracks an exponentially moving average of means and variances during training to use later during inference.",
+        "**Step 1:** During training, BatchNorm uses the current batch's mean and variance for normalization.\n\n**Step 2:** At inference with batch size 1, batch statistics would be unreliable.\n\n**Step 3:** BatchNorm uses running mean/variance (accumulated via EMA) at inference time.",
       hints: [
         "In PyTorch, model.eval() switches BatchNorm to use the stored running stats.",
         "model.train() switches back to using batch statistics.",
@@ -1625,7 +1625,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Hooks are callback functions you can attach to `nn.Module` objects. They allow you to observe, log, or even modify the tensors passing through the forward or backward passes-excellent for diagnosing vanishing gradients or dead neurons.",
+        "**Step 1:** Hooks are callback functions attached to `nn.Module` objects.\n\n**Step 2:** They allow you to observe, log, or modify tensors during forward or backward passes.\n\n**Step 3:** This is excellent for diagnosing vanishing gradients or dead neurons.",
       hints: [
         "register_forward_hook captures the output of a layer during forward pass.",
         "register_backward_hook captures gradients flowing back through a layer.",
@@ -1647,7 +1647,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Self-attention takes Queries, Keys, and Values. It computes an attention matrix by dotting Q and K, scales it, applies softmax, and multiplies it by V, effectively aggregating information from other tokens based on relevance.",
+        "**Step 1:** Self-attention takes Queries (Q), Keys (K), and Values (V) as inputs.\n\n**Step 2:** It computes attention scores as Q @ K.T, scales by sqrt(d_k), and applies softmax.\n\n**Step 3:** The softmax output weights the Values: Attention(Q,K,V) = softmax(QK.T/sqrt(d_k)) @ V.",
       hints: [
         "Attention(Q, K, V) = softmax(Q @ K.T / sqrt(d_k)) @ V",
         "The softmax output weights determine how much each Value vector contributes.",
@@ -1669,7 +1669,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "In autoregressive training, the model predicts the *next* token. If the attention mask didn't block future tokens, the model would simply 'cheat' by looking at the answer during training.",
+        "**Step 1:** In autoregressive training, the model predicts the next token given previous tokens.\n\n**Step 2:** Without masking, the model could attend to future tokens during training.\n\n**Step 3:** The lower-triangular mask blocks future positions, preventing 'cheating' by peeking at answers.",
       hints: [
         "tril(ones(T, T)) creates a lower triangular matrix of 1s.",
         "Future positions are set to -inf before softmax so they get attention weight 0.",
@@ -1691,7 +1691,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "By splitting the Queries, Keys, and Values into multiple heads, the model can learn multiple independent attention patterns. For instance, one head might look for pronouns, while another looks for rhyming words.",
+        "**Step 1:** Multi-head attention splits Q, K, V into multiple heads (lower-dimensional subspaces).\n\n**Step 2:** Each head independently computes attention, learning different patterns.\n\n**Step 3:** Outputs are concatenated and projected back, allowing the model to attend to different subspaces simultaneously.",
       hints: [
         "Each head operates on a lower-dimensional projection of Q, K, V.",
         "Outputs of all heads are concatenated and projected back to the model dimension.",
@@ -1713,7 +1713,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Unlike Recurrent Neural Networks (RNNs) that process tokens sequentially, attention processes all tokens simultaneously. Without adding positional information, the model wouldn't know if a word is at the beginning or end of a sentence.",
+        "**Step 1:** Self-attention is permutation equivariant - it treats all tokens equally regardless of position.\n\n**Step 2:** Without positional information, the model would not know token order.\n\n**Step 3:** Positional encodings (or embeddings) are added to give the model position information.",
       hints: [
         "If you shuffled the input tokens, self-attention without positional encodings would give the same output (just shuffled).",
         "GPT uses learned positional embeddings added to token embeddings.",
@@ -1735,7 +1735,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "By adding the input of a layer to its output (`x + layer(x)`), the gradient can pass directly through the addition operation during backpropagation. This ensures early layers receive strong gradient signals.",
+        "**Step 1:** Residual connections add the input of a layer to its output: x + layer(x).\n\n**Step 2:** During backpropagation, gradients can flow directly through the addition operation.\n\n**Step 3:** This ensures early layers receive strong gradient signals, mitigating vanishing gradients.",
       hints: [
         "The gradient of x + f(x) with respect to x is 1 + df/dx - at minimum 1.",
         "Residual connections were introduced by He et al. in ResNet and adopted in Transformers.",
@@ -1757,7 +1757,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Modern GPUs have specialized Tensor Cores that perform matrix multiplications incredibly fast in fp16/bf16. Using mixed precision cuts memory usage in half and accelerates math, while keeping critical operations in fp32 to maintain numerical stability.",
+        "**Step 1:** Modern GPUs have Tensor Cores that perform matrix multiplications fast in fp16/bf16.\n\n**Step 2:** Mixed precision cuts memory usage in half and accelerates computation.\n\n**Step 3:** Critical operations (like gradient accumulation) are kept in fp32 to maintain numerical stability.",
       hints: [
         "bfloat16 has the same exponent range as float32 but less mantissa precision.",
         "torch.autocast context manager enables mixed precision with minimal code changes.",
@@ -1779,7 +1779,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "If a GPU can only hold a batch of 4, you can run 8 forward/backward passes, summing the gradients each time, and then step the optimizer. Mathematically, this simulates a batch size of 32 (8 * 4).",
+        "**Step 1:** Gradient accumulation simulates larger batch sizes with limited GPU memory.\n\n**Step 2:** You run multiple forward/backward passes, summing gradients each time.\n\n**Step 3:** After accumulating enough steps, the optimizer steps once, simulating a larger batch size.",
       hints: [
         "Do NOT call optimizer.zero_grad() between micro-steps - only after the full accumulation.",
         "Divide the loss by the number of accumulation steps to keep the gradient scale correct.",
@@ -1801,7 +1801,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "DDP duplicates the entire model on every GPU. Each processes a different chunk of the batch. During the backward pass, an All-Reduce communication averages the gradients so every GPU makes the exact same weight update.",
+        "**Step 1:** DDP duplicates the model on every GPU, each processing a different data chunk.\n\n**Step 2:** During backward pass, an All-Reduce communication averages gradients across all GPUs.\n\n**Step 3:** After All-Reduce, every GPU has identical gradients and makes the same optimizer step.",
       hints: [
         "All-Reduce is a collective communication operation that sums (then averages) across all ranks.",
         "After All-Reduce, every GPU has identical gradients and makes the same optimizer step.",
@@ -1823,7 +1823,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Standard optimizers execute many small operations (multiply, add, square root) sequentially, reading/writing to High Bandwidth Memory (HBM) each time. Fused kernels do it all in fast SRAM in one go, removing memory bottlenecks.",
+        "**Step 1:** Standard optimizers execute many small operations, reading/writing to slow HBM each time.\n\n**Step 2:** Fused kernels combine these operations into a single CUDA kernel.\n\n**Step 3:** This reduces memory bandwidth bottlenecks by doing everything in fast SRAM in one pass.",
       hints: [
         "Memory bandwidth is often the bottleneck for optimizer steps, not compute.",
         "torch.optim.AdamW has a `fused=True` parameter to enable this optimization.",
@@ -1845,7 +1845,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Standard attention materializes a massive NxN attention matrix in slow GPU HBM. FlashAttention avoids this by processing the attention block by block (tiling) entirely in fast SRAM, yielding exact results with massive speedups.",
+        "**Step 1:** Standard attention materializes a massive NxN attention matrix in slow GPU HBM.\n\n**Step 2:** FlashAttention avoids this by processing attention block by block (tiling) in fast SRAM.\n\n**Step 3:** This yields exact results with massive speedups and memory efficiency.",
       hints: [
         "The NxN attention matrix for long sequences is the memory bottleneck in standard attention.",
         "FlashAttention v2 in PyTorch: F.scaled_dot_product_attention() uses it automatically.",
@@ -1867,7 +1867,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The count matrix N[i, j] records how often character j follows character i. To get probabilities, each row is normalized: P[i, :] = N[i, :] / N[i, :].sum(). This gives a proper probability distribution for each preceding character.",
+        "**Step 1:** The count matrix N[i, j] records how often character j follows character i.\n\n**Step 2:** To get probabilities, each row is normalized by dividing by the row sum.\n\n**Step 3:** This gives P[i, :] = N[i, :] / N[i, :].sum(), a proper probability distribution.",
       hints: [
         "Each row of the probability matrix represents a conditional distribution P(next | current).",
         "Normalization: divide by the row sum so probabilities add up to 1.",
@@ -1887,7 +1887,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If a bigram (ch1, ch2) never appeared in the training data, P[i,j] = 0. During training, the negative log-likelihood loss computes -log(P), and log(0) = -inf, causing NaN gradients. Adding 1 (Laplace/add-one smoothing) ensures all probabilities are strictly positive.",
+        "**Step 1:** If a bigram never appeared in training, P[i,j] = 0.\n\n**Step 2:** During loss computation, -log(0) = infinity causes NaN gradients.\n\n**Step 3:** Adding 1 (Laplace smoothing) ensures all probabilities are strictly positive.",
       hints: [
         "Zero probability in the model leads to infinite loss.",
         "Add-one smoothing is the simplest form of regularization for count-based models.",
@@ -1907,7 +1907,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The average NLL -E[log P(x)] is lower-bounded by the entropy H(P) = -sum_x P(x) log P(x). A model that perfectly recovers the true data distribution achieves exactly H(P) on average. A uniform model achieves log(27) \\approx 3.296 (for 27 characters), the maximum entropy for the vocabulary.",
+        "**Step 1:** The average NLL is -E[log P(x)], the negative expected log-probability of the data under the model.\n\n**Step 2:** By Shannon's source coding theorem, this is lower-bounded by the entropy H(P) = -sum_x P(x) log P(x). You cannot compress data below its entropy.\n\n**Step 3:** A model that perfectly recovers the true distribution achieves H(P); a uniform baseline achieves log(vocab_size) \approx 3.296 nats for 27 characters.",
       hints: [
         "Shannon entropy is the minimum average bits (or nats) needed to encode samples from P.",
         "A uniform distribution maximizes entropy; a peaked distribution minimizes it.",
@@ -2041,7 +2041,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "During training, BatchNorm normalizes each feature using the current batch\'s mean and variance, which introduces noise that acts as regularization. At inference (after `model.eval()`), a single sample or small batch would give unreliable statistics, so BatchNorm switches to using the running mean/variance accumulated during training via exponential moving average.",
+        "**Step 1:** During training, BatchNorm uses the current minibatch mean and variance for normalization, introducing noise that regularizes training.\n\n**Step 2:** At inference with batch size 1, batch statistics would be unreliable (variance = 0), making stable normalization impossible.\n\n**Step 3:** BatchNorm uses running mean/variance (accumulated via EMA during training) at inference time for stable, deterministic normalization.",
       hints: [
         "Batch statistics are noisy per mini-batch; running statistics are stable over training.",
         "model.train() vs model.eval() controls which stats BatchNorm uses.",
@@ -2230,7 +2230,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Each token in the vocabulary needs a row in the embedding matrix (vocab_size \\times d_model) and a column in the language model head (d_model \\times vocab_size). For GPT-2, vocab_size=50,257, which means the embedding and LM head together account for a significant fraction of total parameters.",
+        "**Step 1:** The token embedding matrix has shape (vocab_size, d_model) - one row per vocabulary token.\n\n**Step 2:** The LM head (unembedding) has shape (d_model, vocab_size) - one column per vocabulary token.\n\n**Step 3:** For GPT-2's 50,257 vocab size, these matrices represent a very large fraction of total model parameters.",
       hints: [
         "Embedding table size = vocab_size \\times d_model.",
         "LM head (unembedding) is often tied to the embedding matrix to save parameters.",
@@ -2342,7 +2342,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If a ReLU neuron\'s pre-activation is always <= 0 (e.g., due to a large negative bias or an excessively large learning rate step), the ReLU output is always 0 and the local gradient is 0. No gradient flows back through the neuron, so its weights never update. This 'dead neuron' is permanent unless the bias shifts.",
+        "**Step 1:** ReLU output is max(0, x); if pre-activation x <= 0, output = 0 and local gradient = 0.\n\n**Step 2:** With zero local gradient, no gradient flows back through the neuron during backpropagation.\n\n**Step 3:** Weights never update, and the neuron stays permanently dead unless a bias change shifts pre-activations positive.",
       hints: [
         "Dead ReLU: gradient = 0 because output = max(0, x) = 0 always.",
         "A learning rate that is too high can push neurons into this dead zone.",
@@ -2356,7 +2356,7 @@ registerQuestions({
         "Initializing all weights in a neural network to exactly zero prevents the symmetry-breaking required for learning, because all neurons in a layer compute identical gradients and update identically.",
       correctAnswer: "true",
       explanation:
-        "If all weights are zero, all neurons in a layer produce the same activation (zero) and receive the same gradient, so they remain identical after each update. This symmetry is never broken, effectively collapsing the layer to a single neuron. Random initialization breaks symmetry, allowing different neurons to specialize.",
+        "**Step 1:** With all weights = 0, every neuron in a layer computes an identical linear combination of its inputs.\n\n**Step 2:** All neurons produce the same output and receive identical gradients, so they all update identically.\n\n**Step 3:** Random initialization breaks this symmetry, giving each neuron a unique gradient and learning trajectory.",
       hints: [
         "All-zero init: every neuron is identical \\to they learn identically \\to they stay identical.",
         "This is called the 'symmetry problem' and it is why random weight initialization is essential.",
@@ -2398,7 +2398,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "L2 (weight decay) adds a term lambda * sum(w^2) to the loss, shrinking weights toward zero. Dropout randomly drops activations with probability p during training, preventing co-adaptation of neurons. Both regularize, but L2 targets weight magnitude while dropout targets feature co-dependence.",
+        "**Step 1:** L2 regularization adds lambda * sum(w^2) to the loss, penalizing large weights directly in the objective.\n\n**Step 2:** Dropout stochastically masks activations with probability p, preventing neurons from co-adapting.\n\n**Step 3:** Both reduce overfitting but via different mechanisms: L2 shrinks weights, dropout encourages redundant representations.",
       hints: [
         "L2: penalty on weight magnitude in the loss. Dropout: stochastic masking of activations.",
         "In AdamW, weight decay is decoupled from the adaptive learning rate (unlike in Adam with L2).",
