@@ -37,10 +37,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The noise schedule controls how much signal is retained at each step. The forward transition is:\n\n\\[\nq(x_t \\mid x_{t-1}) = \\mathcal{N}\\!\\left(x_t; \\sqrt{1-\\beta_t}\\,x_{t-1},\\; \\beta_t\\,I\\right).\n\\]\n\nWhen $\\beta_t$ increases:\n- The variance $\\beta_t$ of the added noise grows.\n- The scaling $\\sqrt{1-\\beta_t}$ of $x_{t-1}$ shrinks.\n- So more noise is added and less of the previous signal survives.\n\nIn the original DDPM paper, the schedule runs from $\\beta_1 \\approx 10^{-4}$ to $\\beta_T \\approx 0.02$, giving a gradual, nearly linear destruction of structure. The cosine schedule (Nichol & Dhariwal, 2021) was later introduced to spread information loss more uniformly across timesteps.",
+        "The noise schedule controls how much signal is retained at each step. The forward transition is:\n\n**Step 1**\n\n\\[\nq(x_t \\mid x_{t-1}) = \\mathcal{N}\\!\\left(x_t; \\sqrt{1-\\beta_t}\\,x_{t-1},\\; \\beta_t\\,I\\right).\n\\]\n\n**Step 2**\n\nWhen $\\beta_t$ increases:\n- The variance $\\beta_t$ of the added noise grows.\n- The scaling $\\sqrt{1-\\beta_t}$ of $x_{t-1}$ shrinks.\n- So more noise is added and less of the previous signal survives.\n\n**Step 3**\n\nIn the original DDPM paper, the schedule runs from $\\beta_1 \\approx 10^{-4}$ to $\\beta_T \\approx 0.02$, giving a gradual, nearly linear destruction of structure. The cosine schedule (Nichol & Dhariwal, 2021) was later introduced to spread information loss more uniformly across timesteps.",
       hints: [
-        "At $\\beta_t = 0$, no noise is added and $x_t = x_{t-1}$; at $\\beta_t = 1$, $x_t$ is pure noise.",
-        "The signal-to-noise ratio at step $t$ is $\\text{SNR}_t = \\bar{\\alpha}_t / (1-\\bar{\\alpha}_t)$, which decreases monotonically as $\\beta_t$ grows.",
+        "Consider extreme cases: at $\\beta_t = 0$, no noise is added; at $\\beta_t = 1$, what happens to $x_t$?",
+        "The signal-to-noise ratio measures how much original signal remains relative to added noise - does it increase or decrease as $\\beta_t$ grows?",
       ],
     },
     {
@@ -57,10 +57,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "We start from the two relevant forward conditionals:\n\n\\[\nq(x_t \\mid x_{t-1}) = \\mathcal{N}\\!\\left(x_t; \\sqrt{1-\\beta_t}\\,x_{t-1},\\; \\beta_t\\,I\\right), \\quad q(x_{t-1} \\mid x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\sqrt{\\bar{\\alpha}_{t-1}}\\,x_0,\\; (1-\\bar{\\alpha}_{t-1})\\,I\\right).\n\\]\n\nApplying Bayes' rule and using the Gaussian product formula (product of two Gaussians yields another Gaussian):\n\n\\[\nq(x_{t-1} \\mid x_t, x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\tilde{\\mu}_t,\\; \\tilde{\\beta}_t\\,I\\right),\n\\]\n\nwhere:\n\n\\[\n\\tilde{\\mu}_t = \\frac{\\sqrt{\\bar{\\alpha}_{t-1}\\,}\\beta_t}{1-\\bar{\\alpha}_t}\\,x_0 + \\frac{\\sqrt{\\alpha_t}\\,(1-\\bar{\\alpha}_{t-1})}{1-\\bar{\\alpha}_t}\\,x_t, \\qquad\n\\tilde{\\beta}_t = \\frac{(1-\\bar{\\alpha}_{t-1})\\,\\beta_t}{1-\\bar{\\alpha}_t}.\n\\]\n\nThe first term weights $x_0$ by how much signal remains at $t-1$; the second weights the noisy observation $x_t$. The reverse process $p_\\theta(x_{t-1} \\mid x_t)$ learns to approximate this posterior.",
+        "We start from the two relevant forward conditionals:\n\n**Step 1**\n\n\\[\nq(x_t \\mid x_{t-1}) = \\mathcal{N}\\!\\left(x_t; \\sqrt{1-\\beta_t}\\,x_{t-1},\\; \\beta_t\\,I\\right), \\quad q(x_{t-1} \\mid x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\sqrt{\\bar{\\alpha}_{t-1}}\\,x_0,\\; \\left(1-\\bar{\\alpha}_{t-1}\\right)\\,I\\right).\n\\]\n\n**Step 2**\n\nApplying Bayes' rule and using the Gaussian product formula (product of two Gaussians yields another Gaussian):\n\n\\[\nq(x_{t-1} \\mid x_t, x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\tilde{\\mu}_t,\\; \\tilde{\\beta}_t\\,I\\right),\n\\]\n\nwhere the mean is a weighted combination of $x_0$ and $x_t$:\n\n\\[\n\\tilde{\\mu}_t = \\frac{\\sqrt{\\bar{\\alpha}_{t-1}\\,}\\beta_t}{1-\\bar{\\alpha}_t}\\,x_0 + \\frac{\\sqrt{\\alpha_t}\\,(1-\\bar{\\alpha}_{t-1})}{1-\\bar{\\alpha}_t}\\,x_t.\n\\]\n\n**Step 3**\n\nThe first term weights $x_0$ by how much signal remains at $t-1$; the second weights the noisy observation $x_t$. The reverse process $p_\\theta(x_{t-1} \\mid x_t)$ learns to approximate this posterior.",
       hints: [
-        "Apply the Gaussian product formula: multiplying $q(x_t \\mid x_{t-1})\\,q(x_{t-1} \\mid x_0)$ and normalizing yields another Gaussian.",
-        "The two terms reflect how $x_0$ and $x_t$ each contribute to the posterior - $x_0$ carries the original signal, while $x_t$ carries the noisy observation.",
+        "When multiplying two Gaussians and normalizing, the result is another Gaussian - what are the mean and variance of this product?",
+        "Think about what information each variable carries: $x_0$ has the original signal, while $x_t$ has been corrupted by noise - how should these be weighted in the posterior?",
       ],
     },
   ],
@@ -80,10 +80,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Ho et al. (2020) derived the DDPM objective from the ELBO and found that a simplified noise-prediction loss works better empirically. Starting from the reparameterization:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\nThe model predicts $\\varepsilon_\\theta(x_t, t) \\approx \\varepsilon$. The simplified loss is:\n\n\\[\n\\mathcal{L}_\\text{simple} = \\mathbb{E}_{t,\\,x_0,\\,\\varepsilon}\\big[\\|\\varepsilon - \\varepsilon_\\theta(x_t,\\; t)\\|^2\\big].\n\\]\n\nThis is equivalent to score matching up to the scaling factor $1/\\sqrt{1-\\bar{\\alpha}_t}$:\n\n\\[\n\\varepsilon_\\theta(x_t, t) = -\\sqrt{1-\\bar{\\alpha}_t}\\,\\nabla_{x_t} \\log q(x_t) \\approx -\\sqrt{1-\\bar{\\alpha}_t}\\,s_\\theta(x_t, t).\n\\]\n\nEmpirically, noise prediction outperformed both $x_0$-reconstruction and the full ELBO.",
+        "Ho et al. (2020) derived the DDPM objective from the ELBO and found that a simplified noise-prediction loss works better empirically.\n\n**Step 1**\n\nStarting from the reparameterization:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\nThe model predicts $\\varepsilon_\\theta(x_t, t) \\approx \\varepsilon$.\n\n**Step 2**\n\nThe simplified loss is:\n\n\\[\n\\mathcal{L}_\\text{simple} = \\mathbb{E}_{t,\\,x_0,\\,\\varepsilon}\\big[\\|\\varepsilon - \\varepsilon_\\theta(x_t,\\; t)\\|^2\\big].\n\\]\n\n**Step 3**\n\nThis is equivalent to score matching up to the scaling factor $1/\\sqrt{1-\\bar{\\alpha}_t}$:\n\n\\[\n\\varepsilon_\\theta(x_t, t) = -\\sqrt{1-\\bar{\\alpha}_t}\\,\\nabla_{x_t} \\log q(x_t) \\approx -\\sqrt{1-\\bar{\\alpha}_t}\\,s_\\theta(x_t, t).\n\\]\n\nEmpirically, noise prediction outperformed both $x_0$-reconstruction and the full ELBO.",
       hints: [
-        "The noise-prediction objective is equivalent to score matching up to the scaling factor $1/\\sqrt{1-\\bar{\\alpha}_t}$.",
-        "The U-Net takes $x_t$ (the noisy image) and $t$ (embedded via sinusoidal positional encodings) as inputs and outputs a noise estimate.",
+        "The noise-prediction loss is related to score matching - can you derive the relationship between predicting noise $\\varepsilon$ and predicting the score $\\nabla \\log q(x_t)$?",
+        "The U-Net takes two inputs: the noisy image $x_t$ and the timestep $t$. Think about how each of these influences the predicted noise.",
       ],
     },
     {

@@ -2,370 +2,555 @@ import type { Question } from "@/lib/curriculum";
 import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
-  "sdi-stream-kafka": [
+  "sds-kafka-fundamentals": [
     {
-      id: "q-sdi-stream-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "In Kafka, how many consumers within the same consumer group can read from a single partition at any given time?",
-      options: ["As many as needed for throughput", "Exactly one", "Two — one primary, one standby", "Up to the replication factor"],
-      correctAnswer: 1,
-      explanation: "Kafka guarantees that each partition is consumed by exactly one consumer within a consumer group at a time. This is the core mechanism that provides ordering guarantees within a partition. If you have more consumers than partitions in a group, the extra consumers sit idle. The maximum parallelism for a consumer group equals the number of partitions in the topic.",
-      hints: ["Think about how Kafka maintains ordering — if two consumers read the same partition simultaneously, how would ordering be preserved?", "Parallelism in Kafka is bounded by the number of partitions, not the number of consumers."],
-    },
-    {
-      id: "q-sdi-stream-2",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A Kafka producer is configured with acks=1. Which scenario best describes the durability guarantee this provides?",
-      options: ["The message is lost if the network drops before any broker receives it, and also if the leader crashes before replicating to followers", "The message is guaranteed durable as long as at least one in-sync replica is alive", "The message is persisted to disk on all in-sync replicas before acknowledgment", "The producer receives no acknowledgment and assumes success after a timeout"],
-      correctAnswer: 0,
-      explanation: "With acks=1, the leader broker acknowledges the message after writing it to its local log, without waiting for followers to replicate. If the leader crashes immediately after acknowledging but before any follower has replicated the message, the message is lost (unclean leader election). acks=all (or acks=-1) waits for all in-sync replicas to acknowledge, providing the strongest durability guarantee. acks=0 is fire-and-forget with no acknowledgment at all.",
-      hints: ["acks=1 means only the partition leader confirms receipt — what happens if that leader dies before followers catch up?", "Compare to acks=all which waits for the entire in-sync replica set (ISR) to confirm."],
-    },
-    {
-      id: "q-sdi-stream-3",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is the primary purpose of Kafka log compaction, and how does it differ from time-based or size-based retention?",
-      options: ["Log compaction compresses messages with gzip to reduce storage; time/size retention deletes old messages", "Log compaction retains only the most recent message per key, enabling Kafka to serve as a changelog store; time/size retention deletes messages based on age or total log size regardless of key", "Log compaction merges small segment files into larger ones to improve read throughput; time/size retention controls segment rollover", "Log compaction removes duplicate messages sent by producers; time/size retention removes messages consumers have already read"],
-      correctAnswer: 1,
-      explanation: "Log compaction ensures that for each unique message key, Kafka retains at least the most recent value. This makes the compacted topic act as a key-value store — consumers starting from the beginning get a full snapshot of the latest state. It is used for changelog topics in Kafka Streams and for database CDC (change data capture) where you want the current state of each entity. Time/size retention simply purges old segments without regard to keys, so you can lose the latest state of an entity if it was last updated before the retention window.",
-      hints: ["Think of log compaction as maintaining a 'last known value' per key — useful when you need to reconstruct current state.", "Time-based retention treats all messages equally regardless of their key; compaction treats them by key."],
-    },
-    {
-      id: "q-sdi-stream-4",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "A Kafka consumer group is processing a topic with 12 partitions. The team scales from 8 to 16 consumer instances. What happens to the extra 4 consumers?",
-      options: ["They form a second consumer group automatically and consume from all partitions", "They share partitions with the existing 8 consumers, doubling throughput per partition", "They remain idle because partition count caps the parallelism of a single consumer group", "Kafka automatically adds 4 more partitions to match the consumer count"],
-      correctAnswer: 2,
-      explanation: "In a single Kafka consumer group, each partition is assigned to exactly one consumer. With 12 partitions and 16 consumers, only 12 consumers are active; the remaining 4 sit idle and serve as hot standbys. They will become active if one of the 12 active consumers fails and a rebalance occurs. To increase parallelism beyond 12, you must increase the partition count — this is an irreversible operation (partitions can only be added, not removed), so capacity planning is important.",
-      hints: ["The ceiling on a consumer group's parallelism is set at topic creation time via the partition count.", "The 4 idle consumers are not wasted — they provide instant failover capacity during rebalancing."],
-    },
-    {
-      id: "q-sdi-stream-5",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "What does 'consumer lag' measure in Kafka and why is it the most critical operational metric to monitor?",
-      options: ["The network latency between producer and broker, measured in milliseconds", "The difference between the latest committed offset and the consumer's current offset per partition, indicating how far behind consumers are from producers", "The time taken for a message to be replicated across all in-sync replicas", "The number of failed consumer poll() calls due to rebalances"],
-      correctAnswer: 1,
-      explanation: "Consumer lag is the difference between the log end offset (where the producer is writing) and the committed offset (where the consumer has processed up to) for each partition. A growing lag means consumers cannot keep up with producer throughput, leading to increasing end-to-end latency or eventual data loss if retention expires before processing. Monitoring consumer lag (via Burrow, Kafka consumer_lag metrics, or kMinion) is essential — a spike often precedes SLA breaches and indicates the need to scale consumers or optimize processing.",
-      hints: ["If producer offset is 10,000 and consumer committed offset is 9,500, the lag is 500 messages.", "Lag growing over time is more alarming than a constant lag — it means the gap is widening."],
-    },
-  ],
-
-  "sdi-stream-flink": [
-    {
-      id: "q-sdi-stream-6",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "In Apache Flink, what is the key difference between keyed state and operator state?",
-      options: ["Keyed state is stored in RocksDB; operator state is stored in heap memory only", "Keyed state is scoped per key within a keyed stream, partitioned and scaled automatically; operator state is scoped per operator task instance, not partitioned by key", "Keyed state supports exactly-once; operator state supports at-least-once only", "Keyed state is for batch jobs; operator state is for streaming jobs"],
-      correctAnswer: 1,
-      explanation: "In Flink, keyed state is associated with a specific key in a KeyedStream (after keyBy()). Each key has its own isolated state, and Flink automatically partitions this state across parallel subtasks — when you scale, state migrates with its key. Operator state is per-task-instance state that is not partitioned by key — examples include Kafka source partition offsets stored per source task. Keyed state supports richer backends (RocksDB for large state) and is far more common in stateful streaming applications like aggregations, joins, and pattern detection.",
-      hints: ["keyBy() is the prerequisite for using keyed state — the state is isolated per unique key value.", "Kafka source connector uses operator state to remember which offset it has read from each partition."],
-    },
-    {
-      id: "q-sdi-stream-7",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A Flink streaming job processes clickstream events where events can arrive up to 5 minutes late. Which mechanism should be used to handle out-of-order events correctly?",
-      options: ["Use processing time windows with a 5-minute offset parameter", "Use event time with watermarks set to current_event_time minus 5 minutes, and assign events to event-time windows", "Use session windows with a 5-minute gap threshold", "Enable exactly-once semantics in the Flink checkpoint configuration"],
-      correctAnswer: 1,
-      explanation: "Event time processing uses the timestamp embedded in the event itself rather than the wall clock. To handle late arrivals, Flink uses watermarks — a monotonically increasing timestamp that asserts 'all events with time <= watermark have arrived'. A watermark of event_time - 5min means Flink waits 5 minutes of event time before triggering a window, accommodating up to 5 minutes of out-of-order delivery. Events arriving after the watermark has passed the window boundary are considered 'late' and can be handled via side outputs or allowedLateness. Processing time (wall clock) cannot handle out-of-order events at all.",
-      hints: ["Watermarks are the mechanism Flink uses to know 'I've seen enough events; now I can close this time window'.", "A watermark of T means: no more events with timestamp < T will arrive. Setting it to current_max_event_time - 5min accommodates 5-minute delays."],
-    },
-    {
-      id: "q-sdi-stream-8",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is the difference between tumbling windows and sliding windows in Flink stream processing?",
-      options: ["Tumbling windows overlap; sliding windows do not overlap", "Tumbling windows are non-overlapping fixed-size windows; sliding windows overlap because the slide interval is smaller than the window size", "Tumbling windows are gap-based; sliding windows are count-based", "They are equivalent but tumbling windows have lower memory overhead"],
-      correctAnswer: 1,
-      explanation: "Tumbling windows divide the stream into consecutive, non-overlapping fixed-size buckets (e.g., every 1 hour). Each event belongs to exactly one window. Sliding windows have a fixed size and a slide interval smaller than the window size — for example, a 1-hour window sliding every 15 minutes means each event belongs to 4 overlapping windows (1 hour / 15 min). Sliding windows are useful for rolling metrics (e.g., 'clicks in the last hour, updated every 15 minutes') but consume more state. Session windows are a third type: gap-based, where a window closes after a period of inactivity.",
-      hints: ["If the slide interval equals the window size, a sliding window becomes a tumbling window.", "A 60-minute sliding window with a 10-minute slide interval means each event is counted in 6 different windows."],
-    },
-    {
-      id: "q-sdi-stream-9",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "How does Flink achieve exactly-once end-to-end semantics when reading from Kafka and writing to Kafka?",
-      options: ["Flink deduplicates messages using message UUIDs stored in a distributed cache", "Flink uses the two-phase commit (2PC) protocol: checkpoints snapshot operator state and Kafka offsets atomically, and Flink's Kafka sink uses Kafka transactions to commit output only after the checkpoint completes", "Flink replays the entire stream from the beginning on any failure, discarding previous output", "Flink writes to Kafka with idempotent producers which automatically deduplicate at the broker"],
-      correctAnswer: 1,
-      explanation: "Flink's exactly-once with Kafka uses the Chandy-Lamport distributed snapshot algorithm for checkpointing combined with Kafka transactions. During a checkpoint, Flink flushes all in-flight Kafka sink records to a pre-commit transaction but does not commit it. Once all operators have successfully snapshotted their state (including Kafka source offsets) and the checkpoint is confirmed durable, the Kafka sink commits the transaction. On failure, Flink restores from the last successful checkpoint — the uncommitted Kafka transaction is aborted, and the Kafka source replays from the checkpointed offset. This means each record is processed exactly once end-to-end.",
-      hints: ["Think of the checkpoint as a consistent cut through the entire job — it captures both input position (Kafka offsets) and output state (uncommitted transactions).", "Kafka transactions allow a producer to write a batch of messages that become visible to consumers only after an explicit commit."],
-    },
-  ],
-
-  "sdi-stream-spark": [
-    {
-      id: "q-sdi-stream-10",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "Which of the following best describes the key advantage of Spark DataFrames over RDDs?",
-      options: ["DataFrames support Java and Scala only; RDDs support Python too", "DataFrames are untyped at compile time giving more flexibility; RDDs are strongly typed", "DataFrames benefit from Catalyst query optimizer and Tungsten execution engine which optimize execution plans automatically; RDDs bypass this optimization", "DataFrames do not support custom transformations; RDDs allow arbitrary code"],
-      correctAnswer: 2,
-      explanation: "Spark DataFrames (and Datasets) are processed through the Catalyst optimizer, which rewrites logical plans into optimized physical plans — pushing down filters, reordering joins, eliminating unnecessary columns. The Tungsten engine uses code generation for CPU-efficient execution and off-heap memory for GC pressure reduction. RDDs are an unoptimized execution model: Spark executes exactly the transformations you write with no query planning. In practice, the same operation on a DataFrame can be 2-10x faster than the equivalent RDD code. The tradeoff: RDDs give you full control over the execution (useful for non-tabular operations).",
-      hints: ["Catalyst is Spark's SQL query optimizer — it rewrites your DataFrame operations before running them.", "Running a filter() on an RDD versus a DataFrame: the DataFrame version may push the filter before a join, avoiding processing unnecessary rows."],
-    },
-    {
-      id: "q-sdi-stream-11",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is the fundamental difference between Spark Streaming (DStream API) and Structured Streaming?",
-      options: ["Spark Streaming processes data continuously; Structured Streaming only supports micro-batch mode", "Spark Streaming is built on RDDs with time-based micro-batches; Structured Streaming treats a stream as an unbounded DataFrame with Catalyst optimization, event-time support, and optional continuous processing mode", "Structured Streaming requires Kafka; Spark Streaming supports any source", "They are architecturally identical but Structured Streaming has a different API"],
-      correctAnswer: 1,
-      explanation: "Spark Streaming (legacy DStream API) batches incoming data into RDDs over fixed time intervals and processes each RDD independently — there is no native event-time support or query optimization. Structured Streaming (Spark 2.0+) models the stream as an infinite append-only table using the DataFrame/Dataset API. This enables Catalyst optimization, event-time windowing with watermarks, stateful operations, and built-in exactly-once output modes (complete, append, update). Structured Streaming supports both micro-batch (default, low latency ~100ms) and experimental continuous processing mode (sub-millisecond latency). The DStream API is in maintenance mode.",
-      hints: ["Structured Streaming inherits all of the SQL/DataFrame optimization stack — the same code that runs on a static DataFrame can often run on a stream.", "Event-time windows in Structured Streaming work the same way as in Flink — they require watermarks."],
-    },
-    {
-      id: "q-sdi-stream-12",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A Spark job performing a join between a 10 TB dataset and a 100 GB dataset is running very slowly due to excessive shuffle. What is the most effective optimization?",
-      options: ["Increase executor memory to store both datasets in memory", "Repartition both datasets to 10,000 partitions before the join", "Broadcast the smaller 100 GB dataset to all executors, eliminating the shuffle entirely, or pre-partition both datasets by join key to co-locate matching records", "Switch from DataFrames to RDDs to avoid Catalyst overhead"],
-      correctAnswer: 2,
-      explanation: "Shuffle in Spark (during joins, groupBy, distinct) is the most expensive operation because it moves data across the network. Two strategies: (1) Broadcast join — if one dataset is small enough to fit in executor memory (typically < 8-10 GB; 100 GB is too large but the principle applies for smaller tables), replicate it to all executors so the join is local. (2) Co-partition — repartition both datasets by the same join key before the join, so matching rows are on the same executor and no shuffle is needed during the join itself. Data skew (hotspot keys) can be addressed with key salting — adding a random prefix to distribute a hot key across multiple partitions.",
-      hints: ["Shuffle requires serializing data, sending it over the network, and deserializing — this is orders of magnitude slower than in-memory computation.", "If both sides of a join are partitioned identically by the join key, Spark can perform the join locally on each partition with no data movement."],
-    },
-    {
-      id: "q-sdi-stream-13",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A Spark job is failing with OutOfMemoryError on executors processing a groupBy aggregation. Profiling shows 95% of data maps to 10 keys out of 1 million. What is the recommended fix?",
-      options: ["Increase executor memory to 128 GB per node", "Enable Spark adaptive query execution (AQE) and set spark.sql.adaptive.skewJoin.enabled=true", "Salt the skewed keys by appending a random integer suffix (0 to N-1) before groupBy, then aggregate in two stages to merge the salted partial results", "Switch to a HashPartitioner with a higher number of buckets"],
-      correctAnswer: 2,
-      explanation: "Key skew causes a few partitions to hold a disproportionate share of data, overwhelming those executors while others sit idle. The salting technique appends a random suffix (e.g., key+'_'+random(0,9)) to each key before the first aggregation — this spreads the hot key across 10 partitions processed in parallel. A second aggregation then strips the suffix and merges the partial results. AQE's skew join optimization (option B) helps for joins but does not address groupBy aggregation skew directly. Increasing memory treats the symptom, not the cause, and may not scale.",
-      hints: ["If 'user_id=42' appears 90% of the time, appending a random 0-9 suffix creates 10 variants, each going to a different partition.", "Two-stage aggregation: first aggregate with salted key, then aggregate again with the real key to combine partial results."],
-    },
-  ],
-
-  "sdi-stream-data-warehouse": [
-    {
-      id: "q-sdi-stream-14",
+      id: "q-stream-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What is the fundamental storage layout difference between OLTP and OLAP databases, and why does it matter for query performance?",
-      options: ["OLTP stores data in binary format; OLAP stores data in JSON format", "OLTP uses row-oriented storage optimized for reading/writing complete records; OLAP uses column-oriented storage optimized for scanning specific columns across many rows", "OLTP uses SSDs; OLAP uses magnetic disks for cost efficiency", "OLTP is distributed; OLAP runs on a single node"],
+      question: "In Apache Kafka, what determines the maximum degree of parallelism for a single consumer group reading from a topic?",
+      options: [
+        "The number of consumer group members registered with the group coordinator",
+        "The number of partitions in the topic",
+        "The replication factor configured for the topic",
+        "The number of Kafka broker nodes in the cluster"
+      ],
       correctAnswer: 1,
-      explanation: "OLTP (Online Transaction Processing) stores each row's columns together on disk — ideal for fetching or updating a complete record (e.g., one customer's order). OLAP (Online Analytical Processing) stores each column's values together — ideal for analytical queries that scan a single column across millions of rows (e.g., SUM(revenue) across all orders). Column storage achieves high compression ratios because similar data is stored together, and I/O is reduced by reading only the queried columns. BigQuery, Snowflake, Redshift, and ClickHouse are columnar; PostgreSQL and MySQL are row-oriented.",
-      hints: ["An analytics query like 'average order value this month' reads the amount column from millions of rows — column storage reads only that column, not all columns.", "Compression works better on columnar stores because a column contains homogeneous values (e.g., all integers, all dates)."],
+      explanation: "The partition count is the hard ceiling on consumer group parallelism. Kafka assigns each partition to at most one consumer within a consumer group at any time. Adding more consumers than partitions leaves the extra consumers idle. LinkedIn designed Kafka this way to provide strong ordering within a partition while enabling horizontal scale across partitions. If you need more parallelism, increase the partition count before creating the topic — partitions can be added but not removed.",
+      hints: [
+        "Can two consumers in the same group read from the same partition simultaneously?",
+        "What happens to a consumer instance when there are more consumers than partitions?"
+      ],
     },
     {
-      id: "q-sdi-stream-15",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "In a star schema data warehouse, what is the relationship between the fact table and dimension tables, and why is this structure preferred for OLAP queries?",
-      options: ["The fact table contains descriptive attributes; dimension tables contain numerical metrics for aggregation", "The fact table contains measurable events/metrics (e.g., order_amount, click_count) with foreign keys to dimension tables (users, products, dates) which contain descriptive attributes; this denormalization avoids joins during aggregation", "Star schema is fully normalized into 3NF to eliminate data redundancy, improving write performance", "Dimension tables are updated in real-time; the fact table is append-only"],
-      correctAnswer: 1,
-      explanation: "In a star schema, the central fact table records events or transactions with numerical measures (e.g., sale_amount, quantity_sold) and foreign keys pointing to dimension tables. Dimension tables (e.g., dim_customer, dim_product, dim_date) contain descriptive attributes that rarely change. The schema is intentionally denormalized — a customer's city is stored directly in dim_customer rather than in a separate city table — to minimize join depth. OLAP queries join the fact table to one or two dimensions, and because dimension tables are small and can be broadcast, these joins are fast. The snowflake schema further normalizes dimension tables but increases query complexity.",
-      hints: ["Think of the fact table as your event log (what happened, how much) and dimension tables as context (who, what product, when).", "Denormalization trades storage for query speed — the same city name may be repeated in dim_customer, but analytics queries are much faster."],
-    },
-    {
-      id: "q-sdi-stream-16",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A BigQuery table stores 5 years of clickstream data (10 TB). Queries always filter by date range and group by user_id. Which combination of table features will minimize query cost?",
-      options: ["Cluster by date, partition by user_id", "Partition by date column, cluster by user_id", "Use a materialized view that pre-aggregates all data by user_id and date", "Shard the table into separate tables per year"],
-      correctAnswer: 1,
-      explanation: "BigQuery partitioning by a date/timestamp column allows the query engine to skip entire partitions that fall outside the WHERE clause date range — this is partition pruning and directly reduces bytes scanned (= cost). Within each partition, clustering by user_id physically sorts the data so that queries filtering or grouping by user_id scan fewer blocks. Clustering is most effective when the clustering column has high cardinality and is frequently used in filters or GROUP BY. Combining partition pruning + clustering typically reduces bytes scanned by 80-95% for common query patterns. Sharding into separate tables is a manual anti-pattern that BigQuery's partitioning replaces.",
-      hints: ["Partitioning eliminates entire date partitions not in your WHERE clause before any data is read.", "Clustering sorts data within a partition — if your query filters on user_id, BigQuery reads only the relevant byte ranges within the partition."],
-    },
-    {
-      id: "q-sdi-stream-17",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is a materialized view in a data warehouse, and what is the primary tradeoff compared to a regular view?",
-      options: ["A materialized view is a view with indexes; a regular view has no indexes. No storage difference.", "A materialized view stores precomputed query results physically on disk and is refreshed periodically; a regular view re-executes the underlying query on every access. Tradeoff: storage cost and potential staleness vs query speed.", "A materialized view is only available in BigQuery; regular views are standard SQL", "A materialized view is always up to date because it uses triggers; a regular view may return stale data"],
-      correctAnswer: 1,
-      explanation: "A materialized view physically persists the result of a query — when a user queries the materialized view, they read the precomputed result rather than re-running an expensive aggregation over raw data. This can reduce query latency from minutes to milliseconds. The tradeoffs: (1) Storage: the result set occupies storage. (2) Staleness: results are only as fresh as the last refresh (scheduled or triggered). (3) Refresh cost: refreshing a materialized view consumes compute. For dashboards showing yesterday's data, this is acceptable. For real-time monitoring, a streaming table or approximate indexes are better. Some systems (BigQuery, Redshift) support incremental refresh that only reprocesses changed data.",
-      hints: ["Think of a materialized view as a cached query result — fast to read, but potentially stale.", "The refresh schedule determines the latency tradeoff: refresh every hour means data is up to 1 hour old."],
-    },
-  ],
-
-  "sdi-stream-etl": [
-    {
-      id: "q-sdi-stream-18",
+      id: "q-stream-2",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What is the practical difference between ETL and ELT pipelines, and when is ELT preferred?",
-      options: ["ETL uses Python; ELT uses SQL. The choice is purely a language preference.", "ETL transforms data before loading it into the destination (requires a transformation layer outside the warehouse); ELT loads raw data first then transforms inside the warehouse using its compute. ELT is preferred when the warehouse has powerful compute (BigQuery, Snowflake) and raw data retention is valuable.", "ETL is for batch processing; ELT is for real-time streaming only", "ETL writes to object storage; ELT writes directly to RDBMS"],
+      question: "A Kafka producer uses a message key of user_id when publishing events. What is the guaranteed behavior?",
+      options: [
+        "All messages for a given user_id are delivered in strict global order across all topics",
+        "All messages with the same user_id key are written to the same partition, preserving per-key ordering",
+        "Kafka compacts messages with the same key so only the latest value survives per key",
+        "The broker routes the message to a consumer instance whose ID matches the key"
+      ],
       correctAnswer: 1,
-      explanation: "In traditional ETL, raw data is extracted from sources, transformed (cleaned, joined, filtered) in an external compute layer (e.g., Spark, Python), and only the cleaned data is loaded into the warehouse — the raw data may be discarded. In ELT, raw data is loaded directly into the warehouse (cheap object storage in modern cloud DWs), and transformation happens inside the warehouse using SQL compute (dbt is a popular tool for ELT transformations). ELT is preferred because: (1) raw data is preserved for future reprocessing, (2) modern warehouses have elastic compute that scales for transformation, (3) transformations can be iterated in SQL without rebuilding an external pipeline. ETL is still useful when heavy data cleaning or PII masking must happen before data enters the warehouse.",
-      hints: ["dbt (data build tool) is the canonical ELT transformation layer — it writes SQL SELECT statements that define transformations inside the warehouse.", "ELT's 'load raw first' approach means you can reprocess historical data if your transformation logic changes."],
+      explanation: "Kafka's default partitioner applies a hash function to the message key and maps it to a partition (partition = hash(key) % numPartitions). All messages with the same key go to the same partition, and Kafka guarantees ordering within a partition. This is the standard approach for ensuring that all events for a given user, order, or entity are processed in the order they were produced. Uber uses this pattern so that ride lifecycle events (REQUEST, ACCEPT, START, END) for a given trip_id always arrive in order.",
+      hints: [
+        "The partitioner formula is: partition = murmur2(key) % numPartitions.",
+        "What would happen to ordering if events for the same user_id landed on different partitions?"
+      ],
     },
     {
-      id: "q-sdi-stream-19",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A data pipeline loads user events into a warehouse and is designed to be retried on failure. Which approach makes the pipeline idempotent?",
-      options: ["Use INSERT INTO on every run, which automatically deduplicates using the warehouse's built-in UNIQUE constraint", "Use MERGE (UPSERT) on the natural key of the record, so re-running the pipeline for the same input data updates existing records rather than inserting duplicates", "Add a pipeline_run_id column and query the warehouse to skip already-processed records before inserting", "Use append-only inserts and deduplicate downstream in the analytics queries using ROW_NUMBER()"],
-      correctAnswer: 1,
-      explanation: "An idempotent pipeline produces the same result regardless of how many times it is run with the same input. INSERT INTO without deduplication is not idempotent — retrying creates duplicates. The standard solution is MERGE/UPSERT: for each incoming record, if a record with the same natural key exists in the destination, update it; otherwise, insert it. This makes the pipeline safe to retry after any failure. BigQuery supports MERGE, Snowflake supports MERGE, and most modern warehouses do too. Using a pipeline_run_id (option C) works but requires reading existing data before each load, which is expensive at scale. Deduplicating in queries (option D) is a workaround but doesn't fix the underlying data quality problem.",
-      hints: ["Idempotent means: running the same operation twice has the same effect as running it once — like a safe 'apply state' rather than an 'append event'.", "MERGE on a natural key (e.g., event_id, user_id + date) ensures each logical record exists exactly once in the destination."],
-    },
-    {
-      id: "q-sdi-stream-20",
+      id: "q-stream-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "A data team wants to rename a column user_id to customer_id in a widely-used warehouse table. Which approach handles schema evolution safely?",
-      options: ["Rename the column directly in the table — downstream queries will automatically update column references", "Add the new customer_id column as a copy of user_id (backward compatible), migrate downstream consumers to use customer_id, then drop user_id after all consumers are updated", "Drop the table and recreate it with the new schema, backfilling from source systems", "Use a view that aliases user_id as customer_id so no migration is needed"],
+      question: "A Kafka consumer crashes after processing 1,000 messages but before committing offsets. When it restarts, what is the expected behavior?",
+      options: [
+        "It starts from the latest offset and permanently skips the 1,000 unprocessed messages",
+        "It replays from the last committed offset, re-delivering the 1,000 messages (at-least-once delivery)",
+        "Kafka automatically commits the offset on behalf of the crashed consumer",
+        "It reads from the beginning of the topic (offset 0) on every restart"
+      ],
       correctAnswer: 1,
-      explanation: "Renaming or deleting columns is a breaking change — any downstream queries, dashboards, or pipelines referencing user_id will fail immediately. Safe schema evolution follows these rules: (1) Adding nullable columns is always backward compatible. (2) Renaming requires a multi-step migration: add the new column, dual-write to both, migrate consumers, deprecate the old column, then drop it after a safe window. (3) Never drop columns without verifying zero downstream dependencies. In practice, teams use a view (option D) as a transitional shim, but eventually the view must be replaced with direct column access. The expand-contract pattern (add -> migrate -> remove) is the industry standard for zero-downtime schema changes.",
-      hints: ["Schema evolution rule: you can add nullable columns safely; you cannot rename or delete columns without a migration plan.", "The expand-contract pattern: expand the schema (add new column), contract it (remove old column) only after all consumers have migrated."],
+      explanation: "Kafka stores committed consumer offsets in the internal __consumer_offsets topic. On restart, the consumer resumes from the last committed offset, causing the 1,000 unacknowledged messages to be re-delivered. This is the at-least-once delivery semantic — messages may be reprocessed, so consumer logic must be idempotent. Netflix and LinkedIn design their Kafka consumers around this: each message carries a unique ID that downstream systems check before writing, discarding duplicates.",
+      hints: [
+        "Offsets mark the boundary between 'processed' and 'to-be-processed'.",
+        "What does 'at-least-once' delivery mean for the consumer's processing logic?"
+      ],
     },
     {
-      id: "q-sdi-stream-21",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "Which of the following is NOT a standard data quality check that should be applied to a data pipeline in production?",
-      options: ["Null rate: the fraction of null values in a required column should be below a threshold", "Row count validation: the number of rows loaded matches expectations based on source row count or historical patterns", "Query plan validation: verifying the optimizer chose the correct join strategy for each pipeline run", "Referential integrity: every foreign key in the fact table has a corresponding record in the dimension table"],
-      correctAnswer: 2,
-      explanation: "Data quality checks in pipelines focus on data correctness, not query execution plans. Standard checks include: null rate (critical columns should not exceed X% nulls), row count (e.g., daily events should be within +/-20% of the 30-day average), referential integrity (orphaned foreign keys indicate upstream data issues), value range checks (e.g., age must be 0-150), schema conformance (expected columns exist with expected types), and duplicate detection. Tools like Great Expectations and dbt tests automate these. Query plan validation (option C) is a performance optimization concern, not a data quality check — it does not detect incorrect or missing data.",
-      hints: ["Data quality checks answer: 'Is the data correct and complete?' — not 'Is the database running efficiently?'", "Great Expectations and dbt tests are the most common frameworks for automated data quality validation in modern pipelines."],
-    },
-  ],
-
-  "sdi-stream-metrics": [
-    {
-      id: "q-sdi-stream-22",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is the key architectural difference between Prometheus's pull model and a push-based metrics system like StatsD?",
-      options: ["Prometheus requires agents on every host; StatsD is agentless", "In Prometheus, the server scrapes a /metrics HTTP endpoint on each target at a configured interval; in push-based systems, applications send metrics to a central collector proactively", "Prometheus stores metrics in object storage; StatsD uses a relational database", "Pull models have higher latency than push models by definition"],
-      correctAnswer: 1,
-      explanation: "Prometheus uses a pull model: the Prometheus server sends HTTP GET requests to /metrics endpoints exposed by each monitored service, typically every 15 seconds. This means Prometheus controls the scrape rate and can detect when targets go down (no response = target down alert). The pull model also makes it easy to add new services without reconfiguring a central collector. Push-based systems (StatsD, CloudWatch, InfluxDB with Telegraf) have applications send metrics to a central aggregator — better for ephemeral jobs (e.g., batch jobs that finish before a scrape occurs). The Prometheus Pushgateway bridges this: short-lived jobs push to the gateway, which Prometheus then scrapes.",
-      hints: ["Pull: Prometheus asks 'what are your metrics?' every 15s. Push: the application says 'here are my metrics' whenever it wants.", "Pushgateway exists specifically for batch jobs and functions that finish too quickly to be scraped."],
-    },
-    {
-      id: "q-sdi-stream-23",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A Prometheus TSDB is growing to 500 GB and needs to retain 2 years of data with efficient long-term querying. Which architecture addresses this?",
-      options: ["Increase local SSD storage to 10 TB and extend Prometheus retention to 730 days", "Use Thanos or Cortex: sidecar uploads Prometheus TSDB blocks to object storage (S3/GCS), downsample old data, and serve long-term queries via a query layer that federates local and remote data", "Deploy a separate Prometheus instance per month and federate them all into a meta-Prometheus", "Export all metrics to a PostgreSQL time-series extension and query with SQL"],
-      correctAnswer: 1,
-      explanation: "Prometheus's local TSDB is designed for short-term retention (15 days default, ~2 weeks typical). For long-term retention, Thanos and Cortex are the standard solutions. Thanos adds a sidecar to each Prometheus instance that uploads completed 2-hour TSDB blocks to object storage (S3, GCS). Old data is downsampled (5-minute resolution after 40 days, 1-hour resolution after 1 year) to reduce storage and query time. The Thanos Query layer provides a unified view across all Prometheus instances and object storage. This approach provides: unlimited retention, global query view across multiple Prometheus shards, and high availability.",
-      hints: ["Prometheus is not designed for multi-year retention on local disk — it's optimized for recent data and fast scraping.", "Thanos's downsampling rule: raw data for <40 days, 5-minute aggregates for <1 year, 1-hour aggregates for >1 year."],
-    },
-    {
-      id: "q-sdi-stream-24",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "In Prometheus alerting, what is the role of AlertManager and how does it prevent alert storms?",
-      options: ["AlertManager evaluates PromQL rules and fires alerts; Prometheus routes them to PagerDuty", "Prometheus evaluates PromQL alert rules and sends alerts to AlertManager, which handles deduplication (groups repeated alerts into one), grouping (combines related alerts), inhibition (suppresses low-priority alerts when high-priority ones fire), and routing to receivers (PagerDuty, Slack, email)", "AlertManager stores alert history in a time-series database for trend analysis", "AlertManager is only used for SLA reporting — not for real-time alerting"],
-      correctAnswer: 1,
-      explanation: "The alerting pipeline in Prometheus is: Prometheus evaluates PromQL alert expressions every evaluation_interval — when a condition is true for longer than the 'for' duration, the alert fires and is sent to AlertManager. AlertManager then applies: (1) Grouping — multiple alerts from the same service are batched into one notification. (2) Deduplication — the same alert firing from multiple Prometheus replicas is deduplicated. (3) Inhibition — if a datacenter-down alert fires, AlertManager suppresses all individual-service alerts from that datacenter. (4) Silencing — planned maintenance windows suppress known alerts. (5) Routing — alerts are dispatched to the correct team via PagerDuty/OpsGenie/Slack based on labels. Without AlertManager, a single incident could generate thousands of individual alerts.",
-      hints: ["AlertManager's grouping + deduplication prevents a single outage from generating hundreds of pages for each affected service separately.", "Inhibition is the most powerful tool: if a root cause alert fires (e.g., host down), suppress all its symptoms (e.g., all services on that host)."],
-    },
-    {
-      id: "q-sdi-stream-25",
-      type: "multiple-choice",
+      id: "q-stream-4",
+      type: "true-false",
       difficulty: "easy",
-      question: "A Grafana dashboard shows a metric query returning data from both Prometheus and ClickHouse on the same panel. What does this demonstrate about Grafana's architecture?",
-      options: ["Grafana stores data from all sources in a unified internal database", "Grafana is a visualization layer that queries multiple data sources (Prometheus, ClickHouse, BigQuery, CloudWatch, etc.) directly and renders them in panels — it does not store metric data itself", "Grafana can only show data from a single data source per dashboard", "ClickHouse must export data to Prometheus before Grafana can query it"],
-      correctAnswer: 1,
-      explanation: "Grafana is a pure visualization and querying tool — it stores no time-series data. It connects to data source plugins (Prometheus, ClickHouse, BigQuery, Loki, Elasticsearch, CloudWatch, and 100+ others) and issues queries directly to each source when a panel renders. A single panel can query multiple sources and overlay the results. This architecture makes Grafana the de facto standard for operational dashboards because teams can mix real-time metrics (from Prometheus) with historical analytics (from ClickHouse or BigQuery) on the same dashboard. Panel types include time-series graphs, gauges, tables, heatmaps, stat panels, and bar charts.",
-      hints: ["Grafana's job is to draw charts — it delegates the data storage and query execution entirely to the configured data sources.", "A Prometheus panel uses PromQL; a ClickHouse panel uses SQL — Grafana sends each query to the correct backend."],
+      question: "Kafka guarantees total message ordering across all partitions of a topic.",
+      correctAnswer: "False",
+      explanation: "False. Kafka guarantees ordering only within a single partition. Messages across different partitions have no global ordering guarantee relative to each other. Two messages written to partition 0 and partition 1 simultaneously cannot be reliably ordered. To preserve total order for a logical entity (e.g., all events for a user), use a consistent partition key (e.g., user_id) so all related events land in the same partition. This is a foundational Kafka design constraint documented by LinkedIn when open-sourcing Kafka in 2011.",
+      hints: [
+        "If partition 0 and partition 1 are on different brokers, who decides which message was 'first'?",
+        "How do you ensure all events for one user arrive in order?"
+      ],
     },
   ],
 
-  "sdi-stream-batch": [
+  "sds-delivery-semantics": [
     {
-      id: "q-sdi-stream-26",
+      id: "q-stream-5",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "In the MapReduce programming model, what happens during the 'shuffle' phase and why is it the most expensive step?",
-      options: ["The shuffle phase compresses intermediate data to reduce storage", "The shuffle phase groups all map output records by key and transfers them across the network to the reducer responsible for each key — this involves serialization, network I/O, and deserialization, making it the dominant cost in most MapReduce jobs", "The shuffle phase writes the final output to HDFS", "The shuffle phase distributes input data to mappers before processing begins"],
+      question: "A payment processing system must never charge a customer twice even if a Kafka message is redelivered. Which approach achieves exactly-once processing at the application level?",
+      options: [
+        "Use at-most-once delivery by disabling retries on the Kafka producer to guarantee no duplicate messages",
+        "Store an idempotency key (e.g., payment_id) in the database; skip processing if the key already exists before writing the charge",
+        "Increase the consumer poll timeout to reduce the probability of duplicate redelivery",
+        "Use Kafka's built-in at-least-once guarantee and compensate for occasional double charges manually"
+      ],
       correctAnswer: 1,
-      explanation: "In MapReduce: (1) Map — each mapper processes a local HDFS split and emits (key, value) pairs. (2) Shuffle — the framework collects all mapper outputs, sorts them by key, and transfers records with the same key to the same reducer node across the network. (3) Reduce — each reducer receives all values for its assigned keys and aggregates. The shuffle is expensive because it moves potentially terabytes of intermediate data across the network, requires sorting (O(n log n)), and involves serialization overhead. Optimizations: combiner functions (local pre-aggregation on the mapper), choosing a good partitioner, and using a format with efficient serialization (Avro, Protocol Buffers).",
-      hints: ["The shuffle solves a fundamental problem: after parallel mapping, all values for the same key must be brought to one place for reduction.", "Combiners act like local mini-reducers on each mapper node, reducing the volume of data sent during shuffle."],
+      explanation: "Exactly-once semantics at the application level requires idempotent consumers. Each payment message carries a unique payment_id. Before writing the charge to the database, the consumer checks whether payment_id already exists in a deduplication table (using a UNIQUE constraint or INSERT ... ON CONFLICT DO NOTHING). If it exists, the message is skipped as a duplicate. Kafka's enable.idempotence=true and transactions handle the producer-to-broker leg, but application-level idempotency is still required for the consumer-to-database leg. Stripe and Uber both use this pattern.",
+      hints: [
+        "What makes an operation idempotent? Applying it multiple times yields the same result as once.",
+        "How can a relational database enforce that the same payment_id is never processed twice?"
+      ],
     },
     {
-      id: "q-sdi-stream-27",
+      id: "q-stream-6",
       type: "multiple-choice",
-      difficulty: "medium",
-      question: "In Apache Spark, what is lazy evaluation and what triggers actual execution?",
-      options: ["Lazy evaluation means Spark caches all intermediate results to avoid recomputation", "Transformations (map, filter, join) build a DAG of operations but do not execute immediately; an action (collect, count, write, saveAsTable) triggers the Catalyst optimizer to plan and execute the entire DAG", "Lazy evaluation is a Spark Streaming concept only — batch jobs execute eagerly", "Lazy evaluation means Spark delays reading input data until the output directory is checked for existing files"],
+      difficulty: "hard",
+      question: "Kafka's idempotent producer (enable.idempotence=true) prevents which specific failure scenario that causes duplicate messages?",
+      options: [
+        "A consumer reading the same message twice because it crashed before committing its offset",
+        "A producer retrying after a network timeout causes a duplicate because the broker wrote the message but the ACK was lost in transit",
+        "A broker losing a message due to disk failure before replication to followers completes",
+        "Two producers publishing to the same partition with overlapping sequence numbers"
+      ],
       correctAnswer: 1,
-      explanation: "Spark's execution model is fundamentally lazy: calling df.filter(...).groupBy(...).agg(...) builds a logical plan (DAG of transformations) but reads no data and does no computation. When you call an action — df.count(), df.collect(), df.write.parquet(...) — Spark submits the DAG to the Catalyst optimizer, which generates an optimized physical plan, divides it into stages separated by shuffles, and executes the stages on the cluster. Lazy evaluation benefits: Catalyst can optimize across the entire chain of transformations (e.g., push filters down before joins, eliminate unused columns). Drawback: you see no output until an action is called, which can surprise developers expecting immediate feedback.",
-      hints: ["Think of transformations as building a recipe and actions as cooking the recipe — the recipe is built lazily, cooking only starts when you're ready to eat.", "Calling df.show() is an action — it triggers execution of the entire DAG up to that point."],
-    },
-    {
-      id: "q-sdi-stream-28",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "An Airflow DAG processes daily data and needs to reprocess the last 90 days of data after a bug fix in the transformation logic. Which Airflow feature handles this?",
-      options: ["Airflow SLA miss callbacks, which trigger automatic reruns for missed execution windows", "Airflow backfill: running 'airflow dags backfill -s START_DATE -e END_DATE' creates and executes DAG runs for each historical execution date within the range", "Airflow sensors detect missing output files and automatically trigger reruns for affected dates", "Airflow XComs can store historical results that get automatically reprocessed on code change"],
-      correctAnswer: 1,
-      explanation: "Airflow's backfill feature creates historical DAG runs for past execution dates that either did not run or need to be reprocessed. The command 'airflow dags backfill --dag-id my_dag -s 2024-01-01 -e 2024-03-31' will create one DAG run per scheduled interval (e.g., daily) between the start and end date and execute them. This is only effective if the pipeline is idempotent (using MERGE/UPSERT, not INSERT) — otherwise reprocessing will create duplicates. Backfill runs are marked with a special 'backfill' tag and run with lower priority by default to avoid starving normal scheduled runs.",
-      hints: ["Backfill is to Airflow what 'replay' is to streaming — it re-executes historical runs to apply updated transformation logic.", "Backfill only works correctly if your pipeline is idempotent — running it twice for the same date should produce the same result."],
-    },
-    {
-      id: "q-sdi-stream-29",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "What is the primary difference between a data lake and a data warehouse, and when would you use each?",
-      options: ["A data lake stores structured data only; a data warehouse stores unstructured data only", "A data lake stores raw data in any format (Parquet, JSON, images, logs) on cheap object storage (S3, GCS) with schema-on-read; a data warehouse stores structured, queryable data with schema-on-write. Lakes are used for raw storage and ML; warehouses for BI and analytics.", "A data lake is always faster for SQL queries than a data warehouse", "Data lakes require Hadoop; data warehouses require proprietary cloud services"],
-      correctAnswer: 1,
-      explanation: "A data lake (S3, GCS, ADLS) is raw storage — you dump any format (Parquet, ORC, JSON, CSV, images, audio) cheaply and define the schema when you read (schema-on-read). This flexibility is ideal for ML training data, raw event archives, and data science exploration. A data warehouse (BigQuery, Snowflake, Redshift) enforces schema on write — data must conform to a table structure, enabling fast SQL queries with columnar storage and query optimization. In practice, modern architectures use a lakehouse pattern (Delta Lake, Apache Iceberg, Apache Hudi) that adds ACID transactions and schema enforcement on top of object storage, combining lake flexibility with warehouse query performance.",
-      hints: ["Lakes are cheap and flexible; warehouses are expensive and queryable — choose based on your primary use case.", "The lakehouse pattern (Delta Lake, Iceberg) is the modern convergence: raw object storage with warehouse-grade SQL performance."],
+      explanation: "The idempotent producer assigns each batch a producer ID (PID) and a monotonically increasing sequence number. If the broker writes the batch to the partition log and the ACK is dropped by the network, the producer retries. Without idempotence, the broker would write the batch a second time. With idempotence, the broker uses the (PID, sequence) pair to detect the duplicate and returns success without writing again. Confluent introduced this feature in Kafka 0.11 as the foundation for exactly-once semantics. acks=all combined with enable.idempotence=true is the recommended production configuration.",
+      hints: [
+        "When does a producer retry — when it does not receive an ACK within request.timeout.ms.",
+        "What information does the broker need to know 'I already wrote this batch'?"
+      ],
     },
   ],
 
-  "sdi-stream-realtime-analytics": [
+  "sds-consumer-lag": [
     {
-      id: "q-sdi-stream-30",
+      id: "q-stream-7",
       type: "multiple-choice",
-      difficulty: "hard",
-      question: "ClickHouse is described as 'column-oriented OLAP.' What specific design choices make ClickHouse capable of scanning 100 billion rows per second?",
-      options: ["ClickHouse uses in-memory processing exclusively, storing no data on disk", "ClickHouse combines columnar storage (reads only queried columns), vectorized query execution (SIMD instructions process 64-256 values per CPU cycle), aggressive compression per column type, and MergeTree engine that pre-sorts data by primary key — making full-column scans extremely cache-efficient", "ClickHouse distributes queries across 10,000 nodes to achieve parallelism", "ClickHouse pre-materializes all possible aggregation combinations at ingest time"],
+      difficulty: "medium",
+      question: "Your Kafka consumer group has a growing lag of 50 million messages. Before scaling up consumers, what is the FIRST thing to check?",
+      options: [
+        "Increase the Kafka topic replication factor to improve read throughput across replicas",
+        "Verify whether the current consumer count already equals the partition count; if so, adding consumers provides no benefit",
+        "Immediately scale the consumer group to 3x its current size to absorb the backlog",
+        "Increase the Kafka topic retention period to ensure messages are not deleted before processing"
+      ],
       correctAnswer: 1,
-      explanation: "ClickHouse's performance comes from a stack of complementary optimizations: (1) Columnar storage — only the queried columns are read from disk, dramatically reducing I/O for wide tables. (2) Vectorized execution — operations are applied to batches of values using SIMD CPU instructions (AVX-512), achieving ~10-50x speedup over row-by-row processing. (3) Per-column compression — LZ4 and ZSTD with column-specific codecs (Delta encoding for timestamps, Gorilla for floats) achieve 5-10x compression, reducing disk reads further. (4) MergeTree engine — the primary key determines sort order, enabling binary search and range scans. ClickHouse is best suited for append-only event data (analytics, logs, metrics) and is not optimized for high-rate point updates or transactional workloads.",
-      hints: ["Vectorization means 'process 256 values at once using one CPU instruction' instead of 'loop 256 times processing one value each'.", "ClickHouse's MergeTree is analogous to LSM trees — data is written to sorted parts and merged in the background, similar to LevelDB/RocksDB."],
+      explanation: "Before scaling, verify that the bottleneck is actually insufficient consumer instances. If consumers == partitions, adding more consumers yields zero benefit — extra consumers sit idle. The real bottleneck may be slow downstream processing (DB writes, HTTP calls), GC pauses, or single-threaded processing within a consumer. Uber's real-time data platform team found that most consumer lag incidents stemmed from slow downstream IO, not insufficient consumer count. Profile the per-message processing latency and check CPU/IO utilization before scaling horizontally.",
+      hints: [
+        "What is the maximum number of useful consumers in a consumer group for a topic with N partitions?",
+        "If consumers are already equal to partitions, what else could be causing lag to grow?"
+      ],
     },
     {
-      id: "q-sdi-stream-31",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "Apache Druid is designed for sub-second OLAP queries on real-time data. Which of the following best describes its ingestion and segment architecture?",
-      options: ["Druid loads data exclusively from HDFS files processed nightly, making it unsuitable for real-time use cases", "Druid ingests from Kafka in real-time and stores data in columnar segments on deep storage (S3). Real-time nodes serve recent data from memory; historical nodes serve older segments from disk. Segments are pre-aggregated at ingest using rollup to reduce storage.", "Druid uses a shared-nothing row-store architecture partitioned by primary key for low-latency lookups", "Druid requires Spark to preprocess data before ingestion and cannot ingest raw events directly"],
-      correctAnswer: 1,
-      explanation: "Druid's architecture is purpose-built for user-facing analytics dashboards requiring sub-second query latency on large datasets. Key design choices: (1) Real-time ingestion from Kafka via Kafka Supervisor — events are indexed in memory and served immediately with sub-second freshness. (2) Columnar segment files — data is stored in immutable segments on deep storage (S3/GCS), loaded into memory/disk on Historical nodes. (3) Rollup — at ingestion, Druid can pre-aggregate multiple raw events into one row (e.g., all clicks for user X in minute Y become one row with count=N), reducing storage 10-100x for high-cardinality datasets. (4) Tiering — hot segments in memory, cold segments on disk. Used by Airbnb, Netflix, and LinkedIn for product analytics dashboards.",
-      hints: ["Druid's rollup is like a streaming GROUP BY at ingest time — it trades raw event fidelity for dramatic storage reduction.", "Real-time nodes and historical nodes serve different data freshness ranges — recent data from memory, historical data from segment files."],
-    },
-    {
-      id: "q-sdi-stream-32",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "A system needs to count unique users across 1 billion events per day in real-time, with results available within 1 second. Exact counting requires 10 GB of memory (one bit per user_id). Which probabilistic data structure solves this with 0.81% error and 12 KB of memory?",
-      options: ["Bloom filter — probabilistic set membership check with configurable false positive rate", "HyperLogLog — probabilistic cardinality estimator using hash functions and bucket statistics to estimate distinct count with 0.81% standard error using ~12 KB", "Count-Min Sketch — frequency estimation structure that answers 'how many times did X appear?' with bounded error", "MinHash — similarity estimation for set intersection/union using hash-based sampling"],
-      correctAnswer: 1,
-      explanation: "HyperLogLog (HLL) is the standard algorithm for approximate cardinality estimation (counting distinct elements). It works by hashing each element, observing the maximum number of leading zeros in the hash (which correlates with the number of distinct values seen), and aggregating across multiple buckets (registers) to reduce variance. With 2^14 = 16,384 registers (12 KB), HLL achieves 0.81% standard error for any cardinality from 1 to 10^18. This is used in Redis (PFADD/PFCOUNT), BigQuery (APPROX_COUNT_DISTINCT), Druid, and ClickHouse. Count-Min Sketch (option C) answers frequency queries ('how often did item X appear?'), not cardinality. Bloom filters test set membership ('have I seen X before?').",
-      hints: ["HyperLogLog observes patterns in hash values to estimate 'how many distinct things have I seen?' without storing the items themselves.", "Redis's PFADD and PFCOUNT implement HyperLogLog in 12 KB per key — the 'PF' prefix honors Philippe Flajolet who invented the algorithm."],
+      id: "q-stream-8",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Consumer lag measured in message count is always a reliable indicator of processing delay in seconds.",
+      correctAnswer: "False",
+      explanation: "False. Message lag (count) does not directly translate to time delay without knowing the current production rate. 1 million messages of lag means 1 second of delay at 1M msg/sec but 17 minutes at 1K msg/sec. Time-based lag (seconds = lag_messages / current_throughput_rate) is a far better SLI for latency SLOs. Netflix's keystone pipeline team uses both metrics: message lag for capacity planning and time-based lag for alerting on SLO breaches. Monitoring tools like Burrow and kminion expose both metrics.",
+      hints: [
+        "If a topic produces 1 message per hour and you have 1 message of lag, is that urgent?",
+        "What additional data point converts message count lag into seconds of delay?"
+      ],
     },
   ],
 
-  "sdi-stream-data-governance": [
+  "sds-stream-windows": [
     {
-      id: "q-sdi-stream-33",
+      id: "q-stream-9",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is data lineage and which tool is commonly used to document it in modern ELT pipelines?",
-      options: ["Data lineage is the compression ratio of data as it moves through the pipeline; monitored with Prometheus", "Data lineage tracks how data flows from source systems through transformations to final destinations — showing which upstream tables a downstream model depends on and which columns feed which metrics. dbt automatically generates lineage graphs from its DAG of SQL models.", "Data lineage refers to the geographic location where data was originally collected, required for GDPR residency compliance", "Data lineage is a Kafka concept describing the sequence of consumer groups that processed a message"],
+      question: "A real-time dashboard needs to show unique active users over the past 60 minutes, refreshed every 5 minutes. Which window type and configuration is correct?",
+      options: [
+        "Tumbling window of 60 minutes — non-overlapping, result updates once per hour",
+        "Sliding window of size 60 minutes with a 5-minute slide interval — overlapping windows, result updates every 5 minutes",
+        "Session window with a 5-minute inactivity gap — gaps define boundaries rather than fixed time",
+        "Global window with a count-based trigger firing every 1,000 events"
+      ],
       correctAnswer: 1,
-      explanation: "Data lineage provides end-to-end visibility into data provenance: where did this number come from? Which raw events fed into this dashboard metric? Which tables would be affected if I change this upstream model? dbt (data build tool) automatically builds a lineage DAG from SQL model dependencies — if model B uses model A as a source, dbt records that dependency and visualizes it. This enables impact analysis (if I change table X, which downstream tables break?), debugging (why does this metric look wrong?), and compliance auditing (where does this customer's PII flow?). Apache Atlas, OpenMetadata, and DataHub are dedicated data catalog tools that extend lineage to cross-system tracking.",
-      hints: ["dbt's --select flag can use lineage to run a model and all its downstream dependencies: 'dbt run --select my_model+'.", "Lineage answers the 'where did this data come from?' question — essential for debugging incorrect metrics in production."],
+      explanation: "A sliding window of size 60 minutes and slide interval 5 minutes produces a new result every 5 minutes, each covering the last hour of events. Each event belongs to 12 overlapping windows (60 / 5). This delivers the rolling-hour semantic with 5-minute freshness. Tumbling windows update only once per hour. Session windows are user-inactivity-based and produce variable-length windows. LinkedIn uses sliding windows for feed engagement metrics and Netflix for content popularity dashboards.",
+      hints: [
+        "How many overlapping windows does each event belong to in a 60-min/5-min sliding window?",
+        "What is the difference between window size and slide interval?"
+      ],
     },
     {
-      id: "q-sdi-stream-34",
+      id: "q-stream-10",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "A company must comply with GDPR's right to erasure. A user requests deletion of all their data. Which approach correctly handles this in a data pipeline with both a Kafka event stream and a BigQuery data warehouse?",
-      options: ["Delete the user record from the source RDBMS only — downstream systems automatically sync the deletion via CDC", "In Kafka, publish a tombstone record (key=user_id, value=null) to trigger log compaction deletion of that key's events; in BigQuery, run DELETE FROM table WHERE user_id = X for all tables, then audit that no derived tables or materialized views retain the PII", "GDPR right to erasure only applies to the source system — warehouses and event streams are exempt as they are analytical systems", "Encrypt the user's data at rest and delete the encryption key (crypto-shredding) — this makes the data unreadable without full deletion"],
+      question: "In Apache Flink, an event-time tumbling window of 1 hour fires its result when:",
+      options: [
+        "Wall-clock time advances by 1 hour from when the first event in the window arrived",
+        "The watermark passes the window's end timestamp (e.g., watermark > window_end)",
+        "The number of events in the window exceeds the configured threshold trigger",
+        "A processing-time timer fires based on the task manager system clock"
+      ],
       correctAnswer: 1,
-      explanation: "GDPR right to erasure (Article 17) requires deletion across all systems storing personal data — including data warehouses, event streams, backups, and derived tables. The two-part solution: (1) Kafka — publish a tombstone record with the user's key and null value. Kafka log compaction will remove all prior events for that key during the next compaction pass. Note: messages in non-compacted topics with time-based retention must wait for retention to expire. (2) BigQuery — DELETE statements on all tables containing user_id, followed by an audit of derived tables, materialized views, and snapshots. Crypto-shredding (option D) is a valid alternative when direct deletion is impractical (e.g., immutable data lakes) — encrypting per-user data and deleting the key renders the data unreadable, which regulators generally accept as 'erasure.'",
-      hints: ["GDPR erasure is not just about the primary database — every downstream copy (warehouse, event stream, cache, backup) must also be addressed.", "A Kafka tombstone (key=user_id, value=null) signals log compaction to remove all prior messages for that key — but compaction is asynchronous and not immediate."],
+      explanation: "In event-time processing, Flink closes and fires a window when the watermark surpasses the window's end time. The watermark represents Flink's estimate of event-time progress, derived from timestamps in the data stream. This decouples window firing from wall-clock time, enabling correct handling of late and out-of-order events. If events stop arriving, the watermark stops advancing and windows never fire — unlike processing-time windows which fire on the system clock regardless. Databricks and Flink's 2015 ATC paper document this as the key distinction between event-time and processing-time semantics.",
+      hints: [
+        "What is the purpose of a watermark — what does 'watermark T' assert about the stream?",
+        "Why can't a processing-time clock correctly handle late-arriving events?"
+      ],
+    },
+  ],
+
+  "sds-watermarks-late-data": [
+    {
+      id: "q-stream-11",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A Flink pipeline uses a 30-second watermark delay for an IoT sensor stream. A sensor event arrives with a timestamp 45 seconds behind the current watermark. What happens?",
+      options: [
+        "Flink buffers the late event indefinitely and includes it in the window when a trigger fires",
+        "The event is dropped or routed to a side output because its window has already fired and been discarded",
+        "Flink retracts the previously emitted window result and recomputes it including the late event",
+        "The watermark rolls back to accommodate the late event and re-triggers affected windows"
+      ],
+      correctAnswer: 1,
+      explanation: "Once the watermark advances past a window's end time plus any configured allowed lateness, that window is garbage-collected. Events arriving after this point are 'late' in Flink's model. They are either silently dropped or routed to a side output (a secondary stream) for separate handling — for example, an audit topic or a late-data reconciliation pipeline. Watermarks are monotonically non-decreasing; they never go backward, as doing so would invalidate downstream state. Uber's Flink platform uses side outputs to capture late IoT sensor events for offline reconciliation without blocking real-time aggregations.",
+      hints: [
+        "Can a watermark ever decrease? What would happen to window state if it could?",
+        "What is Flink's 'allowedLateness' parameter and how does it extend the window lifetime?"
+      ],
+    },
+    {
+      id: "q-stream-12",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Increasing the watermark delay from 1 minute to 10 minutes in a streaming pipeline eliminates more late data but also increases end-to-end result latency by approximately 9 minutes.",
+      correctAnswer: "True",
+      explanation: "True. The watermark delay is a direct trade-off between completeness (fewer late events dropped) and latency (longer wait before windows fire). A 10-minute watermark means results are delayed by 10 minutes relative to event time — a window covering 12:00-13:00 event time will not fire until the watermark reaches 13:10. This 10-minute buffer accommodates late-arriving events at the cost of staleness. LinkedIn's Samza team and Flink's documentation both describe this as the fundamental completeness-vs-latency knob in event-time stream processing.",
+      hints: [
+        "If the watermark is 10 minutes behind event time, when does the 13:00 window boundary trigger?",
+        "What is the relationship between watermark lag and result freshness?"
+      ],
+    },
+  ],
+
+  "sds-lambda-kappa-arch": [
+    {
+      id: "q-stream-13",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In Lambda architecture, which layer provides low-latency results for recent data that the batch layer has not yet incorporated?",
+      options: [
+        "Batch layer — it stores and indexes all historical data for fast query access",
+        "Speed layer — it processes recent events in real time and serves approximate, low-latency results",
+        "Serving layer — it merges batch views and speed layer views to answer queries",
+        "Ingestion layer — it buffers events before routing them to batch and speed layers"
+      ],
+      correctAnswer: 1,
+      explanation: "Lambda architecture has three layers: (1) Batch layer — processes the complete dataset periodically (e.g., every few hours with Spark/Hadoop), producing accurate but stale views. (2) Speed layer — processes events in real time (Flink/Storm), serving approximate results for data not yet in the batch view. (3) Serving layer — merges batch and speed layer views to answer queries. Nathan Marz coined Lambda architecture at BackType/Twitter to solve real-time analytics on top of Hadoop's batch paradigm.",
+      hints: [
+        "Lambda architecture has three layers — what gap does the speed layer fill?",
+        "Why is the batch layer inherently stale and what compensates for it?"
+      ],
+    },
+    {
+      id: "q-stream-14",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Jay Kreps proposed Kappa architecture as a simplification of Lambda. What is the core operational problem Kappa eliminates?",
+      options: [
+        "Kafka cannot handle the throughput required for the Lambda speed layer at LinkedIn scale",
+        "Lambda requires maintaining two separate code paths (batch and streaming) for the same logic, creating a dual-maintenance burden and a common source of divergent results",
+        "The Lambda batch layer cannot scale to petabyte datasets in reasonable wall-clock time",
+        "Lambda's serving layer introduces query latency above 100ms making it unsuitable for user-facing products"
+      ],
+      correctAnswer: 1,
+      explanation: "Jay Kreps (co-creator of Kafka, then at LinkedIn) argued in a 2014 blog post that Lambda's fundamental operational cost is maintaining two codebases — one batch (MapReduce/Spark) and one streaming (Storm/Flink) — that must produce equivalent outputs. Bugs appear when the two implementations drift. Kappa collapses this into a single streaming system: all processing uses a streaming job, and historical reprocessing is done by replaying the Kafka log from offset 0 through the same job. This eliminates the batch layer, halving the maintenance surface area.",
+      hints: [
+        "What is the main complexity Lambda adds over a single-system approach?",
+        "What Kafka capability enables Kappa to reprocess historical data without a separate batch system?"
+      ],
+    },
+    {
+      id: "q-stream-15",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In Kappa architecture, historical reprocessing is done by replaying events from the beginning of the Kafka topic through the same streaming job used for real-time processing.",
+      correctAnswer: "True",
+      explanation: "True. This is the core insight of Kappa architecture. Kafka retains events for a configurable period (or indefinitely with tiered storage). To reprocess history after a bug fix or logic change, you start a new instance of the streaming job from offset 0 (or a specific historical offset) on a new consumer group and new output topic. Once it catches up to real time, you atomically swap the serving layer to point to the new output. The old job is decommissioned. This eliminates the need for a separate batch system. Confluent documents this as the standard Kappa deployment model.",
+      hints: [
+        "What Kafka setting retains data long enough for historical reprocessing?",
+        "How do you deploy a new version of a streaming job without downtime in Kappa?"
+      ],
+    },
+  ],
+
+  "sds-flink-spark-stateful": [
+    {
+      id: "q-stream-16",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Which statement accurately distinguishes Apache Flink from Spark Structured Streaming for stateful stream processing?",
+      options: [
+        "Flink processes data in micro-batches; Spark Structured Streaming is a true record-at-a-time streaming engine",
+        "Flink uses a record-at-a-time pipeline with native stateful operators and incremental checkpointing; Spark Structured Streaming uses micro-batches that add latency but benefit from the Spark SQL optimizer",
+        "Both are functionally equivalent; Flink is simply the open-source version of Spark Structured Streaming",
+        "Spark Structured Streaming supports event-time watermarks; Flink only supports processing-time windows"
+      ],
+      correctAnswer: 1,
+      explanation: "Flink is a true streaming engine processing records one at a time through a dataflow graph, with RocksDB-backed stateful operators, asynchronous incremental checkpointing (Chandy-Lamport barriers), and sub-second latency. Spark Structured Streaming uses micro-batches (default trigger interval 0ms but still batch execution), which adds latency but inherits the full Catalyst/Tungsten optimization stack. Flink achieves lower latency and richer stateful processing primitives (keyed state, timers, process functions). Databricks uses both in production but recommends Delta Live Tables over raw Structured Streaming for most pipelines.",
+      hints: [
+        "What is the difference between micro-batch processing and true record-at-a-time streaming?",
+        "What state backend does Flink use for large state (GB-TB range)?"
+      ],
+    },
+    {
+      id: "q-stream-17",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Apache Flink's checkpointing uses asynchronous barrier snapshotting based on the Chandy-Lamport algorithm. What role do checkpoint barriers play?",
+      options: [
+        "Barriers are heartbeat messages sent by the JobManager to detect task manager failures",
+        "Barriers are special records injected into data streams that signal operators to snapshot their state; when an operator receives barriers on all inputs it snapshots state to durable storage and forwards the barrier downstream",
+        "Barriers partition the event stream into fixed time windows for windowed aggregations",
+        "Barriers signal the end of a Kafka partition to the Flink source connector"
+      ],
+      correctAnswer: 1,
+      explanation: "Flink's JobManager triggers a checkpoint by injecting checkpoint barrier records at each source. When a downstream operator receives a barrier on all input channels, it asynchronously snapshots its state (keyed state, operator state) to a configured state backend (HDFS, S3, RocksDB) and then forwards the barrier. This allows a globally consistent distributed snapshot without pausing the entire pipeline — only a brief alignment phase at each operator buffers in-flight records. On failure, Flink restores all operator states from the last successful checkpoint and replays from the corresponding Kafka offsets. This was published in Flink's ATC'15 paper.",
+      hints: [
+        "How does Flink take a consistent distributed snapshot without a global stop-the-world pause?",
+        "When does an operator actually snapshot its state during checkpointing?"
+      ],
+    },
+  ],
+
+  "sds-event-sourcing-cqrs": [
+    {
+      id: "q-stream-18",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In an event sourcing system, how is the current state of an entity (e.g., a bank account) derived?",
+      options: [
+        "Reading the latest row from a normalized relational database table updated on each command",
+        "Replaying all domain events for that entity from the append-only event log in chronological order to compute current state",
+        "Querying a Redis cache that is updated synchronously with every write operation",
+        "Running a nightly batch aggregation job that computes and stores the current state summary"
+      ],
+      correctAnswer: 1,
+      explanation: "In event sourcing, the append-only event log is the system of record. Current state = fold(initial_state, events). For example, a bank account state is the sum of all DEPOSITED and WITHDRAWN events for that account_id. Snapshots are an optimization: start from the latest snapshot and replay only subsequent events, avoiding full history replay for high-event-count entities. Axon Framework and Kafka-based event sourcing at Confluent both use this model. Benefits include a complete immutable audit trail and the ability to reconstruct state at any historical moment.",
+      hints: [
+        "In event sourcing, the log is the source of truth — not a mutable state table.",
+        "How does event replay answer 'what was the account balance at 3pm last Tuesday'?"
+      ],
+    },
+    {
+      id: "q-stream-19",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In a CQRS system using Kafka, read models (query projections) are built by:",
+      options: [
+        "Running SELECT queries directly against the write-side command database using read replicas",
+        "Consuming domain events from Kafka topics and materializing them into read-optimized projections tailored to specific query patterns (Elasticsearch, Redis, PostgreSQL)",
+        "Synchronously updating both the command model and query projection in the same database transaction",
+        "Polling the command database every second and copying changed rows to a separate read database"
+      ],
+      correctAnswer: 1,
+      explanation: "CQRS separates writes (commands) from reads (queries). On the command side, domain events are published to Kafka. On the query side, consumer services build read-optimized projections from those events: an order history page materializes events into a PostgreSQL timeline table; a product search page projects events into Elasticsearch. Each projection is eventually consistent with the command side and optimized for its specific query pattern. This decoupling is used at LMAX Exchange and in microservice architectures at Netflix and Uber.",
+      hints: [
+        "Why would different query use cases need different read models?",
+        "How does Kafka decouple the command (write) side from the query (read) side?"
+      ],
+    },
+  ],
+
+  "sds-cdc-schema-registry": [
+    {
+      id: "q-stream-20",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Debezium captures changes from a PostgreSQL database and publishes them to Kafka. Which PostgreSQL mechanism does Debezium use?",
+      options: [
+        "Application-level triggers that write changed rows to a dedicated change_log table",
+        "PostgreSQL's write-ahead log (WAL) via a logical replication slot, decoded using the pgoutput or decoderbufs plugin",
+        "Periodic SELECT queries that compare row checksums between polling intervals to detect changes",
+        "PostgreSQL's LISTEN/NOTIFY pub-sub mechanism for row-level change notifications"
+      ],
+      correctAnswer: 1,
+      explanation: "Debezium registers as a PostgreSQL logical replication client using a replication slot. PostgreSQL writes every INSERT, UPDATE, and DELETE to its WAL before applying it (for durability). The logical replication protocol decodes WAL entries into structured change events (old values, new values, operation type). Debezium's connector reads these decoded events and publishes them to Kafka topics — one topic per table by default. This approach has zero impact on normal query traffic and captures changes at the row level without modifying application code. LinkedIn uses Debezium-based CDC in their data mesh architecture.",
+      hints: [
+        "What does PostgreSQL write before applying any change to ensure durability on crash?",
+        "What is a logical replication slot and how does it differ from physical replication?"
+      ],
+    },
+    {
+      id: "q-stream-21",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In Confluent Schema Registry with Avro serialization, which schema change maintains backward compatibility?",
+      options: [
+        "Removing a required field that has no default value from the schema",
+        "Adding a new optional field with a default value to the schema",
+        "Changing the type of an existing field from string to long",
+        "Renaming an existing required field to a new name"
+      ],
+      correctAnswer: 1,
+      explanation: "Backward compatibility means a new schema version can deserialize data written with the old schema. Adding an optional field with a default value is the canonical backward-compatible change: messages serialized with the old schema (missing the new field) deserialize successfully under the new schema, substituting the default. Removing required fields, changing field types, or renaming fields break backward compatibility — old data cannot be deserialized with the new schema. Confluent Schema Registry enforces the configured compatibility level (BACKWARD, FORWARD, FULL) on schema registration, rejecting incompatible changes.",
+      hints: [
+        "Backward compatibility: new code reads old data. What happens if old data has no value for a new required field?",
+        "What makes a field optional in Avro, and what role does a default value play?"
+      ],
+    },
+  ],
+
+  "sds-log-compaction": [
+    {
+      id: "q-stream-22",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Which use case is Kafka log compaction specifically designed to support?",
+      options: [
+        "Retaining all click-stream events for 7 days to enable full analytics replay",
+        "Maintaining a changelog topic where the latest value per key represents current state, enabling Kafka to function as a key-value store for state reconstruction",
+        "Compressing message payloads with LZ4 to reduce network bandwidth and broker disk usage",
+        "Limiting total topic size by deleting all messages beyond a configured byte threshold"
+      ],
+      correctAnswer: 1,
+      explanation: "Log compaction guarantees that for each unique message key, at least the most recent value is retained. This makes a compacted topic behave like a distributed key-value store snapshotted as a log. Kafka Streams uses compacted changelog topics to rebuild local state stores on restart: instead of replaying the entire event history, it only needs the latest value per key. Sending a tombstone (key=X, value=null) deletes the key from the compacted log. Confluent uses compacted topics for KTable semantics and database CDC mirroring.",
+      hints: [
+        "What is a KTable in Kafka Streams and why does it need a compacted changelog topic?",
+        "If a user's profile has been updated 1,000 times, how many records remain after log compaction?"
+      ],
+    },
+    {
+      id: "q-stream-23",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Kafka's time-based retention and log compaction can be enabled simultaneously on the same topic using cleanup.policy=compact,delete.",
+      correctAnswer: "True",
+      explanation: "True. Setting cleanup.policy=compact,delete enables both policies: the topic retains at least the latest value per key (compaction guarantee), AND segments older than retention.ms or larger than retention.bytes are eventually deleted. This is useful for CDC changelog topics that need latest-value semantics but should not grow unboundedly. Old compacted segments that age past the retention window are deleted. This is the default configuration for Kafka Streams internal changelog topics in production deployments and is documented in Confluent's operator guide.",
+      hints: [
+        "What does cleanup.policy=compact,delete mean for a topic?",
+        "What happens to an old compacted segment when it ages past retention.ms?"
+      ],
+    },
+  ],
+
+  "sds-backpressure": [
+    {
+      id: "q-stream-24",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "How does Apache Flink implement backpressure propagation when a downstream operator cannot keep up with incoming data?",
+      options: [
+        "A central coordinator polls operator queue depths and sends explicit throttle RPC signals to upstream operators",
+        "Flink relies on TCP flow control: a full downstream input buffer stops granting credits to upstream, causing the upstream socket write to block, naturally propagating pressure to the source",
+        "A token bucket rate limiter at each operator input enforces a configured maximum message rate",
+        "The JobManager detects high queue depth via metrics and dynamically reduces source partition assignments"
+      ],
+      correctAnswer: 1,
+      explanation: "Flink uses a credit-based flow control mechanism layered on top of TCP's inherent backpressure. When a downstream task's input buffer is full, it cannot grant buffer credits to upstream. The upstream task blocks on its network write, which fills the TCP send buffer, which TCP flow control propagates upstream through all operators to the source. This is implicit backpressure with zero coordination overhead — no polling, no explicit signals. Flink's web UI displays backpressure ratios (fraction of time operators are blocked on output) per operator, which Netflix and Uber use to identify bottleneck stages in production streaming jobs.",
+      hints: [
+        "What happens at the TCP level when a receiver's buffer is full and a sender tries to write?",
+        "Does Flink need an explicit backpressure protocol or does it rely on existing network semantics?"
+      ],
+    },
+    {
+      id: "q-stream-25",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A real-time unique visitor counter must handle 10 million distinct user IDs per minute with sub-second latency. A HashSet holding all user IDs would require over 1 GB of memory per window. What is the best data structure alternative?",
+      options: [
+        "Count-Min Sketch — probabilistic frequency estimation with bounded additive error",
+        "HyperLogLog — probabilistic cardinality estimator using ~12 KB for ~0.81% standard error at any scale",
+        "Bloom filter — probabilistic set membership check with configurable false positive rate",
+        "LSM-tree — log-structured merge-tree for efficient on-disk sorted key-value storage"
+      ],
+      correctAnswer: 1,
+      explanation: "HyperLogLog (HLL) is the standard solution for approximate distinct count at scale. Using ~12 KB of memory (2^14 registers), HLL estimates cardinality with ~0.81% standard error regardless of whether the actual count is 1 million or 1 trillion. Redis implements PFADD/PFCOUNT for HLL natively. Twitter, Facebook, and LinkedIn all use HLL for unique visitor counting in their real-time analytics pipelines. Count-Min Sketch estimates event frequencies (how many times did X occur?), not cardinality. Bloom filter tests set membership (have I seen X before?), not distinct count.",
+      hints: [
+        "Which probabilistic data structure is specifically designed for counting distinct elements?",
+        "How does HyperLogLog estimate cardinality — what statistical property of hashes does it exploit?"
+      ],
+    },
+  ],
+
+  "sds-stream-table-join": [
+    {
+      id: "q-stream-26",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In Kafka Streams, a KStream of purchase events is joined with a KTable of user profiles keyed by user_id. A user profile update arrives after the purchase event it would have enriched has already been processed. What happens?",
+      options: [
+        "Kafka Streams buffers the purchase event and waits for the profile KTable to update before emitting the enriched result",
+        "The purchase event is joined with the KTable value at the moment it is processed; late KTable updates do not retroactively update already-emitted results",
+        "The join fails with a NullPointerException because the key was not in the KTable at processing time",
+        "Kafka Streams automatically reprocesses the purchase event when the matching KTable entry is updated"
+      ],
+      correctAnswer: 1,
+      explanation: "A KStream-KTable join is a point-in-time lookup join: for each KStream record, Kafka Streams performs a synchronous lookup of the KTable's current state at that instant in processing time. If the profile does not exist yet (or has an older value), the purchase event is either dropped (inner join) or enriched with null (left join). Subsequent KTable updates do not trigger reprocessing of past KStream events. This is fundamentally different from a KStream-KStream windowed join, which does buffer events within a time window to match records. LinkedIn uses KStream-KTable joins for activity enrichment in their analytics pipeline.",
+      hints: [
+        "Is a KStream-KTable join time-windowed or is it a snapshot lookup?",
+        "How does a KStream-KTable join differ from a KStream-KStream join in buffering behavior?"
+      ],
+    },
+  ],
+
+  "sds-dead-letter-queue": [
+    {
+      id: "q-stream-27",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A streaming pipeline receives a malformed JSON message that throws a deserialization exception on every processing attempt — a 'poison pill'. What is the correct handling strategy?",
+      options: [
+        "Delete the Kafka consumer group and recreate it to skip past the offending message",
+        "After a configurable number of retries (e.g., 3), route the message to a dead letter queue (DLQ) topic with error metadata, commit the offset, and continue processing",
+        "Halt the consumer and alert on-call engineers to manually inspect and delete the message",
+        "Set auto.offset.reset=latest so the consumer skips all existing messages and starts from the newest"
+      ],
+      correctAnswer: 1,
+      explanation: "A Dead Letter Queue (DLQ) is the standard pattern for unprocessable messages. After N retries, the consumer publishes the raw message bytes to a DLQ topic (e.g., payments.dlq) along with metadata: original topic, partition, offset, timestamp, and the exception stack trace. The consumer then commits the offset for the original topic, unblocking the pipeline. A separate DLQ consumer or alerting system monitors the DLQ for investigation and potential manual replay. Netflix, Uber, and AWS SQS all use this pattern. Setting auto.offset.reset=latest is destructive — it permanently skips all messages between the current and latest offsets.",
+      hints: [
+        "What risk do you take if the consumer blocks indefinitely on a message that will never parse?",
+        "Where should unprocessable messages go so the main pipeline can continue processing?"
+      ],
+    },
+    {
+      id: "q-stream-28",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In a metrics pipeline (StatsD to Kafka to InfluxDB), which Kafka topic configuration prevents a slow InfluxDB writer from exhausting broker disk space?",
+      options: [
+        "Increasing the number of topic partitions to distribute load across more broker disks",
+        "Configuring retention.ms and retention.bytes to enforce time- and size-based message expiration",
+        "Enabling log compaction so duplicate metric data points are merged per tag set",
+        "Using producer quotas to throttle the StatsD publisher write rate to match InfluxDB ingestion speed"
+      ],
+      correctAnswer: 1,
+      explanation: "Retention policies are the primary safeguard against unbounded disk growth. Setting retention.ms=3600000 (1 hour) causes the broker to delete segments older than 1 hour. Setting retention.bytes=10737418240 (10 GB per partition) adds a size cap. If InfluxDB falls behind and consumer lag grows, old metrics are purged rather than filling broker disks. This is a deliberate trade-off: metrics pipelines typically accept loss of old data over broker instability. Producer quotas (option D) would backpressure StatsD publishers rather than allow data to accumulate and expire naturally.",
+      hints: [
+        "What Kafka configuration controls how long data is kept before automatic deletion?",
+        "What is the trade-off between setting a short vs long retention period for a high-throughput metrics topic?"
+      ],
+    },
+  ],
+
+  "sds-warehouse-spark": [
+    {
+      id: "q-stream-29",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Why does columnar storage (Parquet, ORC) dramatically outperform row-oriented storage (CSV, JSON) for analytical queries that read 3 columns from a 100-column table?",
+      options: [
+        "Columnar formats use more indexes so column lookups avoid full-table scans",
+        "Each column's values are stored contiguously on disk, so only the 3 needed columns are read; row-oriented storage must read entire rows — all 100 columns — even to access 3 fields",
+        "Columnar formats apply better compression algorithms than row-oriented formats regardless of query access pattern",
+        "Columnar formats store data pre-sorted by primary key, reducing the number of rows scanned per query"
+      ],
+      correctAnswer: 1,
+      explanation: "The core columnar advantage is IO reduction via column projection. In a CSV/JSON row file, each row stores all 100 columns contiguously — reading 3 columns still requires reading or seeking past all 100 columns per row. In Parquet or ORC, each column's bytes are stored together, so a query touching 3 columns reads only ~3% of total data bytes. Additionally, per-column compression ratios are far superior because values are of the same type and similar magnitude (run-length encoding, dictionary encoding, delta encoding). Databricks' Delta Lake, Apache ORC in Hive, and Google BigQuery's Capacitor all exploit this principle for analytical performance.",
+      hints: [
+        "How is data physically laid out in a Parquet file row group vs a CSV row?",
+        "If each column is stored separately, what IO is saved when a query needs only 3 of 100 columns?"
+      ],
+    },
+    {
+      id: "q-stream-30",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A Spark job processing a 10 TB dataset is severely slow due to data skew — one partition holds 50 GB while all others hold ~200 MB. Which technique best resolves this?",
+      options: [
+        "Increase executor memory to 256 GB per node so each executor can process the large partition in memory",
+        "Apply key salting: append a random integer suffix (0 to N-1) to skewed keys, process in N sub-partitions, then aggregate partial results to combine them",
+        "Call df.coalesce(1) to merge all partitions into one, ensuring uniform processing across a single executor",
+        "Set spark.sql.shuffle.partitions=10000 to create more shuffle partitions so the skewed key is automatically redistributed"
+      ],
+      correctAnswer: 1,
+      explanation: "Key salting is the standard fix for single-key data skew. If the key 'bot123' accounts for 50 GB of data, appending a random integer 0-9 creates 10 virtual keys (bot123_0 through bot123_9), spreading load across 10 partitions processed in parallel. After aggregation, a second pass strips the suffix and merges the 10 sub-results. Increasing shuffle partitions (option D) does not help if one key dominates — all records for that key still hash to the same partition. Databricks engineers and Spark engineers at Netflix documented salting as the primary mitigation for skewed joins and groupBy aggregations.",
+      hints: [
+        "If one key holds 50 GB, how do you split it across multiple partitions without changing business semantics?",
+        "Why does simply increasing spark.sql.shuffle.partitions not help when one specific key is the bottleneck?"
+      ],
     },
   ],
 };

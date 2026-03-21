@@ -2788,6 +2788,258 @@ const questionOverrides: Record<string, QuestionOverride> = {
     options: ["About 3x fewer", "About 9x fewer", "About Cx fewer", "About the same"],
     correctAnswer: 1,
   },
+  "q-hc-kp7-2": {
+    type: "multiple-choice",
+    question: "What signal does an MSA give AlphaFold2?",
+    options: [
+      "The final pLDDT confidence for each residue",
+      "A voxelized 3D density map of the protein",
+      "Correlated mutations that suggest which residues are close in 3D",
+      "Ground-truth contact labels for supervised training",
+    ],
+    correctAnswer: 2,
+  },
+  "q-hc-kp8-2": {
+    type: "multiple-choice",
+    question: "How does DeepVariant cast variant calling?",
+    options: [
+      "As sequence generation from reads to the reference genome",
+      "As image classification on read-pileup images",
+      "As k-mer clustering without alignment",
+      "As time-series forecasting over coverage depth",
+    ],
+    correctAnswer: 1,
+  },
+  "q-hc-kp22-2": {
+    type: "multiple-choice",
+    question: "Why does REINVENT keep a prior model during RL?",
+    options: [
+      "To replace the external scoring function with model likelihood",
+      "To convert SMILES into 3D protein structures before scoring",
+      "To keep generated molecules near valid, drug-like chemical space while optimizing reward",
+      "To guarantee the globally optimal molecule is found",
+    ],
+    correctAnswer: 2,
+  },
+  "q-hc-kp27-2": {
+    type: "multiple-choice",
+    question: "What does a membership inference attack try to infer?",
+    options: [
+      "Whether the synthetic data matches the real data's marginal distributions",
+      "Whether a specific patient's record was in the training set",
+      "Which hidden diagnosis a patient has, given the rest of the record",
+      "How to reconstruct every training record exactly",
+    ],
+    correctAnswer: 1,
+  },
+  "q-gem-kp-23": {
+    type: "multiple-choice",
+    question: "What can Gemini return with parallel function calling?",
+    options: [
+      "Multiple independent function calls in one response.",
+      "A function's result after executing it on Google's servers.",
+      "One function call split across several streamed chunks.",
+      "A plain-text answer while keeping tool calls hidden from the app.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-42": {
+    type: "multiple-choice",
+    question: "With Gemini audio, what does speaker diarization do?",
+    options: [
+      "Assign each stretch of speech to the correct speaker.",
+      "Remove background noise from the recording.",
+      "Translate the conversation into another language.",
+      "Convert audio into a list of phonemes.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-45": {
+    type: "multiple-choice",
+    question: "A PDF has a bar chart. What can Gemini answer?",
+    options: [
+      "Read the axes and answer questions like which bar is highest.",
+      "Only OCR the caption, not the chart itself.",
+      "Only identify the chart type, not the values it shows.",
+      "Answer chart questions only after you convert the PDF to CSV.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-95": {
+    type: "multiple-choice",
+    question: "How do you compare two long PDFs in one Gemini prompt?",
+    options: [
+      "Upload both PDFs and include both file references in the same prompt.",
+      "Merge both PDFs into one image before sending them.",
+      "Create embeddings first; Gemini cannot reason across separate files directly.",
+      "Turn on Google Search grounding so Gemini can fetch both files at runtime.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp9-2": {
+    type: "multiple-choice",
+    question: "Why is impedance control preferred for contact?",
+    options: [
+      "It makes the robot behave like a spring-damper, so contact forces stay compliant instead of spiking",
+      "It guarantees zero position error even against a rigid wall",
+      "It eliminates the need for force sensing in contact tasks",
+      "It plans a collision-free path before the robot touches anything",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp10-2": {
+    type: "multiple-choice",
+    question: "What do streams provide in PDDLStream?",
+    options: [
+      "Continuous samples like grasps or IK solutions only when the planner needs them",
+      "A complete enumeration of all continuous parameters before search begins",
+      "A learned policy that replaces symbolic planning",
+      "A fixed motion graph reused for every task",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp24-3": {
+    type: "multiple-choice",
+    question: "What does RMA's adaptation module estimate at deployment?",
+    options: [
+      "Hidden dynamics like friction or payload from recent proprioception",
+      "The true terrain parameters by querying the simulator online",
+      "Which pre-trained terrain-specific policy to switch to",
+      "A fresh system-identification model before each rollout",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp40-2": {
+    type: "multiple-choice",
+    question: "How do GelSight-style tactile sensors sense contact?",
+    options: [
+      "They image deformation of a soft gel with an internal camera",
+      "They estimate contact from motor current spikes alone",
+      "They scan the fingertip with LiDAR to recover depth",
+      "They infer shear from joint encoder lag at the wrist",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mls-kp5-2": {
+    type: "multiple-choice",
+    question: "Where should a model registry usually store the actual model artifact?",
+    options: [
+      "As rows in the same relational database that stores model metadata",
+      "In object storage, with the registry storing metadata and an artifact URI",
+      "Only on the training machine that produced the model",
+      "Directly inside the serving container image, without an external artifact store",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mls-kp52-1": {
+    question: "What extra compute does activation checkpointing add during training?",
+    options: [
+      "Extra forward recomputation during backward",
+      "No extra compute; it only compresses saved activations",
+      "A second optimizer step on the same batch",
+      "Extra gradient synchronization between GPUs",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mls-kp53-2": {
+    question: "At batch size 1, a dense d x d matrix-vector multiply has arithmetic intensity closest to:",
+    options: ["1 FLOP/byte", "d/2 FLOPs/byte", "d FLOPs/byte", "d^2 FLOPs/byte"],
+    correctAnswer: 0,
+  },
+  "q-mls-kp58-2": {
+    question: "Using FP16, how many KV-cache bytes does one transformer layer need per token?",
+    options: ["4 * d_model bytes", "2 * d_model bytes", "8 * d_model bytes", "4 * d_model^2 bytes"],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp12-3": {
+    question:
+      "You can simulate data x from parameters theta, but you cannot evaluate p(x|theta). Which inference family is designed for this setting?",
+    options: [
+      "Simulation-based inference (likelihood-free inference)",
+      "Maximum likelihood with an exact likelihood",
+      "Ordinary least squares on theta",
+      "Kalman filtering",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp15-3": {
+    question: "Reynolds averaging introduces which unclosed term in RANS?",
+    options: [
+      "The Reynolds stress tensor <u_i' u_j'>",
+      "The mean pressure gradient",
+      "The continuity equation",
+      "The molecular viscosity",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp31-2": {
+    type: "multiple-choice",
+    question:
+      "An FNO trained on a 64x64 grid is evaluated on a 128x128 grid. What property makes this possible?",
+    options: [
+      "It learns weights on low Fourier modes rather than fixed pixel locations",
+      "It upsamples every input back to 64x64 before applying the model",
+      "It stores a separate convolution kernel for each grid resolution",
+      "It ignores spatial structure and uses only a pointwise MLP",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sciml-kp37-2": {
+    type: "multiple-choice",
+    question:
+      "A patient's measurements arrive at days 0, 3, and 11. Which model is built for this kind of irregular sampling?",
+    options: [
+      "A latent Neural ODE with an encoder and continuous-time latent dynamics",
+      "A standard RNN that assumes equal time gaps between observations",
+      "A 1D CNN over the sequence with no timestamps",
+      "k-means clustering on the observation times",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp4-2": {
+    type: "multiple-choice",
+    question: 'What does an "overfit one batch" test check?',
+    options: [
+      "The training loop can drive one fixed batch to near-zero loss.",
+      "The model will generalize well on unseen data.",
+      "The inference service meets its latency SLO.",
+      "The validation split is leakage-free.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp12-2": {
+    type: "multiple-choice",
+    question: "A challenger wins offline AUC. What gate comes next?",
+    options: [
+      "Shadow or canary evaluation on real traffic.",
+      "Immediate promotion, because offline AUC is the release criterion.",
+      "Recompute the validation set with a different random seed.",
+      "Prefer the model with fewer parameters.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp18-3": {
+    type: "multiple-choice",
+    question: "Why use remote Terraform state with locking?",
+    options: [
+      "It prevents concurrent applies from corrupting shared state.",
+      "It makes Terraform plans run faster on GPU nodes.",
+      "It stores large model weights outside Docker images.",
+      "It automatically rolls back failed applies.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp25-3": {
+    type: "multiple-choice",
+    question: "Static vs. dynamic quantization: when are activation scales chosen?",
+    options: [
+      "Dynamic at runtime; static during calibration before deployment.",
+      "Dynamic during training; static during inference.",
+      "Dynamic once per request; static once per model family.",
+      "Dynamic for weights only; static for activations only.",
+    ],
+    correctAnswer: 0,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

@@ -93,13 +93,13 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       hints: [
         "To check whether a complement exists in constant time, what must we have already stored?",
-        "The only way to avoid a hash map is to use a two-pass technique. What does two-pass require?",
         "Two pointers on a sorted array require $\\mathrm{O}(n \\log n)$ time just for the sort."
       ],
       explanation:
-        "The answer is: **sorting changes the original index order**.\n\n" +
-        "Without a hash map, the only other way to achieve $\\mathrm{O}(n)$ lookup of complements is the two-pointer technique, which requires a sorted array. But sorting itself costs $\\mathrm{O}(n \\log n)$, not $\\mathrm{O}(n)$. Once sorted, the original indices are lost, and recovering them requires $\\mathrm{O}(n)$ additional storage.\n\n" +
-        "More formally, a comparison-based sort has a lower bound of $\\Omega(n \\log n)$. Therefore any algorithm that sorts before using two pointers cannot beat $\\Omega(n \\log n)$ in time without using $\\Omega(n)$ extra space for index bookkeeping. This is a fundamental time-space trade-off: $\\mathrm{O}(n)$ time with $\\mathrm{O}(1)$ space for Two Sum is impossible."
+        "**Step 1:** Without a hash map, the only other way to achieve $\\mathrm{O}(n)$ lookup of complements is the two-pointer technique, which requires a sorted array. But sorting itself costs $\\mathrm{O}(n \\log n)$, not $\\mathrm{O}(n)$.\n\n" +
+        "**Step 2:** Once sorted, the original indices are lost, and recovering them requires $\\mathrm{O}(n)$ additional storage.\n\n" +
+        "**Step 3:** More formally, a comparison-based sort has a lower bound of $\\Omega(n \\log n)$. Therefore any algorithm that sorts before using two pointers cannot beat $\\Omega(n \\log n)$ in time without using $\\Omega(n)$ extra space for index bookkeeping. This is a fundamental time-space trade-off: $\\mathrm{O}(n)$ time with $\\mathrm{O}(1)$ space for Two Sum is impossible.\n\n" +
+        "\\[\n\\text{Answer: sorting changes the original index order.}\n\\]"
     },
     {
       id: "q-ts-6",
