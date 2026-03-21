@@ -17,7 +17,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Per Sutton & Barto (Chapter 3), a policy $\\pi$ is a mapping from each state $s \\in S$ and action $a \\in A(s)$ to the probability $\\pi(a|s)$ of taking action a when in state s. It fully specifies the agent's behavior at every state.",
+        "A policy $\pi$ maps every state $s \in \mathcal{S}$ and action $a \in \mathcal{A}(s)$ to the probability $\pi(a \mid s)$ of taking action $a$ when in state $s$. This is the definition given in Sutton & Barto Chapter 3. It fully specifies the agent's behavior: at each state, the agent's action distribution is completely determined by $\pi$.
+
+The other options describe different RL concepts: the discounted return $G_t$ (option 2), the transition dynamics $P(s' \mid s, a)$ (option 3), and a value function approximator (option 4). None of these are mappings from states to action probabilities.
       hints: [
         "The definition involves probabilities of actions given states. Which option expresses a conditional probability distribution over actions?",
         "Think about the type signature: input = state, output = probabilities over actions.",

@@ -1720,19 +1720,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "CLIP is trained with a contrastive (InfoNCE) loss on a batch of N image-text pairs. For a batch of N=4 pairs, how many positive and negative pairs does the loss use?",
+        "CLIP is trained with a contrastive (InfoNCE) loss on a batch of $N$ image-text pairs. For a batch of $N = 4$ pairs, how many positive and negative pairs does the loss use?",
       options: [
         "4 positives and 4 negatives (one negative per positive pair)",
-        "4 positives and 12 negatives (N positives, N²−N negatives)",
+        "4 positives and 12 negatives ($N$ positives, $N^2 - N$ negatives)",
         "4 positives and 8 negatives (2 negatives per positive)",
-        "4 positives and 16 negatives (N² total pairs)",
+        "4 positives and 16 negatives ($N^2$ total pairs)",
       ],
       correctAnswer: 1,
       explanation:
-        "CLIP builds an N×N similarity matrix. Each of the N diagonal entries is a positive pair (matching image-text). The remaining N²−N = N(N−1) off-diagonal entries are negative pairs. For N=4: 4 positives and 4×3 = 12 negatives. The InfoNCE loss maximises the similarity of diagonal entries relative to all negatives in both image→text and text→image directions. Large batch sizes (N=32768) provide many negatives, which is crucial for CLIP\'s performance.",
+        "CLIP constructs an $N \\times N$ similarity matrix. Each of the $N$ diagonal entries (image $i$ with text $i$) is a positive pair. All off-diagonal entries are negative pairs — each image is paired with every other text, and vice versa.\n\nFor $N = 4$:\n\\[\n\\text{positives} = 4, \\quad \\text{negatives} = N^2 - N = 16 - 4 = 12.\n\\]\n\nThe InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image$\\to$text and text$\\to$image directions. Large batch sizes ($N = 32768$) provide abundant negatives, which is crucial for CLIP's performance.",
       hints: [
-        "An N×N matrix has N diagonal (positive) and N²−N off-diagonal (negative) entries.",
-        "For N=4: 4² = 16 total pairs, 4 positives on diagonal, 16−4 = 12 negatives.",
+        "An $N \\times N$ matrix has $N$ diagonal (positive) and $N^2 - N$ off-diagonal (negative) entries.",
+        "For $N = 4$: $4^2 = 16$ total pairs, 4 on the diagonal are positives, $16 - 4 = 12$ are negatives.",
       ],
     },
     {
@@ -1992,17 +1992,17 @@ const questions: Record<string, Question[]> = {
       question:
         "In a Denoising Diffusion Probabilistic Model (DDPM), what is the forward process and what does the model learn to reverse?",
       options: [
-        "Forward process: the model generates an image from noise; the model learns to add noise to a clean image",
-        "Forward process: a fixed Markov chain gradually adds Gaussian noise to a clean image until it becomes pure noise; the model learns a reverse denoising process to recover clean images from noisy ones",
-        "Forward process: the model encodes an image into a latent vector; the model learns to decode the latent vector back to an image",
-        "Forward process: image pixels are randomly masked; the model learns to predict the masked pixels given the unmasked context",
+        "Forward process: the model generates an image from noise; the model learns to add noise to a clean image.",
+        "Forward process: a fixed Markov chain gradually adds Gaussian noise to a clean image until it becomes pure noise; the model learns a reverse denoising process to recover clean images from noisy ones.",
+        "Forward process: the model encodes an image into a latent vector; the model learns to decode the latent vector back to an image.",
+        "Forward process: image pixels are randomly masked; the model learns to predict the masked pixels given the unmasked context.",
       ],
       correctAnswer: 1,
       explanation:
-        "DDPM (Ho et al., 2020) defines a forward process q(x_t | x_{t-1}) that incrementally adds small amounts of Gaussian noise over T steps (typically T=1000) until x_T approximates N(0,I). The model p_theta(x_{t-1} | x_t) is a U-Net trained to predict and remove the noise added at each step. At inference, sampling starts from pure Gaussian noise x_T and iteratively denoises for T steps to produce a clean image x_0. The ELBO objective reduces to predicting the noise epsilon added at each forward step.",
+        "DDPM (Ho et al., 2020) defines:\n\n- **Forward process**: a fixed Markov chain $q(x_t | x_{t-1})$ that incrementally adds small Gaussian noise over $T$ steps (typically $T = 1000$) until $x_T \\approx \\mathcal{N}(0, I)$.\n\n- **Reverse process**: a learned model $p_\\theta(x_{t-1} | x_t)$ (a U-Net) trained to denoise — predict and remove the noise added at each step.\n\nAt inference, sampling starts from pure Gaussian noise $x_T$ and iteratively denoises for $T$ steps to produce a clean image $x_0$. The ELBO training objective reduces to predicting the noise $\\epsilon$ added at each forward step.",
       hints: [
-        "Forward = add noise (fixed, no parameters). Reverse = remove noise (learned U-Net).",
-        "The model predicts the noise epsilon that was added — so given noisy x_t, predict epsilon, subtract it to get x_{t-1}.",
+        "Forward process = add noise (fixed, no parameters). Reverse process = remove noise (learned U-Net).",
+        "The model predicts the noise $\\epsilon$ that was added — so given noisy $x_t$, predict $\\epsilon$, subtract it to get $x_{t-1}$.",
       ],
     },
     {

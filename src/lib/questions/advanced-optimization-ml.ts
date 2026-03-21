@@ -96,7 +96,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Adam maintains exponential moving averages of both the gradient (first moment, like momentum) and the squared gradient (second moment, like RMSProp/AdaGrad), computing bias-corrected estimates to adapt the learning rate per parameter.",
+        "Adam (Adaptive Moment Estimation) combines two key ideas from prior optimizers:\n\n" +
+        "1. **First moment (from momentum):** Maintains an exponential moving average of gradients:\n" +
+        "\\[m_t = \\beta_1 m_{t-1} + (1-\\beta_1) g_t\\]\n\n" +
+        "2. **Second moment (from RMSProp/AdaGrad):** Maintains an exponential moving average of squared gradients:\n" +
+        "\\[v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2\\]\n\n" +
+        "where \\(g_t = \\nabla L(\\theta_t)\\) is the gradient at step \\(t\\).\n\n" +
+        "Bias correction is applied because \\(m_0 = v_0 = 0\\) causes estimates to be biased toward zero early in training:\n" +
+        "\\[\\hat{m}_t = \\frac{m_t}{1-\\beta_1^t}, \\qquad \\hat{v}_t = \\frac{v_t}{1-\\beta_2^t}\\]\n\n" +
+        "The parameter update is:\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{\\hat{v}_t} + \\epsilon} \\hat{m}_t\\]\n\n" +
+        "This adapts the learning rate per parameter: \\(\\hat{m}_t\\) provides the direction (like momentum), while \\(\\sqrt{\\hat{v}_t}\\) inversely scales the step size (dividing out the gradient magnitude).",
       hints: [
         "Adam = Adaptive Moment Estimation — what are the two moments it estimates?",
         "Think of Adam as combining momentum (1st moment) with RMSProp (2nd moment).",
@@ -110,10 +120,17 @@ const questions: Record<string, Question[]> = {
         "AdamW fixes Adam\'s weight decay implementation by decoupling weight decay from the gradient update, applying it directly to the weights rather than including it in the gradient.",
       correctAnswer: "True",
       explanation:
-        "In Adam, L2 regularization modifies the gradient, which then gets divided by the adaptive second moment — weakening its regularization effect; AdamW applies weight decay directly to parameters (θ ← θ − λθ) after the gradient step, restoring proper regularization.",
+        "In standard Adam with L2 regularization, the weight decay term \\(\\lambda \\theta\\) is added to the gradient:\n" +
+        "\\[g_t = \\nabla L(\\theta_t) + \\lambda \\theta_t\\]\n\n" +
+        "The adaptive update divides by \\(\\sqrt{v_t}\\):\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t}} (\\nabla L(\\theta_t) + \\lambda \\theta_t)\\]\n\n" +
+        "The problem: parameters with small historical gradients (rarely-activated features) have small \\(v_t\\), so the \\(\\lambda\\theta_t\\) term gets amplified. Parameters with large \\(v_t\\) have their regularization weakened. The effective regularization strength varies unpredictably.\n\n" +
+        "AdamW (Decoupled Weight Decay) applies weight decay directly after the gradient step:\n" +
+        "\\[\\theta_{t+1} = (1 - \\eta \\lambda) \\theta_t - \\frac{\\eta}{\\sqrt{v_t}} m_t\\]\n\n" +
+        "This ensures the regularization strength \\(\\lambda\\) is independent of the adaptive learning rate, giving consistent regularization across all parameters.",
       hints: [
-        "Why does dividing gradient-based L2 by the adaptive step size weaken regularization?",
-        "Decoupled weight decay means the regularization strength is not scaled by the adaptive learning rate.",
+        "In Adam with L2, the weight decay term gets divided by \\(\\sqrt{v_t}\\) — so parameters with small \\(v_t\\) get over-regularized, and those with large \\(v_t\\) get under-regularized.",
+        "AdamW applies weight decay separately from the gradient update, so regularization strength is uniform across all parameters.",
       ],
     },
     {

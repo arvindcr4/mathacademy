@@ -2169,4 +2169,518 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
+const extra: Record<string, import("@/lib/curriculum").Question[]> = {
+  "feature-store-advanced": [
+    {
+      id: "q-prod-ex1-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A feature store serves features for both model training (offline) and model inference (online). What is 'point-in-time correctness' and why is it critical for training data generation?",
+      options: [
+        "Point-in-time correctness means all features are computed at the same wall-clock time",
+        "Point-in-time correctness means when generating training labels for time T, only features available at time T are used — preventing the use of future information that would not be available at inference, which would constitute data leakage",
+        "Point-in-time correctness ensures that features are stored in UTC timezone",
+        "Point-in-time correctness means features are recomputed exactly once per day at a fixed time"
+      ],
+      correctAnswer: 1,
+      explanation: "Point-in-time correctness (also called temporal join correctness) prevents training-serving skew from data leakage. Example: a fraud model trained with account balance at time T+1 for a transaction at time T would leak future information — at serving time, balance at T+1 is not yet available. Feature stores with point-in-time joins use the as-of timestamp to retrieve only features that existed before the label timestamp, ensuring training data matches the serving-time feature availability.",
+      hints: [
+        "Leakage example: training with 'account balance 24 hours after transaction' — at serving time this future balance does not exist.",
+        "Point-in-time join: for each training row at time T, retrieve the most recent feature value that existed at or before T."
+      ]
+    },
+    {
+      id: "q-prod-ex1-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A feature store has an offline store (data warehouse, batch-updated daily) and an online store (Redis/DynamoDB, updated in near-real-time). For a fraud detection model, which features should be served from the online store vs. the offline store?",
+      options: [
+        "All features from offline store — consistency is more important than freshness for fraud",
+        "Features that change rapidly and have high predictive value for fraud (e.g., transaction velocity in the last 5 minutes, account balance) from the online store; slowly-changing features (e.g., account age, historical average transaction amount) from the offline store — balancing freshness where it matters and cost where it does not",
+        "All features from online store — freshness always dominates for fraud detection",
+        "Features should be randomly split between online and offline stores for load balancing"
+      ],
+      correctAnswer: 1,
+      explanation: "Feature freshness trade-off: online stores provide low latency (<10ms) and real-time freshness but are expensive (RAM/SSD-based) and limited in storage. Offline stores are cheap and high-capacity but have batch update latency (hours to days). For fraud: recent velocity features (last 5-min transaction count) decay in value within minutes — must be online. Historical averages decay over months — offline batch updates are sufficient. Routing features by freshness requirement minimizes cost without sacrificing predictive quality.",
+      hints: [
+        "High-velocity fraud signals (last-5-min transaction count) become stale in minutes — must be online store.",
+        "Historical averages (avg transaction in last 90 days) change slowly — offline daily updates are sufficient and much cheaper."
+      ]
+    },
+    {
+      id: "q-prod-ex1-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Feature freshness SLAs should be defined per feature based on how quickly feature staleness degrades model quality, rather than applying a single uniform freshness SLA to all features in a feature store.",
+      correctAnswer: "True",
+      explanation: "Feature freshness requirements vary by orders of magnitude: a 'current session activity' feature may need sub-second updates, while a 'customer tenure in years' feature can be updated monthly. Applying a single strict SLA to all features massively overengineers low-velocity features (increasing cost) while potentially missing the point for high-velocity ones. Feature-level SLA definition also enables per-feature alerting when update pipelines lag.",
+      hints: [
+        "Real-time feature (session activity): staleness of 60 seconds is catastrophic. Monthly feature (tenure): staleness of 1 day is completely fine.",
+        "Per-feature SLAs enable targeted alerting: page on-call only when features that actually matter for model quality are stale."
+      ]
+    }
+  ],
+
+  "deployment-strategies": [
+    {
+      id: "q-prod-ex2-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What is the key difference between a blue-green deployment and a canary deployment for ML models?",
+      options: [
+        "Blue-green is for batch models; canary is for real-time models",
+        "Blue-green switches 100% of traffic from old to new model atomically (with instant rollback capability); canary gradually shifts a small percentage of traffic (e.g., 1-5%) to the new model for validation before full rollout",
+        "Blue-green requires twice the infrastructure; canary requires identical infrastructure to the current deployment",
+        "Blue-green is used for model architecture changes; canary is used for weight updates only"
+      ],
+      correctAnswer: 1,
+      explanation: "Blue-green: two identical environments (blue=current, green=new). Switch the load balancer to send 100% traffic to green. Rollback = switch back to blue. Zero downtime, instant rollback, but requires 2x infrastructure and no gradual validation. Canary: new model serves 1-5% of traffic initially. Gradually increase if metrics are healthy. Much less risk (only 1-5% of users affected by bugs), but rollout takes longer. Canary is preferred for ML where quality issues may not be immediately visible.",
+      hints: [
+        "Blue-green: atomic switch — 0% to 100% in one step. Fast rollback. No intermediate validation period.",
+        "Canary: gradual rollout — validate quality on 1% before exposing 100%. Catches subtle ML quality issues before they affect all users."
+      ]
+    },
+    {
+      id: "q-prod-ex2-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Shadow deployment (also called dark launch or mirror traffic) runs a new model in parallel with the production model without affecting user-facing responses. What specific ML risk does this technique address that canary deployment cannot?",
+      options: [
+        "Shadow deployment is faster to implement than canary deployments",
+        "Shadow deployment validates that the new model produces non-degraded outputs on real production traffic distribution before any user is affected — catching issues from training-serving skew, unexpected input distributions, or latency regressions without any user impact",
+        "Shadow deployment allows A/B testing user preferences between model versions",
+        "Shadow deployment reduces infrastructure cost by sharing compute between model versions"
+      ],
+      correctAnswer: 1,
+      explanation: "Canary deployment affects 1-5% of real users — any quality regression impacts real users, even if briefly. Shadow deployment: production model handles all requests and serves all responses; the new model receives mirrored copies of all requests, runs in parallel, and its outputs are logged but never returned to users. This allows: (1) comparing output distributions between models on real traffic, (2) measuring latency on production request shapes, (3) detecting crashes or errors — all with zero user impact. It is the safest pre-production validation technique.",
+      hints: [
+        "Shadow outputs are logged and compared offline — no user ever sees the shadow model's response.",
+        "Use shadow to validate latency SLAs on real traffic shapes before canary — avoids surprising 1% of users with slow responses."
+      ]
+    },
+    {
+      id: "q-prod-ex2-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "A/B testing for ML model evaluation requires the experimental design to be set up before the rollout begins — post-hoc analysis of traffic logs to compare two models that were deployed at different times is generally invalid due to temporal confounding.",
+      correctAnswer: "True",
+      explanation: "Post-hoc comparison confounds model effect with time effect: traffic patterns, user behavior, and external events differ between time periods (day of week, seasonality, news events). A/B testing requires simultaneous exposure of matched user groups to both models, with randomized assignment. Pre/post comparisons cannot distinguish model quality improvement from external factors that changed between periods — a fundamental validity threat to ML offline-online metric comparisons.",
+      hints: [
+        "Temporal confound: Monday users behave differently from Friday users. Comparing Monday (old model) vs. Friday (new model) is invalid.",
+        "Simultaneous A/B: same time window, randomized assignment. Controls for all temporal factors by construction."
+      ]
+    }
+  ],
+
+  "drift-detection": [
+    {
+      id: "q-prod-ex3-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The Population Stability Index (PSI) measures feature distribution shift between a reference window (training data) and the current serving window. A PSI > 0.2 is commonly interpreted as:",
+      options: [
+        "Minor shift that can be ignored; no action needed",
+        "Significant shift that requires investigation and likely model retraining — the serving distribution has diverged substantially from the training distribution, indicating potential model degradation",
+        "The model is performing better than at training time",
+        "A data pipeline error that always requires immediate rollback"
+      ],
+      correctAnswer: 1,
+      explanation: "PSI thresholds (industry convention): PSI < 0.1 = negligible shift (no action); 0.1-0.2 = moderate shift (monitor closely); > 0.2 = significant shift (investigate, likely retrain). PSI = sum_i (actual_i - expected_i) * ln(actual_i / expected_i) over binned distributions. PSI > 0.2 means the serving distribution has drifted significantly from what the model was trained on — feature importances and model coefficients may no longer be calibrated to the new distribution.",
+      hints: [
+        "PSI < 0.1: safe. 0.1-0.2: watch carefully. > 0.2: take action. These thresholds come from credit scoring industry practice.",
+        "PSI measures distribution shift across all bins: large bins with different proportions contribute most to the PSI score."
+      ]
+    },
+    {
+      id: "q-prod-ex3-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The Kolmogorov-Smirnov (KS) test can detect input feature distribution drift in production ML systems. What does the KS test statistic D measure, and what is its advantage over PSI for continuous features?",
+      options: [
+        "D measures the mean difference between distributions; PSI is better because it handles bins automatically",
+        "D measures the maximum absolute difference between the empirical CDFs of the reference and current distributions — it is distribution-free (no binning required), making it more sensitive to subtle shifts that bin-based methods like PSI may miss",
+        "D measures the correlation between two feature distributions over time",
+        "D measures the variance ratio between training and serving distributions"
+      ],
+      correctAnswer: 1,
+      explanation: "KS test statistic: D = max |F_ref(x) - F_current(x)| where F is the empirical CDF. It is non-parametric (no distributional assumptions), requires no binning (unlike PSI), and is sensitive to differences in distribution shape, location, and scale. PSI requires choosing bins and can miss subtle shifts that fall within bin boundaries. KS is better for continuous features; PSI is more interpretable (quantifies business-relevant shift magnitude). Production systems often use both.",
+      hints: [
+        "KS = maximum CDF gap: the worst-case point where the two distributions disagree most.",
+        "PSI requires bins (typically 10-20). If a shift occurs within a bin, PSI may not detect it. KS operates on the full CDF — no information loss from binning."
+      ]
+    },
+    {
+      id: "q-prod-ex3-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Concept drift (changes in the relationship between features X and label Y) is more dangerous than data drift (changes in the feature distribution P(X)) because data drift is observable from unlabeled serving data, while concept drift requires labeled data to detect and may silently degrade model quality before labels become available.",
+      correctAnswer: "True",
+      explanation: "Data drift detection requires only feature values from serving traffic (no labels needed) — detectable immediately via PSI, KS test, or statistical tests. Concept drift (P(Y|X) changes) requires both features and labels to measure — in fraud detection, labels may arrive hours to weeks after the transaction. This lag means concept drift can silently degrade model quality for the entire label collection period before it becomes observable. Proxy signals (prediction confidence distribution shift, business metric changes) are often used to detect concept drift early.",
+      hints: [
+        "Data drift: feature distribution changed. Detectable from unlabeled data immediately using statistical tests.",
+        "Concept drift: same feature, different optimal prediction. Requires labeled data — may lag days to weeks in fraud/churn use cases."
+      ]
+    }
+  ],
+
+  "ml-pipeline-design": [
+    {
+      id: "q-prod-ex4-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In ML pipeline design, what does 'idempotency' mean and why is it important for production pipeline reliability?",
+      options: [
+        "Idempotency means the pipeline always runs in exactly the same amount of time",
+        "Idempotency means running the pipeline multiple times with the same input produces the same output as running it once — making retry logic safe and enabling automatic recovery from partial failures without corrupting intermediate state",
+        "Idempotency means the pipeline automatically scales to handle varying data volumes",
+        "Idempotency means pipeline tasks can be paused and resumed without data loss"
+      ],
+      correctAnswer: 1,
+      explanation: "Idempotent ML pipelines: re-running a failed pipeline stage produces the same result as the first successful run, without side effects (no duplicate rows in feature tables, no corrupted partial aggregations). This enables: (1) safe automatic retries on transient failures; (2) backfill re-runs without corrupting historical data; (3) simplified failure recovery. Implementation: use upsert semantics (overwrite by key), partition-level overwrites, or atomic writes with renaming. Non-idempotent pipelines are fragile — a retry after partial failure creates inconsistent state.",
+      hints: [
+        "Non-idempotent: re-running appends duplicate feature rows to the training table. Second run corrupts data.",
+        "Idempotent pattern: write to temp location, validate, then atomically swap — any re-run overwrites the temp and swaps again."
+      ]
+    },
+    {
+      id: "q-prod-ex4-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A DAG-based ML pipeline (Airflow, Prefect) has a data preprocessing task that takes 4 hours and feeds into 5 parallel model training tasks. One model training task fails after 3 hours. What is the correct design pattern to handle this failure?",
+      options: [
+        "Restart the entire DAG from the beginning, rerunning the 4-hour preprocessing task",
+        "Design the pipeline with checkpointed intermediate outputs so the failed training task can be retried independently without rerunning the 4-hour preprocessing, using idempotent task design to ensure a clean retry",
+        "Skip the failed task and mark the DAG as successful with the remaining 4 models",
+        "Pause the entire DAG until manual intervention resolves the failure"
+      ],
+      correctAnswer: 1,
+      explanation: "Proper ML pipeline design: (1) preprocessing outputs to persistent storage (S3, GCS) upon completion; (2) downstream tasks read from storage, not from upstream task memory; (3) each task is idempotent and independently retryable. When training task 5 fails, Airflow retries only task 5 — reading from the already-persisted preprocessing output. No recomputation of the 4-hour preprocessing. This is the fan-out/checkpoint pattern that makes complex ML DAGs operationally manageable.",
+      hints: [
+        "Anti-pattern: passing data directly between tasks via memory — any downstream failure requires full pipeline restart.",
+        "Correct pattern: each task writes outputs to durable storage; downstream tasks read from storage — tasks are independently retryable."
+      ]
+    },
+    {
+      id: "q-prod-ex4-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "ML pipeline reproducibility requires pinning not only Python package versions but also the exact dataset version, random seeds, and hardware configuration used for each training run, since any of these can silently change model outputs.",
+      correctAnswer: "True",
+      explanation: "Full ML reproducibility requires: (1) code version (git commit hash); (2) data version (dataset snapshot ID or timestamp); (3) software environment (pinned dependency lock file + Docker image hash); (4) random seeds (Python, NumPy, PyTorch); (5) hardware configuration (CUDA version, GPU model — different GPU generations can produce different numerical results even with the same code). Missing any of these makes a 'reproduced' run potentially produce different model weights.",
+      hints: [
+        "Dataset version matters: if training data is updated between runs, identical code produces different models.",
+        "Hardware reproducibility: A100 and H100 may produce different float16 rounding due to different tensor core implementations."
+      ]
+    }
+  ],
+
+  "experiment-tracking": [
+    {
+      id: "q-prod-ex5-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What is the minimum set of information that should be automatically logged for every ML experiment to enable meaningful comparison and reproducibility?",
+      options: [
+        "Only the final model accuracy on the test set",
+        "Git commit hash, training data version and hash, all hyperparameters, training/validation metrics per epoch, hardware configuration, wall-clock time, and a pointer to the saved model artifact",
+        "Model accuracy and the engineer's notes in a spreadsheet",
+        "Only hyperparameters — metrics can be recomputed from the saved model"
+      ],
+      correctAnswer: 1,
+      explanation: "Minimum experiment logging for production-grade ML: (1) code: git commit hash (reproducibility); (2) data: dataset version/hash (reproducibility + audit); (3) config: all hyperparameters (comparison); (4) metrics: per-epoch train/val loss, final test metrics per slice (comparison + regression detection); (5) hardware: GPU type, CUDA version (reproducibility); (6) artifact: model checkpoint pointer (deployment link). Missing any of these makes experiments incomparable or non-reproducible, defeating the purpose of tracking.",
+      hints: [
+        "Without the git commit hash, you cannot reproduce the experiment even with all other information.",
+        "Per-slice metrics (not just aggregate) are critical for detecting performance regressions on specific user segments."
+      ]
+    },
+    {
+      id: "q-prod-ex5-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "An ML team runs 200 experiments per week but has no systematic experiment tracking. What specific failure mode does this cause when trying to deploy the best model to production?",
+      options: [
+        "Too many experiments slow down the model training infrastructure",
+        "Without experiment tracking, the team cannot reliably identify which configuration produced the best model, cannot audit the path from data to model, cannot reproduce the result, and may inadvertently deploy a model whose training configuration is unknown — creating an unauditable production system",
+        "Running 200 experiments per week always leads to overfitting",
+        "The lack of tracking only matters for compliance — it has no operational impact"
+      ],
+      correctAnswer: 1,
+      explanation: "Without systematic experiment tracking, production ML teams face: (1) 'which run produced this model?' becomes unanswerable; (2) reproducing the best result is impossible if configuration was not saved; (3) comparing experiments relies on memory or manual spreadsheets with high error rates; (4) compliance and audit questions ('what data was this model trained on?') cannot be answered; (5) production incidents cannot be diagnosed against training configuration. MLflow, W&B, and Comet ML all solve this by auto-capturing the complete experiment lineage.",
+      hints: [
+        "200 experiments/week × 52 weeks = 10,400 experiments per year. Memory alone cannot track this.",
+        "Compliance question: 'Was PII data used to train this model deployed to GDPR users?' Unanswerable without experiment tracking."
+      ]
+    },
+    {
+      id: "q-prod-ex5-3",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Comparing two ML experiments is only valid when they differ in at most one variable — running experiments that change multiple hyperparameters simultaneously makes it impossible to attribute performance differences to any specific change.",
+      correctAnswer: "False",
+      explanation: "This is the scientific single-variable principle applied naively. In practice, multi-variable experiments are valid and common: hyperparameter search (grid search, random search, Bayesian optimization) varies multiple hyperparameters simultaneously to find the optimal combination efficiently. The distinction is: single-variable experiments test causal hypotheses ('does adding dropout improve this architecture?'); multi-variable search finds the best configuration without causal attribution. Both are legitimate experimental strategies with different goals.",
+      hints: [
+        "Hypothesis testing: vary one variable to establish causality. Hyperparameter search: vary many to find the best combination.",
+        "Random search over 100 hyperparameter combinations is a valid experiment — we do not care why one combination is better, just that it is."
+      ]
+    }
+  ],
+
+  "traffic-splitting-ml": [
+    {
+      id: "q-prod-ex6-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "When implementing traffic splitting for an ML A/B test (e.g., 10% to new model, 90% to control), what assignment mechanism ensures valid statistical inference?",
+      options: [
+        "Route by time of day — new model handles morning traffic, control handles evening traffic",
+        "Deterministic hash-based assignment using a stable user identifier (e.g., user_id % 100 < 10 for 10% treatment), ensuring each user always sees the same model — preventing within-user contamination and enabling valid per-user metric computation",
+        "Random assignment on each request — flip a coin per request for maximum randomness",
+        "Assign users alphabetically by name — first 10% of alphabet to treatment"
+      ],
+      correctAnswer: 1,
+      explanation: "Per-request random assignment is invalid: a user may see both models in the same session, contaminating measurements and violating the stable unit treatment value assumption (SUTVA). Time-based routing confounds model quality with time effects. Hash-based assignment (user_id % 100 < 10) is deterministic and stable: a user always sees the same model, enabling per-user metrics, session-level analysis, and valid statistical tests. The hash function ensures uniform distribution without temporal patterns.",
+      hints: [
+        "SUTVA violation: if user sees both models, their behavior cannot be attributed to either model alone.",
+        "Hash-based: user 12345 always gets user_id % 100 = 45 — same model every request, session, and day."
+      ]
+    },
+    {
+      id: "q-prod-ex6-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Network effects (when one user's experience is affected by other users' model assignments) violate the independence assumptions of standard A/B tests and require more sophisticated experimental designs like cluster-based randomization.",
+      correctAnswer: "True",
+      explanation: "Standard A/B tests assume SUTVA: each user's outcome depends only on their own treatment assignment. For social networks, marketplace models, and recommendation systems, this is violated: showing User A a new recommendation model affects what items User B sees (inventory depletion, social virality). Solutions: cluster randomization (assign entire friend groups or geographic regions together), switchback designs (alternate between treatments over time periods), or synthetic control methods.",
+      hints: [
+        "Marketplace example: showing discounts to 50% of buyers changes inventory availability for the other 50% — treatments are not independent.",
+        "Social network example: viral content recommendations for treatment group increases exposure for control group members who see shared posts."
+      ]
+    },
+    {
+      id: "q-prod-ex6-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "An A/B test comparing two ML models shows a statistically significant improvement (p=0.02) in click-through rate but no significant improvement in purchase conversion. How should the team interpret this result?",
+      options: [
+        "Deploy the new model since statistical significance on CTR is sufficient evidence",
+        "The result is ambiguous: CTR improvement may reflect attention-grabbing recommendations that do not convert (click-bait effect). Decision requires understanding whether CTR is a leading indicator for purchases in this domain, and may require longer test duration to detect conversion effects or running the test for the true business metric (revenue)",
+        "The test is invalid since both metrics did not improve simultaneously",
+        "Always trust CTR over conversion since CTR has lower variance and is easier to measure"
+      ],
+      correctAnswer: 1,
+      explanation: "Surrogate metric trap: CTR is easier to measure (lower variance, faster to accumulate) but may not align with the true business objective (revenue, conversions). A model that maximizes CTR via clickbait harms long-term business outcomes. Decision framework: (1) Is CTR a valid proxy for conversion in this domain? (2) Is the test adequately powered to detect conversion effects? (3) What is the economic value of the CTR improvement vs. the risk of unmeasured conversion harm? At minimum, extend the test to power the conversion analysis before deploying.",
+      hints: [
+        "CTR improvement with no conversion lift: users clicked but did not buy — potentially a lower quality recommendation pattern.",
+        "Power analysis: conversion rates are much lower than CTR, requiring much larger sample sizes or longer tests to achieve significance."
+      ]
+    }
+  ],
+
+  "model-degradation-signals": [
+    {
+      id: "q-prod-ex7-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What are the three main categories of model degradation signals in production, ordered from fastest to detect to slowest to detect?",
+      options: [
+        "Accuracy, precision, recall — all detected at the same speed",
+        "Input data signals (detectable immediately from serving traffic, no labels needed), prediction distribution signals (detectable immediately), and business/outcome metrics (require delayed labels — hours to weeks depending on domain)",
+        "Server errors (fastest), model accuracy (medium), business revenue (slowest) — all are equally valid degradation signals",
+        "Latency signals (fastest), memory signals (medium), model accuracy (slowest)"
+      ],
+      correctAnswer: 1,
+      explanation: "Degradation detection lag varies dramatically: (1) Input signals — feature drift (PSI, KS test) is detectable from unlabeled serving data immediately, within minutes of pipeline issues. (2) Prediction signals — prediction distribution shift, confidence distribution, and output class ratios are computable immediately from model outputs. (3) Business/outcome signals — fraud labels arrive hours later; churn labels arrive months later. A layered monitoring system detects degradation at each level, using faster signals as early warning for the outcome signals that take longest to materialize.",
+      hints: [
+        "Input drift: detectable now with no labels. Fraud model accuracy: detectable hours later when transactions are resolved.",
+        "Layer monitoring: input signals as early warning → prediction signals as model-level check → business signals as ground truth."
+      ]
+    },
+    {
+      id: "q-prod-ex7-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A fraud model's prediction score distribution shifts from an average of 0.12 (at training time) to 0.08 six weeks after deployment. Business outcomes have not changed significantly. What are the two most likely explanations and how do you distinguish them?",
+      options: [
+        "The model is broken; immediately roll back to the previous version",
+        "Explanation 1 (concerning): concept drift — fraudsters adapted, making fraud less detectable and shifting scores down; Explanation 2 (benign): data drift — the user population shifted toward lower-risk users, correctly causing lower average fraud scores. Distinguish by segmenting: compute score distributions for known-fraud vs. known-non-fraud transactions separately — if the gap between them narrows, it is concept drift; if both shift proportionally, it is data drift",
+        "This is normal model behavior and requires no investigation",
+        "The shift indicates a data pipeline bug that is truncating feature values"
+      ],
+      correctAnswer: 1,
+      explanation: "Score distribution shift is ambiguous without segmentation. Concept drift: fraudsters adapted (new attack vectors), so the model scores them lower — the fraud detection rate (recall) is declining silently. Data drift: the served population changed (more low-risk users), so the average score is correctly lower — no quality degradation. Diagnosis: compute score distributions separately for verified fraud and verified non-fraud transactions. Narrowing gap = concept drift = urgent retraining needed. Proportional shift = benign data drift.",
+      hints: [
+        "Segment by known outcomes: verified fraud score distribution dropping separately from non-fraud = discriminative power declining.",
+        "Both distributions shift by the same factor: the population changed, not the model's ability to distinguish fraud from non-fraud."
+      ]
+    },
+    {
+      id: "q-prod-ex7-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Monitoring only aggregate model performance metrics (overall AUC, overall accuracy) is insufficient for detecting gradual model degradation in production because aggregate metrics can remain stable while per-segment performance silently degrades.",
+      correctAnswer: "True",
+      explanation: "Aggregate metric masking: if a model's performance improves on the majority segment but degrades on a minority segment, the aggregate metric may be unchanged or even improve. Example: a fraud model's overall AUC stays at 0.92, but its AUC on mobile users (15% of traffic) drops from 0.88 to 0.75 — a major quality regression affecting millions of users that is invisible in aggregate metrics. Production monitoring requires per-segment metric tracking with alerting thresholds for each important segment.",
+      hints: [
+        "Aggregate AUC = weighted average of segment AUCs. If the segment with degradation is small, the aggregate barely moves.",
+        "Slicing by device type, geography, user tenure, and other segments reveals degradation that aggregate metrics hide."
+      ]
+    }
+  ],
+
+  "feature-freshness": [
+    {
+      id: "q-prod-ex8-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A feature store returns 'null' for a required feature because the upstream pipeline is delayed. A model receiving null feature values at serving time faces two failure modes. What are they and what is the best mitigation?",
+      options: [
+        "Null features cause model crashes; the only mitigation is to reject all requests when any feature is null",
+        "Failure mode 1 (silent): the model uses null-imputed values (e.g., 0 or mean) and produces subtly wrong predictions without error. Failure mode 2 (overt): the model crashes on NaN inputs. Best mitigation: feature fallback strategy — use the most recent cached feature value with staleness metadata, plus model-level handling that switches to a degraded fallback model when critical features are absent",
+        "Null features are always safe to impute with zeros since the model handles missing values automatically",
+        "Reject all requests when any feature is null — availability sacrifice is preferable to wrong predictions"
+      ],
+      correctAnswer: 1,
+      explanation: "Null feature handling in production requires a multi-layered strategy: (1) feature store caching — return the last known good value with a staleness flag; (2) model-level feature importance awareness — if a high-importance feature is stale beyond its SLA, route to a simpler fallback model; (3) serving-layer validation — log null feature events and page on-call when null rate exceeds threshold; (4) circuit breaker — if null rate exceeds catastrophic threshold (e.g., 50%), activate the fallback model automatically.",
+      hints: [
+        "Silent failure is more dangerous than crash: wrong predictions look normal in system health metrics while degrading user experience.",
+        "Feature fallback hierarchy: live value → cached value (within SLA) → default value → fallback model. Degrade gracefully at each level."
+      ]
+    },
+    {
+      id: "q-prod-ex8-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Feature freshness monitoring should alert on feature staleness before it exceeds the SLA, not after — because alerts that fire after SLA breach mean the model has already been serving with stale features, potentially for extended periods.",
+      correctAnswer: "True",
+      explanation: "Leading-indicator alerting: alert when feature update lag approaches 80% of the SLA threshold, giving the on-call engineer time to investigate and resolve before SLA breach. Alert-at-breach means the model has already been serving degraded predictions since the breach time. For a fraud model with a 15-minute feature freshness SLA, alert at 12 minutes lag — giving 3 minutes to diagnose before users are affected.",
+      hints: [
+        "Alert at 80% of SLA: 12-minute alert for 15-minute SLA gives investigation time before breach.",
+        "Alert at breach = the damage is already done. The alert only tells you how long the model was already degraded."
+      ]
+    },
+    {
+      id: "q-prod-ex8-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A real-time recommendation model uses a 'user session activity' feature that is computed from a streaming pipeline. The feature has a 30-second average latency and serves 50K QPS. What is the correct architecture to serve this feature with both low latency and high availability?",
+      options: [
+        "Query the streaming pipeline directly for each request — simplest architecture",
+        "Materialize the streaming feature into a low-latency online store (Redis) updated by the streaming pipeline every 30 seconds, with the serving layer reading from Redis — decoupling the streaming computation latency from request serving latency and adding redundancy via Redis replication",
+        "Cache the feature computation in the model server memory for 30 seconds",
+        "Batch-compute the feature hourly and serve from a traditional database"
+      ],
+      correctAnswer: 1,
+      explanation: "Direct streaming query: 30-second computation latency on the critical serving path = 30-second request latency, violating any reasonable SLA at 50K QPS. Model server memory cache: single point of failure, lost on restart, not shared across instances. Correct pattern: streaming pipeline writes computed features to Redis every 30 seconds; serving layer reads from Redis in <1ms. Redis replication provides high availability. Feature freshness: at most 30 seconds stale — acceptable for session activity. This is the standard online feature store pattern.",
+      hints: [
+        "Read-path latency must be decoupled from write-path computation latency. Redis separates these concerns.",
+        "50K QPS × 30-second direct computation = 1.5M concurrent streaming computations — completely impractical."
+      ]
+    }
+  ],
+
+  "canary-deployment-advanced": [
+    {
+      id: "q-prod-ex9-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "During a canary rollout of a new ML model (currently at 5% traffic), the p99 latency for the canary is 2x the control's p99. The model's offline quality metrics are better. How should the team proceed?",
+      options: [
+        "Continue the rollout since offline quality improvement outweighs the latency regression",
+        "Halt the canary rollout: 2x p99 latency regression is a critical production SLA violation. Investigate whether the latency regression is from model complexity, inefficient preprocessing, or serving infrastructure, and resolve it before proceeding — quality improvements are meaningless if the model cannot meet latency SLAs at full traffic",
+        "Increase the canary percentage to 20% to get more data before deciding",
+        "Roll back immediately without investigation since any latency regression must be rejected"
+      ],
+      correctAnswer: 1,
+      explanation: "Canary gates should halt on latency SLA violations before quality gates are evaluated — a model that is 2x slower at p99 will violate SLAs at full scale. The 5% canary stage is precisely designed to catch this safely. Investigation path: profile the model with production traffic shapes to identify the bottleneck (is it the model inference? preprocessing? feature fetching?). Common causes: larger model architecture, unoptimized preprocessing, missing batch processing, or insufficient serving hardware. Fix first, then resume canary.",
+      hints: [
+        "Latency at 5% canary traffic already shows 2x p99 regression — this will only get worse under full traffic load.",
+        "Quality improvement is irrelevant if the model is too slow for production. Latency SLAs are hard requirements."
+      ]
+    },
+    {
+      id: "q-prod-ex9-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A rollback plan should be documented and tested before beginning a canary deployment, not created reactively when problems are discovered during the canary.",
+      correctAnswer: "True",
+      explanation: "Rollback under incident pressure is high-risk: engineers make mistakes when stressed, novel rollback procedures are error-prone, and documenting rollback steps while an incident is ongoing wastes critical minutes. Pre-deployment checklist should include: verified rollback commands, tested rollback procedure in staging, estimated rollback time, and designation of who is authorized to trigger rollback. Automation of the rollback (one-command or single-click) is ideal for ML serving where every second of degraded service matters.",
+      hints: [
+        "During an incident, the goal is recovery speed, not process discovery. Pre-written rollback commands execute in seconds.",
+        "Rollback procedure should be tested in staging: the same procedure that fails silently in staging will fail worse at 2 AM in production."
+      ]
+    },
+    {
+      id: "q-prod-ex9-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A model canary detects a quality regression after 2 days when the canary reaches 10% traffic. Upon investigation, the team finds that the new model performs worse on a specific user cohort (users from region X, 8% of traffic) but better on all others. How should the team handle the promotion decision?",
+      options: [
+        "Promote since 92% of users benefit and only 8% are harmed — majority rules",
+        "Block promotion until the region X regression is investigated: determine the root cause (data quality issue, underrepresentation in training, feature issue for that region), quantify the business impact for affected users, either fix the model to eliminate the regression or get explicit product team sign-off with documented trade-offs before promotion",
+        "Promote to all regions except X immediately using geofencing",
+        "Roll back and never promote — any segment regression must permanently block the model"
+      ],
+      correctAnswer: 1,
+      explanation: "Per-segment regression gates are a core ML deployment best practice. Silent degradation of 8% of users is unacceptable without explicit acknowledgment. The process: (1) root cause analysis (is region X underrepresented in training data? Is there a data quality issue specific to that region?); (2) business impact quantification (how many users, what revenue impact?); (3) fix-or-accept decision: if fixable, fix before promoting; if acceptable trade-off with explicit product sign-off, document the decision in the model card. Blind aggregate promotion is an engineering and ethical failure.",
+      hints: [
+        "8% of users could represent millions of people globally. 'Only 8%' is not a valid justification for silent degradation.",
+        "Root cause matters: if the regression is due to data quality (fixable), promotion should wait for the fix."
+      ]
+    }
+  ],
+
+  "ab-testing-ml": [
+    {
+      id: "q-prod-ex10-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What sample size determines the statistical power of an ML A/B test, and what is the consequence of terminating a test early when results reach statistical significance?",
+      options: [
+        "Sample size is always 1000 users; early stopping is encouraged to reduce test duration",
+        "Sample size is determined by pre-specified power analysis (effect size, alpha, desired power); early stopping when results first reach significance dramatically inflates the false positive rate — the test should run for the pre-specified duration regardless of early results",
+        "Sample size does not matter as long as p < 0.05 is achieved",
+        "Early stopping is safe because statistical significance already controls the false positive rate"
+      ],
+      correctAnswer: 1,
+      explanation: "Peeking and early stopping is a fundamental A/B testing error: if you check results daily and stop when p < 0.05, your actual false positive rate may be 20-30% rather than the nominal 5%. This is because multiple looks at the data inflate type I error. Solutions: pre-commit to test duration via power analysis, use sequential testing methods (e.g., Wald's sequential probability ratio test), or apply alpha spending (O'Brien-Fleming boundaries). In ML, this problem is compounded by the temptation to ship a winning model quickly.",
+      hints: [
+        "Peeking inflation: checking at 10 time points with alpha=0.05 each yields an overall false positive rate of ~40%.",
+        "Power analysis inputs: minimum detectable effect, baseline conversion rate, desired power (80%), alpha (5%) → required sample size."
+      ]
+    },
+    {
+      id: "q-prod-ex10-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "An ML A/B test for a recommendation model shows a statistically significant 2% lift in click-through rate (p=0.001) but the 95% confidence interval is [+0.5%, +3.5%]. The cost of deploying the new model is significant. How should the team decide whether to deploy?",
+      options: [
+        "Deploy immediately — p=0.001 is highly significant and the result is certain",
+        "Use the confidence interval bounds to make an expected value decision: the lower bound (+0.5%) represents the pessimistic case. Compute whether the business value of +0.5% CTR lift exceeds the deployment cost — if yes, deploy; if the lower bound does not justify cost, extend the test or reconsider deployment",
+        "Never deploy unless the confidence interval lower bound is at least as large as the effect size",
+        "Statistical significance alone is sufficient; confidence intervals are not needed for deployment decisions"
+      ],
+      correctAnswer: 1,
+      explanation: "The confidence interval encodes deployment risk: the true effect is plausibly anywhere from +0.5% to +3.5%. The p-value only says the effect is not zero — it does not say the effect is large enough to be worth deploying. Decision framework: compute the expected value at the CI lower bound (conservative estimate). If business_value(+0.5% CTR lift) > deployment_cost, deploy. If not, extend the test to narrow the CI, or accept that the effect may not be economically significant even if statistically significant.",
+      hints: [
+        "Statistical significance ≠ practical significance. p=0.001 with CI [+0.5%, +3.5%] may or may not be worth the deployment cost.",
+        "Lower CI bound = conservative estimate of true effect. Deploy only if the conservative case is still profitable."
+      ]
+    },
+    {
+      id: "q-prod-ex10-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "For ML models serving very low base rate outcomes (e.g., fraud rate of 0.1%), standard A/B testing requires prohibitively large sample sizes to detect meaningful improvements, making the Minimum Detectable Effect (MDE) a critical planning tool.",
+      correctAnswer: "True",
+      explanation: "Low base rates dramatically increase required sample sizes for A/B tests. For 0.1% fraud rate: detecting a 10% relative improvement (from 0.1% to 0.11% detection rate) requires millions of transactions with adequate power. The MDE tells you the smallest effect you can detect given your available sample size — if your test only runs for 1M transactions and your MDE is a 20% relative improvement, you cannot detect the 10% improvement you care about. Teams must either accept lower power, run longer tests, or focus on higher-volume metrics (e.g., prediction scores rather than binary outcomes).",
+      hints: [
+        "Sample size for 0.1% base rate, 10% relative lift, 80% power, alpha=0.05: roughly 60 million samples — impractical for most teams.",
+        "Alternative: use model calibration or predicted score distribution as the test metric — higher variance but lower sample size requirement."
+      ]
+    }
+  ]
+};
+
+Object.assign(questions, extra);
+
 registerQuestions(questions);

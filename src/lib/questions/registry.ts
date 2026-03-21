@@ -1096,6 +1096,99 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-gem-kp-33": {
+    type: "multiple-choice",
+    question:
+      "Why can vector-search RAG still be useful even when Gemini has a very large context window?",
+    options: [
+      "It can be faster and cheaper for large corpora, and it helps retrieve only the most relevant chunks.",
+      "Gemini cannot read multiple documents in a single prompt.",
+      "Large-context models cannot compare information across documents.",
+      "RAG is required for any grounded response.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-51": {
+    type: "multiple-choice",
+    question: "What does the `ANY` function-calling mode require Gemini to do?",
+    options: [
+      "Return at least one function call instead of replying with plain text only.",
+      "Automatically choose the newest function definition.",
+      "Execute the function itself on Google's servers.",
+      "Call every available function in sequence.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gem-kp-92": {
+    type: "multiple-choice",
+    question:
+      "What is the most accurate statement about Google Search grounding in the Gemini API?",
+    options: [
+      "It guarantees every factual statement is correct because each claim is independently verified.",
+      "It can improve factuality by tying the answer to retrieved sources, but the model can still misread or misstate them.",
+      "It disables generative reasoning and returns only verbatim search snippets.",
+      "It works only for coding questions, not general factual queries.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-gem-kp-98": {
+    type: "multiple-choice",
+    question:
+      "With Gemini JSON mode enabled and a response schema provided, what does constrained decoding enforce most directly?",
+    options: [
+      "That the output follows the schema's structure, including required fields and basic field types.",
+      "That every value in the JSON is factually correct.",
+      "That the model returns the shortest valid JSON.",
+      "That client-side validation is unnecessary.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ssl-kp7-1": {
+    type: "multiple-choice",
+    question: "In SimSiam, what is the role of stopgrad?",
+    options: [
+      "stopgrad freezes the projection head weights so only the encoder is trained",
+      "stopgrad prevents gradients from flowing through one branch, breaking the trivial solution where both networks converge to output identical constant vectors",
+      "stopgrad clips the gradient norm to prevent exploding gradients",
+      "stopgrad is equivalent to adding L2 regularization on the target embeddings",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp8-1": {
+    type: "multiple-choice",
+    question: "In Barlow Twins, what do the two terms in the loss enforce?",
+    options: [
+      "First term enforces decorrelation; second term enforces invariance across augmentations",
+      "First term (invariance): push C_ii -> 1 so each embedding dimension is consistent across views; second term (redundancy reduction): push C_ij -> 0 for i != j so different dimensions are decorrelated",
+      "First term minimizes L2 distance between embeddings; second term maximizes cosine similarity",
+      "First term prevents collapse; second term prevents mode dropping",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp10-3": {
+    type: "multiple-choice",
+    question:
+      "In DINO, why are both centering and sharpening applied to the teacher output distribution?",
+    options: [
+      "Centering subtracts the batch mean from teacher outputs (prevents one dimension from dominating); sharpening uses a low temperature for the teacher softmax (prevents uniform collapse). Both are needed because centering alone leads to a uniform distribution, and sharpening alone leads to a single-class collapse",
+      "Centering normalizes embeddings to unit sphere; sharpening applies L1 regularization to the output",
+      "Centering computes the running mean of gradients for stability; sharpening amplifies the top-k logits by 10x",
+      "Centering removes the bias term from the teacher projection head; sharpening applies ReLU to teacher outputs",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ssl-kp44-1": {
+    type: "multiple-choice",
+    question:
+      "Why does BERT replace 10% of masked positions with random words instead of always using [MASK]?",
+    options: [
+      "Random replacement adds noise that prevents the model from memorizing the training corpus",
+      "If only [MASK] tokens were used, the model would learn to attend only to non-[MASK] positions at fine-tune time, causing a train-test mismatch since [MASK] never appears in downstream tasks",
+      "Random words force the model to learn a uniform distribution over the vocabulary, preventing degenerate solutions",
+      "10% random words match the natural token error rate in web-crawled pre-training text, making the task realistic",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

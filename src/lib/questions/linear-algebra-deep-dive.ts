@@ -1520,11 +1520,31 @@ Therefore, $\\boxed{\\text{Option 1}}$ — tensor decomposition compresses CNN w
         "Eigenvectors normalize the feature magnitudes to help k-means converge",
       ],
       correctAnswer: 1,
-      explanation:
-        "The eigenvectors of the Laplacian provide a low-dimensional embedding where nodes in the same cluster (tightly connected subgraph) are close in Euclidean space, enabling k-means to recover graph-based clusters even when original features do not separate linearly.",
+      explanation: `Spectral clustering works by embedding graph nodes into $\\mathbb{R}^k$ using the eigenvectors of the graph Laplacian, then applying k-means in this embedded space.
+
+**Step 1: The graph Laplacian.** For a graph with adjacency matrix $A$ and degree matrix $D$, the (unnormalized) Laplacian is $L = D - A$. The normalized Laplacian is $L_{\\text{sym}} = D^{-1/2} L D^{-1/2}$.
+
+**Step 2: What do the eigenvectors represent?** The eigenvectors of $L$ encode smooth functions on the graph. If $L\\mathbf{v} = \\lambda \\mathbf{v}$, then:
+$$\\sum_{(i,j) \\in E} (v_i - v_j)^2 = \\mathbf{v}^T L \\mathbf{v} = \\lambda \\|\\mathbf{v}\\|^2$$
+
+Small $\\lambda$ means the eigenvector $\\mathbf{v}$ varies little across edges — adjacent nodes have similar values.
+
+**Step 3: The spectral embedding.** The bottom $k$ eigenvectors (ignoring the trivial all-ones eigenvector for connected graphs) give coordinates:
+$$\\mathbf{x}_i \\in \\mathbb{R}^k, \\quad \\text{where } x_i^{(j)} = v_j(i)$$
+
+Nodes in the same **densely connected subgraph** will have similar coordinates because the Laplacian smooths over edges.
+
+**Step 4: Why k-means works here.** In the Laplacian eigenbasis, nodes that are tightly connected (same community) cluster together in Euclidean space. This is a **nonlinear** embedding of the graph structure — k-means on original features cannot capture this.
+
+**Why the other options are wrong:**
+- Option 0: Eigenvectors can have the same dimension as features — this is not the reason.
+- Option 2: k-means can technically be applied to any vectors; the question is why spectral clustering specifically uses it on Laplacian eigenvectors.
+- Option 3: Normalizing magnitudes is not the purpose — preserving graph structure is.
+
+Therefore, $\\boxed{\\text{Option 1}}$ — the Laplacian eigenvector embedding captures graph connectivity via Euclidean proximity.`,
       hints: [
-        "Think about what the Laplacian eigenvectors represent: smooth functions on the graph.",
-        "Two nodes in the same dense subgraph will have similar embeddings in Laplacian eigenspace.",
+        "Recall the Laplacian identity: $\\mathbf{v}^T L \\mathbf{v} = \\frac{1}{2} \\sum_{(i,j) \\in E} (v_i - v_j)^2$. What does a small $\\lambda$ tell you about $v_i$ and $v_j$ for adjacent nodes $i$ and $j$?",
+        "If two nodes $i$ and $j$ are in the same dense community, the edge $(i,j)$ contributes little to $\\sum (v_i - v_j)^2$, so they can share similar eigenvector coordinates without increasing the Rayleigh quotient.",
       ],
     },
   ],
@@ -1569,19 +1589,37 @@ Therefore, $\\boxed{\\text{Option 1}}$ — tensor decomposition compresses CNN w
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "LoRA (Low-Rank Adaptation) fine-tunes a pre-trained weight matrix W by parameterizing the update as ΔW = BA where B ∈ ℝᵐˣʳ and A ∈ ℝʳˣⁿ with r ≪ min(m,n). The benefit is:",
+        "LoRA (Low-Rank Adaptation) fine-tunes a pre-trained weight matrix $W_0$ by parameterizing the update as $\\Delta W = BA$ where $B \\in \\mathbb{R}^{m \\times r}$ and $A \\in \\mathbb{R}^{r \\times n}$ with $r \\ll \\min(m,n)$. The benefit is:",
       options: [
-        "LoRA trains faster because the rank r matrices use less VRAM for gradients and optimizer states",
-        "LoRA increases the model\'s rank to improve expressiveness",
+        "LoRA trains faster because the rank-$r$ matrices use less VRAM for gradients and optimizer states",
+        "LoRA increases the model's expressiveness by raising its rank",
         "LoRA avoids the need for a learning rate schedule",
         "LoRA replaces attention layers with convolutional layers for efficiency",
       ],
       correctAnswer: 0,
-      explanation:
-        "LoRA freezes W and only trains B and A; with r ≪ min(m,n), the trainable parameters (mr + rn) are far fewer than mn, drastically reducing optimizer state memory and enabling fine-tuning of large models on consumer GPUs.",
+      explanation: `LoRA (Hu et al., 2021) addresses the key bottleneck in fine-tuning large language models: the massive memory cost of training.
+
+**Step 1: The full fine-tuning problem.** A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{m \\times n}$ (e.g., for a language model attention layer) has $m \\times n$ parameters. Full fine-tuning updates all $mn$ parameters and must store gradients and optimizer states for each.
+
+**Step 2: LoRA's low-rank update.** LoRA freezes $W_0$ and approximates the weight update as:
+$$\\Delta W = B A, \\quad B \\in \\mathbb{R}^{m \\times r}, \\; A \\in \\mathbb{R}^{r \\times n}$$
+
+with $r \\ll \\min(m, n)$. Only $B$ and $A$ are trained.
+
+**Step 3: Parameter count comparison.** For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with rank $r = 8$:
+$$\\text{Full fine-tuning:} \\quad mn = 4096^2 \\approx 16.8 \\text{ million parameters}$$
+$$\\text{LoRA:} \\quad mr + rn = 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ parameters}$$
+
+This is a **250× reduction** in trainable parameters.
+
+**Step 4: Memory savings.** Adam optimizer states require $2\\times$ the parameter count (first and second moment estimates). With LoRA's small $B$ and $A$, the optimizer state memory is tiny compared to full fine-tuning.
+
+**Step 5: Why it works.** Pre-trained language models have low-rank weight updates — the fine-tuning adaptation lives in a small subspace. By explicitly constraining $\\Delta W$ to rank $r$, LoRA captures this structure efficiently.
+
+Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far fewer parameters ($mr + rn \\ll mn$).`,
       hints: [
-        "Count the parameters in BA vs. the full matrix W = mn entries.",
-        "Gradient computation and Adam optimizer states are proportional to the number of trainable parameters.",
+        "Compare parameter counts: $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ has $4096^2 \\approx 16.8$M parameters. With $r=8$, LoRA trains $8 \\times 4096 + 8 \\times 4096 \\approx 65$K parameters — roughly 250× fewer.",
+        "Adam stores two optimizer states (first and second moments) per trainable parameter. With far fewer trainable parameters, LoRA uses dramatically less VRAM.",
       ],
     },
   ],
