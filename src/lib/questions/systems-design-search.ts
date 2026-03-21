@@ -285,7 +285,7 @@ const questions: Record<string, Question[]> = {
         "min(2, 5) = 2 (best rank wins)"
       ],
       correctAnswer: 0,
-      explanation: "RRF score = Σ 1/(k + rank_i) across all rankers i, where k=60 is a constant that dampens the impact of top-ranked documents from any single system (preventing one ranker from dominating). For document D: RRF = 1/(60+2) + 1/(60+5) = 1/62 + 1/65 ≈ 0.01613 + 0.01538 ≈ 0.03151. The k=60 default was chosen empirically in the original Cormack et al. 2009 paper. RRF is robust, requires no score normalization (unlike linear combination of BM25 and cosine scores which have incompatible scales), and outperforms many learned fusion approaches despite its simplicity.",
+      explanation: "RRF score = $\\sum 1/(k + \\text{rank}_i)$ across all rankers i, where k=60 is a constant that dampens the impact of top-ranked documents from any single system (preventing one ranker from dominating). For document D: RRF = 1/(60+2) + 1/(60+5) = 1/62 + 1/65 \\approx 0.01613 + 0.01538 \\approx 0.03151. The k=60 default was chosen empirically in the original Cormack et al. 2009 paper. RRF is robust, requires no score normalization (unlike linear combination of BM25 and cosine scores which have incompatible scales), and outperforms many learned fusion approaches despite its simplicity.",
       hints: ["RRF uses reciprocal of (k + rank), not the raw score from each system.", "k=60 prevents documents ranked 1st from scoring too far above documents ranked 2nd or 3rd."],
     },
     {
