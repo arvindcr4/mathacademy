@@ -153,7 +153,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Temperature \\tau scales the logits before the softmax: low \\tau makes the loss peaky (large gradient from hard negatives near the anchor), while high \\tau smooths the distribution. SimCLR uses \\tau=0.07 (found optimal via grid search); MoCo uses \\tau=0.07–0.2. \\tau is one of the most critical hyperparameters in contrastive SSL.",
       hints: [
-        "Softmax with low temperature → peaky distribution; high temperature → uniform distribution.",
+        "Softmax with low temperature \\to peaky distribution; high temperature \\to uniform distribution.",
         "Hard negatives are close to the query in embedding space — low temperature amplifies their gradient signal.",
       ],
     },
@@ -171,10 +171,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CPC (van den Oord et al., 2018) showed that the InfoNCE loss is a lower bound on the mutual information: I(z_{t+k}; c_t) ≥ log(N) − L_{InfoNCE}, where N is the number of negative samples. Maximizing InfoNCE encourages the encoder to capture information shared between the context and future observations — i.e., the semantic content invariant to augmentation.",
+        "CPC (van den Oord et al., 2018) showed that the InfoNCE loss is a lower bound on the mutual information: I(z_{t+k}; c_t) \\geq log(N) − L_{InfoNCE}, where N is the number of negative samples. Maximizing InfoNCE encourages the encoder to capture information shared between the context and future observations — i.e., the semantic content invariant to augmentation.",
       hints: [
         "The InfoNCE loss was derived from Noise Contrastive Estimation and formalized as a MI bound in CPC.",
-        "More negatives (larger N) → tighter lower bound → better MI approximation.",
+        "More negatives (larger N) \\to tighter lower bound \\to better MI approximation.",
       ],
     },
   ],
@@ -197,7 +197,7 @@ const questions: Record<string, Question[]> = {
         "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/\\tau) / \\Sigma_{k\$\\neq\$i}^{2N} exp(sim(z_i,z_k)/\\tau)], evaluated symmetrically.",
       hints: [
         "NT-Xent is the full name — Normalized (cosine similarity) Temperature-scaled Cross Entropy.",
-        "Each image produces 2 views; so N images → 2N views → 2(N−1) negatives per anchor.",
+        "Each image produces 2 views; so N images \\to 2N views \\to 2(N−1) negatives per anchor.",
       ],
     },
     {
@@ -208,7 +208,7 @@ const questions: Record<string, Question[]> = {
         "SimCLR uses a non-linear projection head (MLP) between the encoder and the contrastive loss, and the representations used for downstream tasks are taken from the encoder output, not the projection head output.",
       correctAnswer: "True",
       explanation:
-        "Chen et al. found that a 2-layer MLP projection head (g(h) = W_2·ReLU(W_1·h)) significantly improves representation quality. The projection head learns to discard augmentation-specific information not needed for contrastive loss, while the encoder retains it — so encoder outputs h are used for downstream tasks, not z = g(h). This finding boosted linear eval by ~10% compared to no projection head.",
+        "Chen et al. found that a 2-layer MLP projection head (g(h) = W_2\\cdotReLU(W_1\\cdoth)) significantly improves representation quality. The projection head learns to discard augmentation-specific information not needed for contrastive loss, while the encoder retains it — so encoder outputs h are used for downstream tasks, not z = g(h). This finding boosted linear eval by ~10% compared to no projection head.",
       hints: [
         'The projection head is a "disposable" layer that improves training but whose output is discarded at evaluation.',
         "Think about why the features before the projection are more useful: the head compresses away information useful for classification.",
@@ -228,10 +228,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SimCLR (Chen et al., 2020) achieves 69.3% top-1 linear evaluation accuracy on ImageNet with a ResNet-50 and batch size 4096 trained for 1000 epochs. With a larger ResNet-50 (4×) it reaches 76.5% — matching the supervised ResNet-50 baseline. Large batches (4096+) are needed because NT-Xent uses in-batch negatives.",
+        "SimCLR (Chen et al., 2020) achieves 69.3% top-1 linear evaluation accuracy on ImageNet with a ResNet-50 and batch size 4096 trained for 1000 epochs. With a larger ResNet-50 (4\\times) it reaches 76.5% — matching the supervised ResNet-50 baseline. Large batches (4096+) are needed because NT-Xent uses in-batch negatives.",
       hints: [
         "SimCLR requires very large batches because all other batch members serve as negatives — 4096 is standard.",
-        "The 69.3% figure is for standard ResNet-50; the 76.5% requires a 4× wider model.",
+        "The 69.3% figure is for standard ResNet-50; the 76.5% requires a 4\\times wider model.",
       ],
     },
   ],
@@ -251,7 +251,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder \\theta_k is updated by EMA: \\theta_k ← 0.999·\\theta_k + 0.001·\\theta_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.",
+        "MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder \\theta_k is updated by EMA: \\theta_k \\leftarrow 0.999\\cdot\\theta_k + 0.001\\cdot\\theta_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.",
       hints: [
         "The queue stores 65,536 negatives — far more than any feasible batch size.",
         "Momentum 0.999 means the momentum encoder slowly tracks the query encoder without gradients.",
@@ -265,7 +265,7 @@ const questions: Record<string, Question[]> = {
         "In MoCo, the momentum encoder\'s parameters are updated by backpropagating gradients through the key encoding path.",
       correctAnswer: "False",
       explanation:
-        "The momentum encoder\'s parameters are NOT updated by gradient backpropagation — the queue is not differentiable. They are updated by EMA: \\theta_k ← m·\\theta_k + (1−m)·\\theta_q (m=0.999). Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible.",
+        "The momentum encoder\'s parameters are NOT updated by gradient backpropagation — the queue is not differentiable. They are updated by EMA: \\theta_k \\leftarrow m\\cdot\\theta_k + (1−m)\\cdot\\theta_q (m=0.999). Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible.",
       hints: [
         "Gradient-updating the momentum encoder would make it inconsistent with the older keys in the queue.",
         "EMA update: the momentum encoder slowly tracks the query encoder without gradients.",
@@ -302,13 +302,13 @@ const questions: Record<string, Question[]> = {
         "BYOL (Bootstrap Your Own Latent, Grill et al., 2020) uses an asymmetric architecture to avoid collapse without negative pairs. The target network parameters \\xi are updated by:",
       options: [
         "Gradient descent on the BYOL loss, same as the online network",
-        "Exponential moving average (EMA) of the online network parameters: \\xi ← \\tau·\\xi + (1−\\tau)·\\theta, with \\tau = 0.996 increasing to 1 during training",
+        "Exponential moving average (EMA) of the online network parameters: \\xi \\leftarrow \\tau\\cdot\\xi + (1−\\tau)\\cdot\\theta, with \\tau = 0.996 increasing to 1 during training",
         "Random re-initialization at the start of each training epoch",
         "Averaging the online network parameters across all GPU workers in data-parallel training",
       ],
       correctAnswer: 1,
       explanation:
-        "BYOL\'s target network is a momentum copy: \\xi ← \\tau·\\xi + (1−\\tau)·\\theta where \\tau starts at 0.996 and increases toward 1 using a cosine schedule. No gradients flow through the target network. The online network additionally has a predictor q_\\theta that the target lacks — this asymmetry combined with slow-moving EMA target prevents collapse.",
+        "BYOL\'s target network is a momentum copy: \\xi \\leftarrow \\tau\\cdot\\xi + (1−\\tau)\\cdot\\theta where \\tau starts at 0.996 and increases toward 1 using a cosine schedule. No gradients flow through the target network. The online network additionally has a predictor q_\\theta that the target lacks — this asymmetry combined with slow-moving EMA target prevents collapse.",
       hints: [
         "Most contrastive methods need negatives to prevent collapse (all embeddings becoming identical).",
         "BYOL uses asymmetry (predictor on online branch only) + EMA target — not explicit negatives.",
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Without stopgrad, minimizing −cosine_sim(p_1, z_2) can be trivially solved by collapsing both p_1 and z_2 to the same constant. stopgrad breaks the gradient symmetry: when computing ∂L/∂\\theta, z_2 is treated as constant (no gradient), so the network cannot exploit the shortcut. Chen & He analyze this as an EM-like alternating optimization.",
+        "Without stopgrad, minimizing −cosine_sim(p_1, z_2) can be trivially solved by collapsing both p_1 and z_2 to the same constant. stopgrad breaks the gradient symmetry: when computing \\partialL/\\partial\\theta, z_2 is treated as constant (no gradient), so the network cannot exploit the shortcut. Chen & He analyze this as an EM-like alternating optimization.",
       hints: [
         "The stop-gradient is the key difference from BYOL — what happens to backpropagation when you stop gradients?",
         "If gradients can\'t flow through the target branch, the loss can\'t trivially collapse both branches together.",
@@ -436,7 +436,7 @@ const questions: Record<string, Question[]> = {
         "Barlow Twins is inspired by H. Barlow\'s redundancy reduction principle (1961), which suggests that efficient neural coding should minimise redundancy between neurons to maximise the information capacity of the representation.",
       correctAnswer: "True",
       explanation:
-        'Horace Barlow\'s "redundancy reduction" hypothesis proposes that the visual system encodes information with minimal redundancy between neurons — each neuron should convey independent information. Barlow Twins operationalizes this as decorrelating embedding dimensions (off-diagonal C_{ij} → 0), with the Barlow Twins name explicitly honoring this connection.',
+        'Horace Barlow\'s "redundancy reduction" hypothesis proposes that the visual system encodes information with minimal redundancy between neurons — each neuron should convey independent information. Barlow Twins operationalizes this as decorrelating embedding dimensions (off-diagonal C_{ij} \\to 0), with the Barlow Twins name explicitly honoring this connection.',
       hints: [
         'The paper\'s name "Barlow Twins" references Horace Barlow, the neuroscientist who proposed redundancy reduction.',
         "Decorrelated embeddings encode independent features — minimal redundancy.",
@@ -447,16 +447,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Barlow Twins is empirically less sensitive to batch size than SimCLR. The cross-correlation matrix C has dimensions d×d where d is the embedding dimension. This explains reduced batch-size sensitivity because:",
+        "Barlow Twins is empirically less sensitive to batch size than SimCLR. The cross-correlation matrix C has dimensions d\\timesd where d is the embedding dimension. This explains reduced batch-size sensitivity because:",
       options: [
         "Barlow Twins does not use a softmax normalisation, which is batch-size-sensitive",
-        "The cross-correlation matrix C is d×d regardless of batch size N; the signal quality improves with larger N (better correlation estimates) but the loss landscape does not sharply depend on N, unlike NT-Xent which has N−1 explicit negatives per anchor",
+        "The cross-correlation matrix C is d\\timesd regardless of batch size N; the signal quality improves with larger N (better correlation estimates) but the loss landscape does not sharply depend on N, unlike NT-Xent which has N−1 explicit negatives per anchor",
         "Barlow Twins uses a momentum encoder that reduces batch size sensitivity",
         "The off-diagonal decorrelation term is always zero regardless of batch size",
       ],
       correctAnswer: 1,
       explanation:
-        "In NT-Xent, each sample uses exactly 2(N−1) negatives — the loss directly collapses if N is too small. In Barlow Twins, the cross-correlation matrix always has d×d entries; N only affects the statistical quality of the correlation estimate. Empirically, Barlow Twins works with batch sizes as small as 256, while SimCLR needs 4096+.",
+        "In NT-Xent, each sample uses exactly 2(N−1) negatives — the loss directly collapses if N is too small. In Barlow Twins, the cross-correlation matrix always has d\\timesd entries; N only affects the statistical quality of the correlation estimate. Empirically, Barlow Twins works with batch sizes as small as 256, while SimCLR needs 4096+.",
       hints: [
         "SimCLR\'s NT-Xent explicitly uses all other batch items as negatives — the loss changes dramatically with N.",
         "Barlow Twins' cross-correlation matrix size is determined by embedding dimension d, not batch size N.",
@@ -530,13 +530,13 @@ const questions: Record<string, Question[]> = {
         "DINO (Self-DIstillation with NO labels, Caron et al., 2021) trains a student to match the output of a teacher network. The teacher parameters \\xi are updated by:",
       options: [
         "Backpropagating the cross-entropy loss between student and teacher softmax outputs",
-        "Exponential moving average of the student parameters: \\xi ← \\lambda\\xi + (1−\\lambda)\\theta, with no gradient flowing through the teacher — the student minimizes H(P_t(x), P_s(x')), where x and x' are different crops",
+        "Exponential moving average of the student parameters: \\xi \\leftarrow \\lambda\\xi + (1−\\lambda)\\theta, with no gradient flowing through the teacher — the student minimizes H(P_t(x), P_s(x')), where x and x' are different crops",
         "Random re-initialization every 100 epochs to prevent teacher collapse",
         "Training the teacher on a separate labeled dataset and distilling to the student",
       ],
       correctAnswer: 1,
       explanation:
-        "DINO\'s teacher is a momentum copy: \\xi ← \\lambda\\xi + (1−\\lambda)\\theta (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_\\xi(x) − c)/\\tau_t), using the teacher\'s output with centering vector c and teacher temperature \\tau_t < \\tau_s. Different global/local crops create the view pair — a form of knowledge distillation requiring no labels.",
+        "DINO\'s teacher is a momentum copy: \\xi \\leftarrow \\lambda\\xi + (1−\\lambda)\\theta (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_\\xi(x) − c)/\\tau_t), using the teacher\'s output with centering vector c and teacher temperature \\tau_t < \\tau_s. Different global/local crops create the view pair — a form of knowledge distillation requiring no labels.",
       hints: [
         '"Self" distillation: the teacher comes from the student itself via exponential moving average.',
         "No labels: the training signal is the teacher\'s output distribution, not a human-assigned class.",
@@ -565,7 +565,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Centering subtracts the batch mean from teacher outputs (prevents one dimension from dominating); sharpening uses a low temperature \\tau_t for the teacher softmax (prevents uniform collapse). Both are needed because centering alone leads to a uniform distribution, and sharpening alone leads to a single-class collapse",
         "Centering normalizes embeddings to unit sphere; sharpening applies L1 regularization to the output",
-        "Centering computes the running mean of gradients for stability; sharpening amplifies the top-k logits by 10×",
+        "Centering computes the running mean of gradients for stability; sharpening amplifies the top-k logits by 10\\times",
         "Centering removes the bias term from the teacher projection head; sharpening applies ReLU to teacher outputs",
       ],
       correctAnswer: 0,
@@ -593,7 +593,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MAE masks 75% of 16×16 patches and trains a ViT encoder-decoder to reconstruct the normalized pixel values (mean and std computed per patch) of masked patches. The ViT encoder processes only the 25% visible patches (no mask tokens), and a lightweight Transformer decoder reconstructs the full image. This asymmetric design makes pre-training 3× faster than encoding all patches.",
+        "MAE masks 75% of 16\\times16 patches and trains a ViT encoder-decoder to reconstruct the normalized pixel values (mean and std computed per patch) of masked patches. The ViT encoder processes only the 25% visible patches (no mask tokens), and a lightweight Transformer decoder reconstructs the full image. This asymmetric design makes pre-training 3\\times faster than encoding all patches.",
       hints: [
         "Think of MAE as a vision equivalent of BERT: mask some tokens, predict what was masked.",
         "The encoder only processes visible patches (~25%) — greatly reducing compute compared to encoding everything.",
@@ -607,9 +607,9 @@ const questions: Record<string, Question[]> = {
         "MAE applies the ViT encoder only to the unmasked (visible) patches and does NOT include [MASK] tokens in the encoder input — [MASK] tokens are only added in the decoder, making the encoder asymmetrically lightweight.",
       correctAnswer: "True",
       explanation:
-        "By excluding [MASK] tokens from the encoder (unlike BEiT), MAE\'s encoder processes only ~25% of patches at full ViT depth. Mask tokens are added only in the lightweight decoder, which reconstructs the full image. This design is key to MAE\'s 3× training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.",
+        "By excluding [MASK] tokens from the encoder (unlike BEiT), MAE\'s encoder processes only ~25% of patches at full ViT depth. Mask tokens are added only in the lightweight decoder, which reconstructs the full image. This design is key to MAE\'s 3\\times training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.",
       hints: [
-        "If you mask 75% of patches and only encode the rest, the encoder sees 4× fewer tokens — huge compute savings.",
+        "If you mask 75% of patches and only encode the rest, the encoder sees 4\\times fewer tokens — huge compute savings.",
         "The decoder handles the masked positions — keeping it lightweight enables efficient pretraining.",
       ],
     },
@@ -627,7 +627,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Images have high spatial redundancy: neighboring 16×16 patches overlap significantly and share much of their content. At 75% masking, only 25% of patches remain — the model cannot solve MAE by local interpolation (matching nearby visible patches), which would only require learning low-level texture continuity. Instead, the model must build a holistic understanding of the scene — object shapes, spatial layouts, occluded relationships — to accurately fill in large missing regions. BERT uses only 15% masking because text tokens carry dense semantic information; masking more would make the task too difficult. For images, the redundancy means a higher masking ratio is needed to force semantic understanding rather than texture matching.",
+        "Images have high spatial redundancy: neighboring 16\\times16 patches overlap significantly and share much of their content. At 75% masking, only 25% of patches remain — the model cannot solve MAE by local interpolation (matching nearby visible patches), which would only require learning low-level texture continuity. Instead, the model must build a holistic understanding of the scene — object shapes, spatial layouts, occluded relationships — to accurately fill in large missing regions. BERT uses only 15% masking because text tokens carry dense semantic information; masking more would make the task too difficult. For images, the redundancy means a higher masking ratio is needed to force semantic understanding rather than texture matching.",
       hints: [
         "Think about what happens at 25% visible patches: any given masked patch's content is largely determined by distant visible patches, not neighbors. The model must reason globally, not locally.",
         "If you only mask 15% of image patches, a model could solve it by copying neighboring textures — no semantic understanding needed. At 75%, this is impossible.",
@@ -951,7 +951,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Wang & Isola showed that NT-Xent implicitly optimises alignment (positive pair similarity) and uniformity (uniform coverage of the representation sphere). Both are necessary: alignment alone causes collapse; uniformity alone ignores semantic structure.",
       hints: [
-        "Alignment: same semantics → close embeddings. Uniformity: don\'t waste hypersphere capacity by clustering.",
+        "Alignment: same semantics \\to close embeddings. Uniformity: don\'t waste hypersphere capacity by clustering.",
         'Uniformity prevents collapse by encouraging the model to "use" all of the embedding space.',
       ],
     },
@@ -1140,7 +1140,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Removing atoms from functional groups (e.g., -OH, -NH₂) changes the molecule\'s chemical identity and properties. The positive pair would have different labels — violating the semantic-preservation requirement for SSL augmentations.",
+        "Removing atoms from functional groups (e.g., -OH, -NH\\_2) changes the molecule\'s chemical identity and properties. The positive pair would have different labels — violating the semantic-preservation requirement for SSL augmentations.",
       hints: [
         "Not all graph augmentations preserve semantics — in chemistry, specific substructures (functional groups) determine biological activity.",
         'An augmentation that changes the molecule\'s properties creates a positive pair with different "true labels".',
@@ -1418,10 +1418,10 @@ const questions: Record<string, Question[]> = {
       question:
         "SimCLRv2 proposes a semi-supervised learning protocol involving three stages. In the correct order, these are:",
       options: [
-        "Supervised fine-tuning → SSL pre-training → knowledge distillation",
-        "SSL pre-training on unlabelled data → fine-tuning on labelled data → knowledge distillation from the fine-tuned model back to a smaller student",
-        "SSL pre-training → knowledge distillation → supervised fine-tuning",
-        "Labelled data fine-tuning → unlabelled data SSL → knowledge distillation",
+        "Supervised fine-tuning \\to SSL pre-training \\to knowledge distillation",
+        "SSL pre-training on unlabelled data \\to fine-tuning on labelled data \\to knowledge distillation from the fine-tuned model back to a smaller student",
+        "SSL pre-training \\to knowledge distillation \\to supervised fine-tuning",
+        "Labelled data fine-tuning \\to unlabelled data SSL \\to knowledge distillation",
       ],
       correctAnswer: 1,
       explanation:
@@ -1442,13 +1442,13 @@ const questions: Record<string, Question[]> = {
         "What makes linear probing a computationally efficient evaluation method for SSL?",
       options: [
         "Linear probes do not require backpropagation through the encoder",
-        "The encoder is frozen, so only the linear layer\'s parameters (d×C for d embedding dimensions and C classes) are trained — orders of magnitude fewer than the full encoder",
+        "The encoder is frozen, so only the linear layer\'s parameters (d\\timesC for d embedding dimensions and C classes) are trained — orders of magnitude fewer than the full encoder",
         "Linear probes always converge in a single gradient step",
         "Linear probes use a subset of the training data, reducing evaluation time",
       ],
       correctAnswer: 1,
       explanation:
-        "With a frozen encoder, linear probing trains only d×C parameters (e.g., 2048×1000 ≈ 2M for ImageNet). Compare this to fine-tuning an entire ResNet-50 (25M parameters) — linear probing is dramatically cheaper.",
+        "With a frozen encoder, linear probing trains only d\\timesC parameters (e.g., 2048\\times1000 \\approx 2M for ImageNet). Compare this to fine-tuning an entire ResNet-50 (25M parameters) — linear probing is dramatically cheaper.",
       hints: [
         "The heavy lifting (feature extraction) is done by the frozen encoder — the linear layer is tiny.",
         "Think about how many parameters a linear classifier has vs. a deep encoder.",
@@ -1792,9 +1792,9 @@ const additionalSslQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'CLIP uses symmetric InfoNCE (NT-Xent): for a batch of N image-text pairs, compute an N×N similarity matrix. The diagonal entries are the true (matched) pairs. The loss maximizes diagonal similarities and minimizes off-diagonal ones — simultaneously from both the image→text and text→image perspectives. This dual symmetry is the "symmetric" part. No generation, no binary classification — pure contrastive alignment.',
+        'CLIP uses symmetric InfoNCE (NT-Xent): for a batch of N image-text pairs, compute an N\\timesN similarity matrix. The diagonal entries are the true (matched) pairs. The loss maximizes diagonal similarities and minimizes off-diagonal ones — simultaneously from both the image\\totext and text\\toimage perspectives. This dual symmetry is the "symmetric" part. No generation, no binary classification — pure contrastive alignment.',
       hints: [
-        "The N×N matrix approach means every image is compared against all N texts (and vice versa) in the batch.",
+        "The N\\timesN matrix approach means every image is compared against all N texts (and vice versa) in the batch.",
         "InfoNCE = noise-contrastive estimation. With N=32768 (CLIP uses large batches), each sample has N-1 negatives.",
       ],
     },
@@ -1843,15 +1843,15 @@ const additionalSslQuestions: Record<string, Question[]> = {
         "Masked Autoencoders (MAE, He et al., 2022) use an asymmetric encoder-decoder design. Why is the encoder applied only to visible (unmasked) patches?",
       options: [
         "To prevent the encoder from seeing masked tokens and thus learning their content from context",
-        "To reduce encoder compute: with 75% masking, the encoder processes only 25% of patches, making pre-training ~3× faster than full-image encoding while still learning rich representations",
+        "To reduce encoder compute: with 75% masking, the encoder processes only 25% of patches, making pre-training ~3\\times faster than full-image encoding while still learning rich representations",
         "Because the decoder needs the mask tokens as inputs, so the encoder cannot share them",
         "To enforce that the encoder learns global image statistics rather than local patch details",
       ],
       correctAnswer: 1,
       explanation:
-        "MAE\'s asymmetric design is primarily a compute optimization. The encoder (large ViT) only processes the 25% visible patches, dramatically reducing its computational cost. The decoder (shallow transformer) then takes encoder outputs + learnable mask tokens and reconstructs all patches. This design is key to MAE\'s 3× training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.",
+        "MAE\'s asymmetric design is primarily a compute optimization. The encoder (large ViT) only processes the 25% visible patches, dramatically reducing its computational cost. The decoder (shallow transformer) then takes encoder outputs + learnable mask tokens and reconstructs all patches. This design is key to MAE\'s 3\\times training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.",
       hints: [
-        "75% masking + encoder on 25% visible = encoder sees 1/4 of patches → ~4× less encoder compute.",
+        "75% masking + encoder on 25% visible = encoder sees 1/4 of patches \\to ~4\\times less encoder compute.",
         "The decoder handles the masked positions — keeping it lightweight enables efficient pretraining.",
       ],
     },
@@ -1908,7 +1908,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       explanation:
         'ImageBind\'s key insight: images naturally co-occur with many other modalities (text, audio, depth, thermal, IMU). Use images as the binding "hub": train each modality encoder to align with the image encoder using naturally paired data (e.g., video+audio, image+depth). Since all modalities share an image-aligned space, they transitively align to each other — enabling e.g. audio-text retrieval without any audio-text training pairs. This emergent alignment is the most important scientific contribution.',
       hints: [
-        "If audio ↔ image and text ↔ image, then transitively audio ↔ text — without ever training on audio-text pairs.",
+        "If audio \\leftrightarrow image and text \\leftrightarrow image, then transitively audio \\leftrightarrow text — without ever training on audio-text pairs.",
         "Images are the universal pivot: they co-occur naturally with all other modalities in web data.",
       ],
     },
@@ -2016,7 +2016,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
         "RoBERTa found NSP harmful: NSP pairs consist of a real consecutive sentence (positive) and a random sentence from another document (negative). Models solve NSP by detecting topic shift (different document = different topic) rather than learning sentence coherence. This makes NSP too easy and introduces noise. Removing NSP and training longer with more data improved all GLUE benchmarks. ALBERT replaced NSP with the harder Sentence Order Prediction (SOP) task instead.",
       hints: [
         "NSP negative examples = random sentences from different documents. Models just detect topic change.",
-        "RoBERTa: remove NSP, train longer, use dynamic masking → state-of-the-art at the time.",
+        "RoBERTa: remove NSP, train longer, use dynamic masking \\to state-of-the-art at the time.",
       ],
     },
     {
@@ -2033,7 +2033,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ELECTRA\'s key insight: BERT only computes loss on 15% masked tokens (the rest are wasted signal). ELECTRA trains a small MLM generator to replace masked tokens with plausible alternatives, then trains a large discriminator to detect which tokens were replaced vs. original — at every single token position. This provides 100% token coverage for the discriminator\'s loss, making ELECTRA ~4× more compute-efficient than BERT for the same downstream performance.",
+        "ELECTRA\'s key insight: BERT only computes loss on 15% masked tokens (the rest are wasted signal). ELECTRA trains a small MLM generator to replace masked tokens with plausible alternatives, then trains a large discriminator to detect which tokens were replaced vs. original — at every single token position. This provides 100% token coverage for the discriminator\'s loss, making ELECTRA ~4\\times more compute-efficient than BERT for the same downstream performance.",
       hints: [
         "BERT: 15% of tokens get a gradient. ELECTRA: 100% of tokens get a gradient.",
         "The generator makes the task hard by producing plausible (not obviously wrong) replacements.",
@@ -2083,13 +2083,13 @@ const additionalSslQuestions: Record<string, Question[]> = {
         "Barlow Twins (Zbontar et al., 2021) avoids collapse through a redundancy-reduction objective inspired by neuroscience. What is its loss function?",
       options: [
         "Minimize cosine similarity between all pairs of batch embeddings (force all embeddings apart)",
-        "Make the cross-correlation matrix of the two augmented-view embeddings as close to the identity matrix as possible: diagonal terms (invariance) → 1, off-diagonal terms (redundancy) → 0",
+        "Make the cross-correlation matrix of the two augmented-view embeddings as close to the identity matrix as possible: diagonal terms (invariance) \\to 1, off-diagonal terms (redundancy) \\to 0",
         "Maximize mutual information between the two view embeddings using a MINE estimator",
         "Minimize the KL divergence between the softmax distributions of the two view embeddings",
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + \\lambda × sum_{i\$\\neq\$j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
+        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)\\^2 + \\lambda \\times sum_{i\$\\neq\$j} C_ij\\^2. First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
       hints: [
         "Identity cross-correlation matrix = each feature dimension is invariant to augmentation AND uncorrelated with other dimensions.",
         "No negative pairs needed — the off-diagonal penalty prevents collapse by decorrelating dimensions.",
@@ -2183,7 +2183,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       explanation:
         "wav2vec 2.0 quantizes CNN-encoded speech features into discrete tokens using learnable codebooks with Gumbel-softmax (end-to-end differentiable). The transformer then learns to identify the correct quantized token for a masked time step among K distractors drawn from the same sequence. This turns continuous speech SSL into a discrete token identification task — more tractable than raw feature regression. The quantizer learns speech-relevant discrete units (often corresponding to phonemes) as a byproduct.",
       hints: [
-        "Continuous audio → discrete tokens via quantization → contrastive identification of correct token.",
+        "Continuous audio \\to discrete tokens via quantization \\to contrastive identification of correct token.",
         "Gumbel-softmax makes the discrete quantization differentiable for end-to-end training.",
       ],
     },
@@ -2204,7 +2204,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
         "HuBERT procedure: (1) Cluster MFCC features into K=100 clusters using k-means (iteration 1) or cluster previous HuBERT representations (iteration 2+) to get frame-level pseudo-labels; (2) Train a BERT-style transformer with masked prediction on these discrete pseudo-labels. The key insight: even noisy cluster labels contain enough phonetic signal to drive useful SSL. Iterating (re-cluster with the trained model, retrain) progressively refines the pseudo-labels, analogous to EM.",
       hints: [
         "HuBERT = BERT for audio with k-means pseudo-labels instead of human transcriptions.",
-        "The iterative refinement (k-means → train → k-means on new representations → retrain) is like EM.",
+        "The iterative refinement (k-means \\to train \\to k-means on new representations \\to retrain) is like EM.",
       ],
     },
     {
@@ -2217,7 +2217,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       explanation:
         "Baevski et al. (2020) showed wav2vec 2.0 fine-tuned on 10 minutes of labeled LibriSpeech data achieves WER comparable to previous best results using 100 hours of labeled data. With 1 hour of labels, it surpasses the previous best trained on 960 hours. This dramatic label efficiency improvement is the defining practical advantage of SSL for speech: high-quality ASR in low-resource languages without large transcribed speech corpora.",
       hints: [
-        "10 minutes vs. 960 hours: SSL pre-training provides ~6000× labeled data efficiency.",
+        "10 minutes vs. 960 hours: SSL pre-training provides ~6000\\times labeled data efficiency.",
         "This enables ASR for languages where transcribed speech is scarce.",
       ],
     },

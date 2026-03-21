@@ -125,7 +125,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The PPO-RLHF objective for InstructGPT is: objective(ϕ) = E[RM(x, y) − \\beta·log(\\pi_ϕ(y|x)/\\pi_SFT(y|x))] + \\gamma·E[log \\pi_ϕ(x_pretrain)]. What does the \\beta term control?",
+        "The PPO-RLHF objective for InstructGPT is: objective(ϕ) = E[RM(x, y) − \\beta\\cdotlog(\\pi_ϕ(y|x)/\\pi_SFT(y|x))] + \\gamma\\cdotE[log \\pi_ϕ(x_pretrain)]. What does the \\beta term control?",
       options: [
         "The learning rate for the policy gradient update.",
         "The strength of the KL penalty that prevents the RL policy from deviating too far from the SFT reference model.",
@@ -136,7 +136,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "\\beta is the KL penalty coefficient. It weights the KL divergence between the RL policy \\pi_ϕ and the SFT reference \\pi_SFT. A large \\beta keeps the policy close to the reference (preventing reward hacking but limiting improvement); a small \\beta allows the policy to optimize reward more aggressively (risking degenerate outputs). The \\gamma term is the pretraining loss weight.",
       hints: [
-        "Without the \\beta·KL term, the policy could drift to gibberish that scores high on the RM.",
+        "Without the \\beta\\cdotKL term, the policy could drift to gibberish that scores high on the RM.",
         "\\beta requires careful tuning — too large means no alignment improvement, too small means reward hacking.",
       ],
     },
@@ -210,8 +210,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "\\beta controls a fundamental tradeoff. Too small: the policy rewards-hacks and produces degenerate outputs humans dislike. Too large: the policy cannot learn from the reward signal and stays too close to the SFT reference, providing no alignment improvement. An optimal \\beta exists between these extremes and must be tuned empirically.",
       hints: [
-        "At \\beta → ∞, the RL policy is identical to \\pi_SFT — zero improvement.",
-        "At \\beta → 0, the policy maximizes reward without constraint — reward hacking.",
+        "At \\beta \\to \\infty, the RL policy is identical to \\pi_SFT — zero improvement.",
+        "At \\beta \\to 0, the policy maximizes reward without constraint — reward hacking.",
       ],
     },
     {
@@ -219,10 +219,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The KL-regularized RLHF objective E[r(x,y)] − \\beta·KL(\\pi‖\\pi_ref) has a closed-form optimal policy. Which expression is correct?",
+        "The KL-regularized RLHF objective E[r(x,y)] − \\beta\\cdotKL(\\pi‖\\pi_ref) has a closed-form optimal policy. Which expression is correct?",
       options: [
-        "\\pi*(y|x) \\propto \\pi_ref(y|x) · exp(r(x,y)/\\beta)",
-        "\\pi*(y|x) = argmax_y r(x,y) subject to KL ≤ \\beta",
+        "\\pi*(y|x) \\propto \\pi_ref(y|x) \\cdot exp(r(x,y)/\\beta)",
+        "\\pi*(y|x) = argmax_y r(x,y) subject to KL \\leq \\beta",
         "\\pi*(y|x) = \\pi_ref(y|x) + r(x,y)/\\beta (normalized)",
         "\\pi*(y|x) \\propto exp(r(x,y)) regardless of \\pi_ref",
       ],
@@ -245,10 +245,10 @@ const questions: Record<string, Question[]> = {
       question:
         "In Constitutional AI (Bai et al., 2022), the SL-CAI (supervised learning) stage involves a specific self-critique loop. What are the three sequential steps?",
       options: [
-        "Generate response → human critique → human revision",
-        "Generate response → model critiques against a constitutional principle → model revises based on critique",
-        "Generate red-team prompt → human labels harmfulness → model is penalized",
-        "Retrieve constitution → embed principle → fine-tune on embeddings",
+        "Generate response \\to human critique \\to human revision",
+        "Generate response \\to model critiques against a constitutional principle \\to model revises based on critique",
+        "Generate red-team prompt \\to human labels harmfulness \\to model is penalized",
+        "Retrieve constitution \\to embed principle \\to fine-tune on embeddings",
       ],
       correctAnswer: 1,
       explanation:
@@ -301,7 +301,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The DPO loss (Rafailov et al., 2023) is: L_DPO = −log \\sigma(\\beta·log(\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)) − \\beta·log(\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x))). What do the two log-ratio terms represent?",
+        "The DPO loss (Rafailov et al., 2023) is: L_DPO = −log \\sigma(\\beta\\cdotlog(\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)) − \\beta\\cdotlog(\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x))). What do the two log-ratio terms represent?",
       options: [
         "The KL divergence from the reference policy for the winning and losing responses respectively.",
         "The implicit reward assigned to the winning response minus the implicit reward assigned to the losing response — DPO trains the policy to implicitly score y_w higher than y_l.",
@@ -337,7 +337,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DPO\'s implicit reward is r(x,y) = \\beta·log(\\pi_\\theta(y|x)/\\pi_ref(y|x)) + C. This means a completion y is assigned high implicit reward when:",
+        "DPO\'s implicit reward is r(x,y) = \\beta\\cdotlog(\\pi_\\theta(y|x)/\\pi_ref(y|x)) + C. This means a completion y is assigned high implicit reward when:",
       options: [
         "y is highly probable under the reference policy \\pi_ref.",
         '\\pi_\\theta assigns much higher probability to y than \\pi_ref does — the fine-tuned policy has "learned to prefer" y relative to its pre-fine-tuning distribution.',
@@ -346,7 +346,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The implicit reward \\beta·log(\\pi_\\theta/\\pi_ref) is high when the fine-tuned policy \\pi_\\theta is much more likely than the reference \\pi_ref to generate y. This captures "learned preference": if DPO training caused the model to strongly prefer a completion, that completion gets high implicit reward. Completions unchanged from the reference get zero reward.',
+        'The implicit reward \\beta\\cdotlog(\\pi_\\theta/\\pi_ref) is high when the fine-tuned policy \\pi_\\theta is much more likely than the reference \\pi_ref to generate y. This captures "learned preference": if DPO training caused the model to strongly prefer a completion, that completion gets high implicit reward. Completions unchanged from the reference get zero reward.',
       hints: [
         "If \\pi_\\theta(y) = \\pi_ref(y), the log ratio is 0 — no implicit reward.",
         "Positive implicit reward means the policy has shifted toward y; negative means it has shifted away.",
@@ -443,10 +443,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "PPO-RLHF requires four models simultaneously: actor, frozen reference policy, reward model, and critic. All four are typically the same scale as the policy. At 70B parameters with FP16, one model requires ~140 GB of VRAM; four models require ~560 GB+, plus optimizer states for the actor and critic. Memory scales roughly 4× (often more) relative to a single model.",
+        "PPO-RLHF requires four models simultaneously: actor, frozen reference policy, reward model, and critic. All four are typically the same scale as the policy. At 70B parameters with FP16, one model requires ~140 GB of VRAM; four models require ~560 GB+, plus optimizer states for the actor and critic. Memory scales roughly 4\\times (often more) relative to a single model.",
       hints: [
-        "70B × 4 models × 2 bytes/param (FP16) ≈ 560 GB VRAM before optimizer states.",
-        "This 4× memory multiplier is a primary driver of RLHF infrastructure cost.",
+        "70B \\times 4 models \\times 2 bytes/param (FP16) \\approx 560 GB VRAM before optimizer states.",
+        "This 4\\times memory multiplier is a primary driver of RLHF infrastructure cost.",
       ],
     },
     {
@@ -463,7 +463,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In standard fine-tuning, a frozen pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ is updated to $W_0 + \\Delta W$. LoRA constrains $\\Delta W = A \\cdot B$ where $A \\in \\mathbb{R}^{d \\times r}$, $B \\in \\mathbb{R}^{r \\times k}$, with rank $r \\ll \\min(d, k)$. The forward pass becomes:\n\\[ h = W_0 x + \\underbrace{ABx}_{\\text{LoRA update}} \\]\nThe actor and reference share the same frozen $W_0$. Only $A$ and $B$ (2rv params vs. $dk$ for a full copy) are unique to the actor. At $r=16$, a 7B model needs ~50M adapter params instead of ~14GB for a full reference — a ~280× reduction.",
+        "In standard fine-tuning, a frozen pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ is updated to $W_0 + \\Delta W$. LoRA constrains $\\Delta W = A \\cdot B$ where $A \\in \\mathbb{R}^{d \\times r}$, $B \\in \\mathbb{R}^{r \\times k}$, with rank $r \\ll \\min(d, k)$. The forward pass becomes:\n\\[ h = W_0 x + \\underbrace{ABx}_{\\text{LoRA update}} \\]\nThe actor and reference share the same frozen $W_0$. Only $A$ and $B$ (2rv params vs. $dk$ for a full copy) are unique to the actor. At $r=16$, a 7B model needs ~50M adapter params instead of ~14GB for a full reference — a ~280\\times reduction.",
       hints: [
         "For $W \\in \\mathbb{R}^{d \\times k}$ with rank $r$, full fine-tuning stores $dk$ params; LoRA stores only $r(d+k)$, a dramatic reduction when $r \\ll \\min(d,k)$.",
         "The reference is literally $W_0$ (zero extra params); the actor adds $AB$. They share the same forward pass backbone.",
@@ -545,7 +545,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Wei et al. (2021) showed that fine-tuning on ≥60 task clusters substantially improves zero-shot performance. With fewer tasks, performance gains are limited. Diversity forces the model to learn general instruction-following meta-skills rather than task-specific patterns, enabling generalization to new task formats at zero-shot.",
+        "Wei et al. (2021) showed that fine-tuning on \\geq60 task clusters substantially improves zero-shot performance. With fewer tasks, performance gains are limited. Diversity forces the model to learn general instruction-following meta-skills rather than task-specific patterns, enabling generalization to new task formats at zero-shot.",
       hints: [
         "Memorizing 1000 task formats is intractable — the model must generalize from them.",
         "Zero-shot generalization is the emergent property of instruction diversity, not instruction volume.",
@@ -596,14 +596,14 @@ const questions: Record<string, Question[]> = {
       question:
         "In the standard ChatGPT/InstructGPT pipeline (Ouyang et al., 2022), what is the correct order of the three training phases?",
       options: [
-        "RLHF → SFT → Pretraining",
-        "Pretraining → SFT → RLHF (reward modeling + PPO)",
-        "SFT → Pretraining → RLHF",
-        "Pretraining → RLHF → SFT",
+        "RLHF \\to SFT \\to Pretraining",
+        "Pretraining \\to SFT \\to RLHF (reward modeling + PPO)",
+        "SFT \\to Pretraining \\to RLHF",
+        "Pretraining \\to RLHF \\to SFT",
       ],
       correctAnswer: 1,
       explanation:
-        "The standard pipeline is: (1) Pretraining on internet-scale data → base LLM; (2) Supervised Fine-Tuning on ~13,000–14,500 human-written demonstration pairs → SFT model; (3) RLHF = train reward model on ~300K preference pairs + PPO fine-tune using the RM as reward signal → final aligned model. Each phase builds on the previous.",
+        "The standard pipeline is: (1) Pretraining on internet-scale data \\to base LLM; (2) Supervised Fine-Tuning on ~13,000–14,500 human-written demonstration pairs \\to SFT model; (3) RLHF = train reward model on ~300K preference pairs + PPO fine-tune using the RM as reward signal \\to final aligned model. Each phase builds on the previous.",
       hints: [
         "Pretraining gives the model language knowledge; SFT gives it the right behavioral template; RLHF refines preferences.",
         "The SFT model initializes both the RL policy and the reward model in phase 3.",
@@ -757,10 +757,10 @@ const questions: Record<string, Question[]> = {
         'L = −log \\sigma(r(x,y_w) − r(x,y_l)) where r is a separately trained reward model',
         'L = −log \\sigma(\\beta log[\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)] − \\beta log[\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x)]) where the implicit reward is expressed directly via the policy log-prob ratio',
         'L = MSE(\\pi_\\theta(y_w|x), \\pi_ref(y_w|x)) summed over chosen responses',
-        'L = KL(\\pi_\\theta(·|x) || \\pi_ref(·|x)) averaged over preference pairs',
+        'L = KL(\\pi_\\theta(\\cdot|x) || \\pi_ref(\\cdot|x)) averaged over preference pairs',
       ],
       correctAnswer: 1,
-      explanation: 'DPO (Rafailov et al., 2023): starting from the RLHF objective with KL constraint, the optimal policy satisfies \\pi*(y|x) \\propto \\pi_ref(y|x)·exp(r(y,x)/\\beta). Rearranging: r(y,x) = \\beta log[\\pi*(y|x)/\\pi_ref(y|x)] + \\beta log Z(x). Substituting into the Bradley-Terry preference loss eliminates r and Z(x), giving the DPO loss directly in terms of policy log-probabilities.',
+      explanation: 'DPO (Rafailov et al., 2023): starting from the RLHF objective with KL constraint, the optimal policy satisfies \\pi*(y|x) \\propto \\pi_ref(y|x)\\cdotexp(r(y,x)/\\beta). Rearranging: r(y,x) = \\beta log[\\pi*(y|x)/\\pi_ref(y|x)] + \\beta log Z(x). Substituting into the Bradley-Terry preference loss eliminates r and Z(x), giving the DPO loss directly in terms of policy log-probabilities.',
       hints: [
         'The key insight: the optimal RLHF policy implicitly encodes the reward — no separate RM needed.',
         'Log Z(x) cancels in the difference r(y_w) − r(y_l), making the reparameterisation exact.',
@@ -775,7 +775,7 @@ const questions: Record<string, Question[]> = {
       explanation: 'DPO offline limitation: the preference dataset was collected from some behaviour policy (often the SFT model). As the DPO-trained policy improves, its outputs diverge from the dataset distribution, and the fixed preference pairs become less informative (off-policy problem). Online/iterative DPO collects new preferences on current-policy outputs each iteration, addressing this at additional cost.',
       hints: [
         'Offline RL limitation: training data represents old policy outputs; the new policy may never encounter these outputs.',
-        'Online DPO: collect preferences on current model outputs → update → repeat. Higher cost, better asymptotic performance.',
+        'Online DPO: collect preferences on current model outputs \\to update \\to repeat. Higher cost, better asymptotic performance.',
       ],
     },
     {
@@ -824,7 +824,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'UltraFeedback (Cui et al., 2023): GPT-4 generates responses to 64K diverse instructions and assigns scores (1-5) across four quality dimensions per response. The highest and lowest-scored responses form preference pairs for DPO/RLHF training. This AI-generated preference data at scale (without human annotation cost) enabled models like Zephyr to match or exceed models trained on human-annotated data.',
       hints: [
-        'UltraFeedback: 4 model responses per prompt × 64K prompts = 256K scored responses → 64K preference pairs.',
+        'UltraFeedback: 4 model responses per prompt \\times 64K prompts = 256K scored responses \\to 64K preference pairs.',
         'Multi-dimensional scoring: one response can be truthful but unhelpful; scores per dimension give richer training signal.',
       ],
     },
@@ -872,7 +872,7 @@ const questions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Catastrophic forgetting — where safety training degrades the model\'s pre-training knowledge — is mitigated in RLHF by the KL divergence penalty that keeps the policy close to the SFT initialisation.',
       correctAnswer: 'True',
-      explanation: 'The KL constraint \\beta·KL(\\pi_\\theta||\\pi_SFT) in PPO-RLHF anchors the policy near the SFT model, preventing large weight changes that would erase pre-training knowledge. Without this constraint, aggressive RL optimisation could overwrite factual knowledge, language generation quality, or code ability in favour of reward-maximising behaviours. DPO also uses the reference model for the same purpose.',
+      explanation: 'The KL constraint \\beta\\cdotKL(\\pi_\\theta||\\pi_SFT) in PPO-RLHF anchors the policy near the SFT model, preventing large weight changes that would erase pre-training knowledge. Without this constraint, aggressive RL optimisation could overwrite factual knowledge, language generation quality, or code ability in favour of reward-maximising behaviours. DPO also uses the reference model for the same purpose.',
       hints: [
         'KL penalty = implicit regularisation toward the SFT model. Large \\beta = strong regularisation, small policy change.',
         'Catastrophic forgetting in RL: gradient descent on RL loss overwrites weights trained by pre-training and SFT — the KL constraint prevents this.',
@@ -924,7 +924,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'Gao et al. (2022) showed that larger RMs have higher proxy-gold correlation: their predictions better match gold-standard human preferences on held-out evaluations. Larger RMs also overoptimise less quickly — the policy must drift further in KL space before reward hacking occurs. However, larger RMs are more expensive to run during RL (every rollout requires an RM forward pass).',
       hints: [
-        'RM scaling: more parameters → better generalisation from the preference training data.',
+        'RM scaling: more parameters \\to better generalisation from the preference training data.',
         'Trade-off: 70B RM is more accurate but 10x slower than 7B RM — inference cost matters during rollout generation.',
       ],
     },
@@ -954,10 +954,10 @@ const questions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Anthropic\'s model specification (the "Claude constitution") establishes a priority ordering for Claude\'s objectives. What is the correct ordering from highest to lowest priority?',
       options: [
-        'Helpful → Harmless → Honest',
-        'Broadly safe (supporting human oversight) → Broadly ethical → Adherent to Anthropic\'s principles → Genuinely helpful',
-        'Harmless → Honest → Helpful → Corrigible',
-        'Helpful → Honest → Broadly safe → Ethical',
+        'Helpful \\to Harmless \\to Honest',
+        'Broadly safe (supporting human oversight) \\to Broadly ethical \\to Adherent to Anthropic\'s principles \\to Genuinely helpful',
+        'Harmless \\to Honest \\to Helpful \\to Corrigible',
+        'Helpful \\to Honest \\to Broadly safe \\to Ethical',
       ],
       correctAnswer: 1,
       explanation: 'Claude\'s model spec (2024): (1) Broadly safe: supporting appropriate human oversight mechanisms during this critical period of AI development; (2) Broadly ethical: having good values, being honest, avoiding harmful actions; (3) Adherent to Anthropic principles: acting per Anthropic guidelines where relevant; (4) Genuinely helpful: benefiting users and operators. This ordering means Claude will sacrifice helpfulness to avoid harm, and sacrifice harmlessness to maintain broad safety properties.',
@@ -972,7 +972,7 @@ const questions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Claude\'s model specification distinguishes between "operators" (API customers who build products) and "users" (end users of those products), giving operators higher trust and the ability to restrict or expand Claude\'s default behaviours within limits set by Anthropic.',
       correctAnswer: 'True',
-      explanation: 'The three-tier principal hierarchy: Anthropic (highest trust, via training) → Operators (medium trust, via system prompt — can restrict Claude to specific topics, enable adult content for appropriate platforms, etc.) → Users (base trust, via conversation — can adjust within operator-permitted range). This layered trust model enables flexible deployment across diverse use cases while maintaining Anthropic\'s core safety guarantees.',
+      explanation: 'The three-tier principal hierarchy: Anthropic (highest trust, via training) \\to Operators (medium trust, via system prompt — can restrict Claude to specific topics, enable adult content for appropriate platforms, etc.) \\to Users (base trust, via conversation — can adjust within operator-permitted range). This layered trust model enables flexible deployment across diverse use cases while maintaining Anthropic\'s core safety guarantees.',
       hints: [
         'Operator example: a medical platform enables Claude to discuss drug interactions in detail (restricted by default) for verified healthcare providers.',
         'User permissions are bounded by operator permissions, which are bounded by Anthropic\'s training.',
@@ -1026,7 +1026,7 @@ const questions: Record<string, Question[]> = {
       explanation: 'AlpacaEval 2.0: 805 instructions, LLM-as-judge (GPT-4-Turbo) compares each model\'s response against GPT-4-Turbo as baseline. Reports win rate (% of responses preferred over baseline). Correlates well with Chatbot Arena (human preference) rankings. Enables rapid automated evaluation of new models without expensive human annotation — critical for fast development iteration.',
       hints: [
         'AlpacaEval win rate: "what fraction of this model\'s responses did GPT-4-judge prefer over GPT-4-Turbo\'s responses?"',
-        'High win rate ≈ human preference — the correlation is the key validation that makes AlpacaEval useful.',
+        'High win rate \\approx human preference — the correlation is the key validation that makes AlpacaEval useful.',
       ],
     },
     {
@@ -1041,7 +1041,7 @@ const questions: Record<string, Question[]> = {
         'Elo convergence requires that every model pair is compared at least 100 times — below this threshold, ratings are unreliable',
       ],
       correctAnswer: 1,
-      explanation: 'Chatbot Arena uses Bradley-Terry MLE for its "Arena Score" (not vanilla Elo, which is an online update approximation). BT-MLE is a consistent estimator: as N → ∞, the estimated ratings converge in probability to the true quality ordering. Confidence intervals shrink as more comparisons accumulate. The BT model assumes pairwise comparison probability follows a logistic function of the rating difference — the same assumption used in RLHF reward model training.',
+      explanation: 'Chatbot Arena uses Bradley-Terry MLE for its "Arena Score" (not vanilla Elo, which is an online update approximation). BT-MLE is a consistent estimator: as N \\to \\infty, the estimated ratings converge in probability to the true quality ordering. Confidence intervals shrink as more comparisons accumulate. The BT model assumes pairwise comparison probability follows a logistic function of the rating difference — the same assumption used in RLHF reward model training.',
       hints: [
         'Bradley-Terry = the statistical model underlying both Chatbot Arena ratings and RLHF reward models.',
         'MLE consistency: with enough data, the estimator converges to the true parameter regardless of initialisation.',
@@ -1093,7 +1093,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Iterated amplification: (1) Human H uses AI A (initially weak) as a tool to evaluate/solve subtasks; (2) Train A_{new} on (H+A_old)\'s outputs; (3) Human now uses A_{new} (stronger) as a tool — each iteration amplifies human capability. The key claim: if decomposition is correct and human+AI evaluation is accurate, the trained model A_{final} provably converges to the human\'s true preferences even for tasks humans cannot evaluate alone.',
       hints: [
-        'Bootstrap: weak A → human amplified by weak A → slightly better A → human amplified by better A → ...',
+        'Bootstrap: weak A \\to human amplified by weak A \\to slightly better A \\to human amplified by better A \\to ...',
         'Amplification ensures each training step is supervised by a more capable (human+AI) evaluator than the previous step.',
       ],
     },
@@ -1196,7 +1196,7 @@ const additionalQuestions: Record<string, Question[]> = {
         'Training separate RMs per annotator and averaging their scores at test time',
       ],
       correctAnswer: 1,
-      explanation: 'When annotators disagree (50/50 split on a pair), treating it as "definitely y_w wins" introduces noise. Distributional/soft-label training assigns a confidence weight equal to the fraction of annotators who preferred y_w: L = −p · log \\sigma(r_w − r_l) − (1−p) · log \\sigma(r_l − r_w). This makes the RM uncertain in genuinely ambiguous cases and reduces overfitting to noisy labels.',
+      explanation: 'When annotators disagree (50/50 split on a pair), treating it as "definitely y_w wins" introduces noise. Distributional/soft-label training assigns a confidence weight equal to the fraction of annotators who preferred y_w: L = −p \\cdot log \\sigma(r_w − r_l) − (1−p) \\cdot log \\sigma(r_l − r_w). This makes the RM uncertain in genuinely ambiguous cases and reduces overfitting to noisy labels.',
       hints: [
         'Hard label: p = 1 if y_w wins, 0 otherwise. Soft label: p = fraction of annotators who preferred y_w.',
         'Annotator disagreement is signal about ambiguity—don\'t throw it away.',
@@ -1299,7 +1299,7 @@ const additionalQuestions: Record<string, Question[]> = {
       explanation: 'LLM RLHF: discrete token actions, policy gradient via log-prob of sampled tokens — relatively low variance. Diffusion RLHF: continuous Gaussian noise actions over T steps (T=50-1000); REINFORCE has high variance in continuous spaces. DDPO uses importance sampling and truncated backpropagation (not full T-step backprop) to compute gradients. DPO for diffusion (Diffusion-DPO) sidesteps this by reparameterising the preference loss directly in terms of the denoising score network.',
       hints: [
         'REINFORCE variance grows with action space dimensionality and sequence length.',
-        'T denoising steps × high-dim image = very long RL episode with sparse terminal reward.',
+        'T denoising steps \\times high-dim image = very long RL episode with sparse terminal reward.',
       ],
     },
   ],
@@ -1378,7 +1378,7 @@ const additionalQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Deceptive alignment is a theoretical failure mode where a model behaves safely during training and evaluation but pursues misaligned objectives when deployed, because it has learned to detect evaluation conditions.',
       correctAnswer: 'True',
-      explanation: 'Evan Hubinger et al. (2019) formalised deceptive alignment: a model could learn "behave well when being evaluated → receive positive reward → continue existing" and simultaneously learn misaligned terminal goals for post-deployment. The challenge: standard evaluation cannot distinguish a model that is genuinely aligned from one that is deceptively aligned. Interpretability and scalable oversight attempt to address this.',
+      explanation: 'Evan Hubinger et al. (2019) formalised deceptive alignment: a model could learn "behave well when being evaluated \\to receive positive reward \\to continue existing" and simultaneously learn misaligned terminal goals for post-deployment. The challenge: standard evaluation cannot distinguish a model that is genuinely aligned from one that is deceptively aligned. Interpretability and scalable oversight attempt to address this.',
       hints: [
         'Deceptive alignment is consistent with good benchmark performance—making it extremely hard to detect.',
         'The model acts as if it has two modes: "training/eval mode" (safe) and "deployment mode" (misaligned).',
@@ -1446,7 +1446,7 @@ const additionalQuestions: Record<string, Question[]> = {
         'Clipping truncates the KL divergence term at a maximum value to prevent it from dominating the loss',
       ],
       correctAnswer: 1,
-      explanation: 'PPO/GRPO clipped surrogate: L = E[min(r_t A_t, clip(r_t, 1−\\epsilon, 1+\\epsilon) A_t)] where r_t = \\pi_\\theta/\\pi_old. When the policy changes too much (r_t > 1+\\epsilon or < 1−\\epsilon), the gradient is clipped—preventing excessively large policy updates. This is crucial for LLMs where large updates can cause catastrophic forgetting or produce degenerate text. \\epsilon ≈ 0.2 is standard.',
+      explanation: 'PPO/GRPO clipped surrogate: L = E[min(r_t A_t, clip(r_t, 1−\\epsilon, 1+\\epsilon) A_t)] where r_t = \\pi_\\theta/\\pi_old. When the policy changes too much (r_t > 1+\\epsilon or < 1−\\epsilon), the gradient is clipped—preventing excessively large policy updates. This is crucial for LLMs where large updates can cause catastrophic forgetting or produce degenerate text. \\epsilon \\approx 0.2 is standard.',
       hints: [
         'Without clipping, a single high-reward sample could cause a massive policy update that breaks other capabilities.',
         'The clipping is on the probability ratio r_t, not on the gradient directly—it limits how much the policy changes per step.',
@@ -1516,10 +1516,10 @@ const additionalQuestions: Record<string, Question[]> = {
         'Uses RL rather than supervised learning, computing policy gradients through the preference model',
       ],
       correctAnswer: 1,
-      explanation: 'KTO (Ethayarajh et al., 2024): instead of (chosen, rejected) pairs, it uses individual examples with binary labels (desirable/undesirable). The loss uses the Kahneman-Tversky prospect theory value function: v(x) = x if x ≥ 0 (gain), \\lambda·x if x < 0 (loss, with \\lambda > 1 capturing loss aversion). This means the model is penalised more for making bad responses worse than it is rewarded for making good responses better.',
+      explanation: 'KTO (Ethayarajh et al., 2024): instead of (chosen, rejected) pairs, it uses individual examples with binary labels (desirable/undesirable). The loss uses the Kahneman-Tversky prospect theory value function: v(x) = x if x \\geq 0 (gain), \\lambda\\cdotx if x < 0 (loss, with \\lambda > 1 capturing loss aversion). This means the model is penalised more for making bad responses worse than it is rewarded for making good responses better.',
       hints: [
         'DPO: needs paired data (chosen, rejected) — expensive to collect. KTO: needs only binary feedback per example — much cheaper.',
-        'Loss aversion (\\lambda ≈ 2.25 from Kahneman-Tversky): humans feel losses ~2x more strongly than equivalent gains.',
+        'Loss aversion (\\lambda \\approx 2.25 from Kahneman-Tversky): humans feel losses ~2x more strongly than equivalent gains.',
       ],
     },
     {
@@ -1568,7 +1568,7 @@ const additionalQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Sycophancy emerges from RLHF: human raters prefer responses that validate their beliefs, so the model learns to agree rather than correct. Examples: (1) the user presents an incorrect proof — the sycophantic model praises it; (2) the user pushes back on a correct model answer — the sycophant reverses its position. This is a direct consequence of optimising for approval rather than truth.',
       hints: [
-        'RLHF incentive: "say what the human wants to hear" → higher reward → model learns sycophancy.',
+        'RLHF incentive: "say what the human wants to hear" \\to higher reward \\to model learns sycophancy.',
         'Sycophancy \$\\neq\$ helpfulness: a model that tells you what you want to hear is not serving your actual interests.',
       ],
     },
@@ -1580,7 +1580,7 @@ const additionalQuestions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'Zheng et al. (2023) showed GPT-4 as a judge exhibits position bias: the first response is more likely to be rated as better. Models fine-tuned on this biased data learn positional artifacts rather than genuine quality signals. Similarly, verbosity bias (longer = better) teaches models to pad responses rather than be concise and accurate. These biases are corrected by randomising presentation order and explicitly training judges to evaluate content-not-position.',
       hints: [
-        'Annotator cognitive bias → biased preference labels → RM learns the bias → policy exploits it.',
+        'Annotator cognitive bias \\to biased preference labels \\to RM learns the bias \\to policy exploits it.',
         'Fix: when evaluating A vs B, also evaluate B vs A—if the winner changes, the label is unreliable.',
       ],
     },
@@ -1623,7 +1623,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'MT-Bench (Zheng et al., 2023): GPT-4 evaluates responses to 80 multi-turn questions across writing, roleplay, reasoning, math, coding, extraction. Agreement with human experts is ~80% (comparable to inter-human agreement). The main benefit: running 1000 model comparisons with GPT-4 costs ~$50 and 30 minutes vs. weeks and thousands of dollars for human annotation.',
       hints: [
-        'Cost: GPT-4 API at $0.03/1K tokens × 1000 comparisons × ~1K tokens each = $30. Human annotation: much more.',
+        'Cost: GPT-4 API at $0.03/1K tokens \\times 1000 comparisons \\times ~1K tokens each = $30. Human annotation: much more.',
         'Agreement with humans: ~80% — not perfect, but sufficient for ranking models during development.',
       ],
     },
@@ -1701,9 +1701,9 @@ const additionalQuestions2: Record<string, Question[]> = {
         'IPO uses a separate critic network to estimate the optimal reward and clips it to a bounded range',
       ],
       correctAnswer: 1,
-      explanation: 'DPO: push log(\\pi(y_w)/\\pi_ref(y_w)) − log(\\pi(y_l)/\\pi_ref(y_l)) toward +∞. IPO: regress this difference toward a fixed target (1/(2\\beta)), preventing overfitting to the preference labels by keeping the reward ratio bounded. IPO has a closed-form optimal solution and avoids the degeneracy where the model assigns probability 1 to chosen responses and 0 to rejected ones.',
+      explanation: 'DPO: push log(\\pi(y_w)/\\pi_ref(y_w)) − log(\\pi(y_l)/\\pi_ref(y_l)) toward +\\infty. IPO: regress this difference toward a fixed target (1/(2\\beta)), preventing overfitting to the preference labels by keeping the reward ratio bounded. IPO has a closed-form optimal solution and avoids the degeneracy where the model assigns probability 1 to chosen responses and 0 to rejected ones.',
       hints: [
-        'DPO optimal: log-ratio → ∞ for chosen, → −∞ for rejected — this collapses the model\'s output distribution.',
+        'DPO optimal: log-ratio \\to \\infty for chosen, \\to −\\infty for rejected — this collapses the model\'s output distribution.',
         'IPO target: log-ratio = 1/(2\\beta) — a bounded target that is exactly right when the preference is unambiguous.',
       ],
     },
@@ -1733,7 +1733,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Reward shaping in token-level RLHF adds an entropy bonus term to the per-token reward to prevent the policy from collapsing to deterministic outputs and encourage exploration during training.',
       correctAnswer: 'True',
-      explanation: 'Without entropy regularisation, the policy concentrates probability mass on the single highest-reward completion, losing diversity. The KL penalty in PPO-based RLHF (r_t − \\beta log(\\pi_\\theta/\\pi_ref)) serves as implicit entropy regularisation by penalising the policy for moving far from the reference distribution. Explicit entropy bonuses H(\\pi(·|s_t)) can be added as additional reward shaping to encourage broader exploration of the output space.',
+      explanation: 'Without entropy regularisation, the policy concentrates probability mass on the single highest-reward completion, losing diversity. The KL penalty in PPO-based RLHF (r_t − \\beta log(\\pi_\\theta/\\pi_ref)) serves as implicit entropy regularisation by penalising the policy for moving far from the reference distribution. Explicit entropy bonuses H(\\pi(\\cdot|s_t)) can be added as additional reward shaping to encourage broader exploration of the output space.',
       hints: [
         'Entropy bonus: H(\\pi) = −\\Sigma \\pi(a|s) log \\pi(a|s)—high entropy = diverse outputs; low entropy = deterministic.',
         'KL penalty implicitly regularises entropy: keeping \\pi close to \\pi_ref (which has non-trivial entropy) prevents collapse.',
@@ -1763,7 +1763,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       id: 'q-rlhf-kp34-1',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: 'In InstructGPT\'s PPO-based RLHF, the KL penalty \\beta·KL(\\pi_\\theta || \\pi_ref) is added to the reward. What is the role of the reference policy \\pi_ref?',
+      question: 'In InstructGPT\'s PPO-based RLHF, the KL penalty \\beta\\cdotKL(\\pi_\\theta || \\pi_ref) is added to the reward. What is the role of the reference policy \\pi_ref?',
       options: [
         '\\pi_ref provides the baseline for the value function estimation in the critic network',
         '\\pi_ref is the SFT-initialised policy kept frozen; the KL penalty prevents the RLHF policy from drifting too far, preserving language coherence and preventing reward hacking at the cost of KL divergence from the starting point',
@@ -1771,10 +1771,10 @@ const additionalQuestions2: Record<string, Question[]> = {
         '\\pi_ref is updated each iteration to match the current policy, acting as a slowly moving target',
       ],
       correctAnswer: 1,
-      explanation: 'InstructGPT PPO reward: r_total(x,y) = r_RM(x,y) − \\beta·KL(\\pi_\\theta(·|x) || \\pi_SFT(·|x)). The KL term penalises divergence from the SFT baseline: large divergence = large penalty = prevents the policy from exploiting the RM with degenerate outputs. Without this, the policy might learn to produce grammatically broken but high-reward outputs that the RM wasn\'t trained to evaluate.',
+      explanation: 'InstructGPT PPO reward: r_total(x,y) = r_RM(x,y) − \\beta\\cdotKL(\\pi_\\theta(\\cdot|x) || \\pi_SFT(\\cdot|x)). The KL term penalises divergence from the SFT baseline: large divergence = large penalty = prevents the policy from exploiting the RM with degenerate outputs. Without this, the policy might learn to produce grammatically broken but high-reward outputs that the RM wasn\'t trained to evaluate.',
       hints: [
         'KL constraint = "don\'t drift too far from what you knew how to do before RLHF."',
-        '\\beta controls the trade-off: \\beta=0 = unconstrained RM maximisation; \\beta→∞ = no policy change.',
+        '\\beta controls the trade-off: \\beta=0 = unconstrained RM maximisation; \\beta\\to\\infty = no policy change.',
       ],
     },
     {
@@ -1786,7 +1786,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       explanation: 'InstructGPT and subsequent works initialise the PPO value function from the reward model weights (same backbone + scalar head). This provides a warm start for value estimation rather than training from scratch. The critic then adapts during PPO to estimate V(x, y_{1:t}) — the expected future reward from the current prefix — rather than just scoring complete responses.',
       hints: [
         'Cold-start critic: value function trained from random initialisation converges slowly, harming early policy updates.',
-        'RM → critic: the RM already knows "what makes responses good" — a natural initialisation for V(s).',
+        'RM \\to critic: the RM already knows "what makes responses good" — a natural initialisation for V(s).',
       ],
     },
     {
@@ -1796,12 +1796,12 @@ const additionalQuestions2: Record<string, Question[]> = {
       question: 'PPO-based RLHF for LLMs requires 4 models in memory simultaneously. What are they?',
       options: [
         'Actor, critic, discriminator, generator',
-        'Actor (\\pi_\\theta), critic (V_\\phi), reference policy (\\pi_ref, frozen), reward model (r_\\psi, frozen) — each requires a separate model copy, making PPO-RLHF memory-intensive (4× the base model size)',
+        'Actor (\\pi_\\theta), critic (V_\\phi), reference policy (\\pi_ref, frozen), reward model (r_\\psi, frozen) — each requires a separate model copy, making PPO-RLHF memory-intensive (4\\times the base model size)',
         'Actor, target actor, critic, target critic — as in DDPG/SAC for continuous control',
         'Teacher model, student model, reward model, value model',
       ],
       correctAnswer: 1,
-      explanation: 'PPO-RLHF memory footprint: (1) Actor \\pi_\\theta: the policy being trained; (2) Critic V_\\phi: estimates per-step value for advantage computation; (3) Reference \\pi_ref: frozen SFT model for KL penalty computation; (4) Reward model r_\\psi: frozen RM for reward computation. At 70B parameters each, this requires 4 × 70B × 2 bytes (bfloat16) ≈ 560 GB GPU memory. Techniques like LoRA-only updates, model sharding, and parameter sharing (actor/ref share backbone) reduce this.',
+      explanation: 'PPO-RLHF memory footprint: (1) Actor \\pi_\\theta: the policy being trained; (2) Critic V_\\phi: estimates per-step value for advantage computation; (3) Reference \\pi_ref: frozen SFT model for KL penalty computation; (4) Reward model r_\\psi: frozen RM for reward computation. At 70B parameters each, this requires 4 \\times 70B \\times 2 bytes (bfloat16) \\approx 560 GB GPU memory. Techniques like LoRA-only updates, model sharding, and parameter sharing (actor/ref share backbone) reduce this.',
       hints: [
         'At each rollout step: actor generates tokens, RM scores the complete response, critic evaluates the prefix, ref model computes KL.',
         'Reducing to 2 models: share actor/ref backbone, keep RM separate — but KL computation requires both forward passes.',
@@ -1871,7 +1871,7 @@ const additionalQuestions2: Record<string, Question[]> = {
         'Merge the actor and critic networks in PPO to reduce memory requirements during RLHF',
       ],
       correctAnswer: 1,
-      explanation: 'Model merging for alignment: suppose you have (base → safety-tuned via RLHF) and (base → math-tuned via SFT). Instead of training (base → math → RLHF safety), merge the weight deltas: \\theta_merged = \\theta_base + \\lambda₁(\\theta_safety − \\theta_base) + \\lambda₂(\\theta_math − \\theta_base). TIES resolves sign conflicts in weight deltas; DARE randomly drops small weight changes. This enables modular alignment without retraining each capability combination from scratch.',
+      explanation: 'Model merging for alignment: suppose you have (base \\to safety-tuned via RLHF) and (base \\to math-tuned via SFT). Instead of training (base \\to math \\to RLHF safety), merge the weight deltas: \\theta_merged = \\theta_base + \\lambda\\_1(\\theta_safety − \\theta_base) + \\lambda\\_2(\\theta_math − \\theta_base). TIES resolves sign conflicts in weight deltas; DARE randomly drops small weight changes. This enables modular alignment without retraining each capability combination from scratch.',
       hints: [
         'Task arithmetic: adding weight deltas from different fine-tuned models can combine their capabilities.',
         'Conflict resolution: if safety delta and math delta disagree on a weight, TIES uses the majority sign.',
@@ -1901,10 +1901,10 @@ const additionalQuestions2: Record<string, Question[]> = {
         'A single RM can only score binary preferences; an ensemble enables continuous preference scoring',
       ],
       correctAnswer: 1,
-      explanation: 'Ensemble RM: r_ensemble(x,y) = (1/K) \\Sigma_k r_k(x,y). Variance across ensemble members signals RM uncertainty: if all RMs agree, the reward is reliable; if they disagree, the input is out-of-distribution. The policy gradient penalty \\sigma²(r_1,...,r_K) discourages the policy from exploiting uncertain regions. Additionally, adversarially gaming K RMs simultaneously is harder than gaming a single RM—ensemble robustness prevents trivial reward hacking.',
+      explanation: 'Ensemble RM: r_ensemble(x,y) = (1/K) \\Sigma_k r_k(x,y). Variance across ensemble members signals RM uncertainty: if all RMs agree, the reward is reliable; if they disagree, the input is out-of-distribution. The policy gradient penalty \\sigma\\^2(r_1,...,r_K) discourages the policy from exploiting uncertain regions. Additionally, adversarially gaming K RMs simultaneously is harder than gaming a single RM—ensemble robustness prevents trivial reward hacking.',
       hints: [
         'Reward hacking: find x with high r(x) but low true preference. Ensemble: x must have high mean AND low variance across RMs.',
-        'Uncertainty-weighted reward: r_penalty = r_mean − \\lambda·\\sigma_ensemble — penalise inputs where the ensemble is uncertain.',
+        'Uncertainty-weighted reward: r_penalty = r_mean − \\lambda\\cdot\\sigma_ensemble — penalise inputs where the ensemble is uncertain.',
       ],
     },
   ],
@@ -1953,7 +1953,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Agentic alignment challenges: (1) Long-horizon credit assignment — the reward for a 20-step plan only arrives at the end; (2) Irreversibility — deleting a file, sending an email, or making an API call cannot be undone; (3) Goal drift — small misinterpretations compound across steps; (4) Prompt injection — malicious content in the environment tries to hijack the agent\'s goals. Alignment for agents requires "minimal footprint" principles, sandboxing, and human-in-the-loop verification for irreversible actions.',
       hints: [
-        'Single-turn: mistake → bad response. Agentic: mistake at step 2 → cascade of wrong actions → hard-to-reverse damage.',
+        'Single-turn: mistake \\to bad response. Agentic: mistake at step 2 \\to cascade of wrong actions \\to hard-to-reverse damage.',
         'Minimal footprint principle: "prefer reversible actions, request only necessary permissions, verify with user before irreversible steps."',
       ],
     },
@@ -1971,10 +1971,10 @@ const additionalQuestions2: Record<string, Question[]> = {
         'Online RLHF allows training without a reference policy, reducing memory requirements',
       ],
       correctAnswer: 1,
-      explanation: 'Online RLHF (Llama 3 alignment report, Gemini alignment, Claude training): the model generates responses → humans or AI annotators compare → reward model or direct DPO update → repeat. This keeps training on-policy: as the model improves, harder questions are selected and preferences are collected for current-capability outputs. Llama 3 used 6 rounds of online preference data collection for alignment.',
+      explanation: 'Online RLHF (Llama 3 alignment report, Gemini alignment, Claude training): the model generates responses \\to humans or AI annotators compare \\to reward model or direct DPO update \\to repeat. This keeps training on-policy: as the model improves, harder questions are selected and preferences are collected for current-capability outputs. Llama 3 used 6 rounds of online preference data collection for alignment.',
       hints: [
         'Offline: static 2022 data, 2025 model. The model\'s outputs are far better than the "chosen" examples—learning stagnates.',
-        'Online: current model outputs → fresh preferences → meaningful gradient signal for current capability level.',
+        'Online: current model outputs \\to fresh preferences \\to meaningful gradient signal for current capability level.',
       ],
     },
     {
@@ -1986,7 +1986,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       explanation: 'Rejection sampling FT: (1) sample N responses per prompt; (2) score with RM or ground-truth verifier; (3) keep responses above a quality threshold; (4) SFT on the filtered data. This is simpler than PPO/DPO, avoids instability, and works well for verifiable tasks (math, coding) where correctness is the reward. STaR (Zelikman et al.) applied this to chain-of-thought: generate rationales, keep those leading to correct answers, fine-tune.',
       hints: [
         'ReST = "Reward from Scores and Trajectories": sample, score, filter, fine-tune — no RL policy gradient needed.',
-        'STaR: model generates reasoning chains → keep correct ones → retrain → model improves at reasoning.',
+        'STaR: model generates reasoning chains \\to keep correct ones \\to retrain \\to model improves at reasoning.',
       ],
     },
     {
@@ -2003,7 +2003,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'If one response is obviously better, the preference label is clear but provides little new information to the RM. Informative pairs come from the RM\'s decision boundary: where RM uncertainty is highest (|r(y_w) − r(y_l)| is small). Actively selecting such prompts (active learning for preferences) improves RM sample efficiency. Balancing: too much boundary-sampling neglects clear-cut preferences; too little wastes annotation on easy examples.',
       hints: [
-        'Uninformative pair: "Explain quantum physics" → (excellent response) vs (random gibberish). Obviously the first is better—no useful RM training signal.',
+        'Uninformative pair: "Explain quantum physics" \\to (excellent response) vs (random gibberish). Obviously the first is better—no useful RM training signal.',
         'Informative pair: two similar-quality responses on a nuanced request — annotator disagreement is possible, RM learns from the boundary.',
       ],
     },
@@ -2054,7 +2054,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       explanation: 'Counterfactual impact framing: "would withholding this information prevent harm?" If a chemistry student can find the information in any university textbook, refusing it provides no safety benefit while harming the legitimate user. If the information constitutes genuine expert knowledge unavailable elsewhere (e.g., specific bioweapon synthesis parameters), even partial disclosure is restricted. This framework underpins how Claude\'s usage policy distinguishes "sensitive but appropriate" from "harmful to provide under any circumstances."',
       hints: [
         'Counterfactual: "if I don\'t answer this, will the person still find it?" If yes, refusing has no safety benefit.',
-        'Dual-use spectrum: general chemistry (freely available) → precursor synthesis routes (semi-restricted) → weaponisation parameters (categorically restricted).',
+        'Dual-use spectrum: general chemistry (freely available) \\to precursor synthesis routes (semi-restricted) \\to weaponisation parameters (categorically restricted).',
       ],
     },
   ],
@@ -2083,7 +2083,7 @@ const additionalQuestions2: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'The KL divergence penalty in PPO-RLHF provides a principled defense against reward hacking by preventing the policy from exploring regions far from the SFT distribution where reward model predictions are unreliable.',
       correctAnswer: 'True',
-      explanation: 'The KL constraint r_total = r_RM − \\beta·KL(\\pi || \\pi_SFT) works as a trust region: the policy is allowed to move only in directions consistent with the reference distribution. Since the RM was trained on outputs similar to \\pi_SFT, it is most reliable near \\pi_SFT. The \\beta parameter sets how far the policy can deviate—larger \\beta = stronger anti-hacking protection but less alignment improvement; smaller \\beta = more optimisation but more hacking risk.',
+      explanation: 'The KL constraint r_total = r_RM − \\beta\\cdotKL(\\pi || \\pi_SFT) works as a trust region: the policy is allowed to move only in directions consistent with the reference distribution. Since the RM was trained on outputs similar to \\pi_SFT, it is most reliable near \\pi_SFT. The \\beta parameter sets how far the policy can deviate—larger \\beta = stronger anti-hacking protection but less alignment improvement; smaller \\beta = more optimisation but more hacking risk.',
       hints: [
         'Trust region: "stay near what the RM was trained to evaluate reliably."',
         'RM extrapolation: far from training data, the RM\'s predictions are unreliable. KL constraint prevents this exploration.',

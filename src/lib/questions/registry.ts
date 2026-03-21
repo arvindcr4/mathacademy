@@ -213,10 +213,10 @@ const questionOverrides: Record<string, QuestionOverride> = {
     question:
       "Using a bigram model, what is the probability of the sentence '<s> I want Chinese food </s>' if P(I|<s>) = 0.25, P(want|I) = 0.33, P(Chinese|want) = 0.0065, P(food|Chinese) = 0.52, and P(</s>|food) = 0.68?",
     options: [
-      "Approximately 1.9 × 10^-5",
-      "Approximately 2.8 × 10^-4",
-      "Approximately 7.6 × 10^-4",
-      "Approximately 3.6 × 10^-1",
+      "Approximately 1.9 \$\\times\$ 10^-5",
+      "Approximately 2.8 \$\\times\$ 10^-4",
+      "Approximately 7.6 \$\\times\$ 10^-4",
+      "Approximately 3.6 \$\\times\$ 10^-1",
     ],
     correctAnswer: 0,
   },
@@ -620,7 +620,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
   },
   "q-sciml-kp2-2": {
     question:
-      "For a scalar Neural ODE at some time t, suppose the adjoint is a(t) = 2 and the local Jacobian is ∂f_θ/∂h(t) = 3. According to the adjoint equation, what is da/dt at that time?",
+      "For a scalar Neural ODE at some time t, suppose the adjoint is a(t) = 2 and the local Jacobian is \\partialf_θ/\\partialh(t) = 3. According to the adjoint equation, what is da/dt at that time?",
     options: ["-6", "6", "-3", "3"],
     correctAnswer: 0,
   },
@@ -1843,6 +1843,34 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "Because only reinforcement learning policies can be evaluated offline.",
     ],
     correctAnswer: 0,
+  },
+  "q-gan-kp31-2": {
+    type: "true-false",
+    question:
+      "GAN training is guaranteed to converge to a Nash equilibrium when both networks use gradient descent with a sufficiently small learning rate.",
+    options: ["True", "False"],
+    correctAnswer: "false",
+  },
+  "q-gan-kp32-2": {
+    type: "true-false",
+    question:
+      "In a projection discriminator, the class label is incorporated by taking an inner product between the final feature vector and a class embedding rather than by concatenating the label.",
+    options: ["True", "False"],
+    correctAnswer: "true",
+  },
+  "q-gan-kp33-2": {
+    type: "true-false",
+    question:
+      "CycleGAN's identity loss penalizes the generator when it changes an input that is already in the target domain, helping preserve color and style.",
+    options: ["True", "False"],
+    correctAnswer: "true",
+  },
+  "q-gan-kp34-2": {
+    type: "true-false",
+    question:
+      "AttnGAN generates images from text by using word-level attention at multiple resolutions to align specific words with specific spatial regions of the image.",
+    options: ["True", "False"],
+    correctAnswer: "true",
   },
 };
 

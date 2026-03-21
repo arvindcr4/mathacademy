@@ -10,15 +10,15 @@ const questions: Record<string, Question[]> = {
         "EKF-SLAM linearizes the nonlinear motion and observation models using first-order Taylor expansion. What is the primary computational bottleneck that makes EKF-SLAM scale poorly to large maps?",
       options: [
         "The number of laser scan points per frame exceeds GPU memory",
-        "The covariance matrix grows as O(N²) in the number of landmarks N, making updates O(N²) per step",
+        "The covariance matrix grows as O(N\\^2) in the number of landmarks N, making updates O(N\\^2) per step",
         "EKF requires computing the Jacobian of the neural network policy at each step",
         "The linearization error accumulates multiplicatively, not additively, with map size",
       ],
       correctAnswer: 1,
       explanation:
-        "In EKF-SLAM, the state vector contains the robot pose and all N landmark positions. The covariance matrix is (3+2N) × (3+2N), growing quadratically with landmarks. Each observation update requires O(N²) operations, making EKF-SLAM impractical beyond a few hundred landmarks. Factor graph SLAM (e.g., iSAM2, GTSAM) overcomes this by exploiting sparsity in the information matrix.",
+        "In EKF-SLAM, the state vector contains the robot pose and all N landmark positions. The covariance matrix is (3+2N) \\times (3+2N), growing quadratically with landmarks. Each observation update requires O(N\\^2) operations, making EKF-SLAM impractical beyond a few hundred landmarks. Factor graph SLAM (e.g., iSAM2, GTSAM) overcomes this by exploiting sparsity in the information matrix.",
       hints: [
-        "The state vector in EKF-SLAM grows linearly with N landmarks; the covariance matrix (state × state) grows quadratically.",
+        "The state vector in EKF-SLAM grows linearly with N landmarks; the covariance matrix (state \\times state) grows quadratically.",
         "Compare to factor graph SLAM where the information (Fisher) matrix is sparse, enabling efficient incremental updates.",
       ],
     },
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
         "In factor graph SLAM (as implemented in GTSAM or g2o), the key computational advantage over EKF-SLAM is that the information (Fisher) matrix is sparse, enabling efficient incremental updates via methods like iSAM2 without full matrix inversion.",
       correctAnswer: "True",
       explanation:
-        "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N²) full relinearization.",
+        "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N\\^2) full relinearization.",
       hints: [
         "In EKF, every new measurement updates the full covariance matrix; in factor graph SLAM, only the variables directly connected to the new factor are affected.",
         "iSAM2 uses a Bayes tree (a junction tree over the factor graph) to efficiently update only the affected cliques when new measurements arrive.",
@@ -50,7 +50,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "After loop closure detection adds a new edge to the pose graph, the back-end solves a nonlinear least-squares problem: minimize \\Sigma eᵢᵀ \\Omegaᵢ eᵢ over all poses, where eᵢ is the residual between the constraint and the current pose estimate and \\Omegaᵢ is the information matrix. Gauss-Newton (or Levenberg-Marquardt) iteratively linearizes and solves this system; g2o and GTSAM implement these solvers efficiently on sparse systems.",
+        "After loop closure detection adds a new edge to the pose graph, the back-end solves a nonlinear least-squares problem: minimize \\Sigma e\\_i\\^T \\Omega\\_i e\\_i over all poses, where e\\_i is the residual between the constraint and the current pose estimate and \\Omega\\_i is the information matrix. Gauss-Newton (or Levenberg-Marquardt) iteratively linearizes and solves this system; g2o and GTSAM implement these solvers efficiently on sparse systems.",
       hints: [
         "Loop closure turns an open-chain trajectory into a cycle, introducing a constraint that requires globally redistributing the accumulated error.",
         "The optimization objective is a sum of squared Mahalanobis distances over all edges — a classic nonlinear least-squares form.",
@@ -202,7 +202,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Extrinsic calibration determines the rigid body transformation (rotation R and translation t) between the LiDAR and camera frames; without it, LiDAR points cannot be accurately projected onto the image, making pixel-level fusion impossible. Intrinsic calibration (camera matrix K, distortion coefficients) is additionally required to map 3D camera-frame points to 2D pixel coordinates via perspective projection: p = K[R|t]P.",
       hints: [
-        "The transformation from LiDAR frame to image pixels requires two steps: extrinsic (LiDAR→camera 3D) then intrinsic (camera 3D→pixel).",
+        "The transformation from LiDAR frame to image pixels requires two steps: extrinsic (LiDAR\\tocamera 3D) then intrinsic (camera 3D\\topixel).",
         "Target-based calibration (checkerboard visible to both sensors) is the standard approach for determining the extrinsic transform.",
       ],
     },
@@ -222,7 +222,7 @@ const questions: Record<string, Question[]> = {
         "BEVFusion lifts camera features into BEV space using a depth prediction network (via LSS or similar view transformer) and transforms LiDAR features into BEV via voxelization and sparse convolutions. Both modality BEV feature maps are then concatenated and fed to shared task heads, enabling tight spatial fusion without requiring precise depth at every pixel.",
       hints: [
         "BEV (Bird\'s-Eye View) is a natural common space: the ground plane is shared by both sensors.",
-        "Camera→BEV requires predicting per-pixel depth (underdetermined from monocular camera); LiDAR→BEV is straightforward via voxelization.",
+        "Camera\\toBEV requires predicting per-pixel depth (underdetermined from monocular camera); LiDAR\\toBEV is straightforward via voxelization.",
       ],
     },
   ],
@@ -613,7 +613,7 @@ const questions: Record<string, Question[]> = {
         "DAgger (Dataset Aggregation) addresses the compounding error problem of behavior cloning by iteratively collecting new demonstrations at states the learned policy actually visits.",
       correctAnswer: "True",
       explanation:
-        "DAgger\'s algorithm: (1) Train initial policy \\pi₁ on expert dataset D. (2) Roll out \\piᵢ to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
+        "DAgger\'s algorithm: (1) Train initial policy \\pi\\_1 on expert dataset D. (2) Roll out \\pi\\_i to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
       hints: [
         "Behavior cloning suffers from distribution shift: the policy visits states not in the expert demo and has no guidance there.",
         "DAgger iteratively labels the states the current policy visits with expert actions — the dataset grows to cover the policy\'s actual distribution.",

@@ -7,19 +7,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Self-supervised monocular depth estimation (e.g., Monodepth2) trains using photometric reprojection loss. Which expression correctly describes this loss between a target frame Iₜ and a source frame Iₛ?",
+        "Self-supervised monocular depth estimation (e.g., Monodepth2) trains using photometric reprojection loss. Which expression correctly describes this loss between a target frame I\\_t and a source frame Iₛ?",
       options: [
-        "L_photo = ||Iₜ(p) − Iₛ(p_warped)||₁, where p_warped = K·T_{t→s}·D(p)·K⁻¹·p uses predicted depth D and relative pose T to warp the source image onto the target",
-        "L_photo = KL(Iₜ(p) || Iₛ(p)), the KL divergence between pixel intensity distributions",
-        "L_photo = 1 − SSIM(Iₜ, Iₛ) where SSIM is computed on the raw (unwarped) pair",
-        "L_photo = ||D(Iₜ) − D(Iₛ)||₂, the L2 distance between depth maps of target and source frames",
+        "L_photo = ||I\\_t(p) − Iₛ(p_warped)||\\_1, where p_warped = K\\cdotT_{t\\tos}\\cdotD(p)\\cdotK\\^{-1}\\cdotp uses predicted depth D and relative pose T to warp the source image onto the target",
+        "L_photo = KL(I\\_t(p) || Iₛ(p)), the KL divergence between pixel intensity distributions",
+        "L_photo = 1 − SSIM(I\\_t, Iₛ) where SSIM is computed on the raw (unwarped) pair",
+        "L_photo = ||D(I\\_t) − D(Iₛ)||\\_2, the L2 distance between depth maps of target and source frames",
       ],
       correctAnswer: 0,
       explanation:
-        "Monodepth2 uses a combined loss: L = \\alpha·(1−SSIM(Iₜ, Î))/2 + (1−\\alpha)·||Iₜ−Î||₁ where \\alpha=0.85, and Î is the reconstructed target image obtained by warping Iₛ using predicted depth D and relative pose T. Warping: p_warped = K·T_{t→s}·(D(p)·K⁻¹·p). This differentiable projection allows gradients to flow to both D and T.",
+        "Monodepth2 uses a combined loss: L = \\alpha\\cdot(1−SSIM(I\\_t, Î))/2 + (1−\\alpha)\\cdot||I\\_t−Î||\\_1 where \\alpha=0.85, and Î is the reconstructed target image obtained by warping Iₛ using predicted depth D and relative pose T. Warping: p_warped = K\\cdotT_{t\\tos}\\cdot(D(p)\\cdotK\\^{-1}\\cdotp). This differentiable projection allows gradients to flow to both D and T.",
       hints: [
         "If you know depth and camera motion, you can predict what a source frame pixel maps to in the target — that is the warp.",
-        "Minimising the colour difference between Iₜ and the warped Iₛ forces the predicted depth to explain the observed motion.",
+        "Minimising the colour difference between I\\_t and the warped Iₛ forces the predicted depth to explain the observed motion.",
       ],
     },
     {
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
         "Scale ambiguity is an inherent limitation of monocular depth estimation because a scene at double the distance with double the size produces identical images under a pinhole camera model.",
       correctAnswer: "True",
       explanation:
-        "Under the pinhole camera model, scaling all 3D points by factor k and the camera translation by k produces identical image projections: p = K[R|t]·P. This means monocular methods can only recover depth up to an unknown scale factor s — all predicted depths D are valid up to D→s·D. Absolute metric scale requires additional constraints such as known object sizes, camera height, or IMU integration.",
+        "Under the pinhole camera model, scaling all 3D points by factor k and the camera translation by k produces identical image projections: p = K[R|t]\\cdotP. This means monocular methods can only recover depth up to an unknown scale factor s — all predicted depths D are valid up to D\\tos\\cdotD. Absolute metric scale requires additional constraints such as known object sizes, camera height, or IMU integration.",
       hints: [
         "A doll at arm\'s length and a building far away can project identically onto the image plane — depth is unrecoverable without scale information.",
         "Self-supervised methods address scale by median-scaling predictions to match GT during evaluation, or by using stereo pairs for scale anchoring.",
@@ -43,14 +43,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Monodepth2's auto-mask filters out pixels from the photometric loss. Precisely, a pixel p is masked out when:",
       options: [
-        "min_s pe(Iₜ, Iₛ→ₜ) > min_s pe(Iₜ, Iₛ), i.e., the unwarped source frames already reconstruct the target pixel better than the warped frames — indicating the pixel is in a stationary region where reprojection provides no useful signal",
+        "min_s pe(I\\_t, Iₛ\\to\\_t) > min_s pe(I\\_t, Iₛ), i.e., the unwarped source frames already reconstruct the target pixel better than the warped frames — indicating the pixel is in a stationary region where reprojection provides no useful signal",
         "The pixel is in the top 5% of depth uncertainty, indicating the depth network is unsure",
         "The pixel lies within a sky region detected by a separate semantic segmentation network",
         "The pixel has gradient magnitude below a threshold, indicating a textureless region where photometric loss is unreliable",
       ],
       correctAnswer: 0,
       explanation:
-        "Auto-masking condition: \\mu(pe(Iₜ, Iₛ) < pe(Iₜ, Iₛ→ₜ)) — mask pixel p if the photometric error to the raw source Iₛ is less than to the warped source Iₛ→ₜ. This identifies stationary pixels (camera-static or static objects with no relative motion) where the warp doesn\'t improve reconstruction — applying gradients here would incorrectly push depth to infinity. Masked pixels are excluded from the loss.",
+        "Auto-masking condition: \\mu(pe(I\\_t, Iₛ) < pe(I\\_t, Iₛ\\to\\_t)) — mask pixel p if the photometric error to the raw source Iₛ is less than to the warped source Iₛ\\to\\_t. This identifies stationary pixels (camera-static or static objects with no relative motion) where the warp doesn\'t improve reconstruction — applying gradients here would incorrectly push depth to infinity. Masked pixels are excluded from the loss.",
       hints: [
         "If the source frame already matches the target without any warping, the depth prediction is providing no useful reprojection signal.",
         "Stationary objects in a moving sequence appear to not move — their reprojection is trivially good without depth.",
@@ -66,17 +66,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A stereo camera has baseline B=0.12m and focal length f=800px. A point in the scene has disparity d=40px. What is its depth Z in meters?",
       options: [
-        "Z = 40 / (800 × 0.12) = 0.42m",
-        "Z = (800 × 0.12) / 40 = 2.4m",
-        "Z = 800 / (0.12 × 40) = 166.7m",
-        "Z = 0.12 / (800 × 40) = 0.0000038m",
+        "Z = 40 / (800 \\times 0.12) = 0.42m",
+        "Z = (800 \\times 0.12) / 40 = 2.4m",
+        "Z = 800 / (0.12 \\times 40) = 166.7m",
+        "Z = 0.12 / (800 \\times 40) = 0.0000038m",
       ],
       correctAnswer: 1,
       explanation:
-        "The stereo triangulation formula is Z = (f × B) / d. Substituting: Z = (800 × 0.12) / 40 = 96/40 = 2.4m. Note that f must be in the same units as d (pixels), and B in meters gives Z in meters. Disparity d is the horizontal pixel offset between the same point in left and right rectified images: larger d → closer object.",
+        "The stereo triangulation formula is Z = (f \\times B) / d. Substituting: Z = (800 \\times 0.12) / 40 = 96/40 = 2.4m. Note that f must be in the same units as d (pixels), and B in meters gives Z in meters. Disparity d is the horizontal pixel offset between the same point in left and right rectified images: larger d \\to closer object.",
       hints: [
-        "Z = (f × B) / d. Substitute f=800, B=0.12, d=40.",
-        "800 × 0.12 = 96. 96 / 40 = 2.4m.",
+        "Z = (f \\times B) / d. Substitute f=800, B=0.12, d=40.",
+        "800 \\times 0.12 = 96. 96 / 40 = 2.4m.",
       ],
     },
     {
@@ -87,7 +87,7 @@ const questions: Record<string, Question[]> = {
         "After stereo rectification, corresponding points in a stereo pair are guaranteed to lie on the same horizontal scanline, reducing the 2D matching problem to a 1D disparity search.",
       correctAnswer: "True",
       explanation:
-        "Stereo rectification applies homographic warps H_L and H_R to both images so that epipolar lines become horizontal rows. For any point pₗ = (x, y) in the left image, its correspondence in the right image must lie at (x − d, y) for some disparity d ≥ 0. This reduces stereo matching from searching a 2D neighbourhood to a 1D search along the same row, enabling efficient dynamic programming or cost-volume methods.",
+        "Stereo rectification applies homographic warps H_L and H_R to both images so that epipolar lines become horizontal rows. For any point pₗ = (x, y) in the left image, its correspondence in the right image must lie at (x − d, y) for some disparity d \\geq 0. This reduces stereo matching from searching a 2D neighbourhood to a 1D search along the same row, enabling efficient dynamic programming or cost-volume methods.",
       hints: [
         "The epipolar constraint restricts correspondences to a line. After rectification, that line is horizontal (same row).",
         "Searching only along row y in the right image for a point at row y in the left image reduces search space from O(WH) to O(W).",
@@ -100,17 +100,17 @@ const questions: Record<string, Question[]> = {
       question:
         "GwcNet (Group-wise Correlation) builds its cost volume by computing group-wise dot products between left and right feature maps. How does group-wise correlation improve over the concatenation cost volume in DispNet?",
       options: [
-        "Group-wise correlation divides feature channels into G groups and computes inner products within each group across disparity hypotheses, producing a compact C/G × D cost volume that captures feature similarity directly — unlike concatenation (2C × D) which requires the 3D CNN to learn similarity from stacked features implicitly",
-        "Group-wise correlation computes the full C×C feature cross-correlation matrix at each disparity, giving richer matching signals than concatenation at the cost of higher memory",
+        "Group-wise correlation divides feature channels into G groups and computes inner products within each group across disparity hypotheses, producing a compact C/G \\times D cost volume that captures feature similarity directly — unlike concatenation (2C \\times D) which requires the 3D CNN to learn similarity from stacked features implicitly",
+        "Group-wise correlation computes the full C\\timesC feature cross-correlation matrix at each disparity, giving richer matching signals than concatenation at the cost of higher memory",
         "Group-wise correlation replaces the 3D cost volume with a 2D attention map, eliminating the need for 3D convolutions",
         "Group-wise correlation uses a binary similarity measure (Hamming distance) between binary feature codes, reducing cost volume computation to bitwise operations",
       ],
       correctAnswer: 0,
       explanation:
-        "DispNet concatenates left and right features → 2C×D cost volume; the 3D encoder must learn what constitutes a match. GwcNet splits C features into G groups, computes dot products within each group at each disparity: g_wc(d)=\\Sigma_{g=1}^{G} \\phi_g(x_l)·\\phi_g(x_r−d). This C/G×D volume explicitly encodes matching similarity (high inner product = good match) rather than raw feature values, improving both accuracy and memory efficiency vs. concatenation.",
+        "DispNet concatenates left and right features \\to 2C\\timesD cost volume; the 3D encoder must learn what constitutes a match. GwcNet splits C features into G groups, computes dot products within each group at each disparity: g_wc(d)=\\Sigma_{g=1}^{G} \\phi_g(x_l)\\cdot\\phi_g(x_r−d). This C/G\\timesD volume explicitly encodes matching similarity (high inner product = good match) rather than raw feature values, improving both accuracy and memory efficiency vs. concatenation.",
       hints: [
         "Dot product directly measures feature agreement — does concatenation encode this or leave it to the network to discover?",
-        "C channels split into G groups → each group produces 1 scalar per disparity → total C/G scalars per disparity.",
+        "C channels split into G groups \\to each group produces 1 scalar per disparity \\to total C/G scalars per disparity.",
       ],
     },
   ],
@@ -179,14 +179,14 @@ const questions: Record<string, Question[]> = {
       question:
         "What distinguishes metric depth from relative (affine-invariant) depth in monocular estimation, and why does the distinction matter for autonomous driving?",
       options: [
-        "Metric depth provides absolute distances in meters recoverable without any additional constraints; relative depth only recovers depth up to an unknown scale s and shift t (D_metric = s·D_relative + t), making relative depth insufficient for obstacle distance estimation in AV applications",
+        "Metric depth provides absolute distances in meters recoverable without any additional constraints; relative depth only recovers depth up to an unknown scale s and shift t (D_metric = s\\cdotD_relative + t), making relative depth insufficient for obstacle distance estimation in AV applications",
         "Metric depth is computed from stereo cameras while relative depth is computed from monocular cameras exclusively",
         "Metric depth uses LiDAR ground truth while relative depth uses human annotations",
         "Metric depth is per-pixel while relative depth is per-object bounding box only",
       ],
       correctAnswer: 0,
       explanation:
-        'Relative (affine-invariant) depth methods (MiDaS, DPT) predict depth up to unknown scale s and shift t; evaluation aligns predictions to GT using least-squares (D_metric = s·D_pred + t). Metric methods (ZoeDepth, UniDepth, Depth Pro) predict absolute depth in meters without any alignment. AVs need to know "the car ahead is 3.2m away", not just "it is closer than the building" — requiring metric depth.',
+        'Relative (affine-invariant) depth methods (MiDaS, DPT) predict depth up to unknown scale s and shift t; evaluation aligns predictions to GT using least-squares (D_metric = s\\cdotD_pred + t). Metric methods (ZoeDepth, UniDepth, Depth Pro) predict absolute depth in meters without any alignment. AVs need to know "the car ahead is 3.2m away", not just "it is closer than the building" — requiring metric depth.',
       hints: [
         "Relative depth: you need to scale/shift predictions to match any absolute reference. Metric depth does not.",
         "Self-supervised monocular methods are inherently relative — absolute scale requires external constraints (stereo, known height, etc.).",
@@ -220,7 +220,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "UniDepth predicts 3D points in a pseudo-spherical space (rays × depth), jointly outputting intrinsics (fx, fy, cx, cy) from a camera prediction head and depth from a depth head. The pseudo-spherical representation isolates the camera model from depth estimation — predicted intrinsics are used to convert the 3D output to metric depth, enabling generalisation across cameras with different fields of view without providing intrinsics at inference.",
+        "UniDepth predicts 3D points in a pseudo-spherical space (rays \\times depth), jointly outputting intrinsics (fx, fy, cx, cy) from a camera prediction head and depth from a depth head. The pseudo-spherical representation isolates the camera model from depth estimation — predicted intrinsics are used to convert the 3D output to metric depth, enabling generalisation across cameras with different fields of view without providing intrinsics at inference.",
       hints: [
         "If the model can predict what camera was used (focal length), it can apply the correct scale without external calibration.",
         "Separating ray direction (from predicted intrinsics) from depth magnitude (from depth head) decouples camera model from depth.",
@@ -293,17 +293,17 @@ const questions: Record<string, Question[]> = {
       question:
         "NeRF\'s volume rendering integral computes pixel colour C(r) along ray r(t) = o + td. Which expression correctly states the discrete approximation used in practice?",
       options: [
-        "C(r) = \\Sigmaᵢ Tᵢ (1 − exp(−\\sigmaᵢ\\deltaᵢ)) cᵢ, where Tᵢ = exp(−\\Sigmaⱼ<ᵢ \\sigmaⱼ\\deltaⱼ) is accumulated transmittance and \\deltaᵢ is the distance between adjacent samples",
-        "C(r) = \\Sigmaᵢ \\sigmaᵢ cᵢ / \\Sigmaᵢ \\sigmaᵢ, a weighted average of sample colours by density",
-        "C(r) = cₙ where n = argmax \\sigmaᵢ, the colour of the densest sample along the ray",
-        "C(r) = \\Sigmaᵢ exp(−\\sigmaᵢ) cᵢ, where higher density means lower contribution",
+        "C(r) = \\Sigma\\_i T\\_i (1 − exp(−\\sigma\\_i\\delta\\_i)) c\\_i, where T\\_i = exp(−\\Sigma\\_j<\\_i \\sigma\\_j\\delta\\_j) is accumulated transmittance and \\delta\\_i is the distance between adjacent samples",
+        "C(r) = \\Sigma\\_i \\sigma\\_i c\\_i / \\Sigma\\_i \\sigma\\_i, a weighted average of sample colours by density",
+        "C(r) = c\\_n where n = argmax \\sigma\\_i, the colour of the densest sample along the ray",
+        "C(r) = \\Sigma\\_i exp(−\\sigma\\_i) c\\_i, where higher density means lower contribution",
       ],
       correctAnswer: 0,
       explanation:
-        "The NeRF volume rendering equation is C(r) = ∫ T(t)\\sigma(r(t))c(r(t),d)dt where T(t) = exp(−∫₀ᵗ \\sigma(r(s))ds). The discrete form: C(r) = \\Sigmaᵢ Tᵢ \\alphaᵢ cᵢ, with \\alphaᵢ = 1−exp(−\\sigmaᵢ\\deltaᵢ) (opacity at sample i) and Tᵢ = \\Piⱼ<ᵢ(1−\\alphaⱼ) (transmittance reaching sample i). This is the standard Porter-Duff alpha compositing formula applied along the ray.",
+        "The NeRF volume rendering equation is C(r) = \\int T(t)\\sigma(r(t))c(r(t),d)dt where T(t) = exp(−\\int\\_0\\^t \\sigma(r(s))ds). The discrete form: C(r) = \\Sigma\\_i T\\_i \\alpha\\_i c\\_i, with \\alpha\\_i = 1−exp(−\\sigma\\_i\\delta\\_i) (opacity at sample i) and T\\_i = \\Pi\\_j<\\_i(1−\\alpha\\_j) (transmittance reaching sample i). This is the standard Porter-Duff alpha compositing formula applied along the ray.",
       hints: [
-        "Tᵢ represents the fraction of light that passes through all samples before i without being absorbed.",
-        "\\alphaᵢ = 1−exp(−\\sigmaᵢ\\deltaᵢ) is the probability of the ray hitting a particle in interval \\deltaᵢ — the discrete opacity.",
+        "T\\_i represents the fraction of light that passes through all samples before i without being absorbed.",
+        "\\alpha\\_i = 1−exp(−\\sigma\\_i\\delta\\_i) is the probability of the ray hitting a particle in interval \\delta\\_i — the discrete opacity.",
       ],
     },
     {
@@ -320,10 +320,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For a single scalar, \\gamma produces 2L values (sin and cos at each of L frequency levels). With L=10: 2×10=20 values. For a 3D point (x,y,z), NeRF applies \\gamma independently to each coordinate and concatenates, giving 3×2L = 60 values. The full input to the MLP also appends the original coordinates: 3 + 60 = 63. For viewing direction (2D spherical), L=4 gives 2×2×4 = 16 + 2 = 18 values.",
+        "For a single scalar, \\gamma produces 2L values (sin and cos at each of L frequency levels). With L=10: 2\\times10=20 values. For a 3D point (x,y,z), NeRF applies \\gamma independently to each coordinate and concatenates, giving 3\\times2L = 60 values. The full input to the MLP also appends the original coordinates: 3 + 60 = 63. For viewing direction (2D spherical), L=4 gives 2\\times2\\times4 = 16 + 2 = 18 values.",
       hints: [
-        "Two components (sin and cos) per frequency level × L levels = 2L values per scalar input.",
-        "A 3D point uses \\gamma on each of x, y, z: 3 × (2×10) = 60, plus the raw input = 63.",
+        "Two components (sin and cos) per frequency level \\times L levels = 2L values per scalar input.",
+        "A 3D point uses \\gamma on each of x, y, z: 3 \\times (2\\times10) = 60, plus the raw input = 63.",
       ],
     },
     {
@@ -333,16 +333,16 @@ const questions: Record<string, Question[]> = {
       question:
         'NeRF uses a hierarchical sampling strategy with "coarse" and "fine" networks. After evaluating the coarse network at Nc=64 uniform samples to get density estimates, how does the fine network decide where to place its Nf=128 additional samples?',
       options: [
-        "The coarse density estimates define a piecewise constant PDF along the ray; inverse CDF sampling (importance sampling) draws Nf samples proportional to the expected colour contribution Tᵢ\\alphaᵢ — concentrating samples near surfaces",
+        "The coarse density estimates define a piecewise constant PDF along the ray; inverse CDF sampling (importance sampling) draws Nf samples proportional to the expected colour contribution T\\_i\\alpha\\_i — concentrating samples near surfaces",
         "The fine network samples uniformly between the two coarse samples with the highest density",
         "The fine network uses the coarse network\'s output as a learned proposal and samples by gradient ascent on density",
         "The fine network always samples at the midpoints between adjacent coarse samples, doubling spatial resolution",
       ],
       correctAnswer: 0,
       explanation:
-        "After the coarse pass, NeRF normalises the per-sample weights wᵢ = Tᵢ\\alphaᵢ to form a probability distribution along the ray. Inverse-transform sampling draws Nf additional samples from this distribution (concentrated where wᵢ is high, i.e., near surfaces). The final fine render evaluates the fine MLP at all Nc+Nf samples. This concentrates computation near actual scene surfaces rather than in empty space.",
+        "After the coarse pass, NeRF normalises the per-sample weights w\\_i = T\\_i\\alpha\\_i to form a probability distribution along the ray. Inverse-transform sampling draws Nf additional samples from this distribution (concentrated where w\\_i is high, i.e., near surfaces). The final fine render evaluates the fine MLP at all Nc+Nf samples. This concentrates computation near actual scene surfaces rather than in empty space.",
       hints: [
-        "The coarse weights wᵢ = Tᵢ\\alphaᵢ represent each sample\'s contribution to the rendered colour — high weight = likely near a surface.",
+        "The coarse weights w\\_i = T\\_i\\alpha\\_i represent each sample\'s contribution to the rendered colour — high weight = likely near a surface.",
         "Inverse CDF sampling: sort uniform samples [0,1] through the CDF of the weight distribution to get denser samples near peaks.",
       ],
     },
@@ -356,17 +356,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Instant-NGP uses a multi-resolution hash encoding with L levels and hash tables of size T. If L=16 levels ranging from resolution 16 to 512, and T=2^19 entries per level, how many total trainable parameters does the hash encoding have (using 2 features per entry)?",
       options: [
-        "2^19 × 2 = 1M parameters (one level only)",
-        "16 × 2^19 × 2 = 16M parameters total across all levels",
-        "16 × 512² × 2 ≈ 8M (using full grid at finest resolution)",
-        "2^(19×16) parameters (exponential growth with levels)",
+        "2^19 \\times 2 = 1M parameters (one level only)",
+        "16 \\times 2^19 \\times 2 = 16M parameters total across all levels",
+        "16 \\times 512\\^2 \\times 2 \\approx 8M (using full grid at finest resolution)",
+        "2^(19\\times16) parameters (exponential growth with levels)",
       ],
       correctAnswer: 1,
       explanation:
-        "Each of the L=16 hash table levels has T=2^19 ≈ 524K entries, each storing F=2 features. Total = L × T × F = 16 × 524288 × 2 = 16,777,216 ≈ 16.8M parameters. This is far fewer than a full voxel grid at the finest resolution (512³ × 2 = 268M), yet achieves comparable quality because multi-resolution encoding with a small MLP is sufficient.",
+        "Each of the L=16 hash table levels has T=2^19 \\approx 524K entries, each storing F=2 features. Total = L \\times T \\times F = 16 \\times 524288 \\times 2 = 16,777,216 \\approx 16.8M parameters. This is far fewer than a full voxel grid at the finest resolution (512\\^3 \\times 2 = 268M), yet achieves comparable quality because multi-resolution encoding with a small MLP is sufficient.",
       hints: [
-        "Total = L levels × T entries/level × F features/entry.",
-        "16 × 2^19 × 2 = 16 × 524288 × 2 ≈ 16.8M.",
+        "Total = L levels \\times T entries/level \\times F features/entry.",
+        "16 \\times 2^19 \\times 2 = 16 \\times 524288 \\times 2 \\approx 16.8M.",
       ],
     },
     {
@@ -377,7 +377,7 @@ const questions: Record<string, Question[]> = {
         "The multi-resolution hash encoding in Instant-NGP stores feature vectors at L levels with geometrically increasing spatial resolution from N_min to N_max, so that coarser levels capture low-frequency structure and finer levels capture high-frequency detail.",
       correctAnswer: "True",
       explanation:
-        "Instant-NGP uses L resolution levels with resolution Nₗ = ⌊N_min × b^l⌋ where growth factor b = (N_max/N_min)^(1/(L−1)). Typical values: N_min=16, N_max=512, L=16, giving b≈1.45. Features from all L levels are concatenated and fed to a small MLP (2 hidden layers of 64 units), enabling the model to represent both global structure (coarse grid) and fine details (fine grid).",
+        "Instant-NGP uses L resolution levels with resolution Nₗ = ⌊N_min \\times b^l⌋ where growth factor b = (N_max/N_min)^(1/(L−1)). Typical values: N_min=16, N_max=512, L=16, giving b\\approx1.45. Features from all L levels are concatenated and fed to a small MLP (2 hidden layers of 64 units), enabling the model to represent both global structure (coarse grid) and fine details (fine grid).",
       hints: [
         "Think of an image pyramid: coarse levels capture shape; fine levels capture texture.",
         "The MLP synthesises across all L levels, learning which frequencies contribute to each scene region.",
@@ -420,10 +420,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma's 9 entries can violate PSD during training. Decomposing \\Sigma = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.",
+        "A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma's 9 entries can violate PSD during training. Decomposing \\Sigma = R\\cdotS\\cdotS^T\\cdotR^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.",
       hints: [
         "A covariance matrix \\Sigma = A^T A is always PSD. What structure guarantees this while remaining differentiable?",
-        "Quaternion → rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.",
+        "Quaternion \\to rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.",
       ],
     },
     {
@@ -431,12 +431,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigmaᵢ cᵢ \\alphaᵢ \\Piⱼ<ᵢ (1 − \\alphaⱼ), where \\alphaᵢ = oᵢ · exp(−½(x−\\mu₂ᴅ)^T \\Sigma₂ᴅ⁻¹ (x−\\mu₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.",
+        "3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigma\\_i c\\_i \\alpha\\_i \\Pi\\_j<\\_i (1 − \\alpha\\_j), where \\alpha\\_i = o\\_i \\cdot exp(−½(x−\\mu\\_2ᴅ)^T \\Sigma\\_2ᴅ\\^{-1} (x−\\mu\\_2ᴅ)) evaluates the projected 2D Gaussian at pixel position x.",
       correctAnswer: "True",
       explanation:
-        "After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigmaᵢ cᵢ\\alphaᵢ\\Piⱼ<ᵢ(1−\\alphaⱼ). Here \\alphaᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.",
+        "After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigma\\_i c\\_i\\alpha\\_i\\Pi\\_j<\\_i(1−\\alpha\\_j). Here \\alpha\\_i = o\\_i\\cdotG\\_2ᴅ(x) is the product of learned opacity o\\_i and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.",
       hints: [
-        "Compare to NeRF\'s C(r) = \\Sigmaᵢ Tᵢ\\alphaᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.",
+        "Compare to NeRF\'s C(r) = \\Sigma\\_i T\\_i\\alpha\\_ic\\_i: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.",
         "Front-to-back ordering is achieved by sorting Gaussians by depth before rasterisation.",
       ],
     },
@@ -447,17 +447,17 @@ const questions: Record<string, Question[]> = {
       question:
         "What is the adaptive density control strategy in 3D Gaussian Splatting, and why is it necessary?",
       options: [
-        "Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alphaᵢ below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity",
+        "Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alpha\\_i below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity",
         "The number of Gaussians is fixed at initialisation and only their parameters (position, covariance, opacity, colour) are optimised throughout training",
         "Gaussians are densified by adding new ones at positions with high photometric loss, and merged when two Gaussians overlap (IoU > 0.9) to prevent redundancy",
         "A fixed densification schedule adds Gaussians every N iterations at random scene positions regardless of reconstruction quality",
       ],
       correctAnswer: 0,
       explanation:
-        "Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alphaᵢ < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.",
+        "Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alpha\\_i < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.",
       hints: [
         "High positional gradient magnitude signals that the Gaussian is being pulled in conflicting directions — it needs to split to resolve ambiguity.",
-        "Under-reconstruction (high loss region with small Gaussians) → clone; over-reconstruction (one Gaussian covers too much) → split.",
+        "Under-reconstruction (high loss region with small Gaussians) \\to clone; over-reconstruction (one Gaussian covers too much) \\to split.",
       ],
     },
   ],
@@ -470,14 +470,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Dynamic NeRF methods extend static NeRF to handle time-varying scenes. What fundamental change is needed to the input of the NeRF MLP?",
       options: [
-        "Adding a time coordinate t to the MLP input: f(x, y, z, t, \\theta, \\phi) → (r, g, b, \\sigma), so the radiance field is conditioned on time and can represent different scene states at different frames",
+        "Adding a time coordinate t to the MLP input: f(x, y, z, t, \\theta, \\phi) \\to (r, g, b, \\sigma), so the radiance field is conditioned on time and can represent different scene states at different frames",
         "Running a separate static NeRF for each video frame independently, then interpolating between frame-specific NeRFs at novel times",
         "Replacing the viewing direction with a temporal direction vector that encodes motion blur",
         'Adding a binary "moving/static" flag per 3D point predicted by a separate motion segmentation network',
       ],
       correctAnswer: 0,
       explanation:
-        "The simplest dynamic NeRF extension conditions the network on time t: f(\\gamma(x), \\gamma(t), d) → (c, \\sigma). More structured approaches like D-NeRF factor this as a canonical field + deformation: f_canonical(\\gamma(x + \\Deltax(x,t))) where \\Deltax is a learned deformation. Others (HexPlane, K-Planes) use 4D feature grids factored across space-time planes for efficiency.",
+        "The simplest dynamic NeRF extension conditions the network on time t: f(\\gamma(x), \\gamma(t), d) \\to (c, \\sigma). More structured approaches like D-NeRF factor this as a canonical field + deformation: f_canonical(\\gamma(x + \\Deltax(x,t))) where \\Deltax is a learned deformation. Others (HexPlane, K-Planes) use 4D feature grids factored across space-time planes for efficiency.",
       hints: [
         "Static NeRF: f(x,y,z,\\theta,\\phi). Adding t makes it time-aware: f(x,y,z,t,\\theta,\\phi).",
         "The scene changes over time — the MLP must receive time as a conditioning signal.",
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
         "D-NeRF models dynamic scenes by learning a deformation field \\Deltax = MLP_deform(\\gamma(x), \\gamma(t)) that maps query points from world space at time t back to a canonical space, then evaluating a canonical NeRF at x + \\Deltax.",
       correctAnswer: "True",
       explanation:
-        "D-NeRF uses two MLPs: (1) deformation MLP: (\\gamma(x), \\gamma(t)) → \\Deltax, predicting the displacement to map position x at time t to canonical space; (2) canonical NeRF: \\gamma(x + \\Deltax) → (c, \\sigma). Volume rendering composites colours and densities from the canonical field. This canonical-space approach is compact but requires the topology to remain fixed across time (no appearance/disappearance of scene parts).",
+        "D-NeRF uses two MLPs: (1) deformation MLP: (\\gamma(x), \\gamma(t)) \\to \\Deltax, predicting the displacement to map position x at time t to canonical space; (2) canonical NeRF: \\gamma(x + \\Deltax) \\to (c, \\sigma). Volume rendering composites colours and densities from the canonical field. This canonical-space approach is compact but requires the topology to remain fixed across time (no appearance/disappearance of scene parts).",
       hints: [
         'Canonical space is a fixed reference pose — all time steps are "undeformed" to it before colour/density lookup.',
         "The deformation field handles motion; the canonical NeRF handles appearance — a two-network factorisation.",
@@ -511,7 +511,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "HexPlane (Cao & Johnson, 2023) decomposes the 4D radiance field using 6 axis-aligned 2D planes: {XY, YZ, XZ} (pure spatial) + {XT, YT, ZT} (spatial-temporal). For a query (x,y,z,t), features from all 6 planes are sampled by projecting the query onto each plane\'s two axes, then element-wise multiplied (Hadamard product). This 6-plane product approximates the full 4D tensor at O(res²) cost instead of O(res⁴).",
+        "HexPlane (Cao & Johnson, 2023) decomposes the 4D radiance field using 6 axis-aligned 2D planes: {XY, YZ, XZ} (pure spatial) + {XT, YT, ZT} (spatial-temporal). For a query (x,y,z,t), features from all 6 planes are sampled by projecting the query onto each plane\'s two axes, then element-wise multiplied (Hadamard product). This 6-plane product approximates the full 4D tensor at O(res\\^2) cost instead of O(res\\^4).",
       hints: [
         "4D spacetime has C(4,2) = 6 axis pairs — one plane per pair: (x,y),(x,z),(y,z),(x,t),(y,t),(z,t).",
         "Multiplying plane features (Hadamard product) approximates 4D tensor decomposition, like CP/Tucker decomposition.",
@@ -616,16 +616,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Bundle adjustment minimizes which objective function over all camera poses {Rᵢ, tᵢ} and 3D point positions {Xⱼ}?",
+        "Bundle adjustment minimizes which objective function over all camera poses {R\\_i, t\\_i} and 3D point positions {X\\_j}?",
       options: [
-        "\\Sigmaᵢⱼ ||xᵢⱼ − \\pi(Rᵢ, tᵢ, Kᵢ, Xⱼ)||² summed over all observed feature point correspondences (i=image, j=point), where \\pi is the projection function mapping 3D points to 2D image coordinates",
-        "\\Sigmaᵢⱼ ||Xⱼ − Rᵢᵀ(Kᵢ⁻¹xᵢⱼ · dᵢⱼ − tᵢ)||², the 3D position error between triangulated and estimated points",
-        "\\Sigmaᵢⱼ (1 − cos(angle(Rᵢ Xⱼ + tᵢ, xᵢⱼ))), the angular error between observed and predicted ray directions",
-        "\\Sigmaᵢ ||log(RᵢRᵢ₋₁ᵀ)||² + \\Sigmaⱼ ||Xⱼ − X̄||², regularising camera rotation smoothness and point dispersion",
+        "\\Sigma\\_i\\_j ||x\\_i\\_j − \\pi(R\\_i, t\\_i, K\\_i, X\\_j)||\\^2 summed over all observed feature point correspondences (i=image, j=point), where \\pi is the projection function mapping 3D points to 2D image coordinates",
+        "\\Sigma\\_i\\_j ||X\\_j − R\\_i\\^T(K\\_i\\^{-1}x\\_i\\_j \\cdot d\\_i\\_j − t\\_i)||\\^2, the 3D position error between triangulated and estimated points",
+        "\\Sigma\\_i\\_j (1 − cos(angle(R\\_i X\\_j + t\\_i, x\\_i\\_j))), the angular error between observed and predicted ray directions",
+        "\\Sigma\\_i ||log(R\\_iR\\_i₋\\_1\\^T)||\\^2 + \\Sigma\\_j ||X\\_j − X̄||\\^2, regularising camera rotation smoothness and point dispersion",
       ],
       correctAnswer: 0,
       explanation:
-        "Bundle adjustment (Triggs et al. 2000) minimises total reprojection error: \\Sigmaᵢⱼ \\rho(||xᵢⱼ − \\pi(Rᵢ, tᵢ, Kᵢ, Xⱼ)||²) where \\rho is a robust kernel (e.g., Huber or Cauchy) to suppress outlier correspondences. \\pi is the full projection: \\pi(R,t,K,X) = K·(RX+t) followed by perspective division. Solved with Levenberg-Marquardt on the sparse Jacobian (sparsity comes from each observation involving only one camera and one point).",
+        "Bundle adjustment (Triggs et al. 2000) minimises total reprojection error: \\Sigma\\_i\\_j \\rho(||x\\_i\\_j − \\pi(R\\_i, t\\_i, K\\_i, X\\_j)||\\^2) where \\rho is a robust kernel (e.g., Huber or Cauchy) to suppress outlier correspondences. \\pi is the full projection: \\pi(R,t,K,X) = K\\cdot(RX+t) followed by perspective division. Solved with Levenberg-Marquardt on the sparse Jacobian (sparsity comes from each observation involving only one camera and one point).",
       hints: [
         "Reprojection error = distance in pixels between where we observed a feature and where the 3D point projects through the camera.",
         "The Jacobian of reprojection error w.r.t. all poses and points is sparse — each residual only involves one camera and one point.",
@@ -676,13 +676,13 @@ const questions: Record<string, Question[]> = {
         "What is the primary scalability challenge of traditional MVSNet-style cost volume methods, and how do methods like CasMVSNet address it?",
       options: [
         "The 3D cost volume grows linearly with the number of depth hypotheses and quadratically with image resolution, causing GPU memory issues for high-resolution inputs; CasMVSNet uses a coarse-to-fine cascade that progressively narrows the depth range, dramatically reducing memory at each stage",
-        "MVSNet requires O(N²) feature matching between all image pairs, scaling poorly to large image sets; CasMVSNet reduces this with approximate nearest-neighbor feature matching",
+        "MVSNet requires O(N\\^2) feature matching between all image pairs, scaling poorly to large image sets; CasMVSNet reduces this with approximate nearest-neighbor feature matching",
         "The cost volume aggregation with 3D convolutions is too slow for real-time use; CasMVSNet replaces 3D convolutions with 2D convolutions on flattened depth slices",
         "MVSNet is limited to 2 source views; CasMVSNet extends it to unlimited source views using attention pooling",
       ],
       correctAnswer: 0,
       explanation:
-        "A full-resolution cost volume with D depth hypotheses and H×W image resolution requires O(H×W×D) memory, which is prohibitive at high resolution; CasMVSNet builds cost volumes at multiple resolutions in a cascade, using coarse predictions to narrow the depth search range at each finer stage, reducing total memory and computation.",
+        "A full-resolution cost volume with D depth hypotheses and H\\timesW image resolution requires O(H\\timesW\\timesD) memory, which is prohibitive at high resolution; CasMVSNet builds cost volumes at multiple resolutions in a cascade, using coarse predictions to narrow the depth search range at each finer stage, reducing total memory and computation.",
       hints: [
         "Think about how much memory a 3D tensor with 192 depth planes at 1080p image resolution would need.",
         "A coarse-to-fine strategy first finds the approximate depth range, then refines within it at high resolution.",
@@ -761,7 +761,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The standard hand pose representation consists of 21 3D keypoints: 1 wrist + 4 joints per finger (MCP, PIP, DIP, fingertip) × 5 fingers; estimating these keypoints in 3D camera space is the primary task in hand pose benchmarks like FreiHAND and HO-3D.",
+        "The standard hand pose representation consists of 21 3D keypoints: 1 wrist + 4 joints per finger (MCP, PIP, DIP, fingertip) \\times 5 fingers; estimating these keypoints in 3D camera space is the primary task in hand pose benchmarks like FreiHAND and HO-3D.",
       hints: [
         "Think about how many joints a human hand has — count the knuckles per finger.",
         "Most pose estimation benchmarks define a canonical set of keypoints for comparison.",
@@ -867,17 +867,17 @@ const questions: Record<string, Question[]> = {
       question:
         "PointNet processes N input points and produces a global shape descriptor. In what order are its three key operations applied?",
       options: [
-        "(1) 3×3 input T-Net → (2) shared MLP per point → (3) 64×64 feature T-Net → (4) shared MLP per point → (5) global max pooling",
-        "(1) global max pooling → (2) shared MLP → (3) T-Net alignment → (4) per-point features",
-        "(1) KNN graph construction → (2) message passing → (3) global max pooling",
-        "(1) voxelisation → (2) 3D CNN → (3) global average pooling",
+        "(1) 3\\times3 input T-Net \\to (2) shared MLP per point \\to (3) 64\\times64 feature T-Net \\to (4) shared MLP per point \\to (5) global max pooling",
+        "(1) global max pooling \\to (2) shared MLP \\to (3) T-Net alignment \\to (4) per-point features",
+        "(1) KNN graph construction \\to (2) message passing \\to (3) global max pooling",
+        "(1) voxelisation \\to (2) 3D CNN \\to (3) global average pooling",
       ],
       correctAnswer: 0,
       explanation:
-        "PointNet architecture: (1) input transform (T-Net predicts 3×3 matrix, apply to raw points); (2) shared MLP: 64-64; (3) feature transform (T-Net predicts 64×64 matrix, apply to 64-dim features); (4) shared MLP: 64-128-1024; (5) global max pool over N points → 1024-dim global descriptor. The two T-Nets provide alignment invariance; max pooling provides permutation invariance.",
+        "PointNet architecture: (1) input transform (T-Net predicts 3\\times3 matrix, apply to raw points); (2) shared MLP: 64-64; (3) feature transform (T-Net predicts 64\\times64 matrix, apply to 64-dim features); (4) shared MLP: 64-128-1024; (5) global max pool over N points \\to 1024-dim global descriptor. The two T-Nets provide alignment invariance; max pooling provides permutation invariance.",
       hints: [
-        "Total = L levels × T entries/level × F features/entry.",
-        "16 × 2^19 × 2 = 16 × 524288 × 2 ≈ 16.8M.",
+        "Total = L levels \\times T entries/level \\times F features/entry.",
+        "16 \\times 2^19 \\times 2 = 16 \\times 524288 \\times 2 \\approx 16.8M.",
       ],
     },
     {
@@ -888,7 +888,7 @@ const questions: Record<string, Question[]> = {
         "PointNet++ improves over PointNet by hierarchically grouping local neighborhoods of points and applying a mini-PointNet within each group — analogous to how a CNN applies local filters at each spatial location before pooling.",
       correctAnswer: "True",
       explanation:
-        "PointNet++ Set Abstraction (SA) layers: (1) farthest point sampling selects M centroids from N points; (2) ball query groups K points within radius r around each centroid; (3) a mini-PointNet (shared MLP + max pool) encodes each local group into a C-dim feature. Stacking SA layers produces hierarchical feature abstraction: local geometry first, then progressively larger structures — just like CNN conv→pool stacks.",
+        "PointNet++ Set Abstraction (SA) layers: (1) farthest point sampling selects M centroids from N points; (2) ball query groups K points within radius r around each centroid; (3) a mini-PointNet (shared MLP + max pool) encodes each local group into a C-dim feature. Stacking SA layers produces hierarchical feature abstraction: local geometry first, then progressively larger structures — just like CNN conv\\topool stacks.",
       hints: [
         "PointNet processes all N points with global max pool — it cannot model local neighbourhoods.",
         "PointNet++ is to PointNet as a CNN is to a global average pooling classifier.",
@@ -899,19 +899,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "PointNet\'s feature transform T-Net predicts a 64×64 matrix applied to intermediate features. A regularisation term is added to the loss: L_reg = ||I − AAᵀ||²_F. What does this term enforce?",
+        "PointNet\'s feature transform T-Net predicts a 64\\times64 matrix applied to intermediate features. A regularisation term is added to the loss: L_reg = ||I − AA\\^T||\\^2_F. What does this term enforce?",
       options: [
-        "It encourages the predicted 64×64 transform matrix A to be approximately orthogonal (close to a rotation), preventing the high-dimensional feature transform from learning arbitrary distortions that would destabilise training",
+        "It encourages the predicted 64\\times64 transform matrix A to be approximately orthogonal (close to a rotation), preventing the high-dimensional feature transform from learning arbitrary distortions that would destabilise training",
         "It forces the transform matrix to be the identity, preventing the feature alignment from modifying features",
         "It ensures the L2 norm of A equals 1 (unit matrix norm) for stable gradient flow",
         "It regularises the weight norms of the T-Net\'s own MLP layers, not the predicted transform",
       ],
       correctAnswer: 0,
       explanation:
-        "L_reg = ||I − AAᵀ||²_F with weight 0.001 encourages A to be orthogonal: if A is orthogonal then AAᵀ = I and the loss is 0. Orthogonal transforms are length-preserving (isometries) — they rotate/reflect feature space without distorting distances. Without this constraint, the 64×64 transform can be ill-conditioned, causing training instability (much harder to optimise than the 3×3 input transform).",
+        "L_reg = ||I − AA\\^T||\\^2_F with weight 0.001 encourages A to be orthogonal: if A is orthogonal then AA\\^T = I and the loss is 0. Orthogonal transforms are length-preserving (isometries) — they rotate/reflect feature space without distorting distances. Without this constraint, the 64\\times64 transform can be ill-conditioned, causing training instability (much harder to optimise than the 3\\times3 input transform).",
       hints: [
-        "For an orthogonal matrix A: AAᵀ = I. The loss ||I − AAᵀ||²_F = 0 when A is perfectly orthogonal.",
-        "64×64 = 4096 unconstrained parameters is a lot — without regularisation, the transform can easily become ill-conditioned.",
+        "For an orthogonal matrix A: AA\\^T = I. The loss ||I − AA\\^T||\\^2_F = 0 when A is perfectly orthogonal.",
+        "64\\times64 = 4096 unconstrained parameters is a lot — without regularisation, the transform can easily become ill-conditioned.",
       ],
     },
   ],
@@ -922,7 +922,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "An outdoor LiDAR scene is voxelised at 0.1m resolution over a 200×200×4m volume (BEV extent × height). What fraction of the resulting voxels are typically non-empty with a 64-beam LiDAR producing ~100K points?",
+        "An outdoor LiDAR scene is voxelised at 0.1m resolution over a 200\\times200\\times4m volume (BEV extent \\times height). What fraction of the resulting voxels are typically non-empty with a 64-beam LiDAR producing ~100K points?",
       options: [
         "Nearly 100% — all voxels within the LiDAR range are filled",
         "About 1–5% — LiDAR points from a single sweep occupy only a tiny fraction of the total voxel grid",
@@ -931,9 +931,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Total voxels = (200/0.1) × (200/0.1) × (4/0.1) = 2000 × 2000 × 40 = 160M voxels. With ~100K LiDAR points and averaging ~3 points per occupied voxel, approximately 33K non-empty voxels ≈ 0.02% fill rate. Even accounting for multi-return density, occupancy rarely exceeds 5%. This extreme sparsity motivates sparse convolution (e.g., SpConv, MinkowskiEngine) which skips empty voxels entirely.",
+        "Total voxels = (200/0.1) \\times (200/0.1) \\times (4/0.1) = 2000 \\times 2000 \\times 40 = 160M voxels. With ~100K LiDAR points and averaging ~3 points per occupied voxel, approximately 33K non-empty voxels \\approx 0.02% fill rate. Even accounting for multi-return density, occupancy rarely exceeds 5%. This extreme sparsity motivates sparse convolution (e.g., SpConv, MinkowskiEngine) which skips empty voxels entirely.",
       hints: [
-        "Total voxels = (200/0.1)² × (4/0.1) = 2000² × 40 = 160M. 100K points / 160M voxels ≈ 0.06%.",
+        "Total voxels = (200/0.1)\\^2 \\times (4/0.1) = 2000\\^2 \\times 40 = 160M. 100K points / 160M voxels \\approx 0.06%.",
         "Dense 3D CNNs would compute at 160M locations; sparse conv computes only at ~33K occupied ones.",
       ],
     },
@@ -945,7 +945,7 @@ const questions: Record<string, Question[]> = {
         "VoxelNet first applies a Voxel Feature Encoding (VFE) layer that processes the variable number of points within each voxel using a shared MLP and element-wise max pooling, producing a fixed-length feature vector per voxel that is then processed by 3D convolutions.",
       correctAnswer: "True",
       explanation:
-        "VoxelNet VFE: (1) for each non-empty voxel, compute point-level features: for each point in the voxel, concatenate [x, y, z, r, \\Deltax, \\Deltay, \\Deltaz] where \\Delta are offsets from the voxel centroid; (2) shared MLP transforms each point to a 128-dim feature; (3) element-wise max pooling over all points in the voxel → 128-dim voxel feature. These fixed-size voxel features are scattered into a sparse 3D tensor for subsequent 3D CNN processing and final BEV detection.",
+        "VoxelNet VFE: (1) for each non-empty voxel, compute point-level features: for each point in the voxel, concatenate [x, y, z, r, \\Deltax, \\Deltay, \\Deltaz] where \\Delta are offsets from the voxel centroid; (2) shared MLP transforms each point to a 128-dim feature; (3) element-wise max pooling over all points in the voxel \\to 128-dim voxel feature. These fixed-size voxel features are scattered into a sparse 3D tensor for subsequent 3D CNN processing and final BEV detection.",
       hints: [
         "VFE is PointNet-style: shared MLP per point (order-invariant) + max pooling (permutation-invariant) within the voxel.",
         "The output is one fixed-length vector per non-empty voxel, regardless of how many points it contains.",
@@ -1002,7 +1002,7 @@ const questions: Record<string, Question[]> = {
         "Point Transformer (Zhao et al., 2021) uses a subtracted position encoding in its attention mechanism, computing attention weights based on the relative positions between points rather than absolute global positions.",
       correctAnswer: "True",
       explanation:
-        "Point Transformer computes attention weights using subtracted (relative) positional encodings \\gamma(pᵢ - pⱼ), ensuring that attention is invariant to global translation of the point cloud — a desirable inductive bias for 3D shape understanding where relative geometry matters more than absolute position.",
+        "Point Transformer computes attention weights using subtracted (relative) positional encodings \\gamma(p\\_i - p\\_j), ensuring that attention is invariant to global translation of the point cloud — a desirable inductive bias for 3D shape understanding where relative geometry matters more than absolute position.",
       hints: [
         "Think about why the absolute position of a chair in a room matters less than the relative position of its legs to its seat.",
         "Relative positional encoding makes the attention focus on local geometric relationships.",
@@ -1036,18 +1036,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "PointPillars uses vertical pillars instead of 3D voxels. If a scene spans 70m × 80m and pillar size is 0.16m × 0.16m, how many non-empty pillars (at most) does the BEV pseudo-image have?",
+        "PointPillars uses vertical pillars instead of 3D voxels. If a scene spans 70m \\times 80m and pillar size is 0.16m \\times 0.16m, how many non-empty pillars (at most) does the BEV pseudo-image have?",
       options: [
-        "437.5 × 500 = 218,750 pillars (70/0.16 × 80/0.16)",
-        "700 × 800 = 560,000 pillars (using 0.1m resolution)",
-        "350 × 400 = 140,000 pillars (using 0.2m resolution)",
+        "437.5 \\times 500 = 218,750 pillars (70/0.16 \\times 80/0.16)",
+        "700 \\times 800 = 560,000 pillars (using 0.1m resolution)",
+        "350 \\times 400 = 140,000 pillars (using 0.2m resolution)",
         "Unlimited — pillars are defined dynamically by occupied voxels",
       ],
       correctAnswer: 0,
       explanation:
-        "BEV grid size = (X_range / pillar_size) × (Y_range / pillar_size) = (70/0.16) × (80/0.16) = 437.5 × 500 ≈ 438 × 500 = 219,000 total pillar positions. In practice, only ~5–10% are non-empty (occupied by LiDAR points). These non-empty pillars are processed by a shared PointNet-style encoder, scattered into a 2D pseudo-image, then processed by a standard 2D CNN backbone and SSD-style detection head.",
+        "BEV grid size = (X_range / pillar_size) \\times (Y_range / pillar_size) = (70/0.16) \\times (80/0.16) = 437.5 \\times 500 \\approx 438 \\times 500 = 219,000 total pillar positions. In practice, only ~5–10% are non-empty (occupied by LiDAR points). These non-empty pillars are processed by a shared PointNet-style encoder, scattered into a 2D pseudo-image, then processed by a standard 2D CNN backbone and SSD-style detection head.",
       hints: [
-        "Grid dimensions = (scene extent) / (pillar resolution). 70/0.16 ≈ 438, 80/0.16 = 500.",
+        "Grid dimensions = (scene extent) / (pillar resolution). 70/0.16 \\approx 438, 80/0.16 = 500.",
         "Outdoor LiDAR scenes are sparse — most pillar positions in the grid have no points.",
       ],
     },
@@ -1079,7 +1079,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        'PV-RCNN second stage: (1) sample a regular 6×6×6 grid of points inside each 3D proposal box; (2) RoI-grid pooling aggregates features from nearby "keypoints" (downsampled raw-point features saved from the backbone) using set abstraction at each grid point; (3) an MLP over all grid-point features predicts refined (dx, dy, dz, dw, dl, dh, d\\theta) and class confidence. This fine-grained geometric feature aggregation inside proposals recovers localisation accuracy that coarse voxel features miss.',
+        'PV-RCNN second stage: (1) sample a regular 6\\times6\\times6 grid of points inside each 3D proposal box; (2) RoI-grid pooling aggregates features from nearby "keypoints" (downsampled raw-point features saved from the backbone) using set abstraction at each grid point; (3) an MLP over all grid-point features predicts refined (dx, dy, dz, dw, dl, dh, d\\theta) and class confidence. This fine-grained geometric feature aggregation inside proposals recovers localisation accuracy that coarse voxel features miss.',
       hints: [
         "The first stage (voxel backbone + BEV head) gives coarse proposals; the second stage refines them using fine-grained point features.",
         "RoI-grid pooling is the 3D equivalent of RoIAlign in Mask R-CNN — extracting fine features from within a proposed region.",
@@ -1118,7 +1118,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "RandLA-Net uses random sampling (replacing expensive FPS) for efficiency on point clouds with millions of points, and compensates for random sampling\'s quality loss with an attentive feature aggregation module that captures rich local geometry — achieving state-of-the-art accuracy on large-scale datasets like Semantic3D and SemanticKITTI.",
       hints: [
-        "Farthest Point Sampling (FPS) is accurate but O(N²) — random sampling is O(1) but discards structure.",
+        "Farthest Point Sampling (FPS) is accurate but O(N\\^2) — random sampling is O(1) but discards structure.",
         "RandLA-Net\'s feature aggregation compensates for information loss from random sampling.",
       ],
     },
@@ -1295,15 +1295,15 @@ const questions: Record<string, Question[]> = {
       question: 'A key challenge for monocular neural avatar reconstruction (training from a single video) is separating lighting from surface reflectance. Why is this difficult and how do relightable avatar methods address it?',
       options: [
         'Lighting and reflectance are always entangled because cameras record RGB, not HDR light measurements',
-        'Under natural illumination, the observed colour = albedo × shading (lighting × surface normal). These are ambiguous from colour alone (infinite (albedo, lighting) pairs produce the same observed colour); relightable methods impose priors (smooth albedo, BRDF physics) and use shadow-free illumination changes across video frames to separate intrinsic components',
+        'Under natural illumination, the observed colour = albedo \\times shading (lighting \\times surface normal). These are ambiguous from colour alone (infinite (albedo, lighting) pairs produce the same observed colour); relightable methods impose priors (smooth albedo, BRDF physics) and use shadow-free illumination changes across video frames to separate intrinsic components',
         'Relightable avatars require a light stage with controlled illumination during capture, making monocular methods impossible',
         'The difficulty is purely computational: the NeRF must evaluate the rendering equation at each sample point, which is too slow for real-time training',
       ],
       correctAnswer: 1,
       explanation: 'Intrinsic decomposition (albedo/shading) from monocular video: two different (albedo, shading) pairs can produce identical observed RGB — inherently under-determined. Relightable NeRF methods (NeRFactor, NeuSG-relightable): impose smoothness regularisation on albedo (spatially smooth), use physically-based BRDF models, and exploit natural illumination variation across video frames (outdoor: sunlight angle changes; indoor: moving person causes shading changes). Result: disentangled albedo + BRDF + normal that can be relit under novel illumination.',
       hints: [
-        'Colour = albedo × lighting × geometry: three unknowns from one equation. Priors and multi-frame observations resolve the ambiguity.',
-        'Albedo smoothness: real surfaces are piecewise smooth. Large spatial variation in albedo → likely an artifact, not real reflectance.',
+        'Colour = albedo \\times lighting \\times geometry: three unknowns from one equation. Priors and multi-frame observations resolve the ambiguity.',
+        'Albedo smoothness: real surfaces are piecewise smooth. Large spatial variation in albedo \\to likely an artifact, not real reflectance.',
       ],
     },
   ],
@@ -1313,19 +1313,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        'The Lift-Splat-Shoot (LSS) method lifts camera images to BEV. In the "Lift" step, each pixel (u, v) with depth bin dₙ is lifted to a 3D point. What is the 3D coordinate in camera frame?',
+        'The Lift-Splat-Shoot (LSS) method lifts camera images to BEV. In the "Lift" step, each pixel (u, v) with depth bin d\\_n is lifted to a 3D point. What is the 3D coordinate in camera frame?',
       options: [
-        "(dₙ(u − cx)/fx, dₙ(v − cy)/fy, dₙ) — inverse perspective projection using focal lengths fx, fy and principal point cx, cy",
-        "(u/dₙ, v/dₙ, 1/dₙ) — normalised image coordinates divided by depth",
-        "(u · dₙ, v · dₙ, dₙ) — pixel coordinates multiplied by depth",
-        "(u − cx, v − cy, dₙ · fx) — pixel offsets scaled by depth and focal length",
+        "(d\\_n(u − cx)/fx, d\\_n(v − cy)/fy, d\\_n) — inverse perspective projection using focal lengths fx, fy and principal point cx, cy",
+        "(u/d\\_n, v/d\\_n, 1/d\\_n) — normalised image coordinates divided by depth",
+        "(u \\cdot d\\_n, v \\cdot d\\_n, d\\_n) — pixel coordinates multiplied by depth",
+        "(u − cx, v − cy, d\\_n \\cdot fx) — pixel offsets scaled by depth and focal length",
       ],
       correctAnswer: 0,
       explanation:
-        "Inverse perspective projection: given pixel (u,v) and depth dₙ, the 3D point in camera frame is X = dₙ(u−cx)/fx, Y = dₙ(v−cy)/fy, Z = dₙ. LSS predicts a categorical depth distribution over D discrete depth bins for each pixel, creates D feature vectors per pixel weighted by depth probabilities, and lifts all of them to 3D — producing a point cloud of (D×H×W) frustum features that is then splatted to BEV.",
+        "Inverse perspective projection: given pixel (u,v) and depth d\\_n, the 3D point in camera frame is X = d\\_n(u−cx)/fx, Y = d\\_n(v−cy)/fy, Z = d\\_n. LSS predicts a categorical depth distribution over D discrete depth bins for each pixel, creates D feature vectors per pixel weighted by depth probabilities, and lifts all of them to 3D — producing a point cloud of (D\\timesH\\timesW) frustum features that is then splatted to BEV.",
       hints: [
-        "The pinhole projection is p = K·P (3D→2D). The inverse (2D+depth→3D) is P = dₙ·K⁻¹·[u,v,1]ᵀ.",
-        "K⁻¹ applied to homogeneous pixel [u,v,1] gives the normalised direction; scaling by dₙ gives the 3D point.",
+        "The pinhole projection is p = K\\cdotP (3D\\to2D). The inverse (2D+depth\\to3D) is P = d\\_n\\cdotK\\^{-1}\\cdot[u,v,1]\\^T.",
+        "K\\^{-1} applied to homogeneous pixel [u,v,1] gives the normalised direction; scaling by d\\_n gives the 3D point.",
       ],
     },
     {
@@ -1336,7 +1336,7 @@ const questions: Record<string, Question[]> = {
         "BEVFusion achieves camera-LiDAR fusion in BEV space by lifting camera features to BEV using LSS (with predicted depth distributions) and projecting LiDAR features to BEV via voxelisation, then concatenating both modality features before shared detection heads.",
       correctAnswer: "True",
       explanation:
-        "BEVFusion (Liu et al. 2022): (1) camera features lifted to BEV via LSS depth prediction → camera BEV features; (2) LiDAR points voxelised and processed by sparse 3D CNN → LiDAR BEV features; (3) both BEV feature maps are spatially aligned and concatenated channel-wise; (4) shared 2D CNN backbone + detection heads (CenterPoint-style). This achieves tight geometric alignment because both modalities are in the same metric BEV coordinate frame.",
+        "BEVFusion (Liu et al. 2022): (1) camera features lifted to BEV via LSS depth prediction \\to camera BEV features; (2) LiDAR points voxelised and processed by sparse 3D CNN \\to LiDAR BEV features; (3) both BEV feature maps are spatially aligned and concatenated channel-wise; (4) shared 2D CNN backbone + detection heads (CenterPoint-style). This achieves tight geometric alignment because both modalities are in the same metric BEV coordinate frame.",
       hints: [
         "Think about how depth estimation enables cameras to perceive 3D structure — occupancy prediction extends this to the full 3D scene.",
         "Cross-attention allows 3D voxel queries to gather information from relevant 2D image regions.",
@@ -1349,14 +1349,14 @@ const questions: Record<string, Question[]> = {
       question:
         'What is the role of the "Splat" step in the Lift-Splat-Shoot (LSS) architecture for camera-to-BEV feature lifting?',
       options: [
-        'Splatting reduces the 3D frustum feature volume (H×W×D features per camera) to a 2D BEV grid by summing ("splatting") features into BEV grid cells, efficiently implemented using a cumulative sum trick (pillar pooling) that groups frustum points into the same BEV pillar',
+        'Splatting reduces the 3D frustum feature volume (H\\timesW\\timesD features per camera) to a 2D BEV grid by summing ("splatting") features into BEV grid cells, efficiently implemented using a cumulative sum trick (pillar pooling) that groups frustum points into the same BEV pillar',
         "Splatting computes the outer product of depth and image features to produce a 3D feature volume",
         "Splatting projects BEV features back to the camera image plane to compute a reconstruction loss",
         "Splatting applies bilinear interpolation to upsample low-resolution depth predictions to full image resolution",
       ],
       correctAnswer: 0,
       explanation:
-        "LSS Splat: each of the D·H·W lifted 3D points is assigned to a BEV (x,y) pillar based on its 3D coordinates (after camera→ego transformation). Features from all points in the same BEV pillar are summed. This is implemented using a CUDA cumulative-sum trick (sorting points by pillar index then performing parallel prefix sums) for efficiency — avoiding an explicit 3D feature volume materialisation. The result is a H_bev×W_bev×C BEV feature map.",
+        "LSS Splat: each of the D\\cdotH\\cdotW lifted 3D points is assigned to a BEV (x,y) pillar based on its 3D coordinates (after camera\\toego transformation). Features from all points in the same BEV pillar are summed. This is implemented using a CUDA cumulative-sum trick (sorting points by pillar index then performing parallel prefix sums) for efficiency — avoiding an explicit 3D feature volume materialisation. The result is a H_bev\\timesW_bev\\timesC BEV feature map.",
       hints: [
         "Splat = scatter features from 3D frustum points into 2D BEV grid cells by summing all contributions per cell.",
         "The cumulative sum trick avoids building the full 3D feature volume explicitly — it works directly on the sparse point list.",
@@ -1607,9 +1607,9 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'A transformer that attends over a set of reference images to predict density and color',
       ],
       correctAnswer: 1,
-      explanation: 'Instant-NGP (Müller et al., 2022): coordinates x are hashed at L ∈ {16..512K} resolution levels; each level maps x to a small feature vector via a hash function with collision resolution via gradient averaging. The resulting multi-resolution feature is fed to a tiny 2-layer MLP. Hash lookups are O(L) vs. MLP forward pass O(D·W²), enabling training convergence in seconds rather than hours.',
+      explanation: 'Instant-NGP (Müller et al., 2022): coordinates x are hashed at L \\in {16..512K} resolution levels; each level maps x to a small feature vector via a hash function with collision resolution via gradient averaging. The resulting multi-resolution feature is fed to a tiny 2-layer MLP. Hash lookups are O(L) vs. MLP forward pass O(D\\cdotW\\^2), enabling training convergence in seconds rather than hours.',
       hints: [
-        'Hash encoding: map (x,y,z) → integer → lookup trainable 2D feature vector. Collisions are handled implicitly by gradient averaging.',
+        'Hash encoding: map (x,y,z) \\to integer \\to lookup trainable 2D feature vector. Collisions are handled implicitly by gradient averaging.',
         'Multiresolution: coarse level captures large-scale structure; fine level captures details — same principle as image pyramids.',
       ],
     },
@@ -1621,7 +1621,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'When two spatial locations hash to the same table entry, their gradients are summed. Frequently queried positions (e.g., object surfaces visible from many training views) dominate the gradient signal, so the feature adapts to represent them well. Rarely queried positions (background, occluded regions) contribute fewer gradients and their collisions matter less. This implicit averaging makes collision-based hash encoding robust in practice.',
       hints: [
-        'High-frequency query positions get more gradient updates → their features win over rarely-queried collision partners.',
+        'High-frequency query positions get more gradient updates \\to their features win over rarely-queried collision partners.',
         'Collision is a form of parameter sharing — acceptable when the sharing is between positions with similar appearance.',
       ],
     },
@@ -1632,15 +1632,15 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       question: 'Compared to dense voxel grids, the multiresolution hash encoding in Instant-NGP achieves better memory efficiency because ___.',
       options: [
         'It uses 8-bit quantisation rather than 32-bit floats for all stored features',
-        'It covers a large spatial extent with small hash tables by accepting hash collisions — the total parameter count is T·F per resolution level (T = table size, F = feature dim) rather than N³·F for a voxel grid of side N',
+        'It covers a large spatial extent with small hash tables by accepting hash collisions — the total parameter count is T\\cdotF per resolution level (T = table size, F = feature dim) rather than N\\^3\\cdotF for a voxel grid of side N',
         'It stores only the surface voxels rather than the full 3D volume',
         'It uses a separate network per resolution level, which can be pruned independently',
       ],
       correctAnswer: 1,
-      explanation: 'Dense voxel grid: N³ entries for a grid of side N (N=512 → 134M entries). Hash table: T entries per level (T typically 2^14 to 2^24), shared across all space — T << N³. Total params: L·T·F (e.g., 16 levels × 2^19 entries × 2 features = 16M params). This covers the same volume with 8-100x fewer parameters, enabling fine-grained representations that would be prohibitively large as explicit grids.',
+      explanation: 'Dense voxel grid: N\\^3 entries for a grid of side N (N=512 \\to 134M entries). Hash table: T entries per level (T typically 2^14 to 2^24), shared across all space — T << N\\^3. Total params: L\\cdotT\\cdotF (e.g., 16 levels \\times 2^19 entries \\times 2 features = 16M params). This covers the same volume with 8-100x fewer parameters, enabling fine-grained representations that would be prohibitively large as explicit grids.',
       hints: [
-        'Voxel grid: O(N³) memory. Hash table: O(T) memory. The hash collapses 3D space into 1D, accepting collisions.',
-        'At resolution N=512: 512³ = 134M entries. Hash table: 2^19 = 524K entries per level.',
+        'Voxel grid: O(N\\^3) memory. Hash table: O(T) memory. The hash collapses 3D space into 1D, accepting collisions.',
+        'At resolution N=512: 512\\^3 = 134M entries. Hash table: 2^19 = 524K entries per level.',
       ],
     },
   ],
@@ -1682,15 +1682,15 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       question: 'The T-Net (Transformer Network) in PointNet predicts an input alignment matrix. What problem does this solve?',
       options: [
         'It enables PointNet to process point clouds of variable size by dynamically resizing the network',
-        'It predicts a 3×3 (or 64×64) transformation matrix applied to input points (or intermediate features) to make the network invariant to rigid 3D transformations — regularised to be close to a rotation matrix via an L2 penalty on (I − TT^T)',
+        'It predicts a 3\\times3 (or 64\\times64) transformation matrix applied to input points (or intermediate features) to make the network invariant to rigid 3D transformations — regularised to be close to a rotation matrix via an L2 penalty on (I − TT^T)',
         'It is a self-attention mechanism that attends to the most informative points before max-pooling',
         'It transforms the point cloud from world coordinates to camera coordinates using a predicted extrinsic matrix',
       ],
       correctAnswer: 1,
-      explanation: 'T-Net: a mini-PointNet that predicts a 3×3 matrix applied to input xyz (for rotation/reflection invariance) or a 64×64 matrix applied to intermediate features (for feature-space alignment). Regularisation: L_reg = ||I − TT^T||_F² encourages T to be orthogonal. This makes PointNet approximately invariant to rigid transformations of the input point cloud, improving generalisation.',
+      explanation: 'T-Net: a mini-PointNet that predicts a 3\\times3 matrix applied to input xyz (for rotation/reflection invariance) or a 64\\times64 matrix applied to intermediate features (for feature-space alignment). Regularisation: L_reg = ||I − TT^T||_F\\^2 encourages T to be orthogonal. This makes PointNet approximately invariant to rigid transformations of the input point cloud, improving generalisation.',
       hints: [
         'Without T-Net: a rotated point cloud produces different features. With T-Net: T "un-rotates" the cloud before processing.',
-        'Feature-space T-Net (64×64): regularisation is crucial because unconstrained 64×64 matrices can destroy information.',
+        'Feature-space T-Net (64\\times64): regularisation is crucial because unconstrained 64\\times64 matrices can destroy information.',
       ],
     },
   ],
@@ -1707,9 +1707,9 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'Applying PointNet directly to the entire point cloud without any spatial partitioning',
       ],
       correctAnswer: 1,
-      explanation: 'VoxelNet (Zhou & Tuia, 2018): (1) divide 3D space into voxels; (2) for each non-empty voxel, randomly sample ≤T points and encode with VFE layers (element-wise operations + max-pool); (3) stack voxel features into a sparse 3D tensor; (4) apply a 3D sparse convolutional backbone; (5) BEV projection → 2D RPN for 3D bounding box regression. VFE enables variable-size point sets within each voxel.',
+      explanation: 'VoxelNet (Zhou & Tuia, 2018): (1) divide 3D space into voxels; (2) for each non-empty voxel, randomly sample \\leqT points and encode with VFE layers (element-wise operations + max-pool); (3) stack voxel features into a sparse 3D tensor; (4) apply a 3D sparse convolutional backbone; (5) BEV projection \\to 2D RPN for 3D bounding box regression. VFE enables variable-size point sets within each voxel.',
       hints: [
-        'VFE layer: pointwise MLP → element-wise max-pool → concatenate individual and pooled features. Same principle as PointNet.',
+        'VFE layer: pointwise MLP \\to element-wise max-pool \\to concatenate individual and pooled features. Same principle as PointNet.',
         'Sparse convolution: only compute on non-empty voxels — critical efficiency gain since LiDAR point clouds are sparse.',
       ],
     },
@@ -1721,7 +1721,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'CenterPoint (Yin et al., 2021): a centre-based detection head predicts a BEV heatmap where peaks correspond to object centres (inspired by CenterNet for 2D). From each peak, separate regression heads predict height, size, rotation angle (yaw), and velocity. Centre-based detection avoids the anchor-design problem and naturally handles objects at any orientation without anchor alignment issues.',
       hints: [
-        'Anchor-based: need anchors at every location × every orientation × every size. Centre-based: just find the peak, then regress attributes.',
+        'Anchor-based: need anchors at every location \\times every orientation \\times every size. Centre-based: just find the peak, then regress attributes.',
         'Gaussian heatmap: the centre point is rendered as a 2D Gaussian in BEV — easy to detect via peak finding.',
       ],
     },
@@ -1739,8 +1739,8 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Camera-to-BEV transformation requires lifting 2D image features to 3D. LSS (Lift-Splat-Shoot) predicts a depth distribution per pixel and splats features along the ray. BEVFusion uses a unified BEV encoder that fuses lifted camera features and voxelised LiDAR features with spatial alignment. The depth uncertainty from cameras is the fundamental misalignment — LiDAR provides sparse but accurate depth; cameras provide dense but depth-ambiguous features.',
       hints: [
-        'Image pixel (u,v) + focal length → ray direction. But where along the ray is the object? Needs predicted depth.',
-        'LSS: predict depth probability d(z) for each pixel; splat feature f × d(z) into BEV at corresponding (x,y,z).',
+        'Image pixel (u,v) + focal length \\to ray direction. But where along the ray is the object? Needs predicted depth.',
+        'LSS: predict depth probability d(z) for each pixel; splat feature f \\times d(z) into BEV at corresponding (x,y,z).',
       ],
     },
   ],
@@ -1757,7 +1757,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'HRNet uses high resolution to avoid any form of data augmentation during training',
       ],
       correctAnswer: 1,
-      explanation: 'Standard pose estimators: image → downsample (high semantics, low spatial) → upsample → heatmap. Each downsample loses spatial precision. HRNet: start at full resolution, gradually add lower-resolution parallel streams, perform repeated multi-scale fusion — the high-resolution stream is never downsampled, preserving spatial accuracy. This is especially important for small joints (fingers, toes) where ±1 pixel matters.',
+      explanation: 'Standard pose estimators: image \\to downsample (high semantics, low spatial) \\to upsample \\to heatmap. Each downsample loses spatial precision. HRNet: start at full resolution, gradually add lower-resolution parallel streams, perform repeated multi-scale fusion — the high-resolution stream is never downsampled, preserving spatial accuracy. This is especially important for small joints (fingers, toes) where \\pm1 pixel matters.',
       hints: [
         'Encoder-decoder (HourGlass, SimpleBaseline): spatial information lost at the bottleneck must be recovered via skip connections or upsampling — imperfect.',
         'HRNet parallel streams: 1/4, 1/8, 1/16 resolution run simultaneously and exchange information via multi-scale fusion.',
@@ -1787,7 +1787,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'SMPL encodes body shape as a 3D voxel grid and pose as a sequence of transformations applied to the voxels',
       ],
       correctAnswer: 1,
-      explanation: 'SMPL (Loper et al., 2015): template mesh → shape blend shapes (B_S(\\beta) = \\Sigma_n \\beta_n S_n) → pose blend shapes (B_P(\\theta) = \\Sigma_k (R_k − R*_k) P_k) → LBS (rotate each vertex by its bone\'s weighted transformation). The pose blend shapes B_P correct LBS artifacts (e.g., collapsing at bent elbows). Result: a differentiable function mapping 72+10 parameters to a 6890-vertex mesh, enabling gradient-based fitting and neural network integration.',
+      explanation: 'SMPL (Loper et al., 2015): template mesh \\to shape blend shapes (B_S(\\beta) = \\Sigma_n \\beta_n S_n) \\to pose blend shapes (B_P(\\theta) = \\Sigma_k (R_k − R*_k) P_k) \\to LBS (rotate each vertex by its bone\'s weighted transformation). The pose blend shapes B_P correct LBS artifacts (e.g., collapsing at bent elbows). Result: a differentiable function mapping 72+10 parameters to a 6890-vertex mesh, enabling gradient-based fitting and neural network integration.',
       hints: [
         'LBS artifact: linear blending of rotations produces the "candy wrapper" effect (collapsing at large joint angles). Pose blend shapes fix this.',
         'SMPL is differentiable: gradients flow from vertex positions back through LBS and blend shapes to \\theta and \\beta.',
@@ -1832,14 +1832,14 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       question: 'Self-supervised 3D scene flow estimation trains without ground-truth flow labels. Which self-supervised objective is most commonly used?',
       options: [
         'Reconstruction loss: predict frame t+1 point cloud from frame t using estimated flow, penalise Chamfer distance between predicted and observed frame t+1',
-        'Cycle consistency: estimate flow from t→t+1 and t+1→t; enforce that composing them returns to the original point cloud',
+        'Cycle consistency: estimate flow from t\\tot+1 and t+1\\tot; enforce that composing them returns to the original point cloud',
         'Both Chamfer reconstruction and cycle consistency are commonly used together as complementary self-supervised objectives',
         'Contrastive learning: push flow features of matching points together and non-matching points apart',
       ],
       correctAnswer: 2,
-      explanation: 'Self-supervised scene flow: (1) Chamfer loss: p_i + f_i should be close to its nearest neighbour in frame t+1 (forward reconstruction); (2) Cycle loss: f_forward(p) + f_backward(p + f_forward(p)) ≈ 0 — the round-trip should return to the original. Both objectives are complementary: Chamfer ensures the warped cloud matches observations; cycle ensures forward and backward flows are consistent. Methods like Self-Point-Flow combine these.',
+      explanation: 'Self-supervised scene flow: (1) Chamfer loss: p_i + f_i should be close to its nearest neighbour in frame t+1 (forward reconstruction); (2) Cycle loss: f_forward(p) + f_backward(p + f_forward(p)) \\approx 0 — the round-trip should return to the original. Both objectives are complementary: Chamfer ensures the warped cloud matches observations; cycle ensures forward and backward flows are consistent. Methods like Self-Point-Flow combine these.',
       hints: [
-        'Chamfer: warp frame t by flow → should overlap with frame t+1. Penalises poor flow that doesn\'t match observations.',
+        'Chamfer: warp frame t by flow \\to should overlap with frame t+1. Penalises poor flow that doesn\'t match observations.',
         'Cycle: if you move forward then backward by the corresponding flow, you should return home. Enforces flow consistency.',
       ],
     },
@@ -1860,7 +1860,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       explanation: 'RAFT-Stereo (Lipson et al., 2021): build a 1D correlation volume between left features and all right features at each row (epipolar constraint means right features are searched along a horizontal line). The GRU-based update operator iteratively refines the disparity map d using a look-up in the correlation volume at the current d estimate. After K iterations (K=32 typical), the disparity map converges to sub-pixel accuracy.',
       hints: [
         'Stereo constraint: corresponding points in left/right images lie on the same horizontal epipolar line — search is 1D, not 2D.',
-        'Disparity d: left pixel (u,v) corresponds to right pixel (u−d, v). Depth Z = f·B/d where f=focal length, B=baseline.',
+        'Disparity d: left pixel (u,v) corresponds to right pixel (u−d, v). Depth Z = f\\cdotB/d where f=focal length, B=baseline.',
       ],
     },
     {
@@ -1869,9 +1869,9 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Monocular depth estimation is an ill-posed problem (scale ambiguous), while stereo depth estimation provides metric (absolute) depth because the known stereo baseline converts disparity to physical distance.',
       correctAnswer: 'True',
-      explanation: 'Stereo: depth Z = f·B/d where B (baseline = distance between cameras) and f (focal length) are known from calibration. Disparity d is measured in pixels. Result: metric depth in metres. Monocular: a scene scaled by \\lambda produces the same image for any \\lambda — depth is only recoverable up to scale. Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
+      explanation: 'Stereo: depth Z = f\\cdotB/d where B (baseline = distance between cameras) and f (focal length) are known from calibration. Disparity d is measured in pixels. Result: metric depth in metres. Monocular: a scene scaled by \\lambda produces the same image for any \\lambda — depth is only recoverable up to scale. Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
       hints: [
-        'Stereo baseline B: cameras are 6cm apart → B = 0.06m. This physical constant converts relative disparity to absolute depth.',
+        'Stereo baseline B: cameras are 6cm apart \\to B = 0.06m. This physical constant converts relative disparity to absolute depth.',
         'Monocular scale ambiguity: a small close object and a large far object can look identical in a single image.',
       ],
     },
@@ -1887,10 +1887,10 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'Stereo models require ground-truth depth for training and cannot be adapted without retraining from scratch',
       ],
       correctAnswer: 1,
-      explanation: 'Stereo domain generalisation: Z = f·B/d means the disparity value for a 10m object changes if f or B changes. A model trained on KITTI (B=0.54m) applied to a short-baseline phone stereo (B=6mm) sees 90x smaller disparities for the same scene — completely out of distribution. Solutions: normalise disparity by (f·B) during training/inference; train with diverse synthetic datasets varying B and f; meta-learning across camera configurations.',
+      explanation: 'Stereo domain generalisation: Z = f\\cdotB/d means the disparity value for a 10m object changes if f or B changes. A model trained on KITTI (B=0.54m) applied to a short-baseline phone stereo (B=6mm) sees 90x smaller disparities for the same scene — completely out of distribution. Solutions: normalise disparity by (f\\cdotB) during training/inference; train with diverse synthetic datasets varying B and f; meta-learning across camera configurations.',
       hints: [
-        'KITTI baseline 54cm, phone stereo baseline 6mm = 90x difference. Same real-world depth → very different disparity values.',
-        'Normalised disparity: d_norm = d / (f·B) is scale-invariant. Training on d_norm generalises across camera rigs.',
+        'KITTI baseline 54cm, phone stereo baseline 6mm = 90x difference. Same real-world depth \\to very different disparity values.',
+        'Normalised disparity: d_norm = d / (f\\cdotB) is scale-invariant. Training on d_norm generalises across camera rigs.',
       ],
     },
   ],
@@ -1919,10 +1919,10 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'One3D and Zero123 demonstrate zero-shot novel view synthesis: given a single image, they generate the object from arbitrary viewpoints by fine-tuning a diffusion model to be conditioned on camera pose.',
       correctAnswer: 'True',
-      explanation: 'Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) → target view pairs. At inference: given a single input image and a target (\\Deltaazimuth, \\Deltaelevation, \\Deltadistance), generate the novel view. The model learns the mapping from image appearance + camera geometry to novel view appearance — enabling arbitrary view synthesis from a single image without 3D reconstruction.',
+      explanation: 'Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) \\to target view pairs. At inference: given a single input image and a target (\\Deltaazimuth, \\Deltaelevation, \\Deltadistance), generate the novel view. The model learns the mapping from image appearance + camera geometry to novel view appearance — enabling arbitrary view synthesis from a single image without 3D reconstruction.',
       hints: [
-        'Training data: synthetic 3D objects rendered from multiple poses → (source view, relative pose) → target view pairs.',
-        'At test time: feed a real-world photo + desired camera pose → the model imagines the novel view.',
+        'Training data: synthetic 3D objects rendered from multiple poses \\to (source view, relative pose) \\to target view pairs.',
+        'At test time: feed a real-world photo + desired camera pose \\to the model imagines the novel view.',
       ],
     },
     {
@@ -1939,7 +1939,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Point-E: Stage 1 generates a 1024-point coloured point cloud from a text-conditioned image synthesised from the text (using a text-to-image model). Stage 2: given the coarse 4096-point cloud, a separate diffusion model generates a 16384-point fine-resolution cloud. The decomposition: coarse stage handles 3D semantics at low resolution (faster, more tractable); fine stage adds surface detail using the coarse cloud as conditioning. This is more tractable than direct high-resolution 3D diffusion.',
       hints: [
-        'Direct 16K-point 3D diffusion: very high-dimensional, slow to train. Coarse-to-fine: 1K → 16K is much more tractable.',
+        'Direct 16K-point 3D diffusion: very high-dimensional, slow to train. Coarse-to-fine: 1K \\to 16K is much more tractable.',
         'The coarse stage provides the 3D structure (shape, overall geometry); the fine stage adds surface texture and detail.',
       ],
     },
@@ -1969,10 +1969,10 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'easy',
       question: 'TSDF (Truncated Signed Distance Function) fusion represents a 3D surface by storing, at each voxel, the signed distance to the nearest surface — positive outside, negative inside — and the surface is extracted at the zero-crossing using Marching Cubes.',
       correctAnswer: 'True',
-      explanation: 'TSDF (Curless & Levoy, 1996; KinectFusion, 2011): each voxel stores (TSDF value, weight). For each depth frame, update TSDF: if the voxel is in front of the measured surface, TSDF > 0; behind, TSDF < 0; truncate at ±t. The surface is at TSDF = 0. Marching Cubes extracts the isosurface as a triangle mesh. Multiple depth frames are fused by weighted averaging, improving robustness to noise.',
+      explanation: 'TSDF (Curless & Levoy, 1996; KinectFusion, 2011): each voxel stores (TSDF value, weight). For each depth frame, update TSDF: if the voxel is in front of the measured surface, TSDF > 0; behind, TSDF < 0; truncate at \\pmt. The surface is at TSDF = 0. Marching Cubes extracts the isosurface as a triangle mesh. Multiple depth frames are fused by weighted averaging, improving robustness to noise.',
       hints: [
         'SDF zero-crossing: voxels where TSDF changes sign mark the surface — Marching Cubes finds this boundary.',
-        'Truncation: TSDF values beyond ±t (e.g., ±5cm) are set to ±1 — prevents distant empty space from influencing the surface.',
+        'Truncation: TSDF values beyond \\pmt (e.g., \\pm5cm) are set to \\pm1 — prevents distant empty space from influencing the surface.',
       ],
     },
     {
@@ -1990,7 +1990,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       explanation: 'ScanNet (Dai et al., 2017): 1513 RGB-D scans of indoor scenes, annotated with: (1) 3D ground-truth meshes from BundleFusion; (2) per-vertex semantic labels (20 classes: chair, table, sofa, etc.) from crowdsourced annotation; (3) per-instance labels. This enables evaluation of 3D semantic segmentation (PointNet++, PointTransformer), instance segmentation (3D-BoNet), and reconstruction (occupancy networks). The standard benchmark for indoor 3D scene understanding.',
       hints: [
         'RGB-D: RGB camera + depth camera (Kinect or similar) captures both colour and geometry simultaneously.',
-        '1513 scans × diverse room types (bedroom, living room, kitchen) = comprehensive indoor scene diversity.',
+        '1513 scans \\times diverse room types (bedroom, living room, kitchen) = comprehensive indoor scene diversity.',
       ],
     },
   ],
@@ -2007,7 +2007,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'A polar-to-Cartesian transformation of the concatenated surround-view image panorama',
       ],
       correctAnswer: 1,
-      explanation: 'BEVFormer (Li et al., 2022): initialise BEV queries on a grid; for each query at (x,y), project to each camera via camera geometry → get candidate 2D locations; use deformable DETR attention to sample and aggregate features from those image regions across multiple cameras and temporal frames. The transformer implicitly learns the depth and occlusion relationships without explicit depth estimation.',
+      explanation: 'BEVFormer (Li et al., 2022): initialise BEV queries on a grid; for each query at (x,y), project to each camera via camera geometry \\to get candidate 2D locations; use deformable DETR attention to sample and aggregate features from those image regions across multiple cameras and temporal frames. The transformer implicitly learns the depth and occlusion relationships without explicit depth estimation.',
       hints: [
         'BEV query (x,y): "what is at this ground location?" — projected to multiple cameras, features are aggregated via attention.',
         'Deformable attention: instead of attending to all image tokens (quadratic), attend to a small set of learned offsets around the projected location.',
@@ -2072,7 +2072,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       explanation: 'Object-compositional NeRF (uORF, ObjectNeRF): each object has its own NeRF. During rendering, a ray samples densities from all object NeRFs; compositing uses the alpha-compositing formula over objects along the ray. Spatial bounding boxes restrict each object NeRF to its region. This enables scene editing: move an object by translating its bounding box, swap objects by replacing one NeRF with another — without retraining the full scene.',
       hints: [
         'Object NeRF: trained on crops/masks of each object. Scene rendering: composite all objects via alpha-compositing.',
-        'Compositing formula: T_final = \\Pi_i (1 − \\sigma_i·\\Delta_i) — transmittance through all objects ordered front-to-back.',
+        'Compositing formula: T_final = \\Pi_i (1 − \\sigma_i\\cdot\\Delta_i) — transmittance through all objects ordered front-to-back.',
       ],
     },
     {
@@ -2089,7 +2089,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: 'Plenoxels: stores density and spherical harmonic colour coefficients at each voxel; lookup = trilinear interpolation (fast). TensoRF: decomposes the radiance field as a sum of low-rank vector-matrix outer products, enabling fast vectorised lookups. Both avoid costly MLP evaluations (which require many multiply-accumulate ops per sample). Early ray termination: once T(t) < \\epsilon (ray is almost fully opaque), stop sampling — saves 50-90% of samples on typical scenes.',
       hints: [
-        'MLP eval: input (x,y,z) → 8 layers of 256-dim activations → one density + colour. Voxel lookup: input (x,y,z) → trilinear interpolation → one scalar. The latter is 100x faster.',
+        'MLP eval: input (x,y,z) \\to 8 layers of 256-dim activations \\to one density + colour. Voxel lookup: input (x,y,z) \\to trilinear interpolation \\to one scalar. The latter is 100x faster.',
         'Early termination: a point behind an opaque object contributes near-zero to the final pixel — stop sampling there.',
       ],
     },
@@ -2107,21 +2107,21 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'Because storing R and S separately enables faster GPU matrix multiplication during rendering',
       ],
       correctAnswer: 0,
-      explanation: 'A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma\'s 9 entries can violate PSD during training. Decomposing \\Sigma = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.',
+      explanation: 'A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma\'s 9 entries can violate PSD during training. Decomposing \\Sigma = R\\cdotS\\cdotS^T\\cdotR^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.',
       hints: [
         'A covariance matrix \\Sigma = A^T A is always PSD. What structure guarantees this while remaining differentiable?',
-        'Quaternion → rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.',
+        'Quaternion \\to rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.',
       ],
     },
     {
       id: 'q-cv3d-kp41-2',
       type: 'true-false',
       difficulty: 'medium',
-      question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigmaᵢ cᵢ \\alphaᵢ \\Piⱼ<ᵢ (1 − \\alphaⱼ), where \\alphaᵢ = oᵢ · exp(−½(x−\\mu₂ᴅ)^T \\Sigma₂ᴅ⁻¹ (x−\\mu₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
+      question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigma\\_i c\\_i \\alpha\\_i \\Pi\\_j<\\_i (1 − \\alpha\\_j), where \\alpha\\_i = o\\_i \\cdot exp(−½(x−\\mu\\_2ᴅ)^T \\Sigma\\_2ᴅ\\^{-1} (x−\\mu\\_2ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
       correctAnswer: 'True',
-      explanation: 'After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigmaᵢ cᵢ\\alphaᵢ\\Piⱼ<ᵢ(1−\\alphaⱼ). Here \\alphaᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.',
+      explanation: 'After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigma\\_i c\\_i\\alpha\\_i\\Pi\\_j<\\_i(1−\\alpha\\_j). Here \\alpha\\_i = o\\_i\\cdotG\\_2ᴅ(x) is the product of learned opacity o\\_i and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.',
       hints: [
-        'Compare to NeRF\'s C(r) = \\Sigmaᵢ Tᵢ\\alphaᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
+        'Compare to NeRF\'s C(r) = \\Sigma\\_i T\\_i\\alpha\\_ic\\_i: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
         'Front-to-back ordering is achieved by sorting Gaussians by depth before rasterisation.',
       ],
     },
@@ -2131,16 +2131,16 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'hard',
       question: 'What is the adaptive density control strategy in 3D Gaussian Splatting, and why is it necessary?',
       options: [
-        'Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alphaᵢ below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity',
+        'Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alpha\\_i below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity',
         'The number of Gaussians is fixed at initialisation and only their parameters (position, covariance, opacity, colour) are optimised throughout training',
         'Gaussians are densified by adding new ones at positions with high photometric loss, and merged when two Gaussians overlap (IoU > 0.9) to prevent redundancy',
         'A fixed densification schedule adds Gaussians every N iterations at random scene positions regardless of reconstruction quality',
       ],
       correctAnswer: 0,
-      explanation: 'Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alphaᵢ < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.',
+      explanation: 'Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alpha\\_i < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.',
       hints: [
         'High positional gradient magnitude signals that the Gaussian is being pulled in conflicting directions — it needs to split to resolve ambiguity.',
-        'Under-reconstruction (high loss region with small Gaussians) → clone; over-reconstruction (one Gaussian covers too much) → split.',
+        'Under-reconstruction (high loss region with small Gaussians) \\to clone; over-reconstruction (one Gaussian covers too much) \\to split.',
       ],
     },
   ],
@@ -2152,7 +2152,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       question: 'Occupancy networks (Mescheder et al., 2019) represent 3D shapes as ___.',
       options: [
         'A set of oriented surface points (normal + position) generated by a conditional GAN',
-        'A continuous function f_\\theta(p, z) → [0,1] that predicts the probability of any 3D point p being inside the shape given latent code z, enabling mesh extraction at arbitrary resolution via Marching Cubes on the decision boundary f = 0.5',
+        'A continuous function f_\\theta(p, z) \\to [0,1] that predicts the probability of any 3D point p being inside the shape given latent code z, enabling mesh extraction at arbitrary resolution via Marching Cubes on the decision boundary f = 0.5',
         'A signed distance function stored in a fixed-resolution voxel grid',
         'A triangle mesh with a fixed number of vertices generated autoregressively',
       ],
@@ -2160,7 +2160,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       explanation: 'Occupancy networks: encode the input (e.g., image, point cloud) into latent z via an encoder; for any query point p in 3D, predict f_\\theta(p, z) = P(p is occupied). The surface is at f = 0.5. Marching Cubes extracts the mesh from this implicit function at any query resolution. This is resolution-free (unlike voxels) and differentiable (unlike explicit meshes with fixed topology).',
       hints: [
         'Implicit representation: the surface is defined implicitly as the decision boundary of a classifier, not as an explicit set of points.',
-        'Resolution-free: you can query the occupancy function at 16³ voxels for speed or 512³ for high-quality mesh extraction.',
+        'Resolution-free: you can query the occupancy function at 16\\^3 voxels for speed or 512\\^3 for high-quality mesh extraction.',
       ],
     },
     {
@@ -2206,16 +2206,16 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'hard',
       question: 'The NeRF volume rendering equation computes the expected color C(r) of a ray r(t) = o + td. Which expression is correct?',
       options: [
-        'C(r) = ∫ T(t) · \\sigma(r(t)) · c(r(t), d) dt, where T(t) = exp(−∫₀ᵗ \\sigma(r(s)) ds) is the accumulated transmittance from ray origin to t',
-        'C(r) = ∫ \\sigma(r(t)) · c(r(t), d) dt, where \\sigma is the volume density and c is the emitted color at each point',
-        'C(r) = ∑ᵢ \\alphaᵢ · cᵢ where \\alphaᵢ = 1 − exp(−\\sigmaᵢ·\\deltaᵢ) and the transmittance Tᵢ = ∏ⱼ<ᵢ (1 − \\alphaⱼ) is omitted',
-        'C(r) = softmax(\\sigma(r(t₁)), …, \\sigma(r(tₙ))) · c, using softmax to normalize opacity weights',
+        'C(r) = \\int T(t) \\cdot \\sigma(r(t)) \\cdot c(r(t), d) dt, where T(t) = exp(−\\int\\_0\\^t \\sigma(r(s)) ds) is the accumulated transmittance from ray origin to t',
+        'C(r) = \\int \\sigma(r(t)) \\cdot c(r(t), d) dt, where \\sigma is the volume density and c is the emitted color at each point',
+        'C(r) = \\sum\\_i \\alpha\\_i \\cdot c\\_i where \\alpha\\_i = 1 − exp(−\\sigma\\_i\\cdot\\delta\\_i) and the transmittance T\\_i = \\prod\\_j<\\_i (1 − \\alpha\\_j) is omitted',
+        'C(r) = softmax(\\sigma(r(t\\_1)), …, \\sigma(r(t\\_n))) \\cdot c, using softmax to normalize opacity weights',
       ],
       correctAnswer: 0,
-      explanation: 'NeRF (Mildenhall et al. 2020) models the scene as a continuous volumetric radiance field. The rendering integral is C(r) = ∫_{t_n}^{t_f} T(t)·\\sigma(r(t))·c(r(t),d) dt where T(t) = exp(−∫_{t_n}^t \\sigma(r(s))ds) is the accumulated transmittance — the probability that the ray travels from t_n to t without hitting any particle. In discretised form: Cˆ(r) = ∑ᵢ Tᵢ·(1−exp(−\\sigmaᵢ\\deltaᵢ))·cᵢ where Tᵢ = exp(−∑ⱼ<ᵢ \\sigmaⱼ\\deltaⱼ). This is the standard alpha-compositing formula from classical volume rendering.',
+      explanation: 'NeRF (Mildenhall et al. 2020) models the scene as a continuous volumetric radiance field. The rendering integral is C(r) = \\int_{t_n}^{t_f} T(t)\\cdot\\sigma(r(t))\\cdotc(r(t),d) dt where T(t) = exp(−\\int_{t_n}^t \\sigma(r(s))ds) is the accumulated transmittance — the probability that the ray travels from t_n to t without hitting any particle. In discretised form: Cˆ(r) = \\sum\\_i T\\_i\\cdot(1−exp(−\\sigma\\_i\\delta\\_i))\\cdotc\\_i where T\\_i = exp(−\\sum\\_j<\\_i \\sigma\\_j\\delta\\_j). This is the standard alpha-compositing formula from classical volume rendering.',
       hints: [
         'Transmittance T(t): the fraction of light that reaches point t unobstructed — multiply all previous absorption terms.',
-        'The discrete alpha values \\alphaᵢ = 1 − exp(−\\sigmaᵢ\\deltaᵢ) convert density × interval into opacity; Tᵢ = ∏ⱼ<ᵢ(1 − \\alphaⱼ) is accumulated transmittance.',
+        'The discrete alpha values \\alpha\\_i = 1 − exp(−\\sigma\\_i\\delta\\_i) convert density \\times interval into opacity; T\\_i = \\prod\\_j<\\_i(1 − \\alpha\\_j) is accumulated transmittance.',
       ],
     },
     {
@@ -2258,11 +2258,11 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       options: [
         '3DGS uses a smaller MLP than NeRF (3 layers instead of 8), reducing per-sample compute',
         '3DGS represents the scene as explicit 3D Gaussians that are rasterised via differentiable splatting onto the image plane — eliminating per-ray MLP queries entirely and leveraging GPU-optimised tile-based rasterisation that is orders of magnitude faster than volumetric ray marching',
-        '3DGS trains on lower-resolution images (128×128) and upsamples to full resolution with a super-resolution network',
+        '3DGS trains on lower-resolution images (128\\times128) and upsamples to full resolution with a super-resolution network',
         '3DGS uses pre-computed light fields that cache all possible view directions, trading memory for speed',
       ],
       correctAnswer: 1,
-      explanation: '3DGS (Kerbl et al. 2023) initialises Gaussians from SfM point clouds, each defined by position \\mu, covariance \\Sigma (represented as rotation R and scale S: \\Sigma=RSS^T R^T), opacity \\alpha, and view-dependent colour (spherical harmonics coefficients). Rendering projects 3D Gaussians to 2D screen-space ellipses via \\Sigma′ = JW\\Sigma(JW)^T and sorts them by depth for alpha compositing. The tile-based rasteriser processes 16×16 pixel tiles in parallel on the GPU. No MLP query is needed at render time — each Gaussian is an explicit, parameterised primitive evaluated analytically.',
+      explanation: '3DGS (Kerbl et al. 2023) initialises Gaussians from SfM point clouds, each defined by position \\mu, covariance \\Sigma (represented as rotation R and scale S: \\Sigma=RSS^T R^T), opacity \\alpha, and view-dependent colour (spherical harmonics coefficients). Rendering projects 3D Gaussians to 2D screen-space ellipses via \\Sigma′ = JW\\Sigma(JW)^T and sorts them by depth for alpha compositing. The tile-based rasteriser processes 16\\times16 pixel tiles in parallel on the GPU. No MLP query is needed at render time — each Gaussian is an explicit, parameterised primitive evaluated analytically.',
       hints: [
         'Alpha compositing of sorted Gaussians in screen space is a classical graphics operation, easily GPU-parallelised.',
         'Spherical harmonics for colour: degree-3 SH gives view-dependent colour with 48 coefficients per Gaussian.',
@@ -2277,7 +2277,7 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       explanation: "3DGS trains all Gaussian parameters end-to-end via gradient descent. The differentiable tile rasteriser (CUDA implementation) allows gradients to flow back from pixel-level L1 + SSIM photometric loss to each Gaussian's \\mu, \\Sigma, \\alpha, and SH coefficients. Adaptive density control (splitting, cloning, pruning) is applied every 100 iterations based on positional gradient magnitudes. After training (~30 minutes on a V100), the explicit Gaussian scene can be rendered at real-time rates.",
       hints: [
         'The CUDA rasteriser is custom-written with backward passes for each Gaussian parameter — not using standard autograd.',
-        'Loss = \\lambda·L1(render, gt) + (1−\\lambda)·(1−SSIM(render, gt)) with \\lambda=0.8.',
+        'Loss = \\lambda\\cdotL1(render, gt) + (1−\\lambda)\\cdot(1−SSIM(render, gt)) with \\lambda=0.8.',
       ],
     },
     {
@@ -2292,9 +2292,9 @@ const moreVision3dQuestions: Record<string, Question[]> = {
         'Max pooling selects the geometrically most distant point from the centroid, providing a compact shape descriptor',
       ],
       correctAnswer: 1,
-      explanation: "Point clouds have no canonical ordering — the same shape can be represented as any permutation of its points. PointNet's key insight: applying a symmetric function (one whose output is invariant to input permutation) solves this. Max pooling is a symmetric function: max(f(p₁), f(p₂), …) = max(f(p_{\\pi(1)}), f(p_{\\pi(2)}), …) for any permutation \\pi. The network architecture: T-Net (input transform) → shared MLP → T-Net (feature transform) → shared MLP → max pool → global feature → classification/segmentation head.",
+      explanation: "Point clouds have no canonical ordering — the same shape can be represented as any permutation of its points. PointNet's key insight: applying a symmetric function (one whose output is invariant to input permutation) solves this. Max pooling is a symmetric function: max(f(p\\_1), f(p\\_2), …) = max(f(p_{\\pi(1)}), f(p_{\\pi(2)}), …) for any permutation \\pi. The network architecture: T-Net (input transform) \\to shared MLP \\to T-Net (feature transform) \\to shared MLP \\to max pool \\to global feature \\to classification/segmentation head.",
       hints: [
-        'Symmetry requirement: any function g(p₁, …, pₙ) = g(p_{\\pi(1)}, …, p_{\\pi(n)}) for all \\pi is a valid aggregation for unordered sets.',
+        'Symmetry requirement: any function g(p\\_1, …, p\\_n) = g(p_{\\pi(1)}, …, p_{\\pi(n)}) for all \\pi is a valid aggregation for unordered sets.',
         "Max pooling is also a 'critical point set' selector: the global feature is determined by a sparse subset of points that achieve the maximum response — PointNet's theoretical robustness guarantee.",
       ],
     },

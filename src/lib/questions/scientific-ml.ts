@@ -8,18 +8,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + \\lambda_r·L_r + \\lambda_b·L_b. L_r is the physics residual loss defined as ___.",
+        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + \\lambda_r\\cdotL_r + \\lambda_b\\cdotL_b. L_r is the physics residual loss defined as ___.",
       options: [
-        "(1/N_r) \\Sigma |u_\\theta(x_i,t_i) − u_measured(x_i,t_i)|²",
-        "(1/N_r) \\Sigma |N[u_\\theta](x_i,t_i)|² summed over collocation points",
+        "(1/N_r) \\Sigma |u_\\theta(x_i,t_i) − u_measured(x_i,t_i)|\\^2",
+        "(1/N_r) \\Sigma |N[u_\\theta](x_i,t_i)|\\^2 summed over collocation points",
         "KL divergence between the predicted and true solution distributions",
-        "(1/N_b) \\Sigma |∂u_\\theta/∂x − ∂u/∂x|² at boundary points",
+        "(1/N_b) \\Sigma |\\partialu_\\theta/\\partialx − \\partialu/\\partialx|\\^2 at boundary points",
       ],
       correctAnswer: 1,
       explanation:
-        "The physics residual loss L_r = (1/N_r) \\Sigma_{i=1}^{N_r} |N[u_\\theta](x_i,t_i)|² evaluates how much the neural network u_\\theta violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_\\theta.",
+        "The physics residual loss L_r = (1/N_r) \\Sigma_{i=1}^{N_r} |N[u_\\theta](x_i,t_i)|\\^2 evaluates how much the neural network u_\\theta violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_\\theta.",
       hints: [
-        "N[u] is the PDE operator (e.g., ∂u/∂t − ν∂²u/∂x² for the heat equation). The residual is how far N[u_\\theta] is from zero.",
+        "N[u] is the PDE operator (e.g., \\partialu/\\partialt − ν\\partial\\^2u/\\partialx\\^2 for the heat equation). The residual is how far N[u_\\theta] is from zero.",
         "Collocation points are interior domain points where no labels are needed — only the PDE equation must be satisfied.",
       ],
     },
@@ -31,7 +31,7 @@ const questions: Record<string, Question[]> = {
         "PINNs can solve both forward problems (simulating a known PDE) and inverse problems (inferring unknown parameters from observations) within the same framework.",
       correctAnswer: "True",
       explanation:
-        "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in ∂u/∂t = ν∂²u/∂x²) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
+        "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in \\partialu/\\partialt = ν\\partial\\^2u/\\partialx\\^2) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
       hints: [
         "Forward: given ν, find u. Inverse: given some measurements of u, find ν. Both fit naturally into the same loss function.",
         "Unknown parameters appear inside N[u_\\theta; ν] — they are simply extra learnable scalars in the optimisation.",
@@ -65,16 +65,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Neural ODEs define hidden state dynamics as dh/dt = f_\\theta(h(t), t). The hidden state at time t₁ is obtained by ___.",
+        "Neural ODEs define hidden state dynamics as dh/dt = f_\\theta(h(t), t). The hidden state at time t\\_1 is obtained by ___.",
       options: [
-        "h(t₁) = h(t₀) + f_\\theta(h(t₀), t₀) · (t₁ − t₀)  [Euler step]",
-        "h(t₁) = ODESolve(f_\\theta, h(t₀), t₀, t₁)  [numerical ODE integration]",
-        "h(t₁) = sigmoid(W·h(t₀) + b)",
-        "h(t₁) = h(t₀) * exp(f_\\theta(t₁))",
+        "h(t\\_1) = h(t\\_0) + f_\\theta(h(t\\_0), t\\_0) \\cdot (t\\_1 − t\\_0)  [Euler step]",
+        "h(t\\_1) = ODESolve(f_\\theta, h(t\\_0), t\\_0, t\\_1)  [numerical ODE integration]",
+        "h(t\\_1) = sigmoid(W\\cdoth(t\\_0) + b)",
+        "h(t\\_1) = h(t\\_0) * exp(f_\\theta(t\\_1))",
       ],
       correctAnswer: 1,
       explanation:
-        "The exact definition is h(t₁) = h(t₀) + ∫_{t₀}^{t₁} f_\\theta(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
+        "The exact definition is h(t\\_1) = h(t\\_0) + \\int_{t\\_0}^{t\\_1} f_\\theta(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
       hints: [
         "A ResNet layer computes h_{n+1} = h_n + f(h_n) — this is exactly one Euler step of the ODE dh/dt = f(h).",
         "Neural ODEs make this continuous: instead of discrete layers, the ODE solver integrates over a time interval.",
@@ -87,14 +87,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The adjoint sensitivity method for Neural ODEs computes gradients by solving a reverse-time ODE for the adjoint a(t) = dL/dh(t). The adjoint satisfies ___.",
       options: [
-        "da/dt = a(t)ᵀ · ∂f_\\theta/∂h(t)  [forward ODE for a]",
-        "da/dt = −a(t)ᵀ · ∂f_\\theta/∂h(t)  [backward ODE, run in reverse time]",
-        "da/dt = −∂L/∂h(t)  [gradient of loss]",
+        "da/dt = a(t)\\^T \\cdot \\partialf_\\theta/\\partialh(t)  [forward ODE for a]",
+        "da/dt = −a(t)\\^T \\cdot \\partialf_\\theta/\\partialh(t)  [backward ODE, run in reverse time]",
+        "da/dt = −\\partialL/\\partialh(t)  [gradient of loss]",
         "da/dt = f_\\theta(h(t), t)  [same as state ODE]",
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)ᵀ (∂f_\\theta/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. \\theta are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_\\theta/∂\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)\\^T (\\partialf_\\theta/\\partialh), integrated backwards from t\\_1 to t\\_0 starting from a(t\\_1) = dL/dh(t\\_1). Gradients w.r.t. \\theta are then \\int_{t\\_0}^{t\\_1} a(t)\\^T (\\partialf_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
         "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them — O(1) memory vs O(N) for BPTT.",
@@ -130,17 +130,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The Fourier Neural Operator (FNO) layer applies a linear transform in Fourier space. Given input v, the FNO layer computes ___.",
       options: [
-        "\\sigma(W·v + b)  [standard linear layer with activation]",
-        "\\sigma(F⁻¹(R · F(v)) + W·v)  [Fourier-space global conv + local linear, then activation]",
+        "\\sigma(W\\cdotv + b)  [standard linear layer with activation]",
+        "\\sigma(F\\^{-1}(R \\cdot F(v)) + W\\cdotv)  [Fourier-space global conv + local linear, then activation]",
         "\\sigma(Conv2D(v, kernel))  [standard spatial convolution]",
         "\\sigma(Attention(v, v, v))  [self-attention layer]",
       ],
       correctAnswer: 1,
       explanation:
-        "Each FNO layer computes \\sigma(F⁻¹(R·Fₖ(v)) + W·v), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and \\sigma is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
+        "Each FNO layer computes \\sigma(F\\^{-1}(R\\cdotF\\_k(v)) + W\\cdotv), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and \\sigma is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
       hints: [
         "FNO truncates to k Fourier modes (the low-frequency part), which captures global structure while being resolution-independent.",
-        "The local W·v term handles the high-frequency, local part of the transform that the truncated Fourier modes miss.",
+        "The local W\\cdotv term handles the high-frequency, local part of the transform that the truncated Fourier modes miss.",
       ],
     },
     {
@@ -151,7 +151,7 @@ const questions: Record<string, Question[]> = {
         "The Fourier Neural Operator (FNO) achieves resolution invariance by performing convolution operations in Fourier space, allowing it to be evaluated at any spatial resolution at inference time.",
       correctAnswer: "True",
       explanation:
-        "FNO applies linear transforms in Fourier space (equivalent to global convolutions in physical space), then truncates to a fixed number of modes. Because the Fourier transform is resolution-independent, FNO trained at 64×64 can be evaluated at 128×128 without retraining.",
+        "FNO applies linear transforms in Fourier space (equivalent to global convolutions in physical space), then truncates to a fixed number of modes. Because the Fourier transform is resolution-independent, FNO trained at 64\\times64 can be evaluated at 128\\times128 without retraining.",
       hints: [
         "Fourier modes capture global patterns and are not tied to any particular spatial grid resolution.",
         "The fixed number of truncated modes k is the only resolution-dependent parameter — evaluation at finer grids simply uses more physical-space points.",
@@ -171,10 +171,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DeepONet\'s branch net encodes the input function u at sensor points {u(x₁),...,u(xₘ)} → [b₁,...,bₚ]; its trunk net encodes the output query location y → [t₁,...,tₚ]; the operator output is G(u)(y) ≈ \\Sigmaᵢ bᵢ·tᵢ + bias. This is grounded in the universal approximation theorem for operators.",
+        "DeepONet\'s branch net encodes the input function u at sensor points {u(x\\_1),...,u(xₘ)} \\to [b\\_1,...,bₚ]; its trunk net encodes the output query location y \\to [t\\_1,...,tₚ]; the operator output is G(u)(y) \\approx \\Sigma\\_i b\\_i\\cdott\\_i + bias. This is grounded in the universal approximation theorem for operators.",
       hints: [
         "Branch: what does the input function look like? Trunk: where do we want the output? They are combined by a dot product.",
-        "The inner product \\Sigma bᵢtᵢ acts like a learned basis expansion of the output function.",
+        "The inner product \\Sigma b\\_it\\_i acts like a learned basis expansion of the output function.",
       ],
     },
   ],
@@ -197,7 +197,7 @@ const questions: Record<string, Question[]> = {
         "SINDy constructs a library of candidate terms (polynomials, trig functions, etc.) and applies LASSO-type sparse regression to identify the minimal subset that explains dX/dt, yielding interpretable, parsimonious dynamical equations.",
       hints: [
         'SINDy stands for "Sparse Identification of Nonlinear Dynamics" — the word "sparse" is the key.',
-        "Instead of black-box prediction, the goal is to recover the actual equation (e.g., dx/dt = ax + bx²) from data.",
+        "Instead of black-box prediction, the goal is to recover the actual equation (e.g., dx/dt = ax + bx\\^2) from data.",
       ],
     },
     {
@@ -308,7 +308,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MLPs (e.g., Behler-Parrinello networks, ANI, MACE) fit potential energy surfaces from DFT reference data, enabling force field computations 1000× faster than DFT while retaining quantum-level accuracy for dynamics simulations.",
+        "MLPs (e.g., Behler-Parrinello networks, ANI, MACE) fit potential energy surfaces from DFT reference data, enabling force field computations 1000\\times faster than DFT while retaining quantum-level accuracy for dynamics simulations.",
       hints: [
         "Classical force fields are fast but inaccurate; DFT is accurate but slow — MLPs aim to be both fast and accurate.",
         "The ML model learns from quantum chemistry (DFT) calculations and then replaces those expensive calculations during simulation.",
@@ -535,7 +535,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Symbolic regression discovers explicit mathematical formulas (e.g., F = ma, E = mc²) from data by searching over combinations of mathematical operators and constants — unlike neural networks, the output is an interpretable equation.",
+        "Symbolic regression discovers explicit mathematical formulas (e.g., F = ma, E = mc\\^2) from data by searching over combinations of mathematical operators and constants — unlike neural networks, the output is an interpretable equation.",
       hints: [
         "The output is not a model with millions of weights — it is a human-readable mathematical equation.",
         "Think about Kepler discovering the ellipse equation for planetary orbits from data — symbolic regression automates this process.",
@@ -739,7 +739,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint ODE satisfies da/dt = −a(t)ᵀ (∂f_\\theta/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. \\theta are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_\\theta/∂\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint ODE satisfies da/dt = −a(t)\\^T (\\partialf_\\theta/\\partialh), integrated backwards from t\\_1 to t\\_0 starting from a(t\\_1) = dL/dh(t\\_1). Gradients w.r.t. \\theta are then \\int_{t\\_0}^{t\\_1} a(t)\\^T (\\partialf_\\theta/\\partial\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
         "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them — O(1) memory vs O(N) for BPTT.",
@@ -779,7 +779,7 @@ const questions: Record<string, Question[]> = {
         "DimeNet uses directional message passing that incorporates the angle between bonds — not just radial distances — capturing angular geometry of atomic environments, which is important for properties like molecular dipole moments and torsion barriers.",
       hints: [
         "SchNet only uses distances (radial); DimeNet adds angles (directional). More geometric information means better accuracy.",
-        "Bond angles determine molecular geometry: water\'s 104.5° angle vs. CO₂'s 180° linear structure have very different properties.",
+        "Bond angles determine molecular geometry: water\'s 104.5° angle vs. CO\\_2's 180° linear structure have very different properties.",
       ],
     },
     {
@@ -1013,7 +1013,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In concurrent multi-scale simulation (FE²), ML surrogates improve computational tractability by:",
+        "In concurrent multi-scale simulation (FE\\^2), ML surrogates improve computational tractability by:",
       options: [
         "Replacing the macro-scale finite element solver with a neural network",
         "Learning the microscale constitutive response (stress-strain mapping from RVE simulations) to replace expensive online micro-scale RVE computations at each macro integration point",
@@ -1022,9 +1022,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FE² requires a micro-scale RVE solve at every macro integration point and time step — prohibitively expensive. ML constitutive models (trained on offline RVE data) replace these online micro-solves, achieving speedups of 10³-10⁶× while retaining micro-structure fidelity.",
+        "FE\\^2 requires a micro-scale RVE solve at every macro integration point and time step — prohibitively expensive. ML constitutive models (trained on offline RVE data) replace these online micro-solves, achieving speedups of 10\\^3-10⁶\\times while retaining micro-structure fidelity.",
       hints: [
-        "FE² literally means two nested finite element solves — one at macro scale, one at micro scale for each integration point.",
+        "FE\\^2 literally means two nested finite element solves — one at macro scale, one at micro scale for each integration point.",
         "The ML surrogate learns what the micro-scale RVE would output for any given strain state, without re-running the simulation.",
       ],
     },
@@ -1082,7 +1082,7 @@ const questions: Record<string, Question[]> = {
         "SDLs (e.g., A-Lab at Berkeley, Chemspeed, Emerald Cloud Lab) integrate ML-driven experiment selection with autonomous robotic execution and automated characterization, creating a closed-loop discovery platform that runs 24/7 without human bottlenecks.",
       hints: [
         "A self-driving laboratory is analogous to a self-driving car — both human and robot decisions are eliminated from the loop.",
-        "The full loop is: ML proposes experiment → robot executes → instrument measures → data feeds back to ML → repeat.",
+        "The full loop is: ML proposes experiment \\to robot executes \\to instrument measures \\to data feeds back to ML \\to repeat.",
       ],
     },
   ],
@@ -1104,7 +1104,7 @@ const questions: Record<string, Question[]> = {
         "Causal discovery infers the directed acyclic graph (DAG) encoding causal mechanisms from data, distinguishing cause from effect — essential for scientific understanding and predicting outcomes of interventions (experiments).",
       hints: [
         "Correlation tells you two variables move together; causality tells you which one drives the other.",
-        "A causal graph has arrows indicating direction: A → B means A causes B, not just that they are correlated.",
+        "A causal graph has arrows indicating direction: A \\to B means A causes B, not just that they are correlated.",
       ],
     },
     {
@@ -1115,7 +1115,7 @@ const questions: Record<string, Question[]> = {
         "The PC algorithm for causal discovery is a constraint-based method that uses conditional independence tests to construct a causal graph skeleton and then orient edges using v-structure patterns.",
       correctAnswer: "True",
       explanation:
-        "PC algorithm starts with a fully connected graph, removes edges where conditional independence is detected (ci-tests), then orients remaining edges by identifying v-structures (A → C ← B where A and B are not adjacent) and applying orientation rules.",
+        "PC algorithm starts with a fully connected graph, removes edges where conditional independence is detected (ci-tests), then orients remaining edges by identifying v-structures (A \\to C \\leftarrow B where A and B are not adjacent) and applying orientation rules.",
       hints: [
         "PC (named after Peter and Clark) tests conditional independence to determine which edges to remove from the complete graph.",
         "V-structures (colliders) can be identified from independence patterns and provide partial edge orientation.",
@@ -1357,7 +1357,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "They require no training data and can be deployed immediately",
         "They extrapolate more reliably to unseen operating conditions by respecting physical conservation laws and governing equations",
-        "They run 100× faster than unconstrained neural networks at inference time",
+        "They run 100\\times faster than unconstrained neural networks at inference time",
         "They automatically learn the optimal sensor placement for the physical system",
       ],
       correctAnswer: 1,
@@ -1555,7 +1555,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CS theory (Candès, Romberg, Tao; Donoho) guarantees that an s-sparse signal in R^n can be exactly recovered from m = O(s·log(n/s)) measurements if the measurement matrix satisfies RIP, via L1-minimization (basis pursuit).",
+        "CS theory (Candès, Romberg, Tao; Donoho) guarantees that an s-sparse signal in R^n can be exactly recovered from m = O(s\\cdotlog(n/s)) measurements if the measurement matrix satisfies RIP, via L1-minimization (basis pursuit).",
       hints: [
         "Sparsity means the signal has only a few non-zero components in some representation basis.",
         "RIP (Restricted Isometry Property) ensures the measurement matrix does not distort the geometry of sparse vectors.",
@@ -1756,7 +1756,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'FNO requires mesh-based discretisation, while PINNs are always mesh-free',
       ],
       correctAnswer: 1,
-      explanation: 'PINNs embed the PDE as a loss term and train per-instance—no labelled solution data required but each new scenario needs a full retrain. FNO learns an operator mapping (e.g., initial condition → solution) across many instances; inference is a single forward pass but training needs ground-truth solutions (e.g., from a classical solver).',
+      explanation: 'PINNs embed the PDE as a loss term and train per-instance—no labelled solution data required but each new scenario needs a full retrain. FNO learns an operator mapping (e.g., initial condition \\to solution) across many instances; inference is a single forward pass but training needs ground-truth solutions (e.g., from a classical solver).',
       hints: [
         'Think about what "amortised" means: you pay a large upfront cost that gets reused.',
         'PINN: physics at training time; FNO: physics baked in via training data.',
@@ -1788,7 +1788,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'easy',
       question: 'Conformal prediction provides distribution-free coverage guarantees: given a calibration set, it constructs prediction intervals that contain the true value with at least (1−\\alpha) probability, regardless of the underlying data distribution.',
       correctAnswer: 'True',
-      explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) ≤ q̂_{1−\\alpha}} achieves marginal coverage ≥ 1−\\alpha without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
+      explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) \\leq q̂_{1−\\alpha}} achieves marginal coverage \\geq 1−\\alpha without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
       hints: [
         'Conformal methods use a held-out calibration set to set the score threshold.',
         'Coverage is marginal (over random calibration sets), not conditional on x.',
@@ -1859,7 +1859,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       explanation: 'Greedy sequential selection picks the single most uncertain point, re-ranks, picks the next, etc. If run in batch (no refit between picks), the top-k points all concentrate near the current maximum-uncertainty region, wasting budget on redundant, correlated simulations. Batch strategies (e.g., determinantal point processes, core-set selection, k-DPP) explicitly encourage diversity within the batch.',
       hints: [
         'High uncertainty is spatially correlated — nearby points are all uncertain for the same reason.',
-        'Diversity in the batch ≈ sampling from different uncertain "clusters" rather than repeating the same one.',
+        'Diversity in the batch \\approx sampling from different uncertain "clusters" rather than repeating the same one.',
       ],
     },
   ],
@@ -1902,14 +1902,14 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       options: [
         'Adding skip connections between the input and output layers of the GNN',
         'Building a multi-resolution graph hierarchy (coarse-to-fine) so that long-range interactions propagate via few hops through coarser levels, analogous to multigrid methods',
-        'Replacing message passing with attention over all node pairs (O(N²) complexity)',
+        'Replacing message passing with attention over all node pairs (O(N\\^2) complexity)',
         'Using random graph rewiring to create shortcut edges between distant nodes',
       ],
       correctAnswer: 1,
       explanation: 'Hierarchical/multigrid GNN operators (e.g., MGNO, Geo-FNO on graphs) construct a coarsened graph hierarchy: messages at the coarsest level travel across the entire domain in one hop, enabling O(log N) effective interaction distance. This mirrors classical multigrid PDE solvers and keeps complexity near O(N).',
       hints: [
         'Multigrid: smooth errors at fine levels, correct large-scale errors at coarse levels.',
-        'Going from fine to coarse to fine ≈ one message-passing round covers the whole domain.',
+        'Going from fine to coarse to fine \\approx one message-passing round covers the whole domain.',
       ],
     },
   ],
@@ -1956,7 +1956,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'That symbolic regression results always overfit because they lack regularisation',
       ],
       correctAnswer: 1,
-      explanation: 'With k input variables and n operator types, the number of expression trees of depth d grows as O((k·n)^(2^d)). Beyond ~5 variables and moderate complexity, naive GP struggles. Modern approaches address this via: (1) neural-guided search (e.g., NeSymReS uses transformers to propose candidate expressions); (2) embedding dimensional analysis constraints; (3) parallelised island-model evolution.',
+      explanation: 'With k input variables and n operator types, the number of expression trees of depth d grows as O((k\\cdotn)^(2^d)). Beyond ~5 variables and moderate complexity, naive GP struggles. Modern approaches address this via: (1) neural-guided search (e.g., NeSymReS uses transformers to propose candidate expressions); (2) embedding dimensional analysis constraints; (3) parallelised island-model evolution.',
       hints: [
         'Depth 5 tree with 10 nodes and 10 operators: 10^10 possible trees—exhaustive search is hopeless.',
         'Neural guidance: a transformer trained on (data, formula) pairs can propose likely formula skeletons.',
@@ -1976,7 +1976,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The Kolmogorov microscale \\eta as a function of Reynolds number',
       ],
       correctAnswer: 1,
-      explanation: 'RANS equations are unclosed: the Reynolds stress tensor \\tau_ij appears but is unknown. Traditional closures (k-\\epsilon, k-\\omega) use linear eddy viscosity assumptions. Data-driven approaches (e.g., Ling et al., Schmelzer et al.) train ML models to map mean-flow features (strain rate, vorticity, pressure gradient) → \\tau_ij from high-fidelity DNS data.',
+      explanation: 'RANS equations are unclosed: the Reynolds stress tensor \\tau_ij appears but is unknown. Traditional closures (k-\\epsilon, k-\\omega) use linear eddy viscosity assumptions. Data-driven approaches (e.g., Ling et al., Schmelzer et al.) train ML models to map mean-flow features (strain rate, vorticity, pressure gradient) \\to \\tau_ij from high-fidelity DNS data.',
       hints: [
         'RANS averaging introduces \\tau_ij as the "closure problem"—it must be modelled.',
         'DNS resolves all scales but is too expensive for engineering Re; RANS is cheap but needs a closure.',
@@ -1990,7 +1990,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       correctAnswer: 'True',
       explanation: 'Ling et al. (2016) showed that embedding tensor-basis representations (Pope\'s integrity basis for symmetric tensors) into neural networks enforces both Galilean invariance and frame-independence by construction. Unconstrained networks can learn invariant mappings accidentally but are not guaranteed to remain physically consistent outside the training distribution.',
       hints: [
-        'The Reynolds stress is a rank-2 symmetric tensor; it must transform as T_ij → R_ik R_jl T_kl under rotation R.',
+        'The Reynolds stress is a rank-2 symmetric tensor; it must transform as T_ij \\to R_ik R_jl T_kl under rotation R.',
         'Pope\'s tensor basis: any symmetric, traceless function of symmetric input tensors can be written as a linear combination of 10 basis tensors with scalar coefficients.',
       ],
     },
@@ -2026,7 +2026,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Truncated backpropagation through time (TBPTT), which cuts gradients after a fixed number of steps',
       ],
       correctAnswer: 1,
-      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. \\theta and h(t₀) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T ∂f/∂h. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
+      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. \\theta and h(t\\_0) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T \\partialf/\\partialh. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
       hints: [
         'Standard backprop through a discrete ODE solver stores all intermediate states—memory is O(N_steps).',
         'Adjoint method: store only the final state, then recompute states backward as needed during the reverse ODE solve.',
@@ -2036,9 +2036,9 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp37-2',
       type: 'true-false',
       difficulty: 'medium',
-      question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t₀), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
+      question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t\\_0), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
       correctAnswer: 'True',
-      explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t₀); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
+      explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t\\_0); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
       hints: [
         'RNNs require fixed-step inputs; Neural ODEs provide continuous-time dynamics—combine both.',
         'The latent trajectory z(t) is smooth and continuous, so querying at any t is simply integrating the ODE to that time.',
@@ -2056,9 +2056,9 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Neural ODEs only support autonomous (time-independent) dynamics, but chaotic systems are time-dependent',
       ],
       correctAnswer: 1,
-      explanation: 'In chaotic systems, the largest Lyapunov exponent \\lambda₁ > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(\\lambda₁T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
+      explanation: 'In chaotic systems, the largest Lyapunov exponent \\lambda\\_1 > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(\\lambda\\_1T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
       hints: [
-        'Lyapunov exponent: the rate at which infinitesimally separated trajectories diverge. Positive → chaos.',
+        'Lyapunov exponent: the rate at which infinitesimally separated trajectories diverge. Positive \\to chaos.',
         'If you cannot match the trajectory exactly (butterfly effect), can you match its statistics instead?',
       ],
     },
@@ -2076,10 +2076,10 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Replace the classical ML backward pass by computing parameter-shift rule gradients on quantum hardware',
       ],
       correctAnswer: 1,
-      explanation: 'VQE: a parameterised quantum circuit (ansatz) prepares |\\psi(\\theta)⟩ on a quantum processor; repeated measurements estimate ⟨H⟩ via Pauli decomposition. A classical optimiser (gradient-free or using parameter-shift rule gradients) minimises ⟨H⟩(\\theta). Convergence → ground state energy. VQE leverages quantum state preparation while keeping optimisation classical, suiting near-term noisy devices.',
+      explanation: 'VQE: a parameterised quantum circuit (ansatz) prepares |\\psi(\\theta)⟩ on a quantum processor; repeated measurements estimate ⟨H⟩ via Pauli decomposition. A classical optimiser (gradient-free or using parameter-shift rule gradients) minimises ⟨H⟩(\\theta). Convergence \\to ground state energy. VQE leverages quantum state preparation while keeping optimisation classical, suiting near-term noisy devices.',
       hints: [
-        'The variational principle: ⟨\\psi|H|\\psi⟩ ≥ E_0 for any |\\psi⟩. Minimising it finds the ground state.',
-        'Parameter-shift rule: ∂⟨H⟩/∂\\theta_k = [⟨H⟩(\\theta_k + \\pi/2) − ⟨H⟩(\\theta_k − \\pi/2)] / 2 — enables gradient estimation from two circuit evaluations.',
+        'The variational principle: ⟨\\psi|H|\\psi⟩ \\geq E_0 for any |\\psi⟩. Minimising it finds the ground state.',
+        'Parameter-shift rule: \\partial⟨H⟩/\\partial\\theta_k = [⟨H⟩(\\theta_k + \\pi/2) − ⟨H⟩(\\theta_k − \\pi/2)] / 2 — enables gradient estimation from two circuit evaluations.',
       ],
     },
     {
@@ -2088,7 +2088,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Quantum kernel methods encode classical data into quantum states and use the inner product between quantum states as a kernel for classical SVM, potentially offering an exponential feature space without explicitly computing it.',
       correctAnswer: 'True',
-      explanation: 'Quantum kernel: K(x_i, x_j) = |⟨\\phi(x_i)|\\phi(x_j)⟩|², where |\\phi(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
+      explanation: 'Quantum kernel: K(x_i, x_j) = |⟨\\phi(x_i)|\\phi(x_j)⟩|\\^2, where |\\phi(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
       hints: [
         'Classical kernel trick: implicitly compute in high-dimensional space without materialising feature vectors.',
         'Quantum feature map: the quantum circuit maps x to a superposition in 2^n-dimensional Hilbert space.',
@@ -2106,7 +2106,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The inability of variational circuits to represent non-unitary (dissipative) quantum dynamics',
       ],
       correctAnswer: 1,
-      explanation: 'McClean et al. (2018) proved that for random parameterised circuits, Var[∂⟨H⟩/∂\\theta_k] decreases exponentially in the number of qubits n: the gradient landscape is exponentially flat ("barren plateau"), making gradient-based optimisation infeasible for large systems. Mitigations include: local cost functions, structured ansätze (hardware-efficient, chemically-motivated UCCSD), layerwise training.',
+      explanation: 'McClean et al. (2018) proved that for random parameterised circuits, Var[\\partial⟨H⟩/\\partial\\theta_k] decreases exponentially in the number of qubits n: the gradient landscape is exponentially flat ("barren plateau"), making gradient-based optimisation infeasible for large systems. Mitigations include: local cost functions, structured ansätze (hardware-efficient, chemically-motivated UCCSD), layerwise training.',
       hints: [
         'Deep random circuits approach the Haar random unitary—gradients of any observable vanish exponentially.',
         'Local cost (acting on a few qubits) avoids barren plateaus; global cost (all qubits) suffers from them.',
@@ -2136,7 +2136,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp39-2',
       type: 'true-false',
       difficulty: 'easy',
-      question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = ∂H/∂p, ṗ = −∂H/∂q) to evolve dynamics, automatically conserving total energy by construction.',
+      question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = \\partialH/\\partialp, ṗ = −\\partialH/\\partialq) to evolve dynamics, automatically conserving total energy by construction.',
       correctAnswer: 'True',
       explanation: 'HNNs (Greydanus et al., 2019) parameterise H_\\theta(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout—unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
       hints: [
@@ -2153,10 +2153,10 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'They process only equidistant atom pairs, simplifying the graph construction',
         'Physical energies and forces must be invariant/equivariant under Euclidean symmetries (rotation, translation, reflection); equivariant networks satisfy these constraints by construction, dramatically improving data efficiency',
         'They avoid computing pairwise distances, which is the computational bottleneck in MD simulations',
-        'They use equivariant attention that scales as O(N) in the number of atoms rather than O(N²)',
+        'They use equivariant attention that scales as O(N) in the number of atoms rather than O(N\\^2)',
       ],
       correctAnswer: 1,
-      explanation: 'Molecular energy E must be invariant under rigid body transformations (E(3) symmetry), and forces F_i = −∂E/∂r_i are equivariant (rotate with the molecule). E(3)-equivariant GNNs (NequIP, MACE, Allegro) represent atomic features as irreducible representations of SO(3) and use Clebsch-Gordan products for equivariant message passing—achieving 10-100x better data efficiency than non-equivariant models.',
+      explanation: 'Molecular energy E must be invariant under rigid body transformations (E(3) symmetry), and forces F_i = −\\partialE/\\partialr_i are equivariant (rotate with the molecule). E(3)-equivariant GNNs (NequIP, MACE, Allegro) represent atomic features as irreducible representations of SO(3) and use Clebsch-Gordan products for equivariant message passing—achieving 10-100x better data efficiency than non-equivariant models.',
       hints: [
         'If you rotate a molecule, the energy is the same but the forces rotate with it—equivariance, not invariance.',
         'Irreducible representations (irreps) of SO(3) are the spherical harmonics—they transform predictably under rotation.',
@@ -2188,7 +2188,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Differentiable rendering (e.g., NeRF, NVDiffrast) enables gradient-based 3D reconstruction by making the rendering equation differentiable with respect to scene parameters such as geometry, materials, and lighting.',
       correctAnswer: 'True',
-      explanation: 'Differentiable rendering computes ∂(rendered pixel)/∂(scene parameters) via rasterisation or ray-marching, enabling gradient descent to fit scene parameters to observed images. NeRF uses differentiable volume rendering; NVDiffrast uses differentiable rasterisation with edge sampling to handle visibility discontinuities. This underpins inverse rendering, neural scene representations, and text-to-3D methods.',
+      explanation: 'Differentiable rendering computes \\partial(rendered pixel)/\\partial(scene parameters) via rasterisation or ray-marching, enabling gradient descent to fit scene parameters to observed images. NeRF uses differentiable volume rendering; NVDiffrast uses differentiable rasterisation with edge sampling to handle visibility discontinuities. This underpins inverse rendering, neural scene representations, and text-to-3D methods.',
       hints: [
         'Inverse rendering = given images, infer 3D scene—this is an optimisation problem requiring gradients.',
         'Edge discontinuities in rasterisation: the silhouette of an object is a step function in pixel space—requires special treatment.',
@@ -2206,7 +2206,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The Jacobian of the rendering function with respect to the NeRF density field',
       ],
       correctAnswer: 1,
-      explanation: 'SDS gradient: \\nabla_\\theta L_SDS = E_{t,\\epsilon}[w(t)(\\epsilon_\\phi(x_t; y, t) − \\epsilon) · ∂x/∂\\theta], where \\epsilon_\\phi is the diffusion model\'s predicted noise and \\epsilon is the actual noise added. The term (\\epsilon_\\phi − \\epsilon) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering ∂x/∂\\theta, updates the 3D representation without needing a 3D dataset.',
+      explanation: 'SDS gradient: \\nabla_\\theta L_SDS = E_{t,\\epsilon}[w(t)(\\epsilon_\\phi(x_t; y, t) − \\epsilon) \\cdot \\partialx/\\partial\\theta], where \\epsilon_\\phi is the diffusion model\'s predicted noise and \\epsilon is the actual noise added. The term (\\epsilon_\\phi − \\epsilon) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering \\partialx/\\partial\\theta, updates the 3D representation without needing a 3D dataset.',
       hints: [
         'SDS: "if this rendered view doesn\'t look like it was sampled from the diffusion model, update the 3D scene to make it more likely."',
         'No 3D GT needed—the 2D diffusion model provides the supervisory signal via its score function.',
@@ -2271,15 +2271,15 @@ const extraScimlQuestions: Record<string, Question[]> = {
       id: "q-sciml-extra-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "For inverse problems using PINNs (e.g., inferring the diffusivity field nu(x) in ∂u/∂t = nu(x) * ∂²u/∂x²), what modification is required when nu(x) is a spatially varying unknown function rather than a scalar?",
+      question: "For inverse problems using PINNs (e.g., inferring the diffusivity field nu(x) in \\partialu/\\partialt = nu(x) * \\partial\\^2u/\\partialx\\^2), what modification is required when nu(x) is a spatially varying unknown function rather than a scalar?",
       options: [
         "nu(x) cannot be identified by PINNs — only scalar constants are learnable as PINN parameters",
-        "nu(x) is represented as a second neural network n_phi(x) trained jointly with u_theta(x,t), with the physics loss enforcing ∂u_theta/∂t = n_phi(x) * ∂²u_theta/∂x² at collocation points",
+        "nu(x) is represented as a second neural network n_phi(x) trained jointly with u_theta(x,t), with the physics loss enforcing \\partialu_theta/\\partialt = n_phi(x) * \\partial\\^2u_theta/\\partialx\\^2 at collocation points",
         "nu(x) is approximated by piecewise constants on a user-defined spatial grid, with the grid values as learnable parameters",
         "nu(x) is inferred by symbolic regression on the residuals of a forward PINN trained with a guessed nu value",
       ],
       correctAnswer: 1,
-      explanation: "When the unknown is a function rather than a scalar, it is parameterized as a second neural network n_phi(x) (or a Gaussian process). The physics loss L_r = (1/N_r) sum |∂u_theta/∂t - n_phi(x) * ∂²u_theta/∂x²|^2 is minimized jointly over theta and phi, with a data loss L_data anchoring u_theta to observations. This two-network approach can recover smooth spatially varying coefficient fields from sparse measurements.",
+      explanation: "When the unknown is a function rather than a scalar, it is parameterized as a second neural network n_phi(x) (or a Gaussian process). The physics loss L_r = (1/N_r) sum |\\partialu_theta/\\partialt - n_phi(x) * \\partial\\^2u_theta/\\partialx\\^2|^2 is minimized jointly over theta and phi, with a data loss L_data anchoring u_theta to observations. This two-network approach can recover smooth spatially varying coefficient fields from sparse measurements.",
       hints: [
         "The unknown function nu(x) must be parameterized — a neural network is the natural choice for a smooth, nonlinear function approximator.",
         "Joint optimization of both networks requires careful weighting between the physics loss and data loss to avoid trivial solutions.",
@@ -2584,14 +2584,14 @@ const extraScimlQuestions: Record<string, Question[]> = {
       question: "Gaussian Process (GP) regression is an exact Bayesian nonparametric method. For N training points and M test points, what is the computational complexity of GP inference, and what approximation is used for large N?",
       options: [
         "O(N log N) for inference via FFT; sparse GPs using M << N inducing points reduce this to O(NM^2)",
-        "O(N^3) for Cholesky decomposition of the N×N kernel matrix; sparse GPs (e.g., FITC, SVGP) use M inducing points to reduce complexity to O(NM^2) or O(M^3) with mini-batch training",
+        "O(N^3) for Cholesky decomposition of the N\\timesN kernel matrix; sparse GPs (e.g., FITC, SVGP) use M inducing points to reduce complexity to O(NM^2) or O(M^3) with mini-batch training",
         "O(N^2) for the matrix inverse; inducing point methods eliminate this by diagonal approximation",
         "O(N) with conjugate gradient solvers; no approximations are needed for large N",
       ],
       correctAnswer: 1,
-      explanation: "Exact GP requires inverting the N×N kernel matrix K, costing O(N^3) for Cholesky factorization and O(N^2) for predictions — infeasible for N > 10^4. Sparse GP methods introduce M << N inducing points {z_m} that summarize the data: FITC approximates p(f|X,y) using the M inducing outputs, reducing complexity to O(NM^2). SVGP (Hensman et al., 2013) uses variational inference with mini-batches, reducing per-step cost to O(M^3) regardless of N, enabling GP scaling to millions of points.",
+      explanation: "Exact GP requires inverting the N\\timesN kernel matrix K, costing O(N^3) for Cholesky factorization and O(N^2) for predictions — infeasible for N > 10^4. Sparse GP methods introduce M << N inducing points {z_m} that summarize the data: FITC approximates p(f|X,y) using the M inducing outputs, reducing complexity to O(NM^2). SVGP (Hensman et al., 2013) uses variational inference with mini-batches, reducing per-step cost to O(M^3) regardless of N, enabling GP scaling to millions of points.",
       hints: [
-        "Cholesky factorization of an N×N matrix costs O(N^3) — for N=10^5, this is 10^15 operations, completely infeasible.",
+        "Cholesky factorization of an N\\timesN matrix costs O(N^3) — for N=10^5, this is 10^15 operations, completely infeasible.",
         "Inducing points are 'summary' inputs chosen to span the data distribution; the GP approximation passes through the posterior at these points exactly.",
       ],
     },

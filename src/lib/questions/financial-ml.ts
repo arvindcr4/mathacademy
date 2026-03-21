@@ -96,7 +96,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fama and French augmented CAPM with SMB (Small Minus Big, the size premium — long small-caps, short large-caps) and HML (High Minus Low book-to-market, the value premium — long high B/M stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone. The model is: E[Rᵢ] − Rƒ = \\alphaᵢ + \\betaMKT·(Rm−Rƒ) + \\betaSMB·SMB + \\betaHML·HML.",
+        "Fama and French augmented CAPM with SMB (Small Minus Big, the size premium — long small-caps, short large-caps) and HML (High Minus Low book-to-market, the value premium — long high B/M stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone. The model is: E[R\\_i] − Rƒ = \\alpha\\_i + \\betaMKT\\cdot(Rm−Rƒ) + \\betaSMB\\cdotSMB + \\betaHML\\cdotHML.",
       hints: [
         "One factor captures a systematic return difference between small and large companies by market cap.",
         "The other factor relates to how cheaply a company\'s assets are priced relative to their book value (book-to-market ratio).",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        'Alpha represents the idiosyncratic return a strategy earns beyond compensation for bearing systematic risk factors, often called "abnormal return" or manager skill. In the CAPM framework, \\alpha = E[Rₚ] − Rƒ − \\beta·(E[Rm]−Rƒ); in multi-factor models, it is the intercept of the factor regression.',
+        'Alpha represents the idiosyncratic return a strategy earns beyond compensation for bearing systematic risk factors, often called "abnormal return" or manager skill. In the CAPM framework, \\alpha = E[Rₚ] − Rƒ − \\beta\\cdot(E[Rm]−Rƒ); in multi-factor models, it is the intercept of the factor regression.',
       hints: [
         "Think about what is left over once you account for exposure to known risk premia (market, size, value, momentum).",
         "It is the intercept in a factor model regression of portfolio excess returns — the return unexplained by factors.",
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IR = (E[Rₚ] − E[Rb]) / \\sigma(Rₚ − Rb), where Rₚ is portfolio return, Rb is benchmark return, and \\sigma(Rₚ − Rb) is the tracking error (annualised standard deviation of active returns). Grinold\'s Fundamental Law of Active Management states IR ≈ IC × √BR, where IC is the Information Coefficient (skill per bet) and BR is the breadth (number of independent bets per year).",
+        "IR = (E[Rₚ] − E[Rb]) / \\sigma(Rₚ − Rb), where Rₚ is portfolio return, Rb is benchmark return, and \\sigma(Rₚ − Rb) is the tracking error (annualised standard deviation of active returns). Grinold\'s Fundamental Law of Active Management states IR \\approx IC \\times √BR, where IC is the Information Coefficient (skill per bet) and BR is the breadth (number of independent bets per year).",
       hints: [
         "The IR is analogous to the Sharpe ratio but measured relative to a benchmark rather than the risk-free rate.",
         "The denominator is tracking error — the volatility of active returns (portfolio minus benchmark), not total portfolio volatility.",
@@ -600,7 +600,7 @@ const questions: Record<string, Question[]> = {
         "The portfolio will lose at most $1M tomorrow with 99% certainty",
         "There is a 1% probability that tomorrow\'s loss will exceed $1M",
         "The average loss on the worst 1% of trading days is $1M",
-        "The portfolio\'s expected loss tomorrow is $1M × 0.01 = $10,000",
+        "The portfolio\'s expected loss tomorrow is $1M \\times 0.01 = $10,000",
       ],
       correctAnswer: 1,
       explanation:
@@ -622,7 +622,7 @@ const questions: Record<string, Question[]> = {
         "CVaR(\\alpha) = E[L | L > VaR(\\alpha)] — the average of all losses exceeding the 99th percentile. Unlike VaR, CVaR captures the shape and severity of the tail beyond the threshold. CVaR is also a coherent risk measure (satisfies monotonicity, sub-additivity, translation invariance, and positive homogeneity), making it suitable for portfolio optimization via linear programming.",
       hints: [
         "If VaR(99%) = $1M, CVaR(99%) is the average loss on the worst 1% of days — it could be $5M if the tail is fat.",
-        "CVaR\'s sub-additivity means CVaR(A+B) ≤ CVaR(A) + CVaR(B), ensuring diversification is always rewarded.",
+        "CVaR\'s sub-additivity means CVaR(A+B) \\leq CVaR(A) + CVaR(B), ensuring diversification is always rewarded.",
       ],
     },
     {
@@ -839,7 +839,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Factor PnL attribution splits total return into the contribution from each risk factor (factor return × exposure) and a residual specific return not explained by the model.",
+        "Factor PnL attribution splits total return into the contribution from each risk factor (factor return \\times exposure) and a residual specific return not explained by the model.",
       hints: [
         "Think of this as a regression: the explained part comes from factors, the unexplained part is the residual.",
         "Portfolio managers use this to know whether returns came from factor bets or stock-picking.",
@@ -1220,7 +1220,7 @@ const questions: Record<string, Question[]> = {
         'The "Weight of Evidence" (WoE) transformation for a categorical variable in credit modelling is computed as:',
       options: [
         "log(P(event | category) / P(non-event | category))",
-        "log(P(event in category) / P(non-event in category)) × (distribution of events − distribution of non-events)",
+        "log(P(event in category) / P(non-event in category)) \\times (distribution of events − distribution of non-events)",
         "The Gini coefficient of that variable in isolation",
         "The Pearson correlation of the variable with the default indicator",
       ],
@@ -1302,14 +1302,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Under the Basel framework, Expected Credit Loss (ECL) is computed as:",
       options: [
-        "PD × LGD",
-        "PD × LGD × EAD",
-        "EAD × (1 − Recovery Rate)",
-        "PD × EAD × (1 + Interest Rate)",
+        "PD \\times LGD",
+        "PD \\times LGD \\times EAD",
+        "EAD \\times (1 − Recovery Rate)",
+        "PD \\times EAD \\times (1 + Interest Rate)",
       ],
       correctAnswer: 1,
       explanation:
-        "Expected Credit Loss = Probability of Default × Loss Given Default × Exposure at Default; this three-component decomposition is the cornerstone of IRB credit risk capital calculation under Basel II/III.",
+        "Expected Credit Loss = Probability of Default \\times Loss Given Default \\times Exposure at Default; this three-component decomposition is the cornerstone of IRB credit risk capital calculation under Basel II/III.",
       hints: [
         "ECL must account for how likely a default is, how much is owed, and what fraction is lost.",
         "Each component is modelled separately and then multiplied to yield expected loss.",
@@ -1729,11 +1729,11 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Automated Market Makers (AMMs) in DeFi use a constant-product formula (x × y = k) instead of a limit order book to determine trade prices.",
+        "Automated Market Makers (AMMs) in DeFi use a constant-product formula (x \\times y = k) instead of a limit order book to determine trade prices.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "AMMs like Uniswap v2 maintain a liquidity pool with reserves x and y of two tokens; the constant-product invariant x·y=k means the price of a trade is determined by how it shifts the reserve ratio, with no order book or counterparty needed.",
+        "AMMs like Uniswap v2 maintain a liquidity pool with reserves x and y of two tokens; the constant-product invariant x\\cdoty=k means the price of a trade is determined by how it shifts the reserve ratio, with no order book or counterparty needed.",
       hints: [
         "In a traditional exchange, buyers and sellers post orders; in an AMM, a smart contract acts as the counterparty.",
         "The constant-product formula implies price impact is automatically larger for larger trades.",
@@ -1753,7 +1753,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'IL arises because the AMM automatically rebalances the pool (selling the appreciating asset, buying the depreciating one) to maintain x·y=k; this "buy high, sell low" rebalancing produces a position worth less than simply holding both tokens when prices diverge significantly.',
+        'IL arises because the AMM automatically rebalances the pool (selling the appreciating asset, buying the depreciating one) to maintain x\\cdoty=k; this "buy high, sell low" rebalancing produces a position worth less than simply holding both tokens when prices diverge significantly.',
       hints: [
         "Compare the value of your pool share after a 2x price move versus holding the tokens directly—which is worth more?",
         'IL is "impermanent" because it disappears if the price ratio returns to the entry point.',

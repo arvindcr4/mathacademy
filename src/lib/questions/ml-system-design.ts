@@ -94,7 +94,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "At 50K QPS, a 200 ms p99 SLO means the model must complete inference in <50 ms (leaving headroom for feature retrieval and I/O). This SLO eliminates large transformer models immediately. Specifying QPS, latency SLO, and recall floor as hard requirements prevents building a system that cannot serve at production scale.",
       hints: [
-        "50K QPS × 200 ms SLO implies a throughput requirement of 10,000 concurrent inflight requests — a concrete capacity constraint.",
+        "50K QPS \\times 200 ms SLO implies a throughput requirement of 10,000 concurrent inflight requests — a concrete capacity constraint.",
         "Latency and throughput requirements directly constrain model selection.",
       ],
     },
@@ -121,13 +121,13 @@ const questions: Record<string, Question[]> = {
         "You are sizing a real-time ML inference cluster. The model has p50 latency of 20 ms and p99 latency of 80 ms, serving 10,000 QPS. Approximately how many model replicas are needed if each replica handles 100 requests concurrently?",
       options: [
         "1 replica — one server can handle all requests since p50 latency is only 20 ms.",
-        "100 replicas — 10,000 QPS ÷ 100 concurrent requests per replica.",
+        "100 replicas — 10,000 QPS \\div 100 concurrent requests per replica.",
         "10 replicas — p99 latency of 80 ms means only 10 requests per second per replica.",
         "1,000 replicas — one per QPS unit.",
       ],
       correctAnswer: 1,
       explanation:
-        "Using Little\'s Law: throughput = concurrency ÷ latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 ÷ 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20–30% headroom.",
+        "Using Little\'s Law: throughput = concurrency \\div latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 \\div 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20–30% headroom.",
       hints: [
         "Capacity planning: how many requests can each replica process per second given its concurrency limit and latency?",
         "Use Little's Law to reason about the relationship between concurrency, latency, and throughput.",
@@ -196,7 +196,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A ride-sharing company wants to predict surge pricing multipliers (1.0×, 1.5×, 2.0×, 2.5×, 3.0×). What is the most appropriate ML framing?",
+        "A ride-sharing company wants to predict surge pricing multipliers (1.0\\times, 1.5\\times, 2.0\\times, 2.5\\times, 3.0\\times). What is the most appropriate ML framing?",
       options: [
         "Binary classification: surge vs. no surge.",
         "Multi-class classification with 5 ordered classes, or ordinal regression — since the classes have a meaningful order.",
@@ -405,13 +405,13 @@ const questions: Record<string, Question[]> = {
         "A feature store serves embeddings for 500 million user profiles. Each embedding is 256 float32 values (1 KB). The p99 serving latency requirement is <5 ms. Which storage and retrieval architecture is most appropriate?",
       options: [
         "PostgreSQL with a vector column — standard relational database handles this scale.",
-        "Sharded Redis cluster with user_id as the shard key: 500M × 1 KB = 500 GB partitioned across 50 nodes (10 GB/node), each node serving point lookups in <1 ms.",
+        "Sharded Redis cluster with user_id as the shard key: 500M \\times 1 KB = 500 GB partitioned across 50 nodes (10 GB/node), each node serving point lookups in <1 ms.",
         "FAISS index for ANN search — vector databases are the right tool for embedding retrieval.",
         "DynamoDB with embedding stored as a JSON attribute — managed NoSQL for scale.",
       ],
       correctAnswer: 1,
       explanation:
-        "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M × 1 KB = 500 GB across a 50-node cluster is 10 GB/node — within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
+        "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M \\times 1 KB = 500 GB across a 50-node cluster is 10 GB/node — within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
       hints: [
         "Is this a similarity search problem (find nearest neighbors) or a key-based lookup (retrieve by user_id)?",
         "What is the total memory footprint, and how should it be partitioned to achieve sub-millisecond point lookups?",
@@ -534,7 +534,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Optimize accuracy first, then apply post-training quantization to meet latency.",
         "Use a Pareto-optimal search: identify the set of architectures where no architecture dominates another in both accuracy and latency, then select the Pareto-optimal architecture matching your latency budget.",
-        "Use a weighted sum: loss = accuracy + \\lambda × latency. Tune \\lambda on the validation set.",
+        "Use a weighted sum: loss = accuracy + \\lambda \\times latency. Tune \\lambda on the validation set.",
         "Maximize accuracy subject to a hard latency constraint using constrained optimization.",
       ],
       correctAnswer: 1,
@@ -597,7 +597,7 @@ const questions: Record<string, Question[]> = {
         "ROUGE-L is a proxy metric for text quality, not business outcome. The A/B test (the ground truth) shows no statistically significant purchase conversion improvement. Deploying the LLM model would add substantial inference cost, latency, and operational complexity for zero measured business gain. The null result is the signal: the current system is adequate for this metric.",
       hints: [
         "The A/B test CI includes zero — the LLM might be worse, better, or neutral. The null result is valid.",
-        "An LLM model may cost 100× more to serve — that cost requires a commensurate business gain to justify.",
+        "An LLM model may cost 100\\times more to serve — that cost requires a commensurate business gain to justify.",
       ],
     },
   ],
@@ -619,8 +619,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Data parallelism: each GPU worker holds a full copy of the model and processes a different mini-batch; gradients are averaged across workers (AllReduce). Effective when the model fits in one GPU. Model parallelism: the model is split across GPUs (different layers or tensor shards on different devices); each GPU processes the full batch through its partition. Required when the model is too large to fit on one GPU (e.g., LLMs with billions of parameters).",
       hints: [
-        "Data parallel: N GPUs each run the full 10B model on different data → N× throughput.",
-        "Model parallel: the 140 GB LLM is split across 4× 40 GB GPUs — each GPU holds a part of the model.",
+        "Data parallel: N GPUs each run the full 10B model on different data \\to N\\times throughput.",
+        "Model parallel: the 140 GB LLM is split across 4\\times 40 GB GPUs — each GPU holds a part of the model.",
       ],
     },
     {
@@ -702,7 +702,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        'Continuous training introduces risks: a data pipeline bug can corrupt training data, a sudden distribution shift can degrade the model, and noisy labels from a new data source can reduce quality. Continuous training pipelines require validation gates (e.g., "new model must achieve AUC ≥ current model − 0.01 on a holdout set") and automated rollback before promotion.',
+        'Continuous training introduces risks: a data pipeline bug can corrupt training data, a sudden distribution shift can degrade the model, and noisy labels from a new data source can reduce quality. Continuous training pipelines require validation gates (e.g., "new model must achieve AUC \\geq current model − 0.01 on a holdout set") and automated rollback before promotion.',
       hints: [
         "Does automating retraining introduce any new risks compared to manual retraining with human review?",
         "What safeguards are needed to prevent a corrupted data batch from silently degrading a continuously-trained model?",
@@ -760,7 +760,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Post-training INT8 quantization often achieves accuracy within 0.5-1% of FP32 on most tasks while reducing model size by 4× and inference latency by 2-4×. Quantization-aware training (QAT) further closes the accuracy gap. For well-calibrated models on tasks like image classification, speech recognition, and NLP classification, INT8 is routinely used in production (e.g., TensorRT, OpenVINO deployments). Accuracy loss only becomes significant for tasks requiring fine-grained numerical precision.",
+        "Post-training INT8 quantization often achieves accuracy within 0.5-1% of FP32 on most tasks while reducing model size by 4\\times and inference latency by 2-4\\times. Quantization-aware training (QAT) further closes the accuracy gap. For well-calibrated models on tasks like image classification, speech recognition, and NLP classification, INT8 is routinely used in production (e.g., TensorRT, OpenVINO deployments). Accuracy loss only becomes significant for tasks requiring fine-grained numerical precision.",
       hints: [
         "Does INT8 quantization always significantly degrade accuracy, or is the accuracy loss often within acceptable bounds for production?",
         "What technique simulates quantization effects during training to minimize the accuracy gap?",
@@ -771,7 +771,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A recommendation serving system processes requests with a two-stage pipeline: ANN retrieval (5 ms) → feature fetch (10 ms) → reranking model (20 ms) → post-processing (2 ms). The p99 end-to-end latency is 80 ms. Which optimization gives the largest gain?",
+        "A recommendation serving system processes requests with a two-stage pipeline: ANN retrieval (5 ms) \\to feature fetch (10 ms) \\to reranking model (20 ms) \\to post-processing (2 ms). The p99 end-to-end latency is 80 ms. Which optimization gives the largest gain?",
       options: [
         "Optimize the ANN retrieval step from 5 ms to 3 ms.",
         "Parallelize feature fetch and early processing steps that do not depend on each other; pipeline ANN retrieval output into feature fetch to overlap I/O and compute.",
@@ -800,7 +800,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "During a scaling lag, bounded request queuing provides graceful degradation: requests queue until replicas are available, and once the queue is full, new requests get a structured error (503 + Retry-After) that allows clients to retry. This is better than dropping connections silently or letting queues grow unboundedly (causing timeouts). Dynamic batching (option A) helps but cannot absorb a 10× traffic spike alone. The CPU fallback (option D) is a valid secondary measure but is not the primary overload handling technique.",
+        "During a scaling lag, bounded request queuing provides graceful degradation: requests queue until replicas are available, and once the queue is full, new requests get a structured error (503 + Retry-After) that allows clients to retry. This is better than dropping connections silently or letting queues grow unboundedly (causing timeouts). Dynamic batching (option A) helps but cannot absorb a 10\\times traffic spike alone. The CPU fallback (option D) is a valid secondary measure but is not the primary overload handling technique.",
       hints: [
         "What happens to a system when queues grow without bound during a traffic spike?",
         "What HTTP response code and Retry-After header signal to clients that they should resubmit their request later?",
@@ -823,7 +823,7 @@ const questions: Record<string, Question[]> = {
         "Running a heavy recommendation model for 50M users at app-open time is infeasible at p99 < 200 ms. Pre-computing recommendations in a nightly batch job and caching in Redis enables sub-millisecond retrieval. The trade-off is recommendation staleness (up to 24 hours), which is acceptable for home feed content. Real-time signals (e.g., recent clicks) can be layered on top.",
       hints: [
         "50M requests at app-open peak could be 1M+ QPS — serving a heavy model in real time at that scale requires enormous infrastructure.",
-        "Redis GET latency is ~0.1 ms; a recommendation model call is 10–100 ms — a 100–1000× difference.",
+        "Redis GET latency is ~0.1 ms; a recommendation model call is 10–100 ms — a 100–1000\\times difference.",
       ],
     },
     {
@@ -849,7 +849,7 @@ const questions: Record<string, Question[]> = {
         "You must serve a 70B-parameter LLM with p99 first-token latency < 500 ms for a customer-facing chat application at 1,000 QPS. Which combination of techniques is MOST effective?",
       options: [
         "Run on a single A100 80 GB GPU with FP32 precision.",
-        "Use tensor parallelism across 4–8 GPUs (e.g., 4×A100), FP16 quantization, vLLM continuous batching, and KV cache with PagedAttention.",
+        "Use tensor parallelism across 4–8 GPUs (e.g., 4\\timesA100), FP16 quantization, vLLM continuous batching, and KV cache with PagedAttention.",
         "Run on CPU cluster with 128 cores and aggressive caching.",
         "Distill to a 7B model and serve on a single T4 GPU with no other optimizations.",
       ],
@@ -913,9 +913,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At 1B items, HNSW provides the best recall-latency tradeoff: O(log n) query complexity, >95% recall@10 with appropriate ef settings. Memory: 1B × 128 × 4 bytes = 512 GB (FP32); with PQ compression or FP16 → 128-256 GB, achievable on a GPU cluster. Flat search at 1B items is infeasible (O(n) = 1B dot products per query). LSH has lower recall than HNSW. FAISS IVF+PQ is an alternative. HNSW is the industry standard (used in Spotify ANN, Weaviate, Qdrant).",
+        "At 1B items, HNSW provides the best recall-latency tradeoff: O(log n) query complexity, >95% recall@10 with appropriate ef settings. Memory: 1B \\times 128 \\times 4 bytes = 512 GB (FP32); with PQ compression or FP16 \\to 128-256 GB, achievable on a GPU cluster. Flat search at 1B items is infeasible (O(n) = 1B dot products per query). LSH has lower recall than HNSW. FAISS IVF+PQ is an alternative. HNSW is the industry standard (used in Spotify ANN, Weaviate, Qdrant).",
       hints: [
-        "1B × 128 × 4 bytes = 512 GB. FP16 halves this to 256 GB — across multiple nodes.",
+        "1B \\times 128 \\times 4 bytes = 512 GB. FP16 halves this to 256 GB — across multiple nodes.",
         "HNSW: query time O(log n) with 95%+ recall. Flat: O(n) with 100% recall. HNSW wins at 1B items.",
       ],
     },
@@ -1008,7 +1008,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In-batch negatives reuse document encodings already computed for other training pairs in the same batch as negatives for each query. With batch size B, each (query, positive) pair gets B-1 negatives at no extra encoding cost. This makes contrastive training highly efficient. The limitation is that some in-batch negatives may be 'false negatives' (actually relevant documents) — a problem mitigated by hard negative mining from BM25 or a previous model checkpoint.",
       hints: [
-        "Batch size 256: each query gets 255 in-batch negatives. Only 256 document encodings are needed, not 256×256.",
+        "Batch size 256: each query gets 255 in-batch negatives. Only 256 document encodings are needed, not 256\\times256.",
         "False negatives (relevant docs treated as negatives) in in-batch training reduce training signal quality.",
       ],
     },
@@ -1032,7 +1032,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A product search system must handle queries in 50 languages, with the product catalog also in 50 languages. Cross-lingual retrieval (Spanish query → English product title) is required. Which architecture best solves this?",
+        "A product search system must handle queries in 50 languages, with the product catalog also in 50 languages. Cross-lingual retrieval (Spanish query \\to English product title) is required. Which architecture best solves this?",
       options: [
         "Run BM25 separately for each language pair — 2500 separate indices.",
         "Train a multilingual bi-encoder (e.g., fine-tuned mE5 or LaBSE) that maps queries and documents from all 50 languages into a single shared embedding space, enabling cross-lingual dot product similarity.",
@@ -1087,7 +1087,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = \\alpha × BM25 + (1−\\alpha) × cosine_similarity. This combination typically outperforms either alone.",
+        "In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = \\alpha \\times BM25 + (1−\\alpha) \\times cosine_similarity. This combination typically outperforms either alone.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -1105,7 +1105,7 @@ const questions: Record<string, Question[]> = {
         "A two-tower (bi-encoder) retrieval model encodes queries and documents independently. A cross-encoder reranker receives (query, document) pairs. Why are cross-encoders used only for reranking a small candidate set rather than retrieval over the full corpus?",
       options: [
         "Cross-encoders cannot process text longer than 512 tokens.",
-        "Cross-encoders perform full attention between query and document tokens, requiring O(n × d) inference for n documents — infeasible at corpus scale. Bi-encoders pre-compute document embeddings offline, enabling ANN retrieval in O(log n).",
+        "Cross-encoders perform full attention between query and document tokens, requiring O(n \\times d) inference for n documents — infeasible at corpus scale. Bi-encoders pre-compute document embeddings offline, enabling ANN retrieval in O(log n).",
         "Cross-encoders are less accurate than bi-encoders for relevance scoring.",
         "Cross-encoders do not support GPU acceleration.",
       ],
@@ -1128,16 +1128,16 @@ const questions: Record<string, Question[]> = {
         "A fraud detection model must decide in real time whether to block a payment. The cost of a false negative (missed fraud) is $200 on average, and the cost of a false positive (blocking a legitimate transaction) is $10 in customer friction and support costs. How should the decision threshold be set?",
       options: [
         "At probability 0.5 — the standard decision boundary.",
-        "Lower than 0.5 — since false negatives are 20× more costly than false positives, the model should flag more transactions (be more conservative) to catch more fraud even at the cost of more false positives.",
+        "Lower than 0.5 — since false negatives are 20\\times more costly than false positives, the model should flag more transactions (be more conservative) to catch more fraud even at the cost of more false positives.",
         "Higher than 0.5 — precision is more important than recall in fraud detection.",
         "The threshold should not be changed from the default; business costs do not affect model thresholds.",
       ],
       correctAnswer: 1,
       explanation:
-        "The optimal decision threshold is cost-sensitive: with FN cost = $200 and FP cost = $10, the cost ratio is 20:1. The Bayes optimal threshold is P(fraud) > FP_cost / (FP_cost + FN_cost) = 10 / (10 + 200) ≈ 0.048. This means flag any transaction with >4.8% fraud probability. This threshold explicitly encodes the business cost trade-off into the decision rule. Standard 0.5 threshold ignores the asymmetric cost structure.",
+        "The optimal decision threshold is cost-sensitive: with FN cost = $200 and FP cost = $10, the cost ratio is 20:1. The Bayes optimal threshold is P(fraud) > FP_cost / (FP_cost + FN_cost) = 10 / (10 + 200) \\approx 0.048. This means flag any transaction with >4.8% fraud probability. This threshold explicitly encodes the business cost trade-off into the decision rule. Standard 0.5 threshold ignores the asymmetric cost structure.",
       hints: [
         "What is the Bayes optimal decision threshold in terms of the cost ratio between false negatives and false positives?",
-        "When false negatives are 20× more costly than false positives, should the threshold be above or below 0.5?",
+        "When false negatives are 20\\times more costly than false positives, should the threshold be above or below 0.5?",
       ],
     },
     {
@@ -1224,7 +1224,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'With 0.5% fraud rate, a trivial model predicting "not fraud" always achieves 99.5% accuracy. If the model catches 40% of actual fraud (recall=0.4) and the fraud rate is 0.5%, then: frauds caught = 0.4 × 0.5% = 0.2% of all transactions flagged as fraud; false positive rate is effectively near 0% but the useful metric — precision and recall at the fraud class — is what matters. This illustrates why accuracy is a misleading metric for imbalanced classification.',
+        'With 0.5% fraud rate, a trivial model predicting "not fraud" always achieves 99.5% accuracy. If the model catches 40% of actual fraud (recall=0.4) and the fraud rate is 0.5%, then: frauds caught = 0.4 \\times 0.5% = 0.2% of all transactions flagged as fraud; false positive rate is effectively near 0% but the useful metric — precision and recall at the fraud class — is what matters. This illustrates why accuracy is a misleading metric for imbalanced classification.',
       hints: [
         "0.5% fraud rate: if 10M transactions/day, 50K are fraud. 40% recall = 20K caught; 30K missed (false negatives).",
         "The correct metrics: recall (did we catch enough fraud?) and precision (how many flags are real fraud?).",
@@ -1273,7 +1273,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "An ads ranking system uses a two-tower model to predict pCTR: user tower (200 features) and ad tower (150 features) produce 64-dim embeddings, combined via dot product. The pCTR model is miscalibrated: predicted pCTR is on average 2× higher than observed CTR. What is the most efficient calibration fix without retraining the model?",
+        "An ads ranking system uses a two-tower model to predict pCTR: user tower (200 features) and ad tower (150 features) produce 64-dim embeddings, combined via dot product. The pCTR model is miscalibrated: predicted pCTR is on average 2\\times higher than observed CTR. What is the most efficient calibration fix without retraining the model?",
       options: [
         "Retrain the full two-tower model with a calibration objective.",
         "Apply Platt scaling: train a logistic regression on (model output, observed label) pairs using recent production data, then use the regression to map raw model outputs to calibrated probabilities.",
@@ -1282,10 +1282,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Platt scaling is the standard post-hoc calibration technique: fit a logistic regression f(x) = 1 / (1 + exp(-(a*s + b))) where s is the model score, using (score, observed_label) pairs from recent production data. This learns the correct mapping without retraining the full model. A uniform 0.5× multiplier (option C) only corrects the overall mean but not distributional shape. Platt scaling corrects both mean and shape. Temperature scaling is an alternative for neural classifiers.",
+        "Platt scaling is the standard post-hoc calibration technique: fit a logistic regression f(x) = 1 / (1 + exp(-(a*s + b))) where s is the model score, using (score, observed_label) pairs from recent production data. This learns the correct mapping without retraining the full model. A uniform 0.5\\times multiplier (option C) only corrects the overall mean but not distributional shape. Platt scaling corrects both mean and shape. Temperature scaling is an alternative for neural classifiers.",
       hints: [
-        "Calibration: the model\'s predicted probabilities should match empirical frequencies.",
-        "Platt scaling: one logistic regression layer on top of the existing model\'s outputs — cheap and effective.",
+        "What does it mean for a model to be 'calibrated' — do predicted probabilities match observed frequencies?",
+        "What post-hoc technique fits a simple model on top of existing scores to correct calibration without retraining?",
       ],
     },
     {
@@ -1293,16 +1293,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In a real-time ads auction, expected revenue per slot is computed as bid × pCTR (predicted click-through rate). Advertiser A bids $5 with pCTR 0.02; Advertiser B bids $2 with pCTR 0.08. Which wins the auction and by how much?",
+        "In a real-time ads auction, expected revenue per slot is computed as bid \\times pCTR (predicted click-through rate). Advertiser A bids $5 with pCTR 0.02; Advertiser B bids $2 with pCTR 0.08. Which wins the auction and by how much?",
       options: [
         "A wins: $5 bid > $2 bid.",
-        "B wins: expected revenue $2 × 0.08 = $0.16 > $5 × 0.02 = $0.10.",
+        "B wins: expected revenue $2 \\times 0.08 = $0.16 > $5 \\times 0.02 = $0.10.",
         "A wins: 0.02 pCTR is more precise than 0.08.",
         "Tie: both have positive expected revenue.",
       ],
       correctAnswer: 1,
       explanation:
-        "Ad auctions rank by expected revenue = bid × pCTR, not by bid alone. Advertiser B: $2 × 0.08 = $0.16. Advertiser A: $5 × 0.02 = $0.10. B wins despite the lower bid because its higher pCTR more than compensates. This is why pCTR model quality directly impacts auction revenue — miscalibrated pCTR can misrank advertisers and cost the platform money.",
+        "Ad auctions rank by expected revenue = bid \\times pCTR, not by bid alone. Advertiser B: $2 \\times 0.08 = $0.16. Advertiser A: $5 \\times 0.02 = $0.10. B wins despite the lower bid because its higher pCTR more than compensates. This is why pCTR model quality directly impacts auction revenue — miscalibrated pCTR can misrank advertisers and cost the platform money.",
       hints: [
         "A high bid with low CTR may generate less revenue than a lower bid with high CTR.",
         "This is why both bid accuracy (advertiser) and pCTR accuracy (platform model) are critical.",
@@ -1319,8 +1319,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "AUC-ROC measures ranking quality (can you distinguish clickers from non-clickers?) but not calibration (does pCTR=0.02 mean ~2% of similar ads are clicked?). Auction clearing prices, second-price auction mechanics, and advertiser budget pacing all depend on absolute pCTR values. A perfectly ranked but poorly calibrated model can systematically over- or under-charge advertisers, causing billing errors and budget misallocation.",
       hints: [
-        "A model with pCTR=0.10 when true CTR is 0.01 will over-charge winners and mis-pace budgets.",
-        "IPS is the standard causal debiasing technique in recommender systems.",
+        "If a model predicts pCTR=0.10 but the true CTR is 0.01, what business problem does this miscalibration cause in auction pricing?",
+        "What does AUC-ROC measure (ranking quality vs. absolute probability values), and which is more important for auction mechanics?",
       ],
     },
     {
@@ -1339,8 +1339,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.",
       hints: [
-        'Without debiasing: the model learns "top positions → high CTR" rather than "relevant items → high CTR."',
-        "IPS is the standard causal debiasing technique in recommender systems.",
+        "What bias does the model learn from raw click data without debiasing — does it learn position or relevance?",
+        "What causal inference technique weights training examples inversely by their propensity of being observed?",
       ],
     },
   ],
@@ -1375,7 +1375,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "The feedback loop works as follows: (1) the current model ranks content A highly → users click on A → A generates more training signal → the next model ranks A even higher → A crowds out content B. If the current model has a bias toward certain content types (e.g., sensational content), each training iteration amplifies that bias. Breaking the loop requires exploration (showing non-top-ranked content to collect unbiased signal), causal methods (IPS debiasing), and diversity objectives.",
+        "The feedback loop works as follows: (1) the current model ranks content A highly \\to users click on A \\to A generates more training signal \\to the next model ranks A even higher \\to A crowds out content B. If the current model has a bias toward certain content types (e.g., sensational content), each training iteration amplifies that bias. Breaking the loop requires exploration (showing non-top-ranked content to collect unbiased signal), causal methods (IPS debiasing), and diversity objectives.",
       hints: [
         "What does the model learn from data generated by its own past ranking decisions?",
         "What mechanism is needed to collect unbiased signal about content the current model would not have surfaced?",
@@ -1386,7 +1386,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A feed ranking system uses a multi-objective reward: R = w1 × p_like + w2 × p_share + w3 × p_comment − w4 × p_hide. How should the weights be tuned and what is the risk of this approach?",
+        "A feed ranking system uses a multi-objective reward: R = w1 \\times p_like + w2 \\times p_share + w3 \\times p_comment − w4 \\times p_hide. How should the weights be tuned and what is the risk of this approach?",
       options: [
         "Tune weights using gradient descent on a held-out validation set with a combined accuracy metric.",
         "Tune weights via online A/B experiments that vary weight combinations, measuring long-term user retention and satisfaction — not just engagement. Risk: the learned weights may over-optimize short-term proxy signals and miss long-term user value.",
@@ -1452,8 +1452,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.",
       hints: [
-        'Without debiasing: the model learns "top positions → high CTR" rather than "relevant items → high CTR."',
-        "IPS is the standard causal debiasing technique in recommender systems.",
+        "What bias does the model learn from raw click data without debiasing — does it learn position or relevance?",
+        "What causal inference technique weights training examples inversely by their propensity of being observed?",
       ],
     },
   ],
@@ -1473,10 +1473,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At 100K QPS with 0.1% harmful content, ~100 posts/second are harmful and ~99,900 are safe. Running an expensive stage-2 model on all 100K posts/second would be prohibitively costly. Stage 1 uses a fast, high-recall (low-threshold) classifier to flag ~1,000 posts/second for review; stage 2 applies precision-optimized scoring to those 1,000. This reduces stage-2 compute by 99× while maintaining system-level recall.",
+        "At 100K QPS with 0.1% harmful content, ~100 posts/second are harmful and ~99,900 are safe. Running an expensive stage-2 model on all 100K posts/second would be prohibitively costly. Stage 1 uses a fast, high-recall (low-threshold) classifier to flag ~1,000 posts/second for review; stage 2 applies precision-optimized scoring to those 1,000. This reduces stage-2 compute by 99\\times while maintaining system-level recall.",
       hints: [
-        "Stage 1: fast, high recall (catch everything), low precision. Stage 2: slow, high precision (confirm).",
-        "Running stage 2 on 100K QPS vs. 1K QPS = 100× cost difference — the two-stage design pays for itself.",
+        "What are the roles of stage 1 (fast, high recall) and stage 2 (slow, high precision) in a two-stage content moderation pipeline?",
+        "What is the computational saving of using a two-stage design compared to running the expensive stage-2 model on all traffic?",
       ],
     },
     {
@@ -1490,8 +1490,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A classifier outputs a probability score for each piece of content. By adjusting the threshold (e.g., from 0.5 to 0.3 for more aggressive removal), precision and recall trade off without retraining. Lowering the threshold increases recall (catches more harmful content) but decreases precision (more false positives). Raising it does the reverse. The optimal threshold depends on the platform\'s policy goals (e.g., protecting minors requires high recall; reducing creator friction requires high precision).",
       hints: [
-        "The ROC curve and Precision-Recall curve show all achievable (precision, recall) points by varying threshold.",
-        "Policy decisions (how much false positive risk is acceptable) determine threshold — not the model training.",
+        "What model parameter can be adjusted after training to independently control the precision-recall trade-off without retraining?",
+        "What determines the optimal threshold value — the model's training or the platform's policy goals?",
       ],
     },
     {
@@ -1510,8 +1510,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Two distinct failures: (1) Low recall on non-English — the English-fine-tuned classifier does not generalize to other languages because of different linguistic patterns, idioms, and slang; fix: multilingual pre-trained model + few-shot fine-tuning with target-language hate speech examples. (2) False positive bias — the model confuses culturally-specific language, dialects, or code-switching with hate speech; fix: collect native-annotated examples from affected communities, apply targeted debiasing. These are separate problems requiring separate solutions.",
       hints: [
-        "Low recall = missing harmful content. High false positive = incorrectly removing safe content. Both are bad, for different reasons.",
-        "Cultural false positives: African American Vernacular English (AAVE) has been systematically over-flagged by English hate speech classifiers.",
+        "What are the two distinct problems: low recall on non-English content, and high false positives on culturally-specific language?",
+        "Why does an English-trained model fail to generalize to other languages — and what type of model and data can fix this?",
       ],
     },
     {
@@ -1528,7 +1528,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At 100K QPS with 0.1% harmful rate: ~100 harmful posts/second, ~99,900 safe posts/second. At 99% precision, 1% of flagged posts are false positives. The model flags: 100 × 0.85 = 85 true positives (recall=85%) and FP/(FP+TP) = 0.01 → FP = 85 × 0.01/0.99 ≈ 0.86 ≈ ~1 FP/second from the flagged set. However, at 99% precision with high QPS, even 1% of 8,500 flagged posts = 85 false positives/second if recall is higher. The key insight is that at scale, even 99% precision generates substantial false positive volume.",
+        "At 100K QPS with 0.1% harmful rate: ~100 harmful posts/second, ~99,900 safe posts/second. At 99% precision, 1% of flagged posts are false positives. The model flags: 100 \\times 0.85 = 85 true positives (recall=85%) and FP/(FP+TP) = 0.01 \\to FP = 85 \\times 0.01/0.99 \\approx 0.86 \\approx ~1 FP/second from the flagged set. However, at 99% precision with high QPS, even 1% of 8,500 flagged posts = 85 false positives/second if recall is higher. The key insight is that at scale, even 99% precision generates substantial false positive volume.",
       hints: [
         "False positive rate (of safe posts) = FP / total_safe. Even 0.1% of 99,900 = ~100 false positives/second.",
         "Volume amplifies small error rates into large absolute counts at 100K QPS.",
@@ -1615,13 +1615,13 @@ const questions: Record<string, Question[]> = {
         "You are building an entity resolution system for 500M customer records across 3 databases. After blocking, you have 50 billion candidate pairs to score. A pairwise classifier takes 0.1 ms per pair. How do you make this tractable without sacrificing recall?",
       options: [
         "Run the classifier on all 50B pairs using a distributed cluster of 500 machines.",
-        "Apply two-stage scoring: a fast vectorized similarity pre-filter (TF-IDF cosine < 0.3 → discard) to reduce candidate pairs by 90%, followed by the 0.1 ms classifier on the remaining 5B pairs. Add transitivity closure (union-find) to propagate matches.",
+        "Apply two-stage scoring: a fast vectorized similarity pre-filter (TF-IDF cosine < 0.3 \\to discard) to reduce candidate pairs by 90%, followed by the 0.1 ms classifier on the remaining 5B pairs. Add transitivity closure (union-find) to propagate matches.",
         "Reduce blocking to 100M candidate pairs by using stricter blocking keys, accepting recall loss.",
         "Use approximate nearest neighbor search (LSH) to replace blocking entirely, generating 1M candidate pairs.",
       ],
       correctAnswer: 1,
       explanation:
-        "50B pairs × 0.1 ms = 5M seconds — infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B × 0.1 ms = 500K seconds — still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
+        "50B pairs \\times 0.1 ms = 5M seconds — infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B \\times 0.1 ms = 500K seconds — still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
       hints: [
         "What is the total computation time if all 50B pairs are scored sequentially? Is this tractable?",
         "When matching records across 3+ databases, if A matches B and B matches C, what must be true about A and C?",
@@ -1632,7 +1632,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Entity resolution (record linkage) without blocking has O(n²) complexity for n records. With blocking, complexity drops to near-linear. What is the trade-off introduced by blocking?",
+        "Entity resolution (record linkage) without blocking has O(n\\^2) complexity for n records. With blocking, complexity drops to near-linear. What is the trade-off introduced by blocking?",
       options: [
         "Blocking increases memory usage exponentially.",
         "Blocking reduces recall: record pairs in different blocks are never compared, so true matches across blocks are missed.",
@@ -1641,7 +1641,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched — a recall loss. The trade-off is computational feasibility (O(n²)→near-linear) at the cost of some missed matches.",
+        "Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched — a recall loss. The trade-off is computational feasibility (O(n\\^2)\\tonear-linear) at the cost of some missed matches.",
       hints: [
         "What is the computational cost of comparing all n records against all n records? Is this tractable for large datasets?",
         "The recall loss in blocking comes from what source — which pairs are never compared?",
@@ -1678,8 +1678,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Entity resolution for business names requires: (1) fuzzy name matching (Jaro-Winkler, Levenshtein) to handle "Corp" vs. "Corporation"; (2) address normalization (standardizing "One" vs. "1", expanding "WA" to "Washington") followed by fuzzy matching; (3) zip code blocking to reduce candidate pairs. General sentence encoders are effective but add latency; rule-based normalization + edit distance is more interpretable and often more precise for structured records.',
       hints: [
-        '"Corp" and "Corporation" are semantically identical but have edit distance 5 — fuzzy matching handles this.',
-        'Address normalization (USPS standard forms) converts "One Microsoft Way" and "1 Microsoft Way" to the same canonical form.',
+        'Why does exact string matching fail for "Corp" vs. "Corporation", and what technique handles this?',
+        "What address normalization step converts 'One Microsoft Way' and '1 Microsoft Way' to the same form?",
       ],
     },
   ],
@@ -1736,8 +1736,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "p99 spikes in sequential multi-step pipelines arise from tail latency amplification: even if each step's p99 is acceptable individually, the combination of independent slow-tail probabilities means a 4-step pipeline has a compounded probability of a slow response. Hedged requests (speculative execution) and per-step timeouts with cached fallbacks are the standard mitigations.",
       hints: [
-        "Tail latency amplification: k sequential steps each with P(slow)=0.01 gives P(at least one slow)=1-(0.99^k).",
-        "Hedged requests: send the same feature fetch to two Redis replicas simultaneously; use whichever responds first.",
+        "When k sequential steps each have a 1% chance of being slow, what is the probability that at least one step is slow? Does this increase or decrease with more steps?",
+        "What technique sends the same request to multiple replicas simultaneously and uses whichever responds first?",
       ],
     },
   ],
@@ -1760,7 +1760,7 @@ const questions: Record<string, Question[]> = {
         "The data flywheel is driven by implicit signal collection: every user interaction (click, purchase, dwell time, skip) becomes a training example for the next model. This means the model improves as usage grows, which makes it more useful, attracting more users. The key design requirement is that the logging infrastructure captures all relevant user signals and feeds them back into the training pipeline automatically.",
       hints: [
         "Implicit feedback (clicks, purchases) scales with usage and requires no human labeling cost.",
-        "The flywheel only turns if the feedback loop is closed: user signal → training data → better model → more users.",
+        "The flywheel only turns if the feedback loop is closed: user signal \\to training data \\to better model \\to more users.",
       ],
     },
     {
@@ -1873,7 +1873,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vision-language systems face two unique challenges: (1) modality gap — images and text live in different feature spaces that must be aligned (via contrastive training like CLIP); (2) compute asymmetry — image encoding is typically 5–10× more expensive than text encoding (ViT-L processes 224×224 images through 24 attention layers). The serving architecture often pre-encodes gallery images offline to avoid on-the-fly encoding at query time.",
+        "Vision-language systems face two unique challenges: (1) modality gap — images and text live in different feature spaces that must be aligned (via contrastive training like CLIP); (2) compute asymmetry — image encoding is typically 5–10\\times more expensive than text encoding (ViT-L processes 224\\times224 images through 24 attention layers). The serving architecture often pre-encodes gallery images offline to avoid on-the-fly encoding at query time.",
       hints: [
         "CLIP pre-encodes all gallery images offline; at query time only the query (text or image) is encoded in real time.",
         "Image encoder (ViT-L): ~50 ms. Text encoder (BERT-base): ~5 ms. The asymmetry drives architectural decisions.",
@@ -1890,7 +1890,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Late fusion and early fusion have different trade-offs. Late fusion (separate encoders per modality, then combine embeddings) is computationally efficient because gallery modalities can be pre-encoded offline. Early fusion can capture richer cross-modal interactions but requires joint encoding at query time — making it infeasible for retrieval over large galleries. Cross-encoders (early fusion) are reserved for reranking small candidate sets where quality trumps latency.",
       hints: [
-        "Late fusion: pre-encode gallery offline → ANN search at query time. Early fusion: cannot pre-encode — requires joint encoding at query time.",
+        "Late fusion: pre-encode gallery offline \\to ANN search at query time. Early fusion: cannot pre-encode — requires joint encoding at query time.",
         "For retrieval scale (millions of items), late fusion is the practical choice; early fusion wins on accuracy for reranking.",
       ],
     },
@@ -1901,16 +1901,16 @@ const questions: Record<string, Question[]> = {
       question:
         "A fashion e-commerce platform builds a visual similarity search: users upload a clothing image and receive visually similar products from a catalog of 10 million items. Which serving pipeline is correct?",
       options: [
-        "At query time: encode the uploaded image + encode all 10M catalog images → compute all cosine similarities → return top-k.",
-        "Offline: encode all 10M catalog images and index in an ANN index (FAISS/HNSW). At query time: encode the user's uploaded image → ANN search over pre-indexed catalog → return top-k. Re-rank with a cross-modal reranker if needed.",
+        "At query time: encode the uploaded image + encode all 10M catalog images \\to compute all cosine similarities \\to return top-k.",
+        "Offline: encode all 10M catalog images and index in an ANN index (FAISS/HNSW). At query time: encode the user's uploaded image \\to ANN search over pre-indexed catalog \\to return top-k. Re-rank with a cross-modal reranker if needed.",
         "Train a classifier with 10M output classes (one per item) and predict the closest item class.",
         "Use perceptual hashing (pHash) to find visually identical items — no ML model required.",
       ],
       correctAnswer: 1,
       explanation:
-        "The standard vision similarity search pipeline: (1) offline: encode all catalog images with a vision backbone (ViT, ResNet) and build an ANN index (FAISS IVF-PQ) — 10M × 512-dim embeddings in FP16 ≈ 10 GB; (2) online: encode the query image (50–100 ms for ViT-L), ANN search returns top-1000 in <10 ms. Computing all 10M similarities at query time would take seconds. A 10M-class classifier cannot generalize to new catalog items without retraining.",
+        "The standard vision similarity search pipeline: (1) offline: encode all catalog images with a vision backbone (ViT, ResNet) and build an ANN index (FAISS IVF-PQ) — 10M \\times 512-dim embeddings in FP16 \\approx 10 GB; (2) online: encode the query image (50–100 ms for ViT-L), ANN search returns top-1000 in <10 ms. Computing all 10M similarities at query time would take seconds. A 10M-class classifier cannot generalize to new catalog items without retraining.",
       hints: [
-        "10M cosine similarities × ~1 µs each = 10 seconds. ANN search: O(log n) = milliseconds.",
+        "10M cosine similarities \\times ~1 µs each = 10 seconds. ANN search: O(log n) = milliseconds.",
         "New catalog items only need to be encoded and added to the ANN index — no model retraining required.",
       ],
     },
@@ -1931,9 +1931,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Geohash encodes 2D (lat/lon) coordinates into a 1D string with hierarchical prefix properties: nearby locations share long common prefixes. A geohash of length 7 covers ~153m × 153m cells. To find drivers within 2 km, query the geohash cell of the user plus its 8 neighbors. Redis GEO commands (GEOSEARCH) implement this natively with sub-millisecond radius queries. B-tree indexes on lat/lon are inefficient for radius queries because lat and lon are indexed independently in 1D.",
+        "Geohash encodes 2D (lat/lon) coordinates into a 1D string with hierarchical prefix properties: nearby locations share long common prefixes. A geohash of length 7 covers ~153m \\times 153m cells. To find drivers within 2 km, query the geohash cell of the user plus its 8 neighbors. Redis GEO commands (GEOSEARCH) implement this natively with sub-millisecond radius queries. B-tree indexes on lat/lon are inefficient for radius queries because lat and lon are indexed independently in 1D.",
       hints: [
-        "Geohash length 6 ≈ 1.2 km × 0.6 km cells. Length 7 ≈ 153 m × 153 m. Choose based on query radius.",
+        "Geohash length 6 \\approx 1.2 km \\times 0.6 km cells. Length 7 \\approx 153 m \\times 153 m. Choose based on query radius.",
         "Redis GEOSEARCH command: geohash-based spatial index built into Redis — sub-millisecond radius queries.",
       ],
     },
@@ -1991,7 +1991,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "With 3 years of data, the model has seen December only 3 times — insufficient to learn its statistical behavior robustly. Adding explicit seasonal features (Fourier terms for yearly seasonality, holiday indicators, days-before/after holidays) encodes domain knowledge directly and greatly improves generalization for rare seasonal patterns. Prophet, N-BEATS, and TFT all use explicit seasonality decomposition for this reason.",
       hints: [
-        "3 years → 3 Decembers → the model has 3 training samples for the most important retail month.",
+        "3 years \\to 3 Decembers \\to the model has 3 training samples for the most important retail month.",
         "Fourier features (sin/cos of day-of-year) provide smooth seasonality encoding that generalizes across years.",
       ],
     },
@@ -2026,7 +2026,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Recursive forecasting accumulates error: each 1-step prediction error compounds over 30 steps, leading to large errors at the 30-day horizon. Direct multi-output forecasting trains one model with multiple output heads predicting all horizons simultaneously from the current input — no error accumulation. Temporal Fusion Transformer (TFT) and N-HiTS are direct multi-horizon architectures widely used in production forecasting.",
       hints: [
-        "Recursive forecasting error at step k grows approximately as k × \\sigma_1 for independent errors.",
+        "Recursive forecasting error at step k grows approximately as k \\times \\sigma_1 for independent errors.",
         "Direct forecasting: all output heads are trained jointly from the same features, with no error accumulation across steps.",
       ],
     },
@@ -2076,7 +2076,7 @@ const questions: Record<string, Question[]> = {
         "An LLM API serving system handles 10,000 concurrent requests with highly variable output lengths (10–2000 tokens). The system uses static batching. Which problem does static batching create, and what replaces it?",
       options: [
         "GPU memory fragmentation — static batching wastes memory. Replace with unified memory.",
-        "GPU utilization collapse: when the longest sequence in a batch finishes last, all other GPU slots sit idle. Continuous batching (iteration-level scheduling, used in vLLM) adds new requests as sequences complete, eliminating idle time and improving throughput by 5–20×.",
+        "GPU utilization collapse: when the longest sequence in a batch finishes last, all other GPU slots sit idle. Continuous batching (iteration-level scheduling, used in vLLM) adds new requests as sequences complete, eliminating idle time and improving throughput by 5–20\\times.",
         "Network bandwidth saturation — static batching requires too many tokens to be transferred. Replace with token streaming.",
         "Cache invalidation overhead — replace with request-level KV cache pinning.",
       ],
@@ -2085,7 +2085,7 @@ const questions: Record<string, Question[]> = {
         "In static batching, a batch of 32 requests must all finish before new requests start. If 31 requests finish in 100 tokens but 1 runs for 2000 tokens, 31 GPU slots are idle for 1900 tokens worth of generation time — approximately 95% GPU waste for those slots. Continuous batching (vLLM's key innovation) schedules at the token generation step: when any sequence reaches EOS or max_tokens, its slot is immediately replaced by a new waiting request.",
       hints: [
         "Idle GPU in static batching: slots that finished early wait for the slowest sequence in the batch.",
-        "vLLM introduced PagedAttention + continuous batching in 2023, showing 23× throughput improvement over naive serving.",
+        "vLLM introduced PagedAttention + continuous batching in 2023, showing 23\\times throughput improvement over naive serving.",
       ],
     },
   ],
@@ -2096,7 +2096,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A hiring algorithm ranks job applicants and is found to recommend men at a 2× higher rate than equally qualified women. Which fairness criterion is violated and what is the simplest post-processing fix?",
+        "A hiring algorithm ranks job applicants and is found to recommend men at a 2\\times higher rate than equally qualified women. Which fairness criterion is violated and what is the simplest post-processing fix?",
       options: [
         "Calibration is violated — apply Platt scaling to recalibrate scores.",
         "Demographic parity is violated (men and women are not recommended at equal rates). Post-processing fix: apply separate score thresholds per gender group, tuning each threshold to achieve equal positive prediction rates across groups.",
@@ -2134,7 +2134,7 @@ const questions: Record<string, Question[]> = {
         "A credit scoring model is required by regulation to achieve equalized odds (equal TPR and FPR) across racial groups while maintaining overall AUC above 0.80. How is this constraint enforced in a production ML system?",
       options: [
         "Add race as an explicit feature so the model can learn group-specific patterns.",
-        "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| ≤ \\epsilon), and monitor fairness metrics in production with automated alerts when constraints are violated.",
+        "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| \\leq \\epsilon), and monitor fairness metrics in production with automated alerts when constraints are violated.",
         "Retrain the model separately for each racial group — separate models guarantee fairness.",
         "Apply a uniform score multiplier to all members of the disadvantaged group.",
       ],
@@ -2165,7 +2165,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Parameter server architecture: all workers send gradients to central PS nodes, which aggregate and broadcast updated parameters — the PS nodes become network bottlenecks as worker count grows. Ring-AllReduce: workers are arranged in a logical ring; each worker communicates with only its two neighbors in 2(N-1) steps, with near-optimal bandwidth utilization regardless of N. Ring-AllReduce (used by Horovod, PyTorch DDP) scales linearly and is the standard for data-parallel training.",
       hints: [
-        "PS bottleneck: if N=100 workers each send gradients to 1 PS node, the PS needs 100× the bandwidth of one worker.",
+        "PS bottleneck: if N=100 workers each send gradients to 1 PS node, the PS needs 100\\times the bandwidth of one worker.",
         "Ring-AllReduce: bandwidth per worker is constant regardless of N — it scales perfectly.",
       ],
     },
@@ -2174,11 +2174,11 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Gradient compression techniques (e.g., Top-K sparsification, 1-bit quantization of gradients) can reduce communication volume in distributed training by 10–100× with minimal impact on final model accuracy.",
+        "Gradient compression techniques (e.g., Top-K sparsification, 1-bit quantization of gradients) can reduce communication volume in distributed training by 10–100\\times with minimal impact on final model accuracy.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Gradient sparsification selects only the largest K% of gradient values for communication, transmitting ~1% of the full gradient with error feedback (storing unshared gradients and adding them to the next step). 1-bit SGD quantizes gradient values to ±1, reducing communication to 32× fewer bits. Studies show these techniques achieve near-identical final accuracy to full-precision AllReduce, because small gradients contribute minimally to model updates and error feedback ensures no gradient information is permanently lost.",
+        "Gradient sparsification selects only the largest K% of gradient values for communication, transmitting ~1% of the full gradient with error feedback (storing unshared gradients and adding them to the next step). 1-bit SGD quantizes gradient values to \\pm1, reducing communication to 32\\times fewer bits. Studies show these techniques achieve near-identical final accuracy to full-precision AllReduce, because small gradients contribute minimally to model updates and error feedback ensures no gradient information is permanently lost.",
       hints: [
         "Top-K sparsification: send only the K largest gradient elements. Error feedback: accumulate unsent gradients and add them next step.",
         "Communication bandwidth, not compute, is often the bottleneck in large distributed training — compression is critical.",
@@ -2236,9 +2236,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/\\eta fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100× more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
+        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/\\eta fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100\\times more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
       hints: [
-        "Successive Halving: start with N configs at 1 epoch each. Keep top N/3 → train to 3 epochs. Keep top N/9 → train to 9 epochs.",
+        "Successive Halving: start with N configs at 1 epoch each. Keep top N/3 \\to train to 3 epochs. Keep top N/9 \\to train to 9 epochs.",
         "Hyperband eliminates the choice of starting resources in Successive Halving by running multiple brackets simultaneously.",
       ],
     },
@@ -2357,13 +2357,13 @@ const famous: Record<string, Question[]> = {
         "Design TinyURL: you need to generate a unique 7-character short code for each long URL, handling 100M URLs total and 10K write requests/second. Which ID generation + encoding approach is most appropriate?",
       options: [
         "Use MD5(long_url) and take the first 7 characters. Pros: deterministic (same URL always gets same code). Cons: MD5 collisions occur at ~100M entries; truncating to 7 chars makes collisions near-certain.",
-        "Auto-increment a 64-bit integer in the DB and encode it in base62 (a-z, A-Z, 0-9). A 7-char base62 string encodes up to 62^7 ≈ 3.5 trillion unique IDs, far more than 100M. Pros: no collisions, short codes, simple. Cons: single-point auto-increment bottleneck — mitigate with Twitter Snowflake-style distributed ID generation.",
-        "Generate a random UUID (128-bit) for each URL. Store UUID→long_url in DynamoDB. Short code = first 7 hex characters of UUID.",
+        "Auto-increment a 64-bit integer in the DB and encode it in base62 (a-z, A-Z, 0-9). A 7-char base62 string encodes up to 62^7 \\approx 3.5 trillion unique IDs, far more than 100M. Pros: no collisions, short codes, simple. Cons: single-point auto-increment bottleneck — mitigate with Twitter Snowflake-style distributed ID generation.",
+        "Generate a random UUID (128-bit) for each URL. Store UUID\\tolong_url in DynamoDB. Short code = first 7 hex characters of UUID.",
         "Use a consistent hash of the long URL across 10 DB shards. The shard ID + row ID form the short code.",
       ],
       correctAnswer: 1,
       explanation:
-        "Base62 encoding of an auto-incremented integer is the canonical answer: 62^7 ≈ 3.5 trillion > 100M, guaranteed no collisions, and 7 characters is short enough. At 10K writes/s, a single auto-increment DB becomes a bottleneck — solutions include: (a) Twitter Snowflake (41-bit timestamp + 10-bit machine ID + 12-bit sequence = 64-bit globally unique monotone IDs with no coordination), or (b) a ticket server (dedicated sequence DB with batch pre-allocation). MD5 truncation has collisions. UUIDs are 32 hex chars, too long if not encoded, and random UUIDs are unordered (bad for B-tree DB performance).",
+        "Base62 encoding of an auto-incremented integer is the canonical answer: 62^7 \\approx 3.5 trillion > 100M, guaranteed no collisions, and 7 characters is short enough. At 10K writes/s, a single auto-increment DB becomes a bottleneck — solutions include: (a) Twitter Snowflake (41-bit timestamp + 10-bit machine ID + 12-bit sequence = 64-bit globally unique monotone IDs with no coordination), or (b) a ticket server (dedicated sequence DB with batch pre-allocation). MD5 truncation has collisions. UUIDs are 32 hex chars, too long if not encoded, and random UUIDs are unordered (bad for B-tree DB performance).",
       hints: [
         "62^7 = 3,521,614,606,208 — always compute this to confirm the ID space is large enough.",
         "Twitter Snowflake format: 1 unused | 41-bit ms timestamp | 10-bit machine | 12-bit sequence. Allows 4096 IDs/ms/machine with no coordination.",
@@ -2381,14 +2381,14 @@ const famous: Record<string, Question[]> = {
         "Modulo: ~80% remapped. Consistent hashing: ~20% remapped.",
         "Modulo: ~80% remapped. Consistent hashing: ~20% remapped — same formula, the only difference is which keys move.",
         "Modulo: 80% remapped (4/5 of keys change their target node). Consistent hashing: ~1/5 = 20% remapped (only keys owned by the new node's range move).",
-        "Modulo: 100% remapped (every key's hash % N changes). Consistent hashing: ~1/(N+1) ≈ 20% remapped.",
+        "Modulo: 100% remapped (every key's hash % N changes). Consistent hashing: ~1/(N+1) \\approx 20% remapped.",
       ],
       correctAnswer: 3,
       explanation:
-        "With modulo hashing and N→N+1 nodes, almost every key maps to a different node (key % N \$\\neq\$ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
+        "With modulo hashing and N\\toN+1 nodes, almost every key maps to a different node (key % N \$\\neq\$ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
       hints: [
         "Consistent hashing invariant: adding node X only remaps keys in X's arc on the ring — no other nodes are affected.",
-        "Virtual nodes: each physical server owns V points on the ring. Larger V → more uniform load distribution but higher coordination overhead.",
+        "Virtual nodes: each physical server owns V points on the ring. Larger V \\to more uniform load distribution but higher coordination overhead.",
       ],
     },
   ],
@@ -2422,17 +2422,17 @@ const famous: Record<string, Question[]> = {
       question:
         "Design WhatsApp: for real-time 1-to-1 messaging with 2 billion users, how should the server push new messages to a recipient's mobile device, and how should you handle offline recipients?",
       options: [
-        "Short polling: client polls every 1 second. Simple to implement; scales poorly — 2B devices × 1 req/s = 2B req/s server load even when no messages arrive.",
+        "Short polling: client polls every 1 second. Simple to implement; scales poorly — 2B devices \\times 1 req/s = 2B req/s server load even when no messages arrive.",
         "Long polling: client holds an HTTP connection open; server responds only when a message arrives (or on timeout). Better than polling but still wastes one HTTP connection per client and has high reconnect overhead on mobile.",
         "WebSocket (persistent bidirectional TCP connection) for online users, maintained by a stateful connection server (chat service). For offline users: store the message in a DB (e.g., Cassandra) keyed by recipient; on reconnect, the client fetches missed messages via REST. Mobile push (APNs/FCM) wakes offline apps.",
-        "Server-sent events (SSE): server streams messages over HTTP/2 to the client. Bidirectional by using REST for client→server. Simpler than WebSocket.",
+        "Server-sent events (SSE): server streams messages over HTTP/2 to the client. Bidirectional by using REST for client\\toserver. Simpler than WebSocket.",
       ],
       correctAnswer: 2,
       explanation:
-        "WhatsApp uses persistent WebSocket connections to a fleet of connection servers (Erlang/OTP for massive concurrency — 2M connections per server). Online message flow: sender → connection server → message router → recipient's connection server → recipient via WebSocket. For offline recipients: store message in Cassandra (optimized for write-heavy, keyed by recipient+timestamp); on reconnect, client syncs missed messages. Mobile push (APNs for iOS, FCM for Android) provides the initial wake-up signal. This architecture cleanly separates connection management from message storage, allowing each to scale independently.",
+        "WhatsApp uses persistent WebSocket connections to a fleet of connection servers (Erlang/OTP for massive concurrency — 2M connections per server). Online message flow: sender \\to connection server \\to message router \\to recipient's connection server \\to recipient via WebSocket. For offline recipients: store message in Cassandra (optimized for write-heavy, keyed by recipient+timestamp); on reconnect, client syncs missed messages. Mobile push (APNs for iOS, FCM for Android) provides the initial wake-up signal. This architecture cleanly separates connection management from message storage, allowing each to scale independently.",
       hints: [
         "Erlang/OTP: each WebSocket connection = one lightweight Erlang process. 2M processes per server is feasible due to Erlang's green threads and preemptive scheduler.",
-        "Message storage key design: (recipient_id, timestamp) → allows efficient range scan for 'messages since last seen timestamp' on reconnect.",
+        "Message storage key design: (recipient_id, timestamp) \\to allows efficient range scan for 'messages since last seen timestamp' on reconnect.",
       ],
     },
   ],
@@ -2458,7 +2458,7 @@ const famous2: Record<string, Question[]> = {
         "Google's typeahead uses a trie with pre-aggregated top-K lists at each node — this is the canonical answer. Each internal node stores the K highest-frequency completions beneath it, not just the children's prefixes. Traversal is O(length of prefix) = O(3) for 'sta', with O(1) list retrieval. The trie is built offline (MapReduce over query logs) and loaded into each serving machine's memory (~10GB compressed). LIKE queries on SQL are slow even with B-tree indexes (no range scan for suffix patterns). Redis caching only covers hot prefixes; trie handles all prefixes uniformly. Elasticsearch completion suggester is a production alternative (Spotify uses it) but has higher latency than in-memory trie.",
       hints: [
         "Key trie optimization: store top-K completions at EVERY node, not just leaf nodes. Traversing 'sta' returns the pre-computed top-5 without scanning all children.",
-        "Trie memory: 10B queries × average 30 chars = ~300GB raw; frequency aggregation collapses to ~50M unique prefixes × top-5 entries ≈ manageable with compression.",
+        "Trie memory: 10B queries \\times average 30 chars = ~300GB raw; frequency aggregation collapses to ~50M unique prefixes \\times top-5 entries \\approx manageable with compression.",
       ],
     },
     {
@@ -2513,7 +2513,7 @@ const famous2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Uber uses Google S2 geometry (open-sourced). The Hilbert curve property is critical: nearby points on Earth map to nearby S2 cell IDs, enabling range queries with integer key comparisons. At level 14 (~600m cells), a 5km radius needs ~50 cells — fetch all drivers with cell IDs in those 50 cells from a distributed KV store (Uber uses Riak/DynamoDB). Driver location updates (1M × 15/min = 15M writes/min) write to the KV store keyed by cell ID. S2 advantages over geohash: (1) equal-area cells at each level; (2) exact coverage of arbitrary regions without edge artifacts; (3) hierarchical — same system handles city-level and street-level queries. QuadTree works but requires in-memory data structure management across server restarts.",
+        "Uber uses Google S2 geometry (open-sourced). The Hilbert curve property is critical: nearby points on Earth map to nearby S2 cell IDs, enabling range queries with integer key comparisons. At level 14 (~600m cells), a 5km radius needs ~50 cells — fetch all drivers with cell IDs in those 50 cells from a distributed KV store (Uber uses Riak/DynamoDB). Driver location updates (1M \\times 15/min = 15M writes/min) write to the KV store keyed by cell ID. S2 advantages over geohash: (1) equal-area cells at each level; (2) exact coverage of arbitrary regions without edge artifacts; (3) hierarchical — same system handles city-level and street-level queries. QuadTree works but requires in-memory data structure management across server restarts.",
       hints: [
         "Hilbert curve: maps 2D space to 1D while preserving locality. Adjacent points in 2D have close IDs in 1D, enabling range queries.",
         "Driver location update: S2 cell ID at multiple levels = cell ID at level 8 (city block), 12 (neighborhood), 14 (street). Store all three for multi-precision queries.",
@@ -2535,7 +2535,7 @@ const famous2: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Idempotency keys are the industry-standard solution (Stripe, PayPal, Braintree all implement this). The client generates a UUID before the first attempt and reuses it on all retries for the same logical payment. The payment processor stores (idempotency_key → result) with a UNIQUE constraint — duplicate requests return the stored result without re-executing. This is safe to implement with a Redis SET NX (set if not exists) or DB UNIQUE constraint. The key insight: the idempotency key is client-generated (not server-generated) so it survives network failures. 2PC is impractical with external payment processors (they don't expose distributed transaction APIs). Option A depends on the processor returning a specific error — not guaranteed across all processors.",
+        "Idempotency keys are the industry-standard solution (Stripe, PayPal, Braintree all implement this). The client generates a UUID before the first attempt and reuses it on all retries for the same logical payment. The payment processor stores (idempotency_key \\to result) with a UNIQUE constraint — duplicate requests return the stored result without re-executing. This is safe to implement with a Redis SET NX (set if not exists) or DB UNIQUE constraint. The key insight: the idempotency key is client-generated (not server-generated) so it survives network failures. 2PC is impractical with external payment processors (they don't expose distributed transaction APIs). Option A depends on the processor returning a specific error — not guaranteed across all processors.",
       hints: [
         "Idempotency key lifecycle: generate before first attempt, store with the order in your DB, send on every retry. Expire keys after 24-48 hours.",
         "Stripe's implementation: Idempotency-Key header + DB unique index on (customer_id, idempotency_key). Returns cached response for up to 24 hours.",
@@ -2559,7 +2559,7 @@ const famous2: Record<string, Question[]> = {
       explanation:
         "LSM trees optimize for write throughput by converting random writes into sequential disk writes. Write path: (1) append to WAL for durability; (2) write to in-memory MemTable (AVL tree or skip list); (3) when MemTable is full (~64MB), flush to a sorted SSTable on disk sequentially. Sequential writes achieve full disk bandwidth (GB/s vs MB/s for random). Compaction merges SSTables to reclaim space and maintain read performance. Bloom filters (one per SSTable, ~10 bits/key) answer 'does this key exist in this SSTable?' with O(1) and ~1% false positive rate — avoiding disk reads for missing keys. B-trees update in-place with random writes, causing write amplification from page splits and rebalancing. RocksDB (Facebook) is the canonical LSM implementation, used by DynamoDB, Cassandra, and many others.",
       hints: [
-        "LSM write path: WAL (durability) → MemTable (speed) → SSTable (persistence). WAL + MemTable = writes survive crash; WAL is sequential append.",
+        "LSM write path: WAL (durability) \\to MemTable (speed) \\to SSTable (persistence). WAL + MemTable = writes survive crash; WAL is sequential append.",
         "Bloom filter per SSTable: before reading SSTable for a key, check Bloom filter. If negative, skip SSTable entirely. Reduces read amplification from O(SSTables) to O(1) for missing keys.",
       ],
     },
@@ -2574,7 +2574,7 @@ const famous2: Record<string, Question[]> = {
       options: [
         "Pure fan-out-on-read (pull): when a user opens their feed, query all 2000 followed accounts for their recent tweets, merge and sort by time. Simple but slow at read time — 2000 DB queries per feed load.",
         "Pure fan-out-on-write (push): when a user posts, write the tweet ID to each follower's timeline cache (Redis sorted set). Feed reads are O(1). Problem: a celebrity with 30M followers causes 30M Redis writes per tweet — write latency is unacceptable.",
-        "Hybrid: fan-out-on-write for normal users (≤ ~10K followers) into each follower's Redis timeline cache. For celebrities (> threshold), use fan-out-on-read at render time — fetch celebrity tweets separately and merge with the pre-computed timeline. This limits write fan-out to manageable sizes while keeping reads fast for all users.",
+        "Hybrid: fan-out-on-write for normal users (\\leq ~10K followers) into each follower's Redis timeline cache. For celebrities (> threshold), use fan-out-on-read at render time — fetch celebrity tweets separately and merge with the pre-computed timeline. This limits write fan-out to manageable sizes while keeping reads fast for all users.",
         "Fan-out-on-write for all users, using Kafka to buffer the 30M writes asynchronously. The celebrity's 30M followers all eventually receive the tweet within 5 seconds.",
       ],
       correctAnswer: 2,
@@ -2601,9 +2601,9 @@ const famous2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The three canonical challenges for web crawlers at Google scale: (1) Deduplication: 10B pages produce far more URLs (links create cycles and duplicates). A Bloom filter with 10B bits ≈ 1.2GB memory handles 10B URLs with ~1% false positive rate — far cheaper than a hash set. (2) Politeness: crawling too aggressively gets your IP blocked and violates robots.txt. Each domain gets its own queue processed at the allowed rate. (3) URL prioritization: not all pages are equal. PageRank estimate, update frequency (sitemaps), and content quality determine crawl priority. A two-level queue (front queue for priority, back queue by domain for politeness) is the standard architecture. DNS caching is also critical — 4000 req/s with uncached DNS means 4000 DNS lookups/s; cache TTL of 1 hour reduces this by 100-1000x.",
+        "The three canonical challenges for web crawlers at Google scale: (1) Deduplication: 10B pages produce far more URLs (links create cycles and duplicates). A Bloom filter with 10B bits \\approx 1.2GB memory handles 10B URLs with ~1% false positive rate — far cheaper than a hash set. (2) Politeness: crawling too aggressively gets your IP blocked and violates robots.txt. Each domain gets its own queue processed at the allowed rate. (3) URL prioritization: not all pages are equal. PageRank estimate, update frequency (sitemaps), and content quality determine crawl priority. A two-level queue (front queue for priority, back queue by domain for politeness) is the standard architecture. DNS caching is also critical — 4000 req/s with uncached DNS means 4000 DNS lookups/s; cache TTL of 1 hour reduces this by 100-1000x.",
       hints: [
-        "Bloom filter false positive tradeoff: at 10 bits/element, false positive rate ≈ 0.8%. A false positive means a new URL is incorrectly marked as seen and skipped — acceptable for a crawler.",
+        "Bloom filter false positive tradeoff: at 10 bits/element, false positive rate \\approx 0.8%. A false positive means a new URL is incorrectly marked as seen and skipped — acceptable for a crawler.",
         "robots.txt caching: fetch and cache robots.txt per domain (not per page). Re-fetch every 24 hours. Checking robots.txt on every request adds latency and violates the spirit of the standard.",
       ],
     },
@@ -2731,25 +2731,7 @@ const extraMsdQ3: Record<string, Question[]> = {
         "Streaming advantage: amortizes expensive aggregation computations across the stream rather than per-request.",
       ],
     },
-    {
-      id: "q-msd-rt-4",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "An ML serving system must maintain p99 latency < 100ms under 10x traffic spikes. Which combination of techniques best ensures SLO compliance?",
-      options: [
-        "Auto-scaling the serving fleet with a 5-minute scale-up time, ensuring eventual capacity for sustained traffic increases",
-        "Adaptive degradation under load: (1) pre-deploy a distilled smaller model as fallback; (2) request hedging — duplicate slow requests to a second server after 70ms; (3) load shedding — drop lowest-priority traffic above 80% CPU; (4) predictive scaling before anticipated spikes",
-        "Horizontal scaling with a 5-minute SLA for new instances — accept latency violations during scale-up as unavoidable",
-        "Synchronous batch inference: accumulate 100 requests, run batch, return results — this improves GPU utilization",
       ],
-      correctAnswer: 1,
-      explanation: "Handling traffic spikes for p99 latency requires layered techniques: (1) Distilled fallback: when CPU > threshold, route to a 3x faster distilled model — p99 preserved, small accuracy cost. (2) Request hedging: if response not received within 70ms, issue identical request to a second server; first response wins. Reduces tail latency 20-30% at 2% extra load. (3) Load shedding: drop low-priority traffic (anonymous users, background refreshes) during extreme load. (4) Predictive scaling: scale up 10 min before predicted spikes. Auto-scaling alone (5-min scale-up) cannot handle sudden spikes. Synchronous batching increases individual request latency.",
-      hints: [
-        "Request hedging math: if p(>70ms on one server) = 5%, p(both >70ms) = 0.25%. Hedging converts 5% tail to 0.25% tail at 2% extra load.",
-        "Load shedding tiers: tier 1 (logged-in, real-time) never shed. Tier 2 (batch inference, A/B logging) shed first. Tier 3 (analytics) shed aggressively.",
-      ],
-    },
-  ],
   "data-flywheel-advanced": [
     {
       id: "q-msd-df-1",
@@ -2818,25 +2800,7 @@ const extraMsdQ3: Record<string, Question[]> = {
         "Propensity clipping: IPS weights can be very large for low-position clicks. Clip weights at a maximum to prevent high-variance gradient updates.",
       ],
     },
-    {
-      id: "q-msd-df-5",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "Active learning with a budget of 1000 labels/day. Which strategy is most sample-efficient for improving model performance?",
-      options: [
-        "Random sampling: send 1000 randomly selected unlabeled samples to annotators each day",
-        "Pure uncertainty sampling: send the 1000 samples where the model has lowest confidence (highest entropy predictions)",
-        "A hybrid strategy: core-set selection (maximally representative of unlabeled distribution via greedy k-center in embedding space), combined with uncertainty filtering (prefer samples near decision boundary), and diversity constraint (geographic, temporal, class diversity) — this balances informativeness and representativeness",
-        "Hardest negative mining: select the 1000 samples the model is most confidently wrong about based on a proxy label",
       ],
-      correctAnswer: 2,
-      explanation: "Pure uncertainty sampling suffers from redundancy: the 1000 most uncertain samples are often clustered near a few decision boundary regions, providing redundant labels. Core-set selection (Sener & Savarese 2018) ensures selected samples cover the full data distribution by minimizing the maximum distance from any unlabeled sample to its nearest labeled sample. The hybrid approach balances: informativeness (uncertain = near decision boundary), representativeness (core-set coverage), and diversity constraints (prevent temporal/geographic clustering). This hybrid is used in production active learning pipelines at Google and Waymo.",
-      hints: [
-        "Redundancy in uncertainty sampling: if the model is uncertain about blurry cats, sampling 1000 blurry cats gives 1000 similar labels with diminishing returns after ~50.",
-        "Greedy k-center: select x* = argmax_{x unlabeled} min_{x' labeled} d(x, x'). Iteratively selects the point furthest from all currently labeled points.",
-      ],
-    },
-  ],
   "privacy-ml-systems": [
     {
       id: "q-msd-pp-1",
@@ -2887,76 +2851,7 @@ const extraMsdQ3: Record<string, Question[]> = {
         "Privacy budget per model version: some teams treat each model release as a new privacy domain and restart budget tracking — actively debated in the DP community.",
       ],
     },
-    {
-      id: "q-msd-pp-4",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "A company trains a model on sensitive medical records using differential privacy with epsilon=1. Which factor most significantly determines how much accuracy the model loses due to DP noise?",
-      options: [
-        "The number of model parameters — larger models lose more accuracy because more parameters receive noise",
-        "The model architecture type — convolutional networks are more robust to DP noise than transformers",
-        "The clipping threshold C relative to the true gradient norm — if C is much smaller than the gradient norm, important gradients are heavily clipped before noise is added; if C is too large, noise variance (sigma^2 C^2) becomes large. Optimal C balances clipping bias and noise variance",
-        "The learning rate — higher learning rates amplify DP noise and cause divergence",
       ],
-      correctAnswer: 2,
-      explanation: "The clipping threshold C in DP-SGD is the most impactful accuracy hyperparameter: (1) If C << true gradient norm: gradients are always clipped, losing magnitude information. (2) If C >> true gradient norm: gradients are unclipped but noise variance sigma^2 C^2 is large, swamping the gradient signal. Optimal C is set near the median of per-sample gradient norms (auto-clip methods). Larger batch sizes reduce the noise-to-signal ratio. Public pretrained models (DP fine-tuning of BERT/ViT) dramatically reduce accuracy loss because the model starts near the optimum and requires less noisy training.",
-      hints: [
-        "Auto-clipping: AdaClip and DP-Adam variants estimate optimal C adaptively by monitoring gradient norm percentiles during training.",
-        "PATE framework: train multiple teacher models on partitioned data (no DP), aggregate teacher votes with DP noise, use noisy votes to label public data, train student on public data. Much better accuracy-privacy trade-off than DP-SGD.",
-      ],
-    },
-  ],
-  "embedding-retrieval-design": [
-    {
-      id: "q-msd-emb-1",
-      type: "multiple-choice",
-      difficulty: "medium",
-      question: "A recommendation system's item embedding space should have which geometric property to enable efficient and meaningful retrieval?",
-      options: [
-        "Maximum dimensionality — more dimensions encode more item attributes and always improve retrieval quality",
-        "Isotropic distribution with well-separated clusters for semantically different items: embeddings uniformly distributed across the hypersphere (avoiding collapse where embeddings cluster near the origin), with angular distance reflecting semantic dissimilarity and enabling cosine similarity search to align with human-perceived relevance",
-        "Sparse representation where each dimension corresponds to a human-interpretable item attribute, enabling item filtering by dimension value",
-        "Binary embeddings — items as binary vectors enabling Hamming distance search, which is 100x faster than cosine similarity for ANN retrieval",
-      ],
-      correctAnswer: 1,
-      explanation: "Well-designed embedding spaces for retrieval should: (1) be isotropically distributed (uniform on the hypersphere) to use full representational capacity — collapsed embeddings waste capacity and make ANN retrieval unreliable; (2) cluster semantically similar items close together in angular distance; (3) have sufficient but not excessive dimensionality, typically 64-512 dimensions with diminishing returns beyond ~256 dims. Methods to achieve isotropy: temperature scaling in contrastive loss, whitening post-processing, ArcFace-style angular margin losses. Representation collapse is a key failure mode in contrastive learning that must be monitored in production.",
-      hints: [
-        "Collapse detection: monitor the average cosine similarity between randomly sampled item pairs. Near-zero = isotropic (good). Near-one = collapsed (bad).",
-        "Dimensionality selection: measure retrieval recall@k as you increase dimensionality. Pick the elbow point where gains plateau. Common: 64-128 dims for catalog search.",
-      ],
-    },
-    {
-      id: "q-msd-emb-2",
-      type: "true-false",
-      difficulty: "easy",
-      question: "In a recommendation system, increasing the embedding dimension of the item tower always improves retrieval recall because higher-dimensional embeddings can represent more item attributes.",
-      options: ["True", "False"],
-      correctAnswer: "False",
-      explanation: "Embedding dimensionality follows a diminishing returns curve: increasing dimension improves recall up to a point, then plateaus or decreases due to (1) overfitting — with many dimensions and limited training data, the model fits noise; (2) ANN index quality degradation — high-dimensional HNSW and IVF-PQ indices lose recall and become slower (curse of dimensionality for ANN); (3) training instability with high-dimensional softmax over millions of items. Typical sweet spots: 64-128 dims for catalog search (<1M items), 128-256 for large-scale retrieval (>100M items). Above 512 dims rarely provides measurable improvement in production.",
-      hints: [
-        "ANN quality vs dimension: FAISS IVF-PQ quantization error increases with dimension; HNSW graph connectivity degrades. Both negatively affect retrieval recall at very high dimensions.",
-        "Empirical sweet spot: YouTube uses 256 dims. Pinterest uses 128 dims. Both found diminishing returns beyond their chosen dimension.",
-      ],
-    },
-    {
-      id: "q-msd-emb-3",
-      type: "multiple-choice",
-      difficulty: "hard",
-      question: "An e-commerce platform must update its ANN index of 500 million item embeddings as new items are added and attributes change. Which update strategy minimizes both index staleness and rebuild cost?",
-      options: [
-        "Full index rebuild every hour — ensures all embeddings are fresh but requires 500M embedding lookups and 1 hour of indexing time per rebuild",
-        "Maintain a small delta index of recently changed items alongside the main ANN index. At query time, search both indexes and merge results. Periodically merge the delta into the main index during low-traffic windows. New items go into the delta first (available within seconds) while the main index is rebuilt weekly in the background",
-        "Use a hash-based lookup table instead of ANN — hash item IDs to embedding vectors, enabling O(1) lookup with zero rebuild overhead",
-        "Keep the original embeddings frozen and add a re-ranking layer that adjusts scores based on real-time item attributes without updating the ANN index",
-      ],
-      correctAnswer: 1,
-      explanation: "Tiered ANN indexing (main + delta) is the standard production architecture for large-scale retrieval with frequent updates: (1) Main index: 500M items, built weekly or daily during low-traffic. HNSW or IVF-PQ provides fast ANN search. (2) Delta index: thousands of new/changed items since last main rebuild, maintained in a small exact-search structure. Query time: search both and merge by score. New items appear in the delta within seconds. (3) Periodic merge: merge delta into main when delta grows large (degrading brute-force query performance). This pattern is used in Pinecone, Qdrant, and Elasticsearch vector search implementations.",
-      hints: [
-        "Delta index merge trigger: when delta size exceeds 1% of main index size, brute-force delta search becomes expensive. Trigger merge at this threshold.",
-        "Query merge: run ANN search on main (top-k1), run brute-force on delta (top-k2), merge and re-rank by score, return final top-k.",
-      ],
-    },
-  ],
 };
 
 Object.assign(questions, extraMsdQ3);

@@ -12,7 +12,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "−log 2", "−2 log 2", "log 2"],
       correctAnswer: 2,
       explanation:
-        "At Nash equilibrium p_g = p_r, so D*(x) = 1/2 everywhere. Substituting into V gives V(D*,G) = −log 4 + 2·JS(p_r||p_g). Minimising over G is therefore equivalent to minimising the symmetric Jensen-Shannon divergence.",
+        "At Nash equilibrium p_g = p_r, so D*(x) = 1/2 everywhere. Substituting into V gives V(D*,G) = −log 4 + 2\\cdotJS(p_r||p_g). Minimising over G is therefore equivalent to minimising the symmetric Jensen-Shannon divergence.",
       hints: [
         "At equilibrium D*(x) = p_r(x)/(p_r(x)+p_g(x)) = 1/2. Substitute into V(D,G) = E[log D(x)] + E[log(1−D(G(z)))] and simplify.",
         "The global optimum of the GAN is related to the Jensen-Shannon divergence between p_r and p_g.",
@@ -52,7 +52,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Substituting D*(x) = p_r/(p_r+p_g) into the value function V(D*,G) gives V = −log 4 + 2·JS(p_r||p_g). Minimising over G is therefore equivalent to minimising the symmetric Jensen-Shannon divergence.",
+        "Substituting D*(x) = p_r/(p_r+p_g) into the value function V(D*,G) gives V = −log 4 + 2\\cdotJS(p_r||p_g). Minimising over G is therefore equivalent to minimising the symmetric Jensen-Shannon divergence.",
       hints: [
         "The JS divergence is JS(p||q) = (1/2)KL(p||m) + (1/2)KL(q||m) where m = (p+q)/2, and it is symmetric.",
         "KL divergence is asymmetric; JS is symmetric and bounded in [0, log 2].",
@@ -75,7 +75,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When D(G(z)) ≈ 0 (generator is weak), log(1−D(G(z))) saturates near log(1) ≈ 0 giving a near-zero gradient. −log D(G(z)) is large in the same regime, providing a strong gradient signal. The practical generator objective is therefore to minimise −log D(G(z)).",
+        "When D(G(z)) \\approx 0 (generator is weak), log(1−D(G(z))) saturates near log(1) \\approx 0 giving a near-zero gradient. −log D(G(z)) is large in the same regime, providing a strong gradient signal. The practical generator objective is therefore to minimise −log D(G(z)).",
       hints: [
         "Plot log(1−x) and −log(x) for x near 0 to see which has larger magnitude.",
         "Early in training D(G(z)) is very small — the saturating form gives almost no gradient to train the generator.",
@@ -113,7 +113,7 @@ const questions: Record<string, Question[]> = {
         "Arjovsky & Bottou (2017) showed that when p_r and p_g are supported on disjoint manifolds (which is almost certain in high dimensions when p_g is parameterised by a low-dimensional noise), JS(p_r||p_g) = log 2 — a constant — producing zero gradient for the generator regardless of how far apart the distributions are.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
   ],
@@ -124,13 +124,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the DCGAN generator (Radford et al. 2015), a G_block with 4×4 kernel, stride 2, padding 1, applied to a 16×16 feature map produces an output of size ___.",
-      options: ["8×8", "16×16", "32×32", "64×64"],
+        "In the DCGAN generator (Radford et al. 2015), a G_block with 4\\times4 kernel, stride 2, padding 1, applied to a 16\\times16 feature map produces an output of size ___.",
+      options: ["8\\times8", "16\\times16", "32\\times32", "64\\times64"],
       correctAnswer: 2,
       explanation:
-        "The transposed convolution output size formula is: n_out = (n_in − 1)·stride − 2·padding + kernel = (16−1)·2 − 2·1 + 4 = 30 + 4 − 2 = 32. Each G_block doubles spatial dimensions. Starting from 4×4, four G_blocks produce 4→8→16→32→64.",
+        "The transposed convolution output size formula is: n_out = (n_in − 1)\\cdotstride − 2\\cdotpadding + kernel = (16−1)\\cdot2 − 2\\cdot1 + 4 = 30 + 4 − 2 = 32. Each G_block doubles spatial dimensions. Starting from 4\\times4, four G_blocks produce 4\\to8\\to16\\to32\\to64.",
       hints: [
-        "Transposed convolution (also called fractionally-strided convolution) upsamples. Formula: n_out = (n_in−1)·s − 2p + k.",
+        "Transposed convolution (also called fractionally-strided convolution) upsamples. Formula: n_out = (n_in−1)\\cdots − 2p + k.",
         "DCGAN uses stride=2, padding=1, kernel=4 in each G_block, so each block doubles the spatial size.",
       ],
     },
@@ -158,7 +158,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "−0.6", "3", "−3"],
       correctAnswer: 1,
       explanation:
-        "Leaky ReLU(x) = x if x > 0, else \\alpha·x. For x = −3 and \\alpha = 0.2: output = 0.2 × (−3) = −0.6. This non-zero output for negative inputs prevents dead neurons and allows gradient flow through the discriminator even for negative activations.",
+        "Leaky ReLU(x) = x if x > 0, else \\alpha\\cdotx. For x = −3 and \\alpha = 0.2: output = 0.2 \\times (−3) = −0.6. This non-zero output for negative inputs prevents dead neurons and allows gradient flow through the discriminator even for negative activations.",
       hints: [
         "Standard ReLU would output 0 for x = −3. Leaky ReLU multiplies by the small slope \\alpha instead.",
         "\\alpha = 0.2 means negative activations leak through at 20% of their magnitude.",
@@ -232,8 +232,8 @@ const questions: Record<string, Question[]> = {
       question:
         "The Wasserstein-1 (Earth Mover\'s) distance W(p_r, p_g) is defined via the Kantorovich-Rubinstein dual as W(p_r, p_g) = ___.",
       options: [
-        "sup_{||f||_L ≤ 1} E_{x~p_r}[f(x)] − E_{x~p_g}[f(x)]",
-        "inf_{\\gamma ∈ \\Pi(p_r,p_g)} E_{(x,y)~\\gamma}[||x−y||]",
+        "sup_{||f||_L \\leq 1} E_{x~p_r}[f(x)] − E_{x~p_g}[f(x)]",
+        "inf_{\\gamma \\in \\Pi(p_r,p_g)} E_{(x,y)~\\gamma}[||x−y||]",
         "KL(p_r || p_g) + KL(p_g || p_r)",
         "E_{x~p_r}[log p_r(x)/p_g(x)]",
       ],
@@ -242,7 +242,7 @@ const questions: Record<string, Question[]> = {
         "By the Kantorovich-Rubinstein duality, W(p_r,p_g) = sup over all 1-Lipschitz functions f of E_{p_r}[f(x)] − E_{p_g}[f(x)]. WGAN trains a critic f_w to approximate this supremum, making the loss directly the Wasserstein distance.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
     {
@@ -262,7 +262,7 @@ const questions: Record<string, Question[]> = {
         'Arjovsky et al. (2017) explicitly stated in the WGAN paper that "Weight clipping is a clearly terrible way to enforce a Lipschitz constraint." It can lead to either vanishing or exploding gradients depending on the clipping threshold, motivating WGAN-GP\'s gradient penalty improvement.',
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
     {
@@ -272,17 +272,17 @@ const questions: Record<string, Question[]> = {
       question:
         "WGAN-GP (Gulrajani et al. 2017) replaces weight clipping with a gradient penalty. The penalty term is ___.",
       options: [
-        "\\lambda · E_{x̂}[(||\\nablaD(x̂)||₂ − 1)²] where x̂ is sampled along lines between real and fake data",
-        "\\lambda · E_{x}[||\\nablaD(x)||₂²] at real data points only",
-        "\\lambda · ||W||_F² on all critic weights (Frobenius norm penalty)",
-        "\\lambda · E_{z}[||\\nabla_z D(G(z))||₂²]",
+        "\\lambda \\cdot E_{x̂}[(||\\nablaD(x̂)||\\_2 − 1)\\^2] where x̂ is sampled along lines between real and fake data",
+        "\\lambda \\cdot E_{x}[||\\nablaD(x)||\\_2\\^2] at real data points only",
+        "\\lambda \\cdot ||W||_F\\^2 on all critic weights (Frobenius norm penalty)",
+        "\\lambda \\cdot E_{z}[||\\nabla_z D(G(z))||\\_2\\^2]",
       ],
       correctAnswer: 0,
       explanation:
-        "WGAN-GP samples interpolated points x̂ = \\epsilon·x_real + (1−\\epsilon)·x_fake with \\epsilon~U[0,1] and adds \\lambda·E[(||\\nablaD(x̂)||₂ − 1)²] to the critic loss, directly penalising deviation of gradient norms from 1 along the optimal transport path.",
+        "WGAN-GP samples interpolated points x̂ = \\epsilon\\cdotx_real + (1−\\epsilon)\\cdotx_fake with \\epsilon~U[0,1] and adds \\lambda\\cdotE[(||\\nablaD(x̂)||\\_2 − 1)\\^2] to the critic loss, directly penalising deviation of gradient norms from 1 along the optimal transport path.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
   ],
@@ -302,7 +302,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ProGAN starts both networks at 4×4 resolution and smoothly fades in new layers that double the resolution, allowing stable training at resolutions up to 1024×1024.",
+        "ProGAN starts both networks at 4\\times4 resolution and smoothly fades in new layers that double the resolution, allowing stable training at resolutions up to 1024\\times1024.",
       hints: [
         'The method is called "progressive" — think about growing the network incrementally.',
         "Training at low resolution first lets the model learn coarse structure before tackling fine details.",
@@ -398,7 +398,7 @@ const questions: Record<string, Question[]> = {
         "Truncating w = w̄ + \\psi(w − w̄) pulls samples toward the center of the W space, which corresponds to more average, higher-fidelity faces at the cost of less variety.",
       hints: [
         "Points near the mean of a distribution tend to be more typical (higher likelihood) samples.",
-        "\\psi = 1 means no truncation; \\psi → 0 collapses everything to the mean style.",
+        "\\psi = 1 means no truncation; \\psi \\to 0 collapses everything to the mean style.",
       ],
     },
   ],
@@ -412,7 +412,7 @@ const questions: Record<string, Question[]> = {
         "CycleGAN enables image-to-image translation without paired training examples. How does it enforce content consistency?",
       options: [
         "By minimizing pixel-wise L2 loss between input and output",
-        "Through a cycle-consistency loss that requires G(F(x)) ≈ x and F(G(y)) ≈ y",
+        "Through a cycle-consistency loss that requires G(F(x)) \\approx x and F(G(y)) \\approx y",
         "By sharing weights between the two generators",
         "By applying the discriminator to the concatenation of input and output",
       ],
@@ -420,7 +420,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Cycle-consistency loss penalizes deviations from round-trip reconstruction: translating from domain X to Y and back should recover the original image, preventing arbitrary mappings.",
       hints: [
-        'Think about what "cycle" implies: going from X→Y→X should return to the start.',
+        'Think about what "cycle" implies: going from X\\toY\\toX should return to the start.',
         "Without this constraint, the generators could produce any valid-looking image in the target domain, ignoring input content.",
       ],
     },
@@ -453,7 +453,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The identity loss (||G(y) − y||) encourages G (X→Y translator) to act as an approximate identity when given a sample already in domain Y, helping preserve color and content fidelity.",
+        "The identity loss (||G(y) − y||) encourages G (X\\toY translator) to act as an approximate identity when given a sample already in domain Y, helping preserve color and content fidelity.",
       hints: [
         "Without this loss, the generator might unnecessarily alter images that already look like the target domain.",
         "It is applied by feeding real target-domain images through the generator that maps to that same domain.",
@@ -479,7 +479,7 @@ const questions: Record<string, Question[]> = {
         "Pix2Pix is a supervised image-to-image translation framework that uses paired training examples (input image + ground truth output), while CycleGAN relaxes this to unpaired data.",
       hints: [
         "Think about the supervision signal: does Pix2Pix have a ground-truth target to compare against?",
-        "The original Pix2Pix paper demonstrates tasks like facades↔photo, edges→shoes, where pairs exist.",
+        "The original Pix2Pix paper demonstrates tasks like facades\\leftrightarrowphoto, edges\\toshoes, where pairs exist.",
       ],
     },
     {
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "PatchGAN classifies N×N patches independently, encouraging local texture realism while being more parameter-efficient than a full-image discriminator.",
+        "PatchGAN classifies N\\timesN patches independently, encouraging local texture realism while being more parameter-efficient than a full-image discriminator.",
       hints: [
         "A patch-based discriminator penalizes high-frequency artifacts at the local level.",
         "Think about how a convolutional network with limited receptive field perceives images.",
@@ -708,7 +708,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'When D(G(z)) ≈ 0 (generator is easily detected), log(1−D(G(z))) saturates near log(1) ≈ 0 giving vanishing gradients; −log D(G(z)) is large there, providing stronger signal. This is the "non-saturating" generator heuristic from Goodfellow et al. 2014.',
+        'When D(G(z)) \\approx 0 (generator is easily detected), log(1−D(G(z))) saturates near log(1) \\approx 0 giving vanishing gradients; −log D(G(z)) is large there, providing stronger signal. This is the "non-saturating" generator heuristic from Goodfellow et al. 2014.',
       hints: [
         "Plot log(1−x) and −log(x) for x near 0 to see which has larger magnitude.",
         "Early in training the generator produces terrible images — what gradient does each loss give?",
@@ -734,19 +734,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Least Squares GAN (LSGAN) replaces the cross-entropy discriminator loss with (D(x)−1)² + (D(G(z)))². Which divergence does this minimise at the generator optimum?",
+        "Least Squares GAN (LSGAN) replaces the cross-entropy discriminator loss with (D(x)−1)\\^2 + (D(G(z)))\\^2. Which divergence does this minimise at the generator optimum?",
       options: [
         "Jensen-Shannon divergence",
-        "Pearson χ² divergence",
+        "Pearson χ\\^2 divergence",
         "KL divergence",
         "Total variation distance",
       ],
       correctAnswer: 1,
       explanation:
-        "Mao et al. (2017) showed that optimising the LSGAN objective is equivalent to minimising the Pearson χ² divergence between the mixture distribution (p_r + p_g)/2 and p_g. This provides non-saturating gradients for generated samples far from the decision boundary.",
+        "Mao et al. (2017) showed that optimising the LSGAN objective is equivalent to minimising the Pearson χ\\^2 divergence between the mixture distribution (p_r + p_g)/2 and p_g. This provides non-saturating gradients for generated samples far from the decision boundary.",
       hints: [
         "Unlike cross-entropy (which corresponds to JS divergence), the squared loss corresponds to a different f-divergence.",
-        "The Pearson χ² divergence penalises generated samples proportionally to how far they are from the real-data region.",
+        "The Pearson χ\\^2 divergence penalises generated samples proportionally to how far they are from the real-data region.",
       ],
     },
   ],
@@ -781,7 +781,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "WGAN-GP samples x̂ = \\epsilonx + (1−\\epsilon)G(z) with \\epsilon ~ Uniform(0,1) and penalizes (||\\nablaD(x̂)||₂ − 1)², enforcing the Lipschitz constraint along the path between real and fake data.",
+        "WGAN-GP samples x̂ = \\epsilonx + (1−\\epsilon)G(z) with \\epsilon ~ Uniform(0,1) and penalizes (||\\nablaD(x̂)||\\_2 − 1)\\^2, enforcing the Lipschitz constraint along the path between real and fake data.",
       hints: [
         "The theoretical motivation is that the Wasserstein gradient constraint only needs to hold on the optimal transport path.",
         "Sampling between real and fake ensures the penalty is applied where the discriminator is most active.",
@@ -800,7 +800,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "R1 regularization adds (\\gamma/2)||\\nablaD(x)||² evaluated only at real data points, shown theoretically and empirically to stabilize training without requiring interpolated samples.",
+        "R1 regularization adds (\\gamma/2)||\\nablaD(x)||\\^2 evaluated only at real data points, shown theoretically and empirically to stabilize training without requiring interpolated samples.",
       hints: [
         "R1 and R2 penalties differ only in whether they are applied at real or fake samples.",
         "Penalizing gradients at real data prevents the discriminator from becoming arbitrarily sharp near real samples.",
@@ -996,7 +996,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The original 3D-GAN (Wu et al., 2016) generates shapes as 64×64×64 binary voxel grids, enabling 3D convolutional discriminators that evaluate volumetric realism.",
+        "The original 3D-GAN (Wu et al., 2016) generates shapes as 64\\times64\\times64 binary voxel grids, enabling 3D convolutional discriminators that evaluate volumetric realism.",
       hints: [
         "Voxels are 3D analogues of pixels — discrete cubic volume elements.",
         "The original 3D-GAN paper predates NeRF-based implicit representations.",
@@ -1007,13 +1007,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Voxel-based 3D GANs scale efficiently to very high resolutions (e.g., 512³) because memory grows linearly with resolution.",
+        "Voxel-based 3D GANs scale efficiently to very high resolutions (e.g., 512\\^3) because memory grows linearly with resolution.",
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Voxel memory grows cubically (O(n³)) with resolution; a 512³ grid requires 512× more memory than a 128³ grid, making high-resolution voxel generation impractical without specialized representations.",
+        "Voxel memory grows cubically (O(n\\^3)) with resolution; a 512\\^3 grid requires 512\\times more memory than a 128\\^3 grid, making high-resolution voxel generation impractical without specialized representations.",
       hints: [
-        "Images are 2D (n² pixels); voxel grids are 3D (n³ voxels). How does cubic scaling compare to linear?",
+        "Images are 2D (n\\^2 pixels); voxel grids are 3D (n\\^3 voxels). How does cubic scaling compare to linear?",
         "This memory bottleneck motivates alternatives like octrees, point clouds, and implicit representations.",
       ],
     },
@@ -1047,14 +1047,14 @@ const questions: Record<string, Question[]> = {
       question:
         "StackGAN generates high-resolution images from text descriptions using a two-stage approach. What does Stage-I produce?",
       options: [
-        "A 256×256 photorealistic image",
-        "A low-resolution (64×64) image capturing rough shape and colors from the text",
+        "A 256\\times256 photorealistic image",
+        "A low-resolution (64\\times64) image capturing rough shape and colors from the text",
         "A text embedding refined by the image context",
         "A segmentation mask for subsequent rendering",
       ],
       correctAnswer: 1,
       explanation:
-        "Stage-I of StackGAN generates a coarse 64×64 image capturing the high-level semantics of the text; Stage-II takes this and the text to produce a refined 256×256 image with fine details.",
+        "Stage-I of StackGAN generates a coarse 64\\times64 image capturing the high-level semantics of the text; Stage-II takes this and the text to produce a refined 256\\times256 image with fine details.",
       hints: [
         '"Stack" implies building one thing on top of another — coarse-to-fine generation.',
         "The first stage handles global layout; the second stage adds fine-grained textures.",
@@ -1280,7 +1280,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AnoGAN finds the closest latent code z* such that G(z*) ≈ x_test via optimization; anomalies cannot be well-reconstructed since the generator was trained only on normal data, resulting in high residual error.",
+        "AnoGAN finds the closest latent code z* such that G(z*) \\approx x_test via optimization; anomalies cannot be well-reconstructed since the generator was trained only on normal data, resulting in high residual error.",
       hints: [
         "The GAN is trained exclusively on normal data, so its latent space only covers the normal distribution.",
         "If a test image is anomalous, no z in the normal latent space can generate it faithfully.",
@@ -1505,16 +1505,16 @@ const questions: Record<string, Question[]> = {
       question:
         "DDPM (Ho et al. 2020) trains a noise prediction network \\epsilon_\\theta. The simplified training objective (after dropping the weighting term) is ___.",
       options: [
-        "E[||x₀ − x_\\theta(x_t, t)||²]  [predict the original image]",
-        "E[||\\epsilon − \\epsilon_\\theta(√ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon, t)||²]  [predict the added noise]",
-        "E[KL(q(x_{t-1}|x_t,x₀) || p_\\theta(x_{t-1}|x_t))]  [KL between forward and reverse]",
-        "E[log p_\\theta(x₀)]  [maximum likelihood]",
+        "E[||x\\_0 − x_\\theta(x_t, t)||\\^2]  [predict the original image]",
+        "E[||\\epsilon − \\epsilon_\\theta(√ᾱ_t\\cdotx\\_0 + √(1−ᾱ_t)\\cdot\\epsilon, t)||\\^2]  [predict the added noise]",
+        "E[KL(q(x_{t-1}|x_t,x\\_0) || p_\\theta(x_{t-1}|x_t))]  [KL between forward and reverse]",
+        "E[log p_\\theta(x\\_0)]  [maximum likelihood]",
       ],
       correctAnswer: 1,
       explanation:
-        "Ho et al. (2020) showed empirically that the simplified objective L_simple = E_{t,x₀,\\epsilon}[||\\epsilon − \\epsilon_\\theta(x_t, t)||²] works better than the full ELBO. Here x_t = √ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon via the reparameterisation (ᾱ_t = \\Pi_{s=1}^t (1−\\beta_s)), and \\epsilon ~ N(0,I).",
+        "Ho et al. (2020) showed empirically that the simplified objective L_simple = E_{t,x\\_0,\\epsilon}[||\\epsilon − \\epsilon_\\theta(x_t, t)||\\^2] works better than the full ELBO. Here x_t = √ᾱ_t\\cdotx\\_0 + √(1−ᾱ_t)\\cdot\\epsilon via the reparameterisation (ᾱ_t = \\Pi_{s=1}^t (1−\\beta_s)), and \\epsilon ~ N(0,I).",
       hints: [
-        "The key insight is to reparameterise: given x₀ and t, x_t can be sampled in closed form as √ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon.",
+        "The key insight is to reparameterise: given x\\_0 and t, x_t can be sampled in closed form as √ᾱ_t\\cdotx\\_0 + √(1−ᾱ_t)\\cdot\\epsilon.",
         "Training the network to predict the noise \\epsilon (rather than the mean of the reverse process) empirically gives better sample quality.",
       ],
     },
@@ -1523,19 +1523,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "DDPM uses a variance schedule {\\beta_t}. Ho et al. (2020) used a linear schedule from \\beta₁ = 10⁻⁴ to \\beta_T = 0.02 with T = 1000. A key property of this schedule is that ___.",
+        "DDPM uses a variance schedule {\\beta_t}. Ho et al. (2020) used a linear schedule from \\beta\\_1 = 10\\^{-\\^4 to \\beta_T = 0.02 with T = 1000. A key property of this schedule is that ___.",
       options: [
         "x_T is perfectly Gaussian N(0,I) at any finite T",
-        "x_T ≈ N(0,I) because ᾱ_T = \\Pi(1−\\beta_t) ≈ 0 for large T with the linear schedule",
+        "x_T \\approx N(0,I) because ᾱ_T = \\Pi(1−\\beta_t) \\approx 0 for large T with the linear schedule",
         "\\beta_t must be learned; fixed schedules are theoretically suboptimal",
         "The schedule guarantees mode collapse does not occur",
       ],
       correctAnswer: 1,
       explanation:
-        "With T=1000 and \\beta_t linearly increasing, ᾱ_T = \\Pi_{t=1}^T (1−\\beta_t) → 0, so x_T ≈ √ᾱ_T·x₀ + √(1−ᾱ_T)·\\epsilon ≈ \\epsilon ~ N(0,I). The forward process completely destroys the signal by T, which is what allows us to learn the reverse process from pure Gaussian noise.",
+        "With T=1000 and \\beta_t linearly increasing, ᾱ_T = \\Pi_{t=1}^T (1−\\beta_t) \\to 0, so x_T \\approx √ᾱ_T\\cdotx\\_0 + √(1−ᾱ_T)\\cdot\\epsilon \\approx \\epsilon ~ N(0,I). The forward process completely destroys the signal by T, which is what allows us to learn the reverse process from pure Gaussian noise.",
       hints: [
-        "ᾱ_t is the cumulative product of (1−\\beta_s) for s=1 to t. As t→T, this product approaches 0.",
-        "When ᾱ_T ≈ 0, x_T ≈ √1·\\epsilon = \\epsilon ~ N(0,I), making the terminal distribution approximately standard Gaussian.",
+        "ᾱ_t is the cumulative product of (1−\\beta_s) for s=1 to t. As t\\toT, this product approaches 0.",
+        "When ᾱ_T \\approx 0, x_T \\approx √1\\cdot\\epsilon = \\epsilon ~ N(0,I), making the terminal distribution approximately standard Gaussian.",
       ],
     },
     {
@@ -1546,13 +1546,13 @@ const questions: Record<string, Question[]> = {
         "DDIM (Song et al. 2020) accelerates sampling from DDPMs by using a non-Markovian reverse process. Setting \\eta = 0 in DDIM makes the sampling ___.",
       options: [
         "Equivalent to the original DDPM stochastic sampling",
-        "Fully deterministic: the same latent x_T always produces the same image x₀",
+        "Fully deterministic: the same latent x_T always produces the same image x\\_0",
         "Faster but stochastic due to injected noise",
         "Equivalent to score-based generation with Langevin dynamics",
       ],
       correctAnswer: 1,
       explanation:
-        "In DDIM, the reverse step is x_{t-1} = √ᾱ_{t-1}·x̂₀ + √(1−ᾱ_{t-1}−\\sigma_t²)·\\epsilon_\\theta(x_t,t) + \\sigma_t·\\epsilon. When \\eta=0, \\sigma_t=0 for all t, eliminating all stochastic noise and making sampling deterministic. This means x_T uniquely determines x₀, enabling semantic interpolation in latent space.",
+        "In DDIM, the reverse step is x_{t-1} = √ᾱ_{t-1}\\cdotx̂\\_0 + √(1−ᾱ_{t-1}−\\sigma_t\\^2)\\cdot\\epsilon_\\theta(x_t,t) + \\sigma_t\\cdot\\epsilon. When \\eta=0, \\sigma_t=0 for all t, eliminating all stochastic noise and making sampling deterministic. This means x_T uniquely determines x\\_0, enabling semantic interpolation in latent space.",
       hints: [
         "\\eta controls the amount of stochastic noise injected at each reverse step. \\eta=0 means \\sigma_t=0 everywhere.",
         "Deterministic mapping means you can interpolate between two x_T noise codes and smoothly interpolate the generated images.",
@@ -2261,7 +2261,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GAN inversion maps a real image back into the generator\'s latent space, enabling downstream editing by manipulating the found z (or w) and regenerating with G.",
       hints: [
-        'Inversion is the "encoder" direction: image → latent, the reverse of generation (latent → image).',
+        'Inversion is the "encoder" direction: image \\to latent, the reverse of generation (latent \\to image).',
         "Once inverted, you can edit the image by moving in the latent space and re-generating.",
       ],
     },

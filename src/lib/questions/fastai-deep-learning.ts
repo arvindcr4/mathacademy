@@ -85,16 +85,16 @@ registerQuestions({
       question:
         "ResNet-50 and deeper use 'bottleneck' residual blocks instead of the basic blocks used in ResNet-34. What is the key difference?",
       options: [
-        "Bottleneck blocks use larger 7×7 convolutions.",
-        "Bottleneck blocks use 1×1 convolutions to reduce and then restore channel dimensions around a 3×3 convolution, reducing computation.",
+        "Bottleneck blocks use larger 7\\times7 convolutions.",
+        "Bottleneck blocks use 1\\times1 convolutions to reduce and then restore channel dimensions around a 3\\times3 convolution, reducing computation.",
         "Bottleneck blocks remove skip connections entirely.",
         "Bottleneck blocks replace ReLU with sigmoid activations.",
       ],
       correctAnswer: 1,
       explanation:
-        "Bottleneck blocks use a 1×1 conv to reduce channels, a 3×3 conv on the reduced channels, then a 1×1 conv to restore channel count. This reduces the number of parameters and computation while preserving representational power.",
+        "Bottleneck blocks use a 1\\times1 conv to reduce channels, a 3\\times3 conv on the reduced channels, then a 1\\times1 conv to restore channel count. This reduces the number of parameters and computation while preserving representational power.",
       hints: [
-        "The 1×1 convolution acts as a channel dimension reducer (bottleneck).",
+        "The 1\\times1 convolution acts as a channel dimension reducer (bottleneck).",
         "This design allows ResNet-50 to be deeper than ResNet-34 without a proportional increase in parameters.",
       ],
     },
@@ -1173,7 +1173,7 @@ registerQuestions({
         "Each tree in a Random Forest is trained on a bootstrap sample (roughly 63% of the data). The remaining ~37% (out-of-bag samples) weren\'t used to train that tree, so they can be used to evaluate it. Averaging OOB predictions across all trees gives a reliable validation error estimate without needing a separate validation set.",
       hints: [
         "OOB error is essentially free — it uses data that was already not used for each tree\'s training.",
-        "OOB samples average to about 36.8% of total data (1 - 1/e ≈ 0.632 are in-bag).",
+        "OOB samples average to about 36.8% of total data (1 - 1/e \\approx 0.632 are in-bag).",
       ],
     },
   ],
@@ -1433,7 +1433,7 @@ registerQuestions({
       explanation:
         "Max pooling downsamples the feature maps by taking the maximum value over a small window. This reduces computational load, controls overfitting, and makes the detection of features somewhat invariant to small translations.",
       hints: [
-        "Max pooling with a 2×2 window and stride 2 halves the spatial dimensions.",
+        "Max pooling with a 2\\times2 window and stride 2 halves the spatial dimensions.",
         "Taking the maximum value preserves the strongest activation of a feature in each region.",
       ],
     },
@@ -2051,7 +2051,7 @@ registerQuestions({
         "In DDP, each GPU holds a full copy of the model and processes a shard of the batch. After each backward pass, DDP automatically performs an all-reduce (typically NCCL ring-allreduce) to average gradients across all GPUs. Each GPU then performs the same optimizer step with the averaged gradients, keeping all model copies in sync.",
       hints: [
         "All-reduce = sum gradients across all GPUs then divide by the number of GPUs.",
-        "The effective batch size is `per_gpu_batch_size × num_gpus`, so the learning rate often needs scaling.",
+        "The effective batch size is `per_gpu_batch_size \\times num_gpus`, so the learning rate often needs scaling.",
       ],
     },
     {
@@ -2063,9 +2063,9 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch × num_gpus`. The linear scaling rule (Goyal et al., 2017) states that the learning rate should be scaled proportionally (LR × num_gpus) to maintain equivalent optimization dynamics. fastai's `DistributedTrainer` callback handles much of the DDP setup automatically.",
+        "With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch \\times num_gpus`. The linear scaling rule (Goyal et al., 2017) states that the learning rate should be scaled proportionally (LR \\times num_gpus) to maintain equivalent optimization dynamics. fastai's `DistributedTrainer` callback handles much of the DDP setup automatically.",
       hints: [
-        "Larger effective batch size → smoother gradient estimates → can use a larger learning rate.",
+        "Larger effective batch size \\to smoother gradient estimates \\to can use a larger learning rate.",
         "The linear scaling rule works well up to moderate GPU counts; warmup is recommended for very large batches.",
       ],
     },

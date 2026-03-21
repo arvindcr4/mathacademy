@@ -238,8 +238,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The simplest approach collects standard left-to-right BFS, then reverses odd-indexed levels:\n\n\\[\n\\text{for } level = 0..:\\quad \\{\\text{if } level \\% 2 == 1: \\text{reverse}(result[level])\\}\n\\]\n\nThis costs O(n) extra time but avoids complex deque logic or stack management.",
       hints: [
-        "Even levels: left→right. Odd levels: right→left.",
-        "Collect all left→right, then flip the odd levels.",
+        "Even levels: left\\toright. Odd levels: right\\toleft.",
+        "Collect all left\\toright, then flip the odd levels.",
       ],
     },
     {
@@ -561,7 +561,7 @@ const questions: Record<string, Question[]> = {
         "If p and q are in different subtrees, the current node is the first point where their paths diverge — making it their LCA:\n\n\\[\n\\text{If } p < root < q \\text{ (or } q < root < p\\text{): } \\text{LCA} = root\n\\]\n\nAdditionally, if root.val == p.val or root.val == q.val, then root is the LCA (a node is its own descendant).",
       hints: [
         "Walk from root: if both values go same direction, recurse that way. If they split, current is LCA.",
-        "Different subtrees → current node is the LCA.",
+        "Different subtrees \\to current node is the LCA.",
       ],
     },
     {
@@ -647,7 +647,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Two pointers pa and pb start at p and q. Each step:\n- Advance pa to parent(pa), or\n- Advance pb to parent(pb), or\n- If at null, switch to the other starting node\n\nThey meet at the LCA after traversing equal total distance (p→root + q→root). Analogous to the linked list cycle detection / intersection trick:\n\n\\[\n\\text{Total distance} = dist(p, LCA) + dist(LCA, root) + dist(q, LCA) = dist(p, root) + dist(q, root)\n\\]\n\nBoth pointers travel the same total distance, so they meet at the LCA.",
+        "Two pointers pa and pb start at p and q. Each step:\n- Advance pa to parent(pa), or\n- Advance pb to parent(pb), or\n- If at null, switch to the other starting node\n\nThey meet at the LCA after traversing equal total distance (p\\toroot + q\\toroot). Analogous to the linked list cycle detection / intersection trick:\n\n\\[\n\\text{Total distance} = dist(p, LCA) + dist(LCA, root) + dist(q, LCA) = dist(p, root) + dist(q, root)\n\\]\n\nBoth pointers travel the same total distance, so they meet at the LCA.",
       hints: [
         'Same trick as "intersection of two linked lists" — both pointers travel equal total distance.',
         "The sum of distances from p and q to LCA equals the sum from p and q to root.",
@@ -733,10 +733,10 @@ const questions: Record<string, Question[]> = {
       question:
         "In a recursive BST insert that returns the (possibly new) root, the base case is:",
       options: [
-        "root.val == val → return root",
-        "root == null → return new TreeNode(val)",
-        "root.left == null → insert left",
-        "root.right == null → insert right",
+        "root.val == val \\to return root",
+        "root == null \\to return new TreeNode(val)",
+        "root.left == null \\to insert left",
+        "root.right == null \\to insert right",
       ],
       correctAnswer: 1,
       explanation:
@@ -895,7 +895,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'startsWith("pre") = traverse p→r→e nodes, return true if all exist. search("pre") = same traversal + check isEnd=true at \'e\'.',
+        'startsWith("pre") = traverse p\\tor\\toe nodes, return true if all exist. search("pre") = same traversal + check isEnd=true at \'e\'.',
       hints: [
         "Distinguish prefix existence (startsWith) from complete word existence (search).",
       ],
@@ -1071,7 +1071,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Set board[r][c] = '#' before recursing (prevents children from revisiting). Restore board[r][c] = originalChar after backtracking. O(1) in-place marking.",
-      hints: ["Classic backtracking pattern: modify → recurse → undo."],
+      hints: ["Classic backtracking pattern: modify \\to recurse \\to undo."],
     },
     {
       id: "q-ws2-7",
@@ -1181,7 +1181,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Preorder DFS with null markers uniquely encodes any binary tree:\n\n\\[\n\\text{serialize}(node):\\; \\text{if null → emit \'#\';}\\; \\text{else emit val, recurse left, recurse right}\n\\]\n\nDeserialization consumes one token at a time via a pointer or iterator:\n\n\\[\n\\text{deserialize}(iter):\\; tok = next(iter);\\; \\text{if \'#\' → null;}\\; \\text{else node(tok, left=des(iter), right=des(iter))}\n\\]\n\nBoth BFS and DFS approaches are O(n) time and O(n) space. DFS is often simpler to code recursively.",
+        "Preorder DFS with null markers uniquely encodes any binary tree:\n\n\\[\n\\text{serialize}(node):\\; \\text{if null \\to emit \'#\';}\\; \\text{else emit val, recurse left, recurse right}\n\\]\n\nDeserialization consumes one token at a time via a pointer or iterator:\n\n\\[\n\\text{deserialize}(iter):\\; tok = next(iter);\\; \\text{if \'#\' \\to null;}\\; \\text{else node(tok, left=des(iter), right=des(iter))}\n\\]\n\nBoth BFS and DFS approaches are O(n) time and O(n) space. DFS is often simpler to code recursively.",
       hints: [
         "Preorder emits root before children — the first token is always the root during deserialization.",
         "Null markers in preorder serialization make the tree shape unambiguous without needing level information.",
@@ -1299,7 +1299,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In postorder, the root is always the last element (vs. first in preorder):\n\n\\[\n\\text{postorder} = [\\ldots\\text{left subtree}\\ldots,\\;\\ldots\\text{right subtree}\\ldots,\\;\\text{root}]\n\\]\n\nThe algorithm mirrors preorder construction:\n1. root = postorder[end]\n2. Find root in inorder → i\n3. Right subtree size = len(inorder) - i - 1 (important: build right before left when iterating postorder in reverse)\n\nBoth approaches are O(n) with a hash map. Complexity analysis:\n\n\\[\nT(n) = 2T(n/2) + O(1) \\implies O(n)\n\\]",
+        "In postorder, the root is always the last element (vs. first in preorder):\n\n\\[\n\\text{postorder} = [\\ldots\\text{left subtree}\\ldots,\\;\\ldots\\text{right subtree}\\ldots,\\;\\text{root}]\n\\]\n\nThe algorithm mirrors preorder construction:\n1. root = postorder[end]\n2. Find root in inorder \\to i\n3. Right subtree size = len(inorder) - i - 1 (important: build right before left when iterating postorder in reverse)\n\nBoth approaches are O(n) with a hash map. Complexity analysis:\n\n\\[\nT(n) = 2T(n/2) + O(1) \\implies O(n)\n\\]",
       hints: [
         "Postorder root is at the END of the array, not the beginning.",
         "Build right subtree before left when consuming postorder array from right to left.",
@@ -1343,7 +1343,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The constructor pushes all nodes along the leftmost path (root, root.left, root.left.left, …) until null:\n\n\\[\n\\text{pushLeft}(node): \\text{while } node \\neq null:\\; \\text{push}(node);\\; node = node.\\text{left}\n\\]\n\nnext() pops the top node (smallest not yet returned), pushes its right child\'s leftmost path, and returns the value. Amortized O(1) per next(): each node is pushed and popped exactly once across all calls → O(n) total.",
+        "The constructor pushes all nodes along the leftmost path (root, root.left, root.left.left, …) until null:\n\n\\[\n\\text{pushLeft}(node): \\text{while } node \\neq null:\\; \\text{push}(node);\\; node = node.\\text{left}\n\\]\n\nnext() pops the top node (smallest not yet returned), pushes its right child\'s leftmost path, and returns the value. Amortized O(1) per next(): each node is pushed and popped exactly once across all calls \\to O(n) total.",
       hints: [
         "The stack top is always the next smallest element — the leftmost unprocessed node.",
         "After popping a node, push its right child\'s leftmost path to maintain the invariant.",
@@ -1363,7 +1363,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Morris inorder traversal achieves O(1) auxiliary space by temporarily creating threads (back-edges via right pointers) to the inorder successor:\n\n\\[\n\\text{For each node } x:\\; \\text{find predecessor } p = \\text{rightmost in } x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = null: \\text{thread } p.\\text{right} = x,\\; x = x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = x: \\text{remove thread},\\; \\text{visit } x,\\; x = x.\\text{right}\n\\]\n\nEach node is visited at most twice → O(n) total, O(1) space. The iterator state is just the current pointer.",
+        "Morris inorder traversal achieves O(1) auxiliary space by temporarily creating threads (back-edges via right pointers) to the inorder successor:\n\n\\[\n\\text{For each node } x:\\; \\text{find predecessor } p = \\text{rightmost in } x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = null: \\text{thread } p.\\text{right} = x,\\; x = x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = x: \\text{remove thread},\\; \\text{visit } x,\\; x = x.\\text{right}\n\\]\n\nEach node is visited at most twice \\to O(n) total, O(1) space. The iterator state is just the current pointer.",
       hints: [
         "Morris traversal modifies right pointers temporarily and restores them — no stack needed.",
         "O(1) space comes at the cost of temporarily mutating the tree structure.",
@@ -1422,10 +1422,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\[\n\\text{Height } h = \\text{leftmost path length}\n\\]\n\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks → O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
+        "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\[\n\\text{Height } h = \\text{leftmost path length}\n\\]\n\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks \\to O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
       hints: [
         "Position k on the last level can be checked by treating k\'s bits as left/right directions from root.",
-        "O(log n) checks × O(log n) each = O(log^2 n).",
+        "O(log n) checks \\times O(log n) each = O(log^2 n).",
       ],
     },
   ],
@@ -1481,7 +1481,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Processing in reverse preorder (right → left → root) allows linking nodes using a trailing pointer:\n\n\\[\n\\text{flatten}(node):\\;\n\\]\n\\[\n\\text{if null → return;}\n\\]\n\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\]\n\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
+        "Processing in reverse preorder (right \\to left \\to root) allows linking nodes using a trailing pointer:\n\n\\[\n\\text{flatten}(node):\\;\n\\]\n\\[\n\\text{if null \\to return;}\n\\]\n\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\]\n\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
       hints: [
         "Reverse preorder = right subtree first, then left, then root.",
         "Maintaining a \'prev\' pointer in reverse-preorder links each node to its preorder successor.",
@@ -1543,7 +1543,7 @@ const questions: Record<string, Question[]> = {
         "The DFS visits all n nodes in O(n). However, when a leaf is reached, the current path is copied into the result:\n\n\\[\n\\text{copy cost} = O(h) \\text{ per leaf}\n\\]\n\nIn the worst case (a complete binary tree), there are O(n) leaves and h = O(log n), giving O(n log n). But for a skewed tree with one path, h = O(n) and one copy gives O(n). In the truly worst case for the copy operation (a complete tree with n/2 leaves of depth O(log n)):\n\n\\[\n\\frac{n}{2} \\times O(\\log n) = O(n \\log n)\n\\]\n\nHowever LeetCode marks this O(n^2) for the pathological case where height = O(n).",
       hints: [
         "The DFS itself is O(n), but copying the path at each leaf adds O(h) per leaf.",
-        "n/2 leaves × h path length = worst-case copy cost.",
+        "n/2 leaves \\times h path length = worst-case copy cost.",
       ],
     },
   ],
@@ -1599,7 +1599,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\[\n\\text{dfs}(node):\n\\]\n\\[\n\\text{if null → return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\]\n\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\]\n\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
+        "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\[\n\\text{dfs}(node):\n\\]\n\\[\n\\text{if null \\to return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\]\n\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\]\n\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
       hints: [
         "The helper returns height AND updates global max as a side effect.",
         "Setting null height to -1 makes leaf height = 0 without a special case.",
@@ -1626,7 +1626,7 @@ const questions: Record<string, Question[]> = {
         "The problem guarantees that exactly two nodes have been swapped:\n\n\\[\n\\text{Correct BST inorder: } [\\ldots, a, \\ldots, b, \\ldots] \\text{ where } a < b\n\\]\n\\[\n\\text{After swap: } [\\ldots, b, \\ldots, a, \\ldots] \\text{ — two inversions detected}\n\\]\n\nThe recovery is straightforward: identify the two misplaced nodes and swap their values back.",
       hints: [
         "Two swapped nodes create either one or two inversions in the inorder sequence.",
-        "Adjacent swap → one inversion pair. Non-adjacent swap → two inversion pairs.",
+        "Adjacent swap \\to one inversion pair. Non-adjacent swap \\to two inversion pairs.",
       ],
     },
     {

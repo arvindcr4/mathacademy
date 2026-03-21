@@ -70,13 +70,13 @@ const questions: Record<string, Question[]> = {
         "w(x) = P(source=1|x) / (1 − P(source=1|x))",
         "w(x) = (1 − P(source=1|x)) / P(source=1|x)",
         "w(x) = log P(source=1|x) − log P(source=0|x)",
-        "w(x) = P(source=1|x) × P(target=1|x)",
+        "w(x) = P(source=1|x) \\times P(target=1|x)",
       ],
       correctAnswer: 1,
       explanation:
         "By Bayes' rule, P(source=1|x)/P(source=0|x) = P(x|source)/P(x|target) = P_S(x)/P_T(x). The ratio P_T(x)/P_S(x) = P(source=0|x)/P(source=1|x) = (1 − P(source=1|x)) / P(source=1|x). This allows training a binary domain classifier and reading off the density ratio from its output.",
       hints: [
-        "Bayes' rule: P(source|x) \\propto P(x|source)·P(source). The ratio P(x|source)/P(x|target) = P_S(x)/P_T(x).",
+        "Bayes' rule: P(source|x) \\propto P(x|source)\\cdotP(source). The ratio P(x|source)/P(x|target) = P_S(x)/P_T(x).",
         "You want P_T/P_S, so invert the domain classifier odds ratio.",
       ],
     },
@@ -89,7 +89,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "KMM solves: min_w ||\\mu_T − \\Sigma_i w_i \\phi(x_i^S)||²_{RKHS} subject to w_i ≥ 0 and |\\Sigma_i w_i/n_S − 1| ≤ \\epsilon. Expanding the squared RKHS norm gives a quadratic objective in w with kernel matrix K_SS and cross-kernel k_ST, yielding a QP that can be solved without explicit density estimation.",
+        "KMM solves: min_w ||\\mu_T − \\Sigma_i w_i \\phi(x_i^S)||\\^2_{RKHS} subject to w_i \\geq 0 and |\\Sigma_i w_i/n_S − 1| \\leq \\epsilon. Expanding the squared RKHS norm gives a quadratic objective in w with kernel matrix K_SS and cross-kernel k_ST, yielding a QP that can be solved without explicit density estimation.",
       hints: [
         "KMM avoids the intermediate step of density estimation by working directly in feature space.",
         "The QP constraint ensures the weights are non-negative and approximately sum to the sample count.",
@@ -109,7 +109,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Importance sampling variance is proportional to E_{P_S}[w(x)²·L²] / n. When P_S(x) ≪ P_T(x) for some regions, w(x)=P_T(x)/P_S(x) → ∞, giving enormous variance. Practical fixes include weight clipping (cap at some M), self-normalized importance sampling (\\Sigma w_i L_i / \\Sigma w_i), and KLIEP\'s built-in normalization constraint.",
+        "Importance sampling variance is proportional to E_{P_S}[w(x)\\^2\\cdotL\\^2] / n. When P_S(x) ≪ P_T(x) for some regions, w(x)=P_T(x)/P_S(x) \\to \\infty, giving enormous variance. Practical fixes include weight clipping (cap at some M), self-normalized importance sampling (\\Sigma w_i L_i / \\Sigma w_i), and KLIEP\'s built-in normalization constraint.",
       hints: [
         "Importance sampling estimators are unbiased but can have very high variance.",
         "Techniques like weight truncation or self-normalized importance sampling mitigate this at the cost of some bias.",
@@ -123,16 +123,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The squared Maximum Mean Discrepancy MMD²(P, Q) between distributions P and Q using kernel k is defined as:",
+        "The squared Maximum Mean Discrepancy MMD\\^2(P, Q) between distributions P and Q using kernel k is defined as:",
       options: [
         "$$\\text{MMD}^2(P,Q) = \\|\\mathbb{E}_{x\\sim P}[\\phi(x)] - \\mathbb{E}_{y\\sim Q}[\\phi(y)]\\|^2_{\\mathcal{H}} = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')]$$",
-        "MMD²(P,Q) = KL(P||Q) estimated via kernel density estimation",
-        "MMD²(P,Q) = max_{f: ||f||≤1} |E_P[f(x)] − E_Q[f(x)]| (Wasserstein-1 dual)",
-        "MMD²(P,Q) = ||Cov_P(\\phi(x)) − Cov_Q(\\phi(x))||²_F where \\phi is a fixed feature map",
+        "MMD\\^2(P,Q) = KL(P||Q) estimated via kernel density estimation",
+        "MMD\\^2(P,Q) = max_{f: ||f||\\leq1} |E_P[f(x)] − E_Q[f(x)]| (Wasserstein-1 dual)",
+        "MMD\\^2(P,Q) = ||Cov_P(\\phi(x)) − Cov_Q(\\phi(x))||\\^2_F where \\phi is a fixed feature map",
       ],
       correctAnswer: 0,
       explanation:
-        "The MMD measures the distance between distributions P and Q in the RKHS $\\mathcal{H}$ induced by kernel $k$. It equals $\\|\\mu_P - \\mu_Q\\|_{\\mathcal{H}}^2$, where $\\mu_P = \\mathbb{E}_{x\\sim P}[\\phi(x)]$ is the mean embedding. Expanding the squared norm gives:\n\\[\n\\text{MMD}^2(P,Q) = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\n\\]\nFor a characteristic kernel (e.g., the RBF/Gaussian kernel $k(x,y) = \\exp(-\\|x-y\\|^2 / (2\\sigma^2))$), MMD² = 0 if and only if P = Q. The empirical estimator uses within-domain terms $k(x_i, x_j)$ for same-domain pairs and cross-domain terms $k(x_i, y_j)$ — diagonal terms $k(x_i, x_i) = 1$ for normalized kernels are typically excluded in the unbiased U-statistic.",
+        "The MMD measures the distance between distributions P and Q in the RKHS $\\mathcal{H}$ induced by kernel $k$. It equals $\\|\\mu_P - \\mu_Q\\|_{\\mathcal{H}}^2$, where $\\mu_P = \\mathbb{E}_{x\\sim P}[\\phi(x)]$ is the mean embedding. Expanding the squared norm gives:\n\\[\n\\text{MMD}^2(P,Q) = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\n\\]\nFor a characteristic kernel (e.g., the RBF/Gaussian kernel $k(x,y) = \\exp(-\\|x-y\\|^2 / (2\\sigma^2))$), MMD\\^2 = 0 if and only if P = Q. The empirical estimator uses within-domain terms $k(x_i, x_j)$ for same-domain pairs and cross-domain terms $k(x_i, y_j)$ — diagonal terms $k(x_i, x_i) = 1$ for normalized kernels are typically excluded in the unbiased U-statistic.",
       hints: [
         "Start with $\\|\\mu_P - \\mu_Q\\|^2 = \\langle \\mu_P - \\mu_Q, \\mu_P - \\mu_Q\\rangle = \\langle \\mu_P, \\mu_P\\rangle - 2\\langle \\mu_P, \\mu_Q\\rangle + \\langle \\mu_Q, \\mu_Q\\rangle$. Each inner product expands to an expectation over kernel evaluations.",
         "For a normalized kernel like RBF, $k(x_i, x_i) = 1$. Including these diagonal terms in the empirical estimate introduces a positive bias — the unbiased U-statistic excludes $i=j$ pairs to fix this.",
@@ -158,18 +158,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The unbiased U-statistic estimator of MMD²(P,Q) from samples {x_1,...,x_m}∼P and {y_1,...,y_n}∼Q is:",
+        "The unbiased U-statistic estimator of MMD\\^2(P,Q) from samples {x_1,...,x_m}∼P and {y_1,...,y_n}∼Q is:",
       options: [
         "Only cross-domain terms: (2/mn) \\Sigma_{i,j} k(x_i, y_j)",
-        "MMD̂² = [1/(m(m−1)) \\Sigma_{i\$\\neq\$j} k(x_i,x_j)] − [2/(mn) \\Sigma_{i,j} k(x_i,y_j)] + [1/(n(n−1)) \\Sigma_{i\$\\neq\$j} k(y_i,y_j)]",
-        "Only within-domain terms averaged: [1/m² \\Sigma_{i,j} k(x_i,x_j) + 1/n² \\Sigma_{i,j} k(y_i,y_j)] / 2",
+        "MMD̂\\^2 = [1/(m(m−1)) \\Sigma_{i\$\\neq\$j} k(x_i,x_j)] − [2/(mn) \\Sigma_{i,j} k(x_i,y_j)] + [1/(n(n−1)) \\Sigma_{i\$\\neq\$j} k(y_i,y_j)]",
+        "Only within-domain terms averaged: [1/m\\^2 \\Sigma_{i,j} k(x_i,x_j) + 1/n\\^2 \\Sigma_{i,j} k(y_i,y_j)] / 2",
         "The log of the ratio of within-class to between-class kernel values",
       ],
       correctAnswer: 1,
       explanation:
-        "The U-statistic excludes diagonal terms (i=j) to ensure unbiasedness: MMD̂² uses sums over i\$\\neq\$j pairs for within-source and within-target terms. Excluding diagonals ensures E[MMD̂²] = MMD² without a positive bias from k(x_i, x_i) = k(y_j, y_j) = 1 (for normalized kernels).",
+        "The U-statistic excludes diagonal terms (i=j) to ensure unbiasedness: MMD̂\\^2 uses sums over i\$\\neq\$j pairs for within-source and within-target terms. Excluding diagonals ensures E[MMD̂\\^2] = MMD\\^2 without a positive bias from k(x_i, x_i) = k(y_j, y_j) = 1 (for normalized kernels).",
       hints: [
-        "Expand ||\\mu_S − \\mu_T||² in the RKHS to see all three term types.",
+        "Expand ||\\mu_S − \\mu_T||\\^2 in the RKHS to see all three term types.",
         "The U-statistic is unbiased because it excludes self-comparisons k(x_i, x_i).",
       ],
     },
@@ -190,7 +190,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The GRL is defined as: forward pass R(x) = x (identity); backward pass ∂R/∂x = −\\lambdaI. The hyperparameter \\lambda is often annealed during training: \\lambda = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it — both objectives satisfied in a single network.",
+        "The GRL is defined as: forward pass R(x) = x (identity); backward pass \\partialR/\\partialx = −\\lambdaI. The hyperparameter \\lambda is often annealed during training: \\lambda = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it — both objectives satisfied in a single network.",
       hints: [
         "The GRL is a zero-cost trick in the forward pass — it only affects backpropagation.",
         "Reversing gradients makes the feature extractor compete against the domain classifier — adversarial alignment.",
@@ -205,7 +205,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − \\lambda·L_d(G_d(G_f(x)), d)].",
+        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − \\lambda\\cdotL_d(G_d(G_f(x)), d)].",
       hints: [
         "These two objectives can conflict — the feature extractor must find a balance.",
         "The gradient reversal layer implements the adversarial part without requiring alternating optimization.",
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DANN\'s theoretical justification draws on Ben-David et al.'s bound: \\epsilon_T(h) ≤ \\epsilon_S(h) + d_{H△H}(S,T)/2 + \\lambda*. What does the H△H-divergence d_{H△H}(S,T) measure, and why does minimizing it justify DANN?",
+        "DANN\'s theoretical justification draws on Ben-David et al.'s bound: \\epsilon_T(h) \\leq \\epsilon_S(h) + d_{H△H}(S,T)/2 + \\lambda*. What does the H△H-divergence d_{H△H}(S,T) measure, and why does minimizing it justify DANN?",
       options: [
         "It measures the KL divergence between source and target feature distributions; DANN minimizes it via MMD",
         "It measures the discrepancy between source and target distributions in terms of the hypothesis class H — specifically the maximum difference in error between the best hypothesis on source and target; DANN minimizes it by making features indistinguishable to a domain classifier in H",
@@ -241,17 +241,17 @@ const questions: Record<string, Question[]> = {
       question:
         "CORAL (CORrelation ALignment, Sun & Saenko, 2016) aligns source and target domains by minimizing the CORAL loss, which is defined as:",
       options: [
-        "L_CORAL = (1/4d²) ||C_S − C_T||²_F, where C_S and C_T are the feature covariance matrices and d is the feature dimension",
-        "L_CORAL = (1/d) ||\\mu_S − \\mu_T||² where \\mu are the feature means",
+        "L_CORAL = (1/4d\\^2) ||C_S − C_T||\\^2_F, where C_S and C_T are the feature covariance matrices and d is the feature dimension",
+        "L_CORAL = (1/d) ||\\mu_S − \\mu_T||\\^2 where \\mu are the feature means",
         "L_CORAL = KL(N(\\mu_S, C_S) || N(\\mu_T, C_T)) between Gaussian approximations of the feature distributions",
         "L_CORAL = Tr(C_S^{−1} C_T) − log det(C_S^{−1} C_T) − d (the Riemannian distance between SPD matrices)",
       ],
       correctAnswer: 0,
       explanation:
-        "CORAL minimizes L_CORAL = (1/4d²)||C_S − C_T||²_F where C_S = (1/(n−1))(X_S^T X_S − (1/n)(1^T X_S)^T(1^T X_S)) and similarly for C_T. The 4d² normalization accounts for the matrix size. Unlike MMD, CORAL has a closed-form solution: whiten source features (C_S^{−1/2}) and color with target (C_T^{1/2}), requiring only two eigendecompositions.",
+        "CORAL minimizes L_CORAL = (1/4d\\^2)||C_S − C_T||\\^2_F where C_S = (1/(n−1))(X_S^T X_S − (1/n)(1^T X_S)^T(1^T X_S)) and similarly for C_T. The 4d\\^2 normalization accounts for the matrix size. Unlike MMD, CORAL has a closed-form solution: whiten source features (C_S^{−1/2}) and color with target (C_T^{1/2}), requiring only two eigendecompositions.",
       hints: [
         "First-order alignment = mean matching; second-order alignment = covariance matching.",
-        "The Frobenius norm measures element-wise differences between matrices: ||A||²_F = \\Sigma_{i,j} A_{ij}².",
+        "The Frobenius norm measures element-wise differences between matrices: ||A||\\^2_F = \\Sigma_{i,j} A_{ij}\\^2.",
       ],
     },
     {
@@ -283,9 +283,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The gradient ∂L_CORAL/∂X_S = (1/d²)(X_S − 1_n · mean_S^T)(C_S − C_T) / (n−1). This avoids eigendecomposition during backprop — the gradient only involves (C_S − C_T) and the centered features. Mini-batch covariance estimates are noisy but gradient averaging over iterations makes training stable.",
+        "The gradient \\partialL_CORAL/\\partialX_S = (1/d\\^2)(X_S − 1_n \\cdot mean_S^T)(C_S − C_T) / (n−1). This avoids eigendecomposition during backprop — the gradient only involves (C_S − C_T) and the centered features. Mini-batch covariance estimates are noisy but gradient averaging over iterations makes training stable.",
       hints: [
-        "The Frobenius norm ||A||²_F is differentiable everywhere — its gradient is 2A.",
+        "The Frobenius norm ||A||\\^2_F is differentiable everywhere — its gradient is 2A.",
         "With n samples, a covariance matrix has n−1 degrees of freedom in its estimation.",
       ],
     },
@@ -307,7 +307,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "When the source-target gap is too large for direct adaptation, progressive DA interpolates intermediate domains (via data mixing, style transfer, or synthetic augmentation) to create easier adaptation steps.",
       hints: [
-        "Think of it as stepping stones: source → intermediate₁ → intermediate₂ → target.",
+        "Think of it as stepping stones: source \\to intermediate\\_1 \\to intermediate\\_2 \\to target.",
         "Each step is a smaller domain gap, making each adaptation problem easier to solve.",
       ],
     },
@@ -420,7 +420,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'In PDA, the target label space C_T ⊂ C_S; source classes not present in the target are "outlier" classes that can mislead adaptation if treated the same as shared classes.',
+        'In PDA, the target label space C_T \\subset C_S; source classes not present in the target are "outlier" classes that can mislead adaptation if treated the same as shared classes.',
       hints: [
         "Think of adapting an ImageNet classifier to a 10-class target — only 10 of 1000 source classes are relevant.",
         "Standard DA methods that align all classes together are misled by irrelevant source classes.",
@@ -978,7 +978,7 @@ const questions: Record<string, Question[]> = {
         "Both MUNIT and DRIT++ disentangle images into a domain-shared content code and a domain-specific style code; cross-domain translation swaps style codes, preserving content while transferring target-domain appearance.",
       hints: [
         '"Content" = what is in the image (structure, semantics); "style" = how it looks (texture, color).',
-        "To translate X→Y, take content from X and style from Y.",
+        "To translate X\\toY, take content from X and style from Y.",
       ],
     },
   ],
@@ -1107,7 +1107,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "The same patient is scanned twice on the same machine",
         "Models trained on images from one scanner/hospital are deployed at a different site with different scanner settings",
-        "The image resolution is downsampled by 2×",
+        "The image resolution is downsampled by 2\\times",
         "The label space changes from binary to multi-class",
       ],
       correctAnswer: 1,
@@ -1142,7 +1142,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Spectral normalization of the generator to ensure Lipschitz continuity",
         "Task (segmentation) consistency loss to ensure translated images produce the same anatomical labels as the original",
-        "Progressive training starting at 16×16 resolution before scaling to full resolution",
+        "Progressive training starting at 16\\times16 resolution before scaling to full resolution",
         "Identity loss weighted by the Hounsfield unit range of the target modality",
       ],
       correctAnswer: 1,
@@ -1346,7 +1346,7 @@ const questions: Record<string, Question[]> = {
         "Office-31 contains 31 object classes photographed with three distinct imaging modalities: Amazon product photos (controlled backgrounds), DSLR camera photos (high quality), and webcam photos (lower quality, varied backgrounds).",
       hints: [
         'The "Office" refers to the office supply objects in the dataset.',
-        "31 categories × 3 domains with significant visual style differences across domains.",
+        "31 categories \\times 3 domains with significant visual style differences across domains.",
       ],
     },
     {
@@ -1361,7 +1361,7 @@ const questions: Record<string, Question[]> = {
         "DomainNet (Peng et al., 2019) is one of the largest DA benchmarks with ~600K images spanning 345 object categories across 6 domains: Clipart, Infograph, Painting, Quickdraw, Real, and Sketch.",
       hints: [
         "DomainNet was designed to stress-test DA methods at much larger scale than Office-31.",
-        "345 categories × 6 domains makes it significantly more challenging than earlier benchmarks.",
+        "345 categories \\times 6 domains makes it significantly more challenging than earlier benchmarks.",
       ],
     },
     {
@@ -1396,7 +1396,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Train a GAN to translate target images to source style",
         "Analyze the nature and magnitude of the domain shift (data exploration, feature visualization) to choose appropriate methods",
-        "Collect 10× more source domain data to overwhelm the domain gap",
+        "Collect 10\\times more source domain data to overwhelm the domain gap",
         "Replace all batch normalization with layer normalization",
       ],
       correctAnswer: 1,
@@ -1782,9 +1782,9 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = \\Sigma_i F_i (\\theta_i - \\theta_0_i)² where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
+        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = \\Sigma_i F_i (\\theta_i - \\theta_0_i)\\^2 where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
       hints: [
-        "Fisher information as parameter importance: F_i = E[(∂ log p(y|x)/∂\\theta_i)²] — high Fisher importance means the parameter strongly affects source task predictions.",
+        "Fisher information as parameter importance: F_i = E[(\\partial log p(y|x)/\\partial\\theta_i)\\^2] — high Fisher importance means the parameter strongly affects source task predictions.",
         "Threshold filtering: examples with H(p) < H_threshold are reliable and provide good gradient signal. Uncertain examples have noisy pseudo-labels that can hurt performance.",
       ],
     },
@@ -1805,7 +1805,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Few-shot DA methods: (1) Domain alignment + supervised fine-tuning: use UDA loss to align source→target, then fine-tune on few labeled target examples. (2) Minimax entropy (Saito et al., 2019): labeled target examples guide the entropy minimization objective. (3) Prototypical networks: labeled target examples initialize class prototypes for nearest-centroid classification in the adapted feature space. Even 1-3 labeled examples per class significantly outperforms UDA, as the labels resolve the alignment ambiguity.",
+        "Few-shot DA methods: (1) Domain alignment + supervised fine-tuning: use UDA loss to align source\\totarget, then fine-tune on few labeled target examples. (2) Minimax entropy (Saito et al., 2019): labeled target examples guide the entropy minimization objective. (3) Prototypical networks: labeled target examples initialize class prototypes for nearest-centroid classification in the adapted feature space. Even 1-3 labeled examples per class significantly outperforms UDA, as the labels resolve the alignment ambiguity.",
       hints: [
         "The alignment ambiguity problem in UDA: class-discriminative features may be entangled with domain-specific features. A few labeled target examples disambiguate which features to align vs. ignore.",
         "Few-shot DA advantage over pure fine-tuning: standard fine-tuning on 5 labeled target examples easily overfits. Combining with source domain data via domain adaptation regularizes the learned classifier.",
@@ -1821,7 +1821,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       explanation:
         "Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C — but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.",
       hints: [
-        "A-distance: measure of domain discrepancy based on the error rate of a binary domain classifier. Higher classifier error → more similar domains.",
+        "A-distance: measure of domain discrepancy based on the error rate of a binary domain classifier. Higher classifier error \\to more similar domains.",
         "Multi-source DA best practice: always evaluate each source domain\'s contribution separately before combining. If domain C degrades performance, exclude or downweight it.",
       ],
     },
@@ -1855,16 +1855,16 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       question:
         "The Ben-David et al. (2010) theory bound for domain adaptation states that target error is bounded by:",
       options: [
-        "Target error ≤ source error only",
-        "Target error ≤ source error + H-divergence between source and target distributions + \\lambda*, where \\lambda* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously",
-        "Target error ≤ source error × (1 + H-divergence)",
-        "Target error ≤ H-divergence only, independent of source error",
+        "Target error \\leq source error only",
+        "Target error \\leq source error + H-divergence between source and target distributions + \\lambda*, where \\lambda* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously",
+        "Target error \\leq source error \\times (1 + H-divergence)",
+        "Target error \\leq H-divergence only, independent of source error",
       ],
       correctAnswer: 1,
       explanation:
-        "Ben-David et al. (2010) bound: \\epsilon_T(h) ≤ \\epsilon_S(h) + d_{H△H}(S,T) + \\lambda* where: \\epsilon_T(h) = target error; \\epsilon_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); \\lambda* = min_{h∈H}[\\epsilon_S(h)+\\epsilon_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The \\lambda* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
+        "Ben-David et al. (2010) bound: \\epsilon_T(h) \\leq \\epsilon_S(h) + d_{H△H}(S,T) + \\lambda* where: \\epsilon_T(h) = target error; \\epsilon_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); \\lambda* = min_{h\\inH}[\\epsilon_S(h)+\\epsilon_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The \\lambda* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
       hints: [
-        "H-divergence: d_{H△H}(S,T) ≈ 2(1 - 2·min_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence ≈ 0.",
+        "H-divergence: d_{H△H}(S,T) \\approx 2(1 - 2\\cdotmin_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence \\approx 0.",
         "\\lambda* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — \\lambda* is non-zero.",
       ],
     },
@@ -1876,7 +1876,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.",
       correctAnswer: "True",
       explanation:
-        "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance ≈ 2(1 - 2·error(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance ≈ 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance ≈ 2. A lower A-distance means greater domain similarity — more likely that domain adaptation will succeed without large error.",
+        "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance \\approx 2(1 - 2\\cdoterror(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance \\approx 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance \\approx 2. A lower A-distance means greater domain similarity — more likely that domain adaptation will succeed without large error.",
       hints: [
         "A-distance computation: train a linear SVM on source (label 0) and target (label 1) examples. Error rate estimates 1 - A-distance/2.",
         "Using A-distance to select source domains: compute A-distance between each source domain and the target; upweight or select source domains with lower A-distance.",
@@ -1896,7 +1896,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Marginal alignment limitation: aligning P_S(Z) ≈ P_T(Z) can mix classes — class A features from source may align with class B features from target. Conditional DA (CDA) aligns P_S(Z|Y=c) ≈ P_T(Z|Y=c) for each class c. Methods: (1) Joint Maximum Mean Discrepancy (JMMD): match joint (feature, one-hot label) distributions. (2) CDAN (Long et al., 2018): condition the adversarial domain discriminator on the model\'s predicted class distribution.",
+        "Marginal alignment limitation: aligning P_S(Z) \\approx P_T(Z) can mix classes — class A features from source may align with class B features from target. Conditional DA (CDA) aligns P_S(Z|Y=c) \\approx P_T(Z|Y=c) for each class c. Methods: (1) Joint Maximum Mean Discrepancy (JMMD): match joint (feature, one-hot label) distributions. (2) CDAN (Long et al., 2018): condition the adversarial domain discriminator on the model\'s predicted class distribution.",
       hints: [
         "CDAN discriminator input: D(f ⊗ p(y|f)) — the outer product of features f and predicted class probabilities p(y|f). This conditions the domain discriminator on the predicted label, enabling class-conditional alignment.",
         "Pseudo-label quality in conditional DA: the conditional alignment depends on accurate pseudo-labels for target examples. Warmup with marginal alignment before switching to conditional alignment improves stability.",
@@ -1919,10 +1919,10 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Prompt tuning for DA: a domain-specific soft prompt P_d ∈ R^{L×d} is prepended to the input embedding. Only P_d is updated by gradient descent on domain-specific data; the pre-trained LLM is frozen. Benefits: (1) Multi-domain deployment: store one small P_d per domain (~L×d parameters) vs. full model copy. (2) Fast adaptation: few-shot domain-specific learning updates only the small prompt. (3) No catastrophic forgetting: frozen LLM retains all pre-training knowledge.",
+        "Prompt tuning for DA: a domain-specific soft prompt P_d \\in R^{L\\timesd} is prepended to the input embedding. Only P_d is updated by gradient descent on domain-specific data; the pre-trained LLM is frozen. Benefits: (1) Multi-domain deployment: store one small P_d per domain (~L\\timesd parameters) vs. full model copy. (2) Fast adaptation: few-shot domain-specific learning updates only the small prompt. (3) No catastrophic forgetting: frozen LLM retains all pre-training knowledge.",
       hints: [
-        "Prompt tuning parameter count: L=100 tokens × d=768 dims = 76,800 parameters for BERT-base vs. 110M for full fine-tuning — ~1400× more parameter-efficient.",
-        "Domain prompt library: for 100 domains, store 100 small prompt vectors (~100KB each) instead of 100 full model copies (~440MB for BERT). 4400× storage reduction.",
+        "Prompt tuning parameter count: L=100 tokens \\times d=768 dims = 76,800 parameters for BERT-base vs. 110M for full fine-tuning — ~1400\\times more parameter-efficient.",
+        "Domain prompt library: for 100 domains, store 100 small prompt vectors (~100KB each) instead of 100 full model copies (~440MB for BERT). 4400\\times storage reduction.",
       ],
     },
     {
@@ -1933,7 +1933,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Visual prompt tuning (VPT) applies prompt tuning to vision transformers (ViT) for domain adaptation, learning prepended visual token embeddings while keeping the ViT backbone frozen.",
       correctAnswer: "True",
       explanation:
-        "VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens × 12 layers = only 0.03% of ViT-Large parameters.",
+        "VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens \\times 12 layers = only 0.03% of ViT-Large parameters.",
       hints: [
         "VPT-Deep vs. VPT-Shallow: VPT-Deep injects prompts at every transformer layer (more expressive, more parameters); VPT-Shallow only at the input. VPT-Deep consistently outperforms shallow on domain adaptation tasks.",
         "Visual prompt tokens have no direct semantic meaning — they are learned feature modifications that shift the ViT\'s attention patterns to focus on domain-relevant features.",
@@ -1953,10 +1953,10 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CoOp (Zhou et al., 2022): learn K context tokens [v₁,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(·) takes image features and outputs a per-instance shift \\Deltav_i = h(f(x)). Prompt = [v₁+\\Deltav₁,...,vK+\\DeltavK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
+        "CoOp (Zhou et al., 2022): learn K context tokens [v\\_1,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(\\cdot) takes image features and outputs a per-instance shift \\Deltav_i = h(f(x)). Prompt = [v\\_1+\\Deltav\\_1,...,vK+\\DeltavK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
       hints: [
         'Base-to-novel generalization: train on 16-shot of "base" classes, evaluate on completely "novel" classes not seen during prompt training. CoOp hurts novel class accuracy; CoCoOp maintains it.',
-        "Meta-net architecture: a single linear layer mapping CLIP image features (512-dim for ViT-B/16) → per-token bias (K×512). Very lightweight, ~0.01% of CLIP parameters.",
+        "Meta-net architecture: a single linear layer mapping CLIP image features (512-dim for ViT-B/16) \\to per-token bias (K\\times512). Very lightweight, ~0.01% of CLIP parameters.",
       ],
     },
   ],
@@ -2039,8 +2039,8 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "CDA unique challenge: adapter the model to domain D_t without forgetting adaptation to D_1...D_{t-1}. Methods: (1) EWC regularization: penalize changes to parameters important for past domains via Fisher information. (2) Experience replay: small buffer of past domain examples interleaved with new domain training. (3) Adapter-based: domain-specific adapter modules that grow with new domains — backbone frozen, zero forgetting by construction. Key metric: backward transfer (BWT) = performance on past domains after new domain learning. Negative BWT indicates catastrophic forgetting.",
       hints: [
-        "Adapter modules (Houlsby 2019): small bottleneck layers inserted into Transformer blocks. Only adapter parameters updated — all other parameters frozen. Near-zero forgetting at cost of O(r·d) parameters per domain.",
-        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty \\lambda\\Sigma F_i(\\theta_i - \\theta^*_i)² prevents moving important parameters. Requires storing F per domain — memory cost O(d·T) for T domains.",
+        "Adapter modules (Houlsby 2019): small bottleneck layers inserted into Transformer blocks. Only adapter parameters updated — all other parameters frozen. Near-zero forgetting at cost of O(r\\cdotd) parameters per domain.",
+        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty \\lambda\\Sigma F_i(\\theta_i - \\theta^*_i)\\^2 prevents moving important parameters. Requires storing F per domain — memory cost O(d\\cdotT) for T domains.",
       ],
     },
     {
@@ -2093,7 +2093,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MSDA methods: MDAN (per-source adversarial discriminators + mixture weights), DCTN (k-way adversarial alignment), LtC-MSDA (moment matching across all source-target pairs). MSDA bound: \\epsilon_T(h) ≤ \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda*. Sources closer to target receive higher weight. Domain-specific BN: separate BN statistics per source during training, shared at inference.",
+        "MSDA methods: MDAN (per-source adversarial discriminators + mixture weights), DCTN (k-way adversarial alignment), LtC-MSDA (moment matching across all source-target pairs). MSDA bound: \\epsilon_T(h) \\leq \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda*. Sources closer to target receive higher weight. Domain-specific BN: separate BN statistics per source during training, shared at inference.",
       hints: [
         "Source pooling failure: conflicting feature statistics between sources create domain-confounded representations that transfer poorly.",
         "MDAN: K binary discriminators (source k vs target) + task classifier jointly optimized. Source weights \\alpha_k learned end-to-end.",
@@ -2129,7 +2129,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "The MSDA bound \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda* suggests optimal \\alpha_k minimizes weighted sum of source error and source-target H-divergence. In practice: learn \\alpha_k as attention weights over source domain discriminator outputs. Sources with low divergence to target and low source error receive the most weight.",
       hints: [
-        "H-divergence estimation: domain classifier accuracy \\epsilon_d gives d_{H△H} ≈ 2(1-2\\epsilon_d). Low domain classifier accuracy = high divergence = similar source and target.",
+        "H-divergence estimation: domain classifier accuracy \\epsilon_d gives d_{H△H} \\approx 2(1-2\\epsilon_d). Low domain classifier accuracy = high divergence = similar source and target.",
         "\\lambda* term: if no hypothesis performs well on all sources + target, bound is vacuous — negative transfer regime.",
       ],
     },
@@ -2176,7 +2176,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "IRM (Invariant Risk Minimization) forces learning features where:",
       options: [
         "Average risk across all environments is minimized",
-        "The optimal linear classifier w is the same across all environments — the IRM penalty ||\\nabla_{w|w=1} R^e(w∘\\Phi)||² forces \\Phi such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
+        "The optimal linear classifier w is the same across all environments — the IRM penalty ||\\nabla_{w|w=1} R^e(w∘\\Phi)||\\^2 forces \\Phi such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
         "Data augmentation alone learns domain-invariant features",
         "Adversarial training is more stable than gradient penalties",
       ],
@@ -2206,7 +2206,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "Subpopulation shift example: 80% group A, 20% group B in training; 40% A, 60% B at test. Model biased toward A features fails at test. Methods: (1) Group DRO: minimize worst-group risk. (2) JTT: identify misclassified (likely minority) examples, upsample, retrain. (3) EIIL: infer group labels from model disagreement. Waterbirds benchmark: spurious land/water background correlation with bird type.",
       hints: [
         "Average accuracy is misleading for subpopulation shift — always report worst-group accuracy.",
-        "JTT two-stage: (1) train ERM until convergence, (2) upsample misclassified examples 10-100× for final model.",
+        "JTT two-stage: (1) train ERM until convergence, (2) upsample misclassified examples 10-100\\times for final model.",
       ],
     },
     {
@@ -2228,7 +2228,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Group DRO minimizes max_{g∈G} R^g(h). The theoretical guarantee is:",
+        "Group DRO minimizes max_{g\\inG} R^g(h). The theoretical guarantee is:",
       options: [
         "Low expected loss over the worst possible mixture of all distributions",
         "Uniformly low loss across all pre-defined groups — bounds worst-case test loss under subpopulation shift within the group structure G",
@@ -2237,7 +2237,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Group DRO objective: min_\\theta max_{g∈G} E_{(x,y)~P_g}[L(\\theta;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G — if the test shift is outside G, guarantees may not hold.",
+        "Group DRO objective: min_\\theta max_{g\\inG} E_{(x,y)~P_g}[L(\\theta;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G — if the test shift is outside G, guarantees may not hold.",
       hints: [
         "Softmax group weighting: \\alpha_g \\propto exp(R^g/\\tau) — smooth approximation of the max operator. Temperature \\tau controls concentration on worst group.",
         "Group size and variance: small groups have high-variance empirical risk estimates. Use EMA of per-group losses for stability.",
@@ -2275,7 +2275,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "Cross-lingual transfer through DA lens: English = labeled source domain, Spanish = unlabeled target domain. Domain shift is both lexical and syntactic. DA methods applied to cross-lingual: (1) Language-adversarial training: make representations indistinguishable across languages. (2) Multilingual pre-training (XLM-R, mBERT): pre-trains on 100+ languages, learning cross-lingual invariances. XLM-R achieves near-English performance on XNLI for high-resource languages.",
       hints: [
-        "Language divergence matters: English→German transfer better than English→Chinese due to syntactic similarity and shared Latin script vocabulary.",
+        "Language divergence matters: English\\toGerman transfer better than English\\toChinese due to syntactic similarity and shared Latin script vocabulary.",
         "XTREME benchmark: evaluates cross-lingual transfer across 40 languages, 9 tasks (NER, QA, NLI, etc.).",
       ],
     },

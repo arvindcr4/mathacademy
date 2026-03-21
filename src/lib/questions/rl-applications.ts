@@ -19,7 +19,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DQN replaces the tabular Q-table with a deep neural network Q(s,a;\\theta) that takes raw states (e.g., pixel images) as input and outputs Q-values for all actions, enabling generalization across large state spaces.",
       hints: [
-        "Tabular Q-learning cannot scale to Atari games with 210×160 pixel states.",
+        "Tabular Q-learning cannot scale to Atari games with 210\\times160 pixel states.",
         'What does "deep" in DQN refer to?',
       ],
     },
@@ -129,7 +129,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The target network Q(s,a;\\theta⁻) is a periodically-copied snapshot of the online network, kept fixed for many steps to provide stable targets y = R + \\gamma max_a Q(s',a;\\theta⁻) and prevent oscillating or diverging training.",
+        "The target network Q(s,a;\\theta\\^{-) is a periodically-copied snapshot of the online network, kept fixed for many steps to provide stable targets y = R + \\gamma max_a Q(s',a;\\theta\\^{-) and prevent oscillating or diverging training.",
       hints: [
         "If the target keeps changing as you update the network, what problem does this create?",
         "The target network provides a fixed (temporarily) goal to optimize toward.",
@@ -154,7 +154,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Polyak (soft) averaging for target network updates sets \\theta⁻ ← \\tau\\theta + (1-\\tau)\\theta⁻ with small \\tau. Compared to periodic hard updates, this:",
+        "Polyak (soft) averaging for target network updates sets \\theta\\^{- \\leftarrow \\tau\\theta + (1-\\tau)\\theta\\^{- with small \\tau. Compared to periodic hard updates, this:",
       options: [
         "Creates faster convergence by incorporating new information immediately",
         "Provides smoother, more gradual target updates that reduce instability",
@@ -165,7 +165,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Soft updates blend the online and target networks continuously with a small mixing factor \\tau (e.g., 0.005), causing the target to evolve slowly and smoothly — reducing the instability caused by sudden large jumps in hard updates.",
       hints: [
-        "A small \\tau means \\theta⁻ changes very little per step — what does this do to target stability?",
+        "A small \\tau means \\theta\\^{- changes very little per step — what does this do to target stability?",
         "Soft updates are used in DDPG and SAC — why might they prefer smooth updates?",
       ],
     },
@@ -185,7 +185,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Double DQN selects the best action using the online network argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', argmax_a Q(s',a;\\theta); \\theta⁻), reducing the upward bias from using one network for both.",
+        "Double DQN selects the best action using the online network argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', argmax_a Q(s',a;\\theta); \\theta\\^{-), reducing the upward bias from using one network for both.",
       hints: [
         "The bias in Q-learning comes from using the same values for both selection and evaluation.",
         "What if you use one network to pick the action and another to judge its value?",
@@ -256,7 +256,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Without normalization, V and A are not identifiable — the same Q can arise from infinitely many V/A combinations. The standard fix subtracts the mean advantage: Q(s,a) = V(s) + A(s,a) − (1/|A|)\\Sigma_a A(s,a).",
       hints: [
-        "If Q = V + A, then V and A could each shift by ±c and cancel — is V then uniquely determined?",
+        "If Q = V + A, then V and A could each shift by \\pmc and cancel — is V then uniquely determined?",
         "Identifiability requires anchoring A — the mean subtraction centers it at zero.",
       ],
     },
@@ -321,7 +321,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In PER, the stochastic priority P(i) \\propto (|\\deltaᵢ| + \\epsilon)^\\alpha uses the exponent \\alpha to:",
+        "In PER, the stochastic priority P(i) \\propto (|\\delta\\_i| + \\epsilon)^\\alpha uses the exponent \\alpha to:",
       options: [
         "Normalize the priorities so they sum to 1",
         "Control the degree of prioritization: \\alpha=0 gives uniform sampling, \\alpha=1 gives fully proportional sampling",
@@ -367,7 +367,7 @@ const questions: Record<string, Question[]> = {
         "Rainbow DQN achieved superhuman performance on Atari games with far fewer environment interactions than standard DQN.",
       correctAnswer: "True",
       explanation:
-        "Rainbow substantially improved sample efficiency over DQN. It achieved the same performance as DQN with roughly 7× fewer environment interactions and reached higher final performance, demonstrating the compounding benefits of combining multiple improvements.",
+        "Rainbow substantially improved sample efficiency over DQN. It achieved the same performance as DQN with roughly 7\\times fewer environment interactions and reached higher final performance, demonstrating the compounding benefits of combining multiple improvements.",
       hints: [
         "Each component of Rainbow improves either sample efficiency or asymptotic performance.",
         "Do improvements to sample efficiency compound when multiple improvements are combined?",
@@ -403,13 +403,13 @@ const questions: Record<string, Question[]> = {
       question: "The policy gradient theorem expresses \\nabla_\\theta J(\\theta) as:",
       options: [
         "The gradient of the reward function with respect to the environment dynamics",
-        "E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) · Q^{\\pi_\\theta}(s,a)]",
+        "E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)]",
         "The sum of TD errors over the entire episode",
-        "\\nabla_\\theta V^{\\pi_\\theta}(s₀) computed by backpropagation through time",
+        "\\nabla_\\theta V^{\\pi_\\theta}(s\\_0) computed by backpropagation through time",
       ],
       correctAnswer: 1,
       explanation:
-        "The policy gradient theorem gives \\nabla_\\theta J(\\theta) = E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) · Q^{\\pi_\\theta}(s,a)], enabling gradient ascent on expected return without differentiating through the environment dynamics.",
+        "The policy gradient theorem gives \\nabla_\\theta J(\\theta) = E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)], enabling gradient ascent on expected return without differentiating through the environment dynamics.",
       hints: [
         'The gradient of J involves the "score function" \\nabla_\\theta log \\pi_\\theta(a|s).',
         "This formula is key because the environment\'s transition dynamics don\'t need to be differentiable.",
@@ -459,13 +459,13 @@ const questions: Record<string, Question[]> = {
       question: "The REINFORCE algorithm updates the policy parameters using:",
       options: [
         "The TD error from a learned value function",
-        "The complete Monte Carlo return G_t scaled by the log-probability gradient \\nabla_\\theta log \\pi_\\theta(aₜ|sₜ)",
+        "The complete Monte Carlo return G_t scaled by the log-probability gradient \\nabla_\\theta log \\pi_\\theta(a\\_t|s\\_t)",
         "The advantage function estimated by a separate neural network",
         "Importance sampling weights from a behavior policy",
       ],
       correctAnswer: 1,
       explanation:
-        "REINFORCE computes the policy gradient as \\Sigma_t \\nabla_\\theta log \\pi_\\theta(aₜ|sₜ) · Gₜ using the full Monte Carlo return, then updates \\theta ← \\theta + \\alpha · gradient to maximize expected return.",
+        "REINFORCE computes the policy gradient as \\Sigma_t \\nabla_\\theta log \\pi_\\theta(a\\_t|s\\_t) \\cdot G\\_t using the full Monte Carlo return, then updates \\theta \\leftarrow \\theta + \\alpha \\cdot gradient to maximize expected return.",
       hints: [
         "REINFORCE is a Monte Carlo policy gradient method — it uses complete episode returns.",
         "The update increases the probability of actions that led to high returns.",
@@ -499,7 +499,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "REINFORCE assigns the full episode return Gₜ to every action in the trajectory, but individual actions may have contributed very differently to the outcome — making it hard to identify which actions were truly responsible for the reward.",
+        "REINFORCE assigns the full episode return G\\_t to every action in the trajectory, but individual actions may have contributed very differently to the outcome — making it hard to identify which actions were truly responsible for the reward.",
       hints: [
         "If an episode has 100 steps and ends with a reward, which of the 100 actions deserves credit?",
         "This is the temporal credit assignment problem — a fundamental challenge in RL.",
@@ -522,10 +522,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Subtracting a state-dependent baseline b(s) from the return gives \\nabla_\\theta log \\pi_\\theta(a|s) · (G_t − b(s)). Since E[\\nabla_\\theta log \\pi_\\theta · b(s)] = 0, the gradient remains unbiased while the variance is reduced.",
+        "Subtracting a state-dependent baseline b(s) from the return gives \\nabla_\\theta log \\pi_\\theta(a|s) \\cdot (G_t − b(s)). Since E[\\nabla_\\theta log \\pi_\\theta \\cdot b(s)] = 0, the gradient remains unbiased while the variance is reduced.",
       hints: [
         "If E[b(s)] doesn\'t affect the gradient expectation, adding/subtracting it doesn\'t introduce bias.",
-        "A good baseline b(s) ≈ V^\\pi(s) centers the return around zero, reducing large positive/negative fluctuations.",
+        "A good baseline b(s) \\approx V^\\pi(s) centers the return around zero, reducing large positive/negative fluctuations.",
       ],
     },
     {
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A positive advantage A^\\pi(s,a) > 0 means action a was better than average in state s. The policy gradient update \\nabla_\\theta log \\pi_\\theta(a|s) · A^\\pi(s,a) increases the probability of action a proportionally to how much better it was than average.",
+        "A positive advantage A^\\pi(s,a) > 0 means action a was better than average in state s. The policy gradient update \\nabla_\\theta log \\pi_\\theta(a|s) \\cdot A^\\pi(s,a) increases the probability of action a proportionally to how much better it was than average.",
       hints: [
         "The gradient \\nabla_\\theta log \\pi_\\theta(a|s) points in the direction that increases the probability of a.",
         "When is this gradient multiplied by a positive vs. negative scalar?",
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The PPO objective L^{CLIP}(\\theta) = E[min(rₜ(\\theta)Aₜ, clip(rₜ(\\theta), 1-\\epsilon, 1+\\epsilon)Aₜ)] uses the min operation to:",
+        "The PPO objective L^{CLIP}(\\theta) = E[min(r\\_t(\\theta)A\\_t, clip(r\\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\\_t)] uses the min operation to:",
       options: [
         "Average the clipped and unclipped objectives for a smoother gradient",
         "Pessimistically bound the objective, preventing the policy from benefiting from going outside the trust region",
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (Aₜ > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
+        "The min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
       hints: [
         "When A > 0 and r > 1+\\epsilon, which term (clipped or unclipped) gives a smaller value under min?",
         "The min ensures no benefit from making the policy update too large.",
@@ -743,7 +743,7 @@ const questions: Record<string, Question[]> = {
         "Trust Region Policy Optimization (TRPO) constrains updates by solving:",
       options: [
         "Minimize the expected KL divergence subject to a lower bound on improvement",
-        "Maximize the surrogate objective subject to KL(\\pi_{\\theta_old} ‖ \\pi_\\theta) ≤ \\delta",
+        "Maximize the surrogate objective subject to KL(\\pi_{\\theta_old} ‖ \\pi_\\theta) \\leq \\delta",
         "Minimize the TD error subject to the policy staying within the replay buffer distribution",
         "Maximize returns subject to the policy entropy staying above a threshold",
       ],
@@ -777,16 +777,16 @@ const questions: Record<string, Question[]> = {
         "TRPO uses the conjugate gradient method rather than direct matrix inversion to compute the natural gradient because:",
       options: [
         "The Fisher information matrix F is often not positive definite",
-        "Directly inverting F (which is |\\theta|×|\\theta|) is computationally prohibitive for large networks",
+        "Directly inverting F (which is |\\theta|\\times|\\theta|) is computationally prohibitive for large networks",
         "Conjugate gradient provides an exact solution where matrix inversion gives an approximation",
         "The Fisher information matrix cannot be computed analytically for neural networks",
       ],
       correctAnswer: 1,
       explanation:
-        "For a policy with millions of parameters, the Fisher information matrix F is |\\theta|×|\\theta| — storing and inverting it is O(|\\theta|²) in space and O(|\\theta|³) in time. Conjugate gradient computes F⁻¹g using only matrix-vector products Fv, which can be computed efficiently.",
+        "For a policy with millions of parameters, the Fisher information matrix F is |\\theta|\\times|\\theta| — storing and inverting it is O(|\\theta|\\^2) in space and O(|\\theta|\\^3) in time. Conjugate gradient computes F\\^{-1}g using only matrix-vector products Fv, which can be computed efficiently.",
       hints: [
         "How large is the Fisher information matrix for a network with 1M parameters?",
-        "Conjugate gradient finds F⁻¹g without ever explicitly forming F.",
+        "Conjugate gradient finds F\\^{-1}g without ever explicitly forming F.",
       ],
     },
   ],
@@ -800,13 +800,13 @@ const questions: Record<string, Question[]> = {
         "The natural policy gradient differs from the ordinary policy gradient by:",
       options: [
         "Using returns from multiple episodes rather than single transitions",
-        "Preconditions the gradient with the inverse Fisher information matrix F(\\theta)⁻¹",
+        "Preconditions the gradient with the inverse Fisher information matrix F(\\theta)\\^{-1}",
         "Projecting the gradient onto the constraint manifold defined by the action space",
         "Normalizing the gradient by the episode length",
       ],
       correctAnswer: 1,
       explanation:
-        "The natural gradient \\nablãJ = F(\\theta)⁻¹\\nablaJ steepest ascends in the space of policy distributions (under KL divergence) rather than parameter space, making it invariant to policy parameterization.",
+        "The natural gradient \\nablãJ = F(\\theta)\\^{-1}\\nablaJ steepest ascends in the space of policy distributions (under KL divergence) rather than parameter space, making it invariant to policy parameterization.",
       hints: [
         "The Fisher information matrix defines the curvature of the KL divergence between policies.",
         "Preconditioned gradient descent is faster when the loss surface is poorly scaled.",
@@ -833,14 +833,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Fisher information matrix F(\\theta) in the natural policy gradient is defined as:",
       options: [
-        "F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s) · (\\nabla_\\theta log \\pi_\\theta(a|s))ᵀ]",
-        "F(\\theta) = \\nabla²_\\theta J(\\theta) (the Hessian of expected return)",
-        "F(\\theta) = E[(Q^\\pi(s,a))² \\nabla_\\theta log \\pi_\\theta(a|s)]",
+        "F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot (\\nabla_\\theta log \\pi_\\theta(a|s))\\^T]",
+        "F(\\theta) = \\nabla\\^2_\\theta J(\\theta) (the Hessian of expected return)",
+        "F(\\theta) = E[(Q^\\pi(s,a))\\^2 \\nabla_\\theta log \\pi_\\theta(a|s)]",
         "F(\\theta) = \\nabla_\\theta KL(\\pi_{\\theta+\\epsilon} ‖ \\pi_\\theta) / \\epsilon",
       ],
       correctAnswer: 0,
       explanation:
-        "The Fisher information matrix is F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s)(\\nabla_\\theta log \\pi_\\theta(a|s))ᵀ] — the expected outer product of the score function. It captures how sensitive the policy distribution is to changes in parameters.",
+        "The Fisher information matrix is F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s)(\\nabla_\\theta log \\pi_\\theta(a|s))\\^T] — the expected outer product of the score function. It captures how sensitive the policy distribution is to changes in parameters.",
       hints: [
         "The Fisher information matrix is related to the curvature of the log-likelihood.",
         "It equals the expected outer product of the score (gradient of log-likelihood).",
@@ -857,13 +857,13 @@ const questions: Record<string, Question[]> = {
         "Soft Actor-Critic (SAC) augments the standard RL objective by adding:",
       options: [
         "A penalty for large policy updates (KL regularization)",
-        "An entropy bonus \\alpha · H(\\pi(·|s)) to encourage the policy to be as random as possible while maximizing reward",
+        "An entropy bonus \\alpha \\cdot H(\\pi(\\cdot|s)) to encourage the policy to be as random as possible while maximizing reward",
         "A constraint on the value function to stay within a safe range",
         "A separate curiosity reward for visiting novel states",
       ],
       correctAnswer: 1,
       explanation:
-        "SAC uses the maximum entropy RL objective: maximize E[\\Sigma_t (r_t + \\alpha H(\\pi(·|s_t)))], balancing reward maximization with policy entropy — the temperature \\alpha controls this tradeoff.",
+        "SAC uses the maximum entropy RL objective: maximize E[\\Sigma_t (r_t + \\alpha H(\\pi(\\cdot|s_t)))], balancing reward maximization with policy entropy — the temperature \\alpha controls this tradeoff.",
       hints: [
         'SAC has "soft" in its name — what does entropy add to the policy?',
         "Higher entropy means more exploration. How does SAC incorporate this into the objective?",
@@ -920,7 +920,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TD3 trains two independent critic networks Q₁ and Q₂ and uses min(Q₁, Q₂) for the target, penalizing overestimated Q-values — analogous to Double DQN\'s decoupling of selection and evaluation.",
+        "TD3 trains two independent critic networks Q\\_1 and Q\\_2 and uses min(Q\\_1, Q\\_2) for the target, penalizing overestimated Q-values — analogous to Double DQN\'s decoupling of selection and evaluation.",
       hints: [
         "Two critics both estimate the same Q — which estimate is safer to use as a target?",
         "Taking the minimum is a conservative approach — why does this help with overestimation?",
@@ -954,7 +954,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Adding clipped noise to target actions forces the target Q-values to be similar for nearby actions, preventing the critic from creating sharp, exploitable peaks in Q(s,·) that the actor would over-optimize for.",
+        "Adding clipped noise to target actions forces the target Q-values to be similar for nearby actions, preventing the critic from creating sharp, exploitable peaks in Q(s,\\cdot) that the actor would over-optimize for.",
       hints: [
         "If Q(s,a) is very peaky around the target action, small errors in the actor get amplified.",
         "Smoothing the target makes the Q-function landscape more regular and easier to optimize.",
@@ -977,7 +977,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDPG uses a deterministic actor \\mu_\\theta(s) → a (no discrete maximization needed) and trains it by gradient ascent on Q_\\phi(s, \\mu_\\theta(s)) w.r.t. \\theta, enabling DQN-like off-policy learning in continuous action spaces.",
+        "DDPG uses a deterministic actor \\mu_\\theta(s) \\to a (no discrete maximization needed) and trains it by gradient ascent on Q_\\phi(s, \\mu_\\theta(s)) w.r.t. \\theta, enabling DQN-like off-policy learning in continuous action spaces.",
       hints: [
         "DQN\'s argmax over Q-values is intractable in continuous spaces — what replaces it in DDPG?",
         "The actor network outputs a specific action, not a distribution.",
@@ -1002,7 +1002,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The actor in DDPG is updated by gradient ascent on J(\\theta) ≈ E[Q_\\phi(s, \\mu_\\theta(s))]. This requires:",
+        "The actor in DDPG is updated by gradient ascent on J(\\theta) \\approx E[Q_\\phi(s, \\mu_\\theta(s))]. This requires:",
       options: [
         "Computing importance sampling weights to correct for the replay buffer distribution",
         "Differentiating through the critic Q_\\phi with respect to the actor parameters \\theta via the chain rule",
@@ -1011,10 +1011,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The DDPG actor gradient is \\nabla_\\theta Q_\\phi(s, \\mu_\\theta(s)) = \\nabla_a Q_\\phi(s,a)|_{a=\\mu_\\theta(s)} · \\nabla_\\theta \\mu_\\theta(s), computed by backpropagating through the critic into the actor via the chain rule — a form of deterministic policy gradient.",
+        "The DDPG actor gradient is \\nabla_\\theta Q_\\phi(s, \\mu_\\theta(s)) = \\nabla_a Q_\\phi(s,a)|_{a=\\mu_\\theta(s)} \\cdot \\nabla_\\theta \\mu_\\theta(s), computed by backpropagating through the critic into the actor via the chain rule — a form of deterministic policy gradient.",
       hints: [
         "The action a = \\mu_\\theta(s) is a differentiable function of \\theta, and Q_\\phi(s,a) is differentiable in a.",
-        "Chain rule: d/d\\theta Q(s, \\mu_\\theta(s)) = ∂Q/∂a · ∂\\mu_\\theta/∂\\theta.",
+        "Chain rule: d/d\\theta Q(s, \\mu_\\theta(s)) = \\partialQ/\\partiala \\cdot \\partial\\mu_\\theta/\\partial\\theta.",
       ],
     },
   ],
@@ -1117,7 +1117,7 @@ const questions: Record<string, Question[]> = {
         "Dyna+ extends Dyna-Q to handle non-stationary environments by:",
       options: [
         "Using importance sampling to correct for distribution shift",
-        "Adding a bonus reward \\tau·√(time since last visited) to encourage revisiting states and detecting changes",
+        "Adding a bonus reward \\tau\\cdot√(time since last visited) to encourage revisiting states and detecting changes",
         "Periodically resetting the world model to forget outdated transitions",
         "Running a separate change detection algorithm on the reward signal",
       ],
@@ -1236,7 +1236,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "h maps observations to latent states (s→z), g transitions the latent state given an action (z,a→z',r), and f predicts the policy distribution and value from any latent state (z→\\pi,v) — together enabling MCTS-based planning entirely in latent space.",
+        "h maps observations to latent states (s\\toz), g transitions the latent state given an action (z,a\\toz',r), and f predicts the policy distribution and value from any latent state (z\\to\\pi,v) — together enabling MCTS-based planning entirely in latent space.",
       hints: [
         "Think of the three functions as: encode, transition, predict.",
         "MCTS needs to simulate future states — which function provides this in latent space?",
@@ -1663,7 +1663,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Constrained MDPs (CMDPs) extend standard MDPs by adding auxiliary cost functions C_i(s,a), and the goal is to maximize reward subject to E[\\Sigma C_i] ≤ d_i for each constraint i.",
+        "Constrained MDPs (CMDPs) extend standard MDPs by adding auxiliary cost functions C_i(s,a), and the goal is to maximize reward subject to E[\\Sigma C_i] \\leq d_i for each constraint i.",
       correctAnswer: "True",
       explanation:
         "CMDPs formalize safe RL: the agent maximizes expected cumulative reward while satisfying cumulative cost constraints. Algorithms like CPO (Constrained Policy Optimization) and LaGrangian methods directly solve CMDP objectives.",
@@ -1679,14 +1679,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Lagrangian relaxation applied to CMDP optimization converts the constrained problem into an unconstrained one by:",
       options: [
-        "Adding a penalty term \\lambdaᵢ · max(0, E[C_i] − dᵢ) to the objective and optimizing jointly over policy and \\lambda",
+        "Adding a penalty term \\lambda\\_i \\cdot max(0, E[C_i] − d\\_i) to the objective and optimizing jointly over policy and \\lambda",
         "Projecting the policy gradient onto the constraint manifold at each step",
         "Running a separate safety critic that blocks unsafe actions before they are executed",
         "Solving a linear program over the space of occupancy measures",
       ],
       correctAnswer: 0,
       explanation:
-        "Lagrangian relaxation introduces multipliers \\lambdaᵢ ≥ 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) − \\Sigmaᵢ \\lambdaᵢ(E[Cᵢ(\\pi)] − dᵢ). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
+        "Lagrangian relaxation introduces multipliers \\lambda\\_i \\geq 0 and optimizes the Lagrangian L(\\pi,\\lambda) = J(\\pi) − \\Sigma\\_i \\lambda\\_i(E[C\\_i(\\pi)] − d\\_i). The saddle-point (\\pi*, \\lambda*) satisfies the constraints, converting constrained RL into a two-player minimax game.",
       hints: [
         "Lagrangian relaxation moves constraints into the objective with penalty multipliers.",
         "The multiplier \\lambda is large when the constraint is violated, penalizing the policy heavily.",
@@ -1855,7 +1855,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'AlphaZero requires a perfect simulator of the environment (e.g., chess rules). MuZero learns a latent dynamics model f(h, a) → (h\', r, v, p) entirely from data, enabling MCTS planning in the learned latent space. This extends to Atari and other domains where rules are unknown.',
+        'AlphaZero requires a perfect simulator of the environment (e.g., chess rules). MuZero learns a latent dynamics model f(h, a) \\to (h\', r, v, p) entirely from data, enabling MCTS planning in the learned latent space. This extends to Atari and other domains where rules are unknown.',
       hints: [
         'AlphaZero = perfect simulator given; MuZero = learns the simulator.',
         'MuZero\'s latent dynamics model predicts reward, value, and policy — not literal next states.',
@@ -1877,7 +1877,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'RLHF (InstructGPT, ChatGPT): (1) collect human preference data comparing pairs of responses, (2) train a reward model R(x,y) via Bradley-Terry regression, (3) fine-tune the LM with PPO to maximize E[R(x,y)] − \\beta·KL(\\pi || \\pi_ref), keeping the policy close to the reference LM.',
+        'RLHF (InstructGPT, ChatGPT): (1) collect human preference data comparing pairs of responses, (2) train a reward model R(x,y) via Bradley-Terry regression, (3) fine-tune the LM with PPO to maximize E[R(x,y)] − \\beta\\cdotKL(\\pi || \\pi_ref), keeping the policy close to the reference LM.',
       hints: [
         'The reward model learns to score outputs based on human pairwise preferences.',
         'PPO is used because it is stable and clips large policy updates.',
@@ -1902,7 +1902,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'The KL penalty term \\beta·KL(\\pi_\\theta || \\pi_ref) in the RLHF objective serves which dual purpose?',
+        'The KL penalty term \\beta\\cdotKL(\\pi_\\theta || \\pi_ref) in the RLHF objective serves which dual purpose?',
       options: [
         'It speeds up training by reducing gradient variance and prevents the policy from memorizing training prompts',
         'It prevents reward hacking by keeping the fine-tuned policy close to the reference LM, and ensures the policy retains general language capabilities',
@@ -1911,7 +1911,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The KL penalty \\beta·KL(\\pi || \\pi_ref) acts as a regularizer: (1) it limits how far the policy drifts from the pretrained reference, preventing reward hacking exploitation of OOD inputs; (2) it preserves the general language model capabilities learned during pretraining. Higher \\beta = more conservative fine-tuning.',
+        'The KL penalty \\beta\\cdotKL(\\pi || \\pi_ref) acts as a regularizer: (1) it limits how far the policy drifts from the pretrained reference, preventing reward hacking exploitation of OOD inputs; (2) it preserves the general language model capabilities learned during pretraining. Higher \\beta = more conservative fine-tuning.',
       hints: [
         'Without KL penalty, the policy can collapse to gibberish that happens to score high on the reward model.',
         '\\beta controls the trade-off: high \\beta = stays close to reference; low \\beta = more RL optimization.',
@@ -1947,9 +1947,9 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'SAC (Soft Actor-Critic) differs from TD3 (Twin Delayed Deep Deterministic) primarily in that SAC maximizes an entropy-augmented objective, leading to a stochastic policy, while TD3 uses a deterministic policy.',
       correctAnswer: 'True',
       explanation:
-        'SAC optimizes J = E[\\Sigma r_t + \\alpha·H(\\pi(·|s_t))], encouraging maximum entropy exploration. TD3 improves DDPG with twin critics and delayed policy updates but maintains a deterministic policy. SAC\'s stochastic policy provides natural exploration without explicit noise injection.',
+        'SAC optimizes J = E[\\Sigma r_t + \\alpha\\cdotH(\\pi(\\cdot|s_t))], encouraging maximum entropy exploration. TD3 improves DDPG with twin critics and delayed policy updates but maintains a deterministic policy. SAC\'s stochastic policy provides natural exploration without explicit noise injection.',
       hints: [
-        'SAC = maximum entropy RL → stochastic policy. TD3 = deterministic + noise for exploration.',
+        'SAC = maximum entropy RL \\to stochastic policy. TD3 = deterministic + noise for exploration.',
         '\\alpha in SAC controls exploration-exploitation trade-off (temperature parameter).',
       ],
     },
@@ -1989,7 +1989,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'DQN (Mnih et al. 2015) takes as input 4 stacked grayscale frames (84×84 pixels each), giving the network temporal information about motion and velocity. The stack captures recent dynamics without requiring a recurrent network.',
+        'DQN (Mnih et al. 2015) takes as input 4 stacked grayscale frames (84\\times84 pixels each), giving the network temporal information about motion and velocity. The stack captures recent dynamics without requiring a recurrent network.',
       hints: [
         'Stacking frames provides velocity information (motion direction) that a single frame cannot.',
         'DQN is the "end-to-end from pixels" breakthrough — no hand-engineered features.',
@@ -2022,7 +2022,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'AlphaZero uses a single f_\\theta(s) → (p, v) network trained purely from self-play with no human game data. MCTS uses p to guide search and v to evaluate positions. The network learns both move selection and position evaluation jointly, generalizing across chess, shogi, and Go.',
+        'AlphaZero uses a single f_\\theta(s) \\to (p, v) network trained purely from self-play with no human game data. MCTS uses p to guide search and v to evaluate positions. The network learns both move selection and position evaluation jointly, generalizing across chess, shogi, and Go.',
       hints: [
         'AlphaGo used human expert games for supervised pretraining — AlphaZero uses zero human data.',
         'A single network outputs (policy, value) — no separate policy/value networks.',
@@ -2044,7 +2044,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'In a Partially Observable MDP (POMDP), the agent receives observation o_t ~ O(·|s_t) rather than the full state s_t. The observation may be noisy or incomplete. Agents must maintain a belief state b(s_t) = P(s_t | o_1,...,o_t, a_1,...,a_{t-1}) or use memory (RNNs) to act optimally.',
+        'In a Partially Observable MDP (POMDP), the agent receives observation o_t ~ O(\\cdot|s_t) rather than the full state s_t. The observation may be noisy or incomplete. Agents must maintain a belief state b(s_t) = P(s_t | o_1,...,o_t, a_1,...,a_{t-1}) or use memory (RNNs) to act optimally.',
       hints: [
         'A robot with a camera has partial observability — it cannot see behind itself.',
         'POMDP = Partially Observable MDP. The O stands for Observation function.',
@@ -2072,13 +2072,13 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Sparse reward environments (e.g., reward only on task completion) are challenging primarily because:',
       options: [
         'The policy gradient estimator becomes biased when rewards are sparse',
-        'With near-zero expected reward, the gradient signal \\nablaJ(\\theta) ≈ 0 almost everywhere, making learning from random exploration extremely slow',
+        'With near-zero expected reward, the gradient signal \\nablaJ(\\theta) \\approx 0 almost everywhere, making learning from random exploration extremely slow',
         'Sparse rewards violate the Markov property required by standard RL algorithms',
         'Neural networks cannot represent sparse functions, causing approximation error',
       ],
       correctAnswer: 1,
       explanation:
-        'In sparse reward settings, most trajectories receive r=0, so the policy gradient E[\\nablalog \\pi · G] ≈ 0. The agent cannot distinguish good from bad actions without ever reaching the goal. Solutions include reward shaping, hindsight experience replay (HER), intrinsic motivation (curiosity), and curriculum learning.',
+        'In sparse reward settings, most trajectories receive r=0, so the policy gradient E[\\nablalog \\pi \\cdot G] \\approx 0. The agent cannot distinguish good from bad actions without ever reaching the goal. Solutions include reward shaping, hindsight experience replay (HER), intrinsic motivation (curiosity), and curriculum learning.',
       hints: [
         'If a robot never reaches the goal, it receives no learning signal from the environment.',
         'HER, curriculum learning, and intrinsic rewards are the main tools for sparse reward settings.',
@@ -2094,13 +2094,13 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'A Constrained MDP (CMDP) extends the standard MDP by adding:',
       options: [
         'A second agent that enforces safety constraints on the primary agent',
-        'Auxiliary cost functions C_i(s,a) with constraints E[\\Sigma C_i] ≤ d_i that the policy must satisfy',
+        'Auxiliary cost functions C_i(s,a) with constraints E[\\Sigma C_i] \\leq d_i that the policy must satisfy',
         'Hard action masks that block unsafe actions at every timestep',
         'A separate safe state space that the agent must stay within at all times',
       ],
       correctAnswer: 1,
       explanation:
-        'A CMDP is a tuple (S, A, P, r, C_1,...,C_k, d_1,...,d_k). The agent maximizes E[\\Sigma r_t] subject to E[\\Sigma C_i(s_t,a_t)] ≤ d_i for each constraint. This formulation covers safety constraints, resource limits, and fairness requirements.',
+        'A CMDP is a tuple (S, A, P, r, C_1,...,C_k, d_1,...,d_k). The agent maximizes E[\\Sigma r_t] subject to E[\\Sigma C_i(s_t,a_t)] \\leq d_i for each constraint. This formulation covers safety constraints, resource limits, and fairness requirements.',
       hints: [
         'CMDPs add inequality constraints on expected cumulative costs to the standard RL objective.',
         'The threshold d_i specifies the maximum allowable cumulative cost for constraint i.',
@@ -2134,7 +2134,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'CPO (Achiam et al. 2017) extends TRPO\'s trust region to include constraints on expected cumulative costs. It solves: max_\\pi J(\\pi) s.t. J_C_i(\\pi) ≤ d_i, D_KL(\\pi||\\pi_k) ≤ \\delta. Using linear-quadratic approximations it finds the update direction within the trust region that satisfies cost constraints, with recovery steps when constraints are violated.',
+        'CPO (Achiam et al. 2017) extends TRPO\'s trust region to include constraints on expected cumulative costs. It solves: max_\\pi J(\\pi) s.t. J_C_i(\\pi) \\leq d_i, D_KL(\\pi||\\pi_k) \\leq \\delta. Using linear-quadratic approximations it finds the update direction within the trust region that satisfies cost constraints, with recovery steps when constraints are violated.',
       hints: [
         'TRPO constrains the KL divergence — CPO additionally constrains cumulative costs.',
         'The linear cost approximation allows solving the constrained update as a quadratic program.',
@@ -2190,7 +2190,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'IQL (Kostrikov et al. 2021) replaces max_a Q(s\',a) with V(s\') learned via expectile regression at a high quantile \\tau ≈ 0.7–0.9, approximating the max without querying OOD actions. Advantage-weighted regression then extracts a policy. This enables stable offline RL without any OOD action queries.',
+        'IQL (Kostrikov et al. 2021) replaces max_a Q(s\',a) with V(s\') learned via expectile regression at a high quantile \\tau \\approx 0.7–0.9, approximating the max without querying OOD actions. Advantage-weighted regression then extracts a policy. This enables stable offline RL without any OOD action queries.',
       hints: [
         'Expectile regression at high \\tau approximates the maximum of a distribution.',
         'IQL never evaluates Q(s\',a\') for actions a\' not in the dataset — no OOD extrapolation.',
@@ -2342,7 +2342,7 @@ const extra2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "IQL's key insight: to find V*(s) = max_a Q*(s,a) without querying OOD actions, use expectile regression on the value function V(s). The expectile loss L_\\tau^2(u) = |\\tau - 1(u<0)| * u^2 with \\tau close to 1 asymmetrically penalizes underestimation, fitting V(s) to the upper quantile of Q(s,a) over dataset actions. The policy is then extracted via advantage-weighted regression: \\pi(a|s) \\propto exp(\\beta * (Q(s,a) - V(s))). IQL outperforms CQL on many benchmarks and scales better to complex function approximators.",
       hints: [
-        "Expectile \\tau=0.5 recovers the mean (like L2 regression). What does \\tau → 1.0 compute?",
+        "Expectile \\tau=0.5 recovers the mean (like L2 regression). What does \\tau \\to 1.0 compute?",
         "IQL never evaluates Q at OOD actions — it only uses (s,a) pairs from the dataset. How does it still approximate the policy improvement step?",
       ],
     },
@@ -2418,10 +2418,10 @@ const extra2: Record<string, Question[]> = {
       difficulty: "medium",
       question: "RLHF (Reinforcement Learning from Human Feedback) for language models consists of three phases. What are they in correct order?",
       options: [
-        "Pre-train on text → fine-tune with PPO directly → apply KL penalty",
-        "Pre-train on text → supervised fine-tuning (SFT) on demonstrations → train a reward model from preference comparisons → fine-tune the LLM with PPO using the reward model",
-        "Pre-train on text → collect human ratings of individual responses → fine-tune with REINFORCE using those ratings as rewards",
-        "Train a reward model → use it to generate synthetic demonstrations → pre-train the LLM on those demonstrations",
+        "Pre-train on text \\to fine-tune with PPO directly \\to apply KL penalty",
+        "Pre-train on text \\to supervised fine-tuning (SFT) on demonstrations \\to train a reward model from preference comparisons \\to fine-tune the LLM with PPO using the reward model",
+        "Pre-train on text \\to collect human ratings of individual responses \\to fine-tune with REINFORCE using those ratings as rewards",
+        "Train a reward model \\to use it to generate synthetic demonstrations \\to pre-train the LLM on those demonstrations",
       ],
       correctAnswer: 1,
       explanation: "RLHF (InstructGPT, Ouyang et al., 2022) proceeds in three phases: (1) SFT: fine-tune the pre-trained LLM on human-written demonstrations of desired behavior; (2) Reward Model: collect human preference pairs (response A vs. B is preferred), train a reward model R(x,y) using the Bradley-Terry model via a classification loss; (3) RL fine-tuning: use PPO to maximize E[R(x,y)] while keeping the policy close to the SFT model via a KL penalty. This KL penalty is critical: without it, the LLM collapses to reward hacking.",
@@ -2442,7 +2442,7 @@ const extra2: Record<string, Question[]> = {
         "The KL penalty replaces the reward signal when human feedback is unavailable; \\beta scales the reward magnitude",
       ],
       correctAnswer: 1,
-      explanation: "Without the KL penalty, PPO maximizes R(x,y) by exploiting flaws in the reward model — the policy finds outputs that score high under R but are not actually preferred by humans (reward hacking/model overoptimization). The KL penalty KL(\\pi || \\pi_SFT) = E_\\pi[log \\pi(y|x) - log \\pi_SFT(y|x)] keeps the fine-tuned policy close to the SFT baseline. High \\beta → policy barely moves from SFT (safe but limited improvement). Low \\beta → policy aggressively optimizes R, risking reward hacking. The optimal \\beta trades these off. Gao et al. (2022) showed that RL fine-tuning improvements peak at moderate KL distances before degrading.",
+      explanation: "Without the KL penalty, PPO maximizes R(x,y) by exploiting flaws in the reward model — the policy finds outputs that score high under R but are not actually preferred by humans (reward hacking/model overoptimization). The KL penalty KL(\\pi || \\pi_SFT) = E_\\pi[log \\pi(y|x) - log \\pi_SFT(y|x)] keeps the fine-tuned policy close to the SFT baseline. High \\beta \\to policy barely moves from SFT (safe but limited improvement). Low \\beta \\to policy aggressively optimizes R, risking reward hacking. The optimal \\beta trades these off. Gao et al. (2022) showed that RL fine-tuning improvements peak at moderate KL distances before degrading.",
       hints: [
         "If \\beta=0, the policy freely maximizes R(x,y). What happens if the reward model has blind spots or errors?",
         "If \\beta is very large, the policy barely deviates from \\pi_SFT. Is this likely to achieve the alignment goals?",
@@ -2623,15 +2623,15 @@ const extra2: Record<string, Question[]> = {
       question: "Control Barrier Functions (CBFs) are used as safety filters in deployed RL systems. How does a CBF safety filter modify the RL policy's actions at execution time?",
       options: [
         "It selects a completely different action from a pre-programmed safe action set whenever the RL policy selects an unsafe action",
-        "It solves a quadratic program (QP) that finds the minimum-norm modification to the RL policy's action a_RL that keeps the system within a provably safe set, defined as h(s) ≥ 0 where h is the barrier function",
+        "It solves a quadratic program (QP) that finds the minimum-norm modification to the RL policy's action a_RL that keeps the system within a provably safe set, defined as h(s) \\geq 0 where h is the barrier function",
         "It scales down the RL policy's action magnitude whenever the agent is near a constraint boundary",
         "It switches between the RL policy and a human teleoperator when approaching unsafe states",
       ],
       correctAnswer: 1,
-      explanation: "A CBF safety filter solves: min_a ||a - a_RL||^2 subject to ∂h/∂s * f(s,a) + \\alpha(h(s)) ≥ 0 (the CBF condition ensuring h(s) stays ≥ 0 forward in time). This is a convex QP solvable in real-time. The key properties: (1) it is minimally invasive — only modifies actions when necessary to maintain safety; (2) it provides hard safety guarantees — the system is provably confined to the safe set; (3) it is independent of the RL policy — the RL policy can be arbitrary as long as the CBF filter is applied. This decouples the RL performance objective from the safety requirement.",
+      explanation: "A CBF safety filter solves: min_a ||a - a_RL||^2 subject to \\partialh/\\partials * f(s,a) + \\alpha(h(s)) \\geq 0 (the CBF condition ensuring h(s) stays \\geq 0 forward in time). This is a convex QP solvable in real-time. The key properties: (1) it is minimally invasive — only modifies actions when necessary to maintain safety; (2) it provides hard safety guarantees — the system is provably confined to the safe set; (3) it is independent of the RL policy — the RL policy can be arbitrary as long as the CBF filter is applied. This decouples the RL performance objective from the safety requirement.",
       hints: [
         "The CBF filter solves a minimum-norm problem: find the closest safe action to a_RL. What does 'closest' mean here?",
-        "The CBF condition ∂h/∂s * f(s,a) + \\alpha(h(s)) ≥ 0 ensures h remains nonneg. If h(s)=0 (at the boundary), what does this condition require?",
+        "The CBF condition \\partialh/\\partials * f(s,a) + \\alpha(h(s)) \\geq 0 ensures h remains nonneg. If h(s)=0 (at the boundary), what does this condition require?",
       ],
     },
     {
@@ -2658,7 +2658,7 @@ const extra2: Record<string, Question[]> = {
         "Use \\lambda=0 during early training and increase it linearly after the policy becomes competent",
       ],
       correctAnswer: 1,
-      explanation: "Dual gradient ascent (also called primal-dual optimization) updates the multiplier \\lambda in the direction of increasing constraint violation: \\lambda increases when E[C(\\pi)] > d (constraint violated) and decreases otherwise (clamped at 0). The step size \\alpha_\\lambda critically controls stability: too large → \\lambda oscillates wildly, causing unstable policy updates; too small → constraint violations persist for too long before \\lambda responds. In practice, separate learning rates for the policy (primal) and multipliers (dual) are tuned carefully. Recent work (Ray et al., 2019 Safety Gym) showed that simple Lagrangian methods work well when both are tuned appropriately.",
+      explanation: "Dual gradient ascent (also called primal-dual optimization) updates the multiplier \\lambda in the direction of increasing constraint violation: \\lambda increases when E[C(\\pi)] > d (constraint violated) and decreases otherwise (clamped at 0). The step size \\alpha_\\lambda critically controls stability: too large \\to \\lambda oscillates wildly, causing unstable policy updates; too small \\to constraint violations persist for too long before \\lambda responds. In practice, separate learning rates for the policy (primal) and multipliers (dual) are tuned carefully. Recent work (Ray et al., 2019 Safety Gym) showed that simple Lagrangian methods work well when both are tuned appropriately.",
       hints: [
         "\\lambda increases when the constraint is violated and decreases when it is satisfied. What happens if \\alpha_\\lambda is very large?",
         "If the policy update step size and the multiplier update step size are mismatched, can the joint optimization still converge?",

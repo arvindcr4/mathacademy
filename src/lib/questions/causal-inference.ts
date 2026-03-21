@@ -153,7 +153,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "This is the problem of 'Markov equivalence' and 'causal non-identifiability from observational data alone'. Multiple SCMs — even with different causal structures — can be consistent with the same observational distribution. This is why additional assumptions (e.g., functional form restrictions, interventional data) are needed for causal discovery.",
       hints: [
-        "Think about X → Y vs Y → X: both can be consistent with the same bivariate distribution under certain noise models.",
+        "Think about X \\to Y vs Y \\to X: both can be consistent with the same bivariate distribution under certain noise models.",
         "This is why causal discovery is harder than structure learning in Bayesian networks.",
       ],
     },
@@ -164,10 +164,10 @@ const questions: Record<string, Question[]> = {
       question:
         "Pearl's hierarchy of causation (the 'ladder of causation') consists of three rungs. Which ordering is correct from lowest to highest?",
       options: [
-        "Intervention → Association → Counterfactual",
-        "Association → Intervention → Counterfactual",
-        "Counterfactual → Intervention → Association",
-        "Association → Counterfactual → Intervention",
+        "Intervention \\to Association \\to Counterfactual",
+        "Association \\to Intervention \\to Counterfactual",
+        "Counterfactual \\to Intervention \\to Association",
+        "Association \\to Counterfactual \\to Intervention",
       ],
       correctAnswer: 1,
       explanation:
@@ -185,7 +185,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In a Directed Acyclic Graph (DAG) used for causal modeling, an arrow X → Y means:",
+        "In a Directed Acyclic Graph (DAG) used for causal modeling, an arrow X \\to Y means:",
       options: [
         "X and Y are correlated in the data",
         "X is a direct cause of Y — intervening on X changes the distribution of Y",
@@ -194,7 +194,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "An arrow X → Y in a causal DAG encodes the claim that X is a direct cause of Y relative to the other variables in the graph. This is an interventional claim: if we intervene to set X = x (do(X=x)), Y's distribution changes. Correlation alone does not justify drawing an arrow.",
+        "An arrow X \\to Y in a causal DAG encodes the claim that X is a direct cause of Y relative to the other variables in the graph. This is an interventional claim: if we intervene to set X = x (do(X=x)), Y's distribution changes. Correlation alone does not justify drawing an arrow.",
       hints: [
         "Causal arrows encode mechanism, not mere association.",
         "The 'acyclic' in DAG means causes cannot be their own effects (no feedback loops in the static model).",
@@ -217,7 +217,7 @@ const questions: Record<string, Question[]> = {
         "d-separation is a graphical criterion for reading off conditional independence statements. X and Y are d-separated by Z if every path between X and Y is blocked by Z (either through a chain/fork where a node in Z is on the path, or a collider not in Z and with no descendant in Z). Under the Markov and faithfulness assumptions, d-separation implies conditional independence in the joint distribution.",
       hints: [
         "d-separation is 'directed separation' — the directionality of arrows matters for whether a path is blocked.",
-        "Colliders (X → Z ← Y) have special behavior: conditioning on a collider opens the path.",
+        "Colliders (X \\to Z \\leftarrow Y) have special behavior: conditioning on a collider opens the path.",
       ],
     },
     {
@@ -225,7 +225,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In a DAG with structure X → M → Y and X → Y (a mediated and direct effect), conditioning on the mediator M in a regression of Y on X gives:",
+        "In a DAG with structure X \\to M \\to Y and X \\to Y (a mediated and direct effect), conditioning on the mediator M in a regression of Y on X gives:",
       options: [
         "The total causal effect of X on Y",
         "The direct effect of X on Y not through M (the controlled direct effect), but this can be biased if M is a collider for unmeasured confounders",
@@ -234,7 +234,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Conditioning on the mediator M blocks the indirect path X → M → Y, so the coefficient on X captures the direct effect of X on Y. However, if there are unmeasured common causes of M and Y, conditioning on M opens a backdoor path (collider bias), biasing the direct effect estimate. This is the key challenge in mediation analysis.",
+        "Conditioning on the mediator M blocks the indirect path X \\to M \\to Y, so the coefficient on X captures the direct effect of X on Y. However, if there are unmeasured common causes of M and Y, conditioning on M opens a backdoor path (collider bias), biasing the direct effect estimate. This is the key challenge in mediation analysis.",
       hints: [
         "Conditioning on a mediator estimates the direct effect but can induce collider bias.",
         "Think about what happens when M is a collider for an unmeasured U that also affects Y.",
@@ -334,7 +334,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ATT = E[Y(1)-Y(0)|T=1]. If T ⊥ (Y(0),Y(1)) (random assignment), then E[Y(t)|T=1] = E[Y(t)] for t∈{0,1}, so ATT = ATE. With treatment effect heterogeneity and non-random assignment, ATT and ATE generally differ. They also coincide when treatment effects are constant (homogeneous) since then E[Y(1)-Y(0)|T=1] = E[Y(1)-Y(0)] = constant.",
+        "ATT = E[Y(1)-Y(0)|T=1]. If T ⊥ (Y(0),Y(1)) (random assignment), then E[Y(t)|T=1] = E[Y(t)] for t\\in{0,1}, so ATT = ATE. With treatment effect heterogeneity and non-random assignment, ATT and ATE generally differ. They also coincide when treatment effects are constant (homogeneous) since then E[Y(1)-Y(0)|T=1] = E[Y(1)-Y(0)] = constant.",
       hints: [
         "Under randomization, the treated group is a representative sample of the full population.",
         "Constant treatment effects mean everyone benefits (or is harmed) the same amount.",
@@ -517,7 +517,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "2SLS: Stage 1 — regress T on Z (and any controls) to get T̂ = Ẑ·\\gammâ. Stage 2 — regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
+        "2SLS: Stage 1 — regress T on Z (and any controls) to get T̂ = Ẑ\\cdot\\gammâ. Stage 2 — regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
       hints: [
         "T̂ captures only the part of T variation that comes from the instrument Z — which is exogenous by assumption.",
         "The IV estimate is consistent but generally less efficient (higher variance) than OLS when there is no confounding.",
@@ -596,7 +596,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Callaway & Sant'Anna (2021), Sun & Abraham (2021), and Goodman-Bacon (2021) showed that in staggered DiD, TWFE implicitly uses 'forbidden comparisons': already-treated units serve as controls for later-treated units. When treatment effects evolve over time or differ across adoption cohorts, these negative-weighted comparisons can produce biased, even sign-reversed estimates. Modern solutions include cohort-specific ATTs aggregated properly (Callaway-Sant'Anna estimator).",
       hints: [
-        "The Goodman-Bacon decomposition shows TWFE is a weighted average of all 2×2 DiD comparisons, some of which use treated-vs-treated comparisons.",
+        "The Goodman-Bacon decomposition shows TWFE is a weighted average of all 2\\times2 DiD comparisons, some of which use treated-vs-treated comparisons.",
         "This is a major recent insight in applied econometrics; the fix is to use estimators that only compare treated to clean controls.",
       ],
     },
@@ -644,9 +644,9 @@ const questions: Record<string, Question[]> = {
       question:
         "What is the main computational bottleneck of the PC algorithm in high dimensions, and how does it affect reliability?",
       options: [
-        "Computing the covariance matrix, which scales as O(p³); overcome by using sparse matrix methods",
+        "Computing the covariance matrix, which scales as O(p\\^3); overcome by using sparse matrix methods",
         "The number of conditional independence tests grows exponentially with the number of conditioning variables considered; in high dimensions, sparse graphs can limit conditioning set sizes but large conditioning sets have low statistical power",
-        "Sorting edges by correlation, which scales as O(p² log p); overcome by approximate sorting",
+        "Sorting edges by correlation, which scales as O(p\\^2 log p); overcome by approximate sorting",
         "Inverting the Fisher information matrix for each test; overcome by diagonal approximations",
       ],
       correctAnswer: 1,
@@ -690,7 +690,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Exact optimization over the space of DAGs is NP-hard (superexponential in the number of variables). GES uses greedy search in CPDAG space, which is provably consistent under faithfulness but not guaranteed to find the global optimum in finite samples or when faithfulness is violated. Exact methods (e.g., dynamic programming for small p) become intractable for large graphs.",
       hints: [
-        "The DAG space has superexponential size — there are roughly 2^(p²/2) possible DAGs for p variables.",
+        "The DAG space has superexponential size — there are roughly 2^(p\\^2/2) possible DAGs for p variables.",
         "GES trades global optimality for computational feasibility while maintaining asymptotic consistency.",
       ],
     },
@@ -731,7 +731,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Under Gaussian noise, X→Y and Y→X are statistically indistinguishable in the linear bivariate case (Markov equivalence). LiNGAM exploits the fact that under non-Gaussian noise with a linear SEM, the joint distribution is only consistent with one causal ordering. Shimizu et al. showed that ICA (Independent Component Analysis) can recover the unique causal DAG by finding the causal ordering via non-Gaussianity.",
+        "Under Gaussian noise, X\\toY and Y\\toX are statistically indistinguishable in the linear bivariate case (Markov equivalence). LiNGAM exploits the fact that under non-Gaussian noise with a linear SEM, the joint distribution is only consistent with one causal ordering. Shimizu et al. showed that ICA (Independent Component Analysis) can recover the unique causal DAG by finding the causal ordering via non-Gaussianity.",
       hints: [
         "Gaussianity is the 'special case' where causal direction is unidentifiable from observational data.",
         "ICA finds statistically independent components — the non-Gaussian noise variables U_i in the LiNGAM SEM.",
@@ -925,7 +925,7 @@ const questions: Record<string, Question[]> = {
         "Since individual counterfactuals are never observed, CATE evaluation uses: (1) RCT validation — in held-out experimental data, the empirical mean within groups stratified by estimated \\taû(x); (2) Doubly-robust pseudo-outcomes \\taũ_i as approximate individual treatment effects, enabling regression-style evaluation (R-loss); (3) Decision-value metrics like AUTOC or QINI curves that evaluate the policy implied by the CATE.",
       hints: [
         "You cannot directly check if \\taû(x_i) is close to Y_i(1)-Y_i(0) because Y_i(1)-Y_i(0) is unobserved.",
-        "R-loss (Robinson decomposition) is a popular approach: \\taû minimizes E[(Ỹ_i - \\taû(X_i)·T̃_i)²] where tildes denote residuals.",
+        "R-loss (Robinson decomposition) is a popular approach: \\taû minimizes E[(Ỹ_i - \\taû(X_i)\\cdotT̃_i)\\^2] where tildes denote residuals.",
       ],
     },
     {
@@ -936,13 +936,13 @@ const questions: Record<string, Question[]> = {
         "The Robinson decomposition (partial linear model) used in the R-learner for CATE estimation expresses the outcome as:",
       options: [
         "Y = \\alpha + \\betaT + \\epsilon, with \\beta estimated by OLS",
-        "Y - m(X) = \\tau(X)·(T - e(X)) + \\epsilon, where m(X) = E[Y|X] and e(X) = E[T|X] are nuisance functions",
+        "Y - m(X) = \\tau(X)\\cdot(T - e(X)) + \\epsilon, where m(X) = E[Y|X] and e(X) = E[T|X] are nuisance functions",
         "Y = \\tau(X) + g(X) + \\epsilon, where g(X) is a flexible main effect and \\tau(X) is the interaction term",
         "Y(T) = f(X,T) with f estimated by a random forest treating T as a feature",
       ],
       correctAnswer: 1,
       explanation:
-        "The Robinson (1988) partial linear decomposition: Y - m(X) = \\tau(X)·(T - e(X)) + \\epsilon. After partialling out the main effects m(X)=E[Y|X] and e(X)=E[T|X] (nuisance functions estimated in a first stage), the residual equation becomes a weighted regression that identifies \\tau(X). The R-learner minimizes the empirical R-loss: \\Sigma[(Ỹ_i - \\taû(X_i)·T̃_i)²], enabling use of any flexible ML model for \\taû.",
+        "The Robinson (1988) partial linear decomposition: Y - m(X) = \\tau(X)\\cdot(T - e(X)) + \\epsilon. After partialling out the main effects m(X)=E[Y|X] and e(X)=E[T|X] (nuisance functions estimated in a first stage), the residual equation becomes a weighted regression that identifies \\tau(X). The R-learner minimizes the empirical R-loss: \\Sigma[(Ỹ_i - \\taû(X_i)\\cdotT̃_i)\\^2], enabling use of any flexible ML model for \\taû.",
       hints: [
         "The 'R' in R-learner refers to Robinson's decomposition.",
         "The nuisance functions m and e can be estimated with cross-fitting (sample-splitting) to avoid overfitting bias.",
@@ -967,7 +967,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The T-learner trains \\mû_1 only on treated data and \\mû_0 only on control data. When overlap is poor, \\mû_1 must extrapolate to covariate regions covered mostly by controls (and vice versa), introducing high variance and potential bias. The S-learner (single model with T as a feature) can borrow strength across groups but may underfit the treatment effect. X-learner and R-learner are more robust under poor overlap.",
       hints: [
-        "Poor overlap means e(X) ≈ 0 or ≈ 1 for large portions of the covariate space.",
+        "Poor overlap means e(X) \\approx 0 or \\approx 1 for large portions of the covariate space.",
         "Extrapolation with complex models (e.g., random forests) can have large variance outside the training distribution of each group.",
       ],
     },
@@ -1062,7 +1062,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GRF frames any estimation problem via a local moment condition: find \\theta(x) such that E[\\psi_{\\theta,ν}(O_i) | X_i=x] = 0, where \\psi is a score function and ν are nuisance parameters. The forest provides adaptive weights \\alpha_i(x) — the fraction of trees where observation i and query point x land in the same leaf — which define a weighted local estimating equation \\Sigma_i \\alpha_i(x)·\\psi_{\\theta,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
+        "GRF frames any estimation problem via a local moment condition: find \\theta(x) such that E[\\psi_{\\theta,ν}(O_i) | X_i=x] = 0, where \\psi is a score function and ν are nuisance parameters. The forest provides adaptive weights \\alpha_i(x) — the fraction of trees where observation i and query point x land in the same leaf — which define a weighted local estimating equation \\Sigma_i \\alpha_i(x)\\cdot\\psi_{\\theta,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
       hints: [
         "The forest weights \\alpha_i(x) measure 'local similarity' to x — a data-adaptive kernel.",
         "The moment condition framework allows GRF to estimate any semiparametric estimand, not just the CATE.",
@@ -1110,16 +1110,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In the partially linear DML model Y = \\theta_0·D + g_0(X) + \\epsilon, the DML estimator for \\theta_0 is based on the moment condition:",
+        "In the partially linear DML model Y = \\theta_0\\cdotD + g_0(X) + \\epsilon, the DML estimator for \\theta_0 is based on the moment condition:",
       options: [
-        "E[\\epsilon · D] = 0 (standard OLS moment condition)",
-        "E[(Y - \\theta_0·D - ĝ(X)) · V̂] = 0 where V̂ = D - ê(X) is the residualized treatment",
-        "E[Y | D, X] = \\theta_0·D + g_0(X) (conditional expectation equation)",
-        "min\\theta ||Y - \\theta·D - g(X)||² subject to ||g||_∞ ≤ C",
+        "E[\\epsilon \\cdot D] = 0 (standard OLS moment condition)",
+        "E[(Y - \\theta_0\\cdotD - ĝ(X)) \\cdot V̂] = 0 where V̂ = D - ê(X) is the residualized treatment",
+        "E[Y | D, X] = \\theta_0\\cdotD + g_0(X) (conditional expectation equation)",
+        "min\\theta ||Y - \\theta\\cdotD - g(X)||\\^2 subject to ||g||_\\infty \\leq C",
       ],
       correctAnswer: 1,
       explanation:
-        "DML solves the Neyman-orthogonal score equation: E[(Y - \\theta_0·D - g_0(X))·(D - l_0(X))] = 0, where l_0(X) = E[D|X] and g_0(X) = E[Y-\\theta_0·D|X]. Using estimates ĝ and l̂: \\thetâ = {\\Sigma V̂_i(Y_i - ĝ(X_i))} / {\\Sigma V̂_i·D_i}, where V̂_i = D_i - l̂(X_i). This is equivalent to: regress (Y-ĝ(X)) on V̂ = (D-l̂(X)) without intercept. The orthogonality of V̂ to the nuisance g(X) eliminates the first-order bias from nuisance estimation errors.",
+        "DML solves the Neyman-orthogonal score equation: E[(Y - \\theta_0\\cdotD - g_0(X))\\cdot(D - l_0(X))] = 0, where l_0(X) = E[D|X] and g_0(X) = E[Y-\\theta_0\\cdotD|X]. Using estimates ĝ and l̂: \\thetâ = {\\Sigma V̂_i(Y_i - ĝ(X_i))} / {\\Sigma V̂_i\\cdotD_i}, where V̂_i = D_i - l̂(X_i). This is equivalent to: regress (Y-ĝ(X)) on V̂ = (D-l̂(X)) without intercept. The orthogonality of V̂ to the nuisance g(X) eliminates the first-order bias from nuisance estimation errors.",
       hints: [
         "V̂ = D - ê(X) is the residual treatment after removing the effect of X — analogous to an instrumental variable.",
         "This is the Frisch-Waugh-Lovell theorem applied to the partially linear model with ML nuisance estimation.",
@@ -1142,7 +1142,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In an RDD, treatment is determined by whether a running variable X crosses a known threshold c: T = 1(X ≥ c). Units near the cutoff are assumed to be very similar (quasi-random assignment near the threshold), so the jump in outcomes at the cutoff is attributed to the treatment. The identifying assumption is that all other factors influencing the outcome are continuous through the cutoff — only treatment status is discontinuous.",
+        "In an RDD, treatment is determined by whether a running variable X crosses a known threshold c: T = 1(X \\geq c). Units near the cutoff are assumed to be very similar (quasi-random assignment near the threshold), so the jump in outcomes at the cutoff is attributed to the treatment. The identifying assumption is that all other factors influencing the outcome are continuous through the cutoff — only treatment status is discontinuous.",
       hints: [
         "Classic examples: scholarship eligibility based on exam score threshold; legal drinking age at 21; electoral outcomes at 50% vote share.",
         "RDD provides local identification — the LATE at the threshold, not the ATE for the whole population.",
@@ -1162,9 +1162,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a fuzzy RDD: lim_{x↓c} E[T|X=x] \$\\neq\$ lim_{x↑c} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is \\tau_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X≥c) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
+        "In a fuzzy RDD: lim_{x\\downarrowc} E[T|X=x] \$\\neq\$ lim_{x\\uparrowc} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is \\tau_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X\\geqc) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
       hints: [
-        "The threshold 1(X≥c) is a valid instrument: it shifts treatment probability discontinuously but (under continuity) does not directly shift outcomes.",
+        "The threshold 1(X\\geqc) is a valid instrument: it shifts treatment probability discontinuously but (under continuity) does not directly shift outcomes.",
         "Fuzzy RDD = local IV; sharp RDD = reduced form = IV estimate when compliance is perfect.",
       ],
     },
@@ -1273,10 +1273,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "According to the ICM principle, in the causal direction X→Y, the marginal distribution P(X) (cause) and the conditional P(Y|X) (mechanism) should be statistically independent — knowing P(X) provides no information about P(Y|X).",
+        "According to the ICM principle, in the causal direction X\\toY, the marginal distribution P(X) (cause) and the conditional P(Y|X) (mechanism) should be statistically independent — knowing P(X) provides no information about P(Y|X).",
       correctAnswer: "True",
       explanation:
-        "The ICM principle implies that in the causal direction, P(cause) and P(effect|cause) are 'algorithmically independent' — they contain no shared information. In the anti-causal direction, P(Y) and P(X|Y) are typically dependent (knowing the marginal of Y gives information about the conditional). This asymmetry is the basis for causal direction tests: if P(X) and P(Y|X) are simpler to describe jointly than P(Y) and P(X|Y), X→Y is the causal direction.",
+        "The ICM principle implies that in the causal direction, P(cause) and P(effect|cause) are 'algorithmically independent' — they contain no shared information. In the anti-causal direction, P(Y) and P(X|Y) are typically dependent (knowing the marginal of Y gives information about the conditional). This asymmetry is the basis for causal direction tests: if P(X) and P(Y|X) are simpler to describe jointly than P(Y) and P(X|Y), X\\toY is the causal direction.",
       hints: [
         "This is related to the Minimum Description Length principle: the causal direction has a shorter joint description.",
         "Complexity measures like Kolmogorov complexity formalize 'algorithmic independence'.",
@@ -1319,7 +1319,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IRM optimizes: min_\\Phi \\Sigma_e R^e(w·\\Phi) s.t. w ∈ argmin_{w'} R^e(w'·\\Phi) for all e. The constraint requires that the same classifier w is optimal across all environments. Intuitively, features that are causally related to the outcome (not spuriously correlated due to confounders) will have a consistent relationship with Y across environments, while spurious correlates will not. IRM finds a representation where this causal invariance holds.",
+        "IRM optimizes: min_\\Phi \\Sigma_e R^e(w\\cdot\\Phi) s.t. w \\in argmin_{w'} R^e(w'\\cdot\\Phi) for all e. The constraint requires that the same classifier w is optimal across all environments. Intuitively, features that are causally related to the outcome (not spuriously correlated due to confounders) will have a consistent relationship with Y across environments, while spurious correlates will not. IRM finds a representation where this causal invariance holds.",
       hints: [
         "Spurious correlations change across environments (e.g., grass correlates with cows in train data but not in unusual test images).",
         "Causal features have invariant conditional distributions P(Y|\\Phi(X)) across environments.",
@@ -1346,14 +1346,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The practical IRMv1 objective adds a penalty term to ERM. Which formulation is correct?",
       options: [
-        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·||\\nabla_w R^e(w·\\Phi)||² summed over environments",
-        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·||w - w_e||² where w_e is the environment-specific optimal classifier",
-        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) subject to ||\\Phi(X)||² ≤ C",
-        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·KL(P^e(\\Phi(X))||P^{e'}(\\Phi(X)))",
+        "min_\\Phi,w \\Sigma_e R^e(w\\cdot\\Phi) + \\lambda\\cdot||\\nabla_w R^e(w\\cdot\\Phi)||\\^2 summed over environments",
+        "min_\\Phi,w \\Sigma_e R^e(w\\cdot\\Phi) + \\lambda\\cdot||w - w_e||\\^2 where w_e is the environment-specific optimal classifier",
+        "min_\\Phi,w \\Sigma_e R^e(w\\cdot\\Phi) subject to ||\\Phi(X)||\\^2 \\leq C",
+        "min_\\Phi,w \\Sigma_e R^e(w\\cdot\\Phi) + \\lambda\\cdotKL(P^e(\\Phi(X))||P^{e'}(\\Phi(X)))",
       ],
       correctAnswer: 0,
       explanation:
-        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{\\Phi,w} \\Sigma_e [R^e(w·\\Phi) + \\lambda·||\\nabla_{w|w=1} R^e(w·\\Phi)||²]. The penalty term ||\\nabla_w R^e(w·\\Phi)||² measures how much the gradient of the loss w.r.t. the classifier w deviates from zero — if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
+        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{\\Phi,w} \\Sigma_e [R^e(w\\cdot\\Phi) + \\lambda\\cdot||\\nabla_{w|w=1} R^e(w\\cdot\\Phi)||\\^2]. The penalty term ||\\nabla_w R^e(w\\cdot\\Phi)||\\^2 measures how much the gradient of the loss w.r.t. the classifier w deviates from zero — if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
       hints: [
         "If w is optimal for an environment, the gradient of the loss w.r.t. w should be zero.",
         "IRMv1 is a differentiable approximation that can be optimized with gradient descent, unlike the original bi-level problem.",
@@ -1544,7 +1544,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Optimal policy learning in causal inference seeks to find a treatment assignment rule \\pi: X → T that maximizes expected outcome. The optimal policy is:",
+        "Optimal policy learning in causal inference seeks to find a treatment assignment rule \\pi: X \\to T that maximizes expected outcome. The optimal policy is:",
       options: [
         "Always treating everyone (\\pi(x) = 1 for all x)",
         "\\pi*(x) = argmax_t E[Y(t)|X=x] — treating unit x with the treatment that maximizes their conditional expected potential outcome",
@@ -1566,14 +1566,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Policy evaluation using off-policy data (observational data, not from the target policy) uses Inverse Propensity Score (IPS) weighting. The IPS estimator of policy value V(\\pi) is:",
       options: [
-        "(1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i))",
-        "(1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i)) / P(T_i | X_i)",
-        "(1/n)\\Sigma [\\mû_1(X_i) - \\mû_0(X_i)] · \\pi(X_i)",
-        "(1/n)\\Sigma T_i · Y_i / e(X_i)",
+        "(1/n)\\Sigma Y_i \\cdot 1(T_i = \\pi(X_i))",
+        "(1/n)\\Sigma Y_i \\cdot 1(T_i = \\pi(X_i)) / P(T_i | X_i)",
+        "(1/n)\\Sigma [\\mû_1(X_i) - \\mû_0(X_i)] \\cdot \\pi(X_i)",
+        "(1/n)\\Sigma T_i \\cdot Y_i / e(X_i)",
       ],
       correctAnswer: 1,
       explanation:
-        "The IPS estimator for policy value is: V̂(\\pi) = (1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i)) / P(T_i | X_i). When the observed action matches the policy \\pi(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias — units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
+        "The IPS estimator for policy value is: V̂(\\pi) = (1/n)\\Sigma Y_i \\cdot 1(T_i = \\pi(X_i)) / P(T_i | X_i). When the observed action matches the policy \\pi(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias — units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
       hints: [
         "IPS reweights observed outcomes to simulate what would happen under the target policy \\pi.",
         "When the target policy \\pi matches the behavior policy (how data was collected), IPS reduces to the sample mean.",
@@ -1593,7 +1593,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Athey & Wager showed: maximizing E[Y(\\pi(X))] - E[Y(0)] ≈ E[\\tau(X)·\\pi(X)] = E[\\taũ_i·\\pi(X_i)] where \\taũ_i are doubly-robust pseudo-outcomes for \\tau(X_i). This is a weighted classification problem: find \\pi that maximizes \\Sigma \\taũ_i·1(\\pi(X_i)=1), equivalent to classifying X_i into treatment when \\taũ_i > 0. The doubly-robust pseudo-outcomes \\taũ are used as 'soft labels', and the problem is solvable with any weighted classification algorithm (SVM, trees, etc.).",
+        "Athey & Wager showed: maximizing E[Y(\\pi(X))] - E[Y(0)] \\approx E[\\tau(X)\\cdot\\pi(X)] = E[\\taũ_i\\cdot\\pi(X_i)] where \\taũ_i are doubly-robust pseudo-outcomes for \\tau(X_i). This is a weighted classification problem: find \\pi that maximizes \\Sigma \\taũ_i\\cdot1(\\pi(X_i)=1), equivalent to classifying X_i into treatment when \\taũ_i > 0. The doubly-robust pseudo-outcomes \\taũ are used as 'soft labels', and the problem is solvable with any weighted classification algorithm (SVM, trees, etc.).",
       hints: [
         "The reduction to classification is powerful: any classification algorithm becomes a policy learning algorithm.",
         "The pseudo-outcome \\taũ_i approximates the individual treatment effect — positive means treatment is better for unit i.",
@@ -1611,12 +1611,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "The prediction accuracy is equal across groups defined by A",
         "P(Ŷ=y | X=x, A=a) = P(Ŷ=y | X=x, A=a') for all a, a' (demographic parity given X)",
-        "P(Ŷ_{A←a}=y | X=x, A=a) = P(Ŷ_{A←a'}=y | X=x, A=a) — the prediction is the same in the factual and counterfactual world where A is set to a different value",
+        "P(Ŷ_{A\\leftarrowa}=y | X=x, A=a) = P(Ŷ_{A\\leftarrowa'}=y | X=x, A=a) — the prediction is the same in the factual and counterfactual world where A is set to a different value",
         "The protected attribute A is not used as a direct input to the prediction model",
       ],
       correctAnswer: 2,
       explanation:
-        "Counterfactual fairness asks: if person x had belonged to a different demographic group (A=a' instead of A=a), all else being equal, would their predicted outcome have changed? Formally: P(Ŷ_{A←a} | X=x, A=a) = P(Ŷ_{A←a'} | X=x, A=a). This is a counterfactual (rung-3) criterion — it requires a causal model of how A influences the other features X. It avoids using features that are causally downstream of A (proxy discrimination).",
+        "Counterfactual fairness asks: if person x had belonged to a different demographic group (A=a' instead of A=a), all else being equal, would their predicted outcome have changed? Formally: P(Ŷ_{A\\leftarrowa} | X=x, A=a) = P(Ŷ_{A\\leftarrowa'} | X=x, A=a). This is a counterfactual (rung-3) criterion — it requires a causal model of how A influences the other features X. It avoids using features that are causally downstream of A (proxy discrimination).",
       hints: [
         "Removing A from the input doesn't guarantee counterfactual fairness if other features are caused by A (proxy discrimination).",
         "Computing counterfactual fairness requires knowing the causal graph relating A to other features and the outcome.",
@@ -1650,7 +1650,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Path-specific fairness (Nabi & Shpitser, 2018; Chiappa, 2019) formalizes discrimination as causal effects flowing through 'illegitimate' pathways: e.g., race directly affecting loan decisions, or race affecting decisions through zip code (proxy discrimination). Legitimate pathways (e.g., race → income → creditworthiness → loan, if income differences are considered 'legitimate') are permitted. Fairness requires blocking only the illegitimate paths in the potential outcome: E[Ŷ_{A=a, M_{illegit}=M_{illegit,a'}} | X] = E[Ŷ_{A=a'} | X] on illegal paths.",
+        "Path-specific fairness (Nabi & Shpitser, 2018; Chiappa, 2019) formalizes discrimination as causal effects flowing through 'illegitimate' pathways: e.g., race directly affecting loan decisions, or race affecting decisions through zip code (proxy discrimination). Legitimate pathways (e.g., race \\to income \\to creditworthiness \\to loan, if income differences are considered 'legitimate') are permitted. Fairness requires blocking only the illegitimate paths in the potential outcome: E[Ŷ_{A=a, M_{illegit}=M_{illegit,a'}} | X] = E[Ŷ_{A=a'} | X] on illegal paths.",
       hints: [
         "Which paths are 'illegitimate' is a normative choice that must be specified by domain experts and policymakers.",
         "Path-specific effects require computing do-calculus expressions involving specific edges in the causal graph.",

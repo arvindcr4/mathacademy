@@ -7,11 +7,11 @@ const questions: Record<string, Question[]> = {
       id: "q-alg-kp1-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "Which of the following is a valid subspace of \\mathbb{R}³?",
+      question: "Which of the following is a valid subspace of \\mathbb{R}\\^3?",
       options: [
         "The set of all vectors (x, y, z) where x + y + z = 1",
         "The set of all vectors (x, y, z) where x + y + z = 0",
-        "The set of all vectors (x, y, z) where x² + y² + z² = 1",
+        "The set of all vectors (x, y, z) where x\\^2 + y\\^2 + z\\^2 = 1",
         "The set of all vectors (x, y, z) where x, y, z > 0",
       ],
       correctAnswer: 1,
@@ -32,8 +32,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A basis only requires the vectors to be linearly independent and span the space; orthogonality is an additional property of orthonormal bases (e.g., from Gram-Schmidt) but is not required for a basis.",
       hints: [
-        "Think about the standard basis {e₁, e₂, e₃} — is that the only valid basis for \\mathbb{R}³?",
-        "Can you find a basis for \\mathbb{R}² where the two vectors are not perpendicular?",
+        "Think about the standard basis {e\\_1, e\\_2, e\\_3} — is that the only valid basis for \\mathbb{R}\\^3?",
+        "Can you find a basis for \\mathbb{R}\\^2 where the two vectors are not perpendicular?",
       ],
     },
     {
@@ -41,13 +41,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The set of all polynomials of degree ≤ 2 forms a vector space. What is its dimension?",
+        "The set of all polynomials of degree \\leq 2 forms a vector space. What is its dimension?",
       options: ["2", "3", "4", "Infinite"],
       correctAnswer: 1,
       explanation:
-        "Every polynomial of degree ≤ 2 can be written as a₀ + a₁x + a₂x², so {1, x, x²} is a basis — giving dimension 3.",
+        "Every polynomial of degree \\leq 2 can be written as a\\_0 + a\\_1x + a\\_2x\\^2, so {1, x, x\\^2} is a basis — giving dimension 3.",
       hints: [
-        "Find the smallest spanning set: what basic building blocks can generate every polynomial of degree ≤ 2?",
+        "Find the smallest spanning set: what basic building blocks can generate every polynomial of degree \\leq 2?",
         "The dimension equals the number of elements in any basis.",
       ],
     },
@@ -59,10 +59,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A linear transformation T: \\mathbb{R}ⁿ → \\mathbb{R}ᵐ must satisfy which two properties?",
+        "A linear transformation T: \\mathbb{R}\\^n \\to \\mathbb{R}ᵐ must satisfy which two properties?",
       options: [
         "T(u + v) = T(u) + T(v) and T(cu) = cT(u) for all u, v and scalar c",
-        "T(u · v) = T(u) · T(v) and T(u + v) = T(u) × T(v)",
+        "T(u \\cdot v) = T(u) \\cdot T(v) and T(u + v) = T(u) \\times T(v)",
         "T is invertible and T maps the origin to itself",
         "T(u) > 0 for all nonzero u and T(0) = 1",
       ],
@@ -84,8 +84,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A linear transformation is basis-independent, but its matrix representation encodes coordinates relative to chosen bases; different bases yield different (though similar) matrices representing the same transformation.",
       hints: [
-        "Think about how the same rotation in \\mathbb{R}² looks in the standard basis vs. a rotated basis.",
-        "Two matrices A and B represent the same transformation if B = P⁻¹AP for some invertible P.",
+        "Think about how the same rotation in \\mathbb{R}\\^2 looks in the standard basis vs. a rotated basis.",
+        "Two matrices A and B represent the same transformation if B = P\\^{-1}AP for some invertible P.",
       ],
     },
     {
@@ -93,16 +93,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The transformation T(x) = Ax where A is an m × n matrix maps from which space to which space?",
+        "The transformation T(x) = Ax where A is an m \\times n matrix maps from which space to which space?",
       options: [
-        "From \\mathbb{R}ᵐ to \\mathbb{R}ⁿ",
-        "From \\mathbb{R}ⁿ to \\mathbb{R}ᵐ",
-        "From \\mathbb{R}ⁿ to \\mathbb{R}ⁿ (always square)",
+        "From \\mathbb{R}ᵐ to \\mathbb{R}\\^n",
+        "From \\mathbb{R}\\^n to \\mathbb{R}ᵐ",
+        "From \\mathbb{R}\\^n to \\mathbb{R}\\^n (always square)",
         "From \\mathbb{R}ᵐ to \\mathbb{R}ᵐ (always square)",
       ],
       correctAnswer: 1,
       explanation:
-        "For Ax to be defined, x must be in \\mathbb{R}ⁿ (n-dimensional column vector), and the product Ax is an m-dimensional vector in \\mathbb{R}ᵐ; an m × n matrix always maps from \\mathbb{R}ⁿ to \\mathbb{R}ᵐ.",
+        "For Ax to be defined, x must be in \\mathbb{R}\\^n (n-dimensional column vector), and the product Ax is an m-dimensional vector in \\mathbb{R}ᵐ; an m \\times n matrix always maps from \\mathbb{R}\\^n to \\mathbb{R}ᵐ.",
       hints: [
         "The number of columns of A determines the size of the input vector.",
         "The number of rows of A determines the size of the output vector.",
@@ -147,7 +147,7 @@ Therefore, $\\boxed{\\text{The matrix is singular and its columns are linearly d
       type: "true-false",
       difficulty: "medium",
       question:
-        "The determinant of the product of two matrices equals the product of their determinants: det(AB) = det(A)·det(B).",
+        "The determinant of the product of two matrices equals the product of their determinants: det(AB) = det(A)\\cdotdet(B).",
       correctAnswer: "True",
       explanation: `Let us verify this fundamental property of determinants step by step.
 
@@ -188,7 +188,7 @@ Therefore, $\\boxed{\\text{True}}$ — determinants compose multiplicatively und
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A 2×2 matrix with columns [2, 0] and [0, 3] has determinant 6. What is the geometric interpretation?",
+        "A 2\\times2 matrix with columns [2, 0] and [0, 3] has determinant 6. What is the geometric interpretation?",
       options: [
         "The matrix rotates all vectors by 6 degrees",
         "The transformation scales area by a factor of 6 (a unit square maps to a rectangle of area 6)",
@@ -232,11 +232,11 @@ Therefore, $\\boxed{\\text{The transformation scales area by a factor of 6 (a un
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "For a matrix A of size m × n, the rank-nullity theorem states:",
+        "For a matrix A of size m \\times n, the rank-nullity theorem states:",
       options: [
         "rank(A) + nullity(A) = m",
         "rank(A) + nullity(A) = n",
-        "rank(A) × nullity(A) = mn",
+        "rank(A) \\times nullity(A) = mn",
         "rank(A) = nullity(A) for all square matrices",
       ],
       correctAnswer: 1,
@@ -304,7 +304,7 @@ Therefore, $\\boxed{\\text{True}}$.`,
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A 5 × 8 matrix A has rank 3. What are the dimensions of its null space and column space?",
+        "A 5 \\times 8 matrix A has rank 3. What are the dimensions of its null space and column space?",
       options: [
         "Null space: dimension 3, Column space: dimension 5",
         "Null space: dimension 5, Column space: dimension 3",
@@ -355,7 +355,7 @@ Therefore, $\\boxed{\\text{Null space: dimension 5 }(8 - 3),\\text{ Column space
       difficulty: "easy",
       question:
         "The orthogonal projection of vector b onto the line spanned by vector a is:",
-      options: ["a × b (cross product)", "(aᵀb / aᵀa) · a", "b − a", "aᵀb"],
+      options: ["a \\times b (cross product)", "(a\\^Tb / a\\^Ta) \\cdot a", "b − a", "a\\^Tb"],
       correctAnswer: 1,
       explanation: `Let us derive the projection formula from first principles using the orthogonality condition.
 
@@ -421,10 +421,10 @@ Therefore, $\\boxed{\\text{True}}$ — Gram-Schmidt produces an orthonormal basi
       id: "q-alg-kp5-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "For an orthogonal matrix Q (QᵀQ = I), which property holds?",
+      question: "For an orthogonal matrix Q (Q\\^TQ = I), which property holds?",
       options: [
         "Q is always symmetric",
-        "Q preserves vector lengths and angles (det(Q) = ±1)",
+        "Q preserves vector lengths and angles (det(Q) = \\pm1)",
         "Q has all eigenvalues equal to 1",
         "Q is always a rotation matrix with det(Q) = +1",
       ],
@@ -472,7 +472,7 @@ Therefore, $\\boxed{Q\\text{ preserves vector lengths and angles (det}(Q) = \\pm
       difficulty: "easy",
       question:
         "The least squares solution to an overdetermined system Ax = b (more equations than unknowns) minimizes:",
-      options: ["‖Ax‖²", "‖Ax − b‖²", "‖x‖²", "‖A‖²"],
+      options: ["‖Ax‖\\^2", "‖Ax − b‖\\^2", "‖x‖\\^2", "‖A‖\\^2"],
       correctAnswer: 1,
       explanation: `Least squares is the standard method for solving overdetermined linear systems. Let us understand the minimization objective.
 
@@ -509,7 +509,7 @@ Therefore, $\\boxed{\\|Ax - b\\|^2}$ is the quantity minimized by least squares.
       type: "true-false",
       difficulty: "medium",
       question:
-        "The normal equations AᵀAx = Aᵀb always have a unique solution regardless of the rank of A.",
+        "The normal equations A\\^TAx = A\\^Tb always have a unique solution regardless of the rank of A.",
       correctAnswer: "False",
       explanation: `The normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$ are derived from the least squares problem, but their solvability depends on the rank of $A$.
 
@@ -548,8 +548,8 @@ Therefore, $\\boxed{\\text{False}}$ — the normal equations have a unique solut
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The Moore-Penrose pseudoinverse A⁺ satisfies which property when A has full column rank?",
-      options: ["A⁺ = A", "A⁺ = (AᵀA)⁻¹Aᵀ", "A⁺ = Aᵀ(AAᵀ)⁻¹", "A⁺A⁺ = I"],
+        "The Moore-Penrose pseudoinverse A\\^+ satisfies which property when A has full column rank?",
+      options: ["A\\^+ = A", "A\\^+ = (A\\^TA)\\^{-1}A\\^T", "A\\^+ = A\\^T(AA\\^T)\\^{-1}", "A\\^+A\\^+ = I"],
       correctAnswer: 1,
       explanation: `When $A$ has full column rank, the Moore-Penrose pseudoinverse simplifies significantly. Let us work through this carefully.
 
@@ -669,7 +669,7 @@ Therefore, $\\boxed{\\text{False}}$ — only diagonalizable matrices (a proper s
         "The spectral theorem states that for a real symmetric matrix A, the eigenvectors can be chosen to be:",
       options: [
         "Complex and unit-norm",
-        "Real and mutually orthogonal, forming an orthonormal basis for \\mathbb{R}ⁿ",
+        "Real and mutually orthogonal, forming an orthonormal basis for \\mathbb{R}\\^n",
         "Positive and linearly independent only",
         "Identical to the left singular vectors of A",
       ],
@@ -713,19 +713,19 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
       id: "q-alg-kp8-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "In the SVD A = U\\SigmaVᵀ of an m × n matrix, the columns of U are:",
+      question: "In the SVD A = U\\SigmaV\\^T of an m \\times n matrix, the columns of U are:",
       options: [
-        "The right singular vectors of A, lying in \\mathbb{R}ⁿ",
+        "The right singular vectors of A, lying in \\mathbb{R}\\^n",
         "The left singular vectors of A, lying in \\mathbb{R}ᵐ, forming an orthonormal basis for \\mathbb{R}ᵐ",
         "The eigenvalues of A arranged in a column",
         "The row space basis vectors of A",
       ],
       correctAnswer: 1,
       explanation:
-        "U is an m × m orthogonal matrix whose columns (left singular vectors) form an orthonormal basis for \\mathbb{R}ᵐ; they are eigenvectors of AAᵀ.",
+        "U is an m \\times m orthogonal matrix whose columns (left singular vectors) form an orthonormal basis for \\mathbb{R}ᵐ; they are eigenvectors of AA\\^T.",
       hints: [
-        "In A = U\\SigmaVᵀ, U transforms the output space and V transforms the input space.",
-        "Left singular vectors live in the output space \\mathbb{R}ᵐ; right singular vectors live in the input space \\mathbb{R}ⁿ.",
+        "In A = U\\SigmaV\\^T, U transforms the output space and V transforms the input space.",
+        "Left singular vectors live in the output space \\mathbb{R}ᵐ; right singular vectors live in the input space \\mathbb{R}\\^n.",
       ],
     },
     {
@@ -735,10 +735,10 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
       question: "The singular values of any matrix are always non-negative.",
       correctAnswer: "True",
       explanation:
-        "Singular values \\sigmaᵢ are defined as the square roots of the eigenvalues of AᵀA, which is positive semi-definite; therefore singular values are always real and non-negative.",
+        "Singular values \\sigma\\_i are defined as the square roots of the eigenvalues of A\\^TA, which is positive semi-definite; therefore singular values are always real and non-negative.",
       hints: [
         "Singular values come from the diagonal of \\Sigma in the SVD.",
-        "AᵀA is positive semi-definite by construction — what does that imply about its eigenvalues?",
+        "A\\^TA is positive semi-definite by construction — what does that imply about its eigenvalues?",
       ],
     },
     {
@@ -749,15 +749,15 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
         "The Eckart-Young theorem states that the best rank-k approximation to A (minimizing Frobenius norm error) is:",
       options: [
         "The first k rows of A",
-        "Aₖ = \\Sigmaᵢ₌₁ᵏ \\sigmaᵢuᵢvᵢᵀ (the truncated SVD using the top k singular triplets)",
-        "The k × k submatrix of A with largest entries",
+        "A\\_k = \\Sigma\\_i₌\\_1\\^k \\sigma\\_iu\\_iv\\_i\\^T (the truncated SVD using the top k singular triplets)",
+        "The k \\times k submatrix of A with largest entries",
         "A projected onto the first k standard basis vectors",
       ],
       correctAnswer: 1,
       explanation:
-        "The Eckart-Young theorem proves that the truncated SVD (keeping the top k singular values) yields the optimal rank-k approximation in both Frobenius and spectral norm, with approximation error equal to \\sigmaₖ₊₁.",
+        "The Eckart-Young theorem proves that the truncated SVD (keeping the top k singular values) yields the optimal rank-k approximation in both Frobenius and spectral norm, with approximation error equal to \\sigma\\_k₊\\_1.",
       hints: [
-        "Each rank-1 matrix \\sigmaᵢuᵢvᵢᵀ captures the most remaining variance when added greedily.",
+        "Each rank-1 matrix \\sigma\\_iu\\_iv\\_i\\^T captures the most remaining variance when added greedily.",
         "The theorem is the mathematical foundation of PCA and matrix completion methods.",
       ],
     },
@@ -771,13 +771,13 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
       question: "The Frobenius norm of a matrix A is defined as:",
       options: [
         "The largest singular value of A",
-        "The square root of the sum of squares of all entries: ‖A‖_F = √(\\Sigmaᵢⱼ aᵢⱼ²)",
+        "The square root of the sum of squares of all entries: ‖A‖_F = √(\\Sigma\\_i\\_j a\\_i\\_j\\^2)",
         "The maximum absolute row sum",
         "The trace of A",
       ],
       correctAnswer: 1,
       explanation:
-        "The Frobenius norm treats the matrix as a long vector and computes its L2 norm; equivalently, ‖A‖_F = √(trace(AᵀA)) = √(\\Sigma \\sigmaᵢ²) where \\sigmaᵢ are singular values.",
+        "The Frobenius norm treats the matrix as a long vector and computes its L2 norm; equivalently, ‖A‖_F = √(trace(A\\^TA)) = √(\\Sigma \\sigma\\_i\\^2) where \\sigma\\_i are singular values.",
       hints: [
         'Think of "flattening" the matrix into a vector and computing the usual Euclidean length.',
         "The Frobenius norm can also be expressed in terms of singular values.",
@@ -791,10 +791,10 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
         "The spectral norm (operator 2-norm) of a matrix equals its largest singular value.",
       correctAnswer: "True",
       explanation:
-        "‖A‖₂ = max_{‖x‖=1} ‖Ax‖ = \\sigma₁ (the largest singular value), representing the maximum stretch any unit vector undergoes under multiplication by A.",
+        "‖A‖\\_2 = max_{‖x‖=1} ‖Ax‖ = \\sigma\\_1 (the largest singular value), representing the maximum stretch any unit vector undergoes under multiplication by A.",
       hints: [
         "The operator norm measures how much A can stretch a vector.",
-        "The direction of maximum stretch corresponds to the first right singular vector v₁.",
+        "The direction of maximum stretch corresponds to the first right singular vector v\\_1.",
       ],
     },
     {
@@ -814,7 +814,7 @@ Therefore, $\\boxed{\\text{Real and mutually orthogonal, forming an orthonormal 
         "A large condition number means the matrix is nearly rank-deficient; the relative error in the solution is amplified by κ(A) relative to the relative error in b, making the linear system numerically ill-conditioned.",
       hints: [
         "Condition number measures the ratio of maximum to minimum stretching; nearly singular matrices stretch some directions enormously relative to others.",
-        "Think about what happens when \\sigma_min ≈ 0 — what does the ratio \\sigma_max/\\sigma_min become?",
+        "Think about what happens when \\sigma_min \\approx 0 — what does the ratio \\sigma_max/\\sigma_min become?",
       ],
     },
   ],
@@ -984,13 +984,13 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "true-false",
       difficulty: "medium",
       question:
-        "Multiplying two dense n × n matrices always requires O(n³) operations, but sparse matrix-vector multiplication can be done in O(nnz) where nnz is the number of nonzeros.",
+        "Multiplying two dense n \\times n matrices always requires O(n\\^3) operations, but sparse matrix-vector multiplication can be done in O(nnz) where nnz is the number of nonzeros.",
       correctAnswer: "True",
       explanation:
-        "Sparse matrix-vector multiplication (SpMV) only touches the nnz nonzero entries, achieving O(nnz) complexity; for sparse matrices where nnz ≪ n², this is far more efficient than O(n²) dense multiplication.",
+        "Sparse matrix-vector multiplication (SpMV) only touches the nnz nonzero entries, achieving O(nnz) complexity; for sparse matrices where nnz ≪ n\\^2, this is far more efficient than O(n\\^2) dense multiplication.",
       hints: [
-        "In y = Ax, each output entry yᵢ is a dot product of row i of A with x — if row i has only k nonzeros, it takes k operations.",
-        "Note the question compares dense matmul (O(n³)) with sparse matrix-vector product (O(nnz)).",
+        "In y = Ax, each output entry y\\_i is a dot product of row i of A with x — if row i has only k nonzeros, it takes k operations.",
+        "Note the question compares dense matmul (O(n\\^3)) with sparse matrix-vector product (O(nnz)).",
       ],
     },
     {
@@ -1021,14 +1021,14 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Kronecker product A ⊗ B where A is m × n and B is p × q produces a matrix of size:",
-      options: ["m × n", "mp × nq", "(m + p) × (n + q)", "mp × pq"],
+        "The Kronecker product A ⊗ B where A is m \\times n and B is p \\times q produces a matrix of size:",
+      options: ["m \\times n", "mp \\times nq", "(m + p) \\times (n + q)", "mp \\times pq"],
       correctAnswer: 1,
       explanation:
-        "A ⊗ B replaces each entry aᵢⱼ of A with the block aᵢⱼ·B; with A of size m × n and B of size p × q, the result is an (mp) × (nq) block matrix.",
+        "A ⊗ B replaces each entry a\\_i\\_j of A with the block a\\_i\\_j\\cdotB; with A of size m \\times n and B of size p \\times q, the result is an (mp) \\times (nq) block matrix.",
       hints: [
-        "Each of the mn entries of A becomes a p × q block.",
-        "Think about the resulting matrix as an m × n grid of p × q blocks.",
+        "Each of the mn entries of A becomes a p \\times q block.",
+        "Think about the resulting matrix as an m \\times n grid of p \\times q blocks.",
       ],
     },
     {
@@ -1062,7 +1062,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "K-FAC (Kronecker-Factored Approximate Curvature) approximates the Fisher information matrix as a Kronecker product of smaller matrices, enabling computationally feasible natural gradient updates for neural network training.",
       hints: [
         "The Fisher information matrix for a neural network layer has a natural Kronecker structure related to its inputs and outputs.",
-        "Kronecker factorization turns an O(n⁴) matrix into a product of two O(n²) matrices.",
+        "Kronecker factorization turns an O(n\\^4) matrix into a product of two O(n\\^2) matrices.",
       ],
     },
   ],
@@ -1073,14 +1073,14 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "If f(x) = aᵀx where a and x are n-dimensional vectors, then ∂f/∂x equals:",
-      options: ["xᵀ", "a", "aᵀ", "1"],
+        "If f(x) = a\\^Tx where a and x are n-dimensional vectors, then \\partialf/\\partialx equals:",
+      options: ["x\\^T", "a", "a\\^T", "1"],
       correctAnswer: 1,
       explanation:
-        "For f(x) = aᵀx = \\Sigmaᵢ aᵢxᵢ, the partial derivative ∂f/∂xᵢ = aᵢ, so the gradient vector ∂f/∂x = a (using the numerator layout / column vector convention).",
+        "For f(x) = a\\^Tx = \\Sigma\\_i a\\_ix\\_i, the partial derivative \\partialf/\\partialx\\_i = a\\_i, so the gradient vector \\partialf/\\partialx = a (using the numerator layout / column vector convention).",
       hints: [
-        "Differentiate aᵀx = a₁x₁ + a₂x₂ + ... + aₙxₙ with respect to each xᵢ.",
-        "The gradient of a linear function aᵀx is simply the coefficient vector a.",
+        "Differentiate a\\^Tx = a\\_1x\\_1 + a\\_2x\\_2 + ... + a\\_nx\\_n with respect to each x\\_i.",
+        "The gradient of a linear function a\\^Tx is simply the coefficient vector a.",
       ],
     },
     {
@@ -1088,13 +1088,13 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Jacobian matrix of a vector-valued function f: \\mathbb{R}ⁿ → \\mathbb{R}ᵐ is an m × n matrix.",
+        "The Jacobian matrix of a vector-valued function f: \\mathbb{R}\\^n \\to \\mathbb{R}ᵐ is an m \\times n matrix.",
       correctAnswer: "True",
       explanation:
-        "The Jacobian J has entry Jᵢⱼ = ∂fᵢ/∂xⱼ; with m output components and n input variables, J is an m × n matrix encoding all first-order partial derivatives.",
+        "The Jacobian J has entry J\\_i\\_j = \\partialf\\_i/\\partialx\\_j; with m output components and n input variables, J is an m \\times n matrix encoding all first-order partial derivatives.",
       hints: [
         "The Jacobian generalizes the gradient to vector-valued functions.",
-        "Count rows (output dimension m) and columns (input dimension n) from the definition Jᵢⱼ = ∂fᵢ/∂xⱼ.",
+        "Count rows (output dimension m) and columns (input dimension n) from the definition J\\_i\\_j = \\partialf\\_i/\\partialx\\_j.",
       ],
     },
     {
@@ -1102,14 +1102,14 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The gradient of the quadratic form f(x) = xᵀAx with respect to x (where A is symmetric) is:",
-      options: ["Ax", "2Ax", "AᵀAx", "xᵀA"],
+        "The gradient of the quadratic form f(x) = x\\^TAx with respect to x (where A is symmetric) is:",
+      options: ["Ax", "2Ax", "A\\^TAx", "x\\^TA"],
       correctAnswer: 1,
       explanation:
-        "For symmetric A, ∂(xᵀAx)/∂x = 2Ax; the factor of 2 arises from the sum rule applied to (xᵀAx = xᵀAx), and symmetry collapses Aᵀ + A = 2A.",
+        "For symmetric A, \\partial(x\\^TAx)/\\partialx = 2Ax; the factor of 2 arises from the sum rule applied to (x\\^TAx = x\\^TAx), and symmetry collapses A\\^T + A = 2A.",
       hints: [
-        "Write out xᵀAx = \\Sigmaᵢⱼ xᵢAᵢⱼxⱼ and differentiate with respect to xₖ.",
-        "Without symmetry the answer would be (A + Aᵀ)x; symmetry gives 2Ax.",
+        "Write out x\\^TAx = \\Sigma\\_i\\_j x\\_iA\\_i\\_jx\\_j and differentiate with respect to x\\_k.",
+        "Without symmetry the answer would be (A + A\\^T)x; symmetry gives 2Ax.",
       ],
     },
   ],
@@ -1122,16 +1122,16 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       question:
         "Truncated SVD retains only the top k singular values and vectors. The approximation error in Frobenius norm is:",
       options: [
-        "√(\\sigma₁² + \\sigma₂² + ... + \\sigmaₖ²)",
-        "√(\\sigmaₖ₊₁² + \\sigmaₖ₊₂² + ... + \\sigmaᵣ²)",
-        "\\sigmaₖ₊₁ alone",
+        "√(\\sigma\\_1\\^2 + \\sigma\\_2\\^2 + ... + \\sigma\\_k\\^2)",
+        "√(\\sigma\\_k₊\\_1\\^2 + \\sigma\\_k₊\\_2\\^2 + ... + \\sigmaᵣ\\^2)",
+        "\\sigma\\_k₊\\_1 alone",
         "‖A‖_F / k",
       ],
       correctAnswer: 1,
       explanation:
-        "Since the Frobenius norm equals √(\\Sigmaᵢ \\sigmaᵢ²), removing the bottom r−k singular values leaves error √(\\Sigmaᵢ₌ₖ₊₁ʳ \\sigmaᵢ²), i.e., the Frobenius norm of the discarded components.",
+        "Since the Frobenius norm equals √(\\Sigma\\_i \\sigma\\_i\\^2), removing the bottom r−k singular values leaves error √(\\Sigma\\_i₌\\_k₊\\_1ʳ \\sigma\\_i\\^2), i.e., the Frobenius norm of the discarded components.",
       hints: [
-        "The full SVD satisfies ‖A‖_F² = \\Sigmaᵢ \\sigmaᵢ²; what remains after keeping only the top k?",
+        "The full SVD satisfies ‖A‖_F\\^2 = \\Sigma\\_i \\sigma\\_i\\^2; what remains after keeping only the top k?",
         "The Eckart-Young theorem tells you the error is determined by the discarded singular values.",
       ],
     },
@@ -1145,7 +1145,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       explanation:
         "Collaborative filtering via matrix factorization decomposes the user-item rating matrix into low-rank user (U) and item (V) factor matrices, finding latent representations that capture preferences with far fewer parameters than the full matrix.",
       hints: [
-        "A user-item matrix of 1M users × 500K items has 500B entries; a rank-50 factorization needs only 75M parameters.",
+        "A user-item matrix of 1M users \\times 500K items has 500B entries; a rank-50 factorization needs only 75M parameters.",
         "Netflix Prize was famously won using low-rank matrix factorization techniques.",
       ],
     },
@@ -1163,7 +1163,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       ],
       correctAnswer: 1,
       explanation:
-        "Randomized SVD forms a random sketch Y = A\\Omega (where \\Omega is a random Gaussian matrix), orthogonalizes it, and computes an exact SVD of the small projected matrix — achieving near-optimal approximation in O(mnk) instead of O(mn²) time.",
+        "Randomized SVD forms a random sketch Y = A\\Omega (where \\Omega is a random Gaussian matrix), orthogonalizes it, and computes an exact SVD of the small projected matrix — achieving near-optimal approximation in O(mnk) instead of O(mn\\^2) time.",
       hints: [
         "The sketch Y = A\\Omega has only k columns, making its SVD cheap to compute exactly.",
         "Random projections (by the Johnson-Lindenstrauss lemma) approximately preserve geometry with high probability.",
@@ -1186,10 +1186,10 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       ],
       correctAnswer: 1,
       explanation:
-        'The Marchenko-Pastur law gives the limiting distribution of eigenvalues of sample covariance matrices (1/n XᵀX) as dimensions grow proportionally, separating "signal" eigenvalues from the bulk noise distribution.',
+        'The Marchenko-Pastur law gives the limiting distribution of eigenvalues of sample covariance matrices (1/n X\\^TX) as dimensions grow proportionally, separating "signal" eigenvalues from the bulk noise distribution.',
       hints: [
         "In ML, the Marchenko-Pastur law helps identify which PCA components carry real signal vs. noise.",
-        "Think about what happens to sample covariance eigenvalues as n, p → ∞ with p/n → \\gamma.",
+        "Think about what happens to sample covariance eigenvalues as n, p \\to \\infty with p/n \\to \\gamma.",
       ],
     },
     {
@@ -1256,9 +1256,9 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "PCA via eigendecomposition of the covariance matrix and PCA via SVD of the centered data matrix always produce the same principal components.",
       correctAnswer: "True",
       explanation:
-        "If X̃ is the centered data matrix, then X̃ᵀX̃/n is the sample covariance; the right singular vectors of X̃ equal the eigenvectors of X̃ᵀX̃, so both approaches yield identical principal components.",
+        "If X̃ is the centered data matrix, then X̃\\^TX̃/n is the sample covariance; the right singular vectors of X̃ equal the eigenvectors of X̃\\^TX̃, so both approaches yield identical principal components.",
       hints: [
-        "The right singular vectors of X̃ are eigenvectors of X̃ᵀX̃ — what matrix is that?",
+        "The right singular vectors of X̃ are eigenvectors of X̃\\^TX̃ — what matrix is that?",
         "SVD of data is numerically more stable than eigendecomposition of the covariance (avoids squaring the condition number).",
       ],
     },
@@ -1269,14 +1269,14 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       question:
         'The "explained variance ratio" of the k-th principal component is:',
       options: [
-        "\\sigmaₖ / (\\sigma₁ + \\sigma₂ + ... + \\sigmaᵣ) where \\sigmaᵢ are singular values",
-        "\\lambdaₖ / (\\lambda₁ + \\lambda₂ + ... + \\lambdaᵣ) where \\lambdaᵢ are eigenvalues of the covariance matrix",
+        "\\sigma\\_k / (\\sigma\\_1 + \\sigma\\_2 + ... + \\sigmaᵣ) where \\sigma\\_i are singular values",
+        "\\lambda\\_k / (\\lambda\\_1 + \\lambda\\_2 + ... + \\lambdaᵣ) where \\lambda\\_i are eigenvalues of the covariance matrix",
         "k / total number of features",
-        "vₖᵀvₖ where vₖ is the k-th principal component vector",
+        "v\\_k\\^Tv\\_k where v\\_k is the k-th principal component vector",
       ],
       correctAnswer: 1,
       explanation:
-        "Each eigenvalue \\lambdaₖ of the covariance matrix equals the variance captured by the k-th principal component; its share of total variance is \\lambdaₖ / \\Sigmaᵢ \\lambdaᵢ = \\sigmaₖ² / \\Sigmaᵢ \\sigmaᵢ² (using singular values of centered data).",
+        "Each eigenvalue \\lambda\\_k of the covariance matrix equals the variance captured by the k-th principal component; its share of total variance is \\lambda\\_k / \\Sigma\\_i \\lambda\\_i = \\sigma\\_k\\^2 / \\Sigma\\_i \\sigma\\_i\\^2 (using singular values of centered data).",
       hints: [
         "Total variance is trace(covariance) = sum of all eigenvalues.",
         "The explained variance ratio tells you what fraction of the total data spread is captured by PC k.",
@@ -1347,7 +1347,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "NMF factors a non-negative matrix V ≈ WH where W and H are constrained to have:",
+        "NMF factors a non-negative matrix V \\approx WH where W and H are constrained to have:",
       options: [
         "Orthogonal columns and rows respectively",
         "All non-negative entries",
@@ -1407,7 +1407,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "The CP (CANDECOMP/PARAFAC) decomposition expresses a tensor as:",
       options: [
         "A product of two matrices analogous to SVD",
-        "A sum of rank-1 outer products: T ≈ \\Sigmaᵣ aᵣ ⊗ bᵣ ⊗ cᵣ",
+        "A sum of rank-1 outer products: T \\approx \\Sigmaᵣ aᵣ ⊗ bᵣ ⊗ cᵣ",
         "A Tucker decomposition with orthogonal factor matrices",
         "A Kronecker product of smaller tensors",
       ],
@@ -1416,7 +1416,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "CP decomposes a tensor as a sum of rank-1 tensors (outer products), generalizing matrix factorization; the minimum number of rank-1 components needed is the tensor rank.",
       hints: [
         'Think of CP as the tensor analog of SVD: a sum of outer product "atoms."',
-        "For a matrix, a rank-1 outer product is uvᵀ; for a 3-way tensor, it is u ⊗ v ⊗ w.",
+        "For a matrix, a rank-1 outer product is uv\\^T; for a 3-way tensor, it is u ⊗ v ⊗ w.",
       ],
     },
     {
@@ -1427,7 +1427,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "Tensor rank is computationally easy to determine, just like matrix rank which can be found via Gaussian elimination.",
       correctAnswer: "False",
       explanation:
-        "Computing tensor rank is NP-hard in general; unlike matrix rank which has efficient algorithms (Gaussian elimination, SVD), there is no efficient algorithm for computing the rank of a tensor of order ≥ 3.",
+        "Computing tensor rank is NP-hard in general; unlike matrix rank which has efficient algorithms (Gaussian elimination, SVD), there is no efficient algorithm for computing the rank of a tensor of order \\geq 3.",
       hints: [
         "Matrix rank is well-understood and efficiently computable — do the same algorithms extend to tensors?",
         "The difficulty of tensor rank is related to why tensor decomposition problems are harder than matrix problems.",
@@ -1441,7 +1441,7 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
         "Tensor decompositions appear in deep learning in which context?",
       options: [
         "Computing cross-entropy loss functions",
-        "Compressing convolutional layer weight tensors (4D: out_channels × in_channels × kH × kW) using Tucker or CP decomposition",
+        "Compressing convolutional layer weight tensors (4D: out_channels \\times in_channels \\times kH \\times kW) using Tucker or CP decomposition",
         "Implementing attention mechanisms in transformers",
         "Normalizing gradients during backpropagation",
       ],
@@ -1483,13 +1483,13 @@ Therefore, $\\boxed{\\text{Option 1}}$ — tensor decomposition compresses CNN w
         "L = A (the adjacency matrix)",
         "L = D − A where D is the degree matrix and A is the adjacency matrix",
         "L = A + D",
-        "L = A · D⁻¹",
+        "L = A \\cdot D\\^{-1}",
       ],
       correctAnswer: 1,
       explanation:
         "The unnormalized graph Laplacian L = D − A encodes the graph structure; it is positive semi-definite with the number of zero eigenvalues equaling the number of connected components.",
       hints: [
-        "D is diagonal with Dᵢᵢ = degree of node i; subtracting A from D captures the local structure.",
+        "D is diagonal with D\\_i\\_i = degree of node i; subtracting A from D captures the local structure.",
         "The Laplacian appears in diffusion, heat flow, and spectral clustering of graphs.",
       ],
     },
@@ -1557,16 +1557,16 @@ Therefore, $\\boxed{\\text{Option 1}}$ — the Laplacian eigenvector embedding c
       question:
         "In a transformer\'s self-attention, the attention score between query q and key k is computed as:",
       options: [
-        "‖q − k‖₂ (Euclidean distance)",
-        "qᵀk / √d where d is the key dimension",
-        "softmax(q) · softmax(k)",
-        "q × k (cross product)",
+        "‖q − k‖\\_2 (Euclidean distance)",
+        "q\\^Tk / √d where d is the key dimension",
+        "softmax(q) \\cdot softmax(k)",
+        "q \\times k (cross product)",
       ],
       correctAnswer: 1,
       explanation:
-        "Scaled dot-product attention computes qᵀk / √d, where the √d scaling prevents dot products from growing large in high dimensions (which would push softmax into saturation regions).",
+        "Scaled dot-product attention computes q\\^Tk / √d, where the √d scaling prevents dot products from growing large in high dimensions (which would push softmax into saturation regions).",
       hints: [
-        "The dot product qᵀk measures alignment between query and key directions.",
+        "The dot product q\\^Tk measures alignment between query and key directions.",
         "Without the √d scaling, large dot products lead to very peaked softmax distributions.",
       ],
     },
@@ -1610,7 +1610,7 @@ with $r \\ll \\min(m, n)$. Only $B$ and $A$ are trained.
 $$\\text{Full fine-tuning:} \\quad mn = 4096^2 \\approx 16.8 \\text{ million parameters}$$
 $$\\text{LoRA:} \\quad mr + rn = 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ parameters}$$
 
-This is a **250× reduction** in trainable parameters.
+This is a **250\\times reduction** in trainable parameters.
 
 **Step 4: Memory savings.** Adam optimizer states require $2\\times$ the parameter count (first and second moment estimates). With LoRA's small $B$ and $A$, the optimizer state memory is tiny compared to full fine-tuning.
 
@@ -1618,7 +1618,7 @@ This is a **250× reduction** in trainable parameters.
 
 Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far fewer parameters ($mr + rn \\ll mn$).`,
       hints: [
-        "Compare parameter counts: $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ has $4096^2 \\approx 16.8$M parameters. With $r=8$, LoRA trains $8 \\times 4096 + 8 \\times 4096 \\approx 65$K parameters — roughly 250× fewer.",
+        "Compare parameter counts: $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ has $4096^2 \\approx 16.8$M parameters. With $r=8$, LoRA trains $8 \\times 4096 + 8 \\times 4096 \\approx 65$K parameters — roughly 250\\times fewer.",
         "Adam stores two optimizer states (first and second moments) per trainable parameter. With far fewer trainable parameters, LoRA uses dramatically less VRAM.",
       ],
     },
@@ -1639,7 +1639,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       ],
       correctAnswer: 1,
       explanation:
-        "Once A = LU, solving Ax = b reduces to Ly = b (forward substitution) then Ux = y (back substitution), each O(n²) — far cheaper than direct inversion which is O(n³) per right-hand side.",
+        "Once A = LU, solving Ax = b reduces to Ly = b (forward substitution) then Ux = y (back substitution), each O(n\\^2) — far cheaper than direct inversion which is O(n\\^3) per right-hand side.",
       hints: [
         "LU is computed once; multiple right-hand sides can then be solved cheaply.",
         "Think about the complexity of each triangular solve.",
@@ -1653,9 +1653,9 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "QR decomposition is preferred over LU for solving least squares problems because Q preserves numerical stability via orthogonal transformations.",
       correctAnswer: "True",
       explanation:
-        "QR avoids forming AᵀA (which squares the condition number); orthogonal transformations are numerically stable (condition number 1), making QR the standard for least squares in numerical practice.",
+        "QR avoids forming A\\^TA (which squares the condition number); orthogonal transformations are numerically stable (condition number 1), making QR the standard for least squares in numerical practice.",
       hints: [
-        "Forming AᵀA doubles the condition number in the exponent — what does that mean for numerical error?",
+        "Forming A\\^TA doubles the condition number in the exponent — what does that mean for numerical error?",
         "Orthogonal matrices Q satisfy ‖Qx‖ = ‖x‖ — no amplification of errors.",
       ],
     },
@@ -1667,7 +1667,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "The Conjugate Gradient method is appropriate for solving Ax = b when:",
       options: [
         "A is a dense, non-square matrix with more rows than columns",
-        "A is a large, sparse, symmetric positive definite matrix where forming A⁻¹ is intractable",
+        "A is a large, sparse, symmetric positive definite matrix where forming A\\^{-1} is intractable",
         "A is an arbitrary matrix with possible negative eigenvalues",
         "You need an exact solution in a fixed number of steps regardless of matrix size",
       ],
@@ -1676,7 +1676,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "CG exploits symmetry and positive definiteness of A to converge in at most n iterations using only matrix-vector products (no factorization), making it ideal for large sparse SPD systems where direct methods are too expensive.",
       hints: [
         "CG requires SPD A to guarantee convergence and that the algorithm is well-defined.",
-        "The power of CG for sparse systems: each iteration only requires one SpMV, not O(n²) work.",
+        "The power of CG for sparse systems: each iteration only requires one SpMV, not O(n\\^2) work.",
       ],
     },
   ],
@@ -1688,17 +1688,17 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       difficulty: "medium",
       question: "The matrix exponential e^(At) is defined as:",
       options: [
-        "A matrix with entries eᵃⁱʲᵗ",
-        "\\Sigmaₖ₌₀^∞ (At)ᵏ / k! (the matrix power series)",
+        "A matrix with entries eᵃ\\^iʲ\\^t",
+        "\\Sigma\\_k₌\\_0^\\infty (At)\\^k / k! (the matrix power series)",
         "The element-wise exponential of A scaled by t",
         "The inverse of (I − At) for small t",
       ],
       correctAnswer: 1,
       explanation:
-        "The matrix exponential is defined by the power series \\Sigma(At)ᵏ/k!, directly analogous to the scalar exponential; this converges for all finite matrices and is used to solve linear ODEs dx/dt = Ax.",
+        "The matrix exponential is defined by the power series \\Sigma(At)\\^k/k!, directly analogous to the scalar exponential; this converges for all finite matrices and is used to solve linear ODEs dx/dt = Ax.",
       hints: [
-        "Recall the scalar Taylor series: eˣ = 1 + x + x²/2! + ... — extend this to matrices.",
-        "The solution to ẋ = Ax, x(0) = x₀ is x(t) = e^(At)x₀.",
+        "Recall the scalar Taylor series: eˣ = 1 + x + x\\^2/2! + ... — extend this to matrices.",
+        "The solution to ẋ = Ax, x(0) = x\\_0 is x(t) = e^(At)x\\_0.",
       ],
     },
     {
@@ -1706,13 +1706,13 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "true-false",
       difficulty: "medium",
       question:
-        "For a diagonalizable matrix A = P\\LambdaP⁻¹, the matrix exponential simplifies to e^A = Pe^\\LambdaP⁻¹ where e^\\Lambda is a diagonal matrix of scalar exponentials.",
+        "For a diagonalizable matrix A = P\\LambdaP\\^{-1}, the matrix exponential simplifies to e^A = Pe^\\LambdaP\\^{-1} where e^\\Lambda is a diagonal matrix of scalar exponentials.",
       correctAnswer: "True",
       explanation:
-        "Diagonalization decouples the matrix power series: e^A = P(\\Sigma \\Lambdaᵏ/k!)P⁻¹ = Pe^\\LambdaP⁻¹, and e^\\Lambda is diagonal with entries e^(\\lambdaᵢ), making computation of the matrix exponential tractable.",
+        "Diagonalization decouples the matrix power series: e^A = P(\\Sigma \\Lambda\\^k/k!)P\\^{-1} = Pe^\\LambdaP\\^{-1}, and e^\\Lambda is diagonal with entries e^(\\lambda\\_i), making computation of the matrix exponential tractable.",
       hints: [
-        "Use the power series definition and substitute A = P\\LambdaP⁻¹; what happens to Aᵏ?",
-        "Aᵏ = (P\\LambdaP⁻¹)ᵏ = P\\LambdaᵏP⁻¹ because intermediate P⁻¹P terms cancel.",
+        "Use the power series definition and substitute A = P\\LambdaP\\^{-1}; what happens to A\\^k?",
+        "A\\^k = (P\\LambdaP\\^{-1})\\^k = P\\Lambda\\^kP\\^{-1} because intermediate P\\^{-1}P terms cancel.",
       ],
     },
     {
@@ -1746,13 +1746,13 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "The Discrete Fourier Transform (DFT) of a length-n signal x can be written as a matrix multiplication y = Fx where F is:",
       options: [
         "A random orthogonal matrix",
-        "The DFT matrix with entries Fₖₙ = e^(−2\\piikn/N) / √N",
+        "The DFT matrix with entries F\\_k\\_n = e^(−2\\piikn/N) / √N",
         "The identity matrix for periodic signals",
         "A sparse triangular matrix",
       ],
       correctAnswer: 1,
       explanation:
-        "The DFT matrix F has entries Fₖₙ = \\omega^(kn) where \\omega = e^(−2\\pii/N); it is a unitary matrix (FF* = I) enabling the DFT to be viewed as a change of basis to the Fourier basis of complex exponentials.",
+        "The DFT matrix F has entries F\\_k\\_n = \\omega^(kn) where \\omega = e^(−2\\pii/N); it is a unitary matrix (FF* = I) enabling the DFT to be viewed as a change of basis to the Fourier basis of complex exponentials.",
       hints: [
         "The DFT is a linear operation — any linear operation on a vector can be written as a matrix multiplication.",
         "The Fourier basis vectors are complex sinusoids at different frequencies.",
@@ -1763,10 +1763,10 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Fast Fourier Transform (FFT) computes the DFT in O(n log n) instead of O(n²) by exploiting the recursive structure of the DFT matrix.",
+        "The Fast Fourier Transform (FFT) computes the DFT in O(n log n) instead of O(n\\^2) by exploiting the recursive structure of the DFT matrix.",
       correctAnswer: "True",
       explanation:
-        "The Cooley-Tukey FFT algorithm recursively splits the DFT into smaller DFTs using the symmetry \\omega^(2k) = (\\omega²)^k, reducing O(n²) matrix-vector multiplication to O(n log n) butterfly operations.",
+        "The Cooley-Tukey FFT algorithm recursively splits the DFT into smaller DFTs using the symmetry \\omega^(2k) = (\\omega\\^2)^k, reducing O(n\\^2) matrix-vector multiplication to O(n log n) butterfly operations.",
       hints: [
         "The DFT matrix has a highly structured form — it is not arbitrary, enabling structured matrix-vector multiplication.",
         "Think about how a length-n DFT can be split into two length-(n/2) DFTs.",
@@ -1786,7 +1786,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       ],
       correctAnswer: 1,
       explanation:
-        "The convolution theorem states conv(f, g) = IFFT(FFT(f) · FFT(g)); for large kernels, FFT-based convolution is O(n log n) vs. O(nk) direct convolution — used in FNO (Fourier Neural Operator) and frequency-domain CNNs.",
+        "The convolution theorem states conv(f, g) = IFFT(FFT(f) \\cdot FFT(g)); for large kernels, FFT-based convolution is O(n log n) vs. O(nk) direct convolution — used in FNO (Fourier Neural Operator) and frequency-domain CNNs.",
       hints: [
         "Convolution becomes multiplication in frequency space — this is the core insight of signal processing.",
         "Think about when a direct convolution O(nk) becomes more expensive than two FFTs O(n log n).",
@@ -1802,17 +1802,17 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       question:
         "The Mahalanobis distance between point x and distribution with mean \\mu and covariance \\Sigma is:",
       options: [
-        "‖x − \\mu‖₂ (standard Euclidean distance)",
-        "√((x − \\mu)ᵀ\\Sigma⁻¹(x − \\mu))",
-        "(x − \\mu)ᵀ\\Sigma(x − \\mu)",
-        "\\Sigma\\Sigmaᵢ(xᵢ − \\muᵢ)² / \\sigmaᵢ",
+        "‖x − \\mu‖\\_2 (standard Euclidean distance)",
+        "√((x − \\mu)\\^T\\Sigma\\^{-1}(x − \\mu))",
+        "(x − \\mu)\\^T\\Sigma(x − \\mu)",
+        "\\Sigma\\Sigma\\_i(x\\_i − \\mu\\_i)\\^2 / \\sigma\\_i",
       ],
       correctAnswer: 1,
       explanation:
-        "Mahalanobis distance accounts for feature correlations and different scales by whitening the space with \\Sigma⁻¹; when \\Sigma = I it reduces to Euclidean distance.",
+        "Mahalanobis distance accounts for feature correlations and different scales by whitening the space with \\Sigma\\^{-1}; when \\Sigma = I it reduces to Euclidean distance.",
       hints: [
         "Standard Euclidean distance treats all directions equally; Mahalanobis accounts for covariance structure.",
-        "The \\Sigma⁻¹ term stretches the space to decorrelate and normalize each dimension.",
+        "The \\Sigma\\^{-1} term stretches the space to decorrelate and normalize each dimension.",
       ],
     },
     {
@@ -1820,7 +1820,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "true-false",
       difficulty: "medium",
       question:
-        "The sample covariance matrix S = (1/(n−1)) \\Sigmaᵢ (xᵢ − x̄)(xᵢ − x̄)ᵀ is an unbiased estimator of the population covariance matrix \\Sigma.",
+        "The sample covariance matrix S = (1/(n−1)) \\Sigma\\_i (x\\_i − x̄)(x\\_i − x̄)\\^T is an unbiased estimator of the population covariance matrix \\Sigma.",
       correctAnswer: "True",
       explanation:
         "The denominator (n−1) instead of n corrects for the degrees of freedom lost by estimating the mean x̄ from data, making E[S] = \\Sigma — the Bessel correction.",
@@ -1837,7 +1837,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "In high-dimensional settings (p ≫ n), the sample covariance matrix is:",
       options: [
         "A perfectly good estimator with no issues",
-        "Rank-deficient (rank ≤ n − 1 < p) and its inverse does not exist, necessitating regularization (e.g., shrinkage)",
+        "Rank-deficient (rank \\leq n − 1 < p) and its inverse does not exist, necessitating regularization (e.g., shrinkage)",
         "Always the identity matrix due to the law of large numbers",
         "Positive definite as long as n > 10",
       ],
@@ -1857,19 +1857,19 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A quadratic form xᵀAx (with A symmetric) is convex if and only if:",
+        "A quadratic form x\\^TAx (with A symmetric) is convex if and only if:",
       options: [
         "A has all positive entries",
-        "A is positive semi-definite (all eigenvalues ≥ 0)",
+        "A is positive semi-definite (all eigenvalues \\geq 0)",
         "The trace of A is positive",
         "A is invertible",
       ],
       correctAnswer: 1,
       explanation:
-        "The quadratic form xᵀAx is convex iff A is PSD (all eigenvalues ≥ 0); the Hessian of xᵀAx is 2A, and a function is convex iff its Hessian is PSD.",
+        "The quadratic form x\\^TAx is convex iff A is PSD (all eigenvalues \\geq 0); the Hessian of x\\^TAx is 2A, and a function is convex iff its Hessian is PSD.",
       hints: [
         "Convexity of a twice-differentiable function is determined by its Hessian.",
-        "The Hessian of f(x) = xᵀAx is 2A — when is a symmetric matrix PSD?",
+        "The Hessian of f(x) = x\\^TAx is 2A — when is a symmetric matrix PSD?",
       ],
     },
     {
@@ -1880,7 +1880,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "The condition number of the Hessian matrix directly controls the convergence rate of gradient descent: a higher condition number leads to slower convergence.",
       correctAnswer: "True",
       explanation:
-        "For quadratic objectives f(x) = xᵀAx/2, gradient descent convergence rate is (κ−1)/(κ+1) per iteration where κ = \\sigma_max/\\sigma_min; ill-conditioned problems (large κ) force tiny step sizes and slow convergence.",
+        "For quadratic objectives f(x) = x\\^TAx/2, gradient descent convergence rate is (κ−1)/(κ+1) per iteration where κ = \\sigma_max/\\sigma_min; ill-conditioned problems (large κ) force tiny step sizes and slow convergence.",
       hints: [
         "The optimal step size for gradient descent on a quadratic is 2/(\\lambda_max + \\lambda_min).",
         "Preconditioning aims to reduce the condition number, accelerating convergence.",
@@ -1894,7 +1894,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "Natural gradient descent (used in policy gradient RL and some neural network optimizers) multiplies the gradient by the inverse of which matrix?",
       options: [
         "The Hessian of the loss function",
-        "The Fisher information matrix F = E[\\nablalog p(x|\\theta) \\nablalog p(x|\\theta)ᵀ]",
+        "The Fisher information matrix F = E[\\nablalog p(x|\\theta) \\nablalog p(x|\\theta)\\^T]",
         "The covariance matrix of the data",
         "The Jacobian of the output layer",
       ],
@@ -1951,7 +1951,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "When computing a batched matrix multiplication of tensors shaped (B, M, K) and (B, K, N) in PyTorch, the correct operation is:",
       options: [
         "torch.mm applied in a Python loop over the batch dimension",
-        "torch.bmm(A, B) which performs B independent M×K @ K×N multiplications in parallel",
+        "torch.bmm(A, B) which performs B independent M\\timesK @ K\\timesN multiplications in parallel",
         "torch.matmul with squeeze/unsqueeze to collapse the batch dimension",
         'torch.einsum("bmk,bkn->bmn", A, B)',
       ],
@@ -1960,7 +1960,7 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         'torch.bmm performs batched matrix multiplication natively in a single CUDA kernel call; both torch.bmm and torch.einsum("bmk,bkn->bmn") are correct, but the question identifies torch.bmm as the idiomatic batched matmul.',
       hints: [
         "A Python loop is always slow; you want a single operation that handles all batch elements at once.",
-        "torch.bmm is specifically designed for exactly this (batch, M, K) × (batch, K, N) use case.",
+        "torch.bmm is specifically designed for exactly this (batch, M, K) \\times (batch, K, N) use case.",
       ],
     },
   ],
@@ -2062,7 +2062,7 @@ This **symmetric normalization** scales messages by $1/\\sqrt{d_i d_j}$, ensurin
 Therefore, $\\boxed{\\text{Option 1}}$ — normalization bounds eigenvalues to $[0,2]$ and handles degree heterogeneity.`,
       hints: [
         "The normalized Laplacian satisfies $0 \\leq \\lambda_i(\\tilde{L}) \\leq 2$ for all $i$, regardless of graph structure. This means $\\|\\tilde{L}\\|_2 \\leq 2$, so repeated message passing does not cause exponential gradient growth.",
-        "In raw Laplacian aggregation, a node with 1000 neighbors contributes 1000× more than a node with 1 neighbor. In normalized aggregation, each edge contributes $\\frac{1}{\\sqrt{d_i d_j}}$ — balancing the influence of high- and low-degree nodes."
+        "In raw Laplacian aggregation, a node with 1000 neighbors contributes 1000\\times more than a node with 1 neighbor. In normalized aggregation, each edge contributes $\\frac{1}{\\sqrt{d_i d_j}}$ — balancing the influence of high- and low-degree nodes."
       ]
     },
   ],
@@ -2073,19 +2073,19 @@ Therefore, $\\boxed{\\text{Option 1}}$ — normalization bounds eigenvalues to $
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In quantum computing, a qubit state is represented as a unit vector in \\mathbb{C}² with state |\\psi⟩ = \\alpha|0⟩ + \\beta|1⟩. The constraint on \\alpha and \\beta is:",
+        "In quantum computing, a qubit state is represented as a unit vector in \\mathbb{C}\\^2 with state |\\psi⟩ = \\alpha|0⟩ + \\beta|1⟩. The constraint on \\alpha and \\beta is:",
       options: [
         "\\alpha + \\beta = 1 (probabilities sum to 1)",
-        "|\\alpha|² + |\\beta|² = 1 (squared magnitudes sum to 1)",
+        "|\\alpha|\\^2 + |\\beta|\\^2 = 1 (squared magnitudes sum to 1)",
         "\\alpha = \\beta (equal superposition always)",
-        "\\alpha, \\beta ∈ {0, 1} (classical bits)",
+        "\\alpha, \\beta \\in {0, 1} (classical bits)",
       ],
       correctAnswer: 1,
       explanation:
-        "Measurement probabilities are |\\alpha|² and |\\beta|², which must sum to 1 (Born rule); the state vector |\\psi⟩ must be a unit vector in \\mathbb{C}² under the L2 norm ‖|\\psi⟩‖ = 1.",
+        "Measurement probabilities are |\\alpha|\\^2 and |\\beta|\\^2, which must sum to 1 (Born rule); the state vector |\\psi⟩ must be a unit vector in \\mathbb{C}\\^2 under the L2 norm ‖|\\psi⟩‖ = 1.",
       hints: [
-        "The probability of measuring outcome 0 is |\\alpha|², not \\alpha — what must these probabilities sum to?",
-        "This is the condition that |\\psi⟩ is a unit vector in the Hilbert space \\mathbb{C}².",
+        "The probability of measuring outcome 0 is |\\alpha|\\^2, not \\alpha — what must these probabilities sum to?",
+        "This is the condition that |\\psi⟩ is a unit vector in the Hilbert space \\mathbb{C}\\^2.",
       ],
     },
     {
@@ -2107,10 +2107,10 @@ Therefore, $\\boxed{\\text{Option 1}}$ — normalization bounds eigenvalues to $
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Quantum entanglement between two qubits means their joint state vector CANNOT be written as a tensor product |\\psi₁⟩ ⊗ |\\psi₂⟩. This is detected by:",
+        "Quantum entanglement between two qubits means their joint state vector CANNOT be written as a tensor product |\\psi\\_1⟩ ⊗ |\\psi\\_2⟩. This is detected by:",
       options: [
         "Computing the trace of the joint state matrix",
-        "Performing SVD on the state matrix reshaped into a 2×2 matrix; entanglement exists iff the matrix has rank > 1",
+        "Performing SVD on the state matrix reshaped into a 2\\times2 matrix; entanglement exists iff the matrix has rank > 1",
         "Checking whether both qubits have the same state vector",
         "Computing the Kronecker product of the two qubit states",
       ],
@@ -2175,7 +2175,7 @@ Therefore, $\\boxed{\\text{Option 1}}$ — SVD of the reshaped state matrix dete
       explanation:
         "Randomized SVD (Halko et al.) and incremental/online PCA algorithms make SVD practical for very large matrices; dismissing SVD without considering these variants demonstrates incomplete knowledge.",
       hints: [
-        "Randomized SVD runs in O(mnk) for a rank-k approximation — far less than full SVD O(min(mn², m²n)).",
+        "Randomized SVD runs in O(mnk) for a rank-k approximation — far less than full SVD O(min(mn\\^2, m\\^2n)).",
         "sklearn.decomposition.TruncatedSVD and randomized_svd are designed for large sparse matrices.",
       ],
     },
@@ -2204,29 +2204,29 @@ Therefore, $\\boxed{\\text{Option 1}}$ — SVD of the reshaped state matrix dete
 
 const moreAlgQ: Record<string, Question[]> = {
   "matrix-factorizations": [
-    { id: "q-alg-kp31-1", type: "multiple-choice", difficulty: "medium", question: "Which matrix factorization is used by recommendation systems to decompose a user-item ratings matrix R ≈ UV^T where U ∈ \\mathbb{R}^{m×k} and V ∈ \\mathbb{R}^{n×k}?", options: ["QR decomposition", "Non-negative Matrix Factorization (NMF)", "LU decomposition", "Cholesky decomposition"], correctAnswer: 1, explanation: "NMF constrains both U and V to have non-negative entries, producing parts-based representations. For user-item matrices it gives interpretable latent factors (topics/genres). Collaborative filtering variants (SVD++) extend this.", hints: ["Non-negativity constraint ensures factors represent additive parts.", "Netflix Prize solutions used variants of this factorization."] },
+    { id: "q-alg-kp31-1", type: "multiple-choice", difficulty: "medium", question: "Which matrix factorization is used by recommendation systems to decompose a user-item ratings matrix R \\approx UV^T where U \\in \\mathbb{R}^{m\\timesk} and V \\in \\mathbb{R}^{n\\timesk}?", options: ["QR decomposition", "Non-negative Matrix Factorization (NMF)", "LU decomposition", "Cholesky decomposition"], correctAnswer: 1, explanation: "NMF constrains both U and V to have non-negative entries, producing parts-based representations. For user-item matrices it gives interpretable latent factors (topics/genres). Collaborative filtering variants (SVD++) extend this.", hints: ["Non-negativity constraint ensures factors represent additive parts.", "Netflix Prize solutions used variants of this factorization."] },
     { id: "q-alg-kp31-2", type: "true-false", difficulty: "medium", question: "The Cholesky factorization A = LL^T exists if and only if A is symmetric positive definite (SPD).", correctAnswer: "True", explanation: "Cholesky factorization requires the matrix to be symmetric positive definite. It is twice as efficient as LU for SPD matrices and is widely used in probabilistic ML (Gaussian processes, Kalman filters) for stable log-determinant computation.", hints: ["For Gaussian processes, the covariance matrix K is SPD — Cholesky is used to solve K\\alpha = y.", "If A has a zero or negative eigenvalue, Cholesky fails (Cholesky pivot becomes imaginary)."] },
-    { id: "q-alg-kp31-3", type: "multiple-choice", difficulty: "hard", question: "The CUR decomposition decomposes a matrix A ≈ CUR where C are actual columns of A, R are actual rows, and U is a small matrix. Its advantage over SVD for large sparse matrices is:", options: ["CUR gives exact reconstruction while SVD is approximate", "CUR preserves sparsity and interpretability since C and R are original data columns/rows", "CUR is always faster to compute than SVD", "CUR requires fewer parameters than SVD for the same approximation quality"], correctAnswer: 1, explanation: "CUR selects actual columns and rows (often via leverage score sampling), preserving sparsity and interpretability. SVD produces dense singular vectors that are linear combinations of all features — uninterpretable for sparse genomics/text data.", hints: ["Leverage scores identify the most 'important' columns/rows for selection.", "In genomics, CUR's selected columns/rows correspond to actual genes and samples."] },
+    { id: "q-alg-kp31-3", type: "multiple-choice", difficulty: "hard", question: "The CUR decomposition decomposes a matrix A \\approx CUR where C are actual columns of A, R are actual rows, and U is a small matrix. Its advantage over SVD for large sparse matrices is:", options: ["CUR gives exact reconstruction while SVD is approximate", "CUR preserves sparsity and interpretability since C and R are original data columns/rows", "CUR is always faster to compute than SVD", "CUR requires fewer parameters than SVD for the same approximation quality"], correctAnswer: 1, explanation: "CUR selects actual columns and rows (often via leverage score sampling), preserving sparsity and interpretability. SVD produces dense singular vectors that are linear combinations of all features — uninterpretable for sparse genomics/text data.", hints: ["Leverage scores identify the most 'important' columns/rows for selection.", "In genomics, CUR's selected columns/rows correspond to actual genes and samples."] },
   ],
   "numerical-linear-algebra": [
     { id: "q-alg-kp32-1", type: "multiple-choice", difficulty: "medium", question: "The conjugate gradient (CG) method for solving Ax = b requires A to be:", options: ["Any square matrix", "Symmetric positive definite (SPD)", "Orthogonal", "Diagonal"], correctAnswer: 1, explanation: "CG minimizes the A-norm of the error over Krylov subspaces and is guaranteed to converge only for SPD systems. For non-symmetric or indefinite systems, variants like GMRES or MINRES are used.", hints: ["CG interprets Ax = b as minimizing f(x) = ½x^TAx - b^Tx over conjugate directions.", "For non-SPD matrices, GMRES (which stores more Krylov vectors) is the standard alternative."] },
     { id: "q-alg-kp32-2", type: "true-false", difficulty: "easy", question: "Gaussian elimination with partial pivoting (GEPP) is numerically stable for all matrices.", correctAnswer: "False", explanation: "GEPP is stable in practice for most matrices but not theoretically for all. Pathological cases exist where the growth factor is exponential. However, such cases are extremely rare, and GEPP is the standard in LAPACK/MATLAB.", hints: ["The growth factor bounds stability — partial pivoting keeps it O(2^n) in the worst case.", "Complete pivoting is more stable but also more expensive and rarely needed in practice."] },
-    { id: "q-alg-kp32-3", type: "multiple-choice", difficulty: "hard", question: "Preconditioning in iterative solvers (like CG or GMRES) works by solving M⁻¹Ax = M⁻¹b instead of Ax = b. The ideal preconditioner M would be:", options: ["M = I (identity matrix)", "M = A (the original matrix)", "M ≈ A such that M⁻¹ is cheap to apply and κ(M⁻¹A) ≪ κ(A)", "M = A^T (transpose)"], correctAnswer: 2, explanation: "The ideal preconditioner approximates A well (so M⁻¹A ≈ I with condition number near 1) while being cheap to invert. Common choices: incomplete LU (ILU), algebraic multigrid (AMG), and diagonal (Jacobi) preconditioners.", hints: ["If M = A then M⁻¹A = I — perfect but solving Mx=b costs as much as the original problem.", "Condition number κ(M⁻¹A) determines CG convergence rate — lower is faster."] },
+    { id: "q-alg-kp32-3", type: "multiple-choice", difficulty: "hard", question: "Preconditioning in iterative solvers (like CG or GMRES) works by solving M\\^{-1}Ax = M\\^{-1}b instead of Ax = b. The ideal preconditioner M would be:", options: ["M = I (identity matrix)", "M = A (the original matrix)", "M \\approx A such that M\\^{-1} is cheap to apply and κ(M\\^{-1}A) ≪ κ(A)", "M = A^T (transpose)"], correctAnswer: 2, explanation: "The ideal preconditioner approximates A well (so M\\^{-1}A \\approx I with condition number near 1) while being cheap to invert. Common choices: incomplete LU (ILU), algebraic multigrid (AMG), and diagonal (Jacobi) preconditioners.", hints: ["If M = A then M\\^{-1}A = I — perfect but solving Mx=b costs as much as the original problem.", "Condition number κ(M\\^{-1}A) determines CG convergence rate — lower is faster."] },
   ],
   "tensors-and-multilinear": [
-    { id: "q-alg-kp33-1", type: "multiple-choice", difficulty: "hard", question: "The CP (CANDECOMP/PARAFAC) decomposition of a 3-way tensor T ≈ \\Sigmaᵣ aᵣ ⊗ bᵣ ⊗ cᵣ is analogous to matrix rank-1 decomposition. Unlike matrices, computing the exact CP rank of a tensor is:", options: ["Always polynomial time via SVD generalization", "NP-hard in general", "Solved by the higher-order SVD (HOSVD)", "Equivalent to Tucker decomposition"], correctAnswer: 1, explanation: "Computing exact tensor rank (CP rank) is NP-hard in general — a fundamental difference from matrices. Practical algorithms like alternating least squares (ALS) find approximate CP decompositions. This matters for neural network tensor decomposition and signal separation.", hints: ["Unlike matrices where rank = number of nonzero singular values, tensor rank has no clean spectral characterization.", "ALS for CP alternates optimizing one factor matrix while fixing others — not guaranteed to converge to global optimum."] },
-    { id: "q-alg-kp33-2", type: "true-false", difficulty: "medium", question: "The Tucker decomposition of a tensor generalizes matrix SVD by computing a core tensor G and factor matrices for each mode, giving a multilinear generalization of SVD.", correctAnswer: "True", explanation: "Tucker decomposition T ≈ G ×₁ A ×₂ B ×₃ C where G is the core tensor and A, B, C are orthogonal factor matrices — a direct generalization of SVD to higher-order tensors. HOSVD computes this via sequential SVDs on mode-unfoldings.", hints: ["Tucker generalizes: matrix SVD is Tucker with G diagonal (and scalar factors = singular values).", "HOSVD unfolds the tensor along each mode and computes truncated SVD — simple but not optimal."] },
+    { id: "q-alg-kp33-1", type: "multiple-choice", difficulty: "hard", question: "The CP (CANDECOMP/PARAFAC) decomposition of a 3-way tensor T \\approx \\Sigmaᵣ aᵣ ⊗ bᵣ ⊗ cᵣ is analogous to matrix rank-1 decomposition. Unlike matrices, computing the exact CP rank of a tensor is:", options: ["Always polynomial time via SVD generalization", "NP-hard in general", "Solved by the higher-order SVD (HOSVD)", "Equivalent to Tucker decomposition"], correctAnswer: 1, explanation: "Computing exact tensor rank (CP rank) is NP-hard in general — a fundamental difference from matrices. Practical algorithms like alternating least squares (ALS) find approximate CP decompositions. This matters for neural network tensor decomposition and signal separation.", hints: ["Unlike matrices where rank = number of nonzero singular values, tensor rank has no clean spectral characterization.", "ALS for CP alternates optimizing one factor matrix while fixing others — not guaranteed to converge to global optimum."] },
+    { id: "q-alg-kp33-2", type: "true-false", difficulty: "medium", question: "The Tucker decomposition of a tensor generalizes matrix SVD by computing a core tensor G and factor matrices for each mode, giving a multilinear generalization of SVD.", correctAnswer: "True", explanation: "Tucker decomposition T \\approx G \\times\\_1 A \\times\\_2 B \\times\\_3 C where G is the core tensor and A, B, C are orthogonal factor matrices — a direct generalization of SVD to higher-order tensors. HOSVD computes this via sequential SVDs on mode-unfoldings.", hints: ["Tucker generalizes: matrix SVD is Tucker with G diagonal (and scalar factors = singular values).", "HOSVD unfolds the tensor along each mode and computes truncated SVD — simple but not optimal."] },
     { id: "q-alg-kp33-3", type: "multiple-choice", difficulty: "medium", question: "In deep learning, tensor decomposition methods (CP, Tucker) are applied to weight tensors in neural networks primarily to:", options: ["Improve training accuracy", "Reduce model size and inference cost by replacing large weight tensors with low-rank factors", "Increase the number of parameters", "Enable batch normalization"], correctAnswer: 1, explanation: "Tensor decomposition compresses neural network weight tensors (especially in CNNs and transformers) by expressing them as products of smaller factor matrices/tensors, reducing parameters and FLOPs with minimal accuracy loss — a key model compression technique.", hints: ["A 4D convolutional weight tensor can be CP-decomposed into 4 small matrices.", "Tucker decomposition of transformer weight matrices reduces attention head dimensions."] },
   ],
   "probabilistic-linear-algebra": [
-    { id: "q-alg-kp34-1", type: "multiple-choice", difficulty: "hard", question: "Randomized SVD (Halko et al.) computes a rank-k approximation Â ≈ U\\SigmaV^T in O(mn log k + (m+n)k²) instead of O(mn min(m,n)) for full SVD. The key step is:", options: ["Directly computing the top-k singular values via power iteration", "Forming a random sketch Y = A\\Omega where \\Omega ∈ \\mathbb{R}^{n×(k+p)}, then computing QR(Y) to get an approximate column space of A", "Running Lanczos iteration on A^TA", "Applying the fast Johnson-Lindenstrauss transform"], correctAnswer: 1, explanation: "Randomized SVD projects A onto a small random subspace Y = A\\Omega, orthogonalizes via QR, then computes the exact SVD of the small matrix Q^TA. Power iteration steps (Y = (AA^T)^q A\\Omega) improve accuracy for slowly-decaying singular values.", hints: ["The sketch Y captures the range of A with high probability via JL-type concentration.", "sklearn.utils.extmath.randomized_svd implements this — default for TruncatedSVD with n_components ≪ min(m,n)."] },
-    { id: "q-alg-kp34-2", type: "true-false", difficulty: "medium", question: "In Gaussian processes, the log marginal likelihood requires computing log|K| (log-determinant of the covariance matrix), which is computed stably via the Cholesky factor L as 2·\\Sigmaᵢ log Lᵢᵢ.", correctAnswer: "True", explanation: "Since K = LL^T for SPD K, log|K| = log|L|² = 2·\\Sigmaᵢ log Lᵢᵢ. This avoids numerical issues from directly computing the determinant of a large matrix (which can overflow/underflow). This is the standard implementation in GPyTorch and GPflow.", hints: ["Direct determinant computation is unstable for large matrices — products of eigenvalues can overflow.", "The Cholesky diagonal entries Lᵢᵢ > 0 always (for SPD K), so logs are well-defined."] },
-    { id: "q-alg-kp34-3", type: "multiple-choice", difficulty: "hard", question: "Stochastic trace estimation approximates tr(A) ≈ (1/s)·\\Sigmaᵢ zᵢ^T A zᵢ where zᵢ are random vectors. This is used in GP hyperparameter optimization because:", options: ["It avoids storing the matrix A entirely", "Computing tr(K⁻¹dK/d\\theta) for GP log-likelihood gradients requires O(n³) exactly, but stochastic estimation with CG reduces this to O(n²) per gradient", "Trace estimation is always exact for Gaussian random vectors", "It replaces the need for matrix multiplication"], correctAnswer: 1, explanation: "GP log-likelihood gradients require tr(K⁻¹dK/d\\theta). Hutchinson's estimator approximates the trace stochastically, and each matrix-vector product K⁻¹v is computed via CG — giving O(n²) per CG iteration vs O(n³) for Cholesky. This enables GPs to scale to millions of points (GPyTorch's BBMM).", hints: ["Hutchinson estimator: tr(A) ≈ E[z^TAz] for z ~ Rademacher or Gaussian.", "GPyTorch uses this with Lanczos + CG to scale GPs to n > 10^6."] },
+    { id: "q-alg-kp34-1", type: "multiple-choice", difficulty: "hard", question: "Randomized SVD (Halko et al.) computes a rank-k approximation Â \\approx U\\SigmaV^T in O(mn log k + (m+n)k\\^2) instead of O(mn min(m,n)) for full SVD. The key step is:", options: ["Directly computing the top-k singular values via power iteration", "Forming a random sketch Y = A\\Omega where \\Omega \\in \\mathbb{R}^{n\\times(k+p)}, then computing QR(Y) to get an approximate column space of A", "Running Lanczos iteration on A^TA", "Applying the fast Johnson-Lindenstrauss transform"], correctAnswer: 1, explanation: "Randomized SVD projects A onto a small random subspace Y = A\\Omega, orthogonalizes via QR, then computes the exact SVD of the small matrix Q^TA. Power iteration steps (Y = (AA^T)^q A\\Omega) improve accuracy for slowly-decaying singular values.", hints: ["The sketch Y captures the range of A with high probability via JL-type concentration.", "sklearn.utils.extmath.randomized_svd implements this — default for TruncatedSVD with n_components ≪ min(m,n)."] },
+    { id: "q-alg-kp34-2", type: "true-false", difficulty: "medium", question: "In Gaussian processes, the log marginal likelihood requires computing log|K| (log-determinant of the covariance matrix), which is computed stably via the Cholesky factor L as 2\\cdot\\Sigma\\_i log L\\_i\\_i.", correctAnswer: "True", explanation: "Since K = LL^T for SPD K, log|K| = log|L|\\^2 = 2\\cdot\\Sigma\\_i log L\\_i\\_i. This avoids numerical issues from directly computing the determinant of a large matrix (which can overflow/underflow). This is the standard implementation in GPyTorch and GPflow.", hints: ["Direct determinant computation is unstable for large matrices — products of eigenvalues can overflow.", "The Cholesky diagonal entries L\\_i\\_i > 0 always (for SPD K), so logs are well-defined."] },
+    { id: "q-alg-kp34-3", type: "multiple-choice", difficulty: "hard", question: "Stochastic trace estimation approximates tr(A) \\approx (1/s)\\cdot\\Sigma\\_i z\\_i^T A z\\_i where z\\_i are random vectors. This is used in GP hyperparameter optimization because:", options: ["It avoids storing the matrix A entirely", "Computing tr(K\\^{-1}dK/d\\theta) for GP log-likelihood gradients requires O(n\\^3) exactly, but stochastic estimation with CG reduces this to O(n\\^2) per gradient", "Trace estimation is always exact for Gaussian random vectors", "It replaces the need for matrix multiplication"], correctAnswer: 1, explanation: "GP log-likelihood gradients require tr(K\\^{-1}dK/d\\theta). Hutchinson's estimator approximates the trace stochastically, and each matrix-vector product K\\^{-1}v is computed via CG — giving O(n\\^2) per CG iteration vs O(n\\^3) for Cholesky. This enables GPs to scale to millions of points (GPyTorch's BBMM).", hints: ["Hutchinson estimator: tr(A) \\approx E[z^TAz] for z ~ Rademacher or Gaussian.", "GPyTorch uses this with Lanczos + CG to scale GPs to n > 10^6."] },
   ],
   "spectral-methods": [
-    { id: "q-alg-kp35-1", type: "multiple-choice", difficulty: "medium", question: "Spectral clustering uses the eigenvectors of the graph Laplacian L = D - A (where D is degree matrix, A is adjacency matrix). The number of zero eigenvalues of L equals:", options: ["The number of vertices", "The number of edges", "The number of connected components", "The algebraic connectivity"], correctAnswer: 2, explanation: "The multiplicity of the zero eigenvalue of the graph Laplacian equals the number of connected components. The second smallest eigenvalue \\lambda₂ (Fiedler value) measures algebraic connectivity — larger \\lambda₂ means a better-connected graph.", hints: ["Each connected component contributes one zero eigenvalue with eigenvector = indicator of that component.", "Spectral clustering on k clusters uses the bottom k eigenvectors of L (or normalized Laplacian)."] },
-    { id: "q-alg-kp35-2", type: "true-false", difficulty: "medium", question: "The normalized graph Laplacian L_sym = D^{-1/2}LD^{-1/2} has eigenvalues in [0, 2], and its use in spectral clustering is preferred over the unnormalized Laplacian for graphs with varying node degrees.", correctAnswer: "True", explanation: "The normalized Laplacian accounts for degree heterogeneity — high-degree nodes don't dominate the spectral embedding. Its eigenvalues lie in [0,2], with 0 for disconnected components and 2 for bipartite components. This gives more balanced clusters for real-world graphs.", hints: ["Unnormalized Laplacian eigenvectors can be biased toward high-degree nodes.", "Normalized Laplacian corresponds to a random walk: L_rw = D⁻¹L with the same spectrum."] },
-    { id: "q-alg-kp35-3", type: "multiple-choice", difficulty: "hard", question: "The Cheeger inequality relates the Fiedler value \\lambda₂ of the normalized Laplacian to the graph's conductance \\phi(G). The bound is:", options: ["\\lambda₂/2 ≤ \\phi(G) ≤ √(2\\lambda₂)", "\\lambda₂ = \\phi(G) exactly", "\\phi(G) ≤ \\lambda₂ always", "\\lambda₂ ≤ \\phi(G)/2 always"], correctAnswer: 0, explanation: "The Cheeger inequality \\lambda₂/2 ≤ \\phi(G) ≤ √(2\\lambda₂) provides a spectral certificate for graph expansion. Small \\lambda₂ implies a graph bottleneck (easy cut), and the spectral sweep algorithm finds a cut achieving conductance O(√\\lambda₂).", hints: ["Conductance \\phi(G) = min_S |E(S,S̄)|/(min(vol(S),vol(S̄))) — the bottleneck ratio.", "Small \\lambda₂ ≈ 0 means the graph is nearly disconnected — spectral clustering finds the cut."] },
+    { id: "q-alg-kp35-1", type: "multiple-choice", difficulty: "medium", question: "Spectral clustering uses the eigenvectors of the graph Laplacian L = D - A (where D is degree matrix, A is adjacency matrix). The number of zero eigenvalues of L equals:", options: ["The number of vertices", "The number of edges", "The number of connected components", "The algebraic connectivity"], correctAnswer: 2, explanation: "The multiplicity of the zero eigenvalue of the graph Laplacian equals the number of connected components. The second smallest eigenvalue \\lambda\\_2 (Fiedler value) measures algebraic connectivity — larger \\lambda\\_2 means a better-connected graph.", hints: ["Each connected component contributes one zero eigenvalue with eigenvector = indicator of that component.", "Spectral clustering on k clusters uses the bottom k eigenvectors of L (or normalized Laplacian)."] },
+    { id: "q-alg-kp35-2", type: "true-false", difficulty: "medium", question: "The normalized graph Laplacian L_sym = D^{-1/2}LD^{-1/2} has eigenvalues in [0, 2], and its use in spectral clustering is preferred over the unnormalized Laplacian for graphs with varying node degrees.", correctAnswer: "True", explanation: "The normalized Laplacian accounts for degree heterogeneity — high-degree nodes don't dominate the spectral embedding. Its eigenvalues lie in [0,2], with 0 for disconnected components and 2 for bipartite components. This gives more balanced clusters for real-world graphs.", hints: ["Unnormalized Laplacian eigenvectors can be biased toward high-degree nodes.", "Normalized Laplacian corresponds to a random walk: L_rw = D\\^{-1}L with the same spectrum."] },
+    { id: "q-alg-kp35-3", type: "multiple-choice", difficulty: "hard", question: "The Cheeger inequality relates the Fiedler value \\lambda\\_2 of the normalized Laplacian to the graph's conductance \\phi(G). The bound is:", options: ["\\lambda\\_2/2 \\leq \\phi(G) \\leq √(2\\lambda\\_2)", "\\lambda\\_2 = \\phi(G) exactly", "\\phi(G) \\leq \\lambda\\_2 always", "\\lambda\\_2 \\leq \\phi(G)/2 always"], correctAnswer: 0, explanation: "The Cheeger inequality \\lambda\\_2/2 \\leq \\phi(G) \\leq √(2\\lambda\\_2) provides a spectral certificate for graph expansion. Small \\lambda\\_2 implies a graph bottleneck (easy cut), and the spectral sweep algorithm finds a cut achieving conductance O(√\\lambda\\_2).", hints: ["Conductance \\phi(G) = min_S |E(S,S̄)|/(min(vol(S),vol(S̄))) — the bottleneck ratio.", "Small \\lambda\\_2 \\approx 0 means the graph is nearly disconnected — spectral clustering finds the cut."] },
   ],
   "matrix-calculus-v2": [
     { id: "q-alg-kp36-1", type: "multiple-choice", difficulty: "medium", question: "The gradient of $f(X) = \\operatorname{tr}(AX)$ with respect to matrix $X$ is:", options: ["$A$", "$A^T$", "$X^TA^T$", "$\\operatorname{tr}(A) \\cdot I$"], correctAnswer: 1, explanation: `Using the matrix derivative identity, let us derive $\\frac{\\partial \\operatorname{tr}(AX)}{\\partial X}$.
@@ -2307,8 +2307,8 @@ $$\\text{Full:} \\; 4096^2 \\approx 16.8 \\text{M params} \\quad vs. \\quad \\te
 
 **Step 4: Memory reduction.** The base model weights $W_0$ are frozen (forward only), and only $B$ and $A$ require gradient storage and optimizer states. This enables fine-tuning large models on consumer GPUs.
 
-Therefore, $\\boxed{\\text{Option 1}}$ — LoRA reduces trainable parameters from $dk$ to $r(d+k) \\ll dk$.`, hints: ["Count parameters: a $d \\times k$ matrix needs $dk$ parameters, while LoRA's $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ need $dr + rk = r(d+k)$ parameters.", "For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with $r=8$: full fine-tuning $\\approx 16.8$M params; LoRA $\\approx 65$K params — roughly 250× fewer."] },
-    { id: "q-alg-kp37-2", type: "true-false", difficulty: "easy", question: "The Eckart-Young theorem guarantees that the best rank-k approximation to a matrix A in both the Frobenius norm and the spectral norm is given by truncated SVD Aₖ = Uₖ\\SigmaₖVₖ^T.", correctAnswer: "True", explanation: "Eckart-Young: ‖A - Aₖ‖₂ = \\sigmaₖ₊₁ and ‖A - Aₖ‖_F = √(\\Sigmaᵢ>ₖ \\sigmaᵢ²), and no rank-k matrix achieves smaller error in either norm. This is why SVD-based compression is optimal for dimensionality reduction.", hints: ["The theorem applies to both operator (spectral) and Frobenius norms — an unusually strong result.", "The optimal rank-k approximation error in Frobenius norm is √(\\sigmaₖ₊₁² + ... + \\sigmaₙ²)."] },
+Therefore, $\\boxed{\\text{Option 1}}$ — LoRA reduces trainable parameters from $dk$ to $r(d+k) \\ll dk$.`, hints: ["Count parameters: a $d \\times k$ matrix needs $dk$ parameters, while LoRA's $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ need $dr + rk = r(d+k)$ parameters.", "For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with $r=8$: full fine-tuning $\\approx 16.8$M params; LoRA $\\approx 65$K params — roughly 250\\times fewer."] },
+    { id: "q-alg-kp37-2", type: "true-false", difficulty: "easy", question: "The Eckart-Young theorem guarantees that the best rank-k approximation to a matrix A in both the Frobenius norm and the spectral norm is given by truncated SVD A\\_k = U\\_k\\Sigma\\_kV\\_k^T.", correctAnswer: "True", explanation: "Eckart-Young: ‖A - A\\_k‖\\_2 = \\sigma\\_k₊\\_1 and ‖A - A\\_k‖_F = √(\\Sigma\\_i>\\_k \\sigma\\_i\\^2), and no rank-k matrix achieves smaller error in either norm. This is why SVD-based compression is optimal for dimensionality reduction.", hints: ["The theorem applies to both operator (spectral) and Frobenius norms — an unusually strong result.", "The optimal rank-k approximation error in Frobenius norm is √(\\sigma\\_k₊\\_1\\^2 + ... + \\sigma\\_n\\^2)."] },
     { id: "q-alg-kp37-3", type: "multiple-choice", difficulty: "hard", question: "The stable rank of a matrix $A$ is defined as $\\operatorname{sr}(A) = \\|A\\|_F^2 / \\|A\\|_2^2 = \\frac{\\sum_i \\sigma_i^2}{\\sigma_1^2}$. It is used in randomized algorithms because:", options: ["$\\operatorname{sr}(A) = \\operatorname{rank}(A)$ always", "$\\operatorname{sr}(A) \\leq \\operatorname{rank}(A)$ and quantifies how numerically low-rank $A$ is — randomized algorithms require $O(\\operatorname{sr}(A))$ samples to achieve an $\\varepsilon$-approximation", "$\\operatorname{sr}(A)$ determines the computational complexity of Cholesky decomposition", "$\\operatorname{sr}(A)$ is always an integer"], correctAnswer: 1, explanation: `The stable rank (also called numerical rank) provides a more nuanced measure of matrix "size" than rank.
 
 **Step 1: Definition.** For a matrix $A$ with singular values $\\sigma_1 \\geq \\sigma_2 \\geq \\cdots \\geq \\sigma_r > 0$:
@@ -2362,16 +2362,16 @@ Therefore, $\\boxed{\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}}$ is the corr
         "The gradient $2A^T(A\\mathbf{x} - \\mathbf{b}) = 0$ gives the normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$. Solve these for $\\mathbf{x}$."
       ]
     },
-    { id: "q-alg-kp38-2", type: "true-false", difficulty: "medium", question: "Ridge regression (Tikhonov regularization) solves min_x ‖Ax-b‖² + \\lambda‖x‖², and its solution (A^TA + \\lambdaI)⁻¹A^Tb is always well-defined even when A^TA is singular.", correctAnswer: "True", explanation: "Adding \\lambdaI to A^TA ensures all eigenvalues are at least \\lambda > 0, making the matrix positive definite and invertible. This regularization shrinks the solution toward zero and stabilizes the inversion — essential when features are collinear.", hints: ["Eigenvalues of A^TA + \\lambdaI = eigenvalues of A^TA + \\lambda ≥ \\lambda > 0 always.", "In SVD form: x_ridge = \\Sigmaᵢ (\\sigmaᵢ/(\\sigmaᵢ² + \\lambda)) uᵢvᵢ^Tb — small singular values are dampened."] },
-    { id: "q-alg-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The LASSO regression solves min_x ‖Ax-b‖² + \\lambda‖x‖₁. Unlike ridge regression, LASSO produces sparse solutions because:", options: ["The ℓ₁ norm penalty has a square shape in 2D that makes corners at axis intersections", "The ℓ₁ norm ball has corners on the coordinate axes; the quadratic loss contour tends to touch these corners where some xᵢ = 0, inducing sparsity", "ℓ₁ is smoother than ℓ₂ and easier to optimize", "LASSO always sets exactly half the coefficients to zero"], correctAnswer: 1, explanation: "Geometrically, the ℓ₁ ball (diamond/cross-polytope shape) has corners on coordinate axes. The loss contour expansion hits these corners (where some coordinates are exactly 0) with positive probability, inducing sparsity. In contrast, the smooth ℓ₂ ball has no corners.", hints: ["In 2D: ℓ₁ ball is a diamond (corners at (±1,0),(0,±1)); ℓ₂ ball is a circle (no corners).", "Proximal gradient methods solve LASSO via soft-thresholding: sign(x)·max(|x|-\\lambda, 0)."] },
+    { id: "q-alg-kp38-2", type: "true-false", difficulty: "medium", question: "Ridge regression (Tikhonov regularization) solves min_x ‖Ax-b‖\\^2 + \\lambda‖x‖\\^2, and its solution (A^TA + \\lambdaI)\\^{-1}A^Tb is always well-defined even when A^TA is singular.", correctAnswer: "True", explanation: "Adding \\lambdaI to A^TA ensures all eigenvalues are at least \\lambda > 0, making the matrix positive definite and invertible. This regularization shrinks the solution toward zero and stabilizes the inversion — essential when features are collinear.", hints: ["Eigenvalues of A^TA + \\lambdaI = eigenvalues of A^TA + \\lambda \\geq \\lambda > 0 always.", "In SVD form: x_ridge = \\Sigma\\_i (\\sigma\\_i/(\\sigma\\_i\\^2 + \\lambda)) u\\_iv\\_i^Tb — small singular values are dampened."] },
+    { id: "q-alg-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The LASSO regression solves min_x ‖Ax-b‖\\^2 + \\lambda‖x‖\\_1. Unlike ridge regression, LASSO produces sparse solutions because:", options: ["The ℓ\\_1 norm penalty has a square shape in 2D that makes corners at axis intersections", "The ℓ\\_1 norm ball has corners on the coordinate axes; the quadratic loss contour tends to touch these corners where some x\\_i = 0, inducing sparsity", "ℓ\\_1 is smoother than ℓ\\_2 and easier to optimize", "LASSO always sets exactly half the coefficients to zero"], correctAnswer: 1, explanation: "Geometrically, the ℓ\\_1 ball (diamond/cross-polytope shape) has corners on coordinate axes. The loss contour expansion hits these corners (where some coordinates are exactly 0) with positive probability, inducing sparsity. In contrast, the smooth ℓ\\_2 ball has no corners.", hints: ["In 2D: ℓ\\_1 ball is a diamond (corners at (\\pm1,0),(0,\\pm1)); ℓ\\_2 ball is a circle (no corners).", "Proximal gradient methods solve LASSO via soft-thresholding: sign(x)\\cdotmax(|x|-\\lambda, 0)."] },
   ],
   "vector-spaces-advanced": [
-    { id: "q-alg-kp39-1", type: "multiple-choice", difficulty: "hard", question: "A Hilbert space is a complete inner product space. In ML, which of the following is a Hilbert space fundamental to kernel methods?", options: ["The space of all continuous functions on \\mathbb{R}", "A Reproducing Kernel Hilbert Space (RKHS) H_k associated with kernel k, where evaluation functionals are continuous", "The space of all measurable functions (L∞)", "The space of probability distributions"], correctAnswer: 1, explanation: "The RKHS H_k has the reproducing property: f(x) = ⟨f, k(·,x)⟩_{H_k} for all f ∈ H_k. This enables the kernel trick: inner products in the (possibly infinite-dimensional) RKHS are computable as k(x,x') without explicit feature maps.", hints: ["Mercer's theorem: any PSD kernel k(x,x') = ⟨\\phi(x),\\phi(x')⟩ for some feature map \\phi into an RKHS.", "SVMs, Gaussian processes, and kernel PCA all operate in RKHS without explicit feature computation."] },
-    { id: "q-alg-kp39-2", type: "true-false", difficulty: "medium", question: "Any finite-dimensional inner product space over \\mathbb{R} is isomorphic (as an inner product space) to \\mathbb{R}ⁿ with the standard dot product, where n is the dimension.", correctAnswer: "True", explanation: "By Gram-Schmidt orthonormalization, any n-dimensional inner product space has an orthonormal basis, giving an isometry to \\mathbb{R}ⁿ. This justifies working in coordinates without loss of generality for finite-dimensional spaces.", hints: ["Gram-Schmidt converts any basis to an orthonormal one, establishing the isomorphism explicitly.", "In infinite dimensions, different Hilbert spaces (L², ℓ², Sobolev spaces) are non-isomorphic."] },
-    { id: "q-alg-kp39-3", type: "multiple-choice", difficulty: "hard", question: "The Riesz representation theorem states that every continuous linear functional F: H → \\mathbb{R} on a Hilbert space H can be represented as F(x) = ⟨x, y⟩ for a unique y ∈ H. In ML, this theorem underpins:", options: ["The existence of optimal transport maps", "The kernel trick: the evaluation functional \\deltaₓ(f) = f(x) in an RKHS corresponds to the element k(·,x), giving f(x) = ⟨f, k(·,x)⟩", "The convergence of stochastic gradient descent", "The universal approximation theorem for neural networks"], correctAnswer: 1, explanation: "In the RKHS H_k, evaluation at x is a bounded linear functional \\deltaₓ. By Riesz, there exists k(·,x) ∈ H_k such that f(x) = ⟨f, k(·,x)⟩ — the reproducing property. This is why kernel methods can compute inner products in infinite-dimensional spaces via the kernel function.", hints: ["The representer theorem (Tikhonov regularization in RKHS) also follows from Riesz + finite data.", "Riesz identifies H with H* (dual space) via the map y ↦ ⟨·,y⟩ — H is self-dual."] },
+    { id: "q-alg-kp39-1", type: "multiple-choice", difficulty: "hard", question: "A Hilbert space is a complete inner product space. In ML, which of the following is a Hilbert space fundamental to kernel methods?", options: ["The space of all continuous functions on \\mathbb{R}", "A Reproducing Kernel Hilbert Space (RKHS) H_k associated with kernel k, where evaluation functionals are continuous", "The space of all measurable functions (L\\infty)", "The space of probability distributions"], correctAnswer: 1, explanation: "The RKHS H_k has the reproducing property: f(x) = ⟨f, k(\\cdot,x)⟩_{H_k} for all f \\in H_k. This enables the kernel trick: inner products in the (possibly infinite-dimensional) RKHS are computable as k(x,x') without explicit feature maps.", hints: ["Mercer's theorem: any PSD kernel k(x,x') = ⟨\\phi(x),\\phi(x')⟩ for some feature map \\phi into an RKHS.", "SVMs, Gaussian processes, and kernel PCA all operate in RKHS without explicit feature computation."] },
+    { id: "q-alg-kp39-2", type: "true-false", difficulty: "medium", question: "Any finite-dimensional inner product space over \\mathbb{R} is isomorphic (as an inner product space) to \\mathbb{R}\\^n with the standard dot product, where n is the dimension.", correctAnswer: "True", explanation: "By Gram-Schmidt orthonormalization, any n-dimensional inner product space has an orthonormal basis, giving an isometry to \\mathbb{R}\\^n. This justifies working in coordinates without loss of generality for finite-dimensional spaces.", hints: ["Gram-Schmidt converts any basis to an orthonormal one, establishing the isomorphism explicitly.", "In infinite dimensions, different Hilbert spaces (L\\^2, ℓ\\^2, Sobolev spaces) are non-isomorphic."] },
+    { id: "q-alg-kp39-3", type: "multiple-choice", difficulty: "hard", question: "The Riesz representation theorem states that every continuous linear functional F: H \\to \\mathbb{R} on a Hilbert space H can be represented as F(x) = ⟨x, y⟩ for a unique y \\in H. In ML, this theorem underpins:", options: ["The existence of optimal transport maps", "The kernel trick: the evaluation functional \\deltaₓ(f) = f(x) in an RKHS corresponds to the element k(\\cdot,x), giving f(x) = ⟨f, k(\\cdot,x)⟩", "The convergence of stochastic gradient descent", "The universal approximation theorem for neural networks"], correctAnswer: 1, explanation: "In the RKHS H_k, evaluation at x is a bounded linear functional \\deltaₓ. By Riesz, there exists k(\\cdot,x) \\in H_k such that f(x) = ⟨f, k(\\cdot,x)⟩ — the reproducing property. This is why kernel methods can compute inner products in infinite-dimensional spaces via the kernel function.", hints: ["The representer theorem (Tikhonov regularization in RKHS) also follows from Riesz + finite data.", "Riesz identifies H with H* (dual space) via the map y ↦ ⟨\\cdot,y⟩ — H is self-dual."] },
   ],
   "linalg-dl": [
-    { id: "q-alg-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Multi-head self-attention computes Q = XW_Q, K = XW_K, V = XW_V and then Attention = softmax(QK^T/√d_k)V. The √d_k scaling prevents:", options: ["The queries and keys from becoming orthogonal", "The dot products QK^T from growing large in magnitude (causing softmax saturation and vanishing gradients)", "The value matrix from being ill-conditioned", "Numerical overflow in the matrix multiplications"], correctAnswer: 1, explanation: "If d_k is large, dot products q·k grow as O(d_k) in expectation (for unit-norm vectors). Without scaling, softmax receives extreme inputs, producing near-one-hot distributions with vanishing gradients. √d_k scaling keeps the logits O(1) regardless of dimension.", hints: ["For q,k ~ N(0,I), E[q·k] = 0 but Var(q·k) = d_k — so std grows as √d_k.", "The paper 'Attention Is All You Need' introduced this scaling heuristic."] },
+    { id: "q-alg-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Multi-head self-attention computes Q = XW_Q, K = XW_K, V = XW_V and then Attention = softmax(QK^T/√d_k)V. The √d_k scaling prevents:", options: ["The queries and keys from becoming orthogonal", "The dot products QK^T from growing large in magnitude (causing softmax saturation and vanishing gradients)", "The value matrix from being ill-conditioned", "Numerical overflow in the matrix multiplications"], correctAnswer: 1, explanation: "If d_k is large, dot products q\\cdotk grow as O(d_k) in expectation (for unit-norm vectors). Without scaling, softmax receives extreme inputs, producing near-one-hot distributions with vanishing gradients. √d_k scaling keeps the logits O(1) regardless of dimension.", hints: ["For q,k ~ N(0,I), E[q\\cdotk] = 0 but Var(q\\cdotk) = d_k — so std grows as √d_k.", "The paper 'Attention Is All You Need' introduced this scaling heuristic."] },
     { id: "q-alg-kp40-2", type: "true-false", difficulty: "medium", question: "Batch normalization normalizes activations to zero mean and unit variance using the batch statistics, which can be expressed as a linear transformation: x_norm = (x - \\mu)/(\\sigma + \\epsilon), making it a linear operation on x.", correctAnswer: "False", explanation: "Batch normalization is not a linear operation on x because \\mu and \\sigma depend on x (the batch statistics are computed from the current batch). It is an affine normalization with data-dependent statistics — nonlinear in x. However, at inference with fixed running statistics, it becomes a linear transformation.", hints: ["Linear operations satisfy f(\\alphax+\\betay) = \\alphaf(x)+\\betaf(y) — batch norm violates this due to data-dependent \\mu,\\sigma.", "During inference with frozen running_mean and running_var, BN becomes a fixed affine map."] },
     { id: "q-alg-kp40-3", type: "multiple-choice", difficulty: "hard", question: "The Neural Tangent Kernel (NTK) theory shows that infinitely wide neural networks trained with gradient descent are equivalent to kernel regression with the NTK kernel k_NTK. This implies:", options: ["Wide networks always overfit", "Wide networks trained with gradient descent converge to a linear model in function space, maintaining a fixed kernel throughout training (in the infinite-width limit)", "The NTK diagonalizes the loss Hessian", "Wide networks require the kernel trick for efficient training"], correctAnswer: 1, explanation: "In the infinite-width limit, the NTK k_NTK(x,x') remains constant throughout training (kernel doesn't change with parameters), and training is equivalent to kernel gradient descent. This linearization explains why wide networks generalize (kernel regression with appropriate kernel) but also reveals their limitations vs. feature-learning finite-width networks.", hints: ["NTK regime = 'lazy training' regime where weights barely move from initialization.", "Finite-width networks escape the NTK regime and learn features — explaining practical deep learning's superiority."] },
   ],

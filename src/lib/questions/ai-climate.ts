@@ -411,7 +411,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Ancillary services (frequency regulation)}\\]\n\n" +
         "All of these require knowing not just the expected output but the full distribution of possible outcomes.",
       hints: [
-        'A forecast saying "500 MW ± 50 MW" provides actionable uncertainty information. Why is this more useful than just "500 MW" when deciding how much backup capacity to hold?',
+        'A forecast saying "500 MW \\pm 50 MW" provides actionable uncertainty information. Why is this more useful than just "500 MW" when deciding how much backup capacity to hold?',
         "Reserve scheduling is fundamentally an economic decision under uncertainty. What specific information does a grid operator need to make this decision optimally?",
       ],
     },
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Satellite-based GHG monitoring uses which type of spectroscopy to detect atmospheric CO₂ and CH₄ concentrations?",
+        "Satellite-based GHG monitoring uses which type of spectroscopy to detect atmospheric CO\\_2 and CH\\_4 concentrations?",
       options: [
         "X-ray fluorescence",
         "Near-infrared and shortwave-infrared (NIR/SWIR) absorption spectroscopy",
@@ -726,14 +726,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CO₂ and CH₄ have characteristic absorption features in the NIR/SWIR portion of the electromagnetic spectrum:\n\n" +
+        "CO\\_2 and CH\\_4 have characteristic absorption features in the NIR/SWIR portion of the electromagnetic spectrum:\n\n" +
         "\\[\\text{CO}_2: \\quad \\lambda \\approx 1.6\\;\\mu\\text{m}, \\; 2.0\\;\\mu\\text{m}\\]" +
         "\\[\\text{CH}_4: \\quad \\lambda \\approx 1.7\\;\\mu\\text{m}, \\; 2.3\\;\\mu\\text{m}\\]\n\n" +
         "Satellites like OCO-2, GOSAT, and Sentinel-5P measure the reflected solar spectrum in these absorption bands. The depth of the absorption feature encodes the column concentration of the gas above the surface. Spectral inversion algorithms retrieve the concentration:\n\n" +
         "\\[I_{\\text{observed}}(\\lambda) = I_{\\text{surface}}(\\lambda) \\cdot T(\\lambda; C_{\\text{GHG}})\\]",
       hints: [
         "Greenhouse gases absorb infrared radiation — this is the physical basis for how remote sensing detects them. In which portion of the spectrum do these absorption features appear?",
-        "The specific wavelengths at which CO₂ and CH₄ absorb are determined by their molecular structure. What do these characteristic absorption wavelengths define in the satellite instrument design?",
+        "The specific wavelengths at which CO\\_2 and CH\\_4 absorb are determined by their molecular structure. What do these characteristic absorption wavelengths define in the satellite instrument design?",
       ],
     },
     {
@@ -1454,10 +1454,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Advanced Metering Infrastructure (AMI) smart meters provide 15-minute to hourly consumption data; combined with weather (temperature, humidity), building type, and occupancy schedule features, ML models can predict energy consumption with high accuracy.",
-      hints: [
-        "The most direct signal of energy consumption is the meter reading itself — time-series of past consumption is the key input.",
+        "Advanced Metering Infrastructure (AMI) smart meters provide 15-minute to hourly consumption data. Combined with weather (temperature, humidity) and building characteristics (type, age, size):\n\n" +
+        "\\[\\hat{E}_{t+1} = f_\\theta(E_t, E_{t-1}, \\ldots, W_t, W_{t-1}, \\ldots; \\text{building features})\\]\n\n" +
         "Weather is a major driver of heating/cooling loads, making it the most important external feature for building energy models.",
+      hints: [
+        "The most direct signal of energy consumption is the meter reading itself. What type of data does a smart meter provide?",
+        "Weather is a major driver of heating/cooling loads. What external features would you include as inputs to a building energy prediction model?",
       ],
     },
     {
@@ -1468,10 +1470,14 @@ const questions: Record<string, Question[]> = {
         "Deep learning models for building energy prediction can learn occupancy patterns from smart meter data without explicit occupancy sensors.",
       correctAnswer: "True",
       explanation:
-        "Occupancy creates characteristic spikes and dips in electricity consumption (lights, appliances, plug loads); LSTM and Transformer models learn these temporal signatures, enabling implicit occupancy detection without dedicated PIR sensors — though with privacy implications.",
+        "Occupancy creates characteristic temporal signatures in electricity consumption:\n\n" +
+        "\\[\\text{Morning peak:} \\quad \\text{lights, coffee makers, HVAC ramp-up}\\]" +
+        "\\[\\text{Afternoon low:} \\quad \\text{workday, minimal occupancy}\\]" +
+        "\\[\\text{Evening peak:} \\quad \\text{cooking, entertainment, HVAC}\\]\n\n" +
+        "LSTM and Transformer models learn these temporal patterns from historical consumption data, enabling implicit occupancy detection without dedicated sensors. This is both technically useful and a privacy concern — meter data reveals daily routines even without explicit tracking.",
       hints: [
-        "Human presence causes predictable energy use patterns (morning activity, evening appliance use) — can these patterns be learned from meter data alone?",
-        "This is both technically useful and a privacy concern — meter data reveals daily routines even without explicit tracking.",
+        "Human presence causes predictable energy use patterns. Can these patterns be learned from meter data alone, or do you need explicit occupancy sensors?",
+        "What does smart meter data reveal about daily routines even without explicit occupancy sensors?",
       ],
     },
     {
@@ -1479,7 +1485,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'The "Energy Plus" model is used as a simulation tool for building energy optimization. How do ML models interface with it in optimization workflows?',
+        'The "EnergyPlus" model is used as a simulation tool for building energy optimization. How do ML models interface with it in optimization workflows?',
       options: [
         "They replace EnergyPlus entirely",
         "They serve as fast surrogate models trained on EnergyPlus simulation outputs for rapid optimization",
@@ -1488,10 +1494,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "EnergyPlus simulations are computationally expensive (minutes per run); ML surrogates trained on simulation results can evaluate thousands of design alternatives or control strategies per second, enabling efficient optimization of building design and operation parameters.",
+        "EnergyPlus simulations solve detailed physical models of building thermodynamics:\n\n" +
+        "\\[\\frac{dT_{\\text{zone}}}{dt} = \\frac{1}{C}\\left( \\dot{Q}_{\\text{HVAC}} + \\dot{Q}_{\\text{solar}} + \\dot{Q}_{\\text{internal}} - \\dot{Q}_{\\text{loss}} \\right)\\]\n\n" +
+        "Each simulation run takes minutes. ML surrogates trained on simulation results learn:\n\n" +
+        "\\[\\hat{y} = f_\\theta(\\text{building design}, \\text{control params})\\]\n\n" +
+        "These evaluate in milliseconds, enabling optimization over thousands of design alternatives per second via surrogate-based optimization (Bayesian optimization, CMA-ES).",
       hints: [
-        "Running EnergyPlus for every candidate design in an optimization would take weeks — what is the standard solution for expensive black-box functions?",
-        "Surrogate-based optimization (also called Bayesian optimization or emulation-based optimization) is a classic approach for expensive simulators.",
+        "Running EnergyPlus for every candidate design in an optimization would take weeks. What is the standard solution for optimizing over expensive black-box functions?",
+        "Surrogate-based optimization uses a fast approximation of the expensive simulator. What is the typical name for this approach?",
       ],
     },
   ],
@@ -1511,10 +1521,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RL HVAC agents use a composite reward combining comfort metrics (PPD/PMV thermal comfort indices or temperature deviation penalties) and energy cost; the trade-off weighting is a design choice that determines how aggressively the agent sacrifices comfort for energy savings.",
+        "RL HVAC agents use a composite reward:\n\n" +
+        "\\[r_t = -\\alpha \\cdot \\text{EnergyCost}_t - \\beta \\cdot \\text{ComfortPenalty}_t\\]\n\n" +
+        "where comfort is measured by PPD (Predicted Percentage Dissatisfied) or PMV (Predicted Mean Vote) indices:\n\n" +
+        "\\[\\text{PMV} = f(T, RH, v, M, I_c)\\]" +
+        "\\[\\text{PPD} = 100 - 95 \\cdot e^{-(0.03353 \\cdot \\text{PMV}^4 + 0.2179 \\cdot \\text{PMV}^2)}\\]\n\n" +
+        "The trade-off weights \\(\\alpha, \\beta\\) encode the desired comfort-energy compromise.",
       hints: [
-        "Comfort and energy are often in tension — cooling more maintains comfort but uses more electricity.",
-        "Multi-objective RL combines competing objectives into a single weighted reward, with the weights encoding the desired trade-off.",
+        "Comfort and energy are often in tension — cooling more maintains comfort but uses more electricity. How is this trade-off formalized in RL?",
+        "Multi-objective RL combines competing objectives into a single weighted reward. What do the weights encode?",
       ],
     },
     {
@@ -1522,13 +1537,17 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Google\'s DeepMind demonstrated RL-based cooling control in data centers, achieving approximately 40% reduction in cooling energy.",
+        "Google's DeepMind demonstrated RL-based cooling control in data centers, achieving approximately 40% reduction in cooling energy.",
       correctAnswer: "True",
       explanation:
-        "DeepMind applied deep RL to Google\'s data center cooling systems, learning a control policy from operational data that reduced cooling energy by approximately 40% and Power Usage Effectiveness (PUE) by 15%, a landmark industrial RL success story.",
+        "DeepMind applied deep RL to Google's data center cooling systems (2016, published 2018). The RL agent learned to control cooling equipment (chillers, cooling towers, pumps, CRAHs) by processing:\n\n" +
+        "\\[s_t = \\{T_{\\text{inlet}}, T_{\\text{outlet}}, P, \\text{setpoints}\\}\\]\n\n" +
+        "The learned policy reduced cooling energy by ~40% and Power Usage Effectiveness (PUE) by 15%. PUE is defined as:\n\n" +
+        "\\[\\text{PUE} = \\frac{\\text{Total facility power}}{\\text{IT equipment power}}\\]\n\n" +
+        "This was one of the most widely cited real-world applications of deep RL to a physical control system.",
       hints: [
-        "Data center cooling is a massive energy consumer globally — even a few percent improvement represents significant savings.",
-        "This was one of the most widely cited real-world applications of deep RL to a physical system.",
+        "Data center cooling is a massive energy consumer globally. Even a few percent improvement represents significant cost savings and carbon reduction.",
+        "This was one of the most widely cited real-world applications of deep RL. What made it significant?",
       ],
     },
     {
@@ -1545,10 +1564,18 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard RL explores by trial-and-error, which in a physical building means potentially setting temperatures to extremes before learning they are uncomfortable or damaging; constrained RL, safe RL, and model-based RL approaches address this by incorporating safety constraints during training.",
+        "Standard RL uses exploration (trial-and-error) to learn:\n\n" +
+        "\\[a_t = \\pi_\\theta(s_t) + \\epsilon \\quad \\text{(additive exploration noise)}\\]\n\n" +
+        "In simulation, unsafe exploration has no consequences. In an occupied building:\n\n" +
+        "\\[\\text{Unsafe action: set temperature to 35°C in summer} \\Rightarrow \\text{occupant discomfort, potential heat stroke}\\]\n\n" +
+        "Safe RL addresses this via:\n" +
+        "\\[- \\text{Constrained RL: } \\pi \\text{ constrained to safe state-action space}\\]" +
+        "\\[- \\text{Model-based RL: simulate before acting in real world}\\]" +
+        "\\[- \\text{Penalty method: large reward penalty for unsafe actions}\\]\n\n" +
+        "This is critical for deployment in occupied buildings.",
       hints: [
-        "In simulation, unsafe exploration has no real-world consequences; in a real building, exploration affects actual occupants and equipment.",
-        "Safe RL adds safety constraints that prevent the agent from taking actions that violate thermal comfort or equipment operating bounds.",
+        "In simulation, unsafe exploration has no consequences. In a real building, what are the consequences of exploration?",
+        "Safe RL adds constraints to prevent the agent from taking actions that violate thermal comfort or equipment operating bounds. Why is this particularly important for buildings with occupants?",
       ],
     },
   ],
@@ -1739,7 +1766,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Flood risk = hazard × exposure × vulnerability; hazard (inundation depth/frequency) comes from hydrological and hydraulic models, while exposure (buildings, infrastructure, population) and vulnerability (damage functions) come from land use and socioeconomic data.",
+        "Flood risk = hazard \\times exposure \\times vulnerability; hazard (inundation depth/frequency) comes from hydrological and hydraulic models, while exposure (buildings, infrastructure, population) and vulnerability (damage functions) come from land use and socioeconomic data.",
       hints: [
         "Risk in hazard science has a standard formula: risk is not just where flooding occurs, but also what and who is affected.",
         "A flood in an uninhabited desert is a hazard but not a risk — exposure and vulnerability complete the picture.",

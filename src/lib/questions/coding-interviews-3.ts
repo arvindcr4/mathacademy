@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question: "What is the time complexity of the climbing stairs solution with memoization?",
-      options: ["O(1)", "O(n)", "O(n²)", "O(2ⁿ)"],
+      options: ["O(1)", "O(n)", "O(n\\^2)", "O(2\\^n)"],
       correctAnswer: 1,
       explanation:
         "With memoization, each subproblem $dp[i]$ is computed exactly once:\n\n- There are $n$ distinct subproblems (for $i = 1$ to $n$)\n- Each transition $dp[i] = dp[i-1] + dp[i-2]$ takes $O(1)$ time\n\n$$\\text{Total time} = n \\times O(1) = O(n)$$\n\nWithout memoization, the naive recursive solution would be $O(2^n)$ due to exponential recomputation.",
@@ -164,7 +164,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question: "What is the time complexity of the unbounded coin change DP?",
-      options: ["O(amount)", "O(amount × coins)", "O(coins)", "O(2^amount)"],
+      options: ["O(amount)", "O(amount \\times coins)", "O(coins)", "O(2^amount)"],
       correctAnswer: 1,
       explanation:
         "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n$$\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\\\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
@@ -397,10 +397,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question: "DP solution time complexity:",
-      options: ["O(n)", "O(n²)", "O(n × maxWordLength)", "O(2ⁿ)"],
+      options: ["O(n)", "O(n\\^2)", "O(n \\times maxWordLength)", "O(2\\^n)"],
       correctAnswer: 2,
       explanation:
-        "For each i, try up to maxWordLength substrings. O(n × L) where L = max word length.",
+        "For each i, try up to maxWordLength substrings. O(n \\times L) where L = max word length.",
       hints: [
         "There are n end positions to consider.",
         "At each position, you only need to test substrings up to the maximum word length.",
@@ -840,7 +840,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The FLT primality test:\n- If $a^{p-1} \\not\\equiv 1 \\pmod{p}$ → **$p$ is definitely composite**\n- If $a^{p-1} \\equiv 1 \\pmod{p}$ → **$p$ is probably prime**\n\nA passing result means $p$ passed this particular test, but it could still be a composite (especially a Carmichael number). Multiple bases $a$ increase confidence but don't give certainty.",
+        "The FLT primality test:\n- If $a^{p-1} \\not\\equiv 1 \\pmod{p}$ \\to **$p$ is definitely composite**\n- If $a^{p-1} \\equiv 1 \\pmod{p}$ \\to **$p$ is probably prime**\n\nA passing result means $p$ passed this particular test, but it could still be a composite (especially a Carmichael number). Multiple bases $a$ increase confidence but don't give certainty.",
       hints: [
         "If the test fails, $p$ is definitely composite.",
         "If the test passes, $p$ might be prime but could be a Carmichael number.",
@@ -975,7 +975,7 @@ const questions: Record<string, Question[]> = {
       question: "What is C(5, 2)?",
       options: ["5", "10", "15", "20"],
       correctAnswer: 1,
-      explanation: "C(5, 2) = 5! / (2! × 3!) = 120 / (2 × 6) = 10.",
+      explanation: "C(5, 2) = 5! / (2! \\times 3!) = 120 / (2 \\times 6) = 10.",
     },
     {
       id: "q-nt-binom-4",
@@ -990,10 +990,10 @@ const questions: Record<string, Question[]> = {
       id: "q-nt-binom-5",
       type: "true-false",
       difficulty: "hard",
-      question: "Computing C(n, k) using dynamic programming is O(n × k).",
+      question: "Computing C(n, k) using dynamic programming is O(n \\times k).",
       correctAnswer: "True",
       explanation:
-        "DP builds Pascal triangle row by row, requiring O(n × k) time and space.",
+        "DP builds Pascal triangle row by row, requiring O(n \\times k) time and space.",
     },
   ],
   "catalan-numbers": [
@@ -1017,7 +1017,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "C_n = (2n)! / ((n+1)! × n!) is the closed form for Catalan numbers.",
+        "C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers.",
       correctAnswer: "True",
       explanation:
         "This is the binomial coefficient formula: C_n = C(2n, n) / (n+1).",
@@ -1035,7 +1035,7 @@ const questions: Record<string, Question[]> = {
       id: "q-nt-catalan-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The recurrence C_n = sum(C_i × C_{n-1-i}) is called:",
+      question: "The recurrence C_n = sum(C_i \\times C_{n-1-i}) is called:",
       options: [
         "Convolution recurrence",
         "Catalan recurrence",
@@ -1051,10 +1051,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "Catalan numbers grow exponentially as ~4^n / (n^(3/2) × sqrt(pi)).",
+        "Catalan numbers grow exponentially as ~4^n / (n^(3/2) \\times sqrt(pi)).",
       correctAnswer: "True",
       explanation:
-        "Catalan numbers have exponential growth rate approximately 4^n / (n^(3/2) × sqrt(pi)).",
+        "Catalan numbers have exponential growth rate approximately 4^n / (n^(3/2) \\times sqrt(pi)).",
     },
   ],
   fibonacci: [
@@ -1078,7 +1078,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "F_n ≈ \\phi^n / sqrt(5) where \\phi = (1 + sqrt(5)) / 2 is Binet formula.",
+        "F_n \\approx \\phi^n / sqrt(5) where \\phi = (1 + sqrt(5)) / 2 is Binet formula.",
       correctAnswer: "True",
       explanation:
         "Binet\'s formula expresses Fibonacci numbers using the golden ratio \\phi.",
@@ -1132,7 +1132,7 @@ const questions: Record<string, Question[]> = {
         "In binary exponentiation, if n is even we square the base; if odd we multiply by base and reduce exponent.",
       correctAnswer: "True",
       explanation:
-        "Even: a^n = (a^{n/2})^2. Odd: a^n = a × a^{n-1} = a × (a^{(n-1)/2})^2.",
+        "Even: a^n = (a^{n/2})^2. Odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2.",
     },
     {
       id: "q-nt-power-3",
@@ -1162,7 +1162,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "To prevent overflow, apply modulo after each multiplication: (a × b) mod m = ((a mod m) × (b mod m)) mod m.",
+        "To prevent overflow, apply modulo after each multiplication: (a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m.",
     },
     {
       id: "q-nt-power-5",
@@ -1358,7 +1358,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question: "What is the average time complexity of quicksort?",
-      options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+      options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(log n)"],
       correctAnswer: 1,
       explanation:
         "Average case: pivot divides array roughly in half each recursion, giving O(n log n) average time.",
@@ -1427,7 +1427,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "What is the time complexity of Strassen matrix multiplication?",
-      options: ["O(n²)", "O(n^2.81)", "O(n³)", "O(n log n)"],
+      options: ["O(n\\^2)", "O(n^2.81)", "O(n\\^3)", "O(n log n)"],
       correctAnswer: 1,
       explanation:
         "Strassen achieves O(n^2.81) by reducing 8 multiplications to 7 via the Strassen formulas.",
@@ -1492,7 +1492,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "What is the time complexity of the closest pair algorithm using divide and conquer?",
-      options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+      options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(log n)"],
       correctAnswer: 1,
       explanation:
         "Divide and conquer for closest pair: sort by x-coordinate O(n log n), then recursively find closest pair in O(n log n).",
@@ -1565,7 +1565,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "What is the time complexity of Boyer-Moore majority vote algorithm?",
-      options: ["O(n)", "O(n log n)", "O(n²)", "O(1) extra space"],
+      options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(1) extra space"],
       correctAnswer: 0,
       explanation:
         "Boyer-Moore runs in O(n) time and O(1) space, making it optimal for finding majority elements.",
@@ -1812,11 +1812,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "What is the time complexity of Karatsuba integer multiplication?",
-      options: ["O(n)", "O(n log 3)", "O(n²)", "O(n^2.81)"],
+      options: ["O(n)", "O(n log 3)", "O(n\\^2)", "O(n^2.81)"],
       correctAnswer: 1,
       explanation:
-        "Karatsuba achieves O(n^log2(3)) ≈ O(n^1.585) by reducing 4 multiplications to 3.",
-      hints: ["log2(3) ≈ 1.585", "Reduces multiplication count from 4 to 3"],
+        "Karatsuba achieves O(n^log2(3)) \\approx O(n^1.585) by reducing 4 multiplications to 3.",
+      hints: ["log2(3) \\approx 1.585", "Reduces multiplication count from 4 to 3"],
     },
     {
       id: "q-dc-karatsuba-2",
@@ -1881,7 +1881,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question: "Divide and conquer DP reduces complexity from O(n^2k) to:",
-      options: ["O(nk)", "O(n log n)", "O(kn log n)", "O(n²)"],
+      options: ["O(nk)", "O(n log n)", "O(kn log n)", "O(n\\^2)"],
       correctAnswer: 2,
       explanation:
         "With divide and conquer optimization, DP transitions are computed in O(kn log n) instead of O(kn^2).",
@@ -1895,7 +1895,7 @@ const questions: Record<string, Question[]> = {
         "The Knuth optimization requires the quadrangle inequality and monotonicity conditions.",
       correctAnswer: "True",
       explanation:
-        "Knuth optimization applies when opt[i][j-1] <= opt[i][j] <= opt[i+1][j], reducing DP from O(n²) to O(n log n).",
+        "Knuth optimization applies when opt[i][j-1] <= opt[i][j] <= opt[i+1][j], reducing DP from O(n\\^2) to O(n log n).",
       hints: [
         "Special case of divide and conquer",
         "Both conditions must hold",
@@ -2340,7 +2340,7 @@ const questions: Record<string, Question[]> = {
       options: ["00010011", "10001101", "00110001", "11000101"],
       correctAnswer: 0,
       explanation:
-        "Reverse order: 11001000 → 00010011. Read bits right-to-left.",
+        "Reverse order: 11001000 \\to 00010011. Read bits right-to-left.",
     },
     {
       id: "q-bit-rev-2",
@@ -2480,7 +2480,7 @@ const questions: Record<string, Question[]> = {
       options: ["6", "8", "9", "3"],
       correctAnswer: 1,
       explanation:
-        "n elements → 2^n subsets. 2^3 = 8 subsets (including empty set).",
+        "n elements \\to 2^n subsets. 2^3 = 8 subsets (including empty set).",
     },
     {
       id: "q-subset-2",
@@ -3201,7 +3201,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The classic $O(1)$ LRU cache combines:\n\n1. **Hash map**: `key → node` for $O(1)$ lookup\n2. **Doubly linked list**: maintains access order with $O(1)$ node removal and insertion at head/tail\n\nOn access: move node to the front (most recently used).\nOn eviction: remove the tail node (least recently used).\nThe hash map gives us the node pointer directly, enabling $O(1)$ removal.",
+        "The classic $O(1)$ LRU cache combines:\n\n1. **Hash map**: `key \\to node` for $O(1)$ lookup\n2. **Doubly linked list**: maintains access order with $O(1)$ node removal and insertion at head/tail\n\nOn access: move node to the front (most recently used).\nOn eviction: remove the tail node (least recently used).\nThe hash map gives us the node pointer directly, enabling $O(1)$ removal.",
       hints: [
         "We need $O(1)$ lookup (hash map) and $O(1)$ reordering.",
         "A doubly linked list can remove/insert any node in $O(1)$ given a pointer.",
@@ -4083,7 +4083,7 @@ const questions: Record<string, Question[]> = {
       options: ["n log n", "n", "n^2", "n!"],
       correctAnswer: 0,
       explanation:
-        "Sum of n/(n-i+1) for i=1 to n = n * H_n = n * (log n + gamma) ≈ n log n.",
+        "Sum of n/(n-i+1) for i=1 to n = n * H_n = n * (log n + gamma) \\approx n log n.",
       hints: ["What is the nth harmonic number H_n?", "How does it grow?"],
     },
     {

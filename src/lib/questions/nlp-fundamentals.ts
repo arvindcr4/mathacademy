@@ -52,7 +52,7 @@ const questions: Record<string, Question[]> = {
         "WordPiece (used in BERT) selects each merge by choosing the pair that maximises the likelihood of the training corpus under the language model, rather than the pair with the highest raw count.",
       correctAnswer: "True",
       explanation:
-        "WordPiece scores each candidate merge by how much it increases the log-likelihood of the training data: score(A, B) = count(AB) / (count(A) × count(B)). This means a rare pair that always co-occurs (high PMI) can be preferred over a more frequent but less predictive pair, producing a vocabulary better suited to language modelling than BPE\'s raw-count criterion.",
+        "WordPiece scores each candidate merge by how much it increases the log-likelihood of the training data: score(A, B) = count(AB) / (count(A) \\times count(B)). This means a rare pair that always co-occurs (high PMI) can be preferred over a more frequent but less predictive pair, producing a vocabulary better suited to language modelling than BPE\'s raw-count criterion.",
       hints: [
         "BPE: pick the pair with the highest raw count. WordPiece: pick the pair that most improves the LM.",
         "Think pointwise mutual information — a pair that always appears together has high PMI even if neither word is common.",
@@ -96,7 +96,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The distributional hypothesis (Firth, 1957; Harris, 1954) states that words in similar contexts have similar meanings. Skip-Gram operationalises this: it trains a model to predict which words tend to co-occur within a window of k words. Words that appear in similar contexts — "king" and "queen" both appearing near "throne", "crown", "reign" — end up with similar embedding vectors. The famous analogy king − man + woman ≈ queen emerges because these regularities are captured in the vector space.',
+        'The distributional hypothesis (Firth, 1957; Harris, 1954) states that words in similar contexts have similar meanings. Skip-Gram operationalises this: it trains a model to predict which words tend to co-occur within a window of k words. Words that appear in similar contexts — "king" and "queen" both appearing near "throne", "crown", "reign" — end up with similar embedding vectors. The famous analogy king − man + woman \\approx queen emerges because these regularities are captured in the vector space.',
       hints: [
         '"You shall know a word by the company it keeps" (Firth, 1957) — this is the core idea Skip-Gram exploits.',
         'If "doctor" and "physician" appear near the same context words (patient, hospital, treatment), what should their vectors look like?',
@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
         "GloVe trains on individual context-window co-occurrences like Word2Vec, processing one (word, context) pair at a time.",
       correctAnswer: "False",
       explanation:
-        'GloVe (Global Vectors, Pennington et al. 2014) builds a global word–word co-occurrence matrix X over the entire corpus first, then factorises it using a weighted least-squares objective: minimise \\Sigma f(X_ij)(w_i·w̃_j + b_i + b̃_j − log X_ij)². The word "Global" in the name signals that it uses corpus-wide aggregate statistics rather than local window samples. This global view makes GloVe more data-efficient than Skip-Gram\'s stochastic sampling.',
+        'GloVe (Global Vectors, Pennington et al. 2014) builds a global word–word co-occurrence matrix X over the entire corpus first, then factorises it using a weighted least-squares objective: minimise \\Sigma f(X_ij)(w_i\\cdotw̃_j + b_i + b̃_j − log X_ij)\\^2. The word "Global" in the name signals that it uses corpus-wide aggregate statistics rather than local window samples. This global view makes GloVe more data-efficient than Skip-Gram\'s stochastic sampling.',
       hints: [
         'The name GloVe contains the word "Global" — what does that suggest about its use of the corpus?',
         "Word2Vec samples individual (word, context) training pairs. GloVe first builds a big count matrix and trains on those counts directly.",
@@ -134,10 +134,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "By the chain rule and the Markov (bigram) approximation, P(sentence) ≈ \\Pi P(wi|context). Here: 0.25 × 0.33 × 0.0065 × 0.52 × 0.68 ≈ 0.000019. (The exact numbers from Jurafsky & Martin Fig 3.2 give ~0.000019–0.000031 depending on rounding.) The key insight is that sentence probability is a product of conditional bigram probabilities, and the product of many small fractions rapidly becomes very small — hence the use of log space in practice.",
+        "By the chain rule and the Markov (bigram) approximation, P(sentence) \\approx \\Pi P(wi|context). Here: 0.25 \\times 0.33 \\times 0.0065 \\times 0.52 \\times 0.68 \\approx 0.000019. (The exact numbers from Jurafsky & Martin Fig 3.2 give ~0.000019–0.000031 depending on rounding.) The key insight is that sentence probability is a product of conditional bigram probabilities, and the product of many small fractions rapidly becomes very small — hence the use of log space in practice.",
       hints: [
         "The chain rule: P(w1...wn) = P(w1)P(w2|w1)...P(wn|w_{n-1}) for a bigram model.",
-        "Multiply: 0.25 × 0.33 × 0.0065 × 0.52 × 0.68. Note that even a very probable 5-word sentence has probability < 0.001.",
+        "Multiply: 0.25 \\times 0.33 \\times 0.0065 \\times 0.52 \\times 0.68. Note that even a very probable 5-word sentence has probability < 0.001.",
       ],
     },
     {
@@ -154,7 +154,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Perplexity(W) = P(w1...wN)^(-1/N) — the per-word inverse probability of the test set. Lower perplexity = higher probability = the model better predicts the test text. A trigram model conditioning on the two previous words gives better predictions than a bigram (one word) or unigram (no context). The numbers 962 → 170 → 109 (from Jurafsky & Martin, WSJ experiments) show how longer context helps dramatically, but with diminishing returns.",
+        "Perplexity(W) = P(w1...wN)^(-1/N) — the per-word inverse probability of the test set. Lower perplexity = higher probability = the model better predicts the test text. A trigram model conditioning on the two previous words gives better predictions than a bigram (one word) or unigram (no context). The numbers 962 \\to 170 \\to 109 (from Jurafsky & Martin, WSJ experiments) show how longer context helps dramatically, but with diminishing returns.",
       hints: [
         "Perplexity = inverse probability normalised by length. The better the model predicts the test set, the __ the perplexity.",
         "Think of perplexity as the weighted branching factor: a perplexity of 109 means the model is on average choosing among ~109 equally likely next words.",
@@ -168,10 +168,10 @@ const questions: Record<string, Question[]> = {
         "In n-gram language modelling, storing and combining probabilities in log space (log-probabilities) is standard practice because multiplying many probabilities together causes numerical underflow.",
       correctAnswer: "True",
       explanation:
-        "Probabilities are ≤ 1, so multiplying N of them produces a number that shrinks exponentially. For a 100-word sentence with average per-word probability 0.01, the sentence probability is 0.01^100 = 10^-200, far below the smallest float64 value (~10^-308 near the limit). Working in log space converts products to sums: log P(w1...wN) = \\Sigma log P(wi|context), which stays in a manageable numeric range. The exp is taken only at the end if raw probabilities are needed.",
+        "Probabilities are \\leq 1, so multiplying N of them produces a number that shrinks exponentially. For a 100-word sentence with average per-word probability 0.01, the sentence probability is 0.01^100 = 10^-200, far below the smallest float64 value (~10^-308 near the limit). Working in log space converts products to sums: log P(w1...wN) = \\Sigma log P(wi|context), which stays in a manageable numeric range. The exp is taken only at the end if raw probabilities are needed.",
       hints: [
-        "float64 underflows below ~10^-308. A 100-word sentence with P≈0.001 per word has sentence probability 0.001^100 = 10^-300.",
-        "log(a × b) = log(a) + log(b). Addition never underflows the way multiplication does.",
+        "float64 underflows below ~10^-308. A 100-word sentence with P\\approx0.001 per word has sentence probability 0.001^100 = 10^-300.",
+        "log(a \\times b) = log(a) + log(b). Addition never underflows the way multiplication does.",
       ],
     },
   ],
@@ -226,7 +226,7 @@ const questions: Record<string, Question[]> = {
         "Seq2seq models with RNN encoders process all source tokens before the decoder generates any output token, making the encoder phase fully parallelisable across tokens.",
       correctAnswer: "False",
       explanation:
-        "RNN encoders process tokens sequentially: h_t depends on h_{t-1}. This sequential dependency means you cannot compute h_3 until h_2 is done — the encoder phase is O(n) serial steps, not parallelisable. This is a key reason the Transformer replaced RNNs: its self-attention computes representations for all positions simultaneously in O(1) serial steps (though O(n²) in compute).",
+        "RNN encoders process tokens sequentially: h_t depends on h_{t-1}. This sequential dependency means you cannot compute h_3 until h_2 is done — the encoder phase is O(n) serial steps, not parallelisable. This is a key reason the Transformer replaced RNNs: its self-attention computes representations for all positions simultaneously in O(1) serial steps (though O(n\\^2) in compute).",
       hints: [
         "Does computing h_3 require h_2 to already be computed?",
         "Parallelism is what makes GPUs efficient. If steps must run in sequence, GPU parallelism is wasted.",
@@ -449,9 +449,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'In-context learning (ICL) exploits the fact that a large autoregressive model trained to predict the next token will, given examples of the form "Input: X → Output: Y", continue the pattern for a new Input: Z by predicting the most likely Output. No gradient update occurs — the examples shift the implicit prior over completions. This is fundamentally a property of the pretraining objective and scale: the model has learned so many patterns that it can identify and follow new ones from a few demonstrations.',
+        'In-context learning (ICL) exploits the fact that a large autoregressive model trained to predict the next token will, given examples of the form "Input: X \\to Output: Y", continue the pattern for a new Input: Z by predicting the most likely Output. No gradient update occurs — the examples shift the implicit prior over completions. This is fundamentally a property of the pretraining objective and scale: the model has learned so many patterns that it can identify and follow new ones from a few demonstrations.',
       hints: [
-        'The model sees: "Translate English to French: sea → mer; cheese → fromage; dog → ?". It must predict the most likely continuation. What pretraining objective makes this work?',
+        'The model sees: "Translate English to French: sea \\to mer; cheese \\to fromage; dog \\to ?". It must predict the most likely continuation. What pretraining objective makes this work?',
         "ICL is not fine-tuning. The weights are frozen. How can examples in the context window change what the model outputs?",
       ],
     },
@@ -565,7 +565,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The distributional hypothesis (Firth, 1957; Harris, 1954) states that words in similar contexts have similar meanings. Skip-Gram operationalises this: it trains a model to predict which words tend to co-occur within a window of k words. Words that appear in similar contexts — "king" and "queen" both appearing near "throne", "crown", "reign" — end up with similar embedding vectors. The famous analogy king − man + woman ≈ queen emerges because these regularities are captured in the vector space.',
+        'The distributional hypothesis (Firth, 1957; Harris, 1954) states that words in similar contexts have similar meanings. Skip-Gram operationalises this: it trains a model to predict which words tend to co-occur within a window of k words. Words that appear in similar contexts — "king" and "queen" both appearing near "throne", "crown", "reign" — end up with similar embedding vectors. The famous analogy king − man + woman \\approx queen emerges because these regularities are captured in the vector space.',
       hints: [
         '"You shall know a word by the company it keeps" (Firth, 1957) — this is the core idea Skip-Gram exploits.',
         'If "doctor" and "physician" appear near the same context words (patient, hospital, treatment), what should their vectors look like?',
@@ -579,7 +579,7 @@ const questions: Record<string, Question[]> = {
         'A BiLSTM processes the input once left-to-right; "bidirectional" means it additionally includes the reverse input sequence as a separate feature concatenated at the start.',
       correctAnswer: "False",
       explanation:
-        "A BiLSTM runs two separate LSTMs: one forward (left-to-right) and one backward (right-to-left). At each position t, the forward LSTM has seen w_1...w_t and the backward LSTM has seen w_n...w_t. Their hidden states are concatenated: h_t = [→h_t; ←h_t]. This gives every token access to full left and right context without reordering the input. It is not a single reversed concatenation — it is two independent passes over the sequence.",
+        "A BiLSTM runs two separate LSTMs: one forward (left-to-right) and one backward (right-to-left). At each position t, the forward LSTM has seen w_1...w_t and the backward LSTM has seen w_n...w_t. Their hidden states are concatenated: h_t = [\\toh_t; \\leftarrowh_t]. This gives every token access to full left and right context without reordering the input. It is not a single reversed concatenation — it is two independent passes over the sequence.",
       hints: [
         '"Bi" = two passes. The forward pass processes left to right; the backward pass processes right to left. Both run independently and their states are concatenated.',
         'For NER, the word "Washington" in "George Washington" benefits from the right context (a person context); in "Washington, D.C." it benefits from the right context (location). BiLSTM captures both.',
@@ -603,10 +603,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "BERT\'s QA head adds two parameter vectors w_start ∈ R^H and w_end ∈ R^H. For each token i, the start score is s_i = w_start · h_i and end score is e_i = w_end · h_i. Softmax over all positions gives a distribution; the predicted span is [argmax(s), argmax(e)] with the constraint that end ≥ start. This is a minimal head — just 2 × H parameters — that leverages all the contextual information already encoded by BERT.",
+        "BERT\'s QA head adds two parameter vectors w_start \\in R^H and w_end \\in R^H. For each token i, the start score is s_i = w_start \\cdot h_i and end score is e_i = w_end \\cdot h_i. Softmax over all positions gives a distribution; the predicted span is [argmax(s), argmax(e)] with the constraint that end \\geq start. This is a minimal head — just 2 \\times H parameters — that leverages all the contextual information already encoded by BERT.",
       hints: [
         "The QA head is remarkably simple: two vectors, each dotted with every token\'s hidden state. The complexity is in BERT\'s 12 (or 24) transformer layers below.",
-        "Training: maximise log P(true_start) + log P(true_end). At inference: find the span [i,j] that maximises s_i + e_j with j ≥ i.",
+        "Training: maximise log P(true_start) + log P(true_end). At inference: find the span [i,j] that maximises s_i + e_j with j \\geq i.",
       ],
     },
     {
@@ -623,10 +623,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'EM is binary: the normalised prediction must exactly match the normalised gold answer. "the Amazon River" \$\\neq\$ "the Amazon", so EM = 0. F1 computes token overlap: predicted = {the, Amazon, River}, gold = {the, Amazon}. Precision = 2/3, Recall = 2/2 = 1, F1 = 2×(2/3×1)/(2/3+1) = 4/5 = 0.8. (Exact value depends on normalisation.) The point is that F1 gives partial credit for near-correct spans, making it a softer and often more informative metric.',
+        'EM is binary: the normalised prediction must exactly match the normalised gold answer. "the Amazon River" \$\\neq\$ "the Amazon", so EM = 0. F1 computes token overlap: predicted = {the, Amazon, River}, gold = {the, Amazon}. Precision = 2/3, Recall = 2/2 = 1, F1 = 2\\times(2/3\\times1)/(2/3+1) = 4/5 = 0.8. (Exact value depends on normalisation.) The point is that F1 gives partial credit for near-correct spans, making it a softer and often more informative metric.',
       hints: [
         "EM = 1 only if every character matches after normalisation (lowercasing, removing articles/punctuation). Even one extra word = EM 0.",
-        "F1 = 2×P×R/(P+R) over token sets. Tokens in both prediction and gold are true positives.",
+        "F1 = 2\\timesP\\timesR/(P+R) over token sets. Tokens in both prediction and gold are true positives.",
       ],
     },
     {
@@ -661,7 +661,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Temperature scales logits before softmax: softmax(z/T). For T < 1 (e.g., 0.5), dividing by a number < 1 amplifies differences between logits, making the distribution more peaked (the highest-probability token dominates). For T > 1 (e.g., 2.0), differences are compressed, making the distribution flatter and more uniform (more diverse/random outputs). T → 0 approaches greedy decoding; T → ∞ approaches uniform random sampling.",
+        "Temperature scales logits before softmax: softmax(z/T). For T < 1 (e.g., 0.5), dividing by a number < 1 amplifies differences between logits, making the distribution more peaked (the highest-probability token dominates). For T > 1 (e.g., 2.0), differences are compressed, making the distribution flatter and more uniform (more diverse/random outputs). T \\to 0 approaches greedy decoding; T \\to \\infty approaches uniform random sampling.",
       hints: [
         "Logits [3, 1, -1]. With T=0.5: [6, 2, -2] — the gap between 3 and 1 doubles. With T=2: [1.5, 0.5, -0.5] — the gap halves. How does this affect softmax outputs?",
         'T=1 leaves the distribution unchanged. T<1 is "colder" (more confident); T>1 is "hotter" (more uncertain/random).',
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
         '4/4 = 1.0 — all four "the" tokens appear in the reference',
         '2/4 = 0.5 — BLEU clips the count of each word to its max reference count (reference has 2 "the"s); modified precision = 2/4',
         '0/4 = 0 — "the" is a stop word and is excluded from BLEU computation',
-        "1/6 ≈ 0.17 — BLEU divides by the reference length, not hypothesis length",
+        "1/6 \\approx 0.17 — BLEU divides by the reference length, not hypothesis length",
       ],
       correctAnswer: 1,
       explanation:
@@ -790,16 +790,16 @@ const questions: Record<string, Question[]> = {
         "BLEU has a brevity penalty (BP = exp(1 - r/c) for c < r, else 1). A hypothesis of length c = 5 is compared to a reference of length r = 10. What is the brevity penalty?",
       options: [
         "BP = 1.0 — the hypothesis is shorter so no penalty applies",
-        "BP = exp(1 - 10/5) = exp(-1) ≈ 0.368",
-        "BP = exp(1 - 5/10) = exp(-0.5) ≈ 0.607",
+        "BP = exp(1 - 10/5) = exp(-1) \\approx 0.368",
+        "BP = exp(1 - 5/10) = exp(-0.5) \\approx 0.607",
         "BP = 5/10 = 0.5",
       ],
       correctAnswer: 1,
       explanation:
-        "When the hypothesis is shorter than the reference (c < r), BP = exp(1 - r/c). Here r=10, c=5: BP = exp(1 - 10/5) = exp(-1) ≈ 0.368. This heavily penalises very short translations. The brevity penalty compensates for the fact that short hypotheses trivially achieve high n-gram precision by saying very little — a 1-token hypothesis matching 1 reference word has precision 1.0 but is clearly inadequate.",
+        "When the hypothesis is shorter than the reference (c < r), BP = exp(1 - r/c). Here r=10, c=5: BP = exp(1 - 10/5) = exp(-1) \\approx 0.368. This heavily penalises very short translations. The brevity penalty compensates for the fact that short hypotheses trivially achieve high n-gram precision by saying very little — a 1-token hypothesis matching 1 reference word has precision 1.0 but is clearly inadequate.",
       hints: [
-        "The formula is BP = exp(1 - r/c). With c=5, r=10: 1 - 10/5 = 1 - 2 = -1. exp(-1) ≈ 0.37.",
-        "Brevity penalty punishes translations that are too short. A 1-token hypothesis has BP ≈ exp(1-r) which is tiny for large r.",
+        "The formula is BP = exp(1 - r/c). With c=5, r=10: 1 - 10/5 = 1 - 2 = -1. exp(-1) \\approx 0.37.",
+        "Brevity penalty punishes translations that are too short. A 1-token hypothesis has BP \\approx exp(1-r) which is tiny for large r.",
       ],
     },
     {
@@ -833,7 +833,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'This is the Winograd Schema (Levesque, 2012) example. Resolving "it" requires real-world knowledge: trophies and suitcases do not fit when the thing being placed is too big, so "it" → "trophy." Simple syntactic rules cannot resolve this — it requires pragmatic reasoning. Coreference resolution clusters all mentions referring to the same entity: {trophy, it} in this case. The Winograd Schema Challenge tests this capability directly.',
+        'This is the Winograd Schema (Levesque, 2012) example. Resolving "it" requires real-world knowledge: trophies and suitcases do not fit when the thing being placed is too big, so "it" \\to "trophy." Simple syntactic rules cannot resolve this — it requires pragmatic reasoning. Coreference resolution clusters all mentions referring to the same entity: {trophy, it} in this case. The Winograd Schema Challenge tests this capability directly.',
       hints: [
         'Ask yourself: what was "too big" — the trophy (which wouldn\'t fit inside) or the suitcase (too big to store)? Which interpretation makes physical sense?',
         "Coreference clusters are sets of noun phrases/pronouns all referring to the same entity.",
@@ -864,7 +864,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        'Coreference resolution only handles pronoun-antecedent pairs (e.g., "he" → "John") and does not apply to definite noun phrase references (e.g., "the researcher" → "Dr. Smith").',
+        'Coreference resolution only handles pronoun-antecedent pairs (e.g., "he" \\to "John") and does not apply to definite noun phrase references (e.g., "the researcher" \\to "Dr. Smith").',
       correctAnswer: "False",
       explanation:
         "Coreference resolution covers all referring expression types: pronouns (he, she, it), proper names (Barack Obama, the President), definite descriptions (the scientist, the company), demonstratives (this approach, those findings), and zero pronouns in pro-drop languages. The full task clusters all mentions of the same entity regardless of their syntactic form. Entity linking (connecting mentions to knowledge base entries) is a related but distinct task.",
@@ -894,7 +894,7 @@ const questions: Record<string, Question[]> = {
         'In universal dependency grammar, the verb "chased" is the root of the sentence. Nouns take the verb as their head: "cat" is the nsubj (nominal subject) of "chased", and "mouse" is the obj (direct object). "The" depends on "cat" with relation det, and "the" before mouse depends on "mouse" with det. A dependency tree has exactly one root, and every other word has exactly one head.',
       hints: [
         "In a dependency tree, the verb is typically the root. Subject and object are children of the verb.",
-        'The arc direction: head → dependent. nsubj means "nominal subject of". What is the subject of "chased"?',
+        'The arc direction: head \\to dependent. nsubj means "nominal subject of". What is the subject of "chased"?',
       ],
     },
     {
@@ -911,9 +911,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Transition-based parsers build the dependency tree through a sequence of local decisions (SHIFT, REDUCE, LEFT-ARC, RIGHT-ARC) over a stack and buffer. With a neural scorer, each decision is O(1), so the full parse is O(n). Graph-based methods (like Eisner\'s algorithm) compute scores for all O(n²) possible arcs and find the maximum spanning tree in O(n³) — much slower. The trade-off is that transition-based parsers can make locally greedy errors that propagate.",
+        "Transition-based parsers build the dependency tree through a sequence of local decisions (SHIFT, REDUCE, LEFT-ARC, RIGHT-ARC) over a stack and buffer. With a neural scorer, each decision is O(1), so the full parse is O(n). Graph-based methods (like Eisner\'s algorithm) compute scores for all O(n\\^2) possible arcs and find the maximum spanning tree in O(n\\^3) — much slower. The trade-off is that transition-based parsers can make locally greedy errors that propagate.",
       hints: [
-        "O(n) vs O(n³): for a 50-word sentence, that is 50 steps vs 125,000. At deployment speed matters.",
+        "O(n) vs O(n\\^3): for a 50-word sentence, that is 50 steps vs 125,000. At deployment speed matters.",
         "The greedy nature of transition-based parsing means it picks the best action at each step. Can a locally best decision lead to a globally suboptimal tree?",
       ],
     },
@@ -925,7 +925,7 @@ const questions: Record<string, Question[]> = {
         "In a projective dependency tree, no two dependency arcs can cross when the sentence is drawn with words in linear order on a line and arcs drawn above.",
       correctAnswer: "True",
       explanation:
-        "A projective dependency tree is one where for every arc (head → dependent), all words between head and dependent also have head as an ancestor — equivalently, no arcs cross when drawn on a line. Most English sentences are projective. Non-projective dependencies (crossing arcs) occur in languages with freer word order (German, Czech, Dutch) and require algorithms beyond Eisner\'s O(n³) projective parser, such as maximum spanning tree algorithms.",
+        "A projective dependency tree is one where for every arc (head \\to dependent), all words between head and dependent also have head as an ancestor — equivalently, no arcs cross when drawn on a line. Most English sentences are projective. Non-projective dependencies (crossing arcs) occur in languages with freer word order (German, Czech, Dutch) and require algorithms beyond Eisner\'s O(n\\^3) projective parser, such as maximum spanning tree algorithms.",
       hints: [
         'Draw "The cat chased the mouse" and its dependency arcs above the words. Do any arcs cross? Now imagine a scrambled German sentence — crossing arcs become necessary.',
         "Projectivity is a property of the tree relative to the linear word order. English is mostly projective; this makes Eisner\'s efficient algorithm applicable.",
@@ -1099,7 +1099,7 @@ const questions: Record<string, Question[]> = {
         "Zero-shot cross-lingual transfer means: fine-tune on English-labelled NLP data, then evaluate on the same task in the target language — with zero target-language labelled examples used during fine-tuning.",
       correctAnswer: "True",
       explanation:
-        "Zero-shot cross-lingual transfer (Hu et al., 2020 — XTREME benchmark) evaluates: train on English CoNLL NER → evaluate on Arabic/Hindi/Swahili NER with no Arabic/Hindi/Swahili labels. The model must leverage its multilingual representations to transfer syntactic and semantic knowledge. Performance degrades gracefully with linguistic distance from English. Few-shot transfer (adding 10–100 target-language examples) dramatically improves performance, motivating practical annotation strategies for new languages.",
+        "Zero-shot cross-lingual transfer (Hu et al., 2020 — XTREME benchmark) evaluates: train on English CoNLL NER \\to evaluate on Arabic/Hindi/Swahili NER with no Arabic/Hindi/Swahili labels. The model must leverage its multilingual representations to transfer syntactic and semantic knowledge. Performance degrades gracefully with linguistic distance from English. Few-shot transfer (adding 10–100 target-language examples) dramatically improves performance, motivating practical annotation strategies for new languages.",
       hints: [
         '"Zero-shot" = zero labelled examples in the target language during training. The model still processes target-language text at inference.',
         "XTREME and XGLUE are the standard benchmarks for this. Why would this capability matter for low-resource languages with no NLP training data?",
@@ -1202,7 +1202,7 @@ const questions: Record<string, Question[]> = {
         "Distant supervision heuristically generates training data by assuming that any sentence mentioning two KB-related entities expresses that relation — enabling large-scale training without manual annotation, at the cost of noisy labels.",
       hints: [
         'If "Steve Jobs" and "Apple" are linked in a KB as FOUNDED_BY, what assumption does distant supervision make about all sentences containing both names?',
-        'Imagine a KB with "Paris" → "France" and "Eiffel Tower" → "Paris." Distant supervision would label any mention of both "Paris" and "Eiffel Tower" as expressing the relation CAPITAL_OF.',
+        'Imagine a KB with "Paris" \\to "France" and "Eiffel Tower" \\to "Paris." Distant supervision would label any mention of both "Paris" and "Eiffel Tower" as expressing the relation CAPITAL_OF.',
       ],
     },
     {
@@ -1400,19 +1400,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Standard self-attention has O(n²) time and memory complexity. For a document of 32,000 tokens, roughly how many attention operations are computed?",
+        "Standard self-attention has O(n\\^2) time and memory complexity. For a document of 32,000 tokens, roughly how many attention operations are computed?",
       options: [
         "32,000 — linear in sequence length",
-        "32,000 × log(32,000) ≈ 480,000 — log-linear",
-        "32,000² = 1,024,000,000 ≈ 1 billion — quadratic",
-        "32,000³ ≈ 3 × 10^13 — cubic",
+        "32,000 \\times log(32,000) \\approx 480,000 — log-linear",
+        "32,000\\^2 = 1,024,000,000 \\approx 1 billion — quadratic",
+        "32,000\\^3 \\approx 3 \\times 10^13 — cubic",
       ],
       correctAnswer: 2,
       explanation:
-        "Self-attention computes QK^T where Q, K ∈ R^{n×d}: this is an n×n matrix requiring O(n²d) operations and O(n²) memory to store the attention matrix. For n=32,000: 32,000² = 1.024 × 10^9 attention scores per layer. At 12 layers, 12 heads: ~12 billion attention values. This is why vanilla transformers are limited to 512–2048 token contexts and efficient attention variants (FlashAttention, Longformer, Mamba) are critical for long-document tasks.",
+        "Self-attention computes QK^T where Q, K \\in R^{n\\timesd}: this is an n\\timesn matrix requiring O(n\\^2d) operations and O(n\\^2) memory to store the attention matrix. For n=32,000: 32,000\\^2 = 1.024 \\times 10^9 attention scores per layer. At 12 layers, 12 heads: ~12 billion attention values. This is why vanilla transformers are limited to 512–2048 token contexts and efficient attention variants (FlashAttention, Longformer, Mamba) are critical for long-document tasks.",
       hints: [
-        "Every token attends to every other token: n × n pairs. For n=32K: 32,000 × 32,000 = 1,024,000,000.",
-        "Storing a 32K×32K float16 attention matrix: 32,000² × 2 bytes ≈ 2GB per head per layer. How many heads and layers does a typical transformer have?",
+        "Every token attends to every other token: n \\times n pairs. For n=32K: 32,000 \\times 32,000 = 1,024,000,000.",
+        "Storing a 32K\\times32K float16 attention matrix: 32,000\\^2 \\times 2 bytes \\approx 2GB per head per layer. How many heads and layers does a typical transformer have?",
       ],
     },
     {
@@ -1422,17 +1422,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Longformer uses sliding-window attention of width w for most tokens, plus global attention for a few special tokens. A 4,096-token document with w=512 uses global attention only on [CLS]. What is the approximate complexity?",
       options: [
-        "Still O(n²) because the global token attends to all n tokens",
-        "O(n × w) for sliding-window plus O(n × g) for global tokens where g << n — effectively O(n) for small w and g",
-        "O(n × w²) because each window computes internal attention quadratically",
+        "Still O(n\\^2) because the global token attends to all n tokens",
+        "O(n \\times w) for sliding-window plus O(n \\times g) for global tokens where g << n — effectively O(n) for small w and g",
+        "O(n \\times w\\^2) because each window computes internal attention quadratically",
         "O(n log n) due to the hierarchical structure of the window attention",
       ],
       correctAnswer: 1,
       explanation:
-        "Longformer\'s sliding-window attention: each of the n tokens attends to its w/2 neighbours on each side → O(n×w) total. Global attention on g special tokens (typically 1–64): each global token attends to all n tokens and all tokens attend back to each global token → O(n×g). Total: O(n×(w+g)). For n=4096, w=512, g=1: ~4096×513 ≈ 2.1M operations vs. 4096² = 16.8M for full attention — a ~8× reduction. This scales linearly with n for fixed w.",
+        "Longformer\'s sliding-window attention: each of the n tokens attends to its w/2 neighbours on each side \\to O(n\\timesw) total. Global attention on g special tokens (typically 1–64): each global token attends to all n tokens and all tokens attend back to each global token \\to O(n\\timesg). Total: O(n\\times(w+g)). For n=4096, w=512, g=1: ~4096\\times513 \\approx 2.1M operations vs. 4096\\^2 = 16.8M for full attention — a ~8\\times reduction. This scales linearly with n for fixed w.",
       hints: [
-        "Sliding window: token i attends to tokens [i-w/2, i+w/2]. Cost per token: w. Total: n×w.",
-        "Global token: attends to all n tokens (and they attend back). Cost: 2×n×g. For g=1: just 2n additional operations.",
+        "Sliding window: token i attends to tokens [i-w/2, i+w/2]. Cost per token: w. Total: n\\timesw.",
+        "Global token: attends to all n tokens (and they attend back). Cost: 2\\timesn\\timesg. For g=1: just 2n additional operations.",
       ],
     },
     {
@@ -1440,12 +1440,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "FlashAttention (Dao et al., 2022) reduces the theoretical FLOP count of attention from O(n²) to O(n log n) by using a divide-and-conquer algorithm.",
+        "FlashAttention (Dao et al., 2022) reduces the theoretical FLOP count of attention from O(n\\^2) to O(n log n) by using a divide-and-conquer algorithm.",
       correctAnswer: "False",
       explanation:
-        "FlashAttention performs the same O(n²d) floating-point operations as standard attention — it does not reduce FLOPs. Its speedup comes from IO-awareness: instead of materialising the full n×n attention matrix in GPU high-bandwidth memory (HBM), it tiles the computation in fast SRAM, avoiding the O(n²) HBM reads/writes that are the actual bottleneck. GPU compute is usually faster than memory bandwidth. FlashAttention-2 and -3 further optimise parallelism and work partitioning for modern GPU architectures.",
+        "FlashAttention performs the same O(n\\^2d) floating-point operations as standard attention — it does not reduce FLOPs. Its speedup comes from IO-awareness: instead of materialising the full n\\timesn attention matrix in GPU high-bandwidth memory (HBM), it tiles the computation in fast SRAM, avoiding the O(n\\^2) HBM reads/writes that are the actual bottleneck. GPU compute is usually faster than memory bandwidth. FlashAttention-2 and -3 further optimise parallelism and work partitioning for modern GPU architectures.",
       hints: [
-        "GPU bottleneck: memory bandwidth (HBM reads/writes), not FLOP count. FlashAttention avoids writing the O(n²) attention matrix to HBM by computing it tile-by-tile in fast SRAM.",
+        "GPU bottleneck: memory bandwidth (HBM reads/writes), not FLOP count. FlashAttention avoids writing the O(n\\^2) attention matrix to HBM by computing it tile-by-tile in fast SRAM.",
         "The mathematical result is identical to standard attention. The speedup is purely from how the computation accesses memory.",
       ],
     },
@@ -1601,7 +1601,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'ReAct interleaves: Thought ("I need to find the capital of Germany") → Action (Search("Germany capital")) → Observation ("Berlin") → Thought ("The capital is Berlin, not Paris"). The Observation grounds subsequent reasoning in retrieved facts, preventing "hallucination spirals" where wrong premises lead to confidently wrong conclusions.',
+        'ReAct interleaves: Thought ("I need to find the capital of Germany") \\to Action (Search("Germany capital")) \\to Observation ("Berlin") \\to Thought ("The capital is Berlin, not Paris"). The Observation grounds subsequent reasoning in retrieved facts, preventing "hallucination spirals" where wrong premises lead to confidently wrong conclusions.',
       hints: [
         "CoT uses only the model\'s internal knowledge. ReAct augments this with external observations from tools. Which is more reliable for factual questions?",
         "The Observation step provides a factual anchor that the model must incorporate into its next Thought, reducing the chance of continuing with false premises.",
@@ -1717,9 +1717,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RLHF requires three stages: (1) train reward model on preference data, (2) use RM scores as rewards in PPO, (3) update LLM. PPO is complex (requires value network, advantage estimation, clipping) and computationally expensive. DPO (Rafailov et al., 2023) derives a closed-form loss that directly maximises the log-ratio of preferred to rejected responses relative to the reference model — no RM, no RL. The loss is: L_DPO = -log \\sigma(\\beta·log[\\pi(y_w|x)/\\pi_ref(y_w|x)] - \\beta·log[\\pi(y_l|x)/\\pi_ref(y_l|x)]). Empirically, DPO matches or exceeds RLHF quality.",
+        "RLHF requires three stages: (1) train reward model on preference data, (2) use RM scores as rewards in PPO, (3) update LLM. PPO is complex (requires value network, advantage estimation, clipping) and computationally expensive. DPO (Rafailov et al., 2023) derives a closed-form loss that directly maximises the log-ratio of preferred to rejected responses relative to the reference model — no RM, no RL. The loss is: L_DPO = -log \\sigma(\\beta\\cdotlog[\\pi(y_w|x)/\\pi_ref(y_w|x)] - \\beta\\cdotlog[\\pi(y_l|x)/\\pi_ref(y_l|x)]). Empirically, DPO matches or exceeds RLHF quality.",
       hints: [
-        "RLHF pipeline: data → reward model → RL fine-tuning (3 steps). DPO: data → one fine-tuning step. What is eliminated?",
+        "RLHF pipeline: data \\to reward model \\to RL fine-tuning (3 steps). DPO: data \\to one fine-tuning step. What is eliminated?",
         "DPO\'s key insight: the optimal RLHF policy can be expressed analytically, so we can directly optimise toward it without the RL detour.",
       ],
     },
@@ -1733,7 +1733,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Bolukbasi et al. (2016) project embeddings away from the gender direction (PCA component separating male/female word sets), reducing explicit associations. But Gonen & Goldberg (2019) showed that residual bias persists: words like "nurse" and "engineer" cluster by gender stereotypes even after debiasing, because gender correlates with many other dimensions (occupation-related vocabulary, usage contexts). True debiasing would require retraining on debiased corpora or using contrastive objectives that enforce gender-neutral representations for role words.',
       hints: [
-        'If "nurse" → female and "engineer" → male in training data, hundreds of co-occurrence dimensions encode this correlation — not just the gender axis.',
+        'If "nurse" \\to female and "engineer" \\to male in training data, hundreds of co-occurrence dimensions encode this correlation — not just the gender axis.',
         "Bolukbasi removes one dimension. But bias is distributed across the full embedding space. Can removing one direction fully eliminate a multi-dimensional correlation?",
       ],
     },
@@ -1782,7 +1782,7 @@ const questions: Record<string, Question[]> = {
       question:
         "When comparing BPE and WordPiece tokenisers on the same text, which statement best describes the key algorithmic difference in how the next merge/token is selected?",
       options: [
-        "BPE selects the pair with the highest frequency count; WordPiece selects the pair that maximises the likelihood ratio count(AB) / (count(A) × count(B))",
+        "BPE selects the pair with the highest frequency count; WordPiece selects the pair that maximises the likelihood ratio count(AB) / (count(A) \\times count(B))",
         "BPE selects the pair with the highest TF-IDF score; WordPiece selects the pair that minimises perplexity on a held-out set",
         "BPE selects pairs at random with probability proportional to frequency; WordPiece uses a deterministic greedy PMI criterion across all n-grams simultaneously",
         "Both BPE and WordPiece use identical selection criteria — they differ only in how they handle the end-of-word marker",
@@ -1891,7 +1891,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Wei et al. (2022) demonstrated that prompting LLMs with examples that include step-by-step reasoning (chain-of-thought) before the final answer — e.g., 'Roger has 5 balls. He buys 2 more cans of 3 balls each. 2×3=6, 5+6=11. The answer is 11.' — dramatically improves performance on GSM8K and other reasoning benchmarks. The intermediate steps decompose the problem and reduce the probability of early errors propagating. Zero-shot CoT ('Let's think step by step.') also works on large models.",
+        "Wei et al. (2022) demonstrated that prompting LLMs with examples that include step-by-step reasoning (chain-of-thought) before the final answer — e.g., 'Roger has 5 balls. He buys 2 more cans of 3 balls each. 2\\times3=6, 5+6=11. The answer is 11.' — dramatically improves performance on GSM8K and other reasoning benchmarks. The intermediate steps decompose the problem and reduce the probability of early errors propagating. Zero-shot CoT ('Let's think step by step.') also works on large models.",
       hints: [
         "CoT makes the model show its work. Why would that help with multi-step arithmetic?",
         "The 'Let's think step by step' suffix is a zero-shot CoT trigger — no examples needed.",
@@ -1929,7 +1929,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard BERT fine-tuning (Devlin et al., 2019) adds a single linear layer W∈\\mathbb{R}^{d×C} on top of the [CLS] token representation (the aggregate sequence representation) and fine-tunes all parameters end-to-end with cross-entropy loss. The [CLS] token accumulates a global sentence representation through the self-attention layers. Typical hyper-parameters: 2–5 epochs, learning rate 2e-5 to 5e-5, batch size 16–32.",
+        "Standard BERT fine-tuning (Devlin et al., 2019) adds a single linear layer W\\in\\mathbb{R}^{d\\timesC} on top of the [CLS] token representation (the aggregate sequence representation) and fine-tunes all parameters end-to-end with cross-entropy loss. The [CLS] token accumulates a global sentence representation through the self-attention layers. Typical hyper-parameters: 2–5 epochs, learning rate 2e-5 to 5e-5, batch size 16–32.",
       hints: [
         "BERT's [CLS] token was designed to aggregate sequence-level information — it is the natural hook for classification.",
         "Fine-tuning end-to-end updates the pre-trained weights slightly to adapt the representation to the target task.",
@@ -2010,7 +2010,7 @@ const questions: Record<string, Question[]> = {
         "Sentence-level RE extracts relations between entity pairs that appear within a single sentence. Document-level RE (DocRED, Re-DocRED) requires reasoning across sentences: 'Alice was born in Paris. The city is in France.' — the relation (Alice, country-of-birth, France) requires linking 'Paris' to 'France' across sentences via coreference. This demands graph-based or cross-sentence attention models (e.g., ATLOP, DocuNET) that sentence-level models cannot handle.",
       hints: [
         "Sentence-level RE sees both entities in one sentence context. Doc-level RE may see entity A in sentence 1 and entity B in sentence 10.",
-        "Coreference chains (she → Alice, the city → Paris) must be resolved before cross-sentence relations can be extracted.",
+        "Coreference chains (she \\to Alice, the city \\to Paris) must be resolved before cross-sentence relations can be extracted.",
       ],
     },
     {
@@ -2070,7 +2070,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In end-to-end neural task-oriented dialogue, what is the main advantage of end-to-end training over the classic pipeline (NLU → DST → Policy → NLG)?",
+        "In end-to-end neural task-oriented dialogue, what is the main advantage of end-to-end training over the classic pipeline (NLU \\to DST \\to Policy \\to NLG)?",
       options: [
         "End-to-end models always achieve higher task completion rates than pipeline models on all benchmarks",
         "End-to-end models propagate gradients through all components jointly, allowing components to adapt representations to each other and avoiding error propagation from upstream modules",
@@ -2367,7 +2367,7 @@ const extra: Record<string, Question[]> = {
       explanation: "SentencePiece treats text as a raw Unicode stream with no pre-tokenisation whitespace split. Whitespace is replaced by ▁ before segmentation, making it part of the token (e.g., ▁world). This encoding is reversible: concatenate all tokens and replace ▁ with a space to recover the original string exactly, including original whitespace positions. This is critical for generation tasks that need to produce correctly spaced output.",
       hints: [
         "▁world means 'world that starts after a space'. It is a single token, not two.",
-        "Reversible tokenisation: tokens → join → replace ▁ with space → original string. Used in T5, mT5, XLNet.",
+        "Reversible tokenisation: tokens \\to join \\to replace ▁ with space \\to original string. Used in T5, mT5, XLNet.",
       ],
     },
     {
@@ -2435,7 +2435,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "DPR requires supervised training on labelled (question, positive passage, negative passages) triples. In-batch negatives: for a batch of B question-passage pairs, each question treats the other B-1 positive passages as negatives — efficient with large batches. Hard negatives from BM25 (retrieved but wrong passages) teach the model to distinguish semantically related but incorrect passages from the true answer passage. This supervised signal allows DPR to capture semantic relevance beyond keyword overlap.",
       hints: [
-        "In-batch negatives: B pairs → B questions × (B-1) negatives each. Efficient use of GPU memory.",
+        "In-batch negatives: B pairs \\to B questions \\times (B-1) negatives each. Efficient use of GPU memory.",
         "Hard negatives: BM25 top-k that look relevant but are wrong answers. These 'confusable' examples most improve retrieval quality.",
       ],
     },
@@ -2448,13 +2448,13 @@ const extra: Record<string, Question[]> = {
         "RRF(d) = BM25_score(d) + DPR_score(d) (linear combination of raw scores)",
         "RRF(d) = 1/(k + r_s) + 1/(k + r_d) where k is a constant (typically 60)",
         "RRF(d) = max(r_s, r_d) (best rank across retrievers)",
-        "RRF(d) = r_s × r_d (product of ranks; lower is better)",
+        "RRF(d) = r_s \\times r_d (product of ranks; lower is better)",
       ],
       correctAnswer: 1,
-      explanation: "RRF (Cormack et al., 2009): score(d) = sum over retrievers of 1/(k + rank_i(d)). k=60 is standard: rank 1 gives 1/61≈0.016; rank 10 gives 1/70≈0.014. RRF is robust to score distribution differences between systems (BM25 scores in [0,30] vs. dense scores in [-1,1]) because it uses only rank order, not raw scores. Documents ranked highly by both retrievers receive high combined scores.",
+      explanation: "RRF (Cormack et al., 2009): score(d) = sum over retrievers of 1/(k + rank_i(d)). k=60 is standard: rank 1 gives 1/61\\approx0.016; rank 10 gives 1/70\\approx0.014. RRF is robust to score distribution differences between systems (BM25 scores in [0,30] vs. dense scores in [-1,1]) because it uses only rank order, not raw scores. Documents ranked highly by both retrievers receive high combined scores.",
       hints: [
         "RRF avoids normalising scores from different retrievers — rank is comparable; raw scores are not.",
-        "k=60 prevents top-ranked documents from dominating: 1/(1+60) vs 1/(60+60) is only a 2× difference.",
+        "k=60 prevents top-ranked documents from dominating: 1/(1+60) vs 1/(60+60) is only a 2\\times difference.",
       ],
     },
     {
@@ -2484,7 +2484,7 @@ const extra: Record<string, Question[]> = {
       explanation: "Bridge questions require chained reasoning: 'What is the capital of the country where X was born?' needs (1) retrieve X's birthplace, (2) retrieve that country's capital. Single-step RAG cannot retrieve the second document without knowing the answer to the first sub-question. IRCoT interleaves CoT reasoning steps with retrieval: each reasoning step generates a new query, retrieves new evidence, and informs the next reasoning step.",
       hints: [
         "Bridge question: answer requires an intermediate fact not discoverable from the original query alone.",
-        "IRCoT: reason → retrieve → reason further → retrieve again. Each retrieval is conditioned on previously gathered evidence.",
+        "IRCoT: reason \\to retrieve \\to reason further \\to retrieve again. Each retrieval is conditioned on previously gathered evidence.",
       ],
     },
     {
@@ -2511,7 +2511,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "ColBERT (Khattab & Zaharia, 2020) uses a late-interaction architecture where query and document token embeddings interact at retrieval time via MaxSim, giving higher retrieval quality than bi-encoders while maintaining efficiency through pre-computed document embeddings.",
       correctAnswer: "True",
-      explanation: "ColBERT encodes queries and documents as matrices of token embeddings. Similarity: MaxSim(Q,D) = sum_{q in Q} max_{d in D} q·d — each query token finds its best matching document token. Documents are encoded offline; at query time only O(|Q|*|D|) dot products are needed. This late interaction captures fine-grained semantic matching that single-vector bi-encoders compress away. ColBERT outperforms bi-encoders and is competitive with cross-encoders at retrieval speed.",
+      explanation: "ColBERT encodes queries and documents as matrices of token embeddings. Similarity: MaxSim(Q,D) = sum_{q in Q} max_{d in D} q\\cdotd — each query token finds its best matching document token. Documents are encoded offline; at query time only O(|Q|*|D|) dot products are needed. This late interaction captures fine-grained semantic matching that single-vector bi-encoders compress away. ColBERT outperforms bi-encoders and is competitive with cross-encoders at retrieval speed.",
       hints: [
         "Bi-encoder: one vector per document, cosine similarity. ColBERT: token-level matrix, MaxSim. Richer interaction.",
         "MaxSim: each query token votes for the document it matches best. Sum over query tokens — weighted voting across all query terms.",
@@ -2598,7 +2598,7 @@ const extra: Record<string, Question[]> = {
         "The token marks the boundary between two consecutive ORG entities",
       ],
       correctAnswer: 1,
-      explanation: "IOB tagging: B-TYPE = Begin a new entity of TYPE; I-TYPE = Inside (continuation of) an entity of TYPE; O = Outside (not part of any entity). 'Apple Inc. released' → B-ORG I-ORG O. The B tag is crucial for distinguishing adjacent entities of the same type: 'John Smith John Doe' → B-PER I-PER B-PER I-PER — without B, consecutive I tags would merge two separate people into one entity.",
+      explanation: "IOB tagging: B-TYPE = Begin a new entity of TYPE; I-TYPE = Inside (continuation of) an entity of TYPE; O = Outside (not part of any entity). 'Apple Inc. released' \\to B-ORG I-ORG O. The B tag is crucial for distinguishing adjacent entities of the same type: 'John Smith John Doe' \\to B-PER I-PER B-PER I-PER — without B, consecutive I tags would merge two separate people into one entity.",
       hints: [
         "B = Begin (first token of entity). I = Inside (subsequent tokens). O = Outside (non-entity).",
         "Adjacent same-type entities need B to separate them: B-PER I-PER B-PER I-PER for 'John Smith John Doe'.",
@@ -2740,7 +2740,7 @@ const extra2: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "BLEU clipping prevents a degenerate hypothesis like 'the the the the' from scoring 100% unigram precision against a reference containing one 'the'. The count of each n-gram in the hypothesis is capped at its maximum count in any single reference. Modified precision p_n = sum_ngrams min(count_hyp, max_count_ref) / sum_ngrams count_hyp. This ensures a system cannot game BLEU by repeating high-frequency words.",
       hints: [
-        "Without clipping: 'the the the' against reference 'the cat sat' → 3/3 = 100% unigram precision. With clipping: min(3,1)/3 = 1/3.",
+        "Without clipping: 'the the the' against reference 'the cat sat' \\to 3/3 = 100% unigram precision. With clipping: min(3,1)/3 = 1/3.",
         "Clipping is applied before summing counts across the entire test set.",
       ],
     },
@@ -2786,7 +2786,7 @@ const extra2: Record<string, Question[]> = {
         "Can only be applied to binary annotations, making it simpler to compute",
       ],
       correctAnswer: 1,
-      explanation: "Cohen's kappa: k = (P_o - P_e) / (1 - P_e) where P_o is observed agreement and P_e is expected agreement by chance. If labels are unbalanced (e.g., 90% of examples are negative), two random annotators would agree 81% (0.9×0.9) of the time. Kappa normalises this: k=0 means agreement at chance level, k=1 means perfect agreement. For NLP tasks, kappa > 0.8 is generally considered high agreement.",
+      explanation: "Cohen's kappa: k = (P_o - P_e) / (1 - P_e) where P_o is observed agreement and P_e is expected agreement by chance. If labels are unbalanced (e.g., 90% of examples are negative), two random annotators would agree 81% (0.9\\times0.9) of the time. Kappa normalises this: k=0 means agreement at chance level, k=1 means perfect agreement. For NLP tasks, kappa > 0.8 is generally considered high agreement.",
       hints: [
         "P_e: if annotators independently sample from the label distribution, what fraction would match by chance?",
         "Kappa for NER: annotators often agree on O tags (most tokens) but disagree on entity boundaries, giving misleadingly high raw agreement.",

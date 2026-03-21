@@ -67,7 +67,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A transformer uses $d_\\text{model} = 512$ with $h = 8$ attention heads. Each head projects to $d_k = d_\\text{model}/h = 64$ dimensions for queries and keys, and $d_v = 64$ for values. What is the key reason multi-head attention keeps total compute comparable to single-head attention of dimension 512?",
       options: [
-        "$d_k = 512$; total compute is 8× higher than single-head because 8 heads run in parallel",
+        "$d_k = 512$; total compute is 8\\times higher than single-head because 8 heads run in parallel",
         "$d_k = 512/8 = 64$; total compute is comparable because $h$ heads of dimension $d_\\text{model}/h$ each require $\\mathcal{O}(n^2 \\cdot d_\\text{model}/h)$ FLOPs, giving total $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ — same as single-head",
         "$d_k = 8$; heads use tiny projections, making compute negligible",
         "$d_k = 512$; all heads share the same $\\mathbf{W}^Q, \\mathbf{W}^K, \\mathbf{W}^V$ matrices",
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h × d_k = d_model) and then projected by a weight matrix W^O ∈ \\mathbb{R}^{d_model × d_model} to produce the final output.",
+        "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h \\times d_k = d_model) and then projected by a weight matrix W^O \\in \\mathbb{R}^{d_model \\times d_model} to produce the final output.",
       correctAnswer: "True",
       explanation:
         "D2l.ai \\S 11.5 defines the multi-head attention output as:\n\\[\n\\text{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)\\,\\mathbf{W}^\\text{O},\n\\]\nwhere each $\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{K}\\mathbf{W}_i^\\mathbf{K}, \\mathbf{V}\\mathbf{W}_i^\\mathbf{V}\\right)$. The concatenation $\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)$ produces a vector of length $h \\times d_v = h \\times (d_\\text{model}/h) = d_\\text{model}$. The weight matrix $\\mathbf{W}^\\text{O} \\in \\mathbb{R}^{d_\\text{model} \\times d_\\text{model}}$ then linearly combines the head outputs into a single $d_\\text{model}$-dimensional vector. Without $\\mathbf{W}^\\text{O}$, no information would flow between heads after concatenation, leaving each head's representation isolated.",
@@ -163,7 +163,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "RoPE (Rotary Position Embedding) encodes relative position directly into attention scores by rotating Q and K vectors by a position-dependent angle, so that the dot product q_i · k_j depends only on (i − j), not on i and j separately.",
+        "RoPE (Rotary Position Embedding) encodes relative position directly into attention scores by rotating Q and K vectors by a position-dependent angle, so that the dot product q_i \\cdot k_j depends only on (i − j), not on i and j separately.",
       correctAnswer: "True",
       explanation:
         "RoPE (Su et al., 2021) encodes position by rotating the query and key vectors. For a 2D subspace indexed by $j$, the rotation applied at position $m$ is:\n\\[\n\\mathbf{R}_j(m) = \\begin{pmatrix} \\cos(m\\theta_j) & -\\sin(m\\theta_j) \\\\ \\sin(m\\theta_j) & \\cos(m\\theta_j) \\end{pmatrix}.\n\\]\nThe key property is:\n\\[\n\\bigl(\\mathbf{R}_j(i)\\,\\mathbf{q}_j\\bigr)^\\top \\bigl(\\mathbf{R}_j(j)\\,\\mathbf{k}_j\\bigr) = \\mathbf{q}_j^\\top\\,\\mathbf{R}_j(j-i)\\,\\mathbf{k}_j,\n\\]\nso the dot product between positions $i$ and $j$ depends only on the relative displacement $(j-i)$, not on $i$ and $j$ separately. The rotation matrices satisfy $\\mathbf{R}(i)^\\top\\mathbf{R}(j) = \\mathbf{R}(j-i)$. This relative-position property is absent in absolute positional encodings (where the encoding for position $i$ is a fixed vector unrelated to position $j$), which is why RoPE enables better length extrapolation beyond the training context.",
@@ -182,16 +182,16 @@ const questions: Record<string, Question[]> = {
       question:
         "The positionwise FFN in the original transformer (d2l.ai §11.7.3) applies FFN(x) = max(0, xW_1 + b_1)W_2 + b_2 to each token independently. If d_model = 512, the inner dimension is 2048. How many parameters does one FFN sublayer have (counting both linear layers)?",
       options: [
-        "512 × 512 = 262,144 parameters",
-        "512 × 2048 + 2048 + 2048 × 512 + 512 = 2,099,712 parameters",
-        "2048 × 2048 = 4,194,304 parameters",
-        "4 × 512 = 2,048 parameters",
+        "512 \\times 512 = 262,144 parameters",
+        "512 \\times 2048 + 2048 + 2048 \\times 512 + 512 = 2,099,712 parameters",
+        "2048 \\times 2048 = 4,194,304 parameters",
+        "4 \\times 512 = 2,048 parameters",
       ],
       correctAnswer: 1,
       explanation:
-        "The FFN has two weight matrices: W_1 ∈ \\mathbb{R}^{512×2048} (1,048,576 params) and W_2 ∈ \\mathbb{R}^{2048×512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) — totaling ≈ 2.1M parameters. The 4× expansion (2048 = 4 × 512) is standard across the original architecture.",
+        "The FFN has two weight matrices: W_1 \\in \\mathbb{R}^{512\\times2048} (1,048,576 params) and W_2 \\in \\mathbb{R}^{2048\\times512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) — totaling \\approx 2.1M parameters. The 4\\times expansion (2048 = 4 \\times 512) is standard across the original architecture.",
       hints: [
-        "Two weight matrices: d_model × d_ff and d_ff × d_model, where d_ff = 4 × d_model.",
+        "Two weight matrices: d_model \\times d_ff and d_ff \\times d_model, where d_ff = 4 \\times d_model.",
         "The FFN typically has roughly twice the parameters of the multi-head attention sublayer.",
       ],
     },
@@ -237,10 +237,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The original transformer used the learning rate schedule lr = d_model^{-0.5} × min(step^{-0.5}, step × warmup_steps^{-1.5}). For d_model = 512 and warmup_steps = 4000, what is the peak learning rate, and approximately at what step does it occur?",
+        "The original transformer used the learning rate schedule lr = d_model^{-0.5} \\times min(step^{-0.5}, step \\times warmup_steps^{-1.5}). For d_model = 512 and warmup_steps = 4000, what is the peak learning rate, and approximately at what step does it occur?",
       options: [
         "Peak lr = 0.001 at step 1000",
-        "Peak lr = d_model^{-0.5} × warmup_steps^{-0.5} = (512)^{-0.5} × (4000)^{-0.5} ≈ 0.000696 at step 4000",
+        "Peak lr = d_model^{-0.5} \\times warmup_steps^{-0.5} = (512)^{-0.5} \\times (4000)^{-0.5} \\approx 0.000696 at step 4000",
         "Peak lr = 0.1 at step 10000",
         "Peak lr = 1.0 at step 1 due to the warmup formula",
       ],
@@ -271,7 +271,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The original transformer\'s learning rate warmup addresses Adam\'s \"cold start\" problem. In Adam, the effective learning rate is \\alpha × m_t / (√v_t + \\epsilon). Why is the effective LR dangerously large in the first ~100 steps without warmup?",
+        "The original transformer\'s learning rate warmup addresses Adam\'s \"cold start\" problem. In Adam, the effective learning rate is \\alpha \\times m_t / (√v_t + \\epsilon). Why is the effective LR dangerously large in the first ~100 steps without warmup?",
       options: [
         "The momentum term m_t is too large because gradients are large at initialization",
         "The variance estimate v_t is near zero at initialization (no history), making 1/√v_t very large — amplifying the gradient signal regardless of \\alpha",
@@ -297,7 +297,7 @@ const questions: Record<string, Question[]> = {
         'BPE tokenization starts with a character-level vocabulary and iteratively merges the most frequent adjacent pair. If the corpus contains "low low low low" and "lowest lowest", what is the first merge operation?',
       options: [
         'Merge "l" and "o" because "lo" appears most frequently',
-        'Merge "l" and "o" → "lo", then "lo" and "w" → "low" after another step',
+        'Merge "l" and "o" \\to "lo", then "lo" and "w" \\to "low" after another step',
         'The first merge is "lo" + "w" = "low" (5 occurrences vs "lo"+"w" individually)',
         'Merge "low" and "est" because "lowest" is a single word',
       ],
@@ -314,13 +314,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 × d_model rows — roughly 4× the size of GPT-2's 50,257-token vocabulary embedding table.",
+        "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 \\times d_model rows — roughly 4\\times the size of GPT-2's 50,257-token vocabulary embedding table.",
       correctAnswer: "True",
       explanation:
-        "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ — one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger — not $4\\times$ as the statement claims. The claim of \"roughly 4×\" is therefore incorrect. (The statement is False.)",
+        "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ — one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger — not $4\\times$ as the statement claims. The claim of \"roughly 4\\times\" is therefore incorrect. (The statement is False.)",
       hints: [
-        "Embedding table size = vocab_size × d_model × bytes_per_param. For GPT-4: 100K × 4096 × 2 bytes ≈ 820 MB. For GPT-2: 50K × 4096 × 2 bytes ≈ 411 MB.",
-        "The ratio is approximately 2×, not 4×. The \"4×\" claim in the statement is incorrect.",
+        "Embedding table size = vocab_size \\times d_model \\times bytes_per_param. For GPT-4: 100K \\times 4096 \\times 2 bytes \\approx 820 MB. For GPT-2: 50K \\times 4096 \\times 2 bytes \\approx 411 MB.",
+        "The ratio is approximately 2\\times, not 4\\times. The \"4\\times\" claim in the statement is incorrect.",
       ],
     },
     {
@@ -353,17 +353,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Kaplan et al. (2020) found that language model loss L follows a power law with model parameters N: L(N) \\propto N^{-\\alpha_N}. If a model achieves L = 3.0 at N = 1B parameters, and the exponent \\alpha_N = 0.076, approximately what loss does a 10B model achieve?",
       options: [
-        "L ≈ 2.83 (10× parameters reduces loss by about 0.17)",
-        "L ≈ 0.3 (linear scaling with 10× the parameters)",
-        "L ≈ 1.5 (loss halves with each 10× increase in parameters)",
-        "L ≈ 3.0 (parameters have no effect on loss beyond 1B)",
+        "L \\approx 2.83 (10\\times parameters reduces loss by about 0.17)",
+        "L \\approx 0.3 (linear scaling with 10\\times the parameters)",
+        "L \\approx 1.5 (loss halves with each 10\\times increase in parameters)",
+        "L \\approx 3.0 (parameters have no effect on loss beyond 1B)",
       ],
       correctAnswer: 0,
       explanation:
-        "Kaplan et al.'s power law states $L(N) = L_0 + a \\cdot N^{-\\alpha_N}$ with $\\alpha_N = 0.076$. For two model sizes $N_1$ and $N_2$:\n\\[\n\\frac{L(N_2)}{L(N_1)} = \\left(\\frac{N_2}{N_1}\\right)^{-\\alpha_N}.\n\\]\nWith $N_2 = 10N_1 = 10\\text{B}$ and $\\alpha_N = 0.076$:\n\\[\n\\frac{L(10\\text{B})}{L(1\\text{B})} = 10^{-0.076} \\approx 0.839.\n\\]\nTherefore $L(10\\text{B}) \\approx 3.0 \\times 0.839 \\approx 2.52$. The exponent $0.076$ is small: a 10× increase in parameters reduces loss by only about 16%. This is why scaling laws predict that enormous compute investments yield only incremental loss improvements — a fundamental inefficiency of the current scaling paradigm.",
+        "Kaplan et al.'s power law states $L(N) = L_0 + a \\cdot N^{-\\alpha_N}$ with $\\alpha_N = 0.076$. For two model sizes $N_1$ and $N_2$:\n\\[\n\\frac{L(N_2)}{L(N_1)} = \\left(\\frac{N_2}{N_1}\\right)^{-\\alpha_N}.\n\\]\nWith $N_2 = 10N_1 = 10\\text{B}$ and $\\alpha_N = 0.076$:\n\\[\n\\frac{L(10\\text{B})}{L(1\\text{B})} = 10^{-0.076} \\approx 0.839.\n\\]\nTherefore $L(10\\text{B}) \\approx 3.0 \\times 0.839 \\approx 2.52$. The exponent $0.076$ is small: a 10\\times increase in parameters reduces loss by only about 16%. This is why scaling laws predict that enormous compute investments yield only incremental loss improvements — a fundamental inefficiency of the current scaling paradigm.",
       hints: [
         "Power law: $L(N) \\propto N^{-0.076}$. Compute the ratio: $L(10\\text{B})/L(1\\text{B}) = 10^{-0.076} \\approx 0.84$.",
-        "Small exponent means slow loss reduction: 10× more parameters → only ~16% loss reduction.",
+        "Small exponent means slow loss reduction: 10\\times more parameters \\to only ~16% loss reduction.",
       ],
     },
     {
@@ -371,12 +371,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Chinchilla paper (Hoffmann et al., 2022) proposed that compute-optimal training requires N and D to scale equally: D_optimal ≈ 20N tokens. A 70B parameter model is therefore compute-optimally trained on approximately how many tokens?",
+        "The Chinchilla paper (Hoffmann et al., 2022) proposed that compute-optimal training requires N and D to scale equally: D_optimal \\approx 20N tokens. A 70B parameter model is therefore compute-optimally trained on approximately how many tokens?",
       options: [
         "70 billion tokens (1 token per parameter)",
-        "1.4 trillion tokens (20 × 70B)",
-        "7 trillion tokens (100 × 70B)",
-        "700 billion tokens (10 × 70B)",
+        "1.4 trillion tokens (20 \\times 70B)",
+        "7 trillion tokens (100 \\times 70B)",
+        "700 billion tokens (10 \\times 70B)",
       ],
       correctAnswer: 1,
       explanation:
@@ -501,16 +501,16 @@ const questions: Record<string, Question[]> = {
       question:
         "Mistral 7B uses both Grouped Query Attention (8 KV heads for 32 Q heads) and Sliding Window Attention (window size 4096, context 8192). What are the respective memory savings from each technique during inference with a 8192-token sequence?",
       options: [
-        "GQA saves 4× KV cache memory; SWA saves compute but not peak memory for the full sequence",
-        "GQA saves 32× KV cache memory; SWA saves 50% of all GPU memory",
-        "GQA and SWA both reduce model parameters by 4× each",
-        "GQA has no effect on KV cache; SWA saves 4× KV cache memory",
+        "GQA saves 4\\times KV cache memory; SWA saves compute but not peak memory for the full sequence",
+        "GQA saves 32\\times KV cache memory; SWA saves 50% of all GPU memory",
+        "GQA and SWA both reduce model parameters by 4\\times each",
+        "GQA has no effect on KV cache; SWA saves 4\\times KV cache memory",
       ],
       correctAnswer: 0,
       explanation:
-        "GQA reduces KV cache by 32/8 = 4× (4 query heads share each KV head). SWA limits the attention window but each token still accumulates KV entries up to the window size — it reduces attention compute from O(n²) to O(n×w) but the KV cache still grows with sequence length for the rolling window implementation.",
+        "GQA reduces KV cache by 32/8 = 4\\times (4 query heads share each KV head). SWA limits the attention window but each token still accumulates KV entries up to the window size — it reduces attention compute from O(n\\^2) to O(n\\timesw) but the KV cache still grows with sequence length for the rolling window implementation.",
       hints: [
-        "GQA: KV cache reduction = n_Q_heads / n_KV_heads = 32/8 = 4×.",
+        "GQA: KV cache reduction = n_Q_heads / n_KV_heads = 32/8 = 4\\times.",
         "SWA reduces attention FLOPs quadratically but the KV buffer still stores w entries per layer.",
       ],
     },
@@ -565,10 +565,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RoPE uses wavelengths ranging from 2\\pi (highest frequency) to 2\\pi×10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles — interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle — extrapolation is needed to generate meaningful positions beyond T.",
+        "RoPE uses wavelengths ranging from 2\\pi (highest frequency) to 2\\pi\\times10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles — interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle — extrapolation is needed to generate meaningful positions beyond T.",
       hints: [
-        "High-frequency = short wavelength = many complete cycles within training length → safe interpolation.",
-        "Low-frequency = long wavelength = fraction of a cycle within training length → must extrapolate.",
+        "High-frequency = short wavelength = many complete cycles within training length \\to safe interpolation.",
+        "Low-frequency = long wavelength = fraction of a cycle within training length \\to must extrapolate.",
       ],
     },
   ],
@@ -579,16 +579,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Standard attention materializes the n×n attention matrix in GPU HBM (high-bandwidth memory). For n = 4096 and FP16 (2 bytes/element), what is the memory cost of storing this matrix, and why is FlashAttention\'s tiling approach critical?",
+        "Standard attention materializes the n\\timesn attention matrix in GPU HBM (high-bandwidth memory). For n = 4096 and FP16 (2 bytes/element), what is the memory cost of storing this matrix, and why is FlashAttention\'s tiling approach critical?",
       options: [
-        "4096 × 4096 × 2 bytes = 33.6 MB; FlashAttention avoids this by using INT8",
-        "4096 × 4096 × 2 bytes = 33.6 MB; FlashAttention tiles the computation in SRAM (on-chip, ~20MB) to avoid writing this matrix to slow HBM, saving O(n²) HBM reads/writes",
-        "4096 × 4096 × 2 bytes = 33.6 MB; FlashAttention computes only the top-k attention scores to save memory",
+        "4096 \\times 4096 \\times 2 bytes = 33.6 MB; FlashAttention avoids this by using INT8",
+        "4096 \\times 4096 \\times 2 bytes = 33.6 MB; FlashAttention tiles the computation in SRAM (on-chip, ~20MB) to avoid writing this matrix to slow HBM, saving O(n\\^2) HBM reads/writes",
+        "4096 \\times 4096 \\times 2 bytes = 33.6 MB; FlashAttention computes only the top-k attention scores to save memory",
         "The matrix is free since GPUs have infinite shared memory",
       ],
       correctAnswer: 1,
       explanation:
-        "For standard attention, the full $n \\times n$ attention matrix $\\mathbf{A}$ must be materialized in HBM to compute the softmax and the final output. At $n = 4096$ and FP16 (2 bytes):\n\\[\n\\text{HBM for } \\mathbf{A} = 4096 \\times 4096 \\times 2 \\approx 33.6 \\text{ MB per layer}.\n\\]\nWith 32 layers: over 1 GB just for the attention matrices. This HBM read/write is the bottleneck: the GPU spends most of its time moving data, not performing FLOPs.\n\nFlashAttention avoids this by tiling the computation into SRAM-sized blocks. For each row, the online softmax algorithm maintains running statistics:\n\\[\nm_j = \\max(m_{j-1}, x_j),\\quad s_j = s_{j-1} \\cdot e^{m_{j-1} - m_j} + e^{x_j - m_j},\n\\]\nenabling exact softmax computation tile-by-tile without ever materializing the full row. This reduces HBM accesses from $\\mathcal{O}(n^2)$ to $\\mathcal{O}(n)$ per layer, yielding 2–4× wall-clock speedup.",
+        "For standard attention, the full $n \\times n$ attention matrix $\\mathbf{A}$ must be materialized in HBM to compute the softmax and the final output. At $n = 4096$ and FP16 (2 bytes):\n\\[\n\\text{HBM for } \\mathbf{A} = 4096 \\times 4096 \\times 2 \\approx 33.6 \\text{ MB per layer}.\n\\]\nWith 32 layers: over 1 GB just for the attention matrices. This HBM read/write is the bottleneck: the GPU spends most of its time moving data, not performing FLOPs.\n\nFlashAttention avoids this by tiling the computation into SRAM-sized blocks. For each row, the online softmax algorithm maintains running statistics:\n\\[\nm_j = \\max(m_{j-1}, x_j),\\quad s_j = s_{j-1} \\cdot e^{m_{j-1} - m_j} + e^{x_j - m_j},\n\\]\nenabling exact softmax computation tile-by-tile without ever materializing the full row. This reduces HBM accesses from $\\mathcal{O}(n^2)$ to $\\mathcal{O}(n)$ per layer, yielding 2–4\\times wall-clock speedup.",
       hints: [
         "Standard attention: write $n^2$ entries to HBM, read them back for softmax. FlashAttention: keep tiles in SRAM (~20–40 MB capacity) and compute softmax incrementally.",
         "The online softmax tracks $m_j = \\max(x_1, \\ldots, x_j)$ and $s_j = \\sum_{i=1}^j e^{x_i - m_j}$ — the softmax denominator — across tiles.",
@@ -602,7 +602,7 @@ const questions: Record<string, Question[]> = {
         "FlashAttention computes mathematically identical results to standard attention — it is not an approximation — but uses the online softmax algorithm to compute softmax incrementally over tiles without seeing the entire row simultaneously.",
       correctAnswer: "True",
       explanation:
-        "The online softmax trick (Milakov & Gimelshein, 2018) maintains running max and sum statistics across tiles, enabling exact softmax computation without materializing the full row. FlashAttention uses this to compute exact attention in O(1) SRAM rather than O(n²) HBM, with zero accuracy trade-off.",
+        "The online softmax trick (Milakov & Gimelshein, 2018) maintains running max and sum statistics across tiles, enabling exact softmax computation without materializing the full row. FlashAttention uses this to compute exact attention in O(1) SRAM rather than O(n\\^2) HBM, with zero accuracy trade-off.",
       hints: [
         "Incremental softmax: track max_so_far and sum_so_far; rescale previous outputs as new tiles are seen.",
         '"IO-aware" means optimizing memory access patterns, not approximating the math.',
@@ -613,16 +613,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "FlashAttention-2 achieves ~2× speedup over FA-1 by: (1) reducing non-matrix-multiply FLOPs (rescaling operations), (2) better parallelizing across GPU warps, and (3) restructuring loops to minimize warp-level synchronization. Which of these is the dominant win?",
+        "FlashAttention-2 achieves ~2\\times speedup over FA-1 by: (1) reducing non-matrix-multiply FLOPs (rescaling operations), (2) better parallelizing across GPU warps, and (3) restructuring loops to minimize warp-level synchronization. Which of these is the dominant win?",
       options: [
         "Reducing non-matmul FLOPs is dominant because matrix multiplications are the slowest operation",
         "Better warp parallelization across the sequence length dimension is dominant — FA-1 had poor GPU utilization because it only parallelized across batch and heads, leaving sequence-length parallelism unused",
         "Warp synchronization reduction is dominant because it eliminates deadlocks in attention computation",
-        "All three contribute equally — the 2× speedup is split precisely among the three improvements",
+        "All three contribute equally — the 2\\times speedup is split precisely among the three improvements",
       ],
       correctAnswer: 1,
       explanation:
-        "FA-2's primary improvement is parallelizing over the sequence length dimension: FA-1 only parallelized across batch × heads (leaving GPUs idle for small batch or few heads), while FA-2 also parallelizes the outer loop over query blocks — dramatically improving GPU occupancy and SRAM utilization.",
+        "FA-2's primary improvement is parallelizing over the sequence length dimension: FA-1 only parallelized across batch \\times heads (leaving GPUs idle for small batch or few heads), while FA-2 also parallelizes the outer loop over query blocks — dramatically improving GPU occupancy and SRAM utilization.",
       hints: [
         "A GPU with 108 SMs but only 32 attention heads has 76 idle SMs without sequence-length parallelism.",
         "Distributing query blocks across SMs is the key insight that FA-2 adds over FA-1.",
@@ -638,17 +638,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A 70B LLaMA-3 model has 80 transformer layers, 8 KV heads per layer, and head_dim = 128. For a single sequence of length 4096 in FP16 (2 bytes), what is the KV cache size?",
       options: [
-        "80 × 8 × 128 × 2 bytes ≈ 164 KB (one position only)",
-        "2 × 80 × 8 × 128 × 4096 × 2 bytes ≈ 5.4 GB for the full 4096-token sequence",
-        "80 × 128 × 4096 × 2 bytes ≈ 84 MB (ignoring K/V distinction)",
-        "70B × 2 bytes = 140 GB (the whole model must be cached)",
+        "80 \\times 8 \\times 128 \\times 2 bytes \\approx 164 KB (one position only)",
+        "2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2 bytes \\approx 5.4 GB for the full 4096-token sequence",
+        "80 \\times 128 \\times 4096 \\times 2 bytes \\approx 84 MB (ignoring K/V distinction)",
+        "70B \\times 2 bytes = 140 GB (the whole model must be cached)",
       ],
       correctAnswer: 1,
       explanation:
-        "The KV cache stores key and value representations for every cached token position. For a single layer, one KV head requires head_dim × seq_len × bytes. With 8 KV heads and both K and V:\n\\[\n\\text{KV cache per layer} = 2 \\times 8 \\times 128 \\times 4096 \\times 2 \\text{ bytes}.\n\\]\nMultiplying by 80 layers:\n\\[\n\\text{KV cache} = 2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2\n= 5{,}368{,}709{,}120 \\text{ bytes} \\approx 5.4 \\text{ GB}.\n\\]\nA 70B model in FP16 is ~140 GB, so the KV cache for 4096 tokens is ~4% of model weight per sequence — growing linearly with context length and potentially dominating memory for long prompts.",
+        "The KV cache stores key and value representations for every cached token position. For a single layer, one KV head requires head_dim \\times seq_len \\times bytes. With 8 KV heads and both K and V:\n\\[\n\\text{KV cache per layer} = 2 \\times 8 \\times 128 \\times 4096 \\times 2 \\text{ bytes}.\n\\]\nMultiplying by 80 layers:\n\\[\n\\text{KV cache} = 2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2\n= 5{,}368{,}709{,}120 \\text{ bytes} \\approx 5.4 \\text{ GB}.\n\\]\nA 70B model in FP16 is ~140 GB, so the KV cache for 4096 tokens is ~4% of model weight per sequence — growing linearly with context length and potentially dominating memory for long prompts.",
       hints: [
-        "Formula: 2 (K and V) × n_layers × n_KV_heads × head_dim × seq_len × bytes_per_element.",
-        "With GQA (8 KV heads vs. 64 Q heads), the cache is already 8× smaller than standard MHA would be.",
+        "Formula: 2 (K and V) \\times n_layers \\times n_KV_heads \\times head_dim \\times seq_len \\times bytes_per_element.",
+        "With GQA (8 KV heads vs. 64 Q heads), the cache is already 8\\times smaller than standard MHA would be.",
       ],
     },
     {
@@ -659,7 +659,7 @@ const questions: Record<string, Question[]> = {
         "During autoregressive decoding, the KV cache allows each new token to be generated with a single forward pass through only the new token\'s position (not the entire prefix), because previous tokens' K and V representations are already cached and can be directly used in attention.",
       correctAnswer: "True",
       explanation:
-        "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch — O(n²) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
+        "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch — O(n\\^2) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
       hints: [
         "Cache hit: previous tokens' K and V are already computed and stored — no recomputation needed.",
         "The tradeoff is memory (KV cache) for compute — standard in LLM serving.",
@@ -696,16 +696,16 @@ const questions: Record<string, Question[]> = {
         "Beam search with beam width B = 4 maintains the top 4 partial sequences at each step. If greedy decoding achieves sequence probability P_greedy, and beam search achieves P_beam, which relationship is guaranteed?",
       options: [
         "P_beam = P_greedy always (beam search is equivalent to greedy)",
-        "P_beam ≥ P_greedy always (beam search finds sequences at least as probable as greedy)",
+        "P_beam \\geq P_greedy always (beam search finds sequences at least as probable as greedy)",
         "P_beam < P_greedy if B is too small (beam search is worse for small B)",
         "P_beam > P_greedy always (beam search strictly beats greedy)",
       ],
       correctAnswer: 1,
       explanation:
-        "Beam search with B ≥ 1 is a superset of greedy search (B=1 is greedy). It always finds sequences with probability ≥ greedy because it explores B alternatives at each step instead of 1, and any sequence greedy would find is in beam search\'s candidate set.",
+        "Beam search with B \\geq 1 is a superset of greedy search (B=1 is greedy). It always finds sequences with probability \\geq greedy because it explores B alternatives at each step instead of 1, and any sequence greedy would find is in beam search\'s candidate set.",
       hints: [
-        "Greedy = beam search with B = 1. Beam search with B ≥ 2 keeps more candidates.",
-        '"Guaranteed" is the key word — P_beam ≥ P_greedy is a formal property of the algorithm.',
+        "Greedy = beam search with B = 1. Beam search with B \\geq 2 keeps more candidates.",
+        '"Guaranteed" is the key word — P_beam \\geq P_greedy is a formal property of the algorithm.',
       ],
     },
     {
@@ -713,7 +713,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Top-p sampling with p = 0.9 samples from the smallest set of tokens whose cumulative probability ≥ 0.9. For a very peaked distribution (e.g., one token has probability 0.95), how many tokens are in the nucleus?",
+        "Top-p sampling with p = 0.9 samples from the smallest set of tokens whose cumulative probability \\geq 0.9. For a very peaked distribution (e.g., one token has probability 0.95), how many tokens are in the nucleus?",
       options: [
         "Always exactly 90 tokens (p = 0.9 means top 90%)",
         "Just 1 token — the single token with p = 0.95 already exceeds the threshold of 0.9",
@@ -722,7 +722,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The nucleus is the minimal set with cumulative probability ≥ p. If one token already has probability 0.95 > 0.9, it alone forms the entire nucleus — top-p sampling essentially becomes deterministic for peaked distributions, while using a broader set for uncertain (flat) distributions.",
+        "The nucleus is the minimal set with cumulative probability \\geq p. If one token already has probability 0.95 > 0.9, it alone forms the entire nucleus — top-p sampling essentially becomes deterministic for peaked distributions, while using a broader set for uncertain (flat) distributions.",
       hints: [
         '"Smallest set" means we stop adding tokens as soon as cumulative probability crosses p.',
         "This adaptive behavior is top-p\'s advantage over top-k: it naturally handles both peaked and flat distributions.",
@@ -752,16 +752,16 @@ const questions: Record<string, Question[]> = {
       question:
         "In speculative decoding, a draft model proposes k = 5 tokens and the target model verifies them in one forward pass. If k = 5 draft tokens are accepted on average, what is the approximate speedup factor compared to standard autoregressive decoding?",
       options: [
-        "5× speedup — generating 5 tokens per target model call instead of 1",
-        "10× speedup — the draft model processes 5 tokens twice as fast",
-        "2× speedup — the draft and target models run in parallel",
+        "5\\times speedup — generating 5 tokens per target model call instead of 1",
+        "10\\times speedup — the draft model processes 5 tokens twice as fast",
+        "2\\times speedup — the draft and target models run in parallel",
         "No speedup — the draft model adds overhead that cancels the gains",
       ],
       correctAnswer: 0,
       explanation:
-        "Each target model forward pass now verifies k (on average) draft tokens instead of producing 1. If the acceptance rate allows average 5 tokens per call, throughput is ~5× higher. The draft model overhead is small because it is much smaller (e.g., 7B draft for a 70B target), running ~10× faster per token.",
+        "Each target model forward pass now verifies k (on average) draft tokens instead of producing 1. If the acceptance rate allows average 5 tokens per call, throughput is ~5\\times higher. The draft model overhead is small because it is much smaller (e.g., 7B draft for a 70B target), running ~10\\times faster per token.",
       hints: [
-        "Speedup ≈ average accepted tokens per target call. If all k tokens are accepted, speedup ≈ k.",
+        "Speedup \\approx average accepted tokens per target call. If all k tokens are accepted, speedup \\approx k.",
         "The target model call is the bottleneck — getting more tokens per call directly improves throughput.",
       ],
     },
@@ -807,12 +807,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A 7B parameter model in FP16 uses 7B × 2 bytes = 14 GB. If we quantize to INT4 (4-bit), what is the theoretical model size? What is a practical consideration that makes the actual size slightly larger?",
+        "A 7B parameter model in FP16 uses 7B \\times 2 bytes = 14 GB. If we quantize to INT4 (4-bit), what is the theoretical model size? What is a practical consideration that makes the actual size slightly larger?",
       options: [
-        "7B × 4 bits = 3.5 GB theoretical; group scaling factors (one FP16 per group of 128 weights) add ~1% overhead",
-        "7B × 4 bits = 3.5 GB theoretical; practical size is identical to theoretical",
-        "7B × 4 bits = 14 GB theoretical (1 byte = 1 nibble confusion)",
-        "7B × 4 bits = 7 GB theoretical because 4-bit integers take 1 byte each in hardware",
+        "7B \\times 4 bits = 3.5 GB theoretical; group scaling factors (one FP16 per group of 128 weights) add ~1% overhead",
+        "7B \\times 4 bits = 3.5 GB theoretical; practical size is identical to theoretical",
+        "7B \\times 4 bits = 14 GB theoretical (1 byte = 1 nibble confusion)",
+        "7B \\times 4 bits = 7 GB theoretical because 4-bit integers take 1 byte each in hardware",
       ],
       correctAnswer: 0,
       explanation:
@@ -844,7 +844,7 @@ const questions: Record<string, Question[]> = {
         'AWQ (Activation-Aware Weight Quantization) identifies "salient" weights — those that produce large output activations — and protects them by applying per-channel input scaling before quantization. Why does scaling the input channel protect these weights without changing model output?',
       options: [
         "Scaling inputs makes activations smaller, so the model naturally ignores those weights",
-        "If input channel i is scaled by s, weight w_i must be divided by s to preserve output (s × x_i × w_i/s = x_i × w_i); the effective weight w_i/s is now smaller in magnitude and quantizes more accurately",
+        "If input channel i is scaled by s, weight w_i must be divided by s to preserve output (s \\times x_i \\times w_i/s = x_i \\times w_i); the effective weight w_i/s is now smaller in magnitude and quantizes more accurately",
         "Scaling effectively increases the bit-width allocated to salient weights",
         "AWQ scaling is applied only during training and removed before deployment",
       ],
@@ -853,7 +853,7 @@ const questions: Record<string, Question[]> = {
         "AWQ's insight exploits a simple algebraic identity. For input channel $i$ with input $x_i$ and weight $w_i$:\n\\[\n(s \\cdot x_i) \\cdot \\frac{w_i}{s} = x_i \\cdot w_i.\n\\]\nThe output is mathematically unchanged, but the effective weight value changes from $w_i$ to $w_i/s$. For salient weights (those producing large activations), $w_i$ is large in magnitude. Scaling it down by $s > 1$ reduces its magnitude, which reduces the absolute quantization error when rounding to 4 bits.\n\nAWQ finds the optimal per-channel scale $s$ by measuring which weights produce large activations (using a calibration set) and applying $w_i \\leftarrow w_i / s$ before quantization. The scale $s$ is absorbed into the preceding LayerNorm's output, so the net effect on the model's computation is zero.",
       hints: [
         "Identity: $(s x_i)(w_i/s) = x_i w_i$. Scale input UP by $s$ and weight DOWN by $s$ — output unchanged, but weight magnitude reduced.",
-        "Smaller $|w_i|$ → quantization to 4 bits introduces less absolute error → better preserved signal after dequantization.",
+        "Smaller $|w_i|$ \\to quantization to 4 bits introduces less absolute error \\to better preserved signal after dequantization.",
       ],
     },
   ],
@@ -864,12 +864,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "LoRA (Hu et al., 2021) adds \\DeltaW = BA where B ∈ \\mathbb{R}^{d×r} and A ∈ \\mathbb{R}^{r×k}. For a weight matrix W ∈ \\mathbb{R}^{4096×4096} with rank r = 16, how many trainable parameters does the LoRA adapter add, vs. the full weight matrix?",
+        "LoRA (Hu et al., 2021) adds \\DeltaW = BA where B \\in \\mathbb{R}^{d\\timesr} and A \\in \\mathbb{R}^{r\\timesk}. For a weight matrix W \\in \\mathbb{R}^{4096\\times4096} with rank r = 16, how many trainable parameters does the LoRA adapter add, vs. the full weight matrix?",
       options: [
-        "LoRA adds 4096 × 16 + 16 × 4096 = 131,072 params vs. 4096 × 4096 = 16,777,216 — about 0.78% of the full matrix",
-        "LoRA adds 4096 × 4096 = 16,777,216 params (same as full fine-tuning)",
-        "LoRA adds 16 × 16 = 256 params per weight matrix",
-        "LoRA adds 4096 × 16 = 65,536 params (only matrix A is trainable)",
+        "LoRA adds 4096 \\times 16 + 16 \\times 4096 = 131,072 params vs. 4096 \\times 4096 = 16,777,216 — about 0.78% of the full matrix",
+        "LoRA adds 4096 \\times 4096 = 16,777,216 params (same as full fine-tuning)",
+        "LoRA adds 16 \\times 16 = 256 params per weight matrix",
+        "LoRA adds 4096 \\times 16 = 65,536 params (only matrix A is trainable)",
       ],
       correctAnswer: 0,
       explanation:
@@ -981,15 +981,15 @@ const questions: Record<string, Question[]> = {
         "Grouped Query Attention (GQA) uses G groups of KV heads for H query heads (G < H). LLaMA-3-70B has 64 query heads and 8 KV heads. What is G and how does this reduce KV cache compared to full MHA?",
       options: [
         "G = 64; no reduction — all heads still require their own K and V",
-        "G = 8; KV cache is 64/8 = 8× smaller than MHA since 8 K/V heads serve all 64 Q heads",
-        "G = 8; KV cache is 8× larger because GQA stores extra metadata",
+        "G = 8; KV cache is 64/8 = 8\\times smaller than MHA since 8 K/V heads serve all 64 Q heads",
+        "G = 8; KV cache is 8\\times larger because GQA stores extra metadata",
         "G = 1 (MQA); KV cache is reduced to a single K and V for all heads",
       ],
       correctAnswer: 1,
       explanation:
-        "With G = 8 KV groups and H = 64 Q heads, each group serves 64/8 = 8 query heads. KV cache size = 2 × layers × 8 × head_dim × seq_len, vs. 2 × layers × 64 × head_dim × seq_len for MHA — an 8× reduction. Ainslie et al. (2023) showed GQA achieves near-MHA quality at near-MQA inference efficiency.",
+        "With G = 8 KV groups and H = 64 Q heads, each group serves 64/8 = 8 query heads. KV cache size = 2 \\times layers \\times 8 \\times head_dim \\times seq_len, vs. 2 \\times layers \\times 64 \\times head_dim \\times seq_len for MHA — an 8\\times reduction. Ainslie et al. (2023) showed GQA achieves near-MHA quality at near-MQA inference efficiency.",
       hints: [
-        "G = n_KV_heads = 8. KV cache reduction factor = n_Q_heads / n_KV_heads = 64/8 = 8×.",
+        "G = n_KV_heads = 8. KV cache reduction factor = n_Q_heads / n_KV_heads = 64/8 = 8\\times.",
         "Each KV group is shared by H/G = 64/8 = 8 query heads during attention computation.",
       ],
     },
@@ -1014,17 +1014,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Multi-Query Attention (MQA, Shazeer 2019) is the extreme case of GQA with G = 1. Compared to GQA with G = 8, what is the quality trade-off and inference benefit of MQA for a model with 64 query heads?",
       options: [
-        "MQA achieves identical quality to GQA-8 but with 64× smaller KV cache",
-        "MQA achieves 8× smaller KV cache than GQA-8 (64 vs. 8 KV heads), but shows more quality degradation — GQA-8 better balances efficiency and quality",
+        "MQA achieves identical quality to GQA-8 but with 64\\times smaller KV cache",
+        "MQA achieves 8\\times smaller KV cache than GQA-8 (64 vs. 8 KV heads), but shows more quality degradation — GQA-8 better balances efficiency and quality",
         "MQA always outperforms GQA because fewer parameters means less overfitting",
         "MQA and GQA-8 have identical KV cache sizes because head_dim is scaled accordingly",
       ],
       correctAnswer: 1,
       explanation:
-        "MQA (G=1): KV cache is 64× smaller than MHA. GQA-8 (G=8): KV cache is 8× smaller than MHA, 8× larger than MQA. Ainslie et al. showed MQA has noticeable quality loss (especially on tasks requiring fine-grained attention), while GQA-8 recovers most of MHA quality while retaining most of MQA\'s efficiency — making GQA the Pareto-optimal choice for modern LLMs.",
+        "MQA (G=1): KV cache is 64\\times smaller than MHA. GQA-8 (G=8): KV cache is 8\\times smaller than MHA, 8\\times larger than MQA. Ainslie et al. showed MQA has noticeable quality loss (especially on tasks requiring fine-grained attention), while GQA-8 recovers most of MHA quality while retaining most of MQA\'s efficiency — making GQA the Pareto-optimal choice for modern LLMs.",
       hints: [
         "MQA: 1 KV head for all 64 Q heads — extreme memory saving, but a single KV must serve all diversity of Q heads.",
-        "GQA-8: 8 KV heads, each serving 8 Q heads — more diverse representations than MQA with 8× less cache than MHA.",
+        "GQA-8: 8 KV heads, each serving 8 Q heads — more diverse representations than MQA with 8\\times less cache than MHA.",
       ],
     },
   ],
@@ -1035,19 +1035,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Mixtral 8×7B has 8 expert FFNs per transformer layer and activates k = 2 experts per token via a router. If each expert has the same size as the FFN in a 7B dense model, what is the approximate active parameter count per token during inference?",
+        "Mixtral 8\\times7B has 8 expert FFNs per transformer layer and activates k = 2 experts per token via a router. If each expert has the same size as the FFN in a 7B dense model, what is the approximate active parameter count per token during inference?",
       options: [
-        "8 × 7B = 56B parameters are active for every token",
+        "8 \\times 7B = 56B parameters are active for every token",
         "~13B parameters active per token: attention layers (~7B) are always active, plus 2/8 of the total FFN expert parameters",
-        "2 × 7B = 14B parameters active (2 experts × full model size)",
+        "2 \\times 7B = 14B parameters active (2 experts \\times full model size)",
         "7B parameters active — same as a dense 7B model since 2/8 = 1/4 of experts compensates",
       ],
       correctAnswer: 1,
       explanation:
-        "Mixtral 8×7B has 8 FFN expert blocks per layer, each the size of a standard 7B model's FFN. With 32 layers:\n\\[\n\\text{total params} \\approx 46.7B = \\underbrace{7B}_{\\text{attention}} + \\underbrace{8 \\times 7B}_{8 \\times \\text{FFN expert} \\times 32 \\text{ layers}}.\n\\]\nAt inference, the router activates $k = 2$ experts per token per layer. Breaking down active parameters:\n\\[\n\\underbrace{7B}_{\\text{attention (always-on)}} + \\underbrace{2}_{\\text{active experts}} \\times \\underbrace{\\frac{1}{8}}_{\\text{fraction}} \\times \\underbrace{8 \\times 7B}_{\\text{total FFN params}} \\approx 7B + 6B = 13B.\n\\]\nThis gives Mixtral quality comparable to a dense 13B model at the inference cost of a dense 7B model (only ~13B parameters processed per forward pass).",
+        "Mixtral 8\\times7B has 8 FFN expert blocks per layer, each the size of a standard 7B model's FFN. With 32 layers:\n\\[\n\\text{total params} \\approx 46.7B = \\underbrace{7B}_{\\text{attention}} + \\underbrace{8 \\times 7B}_{8 \\times \\text{FFN expert} \\times 32 \\text{ layers}}.\n\\]\nAt inference, the router activates $k = 2$ experts per token per layer. Breaking down active parameters:\n\\[\n\\underbrace{7B}_{\\text{attention (always-on)}} + \\underbrace{2}_{\\text{active experts}} \\times \\underbrace{\\frac{1}{8}}_{\\text{fraction}} \\times \\underbrace{8 \\times 7B}_{\\text{total FFN params}} \\approx 7B + 6B = 13B.\n\\]\nThis gives Mixtral quality comparable to a dense 13B model at the inference cost of a dense 7B model (only ~13B parameters processed per forward pass).",
       hints: [
         "Always-on: attention parameters (~7B). Active FFN: $k/8$ of the total FFN params per layer.",
-        "Mixtral's MoE magic: 46.7B total params, but only ~13B active per token — 2 experts per 8 × 7B experts × 32 layers + 7B attention.",
+        "Mixtral's MoE magic: 46.7B total params, but only ~13B active per token — 2 experts per 8 \\times 7B experts \\times 32 layers + 7B attention.",
       ],
     },
     {
@@ -1058,9 +1058,9 @@ const questions: Record<string, Question[]> = {
         "Without an auxiliary load balancing loss, MoE models collapse: the router learns to always route tokens to the same 1–2 experts, making most expert capacity permanently unused and eliminating the benefit of having multiple experts.",
       correctAnswer: "True",
       explanation:
-        "Router collapse is a well-documented MoE failure mode: a popular expert gets more gradient signal → improves faster → gets routed to more → gets even more signal (positive feedback loop). The load balancing loss (e.g., auxiliary cross-entropy over expert assignment uniformity) breaks this cycle by penalizing unequal routing.",
+        "Router collapse is a well-documented MoE failure mode: a popular expert gets more gradient signal \\to improves faster \\to gets routed to more \\to gets even more signal (positive feedback loop). The load balancing loss (e.g., auxiliary cross-entropy over expert assignment uniformity) breaks this cycle by penalizing unequal routing.",
       hints: [
-        "More gradient signal → better expert → more routing → more signal: a positive feedback loop.",
+        "More gradient signal \\to better expert \\to more routing \\to more signal: a positive feedback loop.",
         "The auxiliary loss adds a small penalty proportional to the variance in expert load, discouraging concentration.",
       ],
     },
@@ -1080,7 +1080,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Routed experts can over-specialize: if all experts compete for specific niches, general-purpose representations may degrade. Shared experts that all tokens always pass through maintain stable general-purpose feature extraction, while routed experts add specialization on top — a divide between general and specialized processing.",
       hints: [
-        'Shared experts ≈ the "general" backbone; routed experts ≈ the "specialist" modules.',
+        'Shared experts \\approx the "general" backbone; routed experts \\approx the "specialist" modules.',
         "Without shared experts, every expert must balance generalism and specialism — leading to worse specialization.",
       ],
     },
@@ -1094,17 +1094,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Sliding Window Attention (SWA) with window size w = 4096 processes a sequence of n = 32768 tokens. What is the memory cost of the attention matrix vs. full self-attention?",
       options: [
-        "SWA attention matrix: n × n = 32768² ≈ 1.1B elements; same as full attention",
-        "SWA attention matrix: n × w = 32768 × 4096 ≈ 134M elements — 8× smaller than full attention\'s n² ≈ 1.1B elements",
-        "SWA attention matrix: w × w = 4096² ≈ 16.8M elements — 67× smaller",
+        "SWA attention matrix: n \\times n = 32768\\^2 \\approx 1.1B elements; same as full attention",
+        "SWA attention matrix: n \\times w = 32768 \\times 4096 \\approx 134M elements — 8\\times smaller than full attention\'s n\\^2 \\approx 1.1B elements",
+        "SWA attention matrix: w \\times w = 4096\\^2 \\approx 16.8M elements — 67\\times smaller",
         "SWA has no attention matrix — it replaces attention with linear convolutions",
       ],
       correctAnswer: 1,
       explanation:
-        "In SWA, each of n tokens attends to its w nearest neighbors — the attention matrix is n × w instead of n × n. For n = 32768 and w = 4096: n × w = 134M vs. n² = 1.07B — an n/w = 8× reduction. This enables linear O(n×w) memory scaling rather than quadratic O(n²) for full attention.",
+        "In SWA, each of n tokens attends to its w nearest neighbors — the attention matrix is n \\times w instead of n \\times n. For n = 32768 and w = 4096: n \\times w = 134M vs. n\\^2 = 1.07B — an n/w = 8\\times reduction. This enables linear O(n\\timesw) memory scaling rather than quadratic O(n\\^2) for full attention.",
       hints: [
         "Each row of the attention matrix has w non-zero entries instead of n.",
-        "Total attention matrix size: n rows × w columns = n×w, vs. n×n for full attention.",
+        "Total attention matrix size: n rows \\times w columns = n\\timesw, vs. n\\timesn for full attention.",
       ],
     },
     {
@@ -1112,13 +1112,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "A model with L = 32 transformer layers using SWA with window size w = 4096 can propagate information from position 1 to position 131,073 (32 × 4096 = 131,072 positions), despite each layer attending to at most 4096 neighboring positions.",
+        "A model with L = 32 transformer layers using SWA with window size w = 4096 can propagate information from position 1 to position 131,073 (32 \\times 4096 = 131,072 positions), despite each layer attending to at most 4096 neighboring positions.",
       correctAnswer: "True",
       explanation:
-        "This is the receptive field argument: layer 1 sees positions within w of each token; layer 2 sees positions within w of layer-1 representations (which already aggregate w-wide neighborhoods); after L layers, each position has an effective receptive field of L × w. Like deep CNNs, local attention layers compose into global context.",
+        "This is the receptive field argument: layer 1 sees positions within w of each token; layer 2 sees positions within w of layer-1 representations (which already aggregate w-wide neighborhoods); after L layers, each position has an effective receptive field of L \\times w. Like deep CNNs, local attention layers compose into global context.",
       hints: [
         "Analogy: a CNN with kernel size 3 has receptive field 3 at layer 1, 5 at layer 2, 2L+1 at layer L.",
-        "SWA effective receptive field = L × w — grows linearly with depth.",
+        "SWA effective receptive field = L \\times w — grows linearly with depth.",
       ],
     },
     {
@@ -1128,16 +1128,16 @@ const questions: Record<string, Question[]> = {
       question:
         "Longformer uses a hybrid of SWA (local attention) + global attention tokens. The [CLS] token and task-relevant tokens are given global attention. What is the computational complexity of this hybrid scheme for n tokens with w window and g global tokens?",
       options: [
-        "O(n²) — global tokens make it equivalent to full attention",
-        "O(n × (w + g)) — linear in n (with n >> w, g), much cheaper than O(n²) full attention while enabling long-range integration through the g global tokens",
-        "O(n × w + g²) — local window is linear; global tokens form a quadratic bottleneck",
-        "O(n × g) — only global token interactions matter; local attention is free",
+        "O(n\\^2) — global tokens make it equivalent to full attention",
+        "O(n \\times (w + g)) — linear in n (with n >> w, g), much cheaper than O(n\\^2) full attention while enabling long-range integration through the g global tokens",
+        "O(n \\times w + g\\^2) — local window is linear; global tokens form a quadratic bottleneck",
+        "O(n \\times g) — only global token interactions matter; local attention is free",
       ],
       correctAnswer: 1,
       explanation:
-        "Longformer complexity: local attention = O(n × w); global attention = O(n × g) (each of n tokens attends to all g global tokens, and g global tokens attend to all n). Total = O(n × (w + g)), which is linear in n when w and g are fixed constants << n — enabling efficient processing of very long documents.",
+        "Longformer complexity: local attention = O(n \\times w); global attention = O(n \\times g) (each of n tokens attends to all g global tokens, and g global tokens attend to all n). Total = O(n \\times (w + g)), which is linear in n when w and g are fixed constants << n — enabling efficient processing of very long documents.",
       hints: [
-        "Local: n × w interactions. Global: n × g interactions (n tokens × g globals each way).",
+        "Local: n \\times w interactions. Global: n \\times g interactions (n tokens \\times g globals each way).",
         "Total O(n(w+g)) is linear in n — the quadratic bottleneck of full attention is eliminated.",
       ],
     },
@@ -1172,7 +1172,7 @@ const questions: Record<string, Question[]> = {
         "RAG (Lewis et al., 2020) showed that jointly training the retriever and generator using non-differentiable retrieval (via marginalization over discrete retrieved documents) is possible through MIPS (Maximum Inner Product Search) and gradient approximation.",
       correctAnswer: "True",
       explanation:
-        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) × p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
+        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) \\times p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
       hints: [
         "Marginalization: sum over top-k retrieved documents weighted by their retrieval probability.",
         "The retriever is updated to retrieve documents that help the generator — not just documents with keyword overlap.",
@@ -1231,8 +1231,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "If a task requires querying weather in 3 cities, serial tool calling requires 3 LLM calls (one per tool + response incorporation); parallel tool calling allows the LLM to output all 3 tool requests at once, the application executes them concurrently, and returns all results in a single tool message batch — reducing 3 round-trips to 1.",
       hints: [
-        "Serial: request tool 1 → wait → request tool 2 → wait → request tool 3 → final answer.",
-        "Parallel: request all 3 tools at once → wait once → final answer. Fewer round-trips = lower latency.",
+        "Serial: request tool 1 \\to wait \\to request tool 2 \\to wait \\to request tool 3 \\to final answer.",
+        "Parallel: request all 3 tools at once \\to wait once \\to final answer. Fewer round-trips = lower latency.",
       ],
     },
     {
@@ -1265,16 +1265,16 @@ const questions: Record<string, Question[]> = {
       question:
         'The ReAct (Reason + Act) agent framework (Yao et al., 2022) interleaves Thought, Action, and Observation steps. For a task "Find the population of the capital of France", what is the correct ReAct trace structure?',
       options: [
-        'Action: search("France capital population") → Observation: 2.1M → Final Answer: 2.1M',
-        'Thought: "France\'s capital is Paris, I need to find Paris\'s population" → Action: search("Paris population") → Observation: "Paris population is 2.1M" → Thought: "I have the answer" → Final Answer: 2.1M',
-        'Thought: "The population is 2.1M" → Final Answer: 2.1M (no action needed)',
-        'Action: search("France") → Action: search("capital") → Action: search("population") → Final Answer: 2.1M',
+        'Action: search("France capital population") \\to Observation: 2.1M \\to Final Answer: 2.1M',
+        'Thought: "France\'s capital is Paris, I need to find Paris\'s population" \\to Action: search("Paris population") \\to Observation: "Paris population is 2.1M" \\to Thought: "I have the answer" \\to Final Answer: 2.1M',
+        'Thought: "The population is 2.1M" \\to Final Answer: 2.1M (no action needed)',
+        'Action: search("France") \\to Action: search("capital") \\to Action: search("population") \\to Final Answer: 2.1M',
       ],
       correctAnswer: 1,
       explanation:
         "ReAct (Yao et al., 2022) interleaves three step types at each turn:\n\n1. **Thought** $\\tau$: the LLM reasons about the current state and decides what to do next. Example: \"The question asks for Paris's population, so I need to search for 'Paris population.'\"\n\n2. **Action** $a$: the LLM outputs a tool call. Example: `search(\"Paris population\")`.\n\n3. **Observation** $o$: the tool result is injected back into the context. Example: \"Paris population is 2.1 million.\"\n\nThe cycle $\\tau \\rightarrow a \\rightarrow o \\rightarrow \\tau \\rightarrow \\cdots$ repeats until the LLM produces a Final Answer. For \"Find the population of the capital of France\":\n\\[\n\\tau_1: & \\text{\"France's capital is Paris\"} \\rightarrow a_1: \\text{search}(\\text{Paris population}) \\\\\n\\tau_2: & o_1 = \\text{\"2.1M\"} \\rightarrow \\text{\"I have the answer\"} \\rightarrow \\text{Final Answer: 2.1M}\n\\]\nThe explicit Thought steps make the agent's reasoning traceable — unlike Action-only agents (which act without visible reasoning) or Thought-only agents (which cannot observe tool results).",
       hints: [
-        "The cycle is: Thought (reason) → Action (tool call) → Observation (result) → repeat → Final Answer.",
+        "The cycle is: Thought (reason) \\to Action (tool call) \\to Observation (result) \\to repeat \\to Final Answer.",
         "Explicit thoughts make the agent debuggable — you can inspect the reasoning trace step by step.",
       ],
     },
@@ -1309,7 +1309,7 @@ const questions: Record<string, Question[]> = {
         "Single-agent limitations: context window fills with interleaved subtask history, reducing attention quality on current task; all subtasks are serialized; one prompt must serve all specializations. Multi-agent addresses all three: focused context per subagent (better attention quality), parallel execution, and per-subagent specialization via targeted system prompts.",
       hints: [
         "A 128k context shared across 10 subtasks gives each subtask ~12k effective context — degraded vs. a dedicated 128k.",
-        "Independent subtasks (e.g., search 3 different topics) can parallelize — 3× throughput for free.",
+        "Independent subtasks (e.g., search 3 different topics) can parallelize — 3\\times throughput for free.",
       ],
     },
   ],
@@ -1411,10 +1411,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DPO\'s loss is L_DPO = -E[(log \\sigma(\\beta × (log \\pi_\\theta(y_w|x) - log \\pi_ref(y_w|x)) - \\beta × (log \\pi_\\theta(y_l|x) - log \\pi_ref(y_l|x))))]. What happens mathematically when \\pi_\\theta = \\pi_ref (the fine-tuned model equals the reference)?",
+        "DPO\'s loss is L_DPO = -E[(log \\sigma(\\beta \\times (log \\pi_\\theta(y_w|x) - log \\pi_ref(y_w|x)) - \\beta \\times (log \\pi_\\theta(y_l|x) - log \\pi_ref(y_l|x))))]. What happens mathematically when \\pi_\\theta = \\pi_ref (the fine-tuned model equals the reference)?",
       options: [
         "The loss is maximized — the model must diverge from the reference to minimize DPO loss",
-        "All log-ratios are 0, making the argument of \\sigma equal to 0, so \\sigma(0) = 0.5 and loss = -log(0.5) ≈ 0.693 — a non-zero loss indicating the model hasn\'t learned preferences yet",
+        "All log-ratios are 0, making the argument of \\sigma equal to 0, so \\sigma(0) = 0.5 and loss = -log(0.5) \\approx 0.693 — a non-zero loss indicating the model hasn\'t learned preferences yet",
         "The loss is undefined since log(\\pi_\\theta/\\pi_ref) = log(1) = 0 is an edge case",
         "The gradient of the DPO loss at \\pi_\\theta = \\pi_ref is 0 — it is always a fixed point",
       ],
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Mistral-7B-v0.1 achieves better benchmark performance than LLaMA-2-13B on many tasks, demonstrating that architectural choices (GQA, SWA) and training data quality can compensate for a 2× deficit in parameter count.",
+        "Mistral-7B-v0.1 achieves better benchmark performance than LLaMA-2-13B on many tasks, demonstrating that architectural choices (GQA, SWA) and training data quality can compensate for a 2\\times deficit in parameter count.",
       correctAnswer: "True",
       explanation:
         "Jiang et al. (2023) showed Mistral-7B outperforms LLaMA-2-13B on commonsense reasoning, math, and code benchmarks. The key factors: sliding window attention enabling longer effective context, GQA for better inference efficiency, and aggressive data quality filtering — demonstrating that raw parameter count is not the dominant determinant of capability.",
@@ -1491,19 +1491,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "LLaVA-1.5 (Liu et al., 2023) connects a CLIP ViT-L/14@336 vision encoder to a Vicuna LLM via a two-layer MLP projection. A 336×336 image produces 576 patch tokens from ViT (14×14 patches = 576). How does this compare to the text token budget, and what is the implication?",
+        "LLaVA-1.5 (Liu et al., 2023) connects a CLIP ViT-L/14@336 vision encoder to a Vicuna LLM via a two-layer MLP projection. A 336\\times336 image produces 576 patch tokens from ViT (14\\times14 patches = 576). How does this compare to the text token budget, and what is the implication?",
       options: [
-        "576 vision tokens ≈ a short paragraph of text; images consume moderate but significant context budget",
-        "576 vision tokens ≈ 576 words, which is too large for any LLM to process",
+        "576 vision tokens \\approx a short paragraph of text; images consume moderate but significant context budget",
+        "576 vision tokens \\approx 576 words, which is too large for any LLM to process",
         "Vision tokens are processed separately and do not count toward the context window",
         "ViT produces 1 global token, not 576, to keep context overhead minimal",
       ],
       correctAnswer: 0,
       explanation:
-        "A 336×336 image with 14×14 patch size gives (336/14)² = 576 patch tokens. This is substantial — roughly equivalent to 400–600 text tokens depending on the text. For high-resolution images, newer models like LLaVA-1.6 use dynamic tiling, producing 2880+ tokens per image, consuming much of the context window.",
+        "A 336\\times336 image with 14\\times14 patch size gives (336/14)\\^2 = 576 patch tokens. This is substantial — roughly equivalent to 400–600 text tokens depending on the text. For high-resolution images, newer models like LLaVA-1.6 use dynamic tiling, producing 2880+ tokens per image, consuming much of the context window.",
       hints: [
-        "576 image tokens ≈ a dense paragraph of text in context budget terms.",
-        "High-res images with tiling (e.g., 4 tiles × 576 = 2304 tokens) can dominate the context window.",
+        "576 image tokens \\approx a dense paragraph of text in context budget terms.",
+        "High-res images with tiling (e.g., 4 tiles \\times 576 = 2304 tokens) can dominate the context window.",
       ],
     },
     {
@@ -1511,12 +1511,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GPT-4V (and LLaVA-1.6) use dynamic high-resolution processing: low-resolution images are processed as a single 336×336 tile (576 tokens), while high-resolution images are divided into multiple 336×336 tiles (each producing 576 tokens), adaptively scaling visual token count with image complexity.",
+        "GPT-4V (and LLaVA-1.6) use dynamic high-resolution processing: low-resolution images are processed as a single 336\\times336 tile (576 tokens), while high-resolution images are divided into multiple 336\\times336 tiles (each producing 576 tokens), adaptively scaling visual token count with image complexity.",
       correctAnswer: "True",
       explanation:
-        "Dynamic tiling addresses the resolution-context tradeoff: a fixed 336×336 encoding cannot capture fine text or small objects in high-resolution images. By tiling (e.g., a 672×672 image → 4 tiles), the model allocates more tokens to detail-rich images, trading context budget for visual fidelity. The total token count scales with the number of tiles used.",
+        "Dynamic tiling addresses the resolution-context tradeoff: a fixed 336\\times336 encoding cannot capture fine text or small objects in high-resolution images. By tiling (e.g., a 672\\times672 image \\to 4 tiles), the model allocates more tokens to detail-rich images, trading context budget for visual fidelity. The total token count scales with the number of tiles used.",
       hints: [
-        "A 4-tile 672×672 image: 4 × 576 = 2304 vision tokens plus 1 thumbnail token = 2305 total.",
+        "A 4-tile 672\\times672 image: 4 \\times 576 = 2304 vision tokens plus 1 thumbnail token = 2305 total.",
         "Dynamic allocation means a 4K image can receive many more tokens than a thumbnail.",
       ],
     },
@@ -1551,13 +1551,13 @@ const questions: Record<string, Question[]> = {
         'Wei et al. (2022) showed Chain-of-Thought prompting significantly improves LLM performance on multi-step math problems. For the problem "A store has 3 shelves with 8 books each, and 2 shelves with 12 books each. How many total books?", which CoT output demonstrates correct reasoning?',
       options: [
         '"The answer is 48." (direct answer, no steps)',
-        '"3 × 8 = 24 books on the first type of shelf. 2 × 12 = 24 books on the second type. Total = 24 + 24 = 48 books."',
-        '"3 shelves × 8 books = 24, plus 2 × 12 = 48, for a total of 72 books." (incorrect but shows steps)',
+        '"3 \\times 8 = 24 books on the first type of shelf. 2 \\times 12 = 24 books on the second type. Total = 24 + 24 = 48 books."',
+        '"3 shelves \\times 8 books = 24, plus 2 \\times 12 = 48, for a total of 72 books." (incorrect but shows steps)',
         '"Let me count: 8 + 8 + 8 + 12 + 12 = 48 books."',
       ],
       correctAnswer: 1,
       explanation:
-        "CoT prompting elicits intermediate reasoning steps: first compute 3 × 8 = 24, then 2 × 12 = 24, then sum 24 + 24 = 48. Wei et al. showed that providing few-shot CoT examples dramatically improves accuracy on arithmetic, symbolic, and commonsense reasoning — particularly for large models (≥100B parameters in 2022, now effective at smaller scale with instruction tuning).",
+        "CoT prompting elicits intermediate reasoning steps: first compute 3 \\times 8 = 24, then 2 \\times 12 = 24, then sum 24 + 24 = 48. Wei et al. showed that providing few-shot CoT examples dramatically improves accuracy on arithmetic, symbolic, and commonsense reasoning — particularly for large models (\\geq100B parameters in 2022, now effective at smaller scale with instruction tuning).",
       hints: [
         "CoT = explicit intermediate steps before the final answer.",
         "Models prompted with step-by-step reasoning examples produce step-by-step reasoning themselves.",
@@ -1648,7 +1648,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HumanEval: read docstring → write one function body → done. SWE-bench: (1) parse a GitHub issue description, (2) navigate a real repository to identify which files need changes, (3) understand complex existing code and its test suite, (4) make coordinated multi-file changes that fix the issue without regressions. The localization and multi-file consistency requirements are the primary difficulty amplifiers.",
+        "HumanEval: read docstring \\to write one function body \\to done. SWE-bench: (1) parse a GitHub issue description, (2) navigate a real repository to identify which files need changes, (3) understand complex existing code and its test suite, (4) make coordinated multi-file changes that fix the issue without regressions. The localization and multi-file consistency requirements are the primary difficulty amplifiers.",
       hints: [
         "Localization = finding which lines in which files cause the bug from an issue description — no pointers given.",
         "Multi-file consistency = changes in file A must work with unchanged file B\'s assumptions.",
@@ -1662,10 +1662,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "vLLM\'s PagedAttention divides KV cache into fixed-size memory pages (e.g., 16 tokens/page). If 4 requests are queued with maximum sequence lengths 512, 512, 512, 512 (total reserved: 4 × 512 = 2048 slots), but actual generation averages 200 tokens/request, how much GPU memory does naive pre-allocation waste vs. PagedAttention?",
+        "vLLM\'s PagedAttention divides KV cache into fixed-size memory pages (e.g., 16 tokens/page). If 4 requests are queued with maximum sequence lengths 512, 512, 512, 512 (total reserved: 4 \\times 512 = 2048 slots), but actual generation averages 200 tokens/request, how much GPU memory does naive pre-allocation waste vs. PagedAttention?",
       options: [
         "Naive wastes 0% — it always allocates exactly the tokens generated",
-        "Naive pre-allocates 2048 slots but uses 4 × 200 = 800 — wasting 2048 - 800 = 1248 slots (61% waste); PagedAttention allocates pages on-demand, using only 800 slots",
+        "Naive pre-allocates 2048 slots but uses 4 \\times 200 = 800 — wasting 2048 - 800 = 1248 slots (61% waste); PagedAttention allocates pages on-demand, using only 800 slots",
         "PagedAttention wastes more memory due to page-boundary fragmentation",
         "Both approaches use identical memory since KV cache is always freed after each request",
       ],
@@ -1673,7 +1673,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Naive contiguous allocation reserves max_seq_len per request upfront — the 1248 reserved-but-unused slots cannot be used by other requests. PagedAttention allocates pages (e.g., 16-token blocks) only as tokens are actually generated, reclaiming unused pages immediately, allowing the saved memory to serve additional concurrent requests.",
       hints: [
-        "Waste = (reserved − used) / reserved = (2048 − 800) / 2048 ≈ 61% for this example.",
+        "Waste = (reserved − used) / reserved = (2048 − 800) / 2048 \\approx 61% for this example.",
         "PagedAttention\'s on-demand allocation: if a request generates 200 tokens, it uses ceil(200/16) = 13 pages, not ceil(512/16) = 32 pages.",
       ],
     },
@@ -1688,7 +1688,7 @@ const questions: Record<string, Question[]> = {
         "Zheng et al. (2023) showed that in production, many requests share long prefixes (system prompts, few-shot examples) that are recomputed wastefully per-request. RadixAttention\'s radix tree maps prefix token sequences to cached KV pages — a new request matching an existing prefix skips prefill for those tokens, dramatically reducing time-to-first-token for prefix-heavy workloads.",
       hints: [
         "Radix tree key = token sequence prefix; value = physical KV cache pages.",
-        "System prompt (e.g., 500 tokens) shared by 1000 requests: recomputed 1000× without caching, once with RadixAttention.",
+        "System prompt (e.g., 500 tokens) shared by 1000 requests: recomputed 1000\\times without caching, once with RadixAttention.",
       ],
     },
     {
@@ -1705,10 +1705,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tensor-parallel attention: each GPU computes Q_i, K_i, V_i from its shard W_i; after computing partial attention outputs, an all-reduce sums contributions across all T GPUs to get the full d_model output. This happens at every transformer layer — with 80 layers × 2 all-reduces (attention + FFN) = 160 all-reduce operations per forward pass. NVLink\'s 3–5× higher bandwidth vs. InfiniBand makes it dramatically faster for this dense communication pattern.",
+        "Tensor-parallel attention: each GPU computes Q_i, K_i, V_i from its shard W_i; after computing partial attention outputs, an all-reduce sums contributions across all T GPUs to get the full d_model output. This happens at every transformer layer — with 80 layers \\times 2 all-reduces (attention + FFN) = 160 all-reduce operations per forward pass. NVLink\'s 3–5\\times higher bandwidth vs. InfiniBand makes it dramatically faster for this dense communication pattern.",
       hints: [
         "All-reduce = every GPU sends its partial result; all GPUs receive the summed result.",
-        "With 80 layers and T = 8, all-reduce latency × 160 rounds dominates inference latency — bandwidth matters enormously.",
+        "With 80 layers and T = 8, all-reduce latency \\times 160 rounds dominates inference latency — bandwidth matters enormously.",
       ],
     },
   ],
@@ -1733,7 +1733,7 @@ Object.assign(questions, {
         "RoPE's rotational structure ensures q_m * k_n = f(x_m, x_n, m-n) — the attention score depends on relative displacement m-n rather than absolute positions. This relative-position property is the basis for length generalization extensions like YaRN and LongRoPE.",
       hints: [
         "Absolute positional embeddings treat position 500 and 5000 as completely different learned vectors; RoPE encodes the difference.",
-        "Rotation by angle theta(m-n) in each 2D subspace: the q_m·k_n dot product encodes relative position m-n.",
+        "Rotation by angle theta(m-n) in each 2D subspace: the q_m\\cdotk_n dot product encodes relative position m-n.",
       ],
     },
     {
@@ -2251,11 +2251,11 @@ Object.assign(questions, {
       id: "q-tr-ex1-2",
       type: "true-false",
       difficulty: "easy",
-      question: "FlashAttention avoids materializing the full n×n attention matrix in GPU HBM by computing attention in tiles that fit in on-chip SRAM, reducing memory complexity from O(n^2) to O(n).",
+      question: "FlashAttention avoids materializing the full n\\timesn attention matrix in GPU HBM by computing attention in tiles that fit in on-chip SRAM, reducing memory complexity from O(n^2) to O(n).",
       correctAnswer: "True",
-      explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n×n attention matrix is never written to HBM — memory complexity drops from O(n^2) to O(n).",
+      explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n\\timesn attention matrix is never written to HBM — memory complexity drops from O(n^2) to O(n).",
       hints: [
-        "Standard attention writes the full n×n score matrix to HBM: O(n^2) memory writes at HBM bandwidth.",
+        "Standard attention writes the full n\\timesn score matrix to HBM: O(n^2) memory writes at HBM bandwidth.",
         "Online softmax allows correct normalization across tiles without ever materializing the full attention matrix."
       ]
     },
@@ -2292,10 +2292,10 @@ Object.assign(questions, {
         "O(d^3) — independent of sequence length entirely"
       ],
       correctAnswer: 1,
-      explanation: "Standard attention: (QK^T)V costs O(n^2 d) because QK^T is n×n. With kernel phi: compute phi(K)^T V first — a d×d matrix at cost O(n d^2) — then multiply phi(Q) by it at cost O(n d^2). Total O(n d^2) — linear in n. For typical values (d=64, n=4096), this reduces from 4096^2 * 64 = 1.07B to 4096 * 64^2 = 16.8M operations — a 64x reduction.",
+      explanation: "Standard attention: (QK^T)V costs O(n^2 d) because QK^T is n\\timesn. With kernel phi: compute phi(K)^T V first — a d\\timesd matrix at cost O(n d^2) — then multiply phi(Q) by it at cost O(n d^2). Total O(n d^2) — linear in n. For typical values (d=64, n=4096), this reduces from 4096^2 * 64 = 1.07B to 4096 * 64^2 = 16.8M operations — a 64x reduction.",
       hints: [
         "Key identity: (phi(Q) phi(K)^T) V = phi(Q) (phi(K)^T V). The right-to-left evaluation costs O(n d^2) not O(n^2 d).",
-        "Linear attention trades the n×n bottleneck for a constant-size d×d context matrix — linear in n for fixed d."
+        "Linear attention trades the n\\timesn bottleneck for a constant-size d\\timesd context matrix — linear in n for fixed d."
       ]
     },
     {
@@ -2322,9 +2322,9 @@ Object.assign(questions, {
         "Reduced attention computation: shared KV enables batching all H heads into one large matmul"
       ],
       correctAnswer: 1,
-      explanation: "During autoregressive decoding (one token at a time), compute per step is low (one row of Q × KV cache), but memory bandwidth is the bottleneck: loading the entire KV cache from HBM per step. MQA reduces KV cache size by H times (1 K and 1 V vs. H), directly cutting memory bandwidth per decode step by H times. Compute FLOPs are only marginally affected — bandwidth is the binding constraint.",
+      explanation: "During autoregressive decoding (one token at a time), compute per step is low (one row of Q \\times KV cache), but memory bandwidth is the bottleneck: loading the entire KV cache from HBM per step. MQA reduces KV cache size by H times (1 K and 1 V vs. H), directly cutting memory bandwidth per decode step by H times. Compute FLOPs are only marginally affected — bandwidth is the binding constraint.",
       hints: [
-        "Decode phase: compute = O(1 × n × d) — tiny. Loading KV cache = O(n × d) per layer — this is the bottleneck.",
+        "Decode phase: compute = O(1 \\times n \\times d) — tiny. Loading KV cache = O(n \\times d) per layer — this is the bottleneck.",
         "MQA benefit is almost entirely bandwidth reduction: H times less KV data transferred from HBM per decode step."
       ]
     }
@@ -2437,7 +2437,7 @@ Object.assign(questions, {
       id: "q-tr-ex5-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "LoRA (Hu et al., 2021) parameterizes a weight update as W = W_0 + BA where B is d×r and A is r×k. For a 7B model with d=k=4096 and rank r=16, how many trainable parameters does one LoRA adapter for a single weight matrix add?",
+      question: "LoRA (Hu et al., 2021) parameterizes a weight update as W = W_0 + BA where B is d\\timesr and A is r\\timesk. For a 7B model with d=k=4096 and rank r=16, how many trainable parameters does one LoRA adapter for a single weight matrix add?",
       options: [
         "4096 * 4096 = 16.8M — same as the full weight matrix",
         "2 * 4096 * 16 = 131,072 — about 128x fewer than the full 16.8M parameter matrix",
@@ -2457,9 +2457,9 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "After LoRA fine-tuning, the adapter weights B and A can be merged into the base model (W = W_0 + BA) before deployment, eliminating any inference latency overhead compared to the original base model.",
       correctAnswer: "True",
-      explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d×k — identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically — a different deployment pattern.",
+      explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d\\timesk — identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically — a different deployment pattern.",
       hints: [
-        "W_merged = W_0 + B@A. The result is a d×k matrix — indistinguishable from any other weight matrix to the serving infrastructure.",
+        "W_merged = W_0 + B@A. The result is a d\\timesk matrix — indistinguishable from any other weight matrix to the serving infrastructure.",
         "Adapter switching for multi-tenant serving: keep B and A separate and add them dynamically per request — no merge needed."
       ]
     },
@@ -2526,9 +2526,9 @@ Object.assign(questions, {
         "Adapter: 2 * 4096 * 64 = 524,288 params — about 6% of the FFN"
       ],
       correctAnswer: 0,
-      explanation: "Each adapter: down-project (d_model × r) + up-project (r × d_model) = 2 * 1024 * 64 = 131,072 params plus biases. Original FFN: 2 * (1024 * 4096) = 8.39M params. Ratio: 131K / 8.39M ≈ 1.56%. Houlsby et al. insert adapters after both attention and FFN sublayers (2 per transformer block), achieving near fine-tuning quality at only ~3% total parameter overhead per layer.",
+      explanation: "Each adapter: down-project (d_model \\times r) + up-project (r \\times d_model) = 2 * 1024 * 64 = 131,072 params plus biases. Original FFN: 2 * (1024 * 4096) = 8.39M params. Ratio: 131K / 8.39M \\approx 1.56%. Houlsby et al. insert adapters after both attention and FFN sublayers (2 per transformer block), achieving near fine-tuning quality at only ~3% total parameter overhead per layer.",
       hints: [
-        "Adapter: down (d_model → r) + nonlinearity + up (r → d_model) with residual. Two matrices: d_model×r and r×d_model.",
+        "Adapter: down (d_model \\to r) + nonlinearity + up (r \\to d_model) with residual. Two matrices: d_model\\timesr and r\\timesd_model.",
         "Per-layer overhead ratio: 2*d_model*r / (2*d_model*d_ff) = r/d_ff = 64/4096 = 1.56%."
       ]
     }
@@ -2542,15 +2542,15 @@ Object.assign(questions, {
       question: "The Chinchilla scaling law (Hoffmann et al., 2022) prescribes compute-optimal training. What is the recommended ratio of training tokens D to model parameters N?",
       options: [
         "D = N — equal parameters and tokens (1:1 ratio)",
-        "D ≈ 20 * N — roughly 20 training tokens per model parameter",
-        "D ≈ 100 * N — 100 tokens per parameter",
+        "D \\approx 20 * N — roughly 20 training tokens per model parameter",
+        "D \\approx 100 * N — 100 tokens per parameter",
         "D is fixed at 300B tokens regardless of model size"
       ],
       correctAnswer: 1,
-      explanation: "Chinchilla's key finding: compute-optimal training uses D* ≈ 20 * N* (tokens ≈ 20x parameters). This contrasts with GPT-3 (175B params, 300B tokens ≈ 1.7 tokens/param) and Gopher (280B params, 300B tokens). For 10B params: use 200B tokens. For 70B params: use 1.4T tokens. LLaMA-1 applied this rule. The 6ND approximation for total FLOPs means doubling N and D proportionally keeps optimal efficiency.",
+      explanation: "Chinchilla's key finding: compute-optimal training uses D* \\approx 20 * N* (tokens \\approx 20x parameters). This contrasts with GPT-3 (175B params, 300B tokens \\approx 1.7 tokens/param) and Gopher (280B params, 300B tokens). For 10B params: use 200B tokens. For 70B params: use 1.4T tokens. LLaMA-1 applied this rule. The 6ND approximation for total FLOPs means doubling N and D proportionally keeps optimal efficiency.",
       hints: [
         "Pre-Chinchilla: scale N, hold D roughly fixed. Post-Chinchilla: scale both N and D proportionally.",
-        "Practical rule: 20 tokens per parameter. 7B model → 140B tokens compute-optimal."
+        "Practical rule: 20 tokens per parameter. 7B model \\to 140B tokens compute-optimal."
       ]
     },
     {
@@ -2592,16 +2592,16 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "For LLaMA-3-70B (80 layers, 8 KV heads, head_dim=128) serving a batch of 32 requests each with 8,192-token context in BF16 (2 bytes/element), what is the approximate KV cache memory requirement?",
       options: [
-        "2 * 80 * 8 * 128 * 8192 * 32 * 2 bytes ≈ 43 GB",
-        "2 * 80 * 64 * 128 * 8192 * 32 * 2 bytes ≈ 344 GB",
-        "80 * 8 * 128 * 8192 * 2 bytes ≈ 1.3 GB per request only",
-        "8 * 128 * 8192 * 32 * 2 bytes ≈ 0.5 GB total"
+        "2 * 80 * 8 * 128 * 8192 * 32 * 2 bytes \\approx 43 GB",
+        "2 * 80 * 64 * 128 * 8192 * 32 * 2 bytes \\approx 344 GB",
+        "80 * 8 * 128 * 8192 * 2 bytes \\approx 1.3 GB per request only",
+        "8 * 128 * 8192 * 32 * 2 bytes \\approx 0.5 GB total"
       ],
       correctAnswer: 0,
-      explanation: "KV cache formula: 2 (K+V) * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes = 2 * 80 * 8 * 128 * 8192 * 32 * 2 = ~42.9 GB. Without GQA (using 64 Q heads as KV): 2 * 80 * 64 * 128 * 8192 * 32 * 2 = ~344 GB — impossible on a single A100. GQA's 8-KV-head design is what makes 70B models practical: 344 GB → 43 GB, an 8x reduction.",
+      explanation: "KV cache formula: 2 (K+V) * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes = 2 * 80 * 8 * 128 * 8192 * 32 * 2 = ~42.9 GB. Without GQA (using 64 Q heads as KV): 2 * 80 * 64 * 128 * 8192 * 32 * 2 = ~344 GB — impossible on a single A100. GQA's 8-KV-head design is what makes 70B models practical: 344 GB \\to 43 GB, an 8x reduction.",
       hints: [
         "KV cache: 2 * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes_per_element.",
-        "GQA-8 vs. MHA-64: 8/64 = 1/8 the KV heads → 1/8 the KV cache. 344 GB → 43 GB for this configuration."
+        "GQA-8 vs. MHA-64: 8/64 = 1/8 the KV heads \\to 1/8 the KV cache. 344 GB \\to 43 GB for this configuration."
       ]
     },
     {
@@ -2631,7 +2631,7 @@ Object.assign(questions, {
       explanation: "H2O and StreamingLLM track cumulative attention scores. Tokens receiving low total attention across recent decode steps are eviction candidates. The critical finding (StreamingLLM, Xiao et al.): initial token positions (0-3) act as 'attention sinks' — softmax must sum to 1, and initial tokens accumulate excess probability mass as a normalization artifact. Evicting these sink tokens causes quality collapse even if many more recent tokens are retained. Fix: always keep the first few tokens plus the most recent window.",
       hints: [
         "Attention sink: softmax forces probability to sum to 1; initial tokens absorb excess probability when no other token is relevant.",
-        "StreamingLLM: retain first 4 sink tokens + sliding window of recent tokens → infinite context with constant cache size."
+        "StreamingLLM: retain first 4 sink tokens + sliding window of recent tokens \\to infinite context with constant cache size."
       ]
     }
   ],
@@ -2714,8 +2714,8 @@ Object.assign(questions, {
       correctAnswer: "True",
       explanation: "Ring Attention: GPU i holds Q_i (its segment of queries) and processes K_j, V_j blocks received from the ring. At each ring step, GPU i computes Q_i K_j^T V_j, accumulates into its output using online softmax, and passes K_j, V_j forward to the next GPU. After n_gpu ring steps, each GPU has its full attention output. Communication per step is proportional to segment_size — constant regardless of total sequence length, enabling sequences of 1M+ tokens.",
       hints: [
-        "Ring step: receive K_j, V_j → compute partial attention → accumulate with online softmax → pass K_j, V_j to next GPU.",
-        "Total communication: n_gpu steps × (seq/n_gpu) × d_model — same as total sequence processing, no overhead from ring topology."
+        "Ring step: receive K_j, V_j \\to compute partial attention \\to accumulate with online softmax \\to pass K_j, V_j to next GPU.",
+        "Total communication: n_gpu steps \\times (seq/n_gpu) \\times d_model — same as total sequence processing, no overhead from ring topology."
       ]
     },
     {

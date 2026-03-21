@@ -103,7 +103,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DSC = 2|A∩B| / (|A|+|B|), measuring spatial overlap between predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap — it is the standard segmentation evaluation metric.",
+        "DSC = 2|A\\capB| / (|A|+|B|), measuring spatial overlap between predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap — it is the standard segmentation evaluation metric.",
       hints: [
         "DSC involves a ratio that compares the intersection of two sets to their combined size.",
         "It is sometimes called the F1 score for segmentation tasks.",
@@ -126,9 +126,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "WSIs can be 100,000×100,000 pixels or more; loading them into GPU memory is impossible. The standard approach is Multiple Instance Learning (MIL) on extracted patches.",
+        "WSIs can be 100,000\\times100,000 pixels or more; loading them into GPU memory is impossible. The standard approach is Multiple Instance Learning (MIL) on extracted patches.",
       hints: [
-        "Think about how many pixels a 40× magnification slide contains — it is measured in gigapixels.",
+        "Think about how many pixels a 40\\times magnification slide contains — it is measured in gigapixels.",
         "The solution involves dividing the image into smaller pieces called patches or tiles.",
       ],
     },
@@ -370,7 +370,7 @@ const questions: Record<string, Question[]> = {
         "The Evoformer takes an MSA representation (rows = homologous sequences, columns = residue positions) and jointly updates it with a pairwise residue-residue representation. Correlated mutations between residue pairs across evolution — co-evolutionary signals — provide strong geometric constraints that guide 3D structure prediction.",
       hints: [
         "If two residues that are spatially close in 3D mutate together across evolution, this co-variation is a strong signal for proximity.",
-        "The MSA representation has shape (N_seq × N_res); the pair representation has shape (N_res × N_res) — Evoformer updates both jointly.",
+        "The MSA representation has shape (N_seq \\times N_res); the pair representation has shape (N_res \\times N_res) — Evoformer updates both jointly.",
       ],
     },
     {
@@ -727,7 +727,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FedAvg aggregates by computing ∑(n_k/n)·w_k — a weighted average of local model weights proportional to local dataset size — which converges to the same solution as centralized training under IID data conditions.",
+        "FedAvg aggregates by computing \\sum(n_k/n)\\cdotw_k — a weighted average of local model weights proportional to local dataset size — which converges to the same solution as centralized training under IID data conditions.",
       hints: [
         "FedAvg is the most basic aggregation rule; it weights each institution\'s contribution by its data volume.",
         "A hospital with 10,000 patients contributes more to the aggregated model than one with 500.",
@@ -779,12 +779,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "Blood glucose level",
         "Bone mineral density",
-        "Blood oxygen saturation (SpO₂) and heart rate",
+        "Blood oxygen saturation (SpO\\_2) and heart rate",
         "Intracranial pressure",
       ],
       correctAnswer: 2,
       explanation:
-        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO₂ via Beer-Lambert law, and heart rate from pulse timing — both now standard in consumer smartwatches.",
+        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO\\_2 via Beer-Lambert law, and heart rate from pulse timing — both now standard in consumer smartwatches.",
       hints: [
         "PPG uses light — think about what physical property of blood changes with each heartbeat.",
         "Pulse oximeters in hospitals use the same physical principle as wearable PPG sensors.",
@@ -952,7 +952,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KG embedding methods learn low-dimensional vectors for entities and relations such that the embedding geometry preserves relational structure — TransE models relation as translation (h + r ≈ t), enabling scoring of candidate drug-disease links.",
+        "KG embedding methods learn low-dimensional vectors for entities and relations such that the embedding geometry preserves relational structure — TransE models relation as translation (h + r \\approx t), enabling scoring of candidate drug-disease links.",
       hints: [
         "These methods learn embeddings of nodes and edges jointly, so entity vectors encode the graph topology.",
         "TransE is named because it models a relation as a translation (vector addition) in embedding space.",
@@ -1444,7 +1444,7 @@ const questions: Record<string, Question[]> = {
         "Model quantization (e.g., INT8 or INT4) is commonly used to deploy ML models on wearable devices because it reduces model size and inference latency at the cost of some accuracy.",
       correctAnswer: "True",
       explanation:
-        "Quantization reduces weight precision from FP32 to INT8/INT4, shrinking model size 4-8× and accelerating inference on low-power hardware (NPUs, ARM Cortex-M) with typically <1-2% accuracy degradation for well-quantized models.",
+        "Quantization reduces weight precision from FP32 to INT8/INT4, shrinking model size 4-8\\times and accelerating inference on low-power hardware (NPUs, ARM Cortex-M) with typically <1-2% accuracy degradation for well-quantized models.",
       hints: [
         "Wearable microcontrollers have kilobytes of RAM, not gigabytes — the model must fit in very limited memory.",
         "Quantization trades numerical precision for efficiency — fewer bits per weight means smaller, faster models.",
@@ -1535,7 +1535,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The CHADS₂ score is a classic clinical risk score used to predict:",
+        "The CHADS\\_2 score is a classic clinical risk score used to predict:",
       options: [
         "Surgical complication risk in cardiac surgery",
         "Stroke risk in patients with atrial fibrillation",
@@ -1544,9 +1544,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CHADS₂ (Congestive heart failure, Hypertension, Age ≥75, Diabetes, Stroke history) scores stroke risk in atrial fibrillation patients to guide anticoagulation therapy decisions — a simple but effective additive risk score.",
+        "CHADS\\_2 (Congestive heart failure, Hypertension, Age \\geq75, Diabetes, Stroke history) scores stroke risk in atrial fibrillation patients to guide anticoagulation therapy decisions — a simple but effective additive risk score.",
       hints: [
-        "Each letter in CHADS₂ is a risk factor — the score sums up how many apply to a patient.",
+        "Each letter in CHADS\\_2 is a risk factor — the score sums up how many apply to a patient.",
         "Atrial fibrillation is a cardiac arrhythmia that increases the risk of a specific serious complication.",
       ],
     },
@@ -1879,7 +1879,7 @@ const questions: Record<string, Question[]> = {
         "Whole Slide Image (WSI) analysis using deep learning is challenging primarily because:",
       options: [
         "Pathology slides contain too few cells to learn meaningful features",
-        "WSIs are gigapixel images (often 100,000×100,000+ pixels) that cannot be processed as a single tensor on current hardware",
+        "WSIs are gigapixel images (often 100,000\\times100,000+ pixels) that cannot be processed as a single tensor on current hardware",
         "Digital pathology images lack color information compared to histological stains",
         "Pathology labels are always at the pixel level, making annotation inexpensive",
       ],

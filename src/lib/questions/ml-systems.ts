@@ -59,7 +59,7 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Inference latency budgets are typically in the tens of milliseconds — a SQL query to BigQuery (seconds) is not acceptable.",
         "Key-value stores (Redis, DynamoDB) are optimized for single-key lookups, not analytical scans.",
-        "The architecture: offline computation → materialization to online store → low-latency retrieval at inference time.",
+        "The architecture: offline computation \\to materialization to online store \\to low-latency retrieval at inference time.",
       ],
     },
   ],
@@ -293,7 +293,7 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Rollback speed is critical — instant redirection via alias vs. minutes/hours of retraining.",
         "Immutability guarantees you can always return to an exact prior state without reconstruction.",
-        "MLflow's alias system: 'Production' alias → v22. To rollback: set_alias('Production', 'v22'). Done.",
+        "MLflow's alias system: 'Production' alias \\to v22. To rollback: set_alias('Production', 'v22'). Done.",
       ],
     },
   ],
@@ -441,7 +441,7 @@ const questions: Record<string, Question[]> = {
         "TensorRT\'s kernel fusion optimization merges multiple sequential operations into a single GPU kernel, reducing memory bandwidth consumption.",
       correctAnswer: "True",
       explanation:
-        "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv → BatchNorm → ReLU becomes a single fused kernel). Without fusion: each op writes its output to VRAM, then the next op reads it back — 3 separate kernel launches and 3 VRAM round-trips. With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
+        "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv \\to BatchNorm \\to ReLU becomes a single fused kernel). Without fusion: each op writes its output to VRAM, then the next op reads it back — 3 separate kernel launches and 3 VRAM round-trips. With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
       hints: [
         "Each separate kernel launch = one write + one read from VRAM. Fusion eliminates intermediate round-trips.",
         "Memory bandwidth is often the bottleneck for modern GPUs, not raw FLOPs — fusion directly attacks this bottleneck.",
@@ -1585,7 +1585,7 @@ const questions: Record<string, Question[]> = {
         "When implementing semantic caching for an LLM API, which design decision is most critical to get right?",
       options: [
         "Whether to use cosine similarity versus Euclidean distance as the similarity metric",
-        "Calibrating the embedding similarity threshold: too high → cache misses on valid paraphrases; too low → incorrect cached responses for genuinely different queries",
+        "Calibrating the embedding similarity threshold: too high \\to cache misses on valid paraphrases; too low \\to incorrect cached responses for genuinely different queries",
         "Selecting the embedding model's dimensionality",
         "Choosing between Redis and Qdrant as the vector store backend",
       ],
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       question:
         "According to the Chinchilla scaling laws, what is the optimal relationship between model parameters (N) and training tokens (D)?",
       options: [
-        "D should be roughly 10× N (train mostly larger models with less data)",
+        "D should be roughly 10\\times N (train mostly larger models with less data)",
         "N and D should scale equally — roughly 20 tokens per parameter",
         "N should be maximized regardless of D",
         "D is irrelevant; only N determines model quality",
@@ -1696,7 +1696,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Distributed tracing works by propagating a trace context (a unique trace ID and span ID) through all service calls in a request chain. Each service records a span — a structured log capturing:\n\n" +
         "\\[ \\text{span} = \\{ \\text{service\\_name}, \\; \\text{start\\_time}, \\; \\text{end\\_time}, \\; \\text{parent\\_span\\_id} \\} \\]\n\n" +
-        "When an inference request arrives, it may pass through: feature retrieval (Redis) → model inference (Triton) → post-processing → client. Each hop creates a child span referencing its parent, forming a trace tree:\n" +
+        "When an inference request arrives, it may pass through: feature retrieval (Redis) \\to model inference (Triton) \\to post-processing \\to client. Each hop creates a child span referencing its parent, forming a trace tree:\n" +
         "\\[ \\text{trace} = \\text{span\\_A} \\rightarrow \\text{span\\_B} \\rightarrow \\text{span\\_C} \\]\n\n" +
         "By examining individual span durations, engineers identify which specific service in the chain is responsible for latency anomalies — not just that latency is elevated, but precisely where.",
       hints: [
@@ -1778,7 +1778,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'In production ML, operational concerns (debuggability, monitoring, incident response speed) often outweigh marginal accuracy gains from complex models — a principle known as "sufficiently good and maintainable" design.',
       hints: [
-        "A model that\'s 2% more accurate but takes 10× longer to debug may be a net negative.",
+        "A model that\'s 2% more accurate but takes 10\\times longer to debug may be a net negative.",
         "Occam\'s Razor applied to ML: prefer simplicity when accuracy is comparable.",
       ],
     },
@@ -2316,7 +2316,7 @@ const extraMlSystems: Record<string, Question[]> = {
       explanation: "In naive pipeline parallelism with K stages and one micro-batch: stage 1 processes the batch, sends activations to stage 2, then idles. Stage 2 processes, sends to stage 3, then idles waiting for the next batch. At any step, only 1 of K stages is active — utilization is 1/K (the 'pipeline bubble'). GPipe fixes this with micro-batching: split the batch into M micro-batches, filling the pipeline. Bubble fraction reduces to (K-1)/(M+K-1), which shrinks as M increases. PipeDream uses 1F1B (one-forward-one-backward) scheduling to further reduce bubble fraction.",
       hints: [
         "Pipeline bubble = idle time when stages wait for activations. Micro-batching keeps the pipeline filled.",
-        "With M=K micro-batches, bubble fraction = (K-1)/(2K-1) ≈ 50%. With M>>K, bubble fraction → 0.",
+        "With M=K micro-batches, bubble fraction = (K-1)/(2K-1) \\approx 50%. With M>>K, bubble fraction \\to 0.",
       ],
     },
     {
@@ -2433,7 +2433,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "O(d^2 / batch) — only memory-bound when batch=1, compute-bound for large batches",
       ],
       correctAnswer: 2,
-      explanation: "For matrix-vector product y = Wx (W: d x d, x: d): FLOPs = 2*d^2 (multiply-add per element). Bytes loaded = 2*d^2 (weight matrix, FP16) + 2*d (input, negligible). Arithmetic intensity = 2*d^2 / (2*d^2) = 1 FLOP/byte. A100 GPU: 312 TFLOP/s (BF16), 2 TB/s memory bandwidth → roofline threshold = 156 FLOP/byte. At 1 FLOP/byte, inference is 156x below the compute threshold — fully memory-bandwidth-bound. This explains why LLM inference latency scales with model size (more parameters = more memory to load) not with compute. Batching amortizes weight loading: batch B raises arithmetic intensity to ~B FLOP/byte.",
+      explanation: "For matrix-vector product y = Wx (W: d x d, x: d): FLOPs = 2*d^2 (multiply-add per element). Bytes loaded = 2*d^2 (weight matrix, FP16) + 2*d (input, negligible). Arithmetic intensity = 2*d^2 / (2*d^2) = 1 FLOP/byte. A100 GPU: 312 TFLOP/s (BF16), 2 TB/s memory bandwidth \\to roofline threshold = 156 FLOP/byte. At 1 FLOP/byte, inference is 156x below the compute threshold — fully memory-bandwidth-bound. This explains why LLM inference latency scales with model size (more parameters = more memory to load) not with compute. Batching amortizes weight loading: batch B raises arithmetic intensity to ~B FLOP/byte.",
       hints: [
         "Arithmetic intensity = FLOPs / bytes. Below the roofline threshold (FLOP/s / bandwidth), operations are memory-bound.",
         "Batch size = 1: load all weights once, perform O(d) FLOPs per weight byte loaded. Batch size = 128: perform 128x more FLOPs per weight byte.",
@@ -2467,7 +2467,7 @@ const extraMlSystems: Record<string, Question[]> = {
       explanation: "Standard attention: Q, K, V in HBM. Compute S = QK^T (O(N^2) HBM reads/writes for N tokens), apply softmax, compute P = softmax(S)V. HBM bandwidth is the bottleneck: O(N^2 * d) bytes of HBM traffic. FlashAttention tiles: loads Q, K, V tiles into SRAM (fast, ~20 TB/s), computes partial attention results within SRAM using online softmax (Milakov & Gimelshein, 2018) to handle the running max, writes only final O back to HBM. HBM reads: O(N*d) not O(N^2*d). FlashAttention is 2-4x faster on A100 for N=2048 and 5-9x for N=8192 — the speedup grows with sequence length where N^2 attention score materialization is most costly.",
       hints: [
         "HBM (High Bandwidth Memory) = GPU DRAM, ~2 TB/s. SRAM (on-chip shared memory) = ~20 TB/s. Keeping computation in SRAM avoids slow HBM round-trips.",
-        "Online softmax: compute softmax without materializing the full N×N attention matrix — process blocks, tracking running max for numerical stability.",
+        "Online softmax: compute softmax without materializing the full N\\timesN attention matrix — process blocks, tracking running max for numerical stability.",
       ],
     },
   ],
@@ -2518,7 +2518,7 @@ const extraMlSystems: Record<string, Question[]> = {
       explanation: "QAT inserts fake quantization operations (round-to-INT4 with straight-through estimators for gradients) during training, allowing the model to learn weight distributions that are robust to 4-bit quantization. PTQ quantizes a pre-trained FP32/FP16 model without gradient updates — the weights were not optimized for the quantization grid. At INT8, PTQ (e.g., GPTQ, SmoothQuant) achieves near-lossless accuracy. At INT4, QAT typically recovers 1-3% more accuracy than PTQ. The tradeoff: QAT requires full or partial retraining (expensive), while PTQ runs in hours on a small calibration set.",
       hints: [
         "Straight-through estimator: treat the rounding operation as identity during backward pass to allow gradients to flow.",
-        "INT8 PTQ ≈ QAT in quality; INT4 PTQ < QAT in quality — QAT's advantage grows at lower bit widths.",
+        "INT8 PTQ \\approx QAT in quality; INT4 PTQ < QAT in quality — QAT's advantage grows at lower bit widths.",
       ],
     },
     {
@@ -2622,10 +2622,10 @@ const extraMlSystems: Record<string, Question[]> = {
         "O(M*log(N)) bytes per GPU — tree all-reduce reduces gradient size at each level",
       ],
       correctAnswer: 2,
-      explanation: "Ring all-reduce: N GPUs arranged in a ring. Phase 1 (scatter-reduce): each GPU sends M/N bytes to its right neighbor, receives M/N from its left, accumulates, and passes on. After N-1 steps, each GPU holds the correct sum of one M/N chunk — total sent: (N-1)*(M/N) bytes. Phase 2 (all-gather): distribute each chunk to all GPUs — another (N-1)*(M/N) bytes per GPU. Total: 2*(N-1)*M/N bytes per GPU → as N→∞, approaches 2M bytes per GPU, independent of N. This is within 2x of the information-theoretic lower bound. Compare: naive all-to-all: O(M*N) per GPU. Ring all-reduce is optimal for bandwidth-bound collective operations.",
+      explanation: "Ring all-reduce: N GPUs arranged in a ring. Phase 1 (scatter-reduce): each GPU sends M/N bytes to its right neighbor, receives M/N from its left, accumulates, and passes on. After N-1 steps, each GPU holds the correct sum of one M/N chunk — total sent: (N-1)*(M/N) bytes. Phase 2 (all-gather): distribute each chunk to all GPUs — another (N-1)*(M/N) bytes per GPU. Total: 2*(N-1)*M/N bytes per GPU \\to as N\\to\\infty, approaches 2M bytes per GPU, independent of N. This is within 2x of the information-theoretic lower bound. Compare: naive all-to-all: O(M*N) per GPU. Ring all-reduce is optimal for bandwidth-bound collective operations.",
       hints: [
         "Ring all-reduce phases: (1) scatter-reduce — accumulate M/N chunk; (2) all-gather — distribute chunks. Each phase: (N-1)*M/N bytes.",
-        "As N→∞, ring all-reduce communication per GPU → 2M bytes — scales perfectly. Parameter server: M*N bytes at the server.",
+        "As N\\to\\infty, ring all-reduce communication per GPU \\to 2M bytes — scales perfectly. Parameter server: M*N bytes at the server.",
       ],
     },
     {
@@ -2635,7 +2635,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Gradient compression techniques such as 1-bit Adam and PowerSGD reduce all-reduce communication volume at the cost of introducing gradient noise that can degrade model convergence if not carefully managed.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "1-bit SGD/Adam (Seide et al., 2014; Tang et al., 2021) compresses gradients to 1 bit per element (sign of gradient) using error feedback to accumulate compression errors. Communication is reduced by 32x (FP32) or 16x (FP16), but gradient noise increases. PowerSGD (Vogels et al., 2019) uses low-rank approximation: approximate gradient matrix G ≈ P*Q^T with rank r, communicating P and Q instead of G — compression ratio d/(2r) for d-dim gradients. Both methods can destabilize training if error feedback is not implemented correctly, especially at low learning rates where gradient signal is small relative to compression noise.",
+      explanation: "1-bit SGD/Adam (Seide et al., 2014; Tang et al., 2021) compresses gradients to 1 bit per element (sign of gradient) using error feedback to accumulate compression errors. Communication is reduced by 32x (FP32) or 16x (FP16), but gradient noise increases. PowerSGD (Vogels et al., 2019) uses low-rank approximation: approximate gradient matrix G \\approx P*Q^T with rank r, communicating P and Q instead of G — compression ratio d/(2r) for d-dim gradients. Both methods can destabilize training if error feedback is not implemented correctly, especially at low learning rates where gradient signal is small relative to compression noise.",
       hints: [
         "Error feedback: accumulate compression error and add to next gradient — prevents systematic bias from compression.",
         "Gradient compression is most beneficial when communication is the bottleneck (large models, slow interconnects) relative to compute.",
@@ -2691,7 +2691,7 @@ const extraMlSystems: Record<string, Question[]> = {
       explanation: "Standard LLM serving pre-allocates KV cache for the maximum sequence length per request. If a request might generate 2048 tokens but generates 50, the remaining 1998 slots are wasted (internal fragmentation). Different requests have different actual lengths (external fragmentation). GPU memory is wasted. PagedAttention (inspired by OS virtual memory): KV cache is stored in fixed-size blocks (pages, e.g., 16 tokens each). A block table maps logical KV positions to physical page locations. Pages are allocated on demand as tokens are generated, deallocated when sequences complete. Result: near-zero KV cache waste, enabling 2-4x more concurrent requests on the same GPU.",
       hints: [
         "OS analogy: PagedAttention solves memory fragmentation the same way OS virtual memory solves heap fragmentation.",
-        "Without PagedAttention: pre-allocate max_len KV cache per request → ~30-40% GPU memory wasted. With PagedAttention: allocate pages on demand → <4% waste.",
+        "Without PagedAttention: pre-allocate max_len KV cache per request \\to ~30-40% GPU memory wasted. With PagedAttention: allocate pages on demand \\to <4% waste.",
       ],
     },
     {
@@ -2706,10 +2706,10 @@ const extraMlSystems: Record<string, Question[]> = {
         "H * d_head^2 * 2 bytes (quadratic in d_head due to outer product)",
       ],
       correctAnswer: 0,
-      explanation: "KV cache per token per layer: K vector of size d_model (= H * d_head) and V vector of size d_model. Each in FP16 (2 bytes). Total: 2 * d_model * 2 = 4 * d_model bytes. For LLaMA-2 70B: d_model = 8192, L = 80 layers. KV cache per token: 4 * 8192 * 80 = 2,621,440 bytes ≈ 2.5 MB per token. For a context of 4096 tokens: 4096 * 2.5MB = 10GB just for KV cache. This explains why longer contexts exhaust GPU memory — KV cache grows linearly with context length and can exceed model parameter memory for long sequences.",
+      explanation: "KV cache per token per layer: K vector of size d_model (= H * d_head) and V vector of size d_model. Each in FP16 (2 bytes). Total: 2 * d_model * 2 = 4 * d_model bytes. For LLaMA-2 70B: d_model = 8192, L = 80 layers. KV cache per token: 4 * 8192 * 80 = 2,621,440 bytes \\approx 2.5 MB per token. For a context of 4096 tokens: 4096 * 2.5MB = 10GB just for KV cache. This explains why longer contexts exhaust GPU memory — KV cache grows linearly with context length and can exceed model parameter memory for long sequences.",
       hints: [
         "KV cache = K + V per token per layer. K shape: [d_model], V shape: [d_model] in FP16 = 2 * 2 * d_model bytes.",
-        "For Llama-2-70B at 4K context: 4096 tokens * 80 layers * 4 * 8192 bytes ≈ 10.7 GB for KV cache alone.",
+        "For Llama-2-70B at 4K context: 4096 tokens * 80 layers * 4 * 8192 bytes \\approx 10.7 GB for KV cache alone.",
       ],
     },
     {
@@ -2761,10 +2761,10 @@ const extraMlSystems2: Record<string, Question[]> = {
         "Gradient-based methods require second-order optimization and are therefore computationally infeasible for large models",
       ],
       correctAnswer: 0,
-      explanation: "Magnitude pruning: |w| < threshold → prune. Simple, cheap, but misses that a small weight in a critical path may be more important than a large weight in a redundant pathway. Gradient-based importance: score w_i by |w_i * gradient_i| (Taylor expansion of loss change) or by |w_i^2 * H_ii| (Hessian diagonal, second-order). These scores approximate the increase in loss if w_i were removed, identifying truly important weights. Wanda (Sun et al., 2023) uses |w_i * X_norm_i| (weight magnitude * input activation norm) — a first-order approximation that outperforms magnitude pruning for LLMs at 50-70% sparsity.",
+      explanation: "Magnitude pruning: |w| < threshold \\to prune. Simple, cheap, but misses that a small weight in a critical path may be more important than a large weight in a redundant pathway. Gradient-based importance: score w_i by |w_i * gradient_i| (Taylor expansion of loss change) or by |w_i^2 * H_ii| (Hessian diagonal, second-order). These scores approximate the increase in loss if w_i were removed, identifying truly important weights. Wanda (Sun et al., 2023) uses |w_i * X_norm_i| (weight magnitude * input activation norm) — a first-order approximation that outperforms magnitude pruning for LLMs at 50-70% sparsity.",
       hints: [
         "Magnitude pruning ignores context: a weight of 0.01 in a critical position matters more than a weight of 10 in an ignored pathway.",
-        "Taylor importance: delta_loss ≈ w_i * grad_i — approximates how much loss increases if w_i is zeroed out.",
+        "Taylor importance: delta_loss \\approx w_i * grad_i — approximates how much loss increases if w_i is zeroed out.",
       ],
     },
     {

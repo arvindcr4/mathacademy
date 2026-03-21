@@ -8,7 +8,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A single perceptron computes y = step(w · x + b). Which function class can it perfectly represent?",
+        "A single perceptron computes y = step(w \\cdot x + b). Which function class can it perfectly represent?",
       options: [
         "Any Boolean function with enough weights",
         "Only linearly separable functions — those where a single hyperplane separates the two classes",
@@ -17,9 +17,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A perceptron\'s decision boundary is the hyperplane w · x + b = 0. It can only classify inputs that are linearly separable. XOR, for example, cannot be separated by a single line and is famously beyond the perceptron\'s capacity.",
+        "A perceptron\'s decision boundary is the hyperplane w \\cdot x + b = 0. It can only classify inputs that are linearly separable. XOR, for example, cannot be separated by a single line and is famously beyond the perceptron\'s capacity.",
       hints: [
-        "Try to draw a single straight line separating XOR outputs: (0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0. It\'s impossible.",
+        "Try to draw a single straight line separating XOR outputs: (0,0)\\to0, (0,1)\\to1, (1,0)\\to1, (1,1)\\to0. It\'s impossible.",
         "The decision boundary of any linear model is always a hyperplane — one flat surface dividing the space.",
       ],
     },
@@ -34,7 +34,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A single perceptron can only represent linear decision boundaries. XOR is not linearly separable — no single hyperplane correctly separates the four XOR input points. This fundamental limitation, publicized by Minsky and Papert (1969), motivated multi-layer networks.",
       hints: [
-        "XOR: (0,0)→0, (0,1)→1, (1,0)→1, (1,1)→0. Plot these points colored by output — you cannot separate them with one line.",
+        "XOR: (0,0)\\to0, (0,1)\\to1, (1,0)\\to1, (1,1)\\to0. Plot these points colored by output — you cannot separate them with one line.",
         'This limitation caused the first "AI winter" and motivated the development of multi-layer perceptrons.',
       ],
     },
@@ -47,12 +47,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "The algorithm converges to the best linear approximation",
         "The algorithm cycles indefinitely, never converging to a stable set of weights",
-        "The algorithm converges after exactly n·d iterations (n samples, d features)",
+        "The algorithm converges after exactly n\\cdotd iterations (n samples, d features)",
         "The algorithm converges but with higher training error than a logistic regression",
       ],
       correctAnswer: 1,
       explanation:
-        "The perceptron update rule (w ← w + y·x on misclassified samples) is guaranteed to converge only if the data is linearly separable. On non-separable data, it cycles indefinitely — there is no stable weight vector that classifies all samples correctly.",
+        "The perceptron update rule (w \\leftarrow w + y\\cdotx on misclassified samples) is guaranteed to converge only if the data is linearly separable. On non-separable data, it cycles indefinitely — there is no stable weight vector that classifies all samples correctly.",
       hints: [
         "The convergence theorem\'s proof relies on the existence of a separating hyperplane — if none exists, the proof breaks down.",
         "This is why gradient-descent-based methods with smooth losses (logistic regression) are preferred for non-separable data.",
@@ -78,7 +78,7 @@ const questions: Record<string, Question[]> = {
         "Backpropagation applies the chain rule of calculus recursively. As described in d2l.ai §5.3, the gradient of the loss with respect to layer ℓ\'s weights equals the product of all Jacobians from layer ℓ+1 to the output, multiplied by the local gradient — a chain of derivatives applied backward through the computational graph. Concretely:\n\n\\[\n\\frac{\\partial L}{\\partial W^{(\\ell)}} = \\frac{\\partial L}{\\partial h^{(L)}} \\cdot \\frac{\\partial h^{(L)}}{\\partial h^{(L-1)}} \\cdot \\cdots \\cdot \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\cdot \\frac{\\partial h^{(\\ell)}}{\\partial W^{(\\ell)}}.\n\\]\n\nEach factor in the product is a Jacobian matrix; their sequential multiplication is exactly the chain rule applied recursively through the network.",
       hints: [
         "To find how a small change in a weight at layer 1 affects the final loss in a 10-layer network, you must chain together the derivatives through all 9 intermediate layers.",
-        "The gradient factorizes as: ∂L/∂W₁ = (∂L/∂h₁₀) · (∂h₁₀/∂h₉) · ... · (∂h₂/∂h₁) · (∂h₁/∂W₁). Each factor is a Jacobian; their product is the chain rule applied recursively.",
+        "The gradient factorizes as: \\partialL/\\partialW\\_1 = (\\partialL/\\partialh\\_1\\_0) \\cdot (\\partialh\\_1\\_0/\\partialh\\_9) \\cdot ... \\cdot (\\partialh\\_2/\\partialh\\_1) \\cdot (\\partialh\\_1/\\partialW\\_1). Each factor is a Jacobian; their product is the chain rule applied recursively.",
       ],
     },
     {
@@ -101,7 +101,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In a deep network using sigmoid activations, gradients are multiplied through each layer during backpropagation. If sigmoid\'s derivative satisfies \\sigma'(x) ≤ 0.25 for all x, and a network has 10 sigmoid layers, then the gradient magnitude at the earliest layer is at most:",
+        "In a deep network using sigmoid activations, gradients are multiplied through each layer during backpropagation. If sigmoid\'s derivative satisfies \\sigma'(x) \\leq 0.25 for all x, and a network has 10 sigmoid layers, then the gradient magnitude at the earliest layer is at most:",
       options: [
         "$0.25 \\times 10 = 2.5$",
         "$0.25^{10} \\approx 9.5 \\times 10^{-7}$, shrinking exponentially with depth",
@@ -110,9 +110,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "During backpropagation, the gradient signal is multiplied through each layer:\n\n\\[\n\\left\\| \\frac{\\partial L}{\\partial h^{(\\ell)}} \\right\\| \\leq \\left\\| \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\right\\| \\cdot \\left\\| \\frac{\\partial L}{\\partial h^{(\\ell+1)}} \\right\\|.\n\\]\n\nWith \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) and \\sigma'(x) ≤ 0.25 for all x, each layer multiplies the gradient by at most 0.25. After 10 layers:\n\n\\[\n0.25^{10} \\approx 9.5 \\times 10^{-7}.\n\\]\n\nEarly layers receive a gradient signal roughly 10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs and 0 otherwise, avoiding this multiplicative shrinkage entirely.",
+        "During backpropagation, the gradient signal is multiplied through each layer:\n\n\\[\n\\left\\| \\frac{\\partial L}{\\partial h^{(\\ell)}} \\right\\| \\leq \\left\\| \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\right\\| \\cdot \\left\\| \\frac{\\partial L}{\\partial h^{(\\ell+1)}} \\right\\|.\n\\]\n\nWith \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) and \\sigma'(x) \\leq 0.25 for all x, each layer multiplies the gradient by at most 0.25. After 10 layers:\n\n\\[\n0.25^{10} \\approx 9.5 \\times 10^{-7}.\n\\]\n\nEarly layers receive a gradient signal roughly 10\\^{-⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs and 0 otherwise, avoiding this multiplicative shrinkage entirely.",
       hints: [
-        "Each layer applies a multiplicative factor of at most 0.25 to the gradient. After 10 layers: 0.25¹⁰ ≈ 10⁻⁶ — the gradient is essentially zero.",
+        "Each layer applies a multiplicative factor of at most 0.25 to the gradient. After 10 layers: 0.25¹⁰ \\approx 10\\^{-⁶ — the gradient is essentially zero.",
         "ReLU\'s gradient is either 0 or 1 for active neurons — no multiplicative shrinkage, so gradients flow unchanged through the network.",
       ],
     },
@@ -144,7 +144,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GELU (Gaussian Error Linear Unit), defined as x·\\Phi(x) where \\Phi is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
+        "GELU (Gaussian Error Linear Unit), defined as x\\cdot\\Phi(x) where \\Phi is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -159,19 +159,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Sigmoid\'s derivative is given by \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)). At x = 5, \\sigma(5) ≈ 0.993. What is the gradient \\sigma'(5), and why does this cause problems in deep networks?",
+        "Sigmoid\'s derivative is given by \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)). At x = 5, \\sigma(5) \\approx 0.993. What is the gradient \\sigma'(5), and why does this cause problems in deep networks?",
       options: [
-        "\\sigma'(5) ≈ 0.007; after 10 saturated sigmoid layers the gradient is ≈ 7×10⁻²⁰ — essentially zero at early layers, causing vanishing gradients",
-        "\\sigma'(5) ≈ 0.5; this is the maximum possible sigmoid gradient and causes exploding gradients",
-        "\\sigma'(5) ≈ 0.993; this large gradient causes exploding gradients in deep networks",
+        "\\sigma'(5) \\approx 0.007; after 10 saturated sigmoid layers the gradient is \\approx 7\\times10\\^{-\\^2⁰ — essentially zero at early layers, causing vanishing gradients",
+        "\\sigma'(5) \\approx 0.5; this is the maximum possible sigmoid gradient and causes exploding gradients",
+        "\\sigma'(5) \\approx 0.993; this large gradient causes exploding gradients in deep networks",
         "\\sigma'(5) = 1; sigmoid has unit gradient for all positive values",
       ],
       correctAnswer: 0,
       explanation:
-        "At x = 5, the sigmoid output is \\sigma(5) ≈ 0.993 (saturated near 1). The gradient is:\n\n\\[\n\\sigma'(5) = \\sigma(5)\\,(1 - \\sigma(5)) \\approx 0.993 \\times 0.007 \\approx 0.007.\n\\]\n\nThis is already very small — the neuron is in saturation. During backpropagation, the gradient signal is multiplied through each layer. After 10 saturated sigmoid layers:\n\n\\[\n\\bigl\\| \\frac{\\partial L}{\\partial h^{(1)}} \\bigr\\| \\leq (0.007)^{10} \\approx 2.8 \\times 10^{-21}.\n\\]\n\nThe gradient vanishes exponentially with depth. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x = 0) and is already small for |x| > 2. In deep networks, early layers receive effectively zero gradient — they cannot learn.",
+        "At x = 5, the sigmoid output is \\sigma(5) \\approx 0.993 (saturated near 1). The gradient is:\n\n\\[\n\\sigma'(5) = \\sigma(5)\\,(1 - \\sigma(5)) \\approx 0.993 \\times 0.007 \\approx 0.007.\n\\]\n\nThis is already very small — the neuron is in saturation. During backpropagation, the gradient signal is multiplied through each layer. After 10 saturated sigmoid layers:\n\n\\[\n\\bigl\\| \\frac{\\partial L}{\\partial h^{(1)}} \\bigr\\| \\leq (0.007)^{10} \\approx 2.8 \\times 10^{-21}.\n\\]\n\nThe gradient vanishes exponentially with depth. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x = 0) and is already small for |x| > 2. In deep networks, early layers receive effectively zero gradient — they cannot learn.",
       hints: [
-        "\\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) is maximum (0.25) only at x = 0. For |x| > 2, \\sigma'(x) < 0.1. At x = 5, \\sigma'(5) ≈ 0.007 — the neuron is saturated.",
-        "Even at the theoretical peak (0.25 per layer), after 10 layers: 0.25¹⁰ ≈ 10⁻⁶. With saturated sigmoid (0.007 per layer), it drops to ~10⁻²¹ — effectively zero.",
+        "\\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) is maximum (0.25) only at x = 0. For |x| > 2, \\sigma'(x) < 0.1. At x = 5, \\sigma'(5) \\approx 0.007 — the neuron is saturated.",
+        "Even at the theoretical peak (0.25 per layer), after 10 layers: 0.25¹⁰ \\approx 10\\^{-⁶. With saturated sigmoid (0.007 per layer), it drops to ~10\\^{-\\^2¹ — effectively zero.",
       ],
     },
   ],
@@ -202,13 +202,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Xavier initialization (Glorot & Bengio, 2010) sets weight variance to \\sigma² = 2/(n_in + n_out). This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
+        "Xavier initialization (Glorot & Bengio, 2010) sets weight variance to \\sigma\\^2 = 2/(n_in + n_out). This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "As derived in d2l.ai §5.4.2.2: forward propagation requires n_in·\\sigma²=1 and backpropagation requires n_out·\\sigma²=1. Since both cannot hold simultaneously, Xavier takes the compromise \\sigma² = 2/(n_in + n_out). This keeps signal variance stable in both directions, preventing vanishing/exploding activations.",
+        "As derived in d2l.ai §5.4.2.2: forward propagation requires n_in\\cdot\\sigma\\^2=1 and backpropagation requires n_out\\cdot\\sigma\\^2=1. Since both cannot hold simultaneously, Xavier takes the compromise \\sigma\\^2 = 2/(n_in + n_out). This keeps signal variance stable in both directions, preventing vanishing/exploding activations.",
       hints: [
-        "The derivation: Var[output] = n_in × \\sigma² × Var[input]. Setting this to Var[input] requires n_in·\\sigma²=1.",
+        "The derivation: Var[output] = n_in \\times \\sigma\\^2 \\times Var[input]. Setting this to Var[input] requires n_in\\cdot\\sigma\\^2=1.",
         "Xavier is the compromise: \\sigma = √(2/(n_in + n_out)), balancing both the forward and backward variance conditions.",
       ],
     },
@@ -226,10 +226,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ReLU kills roughly 50% of activations (all negative values become 0), halving the effective variance at each layer. He initialization compensates: instead of \\sigma²=1/n_in (which would give halved variance after ReLU), it uses \\sigma²=2/n_in, maintaining correct activation variance through layers with ReLU.",
+        "ReLU kills roughly 50% of activations (all negative values become 0), halving the effective variance at each layer. He initialization compensates: instead of \\sigma\\^2=1/n_in (which would give halved variance after ReLU), it uses \\sigma\\^2=2/n_in, maintaining correct activation variance through layers with ReLU.",
       hints: [
         "Xavier assumes activation functions preserve variance symmetrically. ReLU does not — it zeros half the values.",
-        "The factor 2 exactly compensates for the 50% activation death: 2 × (1/2) = 1, maintaining unit variance.",
+        "The factor 2 exactly compensates for the 50% activation death: 2 \\times (1/2) = 1, maintaining unit variance.",
       ],
     },
   ],
@@ -240,7 +240,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Batch Normalization normalizes activations by computing the mini-batch mean \\mu and variance \\sigma², then applying: \\(\\hat{x} = (x - \\mu) / \\sqrt{\\sigma^2 + \\varepsilon}.\\) What do the learnable parameters \\gamma and \\beta do?",
+        "Batch Normalization normalizes activations by computing the mini-batch mean \\mu and variance \\sigma\\^2, then applying: \\(\\hat{x} = (x - \\mu) / \\sqrt{\\sigma^2 + \\varepsilon}.\\) What do the learnable parameters \\gamma and \\beta do?",
       options: [
         "\\gamma scales the learning rate; \\beta controls the dropout rate",
         "\\gamma (scale) and \\beta (shift) allow the network to undo the normalization if needed, preserving representational power",
@@ -307,10 +307,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If a neuron survives with probability (1−p) and is scaled by 1/(1−p), then its expected value is:\n\n\\[\n\\mathbb{E}[h'] = (1-p) \\cdot \\frac{h}{1-p} + p \\cdot 0 = h.\n\\]\n\nThis \"inverted dropout\" design ensures that the expected activation at training time equals the activation at test time (when all neurons are active and no scaling is applied). Without this scaling, the expected training activation would be (1−p)·h, creating a train-test mismatch.",
+        "If a neuron survives with probability (1−p) and is scaled by 1/(1−p), then its expected value is:\n\n\\[\n\\mathbb{E}[h'] = (1-p) \\cdot \\frac{h}{1-p} + p \\cdot 0 = h.\n\\]\n\nThis \"inverted dropout\" design ensures that the expected activation at training time equals the activation at test time (when all neurons are active and no scaling is applied). Without this scaling, the expected training activation would be (1−p)\\cdoth, creating a train-test mismatch.",
       hints: [
-        "E[h'] = Pr(survive) · h/(1−p) + Pr(drop) · 0 = (1−p) · h/(1−p) + 0 = h. The expected value is preserved.",
-        "Without scaling: E[h'] = (1−p) · h. At test time (all neurons active): E[h'] = h. This train-test mismatch in expected activation magnitude is avoided by inverted dropout.",
+        "E[h'] = Pr(survive) \\cdot h/(1−p) + Pr(drop) \\cdot 0 = (1−p) \\cdot h/(1−p) + 0 = h. The expected value is preserved.",
+        "Without scaling: E[h'] = (1−p) \\cdot h. At test time (all neurons active): E[h'] = h. This train-test mismatch in expected activation magnitude is avoided by inverted dropout.",
       ],
     },
     {
@@ -359,16 +359,16 @@ const questions: Record<string, Question[]> = {
         "Adam maintains two moment estimates per parameter: m_t (first moment, mean of gradients) and v_t (second moment, uncentered variance of gradients). What is the effective learning rate for a parameter whose gradient is consistently g = 0.01?",
       options: [
         "Exactly the base learning rate \\alpha, since the gradient is constant",
-        "\\alpha · m̂_t / √v̂_t ≈ \\alpha (the ratio normalizes the learning rate to a consistent magnitude regardless of gradient scale)",
-        "\\alpha × 0.01 (scaled down by gradient magnitude)",
+        "\\alpha \\cdot m̂_t / √v̂_t \\approx \\alpha (the ratio normalizes the learning rate to a consistent magnitude regardless of gradient scale)",
+        "\\alpha \\times 0.01 (scaled down by gradient magnitude)",
         "\\alpha / 0.01 (scaled up when gradient is small)",
       ],
       correctAnswer: 1,
       explanation:
-        "Adam\'s update rule is:\n\n\\[\n\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t} + \\varepsilon},\n\\]\n\nwhere \\(\\hat{m}_t\\) and \\(\\hat{v}_t\\) are bias-corrected first and second moment estimates. For a constant gradient g: \\(\\hat{m}_t = g\\) and \\(\\hat{v}_t = g^2\\) (after bias correction). The effective step size is:\n\n\\[\n\\alpha \\cdot \\frac{g}{\\sqrt{g^2}} = \\alpha \\cdot \\frac{g}{|g|} = \\alpha \\cdot \\operatorname{sgn}(g).\n\\]\n\nThe gradient magnitude cancels in the ratio \\(\\hat{m}_t / \\sqrt{\\hat{v}_t}\\). Adam\'s step size is approximately ±\\alpha in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
+        "Adam\'s update rule is:\n\n\\[\n\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t} + \\varepsilon},\n\\]\n\nwhere \\(\\hat{m}_t\\) and \\(\\hat{v}_t\\) are bias-corrected first and second moment estimates. For a constant gradient g: \\(\\hat{m}_t = g\\) and \\(\\hat{v}_t = g^2\\) (after bias correction). The effective step size is:\n\n\\[\n\\alpha \\cdot \\frac{g}{\\sqrt{g^2}} = \\alpha \\cdot \\frac{g}{|g|} = \\alpha \\cdot \\operatorname{sgn}(g).\n\\]\n\nThe gradient magnitude cancels in the ratio \\(\\hat{m}_t / \\sqrt{\\hat{v}_t}\\). Adam\'s step size is approximately \\pm\\alpha in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
       hints: [
-        "Adam\'s update: \\theta ← \\theta − \\alpha · m̂_t / √(v̂_t + \\epsilon). With constant gradient g: m̂_t = g, v̂_t = g².",
-        "The step is \\alpha · g/√(g²) = \\alpha · g/|g| = \\alpha · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
+        "Adam\'s update: \\theta \\leftarrow \\theta − \\alpha \\cdot m̂_t / √(v̂_t + \\epsilon). With constant gradient g: m̂_t = g, v̂_t = g\\^2.",
+        "The step is \\alpha \\cdot g/√(g\\^2) = \\alpha \\cdot g/|g| = \\alpha \\cdot sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
       ],
     },
     {
@@ -376,14 +376,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "AdamW fixes a flaw in Adam by applying weight decay directly to the weights (\\theta ← \\theta − \\eta·\\lambda·\\theta) rather than folding L2 regularization into the gradient, because Adam\'s adaptive scaling reduces the effective weight decay disproportionately.",
+        "AdamW fixes a flaw in Adam by applying weight decay directly to the weights (\\theta \\leftarrow \\theta − \\eta\\cdot\\lambda\\cdot\\theta) rather than folding L2 regularization into the gradient, because Adam\'s adaptive scaling reduces the effective weight decay disproportionately.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "In vanilla Adam with L2 regularization, the L2 gradient (\\lambda·\\theta) is added to the gradient and then adaptively scaled by 1/√v_t. For parameters with large gradients, this scale is small — effectively reducing weight decay. AdamW decouples weight decay: \\theta ← \\theta − \\alpha·m̂/√v̂ − \\eta·\\lambda·\\theta, applying full weight decay regardless of gradient scale.",
+        "In vanilla Adam with L2 regularization, the L2 gradient (\\lambda\\cdot\\theta) is added to the gradient and then adaptively scaled by 1/√v_t. For parameters with large gradients, this scale is small — effectively reducing weight decay. AdamW decouples weight decay: \\theta \\leftarrow \\theta − \\alpha\\cdotm̂/√v̂ − \\eta\\cdot\\lambda\\cdot\\theta, applying full weight decay regardless of gradient scale.",
       hints: [
         "Adam with L2 loss: the regularization gradient \\lambda\\theta is divided by √v — effective decay = \\lambda/√v, which varies by parameter.",
-        "AdamW: the decay step −\\eta·\\lambda·\\theta is applied directly to weights, unaffected by Adam\'s variance scaling.",
+        "AdamW: the decay step −\\eta\\cdot\\lambda\\cdot\\theta is applied directly to weights, unaffected by Adam\'s variance scaling.",
       ],
     },
     {
@@ -391,19 +391,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "d2l.ai §12.6 shows that SGD with momentum updates: v_t = \\beta·v_{t-1} + g_t, then \\theta ← \\theta − \\alpha·v_t. For \\beta = 0.9, how many effective past gradient steps does momentum approximately integrate?",
+        "d2l.ai §12.6 shows that SGD with momentum updates: v_t = \\beta\\cdotv_{t-1} + g_t, then \\theta \\leftarrow \\theta − \\alpha\\cdotv_t. For \\beta = 0.9, how many effective past gradient steps does momentum approximately integrate?",
       options: [
         "0.9 steps (just less than 1)",
-        "≈ 10 steps (from the geometric series sum 1/(1 − \\beta) = 1/(1 − 0.9) = 10)",
-        "90 steps (100 × 0.9)",
+        "\\approx 10 steps (from the geometric series sum 1/(1 − \\beta) = 1/(1 − 0.9) = 10)",
+        "90 steps (100 \\times 0.9)",
         "1 step — momentum just smooths the current gradient",
       ],
       correctAnswer: 1,
       explanation:
-        "The momentum velocity v_t = \\beta·v_{t-1} + g_t unrolls by substitution into a geometric series:\n\n\\[\nv_t = g_t + \\beta \\cdot g_{t-1} + \\beta^2 \\cdot g_{t-2} + \\cdots + \\beta^{t-1} \\cdot g_1.\n\\]\n\nEach past gradient g_{t-k} contributes \\beta^k to the current velocity, with weight decaying exponentially at rate \\beta^k. The effective window is the sum of the decay weights:\n\n\\[\n\\sum_{k=0}^{\\infty} \\beta^k = \\frac{1}{1-\\beta}.\n\\]\n\nWith \\beta = 0.9: effective window ≈ 1/(1 − 0.9) = 10 steps. A gradient from 10 steps ago carries weight \\beta¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago carries \\beta²⁰ ≈ 0.12.",
+        "The momentum velocity v_t = \\beta\\cdotv_{t-1} + g_t unrolls by substitution into a geometric series:\n\n\\[\nv_t = g_t + \\beta \\cdot g_{t-1} + \\beta^2 \\cdot g_{t-2} + \\cdots + \\beta^{t-1} \\cdot g_1.\n\\]\n\nEach past gradient g_{t-k} contributes \\beta^k to the current velocity, with weight decaying exponentially at rate \\beta^k. The effective window is the sum of the decay weights:\n\n\\[\n\\sum_{k=0}^{\\infty} \\beta^k = \\frac{1}{1-\\beta}.\n\\]\n\nWith \\beta = 0.9: effective window \\approx 1/(1 − 0.9) = 10 steps. A gradient from 10 steps ago carries weight \\beta¹⁰ \\approx 0.35 — still meaningful. A gradient from 20 steps ago carries \\beta\\^2⁰ \\approx 0.12.",
       hints: [
-        "Geometric series: 1 + \\beta + \\beta² + ... = 1/(1−\\beta). For \\beta = 0.9: 1/(1 − 0.9) = 10. So momentum integrates ~10 past gradients.",
-        "A gradient from 10 steps ago is weighted by \\beta¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago: \\beta²⁰ ≈ 0.12.",
+        "Geometric series: 1 + \\beta + \\beta\\^2 + ... = 1/(1−\\beta). For \\beta = 0.9: 1/(1 − 0.9) = 10. So momentum integrates ~10 past gradients.",
+        "A gradient from 10 steps ago is weighted by \\beta¹⁰ \\approx 0.35 — still meaningful. A gradient from 20 steps ago: \\beta\\^2⁰ \\approx 0.12.",
       ],
     },
   ],
@@ -449,19 +449,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'The "Attention is All You Need" transformer schedule sets learning rate as: lr = d_model^{−0.5} · min(step^{−0.5}, step · warmup_steps^{−1.5}). At step = warmup_steps, what is the learning rate, and how does it behave afterward?',
+        'The "Attention is All You Need" transformer schedule sets learning rate as: lr = d_model^{−0.5} \\cdot min(step^{−0.5}, step \\cdot warmup_steps^{−1.5}). At step = warmup_steps, what is the learning rate, and how does it behave afterward?',
       options: [
-        "lr = d_model^{−0.5} × warmup_steps^{−0.5}; then grows as step^{0.5} for remaining training",
-        "lr = d_model^{−0.5} × warmup_steps^{−0.5}; then decays as step^{−0.5} for remaining training",
+        "lr = d_model^{−0.5} \\times warmup_steps^{−0.5}; then grows as step^{0.5} for remaining training",
+        "lr = d_model^{−0.5} \\times warmup_steps^{−0.5}; then decays as step^{−0.5} for remaining training",
         "lr reaches its maximum and stays constant until training ends",
         "lr = 1/d_model; then halves every warmup_steps steps",
       ],
       correctAnswer: 1,
       explanation:
-        "At step = warmup_steps: both terms equal warmup_steps^{−0.5}, so lr = d_model^{−0.5} × warmup_steps^{−0.5} (the peak). For step > warmup_steps: the step^{−0.5} term is smaller, so lr = d_model^{−0.5} × step^{−0.5} — inverse square root decay. The d_model^{−0.5} scaling means larger models (larger d_model) use smaller learning rates.",
+        "At step = warmup_steps: both terms equal warmup_steps^{−0.5}, so lr = d_model^{−0.5} \\times warmup_steps^{−0.5} (the peak). For step > warmup_steps: the step^{−0.5} term is smaller, so lr = d_model^{−0.5} \\times step^{−0.5} — inverse square root decay. The d_model^{−0.5} scaling means larger models (larger d_model) use smaller learning rates.",
       hints: [
-        "The formula has two phases: linear increase (step × warmup^{−1.5}) and inverse-sqrt decrease (step^{−0.5}), meeting at the peak.",
-        "After warmup, lr \\propto 1/√step — cutting LR in half requires 4× more steps.",
+        "The formula has two phases: linear increase (step \\times warmup^{−1.5}) and inverse-sqrt decrease (step^{−0.5}), meeting at the peak.",
+        "After warmup, lr \\propto 1/√step — cutting LR in half requires 4\\times more steps.",
       ],
     },
   ],
@@ -496,9 +496,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^\\gamma log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^\\gamma reduces loss for well-classified examples (p_t → 1) while leaving loss unchanged for misclassified examples (p_t → 0). With \\gamma=2: an easy example with p_t=0.9 contributes (1−0.9)² = 0.01× the original loss — 100× reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
+        "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^\\gamma log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^\\gamma reduces loss for well-classified examples (p_t \\to 1) while leaving loss unchanged for misclassified examples (p_t \\to 0). With \\gamma=2: an easy example with p_t=0.9 contributes (1−0.9)\\^2 = 0.01\\times the original loss — 100\\times reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
       hints: [
-        "Focal loss: FL(p_t) = −(1−p_t)^\\gamma log(p_t). For p_t=0.9, \\gamma=2: weight = (0.1)² = 0.01. For p_t=0.1: weight = (0.9)² ≈ 0.81 — barely affected.",
+        "Focal loss: FL(p_t) = −(1−p_t)^\\gamma log(p_t). For p_t=0.9, \\gamma=2: weight = (0.1)\\^2 = 0.01. For p_t=0.1: weight = (0.9)\\^2 \\approx 0.81 — barely affected.",
         "In object detection, 99% of anchors may be easy negatives (background). Without focal loss, their gradient overwhelms rare foreground objects.",
       ],
     },
@@ -516,7 +516,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are pulled close together and negative pairs (different samples) are pushed far apart. The objective is:\n\n\\[\nL = -\\log\\frac{\\exp(\\text{sim}(z_i, z_j)/\\tau)}{\\sum_{k=1}^{2N} \\mathbb{1}_{[k \\neq i]} \\exp(\\text{sim}(z_i, z_k)/\\tau)},\n\\]\n\nwhere sim(·,·) is cosine similarity, \\tau is a temperature hyperparameter, and the sum is over all negative pairs in the batch. This is the NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR — learning rich representations without any explicit class labels.",
+        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are pulled close together and negative pairs (different samples) are pushed far apart. The objective is:\n\n\\[\nL = -\\log\\frac{\\exp(\\text{sim}(z_i, z_j)/\\tau)}{\\sum_{k=1}^{2N} \\mathbb{1}_{[k \\neq i]} \\exp(\\text{sim}(z_i, z_k)/\\tau)},\n\\]\n\nwhere sim(\\cdot,\\cdot) is cosine similarity, \\tau is a temperature hyperparameter, and the sum is over all negative pairs in the batch. This is the NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR — learning rich representations without any explicit class labels.",
       hints: [
         "Contrastive = contrasting similar vs. different things. The loss directly reflects this: pull positive pairs together, push negative pairs apart.",
         "SimCLR uses two augmented views of the same image as a positive pair and all other images in the batch as negatives, normalized by temperature \\tau.",
@@ -631,9 +631,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Telgarsky (2016) proved that for certain functions (compositions of simple functions), a 2-layer network requires exponentially many neurons while a deep network with the same function class needs only polynomially many. The hierarchical composition of functions in deep networks (edges → shapes → objects in vision) captures exponentially complex patterns efficiently.",
+        "Telgarsky (2016) proved that for certain functions (compositions of simple functions), a 2-layer network requires exponentially many neurons while a deep network with the same function class needs only polynomially many. The hierarchical composition of functions in deep networks (edges \\to shapes \\to objects in vision) captures exponentially complex patterns efficiently.",
       hints: [
-        "Feature hierarchies (pixel patterns → edges → shapes → objects) cannot be efficiently represented in a single flat layer.",
+        "Feature hierarchies (pixel patterns \\to edges \\to shapes \\to objects) cannot be efficiently represented in a single flat layer.",
         "A deep network with k layers can represent function compositions that would require exponentially many neurons in a 2-layer network.",
       ],
     },
@@ -654,7 +654,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Convolutional layers share weights across spatial positions (translation equivariance), meaning the same edge detector learned for the top-left corner also applies to the bottom-right — drastically reducing parameters vs. fully connected layers. A 3×3 conv with 64 filters uses 576 weights regardless of image size; an FC layer on a 224×224 image would need millions.",
+        "Convolutional layers share weights across spatial positions (translation equivariance), meaning the same edge detector learned for the top-left corner also applies to the bottom-right — drastically reducing parameters vs. fully connected layers. A 3\\times3 conv with 64 filters uses 576 weights regardless of image size; an FC layer on a 224\\times224 image would need millions.",
       hints: [
         "A cat\'s ear detector should work whether the cat is on the left or right side of the image — weight sharing enforces this.",
         "Weight sharing: the same filter slides across the entire input, detecting the same feature everywhere.",
@@ -669,9 +669,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        '"Same" padding adds zeros around the input border so that the output height and width match the input exactly (for stride 1). Without padding, a k×k convolution reduces each spatial dimension by k−1. For a 3×3 kernel, padding=1 adds 1 pixel on each side, keeping output size = input size.',
+        '"Same" padding adds zeros around the input border so that the output height and width match the input exactly (for stride 1). Without padding, a k\\timesk convolution reduces each spatial dimension by k−1. For a 3\\times3 kernel, padding=1 adds 1 pixel on each side, keeping output size = input size.',
       hints: [
-        "Without padding, each convolution shrinks the spatial dimensions by (kernel_size − 1). A 224×224 image with 3×3 conv becomes 222×222.",
+        "Without padding, each convolution shrinks the spatial dimensions by (kernel_size − 1). A 224\\times224 image with 3\\times3 conv becomes 222\\times222.",
         '"Same" is named because output size = input size when using it (for stride=1).',
       ],
     },
@@ -682,17 +682,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Depthwise separable convolutions (used in MobileNet) reduce computation compared to standard convolutions by:",
       options: [
-        "Using smaller kernel sizes (1×1 instead of 3×3) throughout the network.",
-        "Factorizing a standard convolution into a depthwise convolution (per-channel spatial filtering) followed by a pointwise 1×1 convolution (cross-channel mixing), drastically reducing FLOP count.",
+        "Using smaller kernel sizes (1\\times1 instead of 3\\times3) throughout the network.",
+        "Factorizing a standard convolution into a depthwise convolution (per-channel spatial filtering) followed by a pointwise 1\\times1 convolution (cross-channel mixing), drastically reducing FLOP count.",
         "Skipping pooling layers entirely and using strided convolutions instead.",
         "Applying pruning to zero out 50% of the convolution weights before inference.",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard conv: each output pixel computes k²·C_in·C_out multiply-adds per spatial position. FLOPs = k² × C_in × C_out × H × W. Depthwise separable factorises this into two steps: (1) Depthwise: each of C_in channels is convolved spatially with its own k×k filter → k² × C_in × H × W FLOPs. (2) Pointwise (1×1): mixes channels → C_in × C_out × H × W FLOPs. Total = k²·C_in + C_in·C_out / (k²·C_in·C_out) = 1/C_out + 1/k². For k=3 and C_out=32: (1/32 + 1/9) ≈ 0.125. A 3×3 depthwise separable conv costs ~8-9× fewer FLOPs than a standard conv.",
+        "Standard conv: each output pixel computes k\\^2\\cdotC_in\\cdotC_out multiply-adds per spatial position. FLOPs = k\\^2 \\times C_in \\times C_out \\times H \\times W. Depthwise separable factorises this into two steps: (1) Depthwise: each of C_in channels is convolved spatially with its own k\\timesk filter \\to k\\^2 \\times C_in \\times H \\times W FLOPs. (2) Pointwise (1\\times1): mixes channels \\to C_in \\times C_out \\times H \\times W FLOPs. Total = k\\^2\\cdotC_in + C_in\\cdotC_out / (k\\^2\\cdotC_in\\cdotC_out) = 1/C_out + 1/k\\^2. For k=3 and C_out=32: (1/32 + 1/9) \\approx 0.125. A 3\\times3 depthwise separable conv costs ~8-9\\times fewer FLOPs than a standard conv.",
       hints: [
-        "Standard conv FLOPs: k² × C_in × C_out × H × W. Depthwise sep: k²·C_in·H·W + C_in·C_out·H·W.",
-        "For k=3 and large C_out: the ratio ≈ 1/k² = 1/9. The depthwise step alone is 9× cheaper than standard conv on the spatial part.",
+        "Standard conv FLOPs: k\\^2 \\times C_in \\times C_out \\times H \\times W. Depthwise sep: k\\^2\\cdotC_in\\cdotH\\cdotW + C_in\\cdotC_out\\cdotH\\cdotW.",
+        "For k=3 and large C_out: the ratio \\approx 1/k\\^2 = 1/9. The depthwise step alone is 9\\times cheaper than standard conv on the spatial part.",
       ],
     },
   ],
@@ -727,9 +727,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "LSTM has 4 gates (forget, input, output, cell) and separate cell/hidden states: ~4 × (h+x) × h parameters per layer. GRU has 2 gates (update, reset) and merges cell and hidden state: ~3 × (h+x) × h parameters — about 25% fewer. On many sequence tasks, GRU matches LSTM performance and sometimes trains faster.",
+        "LSTM has 4 gates (forget, input, output, cell) and separate cell/hidden states: ~4 \\times (h+x) \\times h parameters per layer. GRU has 2 gates (update, reset) and merges cell and hidden state: ~3 \\times (h+x) \\times h parameters — about 25% fewer. On many sequence tasks, GRU matches LSTM performance and sometimes trains faster.",
       hints: [
-        "LSTM: forget gate, input gate, output gate, cell gate → 4 weight matrices. GRU: reset gate, update gate, candidate → 3 weight matrices.",
+        "LSTM: forget gate, input gate, output gate, cell gate \\to 4 weight matrices. GRU: reset gate, update gate, candidate \\to 3 weight matrices.",
         "GRU\'s update gate plays the role of both LSTM\'s forget and input gates simultaneously.",
       ],
     },
@@ -741,16 +741,16 @@ const questions: Record<string, Question[]> = {
         "Backpropagation Through Time (BPTT) in RNNs involves unrolling the network across T timesteps. For a sequence of length T=100, the gradient of the loss with respect to h_1 involves multiplying which quantity T−1=99 times?",
       options: [
         "The input weight matrix W_x, applied at each step.",
-        "The recurrent weight matrix W_h (or its Jacobian ∂h_t/∂h_{t-1}), applied at each temporal step during backpropagation.",
+        "The recurrent weight matrix W_h (or its Jacobian \\partialh_t/\\partialh_{t-1}), applied at each temporal step during backpropagation.",
         "The output projection matrix W_y, applied at each prediction step.",
-        "The gradient of the loss ∂L/∂h_T, applied recursively backward.",
+        "The gradient of the loss \\partialL/\\partialh_T, applied recursively backward.",
       ],
       correctAnswer: 1,
       explanation:
-        "In BPTT, the gradient flows backward through unrolled timesteps: ∂L/∂h_1 = (∂L/∂h_T) · ∏_{t=2}^{T} (∂h_t/∂h_{t-1}). With h_t = \\sigma(W_h·h_{t-1} + W_x·x_t), the Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(\\sigma'(W_h·h_{t-1})). The product of 99 such matrices — ∏_{t=2}^{T} W_h^T — is the culprit. If the largest eigenvalue \\lambda_max of W_h satisfies \\lambda_max < 1, gradients vanish as \\lambda_max^{99}. If \\lambda_max > 1, gradients explode. This is why RNNs without gating struggle with long sequences.",
+        "In BPTT, the gradient flows backward through unrolled timesteps: \\partialL/\\partialh_1 = (\\partialL/\\partialh_T) \\cdot \\prod_{t=2}^{T} (\\partialh_t/\\partialh_{t-1}). With h_t = \\sigma(W_h\\cdoth_{t-1} + W_x\\cdotx_t), the Jacobian \\partialh_t/\\partialh_{t-1} = W_h^T \\cdot diag(\\sigma'(W_h\\cdoth_{t-1})). The product of 99 such matrices — \\prod_{t=2}^{T} W_h^T — is the culprit. If the largest eigenvalue \\lambda_max of W_h satisfies \\lambda_max < 1, gradients vanish as \\lambda_max^{99}. If \\lambda_max > 1, gradients explode. This is why RNNs without gating struggle with long sequences.",
       hints: [
-        "The Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(\\sigma'(·)). Each step multiplies the gradient by W_h^T. After 99 steps: ‖∂h_T/∂h_1‖ ≤ ‖W_h‖^{99}.",
-        "If \\lambda_max(W_h) = 0.5, then \\lambda_max^{99} ≈ 10^{-30} — the gradient is effectively zero. LSTM\'s additive cell state bypasses this multiplication.",
+        "The Jacobian \\partialh_t/\\partialh_{t-1} = W_h^T \\cdot diag(\\sigma'(\\cdot)). Each step multiplies the gradient by W_h^T. After 99 steps: ‖\\partialh_T/\\partialh_1‖ \\leq ‖W_h‖^{99}.",
+        "If \\lambda_max(W_h) = 0.5, then \\lambda_max^{99} \\approx 10^{-30} — the gradient is effectively zero. LSTM\'s additive cell state bypasses this multiplication.",
       ],
     },
   ],
@@ -761,19 +761,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In scaled dot-product attention, the formula is: Attention(Q, K, V) = softmax\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right) · V. If d_k = 64 and Q, K are random unit-variance vectors, what is the variance of a single dot product q · k before scaling?",
+        "In scaled dot-product attention, the formula is: Attention(Q, K, V) = softmax\\left(\\frac{QK^T}{\\sqrt{d_k}}\\right) \\cdot V. If d_k = 64 and Q, K are random unit-variance vectors, what is the variance of a single dot product q \\cdot k before scaling?",
       options: [
         "Variance = 1 (unchanged by dimensionality)",
         "Variance = d_k = 64 (grows linearly with dimension)",
         "Variance = √d_k = 8",
-        "Variance = d_k² = 4096",
+        "Variance = d_k\\^2 = 4096",
       ],
       correctAnswer: 1,
       explanation:
         "For random unit-variance vectors \\(\\mathbf{q}, \\mathbf{k} \\in \\mathbb{R}^{d_k}\\), each dimension i has \\(\\mathbb{E}[q_i] = \\mathbb{E}[k_i] = 0\\) and \\(\\operatorname{Var}(q_i) = \\operatorname{Var}(k_i) = 1\\). Assuming independence across dimensions:\n\n\\[\n\\operatorname{Var}(\\mathbf{q} \\cdot \\mathbf{k}) = \\operatorname{Var}\\left(\\sum_{i=1}^{d_k} q_i k_i\\right) = \\sum_{i=1}^{d_k} \\operatorname{Var}(q_i k_i) = \\sum_{i=1}^{d_k} 1 \\cdot 1 = d_k.\n\\]\n\nSo the dot product variance grows linearly with \\(d_k\\). Dividing by \\(\\sqrt{d_k}\\) restores unit variance:\n\n\\[\n\\operatorname{Var}\\left(\\frac{\\mathbf{q} \\cdot \\mathbf{k}}{\\sqrt{d_k}}\\right) = \\frac{d_k}{d_k} = 1,\n\\]\n\nensuring softmax operates in a regime with meaningful gradients.",
       hints: [
-        "Dot product: q · k = \\Sigma_i q_i k_i. Var(q · k) = \\Sigma_i Var(q_i k_i) = \\Sigma_i (Var(q_i) · Var(k_i)) = d_k × 1 = d_k.",
-        "Without scaling: std(q · k) = √64 = 8. softmax(exp(8) ≈ 2981, exp(−8) ≈ 0.0003) saturates to one-hot with near-zero gradients.",
+        "Dot product: q \\cdot k = \\Sigma_i q_i k_i. Var(q \\cdot k) = \\Sigma_i Var(q_i k_i) = \\Sigma_i (Var(q_i) \\cdot Var(k_i)) = d_k \\times 1 = d_k.",
+        "Without scaling: std(q \\cdot k) = √64 = 8. softmax(exp(8) \\approx 2981, exp(−8) \\approx 0.0003) saturates to one-hot with near-zero gradients.",
       ],
     },
     {
@@ -796,7 +796,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "As shown in d2l.ai §11.6.2, self-attention has O(n²·d) computational complexity and O(1) maximum path length between any two positions. Why does O(1) path length matter for learning?",
+        "As shown in d2l.ai §11.6.2, self-attention has O(n\\^2\\cdotd) computational complexity and O(1) maximum path length between any two positions. Why does O(1) path length matter for learning?",
       options: [
         "O(1) path length means self-attention uses constant memory regardless of sequence length.",
         "O(1) path length means any token can directly influence any other token in a single forward pass, making it maximally easy to learn long-range dependencies — unlike RNNs where information must propagate through O(n) sequential steps.",
@@ -805,7 +805,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Path length = number of sequential steps between two positions for information to flow. In self-attention, the attention mechanism directly connects every token pair in one operation: position i attends to position j with attention score a_{ij} = softmax(q_i · k_j / √d). There is no intermediate token between i and j — information flows directly. By contrast, in an RNN: h_t = f(W·h_{t-1} + U·x_t), so h_100 depends on h_99, which depends on h_98, ..., which depends on h_1. The gradient ∂L/∂h_1 must backpropagate through 99 matrix multiplications — each potentially vanishing or exploding.",
+        "Path length = number of sequential steps between two positions for information to flow. In self-attention, the attention mechanism directly connects every token pair in one operation: position i attends to position j with attention score a_{ij} = softmax(q_i \\cdot k_j / √d). There is no intermediate token between i and j — information flows directly. By contrast, in an RNN: h_t = f(W\\cdoth_{t-1} + U\\cdotx_t), so h_100 depends on h_99, which depends on h_98, ..., which depends on h_1. The gradient \\partialL/\\partialh_1 must backpropagate through 99 matrix multiplications — each potentially vanishing or exploding.",
       hints: [
         "Self-attention computes attention scores between ALL token pairs simultaneously in one matrix operation: A = softmax(QK^T/√d). No intermediate tokens needed.",
         "RNN: to pass information from token 1 to token 100 requires 99 sequential hidden state updates. Each update multiplies by W — gradient decays as ‖W‖^99.",
@@ -845,8 +845,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "For a residual block \\(H(x) = F(x) + x\\), the gradient with respect to \\(x\\) is:\n\n\\[\n\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\frac{\\partial H}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\left(\\frac{\\partial F}{\\partial x} + 1\\right).\n\\]\n\nEven if \\(\\frac{\\partial F}{\\partial x} = 0\\) (e.g., due to ReLU saturation or vanishing gradients in deep networks), the \"+1\" from the skip connection ensures the gradient signal through the shortcut path is exactly \\(\\frac{\\partial L}{\\partial H}\\). This additive identity gradient is why ResNets can be trained at depths of 100–1000+ layers without vanishing gradients.",
       hints: [
-        "H(x) = F(x) + x. By the chain rule: ∂L/∂x = ∂L/∂H · ∂H/∂x = ∂L/∂H · (∂F/∂x + 1). The skip path contributes exactly 1, regardless of how small ∂F/∂x is.",
-        "If ∂F/∂x = 0 (vanishing gradient through the transformation), the skip connection still carries ∂L/∂H · 1 = ∂L/∂H — the gradient signal passes through the shortcut unchanged.",
+        "H(x) = F(x) + x. By the chain rule: \\partialL/\\partialx = \\partialL/\\partialH \\cdot \\partialH/\\partialx = \\partialL/\\partialH \\cdot (\\partialF/\\partialx + 1). The skip path contributes exactly 1, regardless of how small \\partialF/\\partialx is.",
+        "If \\partialF/\\partialx = 0 (vanishing gradient through the transformation), the skip connection still carries \\partialL/\\partialH \\cdot 1 = \\partialL/\\partialH — the gradient signal passes through the shortcut unchanged.",
       ],
     },
     {
@@ -866,7 +866,7 @@ const questions: Record<string, Question[]> = {
         "In ResNet v1 (post-activation), BN+ReLU are applied after the addition, so the skip path carries values through a ReLU — not a true identity. In ResNet v2 (pre-activation), the addition is between two raw (unnormalized, pre-activation) paths. The skip connection is truly H(x) = F(x) + x without any modification to x, giving cleaner gradient flow and better generalization on very deep networks.",
       hints: [
         "ResNet v1 (post-activation): h = ReLU(F(x) + x). The skip path x passes through ReLU before the addition — nonlinearity applied to x.",
-        "ResNet v2 (pre-activation): h = F_preact(x) + x where F_preact = BN→ReLU→Conv. The addition is between two raw, pre-activation values: BN output + x. The skip path is a true identity mapping h = F(x) + x.",
+        "ResNet v2 (pre-activation): h = F_preact(x) + x where F_preact = BN\\toReLU\\toConv. The addition is between two raw, pre-activation values: BN output + x. The skip path is a true identity mapping h = F(x) + x.",
       ],
     },
   ],
@@ -912,7 +912,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "MixUp data augmentation (Zhang et al., 2018) trains on convex combinations: x̃ = \\lambda·xᵢ + (1−\\lambda)·xⱼ, ỹ = \\lambda·yᵢ + (1−\\lambda)·yⱼ. Its main theoretical justification (Vicinal Risk Minimization) is:",
+        "MixUp data augmentation (Zhang et al., 2018) trains on convex combinations: x̃ = \\lambda\\cdotx\\_i + (1−\\lambda)\\cdotx\\_j, ỹ = \\lambda\\cdoty\\_i + (1−\\lambda)\\cdoty\\_j. Its main theoretical justification (Vicinal Risk Minimization) is:",
       options: [
         "It prevents the model from memorizing specific training examples by adding label noise.",
         "It encourages the model to behave linearly between training examples, improving calibration and reducing overconfident extrapolation between data points.",
@@ -921,9 +921,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MixUp applies Vicinal Risk Minimization: instead of training only on discrete samples, it creates a vicinity around each training point by mixing two samples. The model is trained on (x̃, ỹ) where x̃ = \\lambda·x_i + (1−\\lambda)·x_j and ỹ = \\lambda·y_i + (1−\\lambda)·y_j, with \\lambda ~ Beta(\\alpha, \\alpha). This forces the model to satisfy the linear assumption f(\\lambda·x_i + (1−\\lambda)·x_j) ≈ \\lambda·f(x_i) + (1−\\lambda)·f(x_j) — the model behaves linearly between training examples. The result is smoother decision boundaries and better-calibrated probability estimates, reducing overconfident predictions.",
+        "MixUp applies Vicinal Risk Minimization: instead of training only on discrete samples, it creates a vicinity around each training point by mixing two samples. The model is trained on (x̃, ỹ) where x̃ = \\lambda\\cdotx_i + (1−\\lambda)\\cdotx_j and ỹ = \\lambda\\cdoty_i + (1−\\lambda)\\cdoty_j, with \\lambda ~ Beta(\\alpha, \\alpha). This forces the model to satisfy the linear assumption f(\\lambda\\cdotx_i + (1−\\lambda)\\cdotx_j) \\approx \\lambda\\cdotf(x_i) + (1−\\lambda)\\cdotf(x_j) — the model behaves linearly between training examples. The result is smoother decision boundaries and better-calibrated probability estimates, reducing overconfident predictions.",
       hints: [
-        "MixUp loss: L_MixUp = \\lambda·L(y_i, f(x_i)) + (1−\\lambda)·L(y_j, f(x_j)). The model is directly trained to satisfy f(\\lambda·x_i + (1−\\lambda)·x_j) ≈ \\lambda·f(x_i) + (1−\\lambda)·f(x_j).",
+        "MixUp loss: L_MixUp = \\lambda\\cdotL(y_i, f(x_i)) + (1−\\lambda)\\cdotL(y_j, f(x_j)). The model is directly trained to satisfy f(\\lambda\\cdotx_i + (1−\\lambda)\\cdotx_j) \\approx \\lambda\\cdotf(x_i) + (1−\\lambda)\\cdotf(x_j).",
         "Standard ERM trains on exact labels (hard targets). MixUp trains on soft targets from a mixture distribution — this regularizes the function to be linear between data points.",
       ],
     },
@@ -944,7 +944,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FP16 uses 2 bytes vs. FP32's 4 bytes, halving memory for weights and activations. Modern GPUs (with Tensor Cores) compute FP16 matrix multiplications at 2–8× the throughput of FP32, enabling larger batch sizes or models within the same memory budget.",
+        "FP16 uses 2 bytes vs. FP32's 4 bytes, halving memory for weights and activations. Modern GPUs (with Tensor Cores) compute FP16 matrix multiplications at 2–8\\times the throughput of FP32, enabling larger batch sizes or models within the same memory budget.",
       hints: [
         "16 bits = 2 bytes; 32 bits = 4 bytes. Less memory = larger batch size or bigger model.",
         "Tensor Cores on NVIDIA GPUs are specifically designed for fast FP16 and BF16 operations.",
@@ -959,9 +959,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "FP16's minimum representable value is ~6×10⁻⁵; many gradients underflow to zero in FP16. Loss scaling multiplies the loss by a large constant (e.g., 2¹⁰=1024) to move gradients into representable range, with inverse scaling before updating weights in FP32. The master weights are kept in FP32 for numerical stability.",
+        "FP16's minimum representable value is ~6\\times10\\^{-⁵; many gradients underflow to zero in FP16. Loss scaling multiplies the loss by a large constant (e.g., 2¹⁰=1024) to move gradients into representable range, with inverse scaling before updating weights in FP32. The master weights are kept in FP32 for numerical stability.",
       hints: [
-        "Very small gradients (e.g., 10⁻⁷) are not representable in FP16 and become zero — underflow.",
+        "Very small gradients (e.g., 10\\^{-⁷) are not representable in FP16 and become zero — underflow.",
         "Multiplying by 1024 moves those gradients into the FP16 representable range without changing the gradient direction.",
       ],
     },
@@ -979,9 +979,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "BF16: 1 sign bit + 8 exponent bits + 7 mantissa bits. FP16: 1 sign + 5 exponent + 10 mantissa. BF16's 8-bit exponent matches FP32 (dynamic range ~10⁻³⁸ to 10³⁸), avoiding the overflow issues of FP16 (max ~65,504) that plague large activations in LLMs. The reduced mantissa precision (7 vs. 10 bits) is rarely the bottleneck.",
+        "BF16: 1 sign bit + 8 exponent bits + 7 mantissa bits. FP16: 1 sign + 5 exponent + 10 mantissa. BF16's 8-bit exponent matches FP32 (dynamic range ~10\\^{-\\^3⁸ to 10\\^3⁸), avoiding the overflow issues of FP16 (max ~65,504) that plague large activations in LLMs. The reduced mantissa precision (7 vs. 10 bits) is rarely the bottleneck.",
       hints: [
-        "FP16 max value is ~65,504 — activations in large models can easily exceed this. BF16 max is ~3×10³⁸.",
+        "FP16 max value is ~65,504 — activations in large models can easily exceed this. BF16 max is ~3\\times10\\^3⁸.",
         "Exponent bits determine dynamic range; mantissa bits determine precision. BF16 trades precision for range — a good trade for DL.",
       ],
     },
@@ -1036,7 +1036,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A sudden spike in gradient norm (often 10–100× the baseline) signals a potentially destabilizing update — caused by a noisy/outlier batch, too-high learning rate, or a poorly structured input. Many practitioners set an alert or automatic clip threshold based on the running median gradient norm to catch these spikes before they diverge training.",
+        "A sudden spike in gradient norm (often 10–100\\times the baseline) signals a potentially destabilizing update — caused by a noisy/outlier batch, too-high learning rate, or a poorly structured input. Many practitioners set an alert or automatic clip threshold based on the running median gradient norm to catch these spikes before they diverge training.",
       hints: [
         "A calm, gradually decreasing norm means training is stable. A spike means something unusual happened.",
         "Monitoring gradient norms in tools like Weights & Biases can reveal training instability before loss diverges.",
@@ -1054,7 +1054,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "The training loss, stopping when it reaches a predetermined threshold.",
         "The validation loss (or metric), stopping when it no longer improves for a defined number of epochs (patience).",
-        "The gradient norm, stopping when gradients become smaller than 10⁻⁶.",
+        "The gradient norm, stopping when gradients become smaller than 10\\^{-⁶.",
         "The wall-clock training time, stopping after a fixed number of hours.",
       ],
       correctAnswer: 1,
@@ -1189,7 +1189,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Pretrained weights encode valuable representations built over large-scale training. Large learning rates can overwrite them in a few gradient steps — catastrophic forgetting. A small LR (e.g., 10⁻⁵ instead of 10⁻³) allows gentle adaptation to the new task while preserving the useful features encoded in the pretrained weights.",
+        "Pretrained weights encode valuable representations built over large-scale training. Large learning rates can overwrite them in a few gradient steps — catastrophic forgetting. A small LR (e.g., 10\\^{-⁵ instead of 10\\^{-\\^3) allows gentle adaptation to the new task while preserving the useful features encoded in the pretrained weights.",
       hints: [
         "Large updates at high LR can move weights far from their pretrained values, erasing learned features in a few steps.",
         "The goal is to nudge pretrained weights toward the new task, not scramble them with large random updates.",
@@ -1234,7 +1234,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Soft targets (e.g., teacher assigns 0.7 to "cat", 0.2 to "leopard", 0.1 to other classes) encode the teacher\'s knowledge of class similarities. Hard labels (0 or 1) convey no information about relationships between classes. Hinton termed this "dark knowledge" — the meaningful signal in the non-argmax probabilities.',
       hints: [
-        'A hard label of "cat" tells the student nothing about how similar cats are to leopards. Soft targets reveal: cat is 3× more like leopard than other classes.',
+        'A hard label of "cat" tells the student nothing about how similar cats are to leopards. Soft targets reveal: cat is 3\\times more like leopard than other classes.',
         'Hinton called the non-argmax probabilities "dark knowledge" — they contain the teacher\'s learned concept of similarity.',
       ],
     },
@@ -1304,7 +1304,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DARTS (Liu et al., 2019) represents the architecture as a softmax-weighted mixture of candidate operations (e.g., 3×3 conv, 5×5 conv, skip, pooling). Architecture weights \\alpha and operation weights W are trained jointly via gradient descent — the final discrete architecture is derived by selecting the highest-weight operation at each position.",
+        "DARTS (Liu et al., 2019) represents the architecture as a softmax-weighted mixture of candidate operations (e.g., 3\\times3 conv, 5\\times5 conv, skip, pooling). Architecture weights \\alpha and operation weights W are trained jointly via gradient descent — the final discrete architecture is derived by selecting the highest-weight operation at each position.",
       hints: [
         "Discrete choices (which operation?) can\'t be optimized by gradients. DARTS makes them continuous via softmax.",
         'The "architecture weights" are trainable via gradient descent, not enumeration — making NAS orders of magnitude faster.',
@@ -1324,7 +1324,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "One-shot NAS trains a single supernet once (all 2^N candidate architectures share weights in it). Evaluation and search are cheap — sample a path, evaluate it using the supernet\'s shared weights, no additional training needed. Total cost: O(1 × training_cost) instead of O(N × training_cost) for training each candidate separately.",
+        "One-shot NAS trains a single supernet once (all 2^N candidate architectures share weights in it). Evaluation and search are cheap — sample a path, evaluate it using the supernet\'s shared weights, no additional training needed. Total cost: O(1 \\times training_cost) instead of O(N \\times training_cost) for training each candidate separately.",
       hints: [
         'Instead of training each candidate architecture from scratch, train one supernet and "rent" weights from it.',
         "Weight sharing is the key: all 2^N candidate architectures share the supernet\'s parameters.",
@@ -1361,9 +1361,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "If Task A has loss ~1000 (e.g., pixel-wise reconstruction) and Task B has loss ~0.1 (e.g., classification), a naive sum overwhelmingly optimizes Task A — gradients from Task A are 10,000× larger. Task weighting (manual or learned, e.g., GradNorm, uncertainty weighting) balances gradient contributions so all tasks improve together.",
+        "If Task A has loss ~1000 (e.g., pixel-wise reconstruction) and Task B has loss ~0.1 (e.g., classification), a naive sum overwhelmingly optimizes Task A — gradients from Task A are 10,000\\times larger. Task weighting (manual or learned, e.g., GradNorm, uncertainty weighting) balances gradient contributions so all tasks improve together.",
       hints: [
-        "Imagine trying to optimize two goals where one has 10,000× larger gradients — the optimizer ignores the smaller one.",
+        "Imagine trying to optimize two goals where one has 10,000\\times larger gradients — the optimizer ignores the smaller one.",
         "GradNorm and Kendall et al.'s uncertainty-based weighting are popular automatic methods for balancing task losses.",
       ],
     },
@@ -1417,7 +1417,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "EWC (Kirkpatrick et al., 2017) adds L = L_new + \\lambda \\Sigmaᵢ Fᵢ(\\thetaᵢ − \\theta*ᵢ)² where Fᵢ is the Fisher information diagonal (measuring parameter importance for old tasks) and \\theta*ᵢ are old task weights. High-Fisher weights are strongly anchored; low-Fisher weights can change freely for new tasks.",
+        "EWC (Kirkpatrick et al., 2017) adds L = L_new + \\lambda \\Sigma\\_i F\\_i(\\theta\\_i − \\theta*\\_i)\\^2 where F\\_i is the Fisher information diagonal (measuring parameter importance for old tasks) and \\theta*\\_i are old task weights. High-Fisher weights are strongly anchored; low-Fisher weights can change freely for new tasks.",
       hints: [
         "Fisher information identifies which weights mattered most for the previous task (high Fisher = important).",
         "The penalty anchors important weights near their old task values, allowing unimportant weights to adapt freely to new tasks.",
@@ -1440,7 +1440,7 @@ const questions: Record<string, Question[]> = {
         "Experience replay (Gradient Episodic Memory, ER-ACE) maintains a small buffer of old task samples and interleaves them with new task batches during training. By continuously seeing examples of old tasks, the model cannot completely overwrite old task knowledge. The tradeoff: memory overhead for storing old examples vs. forgetting prevention.",
       hints: [
         "If the model keeps seeing a few examples from old tasks during new task training, it cannot forget them completely.",
-        "The buffer size is a key hyperparameter: larger buffer → less forgetting but more memory.",
+        "The buffer size is a key hyperparameter: larger buffer \\to less forgetting but more memory.",
       ],
     },
   ],
@@ -1516,9 +1516,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Quantization maps floating-point values to lower-precision integers. INT8 uses 4× less memory than FP32 and is supported by fast integer arithmetic on modern hardware accelerators. Memory bandwidth is often the bottleneck for LLM inference — quantization directly reduces the bytes transferred per weight, enabling faster token generation.",
+        "Quantization maps floating-point values to lower-precision integers. INT8 uses 4\\times less memory than FP32 and is supported by fast integer arithmetic on modern hardware accelerators. Memory bandwidth is often the bottleneck for LLM inference — quantization directly reduces the bytes transferred per weight, enabling faster token generation.",
       hints: [
-        "FP32 → INT8: 32 bits → 8 bits = 4× smaller. More data fits in cache; memory bandwidth demand drops 4×.",
+        "FP32 \\to INT8: 32 bits \\to 8 bits = 4\\times smaller. More data fits in cache; memory bandwidth demand drops 4\\times.",
         "Integer multiply-accumulate (MAC) operations are faster and cheaper than floating-point on most hardware.",
       ],
     },
@@ -1589,7 +1589,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Per-layer gradient norm plots reveal gradient health throughout the network. Vanishing: norms near zero in early layers (those layers not learning). Exploding: norms in the thousands (updates destabilize training). Tools like TensorBoard, Weights & Biases, or a simple hook logging ||\\nablaW||₂ per layer can identify these issues.",
+        "Per-layer gradient norm plots reveal gradient health throughout the network. Vanishing: norms near zero in early layers (those layers not learning). Exploding: norms in the thousands (updates destabilize training). Tools like TensorBoard, Weights & Biases, or a simple hook logging ||\\nablaW||\\_2 per layer can identify these issues.",
       hints: [
         "Vanishing: gradient norms near zero for early layers. Exploding: gradient norms in the thousands for any layer.",
         "Logging per-layer gradient norms at each step is a key debugging practice for deep network training.",
@@ -1623,18 +1623,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "SiLU (Sigmoid Linear Unit / Swish) is defined as SiLU(x) = x · \\sigma(x). Compared to ReLU, which property does SiLU possess that makes it beneficial for deep networks?",
+        "SiLU (Sigmoid Linear Unit / Swish) is defined as SiLU(x) = x \\cdot \\sigma(x). Compared to ReLU, which property does SiLU possess that makes it beneficial for deep networks?",
       options: [
         "SiLU is computationally cheaper than ReLU because it avoids the max operation",
-        "SiLU is smooth and non-monotonic — it has a small negative region near x ≈ −1.28, allowing the network to learn to suppress near-zero activations rather than hard-zeroing them, improving gradient flow and empirical performance in deep architectures",
-        "SiLU eliminates the vanishing gradient problem entirely because its derivative is always ≥ 1",
+        "SiLU is smooth and non-monotonic — it has a small negative region near x \\approx −1.28, allowing the network to learn to suppress near-zero activations rather than hard-zeroing them, improving gradient flow and empirical performance in deep architectures",
+        "SiLU eliminates the vanishing gradient problem entirely because its derivative is always \\geq 1",
         "SiLU is equivalent to ReLU for positive inputs and LeakyReLU for negative inputs",
       ],
       correctAnswer: 1,
       explanation:
-        "SiLU(x) = x·\\sigma(x) is smooth (infinitely differentiable), self-gated, and non-monotonic with a global minimum near x ≈ −1.28. Unlike ReLU's hard zero for x < 0, SiLU allows small negative values to pass, providing a richer gradient signal. Empirically, SiLU outperforms ReLU in EfficientNet, MobileNetV3, and large language model FFN layers. Its derivative SiLU'(x) = \\sigma(x) + x·\\sigma(x)·(1−\\sigma(x)) is nonzero for all x.",
+        "SiLU(x) = x\\cdot\\sigma(x) is smooth (infinitely differentiable), self-gated, and non-monotonic with a global minimum near x \\approx −1.28. Unlike ReLU's hard zero for x < 0, SiLU allows small negative values to pass, providing a richer gradient signal. Empirically, SiLU outperforms ReLU in EfficientNet, MobileNetV3, and large language model FFN layers. Its derivative SiLU'(x) = \\sigma(x) + x\\cdot\\sigma(x)\\cdot(1−\\sigma(x)) is nonzero for all x.",
       hints: [
-        "Self-gating: the activation gates itself (x · \\sigma(x)) rather than using a separate learned gate.",
+        "Self-gating: the activation gates itself (x \\cdot \\sigma(x)) rather than using a separate learned gate.",
         "SiLU is the activation function used in EfficientNet and many modern vision transformers.",
       ],
     },
@@ -1643,7 +1643,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "GELU (Gaussian Error Linear Unit) is defined as GELU(x) = x · \\Phi(x), where \\Phi is the standard normal CDF. What is the intuition behind this formulation, and why is it preferred in transformer architectures like BERT and GPT?",
+        "GELU (Gaussian Error Linear Unit) is defined as GELU(x) = x \\cdot \\Phi(x), where \\Phi is the standard normal CDF. What is the intuition behind this formulation, and why is it preferred in transformer architectures like BERT and GPT?",
       options: [
         "GELU approximates ReLU but is computationally faster due to lookup table approximation of \\Phi(x)",
         "GELU stochastically gates inputs: each input x is multiplied by the probability that x is greater than a standard normal random draw — smoothly blending identity (x passes through) and zero-gating based on the input's magnitude, which regularizes and improves calibration in attention-based models",
@@ -1652,7 +1652,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GELU(x) = x·\\Phi(x) can be interpreted as: scale x by the probability that a standard normal random variable Z is less than x. For large positive x, \\Phi(x) ≈ 1 (full pass-through); for large negative x, \\Phi(x) ≈ 0 (suppressed). This smooth stochastic gating outperforms ReLU in BERT, GPT-2/3, ViT, and most modern transformers. Approximation: GELU(x) ≈ 0.5x·(1 + tanh(√(2/\\pi)·(x + 0.044715·x³))) is commonly used in practice.",
+        "GELU(x) = x\\cdot\\Phi(x) can be interpreted as: scale x by the probability that a standard normal random variable Z is less than x. For large positive x, \\Phi(x) \\approx 1 (full pass-through); for large negative x, \\Phi(x) \\approx 0 (suppressed). This smooth stochastic gating outperforms ReLU in BERT, GPT-2/3, ViT, and most modern transformers. Approximation: GELU(x) \\approx 0.5x\\cdot(1 + tanh(√(2/\\pi)\\cdot(x + 0.044715\\cdotx\\^3))) is commonly used in practice.",
       hints: [
         "GELU is the default activation in BERT, GPT-2, GPT-3, and ViT — it has essentially replaced ReLU in transformer architectures.",
         "The approximation using tanh avoids computing the true Gaussian CDF and is accurate to within 0.001% on the typical input range.",
@@ -1663,16 +1663,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "SwiGLU (Swish-Gated Linear Unit) is used in LLaMA, PaLM, and Mistral FFN layers. It replaces the standard FFN (Linear → activation → Linear) with which formulation?",
+        "SwiGLU (Swish-Gated Linear Unit) is used in LLaMA, PaLM, and Mistral FFN layers. It replaces the standard FFN (Linear \\to activation \\to Linear) with which formulation?",
       options: [
-        "FFN(x) = SiLU(W₁x + b₁) + W₂x + b₂ — adding a residual path inside the FFN block",
-        "FFN(x) = (SiLU(W₁x) ⊙ W₃x) · W₂ — a gated linear unit where one branch applies SiLU and the other is a learned linear gate, combined via elementwise multiplication before the output projection",
-        "FFN(x) = SiLU(W₁x) · SiLU(W₂x) — applying SiLU to both linear projections and multiplying the results",
-        "FFN(x) = LayerNorm(SiLU(W₁x + b₁)) · W₂ — inserting layer normalization between the two linear layers",
+        "FFN(x) = SiLU(W\\_1x + b\\_1) + W\\_2x + b\\_2 — adding a residual path inside the FFN block",
+        "FFN(x) = (SiLU(W\\_1x) ⊙ W\\_3x) \\cdot W\\_2 — a gated linear unit where one branch applies SiLU and the other is a learned linear gate, combined via elementwise multiplication before the output projection",
+        "FFN(x) = SiLU(W\\_1x) \\cdot SiLU(W\\_2x) — applying SiLU to both linear projections and multiplying the results",
+        "FFN(x) = LayerNorm(SiLU(W\\_1x + b\\_1)) \\cdot W\\_2 — inserting layer normalization between the two linear layers",
       ],
       correctAnswer: 1,
       explanation:
-        "SwiGLU(x, W, V, W₂) = (SiLU(xW) ⊙ xV) W₂. Two linear projections (W and V) split the input: one branch applies SiLU as the activation, the other is a linear gate. Their elementwise product selects which features pass. This gated architecture requires a third weight matrix but delivers better perplexity per parameter. LLaMA models use SwiGLU with a hidden dimension scaled to 8/3 of d_model to maintain parameter count parity with the standard 4×d_model FFN.",
+        "SwiGLU(x, W, V, W\\_2) = (SiLU(xW) ⊙ xV) W\\_2. Two linear projections (W and V) split the input: one branch applies SiLU as the activation, the other is a linear gate. Their elementwise product selects which features pass. This gated architecture requires a third weight matrix but delivers better perplexity per parameter. LLaMA models use SwiGLU with a hidden dimension scaled to 8/3 of d_model to maintain parameter count parity with the standard 4\\timesd_model FFN.",
       hints: [
         "GLU family: Gated Linear Units use elementwise multiplication of two linear branches — the gate controls information flow.",
         "LLaMA/Mistral FFN: three weight matrices (W_gate, W_up, W_down) rather than the standard two (W_1, W_2) in vanilla transformers.",
@@ -1705,7 +1705,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "torch.compile() (PyTorch 2.0+) applies graph capture and kernel fusion to accelerate eager-mode PyTorch code, often achieving 2× speedups without changing the model definition.",
+        "torch.compile() (PyTorch 2.0+) applies graph capture and kernel fusion to accelerate eager-mode PyTorch code, often achieving 2\\times speedups without changing the model definition.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -2488,7 +2488,7 @@ const extraDL: Record<string, Question[]> = {
       question: "In practice, initialising the weights of residual branches near zero (e.g., setting the last BatchNorm gamma to 0) can improve training stability of very deep ResNets by making residual blocks start as near-identity functions.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "The 'zero-init residual' trick (FixRes, Goyal et al., 2017; also in T-fixup, ReZero): by initialising the last layer of each residual block (e.g., the final BN's gamma parameter) to zero, the initial forward pass produces H(x) = F(x) + x ≈ 0 + x = x — the block is initially an identity function. This means a 100-layer network starts as effectively a shallow network, then gradually increases depth as training progresses. This dramatically stabilises early training dynamics and enables higher learning rates.",
+      explanation: "The 'zero-init residual' trick (FixRes, Goyal et al., 2017; also in T-fixup, ReZero): by initialising the last layer of each residual block (e.g., the final BN's gamma parameter) to zero, the initial forward pass produces H(x) = F(x) + x \\approx 0 + x = x — the block is initially an identity function. This means a 100-layer network starts as effectively a shallow network, then gradually increases depth as training progresses. This dramatically stabilises early training dynamics and enables higher learning rates.",
       hints: [
         "If F(x) = gamma * BN_output + x and gamma = 0 initially, then F(x) = x — pure identity mapping at initialisation.",
         "ReZero (Bachlechner et al., 2020) formalises this: H(x) = F(x) * alpha + x with alpha initialised to 0, enabling very deep networks without warmup.",

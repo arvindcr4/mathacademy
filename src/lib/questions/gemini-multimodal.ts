@@ -179,8 +179,7 @@ registerQuestions({
         "It allows the model to access real-time internet search results.",
         "It caches the model outputs to serve identical responses to different users instantly.",
       ],
-      correctAnswer:
-        "It reduces latency and costs when repeatedly sending large amounts of context (like a long document or video) in multiple requests.",
+      correctAnswer: 1,
       explanation:
         "Context Caching allows you to pass a large context window once, cache it, and reference it in subsequent requests. This significantly reduces both latency and token costs for repetitive tasks on the same large document or video.",
       hints: [
@@ -202,8 +201,7 @@ registerQuestions({
         "By setting `temperature` to 1.0.",
         "By using the `stream` parameter.",
       ],
-      correctAnswer:
-        "By providing a JSON Schema object in the `response_schema` parameter of the API configuration.",
+      correctAnswer: 1,
       explanation:
         "The Gemini API supports structured outputs by allowing developers to pass a strict JSON Schema via the `response_schema` configuration, ensuring the model output conforms exactly to the defined structure.",
       hints: [
@@ -243,7 +241,7 @@ registerQuestions({
       question:
         "In the official Gemini SDKs, which method is typically used to send a prompt and receive a complete response?",
       options: ["predict()", "generateContent()", "completeText()", "chat()"],
-      correctAnswer: "generateContent()",
+      correctAnswer: 1,
       explanation:
         "The `generateContent` method (or its language-specific equivalent) is the core method in the Gemini API used for standard text, multimodal, and chat generation requests.",
       hints: [
@@ -328,7 +326,7 @@ registerQuestions({
         "Describing the contents of a photograph.",
         "All of the above.",
       ],
-      correctAnswer: "All of the above.",
+      correctAnswer: 3,
       explanation:
         "Gemini is highly capable at VQA, OCR, and rich image captioning due to its native multimodal architecture.",
       hints: [
@@ -810,7 +808,7 @@ registerQuestions({
       explanation:
         "At approximately 1 frame per second, a 1-hour video generates around 3,600 frames. Each frame uses roughly 258 tokens, totaling about 928,800 tokens — fitting within the 1M token context window. This enables end-to-end reasoning over feature-length content.",
       hints: [
-        "Calculate: 3,600 seconds × 258 tokens/frame ≈ 928,800 tokens.",
+        "Calculate: 3,600 seconds \\times 258 tokens/frame \\approx 928,800 tokens.",
         "1 frame per second is a common sampling rate for Gemini video processing.",
       ],
     },
@@ -1383,14 +1381,14 @@ registerQuestions({
       question:
         "Rank the Gemini model tiers from smallest/fastest to largest/most capable.",
       options: [
-        "Ultra → Pro → Flash → Nano",
-        "Nano → Flash → Pro → Ultra",
-        "Pro → Nano → Ultra → Flash",
-        "Flash → Nano → Ultra → Pro",
+        "Ultra \\to Pro \\to Flash \\to Nano",
+        "Nano \\to Flash \\to Pro \\to Ultra",
+        "Pro \\to Nano \\to Ultra \\to Flash",
+        "Flash \\to Nano \\to Ultra \\to Pro",
       ],
       correctAnswer: 1,
       explanation:
-        "From smallest to largest: Gemini Nano (on-device) → Gemini Flash (lightweight cloud) → Gemini Pro (balanced cloud) → Gemini Ultra (most capable). Each tier trades off size/speed against capability.",
+        "From smallest to largest: Gemini Nano (on-device) \\to Gemini Flash (lightweight cloud) \\to Gemini Pro (balanced cloud) \\to Gemini Ultra (most capable). Each tier trades off size/speed against capability.",
       hints: [
         "\'Nano\' implies tiny; \'Ultra\' implies maximum capability.",
         "Think about the physical meaning of each name.",

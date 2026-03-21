@@ -826,13 +826,13 @@ registerQuestions({
         "What is the theoretical minimum average NLL loss for a bigram model trained on a dataset where each bigram is equally likely among 27 possible next characters?",
       options: [
         "0.0",
-        "log(27) ≈ 3.296",
-        "1/27 ≈ 0.037",
+        "log(27) \\approx 3.296",
+        "1/27 \\approx 0.037",
         "27.0",
       ],
-      correctAnswer: "log(27) ≈ 3.296",
+      correctAnswer: "log(27) \\approx 3.296",
       explanation:
-        "If each of the 27 characters is equally likely (uniform distribution), the model assigns probability 1/27 to each. The NLL per character is -log(1/27) = log(27) ≈ 3.296. This is the baseline 'dumb' model loss; a trained model should beat it.",
+        "If each of the 27 characters is equally likely (uniform distribution), the model assigns probability 1/27 to each. The NLL per character is -log(1/27) = log(27) \\approx 3.296. This is the baseline 'dumb' model loss; a trained model should beat it.",
       hints: [
         "NLL = -log(probability assigned to correct character).",
         "Uniform probability over 27 characters is 1/27; -log(1/27) = log(27).",
@@ -1162,7 +1162,7 @@ registerQuestions({
       correctAnswer:
         "The model is performing at chance level, equivalent to randomly guessing from all 27 characters equally.",
       explanation:
-        "Perplexity is exp(NLL). A uniform model over 27 characters has NLL = log(27) ≈ 3.296, so perplexity = exp(log(27)) = 27. A model with perplexity 27 is no better than random guessing. Lower perplexity is better.",
+        "Perplexity is exp(NLL). A uniform model over 27 characters has NLL = log(27) \\approx 3.296, so perplexity = exp(log(27)) = 27. A model with perplexity 27 is no better than random guessing. Lower perplexity is better.",
       hints: [
         "Perplexity = exp(cross-entropy loss). Lower is better.",
         "Perplexity can be interpreted as the effective vocabulary size the model is choosing from.",
@@ -1269,7 +1269,7 @@ registerQuestions({
       correctAnswer:
         "The model outputs a uniform probability distribution (1/27) over all next characters.",
       explanation:
-        "softmax([0, 0, ..., 0]) = [1/27, 1/27, ..., 1/27]. A weight matrix of all zeros is exactly the maximally uncertain (uniform) model, equivalent to a bigram model with infinite smoothing. The loss in this case is log(27) ≈ 3.296.",
+        "softmax([0, 0, ..., 0]) = [1/27, 1/27, ..., 1/27]. A weight matrix of all zeros is exactly the maximally uncertain (uniform) model, equivalent to a bigram model with infinite smoothing. The loss in this case is log(27) \\approx 3.296.",
       hints: [
         "All-zero logits means all exponentiated values are exp(0) = 1, and there are 27 of them.",
         "This is the initialization point for the neural bigram model before training.",
@@ -1592,7 +1592,7 @@ registerQuestions({
       explanation:
         "If weights are initialized randomly without proper scaling, the variance of the outputs shrinks or grows exponentially with each layer. Kaiming initialization scales weights by a factor of `sqrt(gain / fan_in)` to maintain a stable variance.",
       hints: [
-        "For ReLU, Kaiming uses gain=sqrt(2); for Tanh, gain ≈ 5/3.",
+        "For ReLU, Kaiming uses gain=sqrt(2); for Tanh, gain \\approx 5/3.",
         "fan_in is the number of input connections to a neuron.",
       ],
     },
@@ -1972,7 +1972,7 @@ registerQuestions({
       correctAnswer:
         "The entropy of the bigram distribution H(P), which is the theoretical lower bound for the average NLL.",
       explanation:
-        "The average NLL -E[log P(x)] is lower-bounded by the entropy H(P) = -sum_x P(x) log P(x). A model that perfectly recovers the true data distribution achieves exactly H(P) on average. A uniform model achieves log(27) ≈ 3.296 (for 27 characters), the maximum entropy for the vocabulary.",
+        "The average NLL -E[log P(x)] is lower-bounded by the entropy H(P) = -sum_x P(x) log P(x). A model that perfectly recovers the true data distribution achieves exactly H(P) on average. A uniform model achieves log(27) \\approx 3.296 (for 27 characters), the maximum entropy for the vocabulary.",
       hints: [
         "Shannon entropy is the minimum average bits (or nats) needed to encode samples from P.",
         "A uniform distribution maximizes entropy; a peaked distribution minimizes it.",
@@ -2234,7 +2234,7 @@ registerQuestions({
         "A lower-triangular mask (torch.tril) identifies valid (past/present) positions. The attention logits matrix (T, T) is masked by adding float('-inf') to all upper-triangular positions. After softmax, these become exp(-inf) = 0, effectively preventing the model from attending to future tokens.",
       hints: [
         "torch.tril creates a lower-triangular mask; upper-triangle positions need to be masked out.",
-        "Masked_fill with float('-inf') → softmax gives 0 attention to those positions.",
+        "Masked_fill with float('-inf') \\to softmax gives 0 attention to those positions.",
       ],
     },
     {
@@ -2311,9 +2311,9 @@ registerQuestions({
       correctAnswer:
         "With more merge rules, longer text spans become single tokens (shorter sequences), but the embedding table and output projection matrix grow proportionally to vocab size, increasing parameter count.",
       explanation:
-        "Each token in the vocabulary needs a row in the embedding matrix (vocab_size × d_model) and a column in the language model head (d_model × vocab_size). For GPT-2, vocab_size=50,257, which means the embedding and LM head together account for a significant fraction of total parameters.",
+        "Each token in the vocabulary needs a row in the embedding matrix (vocab_size \\times d_model) and a column in the language model head (d_model \\times vocab_size). For GPT-2, vocab_size=50,257, which means the embedding and LM head together account for a significant fraction of total parameters.",
       hints: [
-        "Embedding table size = vocab_size × d_model.",
+        "Embedding table size = vocab_size \\times d_model.",
         "LM head (unembedding) is often tied to the embedding matrix to save parameters.",
       ],
     },
@@ -2446,7 +2446,7 @@ registerQuestions({
       explanation:
         "If all weights are zero, all neurons in a layer produce the same activation (zero) and receive the same gradient, so they remain identical after each update. This symmetry is never broken, effectively collapsing the layer to a single neuron. Random initialization breaks symmetry, allowing different neurons to specialize.",
       hints: [
-        "All-zero init: every neuron is identical → they learn identically → they stay identical.",
+        "All-zero init: every neuron is identical \\to they learn identically \\to they stay identical.",
         "This is called the 'symmetry problem' and it is why random weight initialization is essential.",
       ],
     },

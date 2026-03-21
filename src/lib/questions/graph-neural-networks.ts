@@ -11,13 +11,13 @@ const questions: Record<string, Question[]> = {
         "A graph G = (V, E) with |V| = n nodes and |E| = m edges can be stored as an adjacency matrix. What is the space complexity of the dense adjacency matrix, and when is it inefficient?",
       options: [
         "O(n): always efficient regardless of graph density",
-        "O(n²): inefficient for sparse graphs (m << n²) where most entries are zero",
+        "O(n\\^2): inefficient for sparse graphs (m << n\\^2) where most entries are zero",
         "O(m): the same as the edge list representation",
-        "O(n·log n): efficient for power-law degree distributions",
+        "O(n\\cdotlog n): efficient for power-law degree distributions",
       ],
       correctAnswer: 1,
       explanation:
-        "The dense adjacency matrix A ∈ {0,1}^{n×n} requires O(n²) space regardless of edge count. For sparse real-world graphs (social networks, citation graphs, molecular graphs) with m = O(n), this wastes O(n²-m) = O(n²) space. Sparse representations (COO: coordinate list, CSR: compressed sparse row, edge index in PyG) store only O(m) entries. GNN frameworks like PyTorch Geometric use edge_index ∈ \\mathcal{Z}^{2×m} as the default sparse representation.",
+        "The dense adjacency matrix A \\in {0,1}^{n\\timesn} requires O(n\\^2) space regardless of edge count. For sparse real-world graphs (social networks, citation graphs, molecular graphs) with m = O(n), this wastes O(n\\^2-m) = O(n\\^2) space. Sparse representations (COO: coordinate list, CSR: compressed sparse row, edge index in PyG) store only O(m) entries. GNN frameworks like PyTorch Geometric use edge_index \\in \\mathcal{Z}^{2\\timesm} as the default sparse representation.",
       hints: [
         "Most real-world graphs are sparse: social networks average ~100-1000 friends per user out of billions.",
         "PyTorch Geometric's edge_index stores [source_nodes, target_nodes] — a compact COO format.",
@@ -37,10 +37,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PyG's edge_index is a 2×E matrix in COO format: edge_index[0, e] = source node of edge e, edge_index[1, e] = target node of edge e. For an undirected graph with edge (u, v), both (u→v) and (v→u) are included. Message passing from v to u uses edge_index[0] as the destination and edge_index[1] as the source: messages flow from edge_index[1] to edge_index[0]. This is the fundamental data structure for all GNN layers in PyG.",
+        "PyG's edge_index is a 2\\timesE matrix in COO format: edge_index[0, e] = source node of edge e, edge_index[1, e] = target node of edge e. For an undirected graph with edge (u, v), both (u\\tov) and (v\\tou) are included. Message passing from v to u uses edge_index[0] as the destination and edge_index[1] as the source: messages flow from edge_index[1] to edge_index[0]. This is the fundamental data structure for all GNN layers in PyG.",
       hints: [
         "COO = Coordinate format: store the (row, col) of each non-zero entry.",
-        "For undirected graphs, m actual edges → 2m entries in edge_index (both directions).",
+        "For undirected graphs, m actual edges \\to 2m entries in edge_index (both directions).",
       ],
     },
     {
@@ -51,13 +51,13 @@ const questions: Record<string, Question[]> = {
         "The graph Laplacian L = D - A (where D is the degree matrix and A is the adjacency matrix) is fundamental to spectral graph theory. What property makes it useful for graph signal processing?",
       options: [
         "L is always invertible, enabling efficient linear system solutions",
-        "L is positive semi-definite (PSD) with eigenvalues \\lambda_0=0 ≤ \\lambda_1 ≤ ... ≤ \\lambda_{n-1}; its eigenvectors form an orthonormal basis for graph signals, analogous to Fourier modes — enabling graph Fourier transforms",
+        "L is positive semi-definite (PSD) with eigenvalues \\lambda_0=0 \\leq \\lambda_1 \\leq ... \\leq \\lambda_{n-1}; its eigenvectors form an orthonormal basis for graph signals, analogous to Fourier modes — enabling graph Fourier transforms",
         "L has the same spectrum as the adjacency matrix A",
         "L preserves the original node features through matrix multiplication",
       ],
       correctAnswer: 1,
       explanation:
-        "The graph Laplacian L = D-A is PSD (x^T·L·x = \\Sigma_{(i,j)∈E}(x_i-x_j)² ≥ 0), with the smallest eigenvalue \\lambda_0=0 (eigenvector = uniform vector, connected graph). The eigendecomposition L = U\\LambdaU^T provides an orthonormal graph Fourier basis U = [u_0,...,u_{n-1}]. A graph signal x can be transformed as x̂ = U^T·x (graph Fourier transform), with filtering: g * x = U·(g(\\Lambda)⊙(U^T·x)). This is the basis of spectral GNNs (ChebNet, GCN).",
+        "The graph Laplacian L = D-A is PSD (x^T\\cdotL\\cdotx = \\Sigma_{(i,j)\\inE}(x_i-x_j)\\^2 \\geq 0), with the smallest eigenvalue \\lambda_0=0 (eigenvector = uniform vector, connected graph). The eigendecomposition L = U\\LambdaU^T provides an orthonormal graph Fourier basis U = [u_0,...,u_{n-1}]. A graph signal x can be transformed as x̂ = U^T\\cdotx (graph Fourier transform), with filtering: g * x = U\\cdot(g(\\Lambda)⊙(U^T\\cdotx)). This is the basis of spectral GNNs (ChebNet, GCN).",
       hints: [
         "The smallest eigenvalues correspond to smooth, low-frequency graph signals; large eigenvalues = high-frequency.",
         "\\lambda_1 > 0 iff the graph is connected (the 'algebraic connectivity' or Fiedler value).",
@@ -71,18 +71,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The normalized graph Laplacian L_norm = I - D^{-1/2}·A·D^{-1/2} is used in spectral GNNs. What is its key advantage over the unnormalized Laplacian L = D-A?",
+        "The normalized graph Laplacian L_norm = I - D^{-1/2}\\cdotA\\cdotD^{-1/2} is used in spectral GNNs. What is its key advantage over the unnormalized Laplacian L = D-A?",
       options: [
         "It is always positive definite (PD), enabling Cholesky decomposition",
         "Its eigenvalues are bounded in [0,2] regardless of node degree, enabling more stable spectral filtering and removing the effect of degree heterogeneity on the filter scale",
         "It has a closed-form inverse, enabling exact Gaussian process inference on graphs",
-        "It reduces memory requirements from O(n²) to O(n)",
+        "It reduces memory requirements from O(n\\^2) to O(n)",
       ],
       correctAnswer: 1,
       explanation:
-        "L_norm = D^{-1/2}·(D-A)·D^{-1/2} = I - D^{-1/2}·A·D^{-1/2}. Its eigenvalues lie in [0,2] for any graph. Without normalization, L's eigenvalues scale with node degrees — high-degree nodes dominate the spectrum. L_norm removes this degree bias, making spectral filters consistent across graphs with different degree distributions. The normalized propagation rule in GCN: Ã = D_norm^{-1/2}·A_norm·D_norm^{-1/2} is the direct application of this normalization.",
+        "L_norm = D^{-1/2}\\cdot(D-A)\\cdotD^{-1/2} = I - D^{-1/2}\\cdotA\\cdotD^{-1/2}. Its eigenvalues lie in [0,2] for any graph. Without normalization, L's eigenvalues scale with node degrees — high-degree nodes dominate the spectrum. L_norm removes this degree bias, making spectral filters consistent across graphs with different degree distributions. The normalized propagation rule in GCN: Ã = D_norm^{-1/2}\\cdotA_norm\\cdotD_norm^{-1/2} is the direct application of this normalization.",
       hints: [
-        "The GCN paper (Kipf & Welling, 2017) uses the normalized adjacency with self-loops: D^{-1/2}·(A+I)·D^{-1/2}.",
+        "The GCN paper (Kipf & Welling, 2017) uses the normalized adjacency with self-loops: D^{-1/2}\\cdot(A+I)\\cdotD^{-1/2}.",
         "Bounded eigenvalues prevent numerical issues in polynomial approximations to spectral filters.",
       ],
     },
@@ -94,7 +94,7 @@ const questions: Record<string, Question[]> = {
         "Computing the eigenvectors of the graph Laplacian for spectral GNN operations is practical for large graphs with millions of nodes.",
       correctAnswer: "False",
       explanation:
-        "Full eigenvector computation requires O(n³) time and O(n²) space — completely intractable for large graphs. This is why spectral GNNs (ChebNet, GCN) use polynomial approximations to the spectral filter (e.g., Chebyshev polynomials of the Laplacian), which can be computed in O(m·K) using K matrix-vector products with L. GCN further approximates to a first-order polynomial, reducing to a simple 1-hop neighborhood aggregation requiring only the sparse adjacency matrix.",
+        "Full eigenvector computation requires O(n\\^3) time and O(n\\^2) space — completely intractable for large graphs. This is why spectral GNNs (ChebNet, GCN) use polynomial approximations to the spectral filter (e.g., Chebyshev polynomials of the Laplacian), which can be computed in O(m\\cdotK) using K matrix-vector products with L. GCN further approximates to a first-order polynomial, reducing to a simple 1-hop neighborhood aggregation requiring only the sparse adjacency matrix.",
       hints: [
         "ChebNet uses Chebyshev polynomials T_k(L_norm) to approximate spectral filters without eigendecomposition.",
         "GCN (K=1 Chebyshev approximation) is why spectral motivation leads to the same spatial aggregation formula.",
@@ -105,18 +105,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The graph Laplacian quadratic form x^T·L·x = \\Sigma_{(i,j)∈E}(x_i - x_j)² measures graph signal smoothness. A graph signal x is considered 'smooth' (low-frequency) when:",
+        "The graph Laplacian quadratic form x^T\\cdotL\\cdotx = \\Sigma_{(i,j)\\inE}(x_i - x_j)\\^2 measures graph signal smoothness. A graph signal x is considered 'smooth' (low-frequency) when:",
       options: [
         "x has constant value at all nodes",
         "x has large differences between all connected node pairs",
-        "x^T·L·x is small, meaning connected nodes tend to have similar signal values — the signal varies slowly across the graph",
-        "x^T·L·x is maximized, concentrating signal energy on few nodes",
+        "x^T\\cdotL\\cdotx is small, meaning connected nodes tend to have similar signal values — the signal varies slowly across the graph",
+        "x^T\\cdotL\\cdotx is maximized, concentrating signal energy on few nodes",
       ],
       correctAnswer: 2,
       explanation:
-        "x^T·L·x = \\Sigma_{(i,j)∈E}(x_i-x_j)² is the Dirichlet energy of the graph signal x. Small value means connected neighbors have similar values — a smooth signal. The constant vector (x_i = c for all i) achieves x^T·L·x = 0 (minimum). High-frequency signals have large differences between neighbors. The graph Fourier transform decomposes x into smooth (low eigenvalue) and oscillatory (high eigenvalue) components, enabling frequency-domain filtering analogous to classical signal processing.",
+        "x^T\\cdotL\\cdotx = \\Sigma_{(i,j)\\inE}(x_i-x_j)\\^2 is the Dirichlet energy of the graph signal x. Small value means connected neighbors have similar values — a smooth signal. The constant vector (x_i = c for all i) achieves x^T\\cdotL\\cdotx = 0 (minimum). High-frequency signals have large differences between neighbors. The graph Fourier transform decomposes x into smooth (low eigenvalue) and oscillatory (high eigenvalue) components, enabling frequency-domain filtering analogous to classical signal processing.",
       hints: [
-        "Smoothness regularization in graph-based semi-supervised learning uses x^T·L·x as a penalty.",
+        "Smoothness regularization in graph-based semi-supervised learning uses x^T\\cdotL\\cdotx as a penalty.",
         "Node labels in citation graphs tend to be smooth: connected papers often share the same topic.",
       ],
     },
@@ -130,14 +130,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Message Passing Neural Network (MPNN) framework describes GNN computations in three phases. Which sequence is correct?",
       options: [
-        "Aggregate → Update → Message",
-        "Message → Aggregate → Update",
-        "Update → Message → Aggregate",
-        "Normalize → Message → Update",
+        "Aggregate \\to Update \\to Message",
+        "Message \\to Aggregate \\to Update",
+        "Update \\to Message \\to Aggregate",
+        "Normalize \\to Message \\to Update",
       ],
       correctAnswer: 1,
       explanation:
-        "MPNN proceeds as: (1) Message: each edge (u,v) computes a message m_{uv} = M_t(h_u, h_v, e_{uv}) using source/target node features and edge features; (2) Aggregate: each node v collects messages from its neighbors: m_v = AGG({m_{uv} : u ∈ N(v)}) using a permutation-invariant function (sum, mean, max); (3) Update: node v updates its representation: h_v' = U_t(h_v, m_v). This general framework unifies GCN, GAT, GraphSAGE, GIN, and many other architectures.",
+        "MPNN proceeds as: (1) Message: each edge (u,v) computes a message m_{uv} = M_t(h_u, h_v, e_{uv}) using source/target node features and edge features; (2) Aggregate: each node v collects messages from its neighbors: m_v = AGG({m_{uv} : u \\in N(v)}) using a permutation-invariant function (sum, mean, max); (3) Update: node v updates its representation: h_v' = U_t(h_v, m_v). This general framework unifies GCN, GAT, GraphSAGE, GIN, and many other architectures.",
       hints: [
         "The MPNN framework from Gilmer et al. (2017) was introduced for quantum chemistry property prediction.",
         "All major GNN architectures can be expressed as special cases of MPNN with specific M, AGG, and U functions.",
@@ -159,7 +159,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Over-smoothing (Li et al., 2018) is a fundamental GNN problem: as L increases, all node representations converge to the same stationary point determined by the graph structure (the eigenvector of the adjacency matrix). Deep GNNs cannot distinguish nodes because they all have the same 'infinite-hop' neighborhood — the entire graph. For tasks requiring only local structure (e.g., node classification on citation graphs), L=2-4 typically suffices. Methods to mitigate over-smoothing include: residual connections, DropEdge, and PairNorm.",
       hints: [
-        "With random walk propagation, L→∞ leads to the stationary distribution — uniform over degree for regular graphs.",
+        "With random walk propagation, L\\to\\infty leads to the stationary distribution — uniform over degree for regular graphs.",
         "Citation graph experiments show that GCN with >4 layers typically performs worse than GCN with 2 layers.",
       ],
     },
@@ -177,7 +177,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Over-squashing: the L-hop neighborhood of node v can grow exponentially as a function of L (for high-degree graphs). All information from this exponentially large neighborhood must be compressed into a fixed-dimension embedding vector at each layer. The sensitivity of node v's embedding to a node u far away becomes exponentially small (∂h_v^L/∂h_u^0 decreases exponentially with distance(u,v)), making long-range information transport impossible. Graph rewiring (adding shortcuts between distant nodes) and full-graph attention can mitigate this.",
+        "Over-squashing: the L-hop neighborhood of node v can grow exponentially as a function of L (for high-degree graphs). All information from this exponentially large neighborhood must be compressed into a fixed-dimension embedding vector at each layer. The sensitivity of node v's embedding to a node u far away becomes exponentially small (\\partialh_v^L/\\partialh_u^0 decreases exponentially with distance(u,v)), making long-range information transport impossible. Graph rewiring (adding shortcuts between distant nodes) and full-graph attention can mitigate this.",
       hints: [
         "Over-squashing is about long-range information loss; over-smoothing is about excessive smoothing of local structure.",
         "Graph transformers (treating all nodes as tokens in attention) solve over-squashing by enabling O(1)-hop communication.",
@@ -191,7 +191,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Graph Convolutional Network (GCN, Kipf & Welling 2017) layer computes node representations as H' = \\sigma(D̃^{-1/2}·Ã·D̃^{-1/2}·H·W), where Ã = A + I. Why are self-loops (I) added?",
+        "The Graph Convolutional Network (GCN, Kipf & Welling 2017) layer computes node representations as H' = \\sigma(D̃^{-1/2}\\cdotÃ\\cdotD̃^{-1/2}\\cdotH\\cdotW), where Ã = A + I. Why are self-loops (I) added?",
       options: [
         "Self-loops make the adjacency matrix invertible",
         "Self-loops ensure each node's own features are included in its updated representation — without them, a node's message passing only aggregates neighbor features, excluding its own current embedding",
@@ -200,10 +200,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Without self-loops (A without I), the aggregation H' = D^{-1/2}·A·D^{-1/2}·H·W computes a weighted average of only the neighbors' features. Node v's own feature h_v is not included in its updated representation h_v'. Adding self-loops (Ã = A+I) ensures node v aggregates from N(v) ∪ {v}, incorporating its own current representation. The degree matrix D̃ is computed from Ã to normalize by the updated degree (including the self-loop).",
+        "Without self-loops (A without I), the aggregation H' = D^{-1/2}\\cdotA\\cdotD^{-1/2}\\cdotH\\cdotW computes a weighted average of only the neighbors' features. Node v's own feature h_v is not included in its updated representation h_v'. Adding self-loops (Ã = A+I) ensures node v aggregates from N(v) \\cup {v}, incorporating its own current representation. The degree matrix D̃ is computed from Ã to normalize by the updated degree (including the self-loop).",
       hints: [
         "Self-loops are the graph analog of 'skip connections' in the aggregation step.",
-        "Without self-loops, the GCN update is: h_v^{l+1} = \\sigma(W·MEAN({h_u^l : u ∈ N(v)})) — ignoring h_v^l.",
+        "Without self-loops, the GCN update is: h_v^{l+1} = \\sigma(W\\cdotMEAN({h_u^l : u \\in N(v)})) — ignoring h_v^l.",
       ],
     },
     {
@@ -211,13 +211,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GCN's symmetric normalization D̃^{-1/2}·Ã·D̃^{-1/2} is equivalent to computing the mean of neighbors' features (unweighted average).",
+        "GCN's symmetric normalization D̃^{-1/2}\\cdotÃ\\cdotD̃^{-1/2} is equivalent to computing the mean of neighbors' features (unweighted average).",
       correctAnswer: "False",
       explanation:
-        "D^{-1}·A would compute the mean (row-normalize: each row sums to 1). D^{-1/2}·A·D^{-1/2} applies symmetric normalization: the contribution of neighbor u to node v is scaled by 1/√(d_u·d_v) where d_u, d_v are degrees (including self-loops). This means high-degree neighbors contribute less. The symmetric normalization ensures the propagation matrix is symmetric and has bounded eigenvalues in [-1,1], while D^{-1}·A (asymmetric) may not be symmetric.",
+        "D^{-1}\\cdotA would compute the mean (row-normalize: each row sums to 1). D^{-1/2}\\cdotA\\cdotD^{-1/2} applies symmetric normalization: the contribution of neighbor u to node v is scaled by 1/√(d_u\\cdotd_v) where d_u, d_v are degrees (including self-loops). This means high-degree neighbors contribute less. The symmetric normalization ensures the propagation matrix is symmetric and has bounded eigenvalues in [-1,1], while D^{-1}\\cdotA (asymmetric) may not be symmetric.",
       hints: [
-        "D^{-1}·A: contribution of neighbor u = 1/degree(v) (all neighbors equally weighted).",
-        "D^{-1/2}·A·D^{-1/2}: contribution of neighbor u = 1/√(degree(u)·degree(v)) — penalizes high-degree neighbors.",
+        "D^{-1}\\cdotA: contribution of neighbor u = 1/degree(v) (all neighbors equally weighted).",
+        "D^{-1/2}\\cdotA\\cdotD^{-1/2}: contribution of neighbor u = 1/√(degree(u)\\cdotdegree(v)) — penalizes high-degree neighbors.",
       ],
     },
     {
@@ -228,13 +228,13 @@ const questions: Record<string, Question[]> = {
         "GCN is derived from a first-order approximation of spectral graph convolutions. What is the key limitation of this derivation that restricts GCN's expressiveness?",
       options: [
         "GCN can only process graphs with at most 1000 nodes",
-        "GCN uses the same weight matrix W for all nodes — it is a transductive method that cannot generalize to new nodes not seen during training (its propagation matrix Â = D̃^{-1/2}·Ã·D̃^{-1/2} requires the full graph during training and inference)",
+        "GCN uses the same weight matrix W for all nodes — it is a transductive method that cannot generalize to new nodes not seen during training (its propagation matrix Â = D̃^{-1/2}\\cdotÃ\\cdotD̃^{-1/2} requires the full graph during training and inference)",
         "GCN cannot handle continuous node features, only discrete labels",
         "GCN requires the graph to be bipartite for the spectral derivation to hold",
       ],
       correctAnswer: 1,
       explanation:
-        "GCN is inherently transductive: the propagation matrix Â = D̃^{-1/2}·Ã·D̃^{-1/2} is computed from the full graph A at training time, and test nodes must be present in this matrix. Adding new nodes requires recomputing Â and retraining. This contrasts with inductive methods (GraphSAGE, GAT) that learn a local aggregation function applicable to any node neighborhood. For dynamic graphs or large-scale graphs where not all nodes are available at once, inductive methods are essential.",
+        "GCN is inherently transductive: the propagation matrix Â = D̃^{-1/2}\\cdotÃ\\cdotD̃^{-1/2} is computed from the full graph A at training time, and test nodes must be present in this matrix. Adding new nodes requires recomputing Â and retraining. This contrasts with inductive methods (GraphSAGE, GAT) that learn a local aggregation function applicable to any node neighborhood. For dynamic graphs or large-scale graphs where not all nodes are available at once, inductive methods are essential.",
       hints: [
         "Transductive: learned for specific graph nodes; inductive: learned for any graph structure.",
         "The planet analogy: GCN is like memorizing distances between specific cities; GraphSAGE is like learning a distance formula.",
@@ -257,7 +257,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GraphSAGE makes two key contributions: (1) Neighborhood sampling — sample a fixed-size S⊂N(v) instead of aggregating all neighbors, making memory cost per node O(S^L) instead of O(|N(v)|^L); (2) Inductive learning — the learned aggregator function is applied to any local neighborhood, generalizing to nodes not seen during training. GraphSAGE was demonstrated on massive graphs (Reddit, Amazon products) where full-batch GCN would be intractable.",
+        "GraphSAGE makes two key contributions: (1) Neighborhood sampling — sample a fixed-size S\\subsetN(v) instead of aggregating all neighbors, making memory cost per node O(S^L) instead of O(|N(v)|^L); (2) Inductive learning — the learned aggregator function is applied to any local neighborhood, generalizing to nodes not seen during training. GraphSAGE was demonstrated on massive graphs (Reddit, Amazon products) where full-batch GCN would be intractable.",
       hints: [
         "Neighborhood sampling enables mini-batch training on large graphs — full-graph GCN requires all node features in memory.",
         "The aggregator can be MEAN, LSTM over random permutations, or MAX-pooling.",
@@ -268,7 +268,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "GraphSAGE concatenates the node's own representation with the aggregated neighbor representation before applying a linear transformation: h_v^{l+1} = \\sigma(W·CONCAT(h_v^l, AGG({h_u^l : u ∈ S(v)})). Why is concatenation preferred over addition?",
+        "GraphSAGE concatenates the node's own representation with the aggregated neighbor representation before applying a linear transformation: h_v^{l+1} = \\sigma(W\\cdotCONCAT(h_v^l, AGG({h_u^l : u \\in S(v)})). Why is concatenation preferred over addition?",
       options: [
         "Concatenation reduces computational cost compared to addition",
         "Concatenation preserves both the node's own features and the aggregated neighborhood information separately, allowing the model to learn different weights for the self-representation vs. the neighborhood — preventing premature information mixing",
@@ -290,14 +290,14 @@ const questions: Record<string, Question[]> = {
       question:
         "GraphSAGE uses neighborhood sampling with fixed sample size S to enable mini-batch training. What is the computational complexity of a forward pass through L GraphSAGE layers for a target node v, using sample size S per layer?",
       options: [
-        "O(L·S·d): linear in layers and sample size",
-        "O(S^L·d): exponential in layers — the 'neighborhood expansion' problem where the receptive field grows exponentially",
-        "O(n·L·d): linear in total nodes for each layer",
-        "O(m·d): linear in edges, shared across all target nodes",
+        "O(L\\cdotS\\cdotd): linear in layers and sample size",
+        "O(S^L\\cdotd): exponential in layers — the 'neighborhood expansion' problem where the receptive field grows exponentially",
+        "O(n\\cdotL\\cdotd): linear in total nodes for each layer",
+        "O(m\\cdotd): linear in edges, shared across all target nodes",
       ],
       correctAnswer: 1,
       explanation:
-        "At layer 1, node v samples S_1 neighbors. Each of those samples S_2 neighbors for layer 2. For L layers, the total number of nodes in the computation graph is S_1·S_2·...·S_L = S^L (if S_i = S). With d-dimensional features, the cost per target node is O(S^L·d). For L=2, S=25: 625 nodes per target. This exponential growth ('neighborhood explosion') is a key challenge in large-graph GNN training, addressed by methods like PinSage (multi-hop importance sampling) and cluster-GCN.",
+        "At layer 1, node v samples S_1 neighbors. Each of those samples S_2 neighbors for layer 2. For L layers, the total number of nodes in the computation graph is S_1\\cdotS_2\\cdot...\\cdotS_L = S^L (if S_i = S). With d-dimensional features, the cost per target node is O(S^L\\cdotd). For L=2, S=25: 625 nodes per target. This exponential growth ('neighborhood explosion') is a key challenge in large-graph GNN training, addressed by methods like PinSage (multi-hop importance sampling) and cluster-GCN.",
       hints: [
         "With L=3, S=10: 1000 node computations per target node — manageable but growing fast.",
         "Cluster-GCN pre-partitions the graph into clusters, training on dense subgraphs to reduce expansion.",
@@ -313,14 +313,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Graph Attention Networks (GAT, Veličković et al. 2018) use attention to weight neighbor contributions. The attention coefficient \\alpha_{ij} between node i and neighbor j is computed as:",
       options: [
-        "\\alpha_{ij} = softmax_j(h_i · h_j) — dot-product attention",
-        "\\alpha_{ij} = softmax_j(LeakyReLU(a^T·[W·h_i || W·h_j])) — learned attention via a shared attention vector a",
+        "\\alpha_{ij} = softmax_j(h_i \\cdot h_j) — dot-product attention",
+        "\\alpha_{ij} = softmax_j(LeakyReLU(a^T\\cdot[W\\cdoth_i || W\\cdoth_j])) — learned attention via a shared attention vector a",
         "\\alpha_{ij} = 1/degree(i) — uniform normalization (same as GCN mean)",
-        "\\alpha_{ij} = 1/√(degree(i)·degree(j)) — symmetric degree normalization (same as GCN)",
+        "\\alpha_{ij} = 1/√(degree(i)\\cdotdegree(j)) — symmetric degree normalization (same as GCN)",
       ],
       correctAnswer: 1,
       explanation:
-        "GAT's attention mechanism: (1) Compute attention logit e_{ij} = LeakyReLU(a^T·[W·h_i || W·h_j]) where a ∈ \\mathbb{R}^{2d'} is a trainable attention vector and || is concatenation; (2) Normalize: \\alpha_{ij} = exp(e_{ij}) / \\Sigma_{k∈N(i)}exp(e_{ik}). The output is h_i' = \\sigma(\\Sigma_j \\alpha_{ij}·W·h_j). Multi-head attention repeats this with K heads and concatenates (or averages) the results, reducing variance.",
+        "GAT's attention mechanism: (1) Compute attention logit e_{ij} = LeakyReLU(a^T\\cdot[W\\cdoth_i || W\\cdoth_j]) where a \\in \\mathbb{R}^{2d'} is a trainable attention vector and || is concatenation; (2) Normalize: \\alpha_{ij} = exp(e_{ij}) / \\Sigma_{k\\inN(i)}exp(e_{ik}). The output is h_i' = \\sigma(\\Sigma_j \\alpha_{ij}\\cdotW\\cdoth_j). Multi-head attention repeats this with K heads and concatenates (or averages) the results, reducing variance.",
       hints: [
         "LeakyReLU (not ReLU) is used to allow gradient flow for negative attention logits.",
         "The attention is computed solely from node features, not edge features — distinguishing it from edge-aware methods.",
@@ -334,9 +334,9 @@ const questions: Record<string, Question[]> = {
         "GAT's attention mechanism is computed using only the features of the source and target nodes, making it insensitive to the structural position of nodes in the graph (e.g., node degree is not directly used).",
       correctAnswer: "True",
       explanation:
-        "Standard GAT computes attention solely from the features W·h_i and W·h_j of the source and target nodes, with no explicit use of structural information (degree, betweenness centrality, etc.). If all nodes have identical features, all attention weights become uniform — equivalent to mean aggregation. GATv2 (Brody et al., 2021) shows that GAT's attention has limited expressive power due to a 'static' attention issue (the ranking of neighbors doesn't change based on the query node in some cases), and proposes a modified dynamic attention.",
+        "Standard GAT computes attention solely from the features W\\cdoth_i and W\\cdoth_j of the source and target nodes, with no explicit use of structural information (degree, betweenness centrality, etc.). If all nodes have identical features, all attention weights become uniform — equivalent to mean aggregation. GATv2 (Brody et al., 2021) shows that GAT's attention has limited expressive power due to a 'static' attention issue (the ranking of neighbors doesn't change based on the query node in some cases), and proposes a modified dynamic attention.",
       hints: [
-        "GATv2 changes the order of operations: e_{ij} = a^T·LeakyReLU(W·[h_i||h_j]) → e_{ij} = a^T·LeakyReLU(W_1·h_i + W_2·h_j) — making attention fully dynamic.",
+        "GATv2 changes the order of operations: e_{ij} = a^T\\cdotLeakyReLU(W\\cdot[h_i||h_j]) \\to e_{ij} = a^T\\cdotLeakyReLU(W_1\\cdoth_i + W_2\\cdoth_j) — making attention fully dynamic.",
         "Structural information (graph topology) can be injected as node features (degree, centrality) if needed.",
       ],
     },
@@ -345,7 +345,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "GAT uses multi-head attention with K heads. In the intermediate layers, the outputs of K attention heads are concatenated (giving K·d' features). In the final layer, they are averaged. Why this distinction?",
+        "GAT uses multi-head attention with K heads. In the intermediate layers, the outputs of K attention heads are concatenated (giving K\\cdotd' features). In the final layer, they are averaged. Why this distinction?",
       options: [
         "Concatenation is only valid for intermediate layers due to memory constraints in the final layer",
         "In intermediate layers, concatenation expands the representation capacity (K different feature views are maintained separately); in the final output layer, averaging reduces the representation to the required output dimension and stabilizes predictions by averaging over K independent attention mechanisms",
@@ -354,7 +354,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-head attention serves different purposes at different depths: intermediate layers benefit from maintaining K separate representation spaces (concatenated), giving the subsequent layer more expressiveness. The final layer must produce the required output dimension (e.g., C classes for node classification); averaging K heads gives the same C-dimensional output while benefiting from ensemble-like variance reduction across heads. Concatenating at the final layer would give K·C outputs requiring an extra projection, adding parameters unnecessarily.",
+        "Multi-head attention serves different purposes at different depths: intermediate layers benefit from maintaining K separate representation spaces (concatenated), giving the subsequent layer more expressiveness. The final layer must produce the required output dimension (e.g., C classes for node classification); averaging K heads gives the same C-dimensional output while benefiting from ensemble-like variance reduction across heads. Concatenating at the final layer would give K\\cdotC outputs requiring an extra projection, adding parameters unnecessarily.",
       hints: [
         "This is analogous to why vision transformer (ViT) pools (averages) the token representations before the classification head.",
         "Averaging K heads = implicit ensemble: each head votes independently, reducing overfitting risk.",
@@ -377,7 +377,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GIN's key theorem: for a GNN to be as discriminative as the WL test, its aggregation must be injective over neighbor feature multisets. SUM is injective for bounded integer features (distinguishes {a,a} from {a}); MEAN loses count information ({a,a} ≡ {a} under mean = a); MAX loses multiplicity ({a,a} ≡ {a} under max = a). GIN update: h_v^{l+1} = MLP((1+\\epsilon)·h_v^l + \\Sigma_{u∈N(v)}h_u^l), where the MLP approximates any injective function by the universal approximation theorem.",
+        "GIN's key theorem: for a GNN to be as discriminative as the WL test, its aggregation must be injective over neighbor feature multisets. SUM is injective for bounded integer features (distinguishes {a,a} from {a}); MEAN loses count information ({a,a} ≡ {a} under mean = a); MAX loses multiplicity ({a,a} ≡ {a} under max = a). GIN update: h_v^{l+1} = MLP((1+\\epsilon)\\cdoth_v^l + \\Sigma_{u\\inN(v)}h_u^l), where the MLP approximates any injective function by the universal approximation theorem.",
       hints: [
         "The WL test distinguishes graphs by iteratively refining node color histograms via aggregation — GIN's SUM achieves the same discriminative power.",
         "MEAN aggregation fails to distinguish: a 3-node graph {1,2,3} vs. a 6-node graph {1,1,2,2,3,3} have the same mean neighborhood.",
@@ -402,7 +402,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The parameter \\epsilon in GIN's update h_v^{l+1} = MLP((1+\\epsilon)·h_v^l + \\Sigma_{u∈N(v)}h_u^l) serves what purpose, and should it be fixed or learned?",
+        "The parameter \\epsilon in GIN's update h_v^{l+1} = MLP((1+\\epsilon)\\cdoth_v^l + \\Sigma_{u\\inN(v)}h_u^l) serves what purpose, and should it be fixed or learned?",
       options: [
         "\\epsilon controls the learning rate for node v's self-update; it must be fixed at \\epsilon=1",
         "\\epsilon weights the relative contribution of the node's own features vs. its neighbors'; it can be either a fixed scalar (e.g., \\epsilon=0) or a learned parameter — both options are proven to achieve the same expressive power as 1-WL if the MLP is sufficiently expressive",
@@ -414,7 +414,7 @@ const questions: Record<string, Question[]> = {
         "GIN is proven to achieve 1-WL expressive power regardless of \\epsilon (fixed or learned), as long as the MLP is a universal approximator. The (1+\\epsilon) factor ensures h_v \$\\neq\$ AGG(N(v)) — the node can tell apart h_v=0, N(v)={0,0} from h_v=0, N(v)={} (empty neighborhood). In practice, both fixed \\epsilon=0 and learned \\epsilon work well. The paper tries both and finds similar performance, with fixed \\epsilon=0 being simpler. The key to expressiveness is the MLP, not the specific value of \\epsilon.",
       hints: [
         "The (1+\\epsilon) ensures the self-feature h_v and the aggregated sum can be distinguished even when they are numerically similar.",
-        "Setting \\epsilon=0 reduces to: h_v^{l+1} = MLP(h_v^l + \\Sigma_{u∈N(v)}h_u^l).",
+        "Setting \\epsilon=0 reduces to: h_v^{l+1} = MLP(h_v^l + \\Sigma_{u\\inN(v)}h_u^l).",
       ],
     },
   ],
@@ -428,13 +428,13 @@ const questions: Record<string, Question[]> = {
         "Graph Transformers (GT) apply self-attention over all pairs of nodes, overcoming GNN's over-squashing limitation. The main challenge in applying standard Transformers to graphs is:",
       options: [
         "Transformers cannot process variable-length sequences, but graphs have varying numbers of nodes",
-        "Quadratic attention complexity O(n²·d) is intractable for large graphs; additionally, Transformers lack an inductive bias for graph structure — they treat all node pairs equally without encoding the graph topology",
+        "Quadratic attention complexity O(n\\^2\\cdotd) is intractable for large graphs; additionally, Transformers lack an inductive bias for graph structure — they treat all node pairs equally without encoding the graph topology",
         "Transformers require fixed-dimensional inputs but graph node features can vary in size",
         "Self-attention is not permutation-invariant, which is required for graph processing",
       ],
       correctAnswer: 1,
       explanation:
-        "Graph Transformers face two challenges: (1) O(n²) attention complexity makes them intractable for graphs with millions of nodes (e.g., social networks, web graphs); (2) Without graph structural bias, the model cannot distinguish topologically different graphs with identical feature sets. Solutions include: sparse attention (attend only to neighbors + random/important far nodes), positional encodings (Laplacian PE, random walk PE), and edge features in attention (encoding adjacency). For small graphs (molecular, chemistry), GT works well without modifications.",
+        "Graph Transformers face two challenges: (1) O(n\\^2) attention complexity makes them intractable for graphs with millions of nodes (e.g., social networks, web graphs); (2) Without graph structural bias, the model cannot distinguish topologically different graphs with identical feature sets. Solutions include: sparse attention (attend only to neighbors + random/important far nodes), positional encodings (Laplacian PE, random walk PE), and edge features in attention (encoding adjacency). For small graphs (molecular, chemistry), GT works well without modifications.",
       hints: [
         "Graphormer (Ying et al., 2021) injects structural bias via node/edge/degree encodings into attention.",
         "BigBird and Longformer sparse attention patterns (local + random + global) can be adapted to graphs.",
@@ -467,7 +467,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Laplacian positional encodings (LPE) are a common structural encoding for graph transformers. They use the k smallest non-trivial eigenvectors of the graph Laplacian as node position vectors. What is a key challenge with LPE?",
       options: [
-        "LPE requires O(n³) computation for every mini-batch, making training impractical",
+        "LPE requires O(n\\^3) computation for every mini-batch, making training impractical",
         "Eigenvectors are only unique up to sign flips and rotations (for repeated eigenvalues), causing inconsistent positional encodings across graphs — a sign ambiguity that requires special handling (e.g., random sign flipping during training, SignNet)",
         "LPE only works for regular graphs where all nodes have the same degree",
         "LPE cannot distinguish nodes in different connected components of the graph",
@@ -525,16 +525,16 @@ const questions: Record<string, Question[]> = {
         "Higher-order GNNs (k-GNN or k-WL) operate on k-tuples of nodes instead of individual nodes. The k=3 case can detect triangles. What is the main drawback of high-order GNNs?",
       options: [
         "Higher-order GNNs cannot process graphs with self-loops",
-        "The computational and memory complexity grows as O(n^k) — exponential in k — making k≥3 intractable for large graphs; even k=3 requires O(n³) computation",
+        "The computational and memory complexity grows as O(n^k) — exponential in k — making k\\geq3 intractable for large graphs; even k=3 requires O(n\\^3) computation",
         "Higher-order GNNs break permutation invariance, requiring a canonical node ordering",
         "Higher-order WL tests cannot distinguish graphs with repeated eigenvalues in the Laplacian",
       ],
       correctAnswer: 1,
       explanation:
-        "k-GNN processes all k-tuples of nodes, with O(n^k) tuple nodes and O(n^k·n) edges between them. For k=3 and n=100: 1 million tuple nodes. This is prohibitive for large graphs. Approximations include: Random Subgraph Networks (using sampled k-subgraphs), Nested GNNs (running inner GNNs on induced subgraphs), and Ring GNN. Practical tradeoffs: full k-GNN (expressive but expensive) vs. MPNN (inexpensive but limited). Most competitive GNNs use specialized architectures (distance encodings, random features) to gain expressiveness without full k-tuple computation.",
+        "k-GNN processes all k-tuples of nodes, with O(n^k) tuple nodes and O(n^k\\cdotn) edges between them. For k=3 and n=100: 1 million tuple nodes. This is prohibitive for large graphs. Approximations include: Random Subgraph Networks (using sampled k-subgraphs), Nested GNNs (running inner GNNs on induced subgraphs), and Ring GNN. Practical tradeoffs: full k-GNN (expressive but expensive) vs. MPNN (inexpensive but limited). Most competitive GNNs use specialized architectures (distance encodings, random features) to gain expressiveness without full k-tuple computation.",
       hints: [
-        "For molecular graphs with n~20-50 atoms, k=3 (n³ ≈ 100k tuples) is feasible; for social graphs (n=millions), k=3 is impossible.",
-        "PPGN (Maron et al., 2019) achieves 3-WL power in O(n³) but efficiently using matrix operations.",
+        "For molecular graphs with n~20-50 atoms, k=3 (n\\^3 \\approx 100k tuples) is feasible; for social graphs (n=millions), k=3 is impossible.",
+        "PPGN (Maron et al., 2019) achieves 3-WL power in O(n\\^3) but efficiently using matrix operations.",
       ],
     },
   ],
@@ -611,16 +611,16 @@ const questions: Record<string, Question[]> = {
         "TransE (Bordes et al. 2013) is a knowledge graph embedding method that models the relation r between head entity h and tail entity t by:",
       options: [
         "Training a classifier that takes (h, r, t) as input and predicts if the triple is valid",
-        "Learning embeddings such that h + r ≈ t — the relation r acts as a translation in embedding space, so valid triples have small ||h + r - t||",
-        "Computing the dot product h · r · t and maximizing it for valid triples",
-        "Learning a rotation matrix R_r that maps h to t: R_r · h ≈ t",
+        "Learning embeddings such that h + r \\approx t — the relation r acts as a translation in embedding space, so valid triples have small ||h + r - t||",
+        "Computing the dot product h \\cdot r \\cdot t and maximizing it for valid triples",
+        "Learning a rotation matrix R_r that maps h to t: R_r \\cdot h \\approx t",
       ],
       correctAnswer: 1,
       explanation:
-        "TransE models (h, r, t) as h + r ≈ t in the embedding space. Training minimizes ||h + r - t|| for positive triples and uses margin-based loss with corrupted (negative) triples. TransE is simple and effective for 1-to-1 relations but fails for 1-to-N, N-to-1, and N-to-N relations (e.g., 'nationality' of multiple people should point to one country, but TransE forces different entity embeddings to be similar if they share a relation). TransR, DistMult, ComplEx, and RotatE address these limitations.",
+        "TransE models (h, r, t) as h + r \\approx t in the embedding space. Training minimizes ||h + r - t|| for positive triples and uses margin-based loss with corrupted (negative) triples. TransE is simple and effective for 1-to-1 relations but fails for 1-to-N, N-to-1, and N-to-N relations (e.g., 'nationality' of multiple people should point to one country, but TransE forces different entity embeddings to be similar if they share a relation). TransR, DistMult, ComplEx, and RotatE address these limitations.",
       hints: [
-        "The analogy: 'Paris is the capital of France' → embedding(Paris) + embedding(capitalOf) ≈ embedding(France).",
-        "TransE: 'Man + gender_rev ≈ Woman' — works well for 1-to-1 relations like gender reversal.",
+        "The analogy: 'Paris is the capital of France' \\to embedding(Paris) + embedding(capitalOf) \\approx embedding(France).",
+        "TransE: 'Man + gender_rev \\approx Woman' — works well for 1-to-1 relations like gender reversal.",
       ],
     },
     {
@@ -628,16 +628,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "RotatE (Sun et al. 2019) models relations as rotations in complex space: t = h ◦ r, where h, t ∈ \\mathbb{C}^d, r ∈ \\mathbb{C}^d with |r_i| = 1. What relational patterns can RotatE model that TransE cannot?",
+        "RotatE (Sun et al. 2019) models relations as rotations in complex space: t = h ◦ r, where h, t \\in \\mathbb{C}^d, r \\in \\mathbb{C}^d with |r_i| = 1. What relational patterns can RotatE model that TransE cannot?",
       options: [
-        "Anti-symmetry only (r(h,t) → ¬r(t,h))",
-        "Symmetry (r(h,t) → r(t,h)), anti-symmetry, inversion (r1(h,t) ↔ r2(t,h)), and composition (r1(h,t) ∧ r2(t,x) → r3(h,x)) — all four major relational patterns",
-        "Transitivity only (r(h,t) ∧ r(t,x) → r(h,x))",
+        "Anti-symmetry only (r(h,t) \\to ¬r(t,h))",
+        "Symmetry (r(h,t) \\to r(t,h)), anti-symmetry, inversion (r1(h,t) \\leftrightarrow r2(t,h)), and composition (r1(h,t) ∧ r2(t,x) \\to r3(h,x)) — all four major relational patterns",
+        "Transitivity only (r(h,t) ∧ r(t,x) \\to r(h,x))",
         "1-to-N relations by using multiple head embeddings for each entity",
       ],
       correctAnswer: 1,
       explanation:
-        "RotatE's unit-modulus complex rotation can model: (1) Symmetry: |r|=1, arg(r)=0 → r=1 → h◦r=h, so t=h (symmetric); (2) Anti-symmetry: r\$\\neq\$r^{-1} → h◦r\$\\neq\$t◦r; (3) Inversion: r2 = r1^{-1}; (4) Composition: r3 = r1·r2 (angle sum). TransE only models composition and cannot represent symmetry (h+r=t and t+r=h implies r=0) or inversion efficiently. Empirically, RotatE achieves state-of-the-art on FB15k-237 and WN18RR benchmarks.",
+        "RotatE's unit-modulus complex rotation can model: (1) Symmetry: |r|=1, arg(r)=0 \\to r=1 \\to h◦r=h, so t=h (symmetric); (2) Anti-symmetry: r\$\\neq\$r^{-1} \\to h◦r\$\\neq\$t◦r; (3) Inversion: r2 = r1^{-1}; (4) Composition: r3 = r1\\cdotr2 (angle sum). TransE only models composition and cannot represent symmetry (h+r=t and t+r=h implies r=0) or inversion efficiently. Empirically, RotatE achieves state-of-the-art on FB15k-237 and WN18RR benchmarks.",
       hints: [
         "'HasSpouse' is symmetric; 'ParentOf' and 'ChildOf' are inverses — important patterns in KGs.",
         "Rotation in complex space = addition of phase angles: |h|=|t|=1, arg(t) = arg(h) + arg(r).",
@@ -650,17 +650,17 @@ const questions: Record<string, Question[]> = {
       question:
         "GNN-based knowledge graph completion methods (e.g., R-GCN) are more powerful than pure embedding methods like TransE in what way?",
       options: [
-        "R-GCN can process larger knowledge graphs due to its O(m) complexity vs TransE's O(n²) complexity",
+        "R-GCN can process larger knowledge graphs due to its O(m) complexity vs TransE's O(n\\^2) complexity",
         "R-GCN aggregates multi-hop structural information — the embedding of entity h incorporates information about h's neighborhood (connected entities and relations), capturing structural context that TransE's bilinear score cannot model",
         "R-GCN uses non-Euclidean geometry for relation modeling, unlike TransE's flat Euclidean space",
         "R-GCN computes exact marginal likelihoods for triple validity, whereas TransE only computes approximate scores",
       ],
       correctAnswer: 1,
       explanation:
-        "Relational GCN (Schlichtkrull et al. 2018) propagates messages across different relation types: h_v^{l+1} = \\sigma(W_0^{(l)}·h_v^l + \\Sigma_r \\Sigma_{u∈N_r(v)} (1/c_{v,r})·W_r^{(l)}·h_u^l). This aggregates multi-hop structural context: entity A's embedding is influenced by its connected entities and the relation types linking them. TransE uses only the triple (h,r,t) without considering the broader graph context. R-GCN's multi-hop aggregation enables modeling long-range dependencies in the KG structure.",
+        "Relational GCN (Schlichtkrull et al. 2018) propagates messages across different relation types: h_v^{l+1} = \\sigma(W_0^{(l)}\\cdoth_v^l + \\Sigma_r \\Sigma_{u\\inN_r(v)} (1/c_{v,r})\\cdotW_r^{(l)}\\cdoth_u^l). This aggregates multi-hop structural context: entity A's embedding is influenced by its connected entities and the relation types linking them. TransE uses only the triple (h,r,t) without considering the broader graph context. R-GCN's multi-hop aggregation enables modeling long-range dependencies in the KG structure.",
       hints: [
         "R-GCN uses separate weight matrices W_r for each relation type r — relation-specific message passing.",
-        "Basis decomposition of W_r = \\Sigma_b a_{rb}·V_b reduces parameter count for KGs with many relation types.",
+        "Basis decomposition of W_r = \\Sigma_b a_{rb}\\cdotV_b reduces parameter count for KGs with many relation types.",
       ],
     },
   ],
@@ -674,16 +674,16 @@ const questions: Record<string, Question[]> = {
         "Link prediction in graphs is the task of predicting whether an edge exists between two nodes that are not currently connected. Common heuristics for link prediction include:",
       options: [
         "Node degree: predict edges between high-degree nodes",
-        "Common neighbors (CN) score = |N(u) ∩ N(v)|, Adamic-Adar, Jaccard coefficient — structural similarity measures based on shared neighborhood",
+        "Common neighbors (CN) score = |N(u) \\cap N(v)|, Adamic-Adar, Jaccard coefficient — structural similarity measures based on shared neighborhood",
         "PageRank: predict edges between high PageRank nodes",
         "Betweenness centrality: predict edges through high-centrality nodes",
       ],
       correctAnswer: 1,
       explanation:
-        "Classical link prediction heuristics are based on the 'friend of a friend' principle: nodes with many common neighbors are likely to connect. Common Neighbors: |N(u)∩N(v)|; Adamic-Adar: \\Sigma_{w∈N(u)∩N(v)} 1/log(|N(w)|) (down-weights high-degree common neighbors); Jaccard: |N(u)∩N(v)|/|N(u)∪N(v)|. GNN-based link prediction computes an edge score from learned node embeddings (e.g., dot product h_u·h_v), often outperforming heuristics on social and citation networks.",
+        "Classical link prediction heuristics are based on the 'friend of a friend' principle: nodes with many common neighbors are likely to connect. Common Neighbors: |N(u)\\capN(v)|; Adamic-Adar: \\Sigma_{w\\inN(u)\\capN(v)} 1/log(|N(w)|) (down-weights high-degree common neighbors); Jaccard: |N(u)\\capN(v)|/|N(u)\\cupN(v)|. GNN-based link prediction computes an edge score from learned node embeddings (e.g., dot product h_u\\cdoth_v), often outperforming heuristics on social and citation networks.",
       hints: [
         "Adamic-Adar down-weights hub nodes (e.g., celebrities in a social network) as common neighbors.",
-        "GNN link prediction: learn embeddings h_u, h_v such that \\sigma(h_u·h_v) predicts edge probability.",
+        "GNN link prediction: learn embeddings h_u, h_v such that \\sigma(h_u\\cdoth_v) predicts edge probability.",
       ],
     },
     {
@@ -703,7 +703,7 @@ const questions: Record<string, Question[]> = {
         "SEAL extracts the h-hop enclosing subgraph around each candidate edge (u,v): all nodes within h hops of both u and v. Each node in the subgraph is labeled with its distance to u and to v (double-radius node labeling, DRNL), encoding structural role. A GNN is then trained on these labeled subgraphs to classify if edge (u,v) exists. This allows the GNN to learn structural heuristics (common neighbors, triangles, etc.) from data, achieving state-of-the-art on many link prediction benchmarks.",
       hints: [
         "SEAL's key insight: link existence depends on local subgraph structure, not just node embeddings.",
-        "DRNL assigns node (w) label = 1 + min(d_u, d_v) + (d_u+d_v)/2·((d_u+d_v)/2 + (d_u-d_v)/2 - 1), encoding structural equivalence.",
+        "DRNL assigns node (w) label = 1 + min(d_u, d_v) + (d_u+d_v)/2\\cdot((d_u+d_v)/2 + (d_u-d_v)/2 - 1), encoding structural equivalence.",
       ],
     },
     {
@@ -771,13 +771,13 @@ const questions: Record<string, Question[]> = {
         "A practical limitation of GraphRAG compared to standard vector RAG is:",
       options: [
         "GraphRAG cannot handle PDF documents, only plain text",
-        "The graph construction pipeline (LLM-based entity/relation extraction + community detection) has very high upfront computational cost (10-100× more expensive than standard RAG indexing), making it impractical for frequently updated corpora or quick prototyping",
+        "The graph construction pipeline (LLM-based entity/relation extraction + community detection) has very high upfront computational cost (10-100\\times more expensive than standard RAG indexing), making it impractical for frequently updated corpora or quick prototyping",
         "GraphRAG only supports English-language documents due to entity extraction limitations",
         "The knowledge graph cannot represent numerical or temporal information",
       ],
       correctAnswer: 1,
       explanation:
-        "GraphRAG's construction requires LLM calls for every chunk to extract entities and relations — costing ~$10-100+ for large corpora. Vector RAG requires only embedding model calls (~1000× cheaper). This makes GraphRAG unsuitable for: (1) Frequently updated corpora (expensive to rebuild); (2) Quick experimentation; (3) Large corpora on tight budgets. Hybrid approaches (RAPTOR, HippoRAG) combine hierarchical summarization with vector search to get some GraphRAG benefits at lower cost.",
+        "GraphRAG's construction requires LLM calls for every chunk to extract entities and relations — costing ~$10-100+ for large corpora. Vector RAG requires only embedding model calls (~1000\\times cheaper). This makes GraphRAG unsuitable for: (1) Frequently updated corpora (expensive to rebuild); (2) Quick experimentation; (3) Large corpora on tight budgets. Hybrid approaches (RAPTOR, HippoRAG) combine hierarchical summarization with vector search to get some GraphRAG benefits at lower cost.",
       hints: [
         "GraphRAG shines for complex analytical queries on stable, well-defined corpora (legal documents, scientific literature).",
         "For frequently updated news or chat data, standard vector RAG with metadata filtering is more practical.",
@@ -814,7 +814,7 @@ const questions: Record<string, Question[]> = {
         "Static knowledge graph completion methods (like TransE or RotatE) can be directly applied to temporal knowledge graphs without modification, treating all temporal facts as static.",
       correctAnswer: "False",
       explanation:
-        "Treating TKG facts as static ignores temporal validity: TransE would learn h + r ≈ t regardless of time, unable to represent that 'Trump, presidentOf, USA, 2017-2021' but not before or after. The same triple (h,r,t) may be true at some times and false at others. Static methods would be confused by contradictory facts (Obama and Trump both being president). Temporal methods condition entity/relation embeddings on \\tau to capture these dynamics.",
+        "Treating TKG facts as static ignores temporal validity: TransE would learn h + r \\approx t regardless of time, unable to represent that 'Trump, presidentOf, USA, 2017-2021' but not before or after. The same triple (h,r,t) may be true at some times and false at others. Static methods would be confused by contradictory facts (Obama and Trump both being president). Temporal methods condition entity/relation embeddings on \\tau to capture these dynamics.",
       hints: [
         "Temporal validity is fundamental: 'Company X CEO Y' is true only during Y's tenure, changing over time.",
         "Ignoring timestamps averages over temporal states, losing the temporal signal.",
@@ -848,7 +848,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A GNN is said to be permutation equivariant if, for any permutation P of the node ordering, f(P·X, PAP^T) = P·f(X, A). This property is desirable because:",
+        "A GNN is said to be permutation equivariant if, for any permutation P of the node ordering, f(P\\cdotX, PAP^T) = P\\cdotf(X, A). This property is desirable because:",
       options: [
         "It allows the GNN to process graphs in sorted order, reducing computation",
         "The output representation for node v should not change if we relabel the nodes — the node ordering is arbitrary and should not affect the learned representations",
@@ -877,7 +877,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Translation equivariance is achieved trivially by using relative coordinates r_{ij} = r_j - r_i and interatomic distances d_{ij} = ||r_{ij}|| — these are translation-invariant by construction. Absolute positions r_i are never used as input. Rotation equivariance is more subtle: transforming a molecule by rotation R changes r_{ij} → R·r_{ij}. SO(3)-equivariant networks must produce features that transform consistently under R — requiring irreducible representations of SO(3) (spherical harmonics l=0,1,2,...) and equivariant tensor operations (Clebsch-Gordan products).",
+        "Translation equivariance is achieved trivially by using relative coordinates r_{ij} = r_j - r_i and interatomic distances d_{ij} = ||r_{ij}|| — these are translation-invariant by construction. Absolute positions r_i are never used as input. Rotation equivariance is more subtle: transforming a molecule by rotation R changes r_{ij} \\to R\\cdotr_{ij}. SO(3)-equivariant networks must produce features that transform consistently under R — requiring irreducible representations of SO(3) (spherical harmonics l=0,1,2,...) and equivariant tensor operations (Clebsch-Gordan products).",
       hints: [
         "DimeNet uses interatomic distances and angles (invariant to rotation) — achieving invariance, not equivariance.",
         "SEGNN and SE(3)-Transformer maintain equivariant feature vectors that transform like physical quantities under rotation.",
@@ -897,7 +897,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Spherical harmonic order l encodes rotational transformation type: l=0: scalar, invariant under SO(3) (good for energies); l=1: vector, transforms like positions under rotation (good for forces, dipole moments); l=2: rank-2 tensor, transforms like quadrupole moments; higher l: increasingly complex angular patterns. Networks like NequIP, MACE, and Allegro use features up to l=3 or l=4. Higher l = more expressive but more compute. The Clebsch-Gordan product combines features of orders (l1, l2) → (l3) where |l1-l2| ≤ l3 ≤ l1+l2.",
+        "Spherical harmonic order l encodes rotational transformation type: l=0: scalar, invariant under SO(3) (good for energies); l=1: vector, transforms like positions under rotation (good for forces, dipole moments); l=2: rank-2 tensor, transforms like quadrupole moments; higher l: increasingly complex angular patterns. Networks like NequIP, MACE, and Allegro use features up to l=3 or l=4. Higher l = more expressive but more compute. The Clebsch-Gordan product combines features of orders (l1, l2) \\to (l3) where |l1-l2| \\leq l3 \\leq l1+l2.",
       hints: [
         "Equivariant neural network for force fields must produce force vectors (l=1) equivariantly from structure.",
         "MACE (2022) uses higher-order equivariant features and achieves state-of-the-art accuracy on MD17 molecular dynamics benchmarks.",
