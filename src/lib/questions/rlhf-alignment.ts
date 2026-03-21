@@ -213,7 +213,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The KL-regularized RLHF objective E[r(x,y)] − \\beta\\cdotKL(\\pi‖\\pi_ref) has a closed-form optimal policy. Which expression is correct?",
+        "The KL-regularized RLHF objective E[r(x,y)] − \\beta\\cdotKL(\\pi\Vert\\pi_ref) has a closed-form optimal policy. Which expression is correct?",
       options: [
         "\\pi*(y|x) \\propto \\pi_ref(y|x) \\cdot exp(r(x,y)/\\beta)",
         "\\pi*(y|x) = argmax_y r(x,y) subject to KL \\leq \\beta",
@@ -1139,7 +1139,7 @@ const additionalQuestions: Record<string, Question[]> = {
       id: 'q-rlhf-kp22-1',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: 'When training a reward model (RM) for RLHF using human preference pairs (y_w, y_l), the Bradley-Terry model assigns probability to y_w being preferred as p(y_w ≻ y_l) = ___.',
+      question: 'When training a reward model (RM) for RLHF using human preference pairs (y_w, y_l), the Bradley-Terry model assigns probability to y_w being preferred as p(y_w \succ y_l) = ___.',
       options: [
         'softmax(r(x, y_w) − r(x, y_l)) = \\sigma(r(x, y_w) − r(x, y_l))',
         'r(x, y_w) / (r(x, y_w) + r(x, y_l))',
@@ -1147,7 +1147,7 @@ const additionalQuestions: Record<string, Question[]> = {
         'r(x, y_w) − r(x, y_l) > 0',
       ],
       correctAnswer: 0,
-      explanation: 'The Bradley-Terry model: P(y_w ≻ y_l | x) = \\sigma(r(x,y_w) − r(x,y_l)) = exp(r(x,y_w)) / (exp(r(x,y_w)) + exp(r(x,y_l))). The RM is trained to maximise log P(y_w ≻ y_l) over all preference pairs, equivalent to minimising the binary cross-entropy loss: −E[log \\sigma(r(x,y_w) − r(x,y_l))].',
+      explanation: 'The Bradley-Terry model: P(y_w \succ y_l | x) = \\sigma(r(x,y_w) − r(x,y_l)) = exp(r(x,y_w)) / (exp(r(x,y_w)) + exp(r(x,y_l))). The RM is trained to maximise log P(y_w \succ y_l) over all preference pairs, equivalent to minimising the binary cross-entropy loss: −E[log \\sigma(r(x,y_w) − r(x,y_l))].',
       hints: [
         'The sigmoid \\sigma(x) = 1/(1+e^{−x}) naturally converts a score difference into a probability.',
         'If r(y_w) >> r(y_l), the sigmoid approaches 1-the RM is confident y_w is better.'
