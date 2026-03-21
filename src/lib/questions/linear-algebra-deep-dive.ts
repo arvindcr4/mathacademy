@@ -123,11 +123,23 @@ const questions: Record<string, Question[]> = {
         "The matrix represents a rotation transformation",
       ],
       correctAnswer: 1,
-      explanation:
-        "A zero determinant means the matrix is singular: its columns are linearly dependent, it maps ℝⁿ to a lower-dimensional subspace (volume collapses to zero), and it has no inverse.",
+      explanation: `Let $A$ be an $n \\times n$ matrix. The determinant $\\det(A)$ has several equivalent interpretations:
+
+**Step 1: Volume interpretation.** The determinant measures the signed volume scaling factor of the linear transformation $T(\\mathbf{x}) = A\\mathbf{x}$. If $\\det(A) = 0$, the transformation collapses $n$-dimensional volume to zero — it maps $\\mathbb{R}^n$ to a lower-dimensional subspace.
+
+**Step 2: Linear dependence.** A set of vectors $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_n\\}$ in $\\mathbb{R}^n$ is linearly dependent if and only if the determinant of the matrix with those vectors as columns (or rows) equals zero. So $\\det(A) = 0$ means the column vectors of $A$ are linearly dependent.
+
+**Step 3: Invertibility.** A matrix is invertible (nonsingular) if and only if $\\det(A) \\neq 0$. When $\\det(A) = 0$, the matrix is singular — it has no inverse.
+
+**Why the other options are wrong:**
+- The identity matrix has $\\det(I) = 1$, not 0.
+- A rotation matrix always has $\\det(Q) = 1$ (preserving orientation).
+- Positive eigenvalues imply $\\det(A) > 0$ (product of eigenvalues), but the converse is false: a matrix can have $\\det = 0$ with some positive eigenvalues.
+
+Therefore, $\\boxed{\\text{The matrix is singular and its columns are linearly dependent}}$.`,
       hints: [
-        'The determinant measures the "volume scaling factor" of the transformation.',
-        "If two rows are identical, what happens to the determinant?",
+        'The determinant measures the "volume scaling factor" of the transformation — what happens to volume when it collapses to zero?',
+        "If two rows of a matrix are identical, the determinant is zero — why does linear dependence of columns lead to the same conclusion?",
       ],
     },
     {
@@ -137,11 +149,38 @@ const questions: Record<string, Question[]> = {
       question:
         "The determinant of the product of two matrices equals the product of their determinants: det(AB) = det(A)·det(B).",
       correctAnswer: "true",
-      explanation:
-        "The multiplicative property of determinants (det(AB) = det(A)·det(B)) holds for square matrices of the same size and reflects the fact that volume scaling factors compose multiplicatively.",
+      explanation: `Let us verify this fundamental property of determinants step by step.
+
+**Step 1: Geometric reasoning.** Consider the geometric interpretation of the determinant as a volume scaling factor. If a linear transformation $A$ scales volume by a factor $\\det(A)$ and a second transformation $B$ scales volume by a factor $\\det(B)$, then applying $B$ first and then $A$ scales volume by $\\det(A) \\cdot \\det(B)$. But $AB$ represents the composition of these transformations, so its determinant must be $\\det(A)\\det(B)$.
+
+**Step 2: Algebraic verification for $2 \\times 2$ matrices.** Let:
+$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}, \\quad B = \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix}$$
+
+Then:
+\\[
+AB = \\begin{pmatrix} ae + bg & af + bh \\\\ ce + dg & cf + dh \\end{pmatrix}
+\\]
+
+Using the formula $\\det(XY) = \\det(X)\\det(Y)$ for $2 \\times 2$ matrices:
+\\[
+\\det(AB) = (ae+bg)(cf+dh) - (af+bh)(ce+dg)
+\\]
+
+Expanding and factoring:
+\\begin{align}
+\\det(AB) &= acef + aedh + bgcf + bgdh - afce - afdg - bhce - bhdg \\\\[5pt]
+&= ad(eh - fg) + bc(eh - fg) \\\\[5pt]
+&= (ad - bc)(eh - fg) = \\det(A) \\cdot \\det(B)
+\\end{align}
+
+**Step 3: General proof.** The multiplicative property extends to all square matrices and can be proven using the fact that $\\det(AB) = \\det(A)\\det(B)$ follows from the product formula for the exterior algebra: $\\det(A \\wedge B) = \\det(A)\\det(B)$.
+
+An immediate corollary: since $AA^{-1} = I$, we have $\\det(A^{-1}) = 1/\\det(A)$.
+
+Therefore, $\\boxed{\\text{True}}$ — determinants compose multiplicatively under matrix multiplication.`,
       hints: [
-        "Think geometrically: if A scales volume by a factor and B scales by b, what does AB scale by?",
-        "This property is used to prove that det(A⁻¹) = 1/det(A).",
+        "Think geometrically: if $A$ scales volume by factor $a$ and $B$ scales by factor $b$, what does the composition $AB$ scale by?",
+        "This property immediately gives $\\det(A^{-1}) = 1/\\det(A)$ — can you see why?",
       ],
     },
     {
@@ -157,11 +196,32 @@ const questions: Record<string, Question[]> = {
         "The sum of all eigenvalues is 6",
       ],
       correctAnswer: 1,
-      explanation:
-        "The determinant equals the signed area scaling factor of the linear transformation; this diagonal matrix stretches by 2 in x and 3 in y, scaling all areas by 2×3 = 6.",
+      explanation: `Let us work through the geometric interpretation using the column vectors explicitly.
+
+**Step 1: Identify the matrix.** The matrix with columns $[2, 0]^T$ and $[0, 3]^T$ is:
+$$A = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$$
+
+**Step 2: Trace the unit square.** Consider the unit square with corners at $(0,0)$, $(1,0)$, $(0,1)$, and $(1,1)$. Under the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$:
+
+\\begin{align}
+(0,0) &\\mapsto (0,0) \\\\\n(1,0) &\\mapsto A\\begin{pmatrix}1\\\\0\\end{pmatrix} = \\begin{pmatrix}2\\\\0\\end{pmatrix} = (2,0) \\\\\n(0,1) &\\mapsto A\\begin{pmatrix}0\\\\1\\end{pmatrix} = \\begin{pmatrix}0\\\\3\\end{pmatrix} = (0,3) \\\\\n(1,1) &\\mapsto A\\begin{pmatrix}1\\\\1\\end{pmatrix} = \\begin{pmatrix}2\\\\3\\end{pmatrix} = (2,3)
+\\end{align}
+
+**Step 3: Compute the area of the image.** The transformed square is a rectangle with corners $(0,0)$, $(2,0)$, $(0,3)$, $(2,3)$, which has area:
+$$\\text{Area} = 2 \\times 3 = 6$$
+
+**Step 4: Connect to the determinant formula.** For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the area of the parallelogram spanned by its column vectors $[a,c]^T$ and $[b,d]^T$ is $|ad - bc| = |\\det(A)|$. Here, $ad - bc = 2 \\cdot 3 - 0 \\cdot 0 = 6$.
+
+The diagonal entries of $A$ stretch the $x$-direction by a factor of 2 and the $y$-direction by a factor of 3, so the area scales by $2 \\times 3 = 6$.
+
+**Why the other options are wrong:**
+- A rotation matrix has determinant $\\pm 1$, not 6.
+- The sum of eigenvalues is $\\text{tr}(A) = 2 + 3 = 5$, not 6.
+
+Therefore, $\\boxed{\\text{The transformation scales area by a factor of 6 (a unit square maps to a rectangle of area 6)}}$.`,
       hints: [
-        "The unit square with corners at (0,0), (1,0), (0,1), (1,1) — where do its corners map?",
-        "What is the area of the parallelogram formed by the two column vectors?",
+        "The unit square with corners at $(0,0)$, $(1,0)$, $(0,1)$, $(1,1)$ — where do its corners map under this transformation? Write out each transformed corner explicitly.",
+        "The area of the parallelogram formed by the two column vectors $[2,0]^T$ and $[0,3]^T$ is $|\\det(A)|$. Compute this using the cross product magnitude: $\\|[2,0] \\times [0,3]\\| = |6 - 0| = 6$.",
       ],
     },
   ],
@@ -180,11 +240,31 @@ const questions: Record<string, Question[]> = {
         "rank(A) = nullity(A) for all square matrices",
       ],
       correctAnswer: 1,
-      explanation:
-        "The rank-nullity theorem states rank(A) + nullity(A) = n, the number of columns; this reflects the fact that dimensions of the column space and null space partition the input dimension n.",
+      explanation: `The rank-nullity theorem is a fundamental result about linear transformations. Let us break it down.
+
+**Step 1: Define the key quantities.**
+- $\\text{rank}(A) = \\dim(\\text{col}(A))$: the dimension of the column space of $A$.
+- $\\text{nullity}(A) = \\dim(\\text{null}(A))$: the dimension of the null space (kernel) of $A$.
+- $n$: the number of columns of $A$ (the dimension of the input space $\\mathbb{R}^n$).
+
+**Step 2: Understand the partition.** For a linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ represented by $A$, every input vector $\\mathbf{x} \\in \\mathbb{R}^n$ can be uniquely decomposed as:
+$$\\mathbf{x} = \\mathbf{x}_{\\text{range}} + \\mathbf{x}_{\\text{kernel}}$$
+where $\\mathbf{x}_{\\text{range}}$ is in the row space (or more precisely, projects nontrivially onto the column space) and $\\mathbf{x}_{\\text{kernel}}$ lies in the null space.
+
+**Step 3: Apply the theorem.** The column space and null space are orthogonal complements (in the row space sense). The dimensions must add up to the input dimension:
+$$\\text{rank}(A) + \\text{nullity}(A) = n$$
+
+This holds because the null space captures "lost" input dimensions (mapped to zero), and the column space captures the "useful" output dimensions.
+
+**Step 4: Verify with an example.** For a rank-1 matrix $A = \\mathbf{u}\\mathbf{v}^T$ of size $m \\times n$:
+- $\\text{rank}(A) = 1$
+- $\\text{nullity}(A) = n - 1$
+- $\\text{rank}(A) + \\text{nullity}(A) = 1 + (n-1) = n$ ✓
+
+Therefore, $\\boxed{\\text{rank}(A) + \\text{nullity}(A) = n}$ is the correct statement.`,
       hints: [
-        "Rank is the dimension of the column space (output); nullity is the dimension of the null space (inputs mapped to zero).",
-        'The theorem accounts for all n input dimensions: some produce output (rank), some are "lost" (nullity).',
+        "Rank is the dimension of the column space (output dimension); nullity is the dimension of inputs mapped to zero. Together, they account for all $n$ input dimensions.",
+        'Think of it as a budget: every one of the $n$ input dimensions either "produces output" (contributes to rank) or "disappears into zero" (contributes to nullity).',
       ],
     },
     {
@@ -194,11 +274,29 @@ const questions: Record<string, Question[]> = {
       question:
         "If a linear system Ax = b has a unique solution, then the null space of A contains only the zero vector.",
       correctAnswer: "true",
-      explanation:
-        "Unique solution means nullity(A) = 0 (trivial null space); if any nonzero vector x₀ were in the null space, then both x* and x* + x₀ would be solutions, contradicting uniqueness.",
+      explanation: `Let us prove this fundamental equivalence between uniqueness of solutions and the trivial null space.
+
+**Step 1: Set up the claim.** Suppose $Ax = b$ has a unique solution $\\mathbf{x}^*$. We want to show that the only vector in $\\text{null}(A)$ is $\\mathbf{0}$.
+
+**Step 2: Proof by contradiction.** Assume there exists a nonzero vector $\\mathbf{x}_0 \\in \\text{null}(A)$, so $A\\mathbf{x}_0 = \\mathbf{0}$ and $\\mathbf{x}_0 \\neq \\mathbf{0}$.
+
+**Step 3: Construct a second solution.** Consider $\\mathbf{x}^* + \\mathbf{x}_0$:
+$$A(\\mathbf{x}^* + \\mathbf{x}_0) = A\\mathbf{x}^* + A\\mathbf{x}_0 = b + \\mathbf{0} = b$$
+
+So $\\mathbf{x}^* + \\mathbf{x}_0$ is also a solution to $Ax = b$.
+
+**Step 4: Show the contradiction.** Since $\\mathbf{x}_0 \\neq \\mathbf{0}$, we have $\\mathbf{x}^* + \\mathbf{x}_0 \\neq \\mathbf{x}^*$. This means $Ax = b$ has at least two distinct solutions: $\\mathbf{x}^*$ and $\\mathbf{x}^* + \\mathbf{x}_0$.
+
+This contradicts our assumption that the solution is unique.
+
+**Step 5: Conclude.** Therefore, if $Ax = b$ has a unique solution, the null space must be trivial: $\\text{null}(A) = \\{\\mathbf{0}\\}$, which means $\\text{nullity}(A) = 0$.
+
+**Geometric interpretation:** A linear transformation has a unique inverse on its image if and only if it is injective (one-to-one) — no two different inputs map to the same output. The null space being trivial is exactly the condition for injectivity.
+
+Therefore, $\\boxed{\\text{True}}$.`,
       hints: [
-        "If Ax = b has solution x*, and Ax₀ = 0, then what is A(x* + x₀)?",
-        "Uniqueness of solution is equivalent to the transformation being injective (one-to-one).",
+        "If $Ax = b$ has solution $\\mathbf{x}^*$, and $\\mathbf{x}_0 \\in \\text{null}(A)$, then what is $A(\\mathbf{x}^* + \\mathbf{x}_0)$? Does this give a different solution?",
+        "Uniqueness of solution is equivalent to the transformation being injective (one-to-one). What does injectivity imply about the null space?",
       ],
     },
     {
@@ -214,11 +312,38 @@ const questions: Record<string, Question[]> = {
         "Null space: dimension 5 (8 − 3), Column space: dimension 3",
       ],
       correctAnswer: 3,
-      explanation:
-        "By rank-nullity: nullity = n − rank = 8 − 3 = 5; the column space has dimension equal to rank = 3. The column space lives in ℝ⁵ (5 rows) but has dimension 3.",
+      explanation: `Let us apply the rank-nullity theorem systematically to find both dimensions.
+
+**Step 1: Identify the given information.**
+- Matrix $A$ is of size $5 \\times 8$: $m = 5$ rows, $n = 8$ columns.
+- $\\text{rank}(A) = 3$.
+
+**Step 2: Apply rank-nullity.** The rank-nullity theorem states:
+$$\\text{rank}(A) + \\text{nullity}(A) = n = 8$$
+
+Solving for nullity:
+$$\\text{nullity}(A) = 8 - \\text{rank}(A) = 8 - 3 = 5$$
+
+**Step 3: Determine the column space dimension.** The column space $\\text{col}(A)$ is a subspace of $\\mathbb{R}^5$ (the output space), and its dimension equals the rank:
+$$\\dim(\\text{col}(A)) = \\text{rank}(A) = 3$$
+
+So the column space lives in $\\mathbb{R}^5$ but only has dimension 3 — it is a 3-dimensional hyperplane (flat) inside 5-dimensional space.
+
+**Step 4: Verify the dimensional balance.** Think of the transformation $T: \\mathbb{R}^8 \\to \\mathbb{R}^5$ as a "filter":
+- 3 dimensions of input are "preserved" as useful output (rank).
+- 5 dimensions of input are "collapsed to zero" (nullity).
+- Total: $3 + 5 = 8$ input dimensions accounted for.
+
+**Summary:**
+| Space | Dimension | Lives in |
+|---|---|---|
+| Null space | 5 | $\\mathbb{R}^8$ (input space) |
+| Column space | 3 | $\\mathbb{R}^5$ (output space) |
+
+Therefore, $\\boxed{\\text{Null space: dimension 5 }(8 - 3),\\text{ Column space: dimension 3}}$.`,
       hints: [
-        "Apply rank-nullity: nullity = n − rank where n is the number of columns (8).",
-        "The column space dimension equals the rank; it lives in the output space ℝᵐ.",
+        "Apply rank-nullity directly: $\\text{nullity} = n - \\text{rank}$ where $n = 8$ is the number of columns.",
+        "The column space dimension always equals the rank, and it lives in $\\mathbb{R}^m$ where $m = 5$ is the number of rows. But the column space's dimension is the rank itself (3), not $m$ (5).",
       ],
     },
   ],
@@ -232,11 +357,31 @@ const questions: Record<string, Question[]> = {
         "The orthogonal projection of vector b onto the line spanned by vector a is:",
       options: ["a × b (cross product)", "(aᵀb / aᵀa) · a", "b − a", "aᵀb"],
       correctAnswer: 1,
-      explanation:
-        "The projection of b onto a is p = (aᵀb / aᵀa)·a; the scalar (aᵀb / aᵀa) gives the signed length along a, and multiplying by a gives the vector projection.",
+      explanation: `Let us derive the projection formula from first principles using the orthogonality condition.
+
+**Step 1: Define the problem.** We want to find the orthogonal projection $\\mathbf{p}$ of $\\mathbf{b}$ onto the line spanned by $\\mathbf{a}$. The projection $\\mathbf{p}$ must lie on this line, so it has the form:
+$$\\mathbf{p} = \\lambda \\mathbf{a}$$
+for some scalar $\\lambda$.
+
+**Step 2: Impose the orthogonality condition.** The error vector $\\mathbf{b} - \\mathbf{p}$ must be orthogonal to $\\mathbf{a}$:
+$$\\mathbf{a}^T(\\mathbf{b} - \\lambda\\mathbf{a}) = 0$$
+
+**Step 3: Solve for λ.** Expanding:
+\\begin{align}
+\\mathbf{a}^T\\mathbf{b} - \\lambda\\mathbf{a}^T\\mathbf{a} &= 0 \\\\\n\\lambda\\mathbf{a}^T\\mathbf{a} &= \\mathbf{a}^T\\mathbf{b} \\\\\n\\lambda &= \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}}
+\\end{align}
+
+**Step 4: Write the projection vector.** Substituting $\\lambda$:
+$$\\mathbf{p} = \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}} \\cdot \\mathbf{a}$$
+
+**Step 5: Interpret geometrically.** The scalar $\\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}}$ is the signed length of the projection along $\\mathbf{a}$ (note: if $\\mathbf{a}$ is not a unit vector, $\\mathbf{a}^T\\mathbf{a} \\neq 1$). The projection $\\mathbf{p}$ points in the same direction as $\\mathbf{a}$ when $\\mathbf{a}^T\\mathbf{b} > 0$ and in the opposite direction when $\\mathbf{a}^T\\mathbf{b} < 0$.
+
+**Geometric intuition:** The projection $\\mathbf{p}$ is the "shadow" of $\\mathbf{b}$ cast onto the line through the origin in the direction of $\\mathbf{a}$, following the rule that the shadow line (error $\\mathbf{b} - \\mathbf{p}$) is perpendicular to $\\mathbf{a}$.
+
+Therefore, $\\boxed{\\mathbf{p} = \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}} \\cdot \\mathbf{a}}$ is the correct formula.`,
       hints: [
-        "The projection must lie on the line spanned by a, so it has the form λa for some scalar λ.",
-        "The error b − p must be orthogonal to a: aᵀ(b − λa) = 0.",
+        "The projection must lie on the line spanned by $\\mathbf{a}$, so it has the form $\\lambda\\mathbf{a}$ for some scalar $\\lambda$.",
+        "The error $\\mathbf{b} - \\mathbf{p}$ must be orthogonal to $\\mathbf{a}$: set $\\mathbf{a}^T(\\mathbf{b} - \\lambda\\mathbf{a}) = 0$ and solve for $\\lambda$.",
       ],
     },
     {
@@ -246,11 +391,30 @@ const questions: Record<string, Question[]> = {
       question:
         "The Gram-Schmidt process takes any set of linearly independent vectors and produces an orthonormal set spanning the same subspace.",
       correctAnswer: "true",
-      explanation:
-        "Gram-Schmidt iteratively projects out the components of each vector along previously processed vectors, producing an orthonormal basis for the same subspace as the original vectors.",
+      explanation: `The Gram-Schmidt process is an algorithm for constructing an orthonormal basis from a set of linearly independent vectors. Let us walk through it step by step.
+
+**Step 1: The algorithm.** Given linearly independent vectors $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\ldots, \\mathbf{v}_n\\}$, we construct an orthonormal set $\\{\\mathbf{u}_1, \\mathbf{u}_2, \\ldots, \\mathbf{u}_n\\}$ as follows:
+
+For $k = 1$:
+$$\\tilde{\\mathbf{u}}_1 = \\mathbf{v}_1, \\quad \\mathbf{u}_1 = \\frac{\\tilde{\\mathbf{u}}_1}{\\|\\tilde{\\mathbf{u}}_1\\|}$$
+
+For each $k = 2, 3, \\ldots, n$:
+\\begin{align}
+\\tilde{\\mathbf{u}}_k &= \\mathbf{v}_k - \\sum_{i=1}^{k-1} (\\mathbf{u}_i^T \\mathbf{v}_k) \\mathbf{u}_i \\quad \\text{(subtract projections onto previous orthonormal vectors)} \\\\\n\\mathbf{u}_k &= \\frac{\\tilde{\\mathbf{u}}_k}{\\|\\tilde{\\mathbf{u}}_k\\|} \\quad \\text{(normalize)}
+\\end{align}
+
+**Step 2: Verification of orthogonality.** At step $k$, $\\tilde{\\mathbf{u}}_k$ is orthogonal to each $\\mathbf{u}_i$ for $i < k$ because:
+$$\\mathbf{u}_i^T \\tilde{\\mathbf{u}}_k = \\mathbf{u}_i^T\\mathbf{v}_k - \\sum_{j=1}^{k-1}(\\mathbf{u}_j^T\\mathbf{v}_k)(\\mathbf{u}_i^T\\mathbf{u}_j) = \\mathbf{u}_i^T\\mathbf{v}_k - \\mathbf{u}_i^T\\mathbf{v}_k = 0$$
+(using orthonormality: $\\mathbf{u}_i^T\\mathbf{u}_j = \\delta_{ij}$).
+
+**Step 3: Verification of span.** Each $\\tilde{\\mathbf{u}}_k$ is a linear combination of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$, so by induction the span of $\\{\\mathbf{u}_1, \\ldots, \\mathbf{u}_k\\}$ equals the span of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$. After $n$ steps, the spans are identical.
+
+**Step 4: Geometric intuition.** At each step, we "peel off" the components of $\\mathbf{v}_k$ that lie along previously computed orthonormal directions, keeping only the residual (which is orthogonal to all of them). This residual becomes the next orthonormal basis vector.
+
+Therefore, $\\boxed{\\text{True}}$ — Gram-Schmidt produces an orthonormal basis spanning the same subspace as the original linearly independent set.`,
       hints: [
-        "At each step, subtract the projection onto all previous orthonormal vectors, then normalize.",
-        "The span does not change because each new vector is a linear combination of original vectors.",
+        "At each step, subtract the projection of $\\mathbf{v}_k$ onto all previously computed orthonormal vectors $\\{\\mathbf{u}_1, \\ldots, \\mathbf{u}_{k-1}\\}$, then normalize the result.",
+        "The span does not change because each new vector $\\tilde{\\mathbf{u}}_k$ is a linear combination of the original vectors $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$ — no new directions are introduced.",
       ],
     },
     {
@@ -265,11 +429,38 @@ const questions: Record<string, Question[]> = {
         "Q is always a rotation matrix with det(Q) = +1",
       ],
       correctAnswer: 1,
-      explanation:
-        "Orthogonal matrices preserve inner products (and thus lengths and angles) because ‖Qu‖² = uᵀQᵀQu = uᵀu; det(Q) = ±1 because det(QᵀQ) = det(I) = 1.",
+      explanation: `Let us verify the properties of orthogonal matrices systematically.
+
+**Step 1: Length preservation.** For any vector $\\mathbf{x} \\in \\mathbb{R}^n$:
+$$\\|Q\\mathbf{x}\\|^2 = (Q\\mathbf{x})^T(Q\\mathbf{x}) = \\mathbf{x}^TQ^TQ\\mathbf{x} = \\mathbf{x}^T I \\mathbf{x} = \\mathbf{x}^T\\mathbf{x} = \\|\\mathbf{x}\\|^2$$
+
+So $Q$ preserves the length of every vector. Since the angle between two vectors is defined via the dot product:
+$$\\cos\\theta = \\frac{\\mathbf{x}^T\\mathbf{y}}{\\|\\mathbf{x}\\|\\|\\mathbf{y}\\|}$$
+and both numerator and denominator are preserved under $Q$, the angle is also preserved.
+
+**Step 2: Determinant.** Taking determinants of $Q^TQ = I$:
+$$\\det(Q^TQ) = \\det(Q^T)\\det(Q) = \\det(Q)^2 = \\det(I) = 1$$
+
+So $\\det(Q)^2 = 1$, which means $\\det(Q) = \\pm 1$. The value $+1$ corresponds to rotations (orientation-preserving), and $-1$ corresponds to improper rotations/reflections (orientation-reversing).
+
+**Step 3: Why orthogonality does NOT imply symmetry.** Consider:
+$$Q = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$$
+
+This rotation matrix is orthogonal but not symmetric (unless $\\theta = 0$ or $\\pi$). Orthogonality and symmetry are independent properties.
+
+**Step 4: Why eigenvalues are not all 1.** The eigenvalues of an orthogonal matrix lie on the unit circle in $\\mathbb{C}$: if $Q\\mathbf{v} = \\lambda\\mathbf{v}$, then:
+$$\\|\\mathbf{v}\\| = \\|Q\\mathbf{v}\\| = |\\lambda|\\|\\mathbf{v}\\| \\implies |\\lambda| = 1$$
+
+But $\\lambda$ can be complex (e.g., rotation by $\\theta \\neq 0, \\pi$ gives eigenvalues $e^{\\pm i\\theta}$), and even for real eigenvalues, only $\\lambda = \\pm 1$ are possible.
+
+**Step 5: Counterexample for option 3 (always +1 determinant).** A reflection matrix like:
+$$Q = \\begin{pmatrix} -1 & 0 \\\\ 0 & 1 \\end{pmatrix}$$
+has $\\det(Q) = -1$, is orthogonal, but is not a rotation.
+
+Therefore, $\\boxed{Q\\text{ preserves vector lengths and angles (det}(Q) = \\pm 1\\text{)}}$ is the correct property.`,
       hints: [
-        "Use the definition QᵀQ = I to compute ‖Qu‖².",
-        "det(Q)² = det(QᵀQ) = det(I) = 1 — what does that imply about det(Q)?",
+        "Compute $\\|Q\\mathbf{x}\\|^2 = \\mathbf{x}^TQ^TQ\\mathbf{x}$ using $Q^TQ = I$. What do you conclude about length preservation?",
+        "Taking determinants of $Q^TQ = I$ gives $\\det(Q)^2 = 1$. This means $\\det(Q) = \\pm 1$ — what does each case correspond to geometrically?",
       ],
     },
   ],
@@ -283,11 +474,34 @@ const questions: Record<string, Question[]> = {
         "The least squares solution to an overdetermined system Ax = b (more equations than unknowns) minimizes:",
       options: ["‖Ax‖²", "‖Ax − b‖²", "‖x‖²", "‖A‖²"],
       correctAnswer: 1,
-      explanation:
-        "Least squares finds x̂ that minimizes the sum of squared residuals ‖Ax − b‖², which is the squared distance between the projection of b onto the column space of A and b itself.",
+      explanation: `Least squares is the standard method for solving overdetermined linear systems. Let us understand the minimization objective.
+
+**Step 1: Understand the problem.** When $Ax = b$ has more equations than unknowns ( $m > n$ ), an exact solution generally does not exist because $b$ typically lies outside the column space of $A$.
+
+**Step 2: Define the residual.** For a candidate solution $\\mathbf{x}$, the residual vector is:
+$$\\mathbf{r}(\\mathbf{x}) = A\\mathbf{x} - \\mathbf{b}$$
+
+The residual measures how far $A\\mathbf{x}$ is from $\\mathbf{b}$.
+
+**Step 3: The least squares criterion.** We seek $\\hat{\\mathbf{x}}$ that minimizes the squared Euclidean norm of the residual:
+$$\\hat{\\mathbf{x}} = \\arg\\min_{\\mathbf{x} \\in \\mathbb{R}^n} \\|A\\mathbf{x} - \\mathbf{b}\\|^2$$
+
+This is the sum of squared residuals (the $\\|\\cdot\\|^2$ notation means $\\mathbf{r}^T\\mathbf{r} = \\sum_i r_i^2$):
+$$\\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b}) = \\sum_{i=1}^m r_i^2$$
+
+**Step 4: Geometric interpretation.** The least squares solution $\\hat{\\mathbf{x}}$ makes $A\\hat{\\mathbf{x}}$ the orthogonal projection of $\\mathbf{b}$ onto the column space of $A$. The quantity $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ is the squared distance between $\\mathbf{b}$ and its projection in the column space.
+
+**Step 5: Why squared norm?** Minimizing $\\|A\\mathbf{x} - \\mathbf{b}\\|$ and $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ give the same $\\hat{\\mathbf{x}}$ (since the square root is monotonic), but the squared form avoids the square root and leads to a linear system (the normal equations).
+
+**Why the other options are wrong:**
+- $\\|Ax\\|^2$: This measures the length of $A\\mathbf{x}$, not how close it is to $\\mathbf{b}$.
+- $\\|x\\|^2$: This measures the length of $\\mathbf{x}$, not the fit quality.
+- $\\|A\\|^2$: This is a property of $A$ alone, independent of $\\mathbf{b}$.
+
+Therefore, $\\boxed{\\|Ax - b\\|^2}$ is the quantity minimized by least squares.`,
       hints: [
-        "The system Ax = b has no exact solution when b is not in the column space of A.",
-        'We want x such that Ax is as close as possible to b — "close" measured by what norm?',
+        "The system $Ax = b$ has no exact solution when $\\mathbf{b}$ is not in the column space of $A$. We want $\\mathbf{x}$ such that $A\\mathbf{x}$ is as close as possible to $\\mathbf{b}$.",
+        'Closeness in Euclidean space is measured by the squared norm $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ — the sum of squared residuals $\\sum_i (a_i^T\\mathbf{x} - b_i)^2$.',
       ],
     },
     {
@@ -297,11 +511,36 @@ const questions: Record<string, Question[]> = {
       question:
         "The normal equations AᵀAx = Aᵀb always have a unique solution regardless of the rank of A.",
       correctAnswer: "false",
-      explanation:
-        "If A has linearly dependent columns (rank-deficient), then AᵀA is also singular and the normal equations have infinitely many solutions; the minimum-norm solution is found using the pseudoinverse.",
+      explanation: `The normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$ are derived from the least squares problem, but their solvability depends on the rank of $A$.
+
+**Step 1: Derive the normal equations.** To minimize $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$, we set the gradient to zero:
+$$\\nabla_\\mathbf{x} \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = 2A^T(A\\mathbf{x} - \\mathbf{b}) = 0$$
+which gives:
+$$A^TA\\mathbf{x} = A^T\\mathbf{b}$$
+
+**Step 2: When does $A^TA$ have full rank?** The matrix $A^TA$ is $n \\times n$. It is invertible (and thus the normal equations have a unique solution) if and only if $A$ has full column rank — that is, $\\text{rank}(A) = n$.
+
+**Step 3: The rank-deficient case.** If $A$ has linearly dependent columns ( $\\text{rank}(A) < n$ ), then:
+- $\\text{rank}(A^TA) = \\text{rank}(A) < n$ (rank does not increase under $A^TA$)
+- $A^TA$ is singular — it has no inverse.
+- The normal equations have infinitely many solutions (if any exist at all).
+
+**Step 4: Concrete counterexample.** Let:
+$$A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 0 \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} 1 \\\\ 1 \\\\ 1 \\end{pmatrix}$$
+
+The columns of $A$ are linearly independent, so the normal equations have a unique solution $\\hat{\\mathbf{x}} = (0.5, 1)^T$.
+
+But if we modify $A$ to have dependent columns:
+$$A = \\begin{pmatrix} 1 & 2 \\\\ 1 & 2 \\\\ 0 & 0 \\end{pmatrix}$$
+
+Then $A^TA = \\begin{pmatrix} 2 & 4 \\\\ 4 & 8 \\end{pmatrix}$ has determinant 0 (singular), and the normal equations may have no unique solution.
+
+**Step 5: What to use when $A^TA$ is singular?** The Moore-Penrose pseudoinverse $A^+$ gives the minimum-norm least squares solution even when $A^TA$ is singular.
+
+Therefore, $\\boxed{\\text{False}}$ — the normal equations have a unique solution if and only if $A$ has full column rank.`,
       hints: [
-        "AᵀA is invertible if and only if A has full column rank.",
-        "What happens to the normal equations when two columns of A are identical?",
+        "$A^TA$ is invertible if and only if $A$ has full column rank (linearly independent columns). Ask yourself: does $A$ always have linearly independent columns?",
+        "What happens to the normal equations when two columns of $A$ are identical? The system becomes singular and you cannot uniquely solve for $\\mathbf{x}$.",
       ],
     },
     {
@@ -312,11 +551,43 @@ const questions: Record<string, Question[]> = {
         "The Moore-Penrose pseudoinverse A⁺ satisfies which property when A has full column rank?",
       options: ["A⁺ = A", "A⁺ = (AᵀA)⁻¹Aᵀ", "A⁺ = Aᵀ(AAᵀ)⁻¹", "A⁺A⁺ = I"],
       correctAnswer: 1,
-      explanation:
-        "When A has full column rank, (AᵀA) is invertible and the pseudoinverse simplifies to (AᵀA)⁻¹Aᵀ, which is the left inverse satisfying A⁺A = I and giving the least squares solution x̂ = A⁺b.",
+      explanation: `When $A$ has full column rank, the Moore-Penrose pseudoinverse simplifies significantly. Let us work through this carefully.
+
+**Step 1: Full column rank condition.** $A$ has full column rank means $\\text{rank}(A) = n$ (all columns are linearly independent). This requires $m \\geq n$ (more rows than columns, or equal).
+
+**Step 2: Properties of the pseudoinverse.** The Moore-Penrose pseudoinverse $A^+$ satisfies four conditions:
+1. $AA^+A = A$
+2. $A^+AA^+ = A^+$
+3. $(AA^+)^T = AA^+$
+4. $(A^+A)^T = A^+A$
+
+**Step 3: The left inverse when $A$ has full column rank.** When $A$ has full column rank, it has a left inverse:
+$$A^+A = I_n$$
+
+To find $A^+$, we require $A^+A = I$, which means $A^+$ must be a left inverse of $A$. Since $A^T A$ is invertible (full column rank), we can compute:
+$$A^+ = (A^T A)^{-1} A^T$$
+
+**Step 4: Verification.** Let us verify that this $A^+$ satisfies the pseudoinverse properties:
+\\begin{align}
+AA^+ &= A(A^T A)^{-1} A^T \\quad \\text{(an } m \\times m \\text{ matrix, typically not identity)} \\\\\nA^+A &= (A^T A)^{-1} A^T A = I_n \\quad \\checkmark
+\\end{align}
+
+So $A^+A = I_n$ is the key property when $A$ has full column rank.
+
+**Step 5: The least squares solution.** With this pseudoinverse, the least squares solution is:
+$$\\hat{\\mathbf{x}} = A^+ \\mathbf{b} = (A^T A)^{-1} A^T \\mathbf{b}$$
+
+This is exactly the solution to the normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$.
+
+**Step 6: Why the other options are wrong.**
+- $A^+ = A$: Only true for identity-like matrices, not in general.
+- $A^+ = A^T(AA^T)^{-1}$: This is the formula for the pseudoinverse when $A$ has full row rank (not column rank).
+- $A^+A^+ = I$: This is meaningless; $A^+$ is not idempotent.
+
+Therefore, $\\boxed{A^+ = (A^TA)^{-1}A^T}$ is correct when $A$ has full column rank.`,
       hints: [
-        "Full column rank means n ≤ m and the columns are linearly independent.",
-        "The least squares solution x̂ = (AᵀA)⁻¹Aᵀb — what is (AᵀA)⁻¹Aᵀ?",
+        "Full column rank means $n \\leq m$ and the columns of $A$ are linearly independent. In this case, $A^TA$ is invertible — what does that suggest for the pseudoinverse?",
+        "The least squares solution is $\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}$. The matrix $(A^TA)^{-1}A^T$ is the pseudoinverse $A^+$ in this case.",
       ],
     },
   ],
