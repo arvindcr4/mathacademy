@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // TIME SERIES ANALYSIS & FORECASTING
+  {
+    id: 'time-series-forecasting',
+    slug: 'time-series-forecasting',
+    name: 'Time Series Analysis & Forecasting',
+    description: 'Classical statistical models, deep learning for sequences, and foundation models for time series.',
+    topics: [
+      {
+        id: 'classical-time-series',
+        name: 'Classical Time Series Models',
+        description: 'ARIMA, exponential smoothing, and statistical forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-1', slug: 'time-series-components', name: 'Trend, Seasonality & Stationarity' },
+          { id: 'ts-kp-2', slug: 'arima', name: 'ARIMA & SARIMA Models' },
+          { id: 'ts-kp-3', slug: 'exponential-smoothing', name: 'Exponential Smoothing (Holt-Winters)' },
+          { id: 'ts-kp-4', slug: 'spectral-analysis', name: 'Fourier Analysis & Spectral Decomposition' },
+          { id: 'ts-kp-5', slug: 'prophet-model', name: 'Facebook Prophet & Decomposition Models' },
+        ]
+      },
+      {
+        id: 'deep-time-series',
+        name: 'Deep Learning for Time Series',
+        description: 'LSTM, TCN, and Transformer-based sequence models.',
+        knowledgePoints: [
+          { id: 'ts-kp-6', slug: 'lstm-time-series', name: 'LSTM & GRU for Sequence Forecasting' },
+          { id: 'ts-kp-7', slug: 'temporal-cnn', name: 'Temporal Convolutional Networks (TCN)' },
+          { id: 'ts-kp-8', slug: 'transformer-time-series', name: 'Informer, Autoformer & Transformer Forecasting' },
+          { id: 'ts-kp-9', slug: 'patchtst', name: 'PatchTST & Channel Independence' },
+          { id: 'ts-kp-10', slug: 'timesnet', name: 'TimesNet & 2D Temporal Variation Modeling' },
+        ]
+      },
+      {
+        id: 'probabilistic-forecasting',
+        name: 'Probabilistic Forecasting',
+        description: 'Uncertainty quantification, conformal prediction, and distribution forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-11', slug: 'quantile-regression-ts', name: 'Quantile Regression & Prediction Intervals' },
+          { id: 'ts-kp-12', slug: 'deepar', name: 'DeepAR & Probabilistic Deep Learning' },
+          { id: 'ts-kp-13', slug: 'normalizing-flows-ts', name: 'Normalizing Flows for Time Series' },
+          { id: 'ts-kp-14', slug: 'conformal-prediction', name: 'Conformal Prediction for Time Series' },
+          { id: 'ts-kp-15', slug: 'bayesian-time-series', name: 'Bayesian Structural Time Series' },
+        ]
+      },
+      {
+        id: 'anomaly-detection-ts',
+        name: 'Anomaly Detection in Time Series',
+        description: 'Statistical and deep learning methods for detecting anomalies.',
+        knowledgePoints: [
+          { id: 'ts-kp-16', slug: 'statistical-anomaly', name: 'Statistical Anomaly Detection (Z-Score, IQR)' },
+          { id: 'ts-kp-17', slug: 'isolation-forest-ts', name: 'Isolation Forest & Unsupervised Anomaly' },
+          { id: 'ts-kp-18', slug: 'lstm-anomaly', name: 'LSTM Autoencoders for Anomaly Detection' },
+          { id: 'ts-kp-19', slug: 'transformers-anomaly', name: 'Transformer-Based Anomaly Detection' },
+          { id: 'ts-kp-20', slug: 'real-time-anomaly', name: 'Real-Time Streaming Anomaly Detection' },
+        ]
+      },
+      {
+        id: 'ts-foundation-models',
+        name: 'Time Series Foundation Models',
+        description: 'Large pretrained models for universal time series forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-21', slug: 'timesfm', name: 'TimesFM & Google\'s Time Series Foundation Model' },
+          { id: 'ts-kp-22', slug: 'moirai', name: 'Moirai & Universal Forecasting' },
+          { id: 'ts-kp-23', slug: 'chronos', name: 'Chronos & Probabilistic Foundation Forecasting' },
+          { id: 'ts-kp-24', slug: 'lag-llama', name: 'Lag-Llama & Decoder-Only TS Models' },
+          { id: 'ts-kp-25', slug: 'zero-shot-forecasting', name: 'Zero-Shot & Few-Shot Time Series Forecasting' },
+        ]
+      },
+      {
+        id: 'ts-applications',
+        name: 'Time Series Applications',
+        description: 'Financial forecasting, demand planning, and IoT sensor analysis.',
+        knowledgePoints: [
+          { id: 'ts-kp-26', slug: 'financial-forecasting', name: 'Financial Time Series & Market Prediction' },
+          { id: 'ts-kp-27', slug: 'demand-forecasting', name: 'Demand Forecasting & Inventory Optimization' },
+          { id: 'ts-kp-28', slug: 'iot-sensor-analysis', name: 'IoT Sensor Analysis & Predictive Maintenance' },
+          { id: 'ts-kp-29', slug: 'climate-forecasting', name: 'Climate & Weather Forecasting with ML' },
+          { id: 'ts-kp-30', slug: 'multivariate-ts', name: 'Multivariate Time Series & Correlation' },
+        ]
+      },
+    ]
+  },
+
   // RECOMMENDER SYSTEMS & RANKING
   {
     id: 'recommender-systems',
