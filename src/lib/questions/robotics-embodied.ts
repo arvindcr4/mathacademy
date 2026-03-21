@@ -393,6 +393,26 @@ const questions: Record<string, Question[]> = {
         "Consider what makes reward design and exploration harder when contact is critical.",
       ],
     },
+    {
+      id: "q-rob-kp7-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What role does tactile sensing play in dexterous in-hand manipulation, and why is vision alone insufficient for tasks like object re-orientation?",
+      options: [
+        "Tactile sensing provides local contact force and slip information that is occluded from cameras during in-hand manipulation, enabling closed-loop detection and correction of incipient slip before the object is dropped",
+        "Tactile sensing is used only to detect object material properties before grasping, not during manipulation",
+        "Vision is always sufficient for in-hand manipulation because depth cameras can recover occluded contact geometry",
+        "Tactile sensing is redundant with wrist force-torque sensors, which provide equivalent local contact information",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "During in-hand manipulation, fingers occlude the contact area from any external camera; tactile sensors (e.g., GelSight, DIGIT) embedded in the fingertips directly measure contact deformation, shear, and slip — enabling sub-millimeter feedback for closed-loop control that vision cannot provide through occlusion.",
+      hints: [
+        "Think about what a camera can see when your hand is closed around an object being rotated.",
+        "Slip detection requires knowing the force distribution at the contact interface — tactile sensors provide this directly.",
+      ],
+    },
   ],
 
   "deformable-objects": [
@@ -619,6 +639,26 @@ const questions: Record<string, Question[]> = {
         "HG-DAgger lets the human intervene only when they judge it necessary, reducing annotation burden while still providing corrective labels.",
       ],
     },
+    {
+      id: "q-rob-kp11-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the distributional shift problem in behavior cloning, and why does it cause compounding errors during policy rollout?",
+      options: [
+        "The policy is trained on states visited by the expert but at test time it visits different states (due to small action errors); since it has no training signal for those novel states, small errors compound over time",
+        "Distributional shift means the robot\'s hardware changes between training and test time, making the learned policy obsolete",
+        "The expert demonstrations are collected in a different environment from where the robot is deployed, causing a domain shift in visual features only",
+        "Compounding errors arise because behavior cloning uses a recurrent network that accumulates hidden state errors over time",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Behavior cloning learns a policy π(a|s) from expert (s, a) pairs. At test time, any action error causes the robot to enter a slightly different state than the expert would; since this state is outside the training distribution, the policy may make a larger error, leading to an even more out-of-distribution state — errors compound quadratically with horizon length.",
+      hints: [
+        "Think about walking a path: one small deviation leads you away from the expert\'s path, and the policy has never seen where you are now.",
+        "The problem grows with horizon length because each step\'s error compounds on top of all previous errors.",
+      ],
+    },
   ],
 
   "inverse-rl": [
@@ -674,6 +714,20 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Think about how GANs work — generator and discriminator competing — and apply that to imitation.",
         "The discriminator score is the reward that pushes the policy to match expert state-action occupancy.",
+      ],
+    },
+    {
+      id: "q-rob-kp12-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In Inverse Reinforcement Learning, the recovered reward function is typically more useful than the recovered policy because it generalizes to new environments and enables retraining under changed dynamics.",
+      correctAnswer: "True",
+      explanation:
+        "IRL\'s key advantage over behavior cloning is that the recovered reward function encodes the underlying objective rather than a specific trajectory; the robot can optimize this reward in a new environment or with different dynamics using RL, whereas a cloned policy from BC is tightly coupled to the original state distribution and may fail in altered settings.",
+      hints: [
+        "Think about why a human\'s goals (reward function) transfer across situations better than copying their exact movements.",
+        "A reward function is more compact and generalizable than a state-to-action mapping.",
       ],
     },
   ],
@@ -899,6 +953,20 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Standard RRT finds a feasible path but not necessarily the shortest one.",
         "The key addition in RRT* is the ability to improve existing tree connections after each new sample.",
+      ],
+    },
+    {
+      id: "q-rob-kp16-4",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Trajectory Optimization methods such as TrajOpt can find smooth, locally-optimal robot arm motions by formulating collision avoidance as a convex penalty on signed distances and solving the resulting nonlinear program with sequential convex programming.",
+      correctAnswer: "True",
+      explanation:
+        "TrajOpt (Schulman et al.) represents collision avoidance constraints as penalties on the signed distance between robot links and obstacles, convexifies these penalties locally, and iteratively solves the convex approximation (sequential convex programming / SQCQP); this produces smooth, collision-free trajectories faster than pure sampling-based planners for high-DoF arms in cluttered environments.",
+      hints: [
+        "Think about how optimization-based planners differ from sampling-based ones — they refine an entire trajectory rather than building a tree node by node.",
+        "Signed distance is the key quantity: positive means separated, negative means in collision — penalizing negative values drives the trajectory toward collision-free space.",
       ],
     },
   ],
@@ -1469,6 +1537,20 @@ const questions: Record<string, Question[]> = {
         "Underactuation means the robot cannot independently control all degrees of freedom.",
       ],
     },
+    {
+      id: "q-rob-kp26-4",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "RT-1 (Robotic Transformer 1) represents robot actions as a discrete set of tokenized bins for each action dimension, allowing a standard transformer sequence model to output motor commands the same way it outputs text tokens.",
+      correctAnswer: "True",
+      explanation:
+        "RT-1 discretizes each action dimension (e.g., end-effector x, y, z, roll, pitch, yaw, gripper) into 256 uniform bins, turning continuous robot control into a token prediction problem that a causal transformer (based on EfficientNet + Transformer Decoder) can solve with a standard cross-entropy loss — the same formulation used in language modeling.",
+      hints: [
+        "Think about how language models predict the next word token — RT-1 applies the same idea to action dimensions.",
+        "Discretizing a continuous action into bins is a common trick to turn regression into classification.",
+      ],
+    },
   ],
 
   "open-x-embodiment": [
@@ -1490,6 +1572,40 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Think about what happens when a humanoid reaches far to one side without adjusting its stance.",
         "Underactuation means the robot cannot independently control all degrees of freedom.",
+      ],
+    },
+    {
+      id: "q-rob-kp29-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The Open X-Embodiment dataset aggregates demonstrations from more than ten different robot platforms and has been used to show that co-training on diverse robot data improves downstream task performance compared to training on single-robot datasets alone.",
+      correctAnswer: "True",
+      explanation:
+        "Open X-Embodiment collects demonstrations from 22+ robot embodiments across multiple research labs; RT-X experiments show that co-training on this diverse mixture improves performance on held-out tasks compared to single-embodiment training, demonstrating positive transfer across robot platforms.",
+      hints: [
+        "Think about how training on more diverse data can improve generalization in other machine learning domains.",
+        "The key result is positive transfer — diversity helps, rather than the noise from dissimilar embodiments hurting.",
+      ],
+    },
+    {
+      id: "q-rob-kp29-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In cross-embodiment robot learning, what does it mean for a policy to be \'embodiment-agnostic\', and what is the main obstacle to achieving it?",
+      options: [
+        "An embodiment-agnostic policy produces correct actions for any robot given its observation; the main obstacle is that action spaces (joint dimensions, gripper types, control frequencies) differ across robots with no canonical mapping",
+        "An embodiment-agnostic policy ignores the robot body entirely and reasons only in task space; the main obstacle is that task space is not well-defined for legged robots",
+        "An embodiment-agnostic policy uses the same reward function for all robots; the main obstacle is reward mis-specification across different task domains",
+        "An embodiment-agnostic policy is one trained only in simulation; the main obstacle is the sim-to-real gap for each individual embodiment",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "True embodiment-agnosticism requires outputting valid actions for robots with fundamentally different kinematic structures (7-DoF arm vs. humanoid vs. mobile base); this demands either a universal action vocabulary (e.g., Cartesian end-effector deltas) or explicit embodiment conditioning, because joint-space actions are incompatible across different robot designs.",
+      hints: [
+        "Think about what would need to be the same and what would need to differ for a single policy to control a 7-DoF arm and a humanoid hand.",
+        "The action space problem is more fundamental than the observation space problem — a policy that outputs 7 joint angles cannot directly control a 21-DoF hand.",
       ],
     },
   ],
@@ -1547,6 +1663,26 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Think about what happens to arm position accuracy when the robot is also walking and its base is moving.",
         "The coupling between locomotion and manipulation makes the sim-to-real gap multiply across both tasks.",
+      ],
+    },
+    {
+      id: "q-rob-kp30-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the Zero Moment Point (ZMP) criterion, and why has it historically been central to humanoid robot walking controllers?",
+      options: [
+        "ZMP is the point on the ground where the net moment of all inertial and gravitational forces is zero; if ZMP stays within the support polygon, the robot will not tip over, providing a practical stability criterion for gait planning",
+        "ZMP is the center of mass projection onto the ground plane, and walking controllers must keep it at the midpoint between the feet at all times",
+        "ZMP is the ankle joint position that minimizes joint torques during single-support walking phases",
+        "ZMP is a reinforcement learning reward signal that penalizes the robot whenever it loses contact with the ground",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "ZMP, introduced by Vukobratović, is the ground-plane point where the combined gravitational and inertial wrench acts with zero moment; a biped is dynamically stable if and only if the ZMP lies within the convex hull of its support contacts (the support polygon). Classical humanoid controllers (e.g., Honda ASIMO) pre-plan footstep sequences that keep ZMP inside this polygon using a linear inverted pendulum model.",
+      hints: [
+        "Think about balancing a broom on your palm — stability depends on where the net force acts relative to your support base.",
+        "The support polygon is the convex hull of all ground contact points — one or two feet depending on the gait phase.",
       ],
     },
   ],

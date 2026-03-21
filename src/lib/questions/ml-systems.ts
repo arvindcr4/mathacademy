@@ -17,10 +17,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A Feature Store centralizes precomputed features so that training and serving use identical transformations, eliminating training-serving skew.",
+        "A Feature Store centralizes precomputed features so that training and serving use identical transformations, eliminating training-serving skew. Without a feature store, the same feature (e.g., 'user_total_spend_30d') might be computed differently in Python training scripts vs. in the Java serving microservice — the classic skew problem. The feature store ensures both paths read from the same computed values stored in the same storage layer.",
       hints: [
-        "Think about the consistency problem between offline training and online serving.",
-        'The key word is "reuse" — features computed once should be available everywhere.',
+        "Training-serving skew: the same feature computed differently offline (Python) vs. online (Java/Scala) — one of the most common ML production bugs.",
+        'The key word is "consistency" — features should be identical in training and serving.',
+        "Feast, Tecton, and Hopsworks are production feature stores; they abstract offline (training) and online (serving) feature retrieval.",
       ],
     },
     {
@@ -31,10 +32,11 @@ const questions: Record<string, Question[]> = {
         "Training-serving skew can occur even when the feature transformation code is identical in both environments.",
       correctAnswer: "true",
       explanation:
-        "Skew can arise from differences in data distributions, timing of feature computation, or subtle library version discrepancies — not just code divergence.",
+        "Skew can arise from differences in data distributions, timing of feature computation, or subtle library version discrepancies — not just code divergence. Example: a feature 'days_since_last_purchase' computed at training time using a warehouse timestamp may differ from serving time due to timezone handling bugs, or different Python/numpy library versions may produce slightly different floating-point results for the same input. The feature 'user_age' may be computed using a birthdate lookup in training but a cached value at serving time.",
       hints: [
-        "Consider whether the same code can produce different results depending on when or where it runs.",
-        'Think about time-dependent features like "days since last purchase".',
+        "Code being identical does not guarantee identical outputs — check library versions, data sources, and timing.",
+        'Think about time-dependent features: "days since last purchase" is a moving window that differs between training (snapshot) and serving (current state).',
+        "Feature stores mitigate this by serving the same precomputed values from a shared store, not recomputing.",
       ],
     },
     {
@@ -51,10 +53,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Online feature stores use low-latency key-value stores (e.g., Redis, DynamoDB) to serve precomputed features in milliseconds during inference.",
+        "Online feature stores use low-latency key-value stores (e.g., Redis ~0.5ms, DynamoDB ~5ms) to serve precomputed features in milliseconds during inference. Inference latency budgets are typically 50-100ms total — a data warehouse query (seconds) is incompatible. Redis stores precomputed feature vectors; at request time, the serving layer fetches features by entity key (e.g., user_id) and passes them to the model. The offline batch job computes features; the online store serves them.",
       hints: [
-        "Inference latency budgets are typically in the tens of milliseconds.",
-        "Which storage technology is optimized for single-key lookups rather than analytical queries?",
+        "Inference latency budgets are typically in the tens of milliseconds — a SQL query to BigQuery (seconds) is not acceptable.",
+        "Key-value stores (Redis, DynamoDB) are optimized for single-key lookups, not analytical scans.",
+        "The architecture: offline computation → materialization to online store → low-latency retrieval at inference time.",
       ],
     },
   ],
@@ -187,10 +190,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "gRPC leverages HTTP/2 multiplexing and Protobuf binary serialization, resulting in significantly lower latency and higher throughput than REST/JSON for structured data.",
+        "gRPC leverages HTTP/2 multiplexing and Protobuf binary serialization, resulting in significantly lower latency and higher throughput than REST/JSON for structured data. A 1 KB JSON payload serializes to ~200 bytes in Protobuf (5x smaller), reducing I/O overhead. HTTP/2 multiplexing allows 50,000 RPS to share a small pool of TCP connections instead of opening a new connection per request. At p99 < 5 ms latency targets, these efficiencies are critical — JSON serialization alone can consume 1-2 ms at high QPS.",
       hints: [
-        "Binary serialization is faster and smaller than text-based formats like JSON.",
-        "HTTP/2 enables request multiplexing over a single connection.",
+        "Binary serialization is 5-10x smaller than JSON — less I/O at the same throughput.",
+        "HTTP/2 multiplexing eliminates head-of-line blocking that plagues HTTP/1.1 at high concurrency.",
+        "For internal microservices at >10K RPS, gRPC's Protocol Buffers are the de facto standard.",
       ],
     },
     {
@@ -201,10 +205,11 @@ const questions: Record<string, Question[]> = {
         "NVIDIA Triton Inference Server can serve models from multiple frameworks (TensorFlow, PyTorch, ONNX) simultaneously on the same server instance.",
       correctAnswer: "true",
       explanation:
-        "Triton\'s backend architecture allows multiple framework backends to coexist, enabling a single deployment to host models from different frameworks simultaneously.",
+        "Triton\'s backend architecture allows multiple framework backends to coexist, enabling a single deployment to host models from different frameworks simultaneously. Each backend (TensorFlow, PyTorch, ONNX Runtime) is a separate plugin that Triton manages. This is critical for organizations migrating between frameworks: a team can run TensorFlow models alongside PyTorch models during a transition period without separate infrastructure.",
       hints: [
         "Triton was designed for heterogeneous model deployment scenarios.",
         'Think about what "backend" means in the context of Triton\'s architecture.',
+        "A single Triton instance can serve a PyTorch BERT model alongside a TensorFlow ResNet — useful during framework migrations.",
       ],
     },
     {
@@ -221,10 +226,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Dynamic batching collects individual client requests arriving within a configurable time window and merges them into a single batch, dramatically improving GPU utilization without increasing client-side latency significantly.",
+        "Dynamic batching collects individual client requests arriving within a configurable time window (e.g., 100 ms) and merges them into a single batch for GPU processing. Without batching, a single-request GPU kernel launch (1-2 ms overhead) dominates inference time for small inputs. With dynamic batching of 32 samples, the kernel launch overhead is amortized across 32 samples. Example: single request inference = 5 ms (mostly kernel launch overhead); batch of 32 = 15 ms total (0.47 ms per sample). That's a 10x per-sample throughput improvement with minimal latency impact on individual requests.",
       hints: [
-        "GPUs are most efficient when processing many samples in parallel.",
-        "Individual requests underutilize GPU parallelism — grouping them together solves this.",
+        "GPUs are most efficient when processing many samples in parallel — a single sample leaves thousands of CUDA cores idle.",
+        "Dynamic batching solves the tension between low latency (small batches) and high throughput (large batches).",
+        "Triton's dynamic batcher waits up to the configured window duration before executing — balancing latency vs. batch size.",
       ],
     },
   ],
@@ -239,10 +245,11 @@ const questions: Record<string, Question[]> = {
       options: ["Staging", "Production", "Archived", "Deleted"],
       correctAnswer: 3,
       explanation:
-        "MLflow Model Registry uses Staging, Production, and Archived stages. Models are archived rather than deleted to preserve audit history and reproducibility.",
+        "MLflow Model Registry uses Staging, Production, and Archived stages. Models are Archived (not Deleted) to preserve audit history and reproducibility. Audit trails matter for compliance: a regulator may ask 'what model was in production on March 15, 2023?' — Archived models answer this. Deleting a model destroys this evidence and makes incident reconstruction impossible.",
       hints: [
-        "Audit trails require that historical model versions remain accessible.",
-        "MLflow stages represent deployment readiness, not deletion.",
+        "Audit trails require that historical model versions remain accessible — Archived preserves them.",
+        "MLflow stages represent deployment readiness, not deletion — Deleted is not a stage.",
+        "In regulated industries (finance, healthcare), model deletion may also violate record-keeping requirements.",
       ],
     },
     {
@@ -253,10 +260,11 @@ const questions: Record<string, Question[]> = {
         "A model registry should store model binaries directly in the same database as its metadata.",
       correctAnswer: "false",
       explanation:
-        "Best practice is to store model artifacts in object storage (e.g., S3, GCS) and keep only references (URIs) in the metadata database, keeping the registry lightweight and scalable.",
+        "Best practice is to store model artifacts in object storage (e.g., S3, GCS) and keep only references (URIs) in the metadata database, keeping the registry lightweight and scalable. A model binary (10 MB to 10 GB) stored as a BLOB in a relational database causes: (1) database bloat, (2) slow backup/restore, (3) connection pool exhaustion. Object storage is designed for large binary objects with built-in versioning, replication, and lifecycle policies.",
       hints: [
-        "Model files can be gigabytes in size — databases are not optimized for binary blobs of that scale.",
-        "Separation of concerns: metadata in a database, binaries in object storage.",
+        "Model files can be gigabytes — databases are optimized for structured data, not large binary blobs.",
+        "Separation of concerns: metadata in a database (fast queries), binaries in object storage (fast retrieval of large files).",
+        "S3 versioning + MLflow's artifact URI tracking = complete model lineage.",
       ],
     },
     {
@@ -273,10 +281,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Immutable versioned artifacts combined with a pointer/alias system allow instant rollback by redirecting the alias to a previously validated version without any retraining.",
+        "Immutable versioned artifacts combined with a pointer/alias system (e.g., MLflow's 'Production' alias) allow instant rollback by redirecting the alias to a previously validated version without any retraining. Example: v23 (broken) is in production; rollback = update 'Production' alias from v23 to v22 (takes seconds). Overwriting in place destroys v23, making forward recovery impossible. Retraining from scratch is slow and may not reproduce the same weights due to randomness.",
       hints: [
-        "Rollback speed is critical — what approach has zero retraining cost?",
-        "Immutability guarantees you can always return to an exact prior state.",
+        "Rollback speed is critical — instant redirection via alias vs. minutes/hours of retraining.",
+        "Immutability guarantees you can always return to an exact prior state without reconstruction.",
+        "MLflow's alias system: 'Production' alias → v22. To rollback: set_alias('Production', 'v22'). Done.",
       ],
     },
   ],
@@ -409,10 +418,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ONNX is an open standard representing ML models as a computation graph, decoupling the training framework from the inference runtime for maximum portability.",
+        "ONNX (Open Neural Network Exchange) is an open standard representing ML models as a computation graph, decoupling the training framework from the inference runtime. You can train in PyTorch and deploy on TensorRT, CoreML, or ONNX Runtime without rewriting model code. The graph is hardware-agnostic; each runtime optimizes for its target (e.g., TensorRT compiles ONNX to optimized CUDA kernels for NVIDIA GPUs).",
       hints: [
-        'ONNX stands for Open Neural Network Exchange — the key word is "exchange".',
-        "You can train in PyTorch and deploy on a non-PyTorch runtime using ONNX.",
+        'ONNX = "Open Neural Network Exchange" — portability between frameworks is the core value proposition.',
+        "ONNX Runtime is NOT the same as PyTorch or TensorFlow — it's a dedicated inference runtime that ingests the ONNX graph.",
+        "You can serve the same ONNX model on NVIDIA GPUs (via TensorRT), CPUs, and edge devices without changing the model.",
       ],
     },
     {
@@ -423,10 +433,11 @@ const questions: Record<string, Question[]> = {
         "TensorRT\'s kernel fusion optimization merges multiple sequential operations into a single GPU kernel, reducing memory bandwidth consumption.",
       correctAnswer: "true",
       explanation:
-        "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv → BatchNorm → ReLU), directly reducing latency and bandwidth pressure.",
+        "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv → BatchNorm → ReLU becomes a single fused kernel). Without fusion: each op writes its output to VRAM, then the next op reads it back — 3 separate kernel launches and 3 VRAM round-trips. With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
       hints: [
-        "Each separate kernel launch writes and reads from GPU memory — fusion cuts those trips.",
-        "Memory bandwidth is often the bottleneck, not raw compute.",
+        "Each separate kernel launch = one write + one read from VRAM. Fusion eliminates intermediate round-trips.",
+        "Memory bandwidth is often the bottleneck for modern GPUs, not raw FLOPs — fusion directly attacks this bottleneck.",
+        "TensorRT's layer fusion is the canonical example: Fused Conv+BatchNorm+ReLU as a single CUDA kernel.",
       ],
     },
     {
@@ -443,10 +454,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PagedAttention stores KV cache in fixed-size, non-contiguous memory pages (inspired by OS virtual memory), dramatically reducing fragmentation and enabling higher concurrent batch sizes.",
+        "PagedAttention stores KV cache in fixed-size, non-contiguous memory pages (inspired by OS virtual memory), dramatically reducing fragmentation and enabling higher concurrent batch sizes. Standard allocation: reserve max_seq_len × n_layers × KV_size per request (e.g., 8192 tokens × 80 layers × 2 × 128 = 16.8 GB) even if the request is only 100 tokens long. PagedAttention: allocate 16-token pages on-demand, return them to the pool when done. This achieves >90% GPU memory utilization vs. 60-70% with standard allocation, enabling 2-4x higher batch sizes and throughput.",
       hints: [
-        "Traditional KV cache requires contiguous memory reservation, wasting space for variable-length sequences.",
-        "OS virtual memory management is the direct inspiration for this design.",
+        "Traditional KV cache pre-allocates max_seq_length per request — catastrophic fragmentation when sequences are short.",
+        "OS virtual memory pages (4KB) inspired PagedAttention's 16-token cache blocks.",
+        "Higher batch size = more samples processed per GPU kernel launch = higher throughput.",
       ],
     },
   ],
@@ -466,10 +478,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Data drift (covariate shift) is when P(X) changes while P(Y|X) remains stable. Concept drift is when P(Y|X) itself changes.",
+        "Data drift (covariate shift) is when P(X) changes while P(Y|X) remains stable — the input distribution shifts but the relationship between features and labels is unchanged. Concept drift is when P(Y|X) itself changes — the underlying phenomenon the model learned changes. Example: during COVID, user spending patterns (P(X)) shifted but the relationship between spending and fraud (P(Y|X)) may have remained similar — data drift, not concept drift.",
       hints: [
-        "The key is whether the feature distribution or the label-given-feature relationship has changed.",
-        "P(X) is the input distribution; P(Y|X) is the conditional relationship.",
+        "The key question: did the feature distribution change, or did the feature-to-label relationship change?",
+        "P(X) = input distribution; P(Y|X) = conditional label distribution given inputs.",
+        "A retailer's user demographics shifting from young to older is data drift; fraudsters changing tactics is concept drift.",
       ],
     },
     {
@@ -480,10 +493,11 @@ const questions: Record<string, Question[]> = {
         "The Population Stability Index (PSI) can detect distribution drift even when ground-truth labels are unavailable.",
       correctAnswer: "true",
       explanation:
-        "PSI compares feature distributions between a reference dataset and current predictions using only the feature values, making it label-free and practical for online monitoring.",
+        "PSI compares feature distributions between a reference dataset and current predictions using only the feature values, making it label-free and practical for online monitoring. PSI formula: $\\text{PSI} = \\sum_{i=1}^{n} (A_i - E_i) \\times \\ln(A_i / E_i)$ where $A_i$ is actual % and $E_i$ is expected % in bin $i$. Standard thresholds: PSI < 0.1 = no action, 0.1-0.25 = investigate, > 0.25 = significant drift requiring model retraining. PSI = 0 means identical distributions; PSI → ∞ means completely disjoint distributions.",
       hints: [
-        "Labels are often delayed or unavailable in production — drift detection must sometimes work without them.",
-        "PSI compares binned distributions of a variable between two time periods.",
+        "PSI = 0 means identical distributions; PSI = infinity means completely disjoint distributions.",
+        "PSI > 0.25 on a key feature (e.g., transaction_amount, user_age) should page the on-call ML engineer.",
+        "PSI is label-free because it only compares feature distributions — no labels needed.",
       ],
     },
     {
@@ -500,10 +514,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Using both confidence score monitoring and feature distribution drift as leading indicators provides early warning before labels arrive, enabling proactive retraining decisions.",
+        "Using both confidence score monitoring and feature distribution drift as leading indicators provides early warning before labels arrive, enabling proactive retraining decisions. Confidence drop (e.g., average predicted probability shifting from 0.72 to 0.55) often precedes measurable accuracy drops because the model starts encountering unfamiliar patterns before accuracy formally degrades. PSI/KL divergence on input features catches covariate shifts that may eventually cause concept drift. Neither signal alone is sufficient — combining them is the mature monitoring strategy.",
       hints: [
         "No single signal is sufficient; combining leading indicators is best practice.",
-        "A drop in model confidence often precedes a measurable accuracy drop.",
+        "A drop in model confidence often precedes a measurable accuracy drop by days or weeks.",
+        "PSI detects data drift (P(X) change); confidence monitoring detects when the model starts seeing unfamiliar patterns.",
       ],
     },
   ],
@@ -636,10 +651,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Daily batch recommendations can be precomputed offline for all users and cached, avoiding real-time model latency while enabling complex, compute-intensive models.",
+        "Daily batch recommendations can be precomputed offline for all users and cached, avoiding real-time model latency while enabling complex, compute-intensive models. Example: Netflix recommends rows of 20 movies per user — computing this for 200M users with a complex model takes hours but can run overnight. The results are stored in a fast key-value store (e.g., Redis) for sub-millisecond serving when users open the app. Staleness of ~24 hours is acceptable for daily recommendations.",
       hints: [
-        "If results can be precomputed ahead of time, batch is almost always more efficient.",
-        "Daily granularity means staleness of a few hours is acceptable.",
+        "If results can be precomputed ahead of time, batch is almost always more efficient — complex models, no latency constraints.",
+        "Daily granularity means staleness of a few hours is acceptable for non-urgent use cases.",
+        "Batch inference + cached results = best of both worlds: complex model computation + low-latency serving.",
       ],
     },
     {
@@ -650,10 +666,11 @@ const questions: Record<string, Question[]> = {
         "Real-time inference always produces fresher predictions than batch inference.",
       correctAnswer: "true",
       explanation:
-        "Real-time inference uses the latest available features at request time, while batch inference uses features as of the last batch run, making real-time inherently fresher.",
+        "Real-time inference uses the latest available features at request time (e.g., current cart contents, today's browsing history), while batch inference uses features as of the last batch run (e.g., last night's snapshot). For rapidly changing signals (stock prices, breaking news relevance, current inventory), this freshness difference is critical. The trade-off: real-time inference requires low-latency feature retrieval infrastructure.",
       hints: [
-        "Batch predictions are computed at a fixed schedule and may be hours or days old.",
-        "Freshness is one of the core trade-offs between batch and real-time.",
+        "Batch predictions are computed at a fixed schedule and may be hours or days old by the time they're served.",
+        "Freshness is one of the core trade-offs: batch = stale but cheap; real-time = fresh but requires live feature infrastructure.",
+        "Real-time inference is necessary when the features themselves change between batch runs (e.g., inventory levels, current location).",
       ],
     },
     {
@@ -670,10 +687,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fraud detection requires real-time features (last N transactions) and low-latency decisions. Streaming feature computation keeps the online feature store current, enabling sub-200ms inference.",
+        "Fraud detection requires real-time features (last N transactions) and low-latency decisions. The architecture: Apache Flink maintains a sliding window of the last 10 transactions per card_id, continuously updated as new transactions arrive via Kafka. These rolling counts are materialized to Redis (~0.5ms read latency). At inference time (triggered by an authorization request), the model fetches features from Redis and runs inference — total latency <200ms. A data warehouse refresh (hourly or nightly) is too stale for fraud detection.",
       hints: [
-        "The 200ms SLA rules out any batch approach.",
-        'Features derived from "the last 10 transactions" must be continuously updated.',
+        "The 200ms SLA rules out any batch approach — batch jobs take minutes to hours.",
+        'Features derived from "the last 10 transactions" are time-series features that must be updated continuously, not periodically.',
+        "Kafka + Flink + Redis is the standard stack for real-time feature engineering in production ML.",
       ],
     },
   ],
@@ -797,7 +815,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In a canary deployment, what percentage of traffic is typically sent to the new model version initially?",
+        "In a canaryary deployment, what percentage of traffic is typically sent to the new model version initially?",
       options: [
         "50%",
         "100%",
@@ -806,10 +824,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Canary deployments start by routing a small traffic slice (1–5%) to the new version, limiting blast radius if issues arise before gradually increasing traffic as confidence grows.",
+        "Canary deployments start by routing a small traffic slice (1–5%) to the new version, limiting blast radius if issues arise before gradually increasing traffic as confidence grows. Standard progression: 1% → 5% → 20% → 50% → 100%, with monitoring gates at each stage. The 1% initial slice is chosen to be large enough for statistical significance (at 1M DAU, 1% = 10K users) but small enough to limit user impact if the canary fails.",
       hints: [
-        "The goal is to limit exposure to potential failures.",
+        "The goal is to limit exposure to potential failures — the canary's job is to catch regressions before they affect all users.",
         '"Canary in a coal mine" — a small sentinel exposed first to detect danger.',
+        "At 10M DAU, 1% canary = 100K users. If the canary fails, 100K users are affected vs. 10M if full rollout.",
       ],
     },
     {
@@ -820,10 +839,11 @@ const questions: Record<string, Question[]> = {
         "A shadow deployment and a canary deployment both expose real users to the new model\'s predictions.",
       correctAnswer: "false",
       explanation:
-        "Shadow deployments run the new model in parallel but serve only the production model\'s predictions to users. Canary deployments actually serve the new model\'s predictions to a small user subset.",
+        "Shadow deployments run the new model in parallel but serve only the production model's predictions to users — zero user impact. Canary deployments actually serve the new model's predictions to a small user subset (1-5%) — real exposure, real feedback. Shadow is for validation; canary is for live testing with real user behavior as the metric.",
       hints: [
-        "Shadow = invisible to users; Canary = a small real exposure.",
-        "User impact is the key distinction between the two strategies.",
+        "Shadow = the new model runs invisibly alongside the champion. User sees champion predictions only.",
+        "Canary = a small % of users see challenger predictions. Real behavior, real metrics.",
+        "Use shadow first (zero risk), then canary (small risk) for a phased evaluation.",
       ],
     },
     {
@@ -840,10 +860,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Automated canary analysis monitors real-time error rates, latency, and business metrics; when any exceed defined thresholds, an automated rollback fires without human intervention to minimize blast radius.",
+        "Automated canary analysis (ACA) monitors real-time error rates, latency, and business metrics (conversion, fraud recall); when any exceed defined thresholds (e.g., error rate > 1%, p99 latency > 200ms, revenue per user drops > 2%), an automated rollback fires without human intervention to minimize blast radius. Tools like Argo Rollouts and Flagger implement automated canary analysis with configurable metrics and rollback policies. Fixed timers are dangerous: a broken canary can cause 24 hours of user harm.",
       hints: [
-        "Manual processes are too slow when production is degraded.",
-        "The rollback trigger must be based on observable signals, not arbitrary time.",
+        "Manual processes are too slow when production is degraded — automated rollback fires in seconds.",
+        "The rollback trigger must be based on observable signals (error rate, latency) that indicate user harm, not arbitrary time.",
+        "Configure rollback thresholds before deployment: what error rate is unacceptable? What latency threshold? Get stakeholder agreement.",
       ],
     },
   ],

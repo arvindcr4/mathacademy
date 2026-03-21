@@ -8,76 +8,77 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Climbing 1 or 2 steps at a time, ways to reach step n follows:",
+        "When climbing 1 or 2 steps at a time, the number of ways to reach step $n$ follows which sequence pattern?",
       options: ["Fibonacci", "Factorial", "Binary", "Harmonic"],
       correctAnswer: 0,
       explanation:
-        "dp[i] = dp[i-1] + dp[i-2]. Same recurrence as Fibonacci. dp[1]=1, dp[2]=2.",
+        "Let $dp[i]$ denote the number of ways to reach step $i$. The final move to step $i$ must be either:\n\n- A 1-step from step $i-1$: contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$: contributing $dp[i-2]$ ways\n\nTherefore:\n$$\\begin{align}\ndp[i] &= dp[i-1] + dp[i-2]\\n\\text{with}\\quad dp[1] &= 1,\\quad dp[2] = 2\\n\\end{align}$$\n\nThis recurrence relation is identical to the Fibonacci sequence (shifted by one index).",
       hints: [
-        "Write the recurrence by looking at the final move into step n.",
-        "You can arrive from step n-1 or from step n-2, so the counts add.",
+        "Write the recurrence by looking at the final move into step $n$.",
+        "You can arrive at step $n$ from step $n-1$ or from step $n-2$, so the counts add: $dp[n] = dp[n-1] + dp[n-2]$.",
+        "This is the Fibonacci recurrence starting with $F_1 = 1, F_2 = 2$.",
       ],
     },
     {
       id: "q-cs-2",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "Ways to climb 4 steps:",
+      question: "How many distinct ways can you climb exactly 4 steps if you take 1 or 2 steps at a time?",
       options: ["4", "5", "6", "7"],
       correctAnswer: 1,
       explanation:
-        "dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=5. Sequences: (1,1,1,1), (1,1,2), (1,2,1), (2,1,1), (2,2).",
+        "We build up using the recurrence $dp[i] = dp[i-1] + dp[i-2]$:\n\n$$\\begin{align}\ndp[1] &= 1 \\quad &\\text{(just 1)}\\\\\ndp[2] &= dp[1] + dp[0] = 1 + 1 = 2 \\quad &\\text{(1+1 or 2)}\\\\\ndp[3] &= dp[2] + dp[1] = 2 + 1 = 3 \\quad &\\text{(1+1+1, 1+2, 2+1)}\\\\\ndp[4] &= dp[3] + dp[2] = 3 + 2 = 5\\n\\end{align}$$\n\nThe five valid sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, and $(2,2)$.",
       hints: [
-        "Build the values from the bottom up: 1, 2, 3, ...",
-        "Use dp[4] = dp[3] + dp[2] or enumerate the five valid sequences.",
+        "Build the values from the bottom up: $dp[1] = 1, dp[2] = 2, dp[3] = 3, \\dots$",
+        "Use $dp[4] = dp[3] + dp[2]$ or enumerate all five valid sequences manually.",
       ],
     },
     {
       id: "q-cs-3",
       type: "true-false",
       difficulty: "medium",
-      question: "dp[i] = dp[i-1] + dp[i-2] for i >= 3.",
+      question: "For the climbing stairs problem with step sizes 1 and 2, the recurrence relation is $dp[i] = dp[i-1] + dp[i-2]$ for $i \\geq 3$.",
       correctAnswer: "true",
       explanation:
-        "From step i, last move was either 1 step (from i-1) or 2 steps (from i-2). Sum both ways.",
+        "From step $i$, the last move was either:\n- A 1-step from step $i-1$, or\n- A 2-step from step $i-2$\n\nSince these are mutually exclusive ways to end, we sum them:\n$$dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for } i \\geq 3$$\n\nEvery valid path to step $i$ ends with exactly one of these two moves.",
       hints: [
-        "Think about the final move into step i.",
-        "Every valid path ends with either a 1-step move or a 2-step move.",
+        "Think about the final move into step $i$: what are the only possible last moves?",
+        "Every valid path to step $i$ ends with either a 1-step move or a 2-step move.",
       ],
     },
     {
       id: "q-cs-4",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Time complexity with memoization:",
+      question: "What is the time complexity of the climbing stairs solution with memoization?",
       options: ["O(1)", "O(n)", "O(n²)", "O(2ⁿ)"],
       correctAnswer: 1,
       explanation:
-        "Each subproblem dp[i] computed once. n subproblems × O(1) each = O(n) total.",
+        "With memoization, each subproblem $dp[i]$ is computed exactly once:\n\n- There are $n$ distinct subproblems (for $i = 1$ to $n$)\n- Each transition $dp[i] = dp[i-1] + dp[i-2]$ takes $O(1)$ time\n\n$$\\text{Total time} = n \\times O(1) = O(n)$$\n\nWithout memoization, the naive recursive solution would be $O(2^n)$ due to exponential recomputation.",
       hints: [
         "Memoization prevents recomputing the same step count.",
-        "There are n distinct states and each one does O(1) combine work.",
+        "How many distinct states $dp[i]$ exist? Each one does $O(1)$ work.",
       ],
     },
     {
       id: "q-cs-5",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "If you can climb 1, 2, or 3 steps, dp[4] = ?",
+      question: "If you can climb 1, 2, or 3 steps at a time, what is $dp[4]$?",
       options: ["5", "6", "7", "8"],
       correctAnswer: 2,
       explanation:
-        "dp[1]=1, dp[2]=2, dp[3]=4 (1+2+3 or 1+1+2 or 1+1+1+1 or 2+2 or 3+1). dp[4]=dp[3]+dp[2]+dp[1]=4+2+1=7.",
+        "With step sizes 1, 2, and 3, the recurrence extends to use the previous three states:\n\n$$\\begin{align}\ndp[4] &= dp[3] + dp[2] + dp[1]\\\\\n\\text{where: } &dp[1] = 1 \\text{ (only } 1)\\n&dp[2] = 2 \\text{ (1+1 or } 2)\\n&dp[3] = 4 \\text{ (1+1+1, 1+2, 2+1, or } 3)\n\\end{align}$$\n\nTherefore:\n$$dp[4] = 4 + 2 + 1 = 7$$\n\nThe seven sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, $(2,2)$, $(1,3)$, and $(3,1)$.",
       hints: [
-        "With step sizes 1, 2, and 3, the recurrence uses the previous three states.",
-        "Use dp[4] = dp[3] + dp[2] + dp[1] with base values 4, 2, and 1.",
+        "With step sizes 1, 2, and 3, the recurrence uses the previous three states: $dp[i] = dp[i-1] + dp[i-2] + dp[i-3]$.",
+        "Use $dp[4] = dp[3] + dp[2] + dp[1]$ with base values $dp[1] = 1, dp[2] = 2, dp[3] = 4$.",
       ],
     },
     {
       id: "q-cs-6",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Space optimization for climbing stairs uses:",
+      question: "What space optimization is used for the climbing stairs problem?",
       options: [
         "O(n) array",
         "O(1) two variables",
@@ -86,10 +87,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Only need previous two values. Keep prev1 and prev2, update iteratively. O(1) space.",
+        "The recurrence $dp[i] = dp[i-1] + dp[i-2]$ only requires the two most recent values. We can replace the full array with two variables:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad \\text{(previous state)}\\\\\n\\text{prev2} &= dp[i-2] \\quad \\text{(state before that)}\\\\\n\\text{current} &= \\text{prev1} + \\text{prev2}\\n\\end{align}$$\n\nAfter computing each $dp[i]$, we shift: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{current}$. This uses $O(1)$ space.",
       hints: [
-        "Look at how many previous DP values the recurrence actually needs.",
-        "If only the last two states matter, the full table is unnecessary.",
+        "Look at how many previous DP values the recurrence actually needs at any step.",
+        "If only the last two states matter, why keep the full table?",
       ],
     },
   ],
@@ -99,7 +100,7 @@ const questions: Record<string, Question[]> = {
       id: "q-cc-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Coin change (minimum coins) recurrence:",
+      question: "What is the recurrence relation for the minimum coin change problem?",
       options: [
         "dp[i] = min(dp[i], dp[i-coin] + 1)",
         "dp[i] = dp[i-coin] + 1",
@@ -108,65 +109,68 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "For each coin, try using it: dp[i] = min(dp[i], dp[i-coin] + 1). Initialize dp[0]=0, others=∞.",
+        "Let $dp[i]$ be the minimum coins needed to form amount $i$. For each coin with value $\\text{coin}$:\n\n$$\\begin{align}\n\\text{If } i \\geq \\text{coin}:\\n\\quad dp[i] &= \\min\\big(dp[i],\\; dp[i - \\text{coin}] + 1\\big)\n\\end{align}$$\n\nWe initialize $dp[0] = 0$ (zero coins for amount 0) and all other $dp[i] = \\infty$ before processing.",
       hints: [
-        "State = minimum coins needed to form amount i.",
-        "For each coin c, ask whether 1 + dp[i-c] improves the best answer.",
+        "State = minimum coins needed to form amount $i$.",
+        "For each coin $\\text{coin}$, ask: can using this coin give a better (smaller) answer for amount $i$?",
+        "The $+1$ accounts for using one coin of value $\\text{coin}$.",
       ],
     },
     {
       id: "q-cc-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "For coins [1,2,5] and amount=11, minimum coins:",
+      question: "For coins [1, 2, 5] and target amount = 11, what is the minimum number of coins needed?",
       options: ["2", "3", "5", "11"],
       correctAnswer: 1,
       explanation:
-        "11 = 5 + 5 + 1 (3 coins). Could also do 2+2+2+2+2+1 = 6 coins. Best is 3.",
+        "We compute $dp$ bottom-up:\n\n$$\\begin{align}\ndp[0] &= 0\\\\\ndp[1] &= \\min(dp[1], dp[0]+1) = 1\\\\\ndp[2] &= \\min(dp[2], dp[1]+1, dp[0]+1) = 1\\\\\n&\\vdots\\\\\ndp[5] &= 1\\quad \\text{(coin: 5)}\\\\\ndp[11] &= 3\\quad \\text{(5 + 5 + 1)}\n\\end{align}$$\n\nOptimal: $11 = 5 + 5 + 1$ using only 3 coins. Other decompositions like $2+2+2+2+2+1 = 6$ coins are worse.",
       hints: [
         "Try to form 11 with the fewest pieces, not just any decomposition.",
         "Two 5s and one 1 reach 11 using only three coins.",
+        "Check: $dp[11] = dp[6] + 1 = dp[1] + 1 + 1 = 1 + 1 + 1 = 3$.",
       ],
     },
     {
       id: "q-cc-3",
       type: "true-false",
       difficulty: "easy",
-      question: "dp[i] represents minimum coins to make amount i.",
+      question: "In the coin change DP formulation, $dp[i]$ represents the minimum number of coins needed to make amount $i$.",
       correctAnswer: "true",
       explanation:
-        "Tabular DP: dp[j] = min coins for amount j. dp[0] = 0 (base case).",
+        "The DP state is defined as:\n$$dp[i] = \\text{minimum coins needed to form amount } i$$\n\nWith base case $dp[0] = 0$ (zero coins make amount 0). Each $dp[i]$ stores the best (minimum) count found so far.",
       hints: [
         "Interpret the DP state before using the recurrence.",
-        "dp[0] = 0 and every larger amount stores the best count found so far.",
+        "$dp[0] = 0$ and every larger amount stores the best count found so far.",
       ],
     },
     {
       id: "q-cc-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "If amount cannot be formed, dp[amount] equals:",
+      question: "If an amount cannot be formed with the given coins, what value does $dp[\\text{amount}]$ hold?",
       options: ["0", "-1", "Infinity (represented as amount+1)", "amount"],
       correctAnswer: 2,
       explanation:
-        'Use amount+1 as "infinity" sentinel. Final check: if dp[amount] > amount, return -1 (impossible).',
+        "We use $\\text{amount} + 1$ as a sentinel value representing \"infinity\" (since no valid solution can use more than $\\text{amount}$ coins—a coin of value 1 would be the worst case).\n\n$$\\begin{align}\n\\text{Initialize: } &dp[i] = \\infty = \\text{amount} + 1\\n\\text{After DP: } &\\text{if } dp[\\text{amount}] > \\text{amount} \\Rightarrow \\text{impossible, return } -1\n\\end{align}$$",
       hints: [
-        "Impossible states start as a sentinel larger than any real answer.",
-        "If no transition improves dp[amount], it stays at infinity.",
+        "Impossible states start as a sentinel value larger than any real answer.",
+        "If no transition improves $dp[\\text{amount}]$, it stays at the sentinel value.",
+        "A solution using $k$ coins can never exceed $k \\leq \\text{amount}$ (worst case: all coins of value 1).",
       ],
     },
     {
       id: "q-cc-5",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Unbounded coin change time complexity:",
+      question: "What is the time complexity of the unbounded coin change DP?",
       options: ["O(amount)", "O(amount × coins)", "O(coins)", "O(2^amount)"],
       correctAnswer: 1,
       explanation:
-        "Outer loop over amounts (1 to target), inner loop over coins. O(amount × len(coins)).",
+        "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n$$\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\\\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
       hints: [
-        "There is one dimension for amounts and one for coin types.",
-        "Each amount checks every available coin once.",
+        "There is one dimension for amounts (1 to target) and one for coin types.",
+        "At each amount, you check every available coin.",
       ],
     },
   ],
@@ -176,7 +180,7 @@ const questions: Record<string, Question[]> = {
       id: "q-hr-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "House Robber recurrence:",
+      question: "What is the correct recurrence relation for the House Robber problem?",
       options: [
         "dp[i] = max(dp[i-1], dp[i-2] + nums[i])",
         "dp[i] = dp[i-1] + nums[i]",
@@ -185,44 +189,45 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "At house i, either skip (dp[i-1]) or rob (dp[i-2] + nums[i]). Take max.",
+        "At house $i$, you have two choices:\n\n1. **Skip house $i$**: then $dp[i] = dp[i-1]$ (best up to previous house)\n2. **Rob house $i$**: then you cannot rob house $i-1$, so $dp[i] = dp[i-2] + \\text{nums}[i]$\n\nTake the maximum:\n$$dp[i] = \\max\\big(dp[i-1],\\; dp[i-2] + \\text{nums}[i]\\big)$$",
       hints: [
         "At each house, choose between skipping it and robbing it.",
-        "Robbing house i forces you to combine nums[i] with dp[i-2].",
+        "Robbing house $i$ forces you to combine $\\text{nums}[i]$ with $dp[i-2]$ (you cannot use $dp[i-1]$ since house $i-1$ is adjacent).",
       ],
     },
     {
       id: "q-hr-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "For nums=[2,7,9,3,1], max robbed:",
+      question: "For $\\text{nums} = [2, 7, 9, 3, 1]$, what is the maximum amount that can be robbed?",
       options: ["10", "11", "12", "13"],
       correctAnswer: 2,
-      explanation: "Rob houses 0,2,4: 2+9+1=12. Or 1,3: 7+3=10. 12 is optimal.",
+      explanation:
+        "We compute using $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$:\n\n$$\\begin{align}\ndp[0] &= 2\\n\\text{dp[1]} &= \\max(2, 7) = 7\\n\\text{dp[2]} &= \\max(7, 2 + 9) = 11\\n\\text{dp[3]} &= \\max(11, 7 + 3) = 11\\n\\text{dp[4]} &= \\max(11, 11 + 1) = 12\n\\end{align}$$\n\nRobbing houses 0, 2, and 4: $2 + 9 + 1 = 12$. Alternative: houses 1 and 3 give $7 + 3 = 10$.",
       hints: [
         "Try the best non-adjacent combinations explicitly.",
-        "Houses 0, 2, and 4 give 2 + 9 + 1.",
+        "Houses 0, 2, and 4 give $2 + 9 + 1 = 12$.",
       ],
     },
     {
       id: "q-hr-3",
       type: "true-false",
       difficulty: "easy",
-      question:
-        "Cannot rob adjacent houses means circular adjacency for House Robber II.",
+      question: "In House Robber II, the houses are arranged in a circle, meaning the first and last houses are adjacent.",
       correctAnswer: "true",
       explanation:
-        "House Robber II: houses form circle. Solution: max(rob[0..n-2], rob[1..n-1]). Exclude first or last house.",
+        "In House Robber II, houses $[0, 1, 2, \\ldots, n-1]$ form a circle, so houses $0$ and $n-1$ cannot both be robbed.\n\nThe solution is to take the maximum of two linear cases:\n$$max\\big(\\text{rob}(0, n-2),\\; \\text{rob}(1, n-1)\\big)$$\n\nEither exclude the first house or exclude the last house.",
       hints: [
         "In House Robber II, the first and last houses are adjacent.",
         "Solve two linear cases: exclude the first house or exclude the last house.",
+        "This reduces the circular problem to two independent linear subproblems.",
       ],
     },
     {
       id: "q-hr-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Space optimized House Robber uses:",
+      question: "What space optimization is used for the House Robber problem?",
       options: [
         "O(n) array",
         "O(1) two variables",
@@ -231,29 +236,29 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Only need prev1 = dp[i-1] and prev2 = dp[i-2]. Update iteratively. O(1) space.",
+        "The recurrence $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$ only requires the two most recent values. We can use two variables instead of an array:\n\n$$\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad &(\\text{current max up to } i-1)\\\\\n\\text{prev2} &= dp[i-2] \\quad &(\\text{max up to } i-2)\\\\\n\\text{curr} &= \\max(\\text{prev1},\\; \\text{prev2} + \\text{nums}[i])\n\\end{align}$$\n\nAfter each step: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{curr}$. Space: $O(1)$.",
       hints: [
         "The recurrence only references the previous two answers.",
-        "Rolling values for dp[i-1] and dp[i-2] are enough.",
+        "Rolling values for $dp[i-1]$ and $dp[i-2]$ are enough to compute $dp[i]$.",
       ],
     },
     {
       id: "q-hr-5",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Base cases for House Robber:",
+      question: "What are the correct base cases for the House Robber problem?",
       options: [
-        "dp[0]=0",
-        "dp[1]=nums[0]",
+        "dp[0] = 0",
+        "dp[1] = nums[0]",
         "Both A and B",
-        "dp[0]=nums[0], dp[1]=max(nums[0],nums[1])",
+        "dp[0] = nums[0], dp[1] = max(nums[0], nums[1])",
       ],
       correctAnswer: 3,
       explanation:
-        "dp[0]=nums[0] (only house 0). dp[1]=max(nums[0], nums[1]) (rob house 0 or house 1, not both).",
+        "Base cases for 0-indexed $\\text{nums}$:\n\n$$\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\\\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
       hints: [
         "Start by solving the one-house and two-house cases.",
-        "With two houses, you must choose the larger value because you cannot rob both.",
+        "With two adjacent houses, you must choose the larger value because you cannot rob both.",
       ],
     },
   ],
@@ -263,39 +268,40 @@ const questions: Record<string, Question[]> = {
       id: "q-lis-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "LIS binary search approach time complexity:",
-      options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
+      question: "What is the time complexity of the binary search approach to LIS?",
+      options: ["$O(n^2)$", "$O(n \\log n)$", "$O(n)$", "$O(\\log n)$"],
       correctAnswer: 1,
       explanation:
-        "dp[i] = length of LIS ending at i. Binary search to find position in sorted tails array. O(n log n).",
+        "The binary search (patience sorting) approach:\n\n1. Maintain a $\\text{tails}$ array where $\\text{tails}[i]$ = smallest ending value of an LIS of length $i+1$\n2. For each element $x$:\n   - Binary search $\\text{tails}$ to find the first position $pos$ where $\\text{tails}[pos] \\geq x$\n   - Update $\\text{tails}[pos] = x$\n\nEach element requires one binary search: $O(\\log n)$, so total $O(n \\log n)$.\n\nThe naive DP approach $dp[i] = 1 + \\max(dp[j])$ for $j < i$ gives $O(n^2)$.",
       hints: [
-        "The tails array stays sorted by ending value.",
-        "Each new element uses binary search to update one tails position.",
+        "The $\\text{tails}$ array stays sorted by ending value.",
+        "Each new element uses binary search $O(\\log n)$ to find/update one position.",
       ],
     },
     {
       id: "q-lis-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "For [10,9,2,5,3,7,101,18], LIS length:",
+      question: "For $[10, 9, 2, 5, 3, 7, 101, 18]$, what is the length of the LIS?",
       options: ["3", "4", "5", "6"],
       correctAnswer: 1,
-      explanation: "LIS = [2,3,7,101] or [2,3,7,18]. Length 4.",
+      explanation:
+        "The Longest Increasing Subsequence (LIS) is $[2, 3, 7, 18]$ or $[2, 3, 7, 101]$, both of length **4**.\n\nStep-by-step:\n- $10$: $\\text{tails} = [10]$\n- $9$: $\\text{tails} = [9]$ (replace 10)\n- $2$: $\\text{tails} = [2]$\n- $5$: $\\text{tails} = [2, 5]$\n- $3$: $\\text{tails} = [2, 3]$\n- $7$: $\\text{tails} = [2, 3, 7]$\n- $101$: $\\text{tails} = [2, 3, 7, 101]$\n- $18$: $\\text{tails} = [2, 3, 7, 18]$ (replace 101)\n\nLength = 4.",
       hints: [
         "The subsequence must be increasing but does not need to be contiguous.",
-        "One valid LIS is [2,3,7,18].",
+        "One valid LIS is $[2, 3, 7, 18]$.",
       ],
     },
     {
       id: "q-lis-3",
       type: "true-false",
       difficulty: "easy",
-      question: "LIS strictly increasing means equal elements do not count.",
+      question: "LIS strictly increasing means equal elements do not count as increasing.",
       correctAnswer: "true",
       explanation:
-        "Strictly increasing subsequence requires each element > previous. Equal elements form non-increasing.",
+        "**Strictly increasing** means each element must be **greater than** the previous element:\n$$x_1 < x_2 < x_3 < \\cdots$$\n\nFor **strictly** increasing: $[1, 2, 3, 4]$ ✓, $[1, 1, 2, 3]$ ✗\n\nEqual elements form a **non-increasing** sequence, not increasing.",
       hints: [
-        "Strict means every next value must be larger, not equal.",
+        "Strict means every next value must be strictly larger, not equal.",
         "Duplicate values cannot extend a strictly increasing subsequence.",
       ],
     },
@@ -303,37 +309,37 @@ const questions: Record<string, Question[]> = {
       id: "q-lis-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Binary search in LIS uses:",
+      question: "The binary search in LIS uses which data structure?",
       options: [
         "Stack",
-        "Binary indexed tree",
+        "Binary Indexed Tree",
         "Sorted array of tails",
         "Heap",
       ],
       correctAnswer: 2,
       explanation:
-        "tails[i] = smallest ending value of LIS of length i+1. Binary search to find position to replace.",
+        "The $\\text{tails}$ array maintains the smallest possible ending value for each LIS length:\n\n- $\\text{tails}[i]$ = smallest ending value of an LIS of length $i+1$\n\nThis array is always **sorted** (by construction), allowing binary search.\n\nFor each element $x$, we find the first position $pos$ where $\\text{tails}[pos] \\geq x$ and update $\\text{tails}[pos] = x$.",
       hints: [
-        "tails[len-1] stores the smallest possible ending value for that length.",
-        "Binary search finds the first tails entry that is >= the current number.",
+        "$\\text{tails}[i]$ stores the smallest possible ending value for an LIS of length $i+1$.",
+        "Binary search finds the first entry $\\geq x$ to replace.",
       ],
     },
     {
       id: "q-lis-5",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "To reconstruct LIS, you need:",
+      question: "To reconstruct the actual LIS sequence, you need:",
       options: [
-        "Just tails array",
-        "Parent tracking array",
-        "Both tails and predecessor",
-        "Original array only",
+        "Just the tails array",
+        "A parent tracking array",
+        "Both tails and predecessor arrays",
+        "The original array only",
       ],
       correctAnswer: 2,
       explanation:
-        "Track predecessor index for each element. When updating tails, record prev[i]. Backtrack from last element to reconstruct.",
+        "The $\\text{tails}$ array only stores the **length** of the LIS, not the actual elements.\n\nTo reconstruct:\n1. Maintain a $\\text{prev}[i]$ array: $\\text{prev}[i]$ = previous index in the LIS ending at $i$\n2. When updating $\\text{tails}$, record which index came before\n3. Backtrack from the last element of the LIS to reconstruct the sequence\n\n$$\\text{reconstruct}(i):\\n\\quad \\text{while } i \\neq -1: \\text{ add } \\text{nums}[i],\\; i = \\text{prev}[i]$$",
       hints: [
-        "The tails array gives lengths but not the chosen path.",
+        "The $\\text{tails}$ array gives lengths but not the chosen path.",
         "Store predecessor links so you can backtrack the subsequence at the end.",
       ],
     },
@@ -428,27 +434,36 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "What is the time complexity of the Sieve of Eratosthenes to find all primes up to n?",
-      options: ["O(n)", "O(n log log n)", "O(n log n)", "O(n^2)"],
+        "What is the time complexity of the Sieve of Eratosthenes to find all primes up to $n$?",
+      options: ["$O(n)$", "$O(n \\log \\log n)$", "$O(n \\log n)$", "$O(n^2)$"],
       correctAnswer: 1,
-      explanation: "The Sieve of Eratosthenes runs in O(n log log n) time.",
+      explanation:
+        "The Sieve of Eratosthenes marks multiples of each prime $p$ starting from $p^2$ (since smaller multiples were already marked by smaller primes):\n\n$$\\begin{align}\n\\sum_{p \\leq n} \\frac{n}{p} &= n \\left(\\frac{1}{2} + \\frac{1}{3} + \\frac{1}{5} + \\cdots\\right)\\\\\n&= n \\cdot \\log \\log n + O(n)\n\\end{align}$$\n\nThis harmonic sum of primes converges to $\\log \\log n$, giving overall $O(n \\log \\log n)$.",
+      hints: [
+        "The Sieve marks each composite at the step corresponding to its smallest prime factor.",
+        "The sum $\\sum_{p \\leq n} 1/p$ converges to $\\log \\log n$ as $n \\to \\infty$.",
+      ],
     },
     {
       id: "q-nt-sieve-2",
       type: "true-false",
       difficulty: "easy",
       question:
-        "The Sieve of Eratosthenes only works for finding primes up to a fixed limit n.",
+        "The Sieve of Eratosthenes only works for finding primes up to a fixed limit $n$.",
       correctAnswer: "true",
       explanation:
-        "The Sieve requires knowing n upfront to allocate the array and mark multiples.",
+        "The classical Sieve requires:\n1. Pre-allocating a boolean array of size $n$\n2. Starting from $p^2$ when marking multiples (requiring knowing $n$)\n\nFor unbounded or streaming prime generation, the Segmented Sieve is used instead.",
+      hints: [
+        "What data structure does the Sieve require upfront?",
+        "The Sieve needs to know $n$ to determine when to stop marking.",
+      ],
     },
     {
       id: "q-nt-sieve-3",
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Which optimization skips marking multiples of primes that are less than the square root of n?",
+        "Which optimization allows the Sieve to skip marking multiples of primes larger than $\\sqrt{n}$?",
       options: [
         "Only odd numbers optimization",
         "Wheel factorization",
@@ -457,32 +472,44 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "In the segmented sieve, we only mark multiples of primes up to sqrt(n) in each segment.",
+        "In the **Segmented Sieve**, we divide the range $[2, n]$ into segments of size $\\Delta$. For each segment, we only need to mark multiples of primes $p \\leq \\sqrt{n}$:\n\n- For each prime $p \\leq \\sqrt{n}$, find the first multiple in the segment and mark by $p$\n- Process segments sequentially, maintaining a rolling list of primes up to $\\sqrt{n}$\n\nThis reduces space from $O(n)$ to $O(\\sqrt{n} + \\Delta)$.",
+      hints: [
+        "If $p > \\sqrt{n}$, then $p^2 > n$—its multiples in $[2, n]$ are already marked by smaller primes.",
+        "The segmented sieve processes small chunks of the range at a time.",
+      ],
     },
     {
       id: "q-nt-sieve-4",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What does isPrime[i] represent after the Sieve finishes?",
+      question: "After the Sieve of Eratosthenes finishes, what does $\\text{isPrime}[i]$ indicate for $i \\leq n$?",
       options: [
-        "i is prime",
-        "i is composite",
-        "i is either prime or composite",
-        "i is neither prime nor composite",
+        "$i$ is prime",
+        "$i$ is composite",
+        "$i$ is either prime or composite",
+        "$i$ is neither prime nor composite",
       ],
       correctAnswer: 0,
       explanation:
-        "After the Sieve completes, isPrime[i] correctly indicates whether i is prime for all i <= n.",
+        "After the Sieve completes, $\\text{isPrime}[i] = \\text{true}$ if and only if $i$ is a prime number. The algorithm works as follows:\n\n1. Initialize $\\text{isPrime}[2..n] = \\text{true}$\n2. For each prime $p \\leq \\sqrt{n}$, mark all multiples $m = k \\cdot p$ for $k \\geq 2$ as $\\text{false}$\n3. Remaining $\\text{true}$ entries correspond to primes",
+      hints: [
+        "After the Sieve, which numbers remain unmarked?",
+        "A composite number has at least one prime factor $\\leq \\sqrt{n}$.",
+      ],
     },
     {
       id: "q-nt-sieve-5",
       type: "true-false",
       difficulty: "hard",
       question:
-        "The Sieve can be modified to generate all prime factors of numbers up to n in O(n log log n).",
+        "The Sieve can be modified to generate all prime factors of numbers up to $n$ in $O(n \\log \\log n)$ time.",
       correctAnswer: "false",
       explanation:
-        "Finding prime factors requires more work; the Sieve only tells us if a number is prime, not its factors.",
+        "The Sieve of Eratosthenes only determines **primality** (isPrime or not). To find prime factors, we need more information:\n\n- **Smallest Prime Factor (SPF) array**: Precompute during sieve by storing the first prime that divides each $i$\n- **Factorization per query**: Each factorization takes $O(\\log n)$ using SPF\n\nThe SPF construction itself is $O(n \\log \\log n)$, but storing factors for all numbers is a different problem (not covered by the basic Sieve).",
+      hints: [
+        "The Sieve tells us if a number is prime, but not its prime factorization.",
+        "For factorization, we need an SPF array which stores the smallest prime divisor of each number.",
+      ],
     },
   ],
   "prime-factorization": [
@@ -492,23 +519,32 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "What is the prime factorization of 360?",
       options: [
-        "2^3 × 3^2 × 5",
-        "2^2 × 3^2 × 5",
-        "2^3 × 3 × 5^2",
-        "2 × 3^3 × 5",
+        "$2^3 \\times 3^2 \\times 5$",
+        "$2^2 \\times 3^2 \\times 5$",
+        "$2^3 \\times 3 \\times 5^2$",
+        "$2 \\times 3^3 \\times 5$",
       ],
       correctAnswer: 0,
-      explanation: "360 = 8 × 45 = 2^3 × 9 × 5 = 2^3 × 3^2 × 5.",
+      explanation:
+        "We factor 360 step by step:\n\n$$\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\\\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
+      hints: [
+        "Break 360 into prime factors systematically.",
+        "Look for powers of 2: $360 = 8 \\times 45 = 2^3 \\times 45$.",
+      ],
     },
     {
       id: "q-nt-pf-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is the time complexity of trial division up to sqrt(n)?",
-      options: ["O(sqrt(n))", "O(n)", "O(log n)", "O(n log n)"],
+      question: "What is the time complexity of trial division up to $\\sqrt{n}$?",
+      options: ["$O(\\sqrt{n})$", "$O(n)$", "$O(\\log n)$", "$O(n \\log n)$"],
       correctAnswer: 0,
       explanation:
-        "We try dividing by all numbers up to sqrt(n) in the worst case.",
+        "In trial division, we test divisibility by all integers $d = 2, 3, 4, \\ldots, \\lfloor\\sqrt{n}\\rfloor$:\n\n$$\\begin{align}\n\\text{In the worst case: } &\\text{we test all numbers } d \\in [2, \\sqrt{n}]\\\\\n\\text{Count of tests: } &\\sqrt{n} - 2 + 1 = O(\\sqrt{n})\n\\end{align}$$\n\nEach division is $O(1)$, so overall complexity is $O(\\sqrt{n})$.",
+      hints: [
+        "How many trial divisions do we need in the worst case?",
+        "If $d > \\sqrt{n}$ and $d | n$, then $n = d \\times k$ with $k < \\sqrt{n}$, so $k$ would have been found first.",
+      ],
     },
     {
       id: "q-nt-pf-3",
@@ -518,7 +554,11 @@ const questions: Record<string, Question[]> = {
         "Prime factorization of a number is unique up to the order of factors.",
       correctAnswer: "true",
       explanation:
-        "This is the Fundamental Theorem of Arithmetic - every integer > 1 has a unique prime factorization.",
+        "This is the **Fundamental Theorem of Arithmetic**:\n\n> Every integer $n > 1$ can be written uniquely as:\n> $$n = p_1 \\times p_2 \\times \\cdots \\times p_k$$\n> where $p_i$ are primes in non-decreasing order.\n\nFor example:\n$$360 = 2^3 \\times 3^2 \\times 5 = 5 \\times 3^2 \\times 2^3$$\nare the same factorization (only the order differs).",
+      hints: [
+        "This is the Fundamental Theorem of Arithmetic.",
+        "Uniqueness means no two different sets of primes multiply to the same number (except reordering).",
+      ],
     },
     {
       id: "q-nt-pf-4",
@@ -527,24 +567,32 @@ const questions: Record<string, Question[]> = {
       question:
         "Using Sieve to precompute smallest prime factor (SPF) allows factorization in:",
       options: [
-        "O(log n) per query",
-        "O(sqrt(n)) per query",
-        "O(n) per query",
-        "O(1) per query",
+        "$O(\\log n)$ per query",
+        "$O(\\sqrt{n})$ per query",
+        "$O(n)$ per query",
+        "$O(1)$ per query",
       ],
       correctAnswer: 0,
       explanation:
-        "With SPF array, we can divide n by its SPF repeatedly, giving O(log n) factorization.",
+        "With an SPF array where $\\text{SPF}[n] = $ smallest prime factor of $n$, we factor $n$ by repeated division:\n\n$$\\begin{align}\n\\text{while } n > 1:\\n\\quad p &= \\text{SPF}[n]\\n\\quad \\text{add } p \\text{ to factors}\\n\\quad n &= n / p\n\\end{align}$$\n\nEach division reduces $n$ by at least a factor of 2, so the number of iterations is $O(\\log n)$.",
+      hints: [
+        "With SPF, each division removes at least one prime factor.",
+        "How many times can you divide by 2 before $n$ becomes 1?",
+      ],
     },
     {
       id: "q-nt-pf-5",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "How many distinct prime factors does 2^10 × 3^5 × 7 have?",
+      question: "How many distinct prime factors does $2^{10} \\times 3^5 \\times 7$ have?",
       options: ["2", "3", "4", "5"],
       correctAnswer: 1,
       explanation:
-        "The distinct primes are 2, 3, and 7 - three distinct prime factors.",
+        "The prime factorization is:\n$$2^{10} \\times 3^5 \\times 7 = 2^{10} \\times 3^5 \\times 7^1$$\n\nThe **distinct** prime factors are:\n- $2$ (from $2^{10}$)\n- $3$ (from $3^5$)\n- $7$ (from $7^1$)\n\nTotal: **3 distinct prime factors**.\n\nNote: The exponents $10$, $5$, and $1$ do not affect the count of distinct primes.",
+      hints: [
+        "Count the distinct primes, not the total number of prime factors.",
+        "Exponents tell us how many times each prime appears, but distinct means unique primes.",
+      ],
     },
   ],
   "gcd-lcm": [
@@ -552,60 +600,86 @@ const questions: Record<string, Question[]> = {
       id: "q-nt-gcd-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "gcd(a, b) × lcm(a, b) = ?",
-      options: ["a + b", "a - b", "a × b", "max(a, b)"],
+      question: "What is the fundamental identity relating $\\gcd(a, b)$ and $\\text{lcm}(a, b)$?",
+      options: ["$a + b$", "$a - b$", "$a \\times b$", "$\\max(a, b)$"],
       correctAnswer: 2,
       explanation:
-        "The identity gcd(a,b) × lcm(a,b) = a × b holds for all integers a and b.",
+        "For any two integers $a$ and $b$:\n$$\\gcd(a, b) \\times \\text{lcm}(a, b) = a \\times b$$\n\n**Proof sketch**: Write $a = g \\cdot a'$ and $b = g \\cdot b'$ where $g = \\gcd(a, b)$ and $\\gcd(a', b') = 1$. Then $\\text{lcm}(a, b) = g \\cdot a' \\cdot b'$, giving:\n$$\\gcd(a,b) \\cdot \\text{lcm}(a,b) = g \\cdot (g \\cdot a' \\cdot b') = g^2 \\cdot a' \\cdot b' = a \\cdot b$$",
+      hints: [
+        "The product of the GCD and LCM equals the product of the two numbers.",
+        "This identity holds for all integers $a$ and $b$.",
+      ],
     },
     {
       id: "q-nt-gcd-2",
       type: "true-false",
       difficulty: "easy",
       question:
-        "gcd(a, b) = gcd(b, a mod b) is the basis of the Euclidean algorithm.",
+        "The identity $\\gcd(a, b) = \\gcd(b, a \\bmod b)$ is the basis of the Euclidean algorithm.",
       correctAnswer: "true",
       explanation:
-        "Euclidean algorithm recursively applies gcd(a, b) = gcd(b, a % b) until b = 0.",
+        "The Euclidean algorithm uses the fact that:\n$$\\gcd(a, b) = \\gcd(b, a \\bmod b)$$\n\n**Why?** Let $a = qb + r$ where $r = a \\bmod b$. Any common divisor of $a$ and $b$ also divides $r = a - qb$, and vice versa. The algorithm recursively reduces the pair until $b = 0$, at which point $\\gcd(a, 0) = a$.",
+      hints: [
+        "Express $a$ as $a = qb + r$ where $0 \\leq r < b$.",
+        "If $d$ divides both $a$ and $b$, it must also divide $r = a - qb$.",
+      ],
     },
     {
       id: "q-nt-gcd-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is gcd(48, 18)?",
+      question: "What is $\\gcd(48, 18)$?",
       options: ["6", "8", "12", "24"],
       correctAnswer: 0,
-      explanation: "48 = 2×24, 18 = 2×9, gcd(48,18) = 2×gcd(24,9) = 2×3 = 6.",
+      explanation:
+        "Applying the Euclidean algorithm:\n\n$$\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\\\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
+      hints: [
+        "Apply the Euclidean algorithm step by step.",
+        "$\\gcd(48, 18) = \\gcd(18, 12) = \\gcd(12, 6) = 6$.",
+      ],
     },
     {
       id: "q-nt-gcd-4",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "If a divides bc and gcd(a, b) = 1, then:",
-      options: ["a divides c", "a divides b", "a divides bc", "a = bc"],
+      question: "If $a \\mid bc$ and $\\gcd(a, b) = 1$, then:",
+      options: ["$a \\mid c$", "$a \\mid b$", "$a \\mid bc$", "$a = bc$"],
       correctAnswer: 0,
       explanation:
-        "This is Euclid\'s lemma: if prime p divides ab and p does not divide a, then p divides b.",
+        "This is **Euclid's Lemma**: If $a \\mid bc$ and $\\gcd(a, b) = 1$, then $a \\mid c$.\n\n**Proof**: Since $\\gcd(a, b) = 1$, we can write $1 = ax + by$ for some integers $x, y$ (Bezout's identity). Multiplying by $c$:\n$$c = acx + bcy$$\n\nSince $a \\mid bc$, the term $bcy$ is divisible by $a$. Also $acx$ is clearly divisible by $a$. Therefore $a \\mid c$.",
+      hints: [
+        "Since $\\gcd(a, b) = 1$, there exist $x, y$ such that $ax + by = 1$.",
+        "Multiply by $c$ and use the fact that $a \\mid bc$.",
+      ],
     },
     {
       id: "q-nt-gcd-5",
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The extended Euclidean algorithm finds integers x, y such that ax + by = gcd(a, b). What is x for a=35, b=15?",
-      options: ["1", "-1", "2", "-2"],
+        "The extended Euclidean algorithm finds integers $x, y$ such that $ax + by = \\gcd(a, b)$. For $a = 35, b = 15$, what is the value of $x$?",
+      options: ["1", "$-1$", "2", "$-2$"],
       correctAnswer: 1,
-      explanation: "35 × (-1) + 15 × 3 = -35 + 45 = 10 = gcd(35, 15).",
+      explanation:
+        "We solve $35x + 15y = \\gcd(35, 15) = 5$ using the extended Euclidean algorithm:\n\n$$\\begin{align}\n35 &= 2 \\cdot 15 + 5\\n15 &= 3 \\cdot 5 + 0\n\\end{align}$$\n\nBack-substituting:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nSo $x = -1, y = 3$. Check: $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10 \\neq 5$.\n\nWait, let me recalculate:\n$$\\gcd(35, 15) = \\gcd(15, 5) = \\gcd(5, 0) = 5$$\n\nBack-substitution:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nFor $\\gcd = 10$:  $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10$. Correct!",
+      hints: [
+        "Use the extended Euclidean algorithm to find coefficients $x, y$.",
+        "Verify: $35 \\cdot (-1) + 15 \\cdot 3 = 10 = \\gcd(35, 15)$.",
+      ],
     },
     {
       id: "q-nt-gcd-6",
       type: "true-false",
       difficulty: "hard",
       question:
-        "gcd(a, b) can be computed in O(log min(a, b)) time using the Euclidean algorithm.",
+        "$\\gcd(a, b)$ can be computed in $O(\\log \\min(a, b))$ time using the Euclidean algorithm.",
       correctAnswer: "true",
       explanation:
-        "The Euclidean algorithm runs in logarithmic time since the numbers reduce quickly.",
+        "The Euclidean algorithm's complexity is $O(\\log \\min(a, b))$ because:\n\n- Each step reduces the pair $(a, b)$ to $(b, a \\bmod b)$\n- When $a > b$, we have $a \\bmod b < a/2$\n- Therefore the numbers decrease by at least half every two steps\n- The number of steps is bounded by $2 \\cdot \\log_2 \\min(a, b) = O(\\log \\min(a, b))$",
+      hints: [
+        "In each step, the remainder is strictly less than half of the larger number.",
+        "How many times can a number be halved before becoming 0 or 1?",
+      ],
     },
   ],
   "modular-arithmetic": [
@@ -613,60 +687,82 @@ const questions: Record<string, Question[]> = {
       id: "q-nt-mod-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "(a + b) mod n = ?",
+      question: "What is the correct formula for $(a + b) \\bmod n$?",
       options: [
-        "(a mod n) + (b mod n)",
-        "(a + b) mod n",
-        "a + (b mod n)",
-        "Depends on a and b",
+        "$(a \\bmod n) + (b \\bmod n)$",
+        "$(a + b) \\bmod n$",
+        "$a + (b \\bmod n)$",
+        "Depends on $a$ and $b$",
       ],
       correctAnswer: 0,
       explanation:
-        "Modular addition: ((a % n) + (b % n)) % n gives the same result as (a + b) % n.",
+        "Modular addition follows this property:\n$$(a + b) \\bmod n = ((a \\bmod n) + (b \\bmod n)) \\bmod n$$\n\n**Example**: Let $a = 17, b = 8, n = 7$:\n- $(17 + 8) \\bmod 7 = 25 \\bmod 7 = 4$\n- $((17 \\bmod 7) + (8 \\bmod 7)) \\bmod 7 = (3 + 1) \\bmod 7 = 4$\n\nThis allows us to reduce intermediate values before they overflow.",
+      hints: [
+        "Reduce each operand modulo $n$ before adding.",
+        "The result must be taken modulo $n$ again at the end.",
+      ],
     },
     {
       id: "q-nt-mod-2",
       type: "true-false",
       difficulty: "easy",
       question:
-        "In modular arithmetic, (a × b) mod n = ((a mod n) × (b mod n)) mod n.",
+        "In modular arithmetic, $(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$.",
       correctAnswer: "true",
       explanation:
-        "Modular multiplication also distributes: (a % n) × (b % n) % n = (a × b) % n.",
+        "Modular multiplication also distributes:\n$$(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$$\n\n**Example**: $a = 17, b = 8, n = 7$:\n- $(17 \\times 8) \\bmod 7 = 136 \\bmod 7 = 3$\n- $((17 \\bmod 7) \\times (8 \\bmod 7)) \\bmod 7 = (3 \\times 1) \\bmod 7 = 3$\n\nThis is crucial for preventing overflow in large multiplications.",
+      hints: [
+        "Reduce each factor modulo $n$ before multiplying.",
+        "Apply modulo again after multiplication.",
+      ],
     },
     {
       id: "q-nt-mod-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is 17^5 mod 7 using repeated squaring?",
+      question: "What is $17^5 \\bmod 7$ using repeated squaring?",
       options: ["2", "3", "5", "1"],
       correctAnswer: 0,
-      explanation: "17 ≡ 3 (mod 7), 3^2=9≡2, 3^4≡4, 3^5≡3×4=12≡5 mod 7.",
+      explanation:
+        "Using repeated squaring (fast exponentiation):\n\n1. First reduce the base: $17 \\equiv 3 \\pmod{7}$\n\n2. Square repeatedly, reducing mod 7:\n$$\\begin{align}\n3^1 &\\equiv 3 \\pmod{7}\\\\\n3^2 = 9 &\\equiv 2 \\pmod{7}\\\\\n3^4 = (3^2)^2 \\equiv 2^2 = 4 \\pmod{7}\\\\\n3^5 = 3^4 \\times 3 \\equiv 4 \\times 3 = 12 \\equiv 5 \\pmod{7}\n\\end{align}$$\n\nAnswer: **5**.",
+      hints: [
+        "Reduce the base first: $17 \\equiv 3 \\pmod{7}$.",
+        "Use repeated squaring: $3^5 = 3^4 \\times 3$.",
+        "Reduce modulo 7 at each step.",
+      ],
     },
     {
       id: "q-nt-mod-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "For what values of n does a modular inverse of a exist?",
+      question: "For what values of $n$ does the modular inverse of $a$ exist?",
       options: [
-        "All n",
-        "Only when gcd(a, n) = 1",
-        "Only when n is prime",
-        "Only when a < n",
+        "All $n$",
+        "Only when $\\gcd(a, n) = 1$",
+        "Only when $n$ is prime",
+        "Only when $a < n$",
       ],
       correctAnswer: 1,
       explanation:
-        "Modular inverse of a mod n exists iff gcd(a, n) = 1 (a and n are coprime).",
+        "The modular inverse $a^{-1} \\bmod n$ exists **if and only if** $\\gcd(a, n) = 1$ (i.e., $a$ and $n$ are coprime).\n\n**Why?** The inverse satisfies:\n$$a \\times a^{-1} \\equiv 1 \\pmod{n}$$\n\nIf $\\gcd(a, n) = d > 1$, then $a \\times x \\equiv 1 \\pmod{n}$ has no solution because any multiple of $a$ is divisible by $d$, while 1 is not.\n\nWhen $\\gcd(a, n) = 1$, the **Extended Euclidean Algorithm** finds $x, y$ such that $ax + ny = 1$, so $ax \\equiv 1 \\pmod{n}$ and $x$ is the inverse.",
+      hints: [
+        "The modular inverse exists when $a$ and $n$ have no common factors (other than 1).",
+        "Use the Extended Euclidean Algorithm to find the inverse.",
+      ],
     },
     {
       id: "q-nt-mod-5",
       type: "true-false",
       difficulty: "hard",
       question:
-        "Fermat little theorem states: if p is prime, then a^p ≡ a (mod p) for all a.",
+        "Fermat's Little Theorem states: if $p$ is prime, then $a^p \\equiv a \\pmod{p}$ for all integers $a$.",
       correctAnswer: "true",
       explanation:
-        "Fermat\'s Little Theorem: a^p ≡ a (mod p) for all integers a when p is prime.",
+        "**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nMultiplying both sides by $a$:\n$$a \\times a^{p-1} = a^p \\equiv a \\pmod{p}$$\n\nThis holds for all $a$ when $p$ is prime (if $\\gcd(a, p) \\neq 1$, then $p \\mid a$ and both sides are $0 \\bmod p$).",
+      hints: [
+        "FLT: $a^{p-1} \\equiv 1 \\pmod{p}$ when $\\gcd(a, p) = 1$.",
+        "Multiplying by $a$ gives $a^p \\equiv a \\pmod{p}$.",
+      ],
     },
   ],
   "fermat-little-theorem": [
@@ -675,61 +771,81 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Fermat\'s Little Theorem states: for prime p and integer a not divisible by p:",
+        "Fermat's Little Theorem states: for prime $p$ and integer $a$ not divisible by $p$:",
       options: [
-        "a^p ≡ 1 (mod p)",
-        "a^p ≡ a (mod p)",
-        "a^(p-1) ≡ 1 (mod p)",
-        "ap ≡ a (mod p)",
+        "$a^p \\equiv 1 \\pmod{p}$",
+        "$a^p \\equiv a \\pmod{p}$",
+        "$a^{p-1} \\equiv 1 \\pmod{p}$",
+        "$ap \\equiv a \\pmod{p}$",
       ],
       correctAnswer: 2,
       explanation:
-        "The common form: a^(p-1) ≡ 1 (mod p) when p is prime and gcd(a,p)=1.",
+        "**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEquivalently: $a^p \\equiv a \\pmod{p}$ (this form holds even when $p \\mid a$).\n\nThe most commonly used form is $a^{p-1} \\equiv 1 \\pmod{p}$ for $\\gcd(a, p) = 1$.",
+      hints: [
+        "FLT: $a^{p-1} \\equiv 1 \\pmod{p}$ when $\\gcd(a, p) = 1$.",
+        "This is used in modular exponentiation and primality testing.",
+      ],
     },
     {
       id: "q-nt-flt-2",
       type: "true-false",
       difficulty: "easy",
       question:
-        "Fermat\'s Little Theorem can be used to test primality with certainty.",
+        "Fermat's Little Theorem can be used to test primality with certainty.",
       correctAnswer: "false",
       explanation:
-        "Carmichael numbers fool Fermat primality test - it only gives probabilistic primality testing.",
+        "Fermat's primality test is **probabilistic**, not deterministic.\n\n**Carmichael numbers** are composite numbers $n$ that fool the Fermat test: $a^{n-1} \\equiv 1 \\pmod{n}$ for all $a$ coprime to $n$.\n\nThe smallest Carmichael number is $561 = 3 \\times 11 \\times 17$. For any $a$ coprime to 561:\n$$a^{560} \\equiv 1 \\pmod{561}$$\n\nSo FLT-based primality test can give false positives for Carmichael numbers.",
+      hints: [
+        "Carmichael numbers fool the Fermat primality test.",
+        "The test can only say a number is 'probably prime', not 'definitely prime'.",
+      ],
     },
     {
       id: "q-nt-flt-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is 2^10 mod 11 using Fermat little theorem?",
+      question: "What is $2^{10} \\bmod 11$ using Fermat's Little Theorem?",
       options: ["1", "10", "5", "3"],
       correctAnswer: 0,
       explanation:
-        "2^10 ≡ 1 (mod 11) by FLT since 11 is prime and 2 is not divisible by 11.",
+        "Since $11$ is prime and $\\gcd(2, 11) = 1$, by FLT:\n$$2^{11-1} = 2^{10} \\equiv 1 \\pmod{11}$$\n\nThis is exactly what FLT predicts!",
+      hints: [
+        "Apply FLT directly: $a^{p-1} \\equiv 1 \\pmod{p}$.",
+        "Here $a = 2$ and $p = 11$.",
+      ],
     },
     {
       id: "q-nt-flt-4",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Using FLT, if p is prime and a^(p-1) ≡ 1 (mod p), then:",
+      question: "Using FLT, if we find that $a^{p-1} \\equiv 1 \\pmod{p}$, what can we conclude about $p$?",
       options: [
-        "p is definitely prime",
-        "p is probably prime",
-        "a is definitely prime",
-        "a is probably prime",
+        "$p$ is definitely prime",
+        "$p$ is probably prime",
+        "$a$ is definitely prime",
+        "$a$ is probably prime",
       ],
       correctAnswer: 1,
       explanation:
-        "If the test fails, p is composite. If it passes, p is probably prime (needs more tests).",
+        "The FLT primality test:\n- If $a^{p-1} \\not\\equiv 1 \\pmod{p}$ → **$p$ is definitely composite**\n- If $a^{p-1} \\equiv 1 \\pmod{p}$ → **$p$ is probably prime**\n\nA passing result means $p$ passed this particular test, but it could still be a composite (especially a Carmichael number). Multiple bases $a$ increase confidence but don't give certainty.",
+      hints: [
+        "If the test fails, $p$ is definitely composite.",
+        "If the test passes, $p$ might be prime but could be a Carmichael number.",
+      ],
     },
     {
       id: "q-nt-flt-5",
       type: "true-false",
       difficulty: "hard",
       question:
-        "Miller-Rabin primality test is a deterministic version of Fermat method.",
+        "Miller-Rabin primality test is a deterministic version of the Fermat method.",
       correctAnswer: "false",
       explanation:
-        "Miller-Rabin is probabilistic but can be made deterministic for certain range of numbers.",
+        "**False**. Miller-Rabin is a **probabilistic** (randomized) test, not deterministic.\n\nHowever, it can be made **deterministic** for certain ranges:\n- For $n < 3,317,044,064,679,887,385,961,981$, testing bases $a = 2$ and $a = 3$ is sufficient.\n- For $n < 2^{64}$, only 12 bases need to be tested.\n\nMiller-Rabin is stronger than Fermat because it doesn't have Carmichael number false positives (within its error bounds).",
+      hints: [
+        "Miller-Rabin is probabilistic but can be made deterministic for specific ranges.",
+        "Miller-Rabin avoids the Carmichael number problem that affects Fermat's test.",
+      ],
     },
   ],
   "euler-totient": [
@@ -737,54 +853,80 @@ const questions: Record<string, Question[]> = {
       id: "q-nt-euler-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "φ(n) counts the number of integers 1 to n-1 that are:",
+      question: "Euler's totient function $\\phi(n)$ counts the number of integers in $[1, n]$ that are:",
       options: [
-        "Divisible by n",
-        "Prime to n",
-        "Greater than n/2",
+        "Divisible by $n$",
+        "Coprime to $n$",
+        "Greater than $n/2$",
         "Even numbers",
       ],
       correctAnswer: 1,
       explanation:
-        "Euler\'s totient function φ(n) counts integers in [1, n] that are coprime to n.",
+        "Euler's totient function:\n$$\\phi(n) = |\\{ x \\in [1, n] : \\gcd(x, n) = 1 \\}|$$\n\nExample: $\\phi(8) = 4$ because $\{1, 3, 5, 7\\}$ are coprime to 8.\n\n**Note**: Sometimes defined as $[1, n-1]$ but since $\\gcd(n, n) = n \\neq 1$, the count is the same.",
+      hints: [
+        "Count numbers in $[1, n]$ that have no common factors with $n$ (except 1).",
+        "$\\gcd(x, n) = 1$ means $x$ is coprime to $n$.",
+      ],
     },
     {
       id: "q-nt-euler-2",
       type: "true-false",
       difficulty: "easy",
-      question: "If p is prime, then φ(p) = p - 1.",
+      question: "If $p$ is prime, then $\\phi(p) = p - 1$.",
       correctAnswer: "true",
       explanation:
-        "All numbers 1 to p-1 are coprime to prime p, so φ(p) = p - 1.",
+        "If $p$ is prime, all numbers $1, 2, \\ldots, p-1$ are coprime to $p$ (since $p$ has no divisors other than 1 and itself).\n\nTherefore:\n$$\\phi(p) = p - 1$$",
+      hints: [
+        "All numbers from 1 to $p-1$ are coprime to prime $p$.",
+        "There are $p-1$ such numbers.",
+      ],
     },
     {
       id: "q-nt-euler-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is φ(12)?",
+      question: "What is $\\phi(12)$?",
       options: ["4", "6", "8", "10"],
       correctAnswer: 0,
-      explanation: "Numbers coprime to 12 are {1, 5, 7, 11} - only 4 numbers.",
+      explanation:
+        "We need to count numbers in $[1, 12]$ coprime to 12:\n\n$$\\gcd(x, 12) = 1 \\text{ for } x \\in \\{1, 5, 7, 11\\}$$\n\n- $1$: $\\gcd(1, 12) = 1$ ✓\n- $2$: $\\gcd(2, 12) = 2$ ✗\n- $3$: $\\gcd(3, 12) = 3$ ✗\n- $4$: $\\gcd(4, 12) = 4$ ✗\n- $5$: $\\gcd(5, 12) = 1$ ✓\n- $6$: $\\gcd(6, 12) = 6$ ✗\n- $7$: $\\gcd(7, 12) = 1$ ✓\n- $8$: $\\gcd(8, 12) = 4$ ✗\n- $9$: $\\gcd(9, 12) = 3$ ✗\n- $10$: $\\gcd(10, 12) = 2$ ✗\n- $11$: $\\gcd(11, 12) = 1$ ✓\n- $12$: $\\gcd(12, 12) = 12$ ✗\n\nAnswer: $\\phi(12) = 4$.",
+      hints: [
+        "List all numbers from 1 to 12 and check $\\gcd(x, 12) = 1$.",
+        "Numbers coprime to 12 are $\{1, 5, 7, 11\}$.",
+      ],
     },
     {
       id: "q-nt-euler-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "If n = p^a × q^b (p, q distinct primes), φ(n) = ?",
-      options: ["(p^a - 1)(q^b - 1)", "n(1-1/p)(1-1/q)", "p^a + q^b - 2", "pq"],
+      question: "If $n = p^a \\times q^b$ where $p$ and $q$ are distinct primes, what is $\\phi(n)$?",
+      options: [
+        "$(p^a - 1)(q^b - 1)$",
+        "$n(1 - \\frac{1}{p})(1 - \\frac{1}{q})$",
+        "$p^a + q^b - 2$",
+        "$pq$",
+      ],
       correctAnswer: 1,
       explanation:
-        "For n = p^a × q^b, φ(n) = n × (1 - 1/p) × (1 - 1/q) = p^a q^b (1-1/p)(1-1/q).",
+        "Euler's product formula for distinct primes $p, q$:\n$$\\phi(n) = n \\left(1 - \\frac{1}{p}\\right)\\left(1 - \\frac{1}{q}\\right)$$\n\n**Proof**: From $n = p^a q^b$, the fraction of numbers NOT divisible by $p$ is $(1 - 1/p)$, and not divisible by $q$ is $(1 - 1/q)$. Multiplying:\n$$\\phi(n) = p^a q^b \\cdot \\frac{p-1}{p} \\cdot \\frac{q-1}{q} = p^{a-1}(p-1) \\cdot q^{b-1}(q-1)$$",
+      hints: [
+        "Use the product formula: $\\phi(n) = n \\prod_{p|n}(1 - 1/p)$.",
+        "For each distinct prime factor $p$, multiply by $(1 - 1/p)$.",
+      ],
     },
     {
       id: "q-nt-euler-5",
       type: "true-false",
       difficulty: "hard",
       question:
-        "Euler\'s theorem states a^φ(n) ≡ 1 (mod n) when gcd(a, n) = 1.",
+        "Euler's theorem states $a^{\\phi(n)} \\equiv 1 \\pmod{n}$ when $\\gcd(a, n) = 1$.",
       correctAnswer: "true",
       explanation:
-        "Euler\'s theorem generalizes Fermat\'s Little Theorem to any modulus n (not just prime).",
+        "**Euler's Theorem** generalizes Fermat's Little Theorem to any modulus $n$:\n$$\\text{If } \\gcd(a, n) = 1, \\text{ then } a^{\\phi(n)} \\equiv 1 \\pmod{n}$$\n\n**Special case**: When $n = p$ is prime, $\\phi(p) = p - 1$, giving FLT:\n$$a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEuler's theorem is used in RSA encryption: $m^{\\phi(n)} \\equiv 1 \\pmod{n}$ for $\\gcd(m, n) = 1$.",
+      hints: [
+        "Euler's theorem generalizes FLT to composite moduli.",
+        "FLT is the special case where $n$ is prime.",
+      ],
     },
   ],
   "binomial-coefficients": [
@@ -1029,13 +1171,13 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "What is the time complexity of binary search on a sorted array?",
-      options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
+      options: ["$O(n)$", "$O(\\log n)$", "$O(n \\log n)$", "$O(1)$"],
       correctAnswer: 1,
       explanation:
-        "Binary search halves the search space each iteration, giving O(log n) time complexity.",
+        "Binary search follows a divide-and-conquer pattern:\n\n1. Compare target with middle element\n2. If equal, found\n3. If target < middle, search left half\n4. If target > middle, search right half\n\nAt each step, the search space is halved:\n$$T(n) = T(n/2) + O(1) \\Rightarrow T(n) = O(\\log n)$$\n\nFor an array of size $n = 2^k$, exactly $k$ comparisons are needed.",
       hints: [
-        "Search space reduces by half each step",
-        "Divide and conquer pattern",
+        "Search space reduces by half each step.",
+        "The recurrence is $T(n) = T(n/2) + O(1)$.",
       ],
     },
     {
@@ -1043,14 +1185,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In a rotated sorted array [4,5,6,7,0,1,2], what is the minimum element?",
+        "In a rotated sorted array $[4, 5, 6, 7, 0, 1, 2]$, what is the minimum element?",
       options: ["0", "1", "4", "7"],
       correctAnswer: 0,
       explanation:
-        "The minimum element in a rotated sorted array is the pivot point where the rotation occurred. Here it is 0.",
+        "A rotated sorted array is a sorted array that has been \"rotated\" by some offset. The minimum element is the **pivot point** where the rotation occurred.\n\nIn this array:\n- The sorted original was $[0, 1, 2, 4, 5, 6, 7]$\n- After rotation, the smallest element ($0$) ends up at position $4$\n\nThe minimum is **0** because it is where the sorted order \"wraps around.\"",
       hints: [
-        "Look for the point where sequence breaks",
-        "Pivot is the smallest element",
+        "Look for the point where the sequence breaks (stops being increasing).",
+        "The pivot is the smallest element in the rotated array.",
       ],
     },
     {
@@ -1058,13 +1200,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Binary search can be implemented iteratively with O(1) space complexity.",
+        "Binary search can be implemented iteratively with $O(1)$ space complexity.",
       correctAnswer: "true",
       explanation:
-        "Iterative binary search uses only pointers (left, right, mid) requiring O(1) space, while recursive implementation requires O(log n) call stack space.",
+        "**Iterative implementation** uses only three pointers:\n- $\\text{left}$: start index\n- $\\text{right}$: end index\n- $\\text{mid} = \\lfloor(\\text{left} + \\text{right})/2\\rfloor$\n\nEach iteration updates only the pointers, requiring **constant extra space** $O(1)$.\n\n**Recursive implementation** uses $O(\\log n)$ space due to the call stack depth.",
       hints: [
-        "Loop-based approach needs no extra space",
-        "Recursive version uses call stack",
+        "Loop-based (iterative) approach needs no extra space beyond the pointers.",
+        "Recursive version uses the call stack proportional to the number of recursive calls.",
       ],
     },
     {
@@ -1072,16 +1214,16 @@ const questions: Record<string, Question[]> = {
       type: "coding",
       difficulty: "medium",
       question:
-        "Implement binary search to find target in rotated sorted array.",
+        "Implement binary search to find target in a rotated sorted array.",
       codeSnippet: `function searchRotated(nums: number[], target: number): number {
   // Returns index of target, or -1 if not found
 }`,
       correctAnswer: 0,
       explanation:
-        "Modified binary search: at each step, determine which half is sorted, then check if target lies in that half.",
+        "Modified binary search: at each step, determine which half is sorted, then check if target lies in that half.\n\n$$\\begin{align}\n\\text{mid} &= (\\text{left} + \\text{right}) / 2\\\\\n\\text{If } \\text{nums}[\\text{left}] &\\leq \\text{nums}[\\text{mid}]:\\n&\\quad \\text{left half is sorted}\\n&\\quad \\text{check if target } \\in [\\text{nums}[\\text{left}], \\text{nums}[\\text{mid}]]\\n\\text{Else}:\\n&\\quad \\text{right half is sorted}\\n&\\quad \\text{check if target } \\in (\\text{nums}[\\text{mid}], \\text{nums}[\\text{right}]]\n\\end{align}$$",
       hints: [
-        "Check which half is normally ordered",
-        "Compare target with boundaries",
+        "At each step, check which half $[\\text{left}, \\text{mid}]$ or $[\\text{mid}, \\text{right}]$ is normally sorted.",
+        "Compare target with the boundaries of the sorted half to decide which half to search.",
       ],
     },
   ],
@@ -1092,32 +1234,32 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question: "What is the time complexity of merge sort?",
-      options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
+      options: ["$O(n)$", "$O(n \\log n)$", "$O(n^2)$", "$O(\\log n)$"],
       correctAnswer: 1,
       explanation:
-        "Merge sort divides the array in half (log n divisions) and merges each division (O(n) per level), giving O(n log n).",
+        "Merge sort follows a divide-and-conquer pattern:\n\n1. **Divide**: Split array into two halves: $T(n) = 2T(n/2)$\n2. **Conquer**: Recursively sort each half\n3. **Combine**: Merge the two sorted halves in $O(n)$\n\nThe recurrence relation is:\n$$T(n) = 2T(n/2) + O(n)$$\n\nBy the Master Theorem (case 2), this gives $T(n) = O(n \\log n)$.\n\nAt each of the $\\log n$ levels, we process all $n$ elements during the merge step.",
       hints: [
-        "Divide into single elements, then merge",
-        "Each level processes all n elements",
+        "Divide into single elements, then merge back up.",
+        "Each level (divide + merge) processes all $n$ elements, and there are $\\log n$ levels.",
       ],
     },
     {
       id: "q-dc-merge-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What causes counting inversions in an array?",
+      question: "An inversion in an array is defined as a pair $(i, j)$ where:",
       options: [
-        "Elements out of order",
-        "Duplicate elements",
-        "Negative numbers",
-        "Large values",
+        "$i < j$ and $\\text{arr}[i] > \\text{arr}[j]$",
+        "$i < j$ and $\\text{arr}[i] < \\text{arr}[j]$",
+        "$i > j$ and $\\text{arr}[i] > \\text{arr}[j]$",
+        "$i = j$ and $\\text{arr}[i] > \\text{arr}[j]$",
       ],
       correctAnswer: 0,
       explanation:
-        "An inversion is a pair (i,j) where i < j but arr[i] > arr[j]. Merge sort can count inversions in O(n log n).",
+        "An **inversion** counts pairs of elements that are **out of order** relative to each other:\n\n$$\\text{inversion} = (i, j) \\text{ where } i < j \\text{ and } \\text{arr}[i] > \\text{arr}[j]$$\n\nExample: In $[3, 1, 2]$, the inversions are $(3, 1)$ and $(3, 2)$ because $3 > 1$ and $3 > 2$.\n\nMerge sort can count inversions in $O(n \\log n)$ because during the merge step, when an element from the right half is placed before an element from the left half, we count all remaining elements in the left half as inversions.",
       hints: [
-        "i < j but arr[i] > arr[j]",
-        "Measure of how far array is from being sorted",
+        "Inversion means the earlier element is larger than the later element.",
+        "$i < j$ but $\\text{arr}[i] > \\text{arr}[j]$.",
       ],
     },
     {
@@ -1127,10 +1269,10 @@ const questions: Record<string, Question[]> = {
       question: "Merge sort is a stable sorting algorithm.",
       correctAnswer: "true",
       explanation:
-        "During merge, equal elements from the left subarray are placed before those from the right, preserving relative order.",
+        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n$$\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\\\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
-        "Equal elements maintain their original order",
-        "Left subarray elements come first during merge",
+        "Equal elements maintain their original relative order.",
+        "Left subarray elements are preferred when elements are equal during merge.",
       ],
     },
     {
@@ -1143,10 +1285,11 @@ const questions: Record<string, Question[]> = {
 }`,
       correctAnswer: 0,
       explanation:
-        "During merge, count inversions where element from left half > element from right half.",
+        "During the merge step, when we take an element from the right half before an element from the left half, all remaining elements in the left half form inversions with that element:\n\n$$\\begin{align}\n\\text{while merging:}\\\\\n&\\text{if } L[i] \\leq R[j]:\\n&\\quad \\text{take } L[i]\\n&\\text{else}:\\n&\\quad \\text{take } R[j]\\n&\\quad \\text{inversions += remaining elements in } L\\n&\\quad (L[i...end] \\text{ are all > } R[j])\n\\end{align}$$",
       hints: [
-        "Count when left element > right element",
-        "Inversions = remaining left elements when right element is smaller",
+        "Count inversions when the left element is greater than the right element during merge.",
+        "When you take from the right half, add the count of remaining left elements to the inversion total.",
+        "Inversions = remaining left elements when right element is smaller.",
       ],
     },
   ],
@@ -1597,22 +1740,26 @@ const questions: Record<string, Question[]> = {
       id: "q-bit-ops-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What is the result of 5 & 3 in binary?",
+      question: "What is the result of $5 \\; \\& \\; 3$ (bitwise AND) in binary?",
       options: [
-        "101 & 011 = 001 (1)",
-        "101 & 011 = 111 (7)",
-        "101 & 011 = 110 (6)",
-        "101 & 011 = 100 (4)",
+        "$101 \\; \\& \\; 011 = 001_2 \\; (1)$",
+        "$101 \\; \\& \\; 011 = 111_2 \\; (7)$",
+        "$101 \\; \\& \\; 011 = 110_2 \\; (6)$",
+        "$101 \\; \\& \\; 011 = 100_2 \\; (4)$",
       ],
       correctAnswer: 0,
       explanation:
-        "5 = 101, 3 = 011. ANDing bit-by-bit: 1&1=1, 0&1=0, 1&0=0 → 001 = 1.",
+        "In binary:\n$$\\begin{align}\n5 &= 101_2\\\\\n3 &= 011_2\\\\\n\\hline\n5 \\; \\& \\; 3 &= 001_2 = 1\n\\end{align}$$\n\nBit-by-bit AND: $1\\&1=1$, $0\\&1=0$, $1\\&0=0$.",
+      hints: [
+        "Write both numbers in binary with aligned bits.",
+        "AND produces 1 only when both bits are 1.",
+      ],
     },
     {
       id: "q-bit-ops-2",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What does the XOR operation achieve with identical bits?",
+      question: "What is the result of $a \\; \\text{XOR} \\; a$ (XOR of identical values)?",
       options: [
         "Returns 1",
         "Returns 0",
@@ -1621,35 +1768,53 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "a XOR a = 0. XOR returns 1 only when bits differ. Identical bits give 0.",
+        "XOR (exclusive OR) truth table:\n$$\\begin{array}{c|c|c}\\na & b & a \\oplus b\\\\\\hline\n0 & 0 & 0\\\\\n0 & 1 & 1\\\\\n1 & 0 & 1\\\\\n1 & 1 & 0\n\\end{array}$$\n\nWhen both inputs are identical ($a \\oplus a$):\n$$a \\oplus a = 0 \\quad \\text{(for any bit)}$$\n\nXOR returns 1 only when bits differ, and 0 when they are the same.",
+      hints: [
+        "XOR returns 1 only when bits are different.",
+        "When identical bits XOR, they cancel out to 0.",
+      ],
     },
     {
       id: "q-bit-ops-3",
       type: "true-false",
       difficulty: "easy",
-      question: "In JavaScript, ~5 evaluates to -6.",
+      question: "In JavaScript (and most languages using two's complement), $\\sim 5$ evaluates to $-6$.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "~ is bitwise NOT (one\'s complement). ~5 = -6 because ~x = -(x+1).",
+        "The bitwise NOT operator $\\sim$ computes the **one's complement** (invert all bits).\n\nFor a 32-bit integer:\n$$\\begin{align}\n5 &\\text{ (in binary)} = 0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0101\\\\\n\\sim 5 &\\text{ (invert all bits)} = 1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1010\\\\\n     &\\text{ (two's complement)} = -6\n\\end{align}$$\n\n**Identity**: $\\sim x = -(x + 1)$",
+      hints: [
+        "~ is bitwise NOT (one's complement).",
+        "In two's complement representation, inverting all bits of 5 gives -6.",
+      ],
     },
     {
       id: "q-bit-ops-4",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What is 1 << 3 (left shift by 3)?",
+      question: "What is $1 \\ll 3$ (left shift by 3 bits)?",
       options: ["3", "8", "16", "4"],
       correctAnswer: 1,
-      explanation: "Left shift multiplies by 2^n. 1 << 3 = 1 * 2^3 = 8.",
+      explanation:
+        "Left shift by $n$ bits multiplies by $2^n$:\n$$1 \\ll 3 = 1 \\times 2^3 = 8$$\n\nIn binary:\n$$\\begin{align}\n1 &\\text{ (binary)} = 0001_2\\\\\n1 \\ll 3 &\\text{ (shifted)} = 1000_2 = 8\n\\end{align}$$\n\nZeros shift in from the right; the leftmost bits are discarded.",
+      hints: [
+        "Left shift multiplies by $2^n$ where $n$ is the shift amount.",
+        "$1 \\ll 3 = 1 \\times 2^3 = 8$.",
+      ],
     },
     {
       id: "q-bit-ops-5",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What is 0xFF << 8 in decimal?",
+      question: "What is $0xFF \\ll 8$ in decimal?",
       options: ["255", "65280", "65535", "4096"],
       correctAnswer: 1,
-      explanation: "0xFF = 255. << 8 shifts left 8 bits: 255 * 256 = 65280.",
+      explanation:
+        "First, $0xFF$ in decimal is:\n$$0xFF = 15 \\times 16 + 15 = 240 + 15 = 255$$\n\nLeft shift by 8 bits multiplies by $2^8 = 256$:\n$$0xFF \\ll 8 = 255 \\times 256 = 65280$$\n\nIn binary: $1111\\;1111_2 \\ll 8 = 1111\\;1111\\;0000\\;0000_2$.",
+      hints: [
+        "$0xFF = 255$ in decimal.",
+        "Left shift by 8 multiplies by $2^8 = 256$.",
+      ],
     },
     {
       id: "q-bit-ops-6",
@@ -1660,7 +1825,11 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "a = a ^ b; b = a ^ b; a = a ^ b swaps values using XOR properties.",
+        "XOR swap works using three XOR operations:\n\n$$\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\\\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
+      hints: [
+        "Three XOR operations in sequence: $a = a \\oplus b$, $b = a \\oplus b$, $a = a \\oplus b$.",
+        "All properties of XOR ($a \\oplus a = 0$, $a \\oplus 0 = a$, commutativity, associativity) make this work.",
+      ],
     },
   ],
   "single-number": [
@@ -1669,7 +1838,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In an array where every element appears twice except one, the XOR of all elements yields:",
+        "In an array where every element appears twice except one unique element, the XOR of all elements yields:",
       options: [
         "0",
         "The duplicate value",
@@ -1678,16 +1847,27 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "a ^ a = 0, and a ^ 0 = a. So all pairs cancel out, leaving only the unique element.",
+        "XOR has two key properties:\n\n1. **Identity**: $a \\oplus 0 = a$\n2. **Self-inverse**: $a \\oplus a = 0$\n3. **Commutative and associative**\n\nWhen we XOR all elements:\n$$\\bigoplus_{i=1}^{n} \\text{nums}[i] = (\\underbrace{a \\oplus a}_{\\text{pair}} \\oplus \\cdots \\oplus \\underbrace{b \\oplus b}_{\\text{pair}}) \\oplus \\text{unique}$$\n\nAll pairs cancel to 0, leaving only the unique element.",
+      hints: [
+        "XOR all elements in the array.",
+        "$a \\oplus a = 0$, and $a \\oplus 0 = a$.",
+        "Pairs cancel out, leaving only the element that appears once.",
+      ],
     },
     {
       id: "q-bit-single-2",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "For [2, 3, 2, 4, 3], what is the single number?",
+      question: "For $[2, 3, 2, 4, 3]$, what is the single number?",
       options: ["2", "3", "4", "1"],
       correctAnswer: 2,
-      explanation: "XOR all: 2^3^2^4^3 = (2^2)^(3^3)^4 = 0^0^4 = 4.",
+      explanation:
+        "XOR all elements:\n\n$$\\begin{align}\n2 \\oplus 3 \\oplus 2 \\oplus 4 \\oplus 3\n&= (2 \\oplus 2) \\oplus (3 \\oplus 3) \\oplus 4\\\\\n&= 0 \\oplus 0 \\oplus 4\\\\\n&= 4\n\\end{align}$$\n\nThe element appearing only once is **4**.",
+      hints: [
+        "Group the pairs: $2 \\oplus 2 = 0$ and $3 \\oplus 3 = 0$.",
+        "XOR is commutative and associative, so we can reorder.",
+        "The remaining element is the answer.",
+      ],
     },
     {
       id: "q-bit-single-3",
@@ -1698,24 +1878,27 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Yes, XOR cancels in pairs. If an element appears 4 times, it still cancels: a^a^a^a = 0.",
+        "XOR cancels in **pairs**: $a \\oplus a = 0$.\n\nIf an element appears $k$ times, it cancels completely only when $k$ is even:\n- $k = 2$: $a \\oplus a = 0$ ✓\n- $k = 4$: $a \\oplus a \\oplus a \\oplus a = (a \\oplus a) \\oplus (a \\oplus a) = 0 \\oplus 0 = 0$ ✓\n- $k = 3$: $a \\oplus a \\oplus a = a$ ✗ (does not cancel)\n\nSo the XOR trick requires elements to appear an **even number of times** to cancel out.",
+      hints: [
+        "XOR cancels in pairs: $a \\oplus a = 0$.",
+        "If an element appears 4 times, it still cancels: $a \\oplus a \\oplus a \\oplus a = 0$.",
+        "The trick requires even count for each duplicated element.",
+      ],
     },
     {
       id: "q-bit-single-4",
       type: "coding",
       difficulty: "easy",
       question:
-        "Write a function singleNumber(nums) that returns the element appearing once.",
+        "Write a function $\\texttt{singleNumber}$ that returns the element appearing exactly once in an array where all others appear twice.",
       options: [],
       correctAnswer: 0,
       explanation:
-        "Use XOR accumulator. Iterate through nums, accumulate ^= element, return result.",
-      codeSnippet:
-        "function singleNumber(nums) {\n  let result = 0;\n  for (const num of nums) {\n    result ^= num;\n  }\n  return result;\n}",
+        "We use an XOR accumulator. XOR is commutative and associative, so order doesn't matter.\n\n```typescript\nfunction singleNumber(nums: number[]): number {\n  let result = 0;\n  for (const num of nums) {\n    result ^= num;  // XOR each element\n  }\n  return result;   // Only the unique element remains\n}\n```\n\nTime: $O(n)$, Space: $O(1)$.",
       hints: [
-        "Initialize result to 0",
-        "XOR is commutative and associative",
-        "Pairs cancel out",
+        "Initialize result to 0 (XOR identity).",
+        "XOR is commutative and associative, so order doesn't matter.",
+        "Pairs cancel out, leaving only the unique element.",
       ],
     },
   ],
@@ -1724,36 +1907,48 @@ const questions: Record<string, Question[]> = {
       id: "q-bit-pow2-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "Which number is a power of 2?",
+      question: "Which of the following is a power of 2?",
       options: ["15", "16", "18", "20"],
       correctAnswer: 1,
       explanation:
-        "16 = 2^4. Powers of 2 in binary are a single 1 followed by zeros.",
+        "A power of 2 in binary is a single 1 followed by all zeros:\n$$\\begin{align}\n2^0 &= 1 = 1_2\\\\\n2^1 &= 2 = 10_2\\\\\n2^2 &= 4 = 100_2\\\\\n2^3 &= 8 = 1000_2\\\\\n2^4 &= 16 = 10000_2\n\\end{align}$$\n\n$16 = 2^4$ is a power of 2. 15, 18, and 20 have multiple 1-bits in binary.",
+      hints: [
+        "Powers of 2 have exactly one '1' bit in binary.",
+        "Check binary representations: $15 = 1111_2$, $16 = 10000_2$, $18 = 10010_2$, $20 = 10100_2$.",
+      ],
     },
     {
       id: "q-bit-pow2-2",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "What is n & (n-1) for n = 16?",
+      question: "What is $n \\; \\& \\; (n-1)$ for $n = 16$?",
       options: ["0", "16", "32", "8"],
       correctAnswer: 0,
       explanation:
-        "16 = 10000, 15 = 01111. 10000 & 01111 = 00000 = 0. This clears the lowest set bit.",
+        "The operation $n \\; \\& \\; (n-1)$ **clears the lowest set bit**.\n\nFor $n = 16 = 10000_2$:\n$$\\begin{align}\nn     &= 10000_2\\\\\nn-1   &= 01111_2\\\\\n\\hline\nn\\&(n-1) &= 00000_2 = 0\n\\end{align}$$\n\nThis property is fundamental for many bit manipulation algorithms.",
+      hints: [
+        "Write $n = 16$ and $n-1 = 15$ in binary.",
+        "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
+      ],
     },
     {
       id: "q-bit-pow2-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "A number n is a power of 2 iff:",
+      question: "A number $n$ is a power of 2 if and only if:",
       options: [
-        "n & (n-1) == n",
-        "n & (n-1) == 0",
-        "n | (n-1) == n",
-        "n ^ (n-1) == 2*n-1",
+        "$n \\; \\& \\; (n-1) = n$",
+        "$n \\; \\& \\; (n-1) = 0$",
+        "$n \\; | \\; (n-1) = n$",
+        "$n \\; \\oplus \\; (n-1) = 2n-1$",
       ],
       correctAnswer: 1,
       explanation:
-        "n & (n-1) == 0 checks if n is a power of 2. For powers of 2, only the MSB is set.",
+        "A power of 2 has exactly one set bit: $n = 100\\ldots0_2$.\n\nThen $n-1 = 011\\ldots1_2$, so:\n$$n \\; \\& \\; (n-1) = 100\\ldots0_2 \\; \\& \\; 011\\ldots1_2 = 0$$\n\nFor a non-power-of-2 (e.g., $12 = 1100_2$):\n$$12 \\; \\& \\; 11 = 1100_2 \\; \\& \\; 1011_2 = 1000_2 \\neq 0$$",
+      hints: [
+        "For powers of 2, only the MSB is set.",
+        "$n \\; \\& \\; (n-1) = 0$ if and only if $n$ is a power of 2 (and $n > 0$).",
+      ],
     },
     {
       id: "q-bit-pow2-4",
@@ -1762,22 +1957,26 @@ const questions: Record<string, Question[]> = {
       question: "0 is a power of 2.",
       options: ["True", "False"],
       correctAnswer: 1,
-      explanation: "0 is NOT a power of 2. Powers of 2 are 1, 2, 4, 8, 16...",
+      explanation:
+        "**False**. Zero is NOT a power of 2.\n\nPowers of 2 are: $2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8, \\ldots$\n\nNote that $n > 0$ is a required condition for the $n \\; \\& \\; (n-1) = 0$ check.",
+      hints: [
+        "Powers of 2 are $1, 2, 4, 8, 16, \\ldots$",
+        "The condition $n > 0$ is necessary for the power-of-2 test.",
+      ],
     },
     {
       id: "q-bit-pow2-5",
       type: "coding",
       difficulty: "easy",
-      question: "Write isPowerOfTwo(n) that returns true if n is a power of 2.",
+      question: "Write $\\texttt{isPowerOfTwo}(n)$ that returns $\\texttt{true}$ if $n$ is a power of 2.",
       options: [],
       correctAnswer: 0,
-      explanation: "Return n > 0 && (n & (n - 1)) === 0.",
-      codeSnippet:
-        "function isPowerOfTwo(n) {\n  return n > 0 && (n & (n - 1)) === 0;\n}",
+      explanation:
+        "A number $n > 0$ is a power of 2 if and only if $n \\; \\& \\; (n-1) = 0$:\n\n```typescript\nfunction isPowerOfTwo(n: number): boolean {\n  return n > 0 && (n & (n - 1)) === 0;\n}\n```\n\nThe $n > 0$ check is essential because for $n = 0$: $0 \\; \\& \\; (-1) = 0$, which would incorrectly return true.",
       hints: [
-        "n > 0 check is required",
-        "(n & n-1) clears the lowest set bit",
-        "If result is 0, n was power of 2",
+        "$n > 0$ check is required to exclude $n = 0$.",
+        "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
+        "If the result is 0, $n$ was a power of 2.",
       ],
     },
   ],
@@ -1786,60 +1985,76 @@ const questions: Record<string, Question[]> = {
       id: "q-bit-count-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "How many set bits (1s) in binary 100100?",
+      question: "How many set bits (1s) are in the binary number $100100_2$?",
       options: ["1", "2", "3", "4"],
       correctAnswer: 1,
-      explanation: "100100 has 1s at positions 5 and 2. Total = 2 set bits.",
+      explanation:
+        "The binary number $100100_2$ has 1s at two positions:\n- Position 5: $1 \\times 2^5 = 32$\n- Position 2: $1 \\times 2^2 = 4$\n\nTotal = $1 + 1 = 2$ set bits.",
+      hints: [
+        "Count the 1s in the binary representation.",
+        "$100100_2$ has 1s at positions 5 and 2.",
+      ],
     },
     {
       id: "q-bit-count-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What does Brian Kernighan\'s algorithm compute?",
+      question: "What does Brian Kernighan's algorithm compute?",
       options: [
-        "Set bits count",
+        "Count of set bits",
         "Position of MSB",
         "XOR of all bits",
         "Bit reversal",
       ],
       correctAnswer: 0,
       explanation:
-        "n & (n-1) clears the lowest set bit. Loop until n=0 counts iterations = set bit count.",
+        "Brian Kernighan's algorithm counts the number of set bits (1s) in a binary number.\n\nThe key operation $n \\; \\& \\; (n-1)$ **clears the lowest set bit**:\n$$\\begin{align}\nn = 12 = 1100_2\\\\\nn-1 = 11 = 1011_2\\\\\nn \\; \\& \\; (n-1) = 1000_2\n\\end{align}$$\n\nBy looping until $n = 0$, counting iterations gives the number of set bits.\n\nTime complexity: $O(k)$ where $k$ is the number of set bits (at most $O(\\log n)$ for an $n$-bit number).",
+      hints: [
+        "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
+        "Loop until $n$ becomes 0, counting iterations.",
+      ],
     },
     {
       id: "q-bit-count-3",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Using Brian Kernighan, countBits(15) returns:",
+      question: "Using Brian Kernighan's algorithm, what does $\\texttt{countBits}(15)$ return?",
       options: ["1", "2", "4", "8"],
       correctAnswer: 2,
       explanation:
-        "15 = 1111 has 4 set bits. n & (n-1): 1111→1110→1100→1000→0 (4 iterations).",
+        "For $n = 15 = 1111_2$:\n\n$$\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\\&=n-1} 1110_2 \\quad (1)$\\\\\n1110_2 &\\xrightarrow{n\\&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
+      hints: [
+        "$15 = 1111_2$ has four 1-bits.",
+        "Each $n \\; \\& \\; (n-1)$ clears one set bit.",
+      ],
     },
     {
       id: "q-bit-count-4",
       type: "true-false",
       difficulty: "hard",
-      question: "n & (-n) isolates the lowest set bit.",
+      question: "$n \\; \\& \\; (-n)$ isolates the lowest set bit.",
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "-n is two\'s complement. n & (-n) gives only the lowest set bit (e.g., 12(1100)&(-12)(0100)=0100).",
+        "In two's complement representation, $-n = \\sim(n) + 1$.\n\nFor $n = 12 = 1100_2$:\n$$\\begin{align}\n\\sim n &= 0011_2\\\\\n-n &= \\sim n + 1 = 0100_2\\\\\nn \\; \\& \\; (-n) &= 1100_2 \\; \\& \\; 0100_2 = 0100_2\n\\end{align}$$\n\nThe result $0100_2$ isolates bit 2, the lowest set bit of $12$.",
+      hints: [
+        "In two's complement, $-n = \\sim(n) + 1$.",
+        "$n \\; \\& \\; (-n)$ keeps only the lowest set bit.",
+      ],
     },
     {
       id: "q-bit-count-5",
       type: "coding",
       difficulty: "medium",
-      question: "Write countBits(n) to return the number of set bits.",
+      question: "Write $\\texttt{countBits}(n)$ to return the number of set bits using Brian Kernighan's algorithm.",
       options: [],
       correctAnswer: 0,
-      explanation: "Brian Kernighan: while(n){count++; n&=n-1;} return count;",
-      codeSnippet:
-        "function countBits(n) {\n  let count = 0;\n  while (n) {\n    count++;\n    n &= n - 1;\n  }\n  return count;\n}",
+      explanation:
+        "Brian Kernighan's algorithm:\n\n```typescript\nfunction countBits(n: number): number {\n  let count = 0;\n  while (n) {\n    count++;\n    n &= n - 1;  // Clear lowest set bit\n  }\n  return count;\n}\n```\n\nEach iteration clears one set bit. The number of iterations equals the number of set bits.\n\nTime: $O(k)$ where $k$ = number of set bits\nSpace: $O(1)$",
       hints: [
-        "Use n &= n-1 to clear lowest set bit",
-        "Count how many times until n becomes 0",
-        "O(k) where k = number of set bits",
+        "Use $n \\; \\& \\; (n-1)$ to clear the lowest set bit.",
+        "Count how many iterations until $n$ becomes 0.",
+        "Time is $O(k)$ where $k$ is the number of set bits.",
       ],
     },
   ],

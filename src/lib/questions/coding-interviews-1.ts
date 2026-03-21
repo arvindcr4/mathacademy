@@ -12,8 +12,13 @@ const questions: Record<string, Question[]> = {
         "What is the time complexity of the optimal Two Sum solution using a hash map?",
       options: ["O(n²)", "O(n)", "O(n log n)", "O(1)"],
       correctAnswer: 1,
+      hints: [
+        "For each element, we check if its complement (target - nums[i]) exists",
+        "Hash maps provide O(1) lookup for checking existence",
+        "Think about how many passes through the array we need"
+      ],
       explanation:
-        "Hash map gives O(1) lookup: for each element nums[i], check if target - nums[i] exists in the map.",
+        "The hash map achieves O(n) time with a single pass. For each element nums[i], we compute its complement as target - nums[i], then check if this complement exists in the map using O(1) hash lookup. We traverse the array only once, and each hash map operation (insert/lookup) is O(1) on average. This gives Time: O(n) and Space: O(n) for the hash map.",
     },
     {
       id: "q-ts-2",
@@ -21,8 +26,12 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Two Sum with hash map requires O(n) extra space.",
       correctAnswer: "true",
+      hints: [
+        "The hash map stores each element as we traverse",
+        "How many elements can be stored in the worst case?"
+      ],
       explanation:
-        "The hash map stores up to n elements, giving O(n) space complexity.",
+        "This is true. The hash map must store up to n elements in the worst case (when no solution is found until the last element). Each entry stores {value: index}, giving O(n) space complexity. This space-time trade-off is fundamental: we use O(n) space to achieve O(n) time.",
     },
     {
       id: "q-ts-3",
@@ -32,8 +41,13 @@ const questions: Record<string, Question[]> = {
         "For input [3, 3] and target 6, what indices does Two Sum return?",
       options: ["[0, 0]", "[0, 1]", "[1, 1]", "[]"],
       correctAnswer: 1,
+      hints: [
+        "Start at index 0: value is 3, complement = 6 - 3 = 3",
+        "Check if complement (3) exists in the map (initially empty)",
+        "Move to index 1 and check again"
+      ],
       explanation:
-        "nums[0] + nums[1] = 3 + 3 = 6, so indices [0, 1] are returned.",
+        "At index 0, nums[0] = 3, complement = 6 - 3 = 3. Map is empty, so we store {3: 0}. At index 1, nums[1] = 3, complement = 6 - 3 = 3. We find 3 exists in our map at index 0. Since nums[0] + nums[1] = 3 + 3 = 6 = target, we return indices [0, 1].",
     },
     {
       id: "q-ts-4",
@@ -47,8 +61,13 @@ const questions: Record<string, Question[]> = {
         "O(n) time, O(n) space",
       ],
       correctAnswer: 1,
+      hints: [
+        "Sorting algorithms have an inherent time complexity",
+        "Two pointers works after sorting but has limitations",
+        "Original indices vs sorted positions matter for the problem"
+      ],
       explanation:
-        "Sorting takes O(n log n). Two pointers then solve in O(n), but this changes index order which may not be acceptable.",
+        "The correct answer is O(n log n) time, O(1) space. Sorting takes O(n log n). Two pointers then solve in O(n), but this changes index order. The Two Sum problem requires original indices, not sorted positions. The sorted approach is invalid unless additional bookkeeping is done (requiring O(n) space).",
     },
     {
       id: "q-ts-5",
@@ -63,8 +82,13 @@ const questions: Record<string, Question[]> = {
         "Because of duplicate handling",
       ],
       correctAnswer: 1,
+      hints: [
+        "O(1) space means we cannot store array elements",
+        "What data structure gives O(1) lookup? Without storing elements, how do we find complements?",
+        "Sorting would be needed to use two pointers without extra space, but sorting itself costs O(n log n)"
+      ],
       explanation:
-        "Sorting changes original indices. Two pointers after sorting requires O(n log n) for sort, not O(n). Hash map preserves original indices in O(n) time.",
+        "The correct answer is Because sorting changes index order. Without a hash map, we cannot check if a complement exists in O(1) time. Sorting changes original indices, and the problem requires original indices. Without storing elements, we'd need to sort first: O(n log n), or search linearly: O(n^2). Achieving O(n) time requires O(n) space for hash map lookup. This is a fundamental time-space trade-off.",
     },
   ],
 
@@ -171,6 +195,20 @@ const questions: Record<string, Question[]> = {
       explanation:
         "If more than one zero exists, all result values are 0 because some element excludes that zero. If exactly one zero, all non-zero positions get product and zero positions get 0.",
     },
+    {
+      id: "q-pe-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What is the time complexity of the prefix/suffix approach for Product Except Self?",
+      options: ["O(n²)", "O(n log n)", "O(n)", "O(1)"],
+      correctAnswer: 2,
+      hints: [
+        "We make one left-to-right pass and one right-to-left pass",
+        "Each element is visited a constant number of times"
+      ],
+      explanation:
+        "Two linear passes: one left-to-right to build prefix products, one right-to-left to multiply in suffix products. Total O(n) time and O(1) extra space (output array excluded).",
+    },
   ],
 
   "rotate-array": [
@@ -229,6 +267,19 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Juggling moves elements in cycles using only a temporary variable. However it requires GCD(n, k) cycles and is more complex than reversal.",
     },
+    {
+      id: "q-ra-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The reversal algorithm for array rotation preserves relative order of elements within each half.",
+      correctAnswer: "True",
+      hints: [
+        "Think about what happens when you reverse a subarray and then reverse it again",
+        "After reversing the full array, then reversing each half — do elements within each segment maintain order?"
+      ],
+      explanation:
+        "True. The three-step reversal (reverse all, reverse first k, reverse last n-k) correctly moves the last k elements to the front while maintaining their original order. For example, [1,2,3,4,5] rotated by 2 gives [4,5,1,2,3] — elements 4,5 and 1,2,3 each maintain their relative order.",
+    },
   ],
 
   "contains-duplicate": [
@@ -270,6 +321,20 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Since array is sorted, duplicates are adjacent. Single pass O(n) without extra space. No hash set needed.",
+    },
+    {
+      id: "q-cd-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "What is the best time complexity achievable for Contains Duplicate?",
+      options: ["O(n²)", "O(n log n)", "O(n)", "O(log n)"],
+      correctAnswer: 2,
+      hints: [
+        "A hash set allows O(1) average lookup",
+        "We must examine every element at least once"
+      ],
+      explanation:
+        "O(n) is achievable using a hash set. We iterate once and for each element check if it already exists in the set. Hash set gives O(1) average-case insert and lookup, yielding O(n) overall. We cannot do better than O(n) since we must examine all elements.",
     },
   ],
 
@@ -319,6 +384,25 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Empty string shares no common prefix with any string (except itself). LCP of ["", "abc"] is "".',
     },
+    {
+      id: "q-lcp-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Trie (prefix tree) approach for LCP has what advantage?",
+      options: [
+        "Lower time complexity than O(n*m)",
+        "O(1) space usage",
+        "Efficient for repeated LCP queries on same string set",
+        "Handles unicode better"
+      ],
+      correctAnswer: 2,
+      hints: [
+        "Building a trie costs O(n*m) upfront",
+        "Once built, multiple LCP queries are fast"
+      ],
+      explanation:
+        "Building a trie from all strings costs O(n*m). However, once built, finding the LCP for any subset or answering multiple LCP queries is O(m) per query instead of O(n*m). The trie approach shines when you need to perform many LCP queries on the same string set.",
+    },
   ],
 
   "valid-parentheses": [
@@ -329,8 +413,13 @@ const questions: Record<string, Question[]> = {
       question: "What data structure is optimal for Valid Parentheses?",
       options: ["Queue", "Stack", "Array", "Linked List"],
       correctAnswer: 1,
+      hints: [
+        "We need to remember which opening brackets we\'ve seen",
+        "The most recent opening bracket should be matched first",
+        "What structure gives you \"most recent\" access?"
+      ],
       explanation:
-        "Stack: push opening brackets, pop and match when closing bracket encountered. LIFO ensures correct nesting.",
+        "Stack is optimal. The LIFO (Last In, First Out) property perfectly matches bracket matching: the most recent opener must be closed first. Push opening brackets, pop and match when closing bracket encountered. Time: O(n), Space: O(n) in worst case.",
     },
     {
       id: "q-vp-2",
@@ -338,8 +427,13 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: '"{[()]}" is a valid parentheses string.',
       correctAnswer: "true",
+      hints: [
+        "Trace through each character",
+        "Does every closer match the most recent unclosed opener?",
+        "At the end, is the stack empty?"
+      ],
       explanation:
-        "Each opening bracket has matching closing bracket in correct order: { → } , [ → ] , ( → ).",
+        "This is true. Each closer matches its corresponding opener in correct order: { -> }, [ -> ], ( -> ). The stack correctly handles nesting: { [ ( ) ] } is properly nested with each closer matching its corresponding opener.",
     },
     {
       id: "q-vp-3",
@@ -348,8 +442,13 @@ const questions: Record<string, Question[]> = {
       question: "Stack approach for Valid Parentheses runs in:",
       options: ["O(1)", "O(n)", "O(n²)", "O(log n)"],
       correctAnswer: 1,
+      hints: [
+        "How many characters do we process?",
+        "Is each character processed a constant number of times?",
+        "What\'s the worst-case space usage?"
+      ],
       explanation:
-        "Single pass through string: O(n) time, O(n) space for stack in worst case.",
+        "O(n) time, O(n) space. Single pass through string of length n. Each character triggers at most one O(1) stack operation. Worst case (all openers), we store all n characters in the stack.",
     },
     {
       id: "q-vp-4",
@@ -358,8 +457,13 @@ const questions: Record<string, Question[]> = {
       question: "Which of these is NOT a valid parentheses string?",
       options: ['"{[()]}"', '"([)]"', '"()[]{}"', '"{{}}"'],
       correctAnswer: 1,
+      hints: [
+        "Use the stack trace method",
+        "What happens when you see ) but stack top is [?",
+        "The issue is WRONG NESTING ORDER"
+      ],
       explanation:
-        "\"([)]\" has mismatched nesting. Stack shows: push '(' then '[', but then ')' tries to close '(' while stack top is \"[\".",
+        "([)] is NOT valid. The problem is wrong nesting order. When ) appears, the stack top is [ (not (). Mismatch! The stack reveals this immediately. {[()]}, ((())), and {}[]{} are all valid.",
     },
     {
       id: "q-vp-5",
@@ -368,8 +472,13 @@ const questions: Record<string, Question[]> = {
       question: "Empty string is considered:",
       options: ["Valid", "Invalid", "Depends on implementation", "Neither"],
       correctAnswer: 0,
+      hints: [
+        "Think about the definition of \"balanced\"",
+        "Does an empty string have any mismatches?",
+        "There\'s no way to find a problem with an empty string"
+      ],
       explanation:
-        "Empty string has no mismatched brackets, so it is valid by definition (vacuously true).",
+        "Valid. The empty string is vacuously true - it contains no brackets, so it cannot have any mismatched pairs. Every closer matches its opener, nesting is correct, and stack is empty at end.",
     },
   ],
 
@@ -382,8 +491,13 @@ const questions: Record<string, Question[]> = {
       question: "Iterative reversal of a linked list uses how many pointers?",
       options: ["1", "2", "3", "4"],
       correctAnswer: 2,
+      hints: [
+        "We need to track the node before current (prev)",
+        "We need to track the current node being reversed (curr)",
+        "Why do we need a third pointer?"
+      ],
       explanation:
-        "Three pointers: prev, curr, next. Store next before reversing link, then advance all three pointers.",
+        "Iterative reversal uses 3 pointers: prev, curr, and next. When we reverse a link (curr.next = prev), we lose access to curr.next. Without saving this in a 'next' pointer, we would have no way to advance through the list. The algorithm: save next, reverse link, advance all pointers. Time: O(n), Space: O(1).",
     },
     {
       id: "q-rll-2",
@@ -391,8 +505,13 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Recursive linked list reversal uses O(n) stack space.",
       correctAnswer: "true",
+      hints: [
+        "Each recursive call creates a stack frame",
+        "How many recursive calls are made for n nodes?",
+        "What data is stored in each stack frame?"
+      ],
       explanation:
-        "Each recursive call adds a frame to the call stack. For n nodes, this is O(n) space (not O(1) like iterative).",
+        "This is true. For n nodes, we make n recursive calls, each adding a frame to the call stack. At any moment, we have n stack frames active. Space: O(n) for the call stack. The iterative approach achieves O(1) space but recursion uses linear space.",
     },
     {
       id: "q-rll-3",
@@ -401,8 +520,13 @@ const questions: Record<string, Question[]> = {
       question: "Time complexity of reversing a linked list iteratively:",
       options: ["O(1)", "O(n)", "O(n²)", "O(log n)"],
       correctAnswer: 1,
+      hints: [
+        "How many nodes do we visit?",
+        "Is there any nested looping?",
+        "Can we do better than visiting each node once?"
+      ],
       explanation:
-        "Single pass through all n nodes, each node visited once. O(n) time, O(1) space.",
+        "O(n). We make a single pass through all n nodes. Each iteration does O(1) work (save next, reverse, advance pointers). Since we visit each node exactly once, this is optimal - no algorithm can do better than O(n) since we must examine each node at least once.",
     },
     {
       id: "q-rll-4",
@@ -411,8 +535,13 @@ const questions: Record<string, Question[]> = {
       question: "After reversing, if head was 1→2→3→4→5, the new head becomes:",
       options: ["Node 1", "Node 5", "Node with value 4", "Null"],
       correctAnswer: 1,
+      hints: [
+        "Draw the reversal process step by step",
+        "What happens to the first node's next pointer?",
+        "What node points to null after reversal?"
+      ],
       explanation:
-        "Reversal flips the direction. The last node (5) becomes the new head since it points to 4, which points to 3, etc.",
+        "Node 5 (the last node) becomes the new head. After reversal: NULL <- 1 <- 2 <- 3 <- 4 <- 5. The original head (Node 1) now points to NULL, and Node 5 is at the start of the reversed chain.",
     },
     {
       id: "q-rll-5",
@@ -421,8 +550,13 @@ const questions: Record<string, Question[]> = {
       question:
         "You can reverse a sublist of a linked list without reversing the entire list.",
       correctAnswer: "true",
+      hints: [
+        "Think about identifying the boundaries of the sublist",
+        "You can disconnect the sublist, reverse it, then reconnect",
+        "What data structure helps track positions in a linked list?"
+      ],
       explanation:
-        'Locate sublist boundaries, disconnect it, reverse just that portion, reconnect. Common in "reverse between m and n" problem.',
+        "This is true. We locate the node before the sublist start (startPrev), disconnect it, reverse just the sublist portion, then reconnect. For example, reversing nodes 2 to 4 in 1 -> 2 -> 3 -> 4 -> 5 gives 1 -> 4 -> 3 -> 2 -> 5.",
     },
   ],
 
@@ -434,8 +568,13 @@ const questions: Record<string, Question[]> = {
       question: "Floyd\'s cycle detection uses:",
       options: ["Two stacks", "Two pointers", "Hash set", "Sorting"],
       correctAnswer: 1,
+      hints: [
+        "Think about relative speeds",
+        "What if one pointer moves faster than the other?",
+        "The \"tortoise and hare\" analogy might help"
+      ],
       explanation:
-        "Floyd\'s Tortoise and Hare: slow moves 1 step, fast moves 2 steps. If they meet, cycle exists.",
+        "Floyd\'s algorithm uses two pointers moving at different speeds (Tortoise and Hare). Slow moves 1 step, fast moves 2 steps. If there is a cycle, fast will lap slow and they must meet. Time: O(n), Space: O(1). No extra memory needed.",
     },
     {
       id: "q-dc-2",
@@ -443,8 +582,13 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Hash set approach detects cycles in O(n) time and O(n) space.",
       correctAnswer: "true",
+      hints: [
+        "What data structure lets us check if we\'ve visited a node before?",
+        "How many nodes can we visit in the worst case?",
+        "What\'s the trade-off compared to Floyd\'s algorithm?"
+      ],
       explanation:
-        "Store visited nodes in set. If we revisit a node, cycle exists. O(n) space for up to n unique nodes.",
+        "This is true. The hash set approach achieves O(n) time but requires O(n) space. We visit each node, add to set if not seen, or return true if already seen. In worst case (no cycle), we store all n nodes. Floyd\'s is space-optimal O(1) but hash set is simpler.",
     },
     {
       id: "q-dc-3",
@@ -453,8 +597,13 @@ const questions: Record<string, Question[]> = {
       question: "Floyd\'s algorithm time complexity:",
       options: ["O(1)", "O(n)", "O(n²)", "O(n log n)"],
       correctAnswer: 1,
+      hints: [
+        "Think about how many iterations until meeting",
+        "The cycle length and distance to cycle entrance matter",
+        "Can pointers loop forever without meeting?"
+      ],
       explanation:
-        "Both pointers traverse the list. In worst case, fast catches slow after at most n iterations.",
+        "O(n). Let u = distance from head to cycle entrance, k = cycle length. When slow enters the cycle (after u steps), fast is already inside. Fast gains 1 step on slow per iteration. They meet after at most k more iterations. Total: u + k <= 2n = O(n).",
     },
     {
       id: "q-dc-4",
@@ -469,8 +618,13 @@ const questions: Record<string, Question[]> = {
         "Calculate distance to head",
       ],
       correctAnswer: 1,
+      hints: [
+        "Once meeting occurs, both pointers are in the cycle",
+        "Think about traversing the cycle until you return to the start",
+        "One full loop around the cycle brings you back to the same node"
+      ],
       explanation:
-        "From meeting point, traverse until you return to same node, counting steps. This gives cycle length k.",
+        "From the meeting point, keep one pointer stationary and move the other until it returns to the same node, counting steps. This count is the cycle length k. For example, if meeting at M and traversing M -> A -> B -> C -> M, the cycle length is 4.",
     },
     {
       id: "q-dc-5",
@@ -485,8 +639,13 @@ const questions: Record<string, Question[]> = {
         "Reset both",
       ],
       correctAnswer: 1,
+      hints: [
+        "After meeting, one pointer is at the meeting point, one at head",
+        "They need to meet at the cycle entrance",
+        "Think about distances: both should travel the same distance"
+      ],
       explanation:
-        "Move both one step at a time. When they meet again, that node is cycle start. Mathematical proof: meeting point = k steps from head where k = cycle length.",
+        "Move both one step at a time. When they meet again, that\'s the cycle entrance. Mathematically, if u = distance to cycle entrance and k = cycle length, after u moves both pointers meet at the entrance. Pointer from head travels u steps, pointer from meeting point also travels u steps to reach the entrance.",
     },
   ],
 
@@ -529,6 +688,19 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "Both lists sorted. Compare heads: 1 vs 1 (equal, pick either), then 2 vs 3, then 4 vs 3, then 4 vs 4. Result: [1,1,2,3,4,4].",
+    },
+    {
+      id: "q-msl-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Merging two sorted linked lists of lengths m and n requires O(m+n) space.",
+      correctAnswer: "False",
+      hints: [
+        "Are we creating new nodes or rewiring existing ones?",
+        "In-place merging just changes the next pointers"
+      ],
+      explanation:
+        "False. We can merge in-place by rewiring the next pointers of existing nodes, using O(1) extra space (just two pointers). No new nodes need to be allocated. Time is O(m+n) but space is O(1).",
     },
   ],
 
@@ -576,6 +748,20 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       explanation:
         "2nd from end is node with value 4. Remove it: 1→2→3→5. Wait, remove 2nd from end means position 2 in [5,4,3,2,1] = node 4.",
+    },
+    {
+      id: "q-rnn-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What is the time complexity of the two-pointer approach to remove nth node from end?",
+      options: ["O(n²)", "O(n)", "O(log n)", "O(1)"],
+      correctAnswer: 1,
+      hints: [
+        "We make a single pass through the list",
+        "Both fast and slow pointers traverse at most n nodes total"
+      ],
+      explanation:
+        "O(n). The fast pointer advances n+1 steps ahead, then both move simultaneously until fast hits the end. Total traversal is at most n steps. This is more efficient than two passes since it only traverses the list once.",
     },
   ],
 
@@ -628,6 +814,20 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "Reading forward: 1,2,1. Reading backward: 1,2,1. Same in both directions → palindrome.",
+    },
+    {
+      id: "q-pll-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "What is the optimal space complexity for palindrome linked list check?",
+      options: ["O(n)", "O(n/2)", "O(log n)", "O(1)"],
+      correctAnswer: 3,
+      hints: [
+        "Is it possible to check without storing any extra data?",
+        "Think about reversing the second half in-place"
+      ],
+      explanation:
+        "O(1) space is achievable. Use slow/fast pointers to find the middle, reverse the second half in-place, compare with the first half, then optionally restore the second half. This requires only a constant number of pointer variables.",
     },
   ],
 
@@ -741,6 +941,20 @@ const questions: Record<string, Question[]> = {
       explanation:
         "If popped value equals current min (top of min stack), pop from min stack too. This reveals previous min.",
     },
+    {
+      id: "q-mns-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What is the space complexity of the MinStack with (value, min) pairs?",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correctAnswer: 2,
+      hints: [
+        "Each push adds one entry to the stack",
+        "n push operations create n stack entries"
+      ],
+      explanation:
+        "O(n). Each push stores a (value, currentMin) pair. With n push operations, the stack holds n pairs. This is a space trade-off for O(1) getMin(). The two-stack variant also uses O(n) total space since the min-stack stores at most n entries.",
+    },
   ],
 
   "implement-queue": [
@@ -789,6 +1003,19 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       explanation:
         "Single stack requires O(n) to dequeue (reverse entire stack). Two stacks achieve amortized O(1).",
+    },
+    {
+      id: "q-iq-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In the two-stack queue, elements may be transferred from stack1 to stack2 multiple times.",
+      correctAnswer: "False",
+      hints: [
+        "Once an element moves to stack2, when does it come back to stack1?",
+        "Elements only flow in one direction: stack1 then stack2 then out"
+      ],
+      explanation:
+        "False. Each element is transferred from stack1 to stack2 exactly once. After transfer, elements are dequeued (popped) from stack2 and never return to stack1. This one-way flow is why the amortized cost per operation is O(1): each element is pushed once, transferred once, and popped once.",
     },
   ],
 
@@ -841,6 +1068,47 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 3,
       explanation:
         "Each element pushed and popped at most once. Overall O(n) time, each operation amortized O(1).",
+    },
+    {
+      id: "q-nge-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "For a circular array [1,2,1], next greater for index 2 (value 1) is:",
+      options: ["-1", "1", "2", "None"],
+      correctAnswer: 2,
+      hints: [
+        "In a circular array, after the last element we wrap around to index 0",
+        "From index 2 (value 1), look at index 0 (value 1), then index 1 (value 2)"
+      ],
+      explanation:
+        "In a circular array, we wrap around. Starting from index 2 (value 1): next is index 0 (value 1, not greater), then index 1 (value 2, which IS greater). So the answer is 2. We can handle circular arrays by iterating 2n times with index % n.",
+    },
+    {
+      id: "q-nge-7",
+      type: "true-false",
+      difficulty: "hard",
+      question: "The monotonic stack for Next Greater Element maintains elements in strictly decreasing order.",
+      correctAnswer: "True",
+      hints: [
+        "Think about what happens when we push a new element that equals the stack top",
+        "When we pop elements, what condition must the new element satisfy?"
+      ],
+      explanation:
+        "True. The stack is monotonically decreasing from bottom to top. When we encounter a new element, we pop all elements from the stack that are smaller than (or equal to, in the strict version) the current element. The remaining stack elements are all greater than the current element, maintaining the decreasing property.",
+    },
+    {
+      id: "q-nge-8",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Space complexity of Next Greater Element using monotonic stack:",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correctAnswer: 2,
+      hints: [
+        "In the worst case, how many elements could be on the stack?",
+        "Consider a strictly decreasing input array"
+      ],
+      explanation:
+        "O(n). In the worst case (e.g., a strictly decreasing array like [5,4,3,2,1]), every element gets pushed onto the stack before any gets popped. The stack can hold all n elements simultaneously. The result array also uses O(n) space.",
     },
   ],
 };

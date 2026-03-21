@@ -287,7 +287,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A priori testing evaluates the SGS model against DNS data independently; a posteriori testing deploys it inside a live LES solver. Error accumulation over time steps can cause divergence even when a priori errors are low — a critical gap many ML models fail to bridge.",
       hints: [
-        '"A priori" means testing in isolation; "a posteriori" means testing in the full coupled simulation.',
+        'The word "a posteriori" means testing in the full coupled simulation.',
         "Small errors per step can compound into large errors or instabilities over thousands of time steps.",
       ],
     },
@@ -739,10 +739,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "EMD measures how much energy must be transported to morph one jet\'s energy flow pattern into another\'s, providing a natural physics-motivated metric that respects infrared/collinear safety — crucial for perturbative QCD validity and anomaly detection in jet space.",
+        "The adjoint ODE satisfies da/dt = −a(t)ᵀ (∂f_θ/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. θ are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_θ/∂θ) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
-        'Think of jets as distributions of energy in angle space — EMD measures the "cost" of morphing one distribution into another.',
-        "IRC safety means the metric is unchanged by splitting one particle into two collinear ones or adding an infinitely soft particle.",
+        "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_θ.",
+        "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them — O(1) memory vs O(N) for BPTT.",
       ],
     },
   ],
@@ -984,14 +984,14 @@ const questions: Record<string, Question[]> = {
         "Physical phenomena occur only at the atomic scale and cannot be modeled at larger scales",
         "Relevant physics spans many orders of magnitude in length and time scales, making direct simulation of all scales simultaneously computationally infeasible",
         "Different scales require different programming languages for their simulations",
-        "Multi-scale models violate the laws of thermodynamics at the boundary between scales",
+        "Turbulence is fundamentally a quantum mechanical phenomenon",
       ],
       correctAnswer: 1,
       explanation:
         "Turbulent combustion, for example, spans from molecular (nm, fs) to engineering (m, s) scales — 9 orders of magnitude each — making full-scale direct simulation impossible. ML bridges scales by learning effective coarse-grained models from fine-scale simulations.",
       hints: [
-        "Think about a material failure: atomic bond breaking determines macroscopic fracture, but simulating every atom in an aircraft wing is impossible.",
-        "The challenge is bridging the gap: how do fine-scale processes (molecules) affect coarse-scale behavior (continuum mechanics)?",
+        "Think about placing a small number of flow sensors (pressure taps) to infer the entire flow field around an airfoil.",
+        "The reconstruction uses a reduced basis (POD modes) to express the full field as a linear combination, recovered from sparse sensor observations.",
       ],
     },
     {
@@ -1362,10 +1362,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pure data-driven surrogates can produce physically inconsistent predictions outside the training regime (violating mass conservation, negative temperatures); physics constraints encoded via PINNs or architecture design enforce physical correctness and improve out-of-distribution reliability.",
+        "Cosmological likelihoods for complex statistics (e.g., higher-order statistics, galaxy morphologies) are analytically intractable; SBI methods (SNPE, SNLE, SNRE) train neural estimators on simulation pairs (θ, x) to approximate the posterior directly.",
       hints: [
-        "Pure ML models extrapolate poorly — they might predict negative pressure in an unobserved regime.",
-        "Physical constraints like conservation of mass or energy eliminate physically impossible predictions.",
+        "Traditional Bayesian inference requires evaluating the likelihood — what if you cannot write it down?",
+        "Forward simulations are feasible (you can simulate the universe given cosmological parameters), even if the inverse probability is not analytically tractable.",
       ],
     },
   ],
@@ -1376,7 +1376,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In climate science, ML is being used to improve the parameterization of which processes that are too small to be resolved by general circulation models (GCMs)?",
+        "ML is being used in climate science to improve the parameterization of which processes that are too small to be resolved by general circulation models (GCMs)?",
       options: [
         "Continental drift and tectonic plate movement",
         "Sub-grid convection, cloud formation, and turbulent mixing, which occur at scales finer than GCM grid cells",
@@ -1711,6 +1711,511 @@ const questions: Record<string, Question[]> = {
     },
   ],
 };
+
+const additionalScimlQuestions: Record<string, Question[]> = {
+  'fourier-neural-operators': [
+    {
+      id: 'q-sciml-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'The Fourier Neural Operator (FNO) learns mappings between function spaces. Its core innovation is applying the integral kernel operator in the ___.',
+      options: [
+        'Spatial domain using learned convolutional filters of fixed size',
+        'Fourier domain, where the kernel becomes a pointwise multiplication by learned complex weights on a truncated set of Fourier modes',
+        'Wavelet domain using learnable mother wavelets at multiple scales',
+        'Graph spectral domain using the graph Laplacian eigenbasis of the input mesh',
+      ],
+      correctAnswer: 1,
+      explanation: 'FNO applies FFT to the input function, multiplies by learned complex weight tensors on the lowest R Fourier modes, then inverse-FFTs back. This is equivalent to a global convolution but is O(N log N) and resolution-invariant—the same weights work for any discretisation of the input function.',
+      hints: [
+        'In the Fourier domain, convolution becomes pointwise multiplication—what does "learning the kernel" mean there?',
+        'Truncating to R modes is a low-pass filter assumption: the operator is assumed to be smooth.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A trained FNO model can be evaluated on a finer spatial grid than the one used during training without retraining, because the learned Fourier mode weights are discretisation-agnostic.',
+      correctAnswer: 'true',
+      explanation: 'Resolution-invariance is a key FNO property: since the operator is parameterised in Fourier space (truncated modes), it can be applied to any resolution by simply running FFT at that resolution, multiplying the same learned weights, and inverse-FFT. This "zero-shot" super-resolution is widely used in PDE surrogate settings.',
+      hints: [
+        'The Fourier transform of a function at different resolutions still has the same low-frequency modes.',
+        'If the learned weights are on modes 1..R, those modes exist regardless of grid resolution.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Compared to PINNs, FNO-based surrogates offer a different trade-off. Which statement correctly captures the main difference?',
+      options: [
+        'FNO enforces PDE constraints exactly via automatic differentiation at test time, while PINNs do not',
+        'FNO is a data-driven operator learner that requires paired (input, solution) training data but amortises inference cost across many PDE instances; PINNs solve each instance from scratch using physics loss and need no solution data',
+        'FNO can only handle 1D PDEs, while PINNs work in arbitrary dimensions',
+        'FNO requires mesh-based discretisation, while PINNs are always mesh-free',
+      ],
+      correctAnswer: 1,
+      explanation: 'PINNs embed the PDE as a loss term and train per-instance—no labelled solution data required but each new scenario needs a full retrain. FNO learns an operator mapping (e.g., initial condition → solution) across many instances; inference is a single forward pass but training needs ground-truth solutions (e.g., from a classical solver).',
+      hints: [
+        'Think about what "amortised" means: you pay a large upfront cost that gets reused.',
+        'PINN: physics at training time; FNO: physics baked in via training data.',
+      ],
+    },
+  ],
+  'uncertainty-sci-ml': [
+    {
+      id: 'q-sciml-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In Bayesian neural networks applied to scientific ML, the posterior over weights p(W|D) is typically approximated via ___.',
+      options: [
+        'Exact marginalisation over all possible weight configurations',
+        'Variational inference (e.g., mean-field VI with ELBO) or MCMC methods such as HMC, because exact posterior computation is intractable for large networks',
+        'Maximum a posteriori (MAP) estimation, which gives the full posterior distribution',
+        'Bootstrap aggregation over 3 or more independently trained networks',
+      ],
+      correctAnswer: 1,
+      explanation: 'Exact Bayesian inference scales exponentially in the number of parameters. Practical methods include (1) variational inference: approximate the posterior with a factorised Gaussian and minimise the KL divergence via the ELBO; (2) MCMC (e.g., HMC, NUTS): sample chains from the posterior—accurate but expensive; (3) deep ensembles: computationally cheapest but not strictly Bayesian.',
+      hints: [
+        'MAP gives a point estimate, not a distribution. The posterior is a distribution over weights.',
+        'The ELBO (Evidence Lower BOund) is the objective for VI: maximising it minimises KL(q||p).',
+      ],
+    },
+    {
+      id: 'q-sciml-kp32-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Conformal prediction provides distribution-free coverage guarantees: given a calibration set, it constructs prediction intervals that contain the true value with at least (1−α) probability, regardless of the underlying data distribution.',
+      correctAnswer: 'true',
+      explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) ≤ q̂_{1−α}} achieves marginal coverage ≥ 1−α without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
+      hints: [
+        'Conformal methods use a held-out calibration set to set the score threshold.',
+        'Coverage is marginal (over random calibration sets), not conditional on x.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In scientific ML, aleatoric uncertainty and epistemic uncertainty serve different roles. Which statement is correct?',
+      options: [
+        'Aleatoric uncertainty decreases with more training data; epistemic uncertainty is irreducible',
+        'Epistemic uncertainty (model ignorance) reflects the data distribution and can be reduced with more data; aleatoric uncertainty (irreducible noise) is only reducible by increasing model complexity',
+        'Both types of uncertainty are irreducible and cannot be estimated separately by any model',
+        'Epistemic uncertainty is only relevant for classification tasks, not for PDE regression',
+      ],
+      correctAnswer: 1,
+      explanation: 'Epistemic (model) uncertainty arises from limited data—it shrinks as more observations are added. Aleatoric (data) uncertainty reflects irreducible stochasticity (sensor noise, chaotic dynamics). In surrogate modelling, epistemic uncertainty indicates where the surrogate should not be trusted; aleatoric uncertainty indicates the inherent variability of the physical system.',
+      hints: [
+        'Think: if you had infinite training data, which uncertainty would disappear?',
+        'A noisy sensor on a turbulent flow introduces aleatoric uncertainty that no amount of data removes.',
+      ],
+    },
+  ],
+  'active-learning-sci-advanced': [
+    {
+      id: 'q-sciml-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In active learning for scientific ML surrogates, the acquisition function determines which simulation to run next. Which acquisition function is motivated by maximising information gain about the model parameters?',
+      options: [
+        'Greedy nearest-neighbor: run the simulation closest to an already-labelled point',
+        'Maximum entropy or BALD (Bayesian Active Learning by Disagreement), which maximises mutual information between predictions and model parameters',
+        'Random sampling over the input space',
+        'Minimum variance: run the simulation where variance of an ensemble is minimised',
+      ],
+      correctAnswer: 1,
+      explanation: 'BALD selects the input x* that maximises I(y; W | x*, D) = H[y|x*, D] − E_{p(W|D)}[H[y|x*, W]], balancing high predictive uncertainty with low average conditional uncertainty. This is equivalent to selecting points where the ensemble disagrees most about predictions, driving the model to reduce epistemic uncertainty efficiently.',
+      hints: [
+        'Information gain = how much does observing this label reduce uncertainty about model weights?',
+        'BALD = "Bayesian Active Learning by Disagreement" — the ensemble members disagree most at informative points.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In physics-informed active learning, collocation points for the PDE residual can be adaptively placed in regions of high residual loss, reducing the total number of collocation points needed for accurate solutions.',
+      correctAnswer: 'true',
+      explanation: 'Adaptive collocation (e.g., RAR — Residual-based Adaptive Refinement) monitors the PDE residual across the domain and adds new collocation points where it is highest. This concentrates compute on difficult regions (sharp gradients, boundary layers) and dramatically reduces the total point budget compared to uniform sampling.',
+      hints: [
+        'Uniform collocation wastes points in easy regions; adaptive methods focus on hard regions.',
+        'RAR is analogous to adaptive mesh refinement (AMR) in classical PDE solvers.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'For a batch active learning strategy in scientific surrogate modelling, why is greedy sequential selection of the top-k most uncertain points suboptimal?',
+      options: [
+        'Because sequential selection is computationally faster than batch selection',
+        'Because the top-k points are often clustered in the same high-uncertainty region, leading to redundant simulations and poor space coverage',
+        'Because sequential selection requires re-fitting the surrogate after each point, which is impossible with neural network surrogates',
+        'Because greedy selection always picks boundary points, which have low information content',
+      ],
+      correctAnswer: 1,
+      explanation: 'Greedy sequential selection picks the single most uncertain point, re-ranks, picks the next, etc. If run in batch (no refit between picks), the top-k points all concentrate near the current maximum-uncertainty region, wasting budget on redundant, correlated simulations. Batch strategies (e.g., determinantal point processes, core-set selection, k-DPP) explicitly encourage diversity within the batch.',
+      hints: [
+        'High uncertainty is spatially correlated — nearby points are all uncertain for the same reason.',
+        'Diversity in the batch ≈ sampling from different uncertain "clusters" rather than repeating the same one.',
+      ],
+    },
+  ],
+  'graph-neural-pde': [
+    {
+      id: 'q-sciml-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Graph Neural Networks (GNNs) are suited for PDE solving on irregular meshes because ___.',
+      options: [
+        'GNNs require a regular Cartesian grid and apply fixed convolution stencils',
+        'GNNs naturally operate on arbitrary graph topologies, so mesh nodes become graph nodes and edges encode spatial adjacency, with message passing mimicking finite-element interactions',
+        'GNNs encode the PDE in their loss function rather than their architecture',
+        'GNNs automatically generate the mesh from the PDE boundary conditions',
+      ],
+      correctAnswer: 1,
+      explanation: 'Methods like MeshGraphNets (Pfaff et al., 2021) represent simulation meshes as graphs, run learned message passing (aggregating neighbour features via edge networks), and roll out dynamics step-by-step. This handles non-uniform, adaptive meshes naturally and generalises across mesh refinements, unlike grid-based CNNs.',
+      hints: [
+        'In FEM, degrees of freedom interact locally through mesh connectivity—this is exactly the graph message-passing structure.',
+        'CNNs assume a regular grid; GNNs can represent any topology.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Message-passing GNNs are limited in their ability to distinguish certain non-isomorphic graphs (the Weisfeiler-Leman limitation), which can affect their expressiveness for PDE problems requiring global geometric reasoning.',
+      correctAnswer: 'true',
+      explanation: 'Standard message passing (sum/mean aggregation) cannot distinguish all graph structures—it is at most as powerful as the 1-WL graph isomorphism test. For PDE tasks requiring global geometric properties (e.g., long-range pressure propagation), higher-order GNNs, transformer attention, or multi-scale architectures are needed to overcome this limitation.',
+      hints: [
+        'WL test: two graphs are "the same" if message passing cannot distinguish their node feature distributions.',
+        'Long-range interactions in a PDE (e.g., elliptic equations) require information to travel many hops in the graph.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The Multipole Graph Neural Operator (MGNO) and similar hierarchical GNN-based operators address the long-range interaction problem by ___.',
+      options: [
+        'Adding skip connections between the input and output layers of the GNN',
+        'Building a multi-resolution graph hierarchy (coarse-to-fine) so that long-range interactions propagate via few hops through coarser levels, analogous to multigrid methods',
+        'Replacing message passing with attention over all node pairs (O(N²) complexity)',
+        'Using random graph rewiring to create shortcut edges between distant nodes',
+      ],
+      correctAnswer: 1,
+      explanation: 'Hierarchical/multigrid GNN operators (e.g., MGNO, Geo-FNO on graphs) construct a coarsened graph hierarchy: messages at the coarsest level travel across the entire domain in one hop, enabling O(log N) effective interaction distance. This mirrors classical multigrid PDE solvers and keeps complexity near O(N).',
+      hints: [
+        'Multigrid: smooth errors at fine levels, correct large-scale errors at coarse levels.',
+        'Going from fine to coarse to fine ≈ one message-passing round covers the whole domain.',
+      ],
+    },
+  ],
+  'symbolic-regression-advanced': [
+    {
+      id: 'q-sciml-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'PySR and similar modern symbolic regression tools search for analytical formulas from data. Their core search algorithm is typically ___.',
+      options: [
+        'Exhaustive enumeration of all possible formulas up to a fixed length',
+        'Evolutionary/genetic programming: a population of expression trees is evolved via mutation and crossover, guided by a parsimony-penalised fitness score',
+        'Gradient descent on a continuous relaxation of the expression tree space',
+        'Bayesian optimisation over the discrete grammar of mathematical expressions',
+      ],
+      correctAnswer: 1,
+      explanation: 'Genetic programming (GP) maintains a population of expression trees. Each iteration: (1) evaluate fitness = accuracy − complexity penalty; (2) select parents; (3) apply crossover (swap subtrees) and mutation (replace nodes/operators); (4) keep the Pareto front of accuracy vs. complexity. PySR adds gradient-based constant optimisation at each step for efficiency.',
+      hints: [
+        'Expression trees naturally support crossover: swap a subtree from one parent into another.',
+        'Parsimony pressure: prefer shorter formulas that fit equally well — Occam\'s razor in practice.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp35-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Symbolic regression can recover exact closed-form equations (e.g., Newton\'s law F = ma) from noisy experimental data, making it a tool for scientific discovery rather than just prediction.',
+      correctAnswer: 'true',
+      explanation: 'Symbolic regression searches for interpretable formulas rather than black-box models. Landmark examples include Udrescu & Tegmark\'s AI Feynman (2020), which recovered 100 physics equations from the Feynman symbolic regression benchmark, and Cranmer et al.\'s discovery of conservation laws from particle physics simulations.',
+      hints: [
+        'A neural network gives you a number; symbolic regression gives you a formula you can reason about.',
+        'If the formula is exact physics, it will generalise perfectly to new regimes—extrapolation is possible.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A key challenge with symbolic regression at scale (many variables, high complexity) is ___.',
+      options: [
+        'That genetic programming cannot represent any formula involving trigonometric functions',
+        'The combinatorial explosion of expression tree space: the number of possible formulas grows super-exponentially in depth/arity, making exhaustive search infeasible and requiring aggressive heuristics or deep learning guidance',
+        'That symbolic regression requires labelled training data unlike PINNs which need no data',
+        'That symbolic regression results always overfit because they lack regularisation',
+      ],
+      correctAnswer: 1,
+      explanation: 'With k input variables and n operator types, the number of expression trees of depth d grows as O((k·n)^(2^d)). Beyond ~5 variables and moderate complexity, naive GP struggles. Modern approaches address this via: (1) neural-guided search (e.g., NeSymReS uses transformers to propose candidate expressions); (2) embedding dimensional analysis constraints; (3) parallelised island-model evolution.',
+      hints: [
+        'Depth 5 tree with 10 nodes and 10 operators: 10^10 possible trees—exhaustive search is hopeless.',
+        'Neural guidance: a transformer trained on (data, formula) pairs can propose likely formula skeletons.',
+      ],
+    },
+  ],
+  'data-driven-turbulence': [
+    {
+      id: 'q-sciml-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'In data-driven turbulence closure for RANS (Reynolds-Averaged Navier-Stokes), the ML model is trained to predict ___.',
+      options: [
+        'The raw velocity field at each timestep, replacing the full Navier-Stokes solve',
+        'The Reynolds stress tensor τ_ij = −ρ⟨u\'_i u\'_j⟩, which encodes the effect of unresolved turbulent fluctuations on the mean flow',
+        'The turbulent kinetic energy spectrum in wavenumber space',
+        'The Kolmogorov microscale η as a function of Reynolds number',
+      ],
+      correctAnswer: 1,
+      explanation: 'RANS equations are unclosed: the Reynolds stress tensor τ_ij appears but is unknown. Traditional closures (k-ε, k-ω) use linear eddy viscosity assumptions. Data-driven approaches (e.g., Ling et al., Schmelzer et al.) train ML models to map mean-flow features (strain rate, vorticity, pressure gradient) → τ_ij from high-fidelity DNS data.',
+      hints: [
+        'RANS averaging introduces τ_ij as the "closure problem"—it must be modelled.',
+        'DNS resolves all scales but is too expensive for engineering Re; RANS is cheap but needs a closure.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp36-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Galilean invariance and rotational equivariance are important physical constraints for ML turbulence closure models, because the Reynolds stress must transform correctly under coordinate changes.',
+      correctAnswer: 'true',
+      explanation: 'Ling et al. (2016) showed that embedding tensor-basis representations (Pope\'s integrity basis for symmetric tensors) into neural networks enforces both Galilean invariance and frame-independence by construction. Unconstrained networks can learn invariant mappings accidentally but are not guaranteed to remain physically consistent outside the training distribution.',
+      hints: [
+        'The Reynolds stress is a rank-2 symmetric tensor; it must transform as T_ij → R_ik R_jl T_kl under rotation R.',
+        'Pope\'s tensor basis: any symmetric, traceless function of symmetric input tensors can be written as a linear combination of 10 basis tensors with scalar coefficients.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A major challenge for deploying ML turbulence models in RANS solvers is a-posteriori instability. What does this mean and how is it addressed?',
+      options: [
+        'The ML model is trained in an a-priori setting (given mean-flow features, predict τ_ij) but when deployed inside the RANS solver (a-posteriori), errors accumulate and may cause solver divergence; addressed by differentiable RANS solvers enabling end-to-end training',
+        'The ML model is unstable during training because of vanishing gradients in deep networks; addressed by residual connections',
+        'The RANS solver diverges because the ML model predicts negative turbulent kinetic energy; addressed by adding a ReLU output activation',
+        'The ML model is too slow for real-time inference; addressed by model distillation',
+      ],
+      correctAnswer: 0,
+      explanation: 'A-priori testing: ML predicts τ_ij from ground-truth DNS mean-flow features—high accuracy. A-posteriori testing: deploy ML inside RANS; mean-flow now comes from the RANS solver itself, which differs from DNS. Small ML errors alter the mean-flow, which further misleads ML predictions, leading to instability. Solutions: differentiable RANS solvers (JAX-Fluids, etc.) that backpropagate through the full simulation loop during training.',
+      hints: [
+        'A-priori: perfect input features. A-posteriori: noisy/drifted features from the solver itself—compound errors.',
+        'Differentiable solvers make the full simulation a computational graph, enabling end-to-end gradient training.',
+      ],
+    },
+  ],
+  'neural-ode-applications': [
+    {
+      id: 'q-sciml-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Neural ODEs parameterise the derivative of a hidden state as dh/dt = f_θ(h(t), t). A key memory-efficient training technique unique to Neural ODEs is ___.',
+      options: [
+        'Gradient checkpointing, storing only every k-th layer activation',
+        'The adjoint method, which computes gradients by solving a reverse-time ODE without storing forward states',
+        'Mixed-precision training to halve activation memory requirements',
+        'Truncated backpropagation through time (TBPTT), which cuts gradients after a fixed number of steps',
+      ],
+      correctAnswer: 1,
+      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. θ and h(t₀) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T ∂f/∂h. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
+      hints: [
+        'Standard backprop through a discrete ODE solver stores all intermediate states—memory is O(N_steps).',
+        'Adjoint method: store only the final state, then recompute states backward as needed during the reverse ODE solve.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp37-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Latent Neural ODEs can model irregularly sampled time series by encoding observed data with an RNN encoder, inferring a latent initial condition z(t₀), then evolving z via a Neural ODE and decoding to outputs at arbitrary query times.',
+      correctAnswer: 'true',
+      explanation: 'Rubanova et al. (2019) introduced Latent Neural ODEs: an RNN encoder processes observed (t_i, x_i) pairs (possibly irregularly spaced) backward in time to infer z(t₀); the Neural ODE then provides a continuous-time latent trajectory; a decoder reconstructs observations at any desired time. This naturally handles missing data and irregular sampling, unlike RNNs that assume fixed time steps.',
+      hints: [
+        'RNNs require fixed-step inputs; Neural ODEs provide continuous-time dynamics—combine both.',
+        'The latent trajectory z(t) is smooth and continuous, so querying at any t is simply integrating the ODE to that time.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'When using a Neural ODE to model chaotic dynamical systems (e.g., Lorenz-63), training becomes difficult because ___.',
+      options: [
+        'The adjoint ODE cannot be integrated backward in time for chaotic systems',
+        'Gradients explode exponentially along the Lyapunov exponent direction as the adjoint is integrated backward; truncated trajectories and specialised loss functions (e.g., shadowing, SRB measure matching) are used to stabilise training',
+        'Chaotic systems have no fixed points, making it impossible to define a loss function',
+        'Neural ODEs only support autonomous (time-independent) dynamics, but chaotic systems are time-dependent',
+      ],
+      correctAnswer: 1,
+      explanation: 'In chaotic systems, the largest Lyapunov exponent λ₁ > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(λ₁T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
+      hints: [
+        'Lyapunov exponent: the rate at which infinitesimally separated trajectories diverge. Positive → chaos.',
+        'If you cannot match the trajectory exactly (butterfly effect), can you match its statistics instead?',
+      ],
+    },
+  ],
+  'quantum-ml': [
+    {
+      id: 'q-sciml-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'A Variational Quantum Eigensolver (VQE) is a hybrid quantum-classical algorithm. The quantum circuit\'s role is to ___.',
+      options: [
+        'Classically diagonalise the Hamiltonian matrix and return the ground state energy',
+        'Prepare a parameterised trial state |ψ(θ)⟩ and estimate ⟨ψ(θ)|H|ψ(θ)⟩ via measurement; classical optimisation then updates θ to minimise this energy expectation',
+        'Run Shor\'s algorithm to factorise the molecular Hamiltonian into independent subsystems',
+        'Replace the classical ML backward pass by computing parameter-shift rule gradients on quantum hardware',
+      ],
+      correctAnswer: 1,
+      explanation: 'VQE: a parameterised quantum circuit (ansatz) prepares |ψ(θ)⟩ on a quantum processor; repeated measurements estimate ⟨H⟩ via Pauli decomposition. A classical optimiser (gradient-free or using parameter-shift rule gradients) minimises ⟨H⟩(θ). Convergence → ground state energy. VQE leverages quantum state preparation while keeping optimisation classical, suiting near-term noisy devices.',
+      hints: [
+        'The variational principle: ⟨ψ|H|ψ⟩ ≥ E_0 for any |ψ⟩. Minimising it finds the ground state.',
+        'Parameter-shift rule: ∂⟨H⟩/∂θ_k = [⟨H⟩(θ_k + π/2) − ⟨H⟩(θ_k − π/2)] / 2 — enables gradient estimation from two circuit evaluations.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp38-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Quantum kernel methods encode classical data into quantum states and use the inner product between quantum states as a kernel for classical SVM, potentially offering an exponential feature space without explicitly computing it.',
+      correctAnswer: 'true',
+      explanation: 'Quantum kernel: K(x_i, x_j) = |⟨φ(x_i)|φ(x_j)⟩|², where |φ(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
+      hints: [
+        'Classical kernel trick: implicitly compute in high-dimensional space without materialising feature vectors.',
+        'Quantum feature map: the quantum circuit maps x to a superposition in 2^n-dimensional Hilbert space.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The "barren plateau" problem in quantum machine learning refers to ___.',
+      options: [
+        'Quantum circuits producing flat output distributions that ignore the input data',
+        'The exponential vanishing of gradients in parameterised quantum circuits as the number of qubits grows, caused by the random unitary nature of deep circuits concentrating the measure on the uniform distribution',
+        'A hardware calibration issue causing systematic bias in gate operations on quantum processors',
+        'The inability of variational circuits to represent non-unitary (dissipative) quantum dynamics',
+      ],
+      correctAnswer: 1,
+      explanation: 'McClean et al. (2018) proved that for random parameterised circuits, Var[∂⟨H⟩/∂θ_k] decreases exponentially in the number of qubits n: the gradient landscape is exponentially flat ("barren plateau"), making gradient-based optimisation infeasible for large systems. Mitigations include: local cost functions, structured ansätze (hardware-efficient, chemically-motivated UCCSD), layerwise training.',
+      hints: [
+        'Deep random circuits approach the Haar random unitary—gradients of any observable vanish exponentially.',
+        'Local cost (acting on a few qubits) avoids barren plateaus; global cost (all qubits) suffers from them.',
+      ],
+    },
+  ],
+  'physics-ml-hybrid': [
+    {
+      id: 'q-sciml-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Universal Differential Equations (UDEs) extend Neural ODEs by ___.',
+      options: [
+        'Adding attention mechanisms to the ODE right-hand side to handle variable-length inputs',
+        'Embedding neural networks only in unknown terms within known differential equation structure, so that established physics is preserved while missing sub-models are learned',
+        'Using universal approximation to guarantee that any ODE can be represented exactly with a large enough network',
+        'Replacing the ODE solver with a neural network that directly maps initial conditions to solutions',
+      ],
+      correctAnswer: 1,
+      explanation: 'UDEs (Rackauckas et al., 2020): if the ODE is ẋ = f(x, t; p) where part of f is known physics and part is unknown, only the unknown part is replaced by a neural network: ẋ = f_known(x, t) + NN_θ(x, t). The known physics provides strong inductive bias, reducing data requirements and improving generalisation. Training uses adjoint sensitivity through the ODE solve.',
+      hints: [
+        'If you know most of a physical model but not one specific term, you can replace just that term with a neural network.',
+        'The neural network learns the missing physics from data, while the rest of the model remains interpretable.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp39-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = ∂H/∂p, ṗ = −∂H/∂q) to evolve dynamics, automatically conserving total energy by construction.',
+      correctAnswer: 'true',
+      explanation: 'HNNs (Greydanus et al., 2019) parameterise H_θ(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout—unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
+      hints: [
+        'Hamilton\'s equations preserve H as a constant of motion—this is a mathematical identity, not a learned property.',
+        'Lagrangian NNs do the same for Lagrangian mechanics, conserving energy via Euler-Lagrange equations.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Equivariant neural networks (e.g., E(3)-equivariant GNNs like NequIP, MACE) are used for molecular force field learning because ___.',
+      options: [
+        'They process only equidistant atom pairs, simplifying the graph construction',
+        'Physical energies and forces must be invariant/equivariant under Euclidean symmetries (rotation, translation, reflection); equivariant networks satisfy these constraints by construction, dramatically improving data efficiency',
+        'They avoid computing pairwise distances, which is the computational bottleneck in MD simulations',
+        'They use equivariant attention that scales as O(N) in the number of atoms rather than O(N²)',
+      ],
+      correctAnswer: 1,
+      explanation: 'Molecular energy E must be invariant under rigid body transformations (E(3) symmetry), and forces F_i = −∂E/∂r_i are equivariant (rotate with the molecule). E(3)-equivariant GNNs (NequIP, MACE, Allegro) represent atomic features as irreducible representations of SO(3) and use Clebsch-Gordan products for equivariant message passing—achieving 10-100x better data efficiency than non-equivariant models.',
+      hints: [
+        'If you rotate a molecule, the energy is the same but the forces rotate with it—equivariance, not invariance.',
+        'Irreducible representations (irreps) of SO(3) are the spherical harmonics—they transform predictably under rotation.',
+      ],
+    },
+  ],
+  'differentiable-simulation': [
+    {
+      id: 'q-sciml-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Differentiable physics simulators enable end-to-end gradient-based optimisation through a simulation. A key challenge is handling ___.',
+      options: [
+        'Floating-point arithmetic, which introduces rounding errors in all gradient computations',
+        'Discontinuous events (contact, collision, phase changes) where gradients are zero or undefined, requiring smoothing, randomisation, or alternative gradient estimators',
+        'The requirement that all physical quantities must be positive, limiting the loss function design',
+        'GPU memory constraints, which prevent storing simulation state at each timestep',
+      ],
+      correctAnswer: 1,
+      explanation: 'Rigid-body contact, fluid shock waves, and phase transitions introduce non-differentiable discontinuities. Approaches: (1) smooth contact models (penalty-based, spring forces); (2) randomised smoothing (perturb inputs, average gradients); (3) complementarity-based differentiable contact (DiffTaichi, Brax); (4) event-driven adjoints that handle discontinuities analytically. Without these, gradients are zero or NaN at collision events.',
+      hints: [
+        'At a collision moment, the velocity changes instantaneously—the step function has zero gradient almost everywhere.',
+        'Smoothing: replace the hard contact with a soft constraint; gradients exist but may be biased.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Differentiable rendering (e.g., NeRF, NVDiffrast) enables gradient-based 3D reconstruction by making the rendering equation differentiable with respect to scene parameters such as geometry, materials, and lighting.',
+      correctAnswer: 'true',
+      explanation: 'Differentiable rendering computes ∂(rendered pixel)/∂(scene parameters) via rasterisation or ray-marching, enabling gradient descent to fit scene parameters to observed images. NeRF uses differentiable volume rendering; NVDiffrast uses differentiable rasterisation with edge sampling to handle visibility discontinuities. This underpins inverse rendering, neural scene representations, and text-to-3D methods.',
+      hints: [
+        'Inverse rendering = given images, infer 3D scene—this is an optimisation problem requiring gradients.',
+        'Edge discontinuities in rasterisation: the silhouette of an object is a step function in pixel space—requires special treatment.',
+      ],
+    },
+    {
+      id: 'q-sciml-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Score Distillation Sampling (SDS) in DreamFusion uses a pretrained 2D diffusion model as a differentiable loss for 3D optimisation. The SDS gradient update direction is ___.',
+      options: [
+        'The gradient of the pixel-wise MSE between rendered images and ground-truth photographs',
+        'The score function of the diffusion model evaluated at the noisy rendered image, minus the score of a random noise distribution—guiding the 3D representation toward high-likelihood regions of the 2D diffusion model\'s distribution',
+        'The negative log-likelihood of the text prompt under a CLIP model applied to the rendered image',
+        'The Jacobian of the rendering function with respect to the NeRF density field',
+      ],
+      correctAnswer: 1,
+      explanation: 'SDS gradient: ∇_θ L_SDS = E_{t,ε}[w(t)(ε_φ(x_t; y, t) − ε) · ∂x/∂θ], where ε_φ is the diffusion model\'s predicted noise and ε is the actual noise added. The term (ε_φ − ε) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering ∂x/∂θ, updates the 3D representation without needing a 3D dataset.',
+      hints: [
+        'SDS: "if this rendered view doesn\'t look like it was sampled from the diffusion model, update the 3D scene to make it more likely."',
+        'No 3D GT needed—the 2D diffusion model provides the supervisory signal via its score function.',
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, additionalScimlQuestions);
 
 registerQuestions(questions);
 export default questions;

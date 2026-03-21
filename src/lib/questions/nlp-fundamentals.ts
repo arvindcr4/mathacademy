@@ -241,19 +241,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In Bahdanau attention, at each decoder step t the model computes alignment scores e_{t,s} = v^T tanh(W_1 h_t + W_2 ĥ_s) for all encoder states ĥ_s. What do the resulting attention weights α_{t,s} represent?",
+        "In Bahdanau (additive) attention, at each decoder step $t$ the model computes alignment scores $e_{t,s} = \\mathbf{v}^\\top \\tanh(\\mathbf{W}_1 \\mathbf{h}_t + \\mathbf{W}_2 \\hat{\\mathbf{h}}_s)$ for all source positions $s$. The resulting attention weights are $\\alpha_{t,s} = \\frac{\\exp(e_{t,s})}{\\sum_{s'}\\exp(e_{t,s'})}$. What do these $\\alpha_{t,s}$ values represent?",
       options: [
-        "The probability that source token s is syntactically the head of target token t",
-        "A soft, learnable alignment: how much the decoder should focus on source position s when generating target token t",
-        "The probability that source and target token vocabularies overlap at position s",
-        "The cosine similarity between source token s and the target embedding at step t",
+        "The probability that source token $s$ is syntactically the head of target token $t$",
+        "A soft, learnable alignment: how much decoder step $t$ should attend to source position $s$ when generating the next target token",
+        "The probability that source and target token vocabularies overlap at position $s$",
+        "The cosine similarity between the query vector $\\mathbf{h}_t$ and the key vector $\\hat{\\mathbf{h}}_s$",
       ],
       correctAnswer: 1,
       explanation:
-        'The α_{t,s} are softmax-normalised alignment scores. They represent a learned soft alignment — the degree to which source position s is relevant when generating target position t. For English-French translation, when generating "la" the model attends strongly to "the" in the source. Crucially, different target tokens can attend to different source positions, and multiple source tokens can receive nonzero weight simultaneously ("soft" vs. hard alignment).',
+        "The attention weights $\\alpha_{t,s} \\in [0,1]$ sum to 1 over all source positions — they form a probability distribution over source positions. Each $\\alpha_{t,s}$ represents the fractional importance of source position $s$ when generating the target token at time $t$. For English-to-French translation, when generating the French token \"la\" (feminine article), the model assigns high $\\alpha_{t,s}$ to the English source position of \"the\" (feminine), not \"a\".\n\nThe key contrast is soft vs. hard alignment: IBM models' hard alignment assigns each target word to exactly one source word, while Bahdanau's soft alignment allows fractional weights — multiple source tokens can receive nonzero $\\alpha$ simultaneously, making the mechanism differentiable end-to-end.\n\nThe context vector at decoder step $t$ is:\n\\[\\mathbf{c}_t = \\sum_s \\alpha_{t,s} \\hat{\\mathbf{h}}_s.\\]",
       hints: [
-        "The α values are produced by a softmax over all source positions, so they sum to 1 — they behave like a probability distribution over source positions.",
-        "Contrast hard alignment (IBM models): assign each target word to exactly one source word. Soft alignment: assign fractional weights to all source words.",
+        "The softmax normalises the raw alignment scores $e_{t,s}$ so that $\\sum_s \\alpha_{t,s} = 1$ — each $\\alpha_{t,s}$ behaves like a probability.",
+        "Hard alignment (IBM Model 1–4): each target position links to exactly one source position. Soft alignment (Bahdanau): every target attends to every source with fractional weights — differentiable and end-to-end trainable.",
+        "The context vector $\\mathbf{c}_t = \\sum_s \\alpha_{t,s} \\hat{\\mathbf{h}}_s$ is a weighted average of all encoder states.",
       ],
     },
     {
@@ -261,19 +262,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Scaled dot-product attention computes Attention(Q,K,V) = softmax(QK^T / √d_k)V. Why divide by √d_k rather than, say, d_k?",
+        "Scaled dot-product attention computes:\n\\[\\text{Attention}(\\mathbf{Q},\\mathbf{K},\\mathbf{V}) = \\text{softmax}\\!\\left(\\frac{\\mathbf{Q}\\mathbf{K}^\\top}{\\sqrt{d_k}}\\right)\\mathbf{V}.\n\\]\nWhy divide by $\\sqrt{d_k}$ rather than by $d_k$?",
       options: [
-        "Dividing by √d_k ensures the attention weights sum to exactly d_k",
-        "When Q and K vectors have unit variance, their dot product has variance d_k; dividing by √d_k restores unit variance, keeping softmax gradients healthy",
+        "Dividing by $\\sqrt{d_k}$ ensures the attention weights sum to exactly 1",
+        "When $\\mathbf{q}$ and $\\mathbf{k}$ have unit variance, their dot product $\\mathbf{q}\\cdot\\mathbf{k} = \\sum_{i=1}^{d_k} q_i k_i$ has variance $d_k$; dividing by $\\sqrt{d_k}$ restores unit variance, keeping softmax in a gradient-friendly regime",
         "It normalises for different sequence lengths so longer sequences get smaller attention weights",
-        "It converts the dot products from cosine similarity to Euclidean distance",
+        "It converts dot products into cosine similarities for comparison",
       ],
       correctAnswer: 1,
       explanation:
-        'If q and k are d_k-dimensional vectors with zero mean and unit variance, q·k = Σ q_i k_i has variance d_k (sum of d_k unit-variance terms). For large d_k (e.g., 512 or 1024) this makes dot products large, pushing softmax into near-zero gradient "saturation" regions. Dividing by √d_k brings the variance back to 1, keeping gradients flowing. The Transformer paper (Vaswani et al., 2017) derives this from the statistical properties of the dot product.',
+        "If $\\mathbf{q}$ and $\\mathbf{k} \\in \\mathbb{R}^{d_k}$ each have independent components with mean 0 and variance 1, then:\n\\[\\mathbb{V}\\text{ar}(\\mathbf{q}\\cdot\\mathbf{k}) = \\mathbb{V}\\text{ar}\\!\\left(\\sum_{i=1}^{d_k} q_i k_i\\right) = d_k \\cdot (1 \\cdot 1) = d_k.\\]\nFor large $d_k$ (e.g., 512 or 1024), $\\mathbf{q}\\cdot\\mathbf{k}$ can have magnitude $\\sim 30\\sqrt{d_k} \\gg 1$, pushing softmax into saturation where the output is nearly one-hot and gradients are near zero. Dividing by $\\sqrt{d_k}$ normalises the variance to 1, keeping softmax inputs in a well-behaved region.\n\nDividing by $d_k$ instead would under-scale: $\\mathbb{V}\\text{ar}(\\mathbf{q}\\cdot\\mathbf{k}/d_k) = 1/d_k$, producing vanishingly small logits and extremely flat attention distributions.",
       hints: [
-        "Var(q·k) = d_k × Var(q_i k_i) = d_k × 1 for unit-variance entries. To get variance 1, divide by √d_k.",
-        "At large values softmax output is nearly one-hot; gradient of softmax near a one-hot is near zero. That is the saturation problem being avoided.",
+        "Step 1: $\\mathbb{V}\\text{ar}(q_i k_i) = \\mathbb{V}\\text{ar}(q_i)\\mathbb{V}\\text{ar}(k_i) = 1 \\cdot 1 = 1$ for unit-variance entries.\nStep 2: $\\mathbb{V}\\text{ar}(\\sum_i q_i k_i) = \\sum_i \\mathbb{V}\\text{ar}(q_i k_i) = d_k$.\nStep 3: To get variance 1, divide by $\\sqrt{d_k}$ (not $d_k$, which would give variance $1/d_k$).",
+        "Softmax saturation: when input $\\gg 0$, softmax output $\\approx$ one-hot, gradient $\\approx 0$. The $\\sqrt{d_k}$ scaling keeps the dot product in a range where softmax is differentiable.",
       ],
     },
     {
@@ -281,13 +282,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Luong attention (Luong et al., 2015) uses an additive (MLP) scoring function, while Bahdanau attention uses a dot-product or bilinear scoring function.",
+        "Luong attention (Luong et al., 2015) uses an additive (MLP) scoring function $\\text{score}(\\mathbf{h}_t, \\hat{\\mathbf{h}}_s) = \\mathbf{v}^\\top \\tanh(\\mathbf{W}[\\mathbf{h}_t; \\hat{\\mathbf{h}}_s])$, while Bahdanau attention uses a dot-product or bilinear scoring function $\\mathbf{h}_t^\\top \\mathbf{W} \\hat{\\mathbf{h}}_s$.",
       correctAnswer: "false",
       explanation:
-        'It is the reverse: Bahdanau (2015) introduced additive/concat attention — score(h_t, ĥ_s) = v^T tanh(W[h_t; ĥ_s]). Luong (2015) introduced simpler multiplicative variants: dot (h_t · ĥ_s), general (h_t^T W ĥ_s), and concat. Luong\'s dot and general forms are faster because they avoid the extra tanh and learnable vector v. This is why "scaled dot-product attention" in Transformers is sometimes called "Luong-style".',
+        "The naming is reversed from what the statement claims:\n\n**Bahdanau (2015)** introduced *additive/concat* attention:\n\\[e_{t,s} = \\mathbf{v}^\\top \\tanh(\\mathbf{W}_1 \\mathbf{h}_t + \\mathbf{W}_2 \\hat{\\mathbf{h}}_s)\\] \nwhich uses a small MLP (the $\\tanh$ non-linearity) to combine the decoder state $\\mathbf{h}_t$ and encoder state $\\hat{\\mathbf{h}}_s$.\n\n**Luong (2015)** introduced *multiplicative* (dot-product / bilinear) variants:\n\\[\n\\text{dot: } & \\mathbf{h}_t^\\top \\hat{\\mathbf{h}}_s, \\\\\n\\text{general: } & \\mathbf{h}_t^\\top \\mathbf{W} \\hat{\\mathbf{h}}_s, \\\\\n\\text{concat: } & \\mathbf{v}^\\top \\tanh(\\mathbf{W}[\\mathbf{h}_t; \\hat{\\mathbf{h}}_s])\n\\]\nThe dot-product form is faster because it avoids the $\\tanh$ and extra parameters. This is why the Transformer's scaled dot-product attention is sometimes called \"Luong-style\" — it uses the dot-product scoring function that Luong popularised.",
       hints: [
-        "Remember the order: Bahdanau (2014/15) came first with the MLP approach; Luong (2015) came second with simpler dot-product variants.",
-        "Additive attention adds the two vectors after projecting them; multiplicative takes their dot product (possibly after a linear transform).",
+        "Mnemonic: **B**ahdanau = **B**efore = MLP (additive) came first (2015). **L**uong = **L**ater = dot-product (multiplicative) came second (2015).",
+        "Additive: uses $\\tanh$ non-linearity and an extra learnable vector $\\mathbf{v}$. Multiplicative: uses only matrix multiplication and optionally a weight matrix $\\mathbf{W}$ — no $\\tanh$.",
+        "The Transformer's scaled dot-product attention $\\frac{\\mathbf{Q}\\mathbf{K}^\\top}{\\sqrt{d_k}}$ is a dot-product attention (Luong-style), scaled to prevent saturation.",
       ],
     },
   ],
@@ -299,19 +301,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Multi-head attention with h=8 heads and model dimension d_model=512 uses d_k = d_v = 64 per head. Why run 8 separate attention computations rather than one big one?",
+        "Multi-head attention with $h=8$ heads and model dimension $d_\\text{model}=512$ uses $d_k = d_v = 64$ per head ($d_k = d_\\text{model}/h$). Why run 8 separate attention computations rather than one single-head attention of dimension 512?",
       options: [
         "To reduce the total parameter count by a factor of 8 compared to single-head attention",
         "To let the model jointly attend from different representation subspaces — each head can specialise in different syntactic or semantic relationships",
-        "To ensure each head processes a different segment of the input sequence",
-        "To make the attention computation parallelisable across 8 GPUs",
+        "To ensure each head processes a different segment of the input sequence (heads are non-overlapping)",
+        "To make the attention computation parallelisable across 8 GPU cores",
       ],
       correctAnswer: 1,
       explanation:
-        "Each head learns separate Q, K, V projections, allowing it to attend to different aspects simultaneously. Empirically, different heads specialise: one head may track subject-verb agreement, another coreferential pronouns, another positional proximity. Concatenating and projecting the h=8 head outputs back to d_model combines these diverse views. The total parameter count is similar to single-head attention with dimension d_model (since 8 × 64 = 512).",
+        "Each head $i$ learns its own projections $\\mathbf{W}_i^Q \\in \\mathbb{R}^{d_\\text{model} \\times d_k}$, $\\mathbf{W}_i^K$, $\\mathbf{W}_i^V$, producing $\\mathbf{Q}_i, \\mathbf{K}_i, \\mathbf{V}_i \\in \\mathbb{R}^{n \\times d_k}$. After computing attention for each head:\n\\[\\text{head}_i = \\text{Attention}(\\mathbf{Q}_i\\mathbf{W}_i^Q, \\mathbf{K}_i\\mathbf{W}_i^K, \\mathbf{V}_i\\mathbf{W}_i^V) \\in \\mathbb{R}^{n \\times d_k},\\]\nthe $h$ heads are concatenated and projected:\n\\[\\text{MultiHead}(\\mathbf{Q},\\mathbf{K},\\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\dots, \\text{head}_h)\\mathbf{W}^O.\\]\nEmpirically, different heads specialise: one tracks subject-verb number agreement, another resolves coreferential pronouns, another attends to positional proximity. Total compute is comparable to single-head with dimension $d_\\text{model}$ because $h \\times d_k = d_\\text{model}$ — the dimension reduction exactly offsets the multiple heads.",
       hints: [
-        'Think of each head as a separate "attention channel" learning its own query/key/value projections. What can 8 specialised channels capture that 1 general channel cannot?',
-        "The paper (Vaswani et al., 2017) shows heads learn different linguistic phenomena. Attending in multiple subspaces jointly is the key advantage.",
+        "Each head projects into a $d_k = d_\\text{model}/h$ dimensional subspace. 8 heads $\\times$ 64 dims = 512 dims total — same total dimensionality as one 512-dim head.",
+        "The key advantage is representational diversity: different heads learn different $\\mathbf{W}_i^Q, \\mathbf{W}_i^K, \\mathbf{W}_i^V$ matrices, attending to different aspects of the input simultaneously.",
+        "Compute comparison: single-head 512-dim attention vs. 8-head 64-dim attention — both require $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ FLOPs.",
       ],
     },
     {
@@ -319,19 +322,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The original Transformer uses sinusoidal positional encodings: PE(pos, 2i) = sin(pos/10000^(2i/d_model)). What property do sinusoidal encodings have that makes them useful for positions never seen in training?",
+        "The original Transformer uses sinusoidal positional encodings:\n\\[PE(\\text{pos}, 2i) = \\sin\\!\\left(\\frac{\\text{pos}}{10000^{2i/d_\\text{model}}}\\right), \\quad PE(\\text{pos}, 2i+1) = \\cos\\!\\left(\\frac{\\text{pos}}{10000^{2i/d_\\text{model}}}\\right).\\]\nWhat key property makes sinusoidal encodings useful for generalising to sequence positions beyond those seen during training?",
       options: [
-        "Sinusoidal encodings are learned during training and extrapolate by periodicity",
-        "They encode relative positions algebraically: PE(pos+k) is a linear transformation of PE(pos), allowing the model to attend by relative offset",
-        "They ensure no two positions share the same encoding for any training sequence length",
-        "They are orthogonal to token embeddings, preventing interference during addition",
+        "Sinusoidal encodings are learned during training and extrapolate to longer sequences by periodic repetition",
+        "They encode relative positions algebraically: $PE(\\text{pos}+k)$ is a fixed linear transformation of $PE(\\text{pos})$ (via the $\\sin(a+b)/\\cos(a+b)$ angle-addition formulas), so attention dot products automatically capture relative distance $(i-j)$",
+        "They ensure every position has a unique encoding by construction, even beyond training length",
+        "They are orthogonal to token embeddings in $\\mathbb{R}^{d_\\text{model}}$, preventing positional information from interfering with token semantics",
       ],
       correctAnswer: 1,
       explanation:
-        "For any fixed offset k, PE(pos+k) can be expressed as a fixed linear function of PE(pos) (using the sin/cos angle-addition formula). This means attention dot products between positions automatically capture relative distances in a way that generalises beyond the training sequence length. Learned positional embeddings (used in BERT, GPT) lack this property and struggle with positions beyond their training length.",
+        "The key algebraic property is that for any fixed offset $k$:\n\\[\\begin{aligned}\nPE(\\text{pos}+k, 2i) &= \\sin\\!\\left(\\frac{\\text{pos}+k}{10000^{2i/d}}\\right) \\\\\n&= \\sin\\!\\left(\\frac{\\text{pos}}{10000^{2i/d}}\\right)\\cos\\!\\left(\\frac{k}{10000^{2i/d}}\\right) + \\cos\\!\\left(\\frac{\\text{pos}}{10000^{2i/d}}\\right)\\sin\\!\\left(\\frac{k}{10000^{2i/d}}\\right) \\\\\n&= A_{ki} \\cdot PE(\\text{pos}, 2i) + B_{ki} \\cdot PE(\\text{pos}, 2i+1),\n\\end{aligned}\\]\nwhere $A_{ki}, B_{ki}$ are constants depending only on $k$ (not on $\\text{pos}$). Thus $PE(\\text{pos}+k)$ is a fixed linear transformation of $PE(\\text{pos})$ — the relative offset $k$ is encoded algebraically into the dot products between position vectors.\n\nLearned positional embeddings (BERT, GPT) have no such guarantee: position 2048 simply has no entry in the lookup table if the model was trained only up to position 1024.",
       hints: [
-        "sin(a+b) = sin(a)cos(b) + cos(a)sin(b). This means PE(pos+k) depends linearly on PE(pos). What does that enable the attention mechanism to do?",
-        "If the training max length is 512 but the test input is 600 tokens, sinusoidal encodings can still produce unique, meaningful position vectors for positions 513–600.",
+        "Use the angle-addition formulas: $\\sin(x+y) = \\sin x \\cos y + \\cos x \\sin y$ and $\\cos(x+y) = \\cos x \\cos y - \\sin x \\sin y$. Apply with $x = \\text{pos}/10000^{2i/d}$ and $y = k/10000^{2i/d}$.",
+        "The constants $A_{ki}, B_{ki}$ depend only on the offset $k$, not on $\\text{pos}$. This means: given any two position vectors $PE(i)$ and $PE(j)$, their dot product reveals $|i-j|$ — not the absolute positions $i$ and $j$.",
+        "Learned embeddings: no row exists for positions never trained. Sinusoidal: the formula produces a valid vector for any integer position, and dot products between positions encode relative distance.",
       ],
     },
     {
@@ -339,13 +343,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "In a Transformer encoder, the causal masking (setting future positions to -∞ before softmax) prevents each token from attending to future tokens in the same layer.",
+        "In a Transformer encoder, causal masking (setting attention scores to $-\\infty$ for future positions before softmax) prevents each token from attending to future tokens within the same encoder layer.",
       correctAnswer: "false",
       explanation:
-        "Causal masking is used in the Transformer decoder (for autoregressive generation) to prevent position t from attending to positions t+1, t+2, ... which have not yet been generated. The encoder has no such mask — every position attends to every other position bidirectionally. This is why BERT, which uses only the encoder, can condition on both left and right context simultaneously.",
+        "**Encoder** blocks use **bidirectional** (full) self-attention: every position attends to every other position without any mask. This is why BERT, which uses only the encoder stack, can condition each token on both its left and right context simultaneously.\n\n**Decoder** blocks apply **causal masking** (also called look-ahead or upper-triangular masking): the attention score matrix is multiplied by a lower-triangular mask $\\mathbf{M}_{ij} = 0$ if $i < j$ (future), $+\\infty$ if $i \\geq j$ (past or self), before softmax. This forces $\\alpha_{ij} = 0$ for $i < j$, so position $t$ can only attend to positions $1, \\dots, t$ — preventing the model from \"seeing the future\" during autoregressive generation.\n\nDuring decoder training with teacher forcing: all target tokens $\\langle\\text{the}, \\text{cat}, \\text{sat}\\rangle$ are available simultaneously, but causal masking ensures each position's representation depends only on previous positions.",
       hints: [
-        "Encoder = bidirectional (full attention matrix). Decoder = causal/masked (lower-triangular attention matrix). Why does the decoder need masking during training?",
-        'During decoder training, all target tokens are available. Without masking, position t could "cheat" by looking at the gold token at t+1.',
+        "Draw the $n \\times n$ attention score matrix for $n=4$ tokens. Encoder: all entries are finite. Decoder: entries above the diagonal (future positions) are masked to $-\\infty$ before softmax.",
+        "BERT = encoder only = bidirectional attention. GPT = decoder only = causal attention. This is the fundamental architectural difference between BERT and GPT.",
+        "Causal masking is necessary because the decoder generates tokens sequentially — if position $t$ could attend to position $t+1$ (which hasn't been generated yet), it would be \"cheating\" during inference.",
       ],
     },
   ],

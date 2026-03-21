@@ -75,10 +75,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Backpropagation applies the chain rule recursively. As described in d2l.ai §5.3, the gradient of the loss with respect to layer l\'s weights equals the product of all Jacobians from layer l+1 to the output times the local gradient — a chain of derivatives applied backward through the computational graph.",
+        "Backpropagation applies the chain rule recursively. As described in d2l.ai §5.3, the gradient of the loss with respect to layer l\'s weights equals the product of all Jacobians from layer l+1 to the output times the local gradient — a chain of derivatives applied backward through the computational graph. Concretely: ∂L/∂W⁽ˡ⁾ = (∂L/∂hᴸ) · (∂hᴸ/∂hᴸ⁻¹) · ... · (∂h⁽ˡ⁺¹⁾/∂h⁽ˡ⁾) · (∂h⁽ˡ⁾/∂W⁽ˡ⁾).",
       hints: [
         "To find how a small change in a weight at layer 1 affects the final loss in a 10-layer network, you must chain together 9 intermediate derivatives.",
-        "dL/dw₁ = (dL/dh₁₀) × (dh₁₀/dh₉) × ... × (dh₂/dh₁) × (dh₁/dw₁) — this product is the chain rule.",
+        "∂L/∂W₁ = (∂L/∂h₁₀) · (∂h₁₀/∂h₉) · ... · (∂h₂/∂h₁) · (∂h₁/∂W₁). Each factor is a Jacobian; their product is the chain rule applied recursively.",
       ],
     },
     {
@@ -110,10 +110,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "As noted in d2l.ai §12.1.2.3, with f(x) = tanh(x), f'(4) ≈ 0.0013. For sigmoid, the max derivative is 0.25. In backpropagation, gradients are multiplied through each layer: 0.25¹⁰ ≈ 9.5 × 10⁻⁷. This exponential shrinkage makes learning in early layers nearly impossible.",
+        "As noted in d2l.ai §12.1.2.3, sigmoid\'s derivative is σ(x)(1−σ(x)), with maximum value 0.25 at x=0. During backpropagation, the gradient signal is multiplied through each layer: |∂L/∂h⁽ˡ⁾| ≤ |∂h⁽ˡ⁺¹⁾/∂h⁽ˡ⁾| · |∂L/∂h⁽ˡ⁺¹⁾|. With σ'(x) ≤ 0.25, after 10 layers: 0.25¹⁰ ≈ 9.5 × 10⁻⁷. Early layers receive a gradient signal ~10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs (σ'(x) = 1 if x > 0, else 0), avoiding this multiplicative shrinkage.",
       hints: [
-        "Repeatedly multiplying by 0.25: 0.25^2=0.0625, 0.25^4≈0.004, 0.25^10≈10⁻⁶ — essentially zero.",
-        "ReLU\'s gradient is exactly 1 for positive inputs, avoiding this multiplicative shrinkage entirely.",
+        "Each layer multiplies the gradient by at most 0.25. After 10 layers: 0.25¹⁰ ≈ 10⁻⁶ — the gradient is essentially zero.",
+        "ReLU\'s gradient is either 0 or 1 — no multiplicative shrinkage for active neurons.",
       ],
     },
   ],
@@ -168,10 +168,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "At x=5: σ(5)(1−σ(5)) ≈ 0.993 × 0.007 ≈ 0.007. Multiplied across 10 layers: 0.007¹⁰ ≈ 2.8×10⁻²¹. As d2l.ai §5.4.1.1 explains, sigmoid gradients vanish for large positive AND negative inputs, and even the peak gradient (0.25 at x=0) shrinks exponentially with depth.",
+        "At x=5: σ(5)(1−σ(5)) ≈ 0.993 × 0.007 ≈ 0.007. The gradient signal shrinks multiplicatively through each layer: after 10 saturated sigmoid layers, |∂L/∂h⁽¹⁾| ≤ (0.007)¹⁰ ≈ 2.8×10⁻²¹. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x=0) and is much smaller for |x| > 2 — meaning the gradient vanishes both in saturation and exponentially with network depth. This makes training deep networks with sigmoid activations extremely difficult.",
       hints: [
-        "σ(x)(1 − σ(x)) reaches its maximum of 0.25 only at x=0. For |x| > 2, the gradient drops below 0.1.",
-        'This is precisely why d2l.ai notes "ReLUs, which are more stable, have emerged as the default choice for practitioners."',
+        "σ(x)(1 − σ(x)) is maximum (0.25) only at x=0. For |x| > 2, gradient < 0.1. At x=5, gradient ≈ 0.007.",
+        "Even at the peak (0.25 per layer), after 10 layers: 0.25¹⁰ ≈ 10⁻⁶. With saturated sigmoid (0.007), it\'s effectively zero.",
       ],
     },
   ],
@@ -309,8 +309,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'As stated in d2l.ai §5.6: "By design, the expectation remains unchanged, i.e., E[h\'] = h." If a neuron survives (probability 1−p) and is scaled by 1/(1−p), then E[h\'] = (1−p)·h/(1−p) + p·0 = h. This "inverted dropout" means at test time, no scaling is needed — all neurons are simply left active.',
       hints: [
-        "Without the 1/(1−p) scaling, the expected activation during training would be (1−p)·h, but at test time it would be h — a mismatch.",
-        "The scaling ensures the network sees the same expected activation magnitude at train and test time.",
+        "Compute E[h\'] = Pr(survive)·h/(1−p) + Pr(drop)·0 = (1−p)·h/(1−p) + 0 = h. The expected value is preserved.",
+        "Without scaling: E[h\'] = (1−p)·h. At test time (all neurons active): E[h\'] = h. Train-test mismatch in expected activation magnitude.",
       ],
     },
     {
@@ -365,10 +365,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Adam\'s update is: θ ← θ − α × m̂_t/√(v̂_t + ε). For a constant gradient g: m̂_t = g and v̂_t = g². So the effective step is α × g/√(g²) = α × g/|g| = α × sign(g). Adam normalizes the step size to approximately α regardless of gradient magnitude — each parameter gets a consistent effective learning rate.",
+        "Adam\'s update rule is: θ_{t+1} = θ_t − α · m̂_t / √(v̂_t + ε), where m̂_t and v̂_t are bias-corrected first and second moment estimates. For a constant gradient g: m̂_t = g and v̂_t = g² (after bias correction). The effective step size is α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude cancels out — Adam\'s step direction is ±α in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
       hints: [
-        "The ratio m/√v ≈ g/|g| = ±1 for a consistent gradient — Adam\'s step size is roughly ±α regardless of gradient scale.",
-        "This per-parameter normalization is why Adam works well for parameters with very different gradient scales.",
+        "Adam\'s update: θ ← θ − α · m̂_t/√(v̂_t + ε). With constant gradient g: m̂_t = g, v̂_t = g².",
+        "Step = α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
       ],
     },
     {
@@ -400,10 +400,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The momentum velocity v_t is a geometric series: v_t = g_t + β·g_{t-1} + β²·g_{t-2} + ... The sum of weights is 1/(1−β). With β=0.9: effective window ≈ 1/(1−0.9) = 10 steps. Momentum effectively averages the last ~10 gradients, smoothing noise and accelerating convergence in consistent directions.",
+        "The momentum velocity v_t = β·v_{t-1} + g_t unrolls as a geometric series: v_t = g_t + β·g_{t-1} + β²·g_{t-2} + ... + β^{t-1}·g_1. The sum of the decay weights is: Σ_{k=0}^{∞} β^k = 1/(1−β). With β=0.9: effective window ≈ 1/(1−0.9) = 10 steps. Each past gradient g_{t-k} contributes β^k to the current velocity, with weight decaying exponentially at rate β^k.",
       hints: [
-        "The geometric sum 1 + β + β² + ... = 1/(1−β). With β=0.9, this equals 10.",
-        'This is why larger β (closer to 1) gives more "inertia" — it integrates over more past gradients.',
+        "Geometric series: 1 + β + β² + ... = 1/(1−β). For β=0.9: 1/(1−0.9) = 10. So momentum integrates ~10 past gradients.",
+        "A gradient from 10 steps ago is weighted by β¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago: β²⁰ ≈ 0.12.",
       ],
     },
   ],
@@ -496,10 +496,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "true",
       explanation:
-        "Focal loss (Lin et al., 2017) multiplies CE loss by (1 − p_t)^γ, where γ > 0 reduces the weight of correctly classified easy examples, letting the model concentrate capacity on difficult or rare cases. With γ=2: an easy example with p=0.9 is down-weighted by (1−0.9)²=0.01×, contributing 100× less to the loss.",
+        "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^γ log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^γ reduces loss for well-classified examples (p_t → 1) while leaving loss unchanged for misclassified examples (p_t → 0). With γ=2: an easy example with p_t=0.9 contributes (1−0.9)² = 0.01× the original loss — 100× reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
       hints: [
-        "In object detection, most anchors are background (easy negatives) — focal loss prevents them from dominating the loss.",
-        "When p_t → 1 (easy example), (1 − p_t)^γ → 0, effectively removing that sample\'s contribution.",
+        "Focal loss: FL(p_t) = −(1−p_t)^γ log(p_t). For p_t=0.9, γ=2: weight = (0.1)² = 0.01. For p_t=0.1: weight = (0.9)² ≈ 0.81 — barely affected.",
+        "In object detection, 99% of anchors may be easy negatives (background). Without focal loss, their gradient overwhelms rare foreground objects.",
       ],
     },
     {
@@ -688,10 +688,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard conv with k×k kernel, C_in channels, C_out filters: O(k² × C_in × C_out × H × W) FLOPs. Depthwise separable: depthwise O(k² × C_in × H × W) + pointwise O(C_in × C_out × H × W). Total reduction: ≈ 1/C_out + 1/k² ≈ 8-9× for 3×3 kernels with many channels.",
+        "Standard conv: each output pixel computes k²·C_in·C_out multiply-adds per spatial position. FLOPs = k² × C_in × C_out × H × W. Depthwise separable factorises this into two steps: (1) Depthwise: each of C_in channels is convolved spatially with its own k×k filter → k² × C_in × H × W FLOPs. (2) Pointwise (1×1): mixes channels → C_in × C_out × H × W FLOPs. Total = k²·C_in + C_in·C_out / (k²·C_in·C_out) = 1/C_out + 1/k². For k=3 and C_out=32: (1/32 + 1/9) ≈ 0.125. A 3×3 depthwise separable conv costs ~8-9× fewer FLOPs than a standard conv.",
       hints: [
-        "Standard conv combines spatial filtering and channel mixing in one expensive step. Depthwise sep: do spatial first (per channel), then channel mixing (1×1).",
-        "The FLOP reduction comes from not combining spatial and channel mixing simultaneously.",
+        "Standard conv FLOPs: k² × C_in × C_out × H × W. Depthwise sep: k²·C_in·H·W + C_in·C_out·H·W.",
+        "For k=3 and large C_out: the ratio ≈ 1/k² = 1/9. The depthwise step alone is 9× cheaper than standard conv on the spatial part.",
       ],
     },
   ],
@@ -746,10 +746,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In BPTT, ∂h_T/∂h_1 = ∏_{t=2}^{T} ∂h_t/∂h_{t-1} = ∏_{t=2}^{T} W_h^T·diag(σ'(W_h·h_{t-1}+...)). This product of 99 Jacobian matrices (each involving W_h) is why vanilla RNNs suffer from vanishing/exploding gradients — repeated multiplication by the same matrix amplifies or suppresses gradient exponentially.",
+        "In BPTT, the gradient flows backward through unrolled timesteps: ∂L/∂h_1 = (∂L/∂h_T) · ∏_{t=2}^{T} (∂h_t/∂h_{t-1}). With h_t = σ(W_h·h_{t-1} + W_x·x_t), the Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(σ'(W_h·h_{t-1})). The product of 99 such matrices — ∏_{t=2}^{T} W_h^T — is the culprit. If the largest eigenvalue λ_max of W_h satisfies λ_max < 1, gradients vanish as λ_max^{99}. If λ_max > 1, gradients explode. This is why RNNs without gating struggle with long sequences.",
       hints: [
-        "An RNN run for 100 timesteps is mathematically equivalent to a 100-layer feedforward network for backpropagation.",
-        "Truncated BPTT limits the unroll length (e.g., to 20 steps) to mitigate gradient issues at the cost of shorter-range credit assignment.",
+        "The Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(σ'(·)). Each step multiplies the gradient by W_h^T. After 99 steps: ‖∂h_T/∂h_1‖ ≤ ‖W_h‖^{99}.",
+        "If λ_max(W_h) = 0.5, then λ_max^{99} ≈ 10^{-30} — the gradient is effectively zero. LSTM\'s additive cell state bypasses this multiplication.",
       ],
     },
   ],
@@ -769,10 +769,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "As noted in d2l.ai §11.3.3: for random unit-variance q and k, each dimension contributes variance 1 to the dot product, so total variance = d_k. Dividing by √d_k normalizes the variance back to 1: Var(q·k/√d_k) = d_k/d_k = 1. Without scaling, for d_k=64 the dot products have std≈8, pushing softmax into saturation with near-zero gradients.",
+        "For random unit-variance vectors q, k ∈ ℝ^{d_k}, each dimension i has Var(q_i) = Var(k_i) = 1 and E[q_i] = E[k_i] = 0. Assuming independence across dimensions: Var(q·k) = Var(Σ_i q_i·k_i) = Σ_i Var(q_i·k_i) = Σ_i (Var(q_i)·Var(k_i)) = Σ_i 1·1 = d_k. So the dot product variance grows linearly with d_k. Dividing by √d_k gives Var(q·k/√d_k) = d_k/d_k = 1, restoring unit variance so softmax operates in a regime with meaningful gradients.",
       hints: [
-        "Var(q·k) = Σᵢ Var(qᵢ·kᵢ) = d_k × 1 = d_k, since each dimension contributes independently.",
-        "Dividing by √d_k: Var(q·k/√d_k) = Var(q·k)/d_k = d_k/d_k = 1. Scaling restores unit variance.",
+        "Dot product: q·k = Σ_i q_i·k_i. Var(q·k) = Σ_i Var(q_i·k_i) = Σ_i (Var(q_i)·Var(k_i)) = d_k × 1 = d_k.",
+        "Without scaling: std(q·k) = √64 = 8. Softmax exp(8) ≈ 2981, exp(-8) ≈ 0.0003 — probabilities saturate to one-hot with zero gradients.",
       ],
     },
     {
@@ -804,10 +804,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'As d2l.ai §11.6.2 states, in RNNs "there are O(n) sequential operations that cannot be parallelized and the maximum path length is also O(n)" — gradients must flow through n steps to reach the first token. In self-attention, every token directly computes its attention to every other token in one step, so the maximum path length is O(1) — making long-range credit assignment much easier.',
+        "Path length = number of sequential steps between two positions for information to flow. In self-attention, the attention mechanism directly connects every token pair in one operation: position i attends to position j with attention score a_{ij} = softmax(q_i · k_j / √d). There is no intermediate token between i and j — information flows directly. By contrast, in an RNN: h_t = f(W·h_{t-1} + U·x_t), so h_100 depends on h_99, which depends on h_98, ..., which depends on h_1. The gradient ∂L/∂h_1 must backpropagate through 99 matrix multiplications — each potentially vanishing or exploding.",
       hints: [
-        "In an RNN, gradient from token 100 must propagate through 99 recurrent steps to reach token 1 — each step can attenuate it.",
-        "In self-attention, token 100 directly attends to token 1 with a single attention score — the gradient path is length 1.",
+        "Self-attention computes attention scores between ALL token pairs simultaneously in one matrix operation: A = softmax(QK^T/√d). No intermediate tokens needed.",
+        "RNN: to pass information from token 1 to token 100 requires 99 sequential hidden state updates. Each update multiplies by W — gradient decays as ‖W‖^99.",
       ],
     },
   ],
@@ -844,8 +844,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'The gradient of H(x) = F(x) + x with respect to x is ∂H/∂x = ∂F/∂x + 1. Even if ∂F/∂x = 0 (vanishing gradient through the transformation), the "+1" from the skip connection ensures the gradient remains at least 1. This additive identity gradient is why ResNets can be trained at depths of 100–1000+ layers.',
       hints: [
-        "Even if F(x)'s gradient is zero, the skip connection carries a gradient of 1 back to x — the network never completely loses gradient signal.",
-        "This is the core reason ResNet-152 works but plain networks of similar depth do not — the skip connection guarantees gradient flow.",
+        "H(x) = F(x) + x. By chain rule: ∂L/∂x = ∂L/∂H · ∂H/∂x = ∂L/∂H · (∂F/∂x + 1). The skip path contributes exactly 1, regardless of ∂F/∂x.",
+        "If ∂F/∂x = 0 (e.g., due to ReLU saturation or vanishing gradients), the skip connection still carries ∂L/∂H · 1 = ∂L/∂H — the gradient signal passes through unchanged.",
       ],
     },
     {
@@ -864,8 +864,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In ResNet v1 (post-activation), BN+ReLU are applied after the addition, so the skip path carries values through a ReLU — not a true identity. In ResNet v2 (pre-activation), the addition is between two raw (unnormalized, pre-activation) paths. The skip connection is truly H(x) = F(x) + x without any modification to x, giving cleaner gradient flow and better generalization on very deep networks.",
       hints: [
-        "In ResNet v1: output = ReLU(F(x) + x). The skip path x goes through ReLU — not identity.",
-        "In ResNet v2: output = F_preact(x) + x where F_preact already contains BN+ReLU+Conv. The addition involves raw x.",
+        "ResNet v1 (post-activation): h = ReLU(F(x) + x). The skip path x passes through ReLU before the addition — nonlinearity applied to x.",
+        "ResNet v2 (pre-activation): h = F_preact(x) + x where F_preact = BN→ReLU→Conv. The addition is between two raw, pre-activation values: BN output + x. The skip path is a true identity mapping h = F(x) + x.",
       ],
     },
   ],
@@ -920,10 +920,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MixUp trains on interpolated samples, encouraging the model\'s learned function to be linear between training points. This Vicinal Risk Minimization principle reduces overconfident extrapolation in regions between training examples, improving calibration and generalization. A mix of 70% cat / 30% dog should predict 70%/30% probabilities — linear behavior between classes.",
+        "MixUp applies Vicinal Risk Minimization: instead of training only on discrete samples, it creates a vicinity around each training point by mixing two samples. The model is trained on (x̃, ỹ) where x̃ = λ·x_i + (1−λ)·x_j and ỹ = λ·y_i + (1−λ)·y_j, with λ ~ Beta(α, α). This forces the model to satisfy the linear assumption f(λ·x_i + (1−λ)·x_j) ≈ λ·f(x_i) + (1−λ)·f(x_j) — the model behaves linearly between training examples. The result is smoother decision boundaries and better-calibrated probability estimates, reducing overconfident predictions.",
       hints: [
-        "If you mix 70% of a cat and 30% of a dog, the model should predict 70% cat / 30% dog — linear interpolation.",
-        "The linearity constraint between training points reduces overconfident extrapolation in interpolation regions.",
+        "MixUp loss: L_MixUp = λ·L(y_i, f(x_i)) + (1−λ)·L(y_j, f(x_j)). The model is directly trained to satisfy f(λ·x_i + (1−λ)·x_j) ≈ λ·f(x_i) + (1−λ)·f(x_j).",
+        "Standard ERM trains on exact labels (hard targets). MixUp trains on soft targets from a mixture distribution — this regularizes the function to be linear between data points.",
       ],
     },
   ],

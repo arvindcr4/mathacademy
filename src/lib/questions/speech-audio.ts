@@ -967,7 +967,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "true",
       explanation:
-        'PLDA models the x-vector distribution as a linear Gaussian model with speaker and channel factors; the PLDA score is the log-likelihood ratio of the hypothesis "same speaker" vs "different speaker," providing better-calibrated decisions than raw cosine similarity.',
+        "PLDA models the x-vector distribution as a linear Gaussian model with speaker and channel factors; the PLDA score is the log-likelihood ratio of the hypothesis 'same speaker' vs 'different speaker,' providing better-calibrated decisions than raw cosine similarity.",
       hints: [
         "Cosine similarity ignores the Gaussian structure of the x-vector space—PLDA explicitly models this structure.",
         "A log-likelihood ratio directly answers the hypothesis testing question at the heart of verification.",
@@ -1069,7 +1069,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ASVspoof evaluates spoofing attacks on automatic speaker verification: TTS and voice conversion generate fake speech matching a target speaker\'s voice, while replay attacks play back a genuine recording—all aimed at fooling the biometric system.",
+        "ASVspoof evaluates spoofing attacks on automatic speaker verification: TTS and voice conversion generate fake speech matching a target speaker\'s voice, while replay attacks play back a genuine recording through a loudspeaker into the microphone—all aimed at fooling the biometric system.",
       hints: [
         "Spoofing in biometrics means presenting a fake but plausible biometric trait to be accepted as genuine.",
         'TTS and voice conversion are "logical access" attacks; replay is a "physical access" attack in the ASVspoof taxonomy.',
@@ -1124,7 +1124,7 @@ const questions: Record<string, Question[]> = {
         "Training a separate ASR model for each speaker in the corpus",
         "Training a single model with speaker-specific feature transformations (e.g., fMLLR) so the model learns to adapt to speaker-normalised features",
         "Augmenting training data with simulated speaker changes every 10 seconds",
-        "Applying vocal tract length normalisation only at test time as post-processing",
+        "Applying a post-processing equalizer to match the target speaker\'s formant frequencies",
       ],
       correctAnswer: 1,
       explanation:
@@ -1240,7 +1240,7 @@ const questions: Record<string, Question[]> = {
         "Audio Event Detection (AED) differs from audio classification in that AED:",
       options: [
         "Works only with music recordings while classification handles environmental sounds",
-        "Predicts not just the presence of sound events but also their temporal boundaries (onset and offset times) within a recording",
+        "Predictss just the presence of sound events but also their temporal boundaries (onset and offset times) within a recording",
         "Requires multi-channel microphone arrays instead of single-channel audio",
         "Uses only symbolic music notation rather than audio waveforms as input",
       ],
@@ -1322,7 +1322,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Genre categories are relatively stable and consensus-driven, while mood labels (e.g., "happy", "melancholic") involve affective perception that varies across listeners; datasets like Valence-Arousal annotations reflect this through wider label distributions and lower inter-rater reliability.',
       hints: [
-        'Two listeners may agree that a song is "pop" but disagree on whether it feels "joyful" or "nostalgic."',
+        'Two listeners may agree that a song is "pop" but disagree on whether it feels "joyful" or "nostalgic".',
         "The Russell circumplex model of affect (valence-arousal) is one framework for structuring mood annotations continuously.",
       ],
     },
@@ -1334,7 +1334,7 @@ const questions: Record<string, Question[]> = {
         "Instrument classification in real music recordings is more challenging than in isolated note datasets because:",
       options: [
         "Musical instruments have been extensively catalogued, so the classes are too easy to distinguish",
-        "Polyphonic mixing, timbre interactions, and shared harmonic content between instruments make individual instrument identification from the mixture acoustically ambiguous",
+        "Polyphonic mixing, timbre interaction, and shared harmonic content between instruments make individual instrument identification from the mixture acoustically ambiguous",
         "Real recordings use higher sample rates that standard CNNs cannot process efficiently",
         "Copyright restrictions prevent training on commercial music recordings",
       ],
@@ -1756,4 +1756,509 @@ const questions: Record<string, Question[]> = {
   ],
 };
 
-export default questions;
+const additionalAudioQuestions: Record<string, Question[]> = {
+  'tts-fundamentals': [
+    {
+      id: 'q-aud-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Tacotron 2 generates speech in two stages. What are those stages?',
+      options: [
+        'First a language model generates word embeddings, then a lookup table maps each embedding to a pre-recorded phoneme',
+        'First a sequence-to-sequence model with attention converts text to mel spectrograms, then a WaveNet vocoder converts mel spectrograms to waveforms',
+        'First a CTC model transcribes text to phonemes, then an HMM aligns phonemes to acoustic frames',
+        'First a VAE samples from a style embedding, then a GAN decoder generates audio directly from noise',
+      ],
+      correctAnswer: 1,
+      explanation: 'Tacotron 2 (Shen et al., 2018): (1) a recurrent seq2seq model with location-sensitive attention maps character/phoneme sequences to mel spectrograms; (2) a WaveNet conditioned on mel spectrograms synthesises the raw waveform. This two-stage approach achieves near-human naturalness on MOS evaluations.',
+      hints: [
+        'Stage 1 handles the linguistic-to-acoustic mapping; stage 2 handles the acoustic-to-waveform synthesis.',
+        'WaveNet was originally an unconditional waveform model; conditioning on mel spectrograms makes it a vocoder.',
+      ],
+    },
+    {
+      id: 'q-aud-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'FastSpeech 2 eliminates the autoregressive mel-spectrogram generation step of Tacotron by using a non-autoregressive feed-forward Transformer with explicit duration, pitch, and energy predictors, achieving much faster inference.',
+      correctAnswer: 'true',
+      explanation: 'FastSpeech 2 (Ren et al., 2021) uses a length regulator to expand phoneme representations to frame level using a predicted duration (from a forced-aligned teacher), then predicts pitch and energy per frame. Since all frames are predicted in parallel (not autoregressively), inference is ~30x faster than Tacotron 2 with comparable quality.',
+      hints: [
+        'Autoregressive: generate frame N before frame N+1; non-autoregressive: generate all frames simultaneously.',
+        'The duration predictor tells the model how many mel frames each phoneme spans—eliminating the attention alignment.',
+      ],
+    },
+    {
+      id: 'q-aud-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'VALL-E (Wang et al., 2023) reformulates TTS as a language modelling task. How does it achieve zero-shot voice cloning from a 3-second prompt?',
+      options: [
+        'It fine-tunes the model on the speaker\'s voice for 10 steps during inference',
+        'It uses EnCodec to tokenise the 3-second prompt into discrete audio codes, then uses the autoregressive codec language model conditioned on the prompt tokens and target text to predict audio codes for the new utterance in the same speaker\'s voice',
+        'It extracts a speaker embedding from the prompt using a d-vector model and adds it to the Tacotron decoder hidden state',
+        'It retrieves the most similar training speaker and copies their vocal characteristics',
+      ],
+      correctAnswer: 1,
+      explanation: 'VALL-E tokenises the 3-second prompt with EnCodec (neural codec with 8 RVQ codebooks) to produce discrete audio tokens. An autoregressive Transformer language model is conditioned on (text tokens + prompt audio tokens) and generates target audio tokens; a non-autoregressive model fills in the remaining RVQ layers. The result inherits the speaker timbre, prosody, and acoustic environment of the prompt.',
+      hints: [
+        'EnCodec RVQ: 8 codebooks, each 75 tokens/sec — the first codebook captures coarse features (timbre), later ones capture fine detail.',
+        'Conditioning on the prompt audio tokens = "continue speaking in this voice" framing.',
+      ],
+    },
+  ],
+  'neural-vocoders': [
+    {
+      id: 'q-aud-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'HiFi-GAN achieves high-fidelity waveform synthesis faster than real-time by using ___.',
+      options: [
+        'A WaveNet-style autoregressive model with mixture of logistics output distribution',
+        'A GAN with a multi-period discriminator (MPD) and multi-scale discriminator (MSD) that evaluate the generator\'s output at multiple temporal resolutions and periodicities, combined with feature matching and mel-spectrogram reconstruction losses',
+        'A normalising flow that invertibly maps a Gaussian prior to a waveform distribution',
+        'A diffusion model that iteratively denoises from Gaussian noise conditioned on mel spectrograms',
+      ],
+      correctAnswer: 1,
+      explanation: 'HiFi-GAN (Kong et al., 2020): the generator uses multi-receptive field fusion (MRF) blocks; the discriminators are (1) MPD: evaluates sliced 1D signals at periods T ∈ {2,3,5,7,11}; (2) MSD: evaluates at original and downsampled resolutions. Combined with feature matching loss (L1 on discriminator features) and mel reconstruction loss, HiFi-GAN is >160x faster than WaveNet with comparable quality.',
+      hints: [
+        'Multi-period discriminator: reshape waveform into 2D (period × frames) and apply 2D convolution — captures periodic structure.',
+        'Feature matching: force generator features to match real waveform features in each discriminator layer.',
+      ],
+    },
+    {
+      id: 'q-aud-kp32-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'WaveGlow is a flow-based vocoder that can be trained to maximise exact log-likelihood and performs inference by running the flow in reverse, making it non-autoregressive and parallelisable.',
+      correctAnswer: 'true',
+      explanation: 'WaveGlow (Prenger et al., 2019) combines WaveNet-style affine coupling layers with Glow\'s multi-scale architecture. Training maximises the exact log-likelihood p(x) = p(z)|det J|⁻¹ via the change-of-variables formula (z = f(x)). Inference inverts f: x = f⁻¹(z) — all samples are generated in parallel, giving real-time or faster synthesis without the sequential bottleneck of WaveNet.',
+      hints: [
+        'Normalising flows are invertible by design: train z = f(x), infer x = f⁻¹(z).',
+        'No autoregression means all waveform samples are computed simultaneously — O(1) latency in the number of steps.',
+      ],
+    },
+    {
+      id: 'q-aud-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'DiffWave and WaveGrad are diffusion-based vocoders. Compared to GAN-based vocoders like HiFi-GAN, their main trade-off is ___.',
+      options: [
+        'Diffusion vocoders are always lower quality because diffusion models cannot model audio waveforms',
+        'Diffusion vocoders achieve comparable or higher quality with more stable training (no mode collapse, no GAN training instability) but require many denoising steps at inference, increasing latency; accelerated samplers (DDIM, DPM-Solver) partially close the gap',
+        'Diffusion vocoders are faster than HiFi-GAN because they compute all timesteps in parallel',
+        'Diffusion vocoders require much more training data than GANs because they have no discriminator',
+      ],
+      correctAnswer: 1,
+      explanation: 'Diffusion vocoders (DiffWave, WaveGrad) achieve high MOS scores without adversarial training instability. The cost is inference time: 1000 denoising steps at 22 kHz = slow. Accelerated samplers (6-step WaveGrad, 6-step DiffWave) reduce latency significantly. HiFi-GAN remains the dominant real-time vocoder choice, while diffusion vocoders are preferred for highest-quality offline synthesis.',
+      hints: [
+        'GAN training: generator vs. discriminator — can be unstable, but inference is one forward pass.',
+        'Diffusion inference: T denoising steps required — T=1000 for best quality, T=6 for fast approximation.',
+      ],
+    },
+  ],
+  'keyword-spotting': [
+    {
+      id: 'q-aud-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Keyword spotting (KWS) systems must run on microcontrollers with <1 MB memory. Which architecture family is best suited for this constraint?',
+      options: [
+        'Full Transformer encoder processing 1-second mel spectrogram patches',
+        'Depthwise separable convolutions (DS-CNN, MobileNet-style) or attention-free tiny RNNs, which reduce parameter count and multiply-accumulate operations by 5-10x compared to standard CNNs while maintaining accuracy',
+        'WaveNet with dilated causal convolutions for maximum receptive field',
+        'Bidirectional LSTM with 5 layers to capture temporal context',
+      ],
+      correctAnswer: 1,
+      explanation: 'DS-CNN (Zhang et al., 2017) and its successors (TC-ResNet, Temporal Efficient Neural Network) use depthwise separable convolutions to cut FLOPs by ~10x. They operate on mel spectrogram frames (typically 40 mel bins, 25ms frames) and achieve >95% accuracy on Google Speech Commands with <200K parameters—deployable on Cortex-M4 MCUs.',
+      hints: [
+        'Depthwise separable conv: depthwise (per-channel spatial) + pointwise (1×1 channel mixing) = standard conv with far fewer params.',
+        'The target: detect "Hey Siri" / "OK Google" always-on with a coin-cell battery life.',
+      ],
+    },
+    {
+      id: 'q-aud-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Attention-based keyword spotting (using a soft attention mechanism over audio frames) allows the model to focus on the most discriminative temporal regions of the keyword, improving robustness to noise and different speaking rates.',
+      correctAnswer: 'true',
+      explanation: 'Attention-based KWS (de Andrade et al., 2018; Berg et al., 2021) computes a weighted sum over frame-level features, emphasising frames containing the keyword acoustics. This is more robust than average pooling (which includes silent frames) and handles variable speaking rates better than fixed-length feature windows.',
+      hints: [
+        'In noisy environments, not all frames are equally informative—attention can down-weight noise frames.',
+        'Speaking rate variation: "hey" might span 2 frames or 6 frames; attention adapts to the actual extent.',
+      ],
+    },
+    {
+      id: 'q-aud-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'In few-shot keyword spotting, the model must detect a new keyword from only 5-10 enrollment samples per user. Which learning paradigm best addresses this?',
+      options: [
+        'Fine-tuning the entire KWS model on the 5 enrollment samples for 100 epochs',
+        'Metric learning with prototypical networks: compute a prototype embedding for the keyword from enrollment samples, then classify new audio by nearest-prototype distance in embedding space',
+        'Increasing the model size to memorise the enrollment samples',
+        'Using a pre-trained speech LLM and prompting it with the enrollment audio clips',
+      ],
+      correctAnswer: 1,
+      explanation: 'Prototypical networks (Snell et al.) are effective for few-shot KWS: compute a prototype c_k = (1/|S_k|) Σ f_θ(x) for each class (keyword / silence / other), then classify by arg min_k d(f_θ(query), c_k). The embedding f_θ is meta-trained on many known keywords to generalise to new ones with few samples. This avoids overfitting to 5 enrollment examples.',
+      hints: [
+        'Few-shot: 5 enrollment samples cannot train a fresh model—you need a pre-learned embedding space.',
+        'Prototype = average embedding of support set samples — the new keyword is represented by its centroid.',
+      ],
+    },
+  ],
+  'singing-voice-synthesis': [
+    {
+      id: 'q-aud-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Singing voice synthesis (SVS) differs from TTS in that the input includes ___.',
+      options: [
+        'Only text transcriptions, exactly as in TTS',
+        'Musical score information including note pitch (MIDI note), duration, and lyrics, requiring the model to match phoneme timing to note boundaries and produce accurate pitch trajectories',
+        'Audio recordings of instruments that the model must blend with the vocal output',
+        'Speaker embeddings that encode the desired singing style independently of pitch',
+      ],
+      correctAnswer: 1,
+      explanation: 'SVS systems (XiaoiceSing, DiffSinger, VISinger) receive (lyrics, note sequence with pitch+duration) as input. Unlike TTS where pitch is prosodic and freely predicted, SVS must produce phonemes precisely on the given MIDI pitch (F0 must match note frequency) and within specified note durations. This adds explicit musical structure to the acoustic modelling challenge.',
+      hints: [
+        'In speech, F0 is a prosodic feature predicted from text; in singing, F0 is prescribed by the musical score.',
+        'Note duration in a score specifies exactly how long each phoneme group must last — much stricter than TTS duration prediction.',
+      ],
+    },
+    {
+      id: 'q-aud-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'DiffSinger uses a diffusion model conditioned on a shallow mel spectrogram predicted by a fast acoustic model, acting as a warm start that reduces the number of required diffusion steps for singing voice synthesis.',
+      correctAnswer: 'true',
+      explanation: 'DiffSinger (Liu et al., 2022) introduces a "shallow diffusion mechanism": a lightweight acoustic model first generates a rough mel spectrogram M₀; the diffusion model then refines M₀ over K steps (e.g., K=100 vs 1000 for cold start from noise). This reduces inference steps by ~10x while maintaining quality, addressing the diffusion vocoder latency problem in SVS.',
+      hints: [
+        'Cold start: diffuse from pure noise → many steps needed. Warm start: diffuse from a rough prediction → far fewer steps.',
+        'The fast acoustic model is like FastSpeech for singing—coarse but quick; the diffusion model polishes it.',
+      ],
+    },
+    {
+      id: 'q-aud-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A key challenge unique to SVS compared to TTS is vibrato and breath modelling. How do modern SVS systems typically handle vibrato?',
+      options: [
+        'Vibrato is entirely ignored because it can be added as post-processing with a fixed modulation frequency',
+        'Vibrato is modelled as a learnable sinusoidal perturbation added to the F0 trajectory, with singer-specific amplitude and rate predicted by an auxiliary network, conditioned on the musical context',
+        'Vibrato is handled by the text-to-phoneme front-end which tags vibrato positions in the lyrics',
+        'Vibrato emerges spontaneously from any sufficiently large acoustic model without explicit modelling',
+      ],
+      correctAnswer: 1,
+      explanation: 'Vibrato is a quasi-periodic F0 oscillation (typically 5-7 Hz, ±50 cents amplitude) that varies by singer, note, and musical phrase. Systems like VISinger 2 and SongCreator predict vibrato onset/offset timing and sinusoidal parameters (rate, extent) conditioned on the musical score and singer embedding. Accurate vibrato modelling is crucial for naturalness in operatic or pop singing styles.',
+      hints: [
+        'Fixed post-processing vibrato is uniform — real singing has variable vibrato onset, rate, and depth.',
+        'Vibrato onset often occurs after a held note\'s initial transient — context-dependent prediction is needed.',
+      ],
+    },
+  ],
+  'audio-qa': [
+    {
+      id: 'q-aud-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Audio Question Answering (AQA) systems that process audio-text pairs are typically built by ___.',
+      options: [
+        'Transcribing audio to text with ASR and then running text-only QA on the transcript',
+        'Using a pretrained audio encoder (e.g., CLAP, AudioMAE) to extract audio embeddings, projecting them into an LLM\'s token space, and fine-tuning the LLM to answer questions about the audio content',
+        'Training a random forest on MFCC statistics extracted from the audio clip',
+        'Generating spectrogram images and running visual QA models on the images',
+      ],
+      correctAnswer: 1,
+      explanation: 'LLM-based AQA (e.g., Pengi, LTU, Qwen-Audio) follow the multimodal LLM pattern: audio encoder → linear projection → LLM. The audio encoder (CLAP, BEATs, AudioMAE) extracts semantic audio features; the projection aligns audio embeddings with the LLM\'s text embedding space; instruction fine-tuning teaches the LLM to answer questions about sounds, music, and speech. This handles open-ended questions that ASR+text QA misses (e.g., "Is this piano playing legato or staccato?").',
+      hints: [
+        'ASR+text QA loses non-linguistic information: timbre, tempo, instrument identity, emotional tone.',
+        'CLAP: Contrastive Language-Audio Pretraining — the audio analogue of CLIP, aligning audio and text in the same embedding space.',
+      ],
+    },
+    {
+      id: 'q-aud-kp35-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'CLAP (Contrastive Language-Audio Pretraining) uses contrastive learning to align audio and text representations in a shared embedding space, enabling zero-shot audio classification by comparing audio embeddings to text prompt embeddings.',
+      correctAnswer: 'true',
+      explanation: 'CLAP (Wu et al., 2023) trains on (audio clip, text description) pairs with InfoNCE loss: matching pairs are pushed close, non-matching pairs pushed apart in the joint embedding space. Zero-shot classification: compute embeddings for class prompts ("sound of rain", "dog barking"), compute audio embedding, predict the closest prompt. No audio-specific fine-tuning required for new classes.',
+      hints: [
+        'CLAP is to audio what CLIP is to images: contrastive pretraining on large (audio, text) pair datasets.',
+        'Zero-shot: the embedding space alignment means audio and text about the same concept are geometrically close.',
+      ],
+    },
+    {
+      id: 'q-aud-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'The AudioCaps dataset and CLOTHO benchmark evaluate audio captioning, not QA. What distinguishes audio captioning from AQA, and why does AQA require additional training signal?',
+      options: [
+        'Audio captioning is harder than AQA because it requires generating longer text responses',
+        'Audio captioning produces a free-form description of audio content (one answer per clip); AQA requires answering diverse, open-ended questions about the same clip, demanding flexible grounding and reasoning over audio semantics—requiring instruction-tuning datasets with varied question-answer pairs',
+        'AQA is easier because questions constrain the output space, while captioning requires full scene understanding',
+        'The two tasks are identical; the same model checkpoint can be used for both without any additional training',
+      ],
+      correctAnswer: 1,
+      explanation: 'Captioning: given audio, generate a single descriptive sentence—trained on (audio, caption) pairs. AQA: given audio + arbitrary question, generate a correct answer—requires the model to ground specific question semantics in the audio signal. This demands instruction-following ability and diverse QA training data. AQUALLM and similar work create (audio, question, answer) triplets by repurposing AudioCaps/CLOTHO captions with LLM-generated questions.',
+      hints: [
+        'A captioning model asked "what tempo is this music?" may fail because it was only trained to describe scene content.',
+        'Instruction tuning: show the model many (audio, question, answer) examples to learn how to respond to diverse questions.',
+      ],
+    },
+  ],
+  'sound-synthesis': [
+    {
+      id: 'q-aud-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'AudioLDM generates audio from text prompts using a latent diffusion model. Its key innovation compared to waveform-space diffusion is ___.',
+      options: [
+        'It uses a GAN discriminator instead of a score-matching objective to stabilise training',
+        'It runs the diffusion process in the latent space of a pretrained VAE encoder, which is lower-dimensional than the mel spectrogram or waveform space, dramatically reducing compute while preserving perceptual quality',
+        'It conditions each denoising step on a separate text embedding from GPT-4',
+        'It synthesises audio by retrieving and concatenating nearest-neighbour segments from the training set',
+      ],
+      correctAnswer: 1,
+      explanation: 'AudioLDM (Liu et al., 2023): a VAE compresses mel spectrograms to a compact latent space (e.g., 64-channel latent at 1/4 temporal resolution); a CLAP text encoder conditions a U-Net diffusion model in latent space; a HiFi-GAN vocoder decodes the generated mel to waveform. Latent diffusion is ~100x cheaper than waveform diffusion while maintaining quality.',
+      hints: [
+        'Latent diffusion (Stable Diffusion) insight: compress first, diffuse in compressed space, decompress—compute-efficient.',
+        'CLAP conditioning: text prompt → CLAP text embedding → cross-attention in U-Net → guides generation toward described sound.',
+      ],
+    },
+    {
+      id: 'q-aud-kp36-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Foley synthesis — generating sound effects that match video content — requires cross-modal alignment between audio and visual modalities, typically achieved by conditioning the audio generation model on visual frame features.',
+      correctAnswer: 'true',
+      explanation: 'Video-to-Foley synthesis (SpecVQGAN, FoleyCrafter) conditions audio generation on visual features extracted from each video frame (e.g., ResNet, ViT features). The model learns cross-modal correspondences: footsteps align with walking feet, water sounds align with water visuals. Temporal alignment is enforced by conditioning on per-frame features throughout the audio generation process.',
+      hints: [
+        'Foley artists in film manually create sound effects synchronised to video; Foley synthesis automates this.',
+        'Frame-level visual features preserve temporal correspondence: sound onset aligns with visual event onset.',
+      ],
+    },
+    {
+      id: 'q-aud-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Music generation models like MusicGen use a single-stage language model with delay pattern interleaving for multi-codebook audio. Why is the delay pattern necessary?',
+      options: [
+        'To ensure that each codebook is generated on a different GPU in parallel, reducing inference time',
+        'Because RVQ codebooks have a hierarchical dependency (codebook k refines residuals from codebooks 1..k-1), the delay pattern offsets each codebook\'s generation by one timestep so that codebook k at time t can attend to codebook k-1 at time t—capturing inter-codebook dependency without a separate model per codebook',
+        'To avoid the model generating silence by ensuring each timestep always produces non-zero tokens',
+        'Because the MIDI score requires beat-aligned token generation with explicit delay between note events',
+      ],
+      correctAnswer: 1,
+      explanation: 'EnCodec produces K codebooks (K=4 or 8) per timestep t. Naive flattening (all K tokens per t before moving to t+1) requires modelling K-way dependency. MusicGen\'s delay pattern: codebook k at timestep t is offset by k positions, so the sequence is [c1_t1, c1_t2, c2_t1, c1_t3, c2_t2, c3_t1, ...]. This allows a single autoregressive model to decode all codebooks while preserving inter-codebook conditioning structure.',
+      hints: [
+        'RVQ: codebook 1 quantises the signal coarsely; codebook 2 quantises the residual after codebook 1, etc.',
+        'Delay pattern: think of it as diagonals in a K×T grid being flattened into a single sequence.',
+      ],
+    },
+  ],
+  'bioacoustics': [
+    {
+      id: 'q-aud-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'BirdNET is a deep learning model for bird species identification from audio. Its deployment challenge, compared to standard audio classification, is ___.',
+      options: [
+        'Bird calls are too short (< 0.1 seconds) for any mel spectrogram to represent',
+        'The class imbalance is extreme: thousands of species with highly varying call frequency, geographic distribution, and recording quality; few-shot or transfer learning is needed for rare species',
+        'Bird audio always contains multiple simultaneous species, requiring blind source separation before classification',
+        'Bird identification is a regression problem (predicting GPS coordinates) rather than a classification problem',
+      ],
+      correctAnswer: 1,
+      explanation: 'BirdNET (Kahl et al.) covers ~6000 species with massive class imbalance: some species have thousands of recordings, others have < 10. Transfer learning from ImageNet/AudioSet pretrained features and data augmentation (mixup, pitch shifting) are critical. Rare species require few-shot adaptation. Geographic and temporal priors further improve accuracy by restricting plausible species based on location/date.',
+      hints: [
+        '6000 species × varying rarity = long-tail distribution; a majority-class classifier would miss rare species entirely.',
+        'Geographic prior: a European bird is very unlikely to appear in a recording from South America—use location metadata.',
+      ],
+    },
+    {
+      id: 'q-aud-kp37-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Passive acoustic monitoring (PAM) uses autonomous recording units deployed in the field to collect continuous audio data, and ML models process the recordings to detect and count wildlife vocalizations at scale.',
+      correctAnswer: 'true',
+      explanation: 'PAM with ML is transforming ecology: ARUs (Autonomous Recording Units) record continuously for weeks; models like BirdNET, ORCA-SPOT (orca detection), and PUMILIO (bat calls) process terabytes of audio to produce species occurrence data at scale impossible with human review. This enables biodiversity monitoring across vast habitats.',
+      hints: [
+        'Traditional wildlife surveys: human observer counts. PAM: continuous audio + ML = 24/7 coverage at low cost.',
+        'A single ARU can generate ~100 GB/day of audio; ML is essential to process this volume.',
+      ],
+    },
+    {
+      id: 'q-aud-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Cetacean (whale/dolphin) communication detection uses click detection for echolocation clicks and whistle detection for social calls. What specific challenge do sperm whale clicks pose for standard audio ML?',
+      options: [
+        'Sperm whale clicks are inaudible to standard hydrophones due to their high frequency content',
+        'Sperm whale clicks are extremely broadband (0.1-30 kHz), very brief (<1ms), and occur at inter-click intervals encoding identity (codas); standard short-time STFT loses inter-click timing information, requiring point process or template-matching approaches',
+        'Sperm whale clicks perfectly overlap with shipping noise, making them impossible to separate',
+        'Sperm whale communication occurs at depths below 1000m where no hydrophone can operate',
+      ],
+      correctAnswer: 1,
+      explanation: 'Sperm whale codas are rhythmic patterns of 3-20 clicks spaced 50-500ms apart; the identity information is in the inter-click intervals (ICI), not spectral content. Standard MFCC/mel features lose this temporal structure. Effective detection uses: (1) waveform-domain click detectors (energy thresholding + matched filters); (2) ICI-based coda classifiers; (3) DTTS (Deep Template Time Series) that explicitly model click patterns.',
+      hints: [
+        'Coda classification: {click, gap, click, gap, click} — the pattern of gaps encodes identity, not the click\'s spectral content.',
+        'Short-time STFT uses 25ms windows — much longer than a 1ms click — so the click energy is smeared across frames.',
+      ],
+    },
+  ],
+  'audio-forensics': [
+    {
+      id: 'q-aud-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Deepfake speech detection (anti-spoofing) aims to distinguish synthesised or voice-converted speech from genuine speech. The ASVspoof challenges evaluate models on which types of attacks?',
+      options: [
+        'Only text-to-speech systems using old HMM-based synthesis',
+        'Text-to-speech (TTS), voice conversion (VC), and replay attacks (playing a recording of the target speaker through a loudspeaker into the microphone), covering both synthesis-based and physical playback spoofing',
+        'Only replay attacks, since TTS has been solved and is no longer a spoofing threat',
+        'Only adversarial perturbations added to genuine speech recordings',
+      ],
+      correctAnswer: 1,
+      explanation: 'ASVspoof 2019/2021 cover: (LA) logical access — TTS+VC generated spoofs attacking ASV systems; (PA) physical access — replay attacks in various room conditions; (DF) deepfake — codec-processed and post-processed TTS/VC. Models (LCNN, RawNet2, AASIST) are evaluated on Equal Error Rate (EER) where impostor acceptance rate = genuine rejection rate.',
+      hints: [
+        'Logical access: the attacker submits synthetic audio to a remote system; physical access: the attacker plays audio in a room containing the microphone.',
+        'EER: the operating point where false acceptance rate = false rejection rate—lower is better for anti-spoofing.',
+      ],
+    },
+    {
+      id: 'q-aud-kp38-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Spectral artifacts in the high-frequency range (> 8 kHz) are a reliable indicator of neural TTS spoofing because most vocoders introduce phase discontinuities or oversmoothing at high frequencies that genuine speech does not exhibit.',
+      correctAnswer: 'true',
+      explanation: 'Mel spectrogram-based TTS/vocoders often use mel filterbanks covering only 0-8 kHz; the HiFi-GAN or WaveNet vocoder must "hallucinate" the 8-22 kHz region. This produces characteristic artifacts: spectral repetitions, phase discontinuities, and oversmoothed harmonics detectable by anti-spoofing models trained to examine high-frequency regions. RawNet2 operates directly on waveforms to capture these subtle artifacts.',
+      hints: [
+        'Human speech has harmonics extending to 10+ kHz with complex phase structure; vocoders may smooth or repeat these.',
+        'Sinc filters and vocoders apply implicit low-pass filtering that leaves characteristic high-frequency signatures.',
+      ],
+    },
+    {
+      id: 'q-aud-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Generalisation to unseen TTS systems is a core challenge in anti-spoofing. Models trained on ASVspoof 2019 often fail on ASVspoof 2021 because ___.',
+      options: [
+        'The evaluation metric changed from EER to minDCF between 2019 and 2021',
+        'Modern TTS/VC systems (e.g., VITS, YourTTS, VALL-E) produce fewer codec artifacts, phone-level temporal structure, and naturalness scores approaching genuine speech; 2019-trained models overfit to artifacts specific to 2019 synthesis systems',
+        'ASVspoof 2021 uses a different microphone type that changes the acoustic characteristics of genuine speech',
+        'The speaker demographics changed between the two datasets, causing a distribution shift in genuine speech characteristics',
+      ],
+      correctAnswer: 1,
+      explanation: 'Anti-spoofing generalisation is an arms race: models trained on 2019 TTS artifacts (often vocoder-specific spectral discontinuities) fail when newer TTS systems (VITS, NaturalSpeech, VALL-E) produce near-natural speech with different or no artifacts. Solutions: training on diverse, diverse-codec datasets; using codec-agnostic features (e.g., phase-based); self-supervised features from wav2vec/HuBERT that encode naturalness.',
+      hints: [
+        'Arms race: TTS quality improves → spoofs are harder to detect → better detectors needed → cycle repeats.',
+        'Overfitting to vocoder artifacts: the model learns "HiFi-GAN sounds like X" but fails when VITS produces different artifacts.',
+      ],
+    },
+  ],
+  'audio-representation': [
+    {
+      id: 'q-aud-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'EnCodec is a neural audio codec that uses residual vector quantisation (RVQ). What role does RVQ play in the compression and reconstruction quality trade-off?',
+      options: [
+        'RVQ applies a single codebook that quantises the full audio signal at once',
+        'RVQ applies K successive codebooks: codebook 1 quantises the encoder output, codebook 2 quantises the residual after codebook 1 reconstruction, etc.; using more codebooks (higher bitrate) improves reconstruction quality while using fewer (lower bitrate) enables more aggressive compression',
+        'RVQ uses random quantisation at each layer to regularise the latent space',
+        'RVQ replaces the neural encoder with a classical Huffman coding scheme for lossless compression',
+      ],
+      correctAnswer: 1,
+      explanation: 'EnCodec\'s RVQ: z = encoder(x); q₁ = VQ(z); r₁ = z − decode(q₁); q₂ = VQ(r₁); r₂ = r₁ − decode(q₂); ...; qK = VQ(r_{K-1}). Quantisation codes (q₁,...,qK) are transmitted. At 24 kHz, EnCodec uses K=32 codebooks at 75 tokens/sec per codebook for 6 kbps, or K=8 for 1.5 kbps. Each additional codebook captures finer signal details, improving perceptual quality.',
+      hints: [
+        'Residual: each codebook codes what the previous level left uncaptured.',
+        'Lower bitrate = fewer codebooks = more compression = lower quality. Classic rate-distortion trade-off.',
+      ],
+    },
+    {
+      id: 'q-aud-kp39-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'AudioMAE (Masked Autoencoders for Audio) learns audio representations by masking patches of the input spectrogram and training the model to reconstruct the masked patches, following the same self-supervised framework as image MAE.',
+      correctAnswer: 'true',
+      explanation: 'AudioMAE (He et al., adapting image MAE to audio): the mel spectrogram is split into patches; a high masking ratio (~80%) is applied; a ViT encoder processes only visible patches; a lightweight decoder reconstructs the full spectrogram. Pre-trained representations transfer effectively to downstream audio classification (AudioSet, ESC-50) and show complementary strengths to CLAP\'s contrastive approach.',
+      hints: [
+        'Image MAE: mask 75% of image patches, reconstruct with a ViT. AudioMAE: same idea on mel spectrogram patches.',
+        '80% masking ratio forces the model to learn holistic audio semantics rather than copying visible adjacent patches.',
+      ],
+    },
+    {
+      id: 'q-aud-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'BEATs (Audio Pre-Training with Acoustic Tokenizers) uses a two-stage iterative pretraining approach. What makes it different from AudioMAE and wav2vec?',
+      options: [
+        'BEATs uses contrastive learning instead of masked prediction, like CLAP but with in-domain audio-only pretraining',
+        'BEATs jointly trains an acoustic tokenizer (discrete audio unit generator) and a Transformer encoder in alternating stages: the tokenizer provides discrete targets for masked prediction, while the Transformer provides better features to update the tokenizer—each improves the other iteratively',
+        'BEATs uses a fixed speech recogniser as the teacher, distilling ASR knowledge into a general audio model',
+        'BEATs processes audio in the frequency domain using discrete wavelet coefficients as both input and reconstruction target',
+      ],
+      correctAnswer: 1,
+      explanation: 'BEATs (Chen et al., 2022): iteration 1—train a tokenizer using the current audio encoder features; use the tokenizer\'s discrete labels as masked prediction targets for the audio Transformer. Iteration 2—retrain the tokenizer with the improved encoder features; retrain the Transformer with better targets. Each cycle improves both. BEATs achieves state-of-the-art on AudioSet without relying on teacher models or contrastive pairs.',
+      hints: [
+        'AudioMAE reconstructs continuous mel values; BEATs predicts discrete token labels—a classification target that may be more semantically meaningful.',
+        'Iterative refinement: the tokenizer improves as the encoder improves, creating a virtuous cycle.',
+      ],
+    },
+  ],
+  'audio-diffusion-advanced': [
+    {
+      id: 'q-aud-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'Stable Audio and AudioLDM 2 both use latent diffusion for audio generation. What additional conditioning mechanism does AudioLDM 2 introduce over AudioLDM 1?',
+      options: [
+        'It conditions on MIDI piano roll inputs to enable symbolic music control',
+        'It introduces GPT-2-based text encodings as an intermediate representation, projecting both text and audio caption features through a language model to unify diverse conditioning modalities before cross-attending into the diffusion U-Net',
+        'It replaces CLAP text embeddings with raw BERT token-level attention over individual words',
+        'It conditions on speaker embeddings extracted from reference speech to enable voice cloning in audio synthesis',
+      ],
+      correctAnswer: 1,
+      explanation: 'AudioLDM 2 (Liu et al., 2023) uses a GPT-2 model as a "bridge" between conditioning text and the diffusion model: diverse text conditioning signals (AudioCaps captions, music descriptions) are encoded and projected through a GPT-2-based language model that generates conditioning tokens; these are then cross-attended in the U-Net. This unifies conditioning for speech, music, and general sound in a single model.',
+      hints: [
+        'AudioLDM 1: CLAP text embedding → cross-attention. AudioLDM 2: CLAP → GPT-2 bridge → cross-attention.',
+        'The GPT-2 bridge learns to translate between the conditioning modality space and the diffusion latent space.',
+      ],
+    },
+    {
+      id: 'q-aud-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Classifier-free guidance (CFG) is commonly used in audio diffusion models to improve prompt adherence: during inference, the model\'s score is extrapolated between the unconditional and conditional predictions, with a guidance scale > 1 amplifying the effect of the condition.',
+      correctAnswer: 'true',
+      explanation: 'CFG for audio: ε_guided = ε_uncond + γ·(ε_cond − ε_uncond), where γ is the guidance scale. At γ=1, standard conditional generation. At γ>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with γ typically 3-7 for audio generation.',
+      hints: [
+        'CFG training: randomly drop the condition (replace with null/empty) during training so the model learns both conditional and unconditional score.',
+        'Higher γ: more like the text prompt; lower γ: more diverse but less adherent. Trade-off similar to temperature in LLMs.',
+      ],
+    },
+    {
+      id: 'q-aud-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Inpainting and outpainting for audio — filling in a masked region or extending a recording — is achieved with diffusion models by ___.',
+      options: [
+        'Running the diffusion model only on the masked region with no conditioning on the surrounding context',
+        'Conditioning the reverse diffusion process on the known (unmasked) audio regions by: at each denoising step, replacing the known-region\'s noisy latent with the appropriately noise-corrupted version of the original audio, while freely sampling the unknown region — a technique called RePaint adapted to audio latent diffusion',
+        'Concatenating the surrounding audio to the text prompt and running standard conditional generation',
+        'Using a separate encoder to extract a style embedding from the surrounding context and conditioning a TTS model on that style',
+      ],
+      correctAnswer: 1,
+      explanation: 'Audio inpainting via RePaint-style latent diffusion: at diffusion step t, known regions z_known are corrupted to noise level t (z_t_known = sqrt(ᾱ_t)·z_known + sqrt(1−ᾱ_t)·ε) and substituted back into the noisy latent; the model freely denoises the masked region. Repeated resampling (back-and-forth diffusion steps in the RePaint schedule) ensures the generated content blends naturally with the boundary. MusicGen and AudioLDM both support variants of this.',
+      hints: [
+        'RePaint: at each denoising step, stitch together "what we know" (corrupted to this noise level) and "what we\'re generating" (freely denoised) — then denoise together.',
+        'The key insight: corrupt the known region to the same noise level as the generated region so they can be combined consistently.',
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, additionalAudioQuestions)
+
+export default questions

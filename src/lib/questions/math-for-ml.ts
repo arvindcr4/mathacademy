@@ -532,19 +532,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "For f(x,y) = 3x²y + y³ − 2x, compute the gradient ∇f at the point (1, 2).",
+        "For $f(x,y) = 3x^2y + y^3 - 2x$, compute the gradient $\\nabla f$ at the point $(1, 2)$.",
       options: [
-        "[6xy − 2, 3x² + 3y²] = [10, 15] at (1,2)",
-        "[6xy − 2, 3x² + 3y²] = [10, 15] at (1,2) — correct",
-        "[6x, 3y²] at (1,2)",
-        "[3y, 3y²] at (1,2)",
+        "$[6xy - 2, 3x^2 + 3y^2] = [10, 15]$ at $(1,2)$",
+        "$[6xy - 2, 3x^2 + 3y^2] = [10, 15]$ at $(1,2)$ — correct",
+        "$[6x, 3y^2]$ at $(1,2)$",
+        "$[3y, 3y^2]$ at $(1,2)$",
       ],
       correctAnswer: 0,
       explanation:
-        "∂f/∂x = 6xy − 2. ∂f/∂y = 3x² + 3y². At (1,2): ∂f/∂x = 6(1)(2)−2 = 10, ∂f/∂y = 3(1)² + 3(2)² = 3 + 12 = 15. So ∇f(1,2) = [10, 15].",
+        "The gradient $\\nabla f = \\left[\\frac{\\partial f}{\\partial x}, \\frac{\\partial f}{\\partial y}\\right]$ collects the partial derivatives.\n\n**Step 1: Compute $\\frac{\\partial f}{\\partial x}$**\nTreat $y$ as a constant and differentiate with respect to $x$:\n\\[\n\\frac{\\partial f}{\\partial x} = \\frac{\\partial}{\\partial x}(3x^2y) + \\frac{\\partial}{\\partial x}(y^3) - \\frac{\\partial}{\\partial x}(2x) = 6xy - 0 - 2 = 6xy - 2.\n\\]\n\n**Step 2: Compute $\\frac{\\partial f}{\\partial y}$**\nTreat $x$ as a constant and differentiate with respect to $y$:\n\\[\n\\frac{\\partial f}{\\partial y} = \\frac{\\partial}{\\partial y}(3x^2y) + \\frac{\\partial}{\\partial y}(y^3) - \\frac{\\partial}{\\partial y}(2x) = 3x^2 + 3y^2 - 0 = 3x^2 + 3y^2.\n\\]\n\n**Step 3: Evaluate at $(1, 2)$**\n\\[\n\\frac{\\partial f}{\\partial x}(1,2) = 6(1)(2) - 2 = 12 - 2 = 10,\n\\quad\n\\frac{\\partial f}{\\partial y}(1,2) = 3(1)^2 + 3(2)^2 = 3 + 12 = 15.\n\\]\n\nTherefore: $\\nabla f(1,2) = [10, 15]$.",
       hints: [
-        "∂f/∂x: treat y as constant, differentiate 3x²y − 2x → 6xy − 2.",
-        "∂f/∂y: treat x as constant, differentiate 3x²y + y³ → 3x² + 3y².",
+        "Remember: when taking $\\frac{\\partial f}{\\partial x}$, all variables except $x$ are treated as constants.",
+        "The power rule for $x^n$ gives $\\frac{\\partial}{\\partial x}(x^n) = nx^{n-1}$, while constants differentiate to zero.",
       ],
     },
     {
@@ -552,13 +552,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "At a local minimum of a differentiable function f: ℝⁿ → ℝ, the gradient ∇f must equal the zero vector.",
+        "At a local minimum of a differentiable function $f: \\mathbb{R}^n \\to \\mathbb{R}$, the gradient $\\nabla f$ must equal the zero vector.",
       correctAnswer: "true",
       explanation:
-        "A necessary (but not sufficient) condition for a local extremum: all partial derivatives vanish, ∇f = 0 (a stationary/critical point). If any ∂f/∂xᵢ ≠ 0, moving a small step in that direction would decrease f, contradicting local minimality.",
+        "This is a **necessary condition** (but not sufficient) for a local extremum.\n\n**Why must $\\nabla f = 0$ at a local minimum?**\n\nIf $\\nabla f(x^*) \\neq 0$, then at least one partial derivative is non-zero, say $\\frac{\\partial f}{\\partial x_k} > 0$ at $x^*$. Then moving a small step in the direction $-h_k$ (decreasing $x_k$) would decrease $f$, contradicting $x^*$ being a local minimum:\n\\[\nf(x^* - \\epsilon \\cdot e_k) \\approx f(x^*) - \\epsilon \\cdot \\frac{\\partial f}{\\partial x_k}(x^*) < f(x^*).\n\\]\n\n**Key insight:** $\\nabla f = 0$ defines a **stationary (critical) point**. These can be:\n- Local minima (all directions curve upward)\n- Local maxima (all directions curve downward)\n- Saddle points (some directions curve up, others curve down)\n\nThis is why the first-derivative test is only a necessary condition — you need the second-derivative test (Hessian) to distinguish between these cases.",
       hints: [
-        "If ∂f/∂xᵢ > 0 at x*, then x* − εeᵢ has lower f value for small ε > 0 — contradicting minimality.",
-        "Note: ∇f = 0 is necessary but not sufficient — saddle points also satisfy ∇f = 0.",
+        "The gradient points in the direction of steepest ascent. At a minimum, there is no direction of descent, so the gradient must vanish.",
+        "Visualize: a bowl-shaped surface has $\\nabla f = 0$ at the bottom point. A saddle point also has $\\nabla f = 0$ but at a 'saddle' where some directions go up and others go down.",
       ],
     },
     {
@@ -566,14 +566,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The gradient of the squared L2 norm f(x) = ‖x‖² = xᵀx with respect to x is:",
-      options: ["x", "2x", "xᵀ", "2xᵀx"],
+        "The gradient of the squared L2 norm $f(x) = \\|x\\|^2 = x^\\top x$ with respect to $x$ is:",
+      options: ["$x$", "$2x$", "$x^\\top$", "$2x^\\top x$"],
       correctAnswer: 1,
       explanation:
-        "f(x) = Σᵢ xᵢ². Then ∂f/∂xₖ = 2xₖ for each k. So ∇f = 2x. Equivalently, using the matrix calculus identity ∇ₓ(xᵀAx) = (A+Aᵀ)x = 2Ax for symmetric A: with A=I, ∇(xᵀx) = 2x.",
+        "The squared L2 norm is $f(x) = \\|x\\|^2 = x^\\top x = \\sum_{i=1}^{n} x_i^2$.\n\n**Method 1: Element-wise differentiation**\nFor each component $x_k$:\n\\[\n\\frac{\\partial f}{\\partial x_k} = \\frac{\\partial}{\\partial x_k}\\left(\\sum_{i=1}^{n} x_i^2\\right) = 2x_k.\n\\]\nAssembling these into a vector:\n\\[\n\\nabla f = [2x_1, 2x_2, \\ldots, 2x_n]^\\top = 2x.\n\\]\n\n**Method 2: Matrix calculus identity**\nFor a symmetric matrix $A$:\n\\[\n\\nabla_x(x^\\top A x) = (A + A^\\top)x = 2Ax.\n\\]\nSince $A = I$ (the identity matrix) is symmetric, and $x^\\top I x = x^\\top x = \\|x\\|^2$:\n\\[\n\\nabla(\\|x\\|^2) = 2Ix = 2x.\n\\]\n\nThis is one of the most frequently-used identities in machine learning optimization (e.g., gradient of the MSE loss $\|Xw - y\\|^2$ is $2X^\\top(Xw - y)$).",
       hints: [
-        "f = x₁² + x₂² + … + xₙ². Partial derivative ∂f/∂xₖ = 2xₖ.",
-        "Assemble partials into the gradient vector: ∇f = [2x₁, 2x₂, …, 2xₙ]ᵀ = 2x.",
+        "Expand $x^\\top x = x_1^2 + x_2^2 + \\cdots + x_n^2$. Each term only depends on one variable, so $\\frac{\\partial}{\\partial x_k}(x_i^2) = 2x_k \\delta_{ik}$.",
+        "The key identity to remember: $\\nabla_x(x^\\top x) = 2x$. This appears constantly in gradient descent, backpropagation, and optimization.",
       ],
     },
   ],
@@ -583,14 +583,14 @@ const questions: Record<string, Question[]> = {
       id: "q-mfml-kp12-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Let f(u) = u³ and u = g(x) = x² + 1. Compute df/dx at x = 2.",
+      question: "Let $f(u) = u^3$ and $u = g(x) = 2x$. Compute $\\frac{df}{dx}$ at $x = 2$.",
       options: ["24", "12", "48", "96"],
       correctAnswer: 2,
       explanation:
-        "Chain rule: df/dx = (df/du)·(du/dx). df/du = 3u², du/dx = 2x. At x=2: u = 4+1 = 5, df/du = 3·25 = 75, du/dx = 4. So df/dx = 75·4... Wait: let\'s recompute. u=5, df/du = 3u²=75, du/dx=2x=4. df/dx = 75×4 = 300? Let me use f(g(x))=(x²+1)³. d/dx = 3(x²+1)²·2x. At x=2: 3(5)²·4 = 3·25·4 = 300. Correction: answer is 300 — but that\'s not listed. Let me restate: f(u)=u², u=3x+1. At x=2: df/dx = 2u·3 = 2(7)·3 = 42. Using f(u)=u³, u=g(x)=2x, x=2: df/dx=3(4)²·2=96.",
+        "The chain rule states that for a composition $f(g(x))$:\n\\[\n\\frac{d}{dx}[f(g(x))] = f'(g(x)) \\cdot g'(x).\n\\]\n\n**Step 1: Identify the inner and outer functions**\n- Outer function: $f(u) = u^3$, so $f'(u) = 3u^2$\n- Inner function: $u = g(x) = 2x$, so $g'(x) = 2$\n\n**Step 2: Apply the chain rule**\n\\[\n\\frac{df}{dx} = f'(u) \\cdot g'(x) = 3u^2 \\cdot 2.\n\\]\n\n**Step 3: Substitute back in terms of $x$**\nSince $u = 2x$:\n\\[\n\\frac{df}{dx} = 3(2x)^2 \\cdot 2 = 3 \\cdot 4x^2 \\cdot 2 = 24x^2.\n\\]\n\n**Step 4: Evaluate at $x = 2$**\n\\[\n\\frac{df}{dx}\\bigg|_{x=2} = 24 \\cdot (2)^2 = 24 \\cdot 4 = 96.\n\\]\n\n**Verification by composition:** $f(g(x)) = (2x)^3 = 8x^3$, so $\\frac{d}{dx}(8x^3) = 24x^2$. At $x = 2$: $24 \\cdot 4 = 96$.",
       hints: [
-        "Chain rule: d/dx[f(g(x))] = f'(g(x))·g'(x).",
-        "With f(u)=u³, g(x)=2x: f'(u)=3u²=3(2x)²=12x², g'(x)=2. df/dx=12x²·2=24x². At x=2: 96.",
+        "The chain rule $\\frac{df}{dx} = \\frac{df}{du} \\cdot \\frac{du}{dx}$ is the fundamental tool: differentiate the outer function at the inner function, then multiply by the derivative of the inner function.",
+        "A helpful mental check: you can also compose first to get $f(g(x)) = (2x)^3 = 8x^3$, then differentiate directly to verify.",
       ],
     },
     {
@@ -598,19 +598,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In neural network backpropagation, the chain rule computes ∂L/∂W₁ (gradient of loss w.r.t. first-layer weights) as:",
+        "In neural network backpropagation, the chain rule computes $\\frac{\\partial L}{\\partial W_1}$ (gradient of loss w.r.t. first-layer weights) as:",
       options: [
-        "∂L/∂W₁ directly from the loss function",
-        "(∂L/∂a₂)·(∂a₂/∂a₁)·(∂a₁/∂W₁) — product of local Jacobians along the computation graph",
+        "$\\frac{\\partial L}{\\partial W_1}$ directly from the loss function",
+        "$(\\frac{\\partial L}{\\partial a_2}) \\cdot (\\frac{\\partial a_2}{\\partial a_1}) \\cdot (\\frac{\\partial a_1}{\\partial W_1})$ — product of local Jacobians along the computation graph",
         "The transpose of the forward pass",
-        "The Hessian of L with respect to W₁",
+        "The Hessian of $L$ with respect to $W_1$",
       ],
       correctAnswer: 1,
       explanation:
-        "Backpropagation applies the multivariate chain rule: ∂L/∂W₁ = (∂L/∂aL)·(∂aL/∂aL₋₁)·…·(∂a₂/∂a₁)·(∂a₁/∂W₁). Each factor is a local Jacobian, efficiently computed in the backward pass without re-traversing the entire graph.",
+        "Backpropagation is a systematic application of the **multivariate chain rule** to computation graphs.\n\n**The computation graph perspective:**\nA neural network with layers $a_1 \\to a_2 \\to \\cdots \\to a_L$ computes:\n\\[\na_{k+1} = f_k(a_k, W_k), \\quad L = \\ell(a_L, y).\n\\]\n\n**Applying the chain rule recursively:**\n\\[\n\\frac{\\partial L}{\\partial W_1} = \\underbrace{\\frac{\\partial L}{\\partial a_L}}_{\\delta_L} \\cdot \\underbrace{\\frac{\\partial a_L}{\\partial a_{L-1}}}_{J_{L-1}} \\cdot \\cdots \\cdot \\underbrace{\\frac{\\partial a_2}{\\partial a_1}}_{J_1} \\cdot \\frac{\\partial a_1}{\\partial W_1}.\n\\]\n\nEach $\\frac{\\partial a_{k+1}}{\\partial a_k} = J_k$ is a **Jacobian matrix** (local gradient), and the final $\\frac{\\partial a_1}{\\partial W_1}$ contains the input activations.\n\n**Why this is efficient:** Rather than re-traversing the entire graph for each gradient, backprop:\n1. First does a **forward pass** storing all activations $a_k$\n2. Then does a single **backward pass** accumulating these Jacobian products\n\nThis reduces gradient computation from $O(\\text{graph size})$ per parameter to essentially $O(\\text{one traversal})$.",
       hints: [
-        "The chain rule for compositions: if L = f(g(h(W₁))), then dL/dW₁ = f'(g(h))·g'(h)·h'(W₁).",
-        "Backprop accumulates these factors from output layer backward to input layer.",
+        "Think of the chain rule for scalar functions: if $L = f(g(h(x)))$, then $\\frac{dL}{dx} = f'(g(h)) \\cdot g'(h) \\cdot h'(x)$. Neural networks are just a multi-variable version of this.",
+        "The key insight of backprop is that we can compute each local gradient independently during the backward pass, then multiply them together to get the full gradient.",
       ],
     },
     {
@@ -621,10 +621,10 @@ const questions: Record<string, Question[]> = {
         "Automatic differentiation (autograd) and symbolic differentiation are the same technique.",
       correctAnswer: "false",
       explanation:
-        "Symbolic differentiation manipulates algebraic expressions to produce a new expression (e.g., Mathematica). Automatic differentiation (PyTorch, JAX) applies chain rule to numerical values during program execution, accumulating gradients without constructing symbolic expressions. Autograd avoids expression swell and handles control flow (if/while) naturally.",
+        "These are fundamentally different approaches to computing derivatives:\n\n**Symbolic Differentiation**\nManipulates algebraic expressions to produce new expressions:\n\\[\n\\frac{d}{dx}(x^2 + \\sin(x)) \\to 2x + \\cos(x).\n\\]\n- Pros: Exact, mathematically clean results\n- Cons: \"Expression swell\" (explosive growth in expression size), struggles with control flow (loops, conditionals)\n- Examples: Mathematica, SymPy, MATLAB's Symbolic Toolbox\n\n**Automatic Differentiation (Autograd)**\nApplies the chain rule to **numerical values** during program execution:\n- Forward mode: evaluates $\\frac{\\partial f}{\\partial x}$ alongside $f(x)$ using dual numbers\n- Reverse mode (backpropagation): records operations in a computational graph, then replays backward to accumulate gradients\n- Handles arbitrary Python code (loops, branches, recursion)\n- Examples: PyTorch, JAX, TensorFlow's Autograd\n\n**Key difference:**\n- Symbolic: \"manipulate the formula\"\n- Autograd: \"evaluate and accumulate\"\n\nFor neural networks with millions of parameters, autograd's reverse-mode differentiation (backprop) is essential — computing symbolic gradients would be intractable.",
       hints: [
-        "Symbolic diff: d/dx(x²+sin(x)) → 2x+cos(x) as an expression.",
-        "Autograd: runs the program with dual numbers or records operations in a tape, then replays backward.",
+        "Imagine computing $\\frac{d}{dx}(\\sin(x^2) + x^2\\cos(x))$ symbolically: you'd need the product rule and chain rule repeatedly, creating increasingly complex expressions. Autograd just evaluates numerically at each step.",
+        "Autograd systems like PyTorch build a dynamic computational graph: each operation records its inputs and outputs. During backward, gradients flow from loss back through each operation, accumulating via the chain rule.",
       ],
     },
   ],
@@ -634,19 +634,19 @@ const questions: Record<string, Question[]> = {
       id: "q-mfml-kp13-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "For f(x, y) = x² + xy + y², what is the Hessian matrix H?",
+      question: "For $f(x, y) = x^2 + xy + y^2$, what is the Hessian matrix $H$?",
       options: [
-        "H = [[2, 1], [1, 2]]",
-        "H = [[2, 0], [0, 2]]",
-        "H = [[1, 1], [1, 1]]",
-        "H = [[2x, y], [x, 2y]]",
+        "$H = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$",
+        "$H = \\begin{pmatrix} 2 & 0 \\\\ 0 & 2 \\end{pmatrix}$",
+        "$H = \\begin{pmatrix} 1 & 1 \\\\ 1 & 1 \\end{pmatrix}$",
+        "$H = \\begin{pmatrix} 2x & y \\\\ x & 2y \\end{pmatrix}$",
       ],
       correctAnswer: 0,
       explanation:
-        "H_{ij} = ∂²f/∂xᵢ∂xⱼ. Here: ∂²f/∂x² = 2, ∂²f/∂y² = 2, ∂²f/∂x∂y = ∂²f/∂y∂x = 1. So H = [[2,1],[1,2]], which is constant (independent of x,y) because f is quadratic.",
+        "The Hessian matrix contains all second-order partial derivatives:\n\\[\nH_{ij} = \\frac{\\partial^2 f}{\\partial x_i \\partial x_j}.\n\\]\n\n**Computing each second partial derivative:**\n\nFirst derivatives:\n\\[\n\\frac{\\partial f}{\\partial x} = 2x + y, \\quad \\frac{\\partial f}{\\partial y} = x + 2y.\n\\]\n\nSecond derivatives (Clairaut's theorem: mixed partials are equal if continuous):\n\\[\n\\frac{\\partial^2 f}{\\partial x^2} = \\frac{\\partial}{\\partial x}(2x + y) = 2,\n\\quad\n\\frac{\\partial^2 f}{\\partial y^2} = \\frac{\\partial}{\\partial y}(x + 2y) = 2,\n\\quad\n\\frac{\\partial^2 f}{\\partial x \\partial y} = \\frac{\\partial}{\\partial y}(2x + y) = 1 = \\frac{\\partial^2 f}{\\partial y \\partial x}.\n\\]\n\n**Assembling the Hessian:**\n\\[\nH = \\begin{pmatrix} \\frac{\\partial^2 f}{\\partial x^2} & \\frac{\\partial^2 f}{\\partial x \\partial y} \\\\ \\frac{\\partial^2 f}{\\partial y \\partial x} & \\frac{\\partial^2 f}{\\partial y^2} \\end{pmatrix} = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}.\n\\]\n\nNote: Since $f$ is a quadratic polynomial, the Hessian is **constant** (independent of $x, y$) — this means the function curves the same way everywhere.",
       hints: [
-        "Compute all second partial derivatives: f_xx = 2, f_yy = 2, f_xy = f_yx = 1.",
-        "Hessian = [[f_xx, f_xy],[f_yx, f_yy]] = [[2,1],[1,2]].",
+        "The Hessian is symmetric for scalar functions of real variables (Clairaut's theorem on equality of mixed partials).",
+        "For a quadratic function $f(x) = x^\\top A x + b^\\top x + c$, the Hessian is simply $H = A + A^\\top = 2A$ when $A$ is symmetric. Here $A = \\begin{pmatrix} 1/2 & 1/2 \\\\ 1/2 & 1 \\end{pmatrix}$, giving $H = 2A$.",
       ],
     },
     {
@@ -654,19 +654,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Hessian H = [[2,1],[1,2]] has eigenvalues 1 and 3. At a critical point where ∇f = 0, what type of point is this?",
+        "The Hessian $H = \\begin{pmatrix} 2 & 1 \\\\ 1 & 2 \\end{pmatrix}$ has eigenvalues $1$ and $3$. At a critical point where $\\nabla f = 0$, what type of point is this?",
       options: [
         "A saddle point (eigenvalues have mixed signs)",
         "A local maximum (all eigenvalues negative)",
-        "A local minimum (all eigenvalues positive — H is positive definite)",
+        "A local minimum (all eigenvalues positive — $H$ is positive definite)",
         "Cannot determine without more information",
       ],
       correctAnswer: 2,
       explanation:
-        "Both eigenvalues (1 and 3) are positive, so H is positive definite (PD). By the second-order sufficiency condition: a critical point where H is PD is a strict local minimum. The function curves upward in all directions.",
+        "The **second-order sufficiency condition** tells us how to classify critical points using the Hessian:\n\n**Classification by eigenvalues:**\n- All $\\lambda_i > 0$ (positive definite) $\\Leftrightarrow$ **local minimum**\n- All $\\lambda_i < 0$ (negative definite) $\\Leftrightarrow$ **local maximum**\n- Mixed signs (indefinite) $\\Leftrightarrow$ **saddle point**\n- Zero eigenvalues require higher-order tests\n\n**Applying to our Hessian:**\nGiven eigenvalues $\\lambda_1 = 1$ and $\\lambda_2 = 3$, both are positive. Therefore $H$ is **positive definite**.\n\n**Geometric intuition:**\nAt a critical point where $\\nabla f = 0$, the Hessian encodes the **curvature** (second derivatives) of $f$:\n- Positive definite means the function curves **upward** in all directions\n- Think of $f(x,y) = x^2 + xy + y^2$ as a bowl-shaped surface — the unique critical point at $(0,0)$ is a global (and local) minimum\n\n**Verification via determinants:**\nFor a $2 \\times 2$ matrix $H = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, it is PD iff $a > 0$ and $\\det(H) > 0$:\n\\[\na = 2 > 0, \\quad \\det(H) = (2)(2) - (1)(1) = 3 > 0.\n\\]\nBoth conditions satisfied, confirming positive definite.",
       hints: [
-        "Second-order test: PD Hessian ↔ local min; ND Hessian ↔ local max; indefinite ↔ saddle.",
-        "For H = [[2,1],[1,2]]: det = 4−1 = 3 > 0 and trace = 4 > 0 → both eigenvalues positive → PD.",
+        "The key insight: the Hessian's eigenvalues tell you how the function curves in different directions. Positive curvature in all directions means you're at a bottom of a 'bowl'.",
+        "For quick checks without computing eigenvalues: for a $2 \\times 2$ symmetric matrix, check $a > 0$ and $\\det > 0$. For larger matrices, check all leading principal minors $> 0$ (Sylvester's criterion).",
       ],
     },
     {
@@ -674,13 +674,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "Newton\'s method for optimization uses the update θ ← θ − H⁻¹∇f, and achieves quadratic convergence near a minimum.",
+        "Newton's method for optimization uses the update $\\theta \\leftarrow \\theta - H^{-1}\\nabla f$, and achieves quadratic convergence near a minimum.",
       correctAnswer: "true",
       explanation:
-        "Newton\'s update θₜ₊₁ = θₜ − H(θₜ)⁻¹∇f(θₜ) uses second-order curvature to take a more accurate step. Near a minimum, the error satisfies ‖θₜ₊₁ − θ*‖ ≤ C·‖θₜ − θ*‖², meaning the number of correct decimal digits doubles per iteration — unlike gradient descent\'s linear convergence.",
+        "Newton's method uses **second-order Taylor approximation** to take more accurate steps than gradient descent.\n\n**Derivation:**\nAround the current point $\\theta_t$, the second-order Taylor expansion of $f$ is:\n\\[\nf(\\theta) \\approx f(\\theta_t) + \\nabla f(\\theta_t)^\\top (\\theta - \\theta_t) + \\frac{1}{2}(\\theta - \\theta_t)^\\top H_t (\\theta - \\theta_t).\n\\]\n\nTaking the gradient with respect to $\\theta$ and setting to zero gives the optimum of this local quadratic model:\n\\[\n\\nabla f(\\theta_t) + H_t(\\theta - \\theta_t) = 0 \\implies \\theta_{t+1} = \\theta_t - H_t^{-1}\\nabla f(\\theta_t).\n\\]\n\n**Convergence analysis:**\nNear a minimum $\\theta^*$ with $\\nabla f(\\theta^*) = 0$ and $H$ positive definite:\n\\[\n\\|\\theta_{t+1} - \\theta^*\\| \\leq C \\cdot \\|\\theta_t - \\theta^*\\|^2.\n\\]\nThis is **quadratic convergence** — the error squares (roughly doubles correct digits) at each iteration.\n\n**Comparison with gradient descent:**\n- GD: $\\|\\text{error}_{t+1}\\| \\leq r \\cdot \\|\\text{error}_t\\|$ — linear (slow)\n- Newton: $\\|\\text{error}_{t+1}\\| \\leq C \\cdot \\|\\text{error}_t\\|^2$ — quadratic (fast)\n\n**Trade-offs:**\n- Newton requires computing and inverting the Hessian ($O(n^3)$ for $n$ parameters)\n- Works best near optima; may diverge far from minimum (Hessian may not be PD)\n- Quasi-Newton methods (L-BFGS) approximate $H^{-1}$ cheaply",
       hints: [
-        "Gradient descent: ‖error_{t+1}‖ ≤ r·‖error_t‖ for r < 1 (linear). Newton: ‖error_{t+1}‖ ≤ C·‖error_t‖² (quadratic).",
-        "Newton\'s method is exact for quadratic objectives, converging in one step. For general objectives, it is quadratic locally.",
+        "Think of gradient descent as taking steps in the direction of steepest descent with fixed step size. Newton's method is like gradient descent but with **variable step size and direction** determined by the local curvature.",
+        "For a perfect quadratic $f(x) = \\frac{1}{2}x^\\top A x - b^\\top x$ with PD $A$, Newton's method converges to the optimum in exactly **one step**: $\\theta^* = A^{-1}b$.",
       ],
     },
   ],
@@ -690,19 +690,19 @@ const questions: Record<string, Question[]> = {
       id: "q-mfml-kp14-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Which of the following functions is convex on ℝ?",
+      question: "Which of the following functions is convex on $\\mathbb{R}$?",
       options: [
-        "f(x) = −x² (concave parabola)",
-        "f(x) = x² (upward parabola)",
-        "f(x) = sin(x) (oscillating)",
-        "f(x) = x³ (has inflection point)",
+        "$f(x) = -x^2$ (concave parabola)",
+        "$f(x) = x^2$ (upward parabola)",
+        "$f(x) = \\sin(x)$ (oscillating)",
+        "$f(x) = x^3$ (has inflection point)",
       ],
       correctAnswer: 1,
       explanation:
-        "f(x) = x² has f''(x) = 2 > 0 everywhere, so it is convex. A function is convex iff f''(x) ≥ 0 (for scalar differentiable functions), i.e., the second derivative test. The chord between any two points lies above or on the parabola.",
+        "A function is **convex** if its epigraph (the region above its graph) is a convex set. Equivalently, for any two points, the line segment between them lies above the function.\n\n**The second derivative test for convexity:**\nFor a twice-differentiable function $f$ on an interval:\n\\[\nf \\text{ is convex } \\iff f''(x) \\geq 0 \\text{ for all } x.\n\\]\n\n**Analyzing each option:**\n\n1. $f(x) = -x^2$: $f'(x) = -2x$, $f''(x) = -2 < 0$ everywhere — **concave** (bowl turned upside down)\n\n2. $f(x) = x^2$: $f'(x) = 2x$, $f''(x) = 2 > 0$ everywhere — **convex** (standard bowl shape)\n\n3. $f(x) = \\sin(x)$: Oscillates between concave and convex — **neither**\n\n4. $f(x) = x^3$: $f''(x) = 6x$, which is negative for $x < 0$ and positive for $x > 0$ — has an **inflection point** at $x = 0$, so **neither** convex nor concave on $\\mathbb{R}$\n\n**Geometric intuition for $f(x) = x^2$:**\nThe chord connecting any two points on the parabola always lies above (or on) the parabola itself — this is the visual definition of convexity.",
       hints: [
-        "Second derivative test for convexity: f''(x) ≥ 0 everywhere ⟺ f is convex.",
-        "f(x) = x²: f'(x) = 2x, f''(x) = 2 > 0. Convex everywhere.",
+        "Visual test: a convex function looks like a 'bowl' — you can roll a ball anywhere on it and it will roll to the bottom. A concave function looks like an 'upside-down bowl'.",
+        "Remember: $f''(x) > 0$ means the function curves upward (convex); $f''(x) < 0$ means it curves downward (concave).",
       ],
     },
     {
@@ -713,10 +713,10 @@ const questions: Record<string, Question[]> = {
         "For a convex function, every local minimum is also a global minimum.",
       correctAnswer: "true",
       explanation:
-        "Suppose x* is a local minimum that is not global. Then ∃y with f(y) < f(x*). By convexity: f(tx*+(1−t)y) ≤ tf(x*)+(1−t)f(y) < f(x*) for t ∈ (0,1). But tx*+(1−t)y is arbitrarily close to x* for t near 1, contradicting x* being a local minimum. So no such y can exist.",
+        "This is one of the most important properties of convex functions — it guarantees that optimization is \"well-behaved.\"\n\n**Proof by contradiction:**\n\nSuppose $x^*$ is a local minimum but **not** a global minimum. Then there exists some $y$ with:\n\\[\nf(y) < f(x^*).\n\\]\n\nBy convexity, for any $t \\in (0, 1)$:\n\\[\nf(tx^* + (1-t)y) \\leq t f(x^*) + (1-t) f(y) < t f(x^*) + (1-t) f(x^*) = f(x^*).\n\\]\n\nNow consider points of the form $z_t = tx^* + (1-t)y$ as $t \\to 1$:\n- $z_t \\to x^*$ as $t \\to 1$\n- For $t$ close enough to 1, $z_t$ is arbitrarily close to $x^*$\n- Yet $f(z_t) < f(x^*)$ for all $t < 1$\n\nThis contradicts $x^*$ being a local minimum!\n\n**Practical implication:**\nWhen training convex models (like linear regression with MSE loss), any local minimum you find is **the** global minimum — no risk of being trapped in a suboptimal local minimum.\n\n**Non-convex counterexample:**\n$f(x) = x^3 - x$ has local minima at $x = -1/\\sqrt{3}$ and $x = 1/\\sqrt{3}$, but the global minimum is not at a local minimum (it goes to $-\\infty$).",
       hints: [
-        "Proof by contradiction: assume a local minimum x* is not global, derive a point nearby with lower value.",
-        'Convexity means there is only one "basin" — no spurious local minima to get trapped in.',
+        "The key step: convexity lets us bound $f$ at intermediate points using a weighted average of endpoint values. If one endpoint is lower, all intermediate points inherit some of that lowness.",
+        "This is why convex optimization is 'easy' — you can't get stuck in local optima. Algorithms like gradient descent that find stationary points are guaranteed to find the global optimum.",
       ],
     },
     {
@@ -724,19 +724,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The cross-entropy loss for logistic regression L(w) = −Σᵢ[yᵢlog σ(wᵀxᵢ) + (1−yᵢ)log(1−σ(wᵀxᵢ))] is:",
+        "The cross-entropy loss for logistic regression $L(w) = -\\sum_i [y_i \\log \\sigma(w^\\top x_i) + (1-y_i)\\log(1-\\sigma(w^\\top x_i))]$ is:",
       options: [
         "Non-convex because it involves the sigmoid function",
-        "Convex in w because log-sum-exp composed with a linear function is convex",
+        "Convex in $w$ because log-sum-exp composed with a linear function is convex",
         "Convex only when the data is linearly separable",
         "Non-convex for multi-class (softmax) but convex for binary",
       ],
       correctAnswer: 1,
       explanation:
-        "The Hessian of L(w) w.r.t. w is H = Σᵢ σᵢ(1−σᵢ)xᵢxᵢᵀ, which is a sum of PSD matrices (each xᵢxᵢᵀ is rank-1 PSD, scaled by σᵢ(1−σᵢ) > 0). So H is PSD, confirming L is convex in w regardless of data separability.",
+        "Despite the sigmoid being non-linear, the **composition structure** makes the loss convex.\n\n**Key insight:** The loss has the form $L(w) = -\\sum_i \\ell_i(w)$ where each $\\ell_i(w)$ is:\n\\[\n\\ell_i(w) = y_i \\log \\sigma(w^\\top x_i) + (1-y_i) \\log(1-\\sigma(w^\\top x_i)).\n\\]\n\n**Showing convexity via the Hessian:**\nDefine $\\sigma_i = \\sigma(w^\\top x_i) = \\frac{1}{1 + e^{-w^\\top x_i}}$.\n\nThe Hessian of the total loss is:\n\\[\nH = \\nabla^2 L(w) = \\sum_i \\sigma_i(1-\\sigma_i) \\, x_i x_i^\\top.\n\\]\n\n**Why this is positive semi-definite (PSD):**\n- Each term $\\sigma_i(1-\\sigma_i) > 0$ because $0 < \\sigma_i < 1$ for all inputs\n- Each $x_i x_i^\\top$ is **rank-1 positive semi-definite** (for any vector $v$, $v^\\top (x_i x_i^\\top) v = (x_i^\\top v)^2 \\geq 0$)\n- A sum of PSD matrices is PSD\n\nSince $H$ is PSD for all $w$, the loss function $L(w)$ is **convex**.\n\n**Critical point:** This convexity holds **regardless of data separability**. Even if the data is perfectly separable (logistic regression can achieve near-zero training loss), the loss is still convex — there are no spurious local minima to worry about.\n\n**Note on multi-class:** The softmax cross-entropy loss $\\ell(w) = -\\log \\frac{e^{w_{y}^\\top x}}{\\sum_j e^{w_j^\\top x}}$ is also convex in $w$ because softmax is log-sum-exp (a convex function) composed with a linear function.",
       hints: [
-        "Hessian = Σᵢ σᵢ(1−σᵢ)xᵢxᵢᵀ where σᵢ(1−σᵢ) > 0. Each xᵢxᵢᵀ is PSD.",
-        "Sum of PSD matrices is PSD. PSD Hessian ↔ convex function.",
+        "The sigmoid $\\sigma(z) = 1/(1+e^{-z})$ is NOT convex or concave globally — but the way it appears in the log-likelihood structure creates convexity in the weight space.",
+        "The term $\\sigma_i(1-\\sigma_i)$ is the variance of a Bernoulli distribution — it's always positive and acts as a 'curvature weight' for each data point's contribution to the Hessian.",
       ],
     },
   ],
@@ -756,10 +756,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Lagrange condition: ∇f = λ∇g → (y, x) = λ(1, 1) → y = x = λ. With constraint x+y = 4: 2x = 4 → x = y = 2. f(2,2) = 4. So the constrained maximum is 4 at (2,2). (This is also the AM-GM optimum: xy ≤ ((x+y)/2)² = 4 with equality iff x=y.)",
+        "**Lagrange multipliers** solve constrained optimization by finding where $\\nabla f$ is parallel to $\\nabla g$.\n\n**Step 1: Set up the Lagrangian**\n\\[\n\\mathcal{L}(x, y, \\lambda) = xy - \\lambda(x + y - 4).\n\\]\n\n**Step 2: Take partial derivatives and set to zero**\n\\[\n\\frac{\\partial \\mathcal{L}}{\\partial x} = y - \\lambda = 0 \\Rightarrow y = \\lambda,\n\\quad\n\\frac{\\partial \\mathcal{L}}{\\partial y} = x - \\lambda = 0 \\Rightarrow x = \\lambda,\n\\quad\n\\frac{\\partial \\mathcal{L}}{\\partial \\lambda} = -(x + y - 4) = 0 \\Rightarrow x + y = 4.\n\\]\n\n**Step 3: Solve the system**\nFrom the first two equations: $x = y = \\lambda$.\n\nSubstituting into the constraint: $x + x = 4 \\Rightarrow x = 2$, so $y = 2$.\n\n**Step 4: Evaluate**\n\\[\nf(2, 2) = 2 \\cdot 2 = 4.\n\\]\n\n**Verification via AM-GM:** $xy \\leq ((x+y)/2)^2 = (4/2)^2 = 4$, with equality when $x = y = 2$.",
       hints: [
-        "∇f = (y,x), ∇g = (1,1). Lagrange: (y,x) = λ(1,1) → y = λ and x = λ → x = y.",
-        "Plug x=y into constraint x+y=4: 2x=4, x=2, y=2. f(2,2)=4.",
+        "At the optimum, $\\nabla f$ is parallel to $\\nabla g$. This gives us $\\frac{\\partial \\mathcal{L}}{\\partial x} = 0$ and $\\frac{\\partial \\mathcal{L}}{\\partial y} = 0$.",
+        "The constraint $x + y = 4$ describes a line. The method finds where along this line the product $xy$ is maximized — intuitively at the 'most square' point $(2, 2)$.",
       ],
     },
     {
@@ -770,10 +770,10 @@ const questions: Record<string, Question[]> = {
         "The Lagrange multiplier λ has the interpretation as the rate of change of the optimal objective value with respect to the constraint level c in g(x) = c.",
       correctAnswer: "true",
       explanation:
-        "Sensitivity interpretation: if the constraint is g(x) = c and F*(c) is the optimal value, then dF*/dc = λ at optimum. In the xy example: if constraint changes to x+y = 4+ε, the new optimum ≈ 4 + λ·ε = 4 + 2ε (since λ=2 at optimum). This is the shadow price.",
+        "This is the **envelope theorem** interpretation of Lagrange multipliers — one of the most economically meaningful aspects.\n\nConsider optimizing $f(x)$ subject to $g(x) = c$. Let $F^*(c)$ be the optimal value. Then:\n\\[\n\\frac{dF^*}{dc}(c) = \\lambda^*,\n\\]\nwhere $\\lambda^*$ is the optimal Lagrange multiplier.\n\nIn our $xy$ example with constraint $x + y = 4$:\n- At the optimum we found $\\lambda = 2$ (since $y = \\lambda = 2$ and $x = \\lambda = 2$)\n- If the constraint changes to $x + y = 4 + \\epsilon$:\n\\[\nF^*(4 + \\epsilon) \\approx F^*(4) + \\lambda \\cdot \\epsilon = 4 + 2\\epsilon.\n\\]\n\nFor $\\epsilon = 1$: new optimum $\\approx 6$ (AM-GM gives $((4+1)/2)^2 = 6.25$).\n\n$\\lambda$ is called the \"shadow price\" because it tells you the marginal value of relaxing the constraint.",
       hints: [
-        "λ measures how much the optimal value improves if the constraint is relaxed by one unit.",
-        "In the xy maximization with x+y=4: λ=2 means increasing the budget from 4 to 5 yields optimum ≈ 6.25, increasing by ≈ 2·1 = 2.",
+        "Think of $\\lambda$ as a 'price' for the constraint resource. If you can increase the budget $c$ by one unit, how much extra objective value do you gain? That's $\\lambda$.",
+        "In constrained optimization, not all constraints are equally valuable. The magnitude of $\\lambda$ tells you which constraints are 'binding' (critical) vs. slack.",
       ],
     },
     {
@@ -790,10 +790,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KKT: αᵢ ≥ 0 and αᵢ(yᵢ(wᵀxᵢ+b)−1) = 0. Either αᵢ = 0 (point is not a support vector, margin constraint not tight) or yᵢ(wᵀxᵢ+b) = 1 (point is exactly on the margin). The decision boundary w = Σᵢ αᵢyᵢxᵢ depends only on support vectors.",
+        "The KKT (Karush-Kuhn-Tucker) complementary slackness condition $\\alpha_i (y_i(w^\\top x_i + b) - 1) = 0$ means that for each training point, exactly one of the following holds:\n\n- $\\alpha_i = 0$: the point is **not** a support vector — it lies outside the margin (constraint not tight)\n- $y_i(w^\\top x_i + b) = 1$: the point **is** a support vector — it lies exactly on the margin boundary\n\nThe decision boundary $w^* = \\sum_i \\alpha_i y_i x_i$ depends **only** on support vectors. Points inside the margin or far from the boundary have $\\alpha_i = 0$ and don't affect $w^*$.\n\nThis is why SVMs are sparse: to classify a new point, you only need to compute its inner product with the support vectors, not all training points.",
       hints: [
-        "Complementary slackness: αᵢ·(constraint) = 0, so either the multiplier or the constraint slack must be zero.",
-        "Points well within the margin have αᵢ = 0 and don\'t affect w. Only margin-boundary points (αᵢ > 0) matter.",
+        "Complementary slackness: $\\alpha_i \\cdot (\\text{constraint slack}) = 0$. If the constraint is loose (slack > 0), then $\\alpha_i = 0$. If $\\alpha_i > 0$, then the constraint must be tight (slack = 0, point exactly on margin).",
+        "The word 'slack' means 'looseness' — if there's slack in the constraint, the multiplier is zero (we're not 'paying' for that point). If there's no slack, we pay a positive price $\\alpha_i > 0$.",
       ],
     },
   ],

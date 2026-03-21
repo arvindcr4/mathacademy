@@ -17,10 +17,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Under the Bradley-Terry preference model, the reward model minimizes −E[log σ(r(y_w) − r(y_l))]. The sigmoid of the score difference gives the predicted probability that y_w is preferred; the loss is minimized when r(y_w) ≫ r(y_l). InstructGPT used 50K prompts generating 300K–1.8M preference pairs.",
+        "Under the Bradley-Terry preference model, the probability that a human prefers $y_w$ over $y_l$ given prompt $x$ is:\n\\[ P(y_w \\succ y_l \\mid x) = \\sigma\\big(r_\\theta(x, y_w) - r_\\theta(x, y_l)\\big) \\]\nwhere $\\sigma$ is the logistic sigmoid. The reward model minimizes the negative log-likelihood:\n\\[ \\mathcal{L}_\\text{RM} = -\\mathbb{E}_{(x, y_w, y_l) \\sim \\mathcal{D}}\\left[ \\log \\sigma\\big(r_\\theta(x, y_w) - r_\\theta(x, y_l)\\big) \\right] \\]\nThis is equivalent to maximizing the log probability that the winning response outranks the losing response. InstructGPT used 50K prompts generating 300K–1.8M preference pairs.",
       hints: [
-        "σ(r(y_w) − r(y_l)) is the predicted probability that the winning response is preferred.",
-        "The loss is large (penalizes heavily) when the losing response is scored higher than the winner.",
+        "The sigmoid $\\sigma(r(y_w) - r(y_l))$ outputs a probability between 0 and 1 — it is high when $r(y_w) > r(y_l)$.",
+        "When $r(y_l) > r(y_w)$, the sigmoid argument is negative, so predicted probability drops below 0.5 — the model is penalized.",
+        "This is the Bradley-Terry model: the probability of preference is a sigmoid function of the reward difference.",
       ],
     },
     {
@@ -168,10 +169,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PPO\'s clipped surrogate objective limits how much the policy can change relative to the old policy used to collect rollouts. If the ratio r_t(θ) exceeds [1−ε, 1+ε], the gradient is clipped to zero for that sample, preventing destabilizing large updates. This is PPO\'s key stability improvement over vanilla policy gradient.",
+        "PPO clips the probability ratio $r_t(\\theta) = \\pi_\\theta(a_t|s_t)/\\pi_{\\theta_\\text{old}}(a_t|s_t)$ to $[1-\\varepsilon, 1+\\varepsilon]$. The unclipped surrogate objective is $L^\\text{CLIP}(\\theta) = \\mathbb{E}_t\\big[r_t(\\theta) \\cdot \\hat{A}_t\\big]$. When $r_t(\\theta)$ exits the $\\[1-\\varepsilon, 1+\\varepsilon\\]$ band, the gradient is zeroed — preventing large trust region steps that could destabilize training. The clip operator is:\n\\[ \\nabla_\\theta L^\\text{CLIP} = \\mathbb{E}_t\\big[\\nabla_\\theta r_t(\\theta) \\cdot \\hat{A}_t \\cdot \\mathbf{1}_{|r_t(\\theta) - 1| \\leq \\varepsilon}\\big] \\]\nwhere $\\hat{A}_t$ is the advantage estimate. Schulman et al. (2017) set $\\varepsilon = 0.2$ by default.",
       hints: [
-        "Without clipping, a large gradient could collapse policy quality in a single update step.",
-        "ε = 0.2 is the default in the original PPO paper (Schulman et al., 2017).",
+        "When $r_t > 1+\\varepsilon$ and advantage is positive, the gradient becomes zero — the policy has already increased probability enough.",
+        "When $r_t < 1-\\varepsilon$ and advantage is negative, the gradient becomes zero — the policy has decreased probability too much.",
+        "This clipping prevents large policy shifts that vanilla policy gradient could make in a single step.",
       ],
     },
   ],
@@ -226,10 +228,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Solving the variational problem via Lagrange multipliers yields the Gibbs distribution: π*(y|x) ∝ π_ref(y|x) · exp(r(x,y)/β). This closed-form solution is the theoretical foundation of DPO — which avoids RL by directly optimizing toward this distribution. β controls the temperature: large β → π* ≈ π_ref; small β → π* concentrates on high-reward outputs.",
+        "The KL-regularized RL objective:\n\\[ \\max_{\\pi} \\; \\mathbb{E}_{x}\\big[r(x,y)\\big] - \\beta \\cdot D_\\text{KL}\\big(\\pi\\|\\pi_\\text{ref}\\big) \\]\nhas a closed-form optimal solution given by the Gibbs (Boltzmann) distribution:\n\\[ \\pi^*(y|x) \\propto \\pi_\\text{ref}(y|x) \\cdot \\exp\\!\\bigg(\\frac{r(x,y)}{\\beta}\\bigg) \\]\nThis is derived by maximizing $\\sum_y \\pi(y|x)r(x,y) - \\beta\\sum_y\\pi(y|x)\\log(\\pi(y|x)/\\pi_\\text{ref}(y|x))$ with a Lagrange multiplier for $\\sum_y\\pi(y|x)=1$. DPO exploits this by using implicit rewards $r_\\text{impl}(x,y) = \\beta\\log(\\pi_\\theta(y|x)/\\pi_\\text{ref}(y|x))$, eliminating the need for a separate reward model.",
       hints: [
-        "The Gibbs distribution is the maximum-entropy solution to constrained reward maximization.",
-        "DPO rearranges this expression to derive a training loss that eliminates the need for explicit RL.",
+        "The temperature $\\beta$ controls entropy: $\\beta \\to \\infty$ gives $\\pi^* \\to \\pi_\\text{ref}$ (maximum entropy); $\\beta \\to 0$ concentrates on argmax outputs.",
+        "DPO rearranges $\\pi^*(y|x) \\propto \\pi_\\text{ref}(x,y)\\exp(r/\\beta)$ to solve for implicit rewards in terms of log-probability ratios.",
+        "This is the maximum-entropy reinforcement learning solution — the most uncertain distribution consistent with the reward constraint.",
       ],
     },
   ],
@@ -307,10 +310,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In DPO, β·log(π_θ(y|x)/π_ref(y|x)) is the implicit reward r(x,y) up to a constant. The loss trains the policy so that the implicit reward of y_w exceeds that of y_l — i.e., π_θ increases probability of y_w relative to π_ref and decreases probability of y_l, all without training an explicit reward model or running RL.",
+        "In DPO, the implicit reward is defined as:\n\\[ r_\\text{implicit}(x, y) = \\beta \\log\\frac{\\pi_\\theta(y|x)}{\\pi_\\text{ref}(y|x)} + C \\]\nThe DPO loss is:\n\\[ \\mathcal{L}_\\text{DPO} = -\\mathbb{E}_{(x, y_w, y_l)}\\left[ \\log \\sigma\\big(r_\\text{implicit}(x, y_w) - r_\\text{implicit}(x, y_l)\\big) \\right] \\]\nThis trains the policy so $r_\\text{implicit}(y_w) > r_\\text{implicit}(y_l)$. Note that $\\pi_\\theta$ appears on both sides — the loss directly updates the policy without a separate reward model or RL loop.",
       hints: [
-        "The log-ratio log(π_θ/π_ref) is the key quantity — how much more (or less) likely is this completion under the fine-tuned policy vs. the reference?",
-        "β scales the implicit reward — larger β means the policy stays closer to the reference.",
+        "The key insight: $r_\\text{implicit} = \\beta\\log(\\pi_\\theta/\\pi_\\text{ref})$ is derived from the KL-regularized optimum condition, not an independent RM.",
+        "When $\\pi_\\theta(y_w) > \\pi_\\text{ref}(y_w)$, the implicit reward for $y_w$ is positive — DPO pushes up such responses.",
+        "The sigmoid $\\sigma(r_\\text{impl}(y_w) - r_\\text{impl}(y_l))$ is the predicted preference probability — DPO maximizes this.",
       ],
     },
     {
@@ -365,10 +369,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Gao et al. (2023) showed an inverted-U relationship: as RL optimization increases KL from the reference, the gold reward (from a human-quality oracle) initially rises (the model genuinely improves) but then falls as the policy exploits the proxy reward model\'s weaknesses. This empirically confirms that there is an optimal stopping point for RL optimization.",
+        "Gao et al. (2023) showed gold reward $r_\\text{gold}$ follows an inverted-U with KL divergence:\n\\[ r_\\text{gold}(KL) \\approx \\alpha\\sqrt{KL} - \\beta\\cdot KL \\]\nThe $\\alpha\\sqrt{KL}$ term reflects genuine improvement (diminishing returns), while $-\\beta\\cdot KL$ reflects hacking that grows linearly and eventually dominates. The optimal stopping point is at $KL^* \\approx (\\alpha/2\\beta)^2$ — where marginal improvement equals marginal harm. This confirms Goodhart's Law: a proxy reward diverges from true preferences when optimized beyond the sweet spot.",
       hints: [
-        'The "sweet spot" is the KL value where gold reward is maximized — optimizing further causes hacking.',
-        "This curve is why early stopping and careful β tuning are critical in RLHF.",
+        "The $\\sqrt{KL}$ term: early optimization yields large gains, but diminishing returns set in quickly.",
+        "The $-\\beta\\cdot KL$ hacking term grows without bound — eventually overwhelming genuine improvement.",
+        'The optimal KL* is where $\\alpha/(2\\sqrt{KL^*}) = \\beta$: marginal gain equals marginal harm.',
       ],
     },
     {
@@ -458,10 +463,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "With LoRA, the policy is parameterized as W_base + A·B where W_base is frozen and A, B are low-rank trainable matrices. The reference policy is simply W_base (no adapters). Since both share the frozen backbone stored once, the extra memory for the reference is near zero. Only the LoRA adapter weights (typically <1% of parameters) are unique to the actor.",
+        "In standard fine-tuning, a frozen pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ is updated to $W_0 + \\Delta W$. LoRA constrains $\\Delta W = A \\cdot B$ where $A \\in \\mathbb{R}^{d \\times r}$, $B \\in \\mathbb{R}^{r \\times k}$, with rank $r \\ll \\min(d, k)$. The forward pass becomes:\n\\[ h = W_0 x + \\underbrace{ABx}_{\\text{LoRA update}} \\]\nThe actor and reference share the same frozen $W_0$. Only $A$ and $B$ (2rv params vs. $dk$ for a full copy) are unique to the actor. At $r=16$, a 7B model needs ~50M adapter params instead of ~14GB for a full reference — a ~280× reduction.",
       hints: [
-        "LoRA: total parameters ≈ base_params + 2 × r × d (very small). The reference is just base_params.",
-        "At r=16 for a 7B model, LoRA adapters are ~50M params vs. 7B for a full reference copy.",
+        "For $W \\in \\mathbb{R}^{d \\times k}$ with rank $r$, full fine-tuning stores $dk$ params; LoRA stores only $r(d+k)$, a dramatic reduction when $r \\ll \\min(d,k)$.",
+        "The reference is literally $W_0$ (zero extra params); the actor adds $AB$. They share the same forward pass backbone.",
+        "At inference, $W_0 + AB$ can be merged into a single matrix for zero-latency overhead.",
       ],
     },
   ],
@@ -632,10 +638,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The negative feedback hypothesis (Goldberg, as cited by Huyenchip 2023): SFT is purely positive — it only shows the model good responses (positive signal). RLHF provides negative signals: the reward model can score bad responses poorly, and PPO updates the policy to avoid those. This bidirectional feedback is fundamentally unavailable in SFT\'s supervised learning paradigm.",
+        "The negative feedback hypothesis (Goldberg, Huyenchip 2023): SFT maximizes $\\mathcal{L}_\\text{SFT} = -\\mathbb{E}_{(x,y)\\sim\\mathcal{D}}[\\log\\pi_\\theta(y|x)]$ — purely positive signal for demonstrated outputs only. No gradient exists for any $\\tilde{y} \\neq y$, even catastrophically wrong ones. RLHF provides bidirectional feedback: the PPO policy gradient $g = \\mathbb{E}[\\nabla_\\theta\\log\\pi_\\theta(y|x) \\cdot r(x,y)]$ assigns negative gradient when $r(x,y) < 0$, explicitly penalizing low-reward outputs including those never seen during training.",
       hints: [
-        "SFT loss only backpropagates through positive demonstrations — no gradient signal for what not to do.",
-        "RL reward can be negative (penalizing bad responses) — this is impossible to express in a standard cross-entropy SFT loss.",
+        "SFT only sees the demonstrated response — there is no learning signal for alternatives.",
+        "PPO assigns negative reward to counterfactual outputs, which SFT cannot do.",
+        "This is why RLHF can learn to refuse harmful queries even though SFT only saw approved responses.",
       ],
     },
   ],
@@ -925,10 +932,11 @@ const additionalQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Gao et al. (2023) fit an empirical model where gold reward grows as ~√KL initially (diminishing returns to exploration) but decays as ~-KL due to hacking (linearly accelerating harm). The net inverted-U shape means there is a well-defined optimal stopping point at KL* ≈ (α/2β)² where marginal gain equals marginal harm. This functional form guided development of the KL-based early stopping criterion.",
+        "Gao et al. (2023) fit the functional form:\n\\[ r_\\text{gold}(KL) = \\alpha\\sqrt{KL} - \\beta\\cdot KL \\]\nwhere $\\alpha > 0$ and $\\beta > 0$ are fitted constants. The $\\sqrt{KL}$ term captures diminishing returns from alignment (the policy rapidly improves early but gains taper off), while $-\\beta\\cdot KL$ captures linearly accelerating reward hacking. Setting $\\frac{d}{dKL}r_\\text{gold} = 0$ gives the optimal stopping point $KL^* = (\\alpha/2\\beta)^2$. This functional form is the foundation of KL-based early stopping criteria in RLHF.",
       hints: [
-        "The √KL growth reflects that initial policy improvements are fast but experience diminishing returns.",
-        "The -KL hacking term grows without bound — eventually dominating, causing the fall after the peak.",
+        "Fitting $r_\\text{gold} \\sim \\alpha\\sqrt{KL} - \\beta KL$ to data directly quantifies the tradeoff.",
+        "Early stopping at $KL^*$ maximizes gold reward — beyond this point, hacking damages alignment more than improvement helps.",
+        "This equation is why modern RLHF uses KL monitoring rather than just monitoring proxy reward.",
       ],
     },
   ],
@@ -1165,7 +1173,491 @@ const additionalQuestions: Record<string, Question[]> = {
     },
   ],
 
+  "dpo-vs-rlhf": [
+    {
+      id: "q-rlhf-kp22-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the primary practical advantage of DPO (Direct Preference Optimization) over PPO-RLHF for aligning large language models?",
+      options: [
+        "DPO always produces better-aligned models than PPO.",
+        "DPO eliminates the need for a separate reward model and RL training loop, training the policy directly on preference data with a supervised loss — requiring only two models instead of four.",
+        "DPO runs on CPUs and does not require GPU acceleration.",
+        "DPO allows the policy to generate on-policy rollouts during training.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "PPO-RLHF requires four models (actor, critic, reward model, reference policy) and an RL training loop with rollout generation, reward scoring, and advantage estimation. DPO trains the policy directly on (prompt, chosen, rejected) triplets using a supervised cross-entropy-like loss, requiring only the policy and a frozen reference. This dramatically reduces engineering complexity, memory requirements, and training time.",
+      hints: [
+        "DPO\'s loss looks like supervised fine-tuning — it uses standard backpropagation, not RL.",
+        "Fewer models means fewer GPUs, simpler infrastructure, and faster iteration — a major practical win.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp22-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "DPO can be applied iteratively (collecting new preference data on current-policy outputs and retraining) to mitigate its offline distributional mismatch limitation.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Iterative DPO (also called online DPO or self-play fine-tuning) addresses the distributional mismatch by: (1) generating completions from the current policy; (2) collecting preferences on those completions (via humans or AI); (3) running DPO training; (4) repeating. This closes the gap between the data-generating policy and the trained policy, and has been shown to match or exceed offline PPO-RLHF in several benchmarks.",
+      hints: [
+        "Each iteration of DPO uses on-policy completions, making the preference data current.",
+        "Papers like SPIN and Self-Play Fine-Tuning formalize this iterative approach.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp22-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "DPO\'s gradient update on a preference pair (y_w, y_l) has an undesirable behavior when the reference policy assigns very low probability to y_w. What is this failure mode called?",
+      options: [
+        "Reward hacking — the implicit reward becomes negative for y_w.",
+        "Token-level DPO divergence — the per-token probabilities become NaN.",
+        "Likelihood displacement — DPO simultaneously decreases the probability of y_l and, unintentionally, of y_w if the reference already assigns low probability to it, failing to correctly increase y_w\'s probability.",
+        "KL collapse — the policy collapses to the reference distribution.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Azar et al. (2023) and Pang et al. (2024) identified that DPO can suffer from likelihood displacement: if π_ref(y_w|x) is very low (y_w is out-of-distribution for the reference), the DPO gradient may not reliably increase π_θ(y_w|x). The implicit reward β·log(π_θ/π_ref) requires careful initialization. IPO (Identity Preference Optimization) and SimPO address this by modifying the loss to be more robust to this case.",
+      hints: [
+        "The DPO gradient for y_w is ∝ (1 − σ(Δr)) · ∇logπ_θ(y_w) — when σ(Δr) ≈ 1, the y_w gradient is near zero.",
+        "If y_w is a good response but very different from the reference, DPO may fail to increase its probability.",
+      ],
+    },
+  ],
+
+  "instructgpt-details": [
+    {
+      id: "q-rlhf-kp23-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "InstructGPT (Ouyang et al., 2022) used approximately how many high-quality human-written demonstration examples for the SFT (supervised fine-tuning) phase?",
+      options: [
+        "500 examples",
+        "13,000–14,500 examples",
+        "300,000 examples",
+        "1.8 million examples",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "InstructGPT\'s SFT phase used approximately 13,000–14,500 human-written prompt-response demonstration pairs. OpenAI contractor labelers wrote high-quality responses to a diverse set of prompts covering helpfulness, safety, and instruction-following. The small dataset size (relative to pretraining) demonstrates that SFT is extremely sample-efficient for eliciting desired behavior from a well-pretrained model.",
+      hints: [
+        "~13K examples is tiny compared to the billions of pretraining tokens — yet sufficient for SFT.",
+        "Quality matters more than quantity for SFT: carefully written demonstrations beat noisy large datasets.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp23-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "InstructGPT\'s human labelers were exclusively Mechanical Turk workers with no domain expertise.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "InstructGPT used contractors from a professional labeling company (Scale AI), not anonymous Mechanical Turk workers. Labelers were screened for agreement with OpenAI researchers on sensitive content and helpfulness judgments. For specialized tasks (e.g., legal, medical prompts), OpenAI acknowledged that their labeler pool may not represent expert knowledge — a limitation they explicitly noted as contributing to hallucination.",
+      hints: [
+        "The labeler selection process included training, calibration, and quality checks — not typical of MTurk.",
+        "Specialized domain expertise (medicine, law) was identified as a gap in the labeler pool.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp23-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "InstructGPT\'s RLHF objective includes a pretraining loss term γ·E[log π_ϕ(x_pretrain)]. Why is the γ coefficient typically set to a very small value (e.g., 0 < γ ≪ 1)?",
+      options: [
+        "A large γ would cause the reward model to overfit to pretraining data.",
+        "A large γ would dominate the RL reward signal, preventing alignment learning and keeping the policy close to the pretrained LM distribution — the policy would improve little beyond the SFT baseline.",
+        "A large γ would increase GPU memory usage proportionally.",
+        "γ must be small to satisfy the Bradley-Terry model\'s normalization constraint.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The full objective is: E[r(x,y)] − β·KL(π‖π_ref) + γ·E[log π_ϕ(x_pretrain)]. If γ is large, the pretrain loss dominates and the model optimizes language modeling rather than human preference. The pretraining term is a regularizer — set small enough to prevent catastrophic forgetting without crowding out the RL reward signal. InstructGPT found γ ≈ 0 or very small worked well for most tasks.",
+      hints: [
+        "Think of γ as a catastrophic-forgetting penalty, not a primary training signal.",
+        "At γ = 0, RLHF ignores pretraining data entirely; at γ = 1, pretraining may dominate the RL reward.",
+      ],
+    },
+  ],
+
+  "ppo-mechanics": [
+    {
+      id: "q-rlhf-kp24-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In PPO-RLHF, the reward signal from the reward model is typically applied only at the end of each generated response (the final token), not at every token. Why?",
+      options: [
+        "Computing per-token rewards would require O(T) forward passes through the reward model, where T is sequence length — this is computationally prohibitive.",
+        "Per-token rewards are mathematically invalid under the Bradley-Terry model.",
+        "PPO\'s clipping mechanism only works with terminal rewards.",
+        "Per-token rewards cause KL divergence to become negative.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The reward model assigns a scalar score to a complete (prompt, response) pair. Applying the reward at the final token is a practical approximation: the RL episode is a single token sequence, and the reward is a terminal reward at the episode end. Generating a per-token intermediate reward would require the RM to score partial sequences, which it was not trained to do. The KL penalty IS applied per-token in the objective.",
+      hints: [
+        "The reward model takes a complete response as input — it cannot score partial sequences mid-generation.",
+        "Only the KL penalty is per-token; the reward model score is assigned at the end of generation.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp24-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In PPO-RLHF, the critic (value network) is initialized from the reward model weights rather than the SFT model weights.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "In standard PPO-RLHF (e.g., TRL library, InstructGPT implementation), the critic (value network V_ψ) is often initialized from the reward model because the RM already learned to assess response quality — a good initialization for estimating expected return. The actor is initialized from the SFT model. Some implementations initialize both from the SFT model. Using the RM as critic initialization reduces value network training time and improves advantage estimate quality.",
+      hints: [
+        "The reward model estimates immediate reward; the value network estimates cumulative return — related but distinct.",
+        "Warm-starting the critic from RM weights provides a better initial value estimate than random initialization.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp24-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "GAE (Generalized Advantage Estimation) is used in PPO-RLHF to compute advantage estimates. With λ = 1, GAE reduces to Monte Carlo returns. With λ = 0, it reduces to TD(0) (one-step TD error). What is the tradeoff controlled by λ?",
+      options: [
+        "λ controls the learning rate for the policy update.",
+        "λ interpolates between high-variance/low-bias (λ=1, Monte Carlo) and low-variance/high-bias (λ=0, TD) advantage estimates — higher λ uses more actual returns (less bias) but more variance; lower λ relies more on the value function (less variance) but inherits its bias.",
+        "λ controls the KL penalty coefficient between RL steps.",
+        "λ determines the clip ratio ε for the PPO surrogate objective.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "GAE (Schulman et al., 2016) computes the advantage as:\n\\[ \\hat{A}_t^\\text{GAE}(\\gamma, \\lambda) = \\sum_{l=0}^{\\infty} (\\gamma\\lambda)^l \\delta_{t+l} \\]\nwhere $\\delta_t = r_t + \\gamma V(s_{t+1}) - V(s_t)$ is the TD error. At λ=1: returns to full Monte Carlo (high variance, low bias). At λ=0: pure one-step TD (low variance, high value-function bias). RLHF typically uses λ ∈ [0.9, 0.99] — close to Monte Carlo but with variance reduction from the value function bootstrap.",
+      hints: [
+        "High λ means the advantage estimate relies more on actual sampled rewards (accurate but noisy).",
+        "Low λ means the advantage estimate relies more on the learned value function (smooth but potentially biased).",
+      ],
+    },
+  ],
+
+  "rlaif-details": [
+    {
+      id: "q-rlhf-kp25-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In RLAIF, what makes a frontier LLM (like GPT-4) a viable preference labeler for aligning a weaker model?",
+      options: [
+        "The frontier LLM was trained on the same data as the model being aligned.",
+        "The frontier LLM is capable enough to reliably evaluate the quality of the weaker model\'s outputs across the relevant dimensions (helpfulness, harmlessness, accuracy), producing labels that correlate well with human judgments.",
+        "The frontier LLM can access the weaker model\'s weights to assess quality.",
+        "Frontier LLMs always agree with each other on preference judgments.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The core assumption of RLAIF is that the AI labeler is competent enough at the evaluation task. If the AI labeler cannot reliably distinguish good from bad outputs, its labels are noise. Frontier LLMs like GPT-4 have been shown to have high agreement with human judgments on summarization, instruction following, and safety — making them viable as preference labelers for models they outperform on those tasks.",
+      hints: [
+        "RLAIF degrades when the AI labeler is weaker or equal to the model being aligned — it cannot reliably rank what it cannot do.",
+        "The labeler must be better at evaluation than the trainee is at generation.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp25-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In RLAIF with self-improvement (a model labeling its own outputs), the labeler model and the trainee model can be the same model, provided the labeling and training are done on different checkpoints.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Self-improvement RLAIF uses a model (or a more capable checkpoint of the same model) to evaluate and generate preference labels for its own outputs. Constitutional AI\'s RL-CAI stage does exactly this: Claude evaluates pairs of its own responses against constitutional principles. The key is using a frozen checkpoint as the labeler while training a separate copy — preventing circular gradient flow while enabling self-critique.",
+      hints: [
+        "CAI uses the same model for generation and critique but at different pipeline stages — not simultaneously.",
+        "Frozen labeler checkpoint + trainable policy copy is the standard pattern for self-improvement RLAIF.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp25-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Constitutional AI\'s RL-CAI generates preference labels by prompting a model with the constitution and a pair of responses. Why does the model\'s chain-of-thought reasoning before outputting a preference label improve label quality?",
+      options: [
+        "Chain-of-thought increases the probability of the correct label token in the vocabulary.",
+        "Explicitly reasoning through constitutional principles before selecting a preference forces the model to apply the relevant evaluation criteria step-by-step, reducing shallow pattern matching and improving label reliability — analogous to chain-of-thought improving reasoning accuracy in other tasks.",
+        "Chain-of-thought reduces the GPU memory required for the forward pass.",
+        "The chain-of-thought output is used as training data for the SFT phase.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Bai et al. (2022) found that prompting the AI judge with chain-of-thought (first reason about which response better follows the principle, then output A or B) produces more reliable constitutional preference labels than direct output. This mirrors Wei et al. (2022)\'s chain-of-thought prompting finding: generating intermediate reasoning steps before final answers improves accuracy on multi-step evaluation tasks by decomposing the judgment.",
+      hints: [
+        "Without reasoning steps, the model may pattern-match on surface features (length, formatting) rather than constitutional adherence.",
+        "CoT forces explicit principle application: \'Response A is harmful because... therefore B is preferred.\'",
+      ],
+    },
+  ],
+
+  "reward-model-training": [
+    {
+      id: "q-rlhf-kp26-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "During reward model training, why is it important to only compute the reward on the response tokens and not on the prompt tokens?",
+      options: [
+        "Prompt tokens are longer than response tokens and would dominate the loss.",
+        "The reward model should evaluate the quality of the response given the prompt, not the quality of the prompt itself — including prompt tokens in the loss would dilute the signal about response quality.",
+        "Prompt tokens are masked in the tokenizer and cannot be processed.",
+        "Including prompt tokens violates the Bradley-Terry preference model assumptions.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The reward model\'s purpose is to score response quality conditioned on the prompt. Backpropagating through prompt token representations would mix irrelevant information (prompt quality/style) with response quality signal. In practice, implementations mask prompt token positions when computing the RM loss, focusing training entirely on how the model\'s representation of the prompt+response encodes response quality.",
+      hints: [
+        "The reward scalar is extracted from the final token\'s hidden state — a natural position to encode the full (prompt, response) quality.",
+        "Gradient masking on prompt positions is standard in RLHF implementations like TRL.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp26-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Reward model ensembling (training multiple independent reward models and averaging their scores) is an effective technique for reducing reward hacking.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "An ensemble of reward models trained on different random seeds or data subsets will disagree on out-of-distribution inputs (the RM\'s uncertainty is high precisely where reward hacking occurs). Using the minimum or average score across ensemble members penalizes outputs where models disagree — effectively detecting potential reward-hacking candidates. This is an uncertainty-aware reward approach that goes beyond a single RM.",
+      hints: [
+        "Individual RMs overfit to different spurious features; an ensemble\'s disagreement signals out-of-distribution inputs.",
+        "Conservative reward estimation (using minimum ensemble score) provides a safety margin against hacking.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp26-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Why does reward model calibration (having P(y_w ≻ y_l) = 0.7 when 70% of humans prefer y_w) matter more for iterative RLHF than for standard offline RLHF?",
+      options: [
+        "Calibration only matters for reward models with more than 1B parameters.",
+        "In iterative RLHF, the policy actively generates novel responses that the RM must reliably rank. A miscalibrated RM may be overconfident on these new outputs, providing misleading gradients. Iterative training amplifies calibration errors over rounds because miscalibrated labels in round N distort the policy for round N+1.",
+        "Calibration affects the KL penalty coefficient calculation.",
+        "Offline RLHF uses absolute ratings; calibration only applies to pairwise comparisons.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In offline RLHF, the RM scores a fixed set of responses — miscalibration creates a fixed bias. In iterative RLHF, the policy generates increasingly novel responses each round, and the RM\'s calibration on these out-of-distribution inputs directly shapes future policy updates. Overconfident RM scores on novel outputs cause the policy to aggressively shift toward those outputs, potentially amplifying reward hacking across iterations.",
+      hints: [
+        "Round 1 miscalibration → biased policy → more out-of-distribution outputs in round 2 → worse miscalibration — a compounding error.",
+        "Calibration testing (ECE, reliability diagrams) on held-out preference pairs should be standard practice.",
+      ],
+    },
+  ],
+
+  "kl-divergence-details": [
+    {
+      id: "q-rlhf-kp27-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In RLHF, the KL divergence KL(π_RL ‖ π_SFT) is applied per-token across the generated response. What does this mean computationally?",
+      options: [
+        "The KL is computed once for the entire sequence by comparing the final output distributions.",
+        "At each token position t, the KL between the RL policy\'s token distribution and the SFT policy\'s token distribution is computed and summed: KL = Σ_t KL(π_RL(·|x, y_{<t}) ‖ π_SFT(·|x, y_{<t})).",
+        "The KL is computed only at the first and last token of each response.",
+        "The KL is approximated using the Euclidean distance between hidden states.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Per-token KL computes the divergence at each autoregressive step: how different are the RL policy\'s next-token probabilities from the SFT reference\'s? Summing across all T tokens in a response gives the sequence-level KL. This is efficiently computed in a single forward pass through both models on the same token sequence. The per-token KL penalty naturally captures how far each individual generation step has drifted from the reference.",
+      hints: [
+        "Per-token KL = Σ_t Σ_v π_RL(v|·) · log(π_RL(v|·) / π_SFT(v|·)) — summed over vocabulary and time steps.",
+        "A response with one divergent token contributes less total KL than one that consistently differs from the reference.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp27-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "KL divergence is symmetric: KL(π_RL ‖ π_SFT) = KL(π_SFT ‖ π_RL).",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "KL divergence is asymmetric: KL(P‖Q) ≠ KL(Q‖P) in general. KL(π_RL ‖ π_SFT) = Σ π_RL · log(π_RL/π_SFT) — weighted by the RL policy\'s distribution. This penalizes places where the RL policy assigns high probability but the reference assigns low probability (the forward KL). KL(π_SFT ‖ π_RL) would instead penalize places where the reference assigns high probability but the RL policy assigns low probability. RLHF uses forward KL (π_RL first) as the penalty.",
+      hints: [
+        "KL(P‖Q) is infinite whenever Q assigns zero probability to an event P assigns positive probability.",
+        "The direction matters: RLHF penalizes the RL policy for diverging from the reference, not the reverse.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp27-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Why is the KL penalty in RLHF applied to the forward KL KL(π_RL ‖ π_SFT) rather than the reverse KL KL(π_SFT ‖ π_RL)?",
+      options: [
+        "The forward KL is computationally cheaper to estimate from samples.",
+        "The forward KL naturally penalizes the RL policy for assigning high probability to sequences the reference considers unlikely — preventing the policy from confidently generating out-of-distribution text. The reverse KL would penalize the reference for diverging from the RL policy, which is incorrect since the reference is frozen.",
+        "The reverse KL would cause the PPO gradient to become zero.",
+        "Both directions are equivalent for autoregressive language models.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In RLHF, the RL policy π_RL is being trained; π_SFT is frozen. The objective is to prevent π_RL from drifting too far from π_SFT. KL(π_RL ‖ π_SFT) = Σ π_RL(y) · log(π_RL(y)/π_SFT(y)) penalizes π_RL for placing mass where π_SFT has low probability — precisely the case where reward hacking would generate implausible text. The forward KL is also tractable to sample from π_RL during training. The reverse KL would optimize from the reference\'s perspective, which is not the training objective.",
+      hints: [
+        "Forward KL: mode-covering — the RL policy is penalized for ignoring modes of the reference.",
+        "We want to constrain where π_RL can go, so the penalty must be weighted by π_RL\'s current distribution.",
+      ],
+    },
+  ],
+
+  "safety-evaluation": [
+    {
+      id: "q-rlhf-kp28-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Red-teaming in the context of LLM alignment refers to:",
+      options: [
+        "Training the model on data from red-colored datasets.",
+        "Adversarially probing the model to find inputs that elicit harmful, unsafe, or misaligned outputs — identifying failure modes before deployment.",
+        "Evaluating model performance on red-team benchmark datasets like MMLU.",
+        "The process of reversing RLHF training to recover the base model.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Red-teaming (Perez et al., 2022; Ganguli et al., 2022) systematically tries to break a model\'s safety behaviors by crafting adversarial prompts. Techniques include: jailbreaking (role-play attacks, instruction overrides), prompt injection, many-shot jailbreaking, and automated red-teaming using another LLM. Anthropic, OpenAI, and Google DeepMind all use red-teaming as a mandatory pre-deployment safety evaluation.",
+      hints: [
+        "Red-teaming finds the \'attack surface\' of alignment — inputs where RLHF\'s safety training fails.",
+        "Automated red-teaming (using an LLM to generate adversarial prompts) scales human red-teaming efforts.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp28-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "A model that passes all red-team evaluations conducted before deployment is guaranteed to be safe in all real-world use cases.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Red-teaming is inherently incomplete: it can only test the attack surface that red-teamers imagined. Novel jailbreaks, unexpected user behaviors, or emergent capabilities at deployment scale can reveal new failure modes not found during pre-deployment evaluation. Additionally, deployed models interact with millions of users, creating a much larger attack surface than any red-team exercise. Red-teaming reduces risk but cannot guarantee safety.",
+      hints: [
+        "Many-shot jailbreaking was discovered after models had already passed standard red-team evaluations.",
+        "The gap between pre-deployment testing and deployed-scale usage is a fundamental limitation of safety evaluation.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp28-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Perez et al. (2022) introduced automated red-teaming where an LLM generates adversarial test prompts. What is the key advantage over manual human red-teaming for safety evaluation?",
+      options: [
+        "Automated red-teaming is guaranteed to find all safety failures.",
+        "An LLM red-teamer can generate thousands of diverse adversarial prompts per hour with low cost, enabling broader coverage of the attack surface than human red-teamers who are limited by time and cognitive bandwidth — especially for discovering rare jailbreaks.",
+        "Automated red-teaming produces prompts that humans cannot understand, testing novel attack vectors.",
+        "LLM red-teamers are unbiased, while human red-teamers only test culturally familiar failure modes.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Human red-teamers are bottlenecked by time (hours per prompt), cognitive fatigue, and limited imagination. An automated LLM red-teamer (prompted to generate harmful prompts, adversarial roleplays, etc.) can generate millions of candidates, enabling much broader coverage. Perez et al. (2022) showed that automated red-teaming discovers safety failures that human red-teams miss, particularly in narrow domains requiring technical knowledge or systematic variation of prompt patterns.",
+      hints: [
+        "Systematic variation (e.g., paraphrasing the same harmful request 1000 ways) is trivial for LLMs but exhausting for humans.",
+        "The goal is attack surface coverage — automated tools maximize breadth while humans maximize creativity.",
+      ],
+    },
+  ],
+
+  "scalable-oversight": [
+    {
+      id: "q-rlhf-kp29-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the core problem that \'scalable oversight\' research aims to solve?",
+      options: [
+        "How to reduce the computational cost of training large reward models.",
+        "How to maintain effective human oversight of AI systems as their capabilities exceed human ability to directly evaluate their outputs — ensuring alignment even when humans cannot reliably judge correctness.",
+        "How to scale human annotation teams efficiently for large RLHF datasets.",
+        "How to make RLHF training scale linearly with model size.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Scalable oversight (Amodei et al., 2016; Christiano et al., 2018) addresses a fundamental alignment challenge: as AI capabilities grow, humans may lose the ability to directly evaluate whether AI outputs are correct, safe, or beneficial. Standard RLHF requires humans to judge AI outputs — but what happens when the AI is smarter than the human evaluator? Scalable oversight techniques (debate, amplification, recursive reward modeling) try to maintain meaningful human control beyond this threshold.",
+      hints: [
+        "A human cannot verify whether an AI\'s novel mathematical proof is correct without similar mathematical ability.",
+        "Scalable oversight asks: how do we align AI that is smarter than us, using humans who are less capable?",
+      ],
+    },
+    {
+      id: "q-rlhf-kp29-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Debate (Irving et al., 2018) is a scalable oversight technique where two AI agents argue opposing positions to help humans identify the correct answer — with the assumption that truthful arguments are easier to verify than lies.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "In AI Debate (Irving et al., 2018), two AI agents take opposing sides on a claim. The key assumption is that it is easier to spot a flaw in a dishonest argument than to independently construct a correct argument from scratch. A human referee watches the debate and can ask clarifying questions. If the assumption holds, debate enables humans to adjudicate complex AI outputs even without direct domain expertise — the AI\'s argument structure helps reveal truth.",
+      hints: [
+        "Cross-examination in courtrooms works similarly: probing an argument for inconsistencies is easier than independently proving the truth.",
+        "The debate assumption: a lie can be revealed by an honest debater; an honest argument cannot be successfully attacked.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp29-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Recursive Reward Modeling (RRM, Leike et al., 2018) addresses scalable oversight by:",
+      options: [
+        "Training a reward model recursively by reusing the same training data multiple times.",
+        "Decomposing complex tasks into subtasks that humans CAN evaluate, training reward models on subtasks, and composing them to provide reward signals for tasks humans cannot directly evaluate — bootstrapping oversight capability.",
+        "Using recursive neural networks (RNNs) as the architecture for reward models.",
+        "Applying reward modeling at multiple layers of the LLM simultaneously.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "RRM (also related to Iterated Amplification, Christiano et al., 2018) breaks a hard-to-evaluate task into subtasks. For example: evaluating a complex code review is hard for a non-expert, but evaluating whether specific lines have specific bugs may be easier. By training reward models on the easier subtasks and composing them, RRM builds oversight capability for harder tasks. This bootstrapping approach enables human oversight to scale with AI capability.",
+      hints: [
+        "Decomposition is the key: humans can evaluate step-by-step reasoning even when they cannot evaluate the final answer directly.",
+        "Iterated Amplification iterates this process: use the composed reward model to train a better AI, which helps build better subtask reward models.",
+      ],
+    },
+  ],
+
   "preference-datasets": [
+    {
+      id: "q-rlhf-kp30-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "When evaluating the \'alignment tax\' from RLHF, what does it mean for a metric to be on the \'Pareto frontier\' of helpfulness vs. harmlessness?",
+      options: [
+        "The model scores 100% on both helpfulness and harmlessness benchmarks.",
+        "No further improvement in helpfulness is possible without some decrease in harmlessness (or vice versa) — the model is optimally trading off the two objectives given current alignment techniques.",
+        "The model uses Pareto-optimal neural architecture search for its design.",
+        "The model\'s training data is Pareto-distributed across topic domains.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The Pareto frontier in multi-objective optimization represents the set of solutions where improving one objective requires sacrificing another. For alignment, a model on the helpfulness-harmlessness Pareto frontier cannot be made more helpful without becoming more harmful (or vice versa). RLHF research aims to push this frontier outward — finding techniques that improve both simultaneously. Constitutional AI\'s combined SL-CAI + RL-CAI was shown to improve the frontier.",
+      hints: [
+        "A model below the Pareto frontier is inefficient — it could be made more helpful without being more harmful.",
+        "Anthropic\'s alignment research explicitly optimizes for Pareto improvements over the helpfulness-harmlessness tradeoff.",
+      ],
+    },
     {
       id: "q-rlhf-kp21-1",
       type: "multiple-choice",

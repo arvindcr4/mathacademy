@@ -42,19 +42,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "KLIEP (Kullback-Leibler Importance Estimation Procedure, Sugiyama et al., 2008) estimates importance weights w(x) = P_T(x)/P_S(x) by:",
+        "KLIEP (Kullback-Leibler Importance Estimation Procedure, Sugiyama et al., 2008) estimates importance weights $w(\\mathbf{x}) = P_T(\\mathbf{x})/P_S(\\mathbf{x})$ by:",
       options: [
         "Training a binary classifier to distinguish source from target and using the odds ratio as the weight",
-        "Directly minimizing the KL divergence KL(P_T || w·P_S) subject to the constraint that w·P_S integrates to 1, solving for w as a kernel density ratio",
+        "Directly minimizing the KL divergence $\\text{KL}(P_T \\| w \\cdot P_S)$ subject to the constraint that $w \\cdot P_S$ integrates to 1, solving for $w$ as a kernel density ratio",
         "Computing the ratio of source and target label frequencies and applying them as weights",
         "Normalizing source samples to have the same mean and variance as target samples",
       ],
       correctAnswer: 1,
       explanation:
-        "KLIEP fits the importance weight function w(x) by minimizing KL(P_T || w·P_S) = E_{P_T}[log P_T] − E_{P_T}[log(w(x)·P_S(x))]. Since P_T and P_S are fixed, this reduces to maximizing E_{P_T}[log w(x)] subject to E_{P_S}[w(x)] = 1. The weight function is modeled as w(x) = Σ_l α_l k(x, x_l^T) using target kernel centers.",
+        "KLIEP directly minimizes the KL divergence from the reweighted source to the target:\n\\[\\min_w \\text{KL}(P_T \\| w \\cdot P_S) = \\mathbb{E}_{P_T}[\\log P_T] - \\mathbb{E}_{P_T}[\\log(w(\\mathbf{x}) \\cdot P_S(\\mathbf{x}))].\\]\nSince the first term is constant with respect to $w$, this reduces to maximizing $\\mathbb{E}_{P_T}[\\log w(\\mathbf{x})]$ subject to the normalization constraint $\\mathbb{E}_{P_S}[w(\\mathbf{x})] = 1$ (ensuring $w \\cdot P_S$ integrates to 1). The weight function is modeled as a kernel expansion $w(\\mathbf{x}) = \\sum_l \\alpha_l k(\\mathbf{x}, \\mathbf{x}_l^T)$ using target kernel centers $\\{\\mathbf{x}_l^T\\}$, with $\\alpha_l \\geq 0$ learned by optimization.",
       hints: [
-        "KLIEP avoids the intermediate step of estimating individual densities — it directly estimates the ratio.",
-        "The constraint E_{P_S}[w(x)] = 1 ensures the reweighted source integrates to a valid probability distribution.",
+        "The key insight: instead of estimating $P_T$ and $P_S$ separately (hard), KLIEP directly estimates the ratio $w = P_T/P_S$ by fitting $w$ to satisfy the constraints — avoiding the hard intermediate steps.",
+        "The constraint $\\mathbb{E}_{P_S}[w(\\mathbf{x})] = 1$ is a normalization condition: without it, scaling $w$ by any constant would keep KL minimized, but the weighted distribution would not integrate to 1.",
       ],
     },
   ],
@@ -125,17 +125,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The squared Maximum Mean Discrepancy MMD²(P, Q) between distributions P and Q using kernel k is defined as:",
       options: [
-        "MMD²(P,Q) = ||E_{x∼P}[φ(x)] − E_{y∼Q}[φ(y)]||²_{RKHS} = E[k(x,x')] − 2E[k(x,y)] + E[k(y,y')] for x,x'∼P and y,y'∼Q",
+        "$$\\text{MMD}^2(P,Q) = \\|\\mathbb{E}_{x\\sim P}[\\phi(x)] - \\mathbb{E}_{y\\sim Q}[\\phi(y)]\\|^2_{\\mathcal{H}} = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')]$$",
         "MMD²(P,Q) = KL(P||Q) estimated via kernel density estimation",
         "MMD²(P,Q) = max_{f: ||f||≤1} |E_P[f(x)] − E_Q[f(x)]| (Wasserstein-1 dual)",
         "MMD²(P,Q) = ||Cov_P(φ(x)) − Cov_Q(φ(x))||²_F where φ is a fixed feature map",
       ],
       correctAnswer: 0,
       explanation:
-        "MMD² equals the squared RKHS norm of the difference of mean embeddings: MMD²(P,Q) = E_{x,x'∼P}[k(x,x')] − 2E_{x∼P,y∼Q}[k(x,y)] + E_{y,y'∼Q}[k(y,y')]. For a characteristic kernel (e.g., RBF/Gaussian), MMD²=0 iff P=Q. The U-statistic unbiased estimator drops diagonal terms k(x_i, x_i).",
+        "The MMD measures the distance between distributions P and Q in the RKHS $\\mathcal{H}$ induced by kernel $k$. It equals $\\|\\mu_P - \\mu_Q\\|_{\\mathcal{H}}^2$, where $\\mu_P = \\mathbb{E}_{x\\sim P}[\\phi(x)]$ is the mean embedding. Expanding the squared norm gives:\n\\[\n\\text{MMD}^2(P,Q) = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\n\\]\nFor a characteristic kernel (e.g., the RBF/Gaussian kernel $k(x,y) = \\exp(-\\|x-y\\|^2 / (2\\sigma^2))$), MMD² = 0 if and only if P = Q. The empirical estimator uses within-domain terms $k(x_i, x_j)$ for same-domain pairs and cross-domain terms $k(x_i, y_j)$ — diagonal terms $k(x_i, x_i) = 1$ for normalized kernels are typically excluded in the unbiased U-statistic.",
       hints: [
-        "Expand ||μ_S − μ_T||² in the RKHS to see all three term types.",
-        "The cross-domain terms E[k(x,y)] are negative in the expansion — reflecting how similar the distributions are.",
+        "Start with $\\|\\mu_P - \\mu_Q\\|^2 = \\langle \\mu_P - \\mu_Q, \\mu_P - \\mu_Q\\rangle = \\langle \\mu_P, \\mu_P\\rangle - 2\\langle \\mu_P, \\mu_Q\\rangle + \\langle \\mu_Q, \\mu_Q\\rangle$. Each inner product expands to an expectation over kernel evaluations.",
+        "For a normalized kernel like RBF, $k(x_i, x_i) = 1$. Including these diagonal terms in the empirical estimate introduces a positive bias — the unbiased U-statistic excludes $i=j$ pairs to fix this.",
       ],
     },
     {
@@ -758,19 +758,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Invariant Risk Minimization (IRM) seeks to learn a representation Φ such that:",
+        "Invariant Risk Minimization (IRM) seeks to learn a representation $\\Phi$ such that:",
       options: [
         "The loss is minimized on the source domain only",
-        "The optimal classifier on top of Φ is the same (invariant) across all training environments",
-        "The representation Φ has minimum norm across environments",
-        "The gradient of the loss with respect to Φ is zero in all environments",
+        "The optimal classifier on top of $\\Phi$ is the same (invariant) across all training environments",
+        "The representation $\\Phi$ has minimum norm across environments",
+        "The gradient of the loss with respect to $\\Phi$ is zero in all environments",
       ],
       correctAnswer: 1,
       explanation:
-        "IRM finds a representation where the same linear classifier w is simultaneously optimal in all environments, learning features that predict Y from X invariantly across environments — targeting spurious correlations.",
+        "IRM (Arjovsky et al., 2019) formulates the problem as finding a representation $\\Phi$ and classifier $w$ such that $w$ is simultaneously optimal for all environments. Formally, the IRM objective is:\n\\[\\min_{\\Phi, w} \\sum_{e \\in \\mathcal{E}} R^e(w \\circ \\Phi) \\quad \\text{s.t.} \\quad w \\in \\arg\\min_{w'} R^e(w' \\circ \\Phi) \; \\forall e.\\]\nEquivalently, IRM encourages the gradient of the loss with respect to $w$ to be zero in every environment when evaluated at the optimal $w$: $abla_w R^e(w \\circ \\Phi) = 0$. The key insight is that if a feature is causal (affects $Y$ consistently across environments), the optimal classifier using that feature is the same everywhere; if it is spurious (varies with the environment), the optimal classifier changes. IRM trades off in-sample performance for out-of-sample invariance.",
       hints: [
-        "If the optimal classifier changes across environments, it means the representation captures environment-specific (spurious) features.",
-        "Invariance ensures the learned classifier relies on causal features, not correlates that vary across environments.",
+        "The constraint $w \\in \\arg\\min_{w'} R^e(w' \\circ \\Phi)$ means: for each environment $e$, the classifier $w$ is the best linear classifier on top of $\\Phi$. If $\\Phi$ captures spurious features, this condition fails in some environments.",
+        "Causal features: $Y \\leftarrow \\Phi(X) \\leftarrow E$ (environment $E$ does not influence the relationship between $\\Phi(X)$ and $Y$). Spurious features: $Y \\leftarrow E \\rightarrow \\Phi(X)$, where the environment influences both the representation and the label, creating illusory correlations.",
       ],
     },
     {
@@ -778,14 +778,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "IRMv1 (the practical IRM implementation) adds a gradient penalty that penalizes the norm of the gradient of the loss with respect to a fixed dummy classifier on top of Φ.",
+        "IRMv1 (the practical IRM implementation) adds a gradient penalty that penalizes the norm of the gradient of the loss with respect to a fixed dummy classifier on top of $\\Phi$.",
       options: ["True", "False"],
       correctAnswer: "true",
       explanation:
-        "IRMv1 replaces the bilevel optimization of IRM with a penalty ||∇_{w=1} R^e(w ∘ Φ)||², which measures how far the representation is from supporting an invariant classifier, making it tractable for gradient-based optimization.",
+        "IRMv1 (IRMV1) replaces the intractable bilevel optimization of IRM with a tractable penalty. The gradient penalty\n\\[\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2\\]\nmeasures how far the representation $\\Phi$ is from admitting $w=1$ as its optimal classifier in environment $e$. If $\\Phi$ were truly invariant, then for each environment the scalar $1 \\cdot \\Phi(X)$ would be the optimal linear classifier, making the gradient of the loss w.r.t. $w$ equal to zero at $w=1$. IRMv1 adds this penalty to the standard ERM loss, making the optimization fully differentiable end-to-end.",
       hints: [
-        "The gradient of loss w.r.t. a fixed w=1 scalar measures whether 1·Φ is locally optimal in each environment.",
-        "If Φ supports an invariant optimal classifier, this gradient should be zero in all environments.",
+        "Fix $w=1$ as a dummy scalar classifier. Then $\\nabla_{w=1} R^e(w \\circ \\Phi) = \\mathbb{E}[\\nabla_{w} L(y, w \\cdot \\Phi(x))]_{w=1} = \\mathbb{E}[\\nabla_{w} L(y, w \\cdot \\Phi(x))]$. This is non-zero whenever the representation $\\Phi$ is not simultaneously optimal across environments.",
+        "The IRM penalty $\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2$ is zero if and only if $w=1$ is a stationary point of $R^e(w \\circ \\Phi)$ in each environment $e$ — i.e., $\\Phi$ supports an invariant optimal classifier.",
       ],
     },
     {

@@ -303,19 +303,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In MAML\'s inner loop, the task-adapted parameters θ'_i are computed via one gradient step as: θ'_i = θ − α∇_θ L_{T_i}(f_θ). What does α represent?",
+        "In MAML's inner loop, the task-adapted parameters $\\theta'_i$ are computed via one gradient step as: $$\\theta'_i = \\theta - \\alpha \\nabla_\\theta \\mathcal{L}_{T_i}(f_\\theta).$$ What does $\\alpha$ represent?",
       options: [
         "The meta-learning rate for the outer loop update",
-        "The inner-loop task-specific learning rate (a fixed hyperparameter, distinct from the outer-loop meta-learning rate β)",
+        "The inner-loop task-specific learning rate (a fixed hyperparameter, distinct from the outer-loop meta-learning rate $\\beta$)",
         "The number of gradient steps in the inner loop",
         "The temperature parameter for the softmax classifier",
       ],
       correctAnswer: 1,
       explanation:
-        "MAML uses two distinct learning rates: α (inner loop, task-level, typically fixed) and β (outer loop, meta-level, optimized with Adam/SGD). The inner-loop update θ'_i = θ − α∇L_{T_i}(θ) adapts parameters to task T_i using support-set loss.",
+        "MAML uses a two-level optimization structure with two distinct learning rates: $\\alpha$ (inner loop, task-level) and $\\beta$ (outer loop, meta-level, optimized with Adam/SGD). The inner-loop update $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$ adapts parameters to task $T_i$ using the support-set loss $\\mathcal{L}_{T_i}$. The outer loop then evaluates how well the adapted parameters $\\theta'_i$ generalize to the query set and updates $\\theta$ accordingly.",
       hints: [
-        "MAML has a two-level optimization structure: the inner loop adapts to each task, the outer loop improves the initialization.",
-        "α is the step size for task adaptation; β is the step size for meta-optimization.",
+        "MAML has a two-level optimization structure: the inner loop adapts to each task, the outer loop improves the initialization based on post-adaptation query-set performance.",
+        "$\\alpha$ is the step size for task adaptation (typically 0.01–0.1); $\\beta$ is the step size for meta-optimization (typically 0.001–0.01).",
+        "The notation $\\nabla_\\theta$ denotes the gradient with respect to the meta-parameters $\\theta$.",
       ],
     },
     {
@@ -323,13 +324,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "MAML\'s meta-gradient computation requires differentiating through the inner loop gradient steps, resulting in second-order gradients (gradients of gradients).",
+        "MAML's meta-gradient computation requires differentiating through the inner loop gradient steps, resulting in second-order gradients (gradients of gradients).",
       correctAnswer: "true",
       explanation:
-        "The meta-objective depends on the adapted parameters θ'_i = θ − α∇L_i(θ). Differentiating the outer-loop loss w.r.t. θ requires ∂θ'_i/∂θ = I − α∇²L_i(θ), producing Hessian-vector products. This second-order computation is MAML\'s main computational bottleneck.",
+        "The meta-objective $\\mathcal{L}_\\text{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$ depends on adapted parameters $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$. Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n$$\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss — a matrix of second derivatives. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
       hints: [
-        "The inner loop computes θ' = θ - α∇L_i(θ). The outer loop differentiates through this expression w.r.t. θ.",
-        "Second-order derivatives are expensive — this is why first-order approximations like FOMAML were developed.",
+        "Chain rule: $\\frac{\\partial \\mathcal{L}(\\theta')}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}}{\\partial \\theta'} \\cdot \\frac{\\partial \\theta'}{\\partial \\theta}$.",
+        "Since $\\theta' = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}$, we have $\\frac{\\partial \\theta'}{\\partial \\theta} = I - \\alpha\\nabla^2_\\theta\\mathcal{L}$. The $\\nabla^2$ is the Hessian (second derivative).",
+        "Second-order derivatives are computationally expensive — this is precisely why first-order approximations like FOMAML were developed.",
       ],
     },
     {
@@ -346,10 +348,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MAML\'s default uses 1 inner-loop gradient step on the support set to compute θ'_i, then evaluates the meta-loss on the query set to compute the outer gradient: θ ← θ − β∇_θ Σ_i L_{T_i}(f_{θ'_i}). The support/query split prevents overfitting the initialization to the adaptation examples.",
+        "MAML's default (Finn et al., 2017) uses $K=1$ inner-loop gradient step on the support set to compute $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}(f_\\theta)$, then evaluates the meta-loss on the query set:\n$$\\theta \\leftarrow \\theta - \\beta \\nabla_\\theta \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta'_i}).$$\nThe support/query split is critical: using the same data for inner and outer loops would let the meta-learner overfit to specific examples rather than learning a generalizable initialization. The support set provides the adaptation signal; the query set measures generalization.",
       hints: [
-        "The support set provides the inner-loop gradient signal for adaptation; the query set evaluates generalization.",
-        "Using different data for inner and outer loops is critical — without it, MAML could just memorize support examples.",
+        "In the episode $(T_i, \\mathcal{D}_i^\\text{supp}, \\mathcal{D}_i^\\text{query})$ structure: inner loop uses $\\mathcal{D}_i^\\text{supp}$, outer loop uses $\\mathcal{D}_i^\\text{query}$.",
+        "Why not use the same data for both? If adaptation and evaluation share the same examples, the meta-learner can memorize them instead of learning a broadly useful initialization.",
+        "Finn et al. (2017) report results with $K=1$ and $K=5$ inner steps; $K=1$ is the default reported in the main paper.",
       ],
     },
   ],
@@ -369,10 +372,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FOMAML drops the second-order Hessian terms from the meta-gradient, using ∇_θ L_{T_i}(θ'_i) instead of the full chain-rule expansion. This eliminates the expensive Hessian-vector product while retaining similar performance empirically.",
+        "FOMAML drops the second-order Hessian terms from the meta-gradient, approximating:\n$$\\nabla_\\theta^\\text{FOMAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\approx \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nas opposed to the full second-order expression:\n$$\\nabla_\\theta^\\text{MAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe FOMAML approximation ignores the $(I - \\alpha\\nabla^2_\\theta\\mathcal{L})$ factor. Empirically this retains most of MAML's performance while eliminating the expensive Hessian-vector product computation.",
       hints: [
         "Second-order gradients are the expensive part of MAML — what happens if you simply drop them?",
         "Think about the trade-off: FOMAML is faster but the gradient estimate is less accurate.",
+        "The chain rule gives ∂L(θ')/∂θ = (∂L/∂θ') · (∂θ'/∂θ) = ∇_{θ'}L · (I − α∇²_θL). Dropping (I − α∇²_θL) is the FOMAML approximation.",
       ],
     },
     {
@@ -389,10 +393,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When k=1, φ = θ − α∇L_i(θ), so φ − θ = −α∇L_i(θ), and the Reptile update is θ ← θ − εα∇L_i(θ). This is identical to FOMAML with one inner step. Reptile\'s advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.",
+        "When k=1, φ = θ − α∇L_i(θ), so φ − θ = −α∇L_i(θ), and the Reptile update is θ ← θ − εα∇L_i(θ). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: φ = θ − α∇_θL_i(θ), so φ − θ = −α∇_θL_i(θ). The update θ ← θ + ε(φ − θ) = θ − εα∇_θL_i(θ) is standard SGD on the task loss — the same as FOMAML with one inner step. For k > 1, φ = θ − α∇_θL_i(θ) − α∇_θL_i(θ − α∇_θL_i(θ)) − ... (k compositions), giving Reptile its distinct behaviour.",
       hints: [
         'Reptile\'s update is "move θ toward where the task gradient took you" — a form of interpolation.',
         "Think about what θ'_i - θ represents when k=1: just one gradient descent step.",
+        "For k > 1, φ = θ after k composed SGD steps. Reptile moves θ toward this φ, averaging over tasks: θ ← θ + ε(φ̄ − θ) where φ̄ is the average post-adaptation parameter.",
       ],
     },
     {
@@ -409,10 +414,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In practice, the Hessian-vector products (second-order terms) tend to be small relative to first-order gradient magnitudes, and stochastic gradient noise dominates the error introduced by the first-order approximation — making FOMAML nearly as good as full MAML at much lower cost.",
+        "In practice, the Hessian-vector products (second-order terms) tend to be small relative to first-order gradient magnitudes, and stochastic gradient noise dominates the error introduced by the first-order approximation — making FOMAML nearly as good as full MAML at much lower cost.\n\nThe full MAML gradient is ∇_θ^MAML = ∇_{θ'}L · (I − α∇²_θL), while FOMAML uses ∇_θ^FOMAML ≈ ∇_θL. The approximation error from dropping (I − α∇²_θL) is small when: (1) α∇²_θL ≈ 0 (small curvature relative to the identity), and (2) the mini-batch gradient noise Var[∇_θL] dominates the curvature term. Empirically both conditions hold in the low-shot regime where MAML operates.",
       hints: [
         "If the Hessian terms are very small, dropping them introduces very little error.",
         "Think about what dominates the gradient signal in mini-batch SGD: the mini-batch noise or the curvature terms?",
+        "The Hessian ∇²L captures how the gradient changes with position in parameter space. In MAML's few-shot regime, gradients change slowly (small curvature), and mini-batch noise (∝ 1/batch_size) dominates.",
       ],
     },
   ],
@@ -432,7 +438,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD treats both the initialisation θ and the per-parameter learning rates α (and directions, stored as a vector of the same shape as θ) as meta-learnable parameters, enabling the meta-learner to adapt both what to update and by how much.",
+        "Meta-SGD treats both the initialisation θ and the per-parameter learning rates α (stored as a vector of the same shape as θ) as meta-learnable parameters. The inner-loop update becomes:\n$$\\theta'_i = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nwhere ⊙ is elementwise multiplication. This allows the meta-learner to learn both what to update (θ) and by how much (α) — effectively learning a diagonal preconditioning matrix for each task. The meta-objective is:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\noptimized jointly over θ and α.",
       hints: [
         "MAML learns θ₀ but uses a fixed scalar learning rate. What else about SGD could be learned?",
         "Think about per-parameter adaptive learning rates — Meta-SGD learns these as part of the meta-training.",
@@ -446,7 +452,7 @@ const questions: Record<string, Question[]> = {
         "In Meta-SGD, the inner-loop update for parameter θ on task i is: θ'_i = θ - α ⊙ ∇L_i(θ), where ⊙ is element-wise multiplication and α is a learned vector.",
       correctAnswer: "true",
       explanation:
-        "The element-wise multiplication of the gradient by learned vector α allows each parameter to have its own learning rate and even sign of update, giving the meta-learner more expressive control over the inner-loop adaptation.",
+        "The elementwise multiplication of the gradient by learned vector α allows each parameter to have its own learning rate and even sign of update, giving the meta-learner more expressive control over the inner-loop adaptation.\n\nSpecifically, each parameter component j is updated as: θ'_j = θ_j + α_j · (∇L)_j. If α_j is positive, the update follows the gradient; if α_j is negative, the update reverses the gradient direction. This is equivalent to learning a diagonal preconditioning matrix M = diag(α) applied to the gradient: θ' = θ + M · ∇L. The meta-learner learns α that generalizes across tasks, finding per-parameter learning rates that work well for the task distribution.",
       hints: [
         "Standard SGD uses a scalar α; Meta-SGD uses a vector α with the same shape as the gradient.",
         "Element-wise multiplication (⊙) applies a different scaling to each gradient component.",
@@ -466,10 +472,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.",
+        "In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.\n\nConsider a ConvNet backbone + linear head: the backbone parameters encode general visual features useful across tasks (small α_j ensures these useful features aren't disrupted by task adaptation), while the head parameters are specific to each task's classification boundaries (large α_j allows rapid task-specific adjustment). A scalar α cannot simultaneously be small for the backbone and large for the head — per-parameter α_j resolves this tension. Empirically, Meta-SGD often outperforms MAML on regression tasks where different output dimensions require different adaptation speeds.",
       hints: [
         "Think about which layers in a neural network are task-specific vs. generally useful across tasks.",
         "A backbone feature extractor might need small updates; a task-specific head might need large ones.",
+        "The elementwise update θ'_j = θ_j + α_j · (∇L)_j lets α_j be negative for some parameters (reversing gradient direction) and positive for others.",
       ],
     },
   ],
@@ -2009,7 +2016,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD (Li et al. 2017) learns both the initial parameters θ AND per-parameter learning rate vectors α (same shape as θ). The inner-loop update becomes θ' = θ + α ⊙ ∇L, where ⊙ is elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter.",
+        "Meta-SGD (Li et al. 2017) learns both the initial parameters θ AND per-parameter learning rate vectors α (same shape as θ). The inner-loop update becomes:\n$$\\theta' = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L},$$\nwhere ⊙ denotes elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter — effectively learning a preconditioning matrix $M = \\text{diag}(\\alpha)$ that scales the gradient differently per parameter. The meta-objective becomes:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\nwhich is optimized jointly over both the initialization θ and the per-parameter learning rates α.",
+      hints: [
+        "MAML uses a scalar α for all parameters; Meta-SGD uses a vector α with the same shape as θ.",
+        "Elementwise multiplication (⊙) applies a different scaling to each gradient component: θ'_j = θ_j + α_j · (∇L)_j.",
+        "The sign of α_j can be negative, allowing the meta-learner to reverse the gradient direction for specific parameters.",
+      ],
     },
     {
       id: "q-meta-kp37-2",
@@ -2020,7 +2032,12 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task. Nichol et al. showed analytically that Reptile\'s update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement.",
+        "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n$$\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\text{where } \\phi_i = \\text{SGD}^K(\\theta, \\mathcal{D}_i^\\text{support}).$$\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
+      hints: [
+        "The MAML gradient is $\\mathbb{E}_i[\\nabla_{\\theta}\\mathcal{L}_{T_i}(f_{\\theta'_i})] \\cdot (I - \\alpha\\nabla^2\\mathcal{L})$ — it requires second-order derivatives.",
+        "Reptile's gradient $\\mathbb{E}_i[\\theta'_i - \\theta]$ can be computed without any second-order derivatives — just the difference between adapted and original parameters.",
+        "For K=1, $\\theta'_i = \\theta - \\alpha\\nabla\\mathcal{L}$, so $\\theta'_i - \\theta = -\\alpha\\nabla\\mathcal{L}$, equivalent to FOMAML.",
+      ],
     },
     {
       id: "q-meta-kp37-3",
@@ -2036,7 +2053,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Reptile moves the meta-parameters towards the task-specific optimal parameters φ_i obtained after inner-loop adaptation. Averaged over tasks, this moves θ towards the "average optimal solution" across tasks — a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.',
+        'Reptile moves the meta-parameters towards the task-specific optimal parameters φ_i obtained after inner-loop adaptation. Averaged over tasks, this moves θ towards the "average optimal solution" across tasks — a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.\n\nGeometrically, the Reptile update θ ← θ + ε(φ_i − θ) interpolates between the current initialization θ and the task-adapted parameters φ_i. Averaged over N tasks: θ_new = θ + (ε/N)Σ_i(φ_i − θ) = (1 − ε)θ + (ε/N)Σ_iφ_i. This is a weighted average of θ and the task optima φ_i, pulling θ toward their centroid. MAML\'s theory shows that an initialization near all task manifolds enables few-shot adaptation because the distance to any task optimum is small from such a point.',
+      hints: [
+        "The Reptile update is θ_new = (1 − ε)θ + ε · (1/N)Σ_iφ_i — a convex combination of the current θ and the task-optimal parameters.",
+        "Think of φ_i as the \"task-specific solution\" after adaptation. Reptile averages these solutions and moves θ toward their centroid.",
+        "The goal is an initialization from which any task optimum is reachable in a few gradient steps — minimizing the maximum distance to any task manifold.",
+      ],
     },
   ],
   "task-augmentation": [

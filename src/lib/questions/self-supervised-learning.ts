@@ -342,10 +342,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'BN in the projection/prediction heads computes batch statistics: z_normalized = (z − μ_batch) / σ_batch. This normalization depends on all other samples in the batch, introducing implicit cross-sample interactions analogous to comparing against negatives. Without BN, BYOL collapses — revealing that its "negative-free" claim has a subtle asterisk.',
+        "Batch normalization computes $\\hat{z} = \\gamma \\frac{z - \\mu_{\\text{batch}}}{\\sigma_{\\text{batch}}} + \\beta$, where $\\mu_{\\text{batch}} = \\frac{1}{B}\\sum_b z_b$ and $\\sigma_{\\text{batch}}^2 = \\frac{1}{B}\\sum_b (z_b - \\mu_{\\text{batch}})^2$ are the batch mean and standard deviation. Critically, $\\hat{z}_i$ depends on all $B$ samples in the batch — not just sample $i$. If the online and target embeddings of sample $i$ diverge from the rest of the batch, the batch statistics shift, which feeds back into $\\hat{z}_i$. This creates an implicit cross-sample contrastive signal: differing from the batch is penalized through the normalization. Without BN, BYOL has no mechanism to distinguish positive pairs from trivial constant solutions, causing collapse. This reveals that BYOL's \"negative-free\" claim relies on BN as an implicit negative.",
       hints: [
-        "BN uses batch mean and variance — those statistics depend on ALL samples in the batch, not just the current one.",
-        "When BN is removed from BYOL, representations collapse — suggesting BN provides implicit contrastive signal.",
+        "Write out $\\hat{z}_i$ explicitly: it contains $\\mu_{\\text{batch}}$ and $\\sigma_{\\text{batch}}$, each of which depends on ALL samples in the batch. Sample $i$ influences its own normalization through its influence on the batch statistics.",
+        "Contrastive methods use negatives explicitly: similar pairs attract, different pairs repel. BN creates an implicit repulsion: if one sample's embedding differs from the batch mean, it effectively \"repel\" itself through the normalization statistics.",
       ],
     },
   ],
@@ -399,10 +399,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "With stopgrad, the SimSiam update alternates: (1) fix the target representations z (E-step: treat them as fixed targets like cluster assignments) and update the predictor p to match them; (2) update θ to improve z for the next iteration (M-step). This alternating optimization provably converges and does not degenerate to collapse, unlike the simultaneous update without stopgrad.",
+        "SimSiam's loss for a pair of views is $\\mathcal{L} = \\frac{1}{2}\\sum_{z_A, z_B} D(p_A, \\text{stopgrad}(z_B)) + D(p_B, \\text{stopgrad}(z_A))$, where $D(p, z) = -\\frac{p \\cdot z}{\\|p\\|\\|z\\|}$ is negative cosine similarity. The stopgradient operator splits the update into two alternating phases: (1) E-step: fix $z$ (no gradient flows into the encoder from this term) and minimize $\\mathcal{L}$ with respect to the predictor $p$ — this is equivalent to finding the best predictor given fixed targets; (2) M-step: gradients now flow through $z = g_\\theta(x)$ to update $\\theta$, improving the encoder for the next iteration. Without stopgrad, both $p$ and $z$ are optimized simultaneously, which can trivially collapse by making both constant. The alternating scheme provably avoids this degenerate fixed point.",
       hints: [
-        "EM alternates between fixing and optimising two sets of variables.",
-        'The "stop-gradient branch" plays the role of fixed latent variables in the E-step.',
+        "In classical EM for clustering: E-step assigns points to clusters (fix cluster centers), M-step updates cluster centers. SimSiam's E-step fixes $z$ (targets) and updates $p$ (predictor); M-step uses the improved $p$ to compute gradients for $\\theta$.",
+        "The stopgradient is not just a numerical trick — it implements the E-step/M-step separation that prevents the trivial constant solution.",
       ],
     },
   ],
@@ -413,19 +413,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Barlow Twins loss (Zbontar et al., 2021) is L_BT = Σ_i (1−C_{ii})² + λ Σ_i Σ_{j≠i} C_{ij}², where C_{ij} = Σ_b z^A_{b,i} z^B_{b,j} / (||z^A_{.,i}|| ||z^B_{.,j}||) is the cross-correlation matrix. What do the two terms separately enforce?",
+        "The Barlow Twins loss (Zbontar et al., 2021) is: \n\[L_{BT} = \sum_i (1 - C_{ii})^2 + \lambda \sum_i \sum_{j \neq i} C_{ij}^2,\] \nwhere \n\[C_{ij} = \frac{\sum_b z^A_{b,i} \, z^B_{b,j}}{\|z^A_{\cdot,i}\| \; \|z^B_{\cdot,j}\|}.\] \nWhat do the two terms enforce?",
       options: [
         "First term enforces decorrelation; second term enforces invariance across augmentations",
-        "First term (invariance): push diagonal entries to 1 so each feature dimension is consistent across augmented views; second term (redundancy reduction): push off-diagonal entries to 0 so different embedding dimensions are decorrelated",
+        "First term (invariance): push $C_{ii} \to 1$ so each embedding dimension is consistent across views; second term (redundancy reduction): push $C_{ij} \to 0$ for $i \neq j$ so different dimensions are decorrelated",
         "First term minimizes L2 distance between embeddings; second term maximizes cosine similarity",
         "First term prevents collapse; second term prevents mode dropping",
       ],
       correctAnswer: 1,
       explanation:
-        "The diagonal terms C_{ii} measure the correlation of embedding dimension i between the two views — pushing to 1 enforces view-invariance. The off-diagonal terms C_{ij} (i≠j) measure redundancy between dimensions — pushing to 0 decorrelates them, following Horace Barlow\'s redundancy reduction hypothesis (1961). The hyperparameter λ trades off these two objectives.",
+        "The cross-correlation matrix $C_{ij}$ measures how similarly dimension $i$ of the two augmented embeddings responds across the batch. The diagonal term $(1 - C_{ii})^2$ drives $C_{ii} \to 1$, enforcing that each dimension captures view-invariant information. The off-diagonal term $C_{ij}^2$ for $i \neq j$ penalizes correlation between dimensions, decorrelating them — following Horace Barlow's redundancy reduction hypothesis (1961): each neuron should convey independent information. An optimal $C$ is the identity matrix $I$, meaning $C_{ii} = 1$ and $C_{ij}=0$ for $i \neq j$. The hyperparameter $\lambda$ balances the two objectives.",
       hints: [
-        "An identity cross-correlation means: same feature is consistent across views (diagonal=1), different features are independent (off-diagonal=0).",
-        "Think about what the identity matrix looks like — ones on diagonal, zeros off diagonal.",
+        "If $C = I$, then $(1-C_{ii})^2 = 0$ and $C_{ij}^2 = 0$ for $i \neq j$ — the loss is minimized. This is what the optimization drives toward.",
+        "Barlow's insight: if two neurons are correlated, one is redundant. Penalizing off-diagonal $C_{ij}$ removes that redundancy.",
       ],
     },
     {
@@ -479,10 +479,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "VICReg\'s variance term prevents collapse by keeping embedding standard deviation above a threshold; the invariance term attracts embeddings of positive pairs; the covariance term decorrelates embedding dimensions to prevent redundancy.",
+        "VICReg's loss is $\\mathcal{L} = \\frac{1}{d}\\sum_i \\max(0, \\gamma - \\text{std}(z_i))$ (variance) $+\\frac{1}{d}\\sum_i \\|z^A_i - z^B_i\\|^2$ (invariance) $-\\frac{1}{d}\\sum_{i \\neq j} C_{ij}$ (covariance). The variance term prevents collapse by keeping embedding standard deviation above a threshold $\\gamma$; the invariance term attracts embeddings of positive pairs (minimizing pairwise distance); the covariance term decorrelates embedding dimensions to prevent redundancy — similar in spirit to Barlow Twins but applied to each branch independently.",
       hints: [
-        "Each term in VICReg addresses a specific failure mode or goal: collapse prevention, invariance, efficiency.",
-        "Think about each word: Variance (spread), Invariance (stability across views), Covariance (independence of dimensions).",
+        "Write out what collapse would look like: if all embeddings collapse to a constant $c$, then $\\text{std}(z_i) = 0$ and the variance term is maximally violated — penalizing collapse explicitly.",
+        "The covariance term $C_{ij} = \\text{Cov}(z_i, z_j)$ penalizes correlated dimensions: if two dimensions always co-vary, one is redundant. Maximizing independence is the goal.",
       ],
     },
     {
@@ -570,10 +570,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Centering: P_t = softmax((g_ξ(x) − c)/τ_t), where c ← m·c + (1−m)·E[g_ξ(x)] (running mean). Without centering, the teacher may collapse to one dominant output dimension (mode collapse). Sharpening via low τ_t (e.g., 0.04 vs student τ_s=0.1) makes the teacher distribution peaked, preventing uniform collapse. The two mechanisms counteract opposite failure modes.",
+        "DINO's teacher output is $P_t^{(k)} = \\frac{\\exp(g_\\xi(x)_k / \\tau_t)}{\\sum_{k'} \\exp(g_\\xi(x)_{k'} / \\tau_t)}$, with a centering term: $P_t^{(k)} = \\frac{\\exp((g_\\xi(x)_k - c_k) / \\tau_t)}{\\sum_{k'} \\exp((g_\\xi(x)_{k'} - c_{k'}) / \\tau_t)}$, where the centering vector $c \\gets m \\cdot c + (1-m) \\cdot \\mathbb{E}[g_\\xi(x)]$ is a running average of the teacher logits. Centering prevents any single logit dimension from dominating by subtracting the batch mean — without it, the teacher could collapse to one dominant class (mode collapse). Sharpening uses a low teacher temperature $\\tau_t = 0.04$ vs student $\\tau_s = 0.1$, making the output distribution peaked — without it, the teacher could spread probability uniformly over all classes. Both failure modes are prevented, but centering alone would allow the uniform distribution (no learning signal), and sharpening alone cannot prevent mode collapse.",
       hints: [
-        "Mode collapse → centering prevents it (subtracts running mean to keep outputs balanced).",
-        "Uniform distribution → sharpening prevents it (low temperature makes predictions peaked).",
+        "What does centering achieve mathematically? If $c = \\mathbb{E}[g_\\xi(x)]$, then the centered logits $(g_\\xi(x) - c)$ have zero mean. This prevents the softmax from spuriously preferring one class just because its raw logit is always higher.",
+        "Low temperature $\\tau_t \\ll \\tau_s$ sharpens the teacher's distribution: small logit differences become large probability differences. This gives the student a clear target. But if the teacher randomly assigns one class a slightly higher logit, centering prevents this from becoming a consistent signal.",
       ],
     },
   ],
@@ -627,10 +627,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Contrastive learning (Chopra et al. 2005; reviewed in Weng 2021) uses positive pairs (augmented views of the same image, or related samples) and negative pairs (different images) to shape the embedding space: attract positives, repel negatives. The learned representation should reflect semantic similarity rather than surface statistics.",
+        "Images have high spatial redundancy: neighboring 16×16 patches overlap significantly and share much of their content. At 75% masking, only 25% of patches remain — the model cannot solve MAE by local interpolation (matching nearby visible patches), which would only require learning low-level texture continuity. Instead, the model must build a holistic understanding of the scene — object shapes, spatial layouts, occluded relationships — to accurately fill in large missing regions. BERT uses only 15% masking because text tokens carry dense semantic information; masking more would make the task too difficult. For images, the redundancy means a higher masking ratio is needed to force semantic understanding rather than texture matching.",
       hints: [
-        "Think of it as metric learning: close = similar, far = dissimilar.",
-        "Positive pairs are typically created by augmenting the same image differently; negatives are other images.",
+        "Think about what happens at 25% visible patches: any given masked patch's content is largely determined by distant visible patches, not neighbors. The model must reason globally, not locally.",
+        "If you only mask 15% of image patches, a model could solve it by copying neighboring textures — no semantic understanding needed. At 75%, this is impossible.",
       ],
     },
   ],
@@ -1191,16 +1191,16 @@ const questions: Record<string, Question[]> = {
         "Applying masking-based SSL (MAE-style) to time series requires adapting the high masking ratio from vision. Why might a much higher masking ratio (e.g., 75%) be less effective for time series than for images?",
       options: [
         "Time series have fewer total time steps than images have patches, so masking fewer is needed",
-        "Time series often have lower temporal (temporal) redundancy than images — nearby time steps may be less correlated than nearby pixels — making moderate masking already challenging without requiring 75%",
+        "Time series often have lower temporal redundancy than images — neighboring time steps carry less shared information than neighboring pixels — so aggressive masking can make the reconstruction task ill-posed rather than semantically challenging",
         "Time series models are shallower than ViTs and cannot handle high masking ratios",
         "Masking is not differentiable for time series data",
       ],
       correctAnswer: 1,
       explanation:
-        "Images have high spatial redundancy (nearby pixels are similar), requiring high masking to create non-trivial prediction tasks. Time series may exhibit lower autocorrelation depending on the domain (e.g., financial data vs. ECG), so the optimal masking ratio must be tuned per application.",
+        "The optimal masking ratio depends on the autocorrelation structure of the time series. Images have strong spatial autocorrelation: adjacent pixels are very similar (high redundancy), so even with 75% masking, visible patches provide enough local context to reconstruct masked regions. Time series vary widely in their autocorrelation: ECG signals have very high redundancy (adjacent heartbeats are nearly identical), while financial returns have low redundancy (successive returns are nearly independent). With low redundancy, 75% masking leaves insufficient context — the model cannot reliably infer missing values from distant observations alone, making the reconstruction task ill-posed rather than simply difficult. The optimal masking ratio for time series is therefore domain-dependent and must be calibrated to the autocorrelation scale of the data.",
       hints: [
-        "The right masking ratio depends on the data\'s autocorrelation structure — how similar are adjacent time steps?",
-        "For ECG signals, adjacent beats are very similar (high redundancy); for stock returns, they may not be.",
+        "Define autocorrelation $\\rho(\\tau) = \\text{Cov}(x_t, x_{t+\\tau}) / \\text{Var}(x_t)$. If $\\rho(\\tau)$ decays quickly (low redundancy), long-range prediction is unreliable even with sophisticated models.",
+        "Think about extreme cases: if $\\rho(1) = 0$ (successive values are independent), knowing 25% of a time series tells you almost nothing about the masked 75%. In images, $\\rho$ decays slowly due to spatial continuity of objects and textures.",
       ],
     },
   ],
@@ -1696,6 +1696,24 @@ const questions: Record<string, Question[]> = {
         "Molecular property prediction is diverse: some properties depend on global structure, others on specific local chemistry.",
       ],
     },
+    {
+      id: 'q-ssl-kp30-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A key open question in SSL research is whether SSL pre-training creates a "task-agnostic" representation or an implicit ensemble of task-specific features. Evidence from probing studies suggests ___.',
+      options: [
+        'SSL representations are completely task-agnostic: all downstream tasks extract identical features from the same layers',
+        'Different downstream tasks activate different subsets of SSL-learned features, with earlier layers encoding lower-level structure and later layers encoding more abstract semantics—suggesting SSL learns a rich hierarchical multi-task representation rather than a single universal one',
+        'SSL representations are task-specific from the first layer and cannot transfer across tasks',
+        'Probing studies show SSL representations have no internal structure and downstream accuracy depends entirely on the linear probe\'s capacity',
+      ],
+      correctAnswer: 1,
+      explanation: 'Linear probing experiments (Zeiler & Fergus, Tenney et al.) show that SSL representations have rich internal structure: earlier Transformer layers encode syntactic features (POS tags, parse depth), middle layers encode semantic roles, and later layers encode task-specific information. This hierarchical structure makes SSL representations useful across many tasks simultaneously—the hallmark of a strong general-purpose representation.',
+      hints: [
+        'Linear probing: train a linear classifier on frozen layer-N features—measures what information is explicitly encoded at that layer.',
+        'If all tasks use layer 12, the representation is generic; if different tasks prefer different layers, it is multi-scale.',
+      ],
+    },
   ],
 };
 
@@ -1927,6 +1945,56 @@ const additionalSslQuestions: Record<string, Question[]> = {
       hints: [
         "6 modalities paired with 1 hub = 5 paired datasets needed, not C(6,2)=15.",
         "Transitivity of alignment does the rest.",
+      ],
+    },
+  ],
+  'ssl-for-video': [
+    {
+      id: 'q-ssl-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'VideoMAE pre-trains a Vision Transformer on video by masking and reconstructing patches. What masking ratio does VideoMAE use, and why is a much higher ratio needed than for image MAE?',
+      options: [
+        '25% masking — same as image MAE, since video patches contain the same amount of information per patch',
+        '90-95% masking — video has high temporal redundancy between frames, so unmasked patches provide enough context to reconstruct masked ones even at extreme ratios; high masking is needed to prevent trivial copy-from-adjacent-frame solutions',
+        '50% masking — a moderate ratio balances information availability with reconstruction difficulty',
+        '10% masking — video is much harder than images so less information should be removed to avoid underfitting',
+      ],
+      correctAnswer: 1,
+      explanation: 'VideoMAE (Tong et al., 2022) uses ~90% tube masking (the same spatial location is masked across all frames in a tube). High masking is necessary because consecutive video frames are nearly identical — at 25% masking, the model can trivially copy unmasked adjacent frames to reconstruct masked ones. Tube masking + 90% ratio forces the model to learn genuine motion and temporal dynamics rather than frame copying.',
+      hints: [
+        'Adjacent frames in 30fps video differ by <5% of pixels — masking is trivially recoverable without tube masking.',
+        'Tube masking: mask the same (x,y) location across all T frames — the model cannot peek at adjacent frames for that location.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp35-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'V-JEPA (Video Joint Embedding Predictive Architecture) predicts in a latent feature space rather than pixel space, avoiding the need to reconstruct fine-grained visual details that are irrelevant to high-level video understanding.',
+      correctAnswer: 'true',
+      explanation: 'V-JEPA (Assran et al., 2024) predicts representations of masked video regions in the embedding space of a target encoder (EMA of the context encoder), not in pixel space. This focuses the model on semantically meaningful features (motion, object identity) rather than texture and high-frequency pixel details. Experiments show V-JEPA learns better action recognition features with less compute than pixel-reconstruction methods.',
+      hints: [
+        'Pixel reconstruction: model must predict exact RGB values — wastes capacity on irrelevant texture details.',
+        'Latent prediction: model must predict abstract features — forces semantic understanding without texture memorisation.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Contrastive video SSL methods like CVRL and MoCo-v3 on video create positive pairs by treating different temporal clips from the same video as views. What is the main challenge this creates compared to image contrastive SSL?',
+      options: [
+        'Video clips are too large to fit in GPU memory, making batched contrastive training impossible',
+        'Temporal clips from the same video may show very different content (scene cuts, activity changes), creating false positive pairs that push semantically dissimilar representations together; temporal proximity or scene-boundary detection must be used to ensure positive pairs are actually semantically similar',
+        'Contrastive video SSL always requires optical flow as an additional input modality',
+        'The InfoNCE loss cannot be computed over video features because they are sequence-valued rather than vector-valued',
+      ],
+      correctAnswer: 1,
+      explanation: 'A 2-minute video may contain a scene cut at 1:00; clips from 0:55 and 1:05 are from different scenes and should not be a positive pair. Naive temporal sampling creates false positives. Solutions: (1) use shot-boundary detectors to sample only within a single shot; (2) use temporal proximity with small windows (clips within 1 second); (3) use cluster-based positive mining rather than temporal proximity.',
+      hints: [
+        'Image SSL: two crops of the same image are always similar. Video SSL: two clips of the same video may not be.',
+        'Shot boundary: a hard cut in a film makes adjacent clips entirely unrelated — treating them as positives hurts.',
       ],
     },
   ],

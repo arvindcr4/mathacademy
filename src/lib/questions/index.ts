@@ -14,6 +14,7 @@ const difficultyRank: Record<Question["difficulty"], number> = {
 type QuestionOverride = Partial<
   Pick<
     Question,
+    | "type"
     | "question"
     | "options"
     | "correctAnswer"
@@ -25,7 +26,14 @@ type QuestionOverride = Partial<
 
 const questionOverrides: Record<string, QuestionOverride> = {
   "q-ra-1": {
-    correctAnswer: 1,
+    question: "Rotate [1,2,3,4,5,6,7] to the right by 3. What array do you get?",
+    options: [
+      "[5,6,7,1,2,3,4]",
+      "[4,5,6,7,1,2,3]",
+      "[3,4,5,6,7,1,2]",
+      "[1,2,3,4,5,6,7]",
+    ],
+    correctAnswer: 0,
     explanation:
       "A right rotation by 3 moves the last three elements, [5,6,7], to the front. The result is [5,6,7,1,2,3,4].",
     hints: [
@@ -34,8 +42,9 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
   },
   "q-rnn-4": {
-    options: ["1→2→3→4", "1→2→3→5", "1→3→4→5", "2→3→4→5"],
-    correctAnswer: 1,
+    question: "What list remains after removing the 2nd node from the end of 1→2→3→4→5?",
+    options: ["1→2→3→5", "1→2→4→5", "1→3→4→5", "2→3→4→5"],
+    correctAnswer: 0,
     explanation:
       "Counting from the end gives 5 as first and 4 as second, so the node with value 4 is removed. The remaining list is 1→2→3→5.",
     hints: [
@@ -65,17 +74,33 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "By the chain rule, df/dx = (df/du)(du/dx). Here f(u)=u³ so df/du = 3u², and u=2x so du/dx = 2. At x=2, u=4, so df/dx = 3(4²)·2 = 96.",
   },
   "q-rl-kp12-3": {
-    options: ["1", "1 + 0.5·V^π(s₂)", "4/3", "2"],
+    question:
+      "A policy starting from state s₁ gets rewards 1, 0, 1, 0, ... forever. If γ = 0.5, what is V^π(s₁)?",
+    options: ["2/3", "4/3", "1", "2"],
+    correctAnswer: 1,
     explanation:
       "Apply the Bellman equations simultaneously: V^π(s₁) = 1 + 0.5·V^π(s₂) and V^π(s₂) = 0.5·V^π(s₁). Substituting gives V^π(s₁) = 1 + 0.25·V^π(s₁), so 0.75·V^π(s₁) = 1 and V^π(s₁) = 4/3. The same result comes from the return series 1 + 0 + 0.25 + 0 + 0.0625 + … = 1/(1−0.25) = 4/3.",
   },
   "q-dc-kp3-2": {
-    correctAnswer: "true",
+    type: "multiple-choice",
+    question:
+      "A balanced binary dataset has 30% of class A mislabeled as class B, while class B labels are clean. Another balanced dataset has 15% symmetric label noise in both classes. Which dataset is usually harder to learn from?",
+    options: [
+      "The symmetric-noise dataset, because both classes contain errors",
+      "The asymmetric-noise dataset, because the one-sided noise shifts the decision boundary toward class B",
+      "They are equally hard, because both have 15% overall noise",
+      "Neither, because models cannot learn once label noise exceeds 10%",
+    ],
+    correctAnswer: 1,
     explanation:
       "Asymmetric label noise is generally more damaging because it pushes the decision boundary in one direction instead of adding balanced uncertainty to both classes. If only class A is flipped to class B, the model learns a systematic bias against class A. Under symmetric noise at the same rate, the corruption is more evenly distributed and partially cancels out.",
   },
   "q-eval-kp10-2": {
-    correctAnswer: "true",
+    type: "multiple-choice",
+    question:
+      "For one query, relevant documents appear at ranks 3, 5, and 7. What is the reciprocal rank for this query?",
+    options: ["1/7", "1/5", "1/3", "3/7"],
+    correctAnswer: 2,
     explanation:
       "MRR only uses the rank of the first relevant result for each query. If the first relevant result is at rank 3, the reciprocal rank is 1/3, and later relevant documents at ranks 5 and 7 do not affect that query\'s MRR contribution.",
   },
@@ -260,7 +285,15 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
   },
   "q-hash-map-2": {
-    question: "One common collision-resolution strategy is separate chaining.",
+    type: "multiple-choice",
+    question: "Which statement about collision handling in hash maps is correct?",
+    options: [
+      "Hash maps must use separate chaining",
+      "Hash maps can use separate chaining or open addressing",
+      "Collisions only happen with bad hash functions",
+      "A collision means the key is missing",
+    ],
+    correctAnswer: 1,
     explanation:
       "Separate chaining stores colliding entries in a per-bucket container such as a linked list. It is a common strategy, although open addressing is another valid collision-resolution approach.",
     hints: [
@@ -656,6 +689,14 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
   },
   "q-nt-mod-1": {
+    question: "Which expression is always equal to (a + b) mod n?",
+    options: [
+      "((a mod n) + (b mod n)) mod n",
+      "(a mod n) + (b mod n)",
+      "a + (b mod n)",
+      "((a mod n) * (b mod n)) mod n",
+    ],
+    correctAnswer: 0,
     hints: [
       "Reduce intermediate values modulo n as soon as possible.",
       "Use the modular rules for addition, subtraction, and multiplication before plugging in the specific numbers.",
@@ -668,6 +709,9 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
   },
   "q-nt-mod-3": {
+    question: "What is 17^5 mod 7?",
+    options: ["2", "4", "5", "6"],
+    correctAnswer: 2,
     hints: [
       "Reduce intermediate values modulo n as soon as possible.",
       "Use the modular rules for addition, subtraction, and multiplication before plugging in the specific numbers.",
@@ -900,6 +944,563 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "Translate the operation into binary first; bitwise questions are easiest in 0/1 form.",
       "Apply the operator one position at a time or use the standard identity for shifts, XOR, or complement.",
     ],
+  },
+  "q-msl-2": {
+    question:
+      "There are N total nodes across k sorted linked lists. Using a min-heap of size k, what is the time complexity to merge them?",
+    options: ["O(N)", "O(N log k)", "O(k log N)", "O(N log N)"],
+    correctAnswer: 1,
+  },
+  "q-iq-1": {
+    question:
+      "In a queue implemented with two stacks, what is the amortized time of dequeue?",
+    options: ["O(1)", "O(log n)", "O(n)", "O(n log n)"],
+    correctAnswer: 0,
+  },
+  "q-lcp-3": {
+    question:
+      "You sort n strings, each of length at most m, before finding the longest common prefix. What is the worst-case time of the sorting step?",
+    options: ["O(m)", "O(nm)", "O(n log n)", "O(nm log n)"],
+    correctAnswer: 3,
+  },
+  "q-rnn-1": {
+    question:
+      "In the one-pass solution to Remove Nth Node From End, how far ahead should fast start from slow when you use a dummy head?",
+    options: ["n-1 nodes", "n nodes", "n+1 nodes", "2n nodes"],
+    correctAnswer: 2,
+  },
+  "q-meta-kp3-3": {
+    question: 'What makes a Siamese network "Siamese"?',
+    options: [
+      "Two inputs are encoded by branches that share weights, then compared in embedding space",
+      "Two independent classifiers vote on the class",
+      "A separate network is trained for each novel class",
+      "The model always requires anchor-positive-negative triplets",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp14-1": {
+    question: "In MAML, what does the outer loop update?",
+    options: [
+      "The shared initialization, based on query-set performance after adaptation",
+      "The support examples themselves, so later episodes are easier",
+      "A separate set of weights for each task, with no shared initialization",
+      "Only the inner-loop learning rate, while the model weights stay fixed",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp17-3": {
+    question:
+      "If randomizing labels in in-context examples barely hurts performance, what are the examples mainly providing?",
+    options: [
+      "A task format and input distribution for the model to pattern-match",
+      "A full supervised signal the model must fit exactly",
+      "A reason to ignore the prompt and rely only on pretraining",
+      "A guaranteed regularization boost from wrong labels",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp23-1": {
+    question:
+      "What is the main difference between multi-task learning and meta-learning?",
+    options: [
+      "Multi-task learning is evaluated on the same tasks it trained on; meta-learning is evaluated on new tasks",
+      "Multi-task learning uses unlabeled data, while meta-learning uses labeled data",
+      "Multi-task learning trains many models, while meta-learning trains one",
+      "Multi-task learning is only for large datasets, while meta-learning is only for small ones",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp25-3": {
+    question:
+      "Why can head-only adaptation generalize better than full-network adaptation when training tasks are limited?",
+    options: [
+      "It reduces the task-specific hypothesis class the learner has to fit",
+      "It increases the number of support examples in each task",
+      "It removes the need for an outer loop",
+      "It guarantees the same optimum for every task",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp27-3": {
+    question: "What changed in FLAN to improve zero-shot performance?",
+    options: [
+      "It instruction-tuned the model on many NLP tasks written as natural-language instructions",
+      "It added an external memory for task definitions at inference time",
+      "It replaced pre-training with MAML-style episodic updates",
+      "It improved zero-shot performance only by scaling parameters while keeping the training objective the same",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp30-3": {
+    question:
+      "Which two MAML hyperparameters most directly control task adaptation?",
+    options: [
+      "The inner-loop learning rate and the number of inner-loop steps",
+      "The meta-batch size and validation frequency",
+      "The backbone width and dropout rate",
+      "The random seed and number of meta-test tasks",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp39-3": {
+    question:
+      "For few-shot NLP meta-learning, what kind of meta-training tasks transfer best?",
+    options: [
+      "A diverse set of auxiliary NLP tasks that is still reasonably similar to the target tasks",
+      "Only episodes built from the target dataset itself",
+      "Mostly synthetic paraphrase tasks, regardless of the target problem",
+      "Any fixed 100-task benchmark, since task choice hardly matters",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp7-3": {
+    question:
+      "Which protocol is usually the best fit for streaming LLM tokens to a browser client?",
+    options: [
+      "REST polling",
+      "Server-Sent Events (SSE)",
+      "WebSockets",
+      "gRPC-web streaming",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp9-3": {
+    question:
+      "In Flink event-time processing, what happens if an event arrives after its window's watermark has passed?",
+    options: [
+      "It is reassigned by processing time",
+      "It is treated as a late event and handled by the late-data policy",
+      "Flink rewinds and recomputes later windows",
+      "It is always dropped immediately",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp11-3": {
+    question:
+      "PSI rises from 0.05 to 0.32 and the KS p-value falls below 0.001 for transaction_amount, but fraud rate is unchanged. What is the best interpretation?",
+    options: [
+      "Concept drift in the fraud relationship",
+      "Upstream feature-value drift in the transaction_amount pipeline",
+      "Corrupted model weights in the registry",
+      "Label drift in the fraud target",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp22-2": {
+    question:
+      "Which defense pattern best protects a production LLM from indirect prompt injection in retrieved documents or tool output?",
+    options: [
+      "Use a larger model",
+      "Treat retrieved/tool content as untrusted, separate it from instructions, and validate actions before execution",
+      "Disable retrieval entirely",
+      "Rely on the system prompt to override malicious text",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp25-2": {
+    question:
+      "INT4 post-training quantization causes too much accuracy loss. What is the best next step?",
+    options: [
+      "Accept the loss",
+      "Try GPTQ/AWQ or W4A16, then use QAT if needed",
+      "Quantize only the embedding layer",
+      "Increase model size before quantizing",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp26-2": {
+    question:
+      "A credit model has equal accuracy across groups but unequal false negative rates. Which statement is correct?",
+    options: [
+      "Equal accuracy is enough to show fairness",
+      "Unequal FNR can still indicate a fairness problem and should be reviewed",
+      "It is only a fairness issue if overall accuracy also differs",
+      "It is only a fairness issue if false positive rates differ too",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp29-1": {
+    question:
+      "In roofline analysis, what does it mean if an inference kernel is memory-bound?",
+    options: [
+      "More users can be served without optimization",
+      "Reducing memory traffic matters more than increasing peak FLOPs",
+      "The model has too many layers",
+      "Only quantization can improve it",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp30-2": {
+    question:
+      "A training job changes after a transitive dependency update. What is the best first move?",
+    options: [
+      "Reinstall everything and retry",
+      "Diff the lockfile, identify the changed dependency, and pin the last known-good version",
+      "Upgrade all packages to latest",
+      "Rebuild without a lockfile",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp10-1": {
+    question:
+      "A ranking has relevance grades [3, 0, 2, 0, 1]. Using DCG@5 = Σ(2^rel_i - 1) / log₂(i+1), the ideal ranking [3, 2, 1, 0, 0] has IDCG@5 ≈ 9.39. What is NDCG@5?",
+    options: ["0.43", "0.78", "0.95", "1.34"],
+    correctAnswer: 2,
+  },
+  "q-eval-kp33-1": {
+    question:
+      "For a confidence bin B_m, which term contributes to Expected Calibration Error?",
+    options: [
+      "|acc(B_m) - conf(B_m)|",
+      "(|B_m|/n) * |acc(B_m) - conf(B_m)|",
+      "(|B_m|/n) * (acc(B_m) - conf(B_m))^2",
+      "KL(p_model || p_data) on B_m",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp34-1": {
+    question:
+      "A classifier fails on FGSM-perturbed images and also drops on foggy photos from a new city. Which label matches these two failures?",
+    options: [
+      "Both are adversarial robustness failures",
+      "First is adversarial robustness failure; second is distribution-shift robustness failure",
+      "First is calibration error; second is adversarial robustness failure",
+      "Both are label-noise problems",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp35-1": {
+    question:
+      "Two models have the same reported FLOPs, but one is 2x slower on the target GPU. What best explains this?",
+    options: [
+      "FLOPs already capture memory traffic, so latency should be the same",
+      "Latency also depends on memory traffic, parallelism, and kernel/compiler efficiency",
+      "Equal FLOPs means equal parameter count, which determines latency",
+      "FLOPs matter only for training cost, not inference",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp36-1": {
+    question:
+      "A translation preserves meaning but uses different wording from the reference. Which BLEU weakness does this expose?",
+    options: [
+      "BLEU rewards paraphrases too strongly",
+      "BLEU relies on n-gram overlap and can score a valid paraphrase too low",
+      "BLEU cannot be computed on a single test set",
+      "BLEU uses only recall, not precision",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp38-1": {
+    question:
+      "A model scores unusually high on MMLU, and later you find many MMLU questions in its pretraining corpus. What evaluation problem is this?",
+    options: [
+      "Label noise",
+      "Benchmark contamination",
+      "Adversarial prompting",
+      "Domain shift",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp39-1": {
+    question:
+      "Two labs evaluate the same LLM on the same benchmark but use different prompt templates and different few-shot examples. Which part of an evaluation harness is meant to prevent this mismatch?",
+    options: [
+      "A fixed train/validation split",
+      "Standardized prompt templates and few-shot example selection",
+      "A toxicity filter on outputs",
+      "Gradient checkpointing during inference",
+    ],
+    correctAnswer: 1,
+  },
+  "q-wb-5": {
+    question:
+      "In a top-down memoized Word Break solution that recurses on the start index, what should canBreak(i) mean?",
+    options: [
+      "Whether the suffix s[i:] can be segmented into dictionary words",
+      "Whether the prefix s[:i] can be segmented into dictionary words",
+      "The minimum number of words needed to form s[i:]",
+      "Whether s[i:] itself is a single dictionary word",
+    ],
+    correctAnswer: 0,
+  },
+  "q-lca-4": {
+    question:
+      "In the BST root=6, left=2, right=8, left.left=0, left.right=4, what is LCA(2, 4)?",
+    options: ["0", "2", "4", "6"],
+    correctAnswer: 1,
+  },
+  "q-blo-4": {
+    question:
+      "In BFS level-order traversal, what should you record before processing a level if you want one array per level?",
+    options: [
+      "The current queue size",
+      "The tree height",
+      "The value of the first node in the queue",
+      "The total number of nodes visited so far",
+    ],
+    correctAnswer: 0,
+  },
+  "q-blo-5": {
+    question:
+      "For the tree root=1, left=2, right=3, left.left=4, left.right=5, right.right=6, what is the zigzag level-order traversal?",
+    options: [
+      "[[1],[2,3],[4,5,6]]",
+      "[[1],[3,2],[4,5,6]]",
+      "[[1],[3,2],[6,5,4]]",
+      "[[1],[2,3],[6,5,4]]",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ws2-4": {
+    question:
+      "In Trie-based Word Search II, after you add a found word to the answer list, which in-place change prevents reporting that same word again without using a separate result set?",
+    options: [
+      "Set that Trie node’s isEnd to false",
+      "Restart DFS from the Trie root after every match",
+      "Stop exploring the board after the first match",
+      "Delete the entire Trie root",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ws2-5": {
+    question:
+      "Ignoring Trie construction, which is the standard worst-case upper bound for DFS search in Word Search II on an m x n board when the longest word has length L?",
+    options: ["O(mn)", "O(mn * 4^L)", "O(W * mn * 4^L)", "O(4^(mn))"],
+    correctAnswer: 1,
+  },
+  "q-ibst-7": {
+    question:
+      "A BST node has two children. Which replacement value preserves the BST property before you delete the replacement node from its original position?",
+    options: [
+      "Any value from the left subtree",
+      "The maximum value in the left subtree or the minimum value in the right subtree",
+      "Any leaf value in the tree",
+      "The value of the parent",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp6-1": {
+    question:
+      "An NLP team has 100 labeled examples and 10,000 unlabeled examples. It can afford to label only 200 more. Which choice best matches active learning?",
+    options: [
+      "Label 200 randomly selected unlabeled examples",
+      "Label the 200 unlabeled examples on which the current model is most uncertain",
+      "Assign pseudo-labels to all 10,000 unlabeled examples and skip human labeling",
+      "Relabel the existing 100 examples until every label is unanimous",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dc-kp1-3": {
+    question:
+      "You train logistic regression, random forest, and XGBoost on the same 500-example dataset. They score 0.70, 0.71, and 0.72 F1. A manual audit finds many contradictory labels on near-identical examples. What is the best next step?",
+    options: [
+      "Keep the data fixed and search a larger hyperparameter grid",
+      "Switch to a larger neural network",
+      "Improve label consistency and collect a small amount of additional high-quality data",
+      "Prioritize distributed training infrastructure",
+    ],
+    correctAnswer: 2,
+  },
+  "q-dc-kp5-1": {
+    question:
+      "An autonomous-vehicle team needs more training examples of pedestrians in dense fog. Which benefit of simulation most directly addresses this need?",
+    options: [
+      "Simulation guarantees better real-world accuracy than real data",
+      "Simulation can generate rare fog scenes on demand and provides automatic ground-truth labels",
+      "Simulation removes the need for any real-world testing",
+      "Simulation eliminates the sim-to-real gap",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mls-kp9-3": {
+    question:
+      "A churn model's true labels arrive 30 days after prediction. Which metric can the team compute immediately, without labels, to flag that production inputs may have shifted away from the training distribution?",
+    options: [
+      "Current-batch accuracy",
+      "PSI or KL divergence on input features",
+      "Confusion matrix on today's predictions",
+      "F1 score on today's predictions",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mls-kp15-1": {
+    question:
+      "A new model version is being released with a canary deployment. The service handles 200,000 requests per hour, and the goal is to limit blast radius while collecting live metrics. What initial traffic split is most appropriate?",
+    options: ["0%", "1-5%", "50%", "100%"],
+    correctAnswer: 1,
+  },
+  "q-mls-kp11-1": {
+    question:
+      "You need to create a new feature column on a very large Spark DataFrame, and the logic can be expressed with native Spark SQL functions. Which approach is usually fastest and most scalable?",
+    options: [
+      "Use built-in Spark functions inside withColumn()",
+      "Use a Python UDF inside withColumn()",
+      "Call collect() and transform rows in a Python loop",
+      "Convert the full DataFrame to Pandas and use apply()",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mls-kp30-3": {
+    question:
+      "A loan-approval system can deploy either (A) a gradient-boosted tree with 94.8% AUC and straightforward monitoring or (B) a large ensemble with 95.0% AUC but much higher debugging and rollback complexity. If both meet business targets, which choice is most defensible?",
+    options: [
+      "Deploy the ensemble, because any accuracy gain outweighs operational cost in a high-stakes system",
+      "Deploy the simpler model, because it meets the target while reducing operational risk",
+      "Always prefer the model with more parameters",
+      "Choose randomly once both clear the target",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rl-kp23-3": {
+    question:
+      "A target policy always chooses the greedy action. A behavior policy is ε-greedy with ε = 0.1 over 4 actions. If the greedy action was taken, what is the one-step importance-sampling ratio π(a|s)/b(a|s)?",
+    options: ["1", "1/0.925 ≈ 1.08", "0.925", "0.025"],
+    correctAnswer: 1,
+  },
+  "q-rl-kp6-1": {
+    question: "Which quantity is a policy?",
+    options: [
+      "V(s): expected return from state s",
+      "π(a|s): probability of taking action a in state s",
+      "P(s'|s,a): probability of next state s' after action a",
+      "G_t: discounted sum of future rewards",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rl-kp6-3": {
+    question:
+      "A robot reaches the same current state s by two different paths. In a fully observed MDP, what should the policy use to choose the next action?",
+    options: [
+      "The full sequence of past states",
+      "Only the current state s",
+      "Only the total reward collected so far",
+      "Only the step number",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp7-1": {
+    question: "Which method is one of Rainbow DQN's components?",
+    options: [
+      "TRPO",
+      "Prioritized experience replay",
+      "SAC",
+      "REINFORCE",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp13-3": {
+    question:
+      "In PPO, suppose A_t > 0 and r_t = 1.3 with ε = 0.2. What should clipping do?",
+    options: [
+      "Use r_t A_t because the ratio is above the clip range",
+      "Use (1+ε)A_t so the objective stops rewarding a larger ratio",
+      "Set A_t to 0",
+      "Switch to the value-function loss",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp9-3": {
+    question:
+      "An episode gives reward 0 for 99 steps and +10 on the last step. Why is REINFORCE's credit assignment hard?",
+    options: [
+      "The final reward makes every action in the episode optimal",
+      "It is hard to tell which earlier actions actually caused the final reward",
+      "The policy gradient becomes exactly zero on long episodes",
+      "REINFORCE cannot train on delayed rewards",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rla-kp23-2": {
+    type: "multiple-choice",
+    question:
+      "If the same DreamerV3 hyperparameters work across Atari, continuous control, and 3D tasks, what does that mainly show?",
+    options: [
+      "The method is more robust across domains and needs less task-specific tuning",
+      "The method no longer needs a world model",
+      "The method trains only from demonstrations",
+      "The method is on-policy",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mfml-kp2-1": {
+    question:
+      "For A = [[1, 2], [0, 1]] and B = [[1, 0], [3, 1]], which pair is correct?",
+    options: [
+      "AB = [[1, 2], [3, 7]] and BA = [[7, 2], [3, 1]]",
+      "AB = [[7, 2], [3, 1]] and BA = [[1, 2], [3, 7]]",
+      "AB = [[7, 0], [0, 1]] and BA = [[1, 0], [3, 1]]",
+      "AB = BA = [[7, 2], [3, 1]]",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp14-3": {
+    question:
+      "For one labeled example, define the logistic loss as l(w) = log(1 + exp(-y w^T x)) with y in {+1, -1}. Which statement is true?",
+    options: [
+      "l(w) is convex in w",
+      "l(w) is concave in w",
+      "l(w) is linear in w",
+      "l(w) is non-convex because it contains an exponential",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mfml-kp24-3": {
+    question:
+      "A spectral GNN uses the full eigenvectors of an n x n graph Laplacian L. For large n, which step is usually the main bottleneck?",
+    options: [
+      "Applying nonlinearities to node features",
+      "Computing the full eigendecomposition of L",
+      "Adding self-loops to the graph",
+      "Normalizing each feature vector",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mfml-kp29-3": {
+    question:
+      "In a score-based diffusion model, the network takes x_t and t as input. What should it estimate?",
+    options: [
+      "log p_0(x) only",
+      "grad_x log p_t(x)",
+      "the Hessian of log p_t(x)",
+      "the covariance matrix of the training set",
+    ],
+    correctAnswer: 1,
+  },
+  "q-alg-kp5-1": {
+    question:
+      "Let a = [1, 0] and b = [3, 4]. What is the orthogonal projection of b onto the line spanned by a?",
+    options: ["[0, 4]", "[3, 0]", "[1, 4]", "[3, 4]"],
+    correctAnswer: 1,
+  },
+  "q-alg-kp20-3": {
+    question:
+      "A spectral-clustering embedding places four nodes at (0.0, 0.1), (0.2, 0.0), (3.0, 3.1), and (3.2, 2.9). If k = 2, which clustering should k-means return?",
+    options: [
+      "{1, 3} and {2, 4}",
+      "{1, 2} and {3, 4}",
+      "{1, 4} and {2, 3}",
+      "{1, 2, 3, 4}",
+    ],
+    correctAnswer: 1,
+  },
+  "q-alg-kp21-3": {
+    question:
+      "A full update to W in R^(1000 x 800) would train 800,000 parameters. With LoRA rank r = 10, where Delta W = BA with B in R^(1000 x 10) and A in R^(10 x 800), how many trainable parameters are added?",
+    options: ["18,000", "80,000", "810,000", "8,000"],
+    correctAnswer: 0,
+  },
+  "q-alg-kp27-1": {
+    question:
+      "If x = np.array([1, 2, 3]) and y = np.array([4, 5, 6]), which NumPy expression returns the scalar dot product 32?",
+    options: [
+      "np.dot(x, y)",
+      "np.concatenate([x, y])",
+      "x[:, None] * y[None, :]",
+      "np.maximum(x, y)",
+    ],
+    correctAnswer: 0,
   },
 };
 

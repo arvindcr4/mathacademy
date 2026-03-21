@@ -17,10 +17,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Logistic regression is a linear model in its features: P(y=1) = σ(w₀ + w₁·age + w₂·income). No matter how well it tunes w₁ and w₂, it cannot learn that high income matters differently at different ages. Adding age × income as a third feature lets the model learn a coefficient w₃ that captures this joint effect, effectively giving the linear model one degree of interaction that it could never represent otherwise.",
+        "Logistic regression is a linear model in its features:\n\\[\n\\mathrm{P}(y=1 \\mid x) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income})\n\\]\nwhere $\\sigma(z) = 1/(1 + e^{-z})$ is the sigmoid. The decision boundary is the hyperplane $\{x : w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} = 0\\}$. No matter how well it tunes $w_1$ and $w_2$, it cannot learn that the effect of income on churn depends on age — the coefficients are constants, not functions of $x$. Adding the interaction term $\\text{age} \\times \\text{income}$ as a third feature gives:\n\\[\n\\mathrm{P}(y=1) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} + w_3 \\cdot \\text{age} \\times \\text{income})\n\\]\nThe coefficient $w_3$ captures how the income effect changes with age — a joint nonlinear effect a pure linear model cannot represent without explicit interaction features.",
       hints: [
-        "A linear model in p features defines a hyperplane. What geometric shape does adding an interaction term allow?",
-        "Tree-based models learn interactions implicitly through consecutive splits; linear models need explicit interaction features.",
+        "Geometrically: a linear model in $p$ features defines a $(p-1)$-dimensional hyperplane in $\\mathbb{R}^p$. An interaction term adds a new dimension, allowing the decision boundary to curve and wrap around the feature space.",
+        "Tree-based models learn interactions implicitly through consecutive splits: 'if age > 30 AND income > 50K' — the tree itself partitions the space into regions with different prediction rules. Linear models need explicit $x_i \\cdot x_j$ features to approximate this.",
       ],
     },
     {
@@ -31,10 +31,10 @@ const questions: Record<string, Question[]> = {
         "Log-transforming a right-skewed numerical feature always improves model performance regardless of the model type.",
       correctAnswer: "false",
       explanation:
-        "For a decision tree (or any tree ensemble), the splitting criterion at a node evaluates all possible thresholds on the raw feature. A monotonic transformation like log(x) preserves the ordering of values, so every split that was optimal on x is still optimal on log(x) — it just uses a different threshold value. The split quality is identical. Log transforms do help linear/distance-based models (logistic regression, KNN, SVM) where feature scale and distribution shape affect gradients and distance computations.",
+        "For a decision tree (or any tree ensemble), the splitting criterion evaluates all possible thresholds on the raw feature. A monotonic transformation $f(x)$ (like $\\log(x)$, $\\sqrt{x}$, or any strictly monotone function) preserves the ordering of values:\n\\[\nx_1 < x_2 \\implies f(x_1) < f(x_2)\n\\]\nAt any node, the optimal split on $x$ is a threshold $t$: samples with $x \\leq t$ go left, $x > t$ go right. Since $f$ is monotone, $f(x) \\leq f(t)$ if and only if $x \\leq t$. The same samples fall on the same sides of the split — only the threshold value changes (from $t$ to $f(t)$). The split quality (information gain, Gini reduction) is identical.\n\nLog transforms DO help linear and distance-based models: in logistic regression, the gradient $\\partial L/\\partial w_j$ scales with feature magnitude, so a feature spanning $[1, 10^6]$ dominates one spanning $[0, 6]$. Log compression reduces this scale disparity, improving gradient-based optimization.",
       hints: [
-        "Decision trees split on ordered thresholds: is x ≤ t? Does replacing x with log(x) change which sample falls on which side of the optimal split?",
-        "Contrast: in logistic regression, the gradient ∂L/∂w scales with feature magnitude — so a feature spanning [1, 10⁶] vs. [0, 6] matters.",
+        "Decision trees split by asking: 'is $x \\leq t$?' Since $f$ is monotone, 'is $f(x) \\leq f(t)$?' asks the same question about the same samples. The tree's split on $\\log(x)$ at threshold $\\log(1000)$ is equivalent to splitting on $x$ at threshold $1000$.",
+        "For linear models: $\\partial L/\\partial w_j \\propto x_j$. With $x_j$ spanning orders of magnitude, gradients explode or vanish. Log-transform compresses $[1, 10^6]$ to $[0, 6]$, bringing features to comparable scales.",
       ],
     },
     {
@@ -51,10 +51,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Logistic regression is linear in its inputs, so it can only model a monotone relationship with a single raw feature. Squaring (option C) creates a parabola centered at 0, which cannot represent a U-shape with a minimum at d = 7. Binning into three indicator columns gives the model three independent slopes for each region. Natural cubic splines with knots at 7 and 90 provide a smooth piecewise-polynomial fit: within each interval the function is a cubic, the pieces join with continuous first and second derivatives, and the function is linear beyond the boundary knots — precisely capturing the U-shape without overfitting.",
+        "Logistic regression is linear: the log-odds is $w \\cdot d = w \\cdot \\text{days}$. A single coefficient $w$ produces a monotone relationship — it can only increase or decrease with $d$, not both. Squaring $d^2$ creates a parabola $w \\cdot d^2$ centered at $d = 0$ with minimum at $d = 0$ — it cannot shift the minimum to $d = 7$ and allow different slopes on each side.\n\nA natural cubic spline with $K$ interior knots $\{t_1, \\ldots, t_K\}$ adds $K$ basis functions to the linear predictor:\n\\[\n\\text{logit}(p) = w_0 + w_1 d + \\sum_{k=1}^{K} w_{1+k} \\cdot h_k(d)\n\\]\nwhere each $h_k(d)$ is a truncated cubic basis function. With knots at $t_1 = 7$ and $t_2 = 90$, the spline fits a separate cubic on $[0, 7]$, $[7, 90]$, and $[90, \\infty)$, joined with continuous first and second derivatives at each knot. This flexibly captures the U-shape: the churn rate rises toward $d = 7$ from the left, dips to a minimum at $d = 7$, rises again toward $d = 90$, then rises once more beyond $d = 90$ — precisely what a single linear coefficient cannot model.",
       hints: [
-        "A single linear coefficient w·d can be positive or negative — it cannot increase on both ends and dip in the middle.",
-        "A spline with K interior knots adds K extra basis functions. With knots at 7 and 90, you get a flexible smooth curve through those change-points.",
+        "A linear model with coefficient $w$: the log-odds changes by $w$ for each unit increase in $d$. This is monotone — it cannot go up AND down. The U-shape requires at least one change point in the slope, which needs multiple basis functions.",
+        "Binning ($K=2$ bins with indicators $I(d \\leq 7)$, $I(7 < d \\leq 90)$) is equivalent to a spline with 2 interior knots but with discontinuous derivatives at the knot boundaries — creating kinks. A spline is a smooth (continuous second derivative) version of binning.",
       ],
     },
   ],
@@ -416,10 +416,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'TPE (Bergstra et al. 2011) splits past trials into "good" (y < y*) and "bad" (y ≥ y*) based on a quantile γ of the observed objective values. It models p(x | y < y*) = l(x) and p(x | y ≥ y*) = g(x) using kernel density estimators. The acquisition function EI(x) ∝ l(x)/g(x): new configurations are sampled from l(x) and selected where the ratio l(x)/g(x) is largest — i.e., configurations likely among good trials and unlikely among bad ones. This is more sample-efficient than random/grid search and cheaper than Gaussian Process Bayesian optimization for high-dimensional discrete spaces.',
+        'TPE (Bergstra et al. 2011) splits past trials into "good" ($y < y^*$) and "bad" ($y \\geq y^*$) based on a quantile $\\gamma$ of observed objective values (default $\\gamma = 0.25$ means the best 25% are good). It models two density functions using kernel density estimation:\n\\[\np(x \\mid y < y^*) = l(x), \\quad p(x \\mid y \\geq y^*) = g(x)\n\\]\nThe acquisition function (Expected Improvement) is:\n\\[\n\\text{EI}(x) \\propto \\frac{l(x)}{g(x)}\n\\]\nNew configurations are sampled from $l(x)$ and selected where the ratio $l(x)/g(x)$ is largest — i.e., configurations that are likely among good trials and unlikely among bad ones. This is more sample-efficient than grid search (exponential in $p$) or random search, and cheaper than Gaussian Process Bayesian optimization for high-dimensional discrete spaces because KDE scales better with dimensionality.',
       hints: [
-        "Grid search is O(k^p) for k values per p parameters — exponential. TPE uses O(n) past observations to propose the next trial.",
-        'The γ quantile (default 0.25 in Optuna) determines the threshold between "good" and "bad" trials.',
+        "Grid search: $O(k^p)$ evaluations for $k$ values per $p$ parameters. Random search: $O(n)$ evaluations but blindly samples. TPE: $O(n)$ evaluations but adaptively guides search toward promising regions using past observations.",
+        "The $\\gamma$ quantile defines 'good' trials. A lower $\\gamma$ (e.g., 0.10) is more aggressive — it defines 'good' as only the top 10%, focusing exploitation. A higher $\\gamma$ (e.g., 0.40) balances exploration more.",
       ],
     },
     {
@@ -430,10 +430,10 @@ const questions: Record<string, Question[]> = {
         "Optuna\'s pruning feature (MedianPruner, HyperbandPruner) can terminate a trial early based on intermediate validation metrics, reducing total tuning compute without compromising the best configuration found.",
       correctAnswer: "true",
       explanation:
-        "Pruners implement successive halving logic: at intermediate step s, a trial is pruned if its metric is worse than the median of all completed trials at the same step. An unpromising XGBoost trial with validation AUC = 0.65 after 100 trees, when all completed trials at 100 trees have median AUC = 0.82, is abandoned — saving the compute of training the remaining 900 trees. The best configurations (those that survive pruning) still run to full budget. Optuna\'s Hyperband integration implements the SHA (Successive Halving Algorithm) rigorously, with geometric budget reduction across brackets.",
+        "Pruners implement successive halving (SHA) logic: at intermediate step $s$, a trial is pruned if its metric is worse than the median of all completed trials at step $s$. For example, an XGBoost trial with validation AUC $= 0.65$ after 100 trees, when all completed trials at 100 trees have median AUC $= 0.82$, is abandoned — saving the compute of training the remaining 900 trees. The best configurations (those that survive pruning) still run to full budget, so the final result is not compromised.\n\nOptuna's HyperbandPruner implements SHA with adaptive budget allocation: it allocates progressively larger budgets to promising trials and smaller budgets to unpromising ones, stopping the worst trials early and concentrating compute on the most promising configurations. This is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial based on intermediate results.",
       hints: [
-        "Pruning is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial.",
-        "Not all models support intermediate reporting; scikit-learn estimators trained as a whole cannot be pruned. XGBoost, LightGBM with callbacks, and PyTorch training loops can report per-epoch metrics.",
+        "Pruning is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial. This separation means you can combine TPE with any pruner (MedianPruner, HyperbandPruner, etc.).",
+        "Not all models support intermediate reporting. Scikit-learn estimators trained as a whole (no callbacks) cannot be pruned. XGBoost, LightGBM (with callbacks), and PyTorch training loops can report per-epoch metrics and thus support pruning.",
       ],
     },
     {
@@ -450,10 +450,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The shrinkage factor η (learning_rate) multiplies each tree\'s contribution: Fₘ = Fₘ₋₁ + η·hₘ. Smaller η requires more trees (larger n_estimators) to reach the same training loss — but achieves better regularization and generalization (Friedman 2002: "with small η, each tree corrects less aggressively, requiring more steps but leading to a smoother function"). Optimal (η, n_estimators) pairs lie on a curve: η = 0.01 might need n = 5000 trees; η = 0.3 might need only n = 100. Tuning n_estimators independently of η, or fixing one and tuning the other, will find suboptimal configurations. The standard approach: fix a small η (0.05–0.1) and use early stopping to find optimal n_estimators.',
+        "The shrinkage factor $\\eta$ (learning_rate) multiplies each tree's contribution to the ensemble:\n\\[\nF_m = F_{m-1} + \\eta \\cdot h_m(x)\n\\]\nwhere $h_m$ is the $m$-th tree's prediction. Smaller $\\eta$ means each tree contributes less — the ensemble learns more slowly but requires more trees to reach the same training loss. Friedman (2002) showed that smaller $\\eta$ with more trees produces a smoother function with better generalization.\n\nOptimal $(\\eta, n)$ pairs lie on a tradeoff curve: $\\eta = 0.01$ might need $n = 5000$ trees; $\\eta = 0.3$ might need only $n = 100$. Tuning $n$ independently of $\\eta$ (or vice versa) finds suboptimal configurations because the interaction is fundamental. The standard approach: fix a small $\\eta \\in [0.05, 0.1]$ and use early stopping to find optimal $n$. Early stopping effectively jointly optimizes both: it trains up to $n_\\text{max}$ trees but stops when validation loss does not improve for $r$ consecutive rounds.",
       hints: [
-        "Early stopping in XGBoost trains up to n_estimators trees but stops when validation metric does not improve for early_stopping_rounds consecutive rounds — effectively joint tuning of η and n.",
-        "Other key regularization params: max_depth (tree complexity), subsample (row subsampling), colsample_bytree (feature subsampling), min_child_weight (leaf regularization).",
+        "Early stopping in XGBoost: $F_m = F_{m-1} + \\eta \\cdot h_m$. If validation AUC does not improve for early_stopping_rounds rounds, stop. This means: large $\\eta$ → fewer trees needed → stops sooner; small $\\eta$ → more trees needed → trains longer. The combination of $\\eta$ and early_stopping_rounds effectively jointly tunes $(\\eta, n)$.",
+        "Other key regularization params: max_depth (tree depth/complexity), subsample (row subsampling), colsample_bytree (feature subsampling), min_child_weight (minimum leaf weight). These control the complexity of individual trees, while $\\eta$ controls how many trees are combined.",
       ],
     },
   ],

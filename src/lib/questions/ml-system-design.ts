@@ -4,6 +4,61 @@ import { registerQuestions } from "@/lib/questions";
 const questions: Record<string, Question[]> = {
   "requirements-ml": [
     {
+      id: "q-msd-kp1-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "When gathering ML system requirements, which stakeholder is most critical to consult FIRST to define the business success metric?",
+      options: [
+        "The ML engineer who will train the model.",
+        "The product manager or business owner who owns the business objective.",
+        "The data engineer who will build the data pipeline.",
+        "The DevOps engineer who will deploy the system.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The business owner defines what success looks like in business terms (e.g., 'increase purchase conversion by 5%' or 'reduce fraud losses by $10M/year'). Without a clear business metric, ML teams risk optimizing proxy metrics that do not translate to business value. Product managers translate business goals into measurable objectives that ML engineers can then operationalize.",
+      hints: [
+        "ML metrics (AUC, NDCG) are proxies — only the business owner knows which proxy best maps to business outcomes.",
+        "Define success first, then work backward to the ML metric.",
+      ],
+    },
+    {
+      id: "q-msd-kp1-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In an ML system design document, data freshness requirements (how recently training data must be from) are determined solely by model accuracy needs and not by the serving latency SLO.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Data freshness requirements are driven by the rate of concept drift in the domain, not serving latency. A fraud detection model may need hourly retraining because fraud patterns evolve daily. A movie recommendation model may be retrained weekly. Serving latency SLO constrains feature retrieval at inference time, not how stale training data can be. These are independent requirements.",
+      hints: [
+        "Serving latency = how fast to respond to a request. Data freshness = how recent the training labels are.",
+        "A model trained on 6-month-old data can still serve with p99 < 100 ms latency.",
+      ],
+    },
+    {
+      id: "q-msd-kp1-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML system must achieve 99.9% availability (three nines). How many minutes of downtime per month does this allow, and what ML-specific failure modes must be included in the availability calculation?",
+      options: [
+        "~44 minutes/month; only infrastructure failures count toward downtime.",
+        "~44 minutes/month; model degradation events (silent accuracy drops, data pipeline failures producing wrong features) must also be counted as availability failures if they cause incorrect outputs.",
+        "~8.7 hours/month; 99.9% availability only applies to web servers, not ML models.",
+        "~4.4 minutes/month; 99.9% is the strictest SLA and applies to all systems equally.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "99.9% availability = 0.1% downtime = 43.8 minutes/month. For ML systems, 'availability' must include silent failures: a data pipeline bug producing incorrect features causes the model to serve wrong predictions with no infrastructure failure — the system appears 'up' but is unavailable in the meaningful sense. ML availability SLOs must cover both infrastructure uptime and model output correctness.",
+      hints: [
+        "99.9% = 1 - 0.001; 30 days × 24 hrs × 60 min × 0.001 = 43.2 minutes.",
+        "Silent model degradation (wrong features, stale model) is functionally equivalent to downtime.",
+      ],
+    },
+    {
       id: "q-msd-kp1-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -61,6 +116,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "problem-framing": [
+    {
+      id: "q-msd-kp2-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A travel company wants to predict 'will this user book a hotel in the next 7 days?' Which ML framing is most direct?",
+      options: [
+        "Regression — predict the exact probability of booking.",
+        "Binary classification — predict a binary label (books / does not book), with probability output for downstream thresholding.",
+        "Clustering — group users by travel intent.",
+        "Multi-label classification — predict all possible travel destinations.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The business question maps directly to a binary outcome (books or not within 7 days). Binary classification outputs a calibrated probability that can be thresholded for downstream actions (send push notification, show promo). Regression to the exact probability is equivalent but requires careful label construction. Clustering does not produce the required yes/no prediction.",
+      hints: [
+        "Binary classification: yes/no outcome with probability output.",
+        "The probability output allows downstream calibration of the decision threshold.",
+      ],
+    },
+    {
+      id: "q-msd-kp2-5",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Framing a problem as multi-task learning (predicting multiple outputs simultaneously) always increases computational cost with no accuracy benefit.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Multi-task learning often improves accuracy on each individual task by sharing representations across related tasks. For example, a model predicting both CTR and conversion rate shares a user interest representation, and gradients from each task regularize the other. The shared backbone reduces overall inference cost compared to running two separate models. The trade-off is increased training complexity.",
+      hints: [
+        "Shared layers in multi-task learning act as a form of regularization — each task reduces the other\'s overfitting.",
+        "Two separate 100M-param models vs. one shared 120M-param model with two heads: the multi-task model is cheaper to serve.",
+      ],
+    },
+    {
+      id: "q-msd-kp2-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A food delivery platform wants to rank restaurants for a user. They have: (A) explicit ratings (1-5 stars), (B) implicit signals (clicks, orders, dwell time on menu), (C) contextual signals (time of day, weather, user location). What is the optimal problem framing?",
+      options: [
+        "Regression on average star rating — predicts the 'best' restaurant objectively.",
+        "Pointwise learning-to-rank using only explicit ratings — they are the cleanest signal.",
+        "Listwise learning-to-rank combining all three signal types, using ratings as strong labels, implicit signals as weak labels, and context as features — optimizing directly for ranking quality (NDCG).",
+        "Collaborative filtering using only order history — explicit signals are too noisy.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Optimal framing combines all available signals: explicit ratings (high-quality, sparse) as strong training labels; implicit signals (abundant, noisy) as weak labels with appropriate loss weighting; context as features that personalize rankings. Listwise optimization (LambdaRank, LambdaLoss) directly optimizes NDCG rather than pointwise regression. This captures the full information in all three signal types.",
+      hints: [
+        "Explicit ratings are rare but accurate; implicit signals are abundant but biased — combine both with different loss weights.",
+        "Listwise losses optimize the ranking metric directly; pointwise losses only approximate it.",
+      ],
+    },
     {
       id: "q-msd-kp2-1",
       type: "multiple-choice",
@@ -120,6 +230,61 @@ const questions: Record<string, Question[]> = {
 
   "data-collection-design": [
     {
+      id: "q-msd-kp3-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A model predicts loan default risk. Training data was collected from 2010-2020. In 2023, the model\'s performance has degraded significantly. What is the most likely cause?",
+      options: [
+        "The model was overfitting to the training data and always had poor performance.",
+        "Concept drift: the statistical relationship between features and loan default has changed since 2020 (e.g., COVID-19 economic shock changed income/debt patterns).",
+        "Data leakage: future information was encoded in the training features.",
+        "The model is underfitting due to insufficient training data.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Concept drift occurs when the joint distribution P(Y|X) changes over time — features that predicted default in 2010-2020 may no longer be predictive in 2023 due to macroeconomic changes, regulatory changes, or demographic shifts. COVID-19 dramatically changed income stability and spending patterns, obsoleting models trained on pre-pandemic data. Regular monitoring and retraining cadences are required to detect and correct concept drift.",
+      hints: [
+        "Concept drift: P(Y|X) changes. Data drift: P(X) changes. Both can degrade model performance.",
+        "A model that was accurate in 2020 but fails in 2023 is not overfitting — it is suffering from distribution shift.",
+      ],
+    },
+    {
+      id: "q-msd-kp3-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Human annotation agreement (inter-annotator agreement, e.g., Cohen\'s kappa) should be measured and reported before using human labels as training data ground truth.",
+      options: ["True", "False"],
+      correctAnswer: "true",
+      explanation:
+        "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators — the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
+      hints: [
+        "Cohen\'s kappa of 0.8+ indicates strong agreement; below 0.6 is weak agreement — unreliable ground truth.",
+        "A model cannot learn a task better than humans can agree on what the correct answer is.",
+      ],
+    },
+    {
+      id: "q-msd-kp3-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "You are training a next-token prediction language model on web-crawled data. Which data quality problem is most likely to cause the model to generate harmful content?",
+      options: [
+        "Duplicate documents in the training set — memorization of repeated content.",
+        "Training data contamination: harmful, toxic, or personally identifiable information in the web crawl gets memorized and reproduced at inference time.",
+        "Imbalanced language distribution — rare languages are underrepresented.",
+        "Training data that is too recent — the model learns ephemeral information.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Web-crawled data contains toxic content, extremist material, personal information, and harmful instructions. LLMs trained on unfiltered web data memorize and can reproduce this content. Mitigation requires: content filtering (blocklists, classifiers), deduplication (reduces memorization), PII scrubbing, and quality filtering (remove spam, low-quality content). The C4, RefinedWeb, and Dolma datasets illustrate different approaches to this problem.",
+      hints: [
+        "GPT-2 could reproduce verbatim training data including personal phone numbers from its training set.",
+        "Deduplication reduces memorization: if a document appears once, it is less likely to be reproduced verbatim.",
+      ],
+    },
+    {
       id: "q-msd-kp3-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -177,6 +342,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "feature-store-design": [
+    {
+      id: "q-msd-kp4-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the primary purpose of point-in-time correct feature retrieval in a feature store?",
+      options: [
+        "To retrieve features as fast as possible for low-latency serving.",
+        "To ensure that training examples use only feature values that were available at the time the label was generated, preventing temporal data leakage.",
+        "To limit the amount of storage used by the feature store.",
+        "To ensure that features are normalized consistently across all training examples.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Point-in-time correct retrieval (also called 'as-of' queries) ensures that when creating a training example with label from time T, the feature values used are those that existed at time T — not future values. Without this, a feature like 'account_balance_at_transaction' might be retrieved using today\'s balance rather than the balance at the time of the labeled transaction, causing look-ahead bias (leakage).",
+      hints: [
+        "If a label is from Jan 15 but feature values from Feb 1 are used, the model sees the future — leakage.",
+        "Point-in-time correct = feature value at the exact moment the training label was generated.",
+      ],
+    },
+    {
+      id: "q-msd-kp4-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "A streaming feature pipeline that computes per-user aggregations using Apache Flink guarantees exactly-once feature update semantics by default, with no additional configuration.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Flink supports exactly-once processing but it requires explicit configuration: checkpointing must be enabled (state.checkpoints.dir), the sink must support idempotent writes or transactions (e.g., Kafka transactional producer, JDBC with upsert semantics), and the source must support replay (Kafka with offset tracking). Default Flink pipelines provide at-least-once semantics. Exactly-once requires coordinating Flink checkpoints with sink transaction commits.",
+      hints: [
+        "At-least-once means a message might be processed twice on failure; exactly-once means state updates are idempotent.",
+        "Redis does not natively support transactions compatible with Flink checkpointing — upsert patterns simulate exactly-once.",
+      ],
+    },
+    {
+      id: "q-msd-kp4-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A feature store serves embeddings for 500 million user profiles. Each embedding is 256 float32 values (1 KB). The p99 serving latency requirement is <5 ms. Which storage and retrieval architecture is most appropriate?",
+      options: [
+        "PostgreSQL with a vector column — standard relational database handles this scale.",
+        "Sharded Redis cluster with user_id as the shard key: 500M × 1 KB = 500 GB partitioned across 50 nodes (10 GB/node), each node serving point lookups in <1 ms.",
+        "FAISS index for ANN search — vector databases are the right tool for embedding retrieval.",
+        "DynamoDB with embedding stored as a JSON attribute — managed NoSQL for scale.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M × 1 KB = 500 GB across a 50-node cluster is 10 GB/node — within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
+      hints: [
+        "FAISS = find nearest neighbors. Redis = fetch by exact key. These are different retrieval patterns.",
+        "500M × 1 KB = ~500 GB. Sharded across 50 nodes = 10 GB/node — Redis is designed for this.",
+      ],
+    },
     {
       id: "q-msd-kp4-1",
       type: "multiple-choice",
@@ -236,6 +456,61 @@ const questions: Record<string, Question[]> = {
 
   "model-selection-design": [
     {
+      id: "q-msd-kp5-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "For a tabular dataset with 1 million rows and 200 engineered features predicting user churn, which model family typically achieves the best accuracy without extensive hyperparameter search?",
+      options: [
+        "Deep neural network with 10 layers.",
+        "Gradient boosted decision tree (e.g., XGBoost, LightGBM) — typically best on structured/tabular data.",
+        "k-Nearest Neighbors with k=10.",
+        "Linear regression with L2 regularization.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "On tabular/structured data, gradient boosted trees (GBDTs) consistently outperform deep learning and simpler models. They handle mixed feature types natively, are robust to irrelevant features, require less feature engineering than linear models, train faster than deep nets, and are interpretable via feature importance. XGBoost won the majority of Kaggle tabular competitions from 2015-2022. Deep learning only surpasses GBDTs on tabular data with very large datasets (>10M rows) and carefully designed architectures.",
+      hints: [
+        "GBDTs: robust to feature scale, handle missing values, capture non-linear interactions natively.",
+        "On tabular data, the winning Kaggle approach is almost always a GBDT ensemble or a GBDT + NN blend.",
+      ],
+    },
+    {
+      id: "q-msd-kp5-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "When comparing two models in an A/B test, statistical significance (p < 0.05) guarantees that the observed improvement is large enough to be worth the deployment cost.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Statistical significance only means the observed difference is unlikely to be due to chance — it says nothing about the magnitude or practical importance of the difference. With large sample sizes (common in ML A/B tests), even a 0.001% CTR improvement can be statistically significant. Practical significance requires also reporting the effect size (absolute and relative lift) and comparing it to the cost of deployment, maintenance, and infrastructure. Minimum detectable effect (MDE) should be pre-specified based on business value.",
+      hints: [
+        "p < 0.05 with 100M users can detect a 0.001% change — statistically significant but practically negligible.",
+        "Always report both p-value (statistical significance) AND effect size (practical significance).",
+      ],
+    },
+    {
+      id: "q-msd-kp5-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "You are performing neural architecture search (NAS) to optimize a model for both accuracy and inference latency on a mobile device. Which multi-objective optimization approach correctly handles this?",
+      options: [
+        "Optimize accuracy first, then apply post-training quantization to meet latency.",
+        "Use a Pareto-optimal search: identify the set of architectures where no architecture dominates another in both accuracy and latency, then select the Pareto-optimal architecture matching your latency budget.",
+        "Use a weighted sum: loss = accuracy + λ × latency. Tune λ on the validation set.",
+        "Maximize accuracy subject to a hard latency constraint using constrained optimization.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Multi-objective NAS requires finding the Pareto frontier — the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing λ a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
+      hints: [
+        "Pareto frontier: a point is Pareto-optimal if no other point improves one objective without worsening another.",
+        "MobileNetV3 and EfficientNet were found via NAS with latency-accuracy multi-objective optimization.",
+      ],
+    },
+    {
       id: "q-msd-kp5-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -293,6 +568,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "training-pipeline-design": [
+    {
+      id: "q-msd-kp6-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In a distributed training job, what is the key difference between data parallelism and model parallelism?",
+      options: [
+        "Data parallelism splits the dataset across workers, each holding a full model copy. Model parallelism splits the model across workers, each holding the full dataset.",
+        "Data parallelism is used for large datasets; model parallelism is used for small datasets.",
+        "Data parallelism runs on CPUs; model parallelism runs on GPUs.",
+        "Data parallelism requires synchronous gradient updates; model parallelism does not.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Data parallelism: each GPU worker holds a full copy of the model and processes a different mini-batch; gradients are averaged across workers (AllReduce). Effective when the model fits in one GPU. Model parallelism: the model is split across GPUs (different layers or tensor shards on different devices); each GPU processes the full batch through its partition. Required when the model is too large to fit on one GPU (e.g., LLMs with billions of parameters).",
+      hints: [
+        "Data parallel: N GPUs each run the full 10B model on different data → N× throughput.",
+        "Model parallel: the 140 GB LLM is split across 4× 40 GB GPUs — each GPU holds a part of the model.",
+      ],
+    },
+    {
+      id: "q-msd-kp6-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Using a larger batch size in distributed training always improves model accuracy because more samples are used per gradient update.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Large batch sizes can hurt generalization. Small-batch SGD converges to sharper minima with poor generalization; large-batch training converges faster but often to sharp minima that generalize poorly ('generalization gap'). The linear scaling rule (scale learning rate proportionally with batch size) partially mitigates this but has limits. Learning rate warmup, gradient clipping, and careful batch size selection are required to achieve good accuracy with large batches.",
+      hints: [
+        "A batch size of 32K may train 10× faster than 32 but often achieves 1-2% lower accuracy without careful tuning.",
+        "The 'generalization gap' in large-batch training is well-documented: Keskar et al. 2017 showed large batches converge to sharp minima.",
+      ],
+    },
+    {
+      id: "q-msd-kp6-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A training pipeline uses a rolling window: always train on the most recent 90 days of data, retrain weekly. After 6 months, a performance investigation shows the model systematically underperforms on weekends vs. weekdays. What is the most likely pipeline design flaw?",
+      options: [
+        "The model architecture is too simple to capture weekend patterns.",
+        "The training data is temporally biased: the rolling window cutoff lands mid-week, and the most recent weekend data is always excluded from the most recent batches, causing the model to see proportionally less weekend data.",
+        "Weekend traffic has higher latency, causing timeouts during inference.",
+        "The feature engineering is wrong — day-of-week features are being incorrectly computed.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Rolling window pipelines with fixed weekly retraining schedules can introduce systematic temporal imbalance: if the pipeline runs every Monday using the past 90 days, Saturday and Sunday data from the most recent weekend are always at the tail of the window. Combined with recency weighting or time-decay in the training objective, weekend data receives less weight. The fix is to verify the temporal distribution of training data by day-of-week and ensure the window includes equal representation.",
+      hints: [
+        "Always audit training data distribution by temporal slices (day of week, hour of day, month) when model performance varies by time.",
+        "If the model is retrained every Monday on 90 days ending Sunday, the most recent data always skews toward weekdays.",
+      ],
+    },
     {
       id: "q-msd-kp6-1",
       type: "multiple-choice",
@@ -352,6 +682,61 @@ const questions: Record<string, Question[]> = {
 
   "serving-design": [
     {
+      id: "q-msd-kp7-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the purpose of model shadow deployment (shadow mode) before a full production rollout?",
+      options: [
+        "To reduce serving costs by running the new model on only 10% of traffic.",
+        "To route all production traffic to both the old and new model simultaneously, log the new model\'s outputs for comparison, but only serve the old model\'s response to users — allowing validation without user impact.",
+        "To test the model on synthetic traffic before any real users are exposed.",
+        "To A/B test two models by splitting user traffic between them.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Shadow deployment mirrors all production traffic to the new model but discards its response — users always receive the old model\'s output. This validates that the new model produces correct outputs, meets latency SLOs under real traffic patterns, handles edge cases, and does not crash — all without any risk to users. Only after shadow validation passes is the model promoted to canary or A/B testing.",
+      hints: [
+        "Shadow mode: both models run, old model serves. A/B test: different users get different models.",
+        "Shadow deployment is the safest validation step: zero user impact, full real-traffic validation.",
+      ],
+    },
+    {
+      id: "q-msd-kp7-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "INT8 quantization of a neural network always degrades model accuracy compared to FP32, making it unsuitable for production serving.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Post-training INT8 quantization often achieves accuracy within 0.5-1% of FP32 on most tasks while reducing model size by 4× and inference latency by 2-4×. Quantization-aware training (QAT) further closes the accuracy gap. For well-calibrated models on tasks like image classification, speech recognition, and NLP classification, INT8 is routinely used in production (e.g., TensorRT, OpenVINO deployments). Accuracy loss only becomes significant for tasks requiring fine-grained numerical precision.",
+      hints: [
+        "BERT-base with INT8 quantization achieves within 1% of FP32 on GLUE while being 2× faster.",
+        "Quantization-aware training (QAT) simulates quantization during training, reducing the accuracy gap further.",
+      ],
+    },
+    {
+      id: "q-msd-kp7-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A recommendation serving system processes requests with a two-stage pipeline: ANN retrieval (5 ms) → feature fetch (10 ms) → reranking model (20 ms) → post-processing (2 ms). The p99 end-to-end latency is 80 ms. Which optimization gives the largest gain?",
+      options: [
+        "Optimize the ANN retrieval step from 5 ms to 3 ms.",
+        "Parallelize feature fetch and early processing steps that do not depend on each other; pipeline ANN retrieval output into feature fetch to overlap I/O and compute.",
+        "Replace the reranking model with a faster model that increases latency from 20 ms to 15 ms.",
+        "Remove the post-processing step (2 ms savings).",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The total sequential latency is 5+10+20+2=37 ms but p99 is 80 ms — indicating tail latency from I/O and queuing. Parallelizing independent steps (e.g., fetching user features and item features in parallel during feature fetch; starting feature pre-fetch during ANN retrieval) eliminates serial waits. This is the highest-leverage optimization: cutting 10 ms of serial I/O by parallelizing can halve end-to-end p99. Optimizing the already-fast 5 ms or 2 ms steps yields minimal gain.",
+      hints: [
+        "Amdahl\'s Law: speed up the slowest sequential step. Feature fetch and reranking dominate.",
+        "I/O-bound steps (feature fetch from Redis) can be parallelized — fire all requests simultaneously instead of sequentially.",
+      ],
+    },
+    {
       id: "q-msd-kp7-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -409,6 +794,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "recommendation-design": [
+    {
+      id: "q-msd-kp8-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A new user signs up for a music streaming app and has no listening history. Which strategy best addresses the cold start problem for recommendations?",
+      options: [
+        "Show an empty recommendations page until the user has listened to 10 songs.",
+        "Ask the user to select 3-5 favorite artists or genres during onboarding, then recommend based on collaborative filtering from similar users who share those preferences.",
+        "Recommend only the globally most popular songs to every new user.",
+        "Wait 24 hours and then start collecting implicit signals.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The cold start problem (no user history) is best addressed by explicit preference elicitation (onboarding survey) combined with collaborative filtering: find users with similar stated preferences and use their listening history to bootstrap recommendations. Pure popularity-based recommendations (option C) are simple but miss personalization. Hybrid approaches layer popularity as a fallback with collaborative filtering as history accumulates.",
+      hints: [
+        "Cold start = no user history. Solutions: ask the user, use popularity, or use demographic similarity.",
+        "Even 3 stated artist preferences dramatically narrows the recommendation space and enables collaborative filtering.",
+      ],
+    },
+    {
+      id: "q-msd-kp8-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Item-to-item collaborative filtering (recommending items similar to what the user last interacted with) inherently suffers from filter bubble effects that user-to-user collaborative filtering does not.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Both item-to-item and user-to-user collaborative filtering can cause filter bubbles. Item-to-item tends to recommend similar items (e.g., more of the same genre), narrowing diversity. User-to-user can equally narrow recommendations if similar users share the same homogeneous taste. The filter bubble is a property of the feedback loop architecture and optimization objective, not just the CF variant. Diversity-promoting objectives (MMR, DPP) and explicit exploration mechanisms address filter bubbles in both approaches.",
+      hints: [
+        "Filter bubble = the system only shows content similar to past behavior, narrowing exposure over time.",
+        "Both CF variants create echo chambers if they purely optimize for similarity without diversity objectives.",
+      ],
+    },
+    {
+      id: "q-msd-kp8-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "You are designing an embedding-based retrieval system for 1 billion items. User and item embeddings are 128-dimensional float32. Which ANN index structure and tradeoff is most appropriate for this scale?",
+      options: [
+        "Flat (exhaustive) search index — guarantees exact nearest neighbors at any scale.",
+        "HNSW (Hierarchical Navigable Small World) index with ef_construction=200 and ef=100 at query time: sub-linear query time O(log n), 95%+ recall@10, ~64 GB memory for 1B 128-dim vectors at compressed precision.",
+        "LSH (Locality-Sensitive Hashing) with 64 hash tables — low memory, fast queries.",
+        "Product quantization (PQ) without any graph index — minimal memory, acceptable recall.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "At 1B items, HNSW provides the best recall-latency tradeoff: O(log n) query complexity, >95% recall@10 with appropriate ef settings. Memory: 1B × 128 × 4 bytes = 512 GB (FP32); with PQ compression or FP16 → 128-256 GB, achievable on a GPU cluster. Flat search at 1B items is infeasible (O(n) = 1B dot products per query). LSH has lower recall than HNSW. FAISS IVF+PQ is an alternative. HNSW is the industry standard (used in Spotify ANN, Weaviate, Qdrant).",
+      hints: [
+        "1B × 128 × 4 bytes = 512 GB. FP16 halves this to 256 GB — across multiple nodes.",
+        "HNSW: query time O(log n) with 95%+ recall. Flat: O(n) with 100% recall. HNSW wins at 1B items.",
+      ],
+    },
     {
       id: "q-msd-kp8-1",
       type: "multiple-choice",

@@ -8,19 +8,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In scaled dot-product attention, queries Q, keys K, and values V all have dimension d_k. If d_k = 64, what is the scaling factor applied before softmax, and why is it needed?",
+        "In scaled dot-product attention with query and key dimension $d_k$, the model computes $\\mathbf{A} = \\text{softmax}\\!\\left(\\frac{\\mathbf{Q}\\mathbf{K}^\\top}{\\sqrt{d_k}}\\right) \\in \\mathbb{R}^{n \\times n}$. If $d_k = 64$, what is the scaling factor and why is it needed?",
       options: [
-        "Scale by 64 to normalize the softmax output to sum to 1",
-        "Scale by √64 = 8 to keep Var(q·k) = 1 when q and k have unit-variance components, preventing softmax saturation",
-        "Scale by 1/64 to match the scale of the value vectors",
-        "No scaling is needed; the softmax handles normalization automatically",
+        "Scale by $d_k = 64$ to ensure each attention row sums to 1",
+        "Scale by $\\sqrt{d_k} = 8$ to keep $\\mathbb{V}\\text{ar}(\\mathbf{q}\\cdot\\mathbf{k}) = 1$ for unit-variance $\\mathbf{q}, \\mathbf{k}$, preventing softmax saturation",
+        "Scale by $1/d_k = 1/64$ to match the magnitude of value vectors",
+        "No scaling is needed; softmax normalises the output automatically",
       ],
       correctAnswer: 1,
       explanation:
-        "As noted in d2l.ai §11.3.1, if q and k each have d_k independent components with mean 0 and variance 1, then Var(q·k) = d_k. Dividing by √d_k normalizes this variance to 1, keeping softmax inputs in a gradient-friendly range.",
+        "If $\\mathbf{q}, \\mathbf{k} \\in \\mathbb{R}^{d_k}$ have independent components with mean 0 and variance 1, then:\n\\[\\mathbb{V}\\text{ar}(\\mathbf{q}\\cdot\\mathbf{k}) = \\mathbb{V}\\text{ar}\\!\\left(\\sum_{i=1}^{d_k} q_i k_i\\right) = \\sum_{i=1}^{d_k} \\mathbb{V}\\text{ar}(q_i k_i) = \\sum_{i=1}^{d_k} 1 \\cdot 1 = d_k.\\]\nFor $d_k = 64$, the dot product variance is 64, so $\\mathbf{q}\\cdot\\mathbf{k} \\sim \\mathcal{N}(0, 64)$. Large logits push softmax into saturation (near one-hot output with near-zero gradients). Dividing by $\\sqrt{d_k} = 8$ scales the variance to 1, keeping softmax in a gradient-friendly regime.\n\nAs d2l.ai §11.3.1 notes: the $\\sqrt{d_k}$ factor prevents the softmax function from entering regions where gradients vanish.",
       hints: [
-        "For d_k components each with variance 1, the dot product variance is d_k — not 1.",
-        "When softmax inputs are very large, gradients vanish; √d_k scaling prevents this.",
+        "Step 1: $\\mathbb{V}\\text{ar}(q_i k_i) = \\mathbb{V}\\text{ar}(q_i) \\cdot \\mathbb{V}\\text{ar}(k_i) = 1 \\cdot 1 = 1$ (for independent unit-variance entries).\nStep 2: $\\mathbb{V}\\text{ar}(\\sum_i q_i k_i) = \\sum_i \\mathbb{V}\\text{ar}(q_i k_i) = d_k$.\nStep 3: To restore variance 1, divide by $\\sqrt{d_k}$.",
+        "At saturation: softmax$(\\text{large value}) \\approx$ one-hot $\\Rightarrow$ gradient $\\approx 0$. The $\\sqrt{d_k}$ scaling prevents reaching this regime.",
       ],
     },
     {
@@ -28,19 +28,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Self-attention computes attention weights α_{ij} = softmax(q_i · k_j / √d_k). For a sequence of length n = 512 with d_k = 64, how many scalar dot products must be computed to fill the full n×n attention score matrix?",
+        "Self-attention computes attention weights $\\alpha_{ij} = \\text{softmax}_{j}\\!\\left(\\frac{\\mathbf{q}_i \\cdot \\mathbf{k}_j}{\\sqrt{d_k}}\\right)$ for all pairs $(i, j)$ where $1 \\leq i, j \\leq n$. For a sequence of length $n = 512$ with $d_k = 64$, how many scalar dot products are needed to fill the full $n \\times n$ attention score matrix?",
       options: [
-        "512 × 64 = 32,768",
-        "512 × 512 = 262,144",
-        "512 × 512 × 64 = 16,777,216",
-        "64 × 64 = 4,096",
+        "$n \\times d_k = 512 \\times 64 = 32{,}768$",
+        "$n \\times n = 512 \\times 512 = 262{,}144$",
+        "$n \\times n \\times d_k = 512 \\times 512 \\times 64 = 16{,}777{,}216$",
+        "$d_k \\times d_k = 64 \\times 64 = 4{,}096$",
       ],
       correctAnswer: 1,
       explanation:
-        "As d2l.ai §11.6.2 notes in its comparison table, self-attention has O(n²·d) computational complexity and O(n²) memory complexity — for n = 512, the attention matrix alone has 262,144 entries, each requiring a d_k-dimensional dot product.",
+        "The full attention score matrix $\\mathbf{S} \\in \\mathbb{R}^{n \\times n}$ has one entry for every ordered pair $(i, j)$ of positions. Computing each entry requires one dot product of two $d_k$-dimensional vectors:\n\\[S_{ij} = \\mathbf{q}_i \\cdot \\mathbf{k}_j = \\sum_{t=1}^{d_k} q_{it} k_{jt}.\\]\nEach dot product involves $d_k$ multiply-add operations, but the question asks for the number of **scalar dot products** (the number of $(i, j)$ pairs, i.e., the number of entries in the matrix).\n\nAs d2l.ai §11.6.2 notes, self-attention has $\\mathcal{O}(n^2 \\cdot d_k)$ computational complexity and $\\mathcal{O}(n^2)$ memory complexity. For $n = 512$: the attention matrix alone stores $262{,}144$ entries, requiring $262{,}144 \\times 64 \\approx 16.8$ million scalar operations for the full matrix multiplication $\\mathbf{Q}\\mathbf{K}^\\top$.",
       hints: [
-        "Every query position attends to every key position — an n×n grid of scores.",
-        "O(n²) attention matrix size is the core scalability challenge for long sequences.",
+        "The attention score matrix $\\mathbf{S} = \\mathbf{Q}\\mathbf{K}^\\top$ has shape $(n, n)$. Each entry $S_{ij}$ is one dot product — so there are $n^2$ entries and $n^2$ dot products.",
+        "Memory for $\\mathbf{S}$: storing all $n^2$ entries. At FP16 (2 bytes/entry), $512^2 \\times 2 \\approx 0.5$ MB per attention layer. For 12 layers: $\\approx 6$ MB just for attention matrices.",
+        "The $\\mathcal{O}(n^2)$ memory is the core bottleneck for long sequences — this motivated FlashAttention (which avoids materialising the full matrix in HBM).",
       ],
     },
     {
@@ -65,19 +66,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A transformer uses d_model = 512 with h = 8 attention heads. What is the dimension d_k of each head\'s Q, K, V projections, and why does multi-head attention keep total compute comparable to single-head attention?",
+        "A transformer uses $d_\\text{model} = 512$ with $h = 8$ attention heads. Each head projects to $d_k = d_\\text{model}/h = 64$ dimensions for queries and keys, and $d_v = 64$ for values. What is the key reason multi-head attention keeps total compute comparable to single-head attention of dimension 512?",
       options: [
-        "d_k = 512; total compute is 8× more because there are 8 heads",
-        "d_k = 512/8 = 64; total compute is comparable because h heads of dimension d_model/h ≈ 1 head of dimension d_model",
-        "d_k = 8; the heads use very small projections to save compute",
-        "d_k = 512; heads share weights so compute does not increase",
+        "$d_k = 512$; total compute is 8× higher than single-head because 8 heads run in parallel",
+        "$d_k = 512/8 = 64$; total compute is comparable because $h$ heads of dimension $d_\\text{model}/h$ each require $\\mathcal{O}(n^2 \\cdot d_\\text{model}/h)$ FLOPs, giving total $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ — same as single-head",
+        "$d_k = 8$; heads use tiny projections, making compute negligible",
+        "$d_k = 512$; all heads share the same $\\mathbf{W}^Q, \\mathbf{W}^K, \\mathbf{W}^V$ matrices",
       ],
       correctAnswer: 1,
       explanation:
-        'As specified in "Attention is All You Need" (reflected in d2l.ai §11.5), each head uses d_k = d_model/h = 64. Total compute is h × O(d_k) ≈ O(d_model) — the heads reduce dimension proportionally, so 8 heads × 64-dim ≈ 1 head × 512-dim in FLOPs.',
+        "Each head $i$ performs attention in a $d_k$-dimensional subspace:\n\\[\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^Q, \\mathbf{K}\\mathbf{W}_i^K, \\mathbf{V}\\mathbf{W}_i^V\\right),\\]\nrequiring $\\mathcal{O}(n^2 \\cdot d_k)$ FLOPs. With $h$ heads in parallel:\n\\[\\text{total FLOPs} = h \\times \\mathcal{O}(n^2 \\cdot d_k) = \\mathcal{O}\\bigl(n^2 \\cdot \\underbrace{h \\cdot d_k}_{=d_\\text{model}}\\bigr) = \\mathcal{O}(n^2 \\cdot d_\\text{model}).\\]\nAs \"Attention is All You Need\" specifies (d2l.ai §11.5), this equals the FLOPs of a single attention head with dimension $d_\\text{model}$ — the per-head dimension reduction exactly compensates for having $h$ heads. Total projection parameters: $h \\times (d_\\text{model} \\times d_k) = d_\\text{model} \\times (h \\cdot d_k) = d_\\text{model}^2$ — same as single-head.",
       hints: [
-        "Total query/key/value parameter count: h × (d_model × d_k) = d_model × d_model — same as single-head.",
-        "The dimension reduction compensates exactly for the increased number of heads.",
+        "Compute per head: $\\mathcal{O}(n^2 \\cdot d_k)$. With $h$ heads: $h \\times \\mathcal{O}(n^2 \\cdot d_k) = \\mathcal{O}(n^2 \\cdot d_\\text{model})$.",
+        "Parameter count: each head needs $\\mathbf{W}_i^Q, \\mathbf{W}_i^K, \\mathbf{W}_i^V \\in \\mathbb{R}^{d_\\text{model} \\times d_k}$. Total: $3h d_\\text{model} d_k = 3 d_\\text{model}^2$ — same as 3 $d_\\text{model} \\times d_\\text{model}$ projections for single-head.",
+        "The representational benefit of multiple heads is \"free\" in terms of compute — the dimension reduction exactly cancels the multiplicity.",
       ],
     },
     {

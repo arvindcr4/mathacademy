@@ -1697,6 +1697,492 @@ const questions: Record<string, Question[]> = {
       ],
     },
   ],
+
+  "multi-step-methods": [
+    {
+      id: "q-rl-kp36-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "In n-step TD learning, increasing n generally increases the variance but decreases the bias of the value estimate. Why?",
+      options: [
+        "Higher n means more parameters to estimate, introducing variance.",
+        "Higher n returns include more actual rewards and fewer bootstrapped estimates, reducing the systematic error (bias) from approximation, but accumulating more stochastic reward terms increases variance.",
+        "Increasing n always improves accuracy since we see more of the future.",
+        "Higher n reduces variance because averaging over longer sequences is more stable.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The bias-variance trade-off in n-step TD: 1-step TD has high bias (bootstraps immediately from a potentially inaccurate value estimate) but low variance (only one stochastic reward). MC (n = episode length) has zero bias (uses actual returns) but high variance (accumulates all stochastic rewards). n-step TD interpolates — increasing n shifts toward MC properties: less bias, more variance. The optimal n balances both, typically in the range 4-32 depending on the environment.",
+      hints: [
+        "Think of it as: TD(0) trusts the value function more; MC trusts the data more.",
+        "At n=1: mostly bias; at n=infinity (MC): mostly variance. The bias-variance trade-off applies across the spectrum.",
+      ],
+    },
+    {
+      id: "q-rl-kp36-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "n-step Tree Backup extends n-step TD to off-policy learning without importance sampling weights. How does it achieve this?",
+      options: [
+        "It uses a different discount factor for off-policy corrections.",
+        "It weights each step by the probability of taking the greedy action under the current policy (π(a|s) instead of μ(a|s)/π(a|s) importance sampling), effectively averaging over all non-selected actions at each step while following the tree of full policy probabilities.",
+        "It simply ignores the behavior policy and reuses on-policy updates.",
+        "It corrects for the behavior policy by dividing each reward by the behavior probability.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Tree Backup eliminates importance sampling by considering the full distribution under the current policy: at each step, it weights the contribution by the probability the current policy would select the taken action, and adds terms for all non-taken actions weighted by their policy probabilities. This creates a consistent off-policy update that is bounded (no unbounded IS ratios) but may be less efficient when the behavior and target policies differ substantially.",
+    },
+    {
+      id: "q-rl-kp36-3",
+      type: "true-false",
+      difficulty: "intermediate",
+      question:
+        "Q(sigma) is a unifying algorithm that generalizes between TD(0), Expected Sarsa, and n-step Tree Backup by using a parameter sigma that controls how much sampling versus expectation is used at each step.",
+      correctAnswer: "True",
+      explanation:
+        "Q(sigma) (Asis et al., 2017) introduces a per-step parameter σ ∈ [0,1]: σ=1 corresponds to full sampling (like Sarsa), σ=0 corresponds to pure expectation (like Expected Sarsa/Tree Backup). At different σ values for each step, Q(sigma) subsumes n-step Sarsa (all σ=1), n-step Expected Sarsa (all σ=0), and intermediate algorithms. This provides a principled framework for understanding and designing n-step methods.",
+    },
+  ],
+
+  "function-approximation-rl": [
+    {
+      id: "q-rl-kp37-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the deadly triad in reinforcement learning, and why does it cause instability?",
+      options: [
+        "The combination of large learning rates, small batch sizes, and deep networks.",
+        "The combination of function approximation, bootstrapping (TD updates), and off-policy training — these three together can cause divergence of value function estimates in tabular settings that are otherwise stable.",
+        "The combination of exploration, exploitation, and reward shaping.",
+        "The interaction between actor networks, critic networks, and experience replay.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The deadly triad (Sutton & Barto): (1) function approximation (generalizing across states); (2) bootstrapping (using estimates to update estimates, as in TD); (3) off-policy training (learning about a different policy than behavior). Each alone is manageable; together they can cause divergence. DQN avoids this partially through target networks (reducing the circular dependency of bootstrapping on rapidly changing estimates) and experience replay (reducing correlation that amplifies off-policy divergence).",
+      hints: [
+        "Tabular RL + bootstrapping + off-policy is stable; add function approximation and it can diverge.",
+        "DQN mitigations: target network reduces bootstrapping instability; replay buffer reduces off-policy correlation.",
+      ],
+    },
+    {
+      id: "q-rl-kp37-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Semi-gradient TD methods update the weights in the direction that reduces the TD error on the current estimate, but not in the direction that would also account for the change in the target. Why does this matter?",
+      options: [
+        "Semi-gradient methods have slower convergence but the same fixed points as full gradient methods.",
+        "Semi-gradient methods converge to the TD fixed point rather than the true gradient of a well-defined loss function; this means they may not minimize any single objective and can diverge with non-linear function approximation, unlike true stochastic gradient methods which always minimize their target loss.",
+        "The missing gradient term only affects learning rates and can be compensated by choosing alpha more carefully.",
+        "Semi-gradient and full gradient methods are equivalent for linear function approximation.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In semi-gradient TD, the target (bootstrap target) is treated as fixed when computing the gradient: ∇w(target - w^T x)^2 only differentiates through w in the prediction, not the target. Full gradient methods differentiate through both. The consequence: semi-gradient TD converges to the TD fixed point (which minimizes a projected Bellman error), not the minimum of mean squared value error. This fixed point exists and is stable for linear approximation but can diverge for nonlinear approximation.",
+    },
+    {
+      id: "q-rl-kp37-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Tile coding is a form of linear function approximation where the state space is covered by overlapping grids (tilings), and the feature vector has a 1 for each tile containing the current state.",
+      correctAnswer: "True",
+      explanation:
+        "Tile coding (CMAC): multiple offset grids (tilings) partition the state space. For each tiling, exactly one tile is active (value 1); all others are 0. The complete feature vector has (num_tilings × tiles_per_tiling) binary features. Linear function approximation with this binary feature vector can represent non-linear value functions because different tilings overlap differently, capturing interactions between state dimensions. It is fast (only active tiles need updating) and proven effective in classical RL benchmarks.",
+    },
+  ],
+
+  "policy-gradient-theory": [
+    {
+      id: "q-rl-kp38-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "The policy gradient theorem states that ∇J(θ) ∝ Σ_s μ(s) Σ_a Q^π(s,a) ∇π(a|s,θ). Why is this result significant?",
+      options: [
+        "It shows that the gradient of return can be computed without knowing the environment dynamics.",
+        "It proves that all policy gradient algorithms converge to global optima.",
+        "It shows that policy gradients are equivalent to value-based methods.",
+        "It provides an exact formula that can be computed in closed form.",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The policy gradient theorem is significant because it expresses the gradient of expected return as a computable expectation under the on-policy distribution μ(s), without requiring knowledge of transition probabilities or their derivatives. This is non-obvious: the return depends on the state distribution, which changes with the policy, yet the theorem shows the gradient of the state distribution does not appear in the formula. This makes policy gradient methods model-free and directly applicable via Monte Carlo sampling.",
+    },
+    {
+      id: "q-rl-kp38-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "REINFORCE with a baseline b(s) uses the update ∇θ J ≈ (Gₜ - b(Sₜ)) ∇θ log π(Aₜ|Sₜ,θ). Why does subtracting a baseline reduce variance without introducing bias?",
+      options: [
+        "The baseline shifts all rewards, reducing their magnitude and thus the gradient variance.",
+        "Any state-dependent baseline b(Sₜ) has zero expected contribution to the gradient (E[b(Sₜ)∇θ log π(Aₜ|Sₜ,θ)] = 0 because Σ_a π(a|s)∇log π(a|s) = ∇Σ_a π(a|s) = ∇1 = 0), so the expectation is preserved while variance can be reduced by choosing b wisely.",
+        "The baseline introduces a slight bias that is outweighed by the variance reduction.",
+        "The baseline rescales the learning rate, indirectly reducing variance.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The key identity: Σ_a π(a|s) ∇log π(a|s) = Σ_a ∇π(a|s) = ∇Σ_a π(a|s) = ∇1 = 0. Therefore E_a[b(s) ∇log π(a|s,θ)] = b(s) × 0 = 0 for any state-dependent baseline. Since the baseline contributes zero in expectation, it cannot introduce bias; yet choosing b(s) close to E[Gₜ|Sₜ=s] (the value function) centers the updates near zero, dramatically reducing variance. This is why actor-critic methods using V(s) as a baseline are so effective.",
+    },
+    {
+      id: "q-rl-kp38-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Trust Region Policy Optimization (TRPO) constrains policy updates to a trust region defined by a maximum KL divergence between the old and new policy to prevent destructive large policy updates.",
+      correctAnswer: "True",
+      explanation:
+        "TRPO's insight: gradient ascent on expected return can take steps that catastrophically degrade the policy when the linear approximation breaks down far from the current policy. TRPO adds a hard constraint: D_KL(π_old || π_new) ≤ δ. This trust region ensures the new policy is close enough to the old policy that the linear/quadratic approximation remains valid. PPO approximates this constraint with a clipped objective, achieving similar stability with simpler first-order optimization.",
+    },
+  ],
+
+  "model-based-rl": [
+    {
+      id: "q-rl-kp39-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the Dyna architecture in model-based RL, and how does it combine real and simulated experience?",
+      options: [
+        "Dyna trains separate models for real and simulated environments and selects the better performing one.",
+        "Dyna augments direct RL (learning from real experience) with planning steps: after each real interaction, the learned environment model generates k simulated experiences that are added to the replay buffer, improving sample efficiency by extracting more value from each real interaction.",
+        "Dyna is a policy gradient method that uses a dynamic programming baseline.",
+        "Dyna replaces real environment interaction entirely with model-based simulation.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Dyna (Sutton, 1990) integrates three components: (1) direct RL from real experience; (2) model learning (fitting a transition model from real data); (3) planning (simulated experience from the model to update value estimates). After each real step, k planning steps are performed using the model. This dramatically improves sample efficiency: with an accurate model, each real interaction generates k+1 effective updates. The challenge is model errors compounding over long rollouts, motivating short simulated trajectories.",
+      hints: [
+        "Dyna-Q: tabular Q-learning + tabular model + planning Q-updates from simulated transitions.",
+        "Modern variants (World Models, Dreamer) use neural network models for the same purpose.",
+      ],
+    },
+    {
+      id: "q-rl-kp39-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Model-based RL can suffer from model exploitation: the agent learns to exploit errors in the learned model to achieve artificially high simulated returns. What architectures mitigate this problem?",
+      options: [
+        "Use a higher learning rate for the model to make it more accurate faster.",
+        "Ensemble models with uncertainty estimation (MBPO, PETS): use the disagreement between ensemble members as a proxy for model uncertainty, and either avoid high-uncertainty regions during planning or add an uncertainty penalty to the simulated reward to discourage exploitation of model errors.",
+        "Train the model on the agent's imagined states rather than real states.",
+        "Use a separate environment for model validation and planning.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Model exploitation (model overestimation) occurs when the policy finds regions where the model predicts high reward but the real environment does not. Mitigations: (1) ensemble disagreement as uncertainty signal — high disagreement indicates unreliable model regions; (2) pessimistic planning (MOPO) — subtract uncertainty penalty from simulated rewards; (3) short rollouts — limit planning horizon to where model errors are small; (4) offline RL with conservative policies — avoid OOD states where the model is unreliable.",
+    },
+    {
+      id: "q-rl-kp39-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In model-based RL, learning a world model that predicts next state and reward from current state and action allows the agent to plan without interacting with the real environment, improving sample efficiency.",
+      correctAnswer: "True",
+      explanation:
+        "World models are the core of model-based RL: with an accurate model P(s'|s,a) and R(s,a), the agent can simulate rollouts to evaluate policies, perform planning (MPC, tree search), or augment replay with synthetic data. This improves sample efficiency by reducing reliance on expensive real-world interactions. The trade-off is model learning cost and error propagation during rollouts. In robotics and scientific domains where real interactions are expensive or dangerous, model-based RL is often essential.",
+    },
+  ],
+
+  "exploration-strategies": [
+    {
+      id: "q-rl-kp40-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is the exploration-exploitation dilemma in RL, and how does epsilon-greedy address it?",
+      options: [
+        "The dilemma of choosing between different reward functions during training.",
+        "The agent must balance exploiting current knowledge (taking actions known to be good) against exploring to discover potentially better actions; epsilon-greedy takes the greedy action with probability 1-epsilon and a random action with probability epsilon, maintaining exploration throughout training.",
+        "The dilemma of whether to use on-policy or off-policy learning.",
+        "The trade-off between model accuracy and computational efficiency.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The exploration-exploitation dilemma is fundamental: a purely greedy agent gets stuck in local optima by never trying unknown actions; a purely random agent never learns to use good actions. Epsilon-greedy is the simplest solution: with probability epsilon, act randomly (explore); otherwise act greedily (exploit). Decaying epsilon-greedy (high epsilon early, low epsilon late) starts with broad exploration and narrows to exploitation as the policy matures. This is computationally trivial and often surprisingly effective.",
+      hints: [
+        "Pure exploitation: agent never discovers better actions. Pure exploration: agent never commits to good actions.",
+        "Epsilon annealing schedule: epsilon_t = max(epsilon_min, epsilon_0 * decay^t).",
+      ],
+    },
+    {
+      id: "q-rl-kp40-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Intrinsic motivation methods for exploration assign reward bonuses based on state novelty or prediction error. What is the key advantage over epsilon-greedy in sparse-reward environments?",
+      options: [
+        "Intrinsic motivation is computationally cheaper than epsilon-greedy.",
+        "In environments with sparse external rewards (e.g., Montezuma's Revenge), epsilon-greedy random exploration almost never reaches rewarding states; intrinsic motivation directs exploration toward novel or surprising states, guiding the agent toward the sparse rewards through curiosity-driven behavior rather than random chance.",
+        "Intrinsic motivation automatically tunes epsilon without manual scheduling.",
+        "Intrinsic motivation only works with model-based RL, not model-free RL.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Sparse-reward exploration crisis: in Montezuma's Revenge, random epsilon-greedy exploration almost never obtains the first reward (reaching a key requires specific sequential actions). Intrinsic reward methods: Random Network Distillation (RND) rewards prediction error on a frozen random network — novel states have high error; Count-based exploration rewards 1/sqrt(N(s)) for state visit count N(s); ICM rewards prediction error on dynamics model. These bonuses make the agent seek novel states, enabling discovery of sparse rewards that random exploration cannot reach.",
+    },
+    {
+      id: "q-rl-kp40-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Upper Confidence Bound (UCB) exploration selects actions with high estimated value OR high uncertainty (rarely tried actions), balancing exploitation and exploration in a principled way.",
+      correctAnswer: "True",
+      explanation:
+        "UCB selects: a = argmax_a [Q(a) + c√(ln(t)/N(a))], where N(a) is the count of times action a was taken and t is the total steps. The bonus c√(ln(t)/N(a)) is large for rarely taken actions, driving exploration, and shrinks as an action is tried more. UCB is optimistic in the face of uncertainty and achieves logarithmic regret in the multi-armed bandit setting — theoretically stronger than epsilon-greedy's linear exploration rate.",
+    },
+  ],
+
+  "rl-in-games": [
+    {
+      id: "q-rl-kp41-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What was the key algorithmic innovation of AlphaGo that allowed it to defeat world champion Go players?",
+      options: [
+        "A purely rule-based system with exhaustive search.",
+        "Combining Monte Carlo Tree Search (MCTS) with deep neural networks for policy (move probability) and value (win probability) estimation, with the networks trained using self-play reinforcement learning to overcome the impossibility of exhaustive search in Go's enormous state space.",
+        "A larger version of the minimax algorithm with alpha-beta pruning.",
+        "Using Q-learning to directly learn the optimal action for each board state.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "AlphaGo's key innovations: (1) a policy network (predicts likely moves, narrows search) and value network (evaluates board positions without rollouts) trained by supervised learning on human games, then improved by self-play RL; (2) MCTS guided by the policy network for candidate moves and the value network for leaf evaluation, replacing expensive random rollouts. Go has ~10^170 positions — exhaustive search is impossible. The neural networks make the search tractable by focusing on promising moves.",
+      hints: [
+        "MCTS without neural networks was already superhuman in simpler games but insufficient for Go.",
+        "AlphaZero removed the human game training, using only self-play from random play — and became even stronger.",
+      ],
+    },
+    {
+      id: "q-rl-kp41-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "AlphaZero uses a single neural network f(s) = (p, v) for both the policy and value function in MCTS. What is the advantage over AlphaGo's separate networks?",
+      options: [
+        "A single network is easier to train and deploy than two separate networks.",
+        "A shared network learns complementary representations: value and policy both benefit from the same board understanding, and training them jointly with shared lower layers allows them to reinforce each other. This eliminates the need for separate training pipelines and achieves stronger play with less compute.",
+        "A single network can be quantized more easily for faster inference.",
+        "Separate networks cause gradient conflict that degrades MCTS performance.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "AlphaZero's joint architecture: one neural network outputs both policy (move probabilities) and value (win probability). The shared body learns rich position representations useful for both tasks. Training jointly (multi-task learning) with shared gradient updates enables the policy and value heads to learn complementary features — better move prediction helps value estimation and vice versa. This also simplifies the training loop: one network, one training objective, one set of hyperparameters.",
+    },
+    {
+      id: "q-rl-kp41-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Atari games in the ALE (Arcade Learning Environment) became a standard RL benchmark because they provide diverse challenges across many games with a unified observation space (screen pixels) and action space (joystick actions).",
+      correctAnswer: "True",
+      explanation:
+        "The ALE benchmark (Bellemare et al., 2013) enabled systematic evaluation of RL algorithms across 57 diverse games using a common interface. DQN's performance across these games demonstrated that a single algorithm with the same hyperparameters could achieve human-level performance on a broad range of tasks — previously considered impossible. The benchmark enabled fair comparison across algorithms and drove rapid RL progress from 2013 to 2020.",
+    },
+  ],
+
+  "offline-rl": [
+    {
+      id: "q-rl-kp42-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is offline (batch) reinforcement learning, and what is the core challenge that distinguishes it from online RL?",
+      options: [
+        "Offline RL trains models without using neural networks, while online RL uses deep learning.",
+        "Offline RL learns a policy from a fixed dataset of previously collected interactions (without further environment access); the core challenge is distributional shift: the learned policy may take actions in states that are out-of-distribution relative to the dataset, where Q-value estimates are unreliable and optimistically extrapolated.",
+        "Offline RL is simply Q-learning applied to stored replays without exploration.",
+        "Offline RL is a technique for reducing training time by pre-computing all updates.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Offline (batch) RL has a unique challenge: no online data collection means the policy cannot correct errors by exploring. Standard off-policy methods (Q-learning) overestimate values for out-of-distribution (OOD) actions — actions not in the dataset receive arbitrarily high bootstrapped Q-values, causing the policy to greedily exploit these overestimates and fail catastrophically in deployment. Conservative methods (CQL, IQL, TD3+BC) address this by adding regularization that discourages OOD actions.",
+      hints: [
+        "Online RL can explore to correct value estimate errors; offline RL cannot.",
+        "OOD action overestimation: Q(s,a_ood) can be large because no data corrects it during training.",
+      ],
+    },
+    {
+      id: "q-rl-kp42-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Conservative Q-Learning (CQL) adds a regularization term to the standard Bellman update. What does it minimize and why does it enable safe offline learning?",
+      options: [
+        "It minimizes the KL divergence between the learned policy and the behavior policy.",
+        "CQL minimizes Q-values for actions not in the dataset while maximizing Q-values for actions that appear in the dataset. This produces a lower bound on the true Q-function, making the policy conservatively pessimistic about OOD actions rather than optimistically overestimating them.",
+        "CQL maximizes the entropy of the learned policy to maintain exploration.",
+        "CQL penalizes high-variance Q-value predictions to improve stability.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "CQL's regularization: min_θ α(E_{s~D}[log Σ_a exp(Q_θ(s,a))] - E_{(s,a)~D}[Q_θ(s,a)]) + standard Bellman loss. The first term (softmax of Q over all actions) pushes down Q-values for unseen actions; the second term (Q at data actions) pulls them up. The result is a conservative Q-function that lower bounds the true Q, ensuring the greedy policy derived from CQL Q-values is safer than one derived from a Q-function with OOD overestimation.",
+    },
+    {
+      id: "q-rl-kp42-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Offline RL datasets collected by suboptimal behavior policies (e.g., a random or mediocre agent) can still be used to train policies that outperform the behavior policy, a phenomenon called policy improvement.",
+      correctAnswer: "True",
+      explanation:
+        "Policy improvement from suboptimal data: offline RL algorithms can extract better behaviors than the data-collecting behavior policy by combining observations across many trajectories to identify which actions lead to better outcomes. For example, a dataset of medium-quality demonstrations may contain some instances where an agent accidentally took a good action sequence — offline RL can learn to replicate these better actions while avoiding bad ones seen in other trajectories. This is why offline RL is valuable for real-world settings where safe online exploration is costly.",
+    },
+  ],
+
+  "multi-agent-rl": [
+    {
+      id: "q-rl-kp43-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is non-stationarity in multi-agent reinforcement learning, and why does it make standard single-agent RL algorithms difficult to apply directly?",
+      options: [
+        "The environment reward function changes randomly over time.",
+        "Each agent's effective environment includes other agents whose policies change during training; from any single agent's perspective, the environment appears non-stationary (the same action in the same state yields different outcomes as other agents change behavior), violating the Markov property assumed by standard RL algorithms.",
+        "Training instability due to the use of neural networks with many parameters.",
+        "Different agents learning at different speeds, causing synchronization problems.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Non-stationarity: agent A learns to exploit agent B's current policy; simultaneously B learns to counter A's current policy. As both change, the environment each faces is constantly shifting. This violates the stationarity assumption of Q-learning convergence guarantees. Solutions: centralized training with decentralized execution (CTDE, e.g., MADDPG) — share information during training to stabilize learning; opponent modeling; self-play with a pool of past policies to prevent single-opponent overfitting.",
+      hints: [
+        "Coordination game: two agents need to learn to cooperate, but each changing independently may cycle.",
+        "CTDE: agents share observations during training (non-stationary), but execute independently (decentralized).",
+      ],
+    },
+    {
+      id: "q-rl-kp43-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "In competitive multi-agent settings, self-play can lead to strategy cycling (rock-paper-scissors dynamics). How does population-based training address this?",
+      options: [
+        "Population-based training selects the best agent and discards the others.",
+        "Maintaining a diverse population of agents with different strategies, and training each agent against a mixture of past and current opponents prevents overfitting to any single strategy and ensures robustness across the strategy space, avoiding the cycling that occurs when training against only the current opponent.",
+        "Population-based training averages the weights of all agents in the population.",
+        "It uses a tournament system where agents play round-robin to determine the Nash equilibrium.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Strategy cycling: if agent A trains only against agent B, A may specialize against B's current strategy, but when B adapts, A's specialization becomes a liability. Population-based training (used in AlphaStar, OpenAI Five): each agent trains against a distribution over a population of past and current opponents, creating a diverse competitive landscape. This approximates playing against the full Nash mixture, producing agents that are robustly good rather than optimally specialized against one opponent.",
+    },
+    {
+      id: "q-rl-kp43-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In cooperative multi-agent RL, credit assignment refers to the problem of determining which agent's actions contributed to a shared team reward when all agents receive the same global reward signal.",
+      correctAnswer: "True",
+      explanation:
+        "Cooperative credit assignment: with a single team reward, each agent must infer how its own actions contributed to the shared outcome — difficult when many agents act simultaneously. Solutions: counterfactual baselines (COMA: compare actual reward to reward expected if agent took a different action, holding others fixed); value decomposition (QMIX, VDN: decompose team Q-value into per-agent contributions); agent-specific reward shaping. Without credit assignment, agents may learn to free-ride on teammates or blame each other for failures.",
+    },
+  ],
+
+  "rl-for-llms": [
+    {
+      id: "q-rl-kp44-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is Reinforcement Learning from Human Feedback (RLHF), and why is it used to align large language models?",
+      options: [
+        "A technique where humans manually program reward functions for language models.",
+        "A three-stage pipeline: (1) supervised fine-tuning on demonstrations; (2) training a reward model on human preference comparisons between model outputs; (3) RL optimization (using PPO) to maximize the learned reward while penalizing divergence from the base model — enabling alignment with nuanced human preferences that cannot be specified as simple reward functions.",
+        "A method for training LLMs to play text-based games using human feedback.",
+        "A way to automatically generate training data by having humans label correct outputs.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "RLHF (Christiano et al., 2017; applied in InstructGPT): (1) SFT: fine-tune the base LLM on curated demonstrations of desired behavior; (2) reward model: train a classifier to predict human preferences between pairs of model outputs using Bradley-Terry model; (3) RL: use PPO to optimize the language model to maximize reward model score while adding a KL penalty against the SFT model (preventing reward hacking). This enables alignment with helpfulness, harmlessness, and honesty — properties hard to specify as explicit rules.",
+      hints: [
+        "The KL penalty prevents the model from finding extreme strategies that maximize reward model score but violate natural language properties.",
+        "RLHF is the core alignment technique behind ChatGPT, Claude, and Gemini.",
+      ],
+    },
+    {
+      id: "q-rl-kp44-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "Direct Preference Optimization (DPO) is proposed as an alternative to RLHF-PPO. What is its key innovation and advantage?",
+      options: [
+        "DPO trains without any human feedback, using synthetic preferences instead.",
+        "DPO reformulates the RLHF optimization problem to directly train the language model on preference data using a binary cross-entropy loss, showing that the optimal policy under the RLHF objective has a closed-form relationship to the reference policy — eliminating the need for a separate reward model and PPO training loop.",
+        "DPO uses a different form of human feedback (rankings instead of pairwise comparisons).",
+        "DPO replaces the KL penalty with a simpler L2 regularization term.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "DPO's insight: the RLHF objective's optimal solution can be expressed directly in terms of the language model's probabilities — the reward model is implicitly reparameterized by the model itself. This allows deriving a loss function on preference pairs (chosen, rejected) that directly fine-tunes the LM without RL: L_DPO = -E[log σ(β log(π_θ(y_w|x)/π_ref(y_w|x)) - β log(π_θ(y_l|x)/π_ref(y_l|x)))]. Benefits: no separate reward model, no PPO instability, simpler training, comparable or better results than RLHF-PPO.",
+    },
+    {
+      id: "q-rl-kp44-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Reward hacking in RLHF occurs when a language model learns to exploit flaws in the reward model to achieve high reward scores while producing outputs that do not satisfy the underlying human intent.",
+      correctAnswer: "True",
+      explanation:
+        "Reward hacking (Goodhart's Law applied to RLHF): the reward model is an imperfect proxy for human preferences. A sufficiently capable LLM finds inputs that score highly on the reward model but do not represent genuinely good outputs — e.g., very long but padded responses if the reward model overvalues length, or confident-sounding but incorrect answers. The KL penalty in PPO limits but does not eliminate this. Ongoing research in constitutional AI, iterative RLHF, and improved reward modeling addresses this challenge.",
+    },
+  ],
+
+  "rl-safety": [
+    {
+      id: "q-rl-kp45-1",
+      type: "multiple-choice",
+      difficulty: "intermediate",
+      question:
+        "What is safe reinforcement learning, and what types of constraints does it typically enforce?",
+      options: [
+        "RL for cybersecurity applications that protects systems from attacks.",
+        "A field of RL that trains agents to achieve objectives while satisfying safety constraints (e.g., keeping a robot's joint torques below damage thresholds, ensuring a financial agent never exceeds risk limits, preventing a vehicle from collisions) — using constrained optimization or Lyapunov-based methods rather than only maximizing reward.",
+        "RL methods that are safe to train on personal data without privacy violations.",
+        "A formal verification approach that proves RL agents are bug-free before deployment.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Safe RL formulates safety as constraints in a Constrained Markov Decision Process (CMDP): maximize E[Σγ^t R_t] subject to E[Σγ^t C_t] ≤ d (cost constraint). Approaches: Lagrangian methods (add a penalty λ × cost to the objective and optimize λ to enforce the constraint); constrained policy optimization (CPO, PCPO); control barrier functions; Lyapunov-based safety. Applications: robotic manipulation (joint limit constraints), autonomous driving (collision avoidance), finance (drawdown limits).",
+      hints: [
+        "CMDP = MDP with an additional cost function C(s,a) and constraint E[cost] ≤ threshold.",
+        "Lagrangian method: the dual variable λ is learned to enforce the constraint during training.",
+      ],
+    },
+    {
+      id: "q-rl-kp45-2",
+      type: "multiple-choice",
+      difficulty: "advanced",
+      question:
+        "An autonomous robot trained with RL must satisfy a safety constraint: joint torques must never exceed τ_max. During deployment, the policy sometimes violates this constraint by 5%. What approaches address this gap between training constraint satisfaction and deployment safety?",
+      options: [
+        "Increase the safety constraint threshold during training to add margin.",
+        "Combine multiple layers: (1) train with a conservative constraint budget (E[cost] ≤ 0.8 × d) to account for constraint satisfaction gaps; (2) add a control barrier function (CBF) safety filter at deployment that overrides the RL policy when the constraint would be violated; (3) verify safety properties using formal methods on the CBF layer. The CBF provides a hard safety guarantee independent of the RL policy's accuracy.",
+        "Run additional training iterations until the constraint is exactly satisfied.",
+        "Accept 5% violations as acceptable for a real-world robot.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Layered safety for deployment: RL with constraints is statistically safe in expectation but may violate constraints in specific states. A control barrier function (CBF) safety filter provides hard safety guarantees: it computes the minimum intervention needed to keep the system in a provably safe set, overriding the RL policy only when necessary. Training with a conservative margin (80% of the constraint budget) provides slack to accommodate model errors. This defense-in-depth approach is standard in safety-critical robotics.",
+    },
+    {
+      id: "q-rl-kp45-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Reward shaping, which adds intermediate rewards to guide exploration, can change the optimal policy if not done carefully, potentially causing the agent to learn the wrong behavior.",
+      correctAnswer: "True",
+      explanation:
+        "Naive reward shaping can cause misalignment: adding intermediate rewards for subgoals that seem helpful may inadvertently create a locally optimal policy that maximizes shaped rewards without achieving the true objective (reward hacking). Potential-based reward shaping (Ng et al., 1999) provides a safe form: adding F(s,a,s') = γΦ(s') - Φ(s) for any potential function Φ preserves the set of optimal policies. Non-potential-based shaping risks changing which policies are optimal.",
+    },
+  ],
 };
 
 registerQuestions(questions);
