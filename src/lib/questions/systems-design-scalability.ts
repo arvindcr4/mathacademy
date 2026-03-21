@@ -27,7 +27,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "A stateless service - one that stores no in-process session state - is a prerequisite for safe horizontal scaling.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Horizontal scaling routes requests across many identical instances. If session state lives in-process on one instance, a user whose next request lands on a different instance will lose their session. Stateless services store all session data externally (e.g., Redis) so any instance can serve any request. This is why statelessness is a foundational prerequisite, not merely a nice-to-have, for horizontal scaling.",
       hints: [
         "If user A's cart is in memory on server 1, what happens when the load balancer sends their next request to server 2?",
@@ -114,7 +114,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "The optimal number of concurrent worker threads for a CPU-bound task is equal to the number of CPU cores, while for an I/O-bound task it can be significantly higher than the number of cores.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "CPU-bound tasks keep the CPU fully utilized during execution. Adding more threads than cores causes context-switching overhead with no throughput gain - the bottleneck is compute. I/O-bound tasks (DB queries, HTTP calls, disk reads) spend most time waiting; during waits the CPU is idle. More threads than cores allows overlapping waits, increasing throughput. A common heuristic for I/O-bound workers: thread count = cores \times (1 + wait_time/compute_time). Thread pools like those in Node.js (async/await), Java (virtual threads), or Python (asyncio) exploit this.",
       hints: [
         "For CPU-bound: N cores doing N computations simultaneously is optimal. N+1 threads means one waits, creating overhead.",
@@ -165,7 +165,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In event sourcing, the current state of an entity is derived by replaying all events that have occurred to that entity since the beginning of time, not by storing the entity's current field values directly.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Event sourcing stores the append-only log of state-changing events (e.g., OrderPlaced, ItemAdded, OrderShipped) as the source of truth. Current state is a projection computed by replaying events. This enables full audit history, temporal queries ('what was the state at time T?'), and easy event-driven integration. The downside is replay cost for entities with long histories, which snapshots mitigate.",
       hints: [
         "Think of a bank account: instead of storing the current balance, store every debit and credit transaction - the balance is the sum.",
@@ -270,7 +270,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "The N+1 query problem occurs when an application executes one query to fetch N parent records and then issues N additional queries to fetch related child records, causing N+1 total database round-trips instead of 1 or 2.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "The N+1 problem is a common ORM anti-pattern. For example: fetch 100 blog posts (1 query), then for each post fetch its author (100 queries) = 101 total queries. The fix is eager loading: use a JOIN or an IN (...) query to fetch all related records in a single additional query. ORMs like Hibernate, ActiveRecord, and Sequelize all support eager loading (includes/preload/joinedload) to solve this. At scale, N+1 can turn a fast endpoint into a slow one - 100ms + 100\times5ms = 600ms.",
       hints: [
         "If you see a loop in code that calls a database method inside each iteration, that's the N+1 pattern.",
@@ -395,7 +395,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "An idempotent job is one that can be safely executed multiple times with the same input and will produce the same result each time, making it safe to retry on failure.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Idempotency is a critical property for jobs in distributed systems because networks fail, workers crash, and at-least-once delivery means jobs can be executed more than once. An idempotent job handles this gracefully: sending the same email twice is not idempotent (user receives duplicates), but charging a payment with a unique idempotency key is idempotent (second charge attempt returns the first result without re-charging). Design jobs to be idempotent by using idempotency keys, checking-then-acting patterns, and database upserts.",
       hints: [
         "The mathematical analog: f(f(x)) = f(x). Applying the function twice gives the same result as applying it once.",

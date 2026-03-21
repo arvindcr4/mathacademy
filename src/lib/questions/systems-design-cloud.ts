@@ -45,7 +45,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Multi-stage Docker builds reduce the final image size by allowing build tools and intermediate artifacts to be discarded, keeping only the runtime binaries in the final image.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "True. Multi-stage builds use multiple FROM instructions in a single Dockerfile. Early stages can include compilers, build tools, and test dependencies (e.g., the Go compiler, Maven, npm). The final stage copies only compiled binaries or production assets from earlier stages, discarding all build-time tooling. A Go application that needs a 800MB build environment can produce a final image of under 10MB containing only the compiled binary.",
       hints: [
         "What tools are needed to build software vs. what is needed to run it at runtime?",
@@ -190,7 +190,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "AWS Lambda pricing is based on the number of invocations plus the duration of execution measured in GB-seconds, meaning a function using 512 MB of memory for 1 second costs the same as a function using 1 GB of memory for 0.5 seconds.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "True. Lambda pricing has two components: (1) per-invocation cost ($0.20 per 1M requests) and (2) compute cost measured in GB-seconds (memory allocated \times duration in seconds). 512 MB \times 1 second = 0.5 GB-seconds. 1024 MB \times 0.5 seconds = 0.5 GB-seconds. Both cost the same in compute charges. This means allocating more memory (which speeds up CPU-bound functions) does not necessarily increase cost if execution time decreases proportionally.",
       hints: [
         "GB-seconds = memory in GB \times execution time in seconds. Calculate both scenarios.",
@@ -260,7 +260,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "AWS PrivateLink allows you to consume services hosted in another VPC or AWS service privately without the traffic traversing the public internet, even if the two VPCs have overlapping CIDR ranges.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "True. AWS PrivateLink creates an interface endpoint (an ENI in your VPC) that connects privately to a service endpoint. Traffic flows through AWS's internal network and never traverses the public internet. Unlike VPC Peering, PrivateLink works even with overlapping IP CIDR ranges because you are connecting to an endpoint, not routing between VPC CIDRs. This makes PrivateLink ideal for SaaS services, shared internal services, and AWS service endpoints (S3, DynamoDB, etc.) without requiring internet gateways.",
       hints: [
         "VPC Peering requires non-overlapping CIDR ranges because it routes IP traffic directly. Does PrivateLink have this constraint?",
@@ -405,7 +405,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Feature flags allow teams to deploy new code to production without activating the feature for users, enabling gradual rollouts to specific user segments and instant disabling without redeployment.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "True. Feature flags (also called feature toggles) decouple deployment from release. Code containing a new feature is deployed to production behind a flag. The flag can be toggled to enable the feature for a percentage of users (1% -> 10% -> 100%), specific user cohorts (beta users, internal employees), or geographic regions. If the feature causes issues, the flag is disabled instantly - no redeployment, no rollback. Services like LaunchDarkly, Unleash, or simple database-backed flags implement this pattern.",
       hints: [
         "What is the difference between 'deploying code' and 'releasing a feature' when using feature flags?",
@@ -457,7 +457,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "CloudWatch CPU and memory utilization metrics can identify over-provisioned EC2 instances, and right-sizing (moving to a smaller instance type) is often the highest-impact cloud cost optimization action.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "True. Right-sizing is frequently the highest ROI cost optimization activity. AWS studies show that 30-40% of cloud spend is wasted on over-provisioned resources. If CloudWatch shows an instance averaging 5-10% CPU utilization, it is likely over-provisioned. AWS Compute Optimizer analyzes 14 days of CloudWatch metrics and recommends right-sized instance types. Note that memory metrics require the CloudWatch Agent to be installed, as EC2 does not natively report memory utilization to CloudWatch.",
       hints: [
         "If an instance uses 5% CPU on average, what fraction of its compute resources are being wasted?",

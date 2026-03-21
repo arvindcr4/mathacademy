@@ -2259,7 +2259,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "A quantum kernel SVM (QSVM) can be implemented by computing all pairwise quantum kernel values K(xi, xj) classically once, then using a standard classical SVM solver with the pre-computed kernel matrix.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "The quantum kernel matrix K (also called the Gram matrix) is computed by running the overlap circuit for each pair (xi, xj) on quantum hardware. Once the full n\\timesn matrix is available classically, a standard SVM dual optimisation (e.g., quadratic programming with cvxopt or scikit-learn's SVC) finds the support vectors and decision boundary - no quantum computation is needed during optimisation or prediction (only during kernel evaluation).",
       hints: [
         "Quantum hardware is only used to fill the kernel matrix; the SVM training itself is classical quadratic programming.",
@@ -2328,7 +2328,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Using a local cost function (measuring only a few qubits rather than all qubits) is a strategy to mitigate barren plateaus because local costs have polynomially (not exponentially) vanishing gradients.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Cerezo et al. (2021) proved that local cost functions - where the observable acts on O(1) qubits - have gradient variance that vanishes at most polynomially with n, not exponentially, for shallow circuits. Global cost functions (e.g., fidelity to target state) are more susceptible to barren plateaus because they require coherence across all qubits.",
       hints: [
         "Local cost: measure a 2-qubit observable on qubits 1-2; this does not require quantum coherence across all n qubits.",
@@ -2397,7 +2397,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "ZNE can exactly recover the noiseless expectation value as long as the noise model is known precisely and the extrapolation is performed correctly.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "ZNE provides an estimate of the noiseless value, not an exact recovery. Extrapolation accuracy depends on: (1) the correctness of the assumed noise model (linear, polynomial, exponential), (2) the number and range of noise data points, and (3) statistical shot noise in each evaluation. For deep circuits or severe noise, the extrapolation can diverge and produce biased estimates. ZNE reduces but does not eliminate error.",
       hints: [
         "Extrapolation to zero is always uncertain - the more data points and the closer they are to zero noise, the better the estimate.",
@@ -2448,7 +2448,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Symmetry verification can only reduce errors from bit-flip noise (Pauli-X errors) and cannot mitigate phase-flip (Pauli-Z) errors because Z errors do not change measurement outcomes in the computational basis.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Symmetry verification in the computational basis checks parity of bitstring outcomes, which only detects errors that change the measured bit value (X or Y errors). Z errors introduce phase flips that do not alter computational basis measurement outcomes and therefore pass the symmetry check undetected. Additional symmetry checks in other bases (e.g., Hadamard-rotated basis) are needed to detect phase errors.",
       hints: [
         "In the computational basis, a Z error leaves |0⟩ \\to |0⟩ and |1⟩ \\to -|1⟩ - the measurement outcome is unchanged.",
@@ -2499,7 +2499,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "On NISQ devices, increasing circuit depth always improves the quality of variational quantum algorithm results because more layers enable richer representations.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "On NISQ hardware, there is an optimal circuit depth: shallow circuits lack expressibility to represent the target function, while deeper circuits accumulate noise from gate errors and decoherence, degrading the output fidelity. The optimal depth balances expressibility against noise accumulation and is device- and problem-specific. Beyond this depth, results worsen despite more layers.",
       hints: [
         "Gate error per layer: each two-qubit gate adds ~0.5% error; after 100 gates, the output fidelity has dropped to ~0.995^{100} \\approx 0.6.",
@@ -2550,7 +2550,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Grover's search algorithm provides a quadratic quantum speedup for unstructured database search, which directly translates to a quadratic speedup in training any machine learning model that uses gradient descent.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Grover's algorithm speeds up finding a specific item in an unstructured database from O(N) to O(√N). However, gradient descent training is not equivalent to unstructured search: gradients require coherent quantum access to training data (via QRAM), the objective landscape has structure exploited by gradient methods, and applying Grover to ML training requires solving multiple subtleties around quantum query complexity and data loading. No direct quadratic speedup for general gradient descent is known.",
       hints: [
         "Grover speeds up 'find the item satisfying property P' - gradient descent does not reduce to this problem structure.",
@@ -2624,7 +2624,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Hardware-efficient ansatze (HEA) are designed to reduce circuit depth and SWAP overhead on NISQ devices, but they are generally more susceptible to barren plateaus than structured chemistry-inspired ansatze (e.g., UCCSD).",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "HEA consists of layers of parameterised single-qubit rotations and fixed entangling gates arranged for hardware connectivity - they are expressive but lack physical structure. UCCSD (Unitary Coupled Cluster Singles and Doubles) is motivated by quantum chemistry; its structured, problem-specific form avoids over-parameterisation and the random 2-design behaviour that causes barren plateaus. Structure is a barren plateau mitigation strategy.",
       hints: [
         "Over-expressible ansatze approach 2-designs, causing barren plateaus; problem-structured ansatze restrict to physically relevant states.",
@@ -2675,7 +2675,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Classical kernel methods like the RBF (Radial Basis Function) kernel can always be computed exactly and in O(n) time for n-dimensional input data, giving them a practical advantage over quantum kernels that require O(n_shots) circuit evaluations per pair.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Classical RBF kernel evaluation K(x, x') = exp(-||x-x'||^2 / (2 sigma^2)) is O(d) in input dimension d, not O(n) - O(n) refers to O(d) scaling in dimension. More importantly, computing the full Gram matrix for N training points is O(N^2 d). Quantum kernels require O(N^2 * n_shots) circuit evaluations, with each evaluation potentially offering exponential feature space access - but the O(N^2) query complexity is the same.",
       hints: [
         "Classical kernel evaluation is cheap per pair but the full Gram matrix has N^2 entries - both quantum and classical kernels share this O(N^2) bottleneck.",
@@ -2708,7 +2708,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       difficulty: "easy",
       question: "For quantum ML to achieve a practical advantage over classical ML, it is generally sufficient to show that the quantum algorithm has better asymptotic complexity on some problem instance.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Practical advantage requires more than asymptotic complexity: (1) the input data must be efficiently loadable into quantum hardware (QRAM is a major bottleneck), (2) the output must be measurable without exponential sampling overhead, (3) the constant factors hidden in O() notation must be favourable for realistic hardware, and (4) the problem instances where the speedup applies must be practically relevant. Many claimed speedups evaporate under these practical constraints.",
       hints: [
         "Asymptotic speedup on paper vs. practical speedup: hardware constants, QRAM overhead, and output sampling costs all matter.",

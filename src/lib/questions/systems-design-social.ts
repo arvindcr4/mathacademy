@@ -45,7 +45,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Fan-out-on-read (pull model) always provides lower read latency than fan-out-on-write (push model) because it avoids precomputation overhead.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Fan-out-on-read actually has higher read latency because the feed must be assembled at request time by querying all accounts the user follows, then merging and ranking the results. Fan-out-on-write has lower read latency because the feed is precomputed and stored, making a read just a sequential scan of the user's timeline. The tradeoff is write amplification (fan-out-on-write) vs. read amplification (fan-out-on-read).",
       hints: [
         "With fan-out-on-read, how many DB queries does loading a feed require if a user follows 500 accounts?",
@@ -224,7 +224,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In a social search system, index rebuild latency (the delay between a user updating their profile and the change appearing in search results) is typically acceptable to be several hours because user profile changes are infrequent.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "While profile changes are less frequent than posts, several hours of latency is not acceptable for key fields. If a user changes their username or deactivates their account, stale search results for hours cause user confusion and potential privacy issues. Production social search systems use near-real-time indexing: profile update events are published to a message queue (Kafka), consumed by an indexing service, and pushed to Elasticsearch within seconds to minutes. Full re-index is only used for schema migrations; incremental updates handle routine changes with low latency.",
       hints: [
         "What happens if a user deactivates their account but still appears in search results for 6 hours?",
@@ -367,7 +367,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Stories should be displayed in engagement-ranked order (most-liked story first) rather than chronological order, because ranked feeds always improve user engagement metrics.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Stories are displayed in chronological order by default (most recent first) on major platforms including Instagram, WhatsApp, and Snapchat. The ephemeral 24-hour nature of stories makes recency the primary relevance signal — a story from 2 hours ago is inherently more relevant than one from 22 hours ago. Engagement ranking is applied to persistent feed content (posts, videos) where recency is not the dominant factor. Additionally, stories from people you interact with most frequently may be ordered higher (interaction-based ranking), but this is different from engagement-score ranking. The statement 'ranked feeds always improve engagement' is also false — ranking can harm perceived authenticity.",
       hints: [
         "Stories expire in 24 hours — does an older story (e.g., 20 hours old) benefit from being ranked higher?",

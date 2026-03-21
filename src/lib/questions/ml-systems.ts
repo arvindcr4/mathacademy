@@ -2325,7 +2325,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Model parallelism (splitting a single model across multiple GPUs) is primarily motivated by memory constraints when a model's parameters and activations exceed a single GPU's memory capacity, rather than by throughput maximization.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Data parallelism maximizes throughput by processing more data in parallel - it requires each worker to hold the full model, so it is feasible when the model fits on one GPU. Model parallelism (tensor, pipeline, or sequence) is motivated by models that do NOT fit on a single GPU: GPT-3 (175B params, ~350GB in FP16) cannot fit on one A100 (80GB VRAM). Model parallelism distributes parameters across GPUs to enable training. However, model parallelism introduces communication overhead between GPU groups, often making it less efficient per-FLOP than data parallelism when not memory-constrained.",
       hints: [
         "Rule of thumb: use data parallelism when the model fits on one GPU (throughput-optimal). Use model parallelism only when forced by memory constraints.",
@@ -2394,7 +2394,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Mixed-precision training with FP16/BF16 weights and FP32 master weights requires maintaining two copies of the model parameters in memory, effectively negating the memory savings of using FP16.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Mixed-precision training maintains: (1) FP16/BF16 working copy of weights for forward/backward (2 bytes/param), and (2) FP32 master copy for optimizer updates (4 bytes/param). Total: 6 bytes/param for weights. Compared to pure FP32 training: 4 bytes/param weights + 4 bytes/param gradients + 8 bytes/param Adam states = 16 bytes/param. Mixed precision: 2 (FP16 weights) + 4 (FP32 master) + 2 (FP16 gradients) + 8 (FP32 Adam states) = 16 bytes/param - same total! However, the benefit is in activation memory: FP16 activations are 2x smaller than FP32 activations, which dominates during training of large models with long sequences.",
       hints: [
         "The memory savings from mixed precision come primarily from FP16 activations (proportional to batch*seq*hidden), not from weights.",
@@ -2445,7 +2445,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "medium",
       question: "NVLink provides significantly higher GPU-to-GPU bandwidth than PCIe for multi-GPU training, which is why systems using NVLink (e.g., DGX A100 with NVLink 3.0) achieve much better all-reduce performance than PCIe-connected GPU clusters.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "NVLink 3.0 (A100): 600 GB/s bidirectional bandwidth per GPU (12 NVLink 3.0 links * 50 GB/s each). PCIe Gen4 x16: 32 GB/s bidirectional. For ring all-reduce with 8 GPUs, the bottleneck is GPU-to-GPU bandwidth. NVLink gives ~18x more bandwidth than PCIe for all-reduce operations. A DGX A100 (8 GPUs, fully connected NVLink) achieves ~300 GB/s effective all-reduce bandwidth per GPU, enabling gradient synchronization of a 7B parameter model (14GB gradients in FP16) in ~47ms. PCIe equivalent: ~870ms - a 18x difference that directly impacts training throughput.",
       hints: [
         "NVLink 3.0: 600 GB/s per GPU. PCIe 4.0 x16: 32 GB/s per GPU. ~18x difference in bandwidth.",
@@ -2514,7 +2514,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Quantization-aware training (QAT) generally achieves higher accuracy than post-training quantization (PTQ) at aggressive quantization levels (e.g., INT4) because QAT simulates quantization error during training, allowing the model to adapt its weights to be more robust to quantization.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "QAT inserts fake quantization operations (round-to-INT4 with straight-through estimators for gradients) during training, allowing the model to learn weight distributions that are robust to 4-bit quantization. PTQ quantizes a pre-trained FP32/FP16 model without gradient updates - the weights were not optimized for the quantization grid. At INT8, PTQ (e.g., GPTQ, SmoothQuant) achieves near-lossless accuracy. At INT4, QAT typically recovers 1-3% more accuracy than PTQ. The tradeoff: QAT requires full or partial retraining (expensive), while PTQ runs in hours on a small calibration set.",
       hints: [
         "Straight-through estimator: treat the rounding operation as identity during backward pass to allow gradients to flow.",
@@ -2583,7 +2583,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Structured pruning (removing entire attention heads or MLP neurons) is generally preferred over unstructured pruning (setting individual weights to zero) for LLM inference acceleration because structured pruning directly reduces computation without requiring sparse hardware support.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Unstructured pruning creates sparse weight matrices (e.g., 50% zeros). On dense hardware like GPUs, sparse matrix operations are not automatically faster - standard CUDA kernels process all elements regardless of sparsity. Speedup requires special sparse kernels (NVIDIA cuSPARSE) which only outperform dense kernels at very high sparsity (>90%). Structured pruning removes entire rows/columns/heads - the resulting smaller dense matrix runs fast with standard GEMM kernels. Wanda (Sun et al., 2023) and LLM-Pruner (Ma et al., 2023) use structured pruning for LLMs: remove attention heads and MLP channels, producing smaller dense models that run faster on standard hardware.",
       hints: [
         "50% unstructured sparsity on GPU: 0-20% speedup (sparse overhead dominates). 50% structured pruning: ~2x speedup (dense matrix half the size).",
@@ -2634,7 +2634,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Gradient compression techniques such as 1-bit Adam and PowerSGD reduce all-reduce communication volume at the cost of introducing gradient noise that can degrade model convergence if not carefully managed.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "1-bit SGD/Adam (Seide et al., 2014; Tang et al., 2021) compresses gradients to 1 bit per element (sign of gradient) using error feedback to accumulate compression errors. Communication is reduced by 32x (FP32) or 16x (FP16), but gradient noise increases. PowerSGD (Vogels et al., 2019) uses low-rank approximation: approximate gradient matrix G \\approx P*Q^T with rank r, communicating P and Q instead of G - compression ratio d/(2r) for d-dim gradients. Both methods can destabilize training if error feedback is not implemented correctly, especially at low learning rates where gradient signal is small relative to compression noise.",
       hints: [
         "Error feedback: accumulate compression error and add to next gradient - prevents systematic bias from compression.",
@@ -2667,7 +2667,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "easy",
       question: "NVIDIA tensor cores (introduced in Volta/V100) accelerate matrix multiply-accumulate operations by performing a 4x4 or 16x16 matrix multiply in a single clock cycle, directly increasing the effective TFLOP/s for training workloads that are dominated by matrix multiplications.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Tensor cores perform warp-level matrix multiply: D = A*B + C where A, B, C, D are small matrices (e.g., 16x16x16 in FP16). A single tensor core instruction executes this in a few clock cycles vs. hundreds of scalar FMA operations in CUDA cores. V100: 640 tensor cores delivering 125 TFLOP/s (FP16) vs. 15.7 TFLOP/s without tensor cores - 8x speedup for GEMM. A100: 312 TFLOP/s (BF16 tensor core) vs. 19.5 TFLOP/s (FP64 CUDA core). Transformer training is 90%+ matrix multiply by FLOPs, so tensor core utilization directly drives training throughput.",
       hints: [
         "Tensor core: 16x16 matmul in one instruction. CUDA core: one multiply-add per instruction. 256 multiplications vs. 1 per clock cycle.",
@@ -2718,7 +2718,7 @@ const extraMlSystems: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Tensor parallelism during inference requires synchronization communication (all-reduce) after each transformer layer, which can become a latency bottleneck when the all-reduce must complete before the next layer begins.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "During inference with tensor parallelism (e.g., across 8 GPUs): each GPU holds 1/8 of each attention/MLP weight matrix. After the row-parallel linear layer in each transformer block, partial activations must be summed via all-reduce before feeding the next block. For a hidden dimension of 8192 and sequence length 1: all-reduce sends 8192 * 2 bytes = 16KB across 8 GPUs. At 600 GB/s NVLink bandwidth, this takes ~0.03ms per layer. For 80 layers: 2.4ms overhead. For large batches or long sequences, all-reduce traffic scales with batch*seq*d_model, making this a real bottleneck that limits how much tensor parallelism is beneficial.",
       hints: [
         "Each transformer block requires 2 all-reduces (after attention and after MLP in Megatron-LM). With 80 layers: 160 all-reduces per forward pass.",
@@ -2773,7 +2773,7 @@ const extraMlSystems2: Record<string, Question[]> = {
       difficulty: "easy",
       question: "LoRA (Low-Rank Adaptation, Hu et al., 2021) is a parameter-efficient fine-tuning method that reduces the number of trainable parameters for adaptation by decomposing weight updates into low-rank matrices, making it suitable for serving multiple task-specific model variants without storing full fine-tuned copies for each task.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "LoRA decomposes the fine-tuning weight update delta_W = A * B where A is (d x r) and B is (r x k) with rank r << min(d,k). Instead of storing a full delta_W (d*k parameters), LoRA stores A and B (r*(d+k) parameters). For r=8, d=k=4096: delta_W has 16.7M params; A+B have 65K params - 256x compression. For serving N task variants: store one base model + N LoRA adapters (each ~50-100MB) instead of N full fine-tuned models (each 7-70GB). At inference time, load the base model and swap LoRA adapters on-the-fly for different tasks.",
       hints: [
         "LoRA rank r=8-64 is typical; r=1 gives maximum compression but minimum expressiveness.",

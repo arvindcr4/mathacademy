@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question:
         "An ML engineer should treat model deployment with the same engineering rigor as shipping a web service: tests, CI/CD pipelines, rollback procedures, and on-call runbooks.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Production ML engineering borrows software engineering best practices: unit/integration tests for preprocessing and model code, CI/CD pipelines that run model evaluation gates, blue-green or canary deployment for safe rollouts, rollback procedures (revert to previous model version), and runbooks for on-call engineers. A model endpoint has the same reliability requirements as any other service.",
       hints: [
@@ -88,7 +88,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Type annotations in Python ML code have no practical benefit because Python does not enforce types at runtime.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Type annotations enable: (1) mypy/pyright static analysis catching bugs before runtime (e.g., wrong tensor shape type passed to a function); (2) IDE autocomplete and navigation; (3) self-documenting function signatures (e.g., `def encode(text: str, max_length: int) -> torch.Tensor`); (4) data contract enforcement with Pydantic. In ML code where tensor shapes and data schemas are notoriously error-prone, type annotations are especially valuable.",
       hints: [
@@ -146,7 +146,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Storing training hyperparameters in a YAML config file (instead of hardcoding them in a script) is sufficient on its own to guarantee experiment reproducibility.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "A config file captures hyperparameters but reproducibility also requires: (1) pinned software environment (Docker image or conda lock file - library version drift changes behavior); (2) random seeds for all RNGs; (3) version-controlled data reference (which dataset version/split was used); (4) code commit hash (which version of the training script ran). Full MLflow experiment tracking or DVC covers all four.",
       hints: [
@@ -204,7 +204,7 @@ const questions: Record<string, Question[]> = {
       question:
         'A "loss should decrease on a single mini-batch" test (the "overfit one batch" sanity check) is a useful model implementation test because it verifies gradients flow correctly through the entire forward and backward pass.',
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'The "overfit one batch" test: train a model for 100 steps on a single fixed batch and assert loss reaches near zero. If loss does not decrease, something is wrong: dead gradients, wrong loss function, broken optimizer, or a forward pass bug. This test is cheap (runs on a tiny batch) and catches fundamental implementation errors before expensive full training runs.',
       hints: [
@@ -262,7 +262,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In an ML CI/CD pipeline, passing all unit and integration tests is sufficient to promote a new model version to production without additional model quality gates.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         'Unit and integration tests verify code correctness but do not catch model quality regressions. A bug that changes data preprocessing can produce syntactically correct but semantically wrong output that passes all code tests while degrading AUC by 10%. ML pipelines require model evaluation gates: "new model AUC \\geq current production model AUC − \\delta" (e.g., \\delta=0.005) before promotion.',
       hints: [
@@ -320,7 +320,7 @@ const questions: Record<string, Question[]> = {
       question:
         "TorchScript models can be loaded and executed in a C++ environment without a Python interpreter, enabling Python-free production deployment.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "TorchScript compiles a PyTorch model to a portable intermediate representation (serialized via `torch.jit.script` or `torch.jit.trace`) that the LibTorch C++ API can load and execute. This removes the Python interpreter from the inference path - important for latency (no GIL, no Python overhead) and for deploying to environments where Python is unavailable (mobile, embedded, C++ microservices).",
       hints: [
@@ -378,7 +378,7 @@ const questions: Record<string, Question[]> = {
       question:
         "REST APIs are always the wrong choice for ML model serving because they are always slower than gRPC.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "REST is appropriate when: clients are browsers or mobile apps (gRPC-Web adds complexity), debugging and monitoring are priorities (JSON is human-readable), throughput requirements are moderate (<10K RPS), or third-party developer access requires a standard interface. gRPC's advantages (binary serialization, HTTP/2 multiplexing, streaming) matter most for high-throughput internal microservices.",
       hints: [
@@ -436,7 +436,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Apache Spark batch inference can be parallelized across a cluster by applying a pandas UDF (mapInPandas) that runs model inference on each data partition independently.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Spark's mapInPandas (or pandas_udf with GROUPED_MAP) distributes data partitions across worker nodes. The serialized model is broadcast to each worker, and each partition runs inference independently. For a 5M-row dataset with 100 partitions \\times 10 workers, inference parallelizes across 100 processes simultaneously, reducing wall time by ~100\\times.",
       hints: [
@@ -494,7 +494,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Apache Flink's exactly-once processing guarantee means that even after a worker failure, stateful aggregations (e.g., running sums used as ML features) are computed correctly without double-counting or data loss.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Flink achieves exactly-once via distributed snapshots (Chandy-Lamport algorithm): periodic checkpoints persist operator state and Kafka offsets atomically. On failure, Flink restores from the last checkpoint and replays events from the saved Kafka offset - processing each event exactly once in the recovered state. This is essential for ML features where double-counted transactions would corrupt feature values.",
       hints: [
@@ -552,7 +552,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In Feast, the offline store (e.g., BigQuery, Parquet on S3) is used for real-time feature serving during model inference.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "The offline store handles historical feature retrieval for training data generation - it is optimized for batch reads (scan millions of rows for a training dataset). The online store (Redis, DynamoDB, Bigtable) handles low-latency point lookups during real-time inference. Querying BigQuery at inference time would add 1-5 seconds of latency - incompatible with most production SLOs.",
       hints: [
@@ -610,7 +610,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Kolmogorov-Smirnov (KS) test is used in ML monitoring to detect whether the distribution of a continuous input feature has shifted between training and production, with p-value < 0.05 as the standard drift threshold.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The two-sample KS test measures the maximum difference between two empirical cumulative distribution functions (CDFs). For ML monitoring: compare the training feature distribution (reference) to a rolling window of production feature values (current). A p-value < 0.05 rejects the null hypothesis of identical distributions, flagging potential drift. The KS statistic itself (0-1) quantifies how different the distributions are.",
       hints: [
@@ -668,7 +668,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In a champion-challenger setup, the challenger model immediately replaces the champion as soon as it achieves higher offline AUC on a held-out validation set.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Model promotion requires multiple gates beyond offline AUC: shadow mode performance (do challenger predictions agree with champion on real traffic?), latency compliance (does challenger meet the p99 SLO?), resource cost (memory, GPU hours), and typically a formal A/B test measuring business metrics. Offline AUC is a necessary but not sufficient condition for promotion.",
       hints: [
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Canary deployment reduces risk by initially routing only 1-5% of production traffic to the new model version, monitoring for errors, and incrementally increasing traffic only if metrics remain healthy.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Canary deployment limits "blast radius": if the new model has a critical bug, only 1-5% of users are affected before rollback. Standard canary progression: 1% \\to 5% \\to 20% \\to 50% \\to 100%, with monitoring gates at each stage (error rate, latency, business metrics). If any gate fails, traffic is routed back to the stable version. The 1% initial slice is chosen to be large enough for statistical significance but small enough to limit user impact.',
       hints: [
@@ -784,7 +784,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In LLMOps, prompt versions must be tracked alongside model versions because a prompt change can alter model behavior as significantly as changing model weights.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "For LLMs, prompts are first-class artifacts: changing a system prompt can completely alter output tone, task performance, safety behavior, and response format - sometimes more dramatically than a model version change. LLMOps requires versioning prompts in a registry (or Git), A/B testing prompt variants, and rolling back prompt changes with the same rigor as model rollbacks. Tools like Langfuse, PromptLayer, and MLflow support prompt versioning.",
       hints: [
@@ -842,7 +842,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A/B testing prompt variants in production (routing 50% of traffic to prompt A and 50% to prompt B) is a valid method to determine which prompt leads to better downstream business metrics.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Prompt A/B testing follows the same methodology as model A/B testing: split traffic, assign users consistently to variants, collect business metrics (conversion rate, user satisfaction, task completion), and apply statistical significance testing. It is the only reliable way to measure the true production impact of a prompt change, since offline evaluation (human ratings, LLM-as-judge) often does not predict business outcomes.",
       hints: [
@@ -900,7 +900,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Semantic caching for LLMs stores embeddings of previous queries and serves cached responses when the cosine similarity between a new query and a cached query exceeds a threshold (e.g., 0.95).",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Semantic caching embeds each query using a fast encoder (e.g., text-embedding-3-small), stores the embedding and LLM response, and at query time compares new query embeddings to cached embeddings via ANN search. If similarity > threshold (e.g., 0.95), the cached response is returned without calling the LLM. This captures paraphrases ("what time do you open?" \\approx "what are your business hours?") that exact-match caching misses.',
       hints: [
@@ -979,7 +979,7 @@ const questions: Record<string, Question[]> = {
         'A model registry should support atomic promotion: transitioning a model from "staging" to "production" status should be a single operation that prevents partial states.',
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Atomic model promotion prevents states where the serving infrastructure sees a model as production before all downstream systems (monitoring dashboards, alerting configurations, documentation) are updated. Atomic promotion also enables clean rollback: if promotion fails midway, the system returns to the previous state automatically rather than leaving a hybrid configuration.",
       hints: [
@@ -1038,7 +1038,7 @@ const questions: Record<string, Question[]> = {
         "Storing Terraform state in a remote backend (e.g., S3 with DynamoDB locking) is a production best practice that prevents state corruption when multiple engineers apply changes simultaneously.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Local Terraform state is dangerous in team environments: two engineers running `terraform apply` simultaneously can corrupt the state file and create inconsistent infrastructure. Remote state with locking (S3 + DynamoDB provides state storage + distributed lock) ensures only one apply runs at a time. State is also backed up, encrypted, and auditable with remote backends.",
       hints: [
@@ -1097,7 +1097,7 @@ const questions: Record<string, Question[]> = {
         "Gradient checkpointing reduces GPU memory usage during training by recomputing intermediate activations during the backward pass instead of storing them all during the forward pass.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Gradient checkpointing (activation checkpointing) trades compute for memory: instead of storing all forward pass activations (which grow O(layers) in memory), only checkpoint activations at selected layers and recompute the others during backprop. This reduces activation memory from O(layers) to O(√layers) at the cost of ~33% more compute. It enables training significantly larger models or larger batch sizes on the same GPU memory budget.",
       hints: [
@@ -1156,7 +1156,7 @@ const questions: Record<string, Question[]> = {
         "Schema validation at data ingestion time (rejecting batches with unexpected schema changes) prevents corrupted data from silently propagating through ML pipelines and corrupting model training.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Schema validation is the first defense in data quality: comparing incoming data against the expected schema catches type changes, missing required fields, and unexpected new fields before they corrupt downstream transformations. Without this gate, a field type change from int to string might silently coerce to NaN in feature engineering, training a model on corrupted features that fails only at inference time - hours or days later.",
       hints: [
@@ -1215,7 +1215,7 @@ const questions: Record<string, Question[]> = {
         "Catastrophic forgetting in neural networks refers to the phenomenon where updating a model on new data causes it to lose previously learned knowledge.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Catastrophic forgetting (catastrophic interference): when a neural network is fine-tuned on new data without access to old data, gradient updates overwrite weights encoding old patterns. Mitigation strategies: elastic weight consolidation (EWC, penalizes changes to important weights), replay buffers (include samples from old data in each update batch), learning rate warmup, and regularization. This is why online learning systems often use replay buffers or maintain access to historical data.",
       hints: [
@@ -1274,7 +1274,7 @@ const questions: Record<string, Question[]> = {
         "Storing ML model API keys and database credentials in environment variables (rather than hardcoding in source code) is a basic security best practice that prevents accidental credential exposure in version control.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The Twelve-Factor App methodology mandates config in environment: credentials in source code are frequently leaked through git commits (GitHub has automated scanners finding leaked API keys within seconds). Environment variables are set at deployment time, not stored in code. For production systems, use secrets management services (AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager) that provide rotation, auditing, and fine-grained access control beyond simple environment variables.",
       hints: [
@@ -1333,7 +1333,7 @@ const questions: Record<string, Question[]> = {
         "Distributed tracing in ML systems can identify which component (feature store, model inference, post-processing) is responsible for a latency spike by showing the time spent in each step of the prediction path.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Distributed tracing (OpenTelemetry, Jaeger, X-Ray) instruments each service component to record span start/end times, creating a trace that shows: 5ms feature lookup \\to 45ms model inference \\to 2ms post-processing = 52ms total. Without tracing, a 52ms p99 latency is just a number; with tracing, you can identify that model inference dominates and direct optimization effort appropriately. This is essential for multi-component ML serving pipelines.",
       hints: [
@@ -1384,7 +1384,7 @@ const questions: Record<string, Question[]> = {
         "Blameless post-incident reviews focus on identifying systemic failures and process improvements rather than assigning fault to individuals, leading to better learning and safer reporting culture.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Blameless PIRs (pioneered by Google SRE and Etsy) recognize that production incidents arise from systemic factors - missing monitoring, inadequate testing, unclear procedures - not individual incompetence. Blame discourages reporting, hides near-misses, and doesn\'t improve systems. Blameless culture enables honest analysis: "the monitoring didn\'t catch this because we had no distribution shift alerts" leads to adding those alerts; "John made a mistake" leads to nothing improving.',
     },
@@ -1431,7 +1431,7 @@ const questions: Record<string, Question[]> = {
         "Dynamic quantization determines scale factors at runtime based on the actual values being quantized, while static quantization pre-computes scale factors using a calibration dataset.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Dynamic quantization: scale factors for activations are computed per-tensor at runtime - more accurate but adds runtime overhead per layer. Static quantization: run calibration data through the model to collect activation statistics, pre-compute scale factors, bake them into the model - faster at inference since no runtime scale computation needed. Static quantization is preferred for production deployment where latency is critical and a calibration dataset is available.",
     },
@@ -1478,7 +1478,7 @@ const questions: Record<string, Question[]> = {
         "Removing protected attributes (race, gender, age) from ML model features guarantees that the model will not exhibit discriminatory behavior.",
       options: ["True", "False"],
 
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         'Removing protected attributes is necessary but not sufficient: proxy features (zip code correlated with race, name predictive of gender, hobbies correlated with age) can allow the model to recover protected attribute information from other features. This is called "proxy discrimination." True fairness requires measuring actual model outcomes across groups (not just inputs) and applying fairness constraints or post-processing to ensure equitable outcomes.',
     },
@@ -1525,7 +1525,7 @@ const questions: Record<string, Question[]> = {
         "Definition of Done for an ML feature should include not only model training and offline evaluation, but also monitoring setup, alerting configuration, and runbook documentation before the feature is considered production-ready.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "ML DoD extends beyond model accuracy: a model without monitoring will have failures go undetected; a model without alerts requires human polling to detect issues; a model without runbooks creates on-call hell. Mature ML organizations include in their DoD: offline metrics meeting threshold, A/B test plan, monitoring dashboards live, drift alerts configured, rollback procedure tested, runbook written, and data retention policy set. Shipping without these creates operational debt immediately.",
     },
@@ -1572,7 +1572,7 @@ const questions: Record<string, Question[]> = {
         "ADRs (Architecture Decision Records) are valuable in ML projects for documenting why specific modeling choices, feature engineering decisions, or infrastructure design decisions were made.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'ADRs capture decisions and their rationale: "We chose gradient boosting over neural networks because interpretability is required for regulatory compliance, and XGBoost achieves comparable accuracy with 10x faster inference on our hardware." Without ADRs, future engineers waste time re-litigating past decisions or making changes that reverse carefully considered choices. In ML, ADRs are especially valuable because modeling decisions are often non-obvious and highly context-dependent.',
     },
@@ -1619,7 +1619,7 @@ const questions: Record<string, Question[]> = {
         "Profiling an ML model before optimizing it is essential because intuitions about bottlenecks are frequently wrong - measured profiling data reveals actual hotspots.",
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Premature optimization anti-pattern: engineers often guess that the large matrix multiplication is the bottleneck, when profiling reveals 70% of time is in a small elementwise normalization layer with high cache miss rate. Tools like PyTorch Profiler, NVIDIA Nsight, and Chrome Trace Event show per-operation time with CUDA kernel-level detail. Always measure before optimizing - the rule of thumb is 90% of runtime is in 10% of code, and that 10% is rarely what you expect.",
     },
@@ -1666,7 +1666,7 @@ const questions: Record<string, Question[]> = {
         'Using Docker containers for ML model serving ensures consistent library versions between development, staging, and production environments, eliminating "works on my machine" deployment issues.',
       options: ["True", "False"],
 
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Docker containers package the application, its dependencies, and system libraries into an immutable artifact. The same Docker image runs identically on a developer's laptop, a staging server, and a production GPU cluster, eliminating environment-induced behavioral differences. For ML: the CUDA version, cuDNN version, PyTorch version, and all Python packages are all captured in the Dockerfile and pinned in the requirements file baked into the image.",
     },
@@ -1720,7 +1720,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Pre-deployment checklists for ML models help prevent common production incidents by systematically verifying that monitoring, alerting, rollback procedures, and evaluation requirements are satisfied before launch.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "ML deployment checklists (analogous to aviation pre-flight checklists) prevent the most common ML incidents: missing monitoring (silent failures), missing rollback plan (slow recovery), incomplete evaluation (performance issues on edge cases). Checklists are not bureaucratic overhead - they are institutional memory encoded into a repeatable process that catches the failure mode that everyone assumed someone else handled.",
       hints: [
@@ -1778,7 +1778,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Normalizing features using statistics computed on the training set (mean, standard deviation) and applying those same statistics at inference time is necessary to prevent training-serving skew in preprocessing.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Feature normalization must use training-time statistics at serving time: (1) fit the scaler on training data only; (2) serialize the fitted scaler as part of the model artifact; (3) apply the same scaler at inference time. Using serving-time statistics would cause training-serving skew and potentially expose future information. This is why preprocessing pipelines must be versioned alongside model weights.",
       hints: [
@@ -1836,7 +1836,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Integration tests for ML pipelines should verify that the end-to-end pipeline (data loading \\to preprocessing \\to training \\to evaluation \\to serialization) produces a model artifact with the expected format and metadata fields.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "ML pipeline integration tests validate the pipeline contract: does the final model artifact contain weights, preprocessing pipeline, feature schema, and metrics metadata? Is the serialized model loadable by the serving infrastructure? Do the output shapes match expectations? These tests catch integration bugs that unit tests of individual components cannot detect.",
       hints: [
@@ -1894,7 +1894,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Blameless post-incident reviews focus on identifying systemic failures and process improvements rather than assigning fault to individuals, leading to better learning and safer reporting culture.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Blameless PIRs (pioneered by Google SRE and Etsy) recognize that production incidents arise from systemic factors - missing monitoring, inadequate testing, unclear procedures - not individual incompetence. Blame discourages reporting and hides near-misses. Blameless culture enables honest analysis: the monitoring did not catch this because we had no distribution shift alerts leads to adding those alerts, rather than blaming an individual.",
       hints: [
@@ -1952,7 +1952,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Removing protected attributes (race, gender, age) from ML model features guarantees that the model will not exhibit discriminatory behavior.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Removing protected attributes is necessary but not sufficient: proxy features (zip code correlated with race, name predictive of gender, hobbies correlated with age) can allow the model to recover protected attribute information from other features. This is called proxy discrimination. True fairness requires measuring actual model outcomes across groups and applying fairness constraints or post-processing to ensure equitable outcomes.",
       hints: [
@@ -2010,7 +2010,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Glue code in ML systems - scripts that connect data sources, model training, evaluation, and serving pipelines - often becomes the most maintenance-heavy part of a production ML system over time.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The glue code problem (Sculley et al.): ML research code (the model itself) is often a small fraction of the total codebase; the majority is data ingestion, feature pipelines, monitoring, serving infrastructure, and integration scripts. This glue code is often written quickly without tests or design review, accumulates inconsistencies, and becomes the primary source of production incidents. Treating ML data pipelines and serving code with the same engineering rigor as model code is essential for long-term maintainability.",
       hints: [
@@ -2068,7 +2068,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Distributed tracing in ML systems can identify which component (feature store, model inference, post-processing) is responsible for a latency spike by showing the time spent in each step of the prediction path.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Distributed tracing (OpenTelemetry, Jaeger, X-Ray) instruments each service component to record span start/end times, creating a trace showing: 5ms feature lookup + 45ms model inference + 2ms post-processing = 52ms total. Without tracing, a 52ms p99 latency is just a number; with tracing, you identify that model inference dominates and direct optimization effort appropriately.",
       hints: [
@@ -2126,7 +2126,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Profiling an ML model before optimizing it is essential because intuitions about bottlenecks are frequently wrong - measured profiling data reveals actual hotspots.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Premature optimization anti-pattern: engineers often guess the large matrix multiplication is the bottleneck, when profiling reveals 70% of time is in a small elementwise normalization layer with high cache miss rate. Tools like PyTorch Profiler, NVIDIA Nsight, and Chrome Trace Event show per-operation time with CUDA kernel-level detail. Always measure before optimizing - 90% of runtime is in 10% of code, and that 10% is rarely what you expect.",
       hints: [
@@ -2184,7 +2184,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Machine learning technical debt accumulates faster than traditional software technical debt because ML systems have an additional dimension of complexity: the interaction between code, data, and model behavior.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "ML tech debt is multidimensional (Sculley et al.): traditional software debt is code debt; ML adds data debt (untracked schema changes, undocumented data quality issues), model debt (undocumented architectural choices, unknown hyperparameter sensitivities), and interaction debt (training-serving skew, feature entanglement). These dimensions interact: a data quality issue may not manifest until the model is retrained, creating compound debt much harder to unwind than simple code debt.",
       hints: [
@@ -2242,7 +2242,7 @@ const questions: Record<string, Question[]> = {
       question:
         "An ML engineer should be able to explain their production ML system\'s failure modes, monitoring setup, and rollback procedures to a non-technical stakeholder as a measure of system reliability maturity.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The explain to a non-technical stakeholder test is a reliability maturity indicator: if you cannot explain how you know the system is working, how you detect failures, and how you recover from them in plain language, those systems likely do not exist or are not understood. Mature ML systems have clear observable indicators of health, defined failure detection criteria, and practiced rollback procedures - all of which can be explained concisely because they have been designed and tested.",
       hints: [

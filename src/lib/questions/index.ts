@@ -50,6 +50,16 @@ import "./systems-design-cloud";
 import "./systems-design-social";
 import "./systems-design-ecommerce";
 import "./systems-design-streaming";
+import "./systems-design-security";
+import "./systems-design-mobile";
+import "./systems-design-search";
+import "./systems-design-interview-prep";
+import "./systems-design-maps";
+import "./systems-design-observability";
+import "./systems-design-realtime";
+import "./systems-design-gaming";
+import "./systems-design-ml-platform";
+import "./systems-design-fintech";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

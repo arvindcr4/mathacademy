@@ -167,13 +167,13 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "There is a bug in the training code.",
       "The training set has many examples.",
     ],
-    correctAnswer: "The training set has many examples.",
+    correctAnswer: 3,
   },
   "q-k-kp-10-b": {
     question:
       "In PyTorch, if you one-hot encode a single character index from a 27-character vocabulary as a 1D tensor, what shape do you get?",
     options: ["(27,)", "(1, 27)", "(27, 1)", "(1,)"],
-    correctAnswer: "(27,)",
+    correctAnswer: 0,
   },
   "q-k-kp-10-c": {
     question:
@@ -195,8 +195,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "When the batch size is 1.",
       "When the input contains negative values.",
     ],
-    correctAnswer:
-      "When its pre-activation stays in a region where the local gradient is zero or near zero.",
+    correctAnswer: 1,
   },
   "q-nlp-kp2-1": {
     question:
@@ -1273,14 +1272,14 @@ const questionOverrides: Record<string, QuestionOverride> = {
     question:
       "If a bigram model's predicted distribution exactly matches the true data distribution P, what is the expected average NLL?",
     options: ["0", "H(P)", "log(vocab_size), regardless of P", "It diverges to infinity"],
-    correctAnswer: "H(P)",
+    correctAnswer: 1,
   },
   "q-k-kp-36": {
     type: "multiple-choice",
     question:
       "If X has shape (B, T) and C has shape (V, d), what is the shape of C[X] before flattening in Karpathy's MLP?",
     options: ["(B, T, d)", "(B, d)", "(V, T, d)", "(B, T*d)"],
-    correctAnswer: "(B, T, d)",
+    correctAnswer: 0,
   },
   "q-k-kp-43": {
     question:
@@ -1291,7 +1290,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "-log(p_y) applied element-wise",
       "1/p_y at the target index and 0 elsewhere",
     ],
-    correctAnswer: "p - y_one_hot",
+    correctAnswer: 0,
   },
   "q-k-kp-52": {
     question: "In Micrograd, which Value counts as a leaf node?",
@@ -1301,8 +1300,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "Any Value whose gradient is nonzero after backward()",
       "Any Value that stores an _op string",
     ],
-    correctAnswer:
-      "A Value created directly as an input or parameter, not produced by an operation on other Values",
+    correctAnswer: 1,
   },
   "q-eval-kp3-1": {
     question:
@@ -2458,6 +2456,337 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "Constant variance over time",
     ],
     correctAnswer: 0,
+  },
+  "q-tr-kp2-2": {
+    type: "multiple-choice",
+    question: "After concatenating all heads, what does W^O do?",
+    options: [
+      "Turns each head's attention scores into probabilities",
+      "Projects and mixes the head outputs back into one d_model representation",
+      "Makes all heads share the same Q, K, and V projections",
+      "Averages the heads so each contributes equally",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tr-kp4-2": {
+    question: "What does it mean that the transformer's FFN is positionwise?",
+    options: [
+      "It mixes information across all token positions",
+      "Each token position gets its own separate FFN weights",
+      "The same MLP is applied to each token independently",
+      "It removes positional information before attention",
+    ],
+    correctAnswer: 2,
+  },
+  "q-tr-kp5-2": {
+    type: "multiple-choice",
+    question: "Why does pre-norm help gradients at initialization?",
+    options: [
+      "LayerNorm turns each sublayer into an exact identity map",
+      "The residual branch starts near zero, so the skip connection carries gradients directly",
+      "LayerNorm removes the need for residual connections",
+      "LayerNorm makes Adam's variance estimate accurate from step 1",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tr-kp12-2": {
+    type: "multiple-choice",
+    question: "Why does a KV cache speed up autoregressive decoding?",
+    options: [
+      "It reduces the number of attention heads used during decoding",
+      "It skips the feed-forward layers for previously generated tokens",
+      "It reuses old keys and values instead of recomputing them for the whole prefix each step",
+      "It compresses the prompt into one fixed vector before generation",
+    ],
+    correctAnswer: 2,
+  },
+  "q-rob-kp1-2": {
+    type: "multiple-choice",
+    question: "What makes factor-graph SLAM more scalable than EKF-SLAM?",
+    options: [
+      "Its information matrix is sparse, so incremental solvers update only affected variables",
+      "It keeps the number of state variables fixed even as landmarks are added",
+      "It turns loop closure into a shortest-path search problem",
+      "It replaces Gaussian estimation with particle filtering",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp16-4": {
+    type: "multiple-choice",
+    question: "What planning strategy does TrajOpt use?",
+    options: [
+      "Trajectory optimization with signed-distance collision penalties and sequential convex updates",
+      "Random tree expansion toward sampled configurations",
+      "Reusable roadmap construction followed by graph search",
+      "End-to-end policy rollout without an explicit planner",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp25-3": {
+    question: "Why can privileged information help if the actor never sees it at test time?",
+    options: [
+      "The critic can learn from full simulator state while the actor is trained only on deployable observations",
+      "The actor stores privileged variables during training and reuses them on the real robot",
+      "Privileged inputs remove the need for domain randomization",
+      "The critic is run online at deployment to supply missing hidden state",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp29-1": {
+    question: "What is Open X-Embodiment?",
+    options: [
+      "A multi-lab dataset of robot demonstrations from many different robot platforms",
+      "A universal controller that lets any robot share the same joint-space policy without retraining",
+      "A GPU simulator for running thousands of robot environments in parallel",
+      "A benchmark of language instructions for navigation with no robot actions",
+    ],
+    correctAnswer: 0,
+  },
+  "q-qml-kp8-2": {
+    type: "multiple-choice",
+    question: "What makes an ansatz hardware-efficient?",
+    options: [
+      "It approximates the Haar distribution as closely as possible.",
+      "It hard-codes molecular symmetries into the circuit.",
+      "It matches the device's native gates and connectivity to avoid extra decomposition and SWAPs.",
+      "It guarantees gradients stay large during training.",
+    ],
+    correctAnswer: 2,
+  },
+  "q-qml-kp14-2": {
+    type: "multiple-choice",
+    question: "Where have provable QML advantages mostly appeared?",
+    options: [
+      "Large real-world benchmarks such as ImageNet-scale classification.",
+      "Constructed tasks tied to explicit hardness assumptions.",
+      "Standard QSVM demos on today's noisy hardware without a hardness assumption.",
+      "Any model that uses amplitude encoding for inputs.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-qml-kp18-2": {
+    type: "multiple-choice",
+    question: "Why can't a QRNN remember arbitrarily long sequences?",
+    options: [
+      "Unitary evolution resets the hidden state after each step.",
+      "A QRNN must measure its memory register at every time step.",
+      "Its quantum memory has finite dimension, and noise further degrades stored information.",
+      "Quantum gates cannot reuse parameters across time steps.",
+    ],
+    correctAnswer: 2,
+  },
+  "q-qml-kp36-2": {
+    type: "multiple-choice",
+    question: "Why batch circuit evaluations in hybrid QML?",
+    options: [
+      "To eliminate shot noise from expectation estimates.",
+      "To reduce the number of qubits the model needs.",
+      "To guarantee that a single QPU executes all circuits in parallel.",
+      "To amortize classical-quantum submission and readout latency across many evaluations.",
+    ],
+    correctAnswer: 3,
+  },
+  "q-sciml-kp5-3": {
+    question:
+      "An SGS model matches DNS stresses offline but makes an LES unstable when coupled into the solver. What is this failure called?",
+    options: [
+      "A priori overfitting",
+      "A posteriori instability",
+      "Galilean invariance violation",
+      "Under-resolved mesh aliasing",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp22-2": {
+    type: "multiple-choice",
+    question: "Rotate a molecule by 90 degrees. Which target should rotate too rather than stay unchanged?",
+    options: ["Total energy", "Bond lengths", "Atomic forces", "Atom count"],
+    correctAnswer: 2,
+  },
+  "q-sciml-kp30-3": {
+    question: "You know the ODE structure but not one rate term. Which model is gray-box?",
+    options: [
+      "A network that learns the entire ODE from data",
+      "A model that keeps the known ODE and learns only the missing rate term",
+      "A lookup table with no differential equation",
+      "A simulator with all parameters fixed by theory",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp31-1": {
+    question: "In an FNO layer, the learned global operator acts on which representation of the field?",
+    options: [
+      "Fixed-size local convolution stencils",
+      "Truncated Fourier modes",
+      "A wavelet tree",
+      "A graph Laplacian basis",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dl-kp2-3": {
+    question:
+      "If each sigmoid layer multiplies the gradient magnitude by at most 0.25, what is the largest possible multiplier after 10 layers?",
+    options: [
+      "10 * 0.25 = 2.5",
+      "0.25",
+      "0.25 / 10 = 0.025",
+      "0.25^10 ~= 9.5e-7",
+      "0.25^5 ~= 9.8e-4",
+    ],
+    correctAnswer: 3,
+  },
+  "q-dl-kp4-2": {
+    type: "multiple-choice",
+    question:
+      "Xavier uses variance 2 / (n_in + n_out). If n_in = 3 and n_out = 5, what variance do you use?",
+    options: ["1/8", "1/4", "2/3", "2/5", "1"],
+    correctAnswer: 1,
+  },
+  "q-dl-kp5-1": {
+    question: "Batch norm outputs y = gamma * x_hat + beta. If x_hat = 2, gamma = 3, and beta = -1, what is y?",
+    options: ["-1", "1", "6", "5", "2"],
+    correctAnswer: 3,
+  },
+  "q-dl-kp7-2": {
+    type: "multiple-choice",
+    question: "In AdamW, where is the weight decay term applied?",
+    options: [
+      "Added to the gradient before moment updates",
+      "Applied directly to the parameters outside the adaptive gradient term",
+      "Added to the second-moment estimate v_t",
+      "Applied only when gradients are zero",
+      "Added only to bias parameters",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp12-2": {
+    type: "multiple-choice",
+    question: "Which CV task finds and localizes refineries in satellite imagery?",
+    options: [
+      "Semantic segmentation that labels every pixel by land-cover class",
+      "Object detection with bounding boxes around facilities",
+      "Image captioning that writes a text description of the scene",
+      "Optical flow that estimates motion between two passes",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp18-2": {
+    type: "multiple-choice",
+    question: "Why are Siamese networks used for change detection?",
+    options: [
+      "They train separate feature spaces for each date so differences are exaggerated",
+      "They encode both dates with shared weights so feature differences are directly comparable",
+      "They infer change from a single image without needing a second date",
+      "They replace bi-temporal comparison with object-detection boxes",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp20-2": {
+    type: "multiple-choice",
+    question: "What most directly flags an active fire pixel from space?",
+    options: [
+      "An anomalously high mid-infrared brightness temperature",
+      "An anomalously low NDVI value",
+      "An anomalously high microwave backscatter return",
+      "A uniform increase in visible-band albedo",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp24-2": {
+    type: "multiple-choice",
+    question: "What does RL usually optimize in smart EV charging?",
+    options: [
+      "Charging every vehicle immediately at maximum power",
+      "Shifting charging away from peak demand and toward renewable-rich hours",
+      "Keeping every plugged-in battery near 100% at all times",
+      "Maximizing the number of charging cycles per day",
+    ],
+    correctAnswer: 1,
+  },
+  "q-aud-kp1-2": {
+    type: "multiple-choice",
+    question: "In MFCCs, what is the DCT for?",
+    options: [
+      "Decorrelating log-mel energies and compressing them into a few coefficients",
+      "Recovering phase information lost in the STFT",
+      "Converting mel bins back to a linear-frequency spectrum",
+      "Estimating phoneme durations for decoding",
+      "Removing silence frames before feature extraction",
+    ],
+    correctAnswer: 0,
+  },
+  "q-aud-kp6-2": {
+    type: "multiple-choice",
+    question: "In Tacotron, location-sensitive attention mainly reduces:",
+    options: [
+      "Repeated or skipped text caused by unstable alignments",
+      "High-frequency vocoder artifacts in the waveform",
+      "Speaker leakage in zero-shot voice cloning",
+      "Exposure bias from teacher forcing",
+      "The number of mel bins needed per frame",
+    ],
+    correctAnswer: 0,
+  },
+  "q-aud-kp11-2": {
+    type: "multiple-choice",
+    question: "After wav2vec 2.0 pre-training, competitive ASR fine-tuning can use as little as:",
+    options: [
+      "10 minutes of labeled speech",
+      "1 minute of labeled speech",
+      "1 hour of labeled speech",
+      "10 hours of labeled speech",
+      "100 hours of labeled speech",
+    ],
+    correctAnswer: 0,
+  },
+  "q-aud-kp15-2": {
+    type: "multiple-choice",
+    question: "In RVQ, what does the second codebook quantize?",
+    options: [
+      "The residual error left by the first codebook",
+      "The original latent again, independently of the first codebook",
+      "The decoder's reconstructed waveform",
+      "The speaker embedding used for conditioning",
+      "The attention weights between text and audio",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp28-1": {
+    question: "In COCO, what does AP@[.50:.95] average over for one class?",
+    options: [
+      "AP at IoU thresholds 0.50, 0.55, ..., 0.95",
+      "Precision at IoU 0.50 and 0.75 only",
+      "AP over small, medium, and large objects only",
+      "IoU of all matched boxes",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp13-2": {
+    question: "What does brightness constancy assume in optical flow?",
+    options: [
+      "The same scene point keeps roughly the same intensity between consecutive frames",
+      "The same pixel location corresponds to the same scene point in both frames",
+      "All points on an object have the same intensity in a frame",
+      "A point's velocity is constant across frames",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp13-3": {
+    type: "multiple-choice",
+    question: "What does an optical flow field assign to each pixel?",
+    options: [
+      "A 2D motion vector between frames",
+      "A depth value",
+      "A semantic class label",
+      "A global camera pose",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv-kp27-1": {
+    question:
+      "For large C, a 3x3 depthwise-separable conv uses about how many times fewer FLOPs than a standard 3x3 conv with C input and C output channels?",
+    options: ["About 3x fewer", "About 9x fewer", "About Cx fewer", "About the same"],
+    correctAnswer: 1,
   },
 };
 

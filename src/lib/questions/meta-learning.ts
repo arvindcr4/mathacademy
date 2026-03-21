@@ -1302,7 +1302,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Multi-task pre-training (training a single model on many tasks jointly before fine-tuning) can serve as a strong alternative to explicit episodic meta-learning for few-shot generalisation.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "T5 (Raffel et al., 2020) and similar multi-task pre-trained models show strong few-shot transfer without episodic meta-training, because training on diverse tasks implicitly develops an inductive bias for task adaptation. The distinction between multi-task pre-training and meta-learning blurs at scale.",
       hints: [
@@ -1360,7 +1360,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In the Meta-Dataset benchmark, test episodes use variable-way variable-shot settings (the number of classes and examples per class vary), unlike miniImageNet which always uses fixed 5-way 1-shot or 5-shot episodes.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Meta-Dataset episodes randomly sample the number of ways (5-50) and the number of support examples per class (1-20) from each dataset, creating a more realistic and challenging evaluation that tests robustness to varying episode structure, not just performance at a fixed N-way K-shot setting.",
       hints: [
@@ -1418,7 +1418,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The PAC-Bayes framework has been applied to derive generalisation bounds for gradient-based meta-learning by treating the meta-initialisation as a prior p(\\theta) and the adapted parameters \\theta'_i as drawn from a posterior - bounding performance by KL(posterior || prior).",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "PAC-Bayes bounds for meta-learning (Amit & Meir 2018) treat the meta-initialisation as a prior p(\\theta) and the task-adapted distribution q(\\theta'|S_i) as a posterior. The bound is: E_T[L_T(\\theta')] \\leq E_T[L_S(\\theta')] + sqrt[(KL(q||p) + log(n/\\delta)) / (2n)], connecting meta-generalisation to the information-theoretic distance between initialization and adapted parameters.",
       hints: [
@@ -1532,7 +1532,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Foundation models pre-trained on diverse data can be viewed as implicitly learning a task prior that enables fast few-shot adaptation, analogous to the meta-learned prior in Bayesian meta-learning.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The diverse pre-training distribution shapes the model\'s inductive bias (prior) over tasks. When few-shot prompted, the model uses this prior to rapidly identify and solve the new task - a functional analogue to a Bayesian meta-learned prior. This connection was formalized by Xie et al. (2022) who showed ICL approximates Bayesian inference under a mixture-of-tasks data generating process.",
       hints: [
@@ -1756,7 +1756,7 @@ const questions: Record<string, Question[]> = {
       question:
         'Generative models trained with meta-learning objectives (e.g., "generate images of unseen categories given one example") can learn to perform visual imagination for truly novel categories.',
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Work such as Lake et al.'s Omniglot few-shot generation and more recent approaches (e.g., LAFITE, Parti) show that meta-training generative models on episode-structured tasks enables generation of novel categories from one or a few examples, demonstrating learned inductive biases for imagination.",
     },
@@ -1801,7 +1801,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Theoretical analyses of MAML show that the number of inner-loop gradient steps directly controls the task-complexity tradeoff: more steps increase expressivity but worsen meta-generalization bounds.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Theoretical work (e.g., Fallah et al. 2020, Khodak et al. 2019) shows that more inner-loop steps increase the hypothesis class complexity, which can improve task-specific performance but expands the effective capacity enough to weaken meta-generalization bounds. This mirrors the bias-variance tradeoff in standard learning theory.",
     },
@@ -1846,7 +1846,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Siamese networks and Matching Networks both use contrastive or pair-based training and produce identical outputs at inference time.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "While both learn similarity-based representations, they differ at inference time. Siamese networks compare a query to each support example independently using a learned distance. Matching Networks use attention over the full support set, producing a weighted combination of support labels - incorporating set-level context that Siamese networks ignore.",
     },
@@ -1891,7 +1891,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Meta-learning on graph-structured data (e.g., molecular property prediction) is more challenging than on image data partly because task-specific graph structures vary in size and topology.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Unlike images which have fixed grid structure, molecular graphs vary in node count, edge count, and topology across tasks. Standard episodic meta-training assumes consistent input dimensionality, so graph meta-learning must handle variable-size inputs, often via graph-level pooling or size-invariant GNN architectures.",
     },
@@ -1935,7 +1935,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Hypernetwork-based meta-learning methods are generally faster at test-time adaptation than MAML because they replace iterative gradient steps with a single forward pass through the hypernetwork.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "MAML requires K gradient steps (inner loop) at test time, which has computational cost proportional to K. Hypernetwork approaches (e.g., CNAPs, VERSA) generate task-specific parameters in a single forward pass, making test-time adaptation significantly faster - at the cost of reduced expressivity compared to iterative optimization.",
     },
@@ -1980,7 +1980,7 @@ const questions: Record<string, Question[]> = {
       question:
         "ANIL (Almost No Inner Loop) demonstrated that most of the benefit in MAML comes from adapting the body (feature extractor) rather than just the head (classifier).",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "ANIL (Raghu et al. 2020) showed the opposite: nearly all of MAML\'s benefit comes from the rapid learning of the head (final linear classifier), not the feature extractor body. The body features can be frozen after pre-training with minimal performance loss, suggesting that the inner loop is primarily serving as a head-adaptation mechanism.",
     },
@@ -2030,7 +2030,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Reptile can be interpreted as a first-order approximation to MAML that avoids computing second-order derivatives.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n$$\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\text{where } \\phi_i = \\text{SGD}^K(\\theta, \\mathcal{D}_i^\\text{support}).$$\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
       hints: [
@@ -2085,7 +2085,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Mixing support examples from different classes (cross-class feature interpolation) during meta-training is a valid form of task augmentation that improves few-shot performance.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Methods like FEAT-aug and mixup-based task augmentation create virtual classes by interpolating feature vectors across classes, then train on these synthetic N-way tasks. This has been shown to improve generalization to novel classes by exposing the meta-learner to a broader distribution of task structures during training.",
     },
@@ -2130,7 +2130,7 @@ const questions: Record<string, Question[]> = {
       question:
         "MAML has been directly applied to NLP few-shot tasks like text classification and relation extraction, yielding improvements over standard fine-tuning in very-low-data regimes.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Dou et al. (2019) "Few-Shot NLP with Meta-Learning," Gu et al. (2018) for machine translation, and subsequent work showed MAML and Prototypical Networks adapted to NLP tasks improve over standard fine-tuning when only K=5 or K=10 labeled examples per class are available, by learning better task-general initializations from auxiliary NLP datasets.',
     },
@@ -2175,7 +2175,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Meta-learning for robot manipulation tasks is easier than for locomotion because manipulation tasks have lower-dimensional state spaces.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Manipulation tasks are generally harder for meta-learning because they involve contact-rich dynamics, high-dimensional object configurations, and require precise dexterous control. Locomotion tasks, while complex, often have more structured reward landscapes. The difficulty of manipulation comes from contact discontinuities and the sensitivity to object pose, not state dimensionality alone.",
     },

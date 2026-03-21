@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A single perceptron can learn to classify data that is not linearly separable, such as the XOR function.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "A single perceptron can only represent linear decision boundaries. XOR is not linearly separable - no single hyperplane correctly separates the four XOR input points. This fundamental limitation, publicized by Minsky and Papert (1969), motivated multi-layer networks.",
       hints: [
@@ -88,7 +88,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A computational graph records every operation during the forward pass; the autograd engine traverses it backward, applying the chain rule at each node to compute all gradients without manual derivation.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "As described in d2l.ai §5.3, during forward propagation a computational graph is constructed that records all operations. During backpropagation, this graph is traversed in reverse and local gradients at each node are multiplied together via the chain rule - producing all parameter gradients automatically.",
       hints: [
@@ -146,7 +146,7 @@ const questions: Record<string, Question[]> = {
       question:
         "GELU (Gaussian Error Linear Unit), defined as x\\cdot\\Phi(x) where \\Phi is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "GELU (Hendrycks & Gimpel, 2016) smoothly gates inputs using the Gaussian CDF - unlike ReLU\'s hard threshold at zero. It produces small negative outputs for slightly-negative inputs (unlike ReLU which hard-zeros them), and has become the default in BERT, GPT-2/3/4, and LLaMA FFN layers due to empirically better performance.",
       hints: [
@@ -204,7 +204,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Xavier initialization (Glorot & Bengio, 2010) sets weight variance to \\sigma\\^2 = 2/(n_in + n_out). This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "As derived in d2l.ai §5.4.2.2: forward propagation requires n_in\\cdot\\sigma\\^2=1 and backpropagation requires n_out\\cdot\\sigma\\^2=1. Since both cannot hold simultaneously, Xavier takes the compromise \\sigma\\^2 = 2/(n_in + n_out). This keeps signal variance stable in both directions, preventing vanishing/exploding activations.",
       hints: [
@@ -262,7 +262,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Layer Normalization normalizes across the feature dimension for a single sample (not across the batch), making it suitable for transformers where batch statistics would be unreliable for variable-length sequences.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Layer Norm (Ba et al., 2016) computes statistics across the hidden dimension for each individual token independently. Unlike Batch Norm which averages over the batch, LN is batch-size-agnostic and works correctly with batch size 1 - essential for transformer inference where we often decode one token at a time.",
       hints: [
@@ -320,7 +320,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Dropout is applied during inference (test time) the same way it is applied during training.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         'As d2l.ai §5.6 states: "we disable dropout at test time. Given a trained model and a new example, we do not drop out any nodes." All neurons are active at test time. The inverted dropout scaling during training ensures activation magnitudes are consistent between train and test phases without any additional test-time adjustment.',
       hints: [
@@ -378,7 +378,7 @@ const questions: Record<string, Question[]> = {
       question:
         "AdamW fixes a flaw in Adam by applying weight decay directly to the weights (\\theta \\leftarrow \\theta − \\eta\\cdot\\lambda\\cdot\\theta) rather than folding L2 regularization into the gradient, because Adam\'s adaptive scaling reduces the effective weight decay disproportionately.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "In vanilla Adam with L2 regularization, the L2 gradient (\\lambda\\cdot\\theta) is added to the gradient and then adaptively scaled by 1/√v_t. For parameters with large gradients, this scale is small - effectively reducing weight decay. AdamW decouples weight decay: \\theta \\leftarrow \\theta − \\alpha\\cdotm̂/√v̂ − \\eta\\cdot\\lambda\\cdot\\theta, applying full weight decay regardless of gradient scale.",
       hints: [
@@ -436,7 +436,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Cosine annealing schedules reduce the learning rate following a cosine curve, allowing it to restart (warm restarts) to escape local minima periodically.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Cosine annealing with warm restarts (SGDR) decays the learning rate to near zero following a cosine schedule, then resets to a higher value, allowing the optimizer to explore different loss landscape regions at the beginning of each cycle.",
       hints: [
@@ -494,7 +494,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Focal loss addresses class imbalance by down-weighting the loss contribution of easy, well-classified examples and focusing training on hard examples.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^\\gamma log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^\\gamma reduces loss for well-classified examples (p_t \\to 1) while leaving loss unchanged for misclassified examples (p_t \\to 0). With \\gamma=2: an easy example with p_t=0.9 contributes (1−0.9)\\^2 = 0.01\\times the original loss - 100\\times reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
       hints: [
@@ -552,7 +552,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Increasing training data size is generally the most effective remedy for overfitting, more effective than regularization techniques alone.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "More training data gives the model less opportunity to memorize specific examples and forces it to learn the underlying distribution. Regularization (dropout, L2, etc.) approximates the effect of more data by constraining model complexity, but cannot substitute for the generalization benefit of genuinely diverse, abundant data.",
       hints: [
@@ -609,7 +609,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Universal Approximation Theorem guarantees that gradient descent will find the optimal weights for the approximating network.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "The UAT is an existence result only - it proves that a network of sufficient width CAN represent the target function, but says nothing about whether gradient descent will find those weights in practice. The optimization landscape is non-convex with many local minima and saddle points, making convergence to the global optimum unguaranteed.",
       hints: [
@@ -667,7 +667,7 @@ const questions: Record<string, Question[]> = {
       question:
         'Adding "same" padding to a convolutional layer ensures the output spatial dimensions equal the input spatial dimensions when stride = 1.',
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         '"Same" padding adds zeros around the input border so that the output height and width match the input exactly (for stride 1). Without padding, a k\\timesk convolution reduces each spatial dimension by k−1. For a 3\\times3 kernel, padding=1 adds 1 pixel on each side, keeping output size = input size.',
       hints: [
@@ -725,7 +725,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The GRU (Gated Recurrent Unit) achieves performance comparable to LSTM on many tasks while using fewer parameters by merging the cell state and hidden state, reducing from 4 gate computations to 2.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "LSTM has 4 gates (forget, input, output, cell) and separate cell/hidden states: ~4 \\times (h+x) \\times h parameters per layer. GRU has 2 gates (update, reset) and merges cell and hidden state: ~3 \\times (h+x) \\times h parameters - about 25% fewer. On many sequence tasks, GRU matches LSTM performance and sometimes trains faster.",
       hints: [
@@ -783,7 +783,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Multi-head attention allows the model to simultaneously attend to information from different representation subspaces at different positions.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Each attention head projects Q, K, V into a different d_k = d_model/h dimensional subspace via learned linear projections. Head i learns to attend based on a different notion of "relevance." The outputs of all h heads are concatenated and projected back to d_model, combining diverse relationship types simultaneously.',
       hints: [
@@ -841,7 +841,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Residual connections improve gradient flow because, by the chain rule, \\(\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot (\\frac{\\partial F}{\\partial x} + 1)\\), where the \"+1\" term ensures a gradient of at least 1 flows along the skip path regardless of how small \\(\\frac{\\partial F}{\\partial x}\\) is.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "For a residual block \\(H(x) = F(x) + x\\), the gradient with respect to \\(x\\) is:\n\n\\[\n\\frac{\\partial L}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\frac{\\partial H}{\\partial x} = \\frac{\\partial L}{\\partial H} \\cdot \\left(\\frac{\\partial F}{\\partial x} + 1\\right).\n\\]\n\nEven if \\(\\frac{\\partial F}{\\partial x} = 0\\) (e.g., due to ReLU saturation or vanishing gradients in deep networks), the \"+1\" from the skip connection ensures the gradient signal through the shortcut path is exactly \\(\\frac{\\partial L}{\\partial H}\\). This additive identity gradient is why ResNets can be trained at depths of 100-1000+ layers without vanishing gradients.",
       hints: [
@@ -899,7 +899,7 @@ const questions: Record<string, Question[]> = {
       question:
         "PyTorch\'s DataLoader with num_workers > 0 loads batches in separate worker processes to overlap data loading and model computation.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Multi-process data loading (num_workers > 0) fetches and preprocesses the next batch in background workers while the GPU trains on the current batch, eliminating the data loading bottleneck through pipeline parallelism. Without it (num_workers=0), the GPU sits idle during data loading.",
       hints: [
@@ -957,7 +957,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Loss scaling in mixed-precision training shifts the gradient values upward before the backward pass to prevent FP16 underflow, then scales them back down before the optimizer step.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "FP16's minimum representable value is ~6\\times10\\^{-⁵; many gradients underflow to zero in FP16. Loss scaling multiplies the loss by a large constant (e.g., 2¹⁰=1024) to move gradients into representable range, with inverse scaling before updating weights in FP32. The master weights are kept in FP32 for numerical stability.",
       hints: [
@@ -1014,7 +1014,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Global norm clipping rescales the entire gradient vector so that its total L2 norm equals the clip threshold, preserving the gradient direction.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Global norm clipping applies:\n\n\\[\n\\mathbf{g} \\leftarrow \\mathbf{g} \\cdot \\frac{\\text{clip\\_value}}{\\|\\mathbf{g}\\|_2}.\n\\]\n\nThis scales the entire gradient vector by a positive scalar, shrinking its magnitude to clip_value while preserving its direction (all relative angles between parameters are maintained). Unlike per-parameter clipping (which clips each element independently, distorting the update direction), global norm clipping maintains the geometric integrity of the gradient direction - which is why it is the standard approach for training transformers and RNNs.",
       hints: [
@@ -1072,7 +1072,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Model checkpointing saves the model weights at the epoch with the best validation performance, not necessarily the weights at the final training epoch.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Checkpointing saves snapshots during training; the best checkpoint (by validation metric) is retained as the final model. The last epoch\'s weights are often overfit relative to the best checkpoint - the optimal bias-variance tradeoff typically occurs before training fully converges.",
       hints: [
@@ -1130,7 +1130,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Bayesian optimization for hyperparameter tuning uses the results of previous trials to build a surrogate model that predicts which hyperparameters are likely to be good, reducing wasted experiments.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Bayesian optimization maintains a probabilistic surrogate (e.g., Gaussian process or Tree Parzen Estimator) of the objective function and uses an acquisition function (e.g., Expected Improvement) to select the next most promising hyperparameter configuration. Unlike random search, it learns from prior trials and focuses exploration on promising regions.",
       hints: [
@@ -1187,7 +1187,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Fine-tuning a pretrained model typically requires a smaller learning rate than training from scratch to avoid catastrophically destroying the pretrained representations.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Pretrained weights encode valuable representations built over large-scale training. Large learning rates can overwrite them in a few gradient steps - catastrophic forgetting. A small LR (e.g., 10\\^{-⁵ instead of 10\\^{-\\^3) allows gentle adaptation to the new task while preserving the useful features encoded in the pretrained weights.",
       hints: [
@@ -1245,7 +1245,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The temperature parameter T in knowledge distillation controls the softness of the teacher\'s probability distribution; higher T produces softer (more uniform) distributions that expose more information in the non-argmax probabilities.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Soft targets use softmax(logits/T). High T flattens the distribution: at T=10, even large logit differences produce similar probabilities, exposing the full structure of the teacher\'s belief about class relationships. At T=1 (standard), the argmax dominates and little dark knowledge is visible. Distillation typically uses T=2-10.",
       hints: [
@@ -1302,7 +1302,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Differentiable NAS (DARTS) makes architecture search tractable by relaxing discrete architecture choices into a continuous mixture, enabling gradient-based optimization over both architecture weights and operation weights jointly.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "DARTS (Liu et al., 2019) represents the architecture as a softmax-weighted mixture of candidate operations (e.g., 3\\times3 conv, 5\\times5 conv, skip, pooling). Architecture weights \\alpha and operation weights W are trained jointly via gradient descent - the final discrete architecture is derived by selecting the highest-weight operation at each position.",
       hints: [
@@ -1359,7 +1359,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Task weighting in multitask learning is important because different tasks may have different loss scales, and naive summation can cause the optimizer to focus disproportionately on high-loss tasks.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "If Task A has loss ~1000 (e.g., pixel-wise reconstruction) and Task B has loss ~0.1 (e.g., classification), a naive sum overwhelmingly optimizes Task A - gradients from Task A are 10,000\\times larger. Task weighting (manual or learned, e.g., GradNorm, uncertainty weighting) balances gradient contributions so all tasks improve together.",
       hints: [
@@ -1415,7 +1415,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Elastic Weight Consolidation (EWC) mitigates catastrophic forgetting by penalizing changes to weights that were important for previous tasks, using the Fisher information matrix as a measure of importance.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "EWC (Kirkpatrick et al., 2017) adds L = L_new + \\lambda \\Sigma\\_i F\\_i(\\theta\\_i − \\theta*\\_i)\\^2 where F\\_i is the Fisher information diagonal (measuring parameter importance for old tasks) and \\theta*\\_i are old task weights. High-Fisher weights are strongly anchored; low-Fisher weights can change freely for new tasks.",
       hints: [
@@ -1472,7 +1472,7 @@ const questions: Record<string, Question[]> = {
       question:
         'The Lottery Ticket Hypothesis (Frankle & Carlin, 2019) proposes that dense networks contain sparse subnetworks ("winning tickets") that, if trained in isolation from the same initialization, can match the full network\'s accuracy.',
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Frankle & Carlin found that winning ticket subnetworks exist inside large networks. Key: the subnetwork must be trained from the original initialization (not random reinitialization) - "rewinding" weights to their initial values. This suggests dense networks are overparameterized and contain efficient sparse cores that are hard to find directly.',
       hints: [
@@ -1529,7 +1529,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Post-Training Quantization (PTQ) can be applied to a pretrained model without retraining, while Quantization-Aware Training (QAT) simulates quantization noise during training to produce more accurate quantized models.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "PTQ quantizes a trained model using calibration data (no gradient updates) - fast and practical but may degrade accuracy at aggressive bit widths (INT4). QAT inserts fake quantization nodes during training so the model adapts to quantization error via gradient descent, typically achieving higher accuracy at the same bit width at the cost of full retraining.",
       hints: [
@@ -1587,7 +1587,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Gradient flow visualization (plotting per-layer gradient norms) can diagnose both vanishing and exploding gradient problems during training.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Per-layer gradient norm plots reveal gradient health throughout the network. Vanishing: norms near zero in early layers (those layers not learning). Exploding: norms in the thousands (updates destabilize training). Tools like TensorBoard, Weights & Biases, or a simple hook logging ||\\nablaW||\\_2 per layer can identify these issues.",
       hints: [
@@ -1707,7 +1707,7 @@ const questions: Record<string, Question[]> = {
       question:
         "torch.compile() (PyTorch 2.0+) applies graph capture and kernel fusion to accelerate eager-mode PyTorch code, often achieving 2\\times speedups without changing the model definition.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "torch.compile() traces the model\'s computation graph, applies optimizations like operator fusion (combining multiple kernels into one), and generates optimized code via TorchInductor/Triton. This gets closer to graph-mode efficiency while preserving eager-mode flexibility and debuggability.",
       hints: [
@@ -1767,7 +1767,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Sinusoidal positional encodings in the original transformer are learned parameters that are updated during training.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Vaswani et al. (2017) used fixed sinusoidal positional encodings - sin and cos functions of different frequencies - that are not learned. This allows the model to generalize to sequence lengths not seen during training. Later models like BERT and GPT-2 switched to learned positional embeddings.",
       hints: [
@@ -1825,7 +1825,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "RWKV combines elements of transformers and RNNs to achieve transformer-quality performance with linear-time inference, making it suitable for very long sequences.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "RWKV (Peng et al., 2023) uses a linear attention formulation that can be computed recurrently (O(n) inference) or in parallel (like transformers during training). It matches transformer quality on many NLP benchmarks while scaling to very long sequences without quadratic memory cost.",
       hints: [
@@ -1883,7 +1883,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Loss spikes during LLM training are typically caused by outlier batches with very high loss, and the standard mitigation is to simply skip those batches.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Skipping loss spike batches is one approach but is not the only or necessarily the best one. Loss spikes also arise from learning rate being too high, optimizer state corruption, or numerical instability. Mitigation strategies include gradient clipping, loss spike detection with rollback to a checkpoint, learning rate reduction, and better data filtering.",
       hints: [
@@ -1941,7 +1941,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "In cosine annealing, the learning rate follows a cosine curve from lr_max to lr_min, reaching its lowest value at the end of training or the end of each cycle.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Cosine annealing (Loshchilov and Hutter, 2017) sets lr(t) = lr_min + 0.5 times (lr_max minus lr_min) times (1 + cos(pi times t/T)). At t=0, lr equals lr_max; at t=T, lr equals lr_min. The smooth decay avoids abrupt LR drops and helps the optimizer settle into flat minima at the end of training.",
       hints: [
@@ -1999,7 +1999,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Data augmentation techniques such as random cropping and color jitter increase the effective training set size by creating new training examples, thereby reducing overfitting.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Data augmentation applies random but label-preserving transformations (crop, flip, color jitter for images; back-translation, synonym substitution for text) to generate novel views of existing examples. This effectively multiplies the training set size, teaches the model invariance to these transformations, and reduces overfitting.",
       hints: [
@@ -2057,7 +2057,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Neural ODEs can model continuous-time dynamics, making them suitable for irregularly sampled time series data where observations occur at non-uniform time intervals.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Because Neural ODEs model dynamics as a continuous-time ODE, they can evaluate the hidden state at any time t - including irregular observation times. Standard RNNs require uniformly spaced inputs or padding/masking for irregular timestamps. Neural ODEs handle irregularity naturally by integrating from one observation time to the next.",
       hints: [
@@ -2115,7 +2115,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Expert collapse in MoE training occurs when the router sends most or all tokens to a small subset of experts, leaving other experts undertrained and underutilized.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Expert collapse (also called load imbalance) is a training failure mode where popular experts receive more tokens, become better trained, and attract even more tokens - a positive feedback loop. Auxiliary load balancing losses (Shazeer et al., GShard) add a regularization term that penalizes uneven expert usage, enforcing roughly uniform expert utilization.",
       hints: [
@@ -2173,7 +2173,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Task interference in multi-task learning occurs when training on one task degrades performance on another task sharing the same model parameters.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Negative transfer (task interference) happens when gradients from different tasks point in conflicting directions, causing updates that improve one task to hurt another. This is the central challenge of multi-task learning and motivates methods like gradient surgery, task weighting, and task-specific adapter layers.",
       hints: [
@@ -2231,7 +2231,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "Elastic Weight Consolidation (EWC) prevents catastrophic forgetting by penalizing changes to weights that were most important for previous tasks, using the Fisher information matrix to measure weight importance.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "EWC (Kirkpatrick et al., 2017) adds a regularization term proportional to the Fisher information times the squared difference from the previous task's optimal weights. High Fisher information means the weight is important - the quadratic penalty resists changing it. This is inspired by synaptic consolidation in neuroscience.",
       hints: [
@@ -2289,7 +2289,7 @@ const questionsExtra: Record<string, Question[]> = {
       question:
         "The receptive field of a neuron in a convolutional neural network is the region of the input image that can influence that neuron's activation, and it grows with each successive convolutional layer.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "With a 3x3 convolution, layer 1 neurons see a 3x3 region, layer 2 neurons see a 5x5 region (3x3 plus 1 pixel border on each side from the previous layer), and so on. After L layers with 3x3 kernels, the receptive field is (2L+1) by (2L+1). Deeper networks have larger receptive fields, enabling them to capture long-range spatial dependencies.",
       hints: [
@@ -2403,7 +2403,7 @@ const extraDL: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Batch Normalization acts as a regularizer during training, reducing the need for Dropout, because the randomness in mini-batch statistics introduces noise that prevents the model from overfitting to exact training samples.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "BatchNorm introduces stochasticity through mini-batch statistics: the normalisation of each sample depends on which other samples are in the batch. This randomness acts as a form of regularisation - the model cannot overfit to any specific sample's exact activation values. The original BatchNorm paper (Ioffe and Szegedy, 2015) reported that adding BatchNorm often allowed reducing or eliminating Dropout without increased overfitting, particularly in image classification networks like Inception.",
       hints: [
         "Each sample is normalised using its batch's statistics - these statistics change every batch, adding noise to activations.",
@@ -2438,7 +2438,7 @@ const extraDL: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Veit et al. (2016) showed that ResNets behave like an ensemble of shallow paths: unrolling the residual connections reveals 2^L exponentially many paths through an L-block ResNet, with most gradient flowing through short paths.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Veit et al. proved that an L-block ResNet with skip connections is mathematically equivalent to a sum over 2^L subnetworks of varying depths (all subsets of layers). During backpropagation, the gradient is a sum over all these paths. Because each skip path passes through the addition (gradient multiplied by 1) while non-skip paths pass through residual functions (gradient potentially diminished), shorter paths contribute stronger gradient signal. This interpretation explains why ResNets train easily despite being very deep - effective depth is the average path length, not L.",
       hints: [
         "An L-block ResNet: each block can be skipped (skip path) or traversed (residual path). 2^L combinations = 2^L paths.",
@@ -2487,7 +2487,7 @@ const extraDL: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In practice, initialising the weights of residual branches near zero (e.g., setting the last BatchNorm gamma to 0) can improve training stability of very deep ResNets by making residual blocks start as near-identity functions.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "The 'zero-init residual' trick (FixRes, Goyal et al., 2017; also in T-fixup, ReZero): by initialising the last layer of each residual block (e.g., the final BN's gamma parameter) to zero, the initial forward pass produces H(x) = F(x) + x \\approx 0 + x = x - the block is initially an identity function. This means a 100-layer network starts as effectively a shallow network, then gradually increases depth as training progresses. This dramatically stabilises early training dynamics and enables higher learning rates.",
       hints: [
         "If F(x) = gamma * BN_output + x and gamma = 0 initially, then F(x) = x - pure identity mapping at initialisation.",
@@ -2576,7 +2576,7 @@ const extraDL: Record<string, Question[]> = {
       difficulty: "easy",
       question: "The Huber loss (smooth L1 loss) combines the benefits of L1 loss (robust to outliers) and L2 loss (smooth gradients near zero) by behaving quadratically for small errors and linearly for large errors.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Huber loss: L_delta(y, f) = 0.5*(y-f)^2 for |y-f| <= delta, else delta*(|y-f| - delta/2). For small errors (< delta): quadratic, like L2 - smooth gradients near zero, stable convergence. For large errors (> delta): linear, like L1 - bounded gradient, robust to outliers. This makes it ideal for regression tasks with occasional outlier labels (e.g., bounding box regression in Faster R-CNN, depth estimation). The delta hyperparameter controls the transition point.",
       hints: [
         "L2 loss gradient: 2*(y-f). For large errors, this becomes huge - one outlier can dominate the gradient. L1 gradient is bounded to +-1.",
@@ -2647,7 +2647,7 @@ const extraDL: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Increasing batch size from 256 to 4096 (16x larger) while linearly scaling the learning rate (16x) maintains approximately the same training dynamics and final model quality as training with the smaller batch.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "The linear scaling rule (Goyal et al., 2017; Krizhevsky, 2014): when multiplying batch size by k, multiply learning rate by k. The intuition: with k-times more samples per gradient step, each step has k-times less variance - scaling LR by k restores the effective noise level. Goyal et al. trained ResNet-50 on ImageNet with batch size 8192 (using LR scaled from 0.1 at BS=256 to 3.2 at BS=8192) with a brief 5-epoch warmup, achieving the same accuracy in 1 hour as standard 256-batch training in 29 hours. The warmup is needed to avoid instability from the large initial updates.",
       hints: [
         "Key insight: larger batch -> lower gradient variance -> more 'confident' updates -> can use larger LR to match the stochastic noise level.",
@@ -2773,7 +2773,7 @@ const extraDL2: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Batch Normalization acts as a regularizer during training, reducing the need for Dropout, because the randomness in mini-batch statistics introduces noise that prevents the model from overfitting to exact training samples.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "BatchNorm introduces stochasticity through mini-batch statistics: the normalisation of each sample depends on which other samples are in the batch. This randomness acts as a form of regularisation - the model cannot overfit to any specific sample exact activation values. The original BatchNorm paper (Ioffe and Szegedy, 2015) reported that adding BatchNorm often allowed reducing or eliminating Dropout without increased overfitting, particularly in image classification networks like Inception.",
       hints: [
         "Each sample is normalised using its batch statistics - these statistics change every batch, adding noise to activations.",

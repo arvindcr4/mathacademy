@@ -2371,7 +2371,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "easy",
       question: "ViT-B/16 and ViT-B/32 have the same number of transformer layers and embedding dimension, but differ only in patch size, which affects the number of tokens and computational cost.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "ViT-B/16 and ViT-B/32 share the same base (B) architecture: 12 transformer layers, embedding dimension 768, 12 attention heads. The only difference is the patch size: /16 creates 14x14=196 tokens; /32 creates 7x7=49 tokens. ViT-B/32 is much cheaper in self-attention cost but ViT-B/16 achieves better accuracy due to finer spatial resolution.",
       hints: [
         "The letter B in ViT-B denotes base model size - same parameters. The number after the slash is the patch size.",
@@ -2459,7 +2459,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Monocular depth estimation can recover the true metric scale of a scene without any additional calibration or reference, because a single camera contains sufficient geometric information.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation: "Monocular depth estimation is fundamentally scale-ambiguous: a scene at twice the depth with twice the object sizes produces an identical image. Monocular methods (MiDaS, DPT, Depth Anything) predict relative or affine-invariant depth, not metric depth. To obtain true metric scale, additional information is required: camera intrinsics plus known object sizes, stereo, LiDAR supervision, or IMU data.",
       hints: [
         "A tiny room and a giant room can look identical in a photo if proportions are the same - the camera cannot tell them apart.",
@@ -2490,7 +2490,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Occupancy networks represent 3D surfaces as the decision boundary of a neural network classifying 3D points as inside or outside the object, enabling continuous surface representation at arbitrary resolution.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Occupancy networks (Mescheder et al., 2019) learn a function f_theta mapping 3D points and a latent code to occupancy probability in [0,1]. The 3D surface is the iso-surface where occupancy = 0.5, extracted via Marching Cubes. Unlike explicit meshes (fixed connectivity) or voxels (fixed resolution), occupancy networks represent continuous surfaces and can handle complex topologies.",
       hints: [
         "The surface is implicitly defined as the 0.5 occupancy level-set - points inside have high occupancy, outside have low.",
@@ -2542,7 +2542,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Video Vision Transformers (ViViT) can treat video as a 3D sequence of spatiotemporal tokens by factorising attention separately over spatial and temporal dimensions, reducing the cost of full spatiotemporal self-attention.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "ViViT (Arnab et al., 2021) proposes factorised attention strategies. In the factorised encoder model, temporal self-attention is applied first across all tokens at each timestep, then spatial self-attention is applied within each frame. This reduces the quadratic cost of full 3D attention from O((T*S)^2) to O(T^2*S + T*S^2), making video transformers tractable for longer clips.",
       hints: [
         "Full spatiotemporal attention over T frames of S patches: O((T*S)^2). Factorised: O(T^2*S + T*S^2).",
@@ -2591,7 +2591,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "easy",
       question: "The Lucas-Kanade optical flow method assumes that the flow vector is constant within a small local patch of pixels, making it best suited for small displacements and typically applied at keypoint locations rather than densely.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "Lucas-Kanade assumes the optical flow vector (u, v) is constant within a small neighbourhood window W around each pixel. This over-determined system (one equation per pixel in W, two unknowns) is solved via least squares. The constant-flow assumption fails for large displacements or at object boundaries. Lucas-Kanade is typically sparse (applied at Harris corner keypoints) and used in a coarse-to-fine pyramid to handle larger displacements.",
       hints: [
         "Lucas-Kanade solves: sum over W of (Ix*u + Iy*v + It)^2. The small neighbourhood is where flow is assumed constant.",
@@ -2643,7 +2643,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "medium",
       question: "SAM 2 (Segment Anything Model 2) extends SAM to video by introducing a streaming memory architecture that propagates segmentation masks from prompted frames to all other frames in the video.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "SAM 2 (Ravi et al., 2024) extends the image-based SAM to video by adding a memory attention module that caches object features from past frames and object pointers (compact object memory). The model streams through the video, and the memory bank guides propagation of the user-prompted segmentation mask across frames without requiring the user to re-prompt each frame. The same model handles both image and video segmentation.",
       hints: [
         "SAM 2 adds memory encoder and memory attention on top of SAM image encoder, prompt encoder, and mask decoder.",
@@ -2713,7 +2713,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Depth estimation from a single RGB image is an ill-posed problem because the mapping from 3D to 2D loses depth information irreversibly, requiring learned statistical priors to produce plausible estimates.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "The perspective projection from 3D world to 2D image is a many-to-one mapping: infinitely many 3D scenes project to the same 2D image. This makes monocular depth estimation fundamentally ill-posed - there is no unique correct answer given only a single image. Deep networks learn statistical priors from large training datasets to disambiguate depth from monocular cues (object size, atmospheric perspective, texture gradients, occlusion), but cannot recover true metric depth without additional constraints.",
       hints: [
         "A small nearby object and a large far object can produce identical image projections - depth cannot be uniquely determined from one view.",
@@ -2762,7 +2762,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In structure-from-motion (SfM), COLMAP recovers 3D scene structure and camera poses simultaneously from a set of unordered 2D images without any prior knowledge of camera positions.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "COLMAP (Schonberger and Frahm, 2016) is a feature-based SfM pipeline that (1) detects SIFT features in all images, (2) matches features across image pairs, (3) estimates essential/fundamental matrices between matched pairs, (4) incrementally reconstructs 3D points and camera poses through bundle adjustment. It requires no prior camera pose information - camera positions, orientations, and intrinsics are all estimated from image content alone. COLMAP is the standard preprocessing step for NeRF and 3DGS pipelines.",
       hints: [
         "SfM: given 2D images with no metadata, recover 3D structure of the scene AND camera positions simultaneously.",
@@ -2793,7 +2793,7 @@ const extraCV: Record<string, Question[]> = {
       difficulty: "easy",
       question: "A point cloud captured by a LiDAR sensor is typically much sparser than a depth image captured by an RGB-D camera at the same distance, because LiDAR returns only one point per emitted laser beam rather than a dense pixel grid.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation: "A 64-channel spinning LiDAR generates approximately 1.3 million 3D points per second - but spread over a 360-degree field of view and 80m range, the resulting BEV occupancy is sparse. An RGB-D camera (e.g., Intel RealSense) produces a dense depth image aligned to the RGB sensor - typically 640x480 = 307K depth pixels per frame at close range (0.1-10m). LiDAR point clouds are inherently sparse and irregular; RGB-D depth maps are dense and structured.",
       hints: [
         "LiDAR: one 3D point per laser beam, emitted in all directions. Sparse but long-range. RGB-D: one depth value per pixel. Dense but short-range.",

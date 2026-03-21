@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Efficient Market Hypothesis (EMH) in its strong form implies that even insider information cannot be used to consistently earn abnormal returns.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Strong-form EMH asserts that all information—public and private—is already reflected in asset prices, so no investor can consistently beat the market using any information.",
       hints: [
@@ -109,7 +109,7 @@ const questions: Record<string, Question[]> = {
       question:
         "When applying PCA to a cross-section of stock returns to extract latent factors, the first principal component is always equivalent to the CAPM market factor.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "The first PC captures the direction of maximum variance in returns, which often correlates with the market but is not mathematically identical to it. The market factor is a value-weighted index of all stocks; the first PC is an eigenportfolio of the return covariance matrix, which is an equal-weight combination of stocks in the direction of maximum variance. These coincide only in special cases (e.g., when all stocks have equal variance and correlation).",
       hints: [
@@ -147,7 +147,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Multiple-testing bias in signal discovery means that a strategy with a high in-sample Sharpe ratio is very likely to have the same Sharpe ratio out of sample.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         'When many signals are tested, some will appear significant purely by chance (false discoveries). Bailey et al. (2014) derived the "Minimum Backtest Length" needed for a given number of trials to make an in-sample Sharpe ratio credible. Without multiple-testing corrections (Bonferroni, Benjamini-Hochberg, or the haircut Sharpe ratio), in-sample Sharpe ratios are heavily upward-biased and out-of-sample performance is typically much weaker.',
       hints: [
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Viterbi algorithm is used in HMMs to find the most likely sequence of hidden states given the observed data.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The Viterbi algorithm uses dynamic programming to efficiently compute the single most probable hidden-state path through the HMM, given a sequence of observations.",
       hints: [
@@ -265,7 +265,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Rank-transforming features before feeding them into a cross-sectional ML model helps mitigate the influence of outliers in financial data.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Rank transformation maps raw feature values to their ordinal ranks, making the model robust to extreme outliers common in financial data such as earnings surprises or price spikes.",
       hints: [
@@ -324,7 +324,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Implementation Shortfall (IS) measures the difference between the decision price and the average execution price, capturing both market impact and timing risk.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "IS (also called arrival-price slippage) quantifies total trading cost as the gap between the price at decision time and the realised execution price, encompassing market impact, opportunity cost, and timing drift.",
       hints: [
@@ -383,7 +383,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Kyle lambda (\\lambda) in Kyle\'s model measures the price impact per unit of order flow, with a higher lambda indicating a more liquid market.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "Kyle\'s lambda is the price impact coefficient—higher lambda means prices move more per unit of net order flow, indicating lower liquidity (greater illiquidity), not more.",
       hints: [
@@ -442,7 +442,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A market-making RL agent that quotes both bid and ask prices profits from the spread when trades occur on both sides, but must manage inventory risk from directional positions.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "A market maker earns the bid-ask spread on round-trip trades but accumulates inventory if one side dominates; the RL agent must learn to adjust quotes to manage this inventory risk.",
       hints: [
@@ -500,7 +500,7 @@ const questions: Record<string, Question[]> = {
       question:
         "FPGA (Field-Programmable Gate Array) hardware is used in HFT because it can execute deterministic trading logic with nanosecond-level latency, bypassing the operating system.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "FPGAs implement trading logic directly in hardware, avoiding OS scheduling jitter and software stack overhead, enabling deterministic round-trip latencies in the nanosecond to low-microsecond range.",
       hints: [
@@ -558,7 +558,7 @@ const questions: Record<string, Question[]> = {
       question:
         "DeepLOB uses convolutional and LSTM layers to capture both spatial (price-level) and temporal dependencies in limit order book data.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "DeepLOB applies convolutional layers across the price-level dimension to extract local order book features and LSTM layers to model their evolution over time, enabling mid-price movement prediction.",
       hints: [
@@ -617,7 +617,7 @@ const questions: Record<string, Question[]> = {
       question:
         "CVaR at confidence level \\alpha (e.g., 99%) equals the expected loss conditional on the loss exceeding VaR(\\alpha), making it a more informative tail risk measure than VaR alone.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "CVaR(\\alpha) = E[L | L > VaR(\\alpha)] — the average of all losses exceeding the 99th percentile. Unlike VaR, CVaR captures the shape and severity of the tail beyond the threshold. CVaR is also a coherent risk measure (satisfies monotonicity, sub-additivity, translation invariance, and positive homogeneity), making it suitable for portfolio optimization via linear programming.",
       hints: [
@@ -676,7 +676,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Ledoit-Wolf shrinkage estimates the covariance matrix as a weighted average of the sample covariance matrix and a structured target (e.g., a scaled identity matrix), with the shrinkage intensity chosen analytically.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Ledoit and Wolf derived an analytical, asymptotically optimal shrinkage coefficient that pulls the sample covariance toward a structured estimator, reducing estimation error without cross-validation.",
       hints: [
@@ -735,7 +735,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Black-Litterman model starts from the market equilibrium returns implied by market capitalisation weights and combines them with investor views using Bayesian updating.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Black-Litterman reverse-engineers equilibrium expected returns from market cap weights (via reverse optimisation) and blends them with subjective views, producing more stable and intuitive portfolio allocations.",
       hints: [
@@ -793,7 +793,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Reverse stress testing starts from a predefined outcome (e.g., bank insolvency) and works backward to identify the scenarios that could cause it.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Reverse stress testing inverts the usual direction: instead of applying scenarios and measuring outcomes, it identifies the combinations of risk factor shocks that would produce a specified catastrophic outcome.",
       hints: [
@@ -852,7 +852,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Autoencoders can be used as unsupervised risk factor models by learning a low-dimensional latent representation of asset returns.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "An autoencoder trained to reconstruct a cross-section of returns through a narrow bottleneck learns latent risk factors in the hidden layer, analogous to PCA but with non-linear factor structure.",
       hints: [
@@ -911,7 +911,7 @@ const questions: Record<string, Question[]> = {
       question:
         "The Q&A section of an earnings call tends to contain more forward-looking and market-moving information than the prepared management remarks section.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Studies find that the unscripted Q&A portion, where analysts probe management, often reveals more decision-relevant information and generates larger abnormal return reactions than the scripted presentation.",
       hints: [
@@ -970,7 +970,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Lexicon-based sentiment approaches like the Loughran-McDonald dictionary are specifically designed for financial text because general-purpose sentiment lexicons misclassify many finance-specific words.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         'Words like "liability", "risk", and "leverage" are neutral in everyday English but carry negative connotations in financial contexts; Loughran-McDonald built finance-specific positive, negative, and uncertainty word lists to handle this.',
       hints: [
@@ -1029,7 +1029,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Post-earnings announcement drift (PEAD) is consistent with strong-form market efficiency because prices fully adjust to earnings surprises on the announcement day.",
       options: ["True", "False"],
-      correctAnswer: "False",
+      correctAnswer: 1,
       explanation:
         "PEAD is an anomaly where stock prices continue to drift in the direction of an earnings surprise for weeks after the announcement, contradicting even semi-strong form efficiency (not just strong form).",
       hints: [
@@ -1087,7 +1087,7 @@ const questions: Record<string, Question[]> = {
       question:
         "FinGPT adopts an open-source, instruction-tuning approach to financial LLMs, enabling low-cost fine-tuning on financial tasks using LoRA adapters.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "FinGPT provides an open-source framework for fine-tuning LLMs on financial tasks using parameter-efficient methods like LoRA, democratising access to financial NLP capabilities without training from scratch.",
       hints: [
@@ -1146,7 +1146,7 @@ const questions: Record<string, Question[]> = {
       question:
         "XBRL (eXtensible Business Reporting Language) tagging in SEC filings enables automated machine-readable extraction of structured financial data without NLP.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "XBRL is a standardised XML-based markup language mandated by the SEC; it tags financial statement line items with machine-readable labels, allowing direct programmatic extraction of figures without parsing natural language.",
       hints: [
@@ -1204,7 +1204,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Gradient Boosted Machines (GBMs) typically outperform logistic regression on credit scoring tasks but are harder to interpret for regulatory compliance purposes.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "GBMs capture non-linear interactions and generally achieve higher AUC on credit datasets, but their ensemble nature makes it harder to produce the simple scorecards and weight-of-evidence explanations required by regulators.",
       hints: [
@@ -1263,7 +1263,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Using zip-code-level data as a credit feature can introduce disparate impact under fair lending law, even if race is not directly used as a variable.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Zip codes are highly correlated with racial composition due to residential segregation; using them as features can produce disparate impact on protected classes even without explicit use of race, creating ECOA compliance risk.",
       hints: [
@@ -1322,7 +1322,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Loss Given Default (LGD) models typically target the variable (1 − recovery rate) and must handle the challenge that LGD values are bounded between 0 and 1 with bimodal distributions.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "LGD is bounded in [0,1] and empirically bimodal (many near-zero recoveries for secured loans and near-full losses for unsecured); specialised models like beta regression or two-stage models are needed rather than ordinary linear regression.",
       hints: [
@@ -1381,7 +1381,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Disparate treatment and disparate impact are both forms of illegal discrimination under fair lending law, but they differ in whether discriminatory intent must be proven.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Disparate treatment requires evidence of discriminatory intent (treating protected classes differently), while disparate impact requires only showing a facially neutral practice causes disproportionate adverse effect on protected classes, regardless of intent.",
       hints: [
@@ -1439,7 +1439,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Survival analysis models like the Cox proportional hazards model are well-suited for mortgage default prediction because they handle censored observations (loans that have not yet defaulted).",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Many loans in a portfolio have not defaulted yet (right-censored); survival models estimate the hazard (instantaneous default rate) while correctly accounting for censoring, unlike logistic regression which treats non-events as identical regardless of loan age.",
       hints: [
@@ -1498,7 +1498,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Implied volatility is the value of \\sigma that, when plugged into the Black-Scholes formula, equates the model price to the observed market price of an option.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Since Black-Scholes is monotone in \\sigma, given the observed market price one can numerically invert the formula (e.g., via Newton-Raphson) to recover the unique implied volatility that matches the market price.",
       hints: [
@@ -1557,7 +1557,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Stochastic volatility models (e.g., Heston) extend Black-Scholes by allowing volatility itself to follow a mean-reverting diffusion process, generating volatility smiles.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "The Heston model introduces a second stochastic process for variance (CIR process), correlated with the asset process; this correlation produces skew, and mean-reversion with vol-of-vol produces the curvature (smile) in the implied volatility surface.",
       hints: [
@@ -1615,7 +1615,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In deep hedging, the network is trained on simulated paths from a market model rather than historical data alone, because historical option paths are too few to train deep networks.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "Deep hedging typically uses Monte Carlo paths from a calibrated market model to generate abundant training scenarios; this avoids the data scarcity problem of historical option time series, which cover only a handful of market regimes.",
       hints: [
@@ -1673,7 +1673,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Least-Squares Monte Carlo (LSMC), originally developed for American option pricing, is also used in XVA computation to regress future exposure on basis functions of current state variables.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "LSMC (Longstaff-Schwartz) approximates the conditional expected exposure at each future date by regressing simulated exposures on polynomial basis functions of current state variables, enabling nested simulation to be replaced by regression.",
       hints: [
@@ -1731,7 +1731,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Automated Market Makers (AMMs) in DeFi use a constant-product formula (x \\times y = k) instead of a limit order book to determine trade prices.",
       options: ["True", "False"],
-      correctAnswer: "True",
+      correctAnswer: 0,
       explanation:
         "AMMs like Uniswap v2 maintain a liquidity pool with reserves x and y of two tokens; the constant-product invariant x\\cdoty=k means the price of a trade is determined by how it shifts the reserve ratio, with no order book or counterparty needed.",
       hints: [
