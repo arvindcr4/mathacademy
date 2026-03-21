@@ -2055,7 +2055,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "The Reptile update is \\theta_new = (1 - \\epsilon)\\theta + \\epsilon \\cdot (1/N)\\Sigma_i\\phi_i - a convex combination of the current \\theta and the task-optimal parameters.",
         "Think of \\phi_i as the \"task-specific solution\" after adaptation. Reptile averages these solutions and moves \\theta toward their centroid.",
-        "The goal is an initialization from which any task optimum is reachable in a few gradient steps - minimizing the maximum distance to any task manifold.",
       ],
     },
   ],
