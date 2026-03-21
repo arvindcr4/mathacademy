@@ -185,7 +185,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Double DQN selects the best action using the online network \argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', \argmax_a Q(s',a;\\theta); \\theta\\^\{-\}, reducing the upward bias from using one network for both.",
+        "In standard DQN, the TD target uses the same network for both selecting and evaluating the action:\n\\[y = R + \\gamma \\max_{a'} Q(s', a'; \\theta).\]\nThis is the source of maximization bias: the network overestimate the Q-value of the action it selects, because the same network both selects and evaluates.\n\n**Step 1.** Double DQN decouples selection and evaluation across two networks. The online network selects the action:\n\\[a^* = \\argmax_{a'} Q(s', a'; \\theta).\]\n\n**Step 2.** The target network evaluates that action:\n\\[y = R + \\gamma Q(s', a^*; \\theta^-).\]\nNote that $a^*$ comes from the online network, but the Q-value is computed by the target network.\n\n**Step 3.** Because different networks select and evaluate, the upward bias is reduced. If the online network picks an action due to overestimation, the target network's evaluation of that action is less likely to be overestimated, breaking the positive feedback loop that causes maximization bias.\n\nThis simple decoupling significantly reduces Q-value overestimation in practice.",
       hints: [
         "The bias in Q-learning comes from using the same values for both selection and evaluation.",
         "What if you use one network to pick the action and another to judge its value?",
@@ -240,7 +240,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Dueling DQN uses a shared convolutional backbone that splits into two streams: V(s) capturing how good the state is, and A(s,a) capturing the relative advantage of each action. Q(s,a) = V(s) + (A(s,a) - mean_a A(s,a)).",
+        "The Q-value $Q(s,a)$ measures how good action $a$ is in state $s$. This can be decomposed into two components:\n\n**Step 1.** The state value $V(s)$: how good is state $s$ overall, regardless of action?\n\n**Step 2.** The advantage $A(s,a)$: how much better is action $a$ than the average action in state $s$? Formally, $A(s,a) = Q(s,a) - V(s)$. If $A(s,a) > 0$, action $a$ is better than average; if $A(s,a) < 0$, it is worse than average.\n\n**Step 3.** Dueling DQN decomposes the Q-value using this identity:\n\\[Q(s,a) = V(s) + A(s,a).\]\nThe architecture has a shared feature extractor followed by two separate streams: one outputs $V(s)$ and the other outputs $A(s,a)$ for each action. These are combined to produce $Q(s,a)$. The mean-subtraction ensures $V(s)$ and $A(s,a)$ are identifiable:\n\\[Q(s,a) = V(s) + A(s,a) - \\frac{1}{|A|} \\sum_{a'} A(s,a').\]",
       hints: [
         "Some states are good or bad regardless of what action you take - how can the architecture reflect this?",
         'Think about separating "how good is this state" from "how much better is this action."',
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The \min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
+        "PPO-Clip uses the clipped surrogate objective to prevent destructively large policy updates. The probability ratio is $r_t(\\theta) = \\pi_\\theta(a_t|s_t) / \\pi_{\\theta_{old}}(a_t|s_t)$, measuring how much more likely the new policy is to select action $a_t$ compared to the old policy.\n\n**Step 1.** The unclipped objective is $r_t(\\theta) \\cdot A_t$. When the advantage $A_t > 0$ (action $a_t$ is better than average), increasing $r_t(\\theta)$ increases the objective. But $r_t(\\theta)$ can grow unbounded, causing destructive large updates.\n\n**Step 2.** PPO clips $r_t(\\theta)$ to stay in $[1-\\epsilon, 1+\\epsilon]$. The clipped objective is $\\text{clip}(r_t(\\theta), 1-\\epsilon, 1+\\epsilon) \\cdot A_t$.\n\n**Step 3.** The $\\min(\\cdot, \\cdot)$ takes the worse of the clipped and unclipped objectives:\n\\begin{align}\nL^{CLIP}(\\theta) &= E\\bigl[\\min(r_t(\\theta) A_t, \\; \\text{clip}(r_t(\\theta), 1-\\epsilon, 1+\\epsilon) \\cdot A_t)\\bigr].\n\\end{align}\n\nWhen $A_t > 0$ and $r_t(\\theta) > 1+\\epsilon$, the unclipped objective gives a higher (better) value, but the clipped term is smaller and wins. This prevents the policy from gaining reward for going outside the trust region, effectively bounding the update size.",
       hints: [
         "When A > 0 and r > 1+\\epsilon, which term (clipped or unclipped) gives a smaller value under \min?",
         "The \min ensures no benefit from making the policy update too large.",
@@ -840,7 +840,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The Fisher information matrix is F(\\theta) = E[\\nabla_\\theta log \\pi_\\theta(a|s)(\\nabla_\\theta log \\pi_\\theta(a|s))\\^T] - the expected outer product of the score function. It captures how sensitive the policy distribution is to changes in parameters.",
+        "The Fisher information matrix $F(\\theta)$ defines the natural gradient's metric. It is derived from the KL divergence geometry of probability distributions.\n\n**Step 1.** Consider two infinitesimally close policies $\\pi_\\theta$ and $\\pi_{\\theta + \\delta\\theta}$. Their KL divergence to second order is:\n\\[\\text{KL}(\\pi_{\\theta+\\delta\\theta} \\| \\pi_\\theta) \\approx \\frac{1}{2} (\\delta\\theta)^T F(\\theta) (\\delta\\theta),\\]\nwhere $F(\\theta)$ is the Fisher information matrix.\n\n**Step 2.** $F(\\theta)$ is defined as the expected outer product of the score function (gradient of log-likelihood):\n\\[F(\\theta) = E_{a \\sim \\pi_\\theta}\\bigl[\\nabla_\\theta \\log \\pi_\\theta(a|s) \\cdot (\\nabla_\\theta \\log \\pi_\\theta(a|s))^T\\bigr].\]\nThis captures how sensitive the log-likelihood is to parameter changes.\n\n**Step 3.** The natural gradient is $F(\\theta)^{-1} \\nabla_\\theta J(\\theta)$. Unlike the ordinary gradient, it is invariant to reparameterization: equivalent policy parameterizations yield equivalent updates in policy space.",
       hints: [
         "The Fisher information matrix is related to the curvature of the log-likelihood.",
         "It equals the expected outer product of the score (gradient of log-likelihood).",

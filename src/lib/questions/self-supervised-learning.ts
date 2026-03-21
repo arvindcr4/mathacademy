@@ -2789,7 +2789,7 @@ Object.assign(questions, extraSsl);
 const patchSsl: Record<string, Question[]> = {
   "ssl-kp30-patch": [
     {
-      id: "q-ssl-kp30-3",
+      id: "q-ssl-kp30-patch-1",
       type: "multiple-choice",
       difficulty: "medium",
       question: "SSL models for tabular data face a unique challenge compared to image/text SSL: which property of tabular data makes standard augmentations like cropping or masking less effective?",
@@ -2809,7 +2809,7 @@ const patchSsl: Record<string, Question[]> = {
   ],
   "ssl-kp35-patch": [
     {
-      id: "q-ssl-kp35-1",
+      id: "q-ssl-kp35-patch-1",
       type: "multiple-choice",
       difficulty: "hard",
       question: "In SSL for medical imaging, which factor most severely limits the direct application of natural image SSL methods like SimCLR to medical images?",
@@ -2827,7 +2827,7 @@ const patchSsl: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-ssl-kp35-2",
+      id: "q-ssl-kp35-patch-2",
       type: "true-false",
       difficulty: "medium",
       question: "SSL pre-training on unlabeled medical images (e.g., chest X-rays) consistently outperforms ImageNet-supervised pre-training for downstream medical imaging tasks, even when the ImageNet-pre-trained model is fine-tuned on the same medical dataset.",
@@ -2839,7 +2839,7 @@ const patchSsl: Record<string, Question[]> = {
       ],
     },
     {
-      id: "q-ssl-kp35-3",
+      id: "q-ssl-kp35-patch-3",
       type: "multiple-choice",
       difficulty: "hard",
       question: "The GigaSSL approach for whole-slide image (WSI) SSL must address which fundamental computational challenge not present in standard image SSL?",
