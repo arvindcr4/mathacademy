@@ -1638,9 +1638,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Evapotranspiration is the dominant cooling mechanism. The energy balance for vegetated surfaces:\n\n" +
+        "**Step 1** Evapotranspiration is the dominant cooling mechanism. The energy balance for vegetated surfaces:\n\n" +
         "\\[\\lambda E = \\text{LAI} \\cdot (R_n - G) \\cdot \\frac{\\rho c_p}{\\gamma} \\cdot \\frac{e_s - e}{r_a}\\]\n\n" +
-        "Vegetation:\n" +
+        "**Step 2** Vegetation:\n" +
         "\\[- \\text{Transpires water (biological process)}\\]" +
         "\\[- \\text{Converts sensible heat (H) to latent heat (LE)}\\]" +
         "\\[- \\text{Reduces net radiation via canopy absorption}\\]\n\n" +
@@ -1815,7 +1815,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Traditional hydrological models require calibration against observed streamflow data; in the ~60% of the world\'s land area with no stream gauges, ML models trained on gauged basins can transfer to ungauged ones using physical catchment attributes (geology, slope, soil), enabling global flood forecasting.",
+        "**Step 1** Traditional hydrological models require calibration against observed streamflow data; in the ~60% of the world\'s land area with no stream gauges, ML models trained on gauged basins can transfer to ungauged ones using physical catchment attributes (geology, slope, soil), enabling global flood forecasting.",
       hints: [
         "Without observed data to calibrate against, how do you build a reliable flood model for a river no one has measured?",
         "ML models trained on diverse gauged basins learn general rainfall-runoff relationships that can generalize to ungauged catchments via similar physical attributes.",
