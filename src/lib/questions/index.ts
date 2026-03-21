@@ -2270,3 +2270,4 @@ import "./coding-interviews-2";
 import "./coding-interviews-3";
 import "./gemini-multimodal";
 import "./karpathy-nn-zero-to-hero";
+import "./fastai-deep-learning";
