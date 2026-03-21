@@ -364,7 +364,7 @@ describe('Question Files Validation', () => {
   })
 
   it('should have balanced LaTeX delimiters in questions', () => {
-    for (const [_bankName, questions] of Object.entries(questionBanks)) {
+    for (const [, questions] of Object.entries(questionBanks)) {
       for (const q of questions as Question[]) {
         const questionText = q.question
 

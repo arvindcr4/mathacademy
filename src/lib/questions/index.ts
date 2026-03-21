@@ -70,6 +70,7 @@ import "./llm-inference-optimization";
 import "./rag-systems";
 import "./ai-engineering-sdks";
 import "./ai-coding-assistants";
+import "./data-engineering-ml";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

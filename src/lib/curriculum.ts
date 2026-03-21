@@ -12809,4 +12809,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "data-engineering-ml",
+    slug: "data-engineering-ml",
+    name: "Data Engineering for AI/ML",
+    description:
+      "Build robust data pipelines for machine learning: ETL, feature stores, data quality, and modern data stack tools.",
+    category: "ai",
+    icon: "📊",
+    color: "#14B8A6",
+    topicCount: 6,
+    estimatedHours: 12,
+    topics: [
+      {
+        id: "data-pipelines-fundamentals",
+        slug: "data-pipelines-fundamentals",
+        name: "Data Pipeline Fundamentals",
+        description:
+          "Core concepts for building ML data pipelines.",
+        knowledgePoints: [
+          {
+            id: "de-kp-1",
+            slug: "etl-vs-elt",
+            name: "ETL vs ELT Patterns",
+          },
+          {
+            id: "de-kp-2",
+            slug: "batch-streaming",
+            name: "Batch vs Streaming Pipelines",
+          },
+          {
+            id: "de-kp-3",
+            slug: "data-formats",
+            name: "Data Formats (Parquet, Avro, Delta)",
+          },
+          {
+            id: "de-kp-4",
+            slug: "data-partitioning",
+            name: "Data Partitioning Strategies",
+          },
+          {
+            id: "de-kp-5",
+            slug: "pipeline-orchestration",
+            name: "Pipeline Orchestration Concepts",
+          },
+        ],
+      },
+      {
+        id: "modern-data-stack",
+        slug: "modern-data-stack",
+        name: "Modern Data Stack Tools",
+        description:
+          "Key tools for modern data engineering.",
+        knowledgePoints: [
+          {
+            id: "de-kp-6",
+            slug: "apache-airflow",
+            name: "Apache Airflow Fundamentals",
+          },
+          {
+            id: "de-kp-7",
+            slug: "dbt-transformations",
+            name: "dbt for Data Transformations",
+          },
+          {
+            id: "de-kp-8",
+            slug: "apache-spark",
+            name: "Apache Spark for Large-Scale Processing",
+          },
+          {
+            id: "de-kp-9",
+            slug: "kafka-streaming",
+            name: "Kafka for Real-Time Streaming",
+          },
+          {
+            id: "de-kp-10",
+            slug: "data-warehouses",
+            name: "Snowflake & BigQuery",
+          },
+        ],
+      },
+      {
+        id: "feature-stores-deep",
+        slug: "feature-stores-deep",
+        name: "Feature Stores Deep Dive",
+        description:
+          "Managing ML features at scale.",
+        knowledgePoints: [
+          {
+            id: "de-kp-11",
+            slug: "feature-store-concepts",
+            name: "Feature Store Architecture",
+          },
+          {
+            id: "de-kp-12",
+            slug: "online-offline-features",
+            name: "Online vs Offline Feature Serving",
+          },
+          {
+            id: "de-kp-13",
+            slug: "feast-feature-store",
+            name: "Feast Feature Store",
+          },
+          {
+            id: "de-kp-14",
+            slug: "feature-versioning",
+            name: "Feature Versioning & Lineage",
+          },
+          {
+            id: "de-kp-15",
+            slug: "feature-freshness",
+            name: "Feature Freshness & Monitoring",
+          },
+        ],
+      },
+      {
+        id: "data-quality-engineering",
+        slug: "data-quality-engineering",
+        name: "Data Quality Engineering",
+        description:
+          "Ensuring data quality for ML systems.",
+        knowledgePoints: [
+          {
+            id: "de-kp-16",
+            slug: "data-validation",
+            name: "Data Validation Frameworks",
+          },
+          {
+            id: "de-kp-17",
+            slug: "data-d-quality-dimensions",
+            name: "Data Quality Dimensions",
+          },
+          {
+            id: "de-kp-18",
+            slug: "anomaly-detection-data",
+            name: "Anomaly Detection in Data Pipelines",
+          },
+          {
+            id: "de-kp-19",
+            slug: "data-contracts",
+            name: "Data Contracts & Schema Evolution",
+          },
+          {
+            id: "de-kp-20",
+            slug: "great-expectations",
+            name: "Great Expectations Library",
+          },
+        ],
+      },
+      {
+        id: "ml-data-pipelines",
+        slug: "ml-data-pipelines",
+        name: "ML-Specific Data Pipelines",
+        description:
+          "Data pipelines designed for machine learning.",
+        knowledgePoints: [
+          {
+            id: "de-kp-21",
+            slug: "training-data-pipelines",
+            name: "Training Data Pipeline Patterns",
+          },
+          {
+            id: "de-kp-22",
+            slug: "inference-data-pipelines",
+            name: "Inference Data Serving",
+          },
+          {
+            id: "de-kp-23",
+            slug: "data-versioning-ml",
+            name: "Data Versioning (DVC)",
+          },
+          {
+            id: "de-kp-24",
+            slug: "feature-pipelines",
+            name: "Feature Pipeline Architecture",
+          },
+          {
+            id: "de-kp-25",
+            slug: "label-management",
+            name: "Label Management Systems",
+          },
+        ],
+      },
+      {
+        id: "data-governance",
+        slug: "data-governance",
+        name: "Data Governance & Compliance",
+        description:
+          "Managing data access, privacy, and compliance.",
+        knowledgePoints: [
+          {
+            id: "de-kp-26",
+            slug: "data-lineage",
+            name: "Data Lineage & Provenance",
+          },
+          {
+            id: "de-kp-27",
+            slug: "data-catalogs",
+            name: "Data Catalogs & Discovery",
+          },
+          {
+            id: "de-kp-28",
+            slug: "access-control-data",
+            name: "Data Access Control",
+          },
+          {
+            id: "de-kp-29",
+            slug: "privacy-pipelines",
+            name: "Privacy-Preserving Pipelines",
+          },
+          {
+            id: "de-kp-30",
+            slug: "compliance-automation",
+            name: "Compliance Automation (GDPR, CCPA)",
+          },
+        ],
+      },
+    ],
+  },
 ];
