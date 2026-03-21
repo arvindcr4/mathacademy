@@ -2623,3 +2623,5 @@ const additionalQuestions4: Record<string, Question[]> = {
 Object.assign(questions, additionalQuestions4);
 
 registerQuestions(questions);
+
+export default questions;

@@ -2857,3 +2857,5 @@ const extraMsdQ3: Record<string, Question[]> = {
 Object.assign(questions, extraMsdQ3);
 
 registerQuestions(questions);
+
+export default questions;

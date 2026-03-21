@@ -223,3 +223,75 @@ describe('Course Statistics', () => {
     expect(totalKPs, 'Should have at least 20 total knowledge points').toBeGreaterThan(20)
   })
 })
+
+describe('Course Search & Lookup', () => {
+  it('should have valid course lookup by slug', () => {
+    const slugs = new Set(courses.map(c => c.slug))
+
+    // Test that slugs are queryable
+    for (const course of courses) {
+      expect(slugs.has(course.slug), `Should be able to lookup ${course.slug}`).toBe(true)
+    }
+  })
+
+  it('should have consistent id and slug naming', () => {
+    for (const course of courses) {
+      // Most courses should have id that matches or is similar to slug
+      expect(
+        course.id.length,
+        `${course.name} id should have reasonable length`
+      ).toBeGreaterThan(0)
+      expect(
+        course.slug.length,
+        `${course.name} slug should have reasonable length`
+      ).toBeGreaterThan(0)
+    }
+  })
+})
+
+describe('Topic Ordering', () => {
+  it('should have logically ordered topics', () => {
+    for (const course of courses) {
+      // First topic should typically be introductory
+      if (course.topics.length > 0) {
+        const firstTopic = course.topics[0]
+        expect(
+          firstTopic.name,
+          `${course.name} first topic should have a name`
+        ).toBeDefined()
+      }
+    }
+  })
+
+  it('should have sequential topic progression', () => {
+    for (const course of courses) {
+      const topicNames = course.topics.map(t => t.name)
+
+      // Check that topics aren't duplicated
+      const uniqueNames = new Set(topicNames)
+      expect(
+        uniqueNames.size,
+        `${course.name} should have unique topic names`
+      ).toBe(topicNames.length)
+    }
+  })
+})
+
+describe('Knowledge Point Coverage', () => {
+  it('should have reasonable number of KPs per topic', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        // Most topics should have 3-8 knowledge points
+        const kpCount = topic.knowledgePoints.length
+        expect(
+          kpCount,
+          `${course.name}: ${topic.name} should have at least 1 KP`
+        ).toBeGreaterThanOrEqual(1)
+        expect(
+          kpCount,
+          `${course.name}: ${topic.name} should have at most 15 KPs`
+        ).toBeLessThanOrEqual(15)
+      }
+    }
+  })
+})

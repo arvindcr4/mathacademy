@@ -2768,3 +2768,5 @@ const extra: Record<string, import("@/lib/curriculum").Question[]> = {
 Object.assign(questions, extra);
 
 registerQuestions(questions);
+
+export default questions;

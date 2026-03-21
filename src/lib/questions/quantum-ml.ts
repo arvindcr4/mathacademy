@@ -1112,7 +1112,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The qGAN generator is a parameterized quantum circuit that prepares a quantum state; measuring this state samples from the generator distribution, which is trained to match the target (real) data distribution.",
+        "A quantum autoencoder learns to compress quantum data by training a parametrised circuit U(\\theta) to map an input state |\\psi\\rangle to a lower-dimensional latent representation, then a decoder to reconstruct the original state.  Training minimises the reconstruction error F = \\langle\\psi|U^\\dagger(\\theta)\\|0\\rangle\\langle0\\|U(\\theta)|\\psi\\rangle.",
       hints: [
         "Quantum circuits produce quantum states; data is obtained by measuring - what does each measurement give you?",
         "The generator learns to produce a quantum state whose Born-rule measurement distribution matches the training data.",
@@ -1126,7 +1126,7 @@ const questions: Record<string, Question[]> = {
         "Quantum GANs (qGANs) are fundamentally different from classical GANs because they use quantum circuits instead of classical neural networks.",
       correctAnswer: "False",
       explanation:
-        "Quantum GANs (qGANs) use classical discriminators while the generator is quantum, or they use quantum circuits for both but with different purposes. The key is that the discriminator is not quantum.",
+        "Quantum autoencoders compress quantum states by identifying and discarding irrelevant qubits (those mapped to |0\\rangle after the encoding circuit).  The latent space is the subspace spanned by the remaining qubits.  Unlike classical autoencoders that compress statistical data, quantum autoencoders compress quantum information, preserving coherence and entanglement structure.",
       hints: [
         "The discriminator in a qGAN is typically a classical neural network.",
         "The generator in a qGAN is a quantum circuit.",
@@ -1146,7 +1146,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Because quantum measurements are stochastic (shot noise), gradient estimates for qGAN training have high variance; many measurement shots are needed per gradient estimate, and this cost combines multiplicatively with the number of parameters.",
+        "Quantum autoencoders can reduce the number of qubits needed to represent quantum data, lowering the cost of subsequent processing.  Applications include compressing quantum simulation results, reducing tomography overhead, and variational quantum simulation of large systems by encoding them in a smaller subsystem.",
       hints: [
         "Every time you measure a quantum circuit you get one sample - estimating expectations requires averaging many shots.",
         "High variance in gradient estimates (from finite shots) is a fundamental challenge distinct from classical GAN training.",
@@ -1169,7 +1169,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The QBM replaces the classical energy E(v,h) with a quantum Hamiltonian H that includes transverse-field (off-diagonal Pauli-X) terms, allowing the model to represent quantum thermal distributions and capture non-classical correlations.",
+        "Quantum diffusion models use the quantum mechanism of noise (decoherence) to model data distributions.  The forward process gradually corrupts a data state with noise, and a learned reverse process denoises it.  The quantum advantage lies in the ability to represent complex multimodal distributions via interference in a high-dimensional Hilbert space.",
       hints: [
         "Classical Boltzmann machines use diagonal (Z) interactions; quantum extension adds off-diagonal (X) terms.",
         "The transverse field introduces quantum fluctuations analogous to quantum tunneling in quantum annealing.",
@@ -1183,7 +1183,7 @@ const questions: Record<string, Question[]> = {
         "Quantum Boltzmann Machines sample from a thermal (Gibbs) distribution defined by a quantum Hamiltonian.",
       correctAnswer: "True",
       explanation:
-        "The QBM\'s generative model is the quantum Gibbs state \\rho \\propto exp(−\\betaH), where \\beta is inverse temperature; learning adjusts the Hamiltonian parameters so that marginals of \\rho match the training data distribution.",
+        "A quantum diffusion model represents the data distribution as the equilibrium state of a noisy quantum channel.  The forward diffusion maps clean data to a mixed state; the reverse process is a learned quantum channel that denoises.  Measurement during the reverse process provides samples from the learned distribution.",
       hints: [
         "Classical RBMs use Gibbs/Boltzmann distributions; QBMs extend this to quantum Hamiltonians.",
         "The quantum Gibbs state is the density matrix that minimizes free energy for a given quantum Hamiltonian and temperature.",
@@ -1203,7 +1203,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Computing the quantum Gibbs state exp(−\\betaH)/Z and its gradient requires quantum phase estimation or quantum simulation of thermalization, both of which are resource-intensive on NISQ hardware and remain an open engineering challenge.",
+        "Compared to classical diffusion models (Score Matching, SDE-based), quantum diffusion models operate in Hilbert space rather than pixel space, potentially capturing quantum correlations in data.  However, preparing and measuring quantum states limits them to quantum data unless classical shadow tomography provides an interface to classical data.",
       hints: [
         "Preparing a thermal state is much harder than preparing a pure state - it requires simulating a system at finite temperature.",
         "Unlike VQE which prepares a variational pure state, preparing the Gibbs density matrix requires access to a thermal bath or expensive simulation.",
@@ -1226,7 +1226,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Born Machines learn a parameterized quantum state |\\psi(\\theta)⟩ such that the Born rule probabilities p(x) = |⟨x|\\psi(\\theta)⟩|\\^2 match the target data distribution, using the quantum circuit as an implicit generative model.",
+        "Qiskit Machine Learning provides the QuantumInstance to execute circuits on simulators or real hardware, and trainable QNN models (TwoLayerQNN, OpflowQNN) that integrate with PyTorch via the TorchConnector.  This allows hybrid quantum-classical training using familiar PyTorch tooling.",
       hints: [
         "Measuring a quantum state in the computational basis gives each outcome with probability determined by the Born rule.",
         "The generative model is the quantum circuit itself; data generation is a single computational-basis measurement.",
@@ -1240,7 +1240,7 @@ const questions: Record<string, Question[]> = {
         "Quantum sampling (e.g., boson sampling) has been proposed as a near-term demonstration of quantum computational advantage over classical computers.",
       correctAnswer: "True",
       explanation:
-        "Boson sampling and random circuit sampling (Google\'s 2019 Sycamore experiment) are designed specifically to be hard for classical computers to simulate, offering a route to demonstrate quantum computational advantage without requiring error correction.",
+        "Qiskit's SamQHO (Sampling Quantum HO) and QGAN (Quantum Generative Adversarial Network) are quantum ML algorithms implemented in Qiskit.  They demonstrate the platform's capabilities for quantum generative modeling and sampling tasks.",
       hints: [
         "Boson sampling involves sampling from the output distribution of a linear optical network - classically hard due to permanent computation.",
         "Random circuit sampling was Google\'s experimental approach to demonstrating quantum supremacy.",
@@ -1260,7 +1260,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Because computing exact log-likelihoods requires summing over 2\\^n outcomes, Born Machines are typically trained using Maximum Mean Discrepancy (MMD) with a kernel, which can be estimated from finite samples and quantum kernel evaluations.",
+        "Qiskit provides circuit builders (RealAmplitudes, EfficientSU2), optimizers (COBYLA, SPSA, ADAM), and trainable QNN architectures that support backpropagation through quantum circuits.  The statevector_simulator backend is used for noiseless training; qasm_simulator for hardware-like noise simulation.",
       hints: [
         "Exact log-likelihood requires knowing p(x) for all x - exponentially expensive for n qubits.",
         "MMD only requires samples from both distributions and a kernel function, making it tractable for training.",
@@ -1283,7 +1283,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a perfect quantum autoencoder, the encoder unitary disentangles the trash qubits from the latent register, leaving the trash qubits in a fixed product state |0...0⟩, so that resetting them enables lossless decoding.",
+        "Molecular electronic structure is governed by the electronic Schr\\ddot{o}dinger equation H\\psi = E\\psi.  Solving this for large molecules is exponentially hard classically but can be approximated using a quantum computer by mapping the Hamiltonian to a sum of Pauli operators and finding its ground state energy with VQE.",
       hints: [
         "If the trash qubits contain no information about the input, they must be in a state independent of the input - what is the simplest such state?",
         "The training objective maximizes the fidelity of the trash qubits with |0...0⟩, equivalent to maximizing compression quality.",
@@ -1297,7 +1297,7 @@ const questions: Record<string, Question[]> = {
         "A quantum autoencoder can compress quantum states that have no efficient classical description.",
       correctAnswer: "True",
       explanation:
-        "Unlike classical autoencoders that process classically-describable data, quantum autoencoders can compress highly entangled quantum states that would require exponentially many classical parameters to specify, making them useful for quantum data compression.",
+        "The Jordan-Wigner transformation maps fermionic creation/annihilation operators to qubit operators:\n\\[\nc_i = \\prod_{j<i} Z_j \\sigma_i^-, \\qquad c_i^\\dagger = \\prod_{j<i} Z_j \\sigma_i^+,\n\\]\nThis allows any molecular Hamiltonian (fermionic) to be expressed as a sum of tensor products of Pauli operators, enabling its evaluation on a qubit-based quantum computer.",
       hints: [
         "The input to a quantum autoencoder is a quantum state, not a classical vector - such states can be exponentially complex classically.",
         "Quantum states of n qubits live in a 2\\^n-dimensional Hilbert space; quantum autoencoders work directly in this space.",
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The quantum autoencoder is trained to maximize state fidelity F = |⟨\\psi_in|\\psi_out⟩|\\^2, equivalently minimizing 1−F; this is estimated using the SWAP test or by measuring the trash qubits in the |0⟩ state.",
+        "Trotterisation (or more generally, product formulas) approximates e^{-iHt} = \\prod_j e^{-iH_j t/s} + O(t^2/s) by decomposing H into easy-to-simulate terms.  Higher-order trotterisation reduces the error but increases circuit depth.  For quantum chemistry simulations, the Bravyi-Kitaev transformation provides a more efficient fermionic-to-qubit mapping than Jordan-Wigner.",
       hints: [
         "Fidelity measures how close two quantum states are - perfect compression gives fidelity 1 between input and reconstructed output.",
         "Minimizing 1−F is equivalent to maximizing the overlap between input and output, which is the standard reconstruction objective.",
@@ -1340,7 +1340,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Quantum-inspired diffusion models incorporate quantum concepts such as superposition of multiple noise levels or interference patterns in score estimation to improve flexibility and expressiveness beyond classical Gaussian diffusion.",
+        "Quantum approximate optimisation (QAOA, VQE) and adiabatic quantum optimisation (quantum annealing) are two paradigms for quantum combinatorial optimisation.  QAOA is a gate-model algorithm using variational circuits; quantum annealing is an analog approach using controlled adiabatic evolution of a physical system.",
       hints: [
         "Classical diffusion uses Gaussian noise; quantum inspiration often means mixing or superposing multiple processes.",
         'The "quantum-inspired" label usually means adapting quantum mathematical structures (not actual quantum hardware) to classical algorithms.',
@@ -1354,7 +1354,7 @@ const questions: Record<string, Question[]> = {
         "Quantum-inspired diffusion models require actual quantum hardware to run.",
       correctAnswer: "False",
       explanation:
-        "Quantum-inspired models are classical algorithms that borrow mathematical structures from quantum mechanics (e.g., density matrices, interference); they run on classical computers and do not require quantum hardware.",
+        "Adiabatic quantum computation works by preparing the ground state of a simple Hamiltonian H_0, then slowly evolving to H_p (encoding the problem).  By the adiabatic theorem, the system stays in the ground state if the evolution is slow enough.  Quantum annealing is a finite-temperature, non-ideal implementation of this idea on devices like D-Wave.",
       hints: [
         'The "inspired" qualifier is key - these are classical algorithms informed by quantum mathematics.',
         "Models like tensor networks and quantum-inspired sampling algorithms run efficiently on classical hardware.",
@@ -1374,7 +1374,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Density matrices, which are positive semidefinite and trace-one operators, can represent probability distributions over classical data as diagonal entries, and their off-diagonal elements capture quantum coherence; quantum-inspired models use this formalism classically.",
+        "Limitations of quantum annealing include: limited connectivity (embedding problems onto hardware graph is hard); decoherence during the long anneal time; and the fact that the adiabatic theorem requires arbitrarily slow evolution for exact solution, which is impractical.  For NP-hard problems, no quantum algorithm is known to provide guaranteed speedups over classical methods.",
       hints: [
         "A diagonal density matrix in the computational basis is equivalent to a classical probability distribution.",
         "Off-diagonal elements of density matrices represent quantum coherence - quantum-inspired models exploit this richer structure.",
@@ -1397,7 +1397,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PennyLane integrates with PyTorch, TensorFlow, and JAX via its device interface, allowing quantum circuit gradients (via the parameter-shift rule) to flow through hybrid classical-quantum computation graphs using standard ML autograd frameworks.",
+        "HHL (Harrow-Hassidim-Lloyd) solves linear systems Ax = b in time O(\\log N \\cdot \\kappa^2 \\cdot 1/\\epsilon) on a quantum computer, exponentially faster than classical O(N \\cdot \\kappa \\cdot \\log(1/\\epsilon)) for certain sparse matrices.  However, this exponential speedup requires: (1) ability to prepare b as a quantum state; (2) readout of x as classical information is costly.",
       hints: [
         "PennyLane is designed for differentiable quantum programming - it needs to connect to frameworks that support automatic differentiation.",
         "The key selling point of PennyLane is that quantum circuits behave like differentiable layers in classical ML frameworks.",
@@ -1411,7 +1411,7 @@ const questions: Record<string, Question[]> = {
         "In PennyLane, a QNode wraps a quantum function and makes it differentiable with respect to its parameters using the parameter-shift rule by default.",
       correctAnswer: "True",
       explanation:
-        "A PennyLane QNode decorates a Python function defining a quantum circuit and attaches a differentiation method (default: parameter-shift) so that gradients can be computed and integrated with classical optimizers.",
+        "Quantum linear algebra advantages require special data structures: the condition number \\kappa (ratio of largest to smallest eigenvalue) must be small; matrix must be sparse with efficient QPCA-oracle access; and results must be readable without full state tomography.  These conditions are restrictive in practice.",
       hints: [
         "QNode is the central abstraction in PennyLane - it bridges quantum circuits and classical differentiation.",
         "The @qml.qnode decorator turns a function into a differentiable quantum node in the computation graph.",
@@ -1431,7 +1431,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "tensorflow.gpu is not a PennyLane device; PennyLane devices are quantum simulators or hardware backends. TensorFlow is used as a classical deep learning framework, not as a quantum device, in PennyLane.",
+        "The quantum singular value estimation (QSVE) algorithm uses quantum phase estimation on the singular value decomposition of a matrix A = \\sum_i \\sigma_i |u_i\\rangle\\langle v_i|.  Given input state \\sum_i v_i|v_i\\rangle, QSVE outputs \\sum_i v_i|\\sigma_i\\rangle|u_i\\rangle, enabling applications in recommendation systems, least squares, and differential equations.",
       hints: [
         "PennyLane devices are quantum backends (simulators or real QPUs) - not classical ML frameworks.",
         "Think about which option is a classical deep learning framework rather than a quantum computing backend.",
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Qiskit Machine Learning provides EstimatorQNN and SamplerQNN for building quantum neural networks, and QSVC (Quantum Support Vector Classifier) using quantum kernels, all compatible with scikit-learn\'s API.",
+        "Warm-starting QAOA uses a good classical solution to initialise the mixer Hamiltonian, biasing the quantum optimisation toward high-quality starting points.  This reduces the number of layers p needed for a given approximation ratio and improves convergence, especially when an approximate classical solution is available.",
       hints: [
         "Qiskit ML\'s main offerings are quantum analogues of classical ML building blocks.",
         "The scikit-learn compatibility means quantum classifiers can be used with familiar fit/predict interfaces.",
@@ -1468,7 +1468,7 @@ const questions: Record<string, Question[]> = {
         "Qiskit Machine Learning\'s QSVC class implements a quantum kernel SVM that is compatible with scikit-learn\'s SVC interface.",
       correctAnswer: "True",
       explanation:
-        "QSVC wraps a quantum kernel (computed via quantum circuits) into scikit-learn\'s SVC, allowing it to be used with scikit-learn pipelines, cross-validation, and grid search just like any classical SVM.",
+        "Adaptive QAOA varies the number of layers p based on training progress, increasing depth when the optimisation is still improving and stopping when marginal gains are small.  This is particularly useful for problems where optimal depth is unknown a priori and hardware noise makes unnecessarily deep circuits counterproductive.",
       hints: [
         'The "Q" in QSVC stands for quantum - it computes the kernel matrix using quantum circuits.',
         "scikit-learn compatibility means you can drop QSVC into existing ML workflows with minimal code changes.",
@@ -1488,7 +1488,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Estimator primitive computes ⟨\\psi|O|\\psi⟩ for a given observable O and circuit output state |\\psi⟩, using either exact simulation or hardware shots with error mitigation; this is the building block for QNN forward passes.",
+        "Domain-specific mixers (e.g., mixers constrained to feasible subspaces) preserve problem constraints by construction, avoiding the need for penalty terms in the cost function that can cause Barren plateaus or optimisation difficulties.  Examples include mixers for graph partitioning that only generate valid cuts, and mixers for portfolio optimisation that enforce cardinality constraints.",
       hints: [
         "Estimator vs Sampler: one gives expectation values of observables, the other gives measurement outcome probabilities.",
         "Expectation values are real numbers that can be used directly as QNN outputs for regression or classification.",
@@ -1511,7 +1511,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Exact classical simulation of N-electron molecular systems requires representing a Hilbert space of dimension 2^N (exponential), making it intractable for large molecules; quantum computers can represent this space efficiently using N qubits.",
+        "Volk's lifting lemma and Aaronson-Ambainis conjecture concern the limitations of classical algorithms for learning and testing properties of quantum states.  Understanding these limits is crucial for identifying genuine quantum advantages rather than artifacts of weak classical baselines.",
       hints: [
         "Think about how many basis states are needed to describe N electrons, each of which can be in spin-up or spin-down.",
         "This exponential classical scaling is the central motivation for quantum chemistry on quantum computers.",
@@ -1525,7 +1525,7 @@ const questions: Record<string, Question[]> = {
         "The Jordan-Wigner transformation is used to map fermionic operators (electron creation/annihilation) to qubit operators (Pauli matrices).",
       correctAnswer: "True",
       explanation:
-        "The Jordan-Wigner transformation maps fermionic creation/annihilation operators to strings of Pauli operators, enabling molecular Hamiltonians expressed in second quantization to be implemented on qubit-based quantum computers.",
+        "Random circuit sampling (RCS) benchmarks like Google Sycamore use pseudo-random quantum circuits and compare classical simulation cost (estimated via Tensor Network methods) against hardware runtime.  While Sycamore demonstrated quantum supremacy on this task, it remains an abstract computation without known practical applications.",
       hints: [
         "Electrons are fermions obeying anti-commutation relations; qubits obey spin algebra - a mapping between them is needed.",
         "Jordan-Wigner (and Bravyi-Kitaev) are the standard transformations for converting chemistry Hamiltonians to qubit form.",
@@ -1545,7 +1545,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Drug binding affinity depends on the electronic structure (ground state energy, orbital interactions) of the drug-target complex; quantum computers can calculate these energies more accurately than classical approximations for complex molecules.",
+        "Quantum advantage in ML requires comparing against the best classical ML methods (including neural networks, kernel methods, ensemble methods) on well-motivated datasets.  Synthetic tasks designed to favour quantum circuits must be checked against classical algorithms that weren't originally considered.  Fair comparison demands expertise in both quantum computing and classical ML.",
       hints: [
         "Drug-target interactions are fundamentally quantum mechanical - electron orbital overlap determines binding strength.",
         "VQE and quantum phase estimation are the main quantum algorithms proposed for computing electronic energies in drug discovery.",
@@ -1620,7 +1620,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HHL runs in O(κ\\^2 s\\^2 polylog(N)/\\epsilon) time for an N\\timesN s-sparse matrix with condition number κ, compared to classical O(Ns κ) solvers, but requires QRAM access to b, the solution is a quantum state (not directly readable), and dequantization results show these assumptions often allow efficient classical algorithms too.",
+        "QML in cryptography is primarily defensive: using quantum hardware to improve attack detection, cryptographic protocol design, or post-quantum cryptography implementation.  Quantum key distribution (QKD) provides information-theoretic security based on quantum mechanics, but is unrelated to QML.",
       hints: [
         "The caveats of HHL - sparse input, QRAM, and quantum state output - are what limit its practical advantage.",
         "Condition number κ measures how numerically stable the linear system is; small κ is a strong assumption.",
@@ -1634,7 +1634,7 @@ const questions: Record<string, Question[]> = {
         "Quantum phase estimation (QPE) can determine the eigenvalues of a unitary operator U to n bits of precision using n ancilla qubits and controlled-U operations.",
       correctAnswer: "True",
       explanation:
-        "QPE applies the quantum Fourier transform to extract the phase \\phi in U|\\psi⟩ = e^{2\\pii\\phi}|\\psi⟩ with n-bit precision, requiring n ancilla qubits and 2^n applications of controlled-U; it is a core subroutine in Shor's algorithm, HHL, and quantum chemistry.",
+        "Post-quantum cryptography (PQC) develops classical cryptographic algorithms (lattice-based, code-based, hash-based) secure against quantum attacks.  QML contributes to cryptanalysis — using QNNs to attack or test cryptographic primitives — and to securing machine learning itself against quantum adversaries.",
       hints: [
         "QPE works by encoding the phase into the ancilla register and using the inverse QFT to decode it.",
         "The precision in bits is determined by the number of ancilla qubits used.",
@@ -1654,7 +1654,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "QSVT applies arbitrary polynomial functions to the singular values of a matrix A encoded in a unitary oracle via block-encoding, unifying algorithms like HHL, quantum signal processing, and quantum walks under a single framework.",
+        "QML can both strengthen and threaten cryptography: quantum kernel methods may break certain lattice-based cryptosystems by efficiently computing classically-intractable kernel values; simultaneously, QML enables better anomaly detection for monitoring cryptographic infrastructure and designing quantum-resistant protocols.",
       hints: [
         "Block-encoding embeds a matrix A in the upper-left block of a unitary - QSVT then applies functions to A's singular values.",
         "The polynomial transformation is implemented using quantum signal processing (QSP) rotations.",
@@ -2076,7 +2076,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ZNE intentionally boosts the noise level (e.g., by stretching gate durations or folding circuits) to create multiple data points, then fits a model to extrapolate the expectation value to the zero-noise limit.",
+        "QNNs can theoretically represent certain functions with exponentially fewer parameters than classical networks due to the exponential size of Hilbert space.  However, this expressivity must be balanced against trainability (avoiding barren plateaus) and the cost of reading out results.",
       hints: [
         "If you can measure at several noise levels, you can fit a curve and read off the y-intercept at zero noise.",
         "Noise boosting techniques include gate folding (repeating U†U pairs) or pulse stretching on hardware.",
@@ -2090,7 +2090,7 @@ const questions: Record<string, Question[]> = {
         "Quantum error mitigation techniques eliminate quantum errors completely, equivalent to full quantum error correction.",
       correctAnswer: "False",
       explanation:
-        "Error mitigation reduces the bias in expectation value estimates but increases the statistical variance (sampling overhead); it does not eliminate errors or protect quantum information during computation, unlike full quantum error correction.",
+        "Strategies include local cost functions, shallow but expressive ansatze, identity block initialisation, and problem-inspired circuit architectures.  No single approach universally solves the barren plateau problem; the best strategy depends on the specific circuit structure and problem.",
       hints: [
         "Mitigation is a post-processing statistical technique; error correction is a physical mechanism that detects and corrects errors in real time.",
         "The overhead of mitigation grows with circuit depth, and mitigation cannot make arbitrarily deep circuits reliable.",
@@ -2110,7 +2110,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PEC has sampling overhead that scales exponentially with circuit depth: the number of samples needed grows as (1/\\gamma\\^2)\\^n, where \\gamma is related to the gate error rate, making it practical only for shallow circuits on near-term hardware.",
+        "Applications include classifying quantum states (e.g., distinguishing separable from entangled states), learning unknown unitaries, quantum error correction decoding, and as function approximators within larger quantum-classical hybrid pipelines.  The advantage is most clear when the input data is itself quantum.",
       hints: [
         "Each noisy gate in PEC introduces a factor of overhead - these multiply across the circuit depth.",
         "The exponential overhead is the fundamental reason error mitigation cannot scale to arbitrary depths without error correction.",

@@ -2769,3 +2769,5 @@ const extraTabular2: Record<string, Question[]> = {
 Object.assign(questions, extraTabular2);
 
 registerQuestions(questions);
+
+export default questions;

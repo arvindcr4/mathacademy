@@ -416,3 +416,5 @@ const questions: Record<string, Question[]> = {
 };
 
 registerQuestions(questions);
+
+export default questions;
