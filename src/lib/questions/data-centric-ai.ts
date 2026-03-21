@@ -2097,5 +2097,127 @@ const extraDCQ: Record<string, Question[]> = {
 
 Object.assign(questions, extraDCQ);
 
+
+const extraDCQ2: Record<string, Question[]> = {
+  "annotation-best-practices": [
+    {
+      id: "q-dc-ex5-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Inter-annotator agreement (IAA) is commonly measured with Cohen's kappa rather than raw percent agreement. Why is raw percent agreement insufficient for evaluating annotation quality?",
+      options: [
+        "Percent agreement is harder to compute than kappa",
+        "Percent agreement does not correct for chance agreement — even random annotators achieve high percent agreement on imbalanced datasets where one class dominates, making it impossible to distinguish skill from chance",
+        "Percent agreement only works for binary classification tasks",
+        "Percent agreement cannot be computed for continuous ratings",
+      ],
+      correctAnswer: 1,
+      explanation: "For a binary task where 90% of examples are class A, two annotators randomly labeling everything as A achieve 90% agreement by chance. Cohen's kappa corrects for this: kappa = (P_observed - P_expected) / (1 - P_expected), where P_expected is the agreement expected by chance given each annotator's marginal label distribution. Kappa = 0 means no better than chance; kappa = 1 means perfect agreement; kappa < 0 means worse than chance. Acceptable kappa thresholds: > 0.6 for moderate agreement, > 0.8 for near-perfect agreement in annotation contexts.",
+      hints: [
+        "Fleiss's kappa extends Cohen's kappa to more than two annotators — useful for crowd-sourced annotation where each example has ratings from multiple workers.",
+        "Krippendorff's alpha handles missing ratings and ordinal scales — preferable when annotators do not all rate the same examples.",
+      ],
+    },
+    {
+      id: "q-dc-ex5-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Majority voting is always the best strategy for aggregating labels from multiple annotators because it selects the label chosen by more than half the annotators, minimizing individual annotator errors.",
+      correctAnswer: "False",
+      explanation: "Majority voting treats all annotators equally and assumes independence. It fails when: (1) Annotators have systematically different accuracy rates — a single expert annotator may be more reliable than the majority of novices, (2) Systematic bias is present — if annotators share a cultural or linguistic bias, the majority vote amplifies the bias, (3) Rare classes are systematically voted down — minority labels are outvoted even when correct. Better approaches: MACE (Multi-Annotator Competence Estimation) and Dawid-Skene model estimate per-annotator accuracy and weight votes accordingly. For difficult tasks, structured disagreement resolution (adjudication by an expert) outperforms simple majority voting.",
+      hints: [
+        "Dawid-Skene (1979) is the foundational probabilistic model for annotator competence estimation — it jointly infers true labels and per-annotator confusion matrices using EM.",
+        "Weighted voting: annotators with higher estimated accuracy on a validation set get higher vote weights — simple to implement and often outperforms unweighted majority vote.",
+      ],
+    },
+    {
+      id: "q-dc-ex5-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Annotation guidelines that are too vague lead to high annotator disagreement. Which guideline improvement strategy most effectively reduces disagreement on ambiguous boundary cases?",
+      options: [
+        "Increasing annotator pay to incentivize more careful labeling",
+        "Providing worked examples of boundary cases with explicit decision rules and rationale — showing examples that ARE and ARE NOT in each category, and the reasoning for each decision",
+        "Requiring annotators to have domain expertise before labeling",
+        "Reducing the number of label categories to simplify the task",
+      ],
+      correctAnswer: 1,
+      explanation: "Boundary cases are where annotation guidelines most often fail: the description of each category may be clear for typical examples but ambiguous for edge cases. Effective guideline improvement: (1) Analyze disagreements from a pilot annotation round to identify common boundary cases, (2) Create worked examples for each boundary case showing the correct label and the reasoning (not just the decision), (3) Encode decision trees for systematic ambiguity resolution: 'if the text contains X AND does not contain Y, then label as class A'. Stanford's NLP annotation practice recommends at least 10 boundary case examples per category pair.",
+      hints: [
+        "Annotation guidelines as living documents: update guidelines with new boundary cases as they emerge during annotation, redistribute updated guidelines with all active annotators.",
+        "Calibration sessions: have all annotators label the same 50-example calibration set, then review disagreements together — this builds shared mental models more effectively than written guidelines alone.",
+      ],
+    },
+    {
+      id: "q-dc-ex5-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Active learning for annotation prioritizes which examples to label next. The core-set selection strategy selects examples that:",
+      options: [
+        "Have the highest model uncertainty (lowest maximum predicted probability)",
+        "Are farthest from already-labeled examples in feature space — maximizing coverage of the input space so the labeled set is representative of the full unlabeled distribution",
+        "Are most similar to the current training set to minimize distribution shift",
+        "Have the highest predicted probability of being positive examples to ensure class balance",
+      ],
+      correctAnswer: 1,
+      explanation: "Core-set (Sener & Savarese 2018) solves the k-center problem: find k unlabeled points such that every unlabeled point is close to at least one selected point. This maximizes coverage of the feature space rather than selecting only uncertain examples. Advantage over uncertainty sampling: uncertainty sampling tends to select boundary examples, neglecting well-covered regions of the input space. Core-set ensures diverse, representative coverage. The greedy k-center algorithm: iteratively select the unlabeled example farthest from the current labeled set. Computational cost: O(n) per selection step, making it practical for large unlabeled pools.",
+      hints: [
+        "Uncertainty sampling selects where the model is least confident — valuable for finding decision boundary examples but may miss diverse regions of the input space.",
+        "BADGE (Batch Active learning by Diverse Gradient Embeddings) combines uncertainty and diversity: select examples with large gradient magnitudes (uncertainty) that are diverse in gradient space (coverage).",
+      ],
+    },
+    {
+      id: "q-dc-ex5-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Crowdsourced annotation on platforms like Amazon Mechanical Turk is always lower quality than expert annotation, because crowd workers lack domain knowledge and incentive alignment.",
+      correctAnswer: "False",
+      explanation: "Snow et al. (2008) demonstrated that 4 Amazon Mechanical Turk workers per example, aggregated via majority vote, achieve near-expert-level agreement with trained NLP annotators on tasks like sentiment analysis, textual entailment, and word sense disambiguation. Crowd annotation quality depends heavily on: (1) Task design (clear guidelines, well-formatted HITs), (2) Worker selection (qualification tests, approval rate thresholds), (3) Quality control (sentinel items with known answers, redundancy with majority vote), (4) Task complexity (crowd works well for tasks not requiring specialized domain knowledge). Expert annotation is superior for specialized domains (medical, legal) but cost-prohibitive at scale.",
+      hints: [
+        "Sentinel items: embed known-correct items in each annotation batch to detect spammers and low-quality workers automatically.",
+        "Task decomposition: complex annotation tasks can be broken into simpler micro-tasks suited for crowd workers — e.g., separate entity detection from relation classification.",
+      ],
+    },
+    {
+      id: "q-dc-ex5-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Label-efficient learning with RLHF (Reinforcement Learning from Human Feedback) uses a reward model trained on human preference data. The most critical failure mode of the reward model is reward hacking, which occurs when:",
+      options: [
+        "The reward model assigns low scores to all outputs, causing training to stall",
+        "The policy model finds outputs that maximize the reward model score without actually being high-quality — exploiting distributional gaps between the reward model's training distribution and the policy's output distribution",
+        "The reward model assigns identical scores to all outputs, providing no gradient signal",
+        "Human annotators provide inconsistent labels, causing the reward model to overfit to noise",
+      ],
+      correctAnswer: 1,
+      explanation: "Reward hacking (Gao et al. 2022, 'Scaling Laws for Reward Model Overoptimization') occurs because the reward model is a proxy for human preferences: it is trained on a finite distribution of comparisons and does not generalize perfectly. As the policy model is optimized against the reward model, it finds outputs that score highly on the proxy but are not actually preferred by humans — e.g., excessively long, sycophantic, or verbose responses that game the reward metric. Mitigations: (1) KL penalty from a reference policy to prevent distributional shift, (2) Periodic reward model updates with new on-policy data, (3) Constitutional AI self-critique to add policy-level constraints, (4) Ensemble of reward models to reduce single-model exploitation.",
+      hints: [
+        "Goodhart's Law: when a measure becomes a target, it ceases to be a good measure. The reward model score is a measure of preference; optimizing it too hard destroys its validity.",
+        "OpenAI's InstructGPT paper reports that human evaluators prefer outputs with KL=4-6 nats from the reference policy — beyond this, reward hacking artifacts become perceptible.",
+      ],
+    },
+    {
+      id: "q-dc-ex5-7",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "A team is designing an annotation workflow for 50,000 customer support tickets with 8 intent categories. Pilot annotation with 3 annotators on 500 tickets gives kappa = 0.55. The most effective next action is:",
+      options: [
+        "Proceed with full annotation using 1 annotator per ticket to reduce cost",
+        "Analyze the disagreement patterns on the 500-ticket pilot to identify which category pairs are most confused, then revise the guidelines specifically for those boundary cases before proceeding",
+        "Increase the number of categories to better capture the disagreement",
+        "Switch to a single expert annotator for the entire dataset",
+      ],
+      correctAnswer: 1,
+      explanation: "Kappa = 0.55 is moderate agreement — acceptable for some tasks but not ideal for 8-category intent classification. Before scaling to 50,000 tickets, improve the guidelines: compute the confusion matrix of annotator disagreements, identify the 2-3 most common category confusions, and add worked examples and decision rules for those specific cases. After guideline revision, re-pilot on a fresh 100-ticket sample. This iterative approach typically raises kappa from 0.55 to 0.7+ before committing resources to full annotation. Scaling with kappa = 0.55 means approximately 22.5% of labels will be inconsistent, requiring later correction.",
+      hints: [
+        "Confusion matrix of annotator disagreements: annotator A labels as intent X, annotator B labels as intent Y — count all such pairs to find the most common disagreement type.",
+        "Guidelines revision ROI: improving kappa from 0.55 to 0.75 on a 50K ticket dataset prevents approximately 10,000 inconsistent labels — worth the investment in a 2-day guideline revision.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extraDCQ2);
+
 export default questions;
 registerQuestions(questions);
