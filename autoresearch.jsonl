@@ -1,1 +1,2 @@
 {"type":"config","name":"mathacademy-style-lessons","metricName":"knowledge_points_count","metricUnit":"count","bestDirection":"higher"}
+{"run":1,"commit":"e8771bb","metric":274,"metrics":{"topics_empty":0,"topics_filled":66,"coverage_percent":100.0},"status":"keep","description":"baseline + fill all 36 empty topics","timestamp":1774075461,"segment":0}
