@@ -1546,6 +1546,98 @@ export const courses: Course[] = [
       },
     ]
   },
+  // ROBOTICS & EMBODIED AI
+  {
+    id: 'robotics-embodied',
+    slug: 'robotics-embodied',
+    name: 'Robotics & Embodied AI',
+    description: 'Robot learning, manipulation, navigation, sim-to-real transfer, and embodied agents.',
+    category: 'ai',
+    icon: 'cpu',
+    color: '#DC2626',
+    topicCount: 6,
+    estimatedHours: 42,
+    topics: [
+      {
+        id: 'robot-perception',
+        name: 'Robot Perception & State Estimation',
+        slug: 'robot-perception',
+        description: 'Sensors, SLAM, and scene understanding for robots.',
+        knowledgePoints: [
+          { id: 'rob-kp-1', slug: 'slam', name: 'Simultaneous Localization and Mapping (SLAM)' },
+          { id: 'rob-kp-2', slug: 'point-cloud-processing', name: 'Point Cloud Processing and 3D Object Detection' },
+          { id: 'rob-kp-3', slug: 'visual-odometry', name: 'Visual Odometry and Depth Estimation' },
+          { id: 'rob-kp-4', slug: 'sensor-fusion', name: 'Multi-Sensor Fusion: LiDAR, Camera, IMU' },
+          { id: 'rob-kp-5', slug: 'robot-scene-understanding', name: 'Semantic Scene Understanding for Robots' },
+        ],
+      },
+      {
+        id: 'robot-manipulation',
+        name: 'Robot Manipulation & Grasping',
+        slug: 'robot-manipulation',
+        description: 'Dexterous manipulation and grasp planning.',
+        knowledgePoints: [
+          { id: 'rob-kp-6', slug: 'grasp-planning', name: 'Grasp Planning and Antipodal Grasps' },
+          { id: 'rob-kp-7', slug: 'dexterous-manipulation', name: 'Dexterous In-Hand Manipulation' },
+          { id: 'rob-kp-8', slug: 'deformable-objects', name: 'Deformable Object Manipulation' },
+          { id: 'rob-kp-9', slug: 'contact-rich', name: 'Contact-Rich Manipulation and Tactile Sensing' },
+          { id: 'rob-kp-10', slug: 'task-and-motion-planning', name: 'Task and Motion Planning (TAMP)' },
+        ],
+      },
+      {
+        id: 'robot-learning',
+        name: 'Robot Learning from Demonstration',
+        slug: 'robot-learning',
+        description: 'Imitation learning, teleoperation, and LfD.',
+        knowledgePoints: [
+          { id: 'rob-kp-11', slug: 'behavior-cloning', name: 'Behavior Cloning and DAgger' },
+          { id: 'rob-kp-12', slug: 'inverse-rl', name: 'Inverse Reinforcement Learning for Robots' },
+          { id: 'rob-kp-13', slug: 'diffusion-policy', name: 'Diffusion Policy for Robot Manipulation' },
+          { id: 'rob-kp-14', slug: 'act-policy', name: 'Action Chunking with Transformers (ACT)' },
+          { id: 'rob-kp-15', slug: 'teleoperation', name: 'Teleoperation and Human-in-the-Loop Learning' },
+        ],
+      },
+      {
+        id: 'navigation-planning',
+        name: 'Navigation & Motion Planning',
+        slug: 'navigation-planning',
+        description: 'Path planning, obstacle avoidance, and navigation.',
+        knowledgePoints: [
+          { id: 'rob-kp-16', slug: 'motion-planning', name: 'Sampling-Based Motion Planning (RRT, PRM)' },
+          { id: 'rob-kp-17', slug: 'neural-motion-planning', name: 'Neural Motion Planning and MPNets' },
+          { id: 'rob-kp-18', slug: 'social-navigation', name: 'Social Navigation and Human-Aware Planning' },
+          { id: 'rob-kp-19', slug: 'visual-navigation', name: 'Vision-Language Navigation and Embodied Agents' },
+          { id: 'rob-kp-20', slug: 'outdoor-navigation', name: 'Outdoor Navigation and Off-Road Driving' },
+        ],
+      },
+      {
+        id: 'sim-to-real',
+        name: 'Sim-to-Real Transfer',
+        slug: 'sim-to-real',
+        description: 'Bridging simulation and real-world robotics.',
+        knowledgePoints: [
+          { id: 'rob-kp-21', slug: 'domain-randomization', name: 'Domain Randomization for Sim-to-Real' },
+          { id: 'rob-kp-22', slug: 'physics-simulators', name: 'Physics Simulators: MuJoCo, Isaac Gym, PyBullet' },
+          { id: 'rob-kp-23', slug: 'real-to-sim', name: 'Real-to-Sim: Gaussian Splatting for Robot Training' },
+          { id: 'rob-kp-24', slug: 'system-identification', name: 'System Identification and Adaptive Control' },
+          { id: 'rob-kp-25', slug: 'privileged-learning', name: 'Asymmetric Actor-Critic and Privileged Learning' },
+        ],
+      },
+      {
+        id: 'foundation-models-robotics',
+        name: 'Foundation Models for Robotics',
+        slug: 'foundation-models-robotics',
+        description: 'Large pretrained models for robot generalization.',
+        knowledgePoints: [
+          { id: 'rob-kp-26', slug: 'rt-2', name: 'RT-2 and Vision-Language-Action Models' },
+          { id: 'rob-kp-27', slug: 'gato', name: 'Gato and Multi-Task Robot Generalists' },
+          { id: 'rob-kp-28', slug: 'llm-planning', name: 'LLM-Based Task Planning for Robots' },
+          { id: 'rob-kp-29', slug: 'open-x-embodiment', name: 'Open X-Embodiment Dataset and Transfer' },
+          { id: 'rob-kp-30', slug: 'humanoid-robots', name: 'Humanoid Robot Learning and Whole-Body Control' },
+        ],
+      },
+    ],
+  },
   // AI FOR CLIMATE & ENERGY
   {
     id: 'ai-climate',
@@ -1563,7 +1655,6 @@ export const courses: Course[] = [
         name: 'Climate Modeling & Weather Prediction',
         slug: 'climate-modeling',
         description: 'ML for weather forecasting and climate projection.',
-        order: 1,
         knowledgePoints: [
           { id: 'clim-kp-1', slug: 'nwp-ml', name: 'ML-Enhanced Numerical Weather Prediction' },
           { id: 'clim-kp-2', slug: 'graphcast', name: 'GraphCast and Graph Neural Networks for Weather' },
@@ -1577,7 +1668,6 @@ export const courses: Course[] = [
         name: 'Renewable Energy Forecasting',
         slug: 'renewable-energy',
         description: 'Solar, wind, and grid optimization with ML.',
-        order: 2,
         knowledgePoints: [
           { id: 'clim-kp-6', slug: 'solar-forecasting', name: 'Solar Irradiance and PV Power Forecasting' },
           { id: 'clim-kp-7', slug: 'wind-forecasting', name: 'Wind Power Prediction and Turbine Analytics' },
@@ -1591,7 +1681,6 @@ export const courses: Course[] = [
         name: 'Carbon Tracking & Emissions Reduction',
         slug: 'carbon-emissions',
         description: 'ML for measuring and reducing greenhouse gas emissions.',
-        order: 3,
         knowledgePoints: [
           { id: 'clim-kp-11', slug: 'ghg-monitoring', name: 'Satellite-Based GHG Monitoring and ML Estimation' },
           { id: 'clim-kp-12', slug: 'industrial-emissions', name: 'Industrial Emissions Detection from Remote Sensing' },
@@ -1605,7 +1694,6 @@ export const courses: Course[] = [
         name: 'Earth Observation & Remote Sensing',
         slug: 'earth-observation',
         description: 'Satellite imagery and geospatial ML.',
-        order: 4,
         knowledgePoints: [
           { id: 'clim-kp-16', slug: 'satellite-segmentation', name: 'Semantic Segmentation of Satellite Imagery' },
           { id: 'clim-kp-17', slug: 'geospatial-foundation-models', name: 'Geospatial Foundation Models (Prithvi, SatMAE)' },
@@ -1619,7 +1707,6 @@ export const courses: Course[] = [
         name: 'Sustainable Buildings & Smart Cities',
         slug: 'sustainable-buildings',
         description: 'Energy efficiency in buildings and urban systems.',
-        order: 5,
         knowledgePoints: [
           { id: 'clim-kp-21', slug: 'building-energy', name: 'Building Energy Consumption Prediction and Optimization' },
           { id: 'clim-kp-22', slug: 'hvac-control', name: 'HVAC Control with Reinforcement Learning' },
@@ -1633,7 +1720,6 @@ export const courses: Course[] = [
         name: 'Climate Adaptation & Risk Assessment',
         slug: 'climate-adaptation',
         description: 'AI for disaster risk, food security, and adaptation.',
-        order: 6,
         knowledgePoints: [
           { id: 'clim-kp-26', slug: 'flood-risk', name: 'Flood Risk Mapping and Early Warning Systems' },
           { id: 'clim-kp-27', slug: 'agricultural-ml', name: 'Agricultural Yield Prediction and Crop Stress Detection' },
