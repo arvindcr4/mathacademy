@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // ML SYSTEM DESIGN FOR INTERVIEWS
+  {
+    id: 'ml-system-design',
+    slug: 'ml-system-design',
+    name: 'ML System Design for Interviews',
+    description: 'Design ML systems end-to-end: feature stores, recommendation engines, search, and fraud detection.',
+    topics: [
+      {
+        id: 'ml-system-fundamentals',
+        name: 'ML System Design Fundamentals',
+        description: 'MLESDI framework, requirements gathering, and system design process.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-1', slug: 'mlesdi-framework', name: 'ML System Design Framework (MLESDI)' },
+          { id: 'mlsd-kp-2', slug: 'requirements-ml-system', name: 'Functional & Non-Functional Requirements for ML' },
+          { id: 'mlsd-kp-3', slug: 'ml-system-tradeoffs', name: 'Latency vs Throughput vs Accuracy Tradeoffs' },
+          { id: 'mlsd-kp-4', slug: 'back-of-envelope-ml', name: 'Back-of-Envelope Estimation for ML Systems' },
+          { id: 'mlsd-kp-5', slug: 'ml-architecture-patterns', name: 'ML Architecture Patterns & Anti-Patterns' },
+        ]
+      },
+      {
+        id: 'feed-ranking-design',
+        name: 'News Feed & Content Ranking',
+        description: 'Designing Twitter/LinkedIn/TikTok feed ranking systems.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-6', slug: 'feed-ranking-system', name: 'News Feed Ranking System Design' },
+          { id: 'mlsd-kp-7', slug: 'engagement-prediction', name: 'Engagement Prediction & Multi-Task Ranking' },
+          { id: 'mlsd-kp-8', slug: 'candidate-generation', name: 'Candidate Generation at Scale' },
+          { id: 'mlsd-kp-9', slug: 'position-bias', name: 'Position Bias & Click Model Correction' },
+          { id: 'mlsd-kp-10', slug: 'diversity-feed', name: 'Diversity & Freshness in Feed Ranking' },
+        ]
+      },
+      {
+        id: 'search-design',
+        name: 'Search & Query Understanding',
+        description: 'Designing ML-powered search systems with query understanding and ranking.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-11', slug: 'query-understanding', name: 'Query Understanding & Intent Classification' },
+          { id: 'mlsd-kp-12', slug: 'dense-retrieval', name: 'Dense Retrieval & Bi-Encoder Architecture' },
+          { id: 'mlsd-kp-13', slug: 'query-rewriting', name: 'Query Rewriting & Expansion' },
+          { id: 'mlsd-kp-14', slug: 'indexing-search', name: 'Inverted Index & ANN Indexing' },
+          { id: 'mlsd-kp-15', slug: 'semantic-search-design', name: 'Semantic Search System Design' },
+        ]
+      },
+      {
+        id: 'ads-design',
+        name: 'Ads & Monetization Systems',
+        description: 'Click-through rate prediction, bidding, and ad auction design.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-16', slug: 'ctr-prediction', name: 'CTR & CVR Prediction System Design' },
+          { id: 'mlsd-kp-17', slug: 'ad-auction', name: 'Ad Auction Mechanics & GSP' },
+          { id: 'mlsd-kp-18', slug: 'bid-optimization', name: 'Bid Optimization & Budget Pacing' },
+          { id: 'mlsd-kp-19', slug: 'ad-targeting', name: 'Ad Targeting & Audience Segmentation' },
+          { id: 'mlsd-kp-20', slug: 'ad-quality', name: 'Ad Quality & Spam Detection' },
+        ]
+      },
+      {
+        id: 'fraud-anomaly-design',
+        name: 'Fraud Detection & Trust & Safety',
+        description: 'Real-time fraud detection, account integrity, and content moderation.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-21', slug: 'fraud-detection-design', name: 'Real-Time Fraud Detection System Design' },
+          { id: 'mlsd-kp-22', slug: 'graph-fraud', name: 'Graph-Based Fraud Detection' },
+          { id: 'mlsd-kp-23', slug: 'content-moderation', name: 'Content Moderation System Design' },
+          { id: 'mlsd-kp-24', slug: 'bot-detection', name: 'Bot Detection & Account Integrity' },
+          { id: 'mlsd-kp-25', slug: 'risk-scoring', name: 'Risk Scoring & Threshold Management' },
+        ]
+      },
+      {
+        id: 'nlp-system-design',
+        name: 'NLP & Conversational AI System Design',
+        description: 'Designing chatbots, question answering, and language understanding systems.',
+        knowledgePoints: [
+          { id: 'mlsd-kp-26', slug: 'chatbot-design', name: 'Conversational AI & Chatbot System Design' },
+          { id: 'mlsd-kp-27', slug: 'qa-system-design', name: 'Question Answering System Design' },
+          { id: 'mlsd-kp-28', slug: 'entity-extraction-design', name: 'NER System Design at Scale' },
+          { id: 'mlsd-kp-29', slug: 'sentiment-system', name: 'Sentiment Analysis at Scale' },
+          { id: 'mlsd-kp-30', slug: 'llm-product-design', name: 'LLM Product Design & Guardrails' },
+        ]
+      },
+    ]
+  },
+
   // APPLIED MATH FOR AI: LINEAR ALGEBRA DEEP DIVE
   {
     id: 'linear-algebra-deep-dive',
