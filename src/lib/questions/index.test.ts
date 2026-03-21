@@ -78,8 +78,8 @@ describe('LaTeX Formatting', () => {
     expect(latexQuestion).toMatch(/\$[^$]+\$/)
 
     // Check that Unicode math symbols are not used
-    const unicodeMathSymbols = /[ℝ×÷∑∏∂∇∈∉⊂⊃∪∩∞√±∓×·⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻⁼⁽⁾ⁿⁱ₀₁₂₃₄₅₆₇₈₉₊₋₌₍₎ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛʷˣʸᶻᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂᵃᵝᵞᵟᵋᶿᶥᶲᵠᵡᵦᵧᵨᵩᵪ]/
     // Note: This test checks that we're moving away from Unicode symbols
+    // The NON_ASCII_PATTERNS constant at the top covers the main Unicode math symbols
   })
 })
 

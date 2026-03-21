@@ -12,7 +12,10 @@ const questions: Record<string, Question[]> = {
       options: ["Fibonacci", "Factorial", "Binary", "Harmonic"],
       correctAnswer: 0,
       explanation:
-        "Let $dp[i]$ denote the number of ways to reach step $i$. The last move to step $i$ must be either:\n\n- A 1-step from step $i-1$, contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$, contributing $dp[i-2]$ ways\n\nThese two sets of paths are mutually exclusive and exhaustive, so we sum them:\n\\[dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for }i \\geq 3\\]\n\nWith base cases $dp[1] = 1$ (only one way: one 1-step) and $dp[2] = 2$ (ways: $1+1$ or $2$), this recurrence generates the Fibonacci sequence starting from $F_1 = 1,\; F_2 = 2$.",
+        "Let $dp[i]$ denote the number of ways to reach step $i$. The last move to step $i$ must be either:\n\n- A 1-step from step $i-1$, contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$, contributing $dp[i-2]$ ways\n\nThese two sets of paths are mutually exclusive and exhaustive, so we sum them:\n" +
+        "\\[\n" +
+        "dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for }i \\geq 3\n" +
+        "\\]\n\nWith base cases $dp[1] = 1$ (only one way: one 1-step) and $dp[2] = 2$ (ways: $1+1$ or $2$), this recurrence generates the Fibonacci sequence starting from $F_1 = 1,\\; F_2 = 2$.",
       hints: [
         "Write the recurrence by looking at the final move into step $n$.",
         "You can arrive at step $n$ from step $n-1$ or from step $n-2$, so the counts add: $dp[n] = dp[n-1] + dp[n-2]$.",

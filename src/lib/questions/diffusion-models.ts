@@ -851,7 +851,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID compares the statistics of InceptionV3 pool-3 features ($2048$-dimensional) between real and generated image sets. It fits a Gaussian with mean $\\mu$ and covariance $\\Sigma$ to each set, then computes the Fréchet distance:\n\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\mathrm{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2\\sqrt{\\Sigma_r \\Sigma_g}\\right).\n\\]\n\nLower FID means more similar distributions. FID captures both quality and diversity: a generator that simply copies training images has low FID, and so does one that generates diverse, high-quality images matching the real distribution. FID is sample-size dependent - typically computed with $50{,}000$ generated images for fair comparison.",
+        "FID compares the statistics of InceptionV3 pool-3 features ($2048$-dimensional) between real and generated image sets.\n\n**Step 1**\n\nIt fits a Gaussian with mean $\\mu$ and covariance $\\Sigma$ to each set, then computes the Fréchet distance:\n\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\mathrm{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2\\sqrt{\\Sigma_r \\Sigma_g}\\right).\n\\]\n\n**Step 2**\n\nLower FID means more similar distributions. FID captures both quality and diversity: a generator that simply copies training images has low FID, and so does one that generates diverse, high-quality images matching the real distribution.\n\n**Step 3**\n\nFID is sample-size dependent - typically computed with $50{,}000$ generated images for fair comparison.",
       hints: [
         "FID $= 0$ means the generated distribution is identical to the real distribution in feature space - unlikely in practice.",
         "FID is sensitive to sample size - using different numbers of generated images makes comparisons unreliable.",
@@ -871,7 +871,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CLIP Score $= \\text{CLIP}\\_\\text{sim}(image, text)$ measures whether the generated image semantically matches the text prompt. It is the standard metric for prompt following in text-to-image models.\n\nHowever, CLIP Score has known limitations: it correlates with CLIP's training biases and may be gamed by models that generate 'CLIP-friendly' images that are visually unrealistic. It also fails to capture fine-grained compositional accuracy such as attribute binding, counting, or spatial relations. CLIP Score is typically used alongside FID to trade off generation quality vs. prompt adherence.",
+        "CLIP Score $= \\text{CLIP}\\_\\text{sim}(image, text)$ measures whether the generated image semantically matches the text prompt.\n\n**Step 1**\n\nIt is the standard metric for prompt following in text-to-image models.\n\n**Step 2**\n\nHowever, CLIP Score has known limitations: it correlates with CLIP's training biases and may be gamed by models that generate 'CLIP-friendly' images that are visually unrealistic. It also fails to capture fine-grained compositional accuracy such as attribute binding, counting, or spatial relations.\n\n**Step 3**\n\nCLIP Score is typically used alongside FID to trade off generation quality vs. prompt adherence.",
       hints: [
         "High CLIP Score + low FID is ideal: images are both high quality and match the text.",
         "CLIP Score can be inflated by generating images that look like CLIP training data rather than being genuinely high quality.",
@@ -891,7 +891,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID conflates two distinct aspects of generation quality:\n- **Precision** (quality/fidelity): what fraction of generated samples are 'realistic' - i.e., fall near the real data manifold?\n- **Recall** (diversity/coverage): what fraction of the real data manifold is 'covered' by generated samples?\n\nA model that generates only one perfect cat image has precision $\\approx 1$ but recall $\\approx 0$ (mode collapse). A model that generates every possible image including unrealistic ones has recall $\\approx 1$ but low precision. CFG guidance scale primarily trades recall for precision: higher guidance $\\rightarrow$ higher precision, lower recall.",
+        "FID conflates two distinct aspects of generation quality.\n\n**Step 1**\n\n- **Precision** (quality/fidelity): what fraction of generated samples are 'realistic' - i.e., fall near the real data manifold?\n- **Recall** (diversity/coverage): what fraction of the real data manifold is 'covered' by generated samples?\n\n**Step 2**\n\nA model that generates only one perfect cat image has precision $\\approx 1$ but recall $\\approx 0$ (mode collapse). A model that generates every possible image including unrealistic ones has recall $\\approx 1$ but low precision.\n\n**Step 3**\n\nCFG guidance scale primarily trades recall for precision: higher guidance $\\rightarrow$ higher precision, lower recall.",
       hints: [
         "A model with high precision but low recall generates few images but they are all high quality - mode collapse.",
         "A model with high recall but low precision generates many images but many are unrealistic - low fidelity.",
@@ -914,7 +914,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Molecular diffusion models (e.g., DiffSBDD, DiffDock, EDM) operate on 3D molecular structures. Each atom is represented by its 3D Cartesian coordinates and atom type. The forward process adds Gaussian noise to atomic positions (and may corrupt atom types); the reverse process denoises to produce valid 3D conformations.\n\nEquivariant neural networks (e.g., EGNN, SE(3)-Transformer) are essential because they guarantee the model generates the same molecule regardless of its absolute orientation or position in 3D space - a fundamental physical symmetry.",
+        "Molecular diffusion models (e.g., DiffSBDD, DiffDock, EDM) operate on 3D molecular structures.\n\n**Step 1**\n\nEach atom is represented by its 3D Cartesian coordinates and atom type. The forward process adds Gaussian noise to atomic positions (and may corrupt atom types); the reverse process denoises to produce valid 3D conformations.\n\n**Step 2**\n\nEquivariant neural networks (e.g., EGNN, SE(3)-Transformer) are essential because they guarantee the model generates the same molecule regardless of its absolute orientation or position in 3D space.\n\n**Step 3**\n\nThis is a fundamental physical symmetry that the model must respect.",
       hints: [
         "3D structure matters for drug design: the shape and charge distribution of a molecule determine how it binds to proteins.",
         "Equivariance to SE(3) (3D rotations and translations) ensures the model does not need to learn separately that a molecule rotated by $45°$ is the same molecule.",

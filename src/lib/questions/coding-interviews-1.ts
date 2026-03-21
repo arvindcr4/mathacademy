@@ -1107,15 +1107,18 @@ const questions: Record<string, Question[]> = {
         "When values are equal, you may pick from either list - the result is the same."
       ],
       explanation:
-        "\\begin align*\n" +
-        "\\text{Compare } 1 \\text{ and } 1: &\\quad \\text{pick } 1 \\text{ (from list 1 or 2)} \\\\\n" +
-        "\\text{Compare } 2 \\text{ and } 1: &\\quad \\text{pick } 1 \\text{ (from list 2)} \\\\\n" +
-        "\\text{Compare } 2 \\text{ and } 3: &\\quad \\text{pick } 2 \\text{ (from list 1)} \\\\\n" +
-        "\\text{Compare } 4 \\text{ and } 3: &\\quad \\text{pick } 3 \\text{ (from list 2)} \\\\\n" +
-        "\\text{Compare } 4 \\text{ and } 4: &\\quad \\text{pick } 4 \\text{ (from list 1)} \\\\\n" +
-        "\\text{List 2 remaining: } 4: &\\quad \\text{pick } 4\n" +
-        "\\end align*\n\n" +
-        "Result: $[1, 1, 2, 3, 4, 4]$."
+        "**Step 1:** At each step, compare the heads of both lists and pick the smaller value:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Compare } 1 \\text{ and } 1: &\\quad \\text{pick } 1 \\; (\\text{from list 1 or 2}),\\\\\n" +
+        "\\text{Compare } 2 \\text{ and } 1: &\\quad \\text{pick } 1 \\; (\\text{from list 2}),\\\\\n" +
+        "\\text{Compare } 2 \\text{ and } 3: &\\quad \\text{pick } 2 \\; (\\text{from list 1}),\\\\\n" +
+        "\\text{Compare } 4 \\text{ and } 3: &\\quad \\text{pick } 3 \\; (\\text{from list 2}),\\\\\n" +
+        "\\text{Compare } 4 \\text{ and } 4: &\\quad \\text{pick } 4 \\; (\\text{from list 1}),\\\\\n" +
+        "\\text{List 2 remaining: } 4: &\\quad \\text{pick } 4.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Result:** $[1, 1, 2, 3, 4, 4]$."
     },
     {
       id: "q-msl-5",
@@ -1443,14 +1446,15 @@ const questions: Record<string, Question[]> = {
         "Each unmatched '(' needs one ')' added after it. How many such additions are needed?"
       ],
       explanation:
-        "1 removal (or equivalently, 1 addition) is needed.\n\n" +
-        "\\begin align*\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } ( \\\\\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } (( \\\\\n" +
-        "\\text{End}: &\\quad 2 \\text{ unmatched openers} \\Rightarrow \\text{add 2 closers} \\Rightarrow \\text{or remove 2 openers} \\\\\n" +
-        "\\text{But: removing 1 opener} '(' \\text{ gives } '()' \\text{ which is balanced}\n" +
-        "\\end align*\n\n" +
-        "The minimum is 1: remove one of the openers, or add one closer after one of them."
+        "**Step 1:** Scan the string:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '(',\\\\\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '( \\; (',\\\\\n" +
+        "\\text{End}: &\\quad 2 \\text{ unmatched openers}.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** Add 2 closers to balance, or equivalently remove 2 openers. But removing just 1 opener gives $'()'$, which is balanced. The minimum is 1."
     },
   ],
 
