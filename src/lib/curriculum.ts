@@ -1328,7 +1328,7 @@ export const courses: Course[] = [
           { id: 'dl-kp-16', slug: 'rnn-basics', name: 'RNN Architecture & Hidden State' },
           { id: 'dl-kp-17', slug: 'lstm', name: 'LSTM: Forget, Input, Output Gates' },
           { id: 'dl-kp-18', slug: 'gru', name: 'GRU: Simplified Gating Mechanism' },
-          { id: 'dl-kp-19', slug: 'bptt', name: 'Backpropagation Through Time (BPTT)' },
+          { id: 'dl-kp-19', slug: 'bptt', name: 'BackpropagationThrough Time (BPTT)' },
           { id: 'dl-kp-20', slug: 'seq2seq', name: 'Sequence-to-Sequence with Encoder-Decoder' },
         ]
       },
@@ -1527,7 +1527,7 @@ export const courses: Course[] = [
           { id: 'tr-kp-21', slug: 'kv-cache', name: 'KV Cache & Memory Management' },
           { id: 'tr-kp-22', slug: 'decoding-strategies', name: 'Decoding: Greedy, Beam, Sampling' },
           { id: 'tr-kp-23', slug: 'speculative-decoding', name: 'Speculative Decoding' },
-          { id: 'tr-kp-24', slug: 'continuous-batching', name: 'Continuous Batching & Throughput' },
+          { id: 'tr-kp-24', slug: 'continuous-batching', name: 'Continuous Batching &Throughput' },
           { id: 'tr-kp-25', slug: 'quantization-llm', name: 'Quantization for LLM Inference (GGUF, AWQ)' },
         ]
       },
@@ -1546,4 +1546,96 @@ export const courses: Course[] = [
       },
     ]
   },
+  {
+    id: 'probabilistic-ml',
+    slug: 'probabilistic-ml',
+    name: 'Probabilistic ML & Bayesian Methods',
+    description: 'Master probabilistic modeling, Bayesian inference, and uncertainty quantification in ML.',
+    category: 'fine-tuning',
+    icon: '📊',
+    color: '#FF6B35',
+    topicCount: 6,
+    estimatedHours: 30,
+    topics: [
+      {
+        id: 'probabilistic-basics',
+        slug: 'probabilistic-basics',
+        name: 'Probabilistic Modeling Basics',
+        description: 'Foundations of probability theory and Bayesian inference.',
+        knowledgePoints: [
+          { id: 'pm-kp-1', slug: 'probability-review', name: 'Probability Review & Bayes\' Theorem' },
+          { id: 'pm-kp-2', slug: 'random-variables', name: 'Random Variables & Distributions' },
+          { id: 'pm-kp-3', slug: 'joint-probabilities', name: 'Joint & Conditional Probabilities' },
+          { id: 'pm-kp-4', slug: 'bayesian-inference', name: 'Bayesian Inference Fundamentals' },
+          { id: 'pm-kp-5', slug: 'conjugate-priors', name: 'Conjugate Priors & Analytical Solutions' },
+        ]
+      },
+      {
+        id: 'bayesian-inference',
+        slug: 'bayesian-inference',
+        name: 'Bayesian Inference',
+        description: 'Advanced techniques for Bayesian parameter estimation and inference.',
+        knowledgePoints: [
+          { id: 'pm-kp-6', slug: 'mcmc-sampling', name: 'MCMC Sampling (Metropolis-Hastings, Gibbs)' },
+          { id: 'pm-kp-7', slug: 'variational-bayes', name: 'Variational Bayes & Approximate Inference' },
+          { id: 'pm-kp-8', slug: 'bayesian-optimization', name: 'Bayesian Optimization for Hyperparameter Tuning' },
+          { id: 'pm-kp-9', slug: 'bayesian-ml', name: 'Bayesian ML & Model Selection' },
+          { id: 'pm-kp-10', slug: 'uncertainty-propagation', name: 'Uncertainty Propagation & Predictive Distributions' },
+        ]
+      },
+      {
+        id: 'ml-with-uncertainty',
+        slug: 'ml-with-uncertainty',
+        name: 'ML with Uncertainty Quantification',
+        description: 'Integrate uncertainty estimates into ML workflows and decision-making.',
+        knowledgePoints: [
+          { id: 'pm-kp-11', slug: 'uncertainty-estimation', name: 'Uncertainty Estimation & Calibration' },
+          { id: 'pm-kp-12', slug: 'robust-prediction', name: 'Robust Prediction Intervals & Quantiles' },
+          { id: 'pm-kp-13', slug: 'bayesian-decision-making', name: 'Bayesian Decision Making & Risk Assessment' },
+          { id: 'pm-kp-14', slug: 'uncertainty-visualization', name: 'Uncertainty Visualization & Explanation' },
+          { id: 'pm-kp-15', slug: 'ml-uncertainty', name: 'ML Uncertainty & Calibration' },
+        ]
+      },
+      {
+        id: 'generative-probabilistic',
+        slug: 'generative-probabilistic',
+        name: 'Generative Probabilistic Models',
+        description: 'Model-based approaches to generative tasks using probabilistic inference.',
+        knowledgePoints: [
+          { id: 'pm-kp-16', slug: 'generative-models', name: 'Generative Models (Naive Bayes, Gaussian Mixtures)' },
+          { id: 'pm-kp-17', slug: 'probabilistic-gans', name: 'Probabilistic GANs & Energy-Based Models' },
+          { id: 'pm-kp-18', slug: 'variational-autoencoders', name: 'Variational Autoencoders (VAEs)' },
+          { id: 'pm-kp-19', slug: 'normalizing-flows', name: 'Normalizing Flows & Density Estimation' },
+          { id: 'pm-kp-20', slug: 'bayesian-gans', name: 'Bayesian GANs & Uncertainty Quantification' },
+        ]
+      },
+      {
+        id: 'bayesian-optimization',
+        slug: 'bayesian-optimization',
+        name: 'Bayesian Optimization',
+        description: 'Optimization techniques that use probabilistic models to guide search.',
+        knowledgePoints: [
+          { id: 'pm-kp-21', slug: 'bayesian-optimization', name: 'Bayesian Optimization (BO)' },
+          { id: 'pm-kp-22', slug: 'gaussian-processes', name: 'Gaussian Processes & BO' },
+          { id: 'pm-kp-23', slug: 'bayesian-active-learning', name: 'Bayesian Active Learning & Data Selection' },
+          { id: 'pm-kp-24', slug: 'bo-ml', name: 'BO in ML & Hyperparameter Tuning' },
+          { id: 'pm-kp-25', slug: 'multi-fidelity-bo', name: 'Multi-Fidelity BO & Resource Allocation' },
+        ]
+      },
+      {
+        id: 'uncertainty-quantification',
+        slug: 'uncertainty-quantification',
+        name: 'Uncertainty Quantification',
+        description: 'Methods for quantifying and managing uncertainty in ML predictions and inferences.',
+        knowledgePoints: [
+          { id: 'pm-kp-26', slug: 'uncertainty-quantification', name: 'Uncertainty Quantification (UQ)' },
+          { id: 'pm-kp-27', slug: 'aleatoric-vs-epistemic', name: 'Aleatoric vs Epistemic Uncertainty' },
+          { id: 'pm-kp-28', slug: 'uq-methods', name: 'UQ Methods (Bootstrap, Jackknife, MCMC)' },
+          { id: 'pm-kp-29', slug: 'uq-ml', name: 'UQ in ML & Calibration' },
+          { id: 'pm-kp-30', slug: 'robust-inference', name: 'Robust Inference & Outlier Detection' },
+        ]
+      },
+    ]
+  },
+
 ]
