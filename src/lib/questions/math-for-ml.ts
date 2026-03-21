@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "vectors-matrices": [
@@ -1612,6 +1612,569 @@ const questions: Record<string, Question[]> = {
     },
   ],
 };
+
+const extra: Record<string, import('@/lib/curriculum').Question[]> = {
+  'kl-divergence-info': [
+    {
+      id: 'q-mfml-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The KL divergence KL(P || Q) between distributions P and Q is defined as:',
+      options: [
+        'Σ_x P(x) log(Q(x)/P(x))',
+        'Σ_x P(x) log(P(x)/Q(x))',
+        'Σ_x |P(x) − Q(x)|',
+        '√(Σ_x (P(x) − Q(x))²)',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'KL(P||Q) = Σ_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL ≥ 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
+      hints: [
+        'KL is always non-negative by Jensen\'s inequality: log is concave so E[log x] ≤ log E[x].',
+        'KL(P||Q) ≠ KL(Q||P) — it is asymmetric and not a true distance metric.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp31-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'KL divergence is asymmetric: KL(P||Q) ≠ KL(Q||P) in general. KL(P||Q) is called the forward KL and tends to be mass-covering (mean-seeking), while KL(Q||P) is called the reverse KL and tends to be mode-seeking (zero-forcing).',
+      correctAnswer: 'True',
+      explanation:
+        'Forward KL (P||Q): penalizes Q being small where P is large, forcing Q to cover all modes of P (mass-covering). Reverse KL (Q||P): penalizes Q being large where P is small, so Q collapses to a single mode of P (mode-seeking). Variational inference minimizes reverse KL; MLE minimizes forward KL.',
+      hints: [
+        'Forward KL: Q must cover all of P\'s mass — spread wide.',
+        'Reverse KL: Q must stay within P\'s support — collapse to one mode.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Mutual information I(X;Y) between random variables X and Y can be expressed in terms of KL divergence as:',
+      options: [
+        'I(X;Y) = KL(P(X) || P(X|Y))',
+        'I(X;Y) = KL(P(X,Y) || P(X)P(Y))',
+        'I(X;Y) = H(X) + H(Y)',
+        'I(X;Y) = KL(P(Y|X) || P(Y))',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'I(X;Y) = KL(P(X,Y) || P(X)P(Y)) = E_{P(X,Y)}[log P(X,Y)/P(X)P(Y)]. This is the KL divergence from the joint to the product of marginals, measuring dependence. I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X) = H(X) + H(Y) − H(X,Y).',
+      hints: [
+        'If X and Y are independent, P(X,Y) = P(X)P(Y), so KL = 0 and I(X;Y) = 0.',
+        'MI measures how much knowing Y reduces uncertainty about X.',
+      ],
+    },
+  ],
+
+  'variational-inference-elbo': [
+    {
+      id: 'q-mfml-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The Evidence Lower BOund (ELBO) in variational inference relates to log evidence log p(x) as:',
+      options: [
+        'log p(x) = ELBO − KL(q(z|x) || p(z|x))',
+        'log p(x) = ELBO + KL(q(z|x) || p(z|x))',
+        'ELBO = log p(x) · KL(q(z|x) || p(z))',
+        'log p(x) = ELBO only when q is the true posterior',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'log p(x) = ELBO + KL(q(z|x) || p(z|x)). Since KL ≥ 0, ELBO ≤ log p(x) — it is a lower bound on the log evidence. Maximizing ELBO simultaneously maximizes the log evidence and minimizes KL(q || p(z|x)), driving q toward the true posterior.',
+      hints: [
+        'KL(q||p) ≥ 0 implies ELBO ≤ log p(x) — hence the name "lower bound".',
+        'ELBO is tight (= log p(x)) when q = p(z|x), the true posterior.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp32-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Mean-field variational inference assumes the variational posterior factorizes as q(z) = ∏_i q_i(z_i), making the approximation independent across latent dimensions.',
+      correctAnswer: 'True',
+      explanation:
+        'Mean-field VI (from statistical physics) assumes full independence: q(z₁,...,z_k) = q₁(z₁)·...·q_k(z_k). This enables efficient coordinate ascent (CAVI): each factor q_i(z_i) ∝ exp(E_{q_{-i}}[log p(x,z)]) has a closed form for exponential family models. The trade-off: cannot capture posterior correlations between latent dimensions.',
+      hints: [
+        'Mean field = fully factorized = no correlation structure between latent variables.',
+        'CAVI = Coordinate Ascent Variational Inference: update each q_i while holding others fixed.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The reparameterization trick in VAEs enables gradient-based ELBO optimization by:',
+      options: [
+        'Replacing the KL term with a Monte Carlo estimator that is always differentiable',
+        'Writing z = μ + σ·ε where ε ~ N(0,I), making z a deterministic function of (μ,σ) so gradients flow through the sampling operation',
+        'Computing the exact gradient of the log-likelihood using the score function identity',
+        'Approximating the discrete latent space with a continuous relaxation',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Sampling z ~ N(μ, σ²) is not differentiable w.r.t. μ, σ. Reparameterizing: ε ~ N(0,1), z = μ + σε makes z a deterministic function of (μ,σ) and the noise ε. Then ∂z/∂μ = 1, ∂z/∂σ = ε, enabling backpropagation through the sampling operation. This gives low-variance gradient estimates.',
+      hints: [
+        'The problem: ∂/∂θ E_{z~p_θ}[f(z)] = ? Cannot backprop through a sampling node.',
+        'Reparameterization moves θ outside the expectation: E_{ε~N(0,I)}[f(g_θ(ε))].',
+      ],
+    },
+  ],
+
+  'matrix-calculus': [
+    {
+      id: 'q-mfml-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The Jacobian matrix J of a vector function f: ℝⁿ → ℝᵐ has shape:',
+      options: [
+        'n × n (a square matrix of partial derivatives)',
+        'm × n, where J_ij = ∂f_i/∂x_j',
+        'n × m, where J_ij = ∂f_j/∂x_i',
+        '1 × n (a gradient vector)',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The Jacobian J ∈ ℝ^{m×n} has J_ij = ∂f_i(x)/∂x_j. Each row i contains the gradient of the i-th output component f_i w.r.t. all inputs. For f: ℝⁿ → ℝ (scalar output), the Jacobian is the gradient ∇f ∈ ℝ^{1×n}.',
+      hints: [
+        'For f: ℝⁿ → ℝᵐ, Jacobian has m rows (outputs) and n columns (inputs).',
+        'The Jacobian generalizes the scalar derivative to vector functions.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp33-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'The Hessian matrix H of a scalar function f: ℝⁿ → ℝ is the matrix of second partial derivatives H_ij = ∂²f/∂x_i∂x_j, and is always symmetric for twice continuously differentiable functions.',
+      correctAnswer: 'True',
+      explanation:
+        'Schwarz\'s theorem (symmetry of second derivatives): if f is twice continuously differentiable (C²), then ∂²f/∂x_i∂x_j = ∂²f/∂x_j∂x_i, so H = Hᵀ. The Hessian characterizes the local curvature of f; its eigenvalues determine whether a critical point is a minimum (all +), maximum (all −), or saddle point (mixed).',
+      hints: [
+        'Schwarz\'s theorem: mixed partials commute for C² functions.',
+        'Hessian eigenvalues: all positive → local min; all negative → local max; mixed → saddle.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'For loss L = ‖Ax − b‖², the gradient ∂L/∂x using matrix calculus is:',
+      options: [
+        '2(Ax − b)',
+        '2Aᵀ(Ax − b)',
+        '2A(Ax − b)',
+        'AᵀA · x − Aᵀb',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'L = (Ax−b)ᵀ(Ax−b). Using matrix calculus: ∂L/∂x = 2Aᵀ(Ax−b). Derivation: Let r = Ax−b. Then L = rᵀr, ∂L/∂r = 2r, ∂r/∂x = A (Jacobian of Ax−b w.r.t. x). Chain rule: ∂L/∂x = (∂r/∂x)ᵀ · ∂L/∂r = Aᵀ · 2r = 2Aᵀ(Ax−b).',
+      hints: [
+        'The chain rule for matrix expressions: ∂f/∂x = (∂g/∂x)ᵀ · ∂f/∂g.',
+        'The Jacobian of Ax w.r.t. x is A (dimension check: ∂(m×1)/∂(n×1) = m×n = A).',
+      ],
+    },
+  ],
+
+  'optimization-theory': [
+    {
+      id: 'q-mfml-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A function f: ℝⁿ → ℝ is convex if for all x, y and λ ∈ [0,1]:',
+      options: [
+        'f(λx + (1−λ)y) ≥ λf(x) + (1−λ)f(y)',
+        'f(λx + (1−λ)y) ≤ λf(x) + (1−λ)f(y)',
+        'f(x) ≤ f(y) whenever ‖x‖ ≤ ‖y‖',
+        '∇f(x) = 0 has a unique solution',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Convexity: the function value at any convex combination of points lies below the chord connecting those points. Equivalent conditions: (1) Hessian is positive semidefinite everywhere, (2) f(y) ≥ f(x) + ∇f(x)ᵀ(y−x) (first-order characterization). Convexity guarantees any local minimum is a global minimum.',
+      hints: [
+        'The chord between (x, f(x)) and (y, f(y)) lies above the function graph for convex f.',
+        'Key property: for convex f, any local minimum is a global minimum.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp34-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'A saddle point is a critical point (∇f = 0) where the Hessian has both positive and negative eigenvalues, indicating it is a minimum in some directions and a maximum in others.',
+      correctAnswer: 'True',
+      explanation:
+        'Saddle points are ubiquitous in high-dimensional neural network loss landscapes. The Hessian at a saddle point is indefinite (some eigenvalues > 0, some < 0). Gradient descent may slow near saddle points (gradient ≈ 0) but noise and curvature asymmetry typically allow escape. True local minima (all positive Hessian eigenvalues) are exponentially rare in high dimensions.',
+      hints: [
+        'Indefinite Hessian = saddle point. Positive definite = local min. Negative definite = local max.',
+        'In high dimensions, most critical points are saddles, not local minima.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The loss landscape of overparameterized neural networks is often described as having many connected valleys of near-zero loss. This observation is best explained by:',
+      options: [
+        'Convexity of the cross-entropy loss combined with ReLU activations',
+        'Overparameterization creates an underdetermined system where infinitely many weight configurations achieve zero training loss, and these solutions form connected manifolds in weight space',
+        'Batch normalization eliminates all local minima by normalizing the loss surface',
+        'Stochastic gradient descent always converges to the global minimum in overparameterized models',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'When the number of parameters exceeds the number of training samples, the system is underdetermined: there are infinitely many weight configurations achieving zero training loss. Recent work (e.g., mode connectivity) shows these solutions often lie on connected paths in weight space, with low loss throughout. This is consistent with empirical findings that different SGD runs from different initializations reach qualitatively similar solutions.',
+      hints: [
+        'Overparameterization = more unknowns than equations → infinitely many solutions.',
+        'Mode connectivity: two independently trained networks can be connected by a path of low-loss networks.',
+      ],
+    },
+  ],
+
+  'measure-theory-probability': [
+    {
+      id: 'q-mfml-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A σ-algebra (sigma-algebra) F on sample space Ω is a collection of subsets satisfying:',
+      options: [
+        'F contains only finite subsets of Ω',
+        'F contains Ω, is closed under complementation, and closed under countable unions',
+        'F contains all subsets with probability > 0.5',
+        'F is the power set of Ω restricted to measurable events',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'A σ-algebra F satisfies: (1) Ω ∈ F, (2) A ∈ F ⟹ Aᶜ ∈ F (closed under complement), (3) A₁, A₂,... ∈ F ⟹ ∪ᵢAᵢ ∈ F (closed under countable union). The triple (Ω, F, P) is a probability space where F specifies which events can be assigned probability.',
+      hints: [
+        'σ-algebra defines "measurable" events — events we can assign probabilities to.',
+        'Closure under countable union allows handling continuous distributions.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp35-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'For a continuous random variable X with density f_X, the expectation E[g(X)] = ∫ g(x) f_X(x) dx is defined as a Lebesgue integral, which agrees with the Riemann integral when f_X is Riemann-integrable.',
+      correctAnswer: 'True',
+      explanation:
+        'The Lebesgue integral generalizes the Riemann integral. For well-behaved densities (e.g., continuous or piecewise continuous), both integrals agree. Lebesgue integration handles more general functions (e.g., indicator functions, limits of measurable functions) and allows powerful convergence theorems (Dominated Convergence, Monotone Convergence) crucial for probability theory.',
+      hints: [
+        'Lebesgue integration: partition the range of f (not the domain) — more general than Riemann.',
+        'Key theorem: Dominated Convergence allows interchanging limits and expectations.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The Radon-Nikodym theorem states that if P is absolutely continuous with respect to Q (P ≪ Q), then:',
+      options: [
+        'P and Q are equal as measures on all measurable sets',
+        'There exists a measurable function f = dP/dQ such that P(A) = ∫_A f dQ for all measurable A',
+        'The KL divergence KL(P||Q) is bounded by the L² norm of P − Q',
+        'P and Q share the same support and have equal marginals',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The Radon-Nikodym derivative (likelihood ratio) f = dP/dQ satisfies P(A) = ∫_A f dQ. Absolute continuity P ≪ Q means Q(A) = 0 ⟹ P(A) = 0. The R-N derivative is the foundation of likelihood ratios in statistics, KL divergence (KL(P||Q) = E_P[log dP/dQ]), and importance sampling.',
+      hints: [
+        'P ≪ Q means P cannot assign mass to Q-null sets.',
+        'dP/dQ is the density of P relative to Q — used in importance sampling weights.',
+      ],
+    },
+  ],
+
+  'bayesian-inference': [
+    {
+      id: 'q-mfml-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Bayes\' theorem for parameter inference updates beliefs about θ given data x as:',
+      options: [
+        'P(θ|x) = P(x)P(θ) / P(x|θ)',
+        'P(θ|x) = P(x|θ)P(θ) / P(x)',
+        'P(θ|x) = P(x|θ) / P(θ)',
+        'P(θ|x) = P(θ)P(x|θ) · P(x)',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Bayes\' theorem: P(θ|x) ∝ P(x|θ) · P(θ). The posterior P(θ|x) combines the likelihood P(x|θ) (how well θ explains data x) with the prior P(θ) (our belief before seeing data). P(x) = ∫P(x|θ)P(θ)dθ is the normalizing constant (model evidence).',
+      hints: [
+        'Posterior ∝ Likelihood × Prior. The normalizer P(x) is often intractable.',
+        'MAP: θ* = argmax P(θ|x). MLE: θ* = argmax P(x|θ) (no prior).',
+      ],
+    },
+    {
+      id: 'q-mfml-kp36-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'A conjugate prior is a prior distribution P(θ) such that the posterior P(θ|x) belongs to the same parametric family as the prior, enabling closed-form Bayesian updates.',
+      correctAnswer: 'True',
+      explanation:
+        'Conjugate priors give analytical posteriors: Beta prior + Bernoulli likelihood → Beta posterior; Gaussian prior + Gaussian likelihood → Gaussian posterior; Dirichlet prior + Categorical likelihood → Dirichlet posterior. Conjugacy enables efficient sequential Bayesian updating without numerical integration.',
+      hints: [
+        'Beta-Binomial conjugacy: Beta(α,β) prior + n successes out of m trials → Beta(α+successes, β+failures).',
+        'Conjugate priors are convenient but not always a good model of prior beliefs.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp36-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Maximum A Posteriori (MAP) estimation can be viewed as MLE with regularization. Which prior corresponds to which regularizer?',
+      options: [
+        'Laplace prior → L2 (Ridge) regularization; Gaussian prior → L1 (LASSO)',
+        'Gaussian prior → L2 (Ridge) regularization; Laplace prior → L1 (LASSO)',
+        'Both Gaussian and Laplace priors lead to L2 regularization with different λ values',
+        'Gaussian prior → dropout regularization; Laplace prior → L2 regularization',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'MAP: θ_MAP = argmax [log P(x|θ) + log P(θ)]. Gaussian prior N(0,σ²I): log P(θ) = −‖θ‖²/(2σ²) ∝ −λ‖θ‖² = L2 regularization (Ridge). Laplace prior ∝ exp(−λ‖θ‖₁): log P(θ) ∝ −λ‖θ‖₁ = L1 regularization (LASSO). L1 promotes sparsity because the Laplace prior has sharper peak at zero.',
+      hints: [
+        'Gaussian is quadratic → L2 penalty. Laplace has exponential tails → L1 penalty.',
+        'Laplace prior → L1 → sparse solutions (many parameters go to exactly zero).',
+      ],
+    },
+  ],
+
+  'gaussian-processes': [
+    {
+      id: 'q-mfml-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A Gaussian Process (GP) is best described as:',
+      options: [
+        'A neural network with Gaussian activation functions',
+        'A distribution over functions where any finite collection of function values has a joint Gaussian distribution',
+        'A Markov chain with Gaussian transition probabilities',
+        'A Gaussian mixture model with infinitely many components',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'A GP f ~ GP(μ, k) defines a distribution over functions: for any finite set of inputs {x₁,...,xₙ}, the outputs [f(x₁),...,f(xₙ)] ~ N(μ, K) where K_ij = k(xᵢ, xⱼ). The kernel k specifies the covariance structure — smoothness, periodicity, etc. GPs provide non-parametric Bayesian regression with calibrated uncertainty.',
+      hints: [
+        'GP = distribution over functions, not a distribution over parameters.',
+        'Any finite marginal of a GP is multivariate Gaussian — that\'s the definition.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp37-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'In GP regression, the posterior predictive mean at a new point x* is a weighted sum of training outputs y, where the weights depend on the kernel function k(x*, xᵢ) evaluated between x* and training points.',
+      correctAnswer: 'True',
+      explanation:
+        'GP posterior: μ*(x*) = k(x*, X)[K(X,X) + σ²I]⁻¹y = Σᵢ αᵢ k(x*, xᵢ) where α = [K+σ²I]⁻¹y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance σ²*(x*) = k(x*,x*) − k(x*,X)[K+σ²I]⁻¹k(X,x*) quantifies uncertainty.',
+      hints: [
+        'Kernel k(x*,xᵢ) measures similarity between x* and training point xᵢ.',
+        'Far from training data: k(x*,xᵢ) ≈ 0, posterior variance ≈ prior variance.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp37-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'GP hyperparameter optimization (e.g., kernel length scale ℓ) is typically performed by maximizing:',
+      options: [
+        'The posterior predictive accuracy on a held-out validation set using cross-validation',
+        'The log marginal likelihood log P(y|X, θ_hyp) = −½ yᵀ(K+σ²I)⁻¹y − ½ log|K+σ²I| − n/2 log(2π)',
+        'The ELBO of a variational approximation to the GP posterior',
+        'The squared error between predicted and actual outputs on the training set',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The log marginal likelihood (type-II MLE / evidence) balances data fit (−½ yᵀ(K+σ²I)⁻¹y) against model complexity (−½ log|K+σ²I|). Gradient-based optimization w.r.t. hyperparameters (ℓ, σ_f, σ_n) yields an automatic Occam\'s razor — it penalizes overly complex kernels that overfit.',
+      hints: [
+        'Log marginal likelihood = log P(y|X, hyp): integrated over all function values (GP prior).',
+        'Complexity penalty −½ log|K| prevents overfitting by penalizing high model complexity.',
+      ],
+    },
+  ],
+
+  'monte-carlo': [
+    {
+      id: 'q-mfml-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Importance sampling estimates E_P[f(x)] when sampling from P is difficult by:',
+      options: [
+        'Sampling x ~ P directly and computing the sample mean of f(x)',
+        'Sampling x ~ Q and computing the weighted mean (1/N) Σᵢ f(xᵢ) w(xᵢ) where w(xᵢ) = P(xᵢ)/Q(xᵢ)',
+        'Using rejection sampling to accept only samples that satisfy f(x) > 0',
+        'Computing the expectation analytically using moment-generating functions',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Importance sampling: E_P[f(x)] = E_Q[f(x)P(x)/Q(x)] = E_Q[f(x)w(x)]. Samples x_i ~ Q are weighted by importance weights w_i = P(x_i)/Q(x_i). The estimator is unbiased if Q(x) > 0 wherever P(x)f(x) ≠ 0. Variance is low when Q ≈ P·|f| (proposal matches integrand shape).',
+      hints: [
+        'Importance weights w = P/Q correct for the mismatch between sampling distribution Q and target P.',
+        'High-variance weights (Q much lighter-tailed than P) cause catastrophic importance sampling failure.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp38-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Markov Chain Monte Carlo (MCMC) methods like Metropolis-Hastings generate samples from a target distribution P(x) by constructing a Markov chain whose stationary distribution equals P(x), without needing to evaluate the normalizing constant of P.',
+      correctAnswer: 'True',
+      explanation:
+        'MH accepts/rejects proposed moves using the acceptance ratio α = min(1, P(x\')Q(x|x\')/P(x)Q(x\'|x)). Since P appears as a ratio, the normalizing constant cancels — only the unnormalized P̃(x) ∝ P(x) is needed. Under detailed balance, the chain\'s stationary distribution is P(x). This makes MCMC invaluable for Bayesian inference where P(θ|x) ∝ P(x|θ)P(θ) is known up to normalizer.',
+      hints: [
+        'Detailed balance: π(x)T(x\'|x) = π(x\')T(x|x\'). Ensures P is the stationary distribution.',
+        'The normalizing constant P(x) = ∫P(x|θ)P(θ)dθ is often intractable — MCMC avoids it.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp38-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Control variates reduce the variance of a Monte Carlo estimator ê = (1/N)Σ f(xᵢ) by:',
+      options: [
+        'Increasing N (sample size) to reduce variance at rate 1/√N',
+        'Subtracting a correlated function c·g(x) with known mean E[g] = μ_g, giving ê_CV = (1/N)Σ [f(xᵢ) − c(g(xᵢ) − μ_g)]',
+        'Importance-weighting samples to match a lower-variance proposal distribution',
+        'Truncating extreme outliers that inflate the variance of f(x)',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Control variate estimator: ê_CV = (1/N)Σ[f(x_i) − c(g(x_i) − μ_g)] is unbiased (since E[g − μ_g] = 0). Optimal c* = Cov(f,g)/Var(g) minimizes Var(ê_CV) = Var(f)(1 − ρ²_{fg}). When |ρ_{fg}| ≈ 1, variance reduction is dramatic. The REINFORCE baseline in RL is a control variate for the policy gradient estimator.',
+      hints: [
+        'Subtracting zero-mean term c(g − μ_g) doesn\'t change the mean but can reduce variance.',
+        'Optimal coefficient c* = Cov(f,g)/Var(g). Higher correlation → larger variance reduction.',
+      ],
+    },
+  ],
+
+  'spectral-graph-theory': [
+    {
+      id: 'q-mfml-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'The graph Laplacian L of an undirected graph G = (V, E) with adjacency matrix A and degree matrix D is defined as:',
+      options: [
+        'L = A + D',
+        'L = D − A',
+        'L = A · D⁻¹',
+        'L = D⁻½ A D⁻½',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The combinatorial graph Laplacian L = D − A where D_ii = Σ_j A_ij (degree of node i). L is symmetric, positive semidefinite, with smallest eigenvalue 0 (eigenvector 1). The number of zero eigenvalues equals the number of connected components. L captures graph connectivity and is fundamental to spectral graph theory.',
+      hints: [
+        'D is diagonal with node degrees; A is the adjacency matrix.',
+        'Normalized Laplacian: L_norm = D^{-1/2}(D−A)D^{-1/2} = I − D^{-1/2}AD^{-1/2}.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp39-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'PageRank computes a stationary distribution of a random walk on the web graph, where at each step the surfer either follows a random outgoing link with probability d, or teleports to a random page with probability (1−d).',
+      correctAnswer: 'True',
+      explanation:
+        'PageRank vector π satisfies π = d·Aᵀπ + (1−d)·1/n. The damping factor d ≈ 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1−d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
+      hints: [
+        'Random surfer model: follow link with prob d, teleport with prob 1−d.',
+        'Without teleportation, dangling nodes (no outlinks) accumulate all rank — it leaks.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp39-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'Spectral clustering uses the eigenvectors of the graph Laplacian because:',
+      options: [
+        'Laplacian eigenvectors maximize the within-cluster edge weight (graph cut)',
+        'The k smallest eigenvectors of L span a k-dimensional embedding that minimizes the normalized cut, and k-means in this space finds near-optimal clusters',
+        'Laplacian eigenvectors are sparse, enabling efficient computation of cluster assignments',
+        'The largest eigenvectors capture global graph structure while small eigenvectors capture local neighborhoods',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The relaxation of the normalized cut problem (NcutMin) is solved exactly by the k eigenvectors corresponding to the k smallest eigenvalues of the normalized Laplacian L_sym = D^{-1/2}LD^{-1/2}. These eigenvectors define an embedding where graph-connected nodes cluster together. Running k-means in this embedding space approximates the optimal graph partitioning.',
+      hints: [
+        'Smallest eigenvalues of L capture global connectivity; smallest eigenvectors span the cluster structure.',
+        'Fiedler vector = second smallest eigenvector — used for bisection (k=2 case).',
+      ],
+    },
+  ],
+
+  'concentration-bounds': [
+    {
+      id: 'q-mfml-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Markov\'s inequality states that for a non-negative random variable X and t > 0:',
+      options: [
+        'P(X ≥ t) ≤ E[X²]/t²',
+        'P(X ≥ t) ≤ E[X]/t',
+        'P(|X − E[X]| ≥ t) ≤ Var(X)/t²',
+        'P(X ≥ t) ≤ exp(−t/E[X])',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Markov\'s inequality: P(X ≥ t) ≤ E[X]/t. It requires only finite mean. Proof: E[X] ≥ E[X·1(X≥t)] ≥ t·P(X≥t). Chebyshev\'s inequality (requires finite variance) is Markov applied to (X−E[X])²: P(|X−μ|≥t) ≤ σ²/t².',
+      hints: [
+        'Markov requires only E[X] < ∞ and X ≥ 0 — extremely weak assumption.',
+        'Chebyshev\'s = apply Markov to (X − E[X])² with threshold t² — gives tighter bound.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp40-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question:
+        'Hoeffding\'s inequality states that for independent bounded random variables Xᵢ ∈ [aᵢ, bᵢ] with S_n = Σ Xᵢ, the tail bound P(S_n − E[S_n] ≥ t) ≤ exp(−2t²/Σ(bᵢ−aᵢ)²) decays exponentially in t.',
+      correctAnswer: 'True',
+      explanation:
+        'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables — much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n − μ ≥ ε) ≤ exp(−2nε²). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
+      hints: [
+        'Exponential decay vs. Chebyshev\'s 1/t² polynomial decay — Hoeffding is exponentially tighter.',
+        'Hoeffding requires bounded variables; Gaussian concentration requires sub-Gaussian variables.',
+      ],
+    },
+    {
+      id: 'q-mfml-kp40-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question:
+        'The union bound (Boole\'s inequality) P(∪ᵢ Aᵢ) ≤ Σᵢ P(Aᵢ) is used in ML theory to:',
+      options: [
+        'Prove that the sample mean concentrates around the true mean for Gaussian data',
+        'Convert per-hypothesis Hoeffding bounds into a uniform convergence guarantee over a finite hypothesis class: P(∃h∈H: |err_S(h) − err(h)| ≥ ε) ≤ |H|·exp(−2nε²)',
+        'Derive the Vapnik-Chervonenkis dimension of a hypothesis class from its size',
+        'Bound the mutual information between inputs and predictions',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'The union bound converts per-hypothesis Hoeffding bounds into a uniform convergence guarantee: P(∃h∈H: |err_S(h) − err(h)| ≥ ε) ≤ Σ_{h∈H} P(|err_S(h) − err(h)| ≥ ε) ≤ |H|·exp(−2nε²). Setting this ≤ δ and solving for ε: with probability ≥ 1−δ, all hypotheses satisfy |training error − true error| ≤ √((log|H| + log(1/δ))/(2n)).',
+      hints: [
+        'Union bound: probability of any bad event ≤ sum of individual bad event probabilities.',
+        'The log|H| factor in the generalization bound is the hypothesis class complexity penalty.',
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extra);
 
 registerQuestions(questions);
 export default questions;
