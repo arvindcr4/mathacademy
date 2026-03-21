@@ -25,7 +25,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Two Sum with hash map requires O(n) extra space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       hints: [
         "The hash map stores each element as we traverse",
         "How many elements can be stored in the worst case?"
@@ -146,7 +146,7 @@ explanation:
       difficulty: "easy",
       question:
         "Kadane\'s algorithm works in O(n) time using dynamic programming.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'What does DP mean for array problems?',
         'Is maxEndingHere at position i dependent only on maxEndingHere at position i-1?',
@@ -223,7 +223,7 @@ explanation:
       type: "true-false",
       difficulty: "medium",
       question: "Division approach works when zero is present in the array.",
-      correctAnswer: "false",
+      correctAnswer: "False",
             hints: [
         'What happens mathematically when you divide by zero?',
         'Think about an array like [1, 0, 2]',
@@ -343,7 +343,7 @@ explanation:
       difficulty: "easy",
       question:
         "Juggling algorithm (cyclic replacements) uses O(1) extra space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'Does the juggling algorithm allocate any extra arrays?',
         'How many variables does it use?',
@@ -405,7 +405,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: "Using a hash set gives O(n) time complexity.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'What is the average-case time complexity of hash set lookup?',
         'How many elements do we process?',
@@ -511,7 +511,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: "If any string is empty, the LCP is an empty string.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'An empty string has length 0',
         'You can\'t share any characters with a string of length 0',
@@ -561,7 +561,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: '"{[()]}" is a valid parentheses string.',
-      correctAnswer: "true",
+      correctAnswer: "True",
       hints: [
         "Trace through each character",
         "Does every closer match the most recent unclosed opener?",
@@ -653,7 +653,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: "Recursive linked list reversal uses O(n) stack space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       hints: [
         "Each recursive call creates a stack frame",
         "How many recursive calls are made for n nodes?",
@@ -698,7 +698,7 @@ explanation:
       difficulty: "medium",
       question:
         "You can reverse a sublist of a linked list without reversing the entire list.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       hints: [
         "Think about identifying the boundaries of the sublist",
         "You can disconnect the sublist, reverse it, then reconnect",
@@ -744,7 +744,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: "Hash set approach detects cycles in O(n) time and O(n) space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       hints: [
         "What data structure lets us check if we\'ve visited a node before?",
         "How many nodes can we visit in the worst case?",
@@ -865,7 +865,7 @@ explanation:
       type: "true-false",
       difficulty: "medium",
       question: "Divide and conquer merging k lists takes O(n log k) time.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'After round 1, we have k/2 lists. After round 2, k/4 lists...',
         'How many rounds until one list remains?',
@@ -941,7 +941,7 @@ explanation:
       type: "true-false",
       difficulty: "medium",
       question: "Dummy head node simplifies edge case of removing head.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'What happens when the node to delete is the original head?',
         'Dummy.next = head lets us handle the head case uniformly',
@@ -1004,7 +1004,7 @@ explanation:
       type: "true-false",
       difficulty: "medium",
       question: "Stack approach for palindrome uses O(n) extra space.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'We push all n values and then compare by popping',
         'How much memory does the stack use?',
@@ -1096,7 +1096,7 @@ explanation:
       type: "true-false",
       difficulty: "easy",
       question: "Stack empty at end means parentheses are balanced.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'If every opener was matched with a closer, what does the stack look like at the end?',
         'What does an empty stack signify?',
@@ -1179,7 +1179,7 @@ explanation:
       difficulty: "medium",
       question:
         "Using two stacks, the min stack tracks all minima historically.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'When do we push to the min stack? When the new value is <= current minimum',
         'When do we pop from the min stack? When the popped value equals the current minimum',
@@ -1258,7 +1258,7 @@ explanation:
       difficulty: "medium",
       question:
         "With two stacks, the order of elements is preserved correctly.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'When we transfer from stack1 to stack2, the order is reversed',
         'After transfer, stack2 top is the front of the queue',
@@ -1349,7 +1349,7 @@ explanation:
       type: "true-false",
       difficulty: "medium",
       question: "If no greater element exists, return -1.",
-      correctAnswer: "true",
+      correctAnswer: "True",
             hints: [
         'What do we assign when the stack is not empty at the end?',
         'Elements that are never popped have no greater element to their right',
