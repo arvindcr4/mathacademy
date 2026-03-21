@@ -95,19 +95,19 @@ const questions: Record<string, Question[]> = {
       id: 'q-ssl-kp2-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'A key limitation of pretext task-based SSL (rotation, jigsaw) is that the representations may be biased toward solving the specific pretext task. What problem does this cause?',
+      question: 'SSL representations are typically evaluated using what standard protocol?',
       options: [
-        'The model requires more compute than contrastive methods',
-        'Features learned to solve a specific pretext task may not transfer well to downstream tasks that require different semantic information',
-        'Pretext tasks cannot be applied to datasets with fewer than 1M images',
-        'The pretext task labels are too noisy to train on',
+        'Directly measuring the pre-text task performance (e.g., masked prediction accuracy)',
+        'Freezing the SSL-trained encoder and training a linear classifier on top using labelled examples (linear probing)',
+        'Fine-tuning the entire SSL model from scratch on the downstream labelled dataset',
+        'Comparing the model\'s embedding distances to a human-defined similarity matrix',
       ],
       correctAnswer: 1,
       explanation:
-        'Representations optimised for rotation prediction may encode orientation-related features at the expense of object identity or semantic content needed for classification. Contrastive methods reduce this bias by encouraging semantic similarity rather than solving a specific artificial task.',
+        'Linear probing freezes the SSL encoder and only trains a linear layer on a labelled downstream dataset. Good linear probe accuracy indicates the encoder learned rich, linearly separable representations that are not merely memorising pre-text task patterns.',
       hints: [
-        'A model perfect at rotation prediction may pay attention to low-level texture cues not useful for object recognition.',
-        'Think about the gap between what the pretext task rewards and what downstream tasks require.',
+        'A linear classifier can only use linearly separable features — what does high linear probe accuracy imply about the representations?',
+        'Freezing the encoder isolates the quality of the learned representations from the downstream dataset size.',
       ],
     },
   ],
@@ -595,14 +595,15 @@ const questions: Record<string, Question[]> = {
       options: [
         'Images have fewer total tokens than text, so a higher ratio is needed for sufficient signal',
         'Images have high spatial redundancy — neighboring patches are highly correlated — so a low masking ratio allows the model to solve the task by simple interpolation rather than high-level semantic understanding; 75% forces the model to reason about global scene structure',
-        'Higher masking enables the decoder to hallucinate realistic-looking textures from noise',
-        'A 75% ratio reduces the encoder compute to match BERT\'s token count per forward pass',
+        'Time series models are shallower than ViTs and cannot handle high masking ratios',
+        'Masking is not differentiable for time series data',
       ],
       correctAnswer: 1,
-      explanation: 'He et al. ablated masking ratios from 25% to 90% and found 75% optimal: below 50%, the task is too easy (local interpolation suffices); above 80%, too little context makes reconstruction ill-posed. High redundancy in image pixels is the key reason a much higher ratio than text masking is needed to create a non-trivial learning task.',
+      explanation:
+        'Contrastive learning (Chopra et al. 2005; reviewed in Weng 2021) uses positive pairs (augmented views of the same image, or related samples) and negative pairs (different images) to shape the embedding space: attract positives, repel negatives. The learned representation should reflect semantic similarity rather than surface statistics.',
       hints: [
-        'Adjacent pixels/patches are correlated in images — with 15% masking, a model can "paint over" masked patches trivially.',
-        'High masking forces the encoder to build a global, semantic model of the scene.',
+        'Think of it as metric learning: close = similar, far = dissimilar.',
+        'Positive pairs are typically created by augmenting the same image differently; negatives are other images.',
       ],
     },
   ],
@@ -1308,7 +1309,7 @@ const questions: Record<string, Question[]> = {
       question: 'Researchers have found that the choice of SSL method matters less than the choice of pre-training data distribution and backbone architecture for transfer performance. What practical implication does this have?',
       options: [
         'Practitioners should always implement the latest SSL algorithm from the literature',
-        'Investing in collecting more diverse in-domain unlabelled data and using a larger backbone is often more impactful than switching between SSL algorithms (SimCLR vs BYOL vs DINO)',
+        'Investinging in collecting more diverse in-domain unlabelled data and using a larger backbone is often more impactful than switching between SSL algorithms (SimCLR vs BYOL vs DINO)',
         'The SSL objective is the primary hyperparameter and should be tuned first',
         'Pre-training data and architecture are fixed by convention and should not be changed',
       ],
@@ -1446,10 +1447,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'VideoMAE uses ~90% masking because adjacent video frames are nearly identical. With lower masking ratios, the model can trivially reconstruct masked patches by copying from nearby temporal neighbours — a much higher ratio is needed to force semantic understanding.',
+        'VideoMAE uses ~90% masking because adjacent video frames are nearly identical. With lower masking ratios, the model can trivially interpolate masked patches from adjacent frames without learning semantics. Tube masking (masking the same spatial location across all frames) forces the model to understand the video content.',
       hints: [
-        'Compare temporal redundancy in video to spatial redundancy in images — which is higher?',
-        'If adjacent frames are almost the same, what masking ratio makes reconstruction non-trivial?',
+        'Images: mask 75% to make task hard. Videos: mask 90%+ to prevent trivial temporal interpolation.',
+        'Tube mask = same spatial patch masked in all frames. Without this, temporal copying trivializes the task.',
       ],
     },
     {
@@ -1627,31 +1628,473 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Emergent capabilities appear at large scales regardless of the specific SSL variant. Scale — model size, data quantity, and compute — is the primary driver, with the SSL objective (causal LM for GPT, masked LM for BERT) shaping what capabilities emerge rather than causing emergence per se.',
       hints: [
-        'Both GPT and BERT use different SSL objectives but both show emergent capabilities at scale.',
-        'Emergence is correlated with scale, not with the choice of SSL objective.',
-      ],
-    },
-    {
-      id: 'q-ssl-kp30-3',
-      type: 'multiple-choice',
-      difficulty: 'hard',
-      question: 'The JEPA (Joint Embedding Predictive Architecture) framework proposed by LeCun aims to be the SSL foundation for future AI systems. What is its key distinction from generative SSL (e.g., MAE, GPT)?',
-      options: [
-        'JEPA uses a discriminative loss; generative SSL uses a generative loss',
-        'JEPA predicts abstract representations of future/missing inputs in latent space rather than predicting raw pixels, avoiding learning irrelevant low-level details and focusing on semantic structure',
-        'JEPA requires paired data from multiple modalities; generative SSL works on single-modality data',
-        'JEPA uses energy-based modelling; generative SSL uses likelihood maximisation',
-      ],
-      correctAnswer: 1,
-      explanation:
-        'JEPA argues that predicting raw pixels (MAE) or tokens (GPT) forces the model to model irrelevant low-level details. Predicting in abstract representation space avoids this by focusing learning on semantic, task-relevant structure — potentially more efficient and scalable for AI systems that must reason about the world.',
-      hints: [
-        'What does predicting raw pixels require that predicting representations avoids?',
-        'Representations abstract away details (noise, texture) irrelevant to semantics — predicting them is a harder but more focused task.',
+        'Transfer learning helps when source and target tasks share relevant features.',
+        'Molecular property prediction is diverse: some properties depend on global structure, others on specific local chemistry.',
       ],
     },
   ],
 }
+
+registerQuestions(questions)
+
+const additionalSslQuestions: Record<string, Question[]> = {
+  'dino-dinov2': [
+    {
+      id: 'q-ssl-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'DINO (Self-DIstillation with NO labels) uses a teacher-student framework. What prevents the student from collapsing to trivial constant representations?',
+      options: [
+        'A contrastive loss that explicitly pushes different-crop embeddings apart',
+        'Centering (subtracting a running mean from teacher outputs) and sharpening (low temperature softmax on teacher) together prevent collapse without negative pairs',
+        'A stop-gradient on the student branch, so gradients only flow through the teacher',
+        'L2 normalization applied to both teacher and student outputs before computing the cross-entropy loss',
+      ],
+      correctAnswer: 1,
+      explanation: 'DINO avoids collapse through two mechanisms: (1) Centering: subtract an exponential moving average of teacher outputs from each teacher output, preventing any single dimension from dominating; (2) Sharpening: apply a low-temperature softmax to teacher outputs, making the distribution peaky. The student uses a higher temperature. Together these prevent mode collapse without requiring negative pairs or stop-gradient on the teacher (though the teacher is an EMA of the student).',
+      hints: [
+        'Collapse = all inputs map to the same embedding. Centering prevents one-dim domination; sharpening makes targets informative.',
+        'Compare to BYOL which uses stop-gradient; DINO uses centering+sharpening as the anti-collapse mechanism.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp31-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'DINOv2 introduced several improvements over DINO. Which combination of changes was most responsible for its superior performance?',
+      options: [
+        'Larger ViT backbone only — DINOv2 uses ViT-G/14 while DINO used ViT-B/8',
+        'Curated high-quality training data (LVD-142M), combined training with DINO + iBOT (masked image modeling) losses, and Sinkhorn-Knopp regularization for assignment — scale and data quality drove most gains',
+        'Replacing the cross-entropy loss with a cosine similarity loss and using a momentum encoder with 0.9999 EMA coefficient',
+        'Adding a language decoder branch that aligns vision features with text using CLIP-style contrastive training',
+      ],
+      correctAnswer: 1,
+      explanation: 'Oquab et al. (2024) DINOv2 key improvements: (1) LVD-142M — a curated dataset of 142M images with deduplication and quality filtering, removing web noise; (2) Combined loss: DINO global crops + iBOT masked-patch prediction, providing both global semantic and local spatial learning signals; (3) Sinkhorn-Knopp regularization for more uniform cluster assignments; (4) ViT-g at 14px patch size. Data curation was identified as the single most impactful factor.',
+      hints: [
+        'DINOv2 did not add any text supervision — it remains purely vision-based.',
+        'The key insight: SSL model quality depends heavily on data quality, not just architecture or loss design.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp31-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'DINO\'s teacher network is trained using backpropagation, with gradients flowing from the cross-entropy loss between student and teacher outputs.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'The DINO teacher is updated via Exponential Moving Average (EMA) of the student weights — no gradients flow to the teacher. Only the student is updated via backpropagation. This momentum teacher provides more stable targets than a network that updates every step, analogous to the momentum encoder in MoCo.',
+      hints: [
+        'EMA teacher = slowly changing target network. This is the same principle as in BYOL and MoCo.',
+        'If gradients flowed to the teacher, it would immediately adjust to match the student, losing the stable-target benefit.',
+      ],
+    },
+  ],
+  'clip-and-multimodal-ssl': [
+    {
+      id: 'q-ssl-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'CLIP (Contrastive Language-Image Pre-Training) is trained on 400M image-text pairs. What is its training objective?',
+      options: [
+        'Minimize cross-entropy between predicted image captions and ground-truth captions (generation)',
+        'Maximize cosine similarity between matched image-text pairs and minimize it between all mismatched pairs in the batch using a symmetric InfoNCE loss',
+        'Predict whether an image-text pair is from the same webpage (binary classification)',
+        'Minimize the L2 distance between image and text embeddings in a shared CLIP space',
+      ],
+      correctAnswer: 1,
+      explanation: 'CLIP uses symmetric InfoNCE (NT-Xent): for a batch of N image-text pairs, compute an N×N similarity matrix. The diagonal entries are the true (matched) pairs. The loss maximizes diagonal similarities and minimizes off-diagonal ones — simultaneously from both the image→text and text→image perspectives. This dual symmetry is the "symmetric" part. No generation, no binary classification — pure contrastive alignment.',
+      hints: [
+        'The N×N matrix approach means every image is compared against all N texts (and vice versa) in the batch.',
+        'InfoNCE = noise-contrastive estimation. With N=32768 (CLIP uses large batches), each sample has N-1 negatives.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp32-2',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question: 'What enables CLIP to perform zero-shot image classification without any task-specific training?',
+      options: [
+        'CLIP\'s image encoder is pre-trained on ImageNet-21K, which covers all classification categories',
+        'CLIP encodes class names as text ("a photo of a {class}") and computes similarity to image embeddings — the most similar class text is predicted; no gradient updates needed',
+        'CLIP uses a meta-learning objective that explicitly trains for few-shot generalization during pre-training',
+        'CLIP applies a linear probe on its image features that is trained on a small held-out set of labeled examples',
+      ],
+      correctAnswer: 1,
+      explanation: 'Zero-shot CLIP: for a classification task with K classes, format each class as "a photo of a [class]" and encode all K texts. Encode the query image. Predict the class whose text embedding has highest cosine similarity to the image embedding. No training on the target task is needed — the image-text alignment learned during pre-training does the work. Prompt engineering (e.g., "a photo of a [class], a type of animal") further improves accuracy.',
+      hints: [
+        'The class names become text queries; the image is matched against them.',
+        'This works because CLIP learned that images and their textual descriptions should have similar embeddings.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp32-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'CLIP performs comparably to supervised ResNet-50 on ImageNet zero-shot classification without seeing any ImageNet training images.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'Radford et al. (2021) showed that zero-shot CLIP (ViT-L/14@336px) achieves ~76% top-1 accuracy on ImageNet, matching the original ResNet-50 trained with full supervision. This is remarkable: no ImageNet labels, no fine-tuning — just the text "a photo of a [class]." Larger CLIP models exceed this, and CLIP is generally much more robust than supervised models to distribution shift.',
+      hints: [
+        'Zero-shot CLIP = 76.2% top-1 on ImageNet; supervised ResNet-50 = 76.1%. Near parity.',
+        'The key is that ImageNet classes are natural language concepts that CLIP learned from web text.',
+      ],
+    },
+  ],
+  'masked-image-modeling': [
+    {
+      id: 'q-ssl-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'Masked Autoencoders (MAE, He et al., 2022) use an asymmetric encoder-decoder design. Why is the encoder applied only to visible (unmasked) patches?',
+      options: [
+        'To prevent the encoder from seeing masked tokens and thus learning their content from context',
+        'To reduce encoder compute: with 75% masking, the encoder processes only 25% of patches, making pre-training ~3× faster than full-image encoding while still learning rich representations',
+        'Because the decoder needs the mask tokens as inputs, so the encoder cannot share them',
+        'To enforce that the encoder learns global image statistics rather than local patch details',
+      ],
+      correctAnswer: 1,
+      explanation: 'MAE\'s asymmetric design is primarily a compute optimization. The encoder (large ViT) only processes the 25% visible patches, dramatically reducing its computational cost. The decoder (shallow transformer) then takes encoder outputs + learnable mask tokens and reconstructs all patches. This design is key to MAE\'s 3× training speedup and its ability to pre-train very large models (ViT-L, ViT-H) efficiently.',
+      hints: [
+        '75% masking + encoder on 25% visible = encoder sees 1/4 of patches → ~4× less encoder compute.',
+        'The decoder handles the masked positions — keeping it lightweight enables efficient pretraining.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp33-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'BEiT (BERT Pre-Training of Image Transformers) differs from MAE in its reconstruction target. What does BEiT predict for masked patches?',
+      options: [
+        'The raw pixel values of the masked patches (same as MAE)',
+        'Discrete visual tokens from a pre-trained dVAE (DALL-E tokenizer), converting patch reconstruction into a classification problem over a visual vocabulary',
+        'The CLIP embedding of the masked patch, aligning vision tokens with language-aligned representations',
+        'The mean color histogram of the masked region',
+      ],
+      correctAnswer: 1,
+      explanation: 'BEiT (Bao et al., 2022) uses a two-stage approach: (1) tokenize all image patches into discrete visual tokens using DALL-E\'s dVAE; (2) mask patches and train a ViT to predict the discrete token IDs of masked patches (not pixel values). This makes MIM a classification task over a finite vocabulary of ~8192 visual tokens, analogous to BERT\'s masked language modeling. BEiT-v3 later extended this to a multimodal masked modeling framework.',
+      hints: [
+        'MAE predicts pixel values; BEiT predicts discrete visual token IDs.',
+        'dVAE tokenization discretizes continuous image patches into a vocabulary — like WordPiece for images.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp33-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'MAE\'s pre-training objective of reconstructing raw pixel values for masked patches is suboptimal compared to reconstructing higher-level features (like CLIP embeddings), and pixel reconstruction has been shown to produce worse downstream representations than feature reconstruction targets.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'MAE (He et al.) showed that pixel reconstruction with 75% masking produces excellent representations, outperforming earlier methods with semantic targets on many benchmarks. While some methods (BEiT, data2vec) use semantic targets, pixel reconstruction with high masking ratio forces the model to learn semantic structure through the constraint of predicting masked regions from context — the target granularity matters less than the task difficulty. MAE is simpler and highly competitive.',
+      hints: [
+        'MAE achieves 87.8% top-1 on ImageNet with ViT-H — competitive with or better than semantic-target methods.',
+        'High masking ratio (75%) is what makes pixel-level prediction non-trivial and forces semantic understanding.',
+      ],
+    },
+  ],
+  'imagebind-multimodal': [
+    {
+      id: 'q-ssl-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'ImageBind (Girdhar et al., 2023) learns a joint embedding space across 6 modalities. What is its key training insight that enables modalities without paired training data to align?',
+      options: [
+        'ImageBind trains all 6 modalities jointly using a single contrastive loss across all pairs simultaneously',
+        'ImageBind uses images as a "binding" modality: each non-image modality is aligned to images using paired data, and since all modalities align to the same image space, they implicitly align to each other — enabling zero-shot cross-modal retrieval between modality pairs with no direct paired training',
+        'ImageBind uses a graph neural network to propagate alignment signals between modalities through a shared hub',
+        'ImageBind trains each modality pair independently and then stitches the spaces together with a learned linear mapping',
+      ],
+      correctAnswer: 1,
+      explanation: 'ImageBind\'s key insight: images naturally co-occur with many other modalities (text, audio, depth, thermal, IMU). Use images as the binding "hub": train each modality encoder to align with the image encoder using naturally paired data (e.g., video+audio, image+depth). Since all modalities share an image-aligned space, they transitively align to each other — enabling e.g. audio-text retrieval without any audio-text training pairs. This emergent alignment is the most important scientific contribution.',
+      hints: [
+        'If audio ↔ image and text ↔ image, then transitively audio ↔ text — without ever training on audio-text pairs.',
+        'Images are the universal pivot: they co-occur naturally with all other modalities in web data.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp34-2',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question: 'Which of the following tasks can ImageBind perform zero-shot, without any task-specific training, due to its joint embedding space?',
+      options: [
+        'Image super-resolution and denoising',
+        'Audio-driven image generation and cross-modal retrieval between any pair of its 6 modalities (e.g., retrieving images from audio queries)',
+        'Multi-lingual text translation across 100+ languages',
+        'Video temporal action localization with frame-level supervision',
+      ],
+      correctAnswer: 1,
+      explanation: 'ImageBind\'s joint embedding enables zero-shot: any-to-any cross-modal retrieval (e.g., find images matching a sound), audio-driven image generation (by using audio embeddings in place of text embeddings in a text-conditioned diffusion model), and arithmetic in embedding space (audio + text = compositional queries). None of these require task-specific training — they emerge from the aligned embedding geometry.',
+      hints: [
+        'If audio and text live in the same space as image embeddings used for generation, you can generate images from audio.',
+        'Embedding arithmetic: image of dog + audio of barking = retrieve images of barking dogs.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp34-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'ImageBind requires paired training data for every combination of its 6 modalities (e.g., audio-text pairs, audio-depth pairs, thermal-IMU pairs) to learn its joint embedding space.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'ImageBind only needs image-paired data for each modality: (image, audio), (image, text), (image, depth), (image, thermal), (image, IMU). The 15 pairwise combinations among 6 modalities are not needed. Alignment between non-image modalities is emergent — it happens because all modalities share the image-aligned embedding space. This is the key data efficiency advantage.',
+      hints: [
+        '6 modalities paired with 1 hub = 5 paired datasets needed, not C(6,2)=15.',
+        'Transitivity of alignment does the rest.',
+      ],
+    },
+  ],
+  'ssl-nlp': [
+    {
+      id: 'q-ssl-kp36-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'BERT uses Masked Language Modeling (MLM) and Next Sentence Prediction (NSP) for pre-training. RoBERTa (Liu et al., 2019) found that one of these was harmful and removed it. Which one, and why?',
+      options: [
+        'MLM was removed because it causes the model to over-rely on bidirectional context, hurting generalization',
+        'NSP was removed because it is too easy (models learn to use topic coherence heuristics) and actually hurts downstream performance by training on noisy cross-document sentence pairs',
+        'NSP was replaced with a harder Sentence Order Prediction (SOP) task; MLM was unchanged',
+        'Neither was removed; RoBERTa\'s gains came from larger batches and more data only',
+      ],
+      correctAnswer: 1,
+      explanation: 'RoBERTa found NSP harmful: NSP pairs consist of a real consecutive sentence (positive) and a random sentence from another document (negative). Models solve NSP by detecting topic shift (different document = different topic) rather than learning sentence coherence. This makes NSP too easy and introduces noise. Removing NSP and training longer with more data improved all GLUE benchmarks. ALBERT replaced NSP with the harder Sentence Order Prediction (SOP) task instead.',
+      hints: [
+        'NSP negative examples = random sentences from different documents. Models just detect topic change.',
+        'RoBERTa: remove NSP, train longer, use dynamic masking → state-of-the-art at the time.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp36-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'ELECTRA (Clark et al., 2020) uses a generator-discriminator architecture for SSL pre-training. What is ELECTRA\'s training objective?',
+      options: [
+        'Generator: generates fake tokens; Discriminator: produces realistic tokens to fool the generator (standard GAN)',
+        'Generator (small MLM model): replaces masked tokens with plausible alternatives; Discriminator (large model): classifies every token as "original" or "replaced" — making all tokens training signal vs. only masked tokens in BERT',
+        'Generator: autoregressively generates the next token; Discriminator: verifies semantic consistency of the generated sequence',
+        'Generator: produces paraphrases; Discriminator: classifies whether two sentences are paraphrases',
+      ],
+      correctAnswer: 1,
+      explanation: 'ELECTRA\'s key insight: BERT only computes loss on 15% masked tokens (the rest are wasted signal). ELECTRA trains a small MLM generator to replace masked tokens with plausible alternatives, then trains a large discriminator to detect which tokens were replaced vs. original — at every single token position. This provides 100% token coverage for the discriminator\'s loss, making ELECTRA ~4× more compute-efficient than BERT for the same downstream performance.',
+      hints: [
+        'BERT: 15% of tokens get a gradient. ELECTRA: 100% of tokens get a gradient.',
+        'The generator makes the task hard by producing plausible (not obviously wrong) replacements.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp36-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'GPT-style causal language modeling (predicting the next token) is a form of self-supervised learning because the supervision signal (the next token) is derived from the data itself without human annotation.',
+      correctAnswer: 'true',
+      explanation: 'Causal language modeling (CLM) is self-supervised: the input text provides both input (tokens 1..t) and label (token t+1) without any human labels. This is why GPT-series models can be pre-trained on vast amounts of raw internet text. Self-supervised learning is the broader category encompassing both BERT-style MLM and GPT-style CLM — both derive training signal from the data structure itself.',
+      hints: [
+        'Self-supervised = labels come from the data, not from human annotators.',
+        'Next-token prediction = the corpus is its own supervision signal.',
+      ],
+    },
+  ],
+  'contrastive-ssl-methods': [
+    {
+      id: 'q-ssl-kp37-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'SimCLR (Chen et al., 2020) identified several components critical for contrastive learning performance. Which combination did it find most important?',
+      options: [
+        'Momentum encoder + memory bank + large backbone',
+        'Data augmentation composition (especially random crop + color jitter + grayscale) + projection head (MLP before loss) + large batch size + normalized temperature-scaled cross-entropy (NT-Xent)',
+        'Stop-gradient on one branch + asymmetric network architecture + cosine similarity loss',
+        'Online cluster assignment + Sinkhorn normalization + multi-crop strategy',
+      ],
+      correctAnswer: 1,
+      explanation: 'SimCLR\'s ablations showed: (1) Augmentation composition is critical — random cropping + color jittering + grayscale together are essential; (2) A non-linear projection head (2-layer MLP) before the NT-Xent loss dramatically improves representation quality (vs. computing loss on raw encoder output); (3) Larger batch sizes provide more negatives, improving contrastive quality; (4) NT-Xent loss with temperature scaling is better than standard cross-entropy. The projection head insight was particularly surprising and influential.',
+      hints: [
+        'The projection head trick: representations from the layer before the projection head are better for transfer than from the projection head itself.',
+        'Why? The projection head may discard information needed for downstream tasks but not the contrastive objective.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp37-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'Barlow Twins (Zbontar et al., 2021) avoids collapse through a redundancy-reduction objective inspired by neuroscience. What is its loss function?',
+      options: [
+        'Minimize cosine similarity between all pairs of batch embeddings (force all embeddings apart)',
+        'Make the cross-correlation matrix of the two augmented-view embeddings as close to the identity matrix as possible: diagonal terms (invariance) → 1, off-diagonal terms (redundancy) → 0',
+        'Maximize mutual information between the two view embeddings using a MINE estimator',
+        'Minimize the KL divergence between the softmax distributions of the two view embeddings',
+      ],
+      correctAnswer: 1,
+      explanation: 'Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + λ × sum_{i≠j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.',
+      hints: [
+        'Identity cross-correlation matrix = each feature dimension is invariant to augmentation AND uncorrelated with other dimensions.',
+        'No negative pairs needed — the off-diagonal penalty prevents collapse by decorrelating dimensions.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp37-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'BYOL (Bootstrap Your Own Latent) requires negative pairs or explicit decorrelation objectives to prevent representational collapse, similar to SimCLR.',
+      correctAnswer: 'false',
+      explanation: 'BYOL uses no negative pairs, no memory bank, no explicit decorrelation. It uses only an online and a target (EMA) network with a stop-gradient on the target branch. Theoretical understanding of why BYOL does not collapse has been debated — key factors include the stop-gradient preventing the target from being directly optimized, the BatchNorm in the predictor creating implicit negative samples through batch statistics, and the EMA providing slowly-moving targets.',
+      hints: [
+        'BYOL was shocking when published: how can a network not collapse without negatives?',
+        'Stop-gradient + EMA target + BatchNorm are the key anti-collapse mechanisms.',
+      ],
+    },
+  ],
+  'ssl-graph-molecules': [
+    {
+      id: 'q-ssl-kp38-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'Graph-level SSL for molecular property prediction uses strategies analogous to image augmentation. Which augmentation strategy is most appropriate for molecular graphs?',
+      options: [
+        'Random pixel dropout — remove random atoms with probability p and predict their properties',
+        'Subgraph masking (randomly mask atom/bond features), edge perturbation (add/remove bonds), and node dropping — carefully chosen to preserve chemical validity and meaningful substructures',
+        'Random rotation and reflection of the 3D molecular conformation, treating the molecule as a point cloud',
+        'Random SMILES string corruption — randomly swap characters in the SMILES representation',
+      ],
+      correctAnswer: 1,
+      explanation: 'Molecular graph augmentation must respect chemical constraints. Common strategies: (1) node masking — mask atom types/features (analogous to image patch masking); (2) edge perturbation — add/remove bonds within chemical plausibility; (3) subgraph masking — hide functional groups. These are used in methods like GraphMAE, GROVER, and GNN pre-training frameworks. Random SMILES corruption can create invalid molecules; 3D rotation is data augmentation for 3D models, not the primary SSL strategy for graph-level tasks.',
+      hints: [
+        'Unlike images, molecular graphs have chemical validity constraints — augmentation cannot create invalid chemistry.',
+        'Functional group masking is particularly powerful: these substructures are the key determinants of molecular properties.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp38-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'GNNs trained with self-supervised pre-training on large molecular datasets followed by fine-tuning often outperform GNNs trained from scratch on small labeled datasets. Which SSL objective is most commonly used in molecular GNN pre-training?',
+      options: [
+        'Predicting the full 3D conformation of a molecule from its 2D graph (generative)',
+        'Context prediction: predict the neighborhood subgraph of a node given the node\'s embedding, or attribute masking: predict masked node/edge attributes from graph context',
+        'Contrastive learning between random graph augmentations of the same molecule (GraphCL)',
+        'Both attribute masking and context prediction are common; GraphCL (contrastive) is also widely used',
+      ],
+      correctAnswer: 3,
+      explanation: 'Hu et al. (2020) "Strategies for Pre-training Graph Neural Networks" established attribute masking and context prediction as foundational GNN SSL methods. GraphCL (You et al., 2020) introduced graph-level contrastive learning with chemical augmentations. GROVER (Rong et al., 2020) combined contextual self-supervised tasks at both node/graph levels. Multiple SSL objectives have proven effective; the field has not converged on a single dominant method as BERT did for NLP.',
+      hints: [
+        'Attribute masking = mask node features; context prediction = predict subgraph context from node embedding.',
+        'GraphCL = contrastive between augmented molecular graph views. All three have shown strong results.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp38-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'Self-supervised pre-training on large unlabeled molecular datasets consistently helps molecular property prediction, even when the pre-training and fine-tuning target properties are chemically unrelated.',
+      correctAnswer: 'false',
+      explanation: 'GNN pre-training benefits are task-dependent. Hu et al. (2020) found that pre-training helps for some tasks (especially those needing structural/chemical context) but can hurt for others. The benefit is largest when pre-training data distribution is similar to fine-tuning targets, and smallest when properties are highly specific and unrelated to general structural patterns. Negative transfer — pre-training hurting fine-tuning — has been documented in molecular GNN pre-training.',
+      hints: [
+        'Transfer learning helps when source and target tasks share relevant features.',
+        'Molecular property prediction is diverse: some properties depend on global structure, others on specific local chemistry.',
+      ],
+    },
+  ],
+  'ssl-audio-speech': [
+    {
+      id: 'q-ssl-kp39-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'wav2vec 2.0 (Baevski et al., 2020) uses a contrastive objective for speech SSL. What is the key element that makes this work for continuous audio?',
+      options: [
+        'Treating speech as a sequence of mel-spectrogram frames and applying a standard contrastive loss between augmented versions',
+        'Quantizing continuous audio representations into discrete speech units (using product quantization with Gumbel-softmax), then training a transformer to identify the true quantized unit for a masked position among distractors',
+        'Predicting future audio frames autoregressively, like CPC (Contrastive Predictive Coding)',
+        'Using a two-stream architecture where one stream processes clean audio and the other processes noisy audio, with contrastive alignment',
+      ],
+      correctAnswer: 1,
+      explanation: 'wav2vec 2.0 quantizes CNN-encoded speech features into discrete tokens using learnable codebooks with Gumbel-softmax (end-to-end differentiable). The transformer then learns to identify the correct quantized token for a masked time step among K distractors drawn from the same sequence. This turns continuous speech SSL into a discrete token identification task — more tractable than raw feature regression. The quantizer learns speech-relevant discrete units (often corresponding to phonemes) as a byproduct.',
+      hints: [
+        'Continuous audio → discrete tokens via quantization → contrastive identification of correct token.',
+        'Gumbel-softmax makes the discrete quantization differentiable for end-to-end training.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp39-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'HuBERT (Hidden-Unit BERT, Hsu et al., 2021) improves over wav2vec 2.0 by using an offline clustering step. What is HuBERT\'s training procedure?',
+      options: [
+        'HuBERT trains an online quantizer jointly with the transformer, like wav2vec 2.0 but with a larger codebook',
+        'HuBERT uses k-means clustering on MFCC features (or previous HuBERT representations) offline to generate pseudo-labels, then trains a BERT-like transformer to predict these discrete cluster labels for masked audio frames',
+        'HuBERT uses a teacher network (EMA of student) to generate soft targets for masked audio frames, like DINO for speech',
+        'HuBERT trains on (audio, transcription) pairs using a CTC loss but treats the transcription as a self-supervised signal derived from ASR n-best lists',
+      ],
+      correctAnswer: 1,
+      explanation: 'HuBERT procedure: (1) Cluster MFCC features into K=100 clusters using k-means (iteration 1) or cluster previous HuBERT representations (iteration 2+) to get frame-level pseudo-labels; (2) Train a BERT-style transformer with masked prediction on these discrete pseudo-labels. The key insight: even noisy cluster labels contain enough phonetic signal to drive useful SSL. Iterating (re-cluster with the trained model, retrain) progressively refines the pseudo-labels, analogous to EM.',
+      hints: [
+        'HuBERT = BERT for audio with k-means pseudo-labels instead of human transcriptions.',
+        'The iterative refinement (k-means → train → k-means on new representations → retrain) is like EM.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp39-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'SSL-pretrained speech models like wav2vec 2.0 can achieve near-human performance on automatic speech recognition with only 10 minutes of labeled data, compared to hundreds of hours needed by supervised baselines.',
+      correctAnswer: 'true',
+      explanation: 'Baevski et al. (2020) showed wav2vec 2.0 fine-tuned on 10 minutes of labeled LibriSpeech data achieves WER comparable to previous best results using 100 hours of labeled data. With 1 hour of labels, it surpasses the previous best trained on 960 hours. This dramatic label efficiency improvement is the defining practical advantage of SSL for speech: high-quality ASR in low-resource languages without large transcribed speech corpora.',
+      hints: [
+        '10 minutes vs. 960 hours: SSL pre-training provides ~6000× labeled data efficiency.',
+        'This enables ASR for languages where transcribed speech is scarce.',
+      ],
+    },
+  ],
+  'ssl-evaluation': [
+    {
+      id: 'q-ssl-kp40-1',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question: 'Linear probing is a standard SSL evaluation protocol. What does it measure, and why is it sometimes a poor proxy for fine-tuning performance?',
+      options: [
+        'Linear probing measures whether a frozen backbone\'s representations are linearly separable for a downstream task; it can be a poor proxy because some SSL methods learn nonlinear representations that are excellent for fine-tuning but not linearly separable',
+        'Linear probing measures training data efficiency; it is a poor proxy because it uses only 1% of labeled data while fine-tuning uses all labels',
+        'Linear probing measures representation dimensionality; methods with higher-dimensional representations always score better',
+        'Linear probing and fine-tuning always agree — if linear probing is high, fine-tuning will also be high',
+      ],
+      correctAnswer: 0,
+      explanation: 'Linear probing trains only a linear classifier on frozen SSL features. It is a proxy for "how well-structured are the representations?" However, fine-tuning (updating all weights) can overcome non-linear arrangement of features. Some methods (e.g., MAE) have relatively modest linear probing accuracy but excellent fine-tuning accuracy because their representations are rich but not linearly organized. MoCo v3 showed this gap clearly. Evaluating both linear probe and fine-tuning gives a fuller picture.',
+      hints: [
+        'Linear probe: frozen features, only train a linear head. Fine-tuning: update all weights.',
+        'MAE linear probe is lower than SimCLR/DINO, but MAE fine-tuning is often higher.',
+      ],
+    },
+    {
+      id: 'q-ssl-kp40-2',
+      type: 'multiple-choice',
+      difficulty: 'expert',
+      question: 'What is the "uniformity-alignment" framework for evaluating SSL representations (Wang & Isola, 2020)?',
+      options: [
+        'Evaluate alignment as how close same-class representations are, and uniformity as how spread representations are across the unit hypersphere — good SSL should maximize both',
+        'Evaluate alignment as how similar representations are to human judgments, and uniformity as the distribution of cluster sizes',
+        'Evaluate alignment as cosine similarity between augmented pairs, and uniformity as the condition number of the representation covariance matrix',
+        'Evaluate alignment and uniformity of gradient norms during SSL training to detect collapse',
+      ],
+      correctAnswer: 0,
+      explanation: 'Wang & Isola (2020) decomposed contrastive learning quality into: (1) Alignment: positive pairs (augmentations of the same image) should have similar representations; (2) Uniformity: representations should be uniformly distributed on the unit hypersphere — high entropy, spread out. Both are desirable: alignment ensures augmentation invariance; uniformity ensures maximum information content (no collapse to a point or subspace). These metrics can be computed without downstream tasks and predict transfer performance.',
+      hints: [
+        'Alignment = similar inputs map nearby. Uniformity = all of embedding space is used, not just a cluster.',
+        'Collapse = perfect alignment but zero uniformity (all images map to the same point).',
+      ],
+    },
+    {
+      id: 'q-ssl-kp40-3',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question: 'k-nearest neighbor (kNN) classification on frozen SSL features is a valid evaluation protocol that requires no training of any additional parameters beyond the SSL pre-training.',
+      correctAnswer: 'true',
+      explanation: 'kNN evaluation: extract features for all labeled training images using the frozen SSL backbone, then for each test image compute its embedding and find the k nearest training embeddings by cosine distance — the majority label among neighbors is the prediction. No parameters are trained. This is even simpler than linear probing and evaluates raw feature quality. DINO and DINOv2 report kNN accuracy as a primary evaluation metric. High kNN accuracy indicates that the embedding space has a natural neighborhood structure aligned with semantic labels.',
+      hints: [
+        'kNN requires no optimization — just feature extraction and distance computation.',
+        'DINO ViT-S achieves 74.5% kNN on ImageNet, remarkable for a model trained with no labels.',
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, additionalSslQuestions)
 
 registerQuestions(questions)
 export default questions

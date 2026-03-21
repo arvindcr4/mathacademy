@@ -283,7 +283,7 @@ const questions: Record<string, Question[]> = {
       question: 'Which of these is NOT a valid parentheses string?',
       options: ['"{[()]}"', '"([)]"', '"()[]{}"', '"{{}}"'],
       correctAnswer: 1,
-      explanation: '"([)]" has mismatched nesting. Stack shows: push '(' then '[', but then ')' tries to close '(' while stack top is "[".',
+      explanation: '"([)]" has mismatched nesting. Stack shows: push \'(\' then \'[\', but then \')\' tries to close \'(\' while stack top is "[".',
     },
     {
       id: 'q-vp-5',

@@ -1571,5 +1571,294 @@ const questions: Record<string, Question[]> = {
   ],
 }
 
+const moreAdaptQuestions: Record<string, Question[]> = {
+  'test-time-adaptation': [
+    {
+      id: 'q-adapt-kp31-1',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question:
+        'Test-Time Adaptation (TTA) differs from standard unsupervised domain adaptation in that:',
+      options: [
+        'TTA requires labeled target data while UDA does not',
+        'TTA adapts the model during inference using only the unlabeled test data (no source data retained), typically by optimizing a self-supervised objective like entropy minimization or consistency — enabling adaptation to distribution shift on-the-fly without retraining',
+        'TTA is computationally cheaper than UDA because it requires no training',
+        'TTA can only be applied to computer vision tasks, not NLP',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'TTA framework: given a pre-trained model and test-time data from a new distribution, adapt the model using only the unlabeled test batch (no source data, no target labels). Methods: (1) Tent (Wang et al., 2021): minimize entropy of model predictions by updating batch normalization statistics and affine parameters. (2) TTT (Sun et al., 2020): solve a self-supervised auxiliary task (rotation prediction) using test data. TTA addresses practical constraints where source data cannot be retained (privacy, storage) but adaptation at inference time is needed.',
+      hints: [
+        'Tent key insight: batch normalization statistics computed on source training data are mismatched to test distribution. Updating BN stats on test batch corrects this efficiently.',
+        'Catastrophic forgetting in TTA: adapting for many steps without source data can degrade performance. TTT+SA and EATA use regularization to prevent over-adaptation.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp31-2',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question:
+        'TTT++ (Liu et al., 2021) improves on standard test-time training by using contrastive self-supervised learning as the adaptation objective instead of rotation prediction, enabling better feature alignment between source and test distributions.',
+      correctAnswer: 'true',
+      explanation:
+        'TTT++ uses SimCLR-style contrastive learning: the auxiliary head minimizes the contrastive loss over augmented views of test examples. Advantages over rotation prediction: (1) Contrastive learning is more tightly coupled to the main task features. (2) Works for non-geometric distribution shifts where rotation prediction may not correlate with the main task. (3) TTT++ achieves better results on corruption robustness benchmarks (ImageNet-C) than rotation-based TTT.',
+      hints: [
+        'Rotation prediction auxiliary task weakness: for datasets with orientation-invariant objects (satellite images, medical scans), rotation prediction is trivially solved and provides no useful adaptation signal.',
+        'Contrastive auxiliary task strength: augmentation invariance aligns with robustness to distribution shifts caused by corruptions — a form of image transformation.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp31-3',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question:
+        'Continual test-time adaptation faces "error accumulation" where the model degrades over time. The method used in EATA (Niu et al., 2022) to address this is:',
+      options: [
+        'Resetting the model to its initial weights after every N test examples',
+        'Filtering out high-entropy (uncertain) test examples before adaptation and applying Fisher information-based regularization to penalize changes to parameters important for the source distribution — preventing noisy updates and catastrophic forgetting',
+        'Using a separate memory bank of source examples to provide periodic supervision signals',
+        'Applying early stopping based on test set performance to prevent over-adaptation',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = Σ_i F_i (θ_i - θ_0_i)² where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.',
+      hints: [
+        'Fisher information as parameter importance: F_i = E[(∂ log p(y|x)/∂θ_i)²] — high Fisher importance means the parameter strongly affects source task predictions.',
+        'Threshold filtering: examples with H(p) < H_threshold are reliable and provide good gradient signal. Uncertain examples have noisy pseudo-labels that can hurt performance.',
+      ],
+    },
+  ],
+
+  'few-shot-da': [
+    {
+      id: 'q-adapt-kp32-1',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question:
+        'Few-shot domain adaptation uses a small number of labeled target examples to:',
+      options: [
+        'Replace the source domain training data entirely',
+        'Guide the alignment direction in feature space — the labeled target examples provide supervision to steer the adapted model toward task-relevant alignment (not just distribution matching), often dramatically improving over both UDA and standard fine-tuning',
+        'Enable data augmentation by generating additional labeled target examples',
+        'Select which source examples to exclude from training to reduce negative transfer',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Few-shot DA methods: (1) Domain alignment + supervised fine-tuning: use UDA loss to align source→target, then fine-tune on few labeled target examples. (2) Minimax entropy (Saito et al., 2019): labeled target examples guide the entropy minimization objective. (3) Prototypical networks: labeled target examples initialize class prototypes for nearest-centroid classification in the adapted feature space. Even 1-3 labeled examples per class significantly outperforms UDA, as the labels resolve the alignment ambiguity.',
+      hints: [
+        'The alignment ambiguity problem in UDA: class-discriminative features may be entangled with domain-specific features. A few labeled target examples disambiguate which features to align vs. ignore.',
+        'Few-shot DA advantage over pure fine-tuning: standard fine-tuning on 5 labeled target examples easily overfits. Combining with source domain data via domain adaptation regularizes the learned classifier.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp32-2',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question:
+        'Negative transfer in multi-source domain adaptation occurs when including data from an unrelated source domain hurts performance on the target domain compared to using only the most related source domain.',
+      correctAnswer: 'true',
+      explanation:
+        'Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C — but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.',
+      hints: [
+        'A-distance: measure of domain discrepancy based on the error rate of a binary domain classifier. Higher classifier error → more similar domains.',
+        'Multi-source DA best practice: always evaluate each source domain\'s contribution separately before combining. If domain C degrades performance, exclude or downweight it.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp32-3',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question:
+        'Mixture of Experts (MoE) architecture for domain adaptation enables adaptive domain handling by:',
+      options: [
+        'Training one expert model per source domain and selecting the best expert for each target example at inference time',
+        'Learning a gating network that routes each input to a combination of specialized domain experts — the gating learns soft domain membership and the expert combination produces features that are both discriminative and adaptive to the input\'s underlying domain',
+        'Using reinforcement learning to select which source domain examples to include in each training batch',
+        'Training experts on different layers of the network and combining their representations via attention',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'MoE for domain adaptation: the gating network g(x) = softmax(Wx) learns domain assignments from input features. Multiple expert feature extractors {E_1,...,E_K} specialize on different domain aspects. The combined representation f(x) = Σ_k g_k(x) E_k(x) adapts to each example\'s domain content. Advantages: (1) Handles multi-domain inputs where examples may come from hybrid distributions. (2) Learns implicit domain structure without requiring domain labels. (3) Can generalize to novel domains via novel gating combinations.',
+      hints: [
+        'Domain adaptation with MoE: experts implicitly learn domain-specific feature transformations while the gating network learns to detect domain membership from input statistics.',
+        'Sparse MoE (top-K gating): only K experts activated per example — reduces compute while maintaining adaptability. Load balancing loss ensures no expert is ignored.',
+      ],
+    },
+  ],
+
+  'deep-da-theory': [
+    {
+      id: 'q-adapt-kp33-1',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question:
+        'The Ben-David et al. (2010) theory bound for domain adaptation states that target error is bounded by:',
+      options: [
+        'Target error ≤ source error only',
+        'Target error ≤ source error + H-divergence between source and target distributions + λ*, where λ* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously',
+        'Target error ≤ source error × (1 + H-divergence)',
+        'Target error ≤ H-divergence only, independent of source error',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Ben-David et al. (2010) bound: ε_T(h) ≤ ε_S(h) + d_{H△H}(S,T) + λ* where: ε_T(h) = target error; ε_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); λ* = min_{h∈H}[ε_S(h)+ε_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The λ* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.',
+      hints: [
+        'H-divergence: d_{H△H}(S,T) ≈ 2(1 - 2·min_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence ≈ 0.',
+        'λ* term: if P_S(Y|X) ≠ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — λ* is non-zero.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp33-2',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question:
+        'The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.',
+      correctAnswer: 'true',
+      explanation:
+        'Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance ≈ 2(1 - 2·error(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance ≈ 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance ≈ 2. A lower A-distance means greater domain similarity — more likely that domain adaptation will succeed without large error.',
+      hints: [
+        'A-distance computation: train a linear SVM on source (label 0) and target (label 1) examples. Error rate estimates 1 - A-distance/2.',
+        'Using A-distance to select source domains: compute A-distance between each source domain and the target; upweight or select source domains with lower A-distance.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp33-3',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question:
+        'Conditional domain adaptation (vs. marginal adaptation) aligns:',
+      options: [
+        'The marginal feature distributions P_S(Z) and P_T(Z) separately from the label distributions',
+        'The class-conditional feature distributions P_S(Z|Y) and P_T(Z|Y) — ensuring that source and target examples of the same class have similar representations, rather than just aligning the overall feature distributions which may ignore class structure',
+        'The joint distribution P(Z,Y) using a Wasserstein-2 metric between source and target',
+        'Only the output logit distributions P_S(Y|Z) and P_T(Y|Z), ignoring the feature space',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Marginal alignment limitation: aligning P_S(Z) ≈ P_T(Z) can mix classes — class A features from source may align with class B features from target. Conditional DA (CDA) aligns P_S(Z|Y=c) ≈ P_T(Z|Y=c) for each class c. Methods: (1) Joint Maximum Mean Discrepancy (JMMD): match joint (feature, one-hot label) distributions. (2) CDAN (Long et al., 2018): condition the adversarial domain discriminator on the model\'s predicted class distribution.',
+      hints: [
+        'CDAN discriminator input: D(f ⊗ p(y|f)) — the outer product of features f and predicted class probabilities p(y|f). This conditions the domain discriminator on the predicted label, enabling class-conditional alignment.',
+        'Pseudo-label quality in conditional DA: the conditional alignment depends on accurate pseudo-labels for target examples. Warmup with marginal alignment before switching to conditional alignment improves stability.',
+      ],
+    },
+  ],
+
+  'prompt-adaptation': [
+    {
+      id: 'q-adapt-kp34-1',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question:
+        'Prompt tuning for domain adaptation adapts a frozen pre-trained language model to a new domain by:',
+      options: [
+        'Fine-tuning all model parameters using domain-specific data',
+        'Learning a small set of continuous "soft prompt" vectors prepended to the input — only these prompt parameters are updated during adaptation while the LLM weights remain frozen, enabling efficient multi-domain adaptation by swapping domain-specific prompt vectors',
+        'Searching for the best discrete prompt text using gradient-free optimization',
+        'Adding adapter layers between transformer blocks that are fine-tuned while the attention weights remain frozen',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Prompt tuning for DA: a domain-specific soft prompt P_d ∈ R^{L×d} is prepended to the input embedding. Only P_d is updated by gradient descent on domain-specific data; the pre-trained LLM is frozen. Benefits: (1) Multi-domain deployment: store one small P_d per domain (~L×d parameters) vs. full model copy. (2) Fast adaptation: few-shot domain-specific learning updates only the small prompt. (3) No catastrophic forgetting: frozen LLM retains all pre-training knowledge.',
+      hints: [
+        'Prompt tuning parameter count: L=100 tokens × d=768 dims = 76,800 parameters for BERT-base vs. 110M for full fine-tuning — ~1400× more parameter-efficient.',
+        'Domain prompt library: for 100 domains, store 100 small prompt vectors (~100KB each) instead of 100 full model copies (~440MB for BERT). 4400× storage reduction.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp34-2',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question:
+        'Visual prompt tuning (VPT) applies prompt tuning to vision transformers (ViT) for domain adaptation, learning prepended visual token embeddings while keeping the ViT backbone frozen.',
+      correctAnswer: 'true',
+      explanation:
+        'VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens × 12 layers = only 0.03% of ViT-Large parameters.',
+      hints: [
+        'VPT-Deep vs. VPT-Shallow: VPT-Deep injects prompts at every transformer layer (more expressive, more parameters); VPT-Shallow only at the input. VPT-Deep consistently outperforms shallow on domain adaptation tasks.',
+        'Visual prompt tokens have no direct semantic meaning — they are learned feature modifications that shift the ViT\'s attention patterns to focus on domain-relevant features.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp34-3',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question:
+        'CLIP-based domain adaptation (CoOp, CoCoOp) adapts CLIP to downstream domains. CoCoOp improves over CoOp by:',
+      options: [
+        'Training more prompt tokens with a higher learning rate',
+        'Making the prompt context conditioned on each input image instance (x-conditional prompts) rather than static class-level prompts — enabling the prompt to adapt to the specific visual content of each image, improving generalization to unseen classes',
+        'Using a separate adapter network to process CLIP\'s text embeddings',
+        'Replacing the text encoder with a fine-tuned language model specific to the target domain',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'CoOp (Zhou et al., 2022): learn K context tokens [v₁,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(·) takes image features and outputs a per-instance shift Δv_i = h(f(x)). Prompt = [v₁+Δv₁,...,vK+ΔvK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.',
+      hints: [
+        'Base-to-novel generalization: train on 16-shot of "base" classes, evaluate on completely "novel" classes not seen during prompt training. CoOp hurts novel class accuracy; CoCoOp maintains it.',
+        'Meta-net architecture: a single linear layer mapping CLIP image features (512-dim for ViT-B/16) → per-token bias (K×512). Very lightweight, ~0.01% of CLIP parameters.',
+      ],
+    },
+  ],
+
+  'source-free-da': [
+    {
+      id: 'q-adapt-kp35-1',
+      type: 'multiple-choice',
+      difficulty: 'intermediate',
+      question:
+        'Source-free domain adaptation (SFDA) addresses the practical constraint that:',
+      options: [
+        'The target domain is too large to fit in GPU memory',
+        'Source data cannot be retained at adaptation time due to privacy regulations, data storage limitations, or proprietary constraints — only a pre-trained source model is available, and adaptation must be performed using only unlabeled target data',
+        'Source domain labels are unavailable due to the original dataset being unlabeled',
+        'The source model was trained on a different computational platform incompatible with adaptation infrastructure',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'SFDA motivation: (1) GDPR and data privacy: medical images from hospital A cannot be shared with hospital B for adaptation. (2) Proprietary data: a source model is trained on proprietary data; only the model weights are distributed, not the data. SFDA methods: (1) SHOT (Liang et al., 2020): freeze source classifier head, adapt feature extractor via self-supervised clustering + entropy minimization on target. (2) G-SFDA: generate virtual source features from the source model for alignment.',
+      hints: [
+        'SHOT insight: the source classifier head encodes source class semantics — keep it frozen. Only adapt the feature extractor to make target features align with what the classifier expects.',
+        'Pseudo-label quality is critical for SFDA: use self-supervised objectives (entropy minimization, consistency regularization) to improve pseudo-label quality before using them for supervised fine-tuning.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp35-2',
+      type: 'true-false',
+      difficulty: 'intermediate',
+      question:
+        'Generative replay in source-free domain adaptation — generating synthetic source-like data from the source model and using it for domain alignment — is inspired by continual learning approaches to prevent catastrophic forgetting.',
+      correctAnswer: 'true',
+      explanation:
+        'Generative replay for SFDA: train a generator G to produce synthetic source-like images from the source model. During adaptation, align target features with the generated pseudo-source features — without needing the real source data. Inspiration from continual learning: Experience Replay and Generative Replay (Shin et al., 2017) prevent catastrophic forgetting by replaying past task data (or generated approximations). Methods: GSFDA uses the source model\'s softmax outputs as class prototypes.',
+      hints: [
+        'Model inversion: given a trained classifier, reconstruct inputs that maximize class probabilities — the inverted images are prototype images for each class, usable as pseudo-source data.',
+        'Generative replay limitation: for complex distributions (natural images), the generated pseudo-source may not faithfully represent source feature statistics.',
+      ],
+    },
+    {
+      id: 'q-adapt-kp35-3',
+      type: 'multiple-choice',
+      difficulty: 'advanced',
+      question:
+        'In source-free domain adaptation, the "information maximization" objective (combining entropy minimization with diversity regularization) addresses what specific failure mode?',
+      options: [
+        'Gradient vanishing during adaptation when entropy is already low',
+        'Model collapse to a single class: pure entropy minimization drives the model to predict one dominant class for all target examples (zero entropy, but all predictions are the same class) — diversity regularization (maximizing the marginal entropy H(E_x[p(y|x)])) prevents this by encouraging a uniform class distribution across the target set',
+        'Overfitting to the most common classes in the target domain',
+        'The model forgetting to predict rare classes due to class imbalance in the target domain',
+      ],
+      correctAnswer: 1,
+      explanation:
+        'Information maximization = entropy minimization + marginal entropy maximization: L_IM = -H(y|x) + H(y) = Σ_x Σ_y p(y|x) log p(y|x) - H(mean_x p(y|x)). The first term minimizes conditional entropy (confident predictions). The second term maximizes marginal entropy (diverse predictions). Without the diversity term: the model predicts class 1 for all examples (H(y|x)=0 but only one class used). This objective is used in IM, SHOT, and many SFDA methods.',
+      hints: [
+        'IM objective equivalence: maximizing I(y;x) = H(y) - H(y|x) — mutual information between predictions and inputs. Maximizes both prediction confidence (low H(y|x)) and diversity (high H(y)).',
+        'Batch size effect: diversity term H(mean_x p(y|x)) requires a sufficiently large batch to accurately estimate the marginal distribution.',
+      ],
+    },
+  ],
+}
+
+Object.assign(questions, moreAdaptQuestions)
+
 registerQuestions(questions)
 export default questions
