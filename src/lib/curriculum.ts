@@ -1563,7 +1563,6 @@ export const courses: Course[] = [
         name: 'Quantum Computing Foundations',
         slug: 'quantum-foundations',
         description: 'Qubits, gates, circuits, and quantum algorithms.',
-        order: 1,
         knowledgePoints: [
           { id: 'qml-kp-1', slug: 'qubits-gates', name: 'Qubits, Superposition, and Quantum Gates' },
           { id: 'qml-kp-2', slug: 'quantum-circuits', name: 'Quantum Circuits and Measurement' },
@@ -1577,7 +1576,6 @@ export const courses: Course[] = [
         name: 'Variational Quantum Circuits',
         slug: 'variational-circuits',
         description: 'Parameterized quantum circuits and hybrid optimization.',
-        order: 2,
         knowledgePoints: [
           { id: 'qml-kp-6', slug: 'vqe', name: 'Variational Quantum Eigensolver (VQE)' },
           { id: 'qml-kp-7', slug: 'qaoa', name: 'Quantum Approximate Optimization Algorithm (QAOA)' },
@@ -1591,7 +1589,6 @@ export const courses: Course[] = [
         name: 'Quantum Kernels & Classification',
         slug: 'quantum-kernels',
         description: 'Quantum feature maps, kernel methods, and quantum SVMs.',
-        order: 3,
         knowledgePoints: [
           { id: 'qml-kp-11', slug: 'quantum-feature-maps', name: 'Quantum Feature Maps and Kernel Estimation' },
           { id: 'qml-kp-12', slug: 'quantum-svm', name: 'Quantum Support Vector Machines' },
@@ -1605,7 +1602,6 @@ export const courses: Course[] = [
         name: 'Quantum Neural Networks',
         slug: 'quantum-neural-networks',
         description: 'Quantum analogues of deep learning.',
-        order: 4,
         knowledgePoints: [
           { id: 'qml-kp-16', slug: 'qnn-architecture', name: 'Quantum Neural Network Architecture and Training' },
           { id: 'qml-kp-17', slug: 'quantum-cnn', name: 'Quantum Convolutional Neural Networks (QCNN)' },
@@ -1619,7 +1615,6 @@ export const courses: Course[] = [
         name: 'Quantum Generative Models',
         slug: 'quantum-generative',
         description: 'Quantum GANs, Boltzmann machines, and sampling.',
-        order: 5,
         knowledgePoints: [
           { id: 'qml-kp-21', slug: 'qgan', name: 'Quantum Generative Adversarial Networks (qGAN)' },
           { id: 'qml-kp-22', slug: 'quantum-boltzmann', name: 'Quantum Boltzmann Machines' },
@@ -1633,7 +1628,6 @@ export const courses: Course[] = [
         name: 'Quantum ML Frameworks & Applications',
         slug: 'quantum-frameworks',
         description: 'PennyLane, Qiskit ML, and near-term use cases.',
-        order: 6,
         knowledgePoints: [
           { id: 'qml-kp-26', slug: 'pennylane', name: 'PennyLane for Quantum Differentiable Programming' },
           { id: 'qml-kp-27', slug: 'qiskit-ml', name: 'Qiskit Machine Learning and IBM Quantum' },
@@ -1661,7 +1655,6 @@ export const courses: Course[] = [
         name: 'Automatic Speech Recognition',
         slug: 'asr-fundamentals',
         description: 'Core ASR techniques from HMMs to end-to-end neural models.',
-        order: 1,
         knowledgePoints: [
           { id: 'aud-kp-1', slug: 'acoustic-models', name: 'Acoustic Models and Feature Extraction (MFCC, Mel Spectrogram)' },
           { id: 'aud-kp-2', slug: 'hmm-asr', name: 'HMM-based ASR and Viterbi Decoding' },
@@ -1675,7 +1668,6 @@ export const courses: Course[] = [
         name: 'Text-to-Speech & Voice Synthesis',
         slug: 'tts-synthesis',
         description: 'Neural TTS, vocoders, and voice cloning.',
-        order: 2,
         knowledgePoints: [
           { id: 'aud-kp-6', slug: 'tacotron', name: 'Tacotron and Sequence-to-Sequence TTS' },
           { id: 'aud-kp-7', slug: 'vocoders', name: 'Neural Vocoders: WaveNet, WaveGlow, HiFi-GAN' },
@@ -1689,7 +1681,6 @@ export const courses: Course[] = [
         name: 'Audio Representation Learning',
         slug: 'audio-representation',
         description: 'Self-supervised and contrastive learning for audio.',
-        order: 3,
         knowledgePoints: [
           { id: 'aud-kp-11', slug: 'wav2vec', name: 'wav2vec 2.0 and Self-Supervised Speech Representations' },
           { id: 'aud-kp-12', slug: 'hubert', name: 'HuBERT and Masked Prediction for Audio' },
@@ -1703,7 +1694,6 @@ export const courses: Course[] = [
         name: 'Speaker Recognition & Diarization',
         slug: 'speaker-recognition',
         description: 'Speaker verification, identification, and diarization.',
-        order: 4,
         knowledgePoints: [
           { id: 'aud-kp-16', slug: 'x-vectors', name: 'X-Vectors and Speaker Embeddings' },
           { id: 'aud-kp-17', slug: 'speaker-verification', name: 'Speaker Verification with PLDA and Cosine Scoring' },
@@ -1717,7 +1707,6 @@ export const courses: Course[] = [
         name: 'Sound Classification & Event Detection',
         slug: 'sound-classification',
         description: 'Environmental sound, music, and audio event detection.',
-        order: 5,
         knowledgePoints: [
           { id: 'aud-kp-21', slug: 'environmental-sound', name: 'Environmental Sound Classification and ESC-50' },
           { id: 'aud-kp-22', slug: 'audio-event-detection', name: 'Audio Event Detection and Sound Source Localization' },
@@ -1731,7 +1720,6 @@ export const courses: Course[] = [
         name: 'Audio Generation & Enhancement',
         slug: 'audio-generation',
         description: 'Music generation, speech enhancement, and source separation.',
-        order: 6,
         knowledgePoints: [
           { id: 'aud-kp-26', slug: 'music-generation', name: 'Music Generation with Transformers (MusicLM, MusicGen)' },
           { id: 'aud-kp-27', slug: 'speech-enhancement', name: 'Speech Enhancement and Noise Suppression' },
