@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { courses, categories, type Course, type Topic, type KnowledgePoint, type Question } from './curriculum'
+import { courses, categories } from './curriculum'
 
 describe('Curriculum Data', () => {
   describe('Categories', () => {

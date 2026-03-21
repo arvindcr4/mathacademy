@@ -20,7 +20,7 @@ const questions: Record<string, Question[]> = {
         "PanGu-Weather (Bi et al., 2023) trains four separate 3DEST models for lead times of 1h, 3h, 6h, and 24h. This hierarchical design reflects that atmospheric predictability varies with forecast horizon:\n\n" +
         "\\[\\text{Short-range (1--6h):} \\quad \\text{mesoscale detail dominates, high spatial resolution needed}\\]" +
         "\\[\\text{Long-range (24h+):} \\quad \\text{synoptic-scale patterns dominate}\\]" +
-        "\nForecasts for arbitrary horizons are produced by composing model calls (e.g., \\(24h + 6h + 1h = 31h\\)), analogous to binary doubling for representing any integer as a sum of powers of 2.\n\n" +
+        "\nForecasts for arbitrary horizons are produced by composing model calls (e.g., \$24h + 6h + 1h = 31h\$), analogous to binary doubling for representing any integer as a sum of powers of 2.\n\n" +
         "Using a single model for all horizons would require compromising between these conflicting resolution and scale requirements.",
       hints: [
         "The atmosphere has different dominant spatial patterns at short (hours) versus medium (days) timescales. What implications does this have for model design?",
@@ -59,7 +59,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Standard transformers use uniform positional encodings that do not reflect Earth's spherical geometry. On a regular latitude-longitude grid:\n\n" +
-        "\\[\\text{Grid cell area} \\propto \\cos(\\text{latitude})\\]\n\n" +
+        "\\[\\text{Grid cell area} \\propto \\cos\left(\\text{latitude}\right)\\]\n\n" +
         "This means grid cells near the poles represent much smaller physical areas than equatorial cells. For example, the 360 grid cells along a latitude circle at 89° span the same longitude range as those at the equator but cover roughly 1/60th the physical area.\n\n" +
         "3DEST incorporates Earth-specific relative position biases in attention that depend on latitude, capturing:\n" +
         "\\[- \\text{Anisotropic atmospheric dynamics (different behavior near poles versus equator)}\\]" +
@@ -86,14 +86,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A regular lat-lon grid has a fundamental problem at the poles: as longitude lines converge, the grid cells become extremely small. The cell area is proportional to \\(\\cos(\\text{latitude})\\), which approaches zero at the poles. This causes:\n\n" +
+        "A regular lat-lon grid has a fundamental problem at the poles: as longitude lines converge, the grid cells become extremely small. The cell area is proportional to \$\\cos\left(\\text{latitude}\right)\$, which approaches zero at the poles. This causes:\n\n" +
         "\\[- \\text{Numerical instability near poles}\\]" +
         "\\[- \\text{Wasted computation in polar regions (many tiny cells)}\\]" +
         "\\[- \\text{Non-uniform message passing in graph neural networks}\\]" +
         "\n" +
         "GraphCast uses a refined icosahedral mesh created by recursively subdividing the 20 triangular faces of a regular icosahedron and projecting onto the sphere. This produces near-uniform triangular cells across the globe, eliminating the polar singularity.",
       hints: [
-        "On a lat-lon grid, cell area is proportional to \\(\\cos(\\text{latitude})\\). What happens at the poles where \\(\\cos(90°) = 0\\)?",
+        "On a lat-lon grid, cell area is proportional to \$\\cos\left(\\text{latitude}\right)\$. What happens at the poles where \$\\cos\left(90°\right) = 0\$?",
         "An icosahedron has 20 equilateral triangular faces. Recursive subdivision of these faces and projection onto the sphere creates a mesh with what key property?",
       ],
     },
@@ -157,7 +157,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Global climate models (GCMs) typically run at 50--100 km horizontal resolution. However, local impact studies - for agriculture, urban planning, or infrastructure - often require 1--10 km resolution. Statistical downscaling bridges this gap by learning a mapping:\n\n" +
         "\\[\\hat{X}_{\\text{high-res}} = f\\left(X_{\\text{coarse}}\\right)\\]\n\n" +
-        "where \\(f\\) is learned from paired coarse-fine historical data. This enables high-resolution projections without running prohibitively expensive fine-grid climate simulations.",
+        "where \$f\$ is learned from paired coarse-fine historical data. This enables high-resolution projections without running prohibitively expensive fine-grid climate simulations.",
       hints: [
         "Global climate models typically operate at 50--100 km resolution. Local impact studies often need 1--10 km resolution. What bridges this gap?",
         'The word "down" in downscaling refers to going to finer spatial scales. Why might a smaller-scale number represent finer resolution?',
@@ -193,9 +193,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Pixel-wise losses like MSE and MAE minimize the expected pixel-level error. For a target \\(y\\) and prediction \\(\\hat{y}\\):\n\n" +
+        "Pixel-wise losses like MSE and MAE minimize the expected pixel-level error. For a target \$y\$ and prediction \$\\hat{y}\$:\n\n" +
         "\\[\\mathcal{L}_{\\text{MSE}} = \\mathbb{E}\\left[(y - \\hat{y})^2\\right]\\]\n\n" +
-        "This loss is minimized by predicting the conditional mean \\(\\hat{y} = \\mathbb{E}[y|x]\\), which averages out variability. The result is overly smooth outputs that:\n\n" +
+        "This loss is minimized by predicting the conditional mean \$\\hat{y} = \\mathbb{E}[y|x]\$, which averages out variability. The result is overly smooth outputs that:\n\n" +
         "\\[- \\text{Preserve the mean accurately}\\]" +
         "\\[- \\text{Underestimate extremes (heat waves, heavy rainfall)}\\]" +
         "\\[- \\text{Lack physically important fine-scale structure}\\]" +
@@ -270,7 +270,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Undersampling: remove majority (non-event) samples}\\]" +
         "\n" +
         "Algorithm-level solutions:\n" +
-        "\\[- \\text{Focal loss: } \\mathcal{L}_{\\text{focal}} = -(1 - p_t)^\\gamma \\log(p_t) \\text{ - focuses on hard, rare examples}\\]" +
+        "\\[- \\text{Focal loss: } \\mathcal{L}_{\\text{focal}} = -(1 - p_t)^\\gamma \\log\left(p_t\right) \\text{ - focuses on hard, rare examples}\\]" +
         "\\[- \\text{Asymmetric loss: penalize false negatives more than false positives}\\]",
       hints: [
         "If a model achieves 99% accuracy by predicting 'no extreme' always, what is the problem with this model for early warning applications?",
@@ -367,7 +367,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Photovoltaic panels convert solar radiation directly into electricity. The power output is approximately:\n\n" +
         "\\[P_{\\text{PV}} = GHI \\cdot A \\cdot \\eta\\]\n\n" +
-        "where \\(A\\) is panel area and \\(\\eta\\) is efficiency. GHI (Global Horizontal Irradiance) is the total solar radiation on a horizontal surface; DNI (Direct Normal Irradiance) is used for concentrating solar systems. ML models forecast irradiance from NWP outputs, satellite imagery, or sky camera images, then convert to power using efficiency curves.",
+        "where \$A\$ is panel area and \$\\eta\$ is efficiency. GHI (Global Horizontal Irradiance) is the total solar radiation on a horizontal surface; DNI (Direct Normal Irradiance) is used for concentrating solar systems. ML models forecast irradiance from NWP outputs, satellite imagery, or sky camera images, then convert to power using efficiency curves.",
       hints: [
         "Photovoltaic panels convert light energy directly to electricity. What measure of light reaching the surface is most relevant for predicting power output?",
         "GHI (global horizontal irradiance) is the total solar radiation on a horizontal surface - why is this the standard input for flat PV panel models?",
@@ -423,8 +423,8 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Wind power output \\(P\\) is related to wind speed \\(v\\) by which physical relationship?",
-      options: ["\\(P \\propto v\\)", "\\(P \\propto v^2\\)", "\\(P \\propto v^3\\)", "\\(P \\propto \\sqrt{v}\\)"],
+        "Wind power output \$P\$ is related to wind speed \$v\$ by which physical relationship?",
+      options: ["\$P \\propto v\$", "\$P \\propto v^2\$", "\$P \\propto v^3\$", "\$P \\propto \\sqrt{v}\$"],
       correctAnswer: 2,
       explanation:
         "Wind power follows from the kinetic energy flux through a turbine rotor. The power extracted from the wind is:\n\n" +
@@ -433,10 +433,10 @@ const questions: Record<string, Question[]> = {
         "\\[- \\eta = \\text{blade efficiency (Betz limit } \\approx 0.59\\text{)}\\]" +
         "\\[- \\rho = \\text{air density }(\\approx 1.225\\text{ kg/m}^3)\\]" +
         "\\[- A = \\text{rotor swept area } = \\pi r^2\\]\n\n" +
-        "The \\(v^3\\) scaling means small forecast errors amplify dramatically: a 10% error in wind speed leads to a ~33% error in power output. This makes accurate wind forecasting critical for grid integration.",
+        "The \$v^3\$ scaling means small forecast errors amplify dramatically: a 10% error in wind speed leads to a ~33% error in power output. This makes accurate wind forecasting critical for grid integration.",
       hints: [
-        "Wind power comes from the kinetic energy of moving air. Kinetic energy is \\(KE = \\frac{1}{2}mv^2\\). Power is energy per unit time. What additional factor of \\(v\\) appears when you consider mass flow rate through the turbine?",
-        "The kinetic energy equation involves \\(v^2\\); power is energy per time. When you account for how much air mass flows through the turbine per second (which itself is proportional to \\(v\\)), what power do you get?",
+        "Wind power comes from the kinetic energy of moving air. Kinetic energy is \$KE = \\frac{1}{2}mv^2\$. Power is energy per unit time. What additional factor of \$v\$ appears when you consider mass flow rate through the turbine?",
+        "The kinetic energy equation involves \$v^2\$; power is energy per time. When you account for how much air mass flows through the turbine per second (which itself is proportional to \$v\$), what power do you get?",
       ],
     },
     {
@@ -550,7 +550,7 @@ const questions: Record<string, Question[]> = {
         "In power grid GNNs, the graph structure mirrors the physical topology of the network:\n\n" +
         "\\[\\text{Nodes } \\mathcal{V}: \\quad \\text{buses } i \\text{ with features } h_i = \\{V_i, \\theta_i, P_i, Q_i\\}\\]\n" +
         "\\[\\text{Edges } \\mathcal{E}: \\quad (i, j) \\text{ with attributes } e_{ij} = \\{z_{ij}, S_{ij}^{\\max}\\}\\]\n\n" +
-        "where \\(V_i\\) is voltage magnitude, \\(\\theta_i\\) is voltage angle, \\(P_i, Q_i\\) are active/reactive power, and \\(z_{ij} = r_{ij} + jx_{ij}\\) is the line impedance. GNN message passing on this graph:\n\n" +
+        "where \$V_i\$ is voltage magnitude, \$\\theta_i\$ is voltage angle, \$P_i, Q_i\$ are active/reactive power, and \$z_{ij} = r_{ij} + jx_{ij}\$ is the line impedance. GNN message passing on this graph:\n\n" +
         "\\[h_i^{(k+1)} = \\sigma\\left(W^{(k)} h_i^{(k)} + \\sum_{j \\in \\mathcal{N}_i} M^{(k)}(h_i^{(k)}, h_j^{(k)}, e_{ij})\\right)\\]\n\n" +
         "This enables physics-informed optimization that respects grid topology.",
       hints: [
@@ -627,7 +627,7 @@ const questions: Record<string, Question[]> = {
         "\\[p_t \\sim \\mathcal{N}(\\mu_t, \\sigma_t^2), \\quad \\mu_t = f(p_{t-1}, p_{t-2}, \\ldots)\\]\n\n" +
         "A stochastic MDP incorporates price uncertainty directly into the state:\n\n" +
         "\\[s_t = \\{\\text{SoC}_t, \\; \\hat{p}_{t:t+H}, \\; \\text{scenario index } k\\}\\]\n\n" +
-        "where \\(\\hat{p}_{t:t+H}\\) represents a price scenario tree. The agent learns a policy that is robust across scenarios:\n\n" +
+        "where \$\\hat{p}_{t:t+H}\$ represents a price scenario tree. The agent learns a policy that is robust across scenarios:\n\n" +
         "\\[\\pi^* = \\arg\\max_\\pi \\mathbb{E}\\left[\\sum_t r(s_t, a_t)\\right]\\]\n\n" +
         "This is critical because:\n" +
         "\\[- \\text{Deterministic MPC assumes perfect foresight - fails in practice}\\]" +
@@ -773,10 +773,10 @@ const questions: Record<string, Question[]> = {
         "Inverse modeling reverses the forward modeling process:\n\n" +
         "\\[\\text{Forward: } \\quad \\mathbf{C} = \\mathcal{M}(\\mathbf{E}) + \\epsilon\\]" +
         "\\[\\text{Inverse: } \\quad \\hat{\\mathbf{E}} = \\mathcal{M}^{-1}(\\mathbf{C})\\]\n\n" +
-        "where \\(\\mathbf{C}\\) are observed concentrations, \\(\\mathbf{E}\\) are emissions, and \\(\\mathcal{M}\\) is the atmospheric transport model. The problem is ill-posed because:\n\n" +
+        "where \$\\mathbf{C}\$ are observed concentrations, \$\\mathbf{E}\$ are emissions, and \$\\mathcal{M}\$ is the atmospheric transport model. The problem is ill-posed because:\n\n" +
         "\\[\\text{Non-uniqueness: } \\quad \\text{Many emission patterns produce similar concentration observations}\\]" +
         "\\[\\text{Transport chaos: } \\quad \\text{Small errors in transport model propagate to large emission errors}\\]\n\n" +
-        "ML accelerates this by learning a surrogate for the expensive transport model \\(\\mathcal{M}\\), enabling fast posterior estimation via Bayesian inversion.",
+        "ML accelerates this by learning a surrogate for the expensive transport model \$\\mathcal{M}\$, enabling fast posterior estimation via Bayesian inversion.",
       hints: [
         "Forward modeling predicts atmospheric concentrations given emissions. What does inverse modeling do - what is being solved for from what?",
         "Atmospheric transport (wind patterns, turbulence) introduces uncertainty. Can different emission patterns produce the same observed concentration pattern? What makes this problem ill-posed?",
@@ -931,7 +931,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{End-of-life treatment of sold products}\\]\n\n" +
         "The challenge is data collection from thousands of entities with varying reporting quality:\n\n" +
         "\\[\\text{Scope 3}_{\\text{company}} = \\sum_{\\text{suppliers } j} E_j \\cdot T_{ij}\\]\n\n" +
-        "where \\(E_j\\) is supplier \\(j\\)'s emissions and \\(T_{ij}\\) is the contribution of supplier \\(j\\)'s input to product \\(i\\). A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined.",
+        "where \$E_j\$ is supplier \$j\$'s emissions and \$T_{ij}\$ is the contribution of supplier \$j\$'s input to product \$i\$. A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined.",
       hints: [
         "Scope 1 is direct emissions (own facilities), Scope 2 is purchased energy. Scope 3 is 'everything else' - what does this include?",
         "A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined. What makes collecting this data difficult - is it the number of entities involved or something else?",
@@ -1216,7 +1216,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Standard MAE masks random spatial patches. Satellite imagery has additional dimensions:\n\n" +
         "\\[I \\in \\mathbb{R}^{H \\times W \\times T \\times B}\\]\n\n" +
-        "where \\(T\\) = time steps and \\(B\\) = spectral bands. SatMAE introduces group masking:\n\n" +
+        "where \$T\$ = time steps and \$B\$ = spectral bands. SatMAE introduces group masking:\n\n" +
         "\\[\\text{Temporal masking:} \\quad \\text{mask all bands for certain time steps}\\]" +
         "\\[\\text{Spectral masking:} \\quad \\text{mask all time steps for certain bands}\\]\n\n" +
         "This forces the model to learn cross-temporal and cross-spectral relationships, which are more meaningful pretext tasks for Earth observation than random spatial patching.",
@@ -1288,7 +1288,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CCDC models each pixel's temporal trajectory as a harmonic regression with seasonal components:\n\n" +
         "\\[\\text{NDVI}(t) = \\sum_{k=0}^{K} \\left[ a_k \\cos\\left(\\frac{2\\pi k t}{T}\\right) + b_k \\sin\\left(\\frac{2\\pi k t}{T}\\right) \\right] + \\epsilon\\]\n\n" +
-        "where \\(T\\) is the annual cycle period. This captures:\n" +
+        "where \$T\$ is the annual cycle period. This captures:\n" +
         "\\[- \\text{Seasonal vegetation phenology}\\]" +
         "\\[- \\text{Baseline vegetation condition}\\]\n\n" +
         "When a change occurs (deforestation, flooding), the observed trajectory deviates significantly from the fitted harmonic model. CCDC detects this as a 'break' in the model residuals:\n\n" +
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Satellites measure SST using thermal infrared sensors. According to Planck's law, the radiation emitted by the ocean surface has a spectrum that depends on temperature:\n\n" +
         "\\[B(\\lambda, T) = \\frac{2hc^2}{\\lambda^5} \\frac{1}{e^{hc/(\\lambda k_B T)} - 1}\\]\n\n" +
-        "At typical SST (~15°C), peak emission is at \\(\\lambda \\approx 11\\;\\mu\\text{m}\\) (thermal infrared). ML correction algorithms remove atmospheric interference and cloud contamination to produce high-quality SST products used for ocean heat monitoring:\n\n" +
+        "At typical SST (~15°C), peak emission is at \$\\lambda \\approx 11\\;\\mu\\text{m}\$ (thermal infrared). ML correction algorithms remove atmospheric interference and cloud contamination to produce high-quality SST products used for ocean heat monitoring:\n\n" +
         "\\[\\text{SST}_{\\text{corrected}} = \\text{SST}_{\\text{brightness}} - \\Delta T_{\\text{atmospheric}}\\]",
       hints: [
         "Temperature determines the wavelength of thermal emission (Planck's law). At typical ocean surface temperatures, what part of the electromagnetic spectrum does the peak emission fall in?",
@@ -1388,7 +1388,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Ignition sources: lightning, human activity}\\]\n\n" +
         "The Rothermel model for fire spread rate:\n\n" +
         "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q}\\]\n\n" +
-        "where \\(I_{\\text{R}}\\) is the reaction intensity, \\(\\rho_b\\) is fuel bulk density. Wind and slope modify the spread rate exponentially.",
+        "where \$I_{\\text{R}}\$ is the reaction intensity, \$\\rho_b\$ is fuel bulk density. Wind and slope modify the spread rate exponentially.",
       hints: [
         "Fire requires fuel, heat, and oxygen - think about which environmental variables control each leg of this triangle.",
         "Wind drives fire spread rate and direction; fuel moisture controls ignition probability. Both are key predictors in the Rothermel model.",
@@ -1428,10 +1428,10 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Rothermel model encodes the physics of fire spread:\n\n" +
         "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q} \\cdot \\phi_w \\cdot \\phi_s\\]\n\n" +
-        "where \\(\\phi_w\\) and \\(\\phi_s\\) are wind and slope factors. Purely data-driven models may violate these physical constraints (e.g., predict fire spreading faster uphill than downhill).\n\n" +
+        "where \$\\phi_w\$ and \$\\phi_s\$ are wind and slope factors. Purely data-driven models may violate these physical constraints (e.g., predict fire spreading faster uphill than downhill).\n\n" +
         "Physics-informed neural networks (PINNs) embed these as loss terms:\n\n" +
         "\\[\\mathcal{L}_{\\text{total}} = \\mathcal{L}_{\\text{data}} + \\lambda \\mathcal{L}_{\\text{physics}}\\]\n\n" +
-        "where \\(\\mathcal{L}_{\\text{physics}}\\) penalizes violations of the Rothermel equations. This regularizes the model especially in data-sparse regions.",
+        "where \$\\mathcal{L}_{\\text{physics}}\$ penalizes violations of the Rothermel equations. This regularizes the model especially in data-sparse regions.",
       hints: [
         "Purely data-driven models may learn spurious correlations. Can a model trained only on historical fire perimeters learn that fire spreads faster uphill than downhill?",
         "Physics constraints serve as regularization. Why is this particularly important when training data covers only a fraction of possible fire conditions?",
@@ -1526,7 +1526,7 @@ const questions: Record<string, Question[]> = {
         "where comfort is measured by PPD (Predicted Percentage Dissatisfied) or PMV (Predicted Mean Vote) indices:\n\n" +
         "\\[\\text{PMV} = f(T, RH, v, M, I_c)\\]" +
         "\\[\\text{PPD} = 100 - 95 \\cdot e^{-(0.03353 \\cdot \\text{PMV}^4 + 0.2179 \\cdot \\text{PMV}^2)}\\]\n\n" +
-        "The trade-off weights \\(\\alpha, \\beta\\) encode the desired comfort-energy compromise.",
+        "The trade-off weights \$\\alpha, \\beta\$ encode the desired comfort-energy compromise.",
       hints: [
         "Comfort and energy are often in tension - cooling more maintains comfort but uses more electricity. How is this trade-off formalized in RL?",
         "Multi-objective RL combines competing objectives into a single weighted reward. What do the weights encode?",
