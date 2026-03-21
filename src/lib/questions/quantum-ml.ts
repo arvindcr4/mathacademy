@@ -1,5 +1,5 @@
 import type { Question } from "@/lib/curriculum";
-import { registerQuestions } from "@/lib/questions";
+import { registerQuestions } from "./registry";
 
 const questions: Record<string, Question[]> = {
   "qubits-gates": [
@@ -1605,6 +1605,462 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
+  "quantum-linear-algebra": [
+    {
+      id: "q-qml-kp31-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The HHL algorithm (Harrow-Hassidim-Lloyd) solves the linear system Ax = b on a quantum computer. Under which assumptions does it claim an exponential speedup over classical solvers?",
+      options: [
+        "A is dense, unstructured, and b is arbitrary",
+        "A is sparse, well-conditioned (small condition number κ), and b is accessible via QRAM",
+        "A is a unitary matrix and b is a computational basis state",
+        "A is a diagonal matrix and b has integer entries",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "HHL runs in O(κ² s² polylog(N)/ε) time for an N×N s-sparse matrix with condition number κ, compared to classical O(Ns κ) solvers, but requires QRAM access to b, the solution is a quantum state (not directly readable), and dequantization results show these assumptions often allow efficient classical algorithms too.",
+      hints: [
+        "The caveats of HHL — sparse input, QRAM, and quantum state output — are what limit its practical advantage.",
+        "Condition number κ measures how numerically stable the linear system is; small κ is a strong assumption.",
+      ],
+    },
+    {
+      id: "q-qml-kp31-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Quantum phase estimation (QPE) can determine the eigenvalues of a unitary operator U to n bits of precision using n ancilla qubits and controlled-U operations.",
+      correctAnswer: "True",
+      explanation:
+        "QPE applies the quantum Fourier transform to extract the phase φ in U|ψ⟩ = e^{2πiφ}|ψ⟩ with n-bit precision, requiring n ancilla qubits and 2^n applications of controlled-U; it is a core subroutine in Shor's algorithm, HHL, and quantum chemistry.",
+      hints: [
+        "QPE works by encoding the phase into the ancilla register and using the inverse QFT to decode it.",
+        "The precision in bits is determined by the number of ancilla qubits used.",
+      ],
+    },
+    {
+      id: "q-qml-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Quantum Singular Value Transformation (QSVT) is a framework that generalizes many quantum algorithms. What is the central object it manipulates?",
+      options: [
+        "The eigenvalues of a Pauli operator",
+        "Polynomial transformations applied to the singular values of a block-encoded matrix",
+        "The amplitudes of a uniform superposition state",
+        "The measurement probabilities of a multi-qubit state",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "QSVT applies arbitrary polynomial functions to the singular values of a matrix A encoded in a unitary oracle via block-encoding, unifying algorithms like HHL, quantum signal processing, and quantum walks under a single framework.",
+      hints: [
+        "Block-encoding embeds a matrix A in the upper-left block of a unitary — QSVT then applies functions to A's singular values.",
+        "The polynomial transformation is implemented using quantum signal processing (QSP) rotations.",
+      ],
+    },
+  ],
+
+  "quantum-optimization-advanced": [
+    {
+      id: "q-qml-kp32-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "QUBO (Quadratic Unconstrained Binary Optimization) problems are directly embeddable on D-Wave quantum annealers. Which of the following ML problems can be formulated as QUBO?",
+      options: [
+        "Gradient descent of a deep neural network",
+        "Binary clustering (assigning data points to two clusters) by minimizing within-cluster distances",
+        "Backpropagation through a sigmoid activation",
+        "Convolutional feature map computation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Binary clustering can be written as a QUBO by assigning binary variables to cluster membership and writing the objective (minimize intra-cluster distances, maximize inter-cluster distances) as a quadratic form in those variables, making it directly solvable by a quantum annealer.",
+      hints: [
+        "QUBO requires binary variables and a quadratic objective — binary cluster assignment fits perfectly.",
+        "Think about how k-means with k=2 can be rewritten as an integer quadratic program over binary assignments.",
+      ],
+    },
+    {
+      id: "q-qml-kp32-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "D-Wave quantum annealers implement quantum annealing using superconducting flux qubits that are coupled via programmable Josephson junction couplers.",
+      correctAnswer: "True",
+      explanation:
+        "D-Wave systems use superconducting flux qubits whose tunneling rates (transverse field) and pairwise couplings (Ising J_ij terms) are programmed via Josephson junction control lines, realizing the quantum annealing process in hardware.",
+      hints: [
+        "Flux qubits encode binary variables as two persistent current states in a superconducting loop.",
+        "Josephson junctions provide the quantum tunneling (transverse field) and the programmable coupling strength between qubits.",
+      ],
+    },
+    {
+      id: "q-qml-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In quantum annealing for combinatorial optimization, the gap between the ground state and the first excited state of the annealing Hamiltonian is critical. What happens when this gap closes during the annealing schedule?",
+      options: [
+        "The algorithm finds the global optimum with certainty",
+        "Diabatic transitions occur, exciting the system out of the ground state, degrading solution quality",
+        "The transverse field automatically increases to compensate",
+        "The annealing time can be reduced without penalty",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When the energy gap closes at the quantum phase transition point, the adiabatic theorem requires an exponentially slow annealing schedule to prevent diabatic excitation; if the schedule is too fast, the system transitions to excited states, reducing the probability of finding the optimal solution.",
+      hints: [
+        "A small gap requires a slow annealing schedule — the adiabatic theorem sets this requirement quantitatively.",
+        "The worst-case exponentially small gap is why quantum annealing may not offer exponential speedups for NP-hard problems.",
+      ],
+    },
+  ],
+
+  "quantum-advantage-benchmarks": [
+    {
+      id: "q-qml-kp33-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "IBM's quantum volume (QV) metric measures the largest random square circuit (equal width and depth) that a quantum computer can implement with high fidelity. What does a higher quantum volume indicate?",
+      options: [
+        "More physical qubits on the chip",
+        "Better overall system performance including qubit count, connectivity, gate fidelity, and measurement errors",
+        "Longer coherence times only",
+        "Faster gate speeds only",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Quantum volume QV = 2^n where n is the largest circuit size successfully run; it captures a holistic system quality metric including qubit connectivity, gate error rates, measurement fidelity, and cross-talk — not just qubit count.",
+      hints: [
+        "QV is a single number summarizing overall hardware quality; a 7-qubit system with low error rates may have higher QV than a 50-qubit noisy system.",
+        "The 'square' circuit (equal width and depth) stresses connectivity and gate fidelity simultaneously.",
+      ],
+    },
+    {
+      id: "q-qml-kp33-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Cross-entropy benchmarking (XEB), as used in Google's quantum supremacy experiment, estimates circuit fidelity by comparing the measured output distribution against the ideal distribution from classical simulation.",
+      correctAnswer: "True",
+      explanation:
+        "XEB computes the cross-entropy between measured bitstring probabilities and classically-simulated ideal probabilities; a high XEB score indicates the quantum hardware is faithfully implementing the intended random circuit, providing evidence of quantum computational fidelity.",
+      hints: [
+        "XEB requires classical simulation of the target circuit — which is why supremacy circuits must be at the boundary of classical simulability.",
+        "The cross-entropy score distinguishes a well-functioning quantum processor from a uniform or biased classical sampler.",
+      ],
+    },
+    {
+      id: "q-qml-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Google's 2019 Sycamore quantum supremacy experiment claimed to perform a specific sampling task in 200 seconds that would take a classical supercomputer 10,000 years. What was the primary challenge to this claim raised by IBM?",
+      options: [
+        "The Sycamore processor had too few qubits to be considered quantum",
+        "IBM showed the same sampling task could be performed classically in approximately 2.5 days by using tensor network contraction with disk storage, dramatically reducing the classical estimate",
+        "The circuit used was not sufficiently random to be classically hard",
+        "Google's cross-entropy benchmarking score was below the threshold for quantum fidelity",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "IBM challenged Google's supremacy claim by demonstrating that optimized tensor network simulations using secondary storage (disk) could perform the same task in ~2.5 days, not 10,000 years; subsequent classical simulation improvements have continued to narrow the quantum advantage gap for random circuit sampling.",
+      hints: [
+        "The classical estimate for Google's task assumed in-memory computation; using disk changed the analysis significantly.",
+        "Tensor network contraction algorithms have improved rapidly since 2019, further challenging quantum supremacy claims.",
+      ],
+    },
+  ],
+
+  "quantum-neural-networks": [
+    {
+      id: "q-qml-kp34-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The data re-uploading technique in quantum neural networks encodes classical data multiple times throughout the circuit layers. What is the key motivation for this approach?",
+      options: [
+        "To reduce the number of qubits required",
+        "To enable the quantum circuit to implement universal function approximation by repeatedly mixing data with trainable parameters",
+        "To prevent barren plateaus by adding noise",
+        "To reduce the number of circuit measurements needed",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A single data encoding at the beginning limits the function class the circuit can represent; data re-uploading interleaves data encoding with trainable rotations throughout the circuit, enabling the QNN to approximate arbitrary functions (analogous to a universal approximator) using a single qubit.",
+      hints: [
+        "Pérez-Salinas et al. showed a single qubit with data re-uploading can be a universal quantum classifier.",
+        "The repeated encoding creates increasingly complex functions of the input by mixing data with different trainable parameters at each layer.",
+      ],
+    },
+    {
+      id: "q-qml-kp34-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "A quantum convolutional neural network (QCNN) shares the same trainable parameters (weight sharing) across qubit patches, analogous to how classical CNNs share filter weights across spatial positions.",
+      correctAnswer: "True",
+      explanation:
+        "QCNNs apply the same parameterized two-qubit gates to all neighboring qubit pairs in each convolutional layer, implementing translational equivariance over the qubit register and reducing the parameter count analogously to classical convolutional weight sharing.",
+      hints: [
+        "Weight sharing in classical CNNs reduces parameters and enforces translational symmetry — QCNNs apply the same idea to qubits.",
+        "Without weight sharing, a QCNN would need independently parameterized gates for every qubit pair.",
+      ],
+    },
+    {
+      id: "q-qml-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In a quantum recurrent neural network trained with gradient-based methods, what is the primary gradient challenge compared to classical LSTM-based RNNs?",
+      options: [
+        "Gradients cannot be computed for unitary matrices",
+        "The combination of deep temporal circuits and global entanglement pushes the system into barren plateaus with exponentially vanishing gradients",
+        "The hidden state measurement collapses the quantum state, preventing backpropagation",
+        "Quantum gates do not support the chain rule for differentiation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Unlike LSTMs which use gating mechanisms to combat vanishing gradients, QRNNs are subject to barren plateaus: the unitary circuit across many time steps behaves like a deep random circuit, causing gradients to vanish exponentially with sequence length, making long-sequence training especially difficult.",
+      hints: [
+        "LSTMs use forget/input gates to maintain long-range gradients — QRNNs have no such mechanism.",
+        "More time steps = deeper circuit = more pronounced barren plateau effect for QRNNs.",
+      ],
+    },
+  ],
+
+  "quantum-cryptography-ml": [
+    {
+      id: "q-qml-kp35-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Quantum Key Distribution (QKD), such as BB84, achieves information-theoretically secure key exchange. What quantum mechanical principle guarantees that eavesdropping is detectable?",
+      options: [
+        "The uncertainty principle: measuring a qubit inevitably disturbs it, introducing detectable errors",
+        "Quantum teleportation: any intercepted qubit is teleported to the eavesdropper's location",
+        "Decoherence: noise destroys the key before it can be intercepted",
+        "Entanglement monogamy: entangled qubits cannot be copied",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "BB84 encodes key bits in random bases; any measurement by Eve collapses the qubits in a way that introduces detectable errors in Alice and Bob's shared key. The no-cloning theorem also prevents Eve from copying qubits without disturbing them.",
+      hints: [
+        "In QKD, Alice and Bob compare a subset of their bits to check for errors — Eve's measurement introduces ~25% error.",
+        "The no-cloning theorem is also relevant: Eve cannot make perfect copies of transmitted qubits to measure later.",
+      ],
+    },
+    {
+      id: "q-qml-kp35-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Post-quantum cryptography refers to classical cryptographic algorithms that are designed to be secure against attacks from both classical and quantum computers.",
+      correctAnswer: "True",
+      explanation:
+        "Post-quantum (or quantum-resistant) cryptography develops classical algorithms based on problems believed to be hard for quantum computers, such as lattice problems (CRYSTALS-Kyber, CRYSTALS-Dilithium), hash-based signatures, and code-based cryptography — standardized by NIST starting 2022.",
+      hints: [
+        "Post-quantum cryptography runs on classical hardware but is designed to resist Shor's algorithm and Grover's algorithm.",
+        "NIST's post-quantum standardization project selected lattice-based schemes as primary standards in 2022.",
+      ],
+    },
+    {
+      id: "q-qml-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Quantum random number generators (QRNGs) provide true randomness. Which quantum phenomenon is most commonly exploited in commercial QRNGs?",
+      options: [
+        "Quantum tunneling in a Josephson junction",
+        "The inherent randomness of quantum measurement outcomes (e.g., photon detection or qubit measurement in superposition)",
+        "Quantum entanglement between two parties",
+        "Quantum error correction syndrome measurements",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Commercial QRNGs exploit the Born-rule randomness of quantum measurements: photons impinging on a beamsplitter and measured at either port, or qubits prepared in |+⟩ and measured in the Z basis, produce perfectly random bits because quantum measurement outcomes are fundamentally unpredictable.",
+      hints: [
+        "Classical pseudo-random number generators are deterministic — quantum measurement outcomes are provably random.",
+        "The simplest QRNG is a qubit in |+⟩ measured in the Z basis: each outcome is 50/50 by the Born rule.",
+      ],
+    },
+  ],
+
+  "quantum-embedding": [
+    {
+      id: "q-qml-kp36-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In hybrid classical-quantum ML, quantum embedding refers to mapping classical data into a quantum Hilbert space. What distinguishes angle embedding from amplitude embedding?",
+      options: [
+        "Angle embedding stores each feature as a rotation angle of a single-qubit gate, requiring n qubits for n features; amplitude embedding stores 2^n features in n qubits",
+        "Angle embedding uses fewer qubits but is less expressive than amplitude embedding",
+        "Amplitude embedding requires only 1 qubit for arbitrary data; angle embedding requires exponentially many",
+        "Angle embedding is used only for binary data; amplitude embedding handles real-valued data",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Angle embedding encodes each feature x_i as a rotation angle θ_i in a single-qubit gate R(x_i), needing n qubits for n features; amplitude embedding encodes N = 2^n features as amplitudes of an n-qubit state, achieving exponential compression but requiring exponentially deep state preparation circuits.",
+      hints: [
+        "Angle embedding is qubit-efficient in preparation depth but qubit-inefficient in qubit count.",
+        "Amplitude embedding is qubit-efficient (logarithmic in data size) but circuit-depth inefficient (exponential preparation).",
+      ],
+    },
+    {
+      id: "q-qml-kp36-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In hybrid quantum-classical architectures, batching multiple quantum circuit evaluations reduces the overhead of classical-quantum communication but requires quantum hardware capable of parallel circuit execution.",
+      correctAnswer: "True",
+      explanation:
+        "Each classical-quantum call has latency overhead; batching groups multiple inputs into a single submission to the quantum device, amortizing communication costs; however this requires either parallel execution on separate qubits or sequential execution on the same hardware with queuing.",
+      hints: [
+        "Think of the analogy to GPU batching in deep learning — multiple inputs are processed together to reduce overhead.",
+        "Quantum cloud APIs (like IBM Quantum or AWS Braket) support batching via primitive-level calls.",
+      ],
+    },
+    {
+      id: "q-qml-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A key challenge in connecting classical and quantum processors in a hybrid architecture is the classical-quantum interface bottleneck. What is the main source of this bottleneck?",
+      options: [
+        "Classical processors are too slow to compile quantum circuits",
+        "The number of shots needed to estimate expectation values with sufficient accuracy introduces significant classical-quantum round-trip latency that dominates training time",
+        "Quantum processors cannot accept floating-point parameters from classical optimizers",
+        "Classical automatic differentiation frameworks do not support complex numbers needed for quantum states",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Each quantum circuit evaluation requires many shots (measurements) to estimate expectation values to the required precision; combined with classical-quantum communication latency (especially for cloud quantum hardware), this round-trip cost dominates training wall time and limits the practical scale of hybrid QML.",
+      hints: [
+        "Statistical noise from finite shots requires many circuit runs per gradient estimate — multiply this by the number of parameters and training steps.",
+        "On cloud quantum hardware, network latency further compounds the per-shot overhead.",
+      ],
+    },
+  ],
+
+  "quantum-chemistry-ml": [
+    {
+      id: "q-qml-kp37-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The Variational Quantum Eigensolver (VQE) estimates the ground state energy of a molecular Hamiltonian. How does VQE guarantee an upper bound on the true ground state energy?",
+      options: [
+        "By using quantum error correction on all gates",
+        "Via the variational principle: ⟨ψ(θ)|H|ψ(θ)⟩ ≥ E_ground for any state |ψ(θ)⟩",
+        "By computing the exact eigenspectrum using quantum phase estimation",
+        "By averaging over many random ansatz circuits",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The variational principle guarantees that the expectation value of H in any trial state is an upper bound on the ground state energy; VQE minimizes this expectation value over the parameterized ansatz, approaching the true ground state energy from above.",
+      hints: [
+        "The variational principle is the quantum mechanical analogue of the fact that any trial wavefunction overestimates the ground state energy.",
+        "VQE optimizes θ to minimize ⟨H⟩ — each evaluation gives an upper bound, and minimization drives it toward the exact ground state.",
+      ],
+    },
+    {
+      id: "q-qml-kp37-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Quantum computers can in principle achieve chemical accuracy (within 1 kcal/mol of the exact ground state energy) for molecular simulations, which classical density functional theory (DFT) often fails to reach for strongly correlated systems.",
+      correctAnswer: "True",
+      explanation:
+        "DFT relies on approximate exchange-correlation functionals that fail for strongly correlated molecules; quantum algorithms like VQE with UCCSD ansatz or quantum phase estimation can in principle compute ground state energies to chemical accuracy (1 kcal/mol ≈ 1.6 mhartree) by working directly in the full Hilbert space.",
+      hints: [
+        "DFT's failure for strongly correlated electrons (e.g., transition metal complexes) is a key motivation for quantum chemistry on quantum computers.",
+        "Chemical accuracy (1 kcal/mol) is the threshold needed to reliably predict reaction rates and thermodynamic properties.",
+      ],
+    },
+    {
+      id: "q-qml-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The second-quantized molecular Hamiltonian H = Σ_pq h_pq a†_p a_q + (1/2) Σ_pqrs h_pqrs a†_p a†_q a_r a_s must be mapped to qubit operators for quantum simulation. Compared to the Bravyi-Kitaev (BK) transformation, what advantage does the Jordan-Wigner (JW) transformation have?",
+      options: [
+        "JW produces Pauli strings of constant length O(1), independent of system size",
+        "JW has a more transparent locality structure: orbital j maps to qubit j with simple Pauli-Z strings for anti-commutation, making it easier to interpret",
+        "JW requires fewer qubits than BK for the same molecule",
+        "JW produces sparser Hamiltonians than BK, reducing circuit depth",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Jordan-Wigner maps each fermionic mode to a qubit with a simple string of Z operators for anti-commutation, making the mapping intuitive and easy to implement; however, JW Pauli strings grow as O(N) in length. Bravyi-Kitaev achieves O(log N) Pauli string length at the cost of a less transparent mapping.",
+      hints: [
+        "JW's Z strings track fermion parity — each creation operator a†_j becomes X_j + iY_j followed by a Z string.",
+        "BK improves JW's locality by using a binary tree structure, reducing Pauli string lengths at the cost of more complex encoding.",
+      ],
+    },
+  ],
+
+  "near-term-quantum": [
+    {
+      id: "q-qml-kp38-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "NISQ (Noisy Intermediate-Scale Quantum) devices have 50-1000+ qubits but lack quantum error correction. Which of the following is NOT a NISQ-friendly algorithm?",
+      options: [
+        "Variational Quantum Eigensolver (VQE)",
+        "Quantum Approximate Optimization Algorithm (QAOA)",
+        "Shor's algorithm for factoring large integers",
+        "Quantum neural networks with shallow circuits",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Shor's algorithm requires fault-tolerant quantum error correction and millions of logical gates, far beyond NISQ capabilities; VQE, QAOA, and shallow QNNs are designed for noisy hardware with limited circuit depth, tolerating some errors.",
+      hints: [
+        "Shor's requires exponentially deeper circuits than current NISQ hardware coherence allows.",
+        "NISQ algorithms are specifically designed to be shallow (low depth) to avoid decoherence.",
+      ],
+    },
+    {
+      id: "q-qml-kp38-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Noise characterization on NISQ devices — such as measuring T1 (energy relaxation), T2 (dephasing time), and gate error rates — is essential for error-aware circuit compilation and mitigation.",
+      correctAnswer: "True",
+      explanation:
+        "Characterizing each qubit's T1 (relaxation time), T2 (coherence time), single- and two-qubit gate fidelities, and readout errors allows compilers to route circuits to less noisy qubits, choose error-aware decompositions, and calibrate mitigation techniques like ZNE or PEC.",
+      hints: [
+        "T1 limits how long a qubit can hold a |1⟩ state; T2 ≤ 2T1 limits the coherence during superposition.",
+        "Error-aware compilation uses noise data to assign operations to the least noisy qubits and gate decompositions.",
+      ],
+    },
+    {
+      id: "q-qml-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Error-aware circuit compilation for NISQ devices includes which of the following noise-adaptive strategies?",
+      options: [
+        "Routing two-qubit gates to pairs of qubits with the highest two-qubit gate error rates",
+        "Dynamical decoupling: inserting sequences of π-pulses during idle periods to suppress dephasing errors",
+        "Increasing circuit depth to allow more gate operations",
+        "Disabling cross-resonance gates in favor of less accurate software-simulated gates",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Dynamical decoupling (DD) inserts sequences of X or XY4 pulses during idle qubit periods, averaging out systematic dephasing errors via refocusing; this is widely used in IBM and IonQ devices to extend effective coherence time during circuit execution.",
+      hints: [
+        "Idle qubits decohere during gate operations on other qubits; DD pulses act like spin echoes to cancel systematic errors.",
+        "XY4 sequences (X, Y, X, Y pulses) are more robust to pulse imperfections than simple X-X echo pairs.",
+      ],
+    },
+  ],
+
   "quantum-error-mitigation": [
     {
       id: "q-qml-kp30-1",
@@ -1658,6 +2114,120 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Each noisy gate in PEC introduces a factor of overhead — these multiply across the circuit depth.",
         "The exponential overhead is the fundamental reason error mitigation cannot scale to arbitrary depths without error correction.",
+      ],
+    },
+  ],
+
+  "readout-error-mitigation": [
+    {
+      id: "q-qml-kp39-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Readout error mitigation corrects for measurement errors in quantum circuits. What is the standard calibration-based approach for single-qubit readout error correction?",
+      options: [
+        "Prepare each qubit in |0⟩ and |1⟩ separately, measure many times to build the assignment matrix M (where M[i][j] = P(measure i | prepare j)), then invert M to correct measurement distributions",
+        "Apply a unitary rotation before measurement to rotate errors into the computational basis",
+        "Repeat each measurement 1000 times and take the majority vote as the corrected outcome",
+        "Use the surface code to detect and correct measurement errors before reading out results",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The assignment (confusion) matrix M characterizes readout errors: each column gives the probability distribution over measurement outcomes given a known input state. Inverting M (or solving a linear system) corrects the noisy measured distribution, recovering an estimate of the ideal probability vector. This calibration step is standard in Qiskit and Cirq mitigation toolkits.",
+      hints: [
+        "The confusion matrix relates what you prepared to what you measured — inversion corrects the measured probabilities.",
+        "For n qubits, the assignment matrix is 2^n × 2^n; for large n, tensor product approximations are used.",
+      ],
+    },
+    {
+      id: "q-qml-kp39-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Readout errors in superconducting qubits arise partly from the finite lifetime of the |1⟩ state (T1 decay) causing the qubit to relax to |0⟩ during the measurement pulse.",
+      correctAnswer: "True",
+      explanation:
+        "During the readout pulse (which takes microseconds), a qubit in |1⟩ can relax to |0⟩ via T1 decay, causing a false |0⟩ measurement outcome; this asymmetric error (|1⟩→|0⟩ more likely than |0⟩→|1⟩) is a primary source of readout error in superconducting quantum processors.",
+      hints: [
+        "T1 is the energy relaxation time; if T1 is comparable to the readout pulse duration, relaxation errors are significant.",
+        "This asymmetry means P(measure 0 | prepare 1) > P(measure 1 | prepare 0) in typical superconducting qubits.",
+      ],
+    },
+    {
+      id: "q-qml-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Twirled Readout Error eXtinction (TREX) improves over standard assignment matrix mitigation by adding random Pauli twirling before measurement. What is the key advantage of TREX?",
+      options: [
+        "TREX eliminates the need for calibration entirely by using random circuits",
+        "TREX converts correlated multi-qubit readout errors into uncorrelated single-qubit errors that can be corrected with a simpler diagonal assignment matrix, avoiding the exponentially large full assignment matrix",
+        "TREX increases measurement fidelity by repeating each circuit with different twirling gates and averaging",
+        "TREX works only on ion trap systems and is not applicable to superconducting qubits",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The full n-qubit assignment matrix is 2^n × 2^n, making it exponentially expensive to calibrate. TREX applies random single-qubit Pauli twirls before readout to symmetrize the error channel into a diagonal (depolarizing-like) form, reducing calibration to n single-qubit experiments and avoiding multi-qubit correlated error modeling.",
+      hints: [
+        "Twirling converts a general error channel into a simpler symmetric form — for readout errors, this means diagonal assignment matrix.",
+        "Diagonal assignment matrix = only P(measure 0|prepare 1) and P(measure 1|prepare 0) per qubit, requiring only 2n calibration circuits.",
+      ],
+    },
+  ],
+
+  "quantum-hardware-platforms": [
+    {
+      id: "q-qml-kp40-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Superconducting qubits (as used by IBM and Google) and trapped-ion qubits (as used by IonQ and Quantinuum) have different tradeoffs. What is the primary advantage of trapped-ion qubits over superconducting qubits?",
+      options: [
+        "Trapped ions have faster gate speeds (nanosecond gates vs. microsecond gates)",
+        "Trapped ions have higher qubit connectivity (all-to-all coupling) and longer coherence times, enabling higher-fidelity two-qubit gates",
+        "Trapped ions can be operated at room temperature, eliminating the need for cryogenic systems",
+        "Trapped ions have larger qubit counts (thousands of qubits vs. hundreds for superconducting)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Trapped-ion systems benefit from all-to-all qubit connectivity (any two ions can interact via shared motional modes), longer coherence times (seconds vs. microseconds for superconducting), and higher two-qubit gate fidelities (>99.9%); the tradeoff is slower gate speeds (microseconds to milliseconds vs. nanoseconds for superconducting) and more complex laser control systems.",
+      hints: [
+        "Gate speed vs. gate fidelity is the key tradeoff: superconducting qubits are faster but noisier per gate.",
+        "All-to-all connectivity in trapped ions avoids the SWAP overhead needed to connect non-adjacent superconducting qubits.",
+      ],
+    },
+    {
+      id: "q-qml-kp40-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Photonic quantum computers encode qubits in the quantum states of photons (e.g., polarization or path), offering the advantage of naturally operating at room temperature and enabling long-distance quantum communication.",
+      correctAnswer: "True",
+      explanation:
+        "Photonic qubits use photon polarization, time-bin, or spatial path modes; photons travel at the speed of light and experience minimal environmental decoherence at room temperature, making them ideal for quantum communication (QKD) and distributed quantum computing, though deterministic photon-photon interactions are challenging for universal computation.",
+      hints: [
+        "Photons don't interact strongly with their environment — which is good for coherence but bad for implementing two-qubit gates.",
+        "Photonic platforms are naturally suited for quantum networks because photons are the carriers of quantum information over fiber.",
+      ],
+    },
+    {
+      id: "q-qml-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "IBM's Eagle (127-qubit) and Heron (133-qubit) processors use a heavy-hex lattice connectivity for qubit coupling. What is the primary engineering reason for this sparse connectivity pattern over a full 2D grid?",
+      options: [
+        "Heavy-hex reduces the number of qubit-qubit couplers, lowering cross-talk (ZZ coupling) between qubits and improving two-qubit gate fidelity at the cost of requiring SWAP gates for non-adjacent operations",
+        "Heavy-hex enables all-to-all connectivity by routing signals through bus resonators",
+        "Heavy-hex reduces chip area, allowing more qubits to fit on the same die size",
+        "Heavy-hex is the only connectivity that supports the surface code without additional modifications",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "In superconducting processors, each coupler introduces residual ZZ coupling (always-on cross-talk) that degrades idle qubit coherence; the heavy-hex lattice reduces the number of couplers per qubit (maximum degree 3 vs. 4 for a square lattice), significantly reducing cross-talk and improving two-qubit gate fidelity, at the cost of requiring SWAP gates for non-adjacent qubit operations.",
+      hints: [
+        "Each coupler in a superconducting processor causes ZZ cross-talk between connected qubits — fewer couplers means less cross-talk.",
+        "The tradeoff: fewer couplers = lower cross-talk but requires more SWAP gates for routing non-adjacent operations.",
       ],
     },
   ],

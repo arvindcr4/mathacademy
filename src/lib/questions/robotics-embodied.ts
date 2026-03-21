@@ -1686,6 +1686,576 @@ const questions: Record<string, Question[]> = {
       ],
     },
   ],
+
+  "robot-grasping": [
+    {
+      id: "q-rob-kp31-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is an antipodal grasp, and why is it mechanically stable for parallel-jaw grippers?",
+      options: [
+        "A grasp where contact normals at the two contact points are parallel and opposing, so friction forces can resist any external wrench applied to the object",
+        "A grasp where both fingers contact the same face of the object to maximize friction area",
+        "A grasp that uses suction cups on opposite poles of a spherical object",
+        "A grasp where the gripper approaches the object from directly above in the vertical direction",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "In an antipodal grasp, the two contact normals point toward each other (antiparallel); with sufficient friction at each contact, the resulting wrench closure condition guarantees that the gripper can resist any arbitrary external force and torque, making it the canonical stable grasp for parallel-jaw grippers.",
+      hints: [
+        "Antipodal means opposite — think about the geometry of squeezing an object from two sides.",
+        "The stability condition is that contact forces (including friction) can balance any external wrench on the object.",
+      ],
+    },
+    {
+      id: "q-rob-kp31-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Grasp quality metrics such as the epsilon (ε) metric measure the radius of the largest wrench ball inscribed in the grasp wrench space, capturing how well a grasp can resist arbitrary external perturbations.",
+      correctAnswer: "True",
+      explanation:
+        "The ε-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space — a larger ε means the grasp resists stronger perturbations from any direction.",
+      hints: [
+        "A grasp with ε > 0 achieves force closure — it can resist wrenches in all directions.",
+        "The ε-metric is conservative: it measures the minimum over all wrench directions, capturing the worst-case direction.",
+      ],
+    },
+    {
+      id: "q-rob-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "6-DOF grasp planning methods (e.g., GraspNet-1Billion, Contact-GraspNet) predict grasps in full SE(3) space. What is the main advantage of 6-DOF grasp prediction over top-down (overhead) planar grasp methods?",
+      options: [
+        "6-DOF methods can generate grasps from any approach direction, enabling grasping of objects in bins, shelves, or occluded environments where a top-down approach is geometrically infeasible",
+        "6-DOF methods require fewer training examples because the 6D grasp space is smaller than the 2D planar space",
+        "Top-down grasps are inherently unstable; 6-DOF grasps are always more stable by definition",
+        "6-DOF methods only work with RGB-D cameras while planar methods work with any sensor",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Planar grasp methods assume a top-down approach, limiting them to table-top scenarios where objects are accessible from above; 6-DOF grasp planning predicts full pose (3D position + 3D orientation) of the gripper, enabling grasps from the side, below, or inside bins where top-down is blocked by walls or other objects.",
+      hints: [
+        "Think about grasping a bottle lying on its side in a bin — a top-down approach would hit the bin wall.",
+        "6-DOF refers to the full gripper pose in SE(3): 3 translation + 3 rotation degrees of freedom.",
+      ],
+    },
+  ],
+
+  "robot-perception-advanced": [
+    {
+      id: "q-rob-kp32-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "6-DOF object pose estimation predicts the full rigid body pose of a known object in a scene. What are the 6 degrees of freedom being estimated?",
+      options: [
+        "3D translation (x, y, z) and 3D rotation (roll, pitch, yaw) in the camera coordinate frame",
+        "3D scale, 3D shear, and object category label",
+        "3D position in world coordinates and 3D velocity",
+        "RGB color, surface normal, and depth at each keypoint",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "6-DOF pose estimation recovers the SE(3) rigid body transformation: 3 translational DOFs (x, y, z position) and 3 rotational DOFs (roll, pitch, yaw) that align the known 3D object model with the observed image or point cloud.",
+      hints: [
+        "SE(3) is the special Euclidean group in 3D — it describes rigid body motion with 3 translation and 3 rotation parameters.",
+        "Knowing the 6-DOF pose allows a robot to compute the exact gripper pose needed to grasp or manipulate the object.",
+      ],
+    },
+    {
+      id: "q-rob-kp32-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Instance segmentation (e.g., Mask R-CNN) is preferred over semantic segmentation for robot manipulation because it separates individual object instances, enabling per-object grasping when multiple copies of the same object are present.",
+      correctAnswer: "True",
+      explanation:
+        "Semantic segmentation labels each pixel with a category but cannot distinguish between individual instances of the same class; instance segmentation outputs separate masks for each object instance, which is essential for manipulation planning when a scene contains multiple apples, cups, or other identical objects.",
+      hints: [
+        "Semantic segmentation: all apples get label 'apple'. Instance segmentation: apple #1, apple #2, apple #3 each get separate masks.",
+        "A robot needs to know which specific object to grasp — semantic labels alone do not disambiguate instances.",
+      ],
+    },
+    {
+      id: "q-rob-kp32-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Depth completion algorithms recover dense depth maps from sparse LiDAR input combined with RGB images. Which learning-based approach is most commonly used?",
+      options: [
+        "A CNN that takes the sparse depth and RGB image as input and outputs a dense depth map, trained with supervised loss on dense ground-truth depth from accumulated LiDAR scans",
+        "A GAN that hallucinates missing depth values from the RGB image alone without using sparse LiDAR input",
+        "A transformer that predicts depth from RGB using attention over all image patches without any geometric constraints",
+        "A classical interpolation method (bilinear or cubic) applied directly to LiDAR points without learning",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Depth completion networks (e.g., CSPN, PENet, GuideNet) fuse sparse LiDAR points and RGB guidance in a CNN to propagate depth to unobserved pixels; ground truth comes from accumulating multiple LiDAR scans or using stereo cameras as pseudolabels.",
+      hints: [
+        "Sparse LiDAR gives accurate but sparse depth; RGB gives dense but ambiguous geometry — combining them is the key.",
+        "Accumulated LiDAR scans from multiple frames can create dense pseudo-ground-truth for training.",
+      ],
+    },
+  ],
+
+  "legged-locomotion": [
+    {
+      id: "q-rob-kp33-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In the context of legged robot control, what does the support polygon represent, and why is it central to static stability analysis?",
+      options: [
+        "The convex hull of all ground contact points; a robot is statically stable if and only if the projection of its center of mass onto the ground lies within this polygon",
+        "The area swept by the robot's feet during a complete gait cycle",
+        "The set of all joint configurations that keep the robot upright",
+        "The friction cone at each foot contact, projected onto the ground plane",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The support polygon is the convex hull of ground contact points (foot positions); static stability requires the center of mass (CoM) projection to lie strictly inside this polygon. If the CoM projection exits the support polygon, the robot tips over. Multi-legged robots with more feet have larger support polygons and are more statically stable.",
+      hints: [
+        "A tripod is always statically stable because the CoM projection is always inside the triangle formed by three feet.",
+        "A biped has a very small support polygon (the foot area) during single-support — this is why biped balance is challenging.",
+      ],
+    },
+    {
+      id: "q-rob-kp33-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Model Predictive Control (MPC) for legged locomotion optimizes a short-horizon trajectory of contact forces and base motion at each control timestep, enabling dynamic gait adaptation to terrain perturbations.",
+      correctAnswer: "True",
+      explanation:
+        "Legged MPC (e.g., as used in MIT Cheetah, ANYmal) solves a constrained optimization problem at 100-500 Hz over a receding horizon: it computes optimal contact forces, stance/swing schedules, and base trajectories that satisfy friction cone and motion constraints, allowing real-time adaptation to uneven terrain and external disturbances.",
+      hints: [
+        "MPC continuously re-plans over a short future window — this is what enables reactive adaptation, unlike pre-planned ZMP gaits.",
+        "The key constraints in legged MPC are the friction cone (contact forces must lie inside the cone) and the robot's centroidal dynamics.",
+      ],
+    },
+    {
+      id: "q-rob-kp33-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Terrain adaptation in legged locomotion requires estimating contact state and terrain geometry. Which sensor modality provides the highest-fidelity terrain map for online footstep planning?",
+      options: [
+        "Proprioceptive sensors alone (joint encoders and IMU) through contact estimation",
+        "LiDAR or depth cameras providing dense point clouds for real-time elevation map construction",
+        "Tactile sensors on the feet measuring contact pressure distribution",
+        "GPS and inertial navigation providing global position but not local terrain geometry",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "LiDAR and depth cameras (e.g., Intel RealSense, Ouster) build real-time elevation maps that capture terrain geometry ahead of the robot; systems like ANYmal use these elevation maps for footstep planning and stair/obstacle avoidance, while proprioception provides complementary contact state estimation.",
+      hints: [
+        "Proprioception tells you what the feet feel under them now — exteroception (LiDAR/depth) tells you what's coming ahead.",
+        "Elevation maps discretize the terrain into a 2.5D grid of heights, enabling fast lookup for footstep feasibility.",
+      ],
+    },
+  ],
+
+  "multi-robot-systems": [
+    {
+      id: "q-rob-kp34-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In multi-robot task allocation, the market-based approach uses auctioning mechanisms to assign tasks. What is the key property that makes this approach scalable?",
+      options: [
+        "Each robot bids for tasks based on its local utility, and a central auctioneer assigns tasks to the highest bidder, distributing computation across robots rather than requiring centralized planning",
+        "All robots share a global state vector and solve a joint optimization problem simultaneously",
+        "Tasks are assigned randomly and robots self-organize through stigmergy",
+        "A single leader robot makes all allocation decisions using a centralized MILP solver",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Market-based allocation (e.g., MURDOCH, TraderBots) uses decentralized bidding: each robot computes its local cost/utility for each task and broadcasts bids; the task is assigned to the lowest-cost bidder. This avoids combinatorial explosion of centralized planning and scales to large robot teams.",
+      hints: [
+        "Think about how an auction distributes the decision-making — the auctioneer only needs to compare bids, not plan globally.",
+        "Decentralization is the key to scalability: robots compute their own bids locally without central coordination.",
+      ],
+    },
+    {
+      id: "q-rob-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In swarm robotics, desired collective behaviors (e.g., aggregation, pattern formation) emerge from local interaction rules without any robot having a global view of the swarm.",
+      correctAnswer: "True",
+      explanation:
+        "Swarm robotics draws from biological swarms (ants, bees, birds): each robot follows simple local rules (attraction/repulsion to neighbors, pheromone-like communication) and the collective behavior emerges globally. No robot has global state knowledge, making the system robust to individual failures and highly scalable.",
+      hints: [
+        "Think about how a flock of birds maintains formation without a leader — each bird only responds to its neighbors.",
+        "Emergence means the collective behavior is not explicitly programmed but arises from local interactions.",
+      ],
+    },
+    {
+      id: "q-rob-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In multi-robot communication, the consensus algorithm allows robots to agree on a shared quantity (e.g., average position or sensor reading). What graph-theoretic condition must hold for consensus to be achievable?",
+      options: [
+        "The communication graph must be a complete graph (all-to-all connections)",
+        "The communication graph must be connected (there exists a path between any two robots)",
+        "Each robot must have at least three communication links",
+        "The communication graph must be a tree with no cycles",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Consensus converges to the same value for all robots if and only if the communication graph is connected (and for directed graphs, has a spanning tree); disconnected subgraphs maintain separate consensus values with no information exchange between components.",
+      hints: [
+        "Connectivity is the minimal condition for information to propagate throughout the entire network.",
+        "A disconnected graph has isolated components that cannot share information — consensus within each component converges to different values.",
+      ],
+    },
+  ],
+
+  "robot-learning-from-video": [
+    {
+      id: "q-rob-kp35-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Video prediction models for robot learning predict future video frames given the current frame and a proposed action. How are these models used for robot planning?",
+      options: [
+        "As world models: the robot simulates the visual consequence of different action sequences and selects the action sequence leading to a desired goal image",
+        "As reward functions: the model predicts whether the video shows task success and provides reward signals",
+        "As imitation learning: the model directly outputs robot joint angles by watching expert videos",
+        "As data augmentation: the model generates synthetic videos to augment a small real dataset",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Video prediction models (e.g., SV2P, RSSM in Dreamer) act as visual world models: given the current image and an action, they predict the next image; by rolling out these predictions, a planner can search over action sequences to find one that leads to the goal configuration — enabling model-based visual planning without environment interaction at test time.",
+      hints: [
+        "Think about how a world model enables planning: you simulate outcomes of actions before committing to them.",
+        "The goal image serves as the target — the planner selects actions whose predicted video ends at the goal.",
+      ],
+    },
+    {
+      id: "q-rob-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Keypoint-based robot state representations detect semantically meaningful points (e.g., end-effector, object corners) from images, providing a compact, geometrically interpretable state for imitation learning policies.",
+      correctAnswer: "True",
+      explanation:
+        "Keypoint representations (e.g., Transporter Networks, Keypoint3D) detect task-relevant landmarks from images using heatmap networks, producing a low-dimensional geometric state that is more robust to visual appearance changes (lighting, color) than raw pixel features and more interpretable for spatial reasoning.",
+      hints: [
+        "Think about what information is actually needed for manipulation — the positions of the gripper and object are key, not every pixel.",
+        "Keypoints provide geometric state (2D or 3D positions) that is invariant to irrelevant visual changes like lighting.",
+      ],
+    },
+    {
+      id: "q-rob-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Learning reward functions from human video demonstrations (e.g., time-contrastive networks, R3M) enables training RL agents without manual reward engineering. What is the primary challenge of this approach?",
+      options: [
+        "Rewards learned from video demonstrations are often noisy, lack precision for fine-grained manipulation, and may encode irrelevant visual features (lighting, background) rather than task progress",
+        "Human video demonstrations cannot be collected in sufficient quantities to train reward functions",
+        "Video-based reward functions always produce sparse rewards, making RL training intractable",
+        "RL agents cannot optimize video-based reward functions because they are not differentiable",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Video-based reward functions face the challenge of visual reward ambiguity: the learned reward may respond to irrelevant features (background color, lighting conditions) rather than true task progress; additionally, the video-reward may not provide sufficient precision to guide fine manipulation, and distribution shift between training videos and robot rollouts degrades reward quality.",
+      hints: [
+        "A reward function that responds to lighting changes rather than task progress will mislead the RL agent.",
+        "Precision matters: a coarse reward that only detects task completion cannot guide fine-grained intermediate steps.",
+      ],
+    },
+  ],
+
+  "robot-safety-compliance": [
+    {
+      id: "q-rob-kp36-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Force-torque (F/T) limits in robot safety systems serve what primary purpose?",
+      options: [
+        "Preventing excessive contact forces that could damage the robot, the environment, or humans by stopping or compliance-modulating motion when measured forces exceed thresholds",
+        "Limiting joint velocities to prevent overshoot in position control",
+        "Controlling the electrical power consumption of the robot's actuators",
+        "Measuring the payload mass to compute gravity compensation",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "F/T safety limits monitor wrist or joint forces and torques in real-time; when measured forces exceed safety thresholds (e.g., due to unexpected collisions or contact), the controller triggers a protective stop or switches to compliance mode, preventing damage to the robot, workpiece, or human collaborators.",
+      hints: [
+        "Think about what happens when a robot arm unexpectedly hits a person — force limits enable it to detect and respond to unexpected contact.",
+        "ISO/TS 15066 defines force and pressure limits for collaborative robots (cobots) operating near humans.",
+      ],
+    },
+    {
+      id: "q-rob-kp36-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Control Barrier Functions (CBFs) provide a formal mathematical framework for enforcing safety constraints in robot control by adding constraint terms to the control law that render a safe set forward invariant.",
+      correctAnswer: "True",
+      explanation:
+        "CBFs define a safety set C = {x : h(x) >= 0} and impose the condition on the control input that ensures the system remains in C for all time if it starts in C; this provides formal safety guarantees while being compatible with performance-optimizing controllers (e.g., QP-based CBF-CLF controllers).",
+      hints: [
+        "Forward invariance means: if you start inside the safe set, the CBF constraint keeps you inside forever.",
+        "CBFs are added as QP constraints on top of a nominal controller — they minimally modify the desired control to maintain safety.",
+      ],
+    },
+    {
+      id: "q-rob-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In robot collision avoidance with moving obstacles, which approach provides the strongest formal safety guarantee for a robot with uncertain obstacle motion predictions?",
+      options: [
+        "ORCA (Optimal Reciprocal Collision Avoidance): computing velocity obstacle sets for each agent and selecting velocities outside all obstacles' velocity cones",
+        "Stochastic CBFs that incorporate uncertainty distributions over obstacle positions into the barrier function constraint, guaranteeing constraint satisfaction with high probability",
+        "A* path planning replanned at 1 Hz using predicted obstacle positions",
+        "Deep RL trained with a collision penalty reward in simulation with domain randomization",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Stochastic CBFs (or chance-constraint CBFs) explicitly model uncertainty in obstacle state estimates and enforce probabilistic safety constraints (e.g., P(h(x) >= 0) >= 1-delta), providing formal probabilistic safety guarantees even when obstacle motion is uncertain; ORCA provides geometric guarantees only for cooperative, deterministic agents.",
+      hints: [
+        "When obstacle positions are uncertain (due to prediction errors), deterministic CBFs may violate constraints — stochastic CBFs handle this rigorously.",
+        "The probability threshold trades off safety conservatism against performance.",
+      ],
+    },
+  ],
+
+  "robot-navigation-advanced": [
+    {
+      id: "q-rob-kp37-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Semantic mapping extends geometric SLAM by associating semantic labels with map elements. What key capability does a semantic map enable that a purely geometric map does not?",
+      options: [
+        "Enabling object-level navigation goals (e.g., 'go to the kitchen chair') and task-relevant spatial reasoning by grounding language categories to map locations",
+        "Reducing map storage size by replacing geometric details with category labels",
+        "Enabling precise 6-DOF localization using semantic anchors instead of geometric features",
+        "Allowing the robot to navigate without any sensors by reasoning from the semantic layout",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Semantic maps associate objects and regions with category labels, enabling the robot to interpret natural language navigation goals ('go to the couch'), perform object search, and reason about task affordances (e.g., 'sit on the chair') — capabilities impossible with purely metric maps that only represent geometry.",
+      hints: [
+        "A geometric map says 'there is a surface at this location'; a semantic map says 'there is a couch at this location'.",
+        "Language grounding becomes possible when map elements have semantic labels — the robot can interpret 'go to the table'.",
+      ],
+    },
+    {
+      id: "q-rob-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Topological maps represent environments as graphs of places (nodes) connected by navigable edges, enabling efficient long-horizon navigation planning without the memory overhead of dense metric maps.",
+      correctAnswer: "True",
+      explanation:
+        "Topological maps abstract the environment into a graph where nodes represent distinctive places (rooms, intersections) and edges represent navigable paths between them; graph search (e.g., Dijkstra's) provides efficient long-horizon path planning, while local metric planners handle navigation between adjacent nodes.",
+      hints: [
+        "Think about how a city map can be represented as a graph of intersections and roads — the topological map is this abstraction for robot environments.",
+        "Topological maps scale to large buildings where dense metric maps would require enormous memory.",
+      ],
+    },
+    {
+      id: "q-rob-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "LiDAR inertial odometry methods (e.g., LIO-SAM, FAST-LIO) achieve robust localization by tightly coupling LiDAR scan matching with IMU pre-integration. What is the key benefit of tight coupling over loose coupling?",
+      options: [
+        "Tight coupling jointly optimizes LiDAR point-to-plane residuals and IMU pre-integration residuals in a single factor graph, providing motion estimates even during LiDAR degeneracy (e.g., in featureless corridors)",
+        "Tight coupling eliminates the need for IMU entirely by using LiDAR Doppler velocity",
+        "Tight coupling processes LiDAR and IMU data sequentially, with each correcting the other independently",
+        "Tight coupling is only applicable to 2D LiDAR and cannot be used with 3D spinning LiDARs",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Tight coupling jointly optimizes LiDAR and IMU measurements in a single factor graph (e.g., using GTSAM or iSAM2); during LiDAR degeneracy (featureless tunnels, open fields), the IMU pre-integration constrains the motion estimate, preventing drift — a capability that loose coupling (which treats the two subsystems independently) cannot provide.",
+      hints: [
+        "Loose coupling chains two independent estimators; tight coupling merges all measurements into one optimization.",
+        "IMU pre-integration provides high-rate motion priors that compensate when LiDAR feature extraction fails.",
+      ],
+    },
+  ],
+
+  "human-robot-interaction": [
+    {
+      id: "q-rob-kp38-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Shared autonomy systems combine human teleoperation input with robot autonomy. What is the primary motivation for blending human intent with robot assistance rather than using full teleoperation?",
+      options: [
+        "To compensate for human input noise, reduce cognitive load, and enable task completion with limited input bandwidth (e.g., a joystick instead of a full 6-DOF controller)",
+        "To replace human input entirely with autonomous control after the first few demonstrations",
+        "To ensure the robot never contacts the environment without explicit human approval",
+        "To reduce latency in the human-robot communication channel",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Shared autonomy (e.g., HIRL, LfD+autonomy systems) infers the human's high-level goal from their input and blends robot autonomy to assist: the robot handles fine motor control while the human provides intent, reducing cognitive load, correcting for noisy inputs, and enabling complex manipulation through limited-bandwidth interfaces.",
+      hints: [
+        "Think about how a driver-assistance system helps a human driver park — the human steers generally, the system fine-tunes.",
+        "Shared autonomy is especially valuable when the human's input device has fewer DOFs than the robot has DOFs.",
+      ],
+    },
+    {
+      id: "q-rob-kp38-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Intent prediction in HRI often models the human's goal as a Bayesian posterior updated over time as the human's trajectory is observed, enabling the robot to predict and proactively assist before the human completes their action.",
+      correctAnswer: "True",
+      explanation:
+        "Bayesian intent prediction maintains a distribution over possible human goals; as human motion is observed, the posterior is updated using a likelihood model (e.g., assuming humans take approximately optimal paths toward their goal); the robot uses this distribution to pre-position itself or pre-grasp objects in anticipation.",
+      hints: [
+        "Early in a motion, many goals are plausible; as the human's hand moves closer to one object, the posterior concentrates on that goal.",
+        "Proactive assistance requires predicting the goal before the human reaches it — Bayesian updating provides a principled way to do this.",
+      ],
+    },
+    {
+      id: "q-rob-kp38-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Natural language command following in robotics requires grounding language to robot actions and world states. What is the main challenge of the symbol grounding problem in this context?",
+      options: [
+        "Mapping natural language symbols (words and phrases) to physical robot actions and perceptual categories requires learning associations between language and sensorimotor experience that cannot be fully specified by syntax alone",
+        "Natural language parsing is too computationally expensive to run on robot hardware in real time",
+        "Robots cannot distinguish between different languages and must be retrained for each language",
+        "Symbol grounding only applies to spoken language and does not affect text-based command interfaces",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "The symbol grounding problem (Harnad 1990) asks how symbols acquire meaning for a physical system; in robotics, words like 'grab the heavy red mug' require grounding 'heavy', 'red', and 'mug' to perceptual properties and 'grab' to a motor skill — connections that must be learned through sensorimotor experience and cannot be captured by language statistics alone.",
+      hints: [
+        "A robot that knows only word co-occurrence statistics does not know what 'red' looks like or what 'grab' feels like.",
+        "Grounding connects abstract symbols to sensory inputs and motor outputs — bridging language and physical experience.",
+      ],
+    },
+  ],
+
+  "robot-manipulation-advanced": [
+    {
+      id: "q-rob-kp39-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Deformable object manipulation (e.g., cloth folding) is harder than rigid object manipulation primarily because:",
+      options: [
+        "Deformable objects have high-dimensional, history-dependent state spaces with complex nonlinear dynamics that are difficult to model and plan over",
+        "Deformable objects are always transparent, making them hard to detect with standard cameras",
+        "Robot grippers cannot exert sufficient force to manipulate deformable objects",
+        "Deformable objects require proprioceptive sensing that current robots lack",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Rigid objects have a 6-DOF state; deformable objects (cloth, rope, dough) have effectively infinite-dimensional configuration spaces. Their dynamics are governed by complex material properties (elasticity, plasticity, friction) that are history-dependent and difficult to model, making both planning and control far more challenging.",
+      hints: [
+        "Think about how many numbers you need to describe the state of every point on a cloth sheet vs. a rigid cup.",
+        "The history dependence of deformable objects means the current configuration depends on how it got there — unlike rigid bodies.",
+      ],
+    },
+    {
+      id: "q-rob-kp39-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Fluid handling in robotics (e.g., pouring liquid from a container) requires modeling free-surface fluid dynamics, making it one of the most challenging manipulation tasks due to the coupling between container tilt, pour rate, and fluid shape.",
+      correctAnswer: "True",
+      explanation:
+        "Pouring tasks require understanding fluid dynamics (surface tension, viscosity, turbulence), predicting pour trajectories as a function of container orientation and velocity, and perceiving the fluid level and pour accuracy — all of which are challenging to model precisely and sensitive to small variations in motion parameters.",
+      hints: [
+        "Unlike rigid or even deformable solid objects, fluids have no persistent shape and require fluid dynamics models.",
+        "Pouring accuracy depends on the exact tilt angle, speed, and distance from the target — all coupled through fluid dynamics.",
+      ],
+    },
+    {
+      id: "q-rob-kp39-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Cloth folding policies trained with reinforcement learning in simulation face which specific sim-to-real challenge beyond the standard reality gap?",
+      options: [
+        "Cloth material properties (stiffness, friction coefficient, stretch modulus) vary widely across different real fabrics and are difficult to identify and match in simulation, causing sim-to-real failures even with domain randomization",
+        "Cloth folding tasks are too simple for RL to learn effective policies, requiring human demonstration instead",
+        "Cloth simulator APIs are not compatible with standard RL frameworks like Gym or Isaac",
+        "Real cloth is always wet, making grasp force estimation impossible",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Cloth material properties vary dramatically (a silk scarf vs. denim jeans behave very differently), and simulators struggle to accurately model the full range; domain randomization over material properties helps but may not cover the real distribution, and the high-dimensional cloth state makes visual observation-based policies especially sensitive to appearance sim-to-real gaps.",
+      hints: [
+        "Think about how differently a thin silk cloth and a thick towel behave when folded — material properties matter enormously.",
+        "Even with domain randomization, the space of possible cloth materials is large and hard to sample from efficiently.",
+      ],
+    },
+  ],
+
+  "robot-actuators-sensing": [
+    {
+      id: "q-rob-kp40-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Series Elastic Actuators (SEAs) place a compliant spring between the motor and the output link. What is the primary advantage of this design for force-controlled manipulation?",
+      options: [
+        "The spring stores energy and measures force via its deflection, providing accurate force sensing, shock absorption, and passive compliance that protects the robot and environment during contact",
+        "The spring increases the maximum joint velocity by storing potential energy",
+        "The spring eliminates the need for any feedback control by acting as a mechanical filter",
+        "The spring increases joint stiffness, enabling higher-precision position control",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "In SEAs, the force at the output equals spring stiffness times spring deflection (measured by encoders), providing accurate, stable force sensing without expensive load cells; the spring also absorbs impact shocks and provides passive compliance during unintended contacts, making SEAs popular for collaborative robots (e.g., Baxter, PR2).",
+      hints: [
+        "Hooke's law: F = k * Δx — measuring spring deflection gives a direct force measurement.",
+        "Passive compliance from the spring means the robot naturally yields to unexpected forces, improving safety.",
+      ],
+    },
+    {
+      id: "q-rob-kp40-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Vision-based tactile sensors (e.g., GelSight, DIGIT) estimate contact geometry and shear forces by imaging the deformation of a gel-covered surface using an internal camera and lighting.",
+      correctAnswer: "True",
+      explanation:
+        "Vision-based tactile sensors coat a transparent elastomer gel with a reflective or colored layer; when an object contacts the gel surface, it deforms — an internal camera images this deformation, and photometric stereo or neural network processing recovers contact geometry (surface normals), contact area, and shear force direction from the image sequence.",
+      hints: [
+        "The gel deformation encodes contact geometry optically — the camera converts touch into vision.",
+        "GelSight-style sensors provide high spatial resolution tactile information by using the imaging system as a 'tactile retina'.",
+      ],
+    },
+    {
+      id: "q-rob-kp40-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Quasi-Direct Drive (QDD) actuators (as used in MIT Mini Cheetah and similar legged robots) use low gear-ratio transmissions. What specific advantage does this provide for legged locomotion compared to high gear-ratio motors?",
+      options: [
+        "High gear ratios increase output torque but also amplify motor friction and reflected inertia, making the joint stiff and unable to feel or respond to ground contact forces; QDD's low gear ratio preserves back-drivability and impact transparency for compliant, reactive leg control",
+        "Low gear ratios increase maximum joint velocity, enabling faster leg swing during running",
+        "QDD eliminates the need for joint encoders by using current sensing for position control",
+        "Low gear ratios reduce motor heat dissipation, allowing continuous high-torque operation",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "High gear ratios reflect motor inertia (by gear ratio squared) to the output, making the joint stiff and masking ground reaction forces; QDD's low gear ratio (1:6 to 1:9) preserves back-drivability so ground impact forces are directly felt by the motor, enabling proprioceptive force control and impact-tolerant leg design essential for dynamic legged locomotion.",
+      hints: [
+        "Reflected inertia scales as gear ratio squared — a 100:1 gearbox makes the joint feel 10,000x heavier to external forces.",
+        "Back-drivability means the output shaft can drive the motor backward — essential for sensing contact forces through the actuator.",
+      ],
+    },
+  ],
 };
 
 export default questions;
