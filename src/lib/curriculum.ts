@@ -1546,6 +1546,182 @@ export const courses: Course[] = [
       },
     ]
   },
+  // TIME SERIES ANALYSIS & FORECASTING
+  {
+    id: 'time-series-forecasting',
+    slug: 'time-series-forecasting',
+    name: 'Time Series Analysis & Forecasting',
+    description: 'Classical statistical models, deep learning for sequences, and foundation models for time series.',
+    topics: [
+      {
+        id: 'classical-time-series',
+        slug: 'classical-time-series',
+        name: 'Classical Time Series Models',
+        description: 'ARIMA, exponential smoothing, and statistical forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-1', slug: 'time-series-components', name: 'Trend, Seasonality & Stationarity' },
+          { id: 'ts-kp-2', slug: 'arima', name: 'ARIMA & SARIMA Models' },
+          { id: 'ts-kp-3', slug: 'exponential-smoothing', name: 'Exponential Smoothing (Holt-Winters)' },
+          { id: 'ts-kp-4', slug: 'spectral-analysis', name: 'Fourier Analysis & Spectral Decomposition' },
+          { id: 'ts-kp-5', slug: 'prophet-model', name: 'Facebook Prophet & Decomposition Models' },
+        ]
+      },
+      {
+        id: 'deep-time-series',
+        slug: 'deep-time-series',
+        name: 'Deep Learning for Time Series',
+        description: 'LSTM, TCN, and Transformer-based sequence models.',
+        knowledgePoints: [
+          { id: 'ts-kp-6', slug: 'lstm-time-series', name: 'LSTM & GRU for Sequence Forecasting' },
+          { id: 'ts-kp-7', slug: 'temporal-cnn', name: 'Temporal Convolutional Networks (TCN)' },
+          { id: 'ts-kp-8', slug: 'transformer-time-series', name: 'Informer, Autoformer & Transformer Forecasting' },
+          { id: 'ts-kp-9', slug: 'patchtst', name: 'PatchTST & Channel Independence' },
+          { id: 'ts-kp-10', slug: 'timesnet', name: 'TimesNet & 2D Temporal Variation Modeling' },
+        ]
+      },
+      {
+        id: 'probabilistic-forecasting',
+        slug: 'probabilistic-forecasting',
+        name: 'Probabilistic Forecasting',
+        description: 'Uncertainty quantification, conformal prediction, and distribution forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-11', slug: 'quantile-regression-ts', name: 'Quantile Regression & Prediction Intervals' },
+          { id: 'ts-kp-12', slug: 'deepar', name: 'DeepAR & Probabilistic Deep Learning' },
+          { id: 'ts-kp-13', slug: 'normalizing-flows-ts', name: 'Normalizing Flows for Time Series' },
+          { id: 'ts-kp-14', slug: 'conformal-prediction', name: 'Conformal Prediction for Time Series' },
+          { id: 'ts-kp-15', slug: 'bayesian-time-series', name: 'Bayesian Structural Time Series' },
+        ]
+      },
+      {
+        id: 'anomaly-detection-ts',
+        slug: 'anomaly-detection-ts',
+        name: 'Anomaly Detection in Time Series',
+        description: 'Statistical and deep learning methods for detecting anomalies.',
+        knowledgePoints: [
+          { id: 'ts-kp-16', slug: 'statistical-anomaly', name: 'Statistical Anomaly Detection (Z-Score, IQR)' },
+          { id: 'ts-kp-17', slug: 'isolation-forest-ts', name: 'Isolation Forest & Unsupervised Anomaly' },
+          { id: 'ts-kp-18', slug: 'lstm-anomaly', name: 'LSTM Autoencoders for Anomaly Detection' },
+          { id: 'ts-kp-19', slug: 'transformers-anomaly', name: 'Transformer-Based Anomaly Detection' },
+          { id: 'ts-kp-20', slug: 'real-time-anomaly', name: 'Real-Time Streaming Anomaly Detection' },
+        ]
+      },
+      {
+        id: 'ts-foundation-models',
+        slug: 'ts-foundation-models',
+        name: 'Time Series Foundation Models',
+        description: 'Large pretrained models for universal time series forecasting.',
+        knowledgePoints: [
+          { id: 'ts-kp-21', slug: 'timesfm', name: 'TimesFM & Google\'s Time Series Foundation Model' },
+          { id: 'ts-kp-22', slug: 'moirai', name: 'Moirai & Universal Forecasting' },
+          { id: 'ts-kp-23', slug: 'chronos', name: 'Chronos & Probabilistic Foundation Forecasting' },
+          { id: 'ts-kp-24', slug: 'lag-llama', name: 'Lag-Llama & Decoder-Only TS Models' },
+          { id: 'ts-kp-25', slug: 'zero-shot-forecasting', name: 'Zero-Shot & Few-Shot Time Series Forecasting' },
+        ]
+      },
+      {
+        id: 'ts-applications',
+        slug: 'ts-applications',
+        name: 'Time Series Applications',
+        description: 'Financial forecasting, demand planning, and IoT sensor analysis.',
+        knowledgePoints: [
+          { id: 'ts-kp-26', slug: 'financial-forecasting', name: 'Financial Time Series & Market Prediction' },
+          { id: 'ts-kp-27', slug: 'demand-forecasting', name: 'Demand Forecasting & Inventory Optimization' },
+          { id: 'ts-kp-28', slug: 'iot-sensor-analysis', name: 'IoT Sensor Analysis & Predictive Maintenance' },
+          { id: 'ts-kp-29', slug: 'climate-forecasting', name: 'Climate & Weather Forecasting with ML' },
+          { id: 'ts-kp-30', slug: 'multivariate-ts', name: 'Multivariate Time Series & Correlation' },
+        ]
+      },
+    ]
+  },
+
+  // RECOMMENDER SYSTEMS & RANKING
+  {
+    id: 'recommender-systems',
+    slug: 'recommender-systems',
+    name: 'Recommender Systems & Ranking',
+    description: 'Collaborative filtering, deep learning recommenders, and learning-to-rank for search and feeds.',
+    topics: [
+      {
+        id: 'collaborative-filtering',
+        slug: 'collaborative-filtering',
+        name: 'Collaborative Filtering',
+        description: 'Matrix factorization, user-item embeddings, and memory-based CF.',
+        knowledgePoints: [
+          { id: 'rs-kp-1', slug: 'user-item-cf', name: 'User-Based & Item-Based Collaborative Filtering' },
+          { id: 'rs-kp-2', slug: 'matrix-factorization', name: 'Matrix Factorization (SVD, ALS)' },
+          { id: 'rs-kp-3', slug: 'implicit-feedback', name: 'Implicit Feedback & BPR' },
+          { id: 'rs-kp-4', slug: 'neural-cf', name: 'Neural Collaborative Filtering (NCF)' },
+          { id: 'rs-kp-5', slug: 'variational-autoencoders-cf', name: 'VAE for Collaborative Filtering (Mult-VAE)' },
+        ]
+      },
+      {
+        id: 'content-based-filtering',
+        slug: 'content-based-filtering',
+        name: 'Content-Based & Hybrid Methods',
+        description: 'Feature-based recommendations, hybrid systems, and contextual bandits.',
+        knowledgePoints: [
+          { id: 'rs-kp-6', slug: 'content-based-filtering', name: 'Content-Based Filtering & TF-IDF Profiles' },
+          { id: 'rs-kp-7', slug: 'wide-deep', name: 'Wide & Deep Learning (Google Play)' },
+          { id: 'rs-kp-8', slug: 'contextual-bandits-rec', name: 'Contextual Bandits for Recommendations' },
+          { id: 'rs-kp-9', slug: 'knowledge-graph-rec', name: 'Knowledge Graph Recommendations (KGAT)' },
+          { id: 'rs-kp-10', slug: 'hybrid-recommendation', name: 'Hybrid Recommender Systems' },
+        ]
+      },
+      {
+        id: 'sequential-recommendations',
+        slug: 'sequential-recommendations',
+        name: 'Sequential & Session-Based Recommendations',
+        description: 'RNN, attention, and transformer models for sequential user behavior.',
+        knowledgePoints: [
+          { id: 'rs-kp-11', slug: 'gru4rec', name: 'GRU4Rec & RNN-Based Session Recommendations' },
+          { id: 'rs-kp-12', slug: 'bert4rec', name: 'BERT4Rec & Self-Supervised Sequential Modeling' },
+          { id: 'rs-kp-13', slug: 'sasrec', name: 'SASRec & Self-Attentive Sequential Recommendations' },
+          { id: 'rs-kp-14', slug: 'session-based-gnn', name: 'Session-Based GNN Recommendations (SR-GNN)' },
+          { id: 'rs-kp-15', slug: 'llm-recommendations', name: 'LLM-Based Recommendations (P5, TALLRec)' },
+        ]
+      },
+      {
+        id: 'learning-to-rank',
+        slug: 'learning-to-rank',
+        name: 'Learning to Rank',
+        description: 'Pointwise, pairwise, listwise ranking methods for search and retrieval.',
+        knowledgePoints: [
+          { id: 'rs-kp-16', slug: 'ranknet', name: 'RankNet & Pairwise Learning-to-Rank' },
+          { id: 'rs-kp-17', slug: 'lambdarank', name: 'LambdaRank & LambdaMART' },
+          { id: 'rs-kp-18', slug: 'listwise-ranking', name: 'ListNet, ListMLE & Listwise Approaches' },
+          { id: 'rs-kp-19', slug: 'neural-ranking', name: 'Neural Ranking (DSSM, BERT Re-ranker)' },
+          { id: 'rs-kp-20', slug: 'ndcg-map', name: 'NDCG, MAP & Ranking Evaluation Metrics' },
+        ]
+      },
+      {
+        id: 'industry-recommenders',
+        slug: 'industry-recommenders',
+        name: 'Industry Recommender Architectures',
+        description: 'Two-tower models, retrieval-ranking pipelines, and production rec systems.',
+        knowledgePoints: [
+          { id: 'rs-kp-21', slug: 'two-tower-model', name: 'Two-Tower Models & ANN Retrieval' },
+          { id: 'rs-kp-22', slug: 'multi-stage-ranking', name: 'Multi-Stage Ranking Pipelines' },
+          { id: 'rs-kp-23', slug: 'mmoe-pgates', name: 'MMoE & Multi-Task Recommendation' },
+          { id: 'rs-kp-24', slug: 'dlrm', name: 'DLRM & Facebook Recommendation Architecture' },
+          { id: 'rs-kp-25', slug: 'feature-cross', name: 'Feature Crossing (DeepFM, xDeepFM)' },
+        ]
+      },
+      {
+        id: 'rec-system-challenges',
+        slug: 'rec-system-challenges',
+        name: 'Recommender System Challenges',
+        description: 'Cold start, filter bubbles, diversity, and online learning.',
+        knowledgePoints: [
+          { id: 'rs-kp-26', slug: 'cold-start', name: 'Cold Start Problem & Solutions' },
+          { id: 'rs-kp-27', slug: 'diversity-serendipity', name: 'Diversity, Serendipity & Beyond Accuracy' },
+          { id: 'rs-kp-28', slug: 'filter-bubble', name: 'Filter Bubbles, Bias & Fairness in Recs' },
+          { id: 'rs-kp-29', slug: 'online-learning-rec', name: 'Online Learning & Real-Time Personalization' },
+          { id: 'rs-kp-30', slug: 'causal-recommendation', name: 'Causal Recommendation & Debiasing' },
+        ]
+      },
+    ]
+  },
+
   // MULTIMODAL LEARNING & FOUNDATION MODELS
   {
     id: 'multimodal-learning',
@@ -1555,6 +1731,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'vision-language-models',
+        slug: 'vision-language-models',
         name: 'Vision-Language Models',
         description: 'CLIP, ALIGN, and contrastive vision-language pretraining.',
         knowledgePoints: [
@@ -1567,6 +1744,7 @@ export const courses: Course[] = [
       },
       {
         id: 'large-multimodal-models',
+        slug: 'large-multimodal-models',
         name: 'Large Multimodal Models (LMMs)',
         description: 'GPT-4V, LLaVA, Gemini, and instruction-tuned multimodal LLMs.',
         knowledgePoints: [
@@ -1579,6 +1757,7 @@ export const courses: Course[] = [
       },
       {
         id: 'audio-speech-models',
+        slug: 'audio-speech-models',
         name: 'Audio, Speech & Music Models',
         description: 'Whisper, speech synthesis, music generation, and audio-visual models.',
         knowledgePoints: [
@@ -1591,6 +1770,7 @@ export const courses: Course[] = [
       },
       {
         id: 'foundation-model-theory',
+        slug: 'foundation-model-theory',
         name: 'Foundation Model Theory & Scaling',
         description: 'Scaling laws, emergent abilities, and foundation model training.',
         knowledgePoints: [
@@ -1603,6 +1783,7 @@ export const courses: Course[] = [
       },
       {
         id: 'embodied-ai',
+        slug: 'embodied-ai',
         name: 'Embodied AI & Robotics Foundation Models',
         description: 'RT-2, Gato, and foundation models for robot control.',
         knowledgePoints: [
@@ -1615,6 +1796,7 @@ export const courses: Course[] = [
       },
       {
         id: 'multimodal-evaluation',
+        slug: 'multimodal-evaluation',
         name: 'Multimodal Evaluation & Benchmarks',
         description: 'Benchmarks for VQA, image captioning, and multimodal reasoning.',
         knowledgePoints: [
@@ -1637,6 +1819,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'quantization',
+        slug: 'quantization',
         name: 'Quantization',
         description: 'Post-training and quantization-aware training for efficient inference.',
         knowledgePoints: [
@@ -1649,6 +1832,7 @@ export const courses: Course[] = [
       },
       {
         id: 'pruning',
+        slug: 'pruning',
         name: 'Neural Network Pruning',
         description: 'Magnitude pruning, structured pruning, and sparse neural networks.',
         knowledgePoints: [
@@ -1661,6 +1845,7 @@ export const courses: Course[] = [
       },
       {
         id: 'knowledge-distillation',
+        slug: 'knowledge-distillation',
         name: 'Knowledge Distillation',
         description: 'Teacher-student training, logit distillation, and feature-level transfer.',
         knowledgePoints: [
@@ -1673,6 +1858,7 @@ export const courses: Course[] = [
       },
       {
         id: 'neural-architecture-search',
+        slug: 'neural-architecture-search',
         name: 'Neural Architecture Search',
         description: 'AutoML, NAS methods, and efficient architecture design.',
         knowledgePoints: [
@@ -1685,6 +1871,7 @@ export const courses: Course[] = [
       },
       {
         id: 'hardware-ml',
+        slug: 'hardware-ml',
         name: 'Hardware Acceleration & Edge ML',
         description: 'GPU/TPU/NPU optimization, CUDA programming, and edge deployment.',
         knowledgePoints: [
@@ -1697,6 +1884,7 @@ export const courses: Course[] = [
       },
       {
         id: 'inference-optimization',
+        slug: 'inference-optimization',
         name: 'Inference Optimization',
         description: 'vLLM, Flash Attention, speculative decoding, and serving optimization.',
         knowledgePoints: [
@@ -1719,6 +1907,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'federated-foundations',
+        slug: 'federated-foundations',
         name: 'Federated Learning Foundations',
         description: 'FL setup, FedAvg, and the challenges of distributed training.',
         knowledgePoints: [
@@ -1731,6 +1920,7 @@ export const courses: Course[] = [
       },
       {
         id: 'differential-privacy',
+        slug: 'differential-privacy',
         name: 'Differential Privacy',
         description: 'DP fundamentals, DP-SGD, and privacy accounting.',
         knowledgePoints: [
@@ -1743,6 +1933,7 @@ export const courses: Course[] = [
       },
       {
         id: 'secure-computation',
+        slug: 'secure-computation',
         name: 'Secure Multi-Party Computation',
         description: 'Cryptographic protocols for privacy-preserving ML.',
         knowledgePoints: [
@@ -1755,6 +1946,7 @@ export const courses: Course[] = [
       },
       {
         id: 'robust-federated',
+        slug: 'robust-federated',
         name: 'Robust & Byzantine-Tolerant FL',
         description: 'Defending against poisoning attacks and Byzantine clients in FL.',
         knowledgePoints: [
@@ -1767,6 +1959,7 @@ export const courses: Course[] = [
       },
       {
         id: 'personalized-fl',
+        slug: 'personalized-fl',
         name: 'Personalized Federated Learning',
         description: 'Per-client adaptation, meta-learning in FL, and hybrid approaches.',
         knowledgePoints: [
@@ -1779,6 +1972,7 @@ export const courses: Course[] = [
       },
       {
         id: 'privacy-ml-applications',
+        slug: 'privacy-ml-applications',
         name: 'Privacy-Preserving ML Applications',
         description: 'Healthcare, finance, and industry applications of privacy-preserving ML.',
         knowledgePoints: [
@@ -1801,6 +1995,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'causal-foundations',
+        slug: 'causal-foundations',
         name: 'Causal Reasoning Foundations',
         description: 'Correlation vs causation, potential outcomes, and structural causal models.',
         knowledgePoints: [
@@ -1813,6 +2008,7 @@ export const courses: Course[] = [
       },
       {
         id: 'treatment-effects',
+        slug: 'treatment-effects',
         name: 'Treatment Effect Estimation',
         description: 'ATE, ATT, CATE, and methods for estimating causal effects from data.',
         knowledgePoints: [
@@ -1825,6 +2021,7 @@ export const courses: Course[] = [
       },
       {
         id: 'causal-discovery',
+        slug: 'causal-discovery',
         name: 'Causal Discovery',
         description: 'Learning causal structure from observational data.',
         knowledgePoints: [
@@ -1837,6 +2034,7 @@ export const courses: Course[] = [
       },
       {
         id: 'heterogeneous-effects',
+        slug: 'heterogeneous-effects',
         name: 'Heterogeneous Treatment Effects',
         description: 'CATE estimation, meta-learners, and causal forests.',
         knowledgePoints: [
@@ -1849,6 +2047,7 @@ export const courses: Course[] = [
       },
       {
         id: 'causal-representation',
+        slug: 'causal-representation',
         name: 'Causal Representation Learning',
         description: 'Learning disentangled, causal representations and domain generalization.',
         knowledgePoints: [
@@ -1861,6 +2060,7 @@ export const courses: Course[] = [
       },
       {
         id: 'causal-applications',
+        slug: 'causal-applications',
         name: 'Causal ML Applications',
         description: 'Uplift modeling, policy learning, and causal fairness.',
         knowledgePoints: [
@@ -1883,6 +2083,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'diffusion-foundations',
+        slug: 'diffusion-foundations',
         name: 'Diffusion Model Foundations',
         description: 'Forward process, reverse denoising, and the DDPM framework.',
         knowledgePoints: [
@@ -1895,6 +2096,7 @@ export const courses: Course[] = [
       },
       {
         id: 'latent-diffusion',
+        slug: 'latent-diffusion',
         name: 'Latent Diffusion & Stable Diffusion',
         description: 'Latent space diffusion, text-to-image, and Stable Diffusion architecture.',
         knowledgePoints: [
@@ -1907,6 +2109,7 @@ export const courses: Course[] = [
       },
       {
         id: 'advanced-diffusion',
+        slug: 'advanced-diffusion',
         name: 'Advanced Diffusion Architectures',
         description: 'DiT, flow matching, consistency models, and rectified flow.',
         knowledgePoints: [
@@ -1919,6 +2122,7 @@ export const courses: Course[] = [
       },
       {
         id: 'video-audio-generation',
+        slug: 'video-audio-generation',
         name: 'Video & Audio Generation',
         description: 'Temporal diffusion, text-to-video, and audio synthesis models.',
         knowledgePoints: [
@@ -1931,6 +2135,7 @@ export const courses: Course[] = [
       },
       {
         id: 'diffusion-training',
+        slug: 'diffusion-training',
         name: 'Training & Fine-Tuning Diffusion Models',
         description: 'DreamBooth, textual inversion, RLHF for diffusion, and efficient training.',
         knowledgePoints: [
@@ -1943,6 +2148,7 @@ export const courses: Course[] = [
       },
       {
         id: 'diffusion-applications',
+        slug: 'diffusion-applications',
         name: 'Diffusion Applications & Multimodal',
         description: 'Real-world applications in science, medicine, and multimodal generation.',
         knowledgePoints: [
@@ -1965,6 +2171,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'graph-foundations',
+        slug: 'graph-foundations',
         name: 'Graph Theory & Representations',
         description: 'Graph data structures, adjacency matrices, and graph properties for ML.',
         knowledgePoints: [
@@ -1977,6 +2184,7 @@ export const courses: Course[] = [
       },
       {
         id: 'message-passing',
+        slug: 'message-passing',
         name: 'Message Passing Neural Networks',
         description: 'MPNN framework, aggregation functions, and graph convolution variants.',
         knowledgePoints: [
@@ -1989,6 +2197,7 @@ export const courses: Course[] = [
       },
       {
         id: 'graph-transformers',
+        slug: 'graph-transformers',
         name: 'Graph Transformers & Scalable GNNs',
         description: 'Attention mechanisms on graphs, scalable training, and graph foundation models.',
         knowledgePoints: [
@@ -2001,6 +2210,7 @@ export const courses: Course[] = [
       },
       {
         id: 'graph-generative',
+        slug: 'graph-generative',
         name: 'Graph Generation & Molecular ML',
         description: 'Generating graphs, molecular property prediction, and drug discovery.',
         knowledgePoints: [
@@ -2013,6 +2223,7 @@ export const courses: Course[] = [
       },
       {
         id: 'knowledge-graphs',
+        slug: 'knowledge-graphs',
         name: 'Knowledge Graphs & Link Prediction',
         description: 'Knowledge graph embeddings, relation learning, and reasoning.',
         knowledgePoints: [
@@ -2025,6 +2236,7 @@ export const courses: Course[] = [
       },
       {
         id: 'geometric-dl',
+        slug: 'geometric-dl',
         name: 'Geometric Deep Learning',
         description: 'Symmetry, equivariance, and learning on manifolds and point clouds.',
         knowledgePoints: [
