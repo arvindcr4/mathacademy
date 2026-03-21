@@ -16,8 +16,7 @@ const questions: Record<string, Question[]> = {
         "Learning a curriculum that gradually increases task difficulty during training",
       ],
       correctAnswer: 1,
-      explanation:
-        "Meta-learning aims to extract shared structure across tasks so that a learner can adapt quickly to a new task using only a handful of examples - solving the few-shot learning challenge.",
+      explanation: "Meta-learning aims to extract shared structure across tasks so that a learner can adapt quickly to a new task using only a handful of examples — solving the few-shot learning challenge.\n\n**Step 1:** Identify the core challenge. In standard supervised learning, we need many labelled examples per class, but in many real-world scenarios we only have a few examples per new task.\n\n**Step 2:** Meta-learning addresses this by learning an inductive bias — an initialisation, a metric, or an adaptation strategy — from a distribution of related training tasks.\n\n**Step 3:** At meta-test time, the learned bias enables fast adaptation to genuinely novel tasks using only a small support set — the hallmark of few-shot learning.",
       hints: [
         'Think about what "learning to learn" implies: the meta-learner is learning how to learn new tasks.',
         'The key word is "fast adaptation" - the meta-learner should need very little new data per task.',
