@@ -1781,7 +1781,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'FastSpeech 2 eliminates the autoregressive mel-spectrogram generation step of Tacotron by using a non-autoregressive feed-forward Transformer with explicit duration, pitch, and energy predictors, achieving much faster inference.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'FastSpeech 2 (Ren et al., 2021) uses a length regulator to expand phoneme representations to frame level using a predicted duration (from a forced-aligned teacher), then predicts pitch and energy per frame. Since all frames are predicted in parallel (not autoregressively), inference is ~30x faster than Tacotron 2 with comparable quality.',
       hints: [
         'Autoregressive: generate frame N before frame N+1; non-autoregressive: generate all frames simultaneously.',
@@ -1831,7 +1831,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'WaveGlow is a flow-based vocoder that can be trained to maximise exact log-likelihood and performs inference by running the flow in reverse, making it non-autoregressive and parallelisable.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'WaveGlow (Prenger et al., 2019) combines WaveNet-style affine coupling layers with Glow\'s multi-scale architecture. Training maximises the exact log-likelihood p(x) = p(z)|det J|⁻¹ via the change-of-variables formula (z = f(x)). Inference inverts f: x = f⁻¹(z) — all samples are generated in parallel, giving real-time or faster synthesis without the sequential bottleneck of WaveNet.',
       hints: [
         'Normalising flows are invertible by design: train z = f(x), infer x = f⁻¹(z).',
@@ -1881,7 +1881,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Attention-based keyword spotting (using a soft attention mechanism over audio frames) allows the model to focus on the most discriminative temporal regions of the keyword, improving robustness to noise and different speaking rates.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Attention-based KWS (de Andrade et al., 2018; Berg et al., 2021) computes a weighted sum over frame-level features, emphasising frames containing the keyword acoustics. This is more robust than average pooling (which includes silent frames) and handles variable speaking rates better than fixed-length feature windows.',
       hints: [
         'In noisy environments, not all frames are equally informative—attention can down-weight noise frames.',
@@ -1931,7 +1931,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'DiffSinger uses a diffusion model conditioned on a shallow mel spectrogram predicted by a fast acoustic model, acting as a warm start that reduces the number of required diffusion steps for singing voice synthesis.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'DiffSinger (Liu et al., 2022) introduces a "shallow diffusion mechanism": a lightweight acoustic model first generates a rough mel spectrogram M₀; the diffusion model then refines M₀ over K steps (e.g., K=100 vs 1000 for cold start from noise). This reduces inference steps by ~10x while maintaining quality, addressing the diffusion vocoder latency problem in SVS.',
       hints: [
         'Cold start: diffuse from pure noise → many steps needed. Warm start: diffuse from a rough prediction → far fewer steps.',
@@ -1981,7 +1981,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'CLAP (Contrastive Language-Audio Pretraining) uses contrastive learning to align audio and text representations in a shared embedding space, enabling zero-shot audio classification by comparing audio embeddings to text prompt embeddings.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'CLAP (Wu et al., 2023) trains on (audio clip, text description) pairs with InfoNCE loss: matching pairs are pushed close, non-matching pairs pushed apart in the joint embedding space. Zero-shot classification: compute embeddings for class prompts ("sound of rain", "dog barking"), compute audio embedding, predict the closest prompt. No audio-specific fine-tuning required for new classes.',
       hints: [
         'CLAP is to audio what CLIP is to images: contrastive pretraining on large (audio, text) pair datasets.',
@@ -2031,7 +2031,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Foley synthesis — generating sound effects that match video content — requires cross-modal alignment between audio and visual modalities, typically achieved by conditioning the audio generation model on visual frame features.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Video-to-Foley synthesis (SpecVQGAN, FoleyCrafter) conditions audio generation on visual features extracted from each video frame (e.g., ResNet, ViT features). The model learns cross-modal correspondences: footsteps align with walking feet, water sounds align with water visuals. Temporal alignment is enforced by conditioning on per-frame features throughout the audio generation process.',
       hints: [
         'Foley artists in film manually create sound effects synchronised to video; Foley synthesis automates this.',
@@ -2081,7 +2081,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'Passive acoustic monitoring (PAM) uses autonomous recording units deployed in the field to collect continuous audio data, and ML models process the recordings to detect and count wildlife vocalizations at scale.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'PAM with ML is transforming ecology: ARUs (Autonomous Recording Units) record continuously for weeks; models like BirdNET, ORCA-SPOT (orca detection), and PUMILIO (bat calls) process terabytes of audio to produce species occurrence data at scale impossible with human review. This enables biodiversity monitoring across vast habitats.',
       hints: [
         'Traditional wildlife surveys: human observer counts. PAM: continuous audio + ML = 24/7 coverage at low cost.',
@@ -2131,7 +2131,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Spectral artifacts in the high-frequency range (> 8 kHz) are a reliable indicator of neural TTS spoofing because most vocoders introduce phase discontinuities or oversmoothing at high frequencies that genuine speech does not exhibit.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'Mel spectrogram-based TTS/vocoders often use mel filterbanks covering only 0-8 kHz; the HiFi-GAN or WaveNet vocoder must "hallucinate" the 8-22 kHz region. This produces characteristic artifacts: spectral repetitions, phase discontinuities, and oversmoothed harmonics detectable by anti-spoofing models trained to examine high-frequency regions. RawNet2 operates directly on waveforms to capture these subtle artifacts.',
       hints: [
         'Human speech has harmonics extending to 10+ kHz with complex phase structure; vocoders may smooth or repeat these.',
@@ -2181,7 +2181,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'AudioMAE (Masked Autoencoders for Audio) learns audio representations by masking patches of the input spectrogram and training the model to reconstruct the masked patches, following the same self-supervised framework as image MAE.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'AudioMAE (He et al., adapting image MAE to audio): the mel spectrogram is split into patches; a high masking ratio (~80%) is applied; a ViT encoder processes only visible patches; a lightweight decoder reconstructs the full spectrogram. Pre-trained representations transfer effectively to downstream audio classification (AudioSet, ESC-50) and show complementary strengths to CLAP\'s contrastive approach.',
       hints: [
         'Image MAE: mask 75% of image patches, reconstruct with a ViT. AudioMAE: same idea on mel spectrogram patches.',
@@ -2231,7 +2231,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Classifier-free guidance (CFG) is commonly used in audio diffusion models to improve prompt adherence: during inference, the model\'s score is extrapolated between the unconditional and conditional predictions, with a guidance scale > 1 amplifying the effect of the condition.',
-      correctAnswer: 'true',
+      correctAnswer: 'True',
       explanation: 'CFG for audio: ε_guided = ε_uncond + γ·(ε_cond − ε_uncond), where γ is the guidance scale. At γ=1, standard conditional generation. At γ>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with γ typically 3-7 for audio generation.',
       hints: [
         'CFG training: randomly drop the condition (replace with null/empty) during training so the model learns both conditional and unconditional score.',
