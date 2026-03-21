@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
-import { getQuestions, getAllQuestions } from './registry'
+import { getQuestions, getAllQuestions, registerQuestions } from './registry'
+import type { QuestionsMap } from './registry'
 
 // Import all question files to trigger registration
 import './index'
@@ -8,7 +9,7 @@ describe('Question Registry', () => {
 
   describe('getQuestions', () => {
     it('should return questions for a valid slug', () => {
-      const questions = getQuestions('rl-fundamentals')
+      const questions = getQuestions('policy-definition')
       expect(Array.isArray(questions)).toBe(true)
       expect(questions.length).toBeGreaterThan(0)
     })

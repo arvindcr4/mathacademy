@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
         "Equivariance to the SE(3) group (3D rotations and translations) is essential for molecular diffusion models, because valid molecules must be generated regardless of their absolute orientation in space.",
       correctAnswer: "True",
       explanation:
-        "A valid molecule should have the same physical properties and binding behavior regardless of how it is oriented or positioned in space. If the generative model is not SE(3)-equivariant, it would need to learn separately that a benzene ring rotated by $45°$ is identical to the original - vastly increasing sample complexity and data requirements.\n\nEquivariant models (EGNN, SE(3)-Transformer, SEGNN) encode this symmetry by construction: rotating the input rotates the output by the same amount, and translating the input translates the output by the same amount. Permutation invariance (over atom ordering) is also required since molecules have no canonical atom ordering.",
+        "A valid molecule should have the same physical properties and binding behavior regardless of how it is oriented or positioned in space.\n\n**Step 1**\n\nIf the generative model is not SE(3)-equivariant, it would need to learn separately that a benzene ring rotated by $45°$ is identical to the original - vastly increasing sample complexity and data requirements.\n\n**Step 2**\n\nEquivariant models (EGNN, SE(3)-Transformer, SEGNN) encode this symmetry by construction: rotating the input rotates the output by the same amount, and translating the input translates the output by the same amount.\n\n**Step 3**\n\nPermutation invariance (over atom ordering) is also required since molecules have no canonical atom ordering.",
       hints: [
         "SE(3) = Special Euclidean group in 3D = rotations (SO(3)) + translations.",
         "Permutation invariance is also necessary - molecules have no canonical atom ordering, so the model must produce the same output regardless of how atoms are indexed.",
@@ -948,7 +948,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DiffDock defines the ligand pose by three components:\n1. **Translation**: position of the ligand center in $\\mathbb{R}^3$.\n2. **Rotation**: orientation of the rigid ligand on SO(3).\n3. **Torsion angles**: internal conformations via $\\mathbb{T}^n$ (the $n$-dimensional torus for $n$ rotatable bonds).\n\nDiffusion runs separately on each component, with separate score networks, and the reverse process denoises all components jointly. This factored representation avoids the curse of dimensionality that would arise from diffusing over all atomic coordinates simultaneously, and generalizes efficiently across molecules of different sizes.",
+        "DiffDock defines the ligand pose by three components.\n\n**Step 1**\n\n1. **Translation**: position of the ligand center in $\\mathbb{R}^3$.\n2. **Rotation**: orientation of the rigid ligand on SO(3).\n3. **Torsion angles**: internal conformations via $\\mathbb{T}^n$ (the $n$-dimensional torus for $n$ rotatable bonds).\n\n**Step 2**\n\nDiffusion runs separately on each component, with separate score networks, and the reverse process denoises all components jointly.\n\n**Step 3**\n\nThis factored representation avoids the curse of dimensionality that would arise from diffusing over all atomic coordinates simultaneously, and generalizes efficiently across molecules of different sizes.",
       hints: [
         "Docking = finding the correct 3D pose (translation, rotation, conformation) of a small molecule bound to a protein.",
         "SO(3) diffusion uses the geodesic distance on the rotation manifold as the noise metric, which is distinct from Euclidean diffusion.",
@@ -971,7 +971,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In LLM RLHF, sequences are typically $< 1000$ tokens. In diffusion RLHF, each 'step' of the denoising chain is a high-dimensional continuous action (the denoised image $x_{t-1}$), and there are $T = 1000$ such steps. The reward $r(x_0)$ is only observed at the end of the chain, creating a $T$-step credit assignment problem.\n\nDDPO (Black et al., 2023) adapts PPO to diffusion by treating each denoising step as an RL action and backpropagating through the entire denoising chain (using importance sampling for efficiency). The denoising chain is analogous to a very long Markov decision process.",
+        "In LLM RLHF, sequences are typically $< 1000$ tokens. In diffusion RLHF, each 'step' of the denoising chain is a high-dimensional continuous action (the denoised image $x_{t-1}$), and there are $T = 1000$ such steps.\n\n**Step 1**\n\nThe reward $r(x_0)$ is only observed at the end of the chain, creating a $T$-step credit assignment problem.\n\n**Step 2**\n\nDDPO (Black et al., 2023) adapts PPO to diffusion by treating each denoising step as an RL action and backpropagating through the entire denoising chain (using importance sampling for efficiency).\n\n**Step 3**\n\nThe denoising chain is analogous to a very long Markov decision process.",
       hints: [
         "The denoising chain is analogous to a very long Markov chain in RL - reward shaping and truncated backpropagation are common practical tricks.",
         "DDPO formulates diffusion sampling as a POMDP and applies policy gradient methods adapted to the continuous, high-dimensional action space.",
@@ -985,7 +985,7 @@ const questions: Record<string, Question[]> = {
         "Diffusion-DPO directly optimizes a diffusion model using preference pairs (winning/losing images) without requiring an explicit trained reward model.",
       correctAnswer: "True",
       explanation:
-        "Diffusion-DPO (Wallace et al., 2023) adapts Direct Preference Optimization (DPO) to diffusion models. Given paired images $(x_w, x_l)$ where a human prefers $x_w$ over $x_l$, it directly optimizes the diffusion model to increase the likelihood of generating $x_w$ over $x_l$, without training a separate reward model.\n\nThe DPO objective for diffusion uses the ELBO to tractably compute the implicit reward difference. This is analogous to how DPO works in LLMs - bypassing the reward model training step entirely.",
+        "Diffusion-DPO (Wallace et al., 2023) adapts Direct Preference Optimization (DPO) to diffusion models.\n\n**Step 1**\n\nGiven paired images $(x_w, x_l)$ where a human prefers $x_w$ over $x_l$, it directly optimizes the diffusion model to increase the likelihood of generating $x_w$ over $x_l$, without training a separate reward model.\n\n**Step 2**\n\nThe DPO objective for diffusion uses the ELBO to tractably compute the implicit reward difference.\n\n**Step 3**\n\nThis is analogous to how DPO works in LLMs - bypassing the reward model training step entirely.",
       hints: [
         "Diffusion-DPO $\\approx$ DPO applied to the DDPM ELBO instead of log-likelihoods of token sequences.",
         "The 'implicit reward' in DPO is $\\log[\\pi_\\theta(x)/\\pi_\\text{ref}(x)]$ - the log-probability ratio of the current model and the reference model.",
@@ -1005,7 +1005,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "DDPO's key insight is adapting PPO's clipped surrogate objective to diffusion. Instead of generating new $T$-step trajectories for every gradient update (prohibitively expensive - each sample requires $T$ forward passes), DDPO stores old trajectories and uses importance sampling weights $\\pi_\\theta(\\tau)/\\pi_{\\theta_\\text{old}}(\\tau)$ to correct for the policy change.\n\nThe PPO clip prevents the importance weight ratio from growing too large, which maintains training stability and prevents the policy from changing too drastically in one update.",
+        "DDPO's key insight is adapting PPO's clipped surrogate objective to diffusion.\n\n**Step 1**\n\nInstead of generating new $T$-step trajectories for every gradient update (prohibitively expensive - each sample requires $T$ forward passes), DDPO stores old trajectories and uses importance sampling weights $\\pi_\\theta(\\tau)/\\pi_{\\theta_\\text{old}}(\\tau)$ to correct for the policy change.\n\n**Step 2**\n\nThe PPO clip prevents the importance weight ratio from growing too large, which maintains training stability.\n\n**Step 3**\n\nThis prevents the policy from changing too drastically in one update.",
       hints: [
         "Reusing old trajectories via importance sampling is the PPO trick that makes on-policy RL tractable - it avoids the cost of generating new trajectories at every gradient step.",
         "The clipping prevents large policy updates that could destabilize training - analogous to trust region methods.",
@@ -1028,7 +1028,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Progressive Distillation trains a student network to replicate two teacher steps in one. The student takes $x_t$ as input and predicts $x_{t-2}$, while the teacher produces the same quantity via two sequential steps:\n\n\\[\n\\hat{x}_0^\\text{student}(x_t, t) \\approx \\hat{x}_0^{\\text{teacher}, 2\\text{-step}}(x_t, t).\n\\]\n\nThis halves the number of required steps per iteration. After distillation, the student becomes the new teacher, and the process repeats. After approximately 7 rounds, $1000$ steps reduce to $8$ steps. Each round costs roughly $15$-$25\\%$ of the original training compute.",
+        "Progressive Distillation trains a student network to replicate two teacher steps in one.\n\n**Step 1**\n\nThe student takes $x_t$ as input and predicts $x_{t-2}$, while the teacher produces the same quantity via two sequential steps:\n\n\\[\n\\hat{x}_0^\\text{student}(x_t, t) \\approx \\hat{x}_0^{\\text{teacher}, 2\\text{-step}}(x_t, t).\n\\]\n\n**Step 2**\n\nThis halves the number of required steps per iteration. After distillation, the student becomes the new teacher, and the process repeats.\n\n**Step 3**\n\nAfter approximately 7 rounds, $1000$ steps reduce to $8$ steps. Each round costs roughly $15$-$25\\%$ of the original training compute.",
       hints: [
         "The distillation target is always in $x_0$ space (the denoised image), making it parameterization-independent.",
         "After 3 rounds: $1000 \\to 500 \\to 250 \\to 125$ steps. After roughly 7 rounds: $1000 \\to 8$ steps.",
@@ -1048,7 +1048,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LCM uses accelerated ODE solving during distillation: instead of requiring the consistency condition $f_\\theta(x_t, t) = f_\\theta(x_{t-1}, t-1)$ for adjacent timesteps, it enforces $f_\\theta(x_t, t) = f_\\theta(x_{t-k}, t-k)$ for a larger skip $k > 1$.\n\nThis 'skipping' enforces consistency over longer ODE intervals, making the model more strongly self-consistent across multiple steps. Combined with using an existing LDM as the teacher, LCM achieves $2$-$4$ step generation on Stable Diffusion in roughly $32$ A100 GPU hours. LCM can also be applied as a LoRA (LCM-LoRA) without full fine-tuning.",
+        "LCM uses accelerated ODE solving during distillation.\n\n**Step 1**\n\nInstead of requiring the consistency condition $f_\\theta(x_t, t) = f_\\theta(x_{t-1}, t-1)$ for adjacent timesteps, it enforces $f_\\theta(x_t, t) = f_\\theta(x_{t-k}, t-k)$ for a larger skip $k > 1$.\n\n**Step 2**\n\nThis 'skipping' enforces consistency over longer ODE intervals, making the model more strongly self-consistent across multiple steps.\n\n**Step 3**\n\nCombined with using an existing LDM as the teacher, LCM achieves $2$-$4$ step generation on Stable Diffusion in roughly $32$ A100 GPU hours. LCM can also be applied as a LoRA (LCM-LoRA) without full fine-tuning.",
       hints: [
         "LCM can be applied to Stable Diffusion or SDXL via LoRA (LCM-LoRA) without full fine-tuning of the base model.",
         "The skip schedule is a key hyperparameter - larger skips yield faster generation but potentially lower quality.",
@@ -1068,7 +1068,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SDS (used in DreamFusion):\n1. Render a 2D view $x = g(\\theta)$ from the NeRF with parameters $\\theta$.\n2. Add noise: $x_t = \\sqrt{\\bar{\\alpha}_t}\\,x + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon$.\n3. Run the diffusion model: predict $\\varepsilon_\\phi(x_t, t, y)$ conditioned on text $y$.\n\nThe SDS gradient is:\n\n\\[\n\\nabla_\\theta \\mathcal{L}_\\text{SDS} = \\mathbb{E}_{t,\\,\\varepsilon}\\big[ w(t)\\,(\\varepsilon_\\phi(x_t, t, y) - \\varepsilon)\\,\\nabla_\\theta x\\big].\n\\]\n\nThis tells the NeRF 'which direction in image space to move to be more consistent with the text prompt $y$'. The U-Net Jacobian is dropped (CFG + diffusion U-Net serves as a perceptual critic). Known artifacts include the 'Janus problem' (multi-face) and over-saturation, addressed by VSD (Variational Score Distillation).",
+        "SDS (used in DreamFusion) works in three steps.\n\n**Step 1**\n\n1. Render a 2D view $x = g(\\theta)$ from the NeRF with parameters $\\theta$.\n2. Add noise: $x_t = \\sqrt{\\bar{\\alpha}_t}\\,x + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon$.\n3. Run the diffusion model: predict $\\varepsilon_\\phi(x_t, t, y)$ conditioned on text $y$.\n\n**Step 2**\n\nThe SDS gradient is:\n\n\\[\n\\nabla_\\theta \\mathcal{L}_\\text{SDS} = \\mathbb{E}_{t,\\,\\varepsilon}\\big[ w(t)\\,(\\varepsilon_\\phi(x_t, t, y) - \\varepsilon)\\,\\nabla_\\theta x\\big].\n\\]\n\nThis tells the NeRF 'which direction in image space to move to be more consistent with the text prompt $y$'.\n\n**Step 3**\n\nThe U-Net Jacobian is dropped (CFG + diffusion U-Net serves as a perceptual critic). Known artifacts include the 'Janus problem' (multi-face) and over-saturation, addressed by VSD (Variational Score Distillation).",
       hints: [
         "SDS updates the NeRF using the 2D diffusion model as a perceptual critic for 3D content - the diffusion model guides the NeRF without direct gradient from a 3D critic.",
         "The 'Janus problem' (multi-face artifact) arises because the SDS prior does not enforce 3D consistency across views.",

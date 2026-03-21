@@ -389,7 +389,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When k=1, \\phi = \\theta − \\alpha\\nablaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nablaL_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta − \\epsilon\\alpha\\nablaL_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta) = \\theta − \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss - the same as FOMAML with one inner step. For k > 1, \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta) − \\alpha\\nabla_\\thetaL_i(\\theta − \\alpha\\nabla_\\thetaL_i(\\theta)) − ... (k compositions), giving Reptile its distinct behaviour.",
+        "When k=1, \\phi = \\theta − \\alpha\\nabla\mathcal{L}_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla\mathcal{L}_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta − \\epsilon\\alpha\\nabla\mathcal{L}_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta) = \\theta − \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss - the same as FOMAML with one inner step. For k > 1, \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta) − \\alpha\\nabla_\\thetaL_i(\\theta − \\alpha\\nabla_\\thetaL_i(\\theta)) − ... (k compositions), giving Reptile its distinct behaviour.",
       hints: [
         'Reptile\'s update is "move \\theta toward where the task gradient took you" - a form of interpolation.',
         "Think about what \\theta'_i - \\theta represents when k=1: just one gradient descent step.",
@@ -433,7 +433,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD treats both the initialisation \\theta and the per-parameter learning rates \\alpha (stored as a vector of the same shape as \\theta) as meta-learnable parameters. The inner-loop update becomes:\n$$\\theta'_i = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nwhere ⊙ is elementwise multiplication. This allows the meta-learner to learn both what to update (\\theta) and by how much (\\alpha) - effectively learning a diagonal preconditioning matrix for each task. The meta-objective is:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\noptimized jointly over \\theta and \\alpha.",
+        "Meta-SGD treats both the initialisation \\theta and the per-parameter learning rates \\alpha (stored as a vector of the same shape as \\theta) as meta-learnable parameters. The inner-loop update becomes:\n\[\\theta'_i = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),\]\nwhere $\odot$ is elementwise multiplication. This allows the meta-learner to learn both what to update (\\theta) and by how much (\\alpha) - effectively learning a diagonal preconditioning matrix for each task. The meta-objective is:\n\[\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\textrm{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\textrm{support}}),\]\noptimized jointly over \\theta and \\alpha.",
       hints: [
         "MAML learns \\theta\\_0 but uses a fixed scalar learning rate. What else about SGD could be learned?",
         "Think about per-parameter adaptive learning rates - Meta-SGD learns these as part of the meta-training.",
@@ -444,13 +444,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In Meta-SGD, the inner-loop update for parameter \\theta on task i is: \\theta'_i = \\theta - \\alpha ⊙ \\nablaL_i(\\theta), where ⊙ is element-wise multiplication and \\alpha is a learned vector.",
+        "In Meta-SGD, the inner-loop update for parameter \\theta on task i is: \\theta'_i = \\theta - \\alpha \odot \\nabla\mathcal{L}_i(\\theta), where \odot is element-wise multiplication and \\alpha is a learned vector.",
       correctAnswer: "True",
       explanation:
-        "The elementwise multiplication of the gradient by learned vector \\alpha allows each parameter to have its own learning rate and even sign of update, giving the meta-learner more expressive control over the inner-loop adaptation.\n\nSpecifically, each parameter component j is updated as: \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nablaL)_j. If \\alpha_j is positive, the update follows the gradient; if \\alpha_j is negative, the update reverses the gradient direction. This is equivalent to learning a diagonal preconditioning matrix M = diag(\\alpha) applied to the gradient: \\theta' = \\theta + M \\cdot \\nablaL. The meta-learner learns \\alpha that generalizes across tasks, finding per-parameter learning rates that work well for the task distribution.",
+        "The elementwise multiplication of the gradient by learned vector \\alpha allows each parameter to have its own learning rate and even sign of update, giving the meta-learner more expressive control over the inner-loop adaptation.\n\nSpecifically, each parameter component j is updated as: \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nabla\mathcal{L})_j. If \\alpha_j is positive, the update follows the gradient; if \\alpha_j is negative, the update reverses the gradient direction. This is equivalent to learning a diagonal preconditioning matrix M = \operatorname{diag}(\\alpha) applied to the gradient: \\theta' = \\theta + M \\cdot \\nabla\mathcal{L}. The meta-learner learns \\alpha that generalizes across tasks, finding per-parameter learning rates that work well for the task distribution.",
       hints: [
         "Standard SGD uses a scalar \\alpha; Meta-SGD uses a vector \\alpha with the same shape as the gradient.",
-        "Element-wise multiplication (⊙) applies a different scaling to each gradient component.",
+        "Element-wise multiplication (\odot) applies a different scaling to each gradient component.",
       ],
     },
     {
@@ -471,7 +471,7 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Think about which layers in a neural network are task-specific vs. generally useful across tasks.",
         "A backbone feature extractor might need small updates; a task-specific head might need large ones.",
-        "The elementwise update \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nablaL)_j lets \\alpha_j be negative for some parameters (reversing gradient direction) and positive for others.",
+        "The elementwise update \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nabla\mathcal{L})_j lets \\alpha_j be negative for some parameters (reversing gradient direction) and positive for others.",
       ],
     },
   ],
@@ -774,7 +774,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The MAML bi-level optimization: inner loop computes \\theta'_i = \\theta − \\alpha\\nablaL_{T_i}(\\theta) on the support set; outer loop evaluates the meta-loss on the query set and updates: \\theta \\leftarrow \\theta − \\beta\\nabla_\\theta \\Sigma_i L_{T_i}(f_{\\theta'_i}). The gradient \\nabla_\\theta L(f_{\\theta'_i}) requires differentiating through the inner loop (second-order), giving terms involving the Hessian \\partial\\^2L/\\partial\\theta\\^2.",
+        "The MAML bi-level optimization: inner loop computes \\theta'_i = \\theta − \\alpha\\nabla\mathcal{L}_{T_i}(\\theta) on the support set; outer loop evaluates the meta-loss on the query set and updates: \\theta \\leftarrow \\theta − \\beta\\nabla_\\theta \\Sigma_i L_{T_i}(f_{\\theta'_i}). The gradient \\nabla_\\theta L(f_{\\theta'_i}) requires differentiating through the inner loop (second-order), giving terms involving the Hessian \\partial\\^2L/\\partial\\theta\\^2.",
       hints: [
         "Inner loop: adapt to each task; outer loop: update the initialization based on post-adaptation performance.",
         "\\alpha is the inner learning rate (task-level); \\beta is the outer/meta learning rate.",
@@ -799,7 +799,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The exact MAML meta-gradient \\nabla_\\theta L_{T_i}(f_{\\theta'_i}) involves a Hessian term. Using the chain rule with \\theta'_i = \\theta − \\alpha\\nablaL_{T_i}(\\theta), the full expression is:",
+        "The exact MAML meta-gradient \\nabla_\\theta L_{T_i}(f_{\\theta'_i}) involves a Hessian term. Using the chain rule with \\theta'_i = \\theta − \\alpha\\nabla\mathcal{L}_{T_i}(\\theta), the full expression is:",
       options: [
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} \\cdot (I − \\alpha\\nabla\\^2_\\theta L_{T_i}(\\theta)) - requiring a Hessian-vector product computation",
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta} L_{T_i}(f_\\theta) - the same as the pre-adaptation gradient (FOMAML approximation)",
@@ -811,7 +811,7 @@ const questions: Record<string, Question[]> = {
         "By chain rule: \\partialL(f_{\\theta'_i})/\\partial\\theta = \\partialL/\\partial\\theta'_i \\cdot \\partial\\theta'_i/\\partial\\theta = \\nabla_{\\theta'_i}L \\cdot (I − \\alpha\\nabla\\^2L_{T_i}(\\theta)). The Hessian \\nabla\\^2L_{T_i}(\\theta) makes this second-order. FOMAML drops this term, using only \\nabla_{\\theta'_i}L (first order). The Hessian-vector product can be computed via reverse-mode autodiff without materializing the full Hessian.",
       hints: [
         "Use chain rule: dL(\\theta'(\\theta))/d\\theta = dL/d\\theta' \\cdot d\\theta'/d\\theta.",
-        "d\\theta'/d\\theta = d(\\theta − \\alpha\\nablaL)/d\\theta = I − \\alpha\\nabla\\^2L - this is the Hessian term.",
+        "d\\theta'/d\\theta = d(\\theta − \\alpha\\nabla\mathcal{L})/d\\theta = I − \\alpha\\nabla\\^2L - this is the Hessian term.",
       ],
     },
   ],
@@ -2011,10 +2011,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD (Li et al. 2017) learns both the initial parameters \\theta AND per-parameter learning rate vectors \\alpha (same shape as \\theta). The inner-loop update becomes:\n$$\\theta' = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L},$$\nwhere ⊙ denotes elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter - effectively learning a preconditioning matrix $M = \\text{diag}(\\alpha)$ that scales the gradient differently per parameter. The meta-objective becomes:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\nwhich is optimized jointly over both the initialization \\theta and the per-parameter learning rates \\alpha.",
+        "Meta-SGD (Li et al. 2017) learns both the initial parameters \\theta AND per-parameter learning rate vectors \\alpha (same shape as \\theta). The inner-loop update becomes:\n\[\\theta' = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L},\]\nwhere $\odot$ denotes elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter - effectively learning a preconditioning matrix $M = \\operatorname{diag}(\\alpha)$ that scales the gradient differently per parameter. The meta-objective becomes:\n\[\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\textrm{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\textrm{support}}),\]\nwhich is optimized jointly over both the initialization \\theta and the per-parameter learning rates \\alpha.",
       hints: [
         "MAML uses a scalar \\alpha for all parameters; Meta-SGD uses a vector \\alpha with the same shape as \\theta.",
-        "Elementwise multiplication (⊙) applies a different scaling to each gradient component: \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nablaL)_j.",
+        "Elementwise multiplication (\odot) applies a different scaling to each gradient component: \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nabla\mathcal{L})_j.",
         "The sign of \\alpha_j can be negative, allowing the meta-learner to reverse the gradient direction for specific parameters.",
       ],
     },
@@ -2027,7 +2027,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n$$\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\text{where } \\phi_i = \\text{SGD}^K(\\theta, \\mathcal{D}_i^\\text{support}).$$\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
+        "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n\[\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\textrm{where } \\phi_i = \\textrm{SGD}^K(\\theta, \\mathcal{D}_i^\\textrm{support}).\]\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
       hints: [
         "The MAML gradient is $\\mathbb{E}_i[\\nabla_{\\theta}\\mathcal{L}_{T_i}(f_{\\theta'_i})] \\cdot (I - \\alpha\\nabla^2\\mathcal{L})$ - it requires second-order derivatives.",
         "Reptile's gradient $\\mathbb{E}_i[\\theta'_i - \\theta]$ can be computed without any second-order derivatives - just the difference between adapted and original parameters.",

@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DQN replaces the tabular Q-table with a deep neural network Q(s,a;\\theta) that takes raw states (e.g., pixel images) as input and outputs Q-values for all actions, enabling generalization across large state spaces.",
+        "Standard Q-learning uses a table to store $Q(s,a)$ for every state-action pair. This works for small problems, but fails when the state space is enormous (e.g., Atari frames with $210 \\times 160$ pixels giving ~10^50 states).\n\n**Step 1.** DQN replaces the Q-table with a deep neural network $Q(s,a;\\theta)$ parameterized by weights $\\theta$. The network takes a raw state $s$ (or stack of frames) as input and outputs a Q-value $Q(s,a;\\theta)$ for each action $a$.\n\n**Step 2.** This function approximation enables generalization: instead of learning $Q(s,a)$ for each $s$ individually, the network learns a shared representation that applies to all states, so experiencing one state improves Q-value estimates for similar states.\n\nTherefore, DQN extends Q-learning to large state spaces by approximating the Q-function with a deep neural network parameterized by $\\theta$.",
       hints: [
         "Tabular Q-learning cannot scale to Atari games with 210\\times160 pixel states.",
         'What does "deep" in DQN refer to?',
@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Experience replay breaks temporal correlations in the training data, and the target network provides stable bootstrapping targets - together these stabilized Q-learning with neural network function approximators.",
+        "DQN with a neural network faces two key instability problems:\n\n**Step 1. Correlated data.** Sequential transitions $(s_t, a_t, r_t, s_{t+1})$ are highly correlated in time. If the network trains on these sequentially, the data distribution shifts during training, causing gradient descent to oscillate or diverge.\n\n**Step 2. Moving target.** The DQN update uses $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ as the target. Since $\\theta$ changes with every update, the target keeps moving - a moving target for a supervised learning problem.\n\nExperience replay and the target network address these respectively:\n\n**Step 3.** Experience replay stores transitions in a replay buffer and samples uniformly at random for each gradient update. This decorrelates the training data, making it closer to i.i.d., and allows each transition to be reused many times for data efficiency.\n\n**Step 4.** The target network $Q(s',a';\\theta^-)$ is a separate, periodically-copied network kept fixed for many steps, providing stable targets $y = R + \\gamma \\max_{a'} Q(s',a';\\theta^-)$ while the online network $\\theta$ is updated. This prevents the moving-target problem.\n\nTogether, these two innovations made DQN stable enough to learn Atari games.",
       hints: [
         "Training on correlated sequential data causes instability in gradient descent.",
         "Chasing a moving target (the Q-network you\'re updating) also causes instability.",
@@ -129,7 +129,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The target network Q(s,a;\\theta\\^\{-\} is a periodically-copied snapshot of the online network, kept fixed for many steps to provide stable targets y = R + \\gamma max_a Q(s',a;\\theta\\^\{-\} and prevent oscillating or diverging training.",
+        "In DQN, the TD target for updating the online network is:\n\\[y = R + \\gamma \\max_{a'} Q(s', a'; \\theta).\]\nBut since $\\theta$ changes at every gradient step, the target $y$ changes at every step too. This \"moving target\" problem causes training instability, similar to chasing a moving goalpost.\n\n**Step 1.** A target network $Q(s,a;\\theta^-)$ is introduced as a periodically-copied snapshot of the online network. It is kept fixed (frozen) for many steps.\n\n**Step 2.** During those frozen steps, the target becomes:\n\\[y = R + \\gamma \\max_{a'} Q(s', a'; \\theta^-).\]\nSince $\\theta^-$ is constant, the target is stable, giving the online network a fixed goal to optimize toward.\n\n**Step 3.** After $C$ steps (typically thousands), the online weights $\\theta$ are copied to the target: $\\theta^- \\leftarrow \\theta$. The target jumps to a new, slightly better goal, and the process repeats.\n\nThis stabilization of the TD target is why DQN with a target network can successfully train a deep neural network.",
       hints: [
         "If the target keeps changing as you update the network, what problem does this create?",
         "The target network provides a fixed (temporarily) goal to optimize toward.",
@@ -409,7 +409,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The policy gradient theorem gives \\nabla_\\theta J(\\theta) = E_{\\pi_\\theta}[\\nabla_\\theta log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)], enabling gradient ascent on expected return without differentiating through the environment dynamics.",
+        "The objective in policy gradient is $J(\\theta) = V^{\\pi_\\theta}(s_0) = E_{\\pi_\\theta}[\\sum_{t=0}^T \\gamma^t r_t]$, the expected discounted return from the start state.\n\n**Step 1.** The policy gradient $\\nabla_\\theta J(\\theta)$ tells us how to update $\\theta$ to increase $J$. But directly differentiating $J$ requires knowing the environment dynamics $P(s'|s,a)$, which we do not have.\n\n**Step 2.** The policy gradient theorem resolves this by expressing $\\nabla_\\theta J(\\theta)$ in a form that depends only on the policy $\\pi_\\theta$:\n\\[\\nabla_\\theta J(\\theta) = E_{\\pi_\\theta}\\bigl[\\nabla_\\theta \\log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)\\bigr].\]\nThe key quantity $\\nabla_\\theta \\log \\pi_\\theta(a|s)$ is called the score function.\n\n**Step 3.** This formula enables gradient ascent on $J$ without differentiating through the environment: the environment dynamics are embedded in the Q-value $Q^{\\pi_\\theta}(s,a)$, which is estimated by sampling. This is why policy gradient methods are also called \"likelihood-ratio\" or \"score-function\" estimators.",
       hints: [
         'The gradient of J involves the "score function" \\nabla_\\theta log \\pi_\\theta(a|s).',
         "This formula is key because the environment\'s transition dynamics don\'t need to be differentiable.",
@@ -465,7 +465,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "REINFORCE computes the policy gradient as \\Sigma_t \\nabla_\\theta log \\pi_\\theta(a\_t|s\_t) \\cdot G\_t using the full Monte Carlo return, then updates \\theta \\leftarrow \\theta + \\alpha \\cdot gradient to maximize expected return.",
+        "REINFORCE is a Monte Carlo policy gradient algorithm that uses complete episode returns to estimate the gradient.\n\n**Step 1.** From the policy gradient theorem: $\\nabla_\\theta J(\\theta) = E[\\nabla_\\theta \\log \\pi_\\theta(a|s) \\cdot Q^{\\pi_\\theta}(s,a)]$.\n\n**Step 2.** REINFORCE replaces the true Q-value $Q^{\\pi_\\theta}(s,a)$ with the Monte Carlo return $G_t = \\sum_{t'=t}^T \\gamma^{t'-t} r_{t'}$, which is an unbiased sample of $Q^{\\pi_\\theta}$. This gives the stochastic gradient estimator:\n\\[\\nabla_\\theta J(\\theta) \\approx \\frac{1}{T} \\sum_{t=0}^{T-1} \\nabla_\\theta \\log \\pi_\\theta(a_t|s_t) \\cdot G_t.\]\n\n**Step 3.** The parameter update is $\\theta \\leftarrow \\theta + \\alpha \\cdot \\nabla_\\theta \\log \\pi_\\theta(a_t|s_t) \\cdot G_t$. Actions that led to high returns ($G_t > 0$) have their probability increased; actions that led to low/negative returns have their probability decreased.\n\nThis is why REINFORCE is a Monte Carlo policy gradient method.",
       hints: [
         "REINFORCE is a Monte Carlo policy gradient method - it uses complete episode returns.",
         "The update increases the probability of actions that led to high returns.",
@@ -2322,7 +2322,7 @@ const extra2: Record<string, Question[]> = {
         "CQL clips Q-values at zero for any action not observed in the offline dataset",
       ],
       correctAnswer: 1,
-      explanation: "CQL's conservative penalty is: \\alpha * (E_{s}[log \\Sigma_a \exp Q(s,a)] - E_{(s,a)~D}[Q(s,a)]). The first term pushes down Q-values for all actions (softmax-weighted average), the second pushes up Q-values for dataset actions. Combined with the Bellman loss, CQL learns Q-values that are lower bounds on the true Q-values under the dataset policy, preventing overestimation for OOD actions. This stops the policy from exploiting spurious high Q-values for actions the agent should never take.",
+      explanation: "CQL's conservative penalty is: \\alpha \cdot (E_{s}[log \\Sigma_a \exp Q(s,a)] - E_{(s,a)~D}[Q(s,a)]). The first term pushes down Q-values for all actions (softmax-weighted average), the second pushes up Q-values for dataset actions. Combined with the Bellman loss, CQL learns Q-values that are lower bounds on the true Q-values under the dataset policy, preventing overestimation for OOD actions. This stops the policy from exploiting spurious high Q-values for actions the agent should never take.",
       hints: [
         "The penalty has two terms: one that pushes Q-values DOWN for all actions, and one that pushes Q-values UP for dataset actions. Why the asymmetry?",
         "log \\Sigma_a \exp Q(s,a) = log softmax partition function. Which actions does this term most penalize?",
@@ -2434,7 +2434,7 @@ const extra2: Record<string, Question[]> = {
       id: "q-rla-kp44-2",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The KL penalty in RLHF fine-tuning has the form: J(\\pi) = E_{x~D, y~\\pi}[R(x,y)] - \\beta * KL(\\pi || \\pi_SFT). What is the purpose of the KL penalty, and what does \\beta control?",
+      question: "The KL penalty in RLHF fine-tuning has the form: J(\\pi) = E_{x~D, y~\\pi}[R(x,y)] - \\beta \cdot KL(\\pi || \\pi_SFT). What is the purpose of the KL penalty, and what does \\beta control?",
       options: [
         "The KL penalty prevents the policy from becoming deterministic; \\beta controls entropy of the output distribution",
         "The KL penalty prevents reward hacking by keeping the policy close to the SFT reference model; \\beta controls the trade-off between reward maximization and staying close to the reference - high \\beta yields a conservative policy close to SFT, low \\beta allows more aggressive optimization that risks mode collapse or reward hacking",
@@ -2470,14 +2470,14 @@ const extra2: Record<string, Question[]> = {
       question: "Direct Preference Optimization (DPO, Rafailov et al., 2023) eliminates the separate reward model training phase of RLHF. What is the key mathematical insight that enables this?",
       options: [
         "DPO replaces pairwise comparisons with absolute ratings, making reward model training unnecessary",
-        "The optimal RLHF policy \\pi* has a closed-form expression as \\pi*(y|x) \\propto \\pi_ref(y|x) * exp(R*(x,y)/\\beta). Inverting this gives R*(x,y) = \\beta * log(\\pi*(y|x)/\\pi_ref(y|x)) + const. Substituting into the Bradley-Terry preference model yields a loss directly in terms of the policy \\pi, bypassing reward model training.",
+        "The optimal RLHF policy \\pi* has a closed-form expression as \\pi*(y|x) \\propto \\pi_ref(y|x) \cdot exp(R*(x,y)/\\beta). Inverting this gives R*(x,y) = \\beta \cdot log(\\pi*(y|x)/\\pi_ref(y|x)) + const. Substituting into the Bradley-Terry preference model yields a loss directly in terms of the policy \\pi, bypassing reward model training.",
         "DPO uses model-based RL to simulate preference comparisons internally without human feedback",
         "DPO trains the reward model and policy simultaneously in a single optimization step",
       ],
       correctAnswer: 1,
-      explanation: "The RLHF objective J(\\pi) = E[R(x,y)] - \\beta*KL(\\pi||\\pi_ref) has optimal solution \\pi* \\propto \\pi_ref * exp(R*/\\beta), giving R* = \\beta * log(\\pi*/\\pi_ref) + Z(x). Plugging into the Bradley-Terry preference model P(y_w > y_l) = \\sigma(R(x,y_w) - R(x,y_l)), the reward difference becomes \\beta*(log(\\pi*/\\pi_ref)(y_w) - log(\\pi*/\\pi_ref)(y_l)). DPO directly minimizes -log \\sigma(\\beta * (log(\\pi_\\theta/\\pi_ref)(y_w) - log(\\pi_\\theta/\\pi_ref)(y_l))) over the policy \\pi_\\theta - no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
+      explanation: "The RLHF objective J(\\pi) = E[R(x,y)] - \\beta*KL(\\pi||\\pi_ref) has optimal solution \\pi* \\propto \\pi_ref \cdot exp(R*/\\beta), giving R* = \\beta \cdot log(\\pi*/\\pi_ref) + Z(x). Plugging into the Bradley-Terry preference model P(y_w > y_l) = \\sigma(R(x,y_w) - R(x,y_l)), the reward difference becomes \\beta*(log(\\pi*/\\pi_ref)(y_w) - log(\\pi*/\\pi_ref)(y_l)). DPO directly minimizes -log \\sigma(\\beta * (log(\\pi_\\theta/\\pi_ref)(y_w) - log(\\pi_\\theta/\\pi_ref)(y_l))) over the policy \\pi_\\theta - no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
       hints: [
-        "The optimal RL policy satisfies \\pi* \\propto \\pi_ref * exp(R/\\beta). Can we express R in terms of \\pi* and \\pi_ref?",
+        "The optimal RL policy satisfies \\pi* \\propto \\pi_ref \cdot exp(R/\\beta). Can we express R in terms of \\pi* and \\pi_ref?",
         "If R appears in the preference model P(y_w > y_l), and R can be expressed in terms of \\pi, can we optimize \\pi directly on the preference data?",
       ],
     },
@@ -2497,7 +2497,7 @@ const extra2: Record<string, Question[]> = {
       id: "q-rla-kp45-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "In RLHF fine-tuning with PPO, the combined reward used for policy updates is typically R_total(x,y) = R_model(x,y) - \\beta * log(\\pi_\\theta(y|x) / \\pi_ref(y|x)). Why is the log ratio term included per token rather than as a single episode-level penalty?",
+      question: "In RLHF fine-tuning with PPO, the combined reward used for policy updates is typically R_total(x,y) = R_model(x,y) - \\beta \cdot log(\\pi_\\theta(y|x) / \\pi_ref(y|x)). Why is the log ratio term included per token rather than as a single episode-level penalty?",
       options: [
         "Per-token KL is easier to implement than episode-level KL",
         "Per-token KL provides a dense reward signal at each token, reducing the credit assignment problem. It keeps the per-step optimization well-defined and prevents degenerate length-based exploits (e.g., generating very long responses to dilute the KL penalty).",

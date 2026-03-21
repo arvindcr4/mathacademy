@@ -168,4 +168,58 @@ describe('Question Files Validation', () => {
       }
     }
   })
+
+  it('should have unique question IDs across all banks', () => {
+    const allIds = new Set<string>()
+    const duplicates: string[] = []
+
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (allIds.has(q.id)) {
+          duplicates.push(`${q.id} (in ${bankName})`)
+        }
+        allIds.add(q.id)
+      }
+    }
+
+    expect(duplicates, `Duplicate IDs found: ${duplicates.slice(0, 10).join(', ')}`).toHaveLength(0)
+  })
+
+  it('should have valid hints (strings, not empty)', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.hints) {
+          expect(Array.isArray(q.hints), `${bankName}: ${q.id} hints should be array`).toBe(true)
+          for (const hint of q.hints) {
+            expect(typeof hint, `${bankName}: ${q.id} hint should be string`).toBe('string')
+            expect(hint.length, `${bankName}: ${q.id} hint should not be empty`).toBeGreaterThan(0)
+          }
+        }
+      }
+    }
+  })
+
+  it('should have valid true-false correctAnswer values', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.type === 'true-false') {
+          expect(
+            ['true', 'false', 'True', 'False'].includes(q.correctAnswer as string),
+            `${bankName}: ${q.id} TF correctAnswer should be true/false`
+          ).toBe(true)
+        }
+      }
+    }
+  })
+
+  it('should have properly formatted bank names (kebab-case)', () => {
+    const validBankNamePattern = /^[a-z0-9-]+$/
+
+    for (const bankName of Object.keys(questionBanks)) {
+      expect(
+        validBankNamePattern.test(bankName),
+        `Bank name "${bankName}" should be kebab-case (lowercase, hyphens only)`
+      ).toBe(true)
+    }
+  })
 })
