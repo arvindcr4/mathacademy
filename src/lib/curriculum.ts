@@ -1555,6 +1555,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'tree-based-methods',
+        slug: 'tree-based-methods',
         name: 'Tree-Based Methods',
         description: 'Decision trees, random forests, and ensemble methods for tabular data.',
         knowledgePoints: [
@@ -1567,6 +1568,7 @@ export const courses: Course[] = [
       },
       {
         id: 'gradient-boosting',
+        slug: 'gradient-boosting',
         name: 'Gradient Boosting Methods',
         description: 'XGBoost, LightGBM, CatBoost, and gradient boosting theory.',
         knowledgePoints: [
@@ -1579,6 +1581,7 @@ export const courses: Course[] = [
       },
       {
         id: 'tabular-feature-engineering',
+        slug: 'tabular-feature-engineering',
         name: 'Feature Engineering & Selection',
         description: 'Encoding categorical features, interaction features, and dimensionality reduction.',
         knowledgePoints: [
@@ -1591,6 +1594,7 @@ export const courses: Course[] = [
       },
       {
         id: 'deep-tabular',
+        slug: 'deep-tabular',
         name: 'Deep Learning for Tabular Data',
         description: 'TabNet, FT-Transformer, and neural networks for structured data.',
         knowledgePoints: [
@@ -1603,6 +1607,7 @@ export const courses: Course[] = [
       },
       {
         id: 'tabular-automl',
+        slug: 'tabular-automl',
         name: 'AutoML for Tabular Data',
         description: 'AutoGluon, H2O, TPOT, and automated ML for structured data.',
         knowledgePoints: [
@@ -1615,6 +1620,7 @@ export const courses: Course[] = [
       },
       {
         id: 'tabular-applications',
+        slug: 'tabular-applications',
         name: 'Tabular ML Applications',
         description: 'Fraud detection, churn prediction, and competition winning strategies.',
         knowledgePoints: [
@@ -1637,6 +1643,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'statistical-evaluation',
+        slug: 'statistical-evaluation',
         name: 'Statistical Evaluation Methods',
         description: 'Significance testing, confidence intervals, and evaluation pitfalls.',
         knowledgePoints: [
@@ -1649,6 +1656,7 @@ export const courses: Course[] = [
       },
       {
         id: 'classification-regression-eval',
+        slug: 'classification-regression-eval',
         name: 'Classification & Regression Metrics',
         description: 'Precision/recall, ROC-AUC, calibration, and regression scoring.',
         knowledgePoints: [
@@ -1661,6 +1669,7 @@ export const courses: Course[] = [
       },
       {
         id: 'llm-benchmarks',
+        slug: 'llm-benchmarks',
         name: 'LLM Benchmarks & Leaderboards',
         description: 'MMLU, HellaSwag, HumanEval, and comprehensive LLM evaluation.',
         knowledgePoints: [
@@ -1673,6 +1682,7 @@ export const courses: Course[] = [
       },
       {
         id: 'generative-eval',
+        slug: 'generative-eval',
         name: 'Generative Model Evaluation',
         description: 'FID, CLIP score, BLEU, ROUGE, and human evaluation.',
         knowledgePoints: [
@@ -1685,6 +1695,7 @@ export const courses: Course[] = [
       },
       {
         id: 'safety-eval',
+        slug: 'safety-eval',
         name: 'Safety & Red-Teaming Evaluation',
         description: 'Toxicity detection, jailbreak testing, and bias benchmarks.',
         knowledgePoints: [
@@ -1697,6 +1708,7 @@ export const courses: Course[] = [
       },
       {
         id: 'system-eval',
+        slug: 'system-eval',
         name: 'System-Level & End-to-End Evaluation',
         description: 'Agent evaluation, RAG assessment, and production system metrics.',
         knowledgePoints: [
@@ -1719,6 +1731,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'data-labeling',
+        slug: 'data-labeling',
         name: 'Data Labeling & Annotation',
         description: 'Human annotation workflows, active learning, and weak supervision.',
         knowledgePoints: [
@@ -1731,6 +1744,7 @@ export const courses: Course[] = [
       },
       {
         id: 'data-augmentation-advanced',
+        slug: 'data-augmentation-advanced',
         name: 'Advanced Data Augmentation',
         description: 'AutoAugment, mixup, CutMix, and augmentation policy search.',
         knowledgePoints: [
@@ -1743,6 +1757,7 @@ export const courses: Course[] = [
       },
       {
         id: 'data-quality',
+        slug: 'data-quality',
         name: 'Data Quality & Cleaning',
         description: 'Data validation, deduplication, label noise, and dataset curation.',
         knowledgePoints: [
@@ -1755,6 +1770,7 @@ export const courses: Course[] = [
       },
       {
         id: 'dataset-distillation',
+        slug: 'dataset-distillation',
         name: 'Dataset Distillation & Coreset Selection',
         description: 'Compress datasets while preserving performance.',
         knowledgePoints: [
@@ -1767,6 +1783,7 @@ export const courses: Course[] = [
       },
       {
         id: 'pretraining-data',
+        slug: 'pretraining-data',
         name: 'Pretraining Data Curation',
         description: 'Web-scale data collection, filtering, and pretraining dataset design.',
         knowledgePoints: [
@@ -1779,6 +1796,7 @@ export const courses: Course[] = [
       },
       {
         id: 'data-privacy-ethics',
+        slug: 'data-privacy-ethics',
         name: 'Data Privacy & Ethics in ML',
         description: 'Consent, data provenance, copyright, and ethical dataset practices.',
         knowledgePoints: [
@@ -1801,6 +1819,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'sgd-variants',
+        slug: 'sgd-variants',
         name: 'SGD & First-Order Optimizers',
         description: 'Momentum, Adam, and adaptive learning rate methods.',
         knowledgePoints: [
@@ -1813,6 +1832,7 @@ export const courses: Course[] = [
       },
       {
         id: 'learning-rate-schedules',
+        slug: 'learning-rate-schedules',
         name: 'Learning Rate Scheduling',
         description: 'Warmup, cosine annealing, cyclic schedules, and learning rate finding.',
         knowledgePoints: [
@@ -1825,6 +1845,7 @@ export const courses: Course[] = [
       },
       {
         id: 'loss-landscapes',
+        slug: 'loss-landscapes',
         name: 'Loss Landscapes & Convergence',
         description: 'Saddle points, loss landscape visualization, and convergence theory.',
         knowledgePoints: [
@@ -1837,6 +1858,7 @@ export const courses: Course[] = [
       },
       {
         id: 'second-order-methods',
+        slug: 'second-order-methods',
         name: 'Second-Order & Curvature Methods',
         description: 'K-FAC, Shampoo, and practical second-order optimization.',
         knowledgePoints: [
@@ -1849,6 +1871,7 @@ export const courses: Course[] = [
       },
       {
         id: 'distributed-optimization',
+        slug: 'distributed-optimization',
         name: 'Distributed & Parallel Optimization',
         description: 'Data parallelism, gradient communication, and distributed training.',
         knowledgePoints: [
@@ -1861,6 +1884,7 @@ export const courses: Course[] = [
       },
       {
         id: 'regularization-training',
+        slug: 'regularization-training',
         name: 'Regularization & Training Tricks',
         description: 'Dropout, normalization, gradient clipping, and training stability.',
         knowledgePoints: [
@@ -1883,6 +1907,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'llm-serving-patterns',
+        slug: 'llm-serving-patterns',
         name: 'LLM Serving Architectures',
         description: 'Serving LLMs at scale: batching, caching, routing, and cost optimization.',
         knowledgePoints: [
@@ -1895,6 +1920,7 @@ export const courses: Course[] = [
       },
       {
         id: 'retrieval-augmented-systems',
+        slug: 'retrieval-augmented-systems',
         name: 'RAG Systems & Vector Databases',
         description: 'Production RAG pipelines, vector stores, and retrieval optimization.',
         knowledgePoints: [
@@ -1907,6 +1933,7 @@ export const courses: Course[] = [
       },
       {
         id: 'llmops',
+        slug: 'llmops',
         name: 'LLMOps & Model Lifecycle',
         description: 'Prompt versioning, LLM monitoring, evaluation pipelines, and A/B testing.',
         knowledgePoints: [
@@ -1919,6 +1946,7 @@ export const courses: Course[] = [
       },
       {
         id: 'streaming-ml',
+        slug: 'streaming-ml',
         name: 'Streaming & Real-Time ML',
         description: 'Online learning, streaming inference, and real-time feature computation.',
         knowledgePoints: [
@@ -1931,6 +1959,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ml-platform-engineering',
+        slug: 'ml-platform-engineering',
         name: 'ML Platform Engineering',
         description: 'Building internal ML platforms, compute orchestration, and developer experience.',
         knowledgePoints: [
@@ -1943,6 +1972,7 @@ export const courses: Course[] = [
       },
       {
         id: 'production-debugging',
+        slug: 'production-debugging',
         name: 'Production Debugging & Incident Response',
         description: 'Diagnosing ML failures, data quality issues, and on-call for ML systems.',
         knowledgePoints: [
@@ -1965,6 +1995,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'few-shot-foundations',
+        slug: 'few-shot-foundations',
         name: 'Few-Shot Learning Foundations',
         description: 'N-way K-shot setup, episodic training, and benchmark tasks.',
         knowledgePoints: [
@@ -1977,6 +2008,7 @@ export const courses: Course[] = [
       },
       {
         id: 'gradient-based-meta',
+        slug: 'gradient-based-meta',
         name: 'Gradient-Based Meta-Learning',
         description: 'MAML, Reptile, and optimization-based fast adaptation.',
         knowledgePoints: [
@@ -1989,6 +2021,7 @@ export const courses: Course[] = [
       },
       {
         id: 'memory-augmented',
+        slug: 'memory-augmented',
         name: 'Memory-Augmented Meta-Learning',
         description: 'External memory, Neural Turing Machines, and memory-based meta-learners.',
         knowledgePoints: [
@@ -2001,6 +2034,7 @@ export const courses: Course[] = [
       },
       {
         id: 'in-context-learning',
+        slug: 'in-context-learning',
         name: 'In-Context & Prompt-Based Meta-Learning',
         description: 'GPT-style in-context learning, ICL theory, and prompt-tuning.',
         knowledgePoints: [
@@ -2013,6 +2047,7 @@ export const courses: Course[] = [
       },
       {
         id: 'zero-shot-meta',
+        slug: 'zero-shot-meta',
         name: 'Zero-Shot & Cross-Domain Transfer',
         description: 'Attribute-based methods, semantic embeddings, and generalized zero-shot learning.',
         knowledgePoints: [
@@ -2025,6 +2060,7 @@ export const courses: Course[] = [
       },
       {
         id: 'meta-learning-applications',
+        slug: 'meta-learning-applications',
         name: 'Meta-Learning Applications',
         description: 'Drug discovery, robotics, NLP, and continual learning with meta-learning.',
         knowledgePoints: [
@@ -2047,6 +2083,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'ssl-foundations',
+        slug: 'ssl-foundations',
         name: 'Self-Supervised Learning Foundations',
         description: 'Pretext tasks, augmentation strategies, and SSL taxonomy.',
         knowledgePoints: [
@@ -2059,6 +2096,7 @@ export const courses: Course[] = [
       },
       {
         id: 'contrastive-methods',
+        slug: 'contrastive-methods',
         name: 'Contrastive Learning Methods',
         description: 'SimCLR, MoCo, and InfoNCE-based contrastive representation learning.',
         knowledgePoints: [
@@ -2071,6 +2109,7 @@ export const courses: Course[] = [
       },
       {
         id: 'non-contrastive-ssl',
+        slug: 'non-contrastive-ssl',
         name: 'Non-Contrastive Self-Supervised Methods',
         description: 'BYOL, SimSiam, Barlow Twins, and VICReg without negative pairs.',
         knowledgePoints: [
@@ -2083,6 +2122,7 @@ export const courses: Course[] = [
       },
       {
         id: 'masked-pretraining',
+        slug: 'masked-pretraining',
         name: 'Masked & Generative Pretraining',
         description: 'MAE, BEiT, and masked language/image modeling.',
         knowledgePoints: [
@@ -2095,6 +2135,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ssl-for-nlp',
+        slug: 'ssl-for-nlp',
         name: 'SSL for NLP & Language Models',
         description: 'BERT, GPT, and self-supervised pretraining objectives for language.',
         knowledgePoints: [
@@ -2107,6 +2148,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ssl-applications',
+        slug: 'ssl-applications',
         name: 'SSL Applications & Transfer',
         description: 'SSL for medical imaging, few-shot learning, and low-data regimes.',
         knowledgePoints: [
@@ -2129,6 +2171,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'interpretability-methods',
+        slug: 'interpretability-methods',
         name: 'Interpretability & Explainability Methods',
         description: 'SHAP, LIME, saliency maps, and mechanistic interpretability.',
         knowledgePoints: [
@@ -2141,6 +2184,7 @@ export const courses: Course[] = [
       },
       {
         id: 'adversarial-robustness',
+        slug: 'adversarial-robustness',
         name: 'Adversarial Attacks & Robustness',
         description: 'Adversarial examples, certified defenses, and robust training.',
         knowledgePoints: [
@@ -2153,6 +2197,7 @@ export const courses: Course[] = [
       },
       {
         id: 'fairness-bias',
+        slug: 'fairness-bias',
         name: 'Fairness, Bias & Ethical ML',
         description: 'Fairness metrics, bias detection, and mitigation strategies.',
         knowledgePoints: [
@@ -2165,6 +2210,7 @@ export const courses: Course[] = [
       },
       {
         id: 'distribution-shift',
+        slug: 'distribution-shift',
         name: 'Distribution Shift & OOD Detection',
         description: 'Detecting covariate shift, concept drift, and out-of-distribution inputs.',
         knowledgePoints: [
@@ -2177,6 +2223,7 @@ export const courses: Course[] = [
       },
       {
         id: 'calibration-uncertainty',
+        slug: 'calibration-uncertainty',
         name: 'Calibration & Predictive Uncertainty',
         description: 'Probability calibration, reliability diagrams, and conformal prediction.',
         knowledgePoints: [
@@ -2189,6 +2236,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ai-safety-long-term',
+        slug: 'ai-safety-long-term',
         name: 'AI Safety & Long-Term Alignment',
         description: 'Mesa-optimization, scalable oversight, and reward hacking.',
         knowledgePoints: [
