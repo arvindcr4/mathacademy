@@ -572,6 +572,60 @@ const questions: Record<string, Question[]> = {
         "Core-set vs. uncertainty sampling: uncertainty sampling finds uncertain points but may cluster near one boundary region; core-set ensures global coverage of the feature space.",
       ],
     },
+    {
+      id: "q-dc-kp6-4",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In pool-based active learning, the oracle (human annotator) labels exactly the examples selected by the acquisition function, and the model is retrained from scratch after each new label is obtained.",
+      correctAnswer: "False",
+      explanation:
+        "Pool-based active learning typically uses batch acquisition (select a batch of B examples per round, e.g., B = 100) rather than single-example acquisition, and retrains after each batch — not after each individual label. Reasons: (1) Single-example retraining is computationally prohibitive for large models. (2) Retraining from scratch (vs. fine-tuning) after every single label would be extremely expensive. In practice: select a batch of B examples using the acquisition function, send them to the oracle for labeling, add all B labeled examples to the training set, retrain the model, repeat. Additionally, the oracle does not always label correctly — human annotators can make mistakes, requiring quality control (e.g., multiple annotators per example, disagreement resolution).",
+      hints: [
+        "Batch active learning trades off acquisition optimality (sequentially choosing examples adapts to already-queried examples) for computational tractability.",
+        "The online vs. batch retraining distinction: online active learning retrains after every label (fine-tune a few steps); batch active learning retrains after B labels (full retraining or more extensive fine-tuning).",
+      ],
+    },
+    {
+      id: "q-dc-kp6-5",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "BALD (Bayesian Active Learning by Disagreement, Houlsby et al. 2011) selects unlabeled examples that maximize the mutual information I(y; θ | x, D) between the predicted label y and the model parameters θ given the current dataset D. Intuitively, BALD selects examples:",
+      options: [
+        "Where the model has the highest predictive entropy H(y | x, D), regardless of model parameter uncertainty",
+        "Where the model\'s ensemble members disagree most on the prediction: high predictive entropy but low expected entropy under individual ensemble members — indicating the model would benefit most from knowing the true label",
+        "Where the model is most confident, providing reinforcement of correct representations",
+        "Where the training loss is highest, maximizing gradient magnitude for efficient learning",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "BALD maximizes I(y; θ | x, D) = H(y | x, D) − E_{θ~p(θ|D)}[H(y | x, θ)]. The first term H(y | x, D) is the predictive entropy (high = uncertain prediction). The second term E[H(y | x, θ)] is the expected entropy under individual models (high = each model is uncertain). BALD = predictive entropy − expected model entropy. High BALD: predictive entropy is high (ensemble is uncertain) but each individual model has low entropy (each model is confident but disagrees with other models). This is the classic disagreement scenario: 5 ensemble members each predict confidently but predict different classes. Low BALD: predictive entropy is high but each individual model is also uncertain — the model is just inherently uncertain about this point, not informatively uncertain. This filters out true outliers from uncertain examples.",
+      hints: [
+        "BALD distinguishes epistemic uncertainty (model parameter uncertainty, reducible by more data) from aleatoric uncertainty (label noise, irreducible). BALD selects epistemically uncertain examples.",
+        "Practical BALD approximation: use MC Dropout or deep ensembles to estimate the expectation E_{θ}[H(y|x,θ)] by running inference multiple times with different dropout masks.",
+      ],
+    },
+    {
+      id: "q-dc-kp6-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In a medical imaging active learning study, the acquisition function selects 100 CT scan slices for radiologist annotation per round. After 5 rounds (500 labels total), the model\'s F1 on rare pathology class \'pulmonary embolism\' remains near 0 despite improving on common classes. The most likely cause is:",
+      options: [
+        "The acquisition function is working correctly; 500 labels are insufficient for any rare class",
+        "Uncertainty-based acquisition without class-balancing constraints fails to select rare-class examples when the current model never predicts the rare class confidently — the rare class never enters the acquisition budget",
+        "The radiologist oracle is unreliable for rare-class annotation",
+        "F1 cannot measure performance on rare classes; accuracy should be used instead",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Cold-start / class-imbalance failure mode of uncertainty sampling: if the initial model never predicts \'pulmonary embolism\' (rare class, say 0.5% prevalence), then no unlabeled example will have high uncertainty for that class. The acquisition function will select uncertain examples from common classes, and the rare class will never be labeled. The model never gets examples of the rare class → never learns to predict it → never queries for more examples — a vicious cycle. Solutions: (1) Class-balanced acquisition: guarantee a minimum number of each class per round by combining uncertainty with diversity constraints. (2) Seeded rare class examples: manually label a small number of rare class examples to bootstrap the model. (3) Mixed acquisition: combine uncertainty sampling with random sampling (ensuring some rare-class examples are randomly selected). (4) Anomaly-based seeding: use an unsupervised anomaly detector to identify likely rare-class examples.",
+      hints: [
+        "The rare class acquisition problem is a fundamental limitation of purely uncertainty-based active learning. The model must first encounter rare examples before it can be uncertain about them.",
+        "Hybrid strategies: combine exploitation (uncertainty) with exploration (random or diversity-based sampling) to avoid locking out rare classes from the acquisition budget.",
+      ],
+    },
   ],
 
   "curriculum-learning-dc": [

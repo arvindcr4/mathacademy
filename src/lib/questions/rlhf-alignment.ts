@@ -1659,6 +1659,41 @@ const additionalQuestions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-rlhf-kp30-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The Open Assistant (OASST1) dataset is an example of community-sourced preference data, where non-professional volunteers annotate preference pairs at a quality comparable to paid professional annotators.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "While OASST1 (K\u00f6pf et al., 2023) is a valuable open-source community-sourced dataset (~160K messages in 35 languages), community volunteer annotation quality is generally lower than that of trained professional annotators. Volunteers have inconsistent quality standards, limited calibration, and no monetary incentive for accuracy. Professional annotators (as used in InstructGPT) undergo training, calibration sessions, and quality monitoring. OASST1\'s value is in breadth and multilingual coverage, not annotation precision.",
+      hints: [
+        "Community contributions democratize RLHF data but sacrifice annotation consistency.",
+        "Quality control in OASST1 relies on peer review within the community, not professional standards.",
+      ],
+    },
+    {
+      id: "q-rlhf-kp30-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When selecting prompts for a preference dataset, why is prompt diversity critical for training a generalizable reward model?",
+      options: [
+        "Diverse prompts increase the number of tokens in the training set, improving RM perplexity.",
+        "A reward model trained on a narrow prompt distribution will overfit to surface features of that distribution (e.g., question format, domain vocabulary) and fail to generalize — high diversity forces the RM to learn domain-agnostic response quality features that transfer to the full deployment distribution.",
+        "Prompt diversity is only important for the SFT phase, not for reward model training.",
+        "Diverse prompts prevent the Bradley-Terry model from becoming overparameterized.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "If the preference dataset contains only coding questions, the RM learns to score responses based on code quality signals — but the deployed model faces diverse prompts including creative writing, factual QA, emotional support, and more. A narrow-distribution RM generalizes poorly and produces unreliable reward signals outside its training domain. InstructGPT\'s prompt collection was designed to span helpfulness, brainstorming, chat, and specialized domains to maximize RM coverage.",
+      hints: [
+        "Imagine an RM trained only on medical prompts — it would have no reliable signal for coding or creative writing tasks.",
+        "Prompt diversity is the RM-training analogue of task diversity in instruction fine-tuning: both require breadth to generalize.",
+      ],
+    },
+    {
       id: "q-rlhf-kp21-1",
       type: "multiple-choice",
       difficulty: "easy",
