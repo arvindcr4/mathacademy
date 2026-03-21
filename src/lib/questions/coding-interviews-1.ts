@@ -96,10 +96,12 @@ const questions: Record<string, Question[]> = {
         "Two pointers on a sorted array require $\\mathrm{O}(n \\log n)$ time just for the sort."
       ],
       explanation:
-        "**Step 1:** Without a hash map, the only other way to achieve $\\mathrm{O}(n)$ lookup of complements is the two-pointer technique, which requires a sorted array. But sorting itself costs $\\mathrm{O}(n \\log n)$, not $\\mathrm{O}(n)$.\n\n" +
-        "**Step 2:** Once sorted, the original indices are lost, and recovering them requires $\\mathrm{O}(n)$ additional storage.\n\n" +
-        "**Step 3:** More formally, a comparison-based sort has a lower bound of $\\Omega(n \\log n)$. Therefore any algorithm that sorts before using two pointers cannot beat $\\Omega(n \\log n)$ in time without using $\\Omega(n)$ extra space for index bookkeeping. This is a fundamental time-space trade-off: $\\mathrm{O}(n)$ time with $\\mathrm{O}(1)$ space for Two Sum is impossible.\n\n" +
-        "\\[\n\\text{Answer: sorting changes the original index order.}\n\\]"
+        "**First, let's recall** the two alternative approaches to Two Sum and their costs.\n\n" +
+        "**Step 1:** Without a hash map, the only other way to achieve $\\mathrm{O}(n)$ lookup of complements is the two-pointer technique on a sorted array. However, sorting itself costs $\\mathrm{O}(n \\log n)$, not $\\mathrm{O}(n)$.\n\n" +
+        "**Step 2:** Once sorted, the original indices are lost, and recovering them requires $\\mathrm{O}(n)$ additional storage for index bookkeeping.\n\n" +
+        "**Step 3:** More formally, a comparison-based sort has a lower bound of $\\Omega(n \\log n)$. Therefore any algorithm that sorts before using two pointers cannot beat $\\Omega(n \\log n)$ in time without using $\\Omega(n)$ extra space.\n\n" +
+        "\\[\n\\text{Answer: sorting changes the original index order.}\n\\]\n\n" +
+        "Therefore, $\\mathrm{O}(n)$ time with $\\mathrm{O}(1)$ space for Two Sum is impossible."
     },
     {
       id: "q-ts-6",
@@ -505,10 +507,12 @@ const questions: Record<string, Question[]> = {
         "After sorting, how do you check for duplicates?"
       ],
       explanation:
-        "The sorting approach works in two steps:\n\n" +
-        "1. Sort the array: $\\mathrm{O}(n \\log n)$.\n" +
-        "2. Scan adjacent pairs to detect duplicates: $\\mathrm{O}(n)$.\n\n" +
-        "Total: $\\mathrm{O}(n \\log n) + \\mathrm{O}(n) = \\mathrm{O}(n \\log n)$."
+        "**First, let's recall** the two-step procedure for the sorting-based approach:\n\n" +
+        "**Step 1:** Sort the array. A comparison-based sort costs $\\mathrm{O}(n \\log n)$.\n\n" +
+        "**Step 2:** Scan adjacent pairs to detect duplicates. Since we visit each adjacent pair once, this costs $\\mathrm{O}(n)$.\n\n" +
+        "Adding these together:\n" +
+        "\\[\n\\text{Total time} = \\mathrm{O}(n \\log n) + \\mathrm{O}(n) = \\mathrm{O}(n \\log n).\n\\]\n\n" +
+        "Therefore, the sorting-based approach has $\\mathrm{O}(n \\log n)$ time complexity."
     },
     {
       id: "q-cd-2",
@@ -522,8 +526,11 @@ const questions: Record<string, Question[]> = {
         "What happens when a duplicate is found during insertion?"
       ],
       explanation:
-        "True. As we iterate through the array, we attempt to insert each element into a hash set. If the element is already present, insertion fails (or we detect it via lookup) and we return true.\n\n" +
-        "Each insertion and lookup is $\\mathrm{O}(1)$ on average. Since we perform at most $n$ insertions and $n$ lookups, the total average time is $\\mathrm{O}(n)$."
+        "**First, let's recall** how the hash-set algorithm works:\n\n" +
+        "**Step 1:** Iterate through the array. For each element, attempt to insert it into a hash set.\n\n" +
+        "**Step 2:** If the element is already present, insertion fails (or we detect it via lookup) and we immediately return true.\n\n" +
+        "Each insertion and lookup is $\\mathrm{O}(1)$ on average. Since we perform at most $n$ insertions and $n$ lookups, the total average time is $\\mathrm{O}(n)$.\n\n" +
+        "Therefore, the hash-set approach achieves $\\mathrm{O}(n)$ average time complexity."
     },
     {
       id: "q-cd-3",
@@ -538,7 +545,11 @@ const questions: Record<string, Question[]> = {
         "How many elements are in the hash set at that point?"
       ],
       explanation:
-        "$\\mathrm{O}(n)$ in the worst case. If there are no duplicates, the algorithm reaches the end of the array having inserted all $n$ elements into the set before returning false. Each element costs one hash-table entry, so the space usage grows linearly with $n$."
+        "**First, let's recall** the worst-case behavior of the hash-set algorithm.\n\n" +
+        "**Step 1:** If there are no duplicates, the algorithm scans the entire array and inserts all $n$ elements into the set before returning false.\n\n" +
+        "**Step 2:** Each element costs one hash-table entry. Therefore, the space usage grows linearly with $n$.\n\n" +
+        "\\[\n\\text{Space complexity} = \\mathrm{O}(n).\n\\]\n\n" +
+        "Therefore, the hash-set approach uses $\\mathrm{O}(n)$ space in the worst case."
     },
     {
       id: "q-cd-4",
@@ -558,9 +569,12 @@ const questions: Record<string, Question[]> = {
         "Do we need any additional data structures to check neighbors in a sorted array?"
       ],
       explanation:
-        "Two pointers (or a single pass with index comparison) suffices.\n\n" +
-        "Since the array is sorted, duplicate elements are adjacent. A single pass comparing $\\text{nums}[i]$ with $\\text{nums}[i+1]$ for all valid $i$ will detect any duplicate in $\\mathrm{O}(n)$ time and $\\mathrm{O}(1)$ extra space.\n\n" +
-        "No hash set is needed (space $\\mathrm{O}(n)$ avoided), and no sorting is needed (already sorted)."
+        "**First, let's recall** the key property of sorted arrays: duplicate elements appear adjacent to each other.\n\n" +
+        "**Step 1:** Use two pointers (or a single index $i$ advancing through the array) to compare each element with its immediate neighbor.\n\n" +
+        "**Step 2:** Since duplicates are adjacent in a sorted array, comparing $\\text{nums}[i]$ with $\\text{nums}[i+1]$ for all valid $i$ will detect any duplicate in $\\mathrm{O}(n)$ time.\n\n" +
+        "**Step 3:** No additional data structures are needed — we only compare neighboring elements in place.\n\n" +
+        "\\[\n\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\n\\]\n\n" +
+        "Therefore, the two-pointer approach achieves $\\mathrm{O}(1)$ extra space on a sorted array."
     },
     {
       id: "q-cd-5",
@@ -575,7 +589,11 @@ const questions: Record<string, Question[]> = {
         "Is $\\mathrm{O}(n)$ achievable?"
       ],
       explanation:
-        "$\\mathrm{O}(n)$ is the best achievable. We must examine every element at least once in the worst case (e.g., when the duplicate is at the very end), giving a lower bound of $\\Omega(n)$. The hash-set approach achieves exactly $\\mathrm{O}(n)$ average time."
+        "**First, let's recall** the lower bound argument for any duplicate-detection algorithm.\n\n" +
+        "**Step 1:** In the worst case (e.g., when the duplicate is at the very end of the array), we must examine every element at least once. This gives a lower bound of $\\Omega(n)$.\n\n" +
+        "**Step 2:** The hash-set approach achieves exactly $\\mathrm{O}(n)$ average time by processing each element once with $\\mathrm{O}(1)$ hash operations.\n\n" +
+        "\\[\n\\text{Best achievable time complexity} = \\Theta(n).\n\\]\n\n" +
+        "Therefore, $\\mathrm{O}(n)$ is the best (lowest) time complexity achievable for the Contains Duplicate problem."
     },
   ],
 

@@ -824,8 +824,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A Trie stores strings character by character. Common uses: autocomplete, spell-check, prefix search. Every root-to-marked-node path represents a stored word.",
-      hints: ['The name "prefix tree" is a direct clue.'],
+        "First, let's recall what a Trie does: it stores strings character by character at each level, with common prefixes shared among words.\n\n\\\n\\text{Trie structure: root} \\to \\text{first char} \\to \\text{second char} \\to \\dots \\to \\text{word end marker}\n\\\]\n\nTherefore, a Trie is optimized for prefix-based operations like autocomplete, spell-checking, and prefix searches, where every root-to-marked-node path represents a stored word.",
+      hints: [
+        'The name "prefix tree" is a direct clue - tries excel when you need to find all words starting with a given prefix.',
+        "Think about how sharing prefixes reduces redundant storage when many words share common beginnings.",
+      ],
     },
     {
       id: "q-trie-2",
@@ -836,8 +839,11 @@ const questions: Record<string, Question[]> = {
       options: ["10", "26", "52", "128"],
       correctAnswer: 1,
       explanation:
-        "One slot per letter a-z: 26 total. children[0] = 'a', ..., children[25] = 'z'.",
-      hints: ["Lowercase English: a through z = 26 characters."],
+        "First, let's recall the structure of a Trie node: each node represents a character position and must be able to reach any possible next character.\n\n\\\n\\text{children}[0] = 'a',\\; \\text{children}[1] = 'b',\\; \\dots,\\; \\text{children}[25] = 'z'\n\\\]\n\nTherefore, one slot per lowercase English letter gives us 26 total slots, enabling O(1) child lookup by character index.",
+      hints: [
+        "Lowercase English has 26 letters from 'a' to 'z'.",
+        "Each slot corresponds to one possible next character in the alphabet.",
+      ],
     },
     {
       id: "q-trie-3",
@@ -970,9 +976,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DFS backtracking explores all paths in the grid. A Trie enables early pruning: if the current prefix is not in the Trie, backtrack immediately.",
+        "First, let's recall Word Search I, where we use DFS backtracking to find a single word in the grid. For Word Search II with multiple words, we need a way to search for all words simultaneously.\n\nTherefore, the algorithm uses DFS backtracking from each cell to explore paths, but incorporates a Trie to prune branches early: if the current path prefix is not a prefix of any dictionary word, we backtrack immediately rather than continuing down that path.",
       hints: [
-        "Word Search I (single word) = DFS backtracking. Word Search II adds Trie for multiple words.",
+        "Word Search I (single word) = DFS backtracking. Word Search II adds a Trie to search for multiple words simultaneously.",
+        "The Trie lets us check if a path prefix could lead to any valid word - if not, prune immediately.",
       ],
     },
     {
@@ -1002,8 +1009,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Only horizontal and vertical neighbors (up, down, left, right) - not diagonals. Words are formed by sequentially adjacent cells sharing an edge.",
-      hints: ["Adjacent = sharing an edge, not a corner."],
+        "First, let's recall the definition of adjacency in grid-based word searches: cells are considered adjacent when they share an edge (not a corner).\n\nStep 1: Moving up decreases the row: (r-1, c)\nStep 2: Moving down increases the row: (r+1, c)\nStep 3: Moving left decreases the column: (r, c-1)\nStep 4: Moving right increases the column: (r, c+1)\n\nTherefore, the four directions are: up, down, left, right (not diagonals), since words are formed by sequentially adjacent cells sharing an edge.",
+      hints: [
+        "Adjacency means sharing an edge (top, bottom, left, right), not a corner.",
+        "Diagonal cells touch only at a point, not along an edge.",
+      ],
     },
     {
       id: "q-ws2-4",
@@ -1038,9 +1048,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "With the Trie, one DFS from each cell branches only where Trie has children. Total: O(m * n * 4^L). Building Trie: O(W * L). Key win: all words searched simultaneously.",
+        "First, let's recall why the Trie helps: without it, we'd need to run a separate DFS for each of W words, giving O(W * m * n * 4^L).\n\nWith the Trie, we perform one DFS from each cell, but the Trie prunes branches where the current prefix doesn't match any word. Each DFS can branch at most 4 ways and goes at most L steps deep:\n\nStep 1: Start DFS from each of m*n cells\nStep 2: At each step, try up to 4 directions (constant factor)\nStep 3: DFS depth bounded by L (max word length)\n\nTherefore, the total time is O(m * n * 4^L), independent of W because all words are searched simultaneously through the shared Trie structure.",
       hints: [
-        "The Trie replaces W independent word searches with one simultaneous search.",
+        "The Trie replaces W independent word searches with one simultaneous search across all words.",
+        "Each DFS from a cell can make at most 4 moves per cell and go at most L steps deep.",
       ],
     },
     {
@@ -1074,9 +1085,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Once a word is found and its Trie node has no remaining word endings below it, pruning that branch prevents future DFS calls from traversing into it. This optimization is significant when many words share prefixes.",
+        "First, let's recall the problem: many dictionary words share prefixes. Once a word is found and its Trie node has no remaining descendants ending in other words, that entire branch becomes a dead end.\n\nStep 1: After finding a word at a Trie node, check if that node has any remaining word endings below it\nStep 2: If no descendants with isEnd=true remain, prune that branch by removing it\nStep 3: Future DFS calls that reach this position will immediately know there's no point continuing\n\nTherefore, pruning prevents wasted traversal effort on branches that can no longer produce valid words, reducing computational work significantly when many words share common prefixes.",
       hints: [
-        "Dead branches = nodes with no words left. No reason to traverse them. Pruning prevents it.",
+        "Dead branches = Trie nodes with no remaining words. Once a word is found and its branch has no more words, there's no reason to traverse that path.",
+        "Pruning is especially beneficial when many dictionary words share long common prefixes.",
       ],
     },
     {
@@ -1106,8 +1118,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "For each of W words: DFS from each of m*n cells, branching up to 4 directions for L steps. Per word: O(m * n * 4^L). Total: O(W * m * n * 4^L). Trie approach eliminates the W multiplier.",
-      hints: ["Brute force = Word Search I run W times independently."],
+        "First, let's recall Word Search I complexity: for a single word of length L, we run DFS from each cell, branching at most 4 ways per step, giving O(m * n * 4^L).\n\nFor brute force Word Search II with W words:\n\nStep 1: For each of W words, run the full Word Search I algorithm\nStep 2: Each word search costs O(m * n * 4^L)\nStep 3: Total across all words is simply W times that amount\n\nTherefore, the brute force approach costs O(W * m * n * 4^L), where the W factor comes from running W independent searches. The Trie-based approach eliminates this W multiplier by searching all words simultaneously.",
+      hints: [
+        "Brute force = running Word Search I independently for each of W words.",
+        "The key insight is that the Trie approach searches all W words in one pass, eliminating the W multiplier.",
+      ],
     },
   ],
 
@@ -1127,10 +1142,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'BFS serialization encodes every node position, including absent children, using a sentinel so deserialization knows the exact tree shape:\n\n\\\[\n\\text{Tree: } 1 \\to 2, 3 \\to 4, null, null, 5\n\\\]\n\\\[\n\\text{Serialized: "1,2,3,4,null,null,5"}\n\\\]\n\nWithout sentinels the decoder cannot distinguish a missing left child from a present one.',
+        "First, let's recall how BFS traversal works: it processes nodes level by level, left to right. To reconstruct the exact tree structure during deserialization, we need to know which positions had missing children.\n\n\\\[\n\\text{Tree: } 1 \\to 2, 3 \\to 4, null, null, 5\n\\\]\n\\\[\n\\text{Serialized: \"1,2,3,4,null,null,5\"}\n\\\]\n\nTherefore, null children are represented by a sentinel marker (e.g., 'null' or '#') in the output string. Without these sentinels, the decoder cannot distinguish between a missing left child and a present right child.",
       hints: [
         "Think of the LeetCode array representation - it includes nulls to mark absent children.",
-        "Null markers preserve structural information that pure value lists lose.",
+        "A tree like [1,2,3,null,4] vs [1,2,3,4,null] have different structures; sentinels preserve this distinction.",
       ],
     },
     {

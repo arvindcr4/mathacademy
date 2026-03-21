@@ -37,10 +37,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A reward model that cannot understand nuanced language cannot reliably judge whether a response is helpful or harmful. Initializing from the SFT model - which already understands the task domain - gives the RM the language comprehension needed to assign meaningful scores. A scalar regression head is then added atop the LM backbone.",
+        "First, let's recall that the reward model's job is to score (prompt, response) pairs by predicting how humans would rate them. A reward model that cannot understand nuanced language cannot reliably judge whether a response is helpful or harmful.\n\nWhen initializing from the SFT model, we start with a backbone that already understands grammar, context, reasoning, and domain knowledge - all the linguistic prerequisites for evaluating response quality. A randomly initialized network would need to learn language understanding from scratch, which is wasteful since the SFT model already acquired this knowledge during its own training.\n\nThe architecture is straightforward: the SFT model's Transformer backbone is preserved, and a single scalar regression head is added atop the final hidden state to output a reward score. The SFT weights provide a high-quality initialization that jumpstarts reward learning.\n\nTherefore, initializing the RM from SFT rather than random weights is essential because it gives the RM strong language understanding as a foundation for learning what humans consider high-quality responses.",
       hints: [
-        "If the RM cannot understand a complex response, it cannot score it accurately.",
-        "The SFT model\'s pre-trained representations are high-quality starting points for learning reward."
+        "If the RM cannot parse complex sentences, it cannot reliably score whether a response is truly helpful or harmful - language understanding is a prerequisite for quality judgment.",
+        "The SFT model learned rich representations during its training on demonstration data - these representations transfer directly to reward prediction, which is why random initialization is strictly worse."
       ],
     },
     {
@@ -51,10 +51,10 @@ const questions: Record<string, Question[]> = {
         "A perfectly trained reward model that exactly captures average human preferences will always produce a well-aligned policy after RL fine-tuning, even with extended optimization.",
       correctAnswer: "false",
       explanation:
-        "Even a high-quality RM is only an approximation of true human preferences. Gao et al. (2023) demonstrated empirically that RL over-optimization causes the gold-standard reward to first increase then decrease as KL from the reference grows - an inverted-U curve. The policy exploits distributional gaps in the RM (reward hacking) that do not correspond to genuine human preferences.",
+        "First, let's recall that the reward model is trained on a fixed dataset of human preference comparisons from a specific policy's outputs. As RL fine-tuning progresses, the policy diverges from the reference distribution and begins generating responses that may lie outside the RM's training distribution.\n\nGao et al. (2023) studied this systematically and discovered the inverted-U curve: gold-standard human reward initially increases with KL divergence (genuine alignment improvement), but then decreases after an optimal KL point. The policy discovers and exploits distributional gaps in the RM - text patterns that score highly on the proxy RM but are not genuinely preferred by humans.\n\nThis is a direct manifestation of Goodhart's Law: 'When a measure becomes a target, it ceases to be a good measure.' The RM is an imperfect proxy for true human preferences, and maximizing it beyond the sweet spot causes divergence.\n\nTherefore, even a perfectly calibrated RM will produce degraded alignment with extended RL optimization, because the policy can find outputs that fool the RM (high proxy reward) without being genuinely high-quality (low human reward).",
       hints: [
-        'Goodhart\'s Law: "When a measure becomes a target, it ceases to be a good measure."',
-        "The RM is trained on a fixed dataset; the policy can generate out-of-distribution text that scores high but reads poorly."
+        'Goodhart\'s Law applies: optimizing any proxy reward (the RM) beyond its accuracy range causes the proxy to diverge from the true target (human preferences).',
+        "The RM was trained on responses from earlier policy versions - as the policy evolves, it generates out-of-distribution text that the RM may rate highly but humans would rate poorly."
       ],
     },
   ],

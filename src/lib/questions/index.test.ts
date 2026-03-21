@@ -432,4 +432,22 @@ describe('Question Files Validation', () => {
       }
     }
   })
+
+  it('should have valid stepByStep structure when present', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.stepByStep) {
+          // At least one step should be defined
+          const hasStep1 = q.stepByStep.step1 && q.stepByStep.step1.length > 10
+          const hasStep2 = q.stepByStep.step2 && q.stepByStep.step2.length > 10
+          const hasStep3 = q.stepByStep.step3 && q.stepByStep.step3.length > 10
+
+          expect(
+            hasStep1 || hasStep2 || hasStep3,
+            `${bankName}: ${q.id} stepByStep should have at least one meaningful step`
+          ).toBe(true)
+        }
+      }
+    }
+  })
 })

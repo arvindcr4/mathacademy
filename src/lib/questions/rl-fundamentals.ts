@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Per Sutton & Barto (Chapter 3), a policy $\\pi$ is a mapping from each state $s \\in S$ and action $a \\in A(s)$ to the probability $\\pi(a|s)$ of taking action a when in state s. It fully specifies the agent's behavior at every state.",
+        "First, let's recall what a conditional probability distribution over actions means: at each state $s$, a policy assigns a probability mass function $\\pi(\\cdot|s)$ over the action set. Sutton & Barto (Chapter 3) define a policy exactly as this mapping: $\\pi(a|s)$ gives the probability of taking action $a$ when in state $s$.\n\nStep-by-step: a policy maps every state $s \\in S$ to probabilities over $A(s)$. The notation $\\pi(a|s)$ is read \"the probability of action $a$ given state $s$\" - a conditional probability distribution. The key insight is that $\\pi$ needs only the current state to specify behavior; it does not need history.\n\nTherefore, $\\pi$ fully specifies the agent's behavior at every state: to know what the agent does, you only need to know which state it's in.",
       hints: [
         "The definition involves probabilities of actions given states. Which option expresses a conditional probability distribution over actions?",
         "Think about the type signature: input = state, output = probabilities over actions.",
@@ -273,10 +273,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'When all true Q-values are Q\cdot (s,a) = 0 but \\hat{Q}(s,a) has i.i.d. noise N(0,\\sigma\\^2), the maximum of noisy estimates is biased upward. Intuitively: \\mathbb{E}[\\max_i X_i] > \\max_i \\mathbb{E}[X_i] = 0 for independent positive-variance variables - the sample maximum is pulled above the true maximum. Here \\max_a \\hat{Q}(s,a) is the maximum of |A| noisy zero-mean variables, whose expectation is positive. This is maximization bias, and it grows with |A|: more candidate actions means the max is more likely to be inflated. Double Q-learning addresses this by decoupling the action selection from the value update, using two networks to eliminate the upward bias.',
+        "First, let's recall the definition of the advantage function: $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. This measures how much better action $a$ is compared to the average action under policy $\\pi$ in state $s$. Given $Q^\\pi(s, a_1) = 8$ and $V^\\pi(s) = 5$, we compute: $A^\\pi(s, a_1) = 8 - 5 = 3$. The positive sign tells us that action $a_1$ yields 3 more units of expected return than the average action under $\\pi$ from state $s$. Recall from the advantage function section (Sutton & Barto): $\\sum_a \\pi(a|s)A^\\pi(s,a) = 0$, confirming that advantages are zero-mean deviations from the baseline $V^\\pi(s)$. Therefore, $A^\\pi(s, a_1) = +3$ indicates that $a_1$ is a better-than-average action in state $s$.",
       hints: [
-        "$V^\pi(s)$ is the expected Q-value under $\pi$: $V^\pi(s) = \sum_a \pi(a \mid s) Q^\pi(s, a)$. So $A^\pi$ is exactly the deviation of $Q^\pi$ from this average.",
-        "Positive $A^\pi(s, a) \rightarrow$ policy gradient should increase $\pi(a \mid s)$. Negative $A^\pi(s, a) \rightarrow$ decrease $\pi(a \mid s)$.",
+        "Apply the definition directly: $A^\\pi(s,a) = Q^\\pi(s,a) - V^\\pi(s)$. Plug in $Q^\\pi(s, a_1) = 8$ and $V^\\pi(s) = 5$ to get the numerical answer.",
+        "A positive advantage means the action performs better than the average action under the policy. What does this imply for how the policy should be updated?",
       ],
     },
   ],
@@ -1178,9 +1178,9 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "When all true Q-values are Q\cdot (s,a) = 0 but \\hat{Q}(s,a) has i.i.d. noise N(0,\\sigma\\^2), the maximum of noisy estimates is biased upward. Intuitively: \\mathbb{E}[\\max_i X_i] > \\max_i \\mathbb{E}[X_i] = 0 for independent positive-variance variables - the sample maximum is pulled above the true maximum. Here \\max_a \\hat{Q}(s,a) is the maximum of |A| noisy zero-mean variables, whose expectation is positive. This is maximization bias, and it grows with |A|: more candidate actions means the max is more likely to be inflated. Double Q-learning addresses this by decoupling the action selection from the value update, using two networks to eliminate the upward bias.",
-        hints: [
-        "V^\\pi(s) is the expected Q-value under \\pi: V^\\pi(s) = \sum_a \\pi(a|s) Q^\\pi(s,a). So A^\\pi is exactly the deviation of Q from this average.",
-        "Positive A^\\pi(s,a) \\to policy gradient should increase \\pi(a|s). Negative A^\\pi(s,a) \\to decrease \\pi(a|s).",
+      hints: [
+        "Consider T independent random variables X_1, ..., X_T each drawn from N(0, \\sigma^2). What is E[\\max_i X_i]? The maximum of T i.i.d. positive-variance variables is pulled above zero.",
+        "The bias grows with |A| because with more candidate actions, there is a higher chance that at least one action's noisy estimate is significantly positive.",
       ],
     },
   ],

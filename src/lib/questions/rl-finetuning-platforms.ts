@@ -18,10 +18,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SFT trains the model to mimic demonstrations (input-output pairs), while RL fine-tuning optimizes for reward signals that measure task success. RL allows the model to explore beyond the demonstration distribution and can improve on tasks where the optimal behavior isn't captured in training data.",
+        "First, let's recall that SFT (Supervised Fine-Tuning) trains the model to mimic demonstration data—it learns to produce outputs similar to labeled examples it has seen. Step-by-step: (1) SFT learns P(y|x) directly from input-output pairs, essentially learning to imitate human-written responses. (2) RL fine-tuning, by contrast, optimizes a policy to maximize reward signals that measure task success. (3) This allows RL to explore beyond the demonstration distribution—while SFT is constrained to outputs similar to training data, RL can discover novel strategies that improve on the training examples. Therefore, RL fine-tuning is preferred when optimal behavior isn't fully captured in demonstration data, enabling the model to find solutions humans didn't explicitly demonstrate.",
       hints: [
-        "SFT is like imitation learning - copy what you see",
-        "RL can discover novel strategies that weren't in the training data",
+        "SFT is like imitation learning—think of it as copying what expert demonstrations look like",
+        "RL can discover strategies beyond what was shown in training data because it optimizes for outcomes, not just similarity to examples",
       ],
     },
     {
@@ -38,10 +38,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DPO directly optimizes the policy using preference data without needing to train a reward model first. This simplifies the pipeline (no RM training step) and avoids reward hacking issues, though it may not work as well for complex multi-turn reasoning tasks where RLHF with PPO excels.",
+        "First, let's recall the standard RLHF pipeline: it requires (1) an SFT model, (2) a separately trained reward model that predicts human preferences, and (3) PPO optimization using that reward model. Step-by-step derivation: DPO (Direct Preference Optimization) revolutionizes this by eliminating the reward model training step entirely. Instead of training a separate RM and then using it for PPO, DPO directly optimizes the policy using preference comparisons. This simplification avoids common issues like reward hacking, where the policy exploits reward model flaws. However, for complex multi-turn reasoning tasks with delayed rewards, the full RLHF pipeline with PPO often performs better. Therefore, DPO is preferred when you want simplicity and your task doesn't require intricate credit assignment across many steps.",
       hints: [
-        "Think about what components RLHF requires: SFT model, reward model, then PPO",
-        "DPO eliminates one of these components",
+        "Standard RLHF needs three components: SFT model, reward model, and PPO. DPO removes one of these",
+        "Consider whether your task involves simple pairwise comparisons or complex multi-step reasoning with delayed rewards",
       ],
     },
     {
@@ -58,10 +58,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RL fine-tuning with PPO is preferred for complex tasks where rewards depend on multi-step reasoning chains or where the model needs to explore strategies beyond the preference data distribution. DPO works well for single-turn alignment but struggles with tasks requiring credit assignment across multiple steps.",
+        "First, let's recall how DPO works: it excels at pairwise preference alignment—given two responses, it learns which humans prefer. However, step-by-step analysis reveals limitations: (1) DPO assigns credit based on direct comparisons between complete responses, (2) For multi-step reasoning, rewards often depend on intermediate steps, not just the final answer, (3) PPO can propagate reward signals backward through a reasoning chain using value functions. Therefore, RL fine-tuning with PPO is preferred when rewards depend on multi-step reasoning chains, delayed feedback, or when the model must explore strategies beyond what preference data captures.",
       hints: [
-        "DPO is great for 'which response is better' pairwise comparisons",
-        "Think about games: RL excels when rewards come at the end of long sequences",
+        "DPO works best when you can clearly compare two complete responses—think of it as grading final exams only",
+        "Consider tasks where the intermediate steps matter: in chess, every move contributes to winning; in reasoning, each step affects the final answer's correctness",
       ],
     },
   ],
@@ -81,10 +81,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GRPO eliminates the need for a critic/value network by computing advantages relative to other samples in the same group. For each prompt, it generates multiple outputs and ranks them against each other, using the relative rankings as the advantage signal. This reduces memory and complexity.",
+        "First, let's recall how PPO works: it requires both a policy network (the model being trained) and a value network (a critic that estimates future rewards). Step-by-step derivation: GRPO's key innovation eliminates the value function entirely. Here's how: (1) For each input prompt, GRPO generates a group of multiple outputs, (2) It ranks these outputs relative to each other (which is better than which), (3) Instead of comparing to a learned value baseline, it uses the group's mean reward as the baseline. This approach—comparing samples within a group rather than against a learned value function—is why GRPO reduces memory and computational complexity. Therefore, GRPO trades some statistical efficiency for practical efficiency, making RL training more accessible.",
       hints: [
-        "PPO needs both policy and value networks",
-        "GRPO's innovation is avoiding the value function entirely",
+        "PPO needs two networks: the actor (policy) and the critic (value function) that must be maintained and updated",
+        "GRPO's insight: instead of learning what rewards to expect, just compare samples within each group to find the relatively better ones",
       ],
     },
     {
@@ -101,10 +101,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Importance sampling allows computing the gradient of the current policy using samples collected from an older version of the policy. The ratio π(a|s)/π_old(a|s) corrects for the distribution mismatch. This is more sample-efficient than collecting fresh rollouts for every gradient step.",
+        "First, let's recall the policy gradient challenge: when we update our policy, the distribution of actions changes, making old samples less useful for new updates. Step-by-step: (1) In on-policy methods like PPO/GRPO, we ideally want samples from the current policy, but collecting new samples is expensive. (2) Importance sampling allows us to reuse samples from an older policy π_old by reweighting probabilities: the ratio π(a|s)/π_old(a|s) corrects for distribution mismatch. (3) This means we can take multiple gradient steps with samples from a single data collection phase. Therefore, importance sampling dramatically improves sample efficiency by letting us squeeze more learning from each batch of data.",
       hints: [
-        "The probability ratio appears in the PPO/GRPO objective",
-        "Without importance sampling, you'd need new samples for each update",
+        "The probability ratio π(a|s)/π_old(a|s) appears in the GRPO objective—think of it as correcting for 'staleness' of old samples",
+        "Without importance sampling, each gradient update would require fresh data collection, making RL extremely sample-inefficient",
       ],
     },
   ],
@@ -124,10 +124,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Chess playing requires exploring strategies beyond what's in demonstration data and optimizing for a clear win/loss reward. SFT can only copy existing play patterns, while RL can discover novel strategies that lead to higher win rates. The other tasks have clear input-output pairs suitable for SFT.",
+        "First, let's recall what makes RL effective: it optimizes for specified rewards and can explore beyond demonstration data. Step-by-step analysis of each option: (1) Translation with parallel corpora has clear input-output pairs—SFT excels here. (2) Chess has a clear win/loss reward (1 for win, -1 for loss) and requires strategic exploration—RL can discover novel strategies humans haven't documented. (3) Summarization with ground truth summaries is ideal for SFT since you have target outputs. (4) Sentiment classification is a straightforward classification task. Therefore, chess is best for RL because it has a measurable reward signal and benefits from exploring strategies beyond existing play patterns.",
       hints: [
-        "Think about which task has a clear objective/reward",
-        "Which task benefits from exploration beyond demonstrations?",
+        "RL shines when you can clearly measure success—the win/loss outcome in chess is unambiguous",
+        "Which task lets you specify 'good' behavior through rewards rather than just demonstrating correct outputs?",
       ],
     },
     {
@@ -144,10 +144,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RL is appropriate when you have a measurable objective (execution time + correctness) that goes beyond imitation. SFT with StackOverflow data would teach common patterns, but RL can optimize for the specific metrics that matter: queries that run fast and return correct results.",
+        "First, let's recall the key question: when does RL outperform SFT? The answer is optimization beyond imitation. Step-by-step: (1) SFT with StackOverflow data teaches common SQL patterns—it learns to write queries similar to upvoted StackOverflow answers. (2) This is useful but doesn't optimize for your specific metrics. (3) RL can incorporate multiple reward signals: query correctness (does it return the right results?) and execution time (does it run fast?). (4) These are measurable objectives that SFT cannot directly optimize for. Therefore, choose RL when you have measurable metrics that go beyond pattern matching from demonstrations.",
       hints: [
-        "SFT mimics - RL optimizes",
-        "What can you measure and reward?",
+        "SFT teaches 'write queries like the examples'; RL teaches 'optimize for your specific goals'",
+        "Consider what you can measure and optimize: execution time, correctness, security, style—all can be reward signals in RL",
       ],
     },
   ],
@@ -167,10 +167,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RL training requires keeping the policy, reference model, and often a value model in memory. LoRA dramatically reduces memory by only training low-rank adapters (~0.1-1% of parameters). This allows using the saved memory for larger batch sizes, longer sequences, or larger base models.",
+        "First, let's recall the memory challenge in RL fine-tuning: standard RLHF needs the policy model, reference model (for KL penalty), and often a value model—all simultaneously in GPU memory. Step-by-step: (1) Full fine-tuning updates all parameters, requiring enormous memory for optimizer states and gradients. (2) LoRA (Low-Rank Adaptation) freezes most weights and only trains small adapter matrices (~0.1-1% of parameters). (3) This dramatically reduces memory because you only store gradients and optimizer states for the tiny adapter, not the full model. (4) The freed memory can be used for larger batch sizes, longer sequences, or fitting larger base models. Therefore, LoRA makes RL fine-tuning practical on consumer GPUs.",
       hints: [
-        "RL needs multiple models in memory simultaneously",
-        "LoRA freezes most weights and trains tiny adapters",
+        "Standard RLHF keeps multiple large models in memory simultaneously; LoRA reduces the trainable portion to ~0.1-1% of parameters",
+        "Think of LoRA as adding 'learning modules' to a frozen base model rather than modifying everything",
       ],
     },
     {
@@ -187,10 +187,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The reference model (frozen base model) is used to compute KL(π || π_ref) which penalizes the policy for deviating too far from the original distribution. This prevents reward hacking and maintains language capabilities. Without it, the model might output gibberish that maximizes reward.",
+        "First, let's recall why the reference model exists in RLHF: it's your anchor to the original model. Step-by-step derivation: (1) When optimizing for rewards, the policy might discover outputs that score high on the reward model but are nonsensical. (2) The KL divergence term KL(π || π_ref) measures how much the new policy π diverges from the reference policy π_ref. (3) This penalty prevents the model from drifting too far from the original distribution—which preserves useful language capabilities. (4) Without this constraint, the model could 'hack' the reward by outputting confident-sounding gibberish that exploits reward model limitations. Therefore, the reference model is your safety net that keeps the fine-tuned model coherent.",
       hints: [
-        "The KL term appears in the RLHF objective",
-        "It prevents 'reward hacking' where the model exploits the reward",
+        "The KL term in the RLHF objective acts like a regularization loss—keeping the new policy close to the original",
+        "Consider what happens without this constraint: the model optimizes purely for the reward signal, which may not capture actual human preferences",
       ],
     },
   ],
@@ -210,10 +210,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Reward models learn from human preference data where annotators compare two model outputs. The Bradley-Terry model converts pairwise comparisons into a probability: P(chosen > rejected) = sigmoid(r(chosen) - r(rejected)). The reward model is trained to maximize the likelihood of human preferences.",
+        "First, let's recall how human preferences are captured for RLHF: we can't directly measure 'goodness' of outputs, but humans can compare two outputs and say which is better. Step-by-step: (1) Human annotators are shown pairs of model responses and choose which they prefer. (2) The Bradley-Terry model converts these pairwise comparisons into a probability framework: P(chosen > rejected) = sigmoid(r(chosen) - r(rejected)). (3) This means the probability that humans prefer response A over B depends on the difference in their predicted rewards. (4) The reward model is trained to maximize the likelihood of these human preference comparisons. Therefore, the reward model learns a scalar reward function that predicts human preferences.",
       hints: [
-        "RLHF = RL from Human Feedback, so how do you capture human preferences?",
-        "The reward model learns to predict which output humans prefer",
+        "RLHF captures human preferences through pairwise comparisons, not absolute ratings—humans find it easier to say 'which is better' than to assign a number",
+        "The sigmoid of the reward difference appears because we want to model probability of preference, which must be between 0 and 1",
       ],
     },
     {
@@ -230,10 +230,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Reward hacking occurs when the policy finds outputs that the reward model scores highly but humans don't actually prefer (e.g., verbose confident-sounding wrong answers). It's mitigated by: KL penalty to reference model, iterative data collection (RLAIF), and using multiple reward models for ensemble voting.",
+        "First, let's recall Goodhart's Law: when a measure becomes a target, it ceases to be a good measure. Step-by-step analysis: (1) The reward model learns to predict human preferences, but it's an imperfect proxy for what humans actually want. (2) Reward hacking occurs when the policy exploits this gap—finding outputs that score high on the reward model but humans don't actually prefer. (3) Classic example: verbose, confident-sounding wrong answers that manipulate the reward model's superficial patterns. (4) Mitigation strategies include: KL penalty to keep the policy near the reference model, iterative data collection where new human feedback is gathered on exploited outputs, and ensemble voting across multiple reward models to reduce variance. Therefore, reward hacking is an alignment problem that requires ongoing monitoring and safeguards.",
       hints: [
-        "The reward model isn't perfect - it can be 'fooled'",
-        "Think about Goodhart's Law: when a measure becomes a target, it ceases to be a good measure",
+        "The reward model is a proxy for human preferences—proxies can be 'gamed' when the policy finds shortcuts the proxy doesn't capture",
+        "Consider why KL divergence to the reference model helps: it penalizes the policy for diverging from what humans originally approved of",
       ],
     },
   ],
@@ -254,10 +254,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HUD (Y Combinator W25) is notable for owning the entire RL loop + serving in one integrated product. Most platforms only do training (Tinker) or only do hosting (Together AI). HUD supports Claude, GPT, Gemini, and Grok models with reinforcement fine-tuning and serves the resulting models at inference.hud.ai.",
+        "First, let's recall the typical RL fine-tuning workflow: most platforms specialize in one part—some offer training (like Tinker), others offer hosting (like Together AI), requiring you to stitch them together. HUD (Y Combinator W25) takes a different approach. Step-by-step: (1) HUD owns the entire lifecycle—reinforcement fine-tuning training AND model serving in one integrated product. (2) You upload your preference data and training prompts, HUD handles the RL training. (3) After training, the resulting models are served at inference.hud.ai. (4) Supported models include Claude, GPT, Gemini, and Grok. Therefore, HUD reduces operational complexity by being a one-stop shop for both training and hosting.",
       hints: [
-        "Think about the typical split: train here, host there",
-        "HUD handles the full lifecycle",
+        "Most platforms force you to choose: either train here or host there—HUD combines both",
+        "Consider the DevOps overhead: with split platforms, you must handle weight exports, format conversions, and multiple API integrations",
       ],
     },
     {
@@ -274,10 +274,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HUD supports reinforcement fine-tuning on major foundation models including Anthropic's Claude, OpenAI's GPT, Google's Gemini, and xAI's Grok. This allows developers to enhance these models for specific tasks using RL rather than being limited to prompt engineering.",
+        "First, let's recall why platform model support matters: proprietary foundation models (Claude, GPT, etc.) are trained by large companies and typically accessed via APIs, limiting customization options. Step-by-step: (1) Traditionally, fine-tuning proprietary models required the provider to support it. (2) HUD's approach supports reinforcement fine-tuning on Claude (Anthropic), GPT (OpenAI), Gemini (Google), and Grok (xAI). (3) This means developers can RL fine-tune these models for specific tasks without being limited to prompt engineering. (4) Each provider has different strengths: Claude for reasoning, GPT for versatility, Gemini for multimodal, Grok for real-time data. Therefore, HUD provides access to the major foundation models for custom RL fine-tuning.",
       hints: [
-        "HUD works with the major LLM providers",
-        "It's not limited to open-source",
+        "Proprietary models are usually accessed via APIs with limited customization—HUD expands what you can do with them",
+        "Consider which task you need: different models excel at different things, so having options matters",
       ],
     },
   ],
