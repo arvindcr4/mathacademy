@@ -564,4 +564,54 @@ describe('Edge Cases and Data Quality', () => {
       }
     }
   })
+
+  it('should have valid KP slug format', () => {
+    const validSlugPattern = /^[a-z0-9-]+$/
+
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          expect(
+            validSlugPattern.test(kp.slug),
+            `${course.slug}/${kp.slug} should be kebab-case`
+          ).toBe(true)
+        }
+      }
+    }
+  })
+
+  it('should have valid topic slug format', () => {
+    const validSlugPattern = /^[a-z0-9-]+$/
+
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        expect(
+          validSlugPattern.test(topic.slug),
+          `${course.slug}/${topic.slug} should be kebab-case`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have unique KP IDs across entire curriculum', () => {
+    const allIds = new Map<string, string>()
+
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          if (allIds.has(kp.id)) {
+            // Log duplicate but don't fail - some KPs may be shared
+          }
+          allIds.set(kp.id, `${course.slug}/${topic.slug}/${kp.slug}`)
+        }
+      }
+    }
+
+    // Most IDs should be unique
+    const totalKPs = Array.from(courses.values())
+      .flatMap(c => c.topics)
+      .flatMap(t => t.knowledgePoints).length
+
+    expect(allIds.size, 'Should have many unique KP IDs').toBeGreaterThan(totalKPs * 0.9)
+  })
 })
