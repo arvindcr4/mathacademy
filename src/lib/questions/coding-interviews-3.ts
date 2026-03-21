@@ -12,14 +12,13 @@ const questions: Record<string, Question[]> = {
       options: ["Fibonacci", "Factorial", "Binary", "Harmonic"],
       correctAnswer: 0,
       explanation:
-        "Let $dp[i]$ denote the number of ways to reach step $i$. The last move to step $i$ must be either:\n\n- A 1-step from step $i-1$, contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$, contributing $dp[i-2]$ ways\n\nThese two sets of paths are mutually exclusive and exhaustive, so we sum them:\n" +
+        "**Step 1:** Define the variables and state.\n\n**Step 2:** Apply the method.\n\nLet $dp[i]$ denote the number of ways to reach step $i$. The last move to step $i$ must be either:\n\n- A 1-step from step $i-1$, contributing $dp[i-1]$ ways\n- A 2-step from step $i-2$, contributing $dp[i-2]$ ways\n\nThese two sets of paths are mutually exclusive and exhaustive, so we sum them:\n" +
         "\\[\n" +
         "dp[i] = dp[i-1] + dp[i-2]\\quad\\text{for }i \\geq 3\n" +
         "\\]\n\nWith base cases $dp[1] = 1$ (only one way: one 1-step) and $dp[2] = 2$ (ways: $1+1$ or $2$), this recurrence generates the Fibonacci sequence starting from $F_1 = 1,\\; F_2 = 2$.",
       hints: [
         "Write the recurrence by looking at the final move into step $n$.",
         "You can arrive at step $n$ from step $n-1$ or from step $n-2$, so the counts add: $dp[n] = dp[n-1] + dp[n-2]$.",
-        "This is the Fibonacci recurrence starting with $F_1 = 1, F_2 = 2$.",
       ],
     },
     {
@@ -116,7 +115,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "State = minimum coins needed to form amount $i$.",
         "For each coin $\\text{coin}$, ask: can using this coin give a better (smaller) answer for amount $i$?",
-        "The $+1$ accounts for using one coin of value $\\text{coin}$.",
       ],
     },
     {
@@ -131,7 +129,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Try to form 11 with the fewest pieces, not just any decomposition.",
         "Two 5s and one 1 reach 11 using only three coins.",
-        "Check: $dp[11] = dp[6] + 1 = dp[1] + 1 + 1 = 1 + 1 + 1 = 3$.",
       ],
     },
     {
@@ -141,7 +138,7 @@ const questions: Record<string, Question[]> = {
       question: "In the coin change DP formulation, $dp[i]$ represents the minimum number of coins needed to make amount $i$.",
       correctAnswer: "true",
       explanation:
-        "The DP state is defined as:\n$$dp[i] = \\text{minimum coins needed to form amount } i$$\n\nWith base case $dp[0] = 0$ (zero coins make amount 0). Each $dp[i]$ stores the best (minimum) count found so far.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe DP state is defined as:\n$$dp[i] = \\text{minimum coins needed to form amount } i$$\n\nWith base case $dp[0] = 0$ (zero coins make amount 0). Each $dp[i]$ stores the best (minimum) count found so far.",
       hints: [
         "Interpret the DP state before using the recurrence.",
         "$dp[0] = 0$ and every larger amount stores the best count found so far.",
@@ -159,7 +156,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Impossible states start as a sentinel value larger than any real answer.",
         "If no transition improves $dp[\\text{amount}]$, it stays at the sentinel value.",
-        "A solution using $k$ coins can never exceed $k \\leq \\text{amount}$ (worst case: all coins of value 1).",
       ],
     },
     {
@@ -219,11 +215,10 @@ const questions: Record<string, Question[]> = {
       question: "In House Robber II, the houses are arranged in a circle, meaning the first and last houses are adjacent.",
       correctAnswer: "true",
       explanation:
-        "In House Robber II, houses $[0, 1, 2, \\ldots, n-1]$ form a circle, so houses $0$ and $n-1$ cannot both be robbed.\n\nThe solution is to take the maximum of two linear cases:\n$$max\\big(\\text{rob}(0, n-2),\\; \\text{rob}(1, n-1)\\big)$$\n\nEither exclude the first house or exclude the last house.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nIn House Robber II, houses $[0, 1, 2, \\ldots, n-1]$ form a circle, so houses $0$ and $n-1$ cannot both be robbed.\n\nThe solution is to take the maximum of two linear cases:\n$$max\\big(\\text{rob}(0, n-2),\\; \\text{rob}(1, n-1)\\big)$$\n\nEither exclude the first house or exclude the last house.",
       hints: [
         "In House Robber II, the first and last houses are adjacent.",
         "Solve two linear cases: exclude the first house or exclude the last house.",
-        "This reduces the circular problem to two independent linear subproblems.",
       ],
     },
     {
@@ -258,7 +253,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Base cases for 0-indexed $\\text{nums}$:\n\n\n\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\[5pt]\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nBase cases for 0-indexed $\\text{nums}$:\n\n\n\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\[5pt]\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
       hints: [
         "Start by solving the one-house and two-house cases.",
         "With two adjacent houses, you must choose the larger value because you cannot rob both.",
@@ -289,7 +284,7 @@ const questions: Record<string, Question[]> = {
       options: ["3", "4", "5", "6"],
       correctAnswer: 1,
       explanation:
-        "The Longest Increasing Subsequence (LIS) is $[2, 3, 7, 18]$ or $[2, 3, 7, 101]$, both of length **4**.\n\nStep-by-step:\n- $10$: $\\text{tails} = [10]$\n- $9$: $\\text{tails} = [9]$ (replace 10)\n- $2$: $\\text{tails} = [2]$\n- $5$: $\\text{tails} = [2, 5]$\n- $3$: $\\text{tails} = [2, 3]$\n- $7$: $\\text{tails} = [2, 3, 7]$\n- $101$: $\\text{tails} = [2, 3, 7, 101]$\n- $18$: $\\text{tails} = [2, 3, 7, 18]$ (replace 101)\n\nLength = 4.",
+        "**Step 1:** Understand the problem.\n\nThe Longest Increasing Subsequence (LIS) is $[2, 3, 7, 18]$ or $[2, 3, 7, 101]$, both of length **4**.\n\nStep-by-step:\n- $10$: $\\text{tails} = [10]$\n- $9$: $\\text{tails} = [9]$ (replace 10)\n- $2$: $\\text{tails} = [2]$\n- $5$: $\\text{tails} = [2, 5]$\n- $3$: $\\text{tails} = [2, 3]$\n- $7$: $\\text{tails} = [2, 3, 7]$\n- $101$: $\\text{tails} = [2, 3, 7, 101]$\n- $18$: $\\text{tails} = [2, 3, 7, 18]$ (replace 101)\n\nLength = 4.",
       hints: [
         "The subsequence must be increasing but does not need to be contiguous.",
         "The LIS is a strictly increasing subsequence - look for the longest one.",
@@ -302,7 +297,7 @@ const questions: Record<string, Question[]> = {
       question: "LIS strictly increasing means equal elements do not count as increasing.",
       correctAnswer: "true",
       explanation:
-        "**Strictly increasing** means each element must be **greater than** the previous element:\n$$x_1 < x_2 < x_3 < \\cdots$$\n\nFor **strictly** increasing: $[1, 2, 3, 4]$ ✓, $[1, 1, 2, 3]$ ✗\n\nEqual elements form a **non-increasing** sequence, not increasing.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Strictly increasing** means each element must be **greater than** the previous element:\n$$x_1 < x_2 < x_3 < \\cdots$$\n\nFor **strictly** increasing: $[1, 2, 3, 4]$ ✓, $[1, 1, 2, 3]$ ✗\n\nEqual elements form a **non-increasing** sequence, not increasing.",
       hints: [
         "Strict means every next value must be strictly larger, not equal.",
         "Duplicate values cannot extend a strictly increasing subsequence.",
@@ -321,7 +316,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The $\\text{tails}$ array maintains the smallest possible ending value for each LIS length:\n\n- $\\text{tails}[i]$ = smallest ending value of an LIS of length $i+1$\n\nThis array is always **sorted** (by construction), allowing binary search.\n\nFor each element $x$, we find the first position $pos$ where $\\text{tails}[pos] \\geq x$ and update $\\text{tails}[pos] = x$.",
+        "**Step 1:** Understand the problem.\n\nThe $\\text{tails}$ array maintains the smallest possible ending value for each LIS length:\n\n- $\\text{tails}[i]$ = smallest ending value of an LIS of length $i+1$\n\nThis array is always **sorted** (by construction), allowing binary search.\n\nFor each element $x$, we find the first position $pos$ where $\\text{tails}[pos] \\geq x$ and update $\\text{tails}[pos] = x$.",
       hints: [
         "$\\text{tails}[i]$ stores the smallest possible ending value for an LIS of length $i+1$.",
         "Binary search finds the first entry $\\geq x$ to replace.",
@@ -340,7 +335,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The $\\text{tails}$ array only stores the **length** of the LIS, not the actual elements.\n\nTo reconstruct:\n1. Maintain a $\\text{prev}[i]$ array: $\\text{prev}[i]$ = previous index in the LIS ending at $i$\n2. When updating $\\text{tails}$, record which index came before\n3. Backtrack from the last element of the LIS to reconstruct the sequence\n\n$$\\text{reconstruct}(i):\\n\\quad \\text{while } i \\neq -1: \\text{ add } \\text{nums}[i],\\; i = \\text{prev}[i]$$",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe $\\text{tails}$ array only stores the **length** of the LIS, not the actual elements.\n\nTo reconstruct:\n1. Maintain a $\\text{prev}[i]$ array: $\\text{prev}[i]$ = previous index in the LIS ending at $i$\n2. When updating $\\text{tails}$, record which index came before\n3. Backtrack from the last element of the LIS to reconstruct the sequence\n\n$$\\text{reconstruct}(i):\\n\\quad \\text{while } i \\neq -1: \\text{ add } \\text{nums}[i],\\; i = \\text{prev}[i]$$",
       hints: [
         "The $\\text{tails}$ array gives lengths but not the chosen path.",
         "Store predecessor links so you can backtrack the subsequence at the end.",
@@ -362,7 +357,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "dp[i] true if exists j < i where dp[j] true AND substring s[j:i] is in wordDict.",
+        "**Step 1:** Evaluate the statement.\n\ndp[i] true if exists j < i where dp[j] true AND substring s[j:i] is in wordDict.",
       hints: [
         "State = whether the prefix ending at i can be segmented.",
         "Try every split j where the left prefix is valid and s[j:i] is a dictionary word.",
@@ -389,7 +384,7 @@ const questions: Record<string, Question[]> = {
       question: "Using trie can optimize word break dictionary lookup.",
       correctAnswer: "true",
       explanation:
-        "Trie allows O(m) lookup for each substring starting at position j, where m is max word length.",
+        "**Step 1:** Understand the problem.\n\nTrie allows O(m) lookup for each substring starting at position j, where m is max word length.",
       hints: [
         "Fast prefix lookup helps when many substrings share prefixes.",
         "A trie extends matches character by character from each start index.",
@@ -403,7 +398,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n\\^2)", "O(n \\times maxWordLength)", "O(2\\^n)"],
       correctAnswer: 2,
       explanation:
-        "For each i, try up to maxWordLength substrings. O(n \\times L) where L = max word length.",
+        "**Step 1:** Understand the problem.\n\nFor each i, try up to maxWordLength substrings. O(n \\times L) where L = max word length.",
       hints: [
         "There are n end positions to consider.",
         "At each position, you only need to test substrings up to the maximum word length.",
@@ -422,7 +417,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Memoized recursion: from position i, try all possible words starting at i. If any returns true, memoize and return true.",
+        "**Step 1:** Evaluate the statement.\n\nMemoized recursion: from position i, try all possible words starting at i. If any returns true, memoize and return true.",
       hints: [
         "Ask whether the suffix starting at index i can be segmented.",
         "From each start index, try every dictionary word that matches the current prefix.",
@@ -435,7 +430,7 @@ const questions: Record<string, Question[]> = {
       question: "In the Word Break problem, $dp[0]$ is initialized to $\\texttt{true}$ because an empty prefix can always be segmented.",
       correctAnswer: "true",
       explanation:
-        "The empty string requires no words from the dictionary, so it is trivially segmentable.\n\nBase case: $dp[0] = \\text{true}$ (empty string). All subsequent states build on this foundation.",
+        "**Step 1:** Understand the problem.\n\nThe empty string requires no words from the dictionary, so it is trivially segmentable.\n\nBase case: $dp[0] = \\text{true}$ (empty string). All subsequent states build on this foundation.",
       hints: [
         "What does an empty prefix need to be segmented?",
         "$dp[0] = \\text{true}$ is the base case; no word is needed.",
@@ -468,7 +463,7 @@ const questions: Record<string, Question[]> = {
         "The Sieve of Eratosthenes only works for finding primes up to a fixed limit $n$.",
       correctAnswer: "true",
       explanation:
-        "The classical Sieve requires:\n1. Pre-allocating a boolean array of size $n$\n2. Starting from $p^2$ when marking multiples (requiring knowing $n$)\n\nFor unbounded or streaming prime generation, the Segmented Sieve is used instead.",
+        "**Step 1:** Understand the problem.\n\nThe classical Sieve requires:\n1. Pre-allocating a boolean array of size $n$\n2. Starting from $p^2$ when marking multiples (requiring knowing $n$)\n\nFor unbounded or streaming prime generation, the Segmented Sieve is used instead.",
       hints: [
         "What data structure does the Sieve require upfront?",
         "The Sieve needs to know $n$ to determine when to stop marking.",
@@ -507,7 +502,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "After the Sieve completes, $\\text{isPrime}[i] = \\text{true}$ if and only if $i$ is a prime number. The algorithm works as follows:\n\n1. Initialize $\\text{isPrime}[2..n] = \\text{true}$\n2. For each prime $p \\leq \\sqrt{n}$, mark all multiples $m = k \\cdot p$ for $k \\geq 2$ as $\\text{false}$\n3. Remaining $\\text{true}$ entries correspond to primes",
+        "**Step 1:** Evaluate the statement.\n\nAfter the Sieve completes, $\\text{isPrime}[i] = \\text{true}$ if and only if $i$ is a prime number. The algorithm works as follows:\n\n1. Initialize $\\text{isPrime}[2..n] = \\text{true}$\n2. For each prime $p \\leq \\sqrt{n}$, mark all multiples $m = k \\cdot p$ for $k \\geq 2$ as $\\text{false}$\n3. Remaining $\\text{true}$ entries correspond to primes",
       hints: [
         "After the Sieve, which numbers remain unmarked?",
         "A composite number has at least one prime factor $\\leq \\sqrt{n}$.",
@@ -542,7 +537,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "We factor 360 step by step:\n\n\n\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\[5pt]\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nWe factor 360 step by step:\n\n\n\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\[5pt]\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
       hints: [
         "Break 360 into prime factors systematically.",
         "Look for powers of 2: $360 = 8 \\times 45 = 2^3 \\times 45$.",
@@ -570,7 +565,7 @@ const questions: Record<string, Question[]> = {
         "Prime factorization of a number is unique up to the order of factors.",
       correctAnswer: "true",
       explanation:
-        "This is the **Fundamental Theorem of Arithmetic**:\n\n> Every integer $n > 1$ can be written uniquely as:\n> $$n = p_1 \\times p_2 \\times \\cdots \\times p_k$$\n> where $p_i$ are primes in non-decreasing order.\n\nFor example:\n$$360 = 2^3 \\times 3^2 \\times 5 = 5 \\times 3^2 \\times 2^3$$\nare the same factorization (only the order differs).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThis is the **Fundamental Theorem of Arithmetic**:\n\n> Every integer $n > 1$ can be written uniquely as:\n> $$n = p_1 \\times p_2 \\times \\cdots \\times p_k$$\n> where $p_i$ are primes in non-decreasing order.\n\nFor example:\n$$360 = 2^3 \\times 3^2 \\times 5 = 5 \\times 3^2 \\times 2^3$$\nare the same factorization (only the order differs).",
       hints: [
         "This is the Fundamental Theorem of Arithmetic.",
         "Uniqueness means no two different sets of primes multiply to the same number (except reordering).",
@@ -590,7 +585,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "With an SPF array where $\\text{SPF}[n] = $ smallest prime factor of $n$, we factor $n$ by repeated division:\n\n\n\\begin{align}\n\\text{while } n > 1:\\n\\quad p &= \\text{SPF}[n]\\n\\quad \\text{add } p \\text{ to factors}\\n\\quad n &= n / p\n\\end{align}$$\n\nEach division reduces $n$ by at least a factor of 2, so the number of iterations is $O(\\log n)$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nWith an SPF array where $\\text{SPF}[n] = $ smallest prime factor of $n$, we factor $n$ by repeated division:\n\n\n\\begin{align}\n\\text{while } n > 1:\\n\\quad p &= \\text{SPF}[n]\\n\\quad \\text{add } p \\text{ to factors}\\n\\quad n &= n / p\n\\end{align}$$\n\nEach division reduces $n$ by at least a factor of 2, so the number of iterations is $O(\\log n)$.",
       hints: [
         "With SPF, each division removes at least one prime factor.",
         "How many times can you divide by 2 before $n$ becomes 1?",
@@ -604,7 +599,7 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "4", "5"],
       correctAnswer: 1,
       explanation:
-        "The prime factorization is:\n$$2^{10} \\times 3^5 \\times 7 = 2^{10} \\times 3^5 \\times 7^1$$\n\nThe **distinct** prime factors are:\n- $2$ (from $2^{10}$)\n- $3$ (from $3^5$)\n- $7$ (from $7^1$)\n\nTotal: **3 distinct prime factors**.\n\nNote: The exponents $10$, $5$, and $1$ do not affect the count of distinct primes.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe prime factorization is:\n$$2^{10} \\times 3^5 \\times 7 = 2^{10} \\times 3^5 \\times 7^1$$\n\nThe **distinct** prime factors are:\n- $2$ (from $2^{10}$)\n- $3$ (from $3^5$)\n- $7$ (from $7^1$)\n\nTotal: **3 distinct prime factors**.\n\nNote: The exponents $10$, $5$, and $1$ do not affect the count of distinct primes.",
       hints: [
         "Count the distinct primes, not the total number of prime factors.",
         "Exponents tell us how many times each prime appears, but distinct means unique primes.",
@@ -620,7 +615,7 @@ const questions: Record<string, Question[]> = {
       options: ["$a + b$", "$a - b$", "$a \\times b$", "$\\max(a, b)$"],
       correctAnswer: 2,
       explanation:
-        "For any two integers $a$ and $b$:\n$$\\gcd(a, b) \\times \\text{lcm}(a, b) = a \\times b$$\n\n**Proof sketch**: Write $a = g \\cdot a'$ and $b = g \\cdot b'$ where $g = \\gcd(a, b)$ and $\\gcd(a', b') = 1$. Then $\\text{lcm}(a, b) = g \\cdot a' \\cdot b'$, giving:\n$$\\gcd(a,b) \\cdot \\text{lcm}(a,b) = g \\cdot (g \\cdot a' \\cdot b') = g^2 \\cdot a' \\cdot b' = a \\cdot b$$",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nFor any two integers $a$ and $b$:\n$$\\gcd(a, b) \\times \\text{lcm}(a, b) = a \\times b$$\n\n**Proof sketch**: Write $a = g \\cdot a'$ and $b = g \\cdot b'$ where $g = \\gcd(a, b)$ and $\\gcd(a', b') = 1$. Then $\\text{lcm}(a, b) = g \\cdot a' \\cdot b'$, giving:\n$$\\gcd(a,b) \\cdot \\text{lcm}(a,b) = g \\cdot (g \\cdot a' \\cdot b') = g^2 \\cdot a' \\cdot b' = a \\cdot b$$",
       hints: [
         "The product of the GCD and LCM equals the product of the two numbers.",
         "This identity holds for all integers $a$ and $b$.",
@@ -648,7 +643,7 @@ const questions: Record<string, Question[]> = {
       options: ["6", "8", "12", "24"],
       correctAnswer: 0,
       explanation:
-        "Applying the Euclidean algorithm:\n\n\n\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\[5pt]\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nApplying the Euclidean algorithm:\n\n\n\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\[5pt]\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
       hints: [
         "Apply the Euclidean algorithm step by step.",
         "$\\gcd(48, 18) = \\gcd(18, 12) = \\gcd(12, 6) = 6$.",
@@ -691,7 +686,7 @@ const questions: Record<string, Question[]> = {
         "$\\gcd(a, b)$ can be computed in $O(\\log \\min(a, b))$ time using the Euclidean algorithm.",
       correctAnswer: "true",
       explanation:
-        "The Euclidean algorithm's complexity is $O(\\log \\min(a, b))$ because:\n\n- Each step reduces the pair $(a, b)$ to $(b, a \\bmod b)$\n- When $a > b$, we have $a \\bmod b < a/2$\n- Therefore the numbers decrease by at least half every two steps\n- The number of steps is bounded by $2 \\cdot \\log_2 \\min(a, b) = O(\\log \\min(a, b))$",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nThe Euclidean algorithm's complexity is $O(\\log \\min(a, b))$ because:\n\n- Each step reduces the pair $(a, b)$ to $(b, a \\bmod b)$\n- When $a > b$, we have $a \\bmod b < a/2$\n- Therefore the numbers decrease by at least half every two steps\n- The number of steps is bounded by $2 \\cdot \\log_2 \\min(a, b) = O(\\log \\min(a, b))$",
       hints: [
         "When $a > b$, we have $a \bmod b < b \leq a/2$.",
         "How many times can a number be halved before becoming 0 or 1?",
@@ -726,7 +721,7 @@ const questions: Record<string, Question[]> = {
         "In modular arithmetic, $(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$.",
       correctAnswer: "true",
       explanation:
-        "Modular multiplication also distributes:\n$$(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$$\n\n**Example**: $a = 17, b = 8, n = 7$:\n- $(17 \\times 8) \\bmod 7 = 136 \\bmod 7 = 3$\n- $((17 \\bmod 7) \\times (8 \\bmod 7)) \\bmod 7 = (3 \\times 1) \\bmod 7 = 3$\n\nThis is crucial for preventing overflow in large multiplications.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nModular multiplication also distributes:\n$$(a \\times b) \\bmod n = ((a \\bmod n) \\times (b \\bmod n)) \\bmod n$$\n\n**Example**: $a = 17, b = 8, n = 7$:\n- $(17 \\times 8) \\bmod 7 = 136 \\bmod 7 = 3$\n- $((17 \\bmod 7) \\times (8 \\bmod 7)) \\bmod 7 = (3 \\times 1) \\bmod 7 = 3$\n\nThis is crucial for preventing overflow in large multiplications.",
       hints: [
         "Reduce each factor modulo $n$ before multiplying.",
         "Apply modulo again after multiplication.",
@@ -740,11 +735,10 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "5", "1"],
       correctAnswer: 0,
       explanation:
-        "Using repeated squaring (fast exponentiation):\n\n1. First reduce the base: $17 \\equiv 3 \\pmod{7}$\n\n2. Square repeatedly, reducing mod 7:\n\[\n\\begin{align}\n3^1 &\\equiv 3 \\pmod{7}\\\[5pt]\n3^2 = 9 &\\equiv 2 \\pmod{7}\\\[5pt]\n3^4 = (3^2)^2 \\equiv 2^2 = 4 \\pmod{7}\\\\\n3^5 = 3^4 \\times 3 \\equiv 4 \\times 3 = 12 \\equiv 5 \\pmod{7}\n\\end{align}$$\n\nAnswer: **5**.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nUsing repeated squaring (fast exponentiation):\n\n1. First reduce the base: $17 \\equiv 3 \\pmod{7}$\n\n2. Square repeatedly, reducing mod 7:\n\[\n\\begin{align}\n3^1 &\\equiv 3 \\pmod{7}\\\[5pt]\n3^2 = 9 &\\equiv 2 \\pmod{7}\\\[5pt]\n3^4 = (3^2)^2 \\equiv 2^2 = 4 \\pmod{7}\\\\\n3^5 = 3^4 \\times 3 \\equiv 4 \\times 3 = 12 \\equiv 5 \\pmod{7}\n\\end{align}$$\n\nAnswer: **5**.",
       hints: [
         "Reduce the base first: $17 \\equiv 3 \\pmod{7}$.",
         "Use repeated squaring: $3^5 = 3^4 \\times 3$.",
-        "Reduce modulo 7 at each step.",
       ],
     },
     {
@@ -774,7 +768,7 @@ const questions: Record<string, Question[]> = {
         "Fermat's Little Theorem states: if $p$ is prime, then $a^p \\equiv a \\pmod{p}$ for all integers $a$.",
       correctAnswer: "true",
       explanation:
-        "**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nMultiplying both sides by $a$:\n$$a \\times a^{p-1} = a^p \\equiv a \\pmod{p}$$\n\nThis holds for all $a$ when $p$ is prime (if $\\gcd(a, p) \\neq 1$, then $p \\mid a$ and both sides are $0 \\bmod p$).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nMultiplying both sides by $a$:\n$$a \\times a^{p-1} = a^p \\equiv a \\pmod{p}$$\n\nThis holds for all $a$ when $p$ is prime (if $\\gcd(a, p) \\neq 1$, then $p \\mid a$ and both sides are $0 \\bmod p$).",
       hints: [
         "FLT: $a^{p-1} \\equiv 1 \\pmod{p}$ when $\\gcd(a, p) = 1$.",
         "Multiplying by $a$ gives $a^p \\equiv a \\pmod{p}$.",
@@ -796,7 +790,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEquivalently: $a^p \\equiv a \\pmod{p}$ (this form holds even when $p \\mid a$).\n\nThe most commonly used form is $a^{p-1} \\equiv 1 \\pmod{p}$ for $\\gcd(a, p) = 1$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Fermat's Little Theorem (FLT)**:\n$$\\text{If } p \\text{ is prime and } \\gcd(a, p) = 1, \\text{ then } a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEquivalently: $a^p \\equiv a \\pmod{p}$ (this form holds even when $p \\mid a$).\n\nThe most commonly used form is $a^{p-1} \\equiv 1 \\pmod{p}$ for $\\gcd(a, p) = 1$.",
       hints: [
         "FLT: $a^{p-1} \\equiv 1 \\pmod{p}$ when $\\gcd(a, p) = 1$.",
         "This is used in modular exponentiation and primality testing.",
@@ -810,7 +804,7 @@ const questions: Record<string, Question[]> = {
         "Fermat's Little Theorem can be used to test primality with certainty.",
       correctAnswer: "false",
       explanation:
-        "Fermat's primality test is **probabilistic**, not deterministic.\n\n**Carmichael numbers** are composite numbers $n$ that fool the Fermat test: $a^{n-1} \\equiv 1 \\pmod{n}$ for all $a$ coprime to $n$.\n\nThe smallest Carmichael number is $561 = 3 \\times 11 \\times 17$. For any $a$ coprime to 561:\n$$a^{560} \\equiv 1 \\pmod{561}$$\n\nSo FLT-based primality test can give false positives for Carmichael numbers.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nFermat's primality test is **probabilistic**, not deterministic.\n\n**Carmichael numbers** are composite numbers $n$ that fool the Fermat test: $a^{n-1} \\equiv 1 \\pmod{n}$ for all $a$ coprime to $n$.\n\nThe smallest Carmichael number is $561 = 3 \\times 11 \\times 17$. For any $a$ coprime to 561:\n$$a^{560} \\equiv 1 \\pmod{561}$$\n\nSo FLT-based primality test can give false positives for Carmichael numbers.",
       hints: [
         "Carmichael numbers fool the Fermat primality test.",
         "The test can only say a number is 'probably prime', not 'definitely prime'.",
@@ -824,7 +818,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "10", "5", "3"],
       correctAnswer: 0,
       explanation:
-        "Since $11$ is prime and $\\gcd(2, 11) = 1$, by FLT:\n$$2^{11-1} = 2^{10} \\equiv 1 \\pmod{11}$$\n\nThis is exactly what FLT predicts!",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nSince $11$ is prime and $\\gcd(2, 11) = 1$, by FLT:\n$$2^{11-1} = 2^{10} \\equiv 1 \\pmod{11}$$\n\nThis is exactly what FLT predicts!",
       hints: [
         "Apply FLT directly: $a^{p-1} \\equiv 1 \\pmod{p}$.",
         "Here $a = 2$ and $p = 11$.",
@@ -843,7 +837,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The FLT primality test:\n- If $a^{p-1} \\not\\equiv 1 \\pmod{p}$ \\to **$p$ is definitely composite**\n- If $a^{p-1} \\equiv 1 \\pmod{p}$ \\to **$p$ is probably prime**\n\nA passing result means $p$ passed this particular test, but it could still be a composite (especially a Carmichael number). Multiple bases $a$ increase confidence but don't give certainty.",
+        "**Step 1:** Understand the problem.\n\nThe FLT primality test:\n- If $a^{p-1} \\not\\equiv 1 \\pmod{p}$ \\to **$p$ is definitely composite**\n- If $a^{p-1} \\equiv 1 \\pmod{p}$ \\to **$p$ is probably prime**\n\nA passing result means $p$ passed this particular test, but it could still be a composite (especially a Carmichael number). Multiple bases $a$ increase confidence but don't give certainty.",
       hints: [
         "If the test fails, $p$ is definitely composite.",
         "If the test passes, $p$ might be prime but could be a Carmichael number.",
@@ -857,7 +851,7 @@ const questions: Record<string, Question[]> = {
         "Miller-Rabin primality test is a deterministic version of the Fermat method.",
       correctAnswer: "false",
       explanation:
-        "**False**. Miller-Rabin is a **probabilistic** (randomized) test, not deterministic.\n\nHowever, it can be made **deterministic** for certain ranges:\n- For $n < 3,317,044,064,679,887,385,961,981$, testing bases $a = 2$ and $a = 3$ is sufficient.\n- For $n < 2^{64}$, only 12 bases need to be tested.\n\nMiller-Rabin is stronger than Fermat because it doesn't have Carmichael number false positives (within its error bounds).",
+        "**Step 1:** Evaluate the statement.\n\n**False**. Miller-Rabin is a **probabilistic** (randomized) test, not deterministic.\n\nHowever, it can be made **deterministic** for certain ranges:\n- For $n < 3,317,044,064,679,887,385,961,981$, testing bases $a = 2$ and $a = 3$ is sufficient.\n- For $n < 2^{64}$, only 12 bases need to be tested.\n\nMiller-Rabin is stronger than Fermat because it doesn't have Carmichael number false positives (within its error bounds).",
       hints: [
         "Miller-Rabin is probabilistic but can be made deterministic for specific ranges.",
         "Miller-Rabin avoids the Carmichael number problem that affects Fermat's test.",
@@ -878,7 +872,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Euler's totient function:\n$$\\phi(n) = |\\{ x \\in [1, n] : \\gcd(x, n) = 1 \\}|$$\n\nExample: $\\phi(8) = 4$ because $\{1, 3, 5, 7\\}$ are coprime to 8.\n\n**Note**: Sometimes defined as $[1, n-1]$ but since $\\gcd(n, n) = n \\neq 1$, the count is the same.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nEuler's totient function:\n$$\\phi(n) = |\\{ x \\in [1, n] : \\gcd(x, n) = 1 \\}|$$\n\nExample: $\\phi(8) = 4$ because $\{1, 3, 5, 7\\}$ are coprime to 8.\n\n**Note**: Sometimes defined as $[1, n-1]$ but since $\\gcd(n, n) = n \\neq 1$, the count is the same.",
       hints: [
         "Count numbers in $[1, n]$ that have no common factors with $n$ (except 1).",
         "$\\gcd(x, n) = 1$ means $x$ is coprime to $n$.",
@@ -891,7 +885,7 @@ const questions: Record<string, Question[]> = {
       question: "If $p$ is prime, then $\\phi(p) = p - 1$.",
       correctAnswer: "true",
       explanation:
-        "If $p$ is prime, all numbers $1, 2, \\ldots, p-1$ are coprime to $p$ (since $p$ has no divisors other than 1 and itself).\n\nTherefore:\n$$\\phi(p) = p - 1$$",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Step 3:** Conclude.\n\nIf $p$ is prime, all numbers $1, 2, \\ldots, p-1$ are coprime to $p$ (since $p$ has no divisors other than 1 and itself).\n\nTherefore:\n$$\\phi(p) = p - 1$$",
       hints: [
         "All numbers from 1 to $p-1$ are coprime to prime $p$.",
         "There are $p-1$ such numbers.",
@@ -905,7 +899,7 @@ const questions: Record<string, Question[]> = {
       options: ["4", "6", "8", "10"],
       correctAnswer: 0,
       explanation:
-        "We need to count numbers in $[1, 12]$ coprime to 12:\n\n$$\\gcd(x, 12) = 1 \\text{ for } x \\in \\{1, 5, 7, 11\\}$$\n\n- $1$: $\\gcd(1, 12) = 1$ ✓\n- $2$: $\\gcd(2, 12) = 2$ ✗\n- $3$: $\\gcd(3, 12) = 3$ ✗\n- $4$: $\\gcd(4, 12) = 4$ ✗\n- $5$: $\\gcd(5, 12) = 1$ ✓\n- $6$: $\\gcd(6, 12) = 6$ ✗\n- $7$: $\\gcd(7, 12) = 1$ ✓\n- $8$: $\\gcd(8, 12) = 4$ ✗\n- $9$: $\\gcd(9, 12) = 3$ ✗\n- $10$: $\\gcd(10, 12) = 2$ ✗\n- $11$: $\\gcd(11, 12) = 1$ ✓\n- $12$: $\\gcd(12, 12) = 12$ ✗\n\nAnswer: $\\phi(12) = 4$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nWe need to count numbers in $[1, 12]$ coprime to 12:\n\n$$\\gcd(x, 12) = 1 \\text{ for } x \\in \\{1, 5, 7, 11\\}$$\n\n- $1$: $\\gcd(1, 12) = 1$ ✓\n- $2$: $\\gcd(2, 12) = 2$ ✗\n- $3$: $\\gcd(3, 12) = 3$ ✗\n- $4$: $\\gcd(4, 12) = 4$ ✗\n- $5$: $\\gcd(5, 12) = 1$ ✓\n- $6$: $\\gcd(6, 12) = 6$ ✗\n- $7$: $\\gcd(7, 12) = 1$ ✓\n- $8$: $\\gcd(8, 12) = 4$ ✗\n- $9$: $\\gcd(9, 12) = 3$ ✗\n- $10$: $\\gcd(10, 12) = 2$ ✗\n- $11$: $\\gcd(11, 12) = 1$ ✓\n- $12$: $\\gcd(12, 12) = 12$ ✗\n\nAnswer: $\\phi(12) = 4$.",
       hints: [
         "List all numbers from 1 to 12 and check $\\gcd(x, 12) = 1$.",
         "Numbers coprime to 12 are $\{1, 5, 7, 11\}$.",
@@ -924,7 +918,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Euler's product formula for distinct primes $p, q$:\n$$\\phi(n) = n \\left(1 - \\frac{1}{p}\\right)\\left(1 - \\frac{1}{q}\\right)$$\n\n**Proof**: From $n = p^a q^b$, the fraction of numbers NOT divisible by $p$ is $(1 - 1/p)$, and not divisible by $q$ is $(1 - 1/q)$. Multiplying:\n$$\\phi(n) = p^a q^b \\cdot \\frac{p-1}{p} \\cdot \\frac{q-1}{q} = p^{a-1}(p-1) \\cdot q^{b-1}(q-1)$$",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nEuler's product formula for distinct primes $p, q$:\n$$\\phi(n) = n \\left(1 - \\frac{1}{p}\\right)\\left(1 - \\frac{1}{q}\\right)$$\n\n**Proof**: From $n = p^a q^b$, the fraction of numbers NOT divisible by $p$ is $(1 - 1/p)$, and not divisible by $q$ is $(1 - 1/q)$. Multiplying:\n$$\\phi(n) = p^a q^b \\cdot \\frac{p-1}{p} \\cdot \\frac{q-1}{q} = p^{a-1}(p-1) \\cdot q^{b-1}(q-1)$$",
       hints: [
         "Use the product formula: $\\phi(n) = n \\prod_{p|n}(1 - 1/p)$.",
         "For each distinct prime factor $p$, multiply by $(1 - 1/p)$.",
@@ -938,7 +932,7 @@ const questions: Record<string, Question[]> = {
         "Euler's theorem states $a^{\\phi(n)} \\equiv 1 \\pmod{n}$ when $\\gcd(a, n) = 1$.",
       correctAnswer: "true",
       explanation:
-        "**Euler's Theorem** generalizes Fermat's Little Theorem to any modulus $n$:\n$$\\text{If } \\gcd(a, n) = 1, \\text{ then } a^{\\phi(n)} \\equiv 1 \\pmod{n}$$\n\n**Special case**: When $n = p$ is prime, $\\phi(p) = p - 1$, giving FLT:\n$$a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEuler's theorem is used in RSA encryption: $m^{\\phi(n)} \\equiv 1 \\pmod{n}$ for $\\gcd(m, n) = 1$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Euler's Theorem** generalizes Fermat's Little Theorem to any modulus $n$:\n$$\\text{If } \\gcd(a, n) = 1, \\text{ then } a^{\\phi(n)} \\equiv 1 \\pmod{n}$$\n\n**Special case**: When $n = p$ is prime, $\\phi(p) = p - 1$, giving FLT:\n$$a^{p-1} \\equiv 1 \\pmod{p}$$\n\nEuler's theorem is used in RSA encryption: $m^{\\phi(n)} \\equiv 1 \\pmod{n}$ for $\\gcd(m, n) = 1$.",
       hints: [
         "Euler's theorem generalizes FLT to composite moduli.",
         "FLT is the special case where $n$ is prime.",
@@ -959,7 +953,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "First, let's recall that C(n, k) represents the number of ways to choose k elements from a set of n elements.\n\nWhen we choose k elements to include, we simultaneously choose n-k elements to exclude. These two perspectives count the same subsets from different angles, so the counts must be equal:\n\nC(n, k) = number of ways to choose k items from n\n        = number of ways to exclude n-k items from n\n        = C(n, n-k)\n\n**Therefore**, C(n, k) = C(n, n-k) is called Pascal's symmetry identity. It allows us to always work with the smaller of k and n-k, reducing computation.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall that C(n, k) represents the number of ways to choose k elements from a set of n elements.\n\nWhen we choose k elements to include, we simultaneously choose n-k elements to exclude. These two perspectives count the same subsets from different angles, so the counts must be equal:\n\nC(n, k) = number of ways to choose k items from n\n        = number of ways to exclude n-k items from n\n        = C(n, n-k)\n\n**Therefore**, C(n, k) = C(n, n-k) is called Pascal's symmetry identity. It allows us to always work with the smaller of k and n-k, reducing computation.",
       hints: [
         "Think about what it means to 'choose k from n' versus 'not choose k from n'.",
         "These two perspectives count the same subsets from different angles.",
@@ -987,7 +981,7 @@ const questions: Record<string, Question[]> = {
       options: ["5", "10", "15", "20"],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the formula for binomial coefficients:\n\nC(n, k) = n! / (k! \\times (n-k)!)\n\n**Step 1**: Compute the factorials:\n- 5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120\n- 2! = 2 \\times 1 = 2\n- 3! = 3 \\times 2 \\times 1 = 6\n\n**Step 2**: Apply the formula:\nC(5, 2) = 5! / (2! \\times 3!)\n        = 120 / (2 \\times 6)\n        = 120 / 12\n        = 10\n\n**Therefore**, C(5, 2) = 10. This represents the 10 ways to choose 2 items from 5 distinct items.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the formula for binomial coefficients:\n\nC(n, k) = n! / (k! \\times (n-k)!)\n\n**Step 1**: Compute the factorials:\n- 5! = 5 \\times 4 \\times 3 \\times 2 \\times 1 = 120\n- 2! = 2 \\times 1 = 2\n- 3! = 3 \\times 2 \\times 1 = 6\n\n**Step 2**: Apply the formula:\nC(5, 2) = 5! / (2! \\times 3!)\n        = 120 / (2 \\times 6)\n        = 120 / 12\n        = 10\n\n**Therefore**, C(5, 2) = 10. This represents the 10 ways to choose 2 items from 5 distinct items.",
       hints: [
         "Apply the formula C(n, k) = n! / (k! * (n-k)!).",
         "Compute the factorials: 5! = 120, 2! = 2, 3! = 6.",
@@ -1035,7 +1029,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "First, let's recall that Catalan numbers C_n form a sequence of natural numbers with many combinatorial applications.\n\nThe nth Catalan number appears in diverse counting problems:\n\n1. **Binary trees**: C_n is the number of distinct binary trees with n+1 leaves\n2. **Parenthesizations**: C_n is the number of ways to correctly parenthesize n+1 factors\n3. **Dyck paths**: C_n is the number of paths from (0,0) to (2n,0) staying above the diagonal\n4. **Many more**: stack-sortable permutations, non-crossing partitions, etc.\n\n**Therefore**, Catalan numbers count all of the above structures, making them fundamental in combinatorics.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall that Catalan numbers C_n form a sequence of natural numbers with many combinatorial applications.\n\nThe nth Catalan number appears in diverse counting problems:\n\n1. **Binary trees**: C_n is the number of distinct binary trees with n+1 leaves\n2. **Parenthesizations**: C_n is the number of ways to correctly parenthesize n+1 factors\n3. **Dyck paths**: C_n is the number of paths from (0,0) to (2n,0) staying above the diagonal\n4. **Many more**: stack-sortable permutations, non-crossing partitions, etc.\n\n**Therefore**, Catalan numbers count all of the above structures, making them fundamental in combinatorics.",
       hints: [
         "Each of these structures has a recursive definition that leads to the Catalan recurrence.",
         "Try drawing the binary trees or Dyck paths for small n to see the pattern.",
@@ -1049,7 +1043,7 @@ const questions: Record<string, Question[]> = {
         "C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers.",
       correctAnswer: "true",
       explanation:
-        "First, let's recall that Catalan numbers can be expressed in closed form.\n\n**Step 1**: Start from the binomial coefficient formula:\nC_n = C(2n, n) / (n+1)\n\n**Step 2**: Expand the binomial coefficient:\nC(2n, n) = (2n)! / (n! \\times n!)\n\n**Step 3**: Divide by (n+1):\nC_n = (2n)! / (n! \\times n!) \\times 1/(n+1)\n     = (2n)! / ((n+1)! \\times n!) \\times (n+1)\n     = (2n)! / (n! \\times (n+1)!)\n\n**Therefore**, C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers, which can also be written as C(2n, n) / (n+1).",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall that Catalan numbers can be expressed in closed form.\n\n**Step 1**: Start from the binomial coefficient formula:\nC_n = C(2n, n) / (n+1)\n\n**Step 2**: Expand the binomial coefficient:\nC(2n, n) = (2n)! / (n! \\times n!)\n\n**Step 3**: Divide by (n+1):\nC_n = (2n)! / (n! \\times n!) \\times 1/(n+1)\n     = (2n)! / ((n+1)! \\times n!) \\times (n+1)\n     = (2n)! / (n! \\times (n+1)!)\n\n**Therefore**, C_n = (2n)! / ((n+1)! \\times n!) is the closed form for Catalan numbers, which can also be written as C(2n, n) / (n+1).",
       hints: [
         "Start from C(2n, n) / (n+1) and simplify.",
         "Remember that (n+1)! = (n+1) \\times n!.",
@@ -1063,7 +1057,7 @@ const questions: Record<string, Question[]> = {
       options: ["3", "4", "5", "6"],
       correctAnswer: 2,
       explanation:
-        "First, let's recall the closed form formula for Catalan numbers:\n\nC_n = C(2n, n) / (n+1) = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: For C_3, substitute n = 3:\nC_3 = C(6, 3) / (3+1) = C(6, 3) / 4\n\n**Step 2**: Compute C(6, 3):\nC(6, 3) = 6! / (3! \\times 3!) = 720 / (6 \\times 6) = 720 / 36 = 20\n\n**Step 3**: Divide by 4:\nC_3 = 20 / 4 = 5\n\n**Therefore**, the third Catalan number C_3 = 5. The sequence begins: C_0 = 1, C_1 = 1, C_2 = 2, C_3 = 5, C_4 = 14, ...",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the closed form formula for Catalan numbers:\n\nC_n = C(2n, n) / (n+1) = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: For C_3, substitute n = 3:\nC_3 = C(6, 3) / (3+1) = C(6, 3) / 4\n\n**Step 2**: Compute C(6, 3):\nC(6, 3) = 6! / (3! \\times 3!) = 720 / (6 \\times 6) = 720 / 36 = 20\n\n**Step 3**: Divide by 4:\nC_3 = 20 / 4 = 5\n\n**Therefore**, the third Catalan number C_3 = 5. The sequence begins: C_0 = 1, C_1 = 1, C_2 = 2, C_3 = 5, C_4 = 14, ...",
       hints: [
         "Use the formula C_n = C(2n, n) / (n+1).",
         "Compute C(6, 3) = 20, then divide by 4.",
@@ -1082,7 +1076,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "First, let's recall the Catalan recurrence relation:\n\nC_n = sum_{i=0}^{n-1} C_i \\times C_{n-1-i}\n\n**Step 1**: Understand why this recurrence arises. Consider building a binary tree or a Dyck path. The key insight is that the structure can be decomposed at the root or peak into two smaller structures of the same type.\n\n**Step 2**: For each split point i, we multiply:\n- C_i: number of ways to form the left structure\n- C_{n-1-i}: number of ways to form the right structure\n\n**Step 3**: This is the convolution of the Catalan sequence with itself (shifted by 1). The term \"convolution\" describes this pattern of multiplying corresponding terms and summing.\n\n**Therefore**, the recurrence C_n = sum(C_i \\times C_{n-1-i}) is called the convolution recurrence for Catalan numbers.",
+        "**Step 1:** Write the recurrence relation.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the Catalan recurrence relation:\n\nC_n = sum_{i=0}^{n-1} C_i \\times C_{n-1-i}\n\n**Step 1**: Understand why this recurrence arises. Consider building a binary tree or a Dyck path. The key insight is that the structure can be decomposed at the root or peak into two smaller structures of the same type.\n\n**Step 2**: For each split point i, we multiply:\n- C_i: number of ways to form the left structure\n- C_{n-1-i}: number of ways to form the right structure\n\n**Step 3**: This is the convolution of the Catalan sequence with itself (shifted by 1). The term \"convolution\" describes this pattern of multiplying corresponding terms and summing.\n\n**Therefore**, the recurrence C_n = sum(C_i \\times C_{n-1-i}) is called the convolution recurrence for Catalan numbers.",
       hints: [
         "The recurrence multiplies terms from two smaller Catalan numbers that sum to n-1.",
         "Convolution means taking two sequences, reversing one, and multiplying corresponding terms.",
@@ -1096,7 +1090,7 @@ const questions: Record<string, Question[]> = {
         "Catalan numbers grow exponentially as ~4^n / (n^(3/2) \\times sqrt(pi)).",
       correctAnswer: "true",
       explanation:
-        "First, let's recall the closed form of Catalan numbers:\n\nC_n = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: Use Stirling's approximation for factorials:\nn! ~ sqrt(2\\pi n) \\times (n/e)^n\n\n**Step 2**: Substitute into the Catalan formula:\nC_n ~ sqrt(4\\pi n) \\times (2n)^{2n} / (e^{2n}) / [sqrt(2\\pi (n+1)) \\times ((n+1)/e)^{n+1} \\times sqrt(2\\pi n) \\times (n/e)^n]\n\n**Step 3**: After simplification, the dominant term is 4^n, with corrections for the sub-exponential factor:\n\nC_n ~ 4^n / (n^{3/2} \\times sqrt(\\pi))\n\n**Therefore**, Catalan numbers grow exponentially as approximately 4^n / (n^{3/2} \\times sqrt(\\pi)), which is faster than any polynomial but slower than exponential with base > 4.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the closed form of Catalan numbers:\n\nC_n = (2n)! / ((n+1)! \\times n!)\n\n**Step 1**: Use Stirling's approximation for factorials:\nn! ~ sqrt(2\\pi n) \\times (n/e)^n\n\n**Step 2**: Substitute into the Catalan formula:\nC_n ~ sqrt(4\\pi n) \\times (2n)^{2n} / (e^{2n}) / [sqrt(2\\pi (n+1)) \\times ((n+1)/e)^{n+1} \\times sqrt(2\\pi n) \\times (n/e)^n]\n\n**Step 3**: After simplification, the dominant term is 4^n, with corrections for the sub-exponential factor:\n\nC_n ~ 4^n / (n^{3/2} \\times sqrt(\\pi))\n\n**Therefore**, Catalan numbers grow exponentially as approximately 4^n / (n^{3/2} \\times sqrt(\\pi)), which is faster than any polynomial but slower than exponential with base > 4.",
       hints: [
         "Apply Stirling's approximation n! ~ sqrt(2\\pi n) (n/e)^n.",
         "Track the dominant 4^n term and the sub-exponential correction factor.",
@@ -1160,7 +1154,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(2^n)", "O(n^2)"],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the matrix representation of Fibonacci:\n\n[[F_{n+1}, F_n], [F_n, F_{n-1}]] = [[1, 1], [1, 0]]^n\n\n**Step 1**: We need to compute [[1,1],[1,0]]^n efficiently using binary exponentiation.\n\n**Step 2**: Binary exponentiation reduces the power to O(log n) matrix multiplications.\n\n**Step 3**: Each 2x2 matrix multiplication is O(1), so total time is O(log n).\n\n**Therefore**, F_n can be computed in O(log n) time using matrix exponentiation, a significant improvement over naive recursion.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the matrix representation of Fibonacci:\n\n[[F_{n+1}, F_n], [F_n, F_{n-1}]] = [[1, 1], [1, 0]]^n\n\n**Step 1**: We need to compute [[1,1],[1,0]]^n efficiently using binary exponentiation.\n\n**Step 2**: Binary exponentiation reduces the power to O(log n) matrix multiplications.\n\n**Step 3**: Each 2x2 matrix multiplication is O(1), so total time is O(log n).\n\n**Therefore**, F_n can be computed in O(log n) time using matrix exponentiation, a significant improvement over naive recursion.",
       hints: [
         "The matrix [[1,1],[1,0]] raised to power n gives F_n in its entries.",
         "Use binary exponentiation on the matrix, which takes O(log n) multiplications.",
@@ -1189,7 +1183,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(sqrt(n))", "O(1)"],
       correctAnswer: 1,
       explanation:
-        "First, let's recall how binary exponentiation works.\n\n**Step 1**: Write n in binary. For example, n = 13 = 1101_2.\n\n**Step 2**: Use the recurrence:\n- If n is even: a^n = (a^{n/2})^2\n- If n is odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2\n\n**Step 3**: Each step halves the exponent (when even) or reduces it by 1 (then halves). The number of steps is proportional to the number of bits in n, which is O(log n).\n\n**Therefore**, binary exponentiation computes a^n in O(log n) time by exploiting the binary representation of the exponent.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Step 3:** Conclude.\n\nFirst, let's recall how binary exponentiation works.\n\n**Step 1**: Write n in binary. For example, n = 13 = 1101_2.\n\n**Step 2**: Use the recurrence:\n- If n is even: a^n = (a^{n/2})^2\n- If n is odd: a^n = a \\times a^{n-1} = a \\times (a^{(n-1)/2})^2\n\n**Step 3**: Each step halves the exponent (when even) or reduces it by 1 (then halves). The number of steps is proportional to the number of bits in n, which is O(log n).\n\n**Therefore**, binary exponentiation computes a^n in O(log n) time by exploiting the binary representation of the exponent.",
       hints: [
         "Each step halves the exponent when it is even.",
         "How many bits does n have? Each bit requires at most one step.",
@@ -1241,7 +1235,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "First, let's recall the modular multiplication property:\n\n(a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m\n\n**Step 1**: When computing a^n, intermediate values can become very large (overflow).\n\n**Step 2**: By applying mod after each multiplication, we keep intermediate values bounded:\n- result = (result \\times base) mod m\n\n**Step 3**: This works because:\n(result \\times base) mod m = ((result mod m) \\times (base mod m)) mod m\n\n**Therefore**, to compute a^n mod m efficiently and avoid overflow, apply modulo after each multiplication. This is the key insight behind modular exponentiation.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall the modular multiplication property:\n\n(a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m\n\n**Step 1**: When computing a^n, intermediate values can become very large (overflow).\n\n**Step 2**: By applying mod after each multiplication, we keep intermediate values bounded:\n- result = (result \\times base) mod m\n\n**Step 3**: This works because:\n(result \\times base) mod m = ((result mod m) \\times (base mod m)) mod m\n\n**Therefore**, to compute a^n mod m efficiently and avoid overflow, apply modulo after each multiplication. This is the key insight behind modular exponentiation.",
       hints: [
         "Apply the property: (a \\times b) mod m = ((a mod m) \\times (b mod m)) mod m.",
         "Keep intermediate results small by taking mod after each multiplication.",
@@ -1255,7 +1249,7 @@ const questions: Record<string, Question[]> = {
         "Matrix exponentiation uses the same binary exponentiation principle as scalar exponentiation.",
       correctAnswer: "true",
       explanation:
-        "First, let's recall that binary exponentiation relies on the associativity of multiplication.\n\nFor scalars: (a \\times b) \\times c = a \\times (b \\times c)\nFor matrices: (A \\times B) \\times C = A \\times (B \\times C)\n\n**Step 1**: Binary exponentiation splits the power:\na^{13} = a^8 \\times a^4 \\times a^1\n\n**Step 2**: This works because multiplication is associative:\na^{2 \\times 4} = (a^4)^2 = a^4 \\times a^4\n\n**Step 3**: Matrix multiplication is also associative, so the same splitting works:\nA^{13} = A^8 \\times A^4 \\times A^1\n\n**Therefore**, matrix exponentiation uses the same binary exponentiation principle because matrix multiplication is associative.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nFirst, let's recall that binary exponentiation relies on the associativity of multiplication.\n\nFor scalars: (a \\times b) \\times c = a \\times (b \\times c)\nFor matrices: (A \\times B) \\times C = A \\times (B \\times C)\n\n**Step 1**: Binary exponentiation splits the power:\na^{13} = a^8 \\times a^4 \\times a^1\n\n**Step 2**: This works because multiplication is associative:\na^{2 \\times 4} = (a^4)^2 = a^4 \\times a^4\n\n**Step 3**: Matrix multiplication is also associative, so the same splitting works:\nA^{13} = A^8 \\times A^4 \\times A^1\n\n**Therefore**, matrix exponentiation uses the same binary exponentiation principle because matrix multiplication is associative.",
       hints: [
         "Binary exponentiation requires associativity of the multiplication operation.",
         "Matrix multiplication is associative: (AB)C = A(BC).",
@@ -1289,7 +1283,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "1", "4", "7"],
       correctAnswer: 0,
       explanation:
-        "A rotated sorted array is a sorted array that has been \"rotated\" by some offset. The minimum element is the **pivot point** where the rotation occurred.\n\nIn this array:\n- The sorted original was $[0, 1, 2, 4, 5, 6, 7]$\n- After rotation, the smallest element ($0$) ends up at position $4$\n\nThe minimum is **0** because it is where the sorted order \"wraps around.\"",
+        "**Step 1:** Understand the problem.\n\nA rotated sorted array is a sorted array that has been \"rotated\" by some offset. The minimum element is the **pivot point** where the rotation occurred.\n\nIn this array:\n- The sorted original was $[0, 1, 2, 4, 5, 6, 7]$\n- After rotation, the smallest element ($0$) ends up at position $4$\n\nThe minimum is **0** because it is where the sorted order \"wraps around.\"",
       hints: [
         "Look for the point where the sequence breaks (stops being increasing).",
         "The pivot is the smallest element in the rotated array.",
@@ -1333,7 +1327,7 @@ const questions: Record<string, Question[]> = {
       question: "Binary search requires the input array to be sorted.",
       correctAnswer: "true",
       explanation:
-        "Binary search relies on the sorted order to decide whether to search the left or right half after each comparison.\n\nIf the array is unsorted, the decision rule $\\text{target} < \\text{mid}$ \\Rightarrow \\text{search left}$ is invalid.",
+        "**Step 1:** Understand the problem.\n\nBinary search relies on the sorted order to decide whether to search the left or right half after each comparison.\n\nIf the array is unsorted, the decision rule $\\text{target} < \\text{mid}$ \\Rightarrow \\text{search left}$ is invalid.",
       hints: [
         "Why do we eliminate half the search space each step?",
         "That elimination is only valid when the array is sorted.",
@@ -1388,7 +1382,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "An **inversion** counts pairs of elements that are **out of order** relative to each other:\n\n$$\\text{inversion} = (i, j) \\text{ where } i < j \\text{ and } \\text{arr}[i] > \\text{arr}[j]$$\n\nExample: In $[3, 1, 2]$, the inversions are $(3, 1)$ and $(3, 2)$ because $3 > 1$ and $3 > 2$.\n\nMerge sort can count inversions in $O(n \\log n)$ because during the merge step, when an element from the right half is placed before an element from the left half, we count all remaining elements in the left half as inversions.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nAn **inversion** counts pairs of elements that are **out of order** relative to each other:\n\n$$\\text{inversion} = (i, j) \\text{ where } i < j \\text{ and } \\text{arr}[i] > \\text{arr}[j]$$\n\nExample: In $[3, 1, 2]$, the inversions are $(3, 1)$ and $(3, 2)$ because $3 > 1$ and $3 > 2$.\n\nMerge sort can count inversions in $O(n \\log n)$ because during the merge step, when an element from the right half is placed before an element from the left half, we count all remaining elements in the left half as inversions.",
       hints: [
         "Inversion means the earlier element is larger than the later element.",
         "$i < j$ but $\\text{arr}[i] > \\text{arr}[j]$.",
@@ -1401,7 +1395,7 @@ const questions: Record<string, Question[]> = {
       question: "Merge sort is a stable sorting algorithm.",
       correctAnswer: "true",
       explanation:
-        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n\n\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nMerge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n\n\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
         "Equal elements maintain their original relative order.",
         "When both halves have equal elements, take from the left half first to maintain stability.",
@@ -1421,7 +1415,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Count inversions when the left element is greater than the right element during merge.",
         "When you take from the right half, add the count of remaining left elements to the inversion total.",
-        "Inversions = remaining left elements when right element is smaller.",
       ],
     },
     {
@@ -1448,7 +1441,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(log n)"],
       correctAnswer: 1,
       explanation:
-        "Average case: pivot divides array roughly in half each recursion, giving O(n log n) average time.",
+        "**Step 1:** Understand the problem.\n\nAverage case: pivot divides array roughly in half each recursion, giving O(n log n) average time.",
       hints: ["Depends on pivot selection", "Average case divides evenly"],
     },
     {
@@ -1465,7 +1458,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Median-of-three (first, middle, last) reduces chance of worst-case by avoiding sorted order issues.",
+        "**Step 1:** Understand the problem.\n\nMedian-of-three (first, middle, last) reduces chance of worst-case by avoiding sorted order issues.",
       hints: [
         "First/last can degrade with sorted input",
         "Random also works well in practice",
@@ -1479,7 +1472,7 @@ const questions: Record<string, Question[]> = {
         "Quicksort is not stable because partition step can change relative order of equal elements.",
       correctAnswer: "true",
       explanation:
-        "During partition, elements are moved around based on comparison with pivot, potentially reorder equal elements.",
+        "**Step 1:** Understand the problem.\n\nDuring partition, elements are moved around based on comparison with pivot, potentially reorder equal elements.",
       hints: [
         "Stability requires equal elements stay in order",
         "In-place partition reorders elements",
@@ -1499,7 +1492,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "An adversary cannot predict the random pivot, preventing them from constructing worst-case inputs that always pick min/max.",
+        "**Step 1:** Understand the problem.\n\nAn adversary cannot predict the random pivot, preventing them from constructing worst-case inputs that always pick min/max.",
       hints: [
         "Adversary needs to know pivot in advance",
         "Randomness breaks input patterns",
@@ -1517,7 +1510,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n\\^2)", "O(n^2.81)", "O(n\\^3)", "O(n log n)"],
       correctAnswer: 1,
       explanation:
-        "Strassen achieves O(n^2.81) by reducing 8 multiplications to 7 via the Strassen formulas.",
+        "**Step 1:** Understand the problem.\n\nStrassen achieves O(n^2.81) by reducing 8 multiplications to 7 via the Strassen formulas.",
       hints: [
         "Uses divide and conquer on matrices",
         "Reduces multiplication count from 8 to 7",
@@ -1531,7 +1524,7 @@ const questions: Record<string, Question[]> = {
         "Strassen algorithm uses 7 multiplications instead of 8 to multiply two 2x2 matrices.",
       correctAnswer: "true",
       explanation:
-        "The key insight: compute 7 products (P1-P7) instead of 8, then combine them to get the result matrix entries.",
+        "**Step 1:** Compute the answer.\n\n**Step 2:** Apply the method.\n\nThe key insight: compute 7 products (P1-P7) instead of 8, then combine them to get the result matrix entries.",
       hints: [
         "Standard uses 8 products",
         "Strassen reduces by 1 multiplication",
@@ -1551,7 +1544,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Strassen trades more addition/subtraction operations for fewer multiplication operations, since multiplication is more expensive.",
+        "**Step 1:** Understand the problem.\n\nStrassen trades more addition/subtraction operations for fewer multiplication operations, since multiplication is more expensive.",
       hints: [
         "Multiplications are the expensive operation",
         "Adds/subtracts are cheaper",
@@ -1582,7 +1575,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(log n)"],
       correctAnswer: 1,
       explanation:
-        "Divide and conquer for closest pair: sort by x-coordinate O(n log n), then recursively find closest pair in O(n log n).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nDivide and conquer for closest pair: sort by x-coordinate O(n log n), then recursively find closest pair in O(n log n).",
       hints: ["Sorting step dominates", "Divide and conquer handles the rest"],
     },
     {
@@ -1599,7 +1592,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "After dividing, we find closest pairs in left and right halves independently, then combine to find cross-strip pairs.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nAfter dividing, we find closest pairs in left and right halves independently, then combine to find cross-strip pairs.",
       hints: ["Each half is solved recursively", "Then combine the results"],
     },
     {
@@ -1610,7 +1603,7 @@ const questions: Record<string, Question[]> = {
         "When checking the strip region for closer pairs, we only need to examine points within delta distance of the dividing line.",
       correctAnswer: "true",
       explanation:
-        "If a pair has distance < delta, both points must be within delta of the dividing line in the strip region.",
+        "**Step 1:** Understand the problem.\n\nIf a pair has distance < delta, both points must be within delta of the dividing line in the strip region.",
       hints: [
         "Delta = minimum of left and right closest pairs",
         "Points must be close to the dividing line",
@@ -1623,7 +1616,7 @@ const questions: Record<string, Question[]> = {
       question: "The brute-force algorithm for finding the closest pair of points in a 2D plane runs in $O(n^2)$ time.",
       correctAnswer: "true",
       explanation:
-        "The brute-force approach checks every pair of points:\n\n$$\\binom{n}{2} = \\frac{n(n-1)}{2} = O(n^2) \\text{ pairs}$$\n\nFor each pair, distance is computed in $O(1)$. The divide and conquer approach achieves $O(n \\log n)$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe brute-force approach checks every pair of points:\n\n$$\\binom{n}{2} = \\frac{n(n-1)}{2} = O(n^2) \\text{ pairs}$$\n\nFor each pair, distance is computed in $O(1)$. The divide and conquer approach achieves $O(n \\log n)$.",
       hints: [
         "How many pairs of $n$ points are there?",
         "Each pair requires a constant-time distance calculation.",
@@ -1637,7 +1630,7 @@ const questions: Record<string, Question[]> = {
       options: ["$O(n)$", "$O(\\log n)$", "At most 7", "At most $\\sqrt{n}$"],
       correctAnswer: 2,
       explanation:
-        "Within the strip, points are sorted by $y$-coordinate. For any point $p$, only points within $\\delta$ in the $y$ direction could be closer than $\\delta$.\n\nBy a packing argument, at most 7 other points can lie in this $2\\delta \\times \\delta$ rectangle. So each point is compared with at most 7 others, giving $O(n)$ total for the strip check.",
+        "**Step 1:** Understand the problem.\n\nWithin the strip, points are sorted by $y$-coordinate. For any point $p$, only points within $\\delta$ in the $y$ direction could be closer than $\\delta$.\n\nBy a packing argument, at most 7 other points can lie in this $2\\delta \\times \\delta$ rectangle. So each point is compared with at most 7 others, giving $O(n)$ total for the strip check.",
       hints: [
         "Pack $\\delta$-separated points in a $2\\delta \\times \\delta$ rectangle.",
         "How many can fit with minimum inter-point distance $\\delta$?",
@@ -1655,7 +1648,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n log n)", "O(n\\^2)", "O(1) extra space"],
       correctAnswer: 0,
       explanation:
-        "Boyer-Moore runs in O(n) time and O(1) space, making it optimal for finding majority elements.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nBoyer-Moore runs in O(n) time and O(1) space, making it optimal for finding majority elements.",
       hints: ["Single pass with counter", "Only O(1) additional space"],
     },
     {
@@ -1667,7 +1660,7 @@ const questions: Record<string, Question[]> = {
       options: ["25%", "33%", "50%", "75%"],
       correctAnswer: 2,
       explanation:
-        "By definition, a majority element appears more than n/2 times (strictly more than 50%).",
+        "**Step 1:** Understand the problem.\n\nBy definition, a majority element appears more than n/2 times (strictly more than 50%).",
       hints: ["More than half", "Not just plurality but majority"],
     },
     {
@@ -1678,7 +1671,7 @@ const questions: Record<string, Question[]> = {
         "The candidate returned by Boyer-Moore is always the majority element if one exists.",
       correctAnswer: "true",
       explanation:
-        "The algorithm guarantees the candidate is the majority element if one exists, due to the cancellation property.",
+        "**Step 1:** Understand the problem.\n\nThe algorithm guarantees the candidate is the majority element if one exists, due to the cancellation property.",
       hints: [
         "Candidate survives all cancellations",
         "Must verify count in second pass",
@@ -1695,7 +1688,7 @@ const questions: Record<string, Question[]> = {
 }`,
       correctAnswer: 0,
       explanation:
-        "Phase 1: candidate selection with cancellation. Phase 2: verification pass to confirm candidate count > n/2.",
+        "**Step 1:** Understand the problem.\n\nPhase 1: candidate selection with cancellation. Phase 2: verification pass to confirm candidate count > n/2.",
       hints: [
         "Keep candidate and counter",
         "Cancel pairs of different elements",
@@ -1714,7 +1707,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "There can be at most 2 elements appearing more than $n/3$ times.\n\nExtended Boyer-Moore maintains two candidate-counter pairs $(c_1, k_1)$ and $(c_2, k_2)$:\n- Increment matching counter\n- If different from both candidates and both counters are non-zero, decrement both\n- Otherwise set as new candidate\n\nA verification pass confirms which candidates actually exceed $n/3$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThere can be at most 2 elements appearing more than $n/3$ times.\n\nExtended Boyer-Moore maintains two candidate-counter pairs $(c_1, k_1)$ and $(c_2, k_2)$:\n- Increment matching counter\n- If different from both candidates and both counters are non-zero, decrement both\n- Otherwise set as new candidate\n\nA verification pass confirms which candidates actually exceed $n/3$.",
       hints: [
         "How many elements can appear more than $n/3$ times?",
         "Generalize Boyer-Moore to maintain two candidates.",
@@ -1732,7 +1725,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n log n)", "O(log n)", "O(1)"],
       correctAnswer: 2,
       explanation:
-        "Using binary search on the smaller array, we can find median in O(log n) time.",
+        "**Step 1:** Understand the problem.\n\nUsing binary search on the smaller array, we can find median in O(log n) time.",
       hints: [
         "Binary search on one array",
         "Eliminate half of remaining elements each step",
@@ -1747,7 +1740,7 @@ const questions: Record<string, Question[]> = {
       options: ["2.5", "3", "3.5", "4"],
       correctAnswer: 2,
       explanation:
-        "Combined sorted array is [1,2,3,4,5,6]. Median of 6 elements = average of 3rd and 4th elements = (3+4)/2 = 3.5.",
+        "**Step 1:** Understand the problem.\n\nCombined sorted array is [1,2,3,4,5,6]. Median of 6 elements = average of 3rd and 4th elements = (3+4)/2 = 3.5.",
       hints: [
         "6 elements, median is avg of 3rd and 4th",
         "Merged array: 1,2,3,4,5,6",
@@ -1761,7 +1754,7 @@ const questions: Record<string, Question[]> = {
         "We can binary search on either array to find median of two sorted arrays.",
       correctAnswer: "true",
       explanation:
-        "We binary search on the shorter array to reduce search space faster, but mathematically either works.",
+        "**Step 1:** Understand the problem.\n\nWe binary search on the shorter array to reduce search space faster, but mathematically either works.",
       hints: [
         "Usually search on shorter array",
         "Both approaches yield O(log n)",
@@ -1811,7 +1804,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(log n)", "O(n log n)", "O(1)"],
       correctAnswer: 1,
       explanation:
-        "Fast exponentiation halves the exponent each step, giving O(log n) multiplications.",
+        "**Step 1:** Understand the problem.\n\nFast exponentiation halves the exponent each step, giving O(log n) multiplications.",
       hints: [
         "Exponent reduces by half each step",
         "Logarithmic number of steps",
@@ -1830,7 +1823,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When n is even: a^n = (a^(n/2))^2. Square the result of recursive call on n/2.",
+        "**Step 1:** Understand the problem.\n\nWhen n is even: a^n = (a^(n/2))^2. Square the result of recursive call on n/2.",
       hints: [
         "Even case: square and halve",
         "Odd case: multiply by base and decrement",
@@ -1844,7 +1837,7 @@ const questions: Record<string, Question[]> = {
         "Fast exponentiation can be implemented recursively or iteratively.",
       correctAnswer: "true",
       explanation:
-        "Recursive: divide and conquer. Iterative: use binary representation of exponent to process bits.",
+        "**Step 1:** Understand the problem.\n\nRecursive: divide and conquer. Iterative: use binary representation of exponent to process bits.",
       hints: [
         "Recursive is natural divide and conquer",
         "Iterative uses bit manipulation",
@@ -1884,7 +1877,7 @@ const questions: Record<string, Question[]> = {
       question: "Matrix exponentiation using fast exponentiation can compute the $n$-th Fibonacci number in $O(\\log n)$ time.",
       correctAnswer: "true",
       explanation:
-        "The Fibonacci recurrence can be written as a matrix equation:\n\n\n\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe Fibonacci recurrence can be written as a matrix equation:\n\n\n\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
       hints: [
         "Express the Fibonacci recurrence as matrix multiplication.",
         "Apply binary exponentiation to compute the $n$-th power of the matrix.",
@@ -1902,7 +1895,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(n)", "O(n log 3)", "O(n\\^2)", "O(n^2.81)"],
       correctAnswer: 1,
       explanation:
-        "Karatsuba achieves O(n^log2(3)) \\approx O(n^1.585) by reducing 4 multiplications to 3.",
+        "**Step 1:** Understand the problem.\n\nKaratsuba achieves O(n^log2(3)) \\approx O(n^1.585) by reducing 4 multiplications to 3.",
       hints: ["log2(3) \\approx 1.585", "Reduces multiplication count from 4 to 3"],
     },
     {
@@ -1925,7 +1918,7 @@ const questions: Record<string, Question[]> = {
         "For small numbers, standard multiplication is faster than Karatsuba due to overhead.",
       correctAnswer: "true",
       explanation:
-        "Karatsuba has significant overhead from recursive calls and additions. Below a threshold (often ~16-64 bits), naive multiplication wins.",
+        "**Step 1:** Understand the problem.\n\nKaratsuba has significant overhead from recursive calls and additions. Below a threshold (often ~16-64 bits), naive multiplication wins.",
       hints: [
         "Overhead of recursion and addition",
         "Threshold varies by implementation",
@@ -1960,7 +1953,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Divide and conquer DP applies when the optimal decision boundary exhibits monotonicity/quadrangle inequality/convexity.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nDivide and conquer DP applies when the optimal decision boundary exhibits monotonicity/quadrangle inequality/convexity.",
       hints: ["opt[i][j] <= opt[i][j+1]", "Also called monotone matrix chain"],
     },
     {
@@ -1982,7 +1975,7 @@ const questions: Record<string, Question[]> = {
         "The Knuth optimization requires the quadrangle inequality and monotonicity conditions.",
       correctAnswer: "true",
       explanation:
-        "Knuth optimization applies when opt[i][j-1] <= opt[i][j] <= opt[i+1][j], reducing DP from O(n\\^2) to O(n log n).",
+        "**Step 1:** Understand the problem.\n\nKnuth optimization applies when opt[i][j-1] <= opt[i][j] <= opt[i+1][j], reducing DP from O(n\\^2) to O(n log n).",
       hints: [
         "Special case of divide and conquer",
         "Both conditions must hold",
@@ -2015,7 +2008,7 @@ const questions: Record<string, Question[]> = {
       question: "The divide and conquer DP optimization applies when the optimal split point $\\text{opt}(i, j)$ is monotone in $j$.",
       correctAnswer: "true",
       explanation:
-        "When $\\text{opt}(i, j) \\leq \\text{opt}(i, j+1)$ (monotonicity), the divide and conquer approach works:\n\n- Compute $\\text{opt}$ for the midpoint $\\text{mid}$ of $[l, r]$\n- Left half: restrict $\\text{opt}$ search to $[\\text{opt}_L, \\text{opt}(\\text{mid})]$\n- Right half: restrict to $[\\text{opt}(\\text{mid}), \\text{opt}_R]$\n\nThis reduces the overall cost from $O(n^2)$ to $O(n \\log n)$ per DP layer.",
+        "**Step 1:** Understand the problem.\n\nWhen $\\text{opt}(i, j) \\leq \\text{opt}(i, j+1)$ (monotonicity), the divide and conquer approach works:\n\n- Compute $\\text{opt}$ for the midpoint $\\text{mid}$ of $[l, r]$\n- Left half: restrict $\\text{opt}$ search to $[\\text{opt}_L, \\text{opt}(\\text{mid})]$\n- Right half: restrict to $[\\text{opt}(\\text{mid}), \\text{opt}_R]$\n\nThis reduces the overall cost from $O(n^2)$ to $O(n \\log n)$ per DP layer.",
       hints: [
         "Monotonicity means the optimal split never decreases as $j$ increases.",
         "This allows each half to search a restricted range.",
@@ -2029,7 +2022,7 @@ const questions: Record<string, Question[]> = {
       options: ["$O(n \\log n)$", "$O(n^2)$", "$O(n^2 \\log n)$", "$O(n)$"],
       correctAnswer: 1,
       explanation:
-        "The Knuth-Yao optimization for interval DP (including optimal BST) uses the monotonicity of the optimal split point:\n\n$$\\text{opt}(i, j-1) \\leq \\text{opt}(i, j) \\leq \\text{opt}(i+1, j)$$\n\nThis restricts the inner loop search, reducing the total transitions from $O(n^3)$ to $O(n^2)$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\n**Step 3:** Conclude.\n\nThe Knuth-Yao optimization for interval DP (including optimal BST) uses the monotonicity of the optimal split point:\n\n$$\\text{opt}(i, j-1) \\leq \\text{opt}(i, j) \\leq \\text{opt}(i+1, j)$$\n\nThis restricts the inner loop search, reducing the total transitions from $O(n^3)$ to $O(n^2)$.",
       hints: [
         "The standard interval DP is $O(n^3)$ for each pair $(i, j)$.",
         "Monotonicity of the optimal split bounds the search range.",
@@ -2052,7 +2045,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "In binary:\n\[\n\\begin{align}\n5 &= 101_2\\\\\n3 &= 011_2\\\\\n\\hline\n5 \\; \\& \\; 3 &= 001_2 = 1\n\\end{align}$$\n\nBit-by-bit AND: $1\\&1=1$, $0\\&1=0$, $1\\&0=0$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nIn binary:\n\[\n\\begin{align}\n5 &= 101_2\\\\\n3 &= 011_2\\\\\n\\hline\n5 \\; \\& \\; 3 &= 001_2 = 1\n\\end{align}$$\n\nBit-by-bit AND: $1\\&1=1$, $0\\&1=0$, $1\\&0=0$.",
       hints: [
         "Write both numbers in binary with aligned bits.",
         "AND produces 1 only when both bits are 1.",
@@ -2071,7 +2064,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "XOR (exclusive OR) truth table:\n\[\n\\begin{array}{c|c|c}\\na & b & a \\oplus b\\\\\\hline\n0 & 0 & 0\\\\\n0 & 1 & 1\\\\\n1 & 0 & 1\\\\\n1 & 1 & 0\n\\end{array}$$\n\nWhen both inputs are identical ($a \\oplus a$):\n$$a \\oplus a = 0 \\quad \\text{(for any bit)}$$\n\nXOR returns 1 only when bits differ, and 0 when they are the same.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nXOR (exclusive OR) truth table:\n\[\n\\begin{array}{c|c|c}\\na & b & a \\oplus b\\\\\\hline\n0 & 0 & 0\\\\\n0 & 1 & 1\\\\\n1 & 0 & 1\\\\\n1 & 1 & 0\n\\end{array}$$\n\nWhen both inputs are identical ($a \\oplus a$):\n$$a \\oplus a = 0 \\quad \\text{(for any bit)}$$\n\nXOR returns 1 only when bits differ, and 0 when they are the same.",
       hints: [
         "XOR returns 1 only when bits are different.",
         "When identical bits XOR, they cancel out to 0.",
@@ -2098,7 +2091,7 @@ const questions: Record<string, Question[]> = {
       options: ["3", "8", "16", "4"],
       correctAnswer: 1,
       explanation:
-        "Left shift by $n$ bits multiplies by $2^n$:\n$$1 \\ll 3 = 1 \\times 2^3 = 8$$\n\nIn binary:\n\[\n\\begin{align}\n1 &\\text{ (binary)} = 0001_2\\\\\n1 \\ll 3 &\\text{ (shifted)} = 1000_2 = 8\n\\end{align}$$\n\nZeros shift in from the right; the leftmost bits are discarded.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nLeft shift by $n$ bits multiplies by $2^n$:\n$$1 \\ll 3 = 1 \\times 2^3 = 8$$\n\nIn binary:\n\[\n\\begin{align}\n1 &\\text{ (binary)} = 0001_2\\\\\n1 \\ll 3 &\\text{ (shifted)} = 1000_2 = 8\n\\end{align}$$\n\nZeros shift in from the right; the leftmost bits are discarded.",
       hints: [
         "Left shift multiplies by $2^n$ where $n$ is the shift amount.",
         "$1 \\ll 3 = 1 \\times 2^3 = 8$.",
@@ -2126,7 +2119,7 @@ const questions: Record<string, Question[]> = {
         "XOR can be used to swap two numbers without a temporary variable.",
       correctAnswer: "true",
       explanation:
-        "XOR swap works using three XOR operations:\n\n\n\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nXOR swap works using three XOR operations:\n\n\n\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
       hints: [
         "Three XOR operations in sequence: $a = a \\oplus b$, $b = a \\oplus b$, $a = a \\oplus b$.",
         "All properties of XOR ($a \\oplus a = 0$, $a \\oplus 0 = a$, commutativity, associativity) make this work.",
@@ -2145,7 +2138,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm uses the fact that $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n\n\\begin{align}\nn = 12 &= 1100_2\\\[5pt]\nn \\; \[5pt]& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nBrian Kernighan's algorithm uses the fact that $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n\n\\begin{align}\nn = 12 &= 1100_2\\\[5pt]\nn \\; \[5pt]& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
       hints: [
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "Count how many operations until $n$ becomes 0.",
@@ -2167,11 +2160,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "XOR has two key properties:\n\n1. **Identity**: $a \\oplus 0 = a$\n2. **Self-inverse**: $a \\oplus a = 0$\n3. **Commutative and associative**\n\nWhen we XOR all elements:\n$$\\bigoplus_{i=1}^{n} \\text{nums}[i] = (\\underbrace{a \\oplus a}_{\\text{pair}} \\oplus \\cdots \\oplus \\underbrace{b \\oplus b}_{\\text{pair}}) \\oplus \\text{unique}$$\n\nAll pairs cancel to 0, leaving only the unique element.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nXOR has two key properties:\n\n1. **Identity**: $a \\oplus 0 = a$\n2. **Self-inverse**: $a \\oplus a = 0$\n3. **Commutative and associative**\n\nWhen we XOR all elements:\n$$\\bigoplus_{i=1}^{n} \\text{nums}[i] = (\\underbrace{a \\oplus a}_{\\text{pair}} \\oplus \\cdots \\oplus \\underbrace{b \\oplus b}_{\\text{pair}}) \\oplus \\text{unique}$$\n\nAll pairs cancel to 0, leaving only the unique element.",
       hints: [
         "XOR all elements in the array.",
         "$a \\oplus a = 0$, and $a \\oplus 0 = a$.",
-        "Pairs cancel out, leaving only the element that appears once.",
       ],
     },
     {
@@ -2182,11 +2174,10 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "4", "1"],
       correctAnswer: 2,
       explanation:
-        "XOR all elements:\n\n\n\\begin{align}\n2 \\oplus 3 \\oplus 2 \\oplus 4 \\oplus 3\n&= (2 \\oplus 2) \\oplus (3 \\oplus 3) \\oplus 4\\\\\n&= 0 \\oplus 0 \\oplus 4\\\\\n&= 4\n\\end{align}$$\n\nThe element appearing only once is **4**.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nXOR all elements:\n\n\n\\begin{align}\n2 \\oplus 3 \\oplus 2 \\oplus 4 \\oplus 3\n&= (2 \\oplus 2) \\oplus (3 \\oplus 3) \\oplus 4\\\\\n&= 0 \\oplus 0 \\oplus 4\\\\\n&= 4\n\\end{align}$$\n\nThe element appearing only once is **4**.",
       hints: [
         "Group the pairs: $2 \\oplus 2 = 0$ and $3 \\oplus 3 = 0$.",
         "XOR is commutative and associative, so we can reorder.",
-        "The remaining element is the answer.",
       ],
     },
     {
@@ -2197,11 +2188,10 @@ const questions: Record<string, Question[]> = {
         "The XOR trick only works when the duplicate appears exactly twice.",
       correctAnswer: "true",
       explanation:
-        "XOR cancels in **pairs**: $a \\oplus a = 0$.\n\nIf an element appears $k$ times, it cancels completely only when $k$ is even:\n- $k = 2$: $a \\oplus a = 0$ ✓\n- $k = 4$: $a \\oplus a \\oplus a \\oplus a = (a \\oplus a) \\oplus (a \\oplus a) = 0 \\oplus 0 = 0$ ✓\n- $k = 3$: $a \\oplus a \\oplus a = a$ ✗ (does not cancel)\n\nSo the XOR trick requires elements to appear an **even number of times** to cancel out.",
+        "**Step 1:** Understand the problem.\n\nXOR cancels in **pairs**: $a \\oplus a = 0$.\n\nIf an element appears $k$ times, it cancels completely only when $k$ is even:\n- $k = 2$: $a \\oplus a = 0$ ✓\n- $k = 4$: $a \\oplus a \\oplus a \\oplus a = (a \\oplus a) \\oplus (a \\oplus a) = 0 \\oplus 0 = 0$ ✓\n- $k = 3$: $a \\oplus a \\oplus a = a$ ✗ (does not cancel)\n\nSo the XOR trick requires elements to appear an **even number of times** to cancel out.",
       hints: [
         "XOR cancels in pairs: $a \\oplus a = 0$.",
         "If an element appears 4 times, it still cancels: $a \\oplus a \\oplus a \\oplus a = 0$.",
-        "The trick requires even count for each duplicated element.",
       ],
     },
     {
@@ -2213,11 +2203,10 @@ const questions: Record<string, Question[]> = {
       options: [],
       correctAnswer: 0,
       explanation:
-        "We use an XOR accumulator. XOR is commutative and associative, so order doesn't matter.\n\n```typescript\nfunction singleNumber(nums: number[]): number {\n  let result = 0;\n  for (const num of nums) {\n    result ^= num;  // XOR each element\n  }\n  return result;   // Only the unique element remains\n}\n```\n\nTime: $O(n)$, Space: $O(1)$.",
+        "**Step 1:** Understand the problem.\n\nWe use an XOR accumulator. XOR is commutative and associative, so order doesn't matter.\n\n```typescript\nfunction singleNumber(nums: number[]): number {\n  let result = 0;\n  for (const num of nums) {\n    result ^= num;  // XOR each element\n  }\n  return result;   // Only the unique element remains\n}\n```\n\nTime: $O(n)$, Space: $O(1)$.",
       hints: [
         "Initialize result to 0 (XOR identity).",
         "XOR is commutative and associative, so order doesn't matter.",
-        "Pairs cancel out, leaving only the unique element.",
       ],
     },
     {
@@ -2233,7 +2222,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Standard XOR cancels in pairs ($a \\oplus a = 0$) but not in triples.\n\nUse two integers $\\text{ones}$ and $\\text{twos}$ tracking how many times each bit has appeared mod 3:\n\n\n\\begin{align}\n\\text{ones}  &= \\text{bits seen 1 time mod 3}\\\\\n\\text{twos}  &= \\text{bits seen 2 times mod 3}\n\\end{align}$$\n\nUpdate rule per element $x$:\n1. $\\text{ones} = (\\text{ones} \\oplus x) \\; \\& \\; \\sim\\text{twos}$\n2. $\\text{twos} = (\\text{twos} \\oplus x) \\; \\& \\; \\sim\\text{ones}$\n\nAfter processing, $\\text{ones}$ holds the unique element.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nStandard XOR cancels in pairs ($a \\oplus a = 0$) but not in triples.\n\nUse two integers $\\text{ones}$ and $\\text{twos}$ tracking how many times each bit has appeared mod 3:\n\n\n\\begin{align}\n\\text{ones}  &= \\text{bits seen 1 time mod 3}\\\\\n\\text{twos}  &= \\text{bits seen 2 times mod 3}\n\\end{align}$$\n\nUpdate rule per element $x$:\n1. $\\text{ones} = (\\text{ones} \\oplus x) \\; \\& \\; \\sim\\text{twos}$\n2. $\\text{twos} = (\\text{twos} \\oplus x) \\; \\& \\; \\sim\\text{ones}$\n\nAfter processing, $\\text{ones}$ holds the unique element.",
       hints: [
         "XOR only cancels pairs. You need a counter mod 3 for each bit position.",
         "Maintain $\\text{ones}$ and $\\text{twos}$ to track bit frequencies.",
@@ -2249,7 +2238,7 @@ const questions: Record<string, Question[]> = {
       options: ["15", "16", "18", "20"],
       correctAnswer: 1,
       explanation:
-        "A power of 2 in binary is a single 1 followed by all zeros:\n\[\n\\begin{align}\n2^0 &= 1 = 1_2\\\\\n2^1 &= 2 = 10_2\\\\\n2^2 &= 4 = 100_2\\\\\n2^3 &= 8 = 1000_2\\\\\n2^4 &= 16 = 10000_2\n\\end{align}$$\n\n$16 = 2^4$ is a power of 2. 15, 18, and 20 have multiple 1-bits in binary.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nA power of 2 in binary is a single 1 followed by all zeros:\n\[\n\\begin{align}\n2^0 &= 1 = 1_2\\\\\n2^1 &= 2 = 10_2\\\\\n2^2 &= 4 = 100_2\\\\\n2^3 &= 8 = 1000_2\\\\\n2^4 &= 16 = 10000_2\n\\end{align}$$\n\n$16 = 2^4$ is a power of 2. 15, 18, and 20 have multiple 1-bits in binary.",
       hints: [
         "Powers of 2 have exactly one '1' bit in binary.",
         "Check binary representations: $15 = 1111_2$, $16 = 10000_2$, $18 = 10010_2$, $20 = 10100_2$.",
@@ -2263,7 +2252,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "16", "32", "8"],
       correctAnswer: 0,
       explanation:
-        "The operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**.\n\nFor $n = 16 = 10000_2$:\n\[\n\\begin{align}\nn     &= 10000_2\\\\\nn-1   &= 01111_2\\\\\n\\hline\nn\\&(n-1) &= 00000_2 = 0\n\\end{align}$$\n\nThis property is fundamental for many bit manipulation algorithms.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nThe operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**.\n\nFor $n = 16 = 10000_2$:\n\[\n\\begin{align}\nn     &= 10000_2\\\\\nn-1   &= 01111_2\\\\\n\\hline\nn\\&(n-1) &= 00000_2 = 0\n\\end{align}$$\n\nThis property is fundamental for many bit manipulation algorithms.",
       hints: [
         "Write $n = 16$ and $n-1 = 15$ in binary.",
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
@@ -2282,7 +2271,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A power of 2 has exactly one set bit: $n = 100\\ldots0_2$.\n\nThen $n-1 = 011\\ldots1_2$, so:\n$$n \\; \\& \\; (n-1) = 100\\ldots0_2 \\; \\& \\; 011\\ldots1_2 = 0$$\n\nFor a non-power-of-2 (e.g., $12 = 1100_2$):\n$$12 \\; \\& \\; 11 = 1100_2 \\; \\& \\; 1011_2 = 1000_2 \\neq 0$$",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nA power of 2 has exactly one set bit: $n = 100\\ldots0_2$.\n\nThen $n-1 = 011\\ldots1_2$, so:\n$$n \\; \\& \\; (n-1) = 100\\ldots0_2 \\; \\& \\; 011\\ldots1_2 = 0$$\n\nFor a non-power-of-2 (e.g., $12 = 1100_2$):\n$$12 \\; \\& \\; 11 = 1100_2 \\; \\& \\; 1011_2 = 1000_2 \\neq 0$$",
       hints: [
         "For powers of 2, only the MSB is set.",
         "$n \\; \\& \\; (n-1) = 0$ if and only if $n$ is a power of 2 (and $n > 0$).",
@@ -2295,7 +2284,7 @@ const questions: Record<string, Question[]> = {
       question: "0 is a power of 2.",
       correctAnswer: "false",
       explanation:
-        "**False**. Zero is NOT a power of 2.\n\nPowers of 2 are: $2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8, \\ldots$\n\nNote that $n > 0$ is a required condition for the $n \\; \\& \\; (n-1) = 0$ check.",
+        "**Step 1:** Evaluate the statement.\n\n**False**. Zero is NOT a power of 2.\n\nPowers of 2 are: $2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8, \\ldots$\n\nNote that $n > 0$ is a required condition for the $n \\; \\& \\; (n-1) = 0$ check.",
       hints: [
         "Powers of 2 are $1, 2, 4, 8, 16, \\ldots$",
         "The condition $n > 0$ is necessary for the power-of-2 test.",
@@ -2309,11 +2298,10 @@ const questions: Record<string, Question[]> = {
       options: [],
       correctAnswer: 0,
       explanation:
-        "A number $n > 0$ is a power of 2 if and only if $n \\; \\& \\; (n-1) = 0$:\n\n```typescript\nfunction isPowerOfTwo(n: number): boolean {\n  return n > 0 && (n & (n - 1)) === 0;\n}\n```\n\nThe $n > 0$ check is essential because for $n = 0$: $0 \\; \\& \\; (-1) = 0$, which would incorrectly return true.",
+        "**Step 1:** Understand the problem.\n\nA number $n > 0$ is a power of 2 if and only if $n \\; \\& \\; (n-1) = 0$:\n\n```typescript\nfunction isPowerOfTwo(n: number): boolean {\n  return n > 0 && (n & (n - 1)) === 0;\n}\n```\n\nThe $n > 0$ check is essential because for $n = 0$: $0 \\; \\& \\; (-1) = 0$, which would incorrectly return true.",
       hints: [
         "$n > 0$ check is required to exclude $n = 0$.",
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
-        "If the result is 0, $n$ was a power of 2.",
       ],
     },
     {
@@ -2329,7 +2317,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "To round up to the nearest power of 2:\n1. Decrease $n$ by 1\n2. Fill all lower bits: $n |= n >> 1$; $n |= n >> 2$; $n |= n >> 4$; ... $n |= n >> 16$\n3. Add 1\n\nThis creates a mask $0\\ldots0111\\ldots1$, then $+1$ flips to the next power of 2.\n\nExample: $n = 9 = 1001_2 \\to 1111_2 \\to 10000_2 = 16$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nTo round up to the nearest power of 2:\n1. Decrease $n$ by 1\n2. Fill all lower bits: $n |= n >> 1$; $n |= n >> 2$; $n |= n >> 4$; ... $n |= n >> 16$\n3. Add 1\n\nThis creates a mask $0\\ldots0111\\ldots1$, then $+1$ flips to the next power of 2.\n\nExample: $n = 9 = 1001_2 \\to 1111_2 \\to 10000_2 = 16$.",
       hints: [
         "First make all bits below the MSB equal to 1, then add 1.",
         "Fill lower bits with OR-shift operations.",
@@ -2364,7 +2352,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm counts the number of set bits (1s) in a binary number.\n\nThe key operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**:\n\[\n\\begin{align}\nn = 12 = 1100_2\\\\\nn-1 = 11 = 1011_2\\\\\nn \\; \\& \\; (n-1) = 1000_2\n\\end{align}$$\n\nBy looping until $n = 0$, counting iterations gives the number of set bits.\n\nTime complexity: $O(k)$ where $k$ is the number of set bits (at most $O(\\log n)$ for an $n$-bit number).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nBrian Kernighan's algorithm counts the number of set bits (1s) in a binary number.\n\nThe key operation $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit**:\n\[\n\\begin{align}\nn = 12 = 1100_2\\\\\nn-1 = 11 = 1011_2\\\\\nn \\; \\& \\; (n-1) = 1000_2\n\\end{align}$$\n\nBy looping until $n = 0$, counting iterations gives the number of set bits.\n\nTime complexity: $O(k)$ where $k$ is the number of set bits (at most $O(\\log n)$ for an $n$-bit number).",
       hints: [
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "Loop until $n$ becomes 0, counting iterations.",
@@ -2378,7 +2366,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "2", "4", "8"],
       correctAnswer: 2,
       explanation:
-        "For $n = 15 = 1111_2$:\n\n\n\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\[5pt]&=n-1} 1110_2 \\quad (1)$\\\[5pt]\n1110_2 &\\xrightarrow{n\[5pt]&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nFor $n = 15 = 1111_2$:\n\n\n\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\[5pt]&=n-1} 1110_2 \\quad (1)$\\\[5pt]\n1110_2 &\\xrightarrow{n\[5pt]&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
       hints: [
         "$15 = 1111_2$ has four 1-bits.",
         "Each $n \\; \\& \\; (n-1)$ clears one set bit.",
@@ -2405,11 +2393,10 @@ const questions: Record<string, Question[]> = {
       options: [],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm:\n\n```typescript\nfunction countBits(n: number): number {\n  let count = 0;\n  while (n) {\n    count++;\n    n &= n - 1;  // Clear lowest set bit\n  }\n  return count;\n}\n```\n\nEach iteration clears one set bit. The number of iterations equals the number of set bits.\n\nTime: $O(k)$ where $k$ = number of set bits\nSpace: $O(1)$",
+        "**Step 1:** Understand the problem.\n\nBrian Kernighan's algorithm:\n\n```typescript\nfunction countBits(n: number): number {\n  let count = 0;\n  while (n) {\n    count++;\n    n &= n - 1;  // Clear lowest set bit\n  }\n  return count;\n}\n```\n\nEach iteration clears one set bit. The number of iterations equals the number of set bits.\n\nTime: $O(k)$ where $k$ = number of set bits\nSpace: $O(1)$",
       hints: [
         "Use $n \\; \\& \\; (n-1)$ to clear the lowest set bit.",
         "Count how many iterations until $n$ becomes 0.",
-        "Time is $O(k)$ where $k$ is the number of set bits.",
       ],
     },
   ],
@@ -2422,7 +2409,7 @@ const questions: Record<string, Question[]> = {
       options: ["00010011", "10001101", "00110001", "11000101"],
       correctAnswer: 0,
       explanation:
-        "Reverse order: 11001000 \\to 00010011. Read bits right-to-left.",
+        "**Step 1:** Compute the answer.\n\nReverse order: 11001000 \\to 00010011. Read bits right-to-left.",
     },
     {
       id: "q-bit-rev-2",
@@ -2447,7 +2434,7 @@ const questions: Record<string, Question[]> = {
         "For reversing last 8 bits of a 32-bit int, use: (n >> 8) | (n << 8).",
       correctAnswer: "true",
       explanation:
-        "Swapping bytes is just shifting in opposite directions and ORing, no loop needed.",
+        "**Step 1:** Understand the problem.\n\nSwapping bytes is just shifting in opposite directions and ORing, no loop needed.",
     },
     {
       id: "q-bit-rev-4",
@@ -2462,7 +2449,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Use >>> 0 for unsigned 32-bit",
         "Extract LSB with n&1",
-        "Accumulate in result with left shift",
       ],
     },
     {
@@ -2472,7 +2458,7 @@ const questions: Record<string, Question[]> = {
       question: "To reverse the bits of an 8-bit number, you can extract each bit and build the result from LSB to MSB.",
       correctAnswer: "true",
       explanation:
-        "The straightforward method extracts one bit at a time:\n\n```\nresult = 0\nfor i in 0..7:\n    result = (result << 1) | (n & 1)\n    n >>= 1\n```\n\nEach iteration shifts the result left and appends the current LSB of $n$. After 8 iterations, the bits are reversed.",
+        "**Step 1:** Understand the problem.\n\nThe straightforward method extracts one bit at a time:\n\n```\nresult = 0\nfor i in 0..7:\n    result = (result << 1) | (n & 1)\n    n >>= 1\n```\n\nEach iteration shifts the result left and appends the current LSB of $n$. After 8 iterations, the bits are reversed.",
       hints: [
         "Extract the LSB with $n \\; \\& \\; 1$.",
         "Shift the result left to make room for each new bit.",
@@ -2493,7 +2479,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Gray code ensures consecutive values differ in exactly one bit position.",
+        "**Step 1:** Evaluate the statement.\n\nGray code ensures consecutive values differ in exactly one bit position.",
     },
     {
       id: "q-gray-2",
@@ -2521,13 +2507,12 @@ const questions: Record<string, Question[]> = {
       options: [],
       correctAnswer: 0,
       explanation:
-        "Generate Gray codes: for i in [0, 2^n): result.push(i ^ (i >> 1));",
+        "**Step 1:** Understand the problem.\n\nGenerate Gray codes: for i in [0, 2^n): result.push(i ^ (i >> 1));",
       codeSnippet:
         "function grayCode(n) {\n  const result = [];\n  for (let i = 0; i < (1 << n); i++) {\n    result.push(i ^ (i >> 1));\n  }\n  return result;\n}",
       hints: [
         "Result length is 2^n",
         "Use formula: i ^ (i >> 1)",
-        "No sorting needed",
       ],
     },
     {
@@ -2543,7 +2528,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "To convert Gray code $g$ back to binary $n$:\n\n\n\\begin{align}\nn_k &= g_k \\quad (\\text{MSB is the same})\\\\\nn_i &= n_{i+1} \\oplus g_i \\quad (\\text{each subsequent bit})\n\\end{align}$$\n\nThis is equivalent to $n = g \\oplus (g >> 1) \\oplus (g >> 2) \\oplus \\ldots$, and also can be written as $n = g \\oplus (g >> 1)$ applied repeatedly (prefix XOR), but the compact iterative formula is the prefix XOR of $g$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nTo convert Gray code $g$ back to binary $n$:\n\n\n\\begin{align}\nn_k &= g_k \\quad (\\text{MSB is the same})\\\\\nn_i &= n_{i+1} \\oplus g_i \\quad (\\text{each subsequent bit})\n\\end{align}$$\n\nThis is equivalent to $n = g \\oplus (g >> 1) \\oplus (g >> 2) \\oplus \\ldots$, and also can be written as $n = g \\oplus (g >> 1)$ applied repeatedly (prefix XOR), but the compact iterative formula is the prefix XOR of $g$.",
       hints: [
         "The MSB of the binary code equals the MSB of the Gray code.",
         "Each subsequent binary bit is the XOR of the previous binary bit and the current Gray bit.",
@@ -2560,7 +2545,7 @@ const questions: Record<string, Question[]> = {
       options: ["6", "8", "9", "3"],
       correctAnswer: 1,
       explanation:
-        "n elements \\to 2^n subsets. 2^3 = 8 subsets (including empty set).",
+        "**Step 1:** Evaluate the statement.\n\nn elements \\to 2^n subsets. 2^3 = 8 subsets (including empty set).",
     },
     {
       id: "q-subset-2",
@@ -2570,7 +2555,7 @@ const questions: Record<string, Question[]> = {
       options: ["0th and 2nd", "1st and 2nd", "0th and 1st", "All three"],
       correctAnswer: 0,
       explanation:
-        "101 = bits 0 and 2 are set, bit 1 is not. Elements at indices 0 and 2.",
+        "**Step 1:** Evaluate the statement.\n\n101 = bits 0 and 2 are set, bit 1 is not. Elements at indices 0 and 2.",
     },
     {
       id: "q-subset-3",
@@ -2594,7 +2579,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Iterate mask from 0 to 2^n - 1",
         "Check (mask >> i) & 1 or mask & (1 << i)",
-        "Build each subset incrementally",
       ],
     },
     {
@@ -2610,7 +2594,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "To iterate over all non-empty sub-masks of $m$:\n\n```javascript\nfor (let s = m; s > 0; s = (s - 1) & m) {\n  // process sub-mask s\n}\n```\n\n$(s - 1) \\; \\& \\; m$ clears the lowest set bit of $s$ and then masks back to only bits in $m$. This visits all $2^{\\text{popcount}(m)}$ sub-masks in $O(2^{\\text{popcount}(m)})$.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nTo iterate over all non-empty sub-masks of $m$:\n\n```javascript\nfor (let s = m; s > 0; s = (s - 1) & m) {\n  // process sub-mask s\n}\n```\n\n$(s - 1) \\; \\& \\; m$ clears the lowest set bit of $s$ and then masks back to only bits in $m$. This visits all $2^{\\text{popcount}(m)}$ sub-masks in $O(2^{\\text{popcount}(m)})$.",
       hints: [
         "$(s - 1)$ flips the trailing bits; $\\& m$ restricts to only bits in $m$.",
         "The loop ends when $s$ becomes 0 (empty sub-mask).",
@@ -2631,7 +2615,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "All properties hold. After three XORs: a=(a^b)^(a^b^b)=a^a^a^b^b^b=0^0^b=b.",
+        "**Step 1:** Evaluate the statement.\n\n**Step 2:** Apply the method.\n\nAll properties hold. After three XORs: a=(a^b)^(a^b^b)=a^a^a^b^b^b=0^0^b=b.",
     },
     {
       id: "q-swap-2",
@@ -2656,7 +2640,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Three XOR operations in sequence",
         "Ensure a and b are not the same variable",
-        "Mathematically: a = (a^b^b) = a",
       ],
     },
     {
@@ -2672,7 +2655,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In the XOR swap, each operation depends on the result of the previous one:\n\n$$a = a \\oplus b \\to b = a \\oplus b \\to a = a \\oplus b$$\n\nThis chain of data dependencies prevents instruction-level parallelism (ILP). A modern out-of-order CPU cannot pipeline these three operations.\n\nBy contrast, a temp-variable swap allows the CPU to issue loads and stores in parallel.",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nIn the XOR swap, each operation depends on the result of the previous one:\n\n$$a = a \\oplus b \\to b = a \\oplus b \\to a = a \\oplus b$$\n\nThis chain of data dependencies prevents instruction-level parallelism (ILP). A modern out-of-order CPU cannot pipeline these three operations.\n\nBy contrast, a temp-variable swap allows the CPU to issue loads and stores in parallel.",
       hints: [
         "Each XOR depends on the previous result - no parallelism possible.",
         "Modern CPUs exploit ILP; sequential data dependencies prevent this.",
@@ -2712,7 +2695,7 @@ const questions: Record<string, Question[]> = {
         "XOR method: missing = XOR of (0 to n) XOR XOR of array elements.",
       correctAnswer: "true",
       explanation:
-        "Each index appears twice except one (the missing), cancels out leaving missing.",
+        "**Step 1:** Understand the problem.\n\nEach index appears twice except one (the missing), cancels out leaving missing.",
     },
     {
       id: "q-miss-4",
@@ -2728,7 +2711,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "XOR all indices 0 to n",
         "XOR all array values",
-        "Missing number remains",
       ],
     },
     {
@@ -2803,7 +2785,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Use two pointers from MSB and LSB",
         "Extract bit at position i with (n >> i) & 1",
-        "Stop when pointers cross",
       ],
     },
     {
@@ -2813,7 +2794,7 @@ const questions: Record<string, Question[]> = {
       question: "The binary string $101$ is a palindrome.",
       correctAnswer: "true",
       explanation:
-        "A palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ - identical. So yes, it is a binary palindrome.",
+        "**Step 1:** Understand the problem.\n\nA palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ - identical. So yes, it is a binary palindrome.",
       hints: [
         "Reverse the bits: does it equal the original?",
         "$101$ reads the same in both directions.",
@@ -2832,7 +2813,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "XOR the number with its bit-reversed form. If the result is 0, all corresponding bits match - it is a palindrome.\n\n$$\\text{isPalindrome}(n) = (n \\oplus \\text{reverseBits}(n)) == 0$$\n\nThis works in $O(1)$ if $\\text{reverseBits}$ is $O(1)$ (using precomputed lookup tables or the magic-constant method for 32-bit integers).",
+        "**Step 1:** Understand the problem.\n\n**Step 2:** Apply the method.\n\nXOR the number with its bit-reversed form. If the result is 0, all corresponding bits match - it is a palindrome.\n\n$$\\text{isPalindrome}(n) = (n \\oplus \\text{reverseBits}(n)) == 0$$\n\nThis works in $O(1)$ if $\\text{reverseBits}$ is $O(1)$ (using precomputed lookup tables or the magic-constant method for 32-bit integers).",
       hints: [
         "XOR of equal values is 0.",
         "If $n \\oplus \\text{reverse}(n) = 0$, every bit matches its mirror.",
@@ -2855,7 +2836,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Hash functions map keys to array indices for O(1) average-case lookup time.",
+        "**Step 1:** Understand the problem.\n\nHash functions map keys to array indices for O(1) average-case lookup time.",
       hints: [
         "Think about what constant-time operation we want",
         "Arrays give O(1) by index, we want O(1) by key",
@@ -2932,7 +2913,7 @@ const questions: Record<string, Question[]> = {
       question: "Hash maps use separate chaining to handle collisions.",
       correctAnswer: "true",
       explanation:
-        "Separate chaining stores colliding elements in a linked list at each bucket index.",
+        "**Step 1:** Understand the problem.\n\nSeparate chaining stores colliding elements in a linked list at each bucket index.",
       hints: [
         "What data structure holds colliding entries?",
         "Think of a list at each bucket",
@@ -2964,7 +2945,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "At load factor 1, every slot is occupied. Linear probing must scan every slot during lookup or insert, giving $O(n)$ worst-case.\n\n**Primary clustering**: Long runs of occupied slots form, causing new inserts to extend runs further. Expected probe length grows as $O(1/(1-\\alpha)^2)$ as $\\alpha \\to 1$.\n\nRehashing to a larger table (typically doubling) restores $O(1)$ average operations.",
+        "**Step 1:** Understand the problem.\n\nAt load factor 1, every slot is occupied. Linear probing must scan every slot during lookup or insert, giving $O(n)$ worst-case.\n\n**Primary clustering**: Long runs of occupied slots form, causing new inserts to extend runs further. Expected probe length grows as $O(1/(1-\\alpha)^2)$ as $\\alpha \\to 1$.\n\nRehashing to a larger table (typically doubling) restores $O(1)$ average operations.",
       hints: [
         "At full capacity, every probe misses until it wraps around.",
         "Primary clustering causes probe sequences to merge into long chains.",
@@ -2986,7 +2967,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "A collision occurs when two different keys produce the same hash value and map to the same array index.",
+        "**Step 1:** Understand the problem.\n\nA collision occurs when two different keys produce the same hash value and map to the same array index.",
       hints: [
         "Think about the pigeonhole principle",
         "What happens when n keys > m slots?",
@@ -3025,7 +3006,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If $\\gcd(h_2(k), m) = d > 1$, the probe sequence only visits $m/d$ distinct slots before cycling.\n\nThis means at most $m/d$ slots are ever probed - some slots become unreachable, potentially causing spurious lookup failures even when empty slots exist.\n\nRequiring $h_2(k)$ coprime to $m$ (e.g., $m$ prime, or $h_2(k)$ always odd with $m$ a power of 2) guarantees a full permutation of all $m$ slots.",
+        "**Step 1:** Understand the problem.\n\nIf $\\gcd(h_2(k), m) = d > 1$, the probe sequence only visits $m/d$ distinct slots before cycling.\n\nThis means at most $m/d$ slots are ever probed - some slots become unreachable, potentially causing spurious lookup failures even when empty slots exist.\n\nRequiring $h_2(k)$ coprime to $m$ (e.g., $m$ prime, or $h_2(k)$ always odd with $m$ a power of 2) guarantees a full permutation of all $m$ slots.",
       hints: [
         "A probe sequence of step size $d$ cycles after $m/d$ steps if $\\gcd(d, m) = d$.",
         "Full coverage requires the step size to generate all residues modulo $m$.",
@@ -3042,7 +3023,7 @@ const questions: Record<string, Question[]> = {
       options: ["Hash set", "Hash map", "Stack", "Queue"],
       correctAnswer: 1,
       explanation:
-        "Hash map stores (value -> index) pairs, allowing O(1) lookup for complement (target - nums[i]).",
+        "**Step 1:** Understand the problem.\n\nHash map stores (value -> index) pairs, allowing O(1) lookup for complement (target - nums[i]).",
       hints: [
         "We need to find complement",
         "What lets us check if complement exists?",
@@ -3055,7 +3036,7 @@ const questions: Record<string, Question[]> = {
       question: "Two Sum with hash map runs in O(n) time with O(n) space.",
       correctAnswer: "true",
       explanation:
-        "Single pass O(n), hash map stores up to n elements O(n) space.",
+        "**Step 1:** Understand the problem.\n\nSingle pass O(n), hash map stores up to n elements O(n) space.",
       hints: [
         "How many passes through the array?",
         "What auxiliary storage do we need?",
@@ -3074,7 +3055,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The correct order is:\n\n1. Check if $\\text{target} - \\text{nums}[i]$ exists in the map\n2. If yes, return $[\\text{map}[\\text{complement}], i]$\n3. If no, add $\\text{nums}[i] \\to i$ to the map\n\nAdding after ensures we don't use the same element twice (e.g., if target = 6 and the element is 3, we don't match 3 with itself).",
+        "**Step 1:** Understand the problem.\n\nThe correct order is:\n\n1. Check if $\\text{target} - \\text{nums}[i]$ exists in the map\n2. If yes, return $[\\text{map}[\\text{complement}], i]$\n3. If no, add $\\text{nums}[i] \\to i$ to the map\n\nAdding after ensures we don't use the same element twice (e.g., if target = 6 and the element is 3, we don't match 3 with itself).",
       hints: [
         "We must not use the same element at the same index twice.",
         "Checking before insertion avoids self-pairing.",
@@ -3124,7 +3105,7 @@ const questions: Record<string, Question[]> = {
         "Grouping anagrams using sorting has O(n * k log k) time complexity where k is max string length.",
       correctAnswer: "true",
       explanation:
-        "Sorting each string costs O(k log k), done for n strings gives O(n * k log k).",
+        "**Step 1:** Understand the problem.\n\nSorting each string costs O(k log k), done for n strings gives O(n * k log k).",
       hints: ["Cost to sort one string", "Applied to n strings"],
     },
     {
@@ -3134,7 +3115,7 @@ const questions: Record<string, Question[]> = {
       question: 'Two strings are anagrams of each other if and only if they have the same character frequencies.',
       correctAnswer: "true",
       explanation:
-        "Anagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters - that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
+        "**Step 1:** Understand the problem.\n\nAnagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters - that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
       hints: [
         "Anagrams use the same characters, just in a different order.",
         "Character frequency (count) is the canonical comparison.",
@@ -3153,7 +3134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Multiple $O(k)$ canonical forms exist:\n\n1. **Frequency count array**: `[2,0,0,0,1,0,...,0,1]` for \"aae\"\n2. **Character-count pairs**: sorted `(a,2),(e,1)` representation\n3. **Prime product hash**: assign a prime to each letter; multiply their primes - but this can overflow for long strings\n\nAll three uniquely identify an anagram group. The frequency array is most common in practice.",
+        "**Step 1:** Understand the problem.\n\nMultiple $O(k)$ canonical forms exist:\n\n1. **Frequency count array**: `[2,0,0,0,1,0,...,0,1]` for \"aae\"\n2. **Character-count pairs**: sorted `(a,2),(e,1)` representation\n3. **Prime product hash**: assign a prime to each letter; multiply their primes - but this can overflow for long strings\n\nAll three uniquely identify an anagram group. The frequency array is most common in practice.",
       hints: [
         "Any representation that captures character frequencies is a valid canonical key.",
         "Sorting is one approach; counting is another.",
@@ -3171,7 +3152,7 @@ const questions: Record<string, Question[]> = {
       options: ["Stack", "Queue", "Hash set", "Tree"],
       correctAnswer: 2,
       explanation:
-        "Hash set stores characters in current window, allowing O(1) lookup for duplicates.",
+        "**Step 1:** Understand the problem.\n\nHash set stores characters in current window, allowing O(1) lookup for duplicates.",
       hints: [
         "We need to track characters in window",
         "What gives constant-time membership check?",
@@ -3235,7 +3216,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "LRU evicts the least recently accessed item when capacity is reached.",
+        "**Step 1:** Understand the problem.\n\nLRU evicts the least recently accessed item when capacity is reached.",
       hints: [
         "What item should we remove when full?",
         "Think about recency of access",
@@ -3248,7 +3229,7 @@ const questions: Record<string, Question[]> = {
       question: "Hash map alone can implement LRU cache efficiently.",
       correctAnswer: "false",
       explanation:
-        "Hash map gives O(1) access but not O(1) eviction ordering. Need a data structure for recency (doubly linked list).",
+        "**Step 1:** Understand the problem.\n\nHash map gives O(1) access but not O(1) eviction ordering. Need a data structure for recency (doubly linked list).",
       hints: ["What ordering do we need?", "Can hash map maintain order?"],
     },
     {
@@ -3277,7 +3258,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The classic $O(1)$ LRU cache combines:\n\n1. **Hash map**: `key \\to node` for $O(1)$ lookup\n2. **Doubly linked list**: maintains access order with $O(1)$ node removal and insertion at head/tail\n\nOn access: move node to the front (most recently used).\nOn eviction: remove the tail node (least recently used).\nThe hash map gives us the node pointer directly, enabling $O(1)$ removal.",
+        "**Step 1:** Understand the problem.\n\nThe classic $O(1)$ LRU cache combines:\n\n1. **Hash map**: `key \\to node` for $O(1)$ lookup\n2. **Doubly linked list**: maintains access order with $O(1)$ node removal and insertion at head/tail\n\nOn access: move node to the front (most recently used).\nOn eviction: remove the tail node (least recently used).\nThe hash map gives us the node pointer directly, enabling $O(1)$ removal.",
       hints: [
         "We need $O(1)$ lookup (hash map) and $O(1)$ reordering.",
         "A doubly linked list can remove/insert any node in $O(1)$ given a pointer.",
@@ -3300,7 +3281,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Hash map stores element -> count, incrementing on each encounter gives frequency.",
+        "**Step 1:** Understand the problem.\n\nHash map stores element -> count, incrementing on each encounter gives frequency.",
       hints: [
         "We want to count occurrences",
         "What operation for each element?",
@@ -3332,7 +3313,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Optimal approach: bucket sort by frequency.\n\n1. Count frequencies: $O(n)$\n2. Create $n+1$ buckets where bucket $i$ holds elements with frequency $i$: $O(n)$\n3. Collect top-$K$ elements from the highest-frequency buckets: $O(n)$\n\nTotal: $O(n)$, which beats the $O(n \\log k)$ heap approach.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nOptimal approach: bucket sort by frequency.\n\n1. Count frequencies: $O(n)$\n2. Create $n+1$ buckets where bucket $i$ holds elements with frequency $i$: $O(n)$\n3. Collect top-$K$ elements from the highest-frequency buckets: $O(n)$\n\nTotal: $O(n)$, which beats the $O(n \\log k)$ heap approach.",
       hints: [
         "Frequency values range from 1 to $n$, enabling bucket sort.",
         "Bucket sort allows $O(n)$ for this problem.",
@@ -3351,7 +3332,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The first pass of Boyer-Moore guarantees: **if a majority element exists, the candidate must be it**.\n\nHowever, it does NOT guarantee a majority element exists. For example, $[1, 2, 3]$ - the candidate is 3 (or any element), but no majority element exists.\n\nThe second pass counts occurrences of the candidate to confirm $\\text{count} > n/2$.",
+        "**Step 1:** Understand the problem.\n\nThe first pass of Boyer-Moore guarantees: **if a majority element exists, the candidate must be it**.\n\nHowever, it does NOT guarantee a majority element exists. For example, $[1, 2, 3]$ - the candidate is 3 (or any element), but no majority element exists.\n\nThe second pass counts occurrences of the candidate to confirm $\\text{count} > n/2$.",
       hints: [
         "Boyer-Moore guarantees the candidate is the majority element IF one exists.",
         "The algorithm cannot tell on the first pass whether a majority element truly exists.",
@@ -3373,7 +3354,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Bloom filter is a probabilistic structure that can return false positives but never false negatives.",
+        "**Step 1:** Evaluate the statement.\n\nBloom filter is a probabilistic structure that can return false positives but never false negatives.",
       hints: [
         'Can it ever say "no" when element was added?',
         "What can it guarantee?",
@@ -3397,7 +3378,7 @@ const questions: Record<string, Question[]> = {
       question: "A Bloom filter uses a bit array and multiple hash functions to check set membership.",
       correctAnswer: "true",
       explanation:
-        "A Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set - if any is 0, $x$ was not inserted",
+        "**Step 1:** Understand the problem.\n\nA Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set - if any is 0, $x$ was not inserted",
       hints: [
         "Multiple hash functions reduce false positive probability.",
         "A single hash function would have too many collisions.",
@@ -3416,7 +3397,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "After inserting $n$ elements with $k$ hash functions into $m$ bits:\n\n- Probability a specific bit is 0: $\\left(1 - 1/m\\right)^{kn} \\approx e^{-kn/m}$\n- Probability a specific bit is 1: $1 - e^{-kn/m}$\n- False positive: all $k$ query bits are 1: $\\left(1 - e^{-kn/m}\\right)^k$\n\nOptimal $k = (m/n) \\ln 2$ minimizes this false positive rate.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nAfter inserting $n$ elements with $k$ hash functions into $m$ bits:\n\n- Probability a specific bit is 0: $\\left(1 - 1/m\\right)^{kn} \\approx e^{-kn/m}$\n- Probability a specific bit is 1: $1 - e^{-kn/m}$\n- False positive: all $k$ query bits are 1: $\\left(1 - e^{-kn/m}\\right)^k$\n\nOptimal $k = (m/n) \\ln 2$ minimizes this false positive rate.",
       hints: [
         "Each bit has probability $\\approx e^{-kn/m}$ of still being 0.",
         "A false positive requires all $k$ queried bits to be 1.",
@@ -3438,7 +3419,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Consistent hashing minimizes data movement when servers are added or removed.",
+        "**Step 1:** Understand the problem.\n\nConsistent hashing minimizes data movement when servers are added or removed.",
       hints: [
         "What changes when you add a server?",
         "How much data needs to move?",
@@ -3452,7 +3433,7 @@ const questions: Record<string, Question[]> = {
         "In consistent hashing, only K/n keys are remapped when adding a new server.",
       correctAnswer: "true",
       explanation:
-        "Unlike mod-N hashing which remaps all keys, consistent hashing only remaps K/n keys.",
+        "**Step 1:** Understand the problem.\n\nUnlike mod-N hashing which remaps all keys, consistent hashing only remaps K/n keys.",
       hints: [
         "What fraction of the ring changes?",
         "How does this compare to mod-N?",
@@ -3484,7 +3465,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "With only one point per server on the ring, load distribution can be highly unequal (some servers get large arcs, some small).\n\nBy mapping each physical server to $v$ virtual nodes (multiple ring positions), the load is distributed more uniformly. With many vnodes, by the law of large numbers, each server receives close to $1/N$ of the keys.",
+        "**Step 1:** Understand the problem.\n\nWith only one point per server on the ring, load distribution can be highly unequal (some servers get large arcs, some small).\n\nBy mapping each physical server to $v$ virtual nodes (multiple ring positions), the load is distributed more uniformly. With many vnodes, by the law of large numbers, each server receives close to $1/N$ of the keys.",
       hints: [
         "One point per server creates uneven arc lengths on the ring.",
         "More points per server averages out the arc sizes.",
@@ -3506,7 +3487,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "State compression represents multiple related states as bits in a single integer, enabling O(1) state transitions.",
+        "**Step 1:** Understand the problem.\n\nState compression represents multiple related states as bits in a single integer, enabling O(1) state transitions.",
       hints: [
         "Think about representing subsets as bits",
         "What can fit in a 64-bit integer?",
@@ -3520,7 +3501,7 @@ const questions: Record<string, Question[]> = {
         "In a TSP bitmask DP with 20 cities, the state space is 2^20 * 20 = ~400M entries.",
       correctAnswer: "true",
       explanation:
-        "For each subset (2^n subsets) and each ending city (n cities), we have O(n * 2^n) states.",
+        "**Step 1:** Understand the problem.\n\nFor each subset (2^n subsets) and each ending city (n cities), we have O(n * 2^n) states.",
       hints: [
         "How many subsets of n elements?",
         "What is the memory footprint?",
@@ -3539,7 +3520,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Setting (s | (1 << i)), clearing (s & ~(1 << i)), and checking (s & (1 << i)) bits are fundamental operations.",
+        "**Step 1:** Understand the problem.\n\nSetting (s | (1 << i)), clearing (s & ~(1 << i)), and checking (s & (1 << i)) bits are fundamental operations.",
       hints: [
         "How do you add an element to a set?",
         "How do you check membership?",
@@ -3575,7 +3556,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Start with dp[1][0] = 0 (only city 0 visited)",
         "For each state, try all previous cities",
-        "Remove current city from mask to get previous state",
       ],
     },
     {
@@ -3587,11 +3567,10 @@ const questions: Record<string, Question[]> = {
       options: ["O(n!)", "O(n^2 * 2^n)", "O(n * 2^n)", "O(2^n)"],
       correctAnswer: 1,
       explanation:
-        "We have O(2^n) states, each considering O(n) possible transitions to other cities, resulting in O(n^2 * 2^n).",
+        "**Step 1:** Understand the problem.\n\nWe have O(2^n) states, each considering O(n) possible transitions to other cities, resulting in O(n^2 * 2^n).",
       hints: [
         "How many masks exist?",
         "For each mask, how many ending cities?",
-        "For each (mask, i), what is the inner loop?",
       ],
     },
     {
@@ -3601,7 +3580,7 @@ const questions: Record<string, Question[]> = {
       question: "In bitmask DP, each bit in the state mask typically represents whether a specific element is included in the current subset.",
       correctAnswer: "true",
       explanation:
-        "A bitmask of $n$ bits represents a subset of $n$ elements. If bit $i$ is set, element $i$ is in the subset.\n\nFor example, with elements $\\{A, B, C\\}$:\n- $011_2 = 3$: elements $A$ and $B$ are included\n- $111_2 = 7$: all three elements are included\n- $000_2 = 0$: empty subset",
+        "**Step 1:** Understand the problem.\n\nA bitmask of $n$ bits represents a subset of $n$ elements. If bit $i$ is set, element $i$ is in the subset.\n\nFor example, with elements $\\{A, B, C\\}$:\n- $011_2 = 3$: elements $A$ and $B$ are included\n- $111_2 = 7$: all three elements are included\n- $000_2 = 0$: empty subset",
       hints: [
         "A bitmask is just a compact set representation.",
         "Bit $i$ set means element $i$ belongs to the current subset.",
@@ -3623,7 +3602,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tree DP computes child subtree results first (post-order) before combining them at the parent.",
+        "**Step 1:** Compute the answer.\n\nTree DP computes child subtree results first (post-order) before combining them at the parent.",
       hints: [
         "Why do children need to be computed first?",
         "What does bottom-up mean?",
@@ -3643,7 +3622,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Rerooting adjusts dp values by subtracting the child contribution and adding the parent contribution without recomputing everything.",
+        "**Step 1:** Understand the problem.\n\nRerooting adjusts dp values by subtracting the child contribution and adding the parent contribution without recomputing everything.",
       hints: [
         "What changes when root moves to a child?",
         "How do you avoid double counting?",
@@ -3677,7 +3656,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "For each node, find the two tallest child heights",
         "Diameter through node = sum of two tallest + 2",
-        "Track global maximum diameter",
       ],
     },
     {
@@ -3688,7 +3666,7 @@ const questions: Record<string, Question[]> = {
         "In tree DP, each node can be independent root and we compute subtree sizes/bottoms-up.",
       correctAnswer: "true",
       explanation:
-        "Tree DP treats each node as root of its own subtree and computes information in O(size of subtree).",
+        "**Step 1:** Compute the answer.\n\nTree DP treats each node as root of its own subtree and computes information in O(size of subtree).",
       hints: [
         "Is a leaf node a valid subtree?",
         "What does post-order mean for trees?",
@@ -3707,7 +3685,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Rerooting allows O(1) transition when changing root by using prefix/suffix techniques to avoid O(n) recomputation.",
+        "**Step 1:** Understand the problem.\n\nRerooting allows O(1) transition when changing root by using prefix/suffix techniques to avoid O(n) recomputation.",
       hints: [
         "If you move root from parent to child, what changes?",
         "Can you reuse computed values from parent?",
@@ -3720,7 +3698,7 @@ const questions: Record<string, Question[]> = {
       question: "Tree DP is a special case of dynamic programming where the structure of the problem follows a tree (acyclic graph).",
       correctAnswer: "true",
       explanation:
-        "Tree DP exploits the recursive structure of trees: each subtree's optimal solution depends only on its own children, not on siblings or ancestors.\n\nThis enables bottom-up computation (post-order traversal) where each node's value is computed after all its children are processed.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nTree DP exploits the recursive structure of trees: each subtree's optimal solution depends only on its own children, not on siblings or ancestors.\n\nThis enables bottom-up computation (post-order traversal) where each node's value is computed after all its children are processed.",
       hints: [
         "Trees have no cycles, so subproblems do not depend on each other circularly.",
         "Children are independent of each other given their parent.",
@@ -3742,7 +3720,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Interval DP fills the DP table by increasing interval length, ensuring subproblems are solved before larger intervals.",
+        "**Step 1:** Understand the problem.\n\nInterval DP fills the DP table by increasing interval length, ensuring subproblems are solved before larger intervals.",
       hints: [
         "What property ensures optimal substructure?",
         "How do you ensure subintervals are computed first?",
@@ -3796,7 +3774,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Try each key as root",
         "Cost = left cost + right cost + sum of all frequencies in range",
-        "Build from smaller to larger intervals",
       ],
     },
     {
@@ -3807,7 +3784,7 @@ const questions: Record<string, Question[]> = {
         "Interval DP always processes intervals in increasing order of length.",
       correctAnswer: "true",
       explanation:
-        "To use optimal substructure, all subintervals must be computed before larger intervals that depend on them.",
+        "**Step 1:** Compute the answer.\n\n**Step 3:** Conclude.\n\nTo use optimal substructure, all subintervals must be computed before larger intervals that depend on them.",
       hints: [
         "What interval lengths do you start with?",
         "How do you know subproblems are ready?",
@@ -3826,7 +3803,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "LCS is solved with 2D DP on string positions, not interval DP. Matrix chain, BST, and palindrome partitioning all have optimal substructure over contiguous intervals.",
+        "**Step 1:** Understand the problem.\n\n**Step 3:** Conclude.\n\nLCS is solved with 2D DP on string positions, not interval DP. Matrix chain, BST, and palindrome partitioning all have optimal substructure over contiguous intervals.",
       hints: [
         "Is LCS about contiguous substrings?",
         "What defines the subproblems in each case?",
@@ -3839,7 +3816,7 @@ const questions: Record<string, Question[]> = {
       question: "In interval DP, the smallest intervals (single elements) form the base cases.",
       correctAnswer: "true",
       explanation:
-        "Interval DP builds up from subintervals of length 1 (single elements) to the full interval.\n\nBase case: $dp[i][i]$ for all $i$ (interval of length 1).\nFill order: increasing interval length $2, 3, \\ldots, n$.\n\nThis ensures all subintervals are computed before the intervals that depend on them.",
+        "**Step 1:** Understand the problem.\n\nInterval DP builds up from subintervals of length 1 (single elements) to the full interval.\n\nBase case: $dp[i][i]$ for all $i$ (interval of length 1).\nFill order: increasing interval length $2, 3, \\ldots, n$.\n\nThis ensures all subintervals are computed before the intervals that depend on them.",
       hints: [
         "A single element has no meaningful split point - it is a trivial base case.",
         "Larger intervals are built from smaller ones.",
@@ -3861,7 +3838,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Topological sort ensures when we process a node, all its predecessors (dependencies) have already been processed.",
+        "**Step 1:** Understand the problem.\n\nTopological sort ensures when we process a node, all its predecessors (dependencies) have already been processed.",
       hints: ["What makes DAGs special for DP?", "Why does order matter?"],
     },
     {
@@ -3903,7 +3880,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Topological sort first",
         "dp[v] = max over all incoming edges of dp[u] + weight",
-        "Initialize source nodes with 0",
       ],
     },
     {
@@ -3914,7 +3890,7 @@ const questions: Record<string, Question[]> = {
         "In DAG DP, if there are multiple topological orders, the result is always the same.",
       correctAnswer: "true",
       explanation:
-        "All topological sorts produce valid processing orders because they respect dependencies.",
+        "**Step 1:** Understand the problem.\n\nAll topological sorts produce valid processing orders because they respect dependencies.",
       hints: [
         "Do different orders change dependencies?",
         "What matters about the order?",
@@ -3947,7 +3923,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Number of paths to v = sum of number of paths to all predecessors u that have edges to v.",
+        "**Step 1:** Understand the problem.\n\nNumber of paths to v = sum of number of paths to all predecessors u that have edges to v.",
       hints: [
         "How do paths to v relate to paths to its predecessors?",
         "Is this additive or multiplicative?",
@@ -3960,7 +3936,7 @@ const questions: Record<string, Question[]> = {
       question: "Dynamic programming on graphs is only applicable to directed acyclic graphs (DAGs).",
       correctAnswer: "false",
       explanation:
-        "DP can be applied to graphs with cycles when combined with appropriate state design.\n\nExamples:\n- **Shortest paths with negative edges**: Bellman-Ford DP works on general graphs\n- **Floyd-Warshall**: all-pairs shortest paths on general graphs\n- **Bitmask DP (TSP)**: works on complete graphs with cycles\n\nThe key is that the DP state must avoid circular dependencies.",
+        "**Step 1:** Understand the problem.\n\nDP can be applied to graphs with cycles when combined with appropriate state design.\n\nExamples:\n- **Shortest paths with negative edges**: Bellman-Ford DP works on general graphs\n- **Floyd-Warshall**: all-pairs shortest paths on general graphs\n- **Bitmask DP (TSP)**: works on complete graphs with cycles\n\nThe key is that the DP state must avoid circular dependencies.",
       hints: [
         "DAGs are the simplest case, but DP also works elsewhere.",
         "Think of Bellman-Ford or Floyd-Warshall - both handle cyclic graphs.",
@@ -3982,7 +3958,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Digit DP typically processes from most significant digit, maintaining tight/loose constraints as it goes.",
+        "**Step 1:** Understand the problem.\n\nDigit DP typically processes from most significant digit, maintaining tight/loose constraints as it goes.",
       hints: [
         "Which digit is most constrained first?",
         "How do constraints propagate?",
@@ -4038,7 +4014,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Track remainder modulo K at each position",
         "New remainder = (old * 10 + digit) % K",
-        "Base case: at end, check if remainder is 0",
       ],
     },
     {
@@ -4049,7 +4024,7 @@ const questions: Record<string, Question[]> = {
         'In digit DP, leading zeros are typically skipped using a "started" flag.',
       correctAnswer: "true",
       explanation:
-        "The started flag tracks whether we have encountered a non-zero digit, allowing proper handling of leading zeros.",
+        "**Step 1:** Understand the problem.\n\nThe started flag tracks whether we have encountered a non-zero digit, allowing proper handling of leading zeros.",
       hints: [
         "How do you distinguish between 0 and 00042?",
         "What does started=false mean?",
@@ -4074,7 +4049,7 @@ const questions: Record<string, Question[]> = {
       question: "Digit DP counts numbers in a range $[0, N]$ satisfying some digit-level constraint.",
       correctAnswer: "true",
       explanation:
-        "Digit DP processes numbers digit by digit from the most significant position.\n\nIt counts how many integers in $[0, N]$ satisfy a property (e.g., no two adjacent digits are the same, sum of digits is divisible by $k$, etc.) by tracking a compact state at each position.",
+        "**Step 1:** Understand the problem.\n\nDigit DP processes numbers digit by digit from the most significant position.\n\nIt counts how many integers in $[0, N]$ satisfy a property (e.g., no two adjacent digits are the same, sum of digits is divisible by $k$, etc.) by tracking a compact state at each position.",
       hints: [
         "We process digits left to right, maintaining necessary state.",
         "The upper bound $N$ constrains valid numbers.",
@@ -4096,7 +4071,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Probability DP updates beliefs using Bayes theorem as new random events are observed.",
+        "**Step 1:** Understand the problem.\n\nProbability DP updates beliefs using Bayes theorem as new random events are observed.",
       hints: [
         "How do you update probability of state after observation?",
         "What formula governs this?",
@@ -4111,7 +4086,7 @@ const questions: Record<string, Question[]> = {
       options: ["i/N", "1 - i/N", "0.5", "Depends on step size"],
       correctAnswer: 0,
       explanation:
-        "For fair coin in symmetric random walk, P(reach N before 0 | start i) = i/N.",
+        "**Step 1:** Understand the problem.\n\nFor fair coin in symmetric random walk, P(reach N before 0 | start i) = i/N.",
       hints: ["Symmetric random walk property", "Expected position is linear"],
     },
     {
@@ -4134,7 +4109,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "When you have i-1 coupons, probability of new one is (n-i+1)/n",
         "Expected draws for next coupon = n/(n-i+1)",
-        "Sum expectations from 1 to n",
       ],
     },
     {
@@ -4145,7 +4119,7 @@ const questions: Record<string, Question[]> = {
         "In probability DP, the sum of probabilities over all states should always equal 1.",
       correctAnswer: "true",
       explanation:
-        "Normalization ensures the probability distribution is valid at each step.",
+        "**Step 1:** Understand the problem.\n\nNormalization ensures the probability distribution is valid at each step.",
       hints: [
         "What does a probability distribution sum to?",
         "When does this property help?",
@@ -4192,11 +4166,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "The mex of reachable Grundy values defines the Grundy number. Positions with Grundy=0 are losing; non-zero are winning. Combined games use XOR.",
+        "**Step 1:** Understand the problem.\n\nThe mex of reachable Grundy values defines the Grundy number. Positions with Grundy=0 are losing; non-zero are winning. Combined games use XOR.",
       hints: [
         "What is mex?",
         "How do you combine subgames?",
-        "Who wins if Grundy is 0?",
       ],
     },
     {
@@ -4207,7 +4180,7 @@ const questions: Record<string, Question[]> = {
         "In game DP with perfect play, dp[i] = true if any move leads to a losing position for opponent.",
       correctAnswer: "true",
       explanation:
-        "This is the standard minimax DP: winning = exists move to losing; losing = all moves lead to winning.",
+        "**Step 1:** Understand the problem.\n\nThis is the standard minimax DP: winning = exists move to losing; losing = all moves lead to winning.",
       hints: ["What is the base case?", "How do winning/losing alternate?"],
     },
     {
@@ -4231,7 +4204,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Base case: dp[0] = false (nothing to take = losing)",
         "Check moves of 1, 3, 4 stones",
-        "Position is winning if ANY move leads to losing for opponent",
       ],
     },
     {
@@ -4248,7 +4220,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The Sprague-Grundy theorem: G = G1 XOR G2 XOR ... XOR Gn for independent subgames.",
+        "**Step 1:** Understand the problem.\n\nThe Sprague-Grundy theorem: G = G1 XOR G2 XOR ... XOR Gn for independent subgames.",
       hints: [
         "XOR is to nim-sum what addition is to what?",
         "What makes XOR special for impartial games?",
@@ -4268,7 +4240,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If there exists a move to a losing position, current is winning (you can force opponent into losing state).",
+        "**Step 1:** Understand the problem.\n\nIf there exists a move to a losing position, current is winning (you can force opponent into losing state).",
       hints: [
         'What does "losing position" mean for opponent?',
         "How do you force a win?",
@@ -4281,7 +4253,7 @@ const questions: Record<string, Question[]> = {
       question: "In a two-player game DP, a position is a losing position if all moves from it lead to winning positions for the opponent.",
       correctAnswer: "true",
       explanation:
-        "Standard two-player game DP with perfect play:\n- **Losing position**: every available move leads to a winning state for the opponent\n- **Winning position**: at least one move leads to a losing state for the opponent\n\nBase case: a position with no moves is a losing position (the player to move loses).",
+        "**Step 1:** Understand the problem.\n\nStandard two-player game DP with perfect play:\n- **Losing position**: every available move leads to a winning state for the opponent\n- **Winning position**: at least one move leads to a losing state for the opponent\n\nBase case: a position with no moves is a losing position (the player to move loses).",
       hints: [
         "If every move gives the opponent a winning position, the current player loses.",
         "You win only if you can force the opponent into a losing position.",
@@ -4303,7 +4275,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The opt(i,j) must be monotonic: opt(i,j) <= opt(i,j+1) and opt(i,j) <= opt(i+1,j). This ensures correct divide and conquer.",
+        "**Step 1:** Understand the problem.\n\nThe opt(i,j) must be monotonic: opt(i,j) <= opt(i,j+1) and opt(i,j) <= opt(i+1,j). This ensures correct divide and conquer.",
       hints: [
         "What property ensures the recurrence is well-behaved?",
         "Is this always required?",
@@ -4359,7 +4331,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Assume opt is monotonic",
         "For dp[mid], only try k in valid range",
-        "Recurse on left with updated opt bounds",
       ],
     },
     {
@@ -4370,7 +4341,7 @@ const questions: Record<string, Question[]> = {
         "Monotone queue optimization is used for DP of the form dp[i] = min/max over j in sliding window.",
       correctAnswer: "true",
       explanation:
-        "When the valid range for j is a moving window, monotone queue maintains candidate minima/maxima in O(1) amortized.",
+        "**Step 1:** Understand the problem.\n\nWhen the valid range for j is a moving window, monotone queue maintains candidate minima/maxima in O(1) amortized.",
       hints: [
         "What is the structure of valid j for each i?",
         "How does a deque help?",
@@ -4389,7 +4360,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Knuth optimization reduces O(n^3) to O(n^2) when cost satisfies quadrangle inequality.",
+        "**Step 1:** Understand the problem.\n\nKnuth optimization reduces O(n^3) to O(n^2) when cost satisfies quadrangle inequality.",
       hints: [
         "What is the complexity of naive optimal BST?",
         "Which optimization applies to it?",
@@ -4455,7 +4426,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Only need previous row to compute current row",
         "When characters match, extend diagonal value",
-        "When they differ, take max of top and left",
       ],
     },
     {
@@ -4490,7 +4460,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "What does * mean?",
         "What does ? mean?",
-        "How do you handle them in DP?",
       ],
     },
     {
@@ -4597,7 +4566,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Start from node 0",
         "Build up subsets by adding one node at a time",
-        "Close the cycle by returning to node 0",
       ],
     },
     {
@@ -4632,7 +4600,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "How many masks?",
         "How many i values per mask?",
-        "Inner loop cost?",
       ],
     },
     {
