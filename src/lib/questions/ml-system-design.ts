@@ -2165,8 +2165,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Parameter server architecture: all workers send gradients to central PS nodes, which aggregate and broadcast updated parameters — the PS nodes become network bottlenecks as worker count grows. Ring-AllReduce: workers are arranged in a logical ring; each worker communicates with only its two neighbors in 2(N-1) steps, with near-optimal bandwidth utilization regardless of N. Ring-AllReduce (used by Horovod, PyTorch DDP) scales linearly and is the standard for data-parallel training.",
       hints: [
-        "PS bottleneck: if N=100 workers each send gradients to 1 PS node, the PS needs 100\\times the bandwidth of one worker.",
-        "Ring-AllReduce: bandwidth per worker is constant regardless of N — it scales perfectly.",
+        "In a parameter server architecture, where do all workers send their gradients, and what becomes the bottleneck as the number of workers increases?",
+        "In ring-AllReduce, how many neighbors does each worker communicate with, and how does this affect scalability?",
       ],
     },
     {
@@ -2180,8 +2180,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Gradient sparsification selects only the largest K% of gradient values for communication, transmitting ~1% of the full gradient with error feedback (storing unshared gradients and adding them to the next step). 1-bit SGD quantizes gradient values to \\pm1, reducing communication to 32\\times fewer bits. Studies show these techniques achieve near-identical final accuracy to full-precision AllReduce, because small gradients contribute minimally to model updates and error feedback ensures no gradient information is permanently lost.",
       hints: [
-        "Top-K sparsification: send only the K largest gradient elements. Error feedback: accumulate unsent gradients and add them next step.",
-        "Communication bandwidth, not compute, is often the bottleneck in large distributed training — compression is critical.",
+        "What is the key idea behind Top-K gradient sparsification, and what ensures that untransmitted gradient information is not permanently lost?",
+        "What system resource (compute or communication bandwidth) is typically the bottleneck in large-scale distributed training?",
       ],
     },
     {
@@ -2200,8 +2200,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Synchronous distributed training requires all workers to participate in each AllReduce step; a single GPU failure stalls the entire job. Fault tolerance requires: (1) periodic checkpointing (model weights, optimizer state, RNG state, training step); (2) elastic training (TorchElastic, DeepSpeed elasticity) that allows job continuation with N-1 workers after a failure, re-sharding the data parallelism automatically; (3) spot/preemptible instance handling in cloud deployments.",
       hints: [
-        "Checkpointing interval = max acceptable restart cost. Every 30 minutes: lose at most 30 min of training.",
-        "TorchElastic: workers register with a rendezvous backend; on worker failure, surviving workers reform the group and continue.",
+        "What determines the maximum amount of work lost when a GPU fails during a distributed training job?",
+        "What mechanism allows surviving workers to automatically re-form a training group and continue after a worker failure?",
       ],
     },
   ],
