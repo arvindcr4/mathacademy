@@ -876,6 +876,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // ML SYSTEMS & MLOps
+  {
+    id: 'ml-systems',
+    slug: 'ml-systems',
+    name: 'ML Systems & MLOps',
+    description: 'Build production-grade ML systems: experiment tracking, model serving, monitoring, and the full MLOps lifecycle.',
+    category: 'software-engineering',
+    icon: '⚙️',
+    color: '#F59E0B',
+    topicCount: 6,
+    estimatedHours: 25,
+    topics: [
+      {
+        id: 'experiment-tracking',
+        slug: 'experiment-tracking',
+        name: 'Experiment Tracking',
+        description: 'Track, compare, and reproduce ML experiments at scale.',
+        knowledgePoints: [
+          { id: 'mls-kp-1', slug: 'wandb-basics', name: 'Weights & Biases (W&B) Basics' },
+          { id: 'mls-kp-2', slug: 'mlflow-tracking', name: 'MLflow Experiment Tracking' },
+          { id: 'mls-kp-3', slug: 'hyperparameter-search', name: 'Hyperparameter Search (Optuna, Ray Tune)' },
+          { id: 'mls-kp-4', slug: 'reproducibility', name: 'Reproducibility & Seed Management' },
+          { id: 'mls-kp-5', slug: 'artifact-versioning', name: 'Artifact & Model Versioning' },
+        ]
+      },
+      {
+        id: 'data-pipelines',
+        slug: 'data-pipelines',
+        name: 'Data Pipelines',
+        description: 'Build reliable, scalable data pipelines for ML training and inference.',
+        knowledgePoints: [
+          { id: 'mls-kp-6', slug: 'feature-stores', name: 'Feature Stores & Feature Engineering' },
+          { id: 'mls-kp-7', slug: 'data-validation', name: 'Data Validation (Great Expectations)' },
+          { id: 'mls-kp-8', slug: 'stream-processing', name: 'Stream Processing for ML (Kafka, Flink)' },
+          { id: 'mls-kp-9', slug: 'data-versioning', name: 'Data Versioning (DVC, LakeFS)' },
+          { id: 'mls-kp-10', slug: 'etl-for-ml', name: 'ETL Pipelines for ML Workflows' },
+        ]
+      },
+      {
+        id: 'model-serving',
+        slug: 'model-serving',
+        name: 'Model Serving',
+        description: 'Deploy models to production with low latency and high throughput.',
+        knowledgePoints: [
+          { id: 'mls-kp-11', slug: 'rest-api-serving', name: 'REST API Model Serving (FastAPI, BentoML)' },
+          { id: 'mls-kp-12', slug: 'triton-inference', name: 'NVIDIA Triton Inference Server' },
+          { id: 'mls-kp-13', slug: 'model-optimization', name: 'Model Optimization (ONNX, TensorRT)' },
+          { id: 'mls-kp-14', slug: 'ab-testing-ml', name: 'A/B Testing for ML Models' },
+          { id: 'mls-kp-15', slug: 'canary-deployment', name: 'Canary & Shadow Deployments' },
+        ]
+      },
+      {
+        id: 'monitoring-observability',
+        slug: 'monitoring-observability',
+        name: 'ML Monitoring & Observability',
+        description: 'Detect and respond to model drift, data drift, and performance degradation.',
+        knowledgePoints: [
+          { id: 'mls-kp-16', slug: 'data-drift', name: 'Data Drift Detection' },
+          { id: 'mls-kp-17', slug: 'model-drift', name: 'Model Performance Drift & Retraining Triggers' },
+          { id: 'mls-kp-18', slug: 'logging-ml', name: 'Logging & Tracing for ML Services' },
+          { id: 'mls-kp-19', slug: 'alerting-ml', name: 'Alerting & On-Call for ML Systems' },
+          { id: 'mls-kp-20', slug: 'model-cards', name: 'Model Cards & Documentation' },
+        ]
+      },
+      {
+        id: 'ci-cd-ml',
+        slug: 'ci-cd-ml',
+        name: 'CI/CD for ML',
+        description: 'Automated testing, validation, and deployment pipelines for ML.',
+        knowledgePoints: [
+          { id: 'mls-kp-21', slug: 'ml-testing', name: 'Testing ML Models (Unit, Integration, Shadow)' },
+          { id: 'mls-kp-22', slug: 'github-actions-ml', name: 'GitHub Actions for ML Pipelines' },
+          { id: 'mls-kp-23', slug: 'containerization-ml', name: 'Containerization (Docker) for ML' },
+          { id: 'mls-kp-24', slug: 'kubernetes-ml', name: 'Kubernetes for ML Workloads' },
+          { id: 'mls-kp-25', slug: 'infrastructure-as-code', name: 'Infrastructure as Code (Terraform)' },
+        ]
+      },
+      {
+        id: 'cloud-ml',
+        slug: 'cloud-ml',
+        name: 'Cloud ML Platforms',
+        description: 'Leverage cloud platforms for scalable ML training and inference.',
+        knowledgePoints: [
+          { id: 'mls-kp-26', slug: 'sagemaker', name: 'AWS SageMaker Overview' },
+          { id: 'mls-kp-27', slug: 'vertex-ai', name: 'Google Vertex AI' },
+          { id: 'mls-kp-28', slug: 'azure-ml', name: 'Azure Machine Learning' },
+          { id: 'mls-kp-29', slug: 'spot-training', name: 'Spot Instance Training & Checkpointing' },
+          { id: 'mls-kp-30', slug: 'cost-tracking-ml', name: 'GPU Cost Tracking & Optimization' },
+        ]
+      },
+    ]
+  },
+
   // TRANSFORMERS & LLMs
   {
     id: 'transformers-llms',
