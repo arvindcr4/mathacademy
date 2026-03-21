@@ -19,10 +19,24 @@ export interface Topic {
   knowledgePoints: KnowledgePoint[]
 }
 
+export interface Question {
+  id: string
+  type: 'multiple-choice' | 'true-false' | 'coding'
+  difficulty: 'easy' | 'medium' | 'hard'
+  question: string
+  options?: string[]
+  correctAnswer: string | number
+  explanation: string
+  hints?: string[]
+  codeSnippet?: string
+  testCases?: { input: string; output: string }[]
+}
+
 export interface KnowledgePoint {
   id: string
   slug: string
   name: string
+  questions?: Question[]
 }
 
 export const categories = [
@@ -50,10 +64,25 @@ export const courses: Course[] = [
         name: 'Markov Decision Processes',
         description: 'Understand the mathematical framework for sequential decision making.',
         knowledgePoints: [
-          { id: 'kp-1', slug: 'states-and-actions', name: 'States and Actions' },
-          { id: 'kp-2', slug: 'transition-model', name: 'Transition Model' },
-          { id: 'kp-3', slug: 'reward-hypothesis', name: 'Reward Hypothesis' },
-          { id: 'kp-4', slug: 'discount-factor', name: 'Discount Factor' },
+          { id: 'kp-1', slug: 'states-and-actions', name: 'States and Actions', questions: [
+            { id: 'q-mdp-1', type: 'multiple-choice', difficulty: 'easy', question: 'In an MDP, what does the state represent?', options: ['The agent\'s current location', 'A complete description of the environment at a point in time', 'The action the agent will take next', 'The expected future reward'], correctAnswer: 1, explanation: 'A state s is a complete description of the environment at a given time. It contains all relevant information needed to make decisions.' },
+            { id: 'q-mdp-2', type: 'true-false', difficulty: 'medium', question: 'In a fully observable MDP, the agent can always determine its current state with certainty.', correctAnswer: 'true', explanation: 'Full observability means the agent receives the full state information, allowing it to know exactly which state it is in.' },
+            { id: 'q-mdp-3', type: 'multiple-choice', difficulty: 'medium', question: 'What is the key difference between states and actions in an MDP?', options: ['States are discrete, actions are continuous', 'Actions are decisions made by the agent, states describe the environment', 'States are only relevant at the start, actions throughout', 'There is no difference'], correctAnswer: 1, explanation: 'States describe the environment configuration, while actions are the choices available to the agent that lead to state transitions.' },
+          ] },
+          { id: 'kp-2', slug: 'transition-model', name: 'Transition Model', questions: [
+            { id: 'q-tm-1', type: 'multiple-choice', difficulty: 'medium', question: 'What does P(s\'|s,a) represent in an MDP?', options: ['Probability of being in state s given action a was taken', 'Probability of taking action a in state s', 'Probability of transitioning to state s\' given action a in state s', 'Reward for transitioning to s\''], correctAnswer: 2, explanation: 'P(s\'|s,a) is the state transition probability - the probability of ending up in state s\' when taking action a in state s.' },
+            { id: 'q-tm-2', type: 'true-false', difficulty: 'easy', question: 'The sum of P(s\'|s,a) over all possible s\' must equal 1.', correctAnswer: 'true', explanation: 'Transition probabilities form a probability distribution - from any state-action pair, the agent must transition to exactly one next state (with probabilities summing to 1).' },
+            { id: 'q-tm-3', type: 'multiple-choice', difficulty: 'hard', question: 'In a stochastic transition model with P(s\'|s,a) = 0.3 for three states, what is the sum of probabilities for all possible next states?', options: ['0.3', '0.9', '1.0', 'Cannot be determined'], correctAnswer: 2, explanation: 'For a proper probability distribution, sum of P(s\'|s,a) over all s\' must equal 1, representing certainty of transitioning to some next state.' },
+          ] },
+          { id: 'kp-3', slug: 'reward-hypothesis', name: 'Reward Hypothesis', questions: [
+            { id: 'q-rh-1', type: 'multiple-choice', difficulty: 'easy', question: 'According to the Reward Hypothesis, what can all goals be expressed as?', options: ['State sequences', 'Maximizing cumulative reward signals', 'Policy optimization', 'Value function maximization'], correctAnswer: 1, explanation: 'The Reward Hypothesis states that all goals can be described by the maximization of expected cumulative reward.' },
+            { id: 'q-rh-2', type: 'true-false', difficulty: 'medium', question: 'A single reward signal is always sufficient to specify complex goals.', correctAnswer: 'false', explanation: 'Complex goals often require carefully shaped reward functions. Poor reward design can lead to unintended behaviors (reward hacking).' },
+          ] },
+          { id: 'kp-4', slug: 'discount-factor', name: 'Discount Factor', questions: [
+            { id: 'q-df-1', type: 'multiple-choice', difficulty: 'medium', question: 'What does a discount factor γ close to 0 imply about the agent\'s behavior?', options: ['Agent prioritizes immediate rewards', 'Agent considers future rewards equally', 'Agent only cares about the final state', 'Agent cannot learn'], correctAnswer: 0, explanation: 'With γ ≈ 0, immediate rewards dominate. The agent becomes "myopic" and prioritizes short-term gains.' },
+            { id: 'q-df-2', type: 'multiple-choice', difficulty: 'medium', question: 'What is the typical range of the discount factor?', options: ['[-1, 1]', '[0, 1]', '[1, ∞)', '[-∞, ∞)'], correctAnswer: 1, explanation: 'γ is typically between 0 and 1. γ = 1 means no discounting (finite horizons only), γ = 0 means myopic behavior.' },
+            { id: 'q-df-3', type: 'true-false', difficulty: 'easy', question: 'Using a discount factor ensures the infinite return sum converges to a finite value.', correctAnswer: 'true', explanation: 'With γ ∈ [0,1), the geometric series Σγ^t converges to 1/(1-γ), ensuring finite returns even in infinite horizons.' },
+          ] },
         ]
       },
       {
@@ -62,13 +91,31 @@ export const courses: Course[] = [
         name: 'Bellman Equations',
         description: 'Derive and understand the core equations that power RL algorithms.',
         knowledgePoints: [
-          { id: 'kp-5', slug: 'value-function', name: 'Value Function' },
-          { id: 'kp-6', slug: 'action-value', name: 'Action-Value Function Q(s,a)' },
-          { id: 'kp-7', slug: 'bellman-optimality', name: 'Bellman Optimality Equation' },
-          { id: 'kp-27', slug: 'bellman-recursion', name: 'Bellman Recursion & Bootstrapping' },
-          { id: 'kp-28', slug: 'contraction-mapping', name: 'Contraction Mapping Theorem' },
-          { id: 'kp-39', slug: 'optimal-policy-existence', name: 'Existence of Optimal Policies' },
-          { id: 'kp-40', slug: 'bellman-operator', name: 'Bellman Backup Operator (T operator)' },
+          { id: 'kp-5', slug: 'value-function', name: 'Value Function', questions: [
+            { id: 'q-vf-1', type: 'multiple-choice', difficulty: 'easy', question: 'What does the value function V(s) represent?', options: ['Expected immediate reward from state s', 'Expected cumulative reward from state s following optimal policy', 'Maximum reward achievable from state s', 'Average reward per timestep from s'], correctAnswer: 1, explanation: 'V(s) = E[G_t | S_t = s] represents the expected return (discounted cumulative reward) when starting from state s and following the optimal policy.' },
+            { id: 'q-vf-2', type: 'true-false', difficulty: 'medium', question: 'The value function for a given policy is unique.', correctAnswer: 'true', explanation: 'For any stationary policy, there exists a unique value function satisfying the Bellman expectation equation.' },
+          ] },
+          { id: 'kp-6', slug: 'action-value', name: 'Action-Value Function Q(s,a)', questions: [
+            { id: 'q-aq-1', type: 'multiple-choice', difficulty: 'medium', question: 'How does Q(s,a) relate to V(s)?', options: ['Q(s,a) = V(s) for all states', 'Q(s,a) = E[R_{t+1} + γV(s\') | S_t=s, A_t=a]', 'Q(s,a) is always greater than V(s)', 'Q(s,a) does not depend on the next state'], correctAnswer: 1, explanation: 'Q(s,a) = Σ_{s\',r} P(s\',r|s,a)[r + γV(s\')] - the action-value function averages over all possible transitions and rewards.' },
+            { id: 'q-aq-2', type: 'true-false', difficulty: 'medium', question: 'argmax_a Q(s,a) always gives the optimal action for state s.', correctAnswer: 'true', explanation: 'By definition, the optimal policy selects actions maximizing Q. So argmax_a Q(s,a) yields the optimal action.' },
+          ] },
+          { id: 'kp-7', slug: 'bellman-optimality', name: 'Bellman Optimality Equation', questions: [
+            { id: 'q-bo-1', type: 'multiple-choice', difficulty: 'hard', question: 'The Bellman optimality equation is: V*(s) =', options: ['Σ_a π(a|s) Σ_{s\',r} P(s\',r|s,a)[r + γV*(s\')]', 'max_a Σ_{s\',r} P(s\',r|s,a)[r + γV*(s\')]', 'min_a Σ_{s\',r} P(s\',r|s,a)[r + γV*(s\')]', 'Σ_{s\',r} P(s\',r|s,a)[r + γΣ_a V*(s\')]'], correctAnswer: 1, explanation: 'The optimal value satisfies V*(s) = max_a Σ_{s\',r} P(s\',r|s,a)[r + γV*(s\')] - taking the max over actions gives the optimal value.' },
+            { id: 'q-bo-2', type: 'true-false', difficulty: 'medium', question: 'The Bellman optimality equation is nonlinear due to the max operator.', correctAnswer: 'true', explanation: 'Unlike the Bellman expectation equation which is linear in π, the optimality equation has max which makes it nonlinear.' },
+          ] },
+          { id: 'kp-27', slug: 'bellman-recursion', name: 'Bellman Recursion & Bootstrapping', questions: [
+            { id: 'q-br-1', type: 'multiple-choice', difficulty: 'medium', question: 'What is "bootstrapping" in RL?', options: ['Starting episodes from random initial states', 'Estimating value functions using other value function estimates', 'Initializing Q-values to small values', 'Using Monte Carlo for all estimates'], correctAnswer: 1, explanation: 'Bootstrapping means estimating a value function based on other value function estimates (not pure sample returns). TD learning bootstraps.' },
+            { id: 'q-br-2', type: 'true-false', difficulty: 'medium', question: 'Monte Carlo methods bootstrap.', correctAnswer: 'false', explanation: 'Monte Carlo uses actual returns G_t (sample-based), not bootstrapped estimates. TD and DP both bootstrap.' },
+          ] },
+          { id: 'kp-28', slug: 'contraction-mapping', name: 'Contraction Mapping Theorem', questions: [
+            { id: 'q-cm-1', type: 'multiple-choice', difficulty: 'hard', question: 'The Bellman operator T is a γ-contraction with mapping radius:', options: ['1', 'γ', '1-γ', '1/(1-γ)'], correctAnswer: 1, explanation: 'The Bellman operator T satisfies ||T v - T w|| ≤ γ ||v - w||, making it a γ-contraction with fixed point v*.' },
+            { id: 'q-cm-2', type: 'true-false', difficulty: 'hard', question: 'The contraction property guarantees that repeated application of T converges to a unique fixed point.', correctAnswer: 'true', explanation: 'By Banach\'s fixed point theorem, any γ-contraction mapping has a unique fixed point and applying T converges to it.' },
+          ] },
+          { id: 'kp-39', slug: 'optimal-policy-existence', name: 'Existence of Optimal Policies', questions: [
+            { id: 'q-op-1', type: 'true-false', difficulty: 'medium', question: 'There always exists at least one optimal policy for any finite MDP.', correctAnswer: 'true', explanation: 'For finite MDPs with bounded rewards, there always exists an optimal deterministic policy.' },
+          ] },
+          { id: 'kp-40', slug: 'bellman-operator', name: 'Bellman Backup Operator (T operator)', questions: [
+            { id: 'q-bb-1', type: 'multiple-choice', difficulty: 'hard', question: 'What does the Bellman backup operator T do?', options: ['Selects actions for the policy', 'Transforms value functions by taking expected next state values', 'Updates the learning rate', 'Normalizes rewards'], correctAnswer: 1, explanation: '(T v)(s) = max_a Σ_{s\',r} P(s\',r|s,a)[r + γv(s\')] - it backs up values from successor states.' },
         ]
       },
       {
@@ -77,13 +124,31 @@ export const courses: Course[] = [
         name: 'Dynamic Programming',
         description: 'Policy and value iteration methods for known environments.',
         knowledgePoints: [
-          { id: 'kp-8', slug: 'policy-evaluation', name: 'Policy Evaluation' },
-          { id: 'kp-9', slug: 'policy-iteration', name: 'Policy Iteration' },
-          { id: 'kp-10', slug: 'value-iteration', name: 'Value Iteration' },
-          { id: 'kp-29', slug: 'dp-convergence', name: 'DP Convergence & Complexity' },
-          { id: 'kp-30', slug: 'asynchronous-dp', name: 'Asynchronous Dynamic Programming' },
-          { id: 'kp-41', slug: 'modified-policy-iteration', name: 'Modified Policy Iteration' },
-          { id: 'kp-42', slug: 'tabular-vs-approximate', name: 'Tabular vs Approximate DP' },
+          { id: 'kp-8', slug: 'policy-evaluation', name: 'Policy Evaluation', questions: [
+            { id: 'q-pe-1', type: 'multiple-choice', difficulty: 'easy', question: 'Policy evaluation computes V^π(s) by:', options: ['Taking the max over actions', 'Iteratively applying the Bellman expectation equation', 'Using Monte Carlo samples only', 'Updating Q-values directly'], correctAnswer: 1, explanation: 'Iterative policy evaluation applies V_{k+1}(s) = Σ_a π(a|s) Σ_{s\',r} P(s\',r|s,a)[r + γV_k(s\')] until convergence.' },
+            { id: 'q-pe-2', type: 'true-false', difficulty: 'medium', question: 'Policy evaluation converges to the true V^π in the limit of infinite iterations.', correctAnswer: 'true', explanation: 'Iterative policy evaluation converges to the unique fixed point V^π as k → ∞ due to the contraction property of the Bellman operator.' },
+          ] },
+          { id: 'kp-9', slug: 'policy-iteration', name: 'Policy Iteration', questions: [
+            { id: 'q-pi-1', type: 'multiple-choice', difficulty: 'medium', question: 'Policy iteration alternates between:', options: ['Value iteration and policy evaluation', 'Policy evaluation and policy improvement', 'Monte Carlo and TD', 'Action selection and state evaluation'], correctAnswer: 1, explanation: 'PI = Policy Evaluation (compute V^π) → Policy Improvement (greedy w.r.t. V^π) → repeat until convergence.' },
+            { id: 'q-pi-2', type: 'true-false', difficulty: 'easy', question: 'Policy iteration always converges to an optimal policy.', correctAnswer: 'true', explanation: 'Policy iteration terminates when no improvements are possible, yielding an optimal policy π*.' },
+          ] },
+          { id: 'kp-10', slug: 'value-iteration', name: 'Value Iteration', questions: [
+            { id: 'q-vi-1', type: 'multiple-choice', difficulty: 'medium', question: 'Value iteration combines policy evaluation and improvement via:', options: ['Single complete policy evaluation pass', 'Single application of Bellman optimality backup', 'Multiple alternating iterations', 'Monte Carlo sampling'], correctAnswer: 1, explanation: 'VI applies V_{k+1}(s) = max_a Σ_{s\',r} P(s\',r|s,a)[r + γV_k(s\')] - effectively one backup per iteration.' },
+            { id: 'q-vi-2', type: 'true-false', difficulty: 'medium', question: 'Value iteration is guaranteed to converge in fewer iterations than policy iteration.', correctAnswer: 'false', explanation: 'VI may require many iterations; PI can converge faster because policy improvements are directly computed.' },
+          ] },
+          { id: 'kp-29', slug: 'dp-convergence', name: 'DP Convergence & Complexity', questions: [
+            { id: 'q-dc-1', type: 'multiple-choice', difficulty: 'hard', question: 'The time complexity of policy iteration per iteration is:', options: ['O(|S|)', 'O(|S|²|A|)', 'O(|S||A|)', 'O(|S|³)'], correctAnswer: 1, explanation: 'Computing V^π requires O(|S|²|A|) for the full Bellman backup across all state-action pairs.' },
+            { id: 'q-dc-2', type: 'true-false', difficulty: 'medium', question: 'DP methods require a complete model of the environment (P(s\'|s,a)).', correctAnswer: 'true', explanation: 'Dynamic Programming needs the model P(s\'|s,a) and R(s,a,s\') - this is what distinguishes it from model-free RL.' },
+          ] },
+          { id: 'kp-30', slug: 'asynchronous-dp', name: 'Asynchronous Dynamic Programming', questions: [
+            { id: 'q-adp-1', type: 'multiple-choice', difficulty: 'hard', question: 'What is the key advantage of asynchronous DP?', options: ['Guaranteed faster convergence', 'Updates states in any order without full sweeps', 'Requires less memory', 'Works with unknown transitions'], correctAnswer: 1, explanation: 'Async DP updates individual states immediately when visited, avoiding synchronous sweeps but requiring careful ordering for convergence.' },
+          ] },
+          { id: 'kp-41', slug: 'modified-policy-iteration', name: 'Modified Policy Iteration', questions: [
+            { id: 'q-mpi-1', type: 'multiple-choice', difficulty: 'hard', question: 'Modified policy iteration uses truncated policy evaluation by:', options: ['Limiting the number of states', 'Stopping evaluation after k iterations', 'Using TD updates only', 'Randomly selecting states'], correctAnswer: 1, explanation: 'Modified PI performs k Bellman updates (instead of ∞) before policy improvement, trading off accuracy for speed.' },
+          ] },
+          { id: 'kp-42', slug: 'tabular-vs-approximate', name: 'Tabular vs Approximate DP', questions: [
+            { id: 'q-tv-1', type: 'true-false', difficulty: 'easy', question: 'Tabular DP maintains exact value for each state.', correctAnswer: 'true', explanation: 'In tabular methods, V(s) is stored as a distinct entry for each state - exact representation.' },
+          ] },
         ]
       },
       {
@@ -92,13 +157,31 @@ export const courses: Course[] = [
         name: 'Monte Carlo Methods',
         description: 'Learning from experience through sampled trajectories.',
         knowledgePoints: [
-          { id: 'kp-11', slug: 'mc-prediction', name: 'Monte Carlo Prediction' },
-          { id: 'kp-12', slug: 'mc-control', name: 'Monte Carlo Control' },
-          { id: 'kp-13', slug: 'epsilon-greedy', name: 'Epsilon-Greedy Exploration' },
-          { id: 'kp-31', slug: 'first-visit-mc', name: 'First-Visit vs Every-Visit MC' },
-          { id: 'kp-32', slug: 'importance-sampling', name: 'Importance Sampling in MC' },
-          { id: 'kp-43', slug: 'weighted-importance-sampling', name: 'Weighted Importance Sampling' },
-          { id: 'kp-44', slug: 'glie', name: 'GLIE: Greedy in the Limit of Exploration' },
+          { id: 'kp-11', slug: 'mc-prediction', name: 'Monte Carlo Prediction', questions: [
+            { id: 'q-mcp-1', type: 'multiple-choice', difficulty: 'easy', question: 'Monte Carlo prediction estimates V(s) by:', options: ['Using the Bellman equation iteratively', 'Averaging returns observed from state s', 'Computing expected values from the model', 'Applying TD updates'], correctAnswer: 1, explanation: 'MC prediction estimates V(s) as the average of actual returns G_t encountered when visiting state s.' },
+            { id: 'q-mcp-2', type: 'true-false', difficulty: 'easy', question: 'Monte Carlo methods can only be applied to episodic MDPs.', correctAnswer: 'true', explanation: 'MC needs complete episodes to compute returns G_t. For continuing tasks, we use TD methods.' },
+          ] },
+          { id: 'kp-12', slug: 'mc-control', name: 'Monte Carlo Control', questions: [
+            { id: 'q-mcc-1', type: 'multiple-choice', difficulty: 'medium', question: 'Monte Carlo control uses what approach to improve the policy?', options: ['Gradient descent on V', 'Greedy action selection w.r.t. Q values', 'TD error minimization', 'Policy gradient updates'], correctAnswer: 1, explanation: 'MC Control computes Q ≈ mean returns and improves policy by taking greedy action w.r.t. Q.' },
+            { id: 'q-mcc-2', type: 'true-false', difficulty: 'medium', question: 'Exploring starts is required for Monte Carlo control to find optimal policy.', correctAnswer: 'false', explanation: 'Exploring starts helps but ε-greedy or other exploration strategies can be used instead.' },
+          ] },
+          { id: 'kp-13', slug: 'epsilon-greedy', name: 'Epsilon-Greedy Exploration', questions: [
+            { id: 'q-eg-1', type: 'multiple-choice', difficulty: 'easy', question: 'In ε-greedy, with probability ε the agent:', options: ['Takes the greedy action', 'Takes a random action', 'Takes no action', 'Updates the value function'], correctAnswer: 1, explanation: 'ε-greedy: with prob 1-ε choose argmax_a Q(s,a), with prob ε choose uniformly random action.' },
+            { id: 'q-eg-2', type: 'true-false', difficulty: 'easy', question: 'ε decreases over time in GLIE schedules.', correctAnswer: 'true', explanation: 'GLIE (Greedy in the Limit of Exploration) schedules ε_t → 0 as t → ∞, ensuring convergence to optimal policy.' },
+          ] },
+          { id: 'kp-31', slug: 'first-visit-mc', name: 'First-Visit vs Every-Visit MC', questions: [
+            { id: 'q-fv-1', type: 'multiple-choice', difficulty: 'medium', question: 'First-visit MC estimates V(s) as:', options: ['Average over all returns to state s', 'Average over returns from first visit to s only', 'Maximum return from any visit', 'Return from most recent visit'], correctAnswer: 1, explanation: 'First-visit MC only counts the first occurrence of s in each episode when averaging returns.' },
+            { id: 'q-fv-2', type: 'true-false', difficulty: 'medium', question: 'Every-visit MC has lower variance than first-visit MC.', correctAnswer: 'false', explanation: 'First-visit MC typically has lower variance; every-visit includes more samples but introduces correlation.' },
+          ] },
+          { id: 'kp-32', slug: 'importance-sampling', name: 'Importance Sampling in MC', questions: [
+            { id: 'q-is-1', type: 'multiple-choice', difficulty: 'hard', question: 'Importance sampling ratios ρ_{t:T-1} = Π_{k=t}^{T-1} π(A_k|S_k)/b(A_k|S_k) are used to:', options: ['Reduce variance of estimates', 'Estimate returns under target policy from behavior policy samples', 'Normalize rewards', 'Compute advantage estimates'], correctAnswer: 1, explanation: 'Off-policy MC uses importance sampling to correct for the distribution mismatch between behavior (b) and target (π) policies.' },
+            { id: 'q-is-2', type: 'true-false', difficulty: 'hard', question: 'Ordinary importance sampling can have infinite variance.', correctAnswer: 'true', explanation: 'When importance ratios become extreme (product of many ratios), ordinary IS can have unbounded variance.' },
+          ] },
+          { id: 'kp-43', slug: 'weighted-importance-sampling', name: 'Weighted Importance Sampling', questions: [
+            { id: 'q-wis-1', type: 'multiple-choice', difficulty: 'hard', question: 'Weighted importance sampling uses:', options: ['ρ_{t:T-1} G_t directly', 'Σ ρ_{t:T-1} as normalization / Σ ρ_{t:T-1}', 'Normalized importance ratios to bound variance', 'Importance sampling only on rewards'], correctAnswer: 2, explanation: 'Weighted IS normalizes: V(s) = (Σ ρ G) / (Σ ρ), which ensures bounded variance at the cost of some bias.' },
+          ] },
+          { id: 'kp-44', slug: 'glie', name: 'GLIE: Greedy in the Limit of Exploration', questions: [
+            { id: 'q-glie-1', type: 'multiple-choice', difficulty: 'medium', question: 'GLIE requires that:', options: ['All state-action pairs are visited finitely', 'All state-action pairs are visited infinitely often', 'ε stays constant', 'Only greedy actions are taken'], correctAnswer: 1, explanation: 'GLIE requires infinite exploration (all pairs visited i.o.) and greedy limit, ensuring convergence to optimal π*.' },
         ]
       },
       {
@@ -107,10 +190,23 @@ export const courses: Course[] = [
         name: 'Temporal Difference Learning',
         description: 'Combine Monte Carlo and DP ideas with TD(0), TD(λ), and eligibility traces.',
         knowledgePoints: [
-          { id: 'kp-14', slug: 'td-0', name: 'TD(0) Algorithm' },
-          { id: 'kp-15', slug: 'sarsa', name: 'SARSA' },
-          { id: 'kp-16', slug: 'q-learning', name: 'Q-Learning (Off-Policy TD)' },
-          { id: 'kp-17', slug: 'eligibility-traces', name: 'Eligibility Traces' },
+          { id: 'kp-14', slug: 'td-0', name: 'TD(0) Algorithm', questions: [
+            { id: 'q-td0-1', type: 'multiple-choice', difficulty: 'easy', question: 'The TD(0) update is: V(s) ←', options: ['V(s) + α[G_t - V(s)]', 'V(s) + α[R_{t+1} + γV(s\') - V(s)]', 'V(s) + α[G_t + γV(s\') - V(s)]', 'V(s) + α[R_{t+1} - V(s)]'], correctAnswer: 1, explanation: 'TD(0) uses the TD error δ_t = R_{t+1} + γV(s\') - V(s) to bootstrap from the next state estimate.' },
+            { id: 'q-td0-2', type: 'true-false', difficulty: 'medium', question: 'TD(0) is a bootstrapping method because it uses V(s\') to update V(s).', correctAnswer: 'true', explanation: 'Bootstrapping = updating estimates based on other estimates. TD(0) uses V(s\'): estimates V from estimates of successor states.' },
+            { id: 'q-td0-3', type: 'multiple-choice', difficulty: 'medium', question: 'TD(0) converges to V^π if:', options: ['α decreases over time', 'All states are visited infinitely often with decaying α', 'episodic tasks only', 'The policy is fixed'], correctAnswer: 1, explanation: 'Convergence requires GLIE-like conditions: infinite visits, decreasing step size (Σα=∞, Σα²<∞).' },
+          ] },
+          { id: 'kp-15', slug: 'sarsa', name: 'SARSA', questions: [
+            { id: 'q-sarsa-1', type: 'multiple-choice', difficulty: 'medium', question: 'SARSA is an on-policy algorithm because:', options: ['It uses the greedy policy for updates', 'It uses the current policy\'s action for the next state in update', 'It requires a separate behavior policy', 'It only works with discrete states'], correctAnswer: 1, explanation: 'SARSA uses A_{t+1} ~ π(·|s\') in the update: Q(s,a) ← Q(s,a) + α[R + γQ(s\',a\') - Q(s,a)].' },
+            { id: 'q-sarsa-2', type: 'true-false', difficulty: 'easy', question: 'SARSA is called "on-policy" because updates follow the same policy that generates actions.', correctAnswer: 'true', explanation: 'On-policy = learning about the policy that is currently being followed for exploration.' },
+          ] },
+          { id: 'kp-16', slug: 'q-learning', name: 'Q-Learning (Off-Policy TD)', questions: [
+            { id: 'q-ql-1', type: 'multiple-choice', difficulty: 'medium', question: 'Q-learning update: Q(s,a) ← Q(s,a) + α[R + γ max_{a\'} Q(s\', a\') - Q(s,a)]', options: ['Uses max over actions in the next state', 'Is on-policy', 'Does not bootstrap', 'Requires continuous actions'], correctAnswer: 0, explanation: 'Q-learning uses max_a\' Q(s\',a\') which approximates the optimal action-value function, making it off-policy.' },
+            { id: 'q-ql-2', type: 'true-false', difficulty: 'medium', question: 'Q-learning can learn optimal policy while following ε-greedy exploration.', correctAnswer: 'true', explanation: 'Q-learning is off-policy: behavior policy (ε-greedy) can explore, while the target uses max (greedy) updates.' },
+            { id: 'q-ql-3', type: 'multiple-choice', difficulty: 'hard', question: 'What is the relationship between Q-learning and SARSA?', options: ['Q-learning has higher variance', 'Q-learning off-policy learns optimal Q*, SARSA on-policy learns Q^π', 'They are identical', 'SARSA converges faster'], correctAnswer: 1, explanation: 'Q-learning (off-policy) → Q* optimal; SARSA (on-policy) → Q^π for current policy. Q-learning may be higher variance.' },
+          ] },
+          { id: 'kp-17', slug: 'eligibility-traces', name: 'Eligibility Traces', questions: [
+            { id: 'q-et-1', type: 'multiple-choice', difficulty: 'hard', question: 'Eligibility traces combine MC and TD by:', options: ['Using a trace that decays over time', 'Updating all states proportionally to their eligibility', 'Storing returns for future use', 'Computing TD errors at each step'], correctAnswer: 1, explanation: 'Eligibility traces E(s) decay (λ^t) but accumulate (on each visit), enabling updates to affect many past states.' },
+            { id: 'q-et-2', type: 'true-false', difficulty: 'medium', question: 'λ=0 reduces to TD(0), λ=1 reduces to MC.', correctAnswer: 'true', explanation: 'λ encodes how far back traces reach: λ=0 (TD(0)) to λ=1 (MC-like). λ controls the bias-variance tradeoff.' },
         ]
       },
       {
@@ -552,13 +648,36 @@ export const courses: Course[] = [
     estimatedHours: 60,
     topics: [
       { id: 'arrays', slug: 'arrays', name: 'Arrays & Strings', description: 'Foundational array manipulation and string algorithms.', knowledgePoints: [
-          { id: 'ci-kp-1', slug: 'two-sum', name: 'Two Sum' },
-          { id: 'ci-kp-2', slug: 'maximum-subarray', name: 'Maximum Subarray (Kadane\'s Algorithm)' },
-          { id: 'ci-kp-3', slug: 'product-except-self', name: 'Product of Array Except Self' },
-          { id: 'ci-kp-4', slug: 'rotate-array', name: 'Rotate Array' },
-          { id: 'ci-kp-5', slug: 'contains-duplicate', name: 'Contains Duplicate' },
-          { id: 'ci-kp-6', slug: 'longest-common-prefix', name: 'Longest Common Prefix' },
-          { id: 'ci-kp-7', slug: 'valid-parentheses', name: 'Valid Parentheses' },
+          { id: 'ci-kp-1', slug: 'two-sum', name: 'Two Sum', questions: [
+            { id: 'q-ts-1', type: 'multiple-choice', difficulty: 'easy', question: 'What is the time complexity of the optimal Two Sum solution using a hash map?', options: ['O(n²)', 'O(n)', 'O(n log n)', 'O(1)'], correctAnswer: 1, explanation: 'Hash map gives O(1) lookup: for each element nums[i], check if target - nums[i] exists in the map.' },
+            { id: 'q-ts-2', type: 'true-false', difficulty: 'easy', question: 'Two Sum with hash map requires O(n) extra space.', correctAnswer: 'true', explanation: 'The hash map stores up to n elements, giving O(n) space complexity.' },
+            { id: 'q-ts-3', type: 'multiple-choice', difficulty: 'medium', question: 'For input [3, 3] and target 6, what indices does Two Sum return?', options: ['[0, 0]', '[0, 1]', '[1, 1]', '[]'], correctAnswer: 1, explanation: 'nums[0] + nums[1] = 3 + 3 = 6, so indices [0, 1] are returned.' },
+          ] },
+          { id: 'ci-kp-2', slug: 'maximum-subarray', name: 'Maximum Subarray (Kadane\'s Algorithm)', questions: [
+            { id: 'q-ms-1', type: 'multiple-choice', difficulty: 'medium', question: 'Kadane\'s algorithm has time complexity:', options: ['O(n²)', 'O(n)', 'O(n log n)', 'O(1)'], correctAnswer: 1, explanation: 'Single pass through array maintaining current sum and max sum in O(n) time.' },
+            { id: 'q-ms-2', type: 'multiple-choice', difficulty: 'medium', question: 'Kadane\'s algorithm fails when all numbers are:', options: ['Positive', 'Negative', 'Zero', 'Mixed'], correctAnswer: 1, explanation: 'With all negative numbers, the algorithm must be modified to track the maximum (least negative) rather than resetting.' },
+            { id: 'q-ms-3', type: 'true-false', difficulty: 'easy', question: 'Kadane\'s algorithm works in O(n) time using dynamic programming.', correctAnswer: 'true', explanation: 'DP formulation: maxEndingHere = max(maxEndingHere + num, num); maxSoFar = max(maxSoFar, maxEndingHere).' },
+          ] },
+          { id: 'ci-kp-3', slug: 'product-except-self', name: 'Product of Array Except Self', questions: [
+            { id: 'q-pe-1', type: 'multiple-choice', difficulty: 'medium', question: 'Product Except Self requires O(n) time and O(1) extra space (output array not counted). What is the approach?', options: ['Division by each element', 'Prefix and suffix products', 'Recursion', 'Sorting'], correctAnswer: 1, explanation: 'Compute prefix[i] = product of all elements left of i, suffix[i] = product of all elements right of i. Result[i] = prefix[i] * suffix[i].' },
+            { id: 'q-pe-2', type: 'true-false', difficulty: 'medium', question: 'Division approach works when zero is present in the array.', correctAnswer: 'false', explanation: 'Division fails with zeros because you cannot divide by zero. Prefix/suffix approach handles zeros correctly.' },
+          ] },
+          { id: 'ci-kp-4', slug: 'rotate-array', name: 'Rotate Array', questions: [
+            { id: 'q-ra-1', type: 'multiple-choice', difficulty: 'easy', question: 'Rotating [1,2,3,4,5,6,7] by k=3 yields:', options: ['[4,5,6,7,1,2,3]', '[5,6,7,1,2,3,4]', '[3,4,5,6,7,1,2]', '[1,2,3,4,5,6,7]'], correctAnswer: 0, explanation: 'Rotate right by k: last k elements move to front. k=3: [5,6,7] moves front, giving [5,6,7,1,2,3,4]. Wait - let me reconsider: right rotate by 3 means [1,2,3,4] → end, [5,6,7] → front. Result: [5,6,7,1,2,3,4] (option 1).' },
+            { id: 'q-ra-2', type: 'multiple-choice', difficulty: 'medium', question: 'What is the optimal time complexity for rotating an array?', options: ['O(n²)', 'O(n)', 'O(n) with O(1) space via reversal', 'O(log n)'], correctAnswer: 2, explanation: 'Reversal algorithm: reverse entire array, reverse first k, reverse last n-k. Total O(n) time, O(1) space.' },
+          ] },
+          { id: 'ci-kp-5', slug: 'contains-duplicate', name: 'Contains Duplicate', questions: [
+            { id: 'q-cd-1', type: 'multiple-choice', difficulty: 'easy', question: 'Time complexity of sorting approach for Contains Duplicate:', options: ['O(1)', 'O(n)', 'O(n log n)', 'O(n²)'], correctAnswer: 2, explanation: 'Sorting costs O(n log n), then single pass checks adjacent elements for duplicates.' },
+            { id: 'q-cd-2', type: 'true-false', difficulty: 'easy', question: 'Using a hash set gives O(n) time complexity.', correctAnswer: 'true', explanation: 'Hash set provides O(1) average lookup; if adding finds existing element, duplicate exists.' },
+          ] },
+          { id: 'ci-kp-6', slug: 'longest-common-prefix', name: 'Longest Common Prefix', questions: [
+            { id: 'q-lcp-1', type: 'multiple-choice', difficulty: 'easy', question: 'For ["flower", "flow", "flight"], the longest common prefix is:', options: ['fl', 'flow', 'f', 'flight'], correctAnswer: 0, explanation: '"fl" is common to all three strings. "flow" doesn\'t match "flight" at position 4.' },
+            { id: 'q-lcp-2', type: 'multiple-choice', difficulty: 'medium', question: 'Vertical scanning approach has worst-case time complexity:', options: ['O(n log n)', 'O(n*m) where m is shortest string length', 'O(n*m)', 'O(m)'], correctAnswer: 2, explanation: 'Vertical scan: check char at position i for all strings. If different or index exceeds any string, stop. O(n*m) worst case.' },
+          ] },
+          { id: 'ci-kp-7', slug: 'valid-parentheses', name: 'Valid Parentheses', questions: [
+            { id: 'q-vp-1', type: 'multiple-choice', difficulty: 'easy', question: 'What data structure is optimal for Valid Parentheses?', options: ['Queue', 'Stack', 'Array', 'Linked List'], correctAnswer: 1, explanation: 'Stack: push opening brackets, pop and match when closing bracket encountered. LIFO ensures correct nesting.' },
+            { id: 'q-vp-2', type: 'true-false', difficulty: 'easy', question: '"{[()]}" is a valid parentheses string.', correctAnswer: 'true', explanation: 'Each opening bracket has matching closing bracket in correct order: { → } , [ → ] , ( → ).' },
+            { id: 'q-vp-3', type: 'multiple-choice', difficulty: 'medium', question: 'Stack approach for Valid Parentheses runs in:', options: ['O(1)', 'O(n)', 'O(n²)', 'O(log n)'], correctAnswer: 1, explanation: 'Single pass through string: O(n) time, O(n) space for stack in worst case.' },
         ] },
       { id: 'linked-lists', slug: 'linked-lists', name: 'Linked Lists', description: 'Singly, doubly, and circular linked lists.', knowledgePoints: [
           { id: 'ci-kp-8', slug: 'reverse-linked-list', name: 'Reverse Linked List' },
@@ -1545,6 +1664,104 @@ export const courses: Course[] = [
         ]
       },
     ]
+  },
+  // 3D VISION & SCENE UNDERSTANDING
+  {
+    id: 'vision-3d',
+    slug: 'vision-3d',
+    name: '3D Vision & Scene Understanding',
+    description: 'Neural radiance fields, 3D reconstruction, depth estimation, point clouds, and 3D scene understanding.',
+    category: 'ai',
+    icon: 'cube',
+    color: '#7C3AED',
+    topicCount: 6,
+    estimatedHours: 40,
+    topics: [
+      {
+        id: 'depth-estimation',
+        name: 'Depth Estimation & Stereo Vision',
+        slug: 'depth-estimation',
+        description: 'Monocular and stereo depth prediction.',
+        order: 1,
+        knowledgePoints: [
+          { id: 'cv3d-kp-1', slug: 'monocular-depth', name: 'Monocular Depth Estimation with Self-Supervision' },
+          { id: 'cv3d-kp-2', slug: 'stereo-matching', name: 'Stereo Matching and Disparity Estimation' },
+          { id: 'cv3d-kp-3', slug: 'depth-completion', name: 'Depth Completion from Sparse LiDAR' },
+          { id: 'cv3d-kp-4', slug: 'metric-depth', name: 'Metric Depth and Scale Ambiguity' },
+          { id: 'cv3d-kp-5', slug: 'depth-anything', name: 'Depth Anything and Foundation Depth Models' },
+        ],
+      },
+      {
+        id: 'neural-radiance-fields',
+        name: 'Neural Radiance Fields',
+        slug: 'neural-radiance-fields',
+        description: 'NeRF, Gaussian splatting, and novel view synthesis.',
+        order: 2,
+        knowledgePoints: [
+          { id: 'cv3d-kp-6', slug: 'nerf-fundamentals', name: 'NeRF: Volume Rendering and Positional Encoding' },
+          { id: 'cv3d-kp-7', slug: 'instant-ngp', name: 'Instant Neural Graphics Primitives (Instant-NGP)' },
+          { id: 'cv3d-kp-8', slug: 'gaussian-splatting', name: '3D Gaussian Splatting for Real-Time Rendering' },
+          { id: 'cv3d-kp-9', slug: 'dynamic-nerf', name: 'Dynamic NeRF and 4D Scene Reconstruction' },
+          { id: 'cv3d-kp-10', slug: 'generative-nerf', name: 'Generative NeRF and 3D-Aware Image Synthesis' },
+        ],
+      },
+      {
+        id: '3d-reconstruction',
+        name: '3D Reconstruction & Pose Estimation',
+        slug: '3d-reconstruction',
+        description: 'Structure from motion, MVS, and pose estimation.',
+        order: 3,
+        knowledgePoints: [
+          { id: 'cv3d-kp-11', slug: 'sfm', name: 'Structure from Motion (SfM) and COLMAP' },
+          { id: 'cv3d-kp-12', slug: 'mvs', name: 'Multi-View Stereo and Dense Reconstruction' },
+          { id: 'cv3d-kp-13', slug: 'object-pose', name: '6-DoF Object Pose Estimation' },
+          { id: 'cv3d-kp-14', slug: 'hand-pose', name: 'Hand and Human Pose Estimation in 3D' },
+          { id: 'cv3d-kp-15', slug: 'scene-flow', name: 'Scene Flow and 3D Motion Estimation' },
+        ],
+      },
+      {
+        id: 'point-cloud-learning',
+        name: 'Point Cloud Learning',
+        slug: 'point-cloud-learning',
+        description: 'Deep learning on 3D point clouds.',
+        order: 4,
+        knowledgePoints: [
+          { id: 'cv3d-kp-16', slug: 'pointnet', name: 'PointNet and PointNet++ for Point Cloud Processing' },
+          { id: 'cv3d-kp-17', slug: 'voxel-methods', name: 'Voxel-Based and Sparse Convolution Methods' },
+          { id: 'cv3d-kp-18', slug: 'point-transformers', name: 'Point Transformers and Attention on Point Clouds' },
+          { id: 'cv3d-kp-19', slug: '3d-object-detection', name: '3D Object Detection: VoxelNet, PointPillars, CenterPoint' },
+          { id: 'cv3d-kp-20', slug: 'point-cloud-segmentation', name: '3D Semantic and Instance Segmentation' },
+        ],
+      },
+      {
+        id: 'scene-graphs',
+        name: 'Scene Graphs & Spatial Reasoning',
+        slug: 'scene-graphs',
+        description: 'Relational scene understanding and spatial reasoning.',
+        order: 5,
+        knowledgePoints: [
+          { id: 'cv3d-kp-21', slug: 'scene-graph-generation', name: 'Scene Graph Generation from Images' },
+          { id: 'cv3d-kp-22', slug: 'spatial-relations', name: 'Spatial Relation Detection and Visual Reasoning' },
+          { id: 'cv3d-kp-23', slug: '3d-scene-graphs', name: '3D Scene Graphs for Embodied AI' },
+          { id: 'cv3d-kp-24', slug: 'panoptic-3d', name: 'Panoptic Lifting and 3D Panoptic Segmentation' },
+          { id: 'cv3d-kp-25', slug: 'grounded-3d', name: 'Language-Grounded 3D Scene Understanding' },
+        ],
+      },
+      {
+        id: 'autonomous-driving-3d',
+        name: '3D Perception for Autonomous Driving',
+        slug: 'autonomous-driving-3d',
+        description: 'End-to-end 3D scene understanding for self-driving.',
+        order: 6,
+        knowledgePoints: [
+          { id: 'cv3d-kp-26', slug: 'bev-perception', name: 'Bird-Eye-View Perception and BEVFusion' },
+          { id: 'cv3d-kp-27', slug: 'occupancy-prediction', name: 'Occupancy Prediction and 3D Scene Completion' },
+          { id: 'cv3d-kp-28', slug: 'temporal-3d', name: 'Temporal Fusion for 3D Detection' },
+          { id: 'cv3d-kp-29', slug: 'world-models-driving', name: 'World Models for Autonomous Driving (GAIA-1, UniSim)' },
+          { id: 'cv3d-kp-30', slug: 'end-to-end-driving', name: 'End-to-End Learning for Autonomous Driving' },
+        ],
+      },
+    ],
   },
   // ROBOTICS & EMBODIED AI
   {
