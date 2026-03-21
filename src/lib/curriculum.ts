@@ -67,6 +67,8 @@ export const courses: Course[] = [
           { id: 'kp-7', slug: 'bellman-optimality', name: 'Bellman Optimality Equation' },
           { id: 'kp-27', slug: 'bellman-recursion', name: 'Bellman Recursion & Bootstrapping' },
           { id: 'kp-28', slug: 'contraction-mapping', name: 'Contraction Mapping Theorem' },
+          { id: 'kp-39', slug: 'optimal-policy-existence', name: 'Existence of Optimal Policies' },
+          { id: 'kp-40', slug: 'bellman-operator', name: 'Bellman Backup Operator (T operator)' },
         ]
       },
       {
@@ -80,6 +82,8 @@ export const courses: Course[] = [
           { id: 'kp-10', slug: 'value-iteration', name: 'Value Iteration' },
           { id: 'kp-29', slug: 'dp-convergence', name: 'DP Convergence & Complexity' },
           { id: 'kp-30', slug: 'asynchronous-dp', name: 'Asynchronous Dynamic Programming' },
+          { id: 'kp-41', slug: 'modified-policy-iteration', name: 'Modified Policy Iteration' },
+          { id: 'kp-42', slug: 'tabular-vs-approximate', name: 'Tabular vs Approximate DP' },
         ]
       },
       {
@@ -93,6 +97,8 @@ export const courses: Course[] = [
           { id: 'kp-13', slug: 'epsilon-greedy', name: 'Epsilon-Greedy Exploration' },
           { id: 'kp-31', slug: 'first-visit-mc', name: 'First-Visit vs Every-Visit MC' },
           { id: 'kp-32', slug: 'importance-sampling', name: 'Importance Sampling in MC' },
+          { id: 'kp-43', slug: 'weighted-importance-sampling', name: 'Weighted Importance Sampling' },
+          { id: 'kp-44', slug: 'glie', name: 'GLIE: Greedy in the Limit of Exploration' },
         ]
       },
       {
@@ -118,6 +124,8 @@ export const courses: Course[] = [
           { id: 'kp-20', slug: 'experience-replay', name: 'Experience Replay' },
           { id: 'kp-33', slug: 'target-networks', name: 'Target Networks & Stability' },
           { id: 'kp-34', slug: 'double-dqn', name: 'Double DQN & Dueling Architecture' },
+          { id: 'kp-45', slug: 'prioritized-replay', name: 'Prioritized Experience Replay' },
+          { id: 'kp-46', slug: 'noisy-networks', name: 'Noisy Networks for Exploration' },
         ]
       },
       {
@@ -131,6 +139,8 @@ export const courses: Course[] = [
           { id: 'kp-23', slug: 'gae', name: 'Generalized Advantage Estimation' },
           { id: 'kp-35', slug: 'baseline-variance', name: 'Baseline & Variance Reduction' },
           { id: 'kp-36', slug: 'natural-policy-gradient', name: 'Natural Policy Gradient' },
+          { id: 'kp-47', slug: 'trpo', name: 'Trust Region Policy Optimization (TRPO)' },
+          { id: 'kp-48', slug: 'entropy-regularization', name: 'Entropy Regularization for Exploration' },
         ]
       },
       {
@@ -144,6 +154,8 @@ export const courses: Course[] = [
           { id: 'kp-26', slug: 'td3', name: 'Twin Delayed DDPG (TD3)' },
           { id: 'kp-37', slug: 'rainbow-dqn', name: 'Rainbow DQN' },
           { id: 'kp-38', slug: 'model-based-rl', name: 'Model-Based RL (MBPO, Dreamer)' },
+          { id: 'kp-49', slug: 'alphago', name: 'AlphaGo & AlphaZero' },
+          { id: 'kp-50', slug: 'hierarchical-rl', name: 'Hierarchical Reinforcement Learning' },
         ]
       },
     ]
@@ -227,6 +239,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-3', slug: 'transfer-learning-types', name: 'Types of Transfer Learning' },
           { id: 'ft-kp-30', slug: 'when-to-finetune', name: 'When to Fine-Tune vs Prompt Engineer' },
           { id: 'ft-kp-31', slug: 'finetune-cost-benefit', name: 'Cost-Benefit Analysis of Fine-Tuning' },
+          { id: 'ft-kp-51', slug: 'foundation-model-landscape', name: 'Foundation Model Landscape (Open vs Closed)' },
+          { id: 'ft-kp-52', slug: 'task-specific-vs-general', name: 'Task-Specific vs General Fine-Tuning' },
         ]
       },
       {
@@ -292,6 +306,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-18', slug: 'llm-judges', name: 'LLM-as-a-Judge' },
           { id: 'ft-kp-40', slug: 'mt-bench', name: 'MT-Bench & AlpacaEval' },
           { id: 'ft-kp-41', slug: 'evals-suite', name: 'Open LLM Leaderboard Evals' },
+          { id: 'ft-kp-53', slug: 'arena-eval', name: 'Chatbot Arena & ELO Rating' },
+          { id: 'ft-kp-54', slug: 'contamination-detection', name: 'Benchmark Contamination Detection' },
         ]
       },
       {
@@ -305,6 +321,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-21', slug: 'dpo', name: 'Direct Preference Optimization (DPO)' },
           { id: 'ft-kp-42', slug: 'constitutional-ai', name: 'Constitutional AI & RLAIF' },
           { id: 'ft-kp-43', slug: 'kl-penalty', name: 'KL Divergence Penalty & Reference Model' },
+          { id: 'ft-kp-55', slug: 'orpo', name: 'ORPO: Odds Ratio Preference Optimization' },
+          { id: 'ft-kp-56', slug: 'simpo', name: 'SimPO: Simple Preference Optimization' },
         ]
       },
       {
@@ -344,6 +362,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-29', slug: 'deployment', name: 'Deployment Strategies' },
           { id: 'ft-kp-49', slug: 'vllm-serving', name: 'vLLM & PagedAttention for Serving' },
           { id: 'ft-kp-50', slug: 'quantization-inference', name: 'Quantization for Inference (AWQ, GPTQ)' },
+          { id: 'ft-kp-57', slug: 'model-pruning', name: 'Model Pruning for Production' },
+          { id: 'ft-kp-58', slug: 'knowledge-distillation', name: 'Knowledge Distillation' },
         ]
       },
     ]
