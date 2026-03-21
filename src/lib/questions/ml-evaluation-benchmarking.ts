@@ -805,7 +805,7 @@ const questions: Record<string, Question[]> = {
         'Counterfactual fairness is always stricter than observational fairness and implies all observational fairness criteria',
       ],
       correctAnswer: 1,
-      explanation: 'Kusner et al. (2017) define counterfactual fairness: a model is counterfactually fair if for all individuals, P(Ŷ_{A←a}=y | X=x, A=a) = P(Ŷ_{A←a'}=y | X=x, A=a) — the prediction is unchanged when you counterfactually set the sensitive attribute to a different value in a causal graph. This requires a causal model of how A affects other features and the outcome, going beyond statistical correlations.',
+      explanation: "Kusner et al. (2017) define counterfactual fairness: a model is counterfactually fair if for all individuals, P(Ŷ_{A←a}=y | X=x, A=a) = P(Ŷ_{A←a'}=y | X=x, A=a) — the prediction is unchanged when you counterfactually set the sensitive attribute to a different value in a causal graph. This requires a causal model of how A affects other features and the outcome, going beyond statistical correlations.",
     },
   ],
   'bias-detection': [

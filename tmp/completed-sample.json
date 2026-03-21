@@ -1,0 +1,1007 @@
+{
+  "exported_at": "2026-03-21T10:46:52.335Z",
+  "source": "opencli mathacademy completed-questions",
+  "source_url": "https://www.mathacademy.com/learn",
+  "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+  "tasks_exported": 2,
+  "questions_exported": 14,
+  "failures": [],
+  "tasks": [
+    {
+      "task_id": 2834492,
+      "task_type": "Lesson",
+      "topic_id": 1473,
+      "topic_name": "The Product Rule for Logarithms",
+      "course_id": null,
+      "course_name": "Mathematical Foundations II",
+      "completed_at": "2025-01-13T06:39:15.000Z",
+      "completed_date": "Mon, Jan 13th, 2025",
+      "completed_time": "6:39 AM",
+      "started_at": "2025-01-13T06:30:03.000Z",
+      "points_possible": 7,
+      "points_awarded": 9,
+      "progress": 1,
+      "progress_display": "100%",
+      "review_url": "/learn?taskId=2834492",
+      "topic_url": "/topics/1473",
+      "prerequisites": [
+        {
+          "id": 1599,
+          "name": "Simplifying Logarithmic Expressions",
+          "url_slug": null,
+          "topic_url": "/topics/1599"
+        }
+      ],
+      "question_count": 8,
+      "questions": [
+        {
+          "number": 1,
+          "question_id": 66746,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4014,
+          "example_title": "Combining Logarithms Using the Product Rule",
+          "format": "MC",
+          "difficulty": "H",
+          "difficulty_class": "difficultyHard",
+          "created_at": "2025-01-13T06:31:40.000Z",
+          "created_display": "Mon, Jan 13th @ 6:31 AM",
+          "time_elapsed_ms": 78324,
+          "time_elapsed_display": "1:18",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Express $\\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) + \\log_4 k$ as a single logarithm.</p>\n",
+          "question_text": "Express $\\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) + \\log_4 k$ as a single logarithm.",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>Using the product rule for logarithms, we can combine the first two terms as follows:\n\\begin{align}\n\\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) + \\log_4 k\n\n & = \\bigl( \\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) \\bigr) + \\log_4 k \\\\[5pt]\n\n& = \\log_{4}\\big(k^2 t t^2\\big) + \\log_4 k\\\\[5pt]\n\\end{align}</p>\n<p>Using the product rule for logarithms once more, we obtain\n\\[\n\\log_{4}\\big(k^2 t t^2\\big) + \\log_4 k = \\log_{4}\\big(k^2 t t^2 k\\big).\n\\]</p>\n<p>Finally, if we use the commutative property of real numbers and the addition law for exponents, we get\n\\begin{align}\n\\log_{4}\\big(k^2 t t^2 k \\big) & = \\log_{4}\\big(k^2 k t t^2\\big)\\\\[5pt]\n\n& = \\log_{4}\\big(k^{2+1} t^{1+2}\\big)\\\\[5pt]\n\n& = \\log_{4}\\big(k^3 t^3\\big). \n\\end{align}</p>\n<p>Therefore,\n\\[\n\\log_{4}(k^2 t) + \\log_{4}(t^2) + \\log_4(k) = \\log_{4}\\big(k^3 t^3\\big).\n\\]</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nUsing the product rule for logarithms, we can combine the first two terms as follows:\n\\begin{align}\n\\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) + \\log_4 k\n& = \\bigl( \\log_{4}\\big(k^2 t\\big) + \\log_{4}\\big(t^2\\big) \\bigr) + \\log_4 k \\\\[5pt]\n& = \\log_{4}\\big(k^2 t t^2\\big) + \\log_4 k\\\\[5pt]\n\\end{align}\nUsing the product rule for logarithms once more, we obtain\n\\[\n\\log_{4}\\big(k^2 t t^2\\big) + \\log_4 k = \\log_{4}\\big(k^2 t t^2 k\\big).\n\\]\nFinally, if we use the commutative property of real numbers and the addition law for exponents, we get\n\\begin{align}\n\\log_{4}\\big(k^2 t t^2 k \\big) & = \\log_{4}\\big(k^2 k t t^2\\big)\\\\[5pt]\n& = \\log_{4}\\big(k^{2+1} t^{1+2}\\big)\\\\[5pt]\n& = \\log_{4}\\big(k^3 t^3\\big).\n\\end{align}\nTherefore,\n\\[\n\\log_{4}(k^2 t) + \\log_{4}(t^2) + \\log_4(k) = \\log_{4}\\big(k^3 t^3\\big).\n\\]",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\log_{4}\\left(k^3 t^3\\right)$ ",
+              "text": "$\\log_{4}\\left(k^3 t^3\\right)$"
+            },
+            {
+              "number": 2,
+              "html": "$\\log_{12}\\left(k^2 t + t^2 + k\\right)$  ",
+              "text": "$\\log_{12}\\left(k^2 t + t^2 + k\\right)$"
+            },
+            {
+              "number": 3,
+              "html": "$\\log_{4}\\left(k^2 t + t^2 + k\\right)$  ",
+              "text": "$\\log_{4}\\left(k^2 t + t^2 + k\\right)$"
+            },
+            {
+              "number": 4,
+              "html": "$\\log_{12}\\left(k^2 t^2\\right)$  ",
+              "text": "$\\log_{12}\\left(k^2 t^2\\right)$"
+            },
+            {
+              "number": 5,
+              "html": "$\\log_{4}\\left(k^2 t^2\\right)$  ",
+              "text": "$\\log_{4}\\left(k^2 t^2\\right)$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\log_{4}\\left(k^3 t^3\\right)$ ",
+            "text": "$\\log_{4}\\left(k^3 t^3\\right)$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890812,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 2,
+          "question_id": 66745,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4014,
+          "example_title": "Combining Logarithms Using the Product Rule",
+          "format": "MC",
+          "difficulty": "H",
+          "difficulty_class": "difficultyHard",
+          "created_at": "2025-01-13T06:32:03.000Z",
+          "created_display": "Mon, Jan 13th @ 6:32 AM",
+          "time_elapsed_ms": 16705,
+          "time_elapsed_display": "0:17",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Express $\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq)$ as a single logarithm.</p>\n",
+          "question_text": "Express $\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq)$ as a single logarithm.",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>Using the product rule for logarithms, we can combine the first two terms as follows:\n\\begin{align}\n\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq)\n& = \\bigl( \\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) \\bigr) + \\log_3(pq)\\\\[5pt]\n\n& = \\log_{3}\\big(p^3 q^2\\big) + \\log_3(pq)\\\\[5pt]\n\\end{align}</p>\n<p>Using the product rule for logarithms once more, we obtain\n\\[\n\\log_{3}\\big(p^3 q^2\\big) + \\log_3(pq)= \\log_{3}\\big(p^3 q^2 pq\\big).\n\\]</p>\n<p>Finally, if we use the commutative property of real numbers and the addition law for exponents, we get\n\\begin{align}\n\\log_{3} \\big(p^3 q^2 pq\\big)\n& = \\log_{3} \\big(p^3p q^2 q \\big)\\\\[5pt]\n& = \\log_{3} \\big(p^{3+1} q^{2+1} \\big)\\\\[5pt]\n& = \\log_{3}\\big(p^4 q^3\\big).\n\\end{align}</p>\n<p>Therefore,\n\\[\n\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq) = \\log_{3}\\big(p^4 q^3\\big).\n\\]</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nUsing the product rule for logarithms, we can combine the first two terms as follows:\n\\begin{align}\n\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq)\n& = \\bigl( \\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) \\bigr) + \\log_3(pq)\\\\[5pt]\n& = \\log_{3}\\big(p^3 q^2\\big) + \\log_3(pq)\\\\[5pt]\n\\end{align}\nUsing the product rule for logarithms once more, we obtain\n\\[\n\\log_{3}\\big(p^3 q^2\\big) + \\log_3(pq)= \\log_{3}\\big(p^3 q^2 pq\\big).\n\\]\nFinally, if we use the commutative property of real numbers and the addition law for exponents, we get\n\\begin{align}\n\\log_{3} \\big(p^3 q^2 pq\\big)\n& = \\log_{3} \\big(p^3p q^2 q \\big)\\\\[5pt]\n& = \\log_{3} \\big(p^{3+1} q^{2+1} \\big)\\\\[5pt]\n& = \\log_{3}\\big(p^4 q^3\\big).\n\\end{align}\nTherefore,\n\\[\n\\log_{3}\\big(p^3\\big) + \\log_{3}\\big(q^2\\big) + \\log_3(pq) = \\log_{3}\\big(p^4 q^3\\big).\n\\]",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\log_{3}\\big(p^4 q^3\\big)$ ",
+              "text": "$\\log_{3}\\big(p^4 q^3\\big)$"
+            },
+            {
+              "number": 2,
+              "html": "$\\log_{27}\\big(p^4 q^3\\big)$  ",
+              "text": "$\\log_{27}\\big(p^4 q^3\\big)$"
+            },
+            {
+              "number": 3,
+              "html": "$\\log_{9}\\big(p^3+q^2+pq\\big)$  ",
+              "text": "$\\log_{9}\\big(p^3+q^2+pq\\big)$"
+            },
+            {
+              "number": 4,
+              "html": "$\\log_{3}\\big(p^3 q^2\\big)$  ",
+              "text": "$\\log_{3}\\big(p^3 q^2\\big)$"
+            },
+            {
+              "number": 5,
+              "html": "$\\log_{3}\\big(p^3+q^2+pq  \\big)$  ",
+              "text": "$\\log_{3}\\big(p^3+q^2+pq \\big)$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\log_{3}\\big(p^4 q^3\\big)$ ",
+            "text": "$\\log_{3}\\big(p^4 q^3\\big)$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890821,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 4,
+          "question_id": 99913,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4014,
+          "example_title": "Combining Logarithms Using the Product Rule",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:34:42.000Z",
+          "created_display": "Mon, Jan 13th @ 6:34 AM",
+          "time_elapsed_ms": 27352,
+          "time_elapsed_display": "0:27",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Express $\\log(x+2) + \\log(5x)$ as a single logarithm.</p>\n",
+          "question_text": "Express $\\log(x+2) + \\log(5x)$ as a single logarithm.",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>Using the product rule for logarithms, the given expression can be rewritten as</p>\n<p>\\begin{align}\n\\log(x+2) + \\log(5x) & = \\log\\big( (x+2)\\cdot 5x \\big)\\\\[5pt]\n& = \\log \\left(5x^2 + 10x \\right).\n\\end{align}</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nUsing the product rule for logarithms, the given expression can be rewritten as\n\\begin{align}\n\\log(x+2) + \\log(5x) & = \\log\\big( (x+2)\\cdot 5x \\big)\\\\[5pt]\n& = \\log \\left(5x^2 + 10x \\right).\n\\end{align}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\log \\left(5x^2 + 10x \\right)$",
+              "text": "$\\log \\left(5x^2 + 10x \\right)$"
+            },
+            {
+              "number": 2,
+              "html": "$\\log \\left(5x^2 + 10 \\right)$",
+              "text": "$\\log \\left(5x^2 + 10 \\right)$"
+            },
+            {
+              "number": 3,
+              "html": "$\\log \\left(6x + 2 \\right)$",
+              "text": "$\\log \\left(6x + 2 \\right)$"
+            },
+            {
+              "number": 4,
+              "html": "$\\log \\left(7x+2 \\right)$",
+              "text": "$\\log \\left(7x+2 \\right)$"
+            },
+            {
+              "number": 5,
+              "html": "$\\log \\left(5x^2 + 5x \\right)$",
+              "text": "$\\log \\left(5x^2 + 5x \\right)$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\log \\left(5x^2 + 10x \\right)$",
+            "text": "$\\log \\left(5x^2 + 10x \\right)$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890898,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 3,
+          "question_id": 108100,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4015,
+          "example_title": "Combining Logarithms With Coefficients Using the Product Rule",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:34:12.000Z",
+          "created_display": "Mon, Jan 13th @ 6:34 AM",
+          "time_elapsed_ms": 93162,
+          "time_elapsed_display": "1:33",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Express $4\\log 2+4\\log 4 + 4\\log 8$ as a single logarithm.</p>\n",
+          "question_text": "Express $4\\log 2+4\\log 4 + 4\\log 8$ as a single logarithm.",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>If we factor the given expression and use the product rule for logarithms, we get</p>\n<p>\\begin{align}\n4\\log 2+4\\log 4+4 \\log 8\n&= 4 \\left(\\log 2+4\\log 4 + \\log 8\\right) \\\\[5pt]\n&= 4\\log (2 \\cdot 4 \\cdot 8) \\\\[5pt]\n&= 4\\log  64.\n\\end{align}</p>\n<p>Therefore,\n\\[\n4\\log 2+4\\log 4 + 4\\log 8 = 4\\log 64.\n\\]</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nIf we factor the given expression and use the product rule for logarithms, we get\n\\begin{align}\n4\\log 2+4\\log 4+4 \\log 8\n&= 4 \\left(\\log 2+4\\log 4 + \\log 8\\right) \\\\[5pt]\n&= 4\\log (2 \\cdot 4 \\cdot 8) \\\\[5pt]\n&= 4\\log 64.\n\\end{align}\nTherefore,\n\\[\n4\\log 2+4\\log 4 + 4\\log 8 = 4\\log 64.\n\\]",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": " $4\\log 64$",
+              "text": "$4\\log 64$"
+            },
+            {
+              "number": 2,
+              "html": "$4\\log 14$",
+              "text": "$4\\log 14$"
+            },
+            {
+              "number": 3,
+              "html": "$\\log 64$",
+              "text": "$\\log 64$"
+            },
+            {
+              "number": 4,
+              "html": "$12\\log 14$",
+              "text": "$12\\log 14$"
+            },
+            {
+              "number": 5,
+              "html": " $64\\log 64$",
+              "text": "$64\\log 64$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": " $4\\log 64$",
+            "text": "$4\\log 64$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890882,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 5,
+          "question_id": 66757,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4016,
+          "example_title": "Separating a Logarithm Into Two Logarithms Using the Product Rule",
+          "format": "MC",
+          "difficulty": "H",
+          "difficulty_class": "difficultyHard",
+          "created_at": "2025-01-13T06:35:21.000Z",
+          "created_display": "Mon, Jan 13th @ 6:35 AM",
+          "time_elapsed_ms": 29684,
+          "time_elapsed_display": "0:30",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>$\\log_2(8 p) = $</p>\n",
+          "question_text": "$\\log_2(8 p) = $",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>Using the product rule, the given expression can be rewritten as\n\\begin{align}\n\\log_2(8 p) = \\log_2 8 + \\log_2 p.\n\\end{align}</p>\n<p>Since $8 = 2^3,$ we have\n\\[\n\\log_2 8 = \\log_2\\left( 2^3 \\right) = 3.\n\\]</p>\n<p>Therefore,\n\\begin{align}\n\\log_2(8 p) & = \\log_2 8 + \\log_2 p\\\\[5pt]\n& = 3 + \\log_2 p.\n\\end{align}</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nUsing the product rule, the given expression can be rewritten as\n\\begin{align}\n\\log_2(8 p) = \\log_2 8 + \\log_2 p.\n\\end{align}\nSince $8 = 2^3,$ we have\n\\[\n\\log_2 8 = \\log_2\\left( 2^3 \\right) = 3.\n\\]\nTherefore,\n\\begin{align}\n\\log_2(8 p) & = \\log_2 8 + \\log_2 p\\\\[5pt]\n& = 3 + \\log_2 p.\n\\end{align}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$3 + \\log_2 p$ ",
+              "text": "$3 + \\log_2 p$"
+            },
+            {
+              "number": 2,
+              "html": "$8 + \\log_2 p$  ",
+              "text": "$8 + \\log_2 p$"
+            },
+            {
+              "number": 3,
+              "html": "$3\\log_2 p$  ",
+              "text": "$3\\log_2 p$"
+            },
+            {
+              "number": 4,
+              "html": " $1 + \\log_2(2p)$ ",
+              "text": "$1 + \\log_2(2p)$"
+            },
+            {
+              "number": 5,
+              "html": "$3 \\log_2(4p)$  ",
+              "text": "$3 \\log_2(4p)$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$3 + \\log_2 p$ ",
+            "text": "$3 + \\log_2 p$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890924,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 6,
+          "question_id": 47206,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4016,
+          "example_title": "Separating a Logarithm Into Two Logarithms Using the Product Rule",
+          "format": "MC",
+          "difficulty": "E",
+          "difficulty_class": "difficultyEasy",
+          "created_at": "2025-01-13T06:35:40.000Z",
+          "created_display": "Mon, Jan 13th @ 6:35 AM",
+          "time_elapsed_ms": 16366,
+          "time_elapsed_display": "0:16",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>$\\log_8(3z)=$</p>\n",
+          "question_text": "$\\log_8(3z)=$",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\t\\log_n a + \\log_n b = \\log_n(ab)\n\\]</p>\n<p>Using the product rule, the given expression can be rewritten as\n\\begin{align}\n\t\\log_8 (3z ) \n\t\t& = \\log_8 (3 \\cdot z )\\\\[5pt]\n\t\t& = \\log_8 3 + \\log_8 z.\n\\end{align}</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b = \\log_n(ab)\n\\]\nUsing the product rule, the given expression can be rewritten as\n\\begin{align}\n\\log_8 (3z )\n& = \\log_8 (3 \\cdot z )\\\\[5pt]\n& = \\log_8 3 + \\log_8 z.\n\\end{align}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\log_8 3+\\log_8 z$",
+              "text": "$\\log_8 3+\\log_8 z$"
+            },
+            {
+              "number": 2,
+              "html": "$\\log_8 3\\cdot\\log_8 z$",
+              "text": "$\\log_8 3\\cdot\\log_8 z$"
+            },
+            {
+              "number": 3,
+              "html": "$\\log_8 3-\\log_8 z$",
+              "text": "$\\log_8 3-\\log_8 z$"
+            },
+            {
+              "number": 4,
+              "html": "$\\dfrac{\\log_8 3}{\\log_8 z}$",
+              "text": "$\\dfrac{\\log_8 3}{\\log_8 z}$"
+            },
+            {
+              "number": 5,
+              "html": "$3\\log_8 z$",
+              "text": "$3\\log_8 z$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\log_8 3+\\log_8 z$",
+            "text": "$\\log_8 3+\\log_8 z$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890931,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 7,
+          "question_id": 99919,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4018,
+          "example_title": "Evaluating an Expression Using the Product Rule ",
+          "format": "MC",
+          "difficulty": "H",
+          "difficulty_class": "difficultyHard",
+          "created_at": "2025-01-13T06:39:02.000Z",
+          "created_display": "Mon, Jan 13th @ 6:39 AM",
+          "time_elapsed_ms": 146903,
+          "time_elapsed_display": "2:27",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>If $\\log 16 = x$ and $\\log 4=y$, then $2\\log 64=$</p>\n",
+          "question_text": "If $\\log 16 = x$ and $\\log 4=y$, then $2\\log 64=$",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b= \\log_n(ab)\n\\]</p>\n<p>Using the product rule for logarithms and the information given, we get</p>\n<p>\\begin{align}\n2\\log  64 & = 2\\log(16\\cdot 4)\\\\[5pt]\n\n&=2\\bigl( \\log 16 + \\log 4 \\bigr) \\\\[5pt]\n\n& = 2(x + y).\n\\end{align}</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b= \\log_n(ab)\n\\]\nUsing the product rule for logarithms and the information given, we get\n\\begin{align}\n2\\log 64 & = 2\\log(16\\cdot 4)\\\\[5pt]\n&=2\\bigl( \\log 16 + \\log 4 \\bigr) \\\\[5pt]\n& = 2(x + y).\n\\end{align}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$2(x+y)$",
+              "text": "$2(x+y)$"
+            },
+            {
+              "number": 2,
+              "html": "$2xy$",
+              "text": "$2xy$"
+            },
+            {
+              "number": 3,
+              "html": "$4(x+y)$",
+              "text": "$4(x+y)$"
+            },
+            {
+              "number": 4,
+              "html": "$x^2 + y^2$",
+              "text": "$x^2 + y^2$"
+            },
+            {
+              "number": 5,
+              "html": "$x+y+2xy$",
+              "text": "$x+y+2xy$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$2(x+y)$",
+            "text": "$2(x+y)$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12891048,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 8,
+          "question_id": 108103,
+          "task_id": 2834492,
+          "task_type": "Lesson",
+          "topic_id": 1473,
+          "topic_name": "The Product Rule for Logarithms",
+          "example_id": 4018,
+          "example_title": "Evaluating an Expression Using the Product Rule ",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:39:15.000Z",
+          "created_display": "Mon, Jan 13th @ 6:39 AM",
+          "time_elapsed_ms": 10066,
+          "time_elapsed_display": "0:10",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>If $\\ln  x =10$ and $\\ln  y = 2$, then $\\ln (xy)=$</p>\n",
+          "question_text": "If $\\ln x =10$ and $\\ln y = 2$, then $\\ln (xy)=$",
+          "explanation_html": "<p>First, let&#39;s recall the product rule for logarithms:</p>\n<p>\\[\n\\log_n a + \\log_n b= \\log_n(ab)\n\\]</p>\n<p>Using the product rule, we have</p>\n<p>\\begin{align}\n\\ln (xy) & = \\ln x + \\ln y\\\\[5pt]\n\n& = 10 + 2\\\\[5pt]\n& =12.\n\\end{align}</p>\n",
+          "explanation_text": "First, let's recall the product rule for logarithms:\n\\[\n\\log_n a + \\log_n b= \\log_n(ab)\n\\]\nUsing the product rule, we have\n\\begin{align}\n\\ln (xy) & = \\ln x + \\ln y\\\\[5pt]\n& = 10 + 2\\\\[5pt]\n& =12.\n\\end{align}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$12$",
+              "text": "$12$"
+            },
+            {
+              "number": 2,
+              "html": "$20$",
+              "text": "$20$"
+            },
+            {
+              "number": 3,
+              "html": "$10x+2y$",
+              "text": "$10x+2y$"
+            },
+            {
+              "number": 4,
+              "html": "$20xy$",
+              "text": "$20xy$"
+            },
+            {
+              "number": 5,
+              "html": "$x^{10}y^2$",
+              "text": "$x^{10}y^2$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$12$",
+            "text": "$12$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12891054,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        }
+      ]
+    },
+    {
+      "task_id": 2834592,
+      "task_type": "Lesson",
+      "topic_id": 1551,
+      "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+      "course_id": null,
+      "course_name": "Mathematical Foundations II",
+      "completed_at": "2025-01-13T06:29:46.000Z",
+      "completed_date": "Mon, Jan 13th, 2025",
+      "completed_time": "6:29 AM",
+      "started_at": "2025-01-13T06:17:26.000Z",
+      "points_possible": 7,
+      "points_awarded": 9,
+      "progress": 1,
+      "progress_display": "100%",
+      "review_url": "/learn?taskId=2834592",
+      "topic_url": "/topics/1551",
+      "prerequisites": [
+        {
+          "id": 226,
+          "name": "Solving Logarithmic Equations",
+          "url_slug": null,
+          "topic_url": "/topics/226"
+        }
+      ],
+      "question_count": 6,
+      "questions": [
+        {
+          "number": 1,
+          "question_id": 100636,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4146,
+          "example_title": "Solving Natural Logarithmic Equations",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:18:29.000Z",
+          "created_display": "Mon, Jan 13th @ 6:18 AM",
+          "time_elapsed_ms": 29850,
+          "time_elapsed_display": "0:30",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>If $\\ln \\left( {3-7x} \\right) = 6$, then $x=$</p>\n",
+          "question_text": "If $\\ln \\left( {3-7x} \\right) = 6$, then $x=$",
+          "explanation_html": "<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n\t\\ln \\left( {3-7x} \\right) &= 6 \\\\[3pt]\n\te^{\\color{blue}\\ln \\left( {3-7x} \\right)} &=e^{\\color{blue}6}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln(3-7x)} = 3-7x.$ </p>\n<p>Therefore, \n\\begin{align*}\n\t3-7x & = e^6  \\\\[3pt]\n\t- 7x &=  e^6 - 3 \\\\[3pt]\n\tx &= \\dfrac{e^6 - 3}{ - 7} \\\\[3pt]\n\tx &= \\dfrac{3 -e^6}{7}.\t\n\\end{align*}</p>\n",
+          "explanation_text": "To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln \\left( {3-7x} \\right) &= 6 \\\\[3pt]\ne^{\\color{blue}\\ln \\left( {3-7x} \\right)} &=e^{\\color{blue}6}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln(3-7x)} = 3-7x.$\nTherefore,\n\\begin{align*}\n3-7x & = e^6 \\\\[3pt]\n- 7x &= e^6 - 3 \\\\[3pt]\nx &= \\dfrac{e^6 - 3}{ - 7} \\\\[3pt]\nx &= \\dfrac{3 -e^6}{7}.\n\\end{align*}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\dfrac{3 -e^6}{7}$",
+              "text": "$\\dfrac{3 -e^6}{7}$"
+            },
+            {
+              "number": 2,
+              "html": "$\\dfrac{3 +e^6}{7}$",
+              "text": "$\\dfrac{3 +e^6}{7}$"
+            },
+            {
+              "number": 3,
+              "html": "$\\dfrac{3 -e^7}{6}$",
+              "text": "$\\dfrac{3 -e^7}{6}$"
+            },
+            {
+              "number": 4,
+              "html": "$\\dfrac{6 -e^6}{7}$",
+              "text": "$\\dfrac{6 -e^6}{7}$"
+            },
+            {
+              "number": 5,
+              "html": "$\\dfrac{6+e^7}{7}$",
+              "text": "$\\dfrac{6+e^7}{7}$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\dfrac{3 -e^6}{7}$",
+            "text": "$\\dfrac{3 -e^6}{7}$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890421,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 2,
+          "question_id": 19178,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4146,
+          "example_title": "Solving Natural Logarithmic Equations",
+          "format": "MC",
+          "difficulty": "E",
+          "difficulty_class": "difficultyEasy",
+          "created_at": "2025-01-13T06:18:43.000Z",
+          "created_display": "Mon, Jan 13th @ 6:18 AM",
+          "time_elapsed_ms": 11068,
+          "time_elapsed_display": "0:11",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Find the exact solution to $\n\\ln \\left( {4x} \\right) = 2\n.$</p>\n",
+          "question_text": "Find the exact solution to $\n\\ln \\left( {4x} \\right) = 2\n.$",
+          "explanation_html": "<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n   \\ln\\left( {4x} \\right) &= 2 \\\\[3pt]\n    e^{\\color{blue}\\ln\\left( {4x} \\right)} &=e^{\\color{blue}2}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln (4x)} = 4x.$ </p>\n<p>Therefore, </p>\n<p>\\begin{align*}\n    4x &= e^{2} \\\\[5pt]\n    x &= \\dfrac{1}{4}e^{2}\\\\[5pt]\n x &= \\dfrac{e^{2}}{4}.\n\\end{align*}</p>\n",
+          "explanation_text": "To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln\\left( {4x} \\right) &= 2 \\\\[3pt]\ne^{\\color{blue}\\ln\\left( {4x} \\right)} &=e^{\\color{blue}2}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln (4x)} = 4x.$\nTherefore,\n\\begin{align*}\n4x &= e^{2} \\\\[5pt]\nx &= \\dfrac{1}{4}e^{2}\\\\[5pt]\nx &= \\dfrac{e^{2}}{4}.\n\\end{align*}",
+          "free_answer_choice_html": null,
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$x = \\dfrac{e^2}{4}$",
+              "text": "$x = \\dfrac{e^2}{4}$"
+            },
+            {
+              "number": 2,
+              "html": "$x =\\dfrac{2-e^{2}}{4}$",
+              "text": "$x =\\dfrac{2-e^{2}}{4}$"
+            },
+            {
+              "number": 3,
+              "html": "$x = \\dfrac{{4 - e}}{2}$",
+              "text": "$x = \\dfrac{{4 - e}}{2}$"
+            },
+            {
+              "number": 4,
+              "html": "$x = \\dfrac{{ {e^4}}}{2}$",
+              "text": "$x = \\dfrac{{ {e^4}}}{2}$"
+            },
+            {
+              "number": 5,
+              "html": "$x =\\dfrac{1}{2}$",
+              "text": "$x =\\dfrac{1}{2}$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$x = \\dfrac{e^2}{4}$",
+            "text": "$x = \\dfrac{e^2}{4}$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890426,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 3,
+          "question_id": 100718,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4147,
+          "example_title": "Solving Natural Logarithmic Equations by First Rearranging the Equation",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:20:44.000Z",
+          "created_display": "Mon, Jan 13th @ 6:20 AM",
+          "time_elapsed_ms": 60821,
+          "time_elapsed_display": "1:01",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Find the exact solution to $5\\ln (7-2x) +13 = 38.$</p>\n",
+          "question_text": "Find the exact solution to $5\\ln (7-2x) +13 = 38.$",
+          "explanation_html": "<p>First, we rearrange our equation to isolate the logarithmic term, as follows:</p>\n<p>\\begin{align*}\n\t5\\ln (7-2x) +13 &= 38 \\\\[3pt]\n\t5\\ln (7-2x) &= 25 \\\\[3pt]\n\t\\ln (7-2x) &= 5\n\\end{align*}</p>\n<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n\t\\ln{(7-2x)} &= 5 \\\\[3pt]\n\te^{\\color{blue}\\ln{(7-2x)}} &=e^{\\color{blue}5}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln (7-2x)} = 7-2x.$ </p>\n<p>Therefore, </p>\n<p>\\begin{align*}\n\t7-2x  &= e^5 \\\\[5pt]\n\t-2x  &= e^5-7 \\\\[3pt]\n\tx  &= \\dfrac{e^5-7}{-2} \\\\[3pt]\n\tx  &= \\dfrac{7-e^5}{2}.\n\\end{align*}</p>\n",
+          "explanation_text": "First, we rearrange our equation to isolate the logarithmic term, as follows:\n\\begin{align*}\n5\\ln (7-2x) +13 &= 38 \\\\[3pt]\n5\\ln (7-2x) &= 25 \\\\[3pt]\n\\ln (7-2x) &= 5\n\\end{align*}\nTo remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln{(7-2x)} &= 5 \\\\[3pt]\ne^{\\color{blue}\\ln{(7-2x)}} &=e^{\\color{blue}5}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln (7-2x)} = 7-2x.$\nTherefore,\n\\begin{align*}\n7-2x &= e^5 \\\\[5pt]\n-2x &= e^5-7 \\\\[3pt]\nx &= \\dfrac{e^5-7}{-2} \\\\[3pt]\nx &= \\dfrac{7-e^5}{2}.\n\\end{align*}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\dfrac{7-e^5}{2}$",
+              "text": "$\\dfrac{7-e^5}{2}$"
+            },
+            {
+              "number": 2,
+              "html": "$\\dfrac{7-e^2}{2}$",
+              "text": "$\\dfrac{7-e^2}{2}$"
+            },
+            {
+              "number": 3,
+              "html": "$\\dfrac{7+e^5}{5}$",
+              "text": "$\\dfrac{7+e^5}{5}$"
+            },
+            {
+              "number": 4,
+              "html": "$\\dfrac{7-e^2}{5}$",
+              "text": "$\\dfrac{7-e^2}{5}$"
+            },
+            {
+              "number": 5,
+              "html": "$\\dfrac{2+e^5}{7}$",
+              "text": "$\\dfrac{2+e^5}{7}$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\dfrac{7-e^5}{2}$",
+            "text": "$\\dfrac{7-e^5}{2}$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890492,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 4,
+          "question_id": 79393,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4147,
+          "example_title": "Solving Natural Logarithmic Equations by First Rearranging the Equation",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:23:00.000Z",
+          "created_display": "Mon, Jan 13th @ 6:23 AM",
+          "time_elapsed_ms": 131480,
+          "time_elapsed_display": "2:11",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Find the exact solution to $2\\ln (1-5x) +3 = 9.$</p>\n",
+          "question_text": "Find the exact solution to $2\\ln (1-5x) +3 = 9.$",
+          "explanation_html": "<p>First, we rearrange our equation to isolate the logarithmic term, as follows:</p>\n<p>\\begin{align*}\n\t2\\ln (1-5x) +3 &= 9 \\\\[3pt]\n\t2\\ln (1-5x) &= 6 \\\\[3pt]\n\t\\ln (1-5x) &= 3\n\\end{align*}</p>\n<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n\t\\ln{(1-5x)} &= 3 \\\\[3pt]\n\te^{\\color{blue}\\ln{(1-5x)}} &=e^{\\color{blue}3}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln (1-5x)} = 1-5x.$ </p>\n<p>Therefore, </p>\n<p>\\begin{align*}\n\t1-5x  &= e^3 \\\\[5pt]\n\t-5x  &= e^3-1 \\\\[3pt]\n\tx  &= \\dfrac{e^3-1}{-5} \\\\[3pt]\n\tx  &= \\dfrac{1-e^3}{5}.\n\\end{align*}</p>\n",
+          "explanation_text": "First, we rearrange our equation to isolate the logarithmic term, as follows:\n\\begin{align*}\n2\\ln (1-5x) +3 &= 9 \\\\[3pt]\n2\\ln (1-5x) &= 6 \\\\[3pt]\n\\ln (1-5x) &= 3\n\\end{align*}\nTo remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln{(1-5x)} &= 3 \\\\[3pt]\ne^{\\color{blue}\\ln{(1-5x)}} &=e^{\\color{blue}3}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln (1-5x)} = 1-5x.$\nTherefore,\n\\begin{align*}\n1-5x &= e^3 \\\\[5pt]\n-5x &= e^3-1 \\\\[3pt]\nx &= \\dfrac{e^3-1}{-5} \\\\[3pt]\nx &= \\dfrac{1-e^3}{5}.\n\\end{align*}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$\\dfrac{1-e^3}{5}$",
+              "text": "$\\dfrac{1-e^3}{5}$"
+            },
+            {
+              "number": 2,
+              "html": "$\\dfrac{e^3+1}{5}$",
+              "text": "$\\dfrac{e^3+1}{5}$"
+            },
+            {
+              "number": 3,
+              "html": "$\\dfrac{1+e^3}{3}$",
+              "text": "$\\dfrac{1+e^3}{3}$"
+            },
+            {
+              "number": 4,
+              "html": "$\\dfrac{2-e^3}{3}$",
+              "text": "$\\dfrac{2-e^3}{3}$"
+            },
+            {
+              "number": 5,
+              "html": "$\\dfrac{3+e^3}{5}$",
+              "text": "$\\dfrac{3+e^3}{5}$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$\\dfrac{1-e^3}{5}$",
+            "text": "$\\dfrac{1-e^3}{5}$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890548,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 5,
+          "question_id": 110779,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4148,
+          "example_title": "Solving Natural Logarithmic Equations by Combining Logarithmic Terms",
+          "format": "MC",
+          "difficulty": "H",
+          "difficulty_class": "difficultyHard",
+          "created_at": "2025-01-13T06:28:28.000Z",
+          "created_display": "Mon, Jan 13th @ 6:28 AM",
+          "time_elapsed_ms": 269664,
+          "time_elapsed_display": "4:30",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>Find the values of $x$ such that $\\ln(x-1) - 3\\ln(x-1) = 2.$</p>\n",
+          "question_text": "Find the values of $x$ such that $\\ln(x-1) - 3\\ln(x-1) = 2.$",
+          "explanation_html": "<p>First, we simplify our equation by collecting the like logarithmic terms, and isolating the logarithm, as follows:</p>\n<p>\\begin{align*}\n\t\\ln(x-1) - 3\\ln(x-1) &= 2 \\\\[5pt]\n\t(1-3)\\ln(x-1) &=2 \\\\[5pt]\n\t-2\\ln(x-1) &= 2 \\\\[5pt]\n\t\\ln(x-1) &= -1\n\\end{align*}</p>\n<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n\t\\ln(x-1) &= -1 \\\\[5pt]\n\te^{\\color{blue}\\ln(x-1)} &= e^{\\color{blue}-1}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln (x-1)} = x-1.$ </p>\n<p>Therefore, </p>\n<p>\\begin{align*}\n\tx-1 &= e^{-1} \\\\[5pt]\n\tx-1 &= \\dfrac{1}{e} \\\\[5pt]\n\tx & =  \\dfrac{1}{e} + 1.\n\\end{align*}</p>\n",
+          "explanation_text": "First, we simplify our equation by collecting the like logarithmic terms, and isolating the logarithm, as follows:\n\\begin{align*}\n\\ln(x-1) - 3\\ln(x-1) &= 2 \\\\[5pt]\n(1-3)\\ln(x-1) &=2 \\\\[5pt]\n-2\\ln(x-1) &= 2 \\\\[5pt]\n\\ln(x-1) &= -1\n\\end{align*}\nTo remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln(x-1) &= -1 \\\\[5pt]\ne^{\\color{blue}\\ln(x-1)} &= e^{\\color{blue}-1}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln (x-1)} = x-1.$\nTherefore,\n\\begin{align*}\nx-1 &= e^{-1} \\\\[5pt]\nx-1 &= \\dfrac{1}{e} \\\\[5pt]\nx & = \\dfrac{1}{e} + 1.\n\\end{align*}",
+          "free_answer_choice_html": " ",
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$ \\dfrac{1}{e} + 1$",
+              "text": "$ \\dfrac{1}{e} + 1$"
+            },
+            {
+              "number": 2,
+              "html": "$e + 1$",
+              "text": "$e + 1$"
+            },
+            {
+              "number": 3,
+              "html": "$ e^4 + 1$",
+              "text": "$ e^4 + 1$"
+            },
+            {
+              "number": 4,
+              "html": "$ \\dfrac{1}{e^4} + 1$",
+              "text": "$ \\dfrac{1}{e^4} + 1$"
+            },
+            {
+              "number": 5,
+              "html": "$\\sqrt{e}+1$",
+              "text": "$\\sqrt{e}+1$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$ \\dfrac{1}{e} + 1$",
+            "text": "$ \\dfrac{1}{e} + 1$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890687,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        },
+        {
+          "number": 6,
+          "question_id": 70040,
+          "task_id": 2834592,
+          "task_type": "Lesson",
+          "topic_id": 1551,
+          "topic_name": "Solving Logarithmic Equations Containing the Natural Logarithm",
+          "example_id": 4148,
+          "example_title": "Solving Natural Logarithmic Equations by Combining Logarithmic Terms",
+          "format": "MC",
+          "difficulty": "M",
+          "difficulty_class": "difficultyModerate",
+          "created_at": "2025-01-13T06:29:46.000Z",
+          "created_display": "Mon, Jan 13th @ 6:29 AM",
+          "time_elapsed_ms": 75066,
+          "time_elapsed_display": "1:15",
+          "result": "correct",
+          "correct": true,
+          "question_html": "<p>If $2\\ln{x} + 3\\ln{x}=20$, then what is the value of  $x?$</p>\n",
+          "question_text": "If $2\\ln{x} + 3\\ln{x}=20$, then what is the value of $x?$",
+          "explanation_html": "<p>First, we simplify our equation by collecting the like logarithmic terms, and isolating the logarithm, as follows:\n\\begin{align*}\n\t2\\ln{x} + 3\\ln{x} &= 20 \\\\[5pt]\n\t(2+3)\\ln x &= 20 \\\\[5pt]\n\t5\\ln x &= 20 \\\\[5pt]\n\t\\ln x &= \\dfrac{20}{5}\\\\[5pt]\n\t\\ln x &=4.\n\\end{align*}</p>\n<p>To remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:</p>\n<p>\\begin{align*}\n\t\\ln x &= 4 \\\\[5pt]\n\te^{\\color{blue}\\ln x} &= e^{\\color{blue}4}\n\\end{align*}</p>\n<p>Since exponentiation is the inverse function of the logarithm, we get $e^{\\ln x} = x.$ </p>\n<p>Therefore, $\tx = e^{4}. $</p>\n",
+          "explanation_text": "First, we simplify our equation by collecting the like logarithmic terms, and isolating the logarithm, as follows:\n\\begin{align*}\n2\\ln{x} + 3\\ln{x} &= 20 \\\\[5pt]\n(2+3)\\ln x &= 20 \\\\[5pt]\n5\\ln x &= 20 \\\\[5pt]\n\\ln x &= \\dfrac{20}{5}\\\\[5pt]\n\\ln x &=4.\n\\end{align*}\nTo remove the logarithm, we exponentiate both sides of the equation. The logarithm is a natural logarithm, which means its base is $e.$ So, we use a base of $e$ for the exponentiation as well:\n\\begin{align*}\n\\ln x &= 4 \\\\[5pt]\ne^{\\color{blue}\\ln x} &= e^{\\color{blue}4}\n\\end{align*}\nSince exponentiation is the inverse function of the logarithm, we get $e^{\\ln x} = x.$\nTherefore, $ x = e^{4}. $",
+          "free_answer_choice_html": null,
+          "free_answer_choice_text": "",
+          "choices": [
+            {
+              "number": 1,
+              "html": "$e^4$ ",
+              "text": "$e^4$"
+            },
+            {
+              "number": 2,
+              "html": "$\\dfrac{e^{2}}{4}$ ",
+              "text": "$\\dfrac{e^{2}}{4}$"
+            },
+            {
+              "number": 3,
+              "html": "$\\sqrt e$  ",
+              "text": "$\\sqrt e$"
+            },
+            {
+              "number": 4,
+              "html": "$\\sqrt[3]e$   ",
+              "text": "$\\sqrt[3]e$"
+            },
+            {
+              "number": 5,
+              "html": "$\\dfrac{e^{20}}{5}$ ",
+              "text": "$\\dfrac{e^{20}}{5}$"
+            }
+          ],
+          "student_answer": {
+            "selected_choice": 1,
+            "html": "$e^4$ ",
+            "text": "$e^4$",
+            "free_response": [],
+            "raw_choices": null
+          },
+          "hints": [],
+          "hint_status": "No hint field is exposed by the Math Academy completed-task review API.",
+          "graphics": [],
+          "raw": {
+            "answer_id": 12890745,
+            "select_id": null,
+            "question_format": "MC"
+          }
+        }
+      ]
+    }
+  ]
+}

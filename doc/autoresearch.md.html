@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>autoresearch.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "autoresearch.md";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+      <div class="heading h1">
+        <a href="#autoresearch-mathacademy-style-lessons">Autoresearch: MathAcademy Style Lessons</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#objective">Objective</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#metrics">Metrics</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#how-to-run">How to Run</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#files-in-scope">Files in Scope</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#off-limits">Off Limits</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#constraints">Constraints</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#whats-been-tried">What&#39;s Been Tried</a>
+      </div>
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="docs markdown"><div class="pilwrap" id="autoresearch-mathacademy-style-lessons">
+  <h1>
+    <a href="#autoresearch-mathacademy-style-lessons" name="autoresearch-mathacademy-style-lessons" class="pilcrow"></a>
+Autoresearch: MathAcademy Style Lessons
+  </h1>
+</div>
+<div class="pilwrap" id="objective">
+  <h2>
+    <a href="#objective" name="objective" class="pilcrow"></a>
+Objective
+  </h2>
+</div>
+<p>Populate the MathAcademy curriculum with comprehensive knowledge points (lesson content) for Coding Interview Prep and Reinforcement Learning courses. The platform renders lesson content from <code>src/lib/curriculum.ts</code> (metadata) and <code>src/app/course/[slug]/page.tsx</code> (exampleProblems dictionary).</p>
+<div class="pilwrap" id="metrics">
+  <h2>
+    <a href="#metrics" name="metrics" class="pilcrow"></a>
+Metrics
+  </h2>
+</div>
+<ul>
+<li><strong>Primary</strong>: knowledge_points_added (count, higher is better)</li>
+<li><strong>Secondary</strong>: topics_with_content (count), topics_fully_covered (count)</li>
+</ul>
+<div class="pilwrap" id="how-to-run">
+  <h2>
+    <a href="#how-to-run" name="how-to-run" class="pilcrow"></a>
+How to Run
+  </h2>
+</div>
+<p><code>./autoresearch.sh</code> — outputs <code>METRIC name=number</code> lines.</p>
+<div class="pilwrap" id="files-in-scope">
+  <h2>
+    <a href="#files-in-scope" name="files-in-scope" class="pilcrow"></a>
+Files in Scope
+  </h2>
+</div>
+<ul>
+<li><code>src/lib/curriculum.ts</code> — Course/Topic/KnowledgePoint metadata definitions</li>
+<li><code>src/app/course/[slug]/page.tsx</code> — Example problems and practice content dictionary</li>
+</ul>
+<div class="pilwrap" id="off-limits">
+  <h2>
+    <a href="#off-limits" name="off-limits" class="pilcrow"></a>
+Off Limits
+  </h2>
+</div>
+<ul>
+<li>Database schema (<code>prisma/schema.prisma</code>)</li>
+<li>Component files (<code>src/components/</code>)</li>
+<li>Dashboard and home pages</li>
+</ul>
+<div class="pilwrap" id="constraints">
+  <h2>
+    <a href="#constraints" name="constraints" class="pilcrow"></a>
+Constraints
+  </h2>
+</div>
+<ul>
+<li>Keep knowledge point slugs kebab-case (e.g., <code>two-sum</code>, <code>bellman-optimality</code>)</li>
+<li>Each knowledge point needs: id, slug, name in curriculum.ts</li>
+<li>Each knowledge point slug in page.tsx needs at least 1 practice problem with question, answer, hints</li>
+<li>Topic descriptions must remain meaningful and accurate</li>
+</ul>
+<div class="pilwrap" id="whats-been-tried">
+  <h2>
+    <a href="#whats-been-tried" name="whats-been-tried" class="pilcrow"></a>
+What's Been Tried
+  </h2>
+</div>
+<p><em>(empty — fresh start)</em></p>
+</div>
+  </div>
+</body>
+</html>

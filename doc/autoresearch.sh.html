@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>autoresearch.sh</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "autoresearch.sh";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>autoresearch.sh</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-meta">#!/bin/bash</span>
+<span class="hljs-built_in">set</span> -euo pipefail
+
+<span class="hljs-built_in">cd</span> /home/arvind/mathacademy
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>Count knowledge points (lines with full definition)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">KP_COUNT=$(grep -cE <span class="hljs-string">"^\s+\{ id: '[^']+', slug: '[^']+', name: '[^']+' \},"</span> src/lib/curriculum.ts)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>Count topics with empty knowledgePoints (need to be filled)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">TOPICS_EMPTY=$(grep -c <span class="hljs-string">"knowledgePoints: \[\]"</span> src/lib/curriculum.ts || <span class="hljs-literal">true</span>)
+TOPICS_EMPTY=<span class="hljs-variable">${TOPICS_EMPTY:-0}</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>Count topics with non-empty knowledgePoints (total topics = 66)</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">TOPICS_FILLED=$((66 - TOPICS_EMPTY))
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>Count question-bank quality signals</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh">QUESTIONS_COUNT=$(grep -rh <span class="hljs-string">"id: 'q-"</span> src/lib/questions/*.ts 2&gt;/dev/null | wc -l || <span class="hljs-literal">true</span>)
+EXPLICIT_HINTS_COUNT=$(grep -rh <span class="hljs-string">"hints:"</span> src/lib/questions/*.ts 2&gt;/dev/null | wc -l || <span class="hljs-literal">true</span>)
+MISSING_EXPLICIT_HINTS=$((QUESTIONS_COUNT - EXPLICIT_HINTS_COUNT))
+SUSPICIOUS_EXPLANATIONS=$(grep -RhnE <span class="hljs-string">"Wait -|let me reconsider|TODO|FIXME"</span> src/lib/questions 2&gt;/dev/null | wc -l || <span class="hljs-literal">true</span>)
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>Target: 66 total topics, 0 empty means 100% coverage</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="sh"><span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC knowledge_points_count=<span class="hljs-variable">$KP_COUNT</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC topics_empty=<span class="hljs-variable">$TOPICS_EMPTY</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC topics_filled=<span class="hljs-variable">$TOPICS_FILLED</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC questions_count=<span class="hljs-variable">$QUESTIONS_COUNT</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC explicit_hints_count=<span class="hljs-variable">$EXPLICIT_HINTS_COUNT</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC missing_explicit_hints=<span class="hljs-variable">$MISSING_EXPLICIT_HINTS</span>"</span>
+<span class="hljs-built_in">echo</span> <span class="hljs-string">"METRIC suspicious_explanations=<span class="hljs-variable">$SUSPICIOUS_EXPLANATIONS</span>"</span>
+python3 -c <span class="hljs-string">"print(f'coverage_percent={round((<span class="hljs-variable">$TOPICS_FILLED</span> * 100) / 66, 1)}')"</span>
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

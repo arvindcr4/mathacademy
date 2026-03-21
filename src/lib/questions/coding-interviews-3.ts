@@ -11,6 +11,7 @@ const questions: Record<string, Question[]> = {
       options: ['Fibonacci', 'Factorial', 'Binary', 'Harmonic'],
       correctAnswer: 0,
       explanation: 'dp[i] = dp[i-1] + dp[i-2]. Same recurrence as Fibonacci. dp[1]=1, dp[2]=2.',
+      hints: ['Write the recurrence by looking at the final move into step n.', 'You can arrive from step n-1 or from step n-2, so the counts add.'],
     },
     {
       id: 'q-cs-2',
@@ -20,6 +21,7 @@ const questions: Record<string, Question[]> = {
       options: ['4', '5', '6', '7'],
       correctAnswer: 1,
       explanation: 'dp[1]=1, dp[2]=2, dp[3]=3, dp[4]=5. Sequences: (1,1,1,1), (1,1,2), (1,2,1), (2,1,1), (2,2).',
+      hints: ['Build the values from the bottom up: 1, 2, 3, ...', 'Use dp[4] = dp[3] + dp[2] or enumerate the five valid sequences.'],
     },
     {
       id: 'q-cs-3',
@@ -28,6 +30,7 @@ const questions: Record<string, Question[]> = {
       question: 'dp[i] = dp[i-1] + dp[i-2] for i >= 3.',
       correctAnswer: 'true',
       explanation: 'From step i, last move was either 1 step (from i-1) or 2 steps (from i-2). Sum both ways.',
+      hints: ['Think about the final move into step i.', 'Every valid path ends with either a 1-step move or a 2-step move.'],
     },
     {
       id: 'q-cs-4',
@@ -37,6 +40,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(1)', 'O(n)', 'O(n²)', 'O(2ⁿ)'],
       correctAnswer: 1,
       explanation: 'Each subproblem dp[i] computed once. n subproblems × O(1) each = O(n) total.',
+      hints: ['Memoization prevents recomputing the same step count.', 'There are n distinct states and each one does O(1) combine work.'],
     },
     {
       id: 'q-cs-5',
@@ -46,6 +50,7 @@ const questions: Record<string, Question[]> = {
       options: ['5', '6', '7', '8'],
       correctAnswer: 2,
       explanation: 'dp[1]=1, dp[2]=2, dp[3]=4 (1+2+3 or 1+1+2 or 1+1+1+1 or 2+2 or 3+1). dp[4]=dp[3]+dp[2]+dp[1]=4+2+1=7.',
+      hints: ['With step sizes 1, 2, and 3, the recurrence uses the previous three states.', 'Use dp[4] = dp[3] + dp[2] + dp[1] with base values 4, 2, and 1.'],
     },
     {
       id: 'q-cs-6',
@@ -55,6 +60,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(n) array', 'O(1) two variables', 'O(log n) space', 'O(n log n)'],
       correctAnswer: 1,
       explanation: 'Only need previous two values. Keep prev1 and prev2, update iteratively. O(1) space.',
+      hints: ['Look at how many previous DP values the recurrence actually needs.', 'If only the last two states matter, the full table is unnecessary.'],
     },
   ],
 
@@ -67,6 +73,7 @@ const questions: Record<string, Question[]> = {
       options: ['dp[i] = min(dp[i], dp[i-coin] + 1)', 'dp[i] = dp[i-coin] + 1', 'dp[i] = max(dp[i], dp[i-coin] + 1)', 'dp[i] = coin count'],
       correctAnswer: 0,
       explanation: 'For each coin, try using it: dp[i] = min(dp[i], dp[i-coin] + 1). Initialize dp[0]=0, others=∞.',
+      hints: ['State = minimum coins needed to form amount i.', 'For each coin c, ask whether 1 + dp[i-c] improves the best answer.'],
     },
     {
       id: 'q-cc-2',
@@ -76,6 +83,7 @@ const questions: Record<string, Question[]> = {
       options: ['2', '3', '5', '11'],
       correctAnswer: 1,
       explanation: '11 = 5 + 5 + 1 (3 coins). Could also do 2+2+2+2+2+1 = 6 coins. Best is 3.',
+      hints: ['Try to form 11 with the fewest pieces, not just any decomposition.', 'Two 5s and one 1 reach 11 using only three coins.'],
     },
     {
       id: 'q-cc-3',
@@ -84,6 +92,7 @@ const questions: Record<string, Question[]> = {
       question: 'dp[i] represents minimum coins to make amount i.',
       correctAnswer: 'true',
       explanation: 'Tabular DP: dp[j] = min coins for amount j. dp[0] = 0 (base case).',
+      hints: ['Interpret the DP state before using the recurrence.', 'dp[0] = 0 and every larger amount stores the best count found so far.'],
     },
     {
       id: 'q-cc-4',
@@ -93,6 +102,7 @@ const questions: Record<string, Question[]> = {
       options: ['0', '-1', 'Infinity (represented as amount+1)', 'amount'],
       correctAnswer: 2,
       explanation: 'Use amount+1 as "infinity" sentinel. Final check: if dp[amount] > amount, return -1 (impossible).',
+      hints: ['Impossible states start as a sentinel larger than any real answer.', 'If no transition improves dp[amount], it stays at infinity.'],
     },
     {
       id: 'q-cc-5',
@@ -102,6 +112,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(amount)', 'O(amount × coins)', 'O(coins)', 'O(2^amount)'],
       correctAnswer: 1,
       explanation: 'Outer loop over amounts (1 to target), inner loop over coins. O(amount × len(coins)).',
+      hints: ['There is one dimension for amounts and one for coin types.', 'Each amount checks every available coin once.'],
     },
   ],
 
@@ -114,6 +125,7 @@ const questions: Record<string, Question[]> = {
       options: ['dp[i] = max(dp[i-1], dp[i-2] + nums[i])', 'dp[i] = dp[i-1] + nums[i]', 'dp[i] = min(dp[i-1], dp[i-2] + nums[i])', 'dp[i] = nums[i] + nums[i-1]'],
       correctAnswer: 0,
       explanation: 'At house i, either skip (dp[i-1]) or rob (dp[i-2] + nums[i]). Take max.',
+      hints: ['At each house, choose between skipping it and robbing it.', 'Robbing house i forces you to combine nums[i] with dp[i-2].'],
     },
     {
       id: 'q-hr-2',
@@ -123,6 +135,7 @@ const questions: Record<string, Question[]> = {
       options: ['10', '11', '12', '13'],
       correctAnswer: 2,
       explanation: 'Rob houses 0,2,4: 2+9+1=12. Or 1,3: 7+3=10. 12 is optimal.',
+      hints: ['Try the best non-adjacent combinations explicitly.', 'Houses 0, 2, and 4 give 2 + 9 + 1.'],
     },
     {
       id: 'q-hr-3',
@@ -131,6 +144,7 @@ const questions: Record<string, Question[]> = {
       question: 'Cannot rob adjacent houses means circular adjacency for House Robber II.',
       correctAnswer: 'true',
       explanation: 'House Robber II: houses form circle. Solution: max(rob[0..n-2], rob[1..n-1]). Exclude first or last house.',
+      hints: ['In House Robber II, the first and last houses are adjacent.', 'Solve two linear cases: exclude the first house or exclude the last house.'],
     },
     {
       id: 'q-hr-4',
@@ -140,6 +154,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(n) array', 'O(1) two variables', 'O(log n) stack', 'O(1) single variable'],
       correctAnswer: 1,
       explanation: 'Only need prev1 = dp[i-1] and prev2 = dp[i-2]. Update iteratively. O(1) space.',
+      hints: ['The recurrence only references the previous two answers.', 'Rolling values for dp[i-1] and dp[i-2] are enough.'],
     },
     {
       id: 'q-hr-5',
@@ -149,6 +164,7 @@ const questions: Record<string, Question[]> = {
       options: ['dp[0]=0', 'dp[1]=nums[0]', 'Both A and B', 'dp[0]=nums[0], dp[1]=max(nums[0],nums[1])'],
       correctAnswer: 3,
       explanation: 'dp[0]=nums[0] (only house 0). dp[1]=max(nums[0], nums[1]) (rob house 0 or house 1, not both).',
+      hints: ['Start by solving the one-house and two-house cases.', 'With two houses, you must choose the larger value because you cannot rob both.'],
     },
   ],
 
@@ -161,6 +177,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(n²)', 'O(n log n)', 'O(n)', 'O(log n)'],
       correctAnswer: 1,
       explanation: 'dp[i] = length of LIS ending at i. Binary search to find position in sorted tails array. O(n log n).',
+      hints: ['The tails array stays sorted by ending value.', 'Each new element uses binary search to update one tails position.'],
     },
     {
       id: 'q-lis-2',
@@ -170,6 +187,7 @@ const questions: Record<string, Question[]> = {
       options: ['3', '4', '5', '6'],
       correctAnswer: 1,
       explanation: 'LIS = [2,3,7,101] or [2,3,7,18]. Length 4.',
+      hints: ['The subsequence must be increasing but does not need to be contiguous.', 'One valid LIS is [2,3,7,18].'],
     },
     {
       id: 'q-lis-3',
@@ -178,6 +196,7 @@ const questions: Record<string, Question[]> = {
       question: 'LIS strictly increasing means equal elements do not count.',
       correctAnswer: 'true',
       explanation: 'Strictly increasing subsequence requires each element > previous. Equal elements form non-increasing.',
+      hints: ['Strict means every next value must be larger, not equal.', 'Duplicate values cannot extend a strictly increasing subsequence.'],
     },
     {
       id: 'q-lis-4',
@@ -187,6 +206,7 @@ const questions: Record<string, Question[]> = {
       options: ['Stack', 'Binary indexed tree', 'Sorted array of tails', 'Heap'],
       correctAnswer: 2,
       explanation: 'tails[i] = smallest ending value of LIS of length i+1. Binary search to find position to replace.',
+      hints: ['tails[len-1] stores the smallest possible ending value for that length.', 'Binary search finds the first tails entry that is >= the current number.'],
     },
     {
       id: 'q-lis-5',
@@ -196,6 +216,7 @@ const questions: Record<string, Question[]> = {
       options: ['Just tails array', 'Parent tracking array', 'Both tails and predecessor', 'Original array only'],
       correctAnswer: 2,
       explanation: 'Track predecessor index for each element. When updating tails, record prev[i]. Backtrack from last element to reconstruct.',
+      hints: ['The tails array gives lengths but not the chosen path.', 'Store predecessor links so you can backtrack the subsequence at the end.'],
     },
   ],
 
@@ -208,6 +229,7 @@ const questions: Record<string, Question[]> = {
       options: ['dp[i] = OR(dp[j] AND wordDict contains s[j:i])', 'dp[i] = AND(dp[j] AND wordDict)', 'dp[i] = wordDict.contains(s[0:i])', 'dp[i] = dp[i-1]'],
       correctAnswer: 0,
       explanation: 'dp[i] true if exists j < i where dp[j] true AND substring s[j:i] is in wordDict.',
+      hints: ['State = whether the prefix ending at i can be segmented.', 'Try every split j where the left prefix is valid and s[j:i] is a dictionary word.'],
     },
     {
       id: 'q-wb-2',
@@ -217,6 +239,7 @@ const questions: Record<string, Question[]> = {
       options: ['True', 'False', 'Depends on order', 'Cannot determine'],
       correctAnswer: 0,
       explanation: '"leet" + "code" = "leetcode". dp[4]=true (leet), dp[8]=dp[4] AND contains(code)=true.',
+      hints: ['Split the string into known dictionary words.', 'The prefix "leet" works first, and then "code" completes the full string.'],
     },
     {
       id: 'q-wb-3',
@@ -225,6 +248,7 @@ const questions: Record<string, Question[]> = {
       question: 'Using trie can optimize word break dictionary lookup.',
       correctAnswer: 'true',
       explanation: 'Trie allows O(m) lookup for each substring starting at position j, where m is max word length.',
+      hints: ['Fast prefix lookup helps when many substrings share prefixes.', 'A trie extends matches character by character from each start index.'],
     },
     {
       id: 'q-wb-4',
@@ -234,6 +258,7 @@ const questions: Record<string, Question[]> = {
       options: ['O(n)', 'O(n²)', 'O(n × maxWordLength)', 'O(2ⁿ)'],
       correctAnswer: 2,
       explanation: 'For each i, try up to maxWordLength substrings. O(n × L) where L = max word length.',
+      hints: ['There are n end positions to consider.', 'At each position, you only need to test substrings up to the maximum word length.'],
     },
     {
       id: 'q-wb-5',
@@ -243,6 +268,7 @@ const questions: Record<string, Question[]> = {
       options: ['Top-down from index 0', 'Bottom-up from n to 0', 'Binary search', 'Two pointers'],
       correctAnswer: 0,
       explanation: 'Memoized recursion: from position i, try all possible words starting at i. If any returns true, memoize and return true.',
+      hints: ['Ask whether the suffix starting at index i can be segmented.', 'From each start index, try every dictionary word that matches the current prefix.'],
     },
   ],
 

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>project.yml</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = ".serena/project.yml";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>project.yml</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<p>the name by which the project can be referenced within Serena</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">project_name:</span> <span class="hljs-string">"mathacademy"</span>
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<p>list of languages for which language servers are started; choose from:
+al                  bash                clojure             cpp                 csharp
+csharp_omnisharp    dart                elixir              elm                 erlang
+fortran             fsharp              go                  groovy              haskell
+java                julia               kotlin              lua                 markdown
+matlab              nix                 pascal              perl                php
+php_phpactor        powershell          python              python_jedi         r
+rego                ruby                ruby_solargraph     rust                scala
+swift               terraform           toml                typescript          typescript_vts
+vue                 yaml                zig
+(This list may be outdated. For the current list, see values of Language enum here:
+https://github.com/oraios/serena/blob/main/src/solidlsp/ls_config.py
+For some languages, there are alternative language servers, e.g. csharp_omnisharp, ruby_solargraph.)
+Note:</p>
+<ul>
+<li>For C, use cpp</li>
+<li>For JavaScript, use typescript</li>
+<li>For Free Pascal/Lazarus, use pascal
+Special requirements:
+Some languages require additional setup/installations.
+See here for details: https://oraios.github.io/serena/01-about/020_programming-languages.html#language-servers
+When using multiple languages, the first language server that supports a given file will be used for that file.
+The first language is the default language and the respective language server will be used as a fallback.
+Note that when using the JetBrains backend, language servers are not used and this list is correspondingly ignored.</li>
+</ul>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">languages:</span>
+<span class="hljs-bullet">-</span> <span class="hljs-string">typescript</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>the encoding used by text files in the project
+For a list of possible encodings, see https://docs.python.org/3.11/library/codecs.html#standard-encodings</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">encoding:</span> <span class="hljs-string">"utf-8"</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>line ending convention to use when writing source files.
+Possible values: unset (use global setting), &quot;lf&quot;, &quot;crlf&quot;, or &quot;native&quot; (platform default)
+This does not affect Serena's own files (e.g. memories and configuration files), which always use native line endings.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">line_ending:</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>The language backend to use for this project.
+If not set, the global setting from serena_config.yml is used.
+Valid values: LSP, JetBrains
+Note: the backend is fixed at startup. If a project with a different backend
+is activated post-init, an error will be returned.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">language_backend:</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<p>whether to use project's .gitignore files to ignore files</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">ignore_all_files_in_gitignore:</span> <span class="hljs-literal">true</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<p>list of additional paths to ignore in this project.
+Same syntax as gitignore, so you can use * and **.
+Note: global ignored_paths from serena_config.yml are also applied additively.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">ignored_paths:</span> <span class="hljs-string">[]</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<p>whether the project is in read-only mode
+If set to true, all editing tools will be disabled and attempts to use them will result in an error
+Added on 2025-04-18</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">read_only:</span> <span class="hljs-literal">false</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<p>list of tool names to exclude.
+This extends the existing exclusions (e.g. from the global configuration)</p>
+<p>Below is the complete list of tools for convenience.
+To make sure you have the latest list of tools, and to view their descriptions,
+execute <code>uv run scripts/print_tool_overview.py</code>.</p>
+<ul>
+<li><code>activate_project</code>: Activates a project by name.</li>
+<li><code>check_onboarding_performed</code>: Checks whether project onboarding was already performed.</li>
+<li><code>create_text_file</code>: Creates/overwrites a file in the project directory.</li>
+<li><code>delete_lines</code>: Deletes a range of lines within a file.</li>
+<li><code>delete_memory</code>: Deletes a memory from Serena's project-specific memory store.</li>
+<li><code>execute_shell_command</code>: Executes a shell command.</li>
+<li><code>find_referencing_code_snippets</code>: Finds code snippets in which the symbol at the given location is referenced.</li>
+<li><code>find_referencing_symbols</code>: Finds symbols that reference the symbol at the given location (optionally filtered by type).</li>
+<li><code>find_symbol</code>: Performs a global (or local) search for symbols with/containing a given name/substring (optionally filtered by type).</li>
+<li><code>get_current_config</code>: Prints the current configuration of the agent, including the active and available projects, tools, contexts, and modes.</li>
+<li><code>get_symbols_overview</code>: Gets an overview of the top-level symbols defined in a given file.</li>
+<li><code>initial_instructions</code>: Gets the initial instructions for the current project.
+Should only be used in settings where the system prompt cannot be set,
+e.g. in clients you have no control over, like Claude Desktop.</li>
+<li><code>insert_after_symbol</code>: Inserts content after the end of the definition of a given symbol.</li>
+<li><code>insert_at_line</code>: Inserts content at a given line in a file.</li>
+<li><code>insert_before_symbol</code>: Inserts content before the beginning of the definition of a given symbol.</li>
+<li><code>list_dir</code>: Lists files and directories in the given directory (optionally with recursion).</li>
+<li><code>list_memories</code>: Lists memories in Serena's project-specific memory store.</li>
+<li><code>onboarding</code>: Performs onboarding (identifying the project structure and essential tasks, e.g. for testing or building).</li>
+<li><code>prepare_for_new_conversation</code>: Provides instructions for preparing for a new conversation (in order to continue with the necessary context).</li>
+<li><code>read_file</code>: Reads a file within the project directory.</li>
+<li><code>read_memory</code>: Reads the memory with the given name from Serena's project-specific memory store.</li>
+<li><code>remove_project</code>: Removes a project from the Serena configuration.</li>
+<li><code>replace_lines</code>: Replaces a range of lines within a file with new content.</li>
+<li><code>replace_symbol_body</code>: Replaces the full definition of a symbol.</li>
+<li><code>restart_language_server</code>: Restarts the language server, may be necessary when edits not through Serena happen.</li>
+<li><code>search_for_pattern</code>: Performs a search for a pattern in the project.</li>
+<li><code>summarize_changes</code>: Provides instructions for summarizing the changes made to the codebase.</li>
+<li><code>switch_modes</code>: Activates modes by providing a list of their names</li>
+<li><code>think_about_collected_information</code>: Thinking tool for pondering the completeness of collected information.</li>
+<li><code>think_about_task_adherence</code>: Thinking tool for determining whether the agent is still on track with the current task.</li>
+<li><code>think_about_whether_you_are_done</code>: Thinking tool for determining whether the task is truly completed.</li>
+<li><code>write_memory</code>: Writes a named memory (for future reference) to Serena's project-specific memory store.</li>
+</ul>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">excluded_tools:</span> <span class="hljs-string">[]</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>list of tools to include that would otherwise be disabled (particularly optional tools that are disabled by default).
+This extends the existing inclusions (e.g. from the global configuration).</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">included_optional_tools:</span> <span class="hljs-string">[]</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>fixed set of tools to use as the base tool set (if non-empty), replacing Serena's default set of tools.
+This cannot be combined with non-empty excluded_tools or included_optional_tools.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">fixed_tools:</span> <span class="hljs-string">[]</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<p>list of mode names to that are always to be included in the set of active modes
+The full set of modes to be activated is base_modes + default_modes.
+If the setting is undefined, the base_modes from the global configuration (serena_config.yml) apply.
+Otherwise, this setting overrides the global configuration.
+Set this to [] to disable base modes for this project.
+Set this to a list of mode names to always include the respective modes for this project.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">base_modes:</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<p>list of mode names that are to be activated by default.
+The full set of modes to be activated is base_modes + default_modes.
+If the setting is undefined, the default_modes from the global configuration (serena_config.yml) apply.
+Otherwise, this overrides the setting from the global configuration (serena_config.yml).
+This setting can, in turn, be overridden by CLI parameters (--mode).</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">default_modes:</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<p>initial prompt for the project. It will always be given to the LLM upon activating the project
+(contrary to the memories, which are loaded on demand).</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">initial_prompt:</span> <span class="hljs-string">""</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<p>time budget (seconds) per tool call for the retrieval of additional symbol information
+such as docstrings or parameter information.
+This overrides the corresponding setting in the global configuration; see the documentation there.
+If null or missing, use the setting from the global configuration.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">symbol_info_budget:</span>
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>list of regex patterns which, when matched, mark a memory entry as read‑only.
+Extends the list from the global configuration, merging the two lists.</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="yaml"><span class="hljs-attr">read_only_memory_patterns:</span> <span class="hljs-string">[]</span>
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
