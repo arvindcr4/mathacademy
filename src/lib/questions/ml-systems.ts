@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Training-serving skew can occur even when the feature transformation code is identical in both environments.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Skew can arise from differences in data distributions, timing of feature computation, or subtle library version discrepancies — not just code divergence. Example: a feature 'days_since_last_purchase' computed at training time using a warehouse timestamp may differ from serving time due to timezone handling bugs, or different Python/numpy library versions may produce slightly different floating-point results for the same input. The feature 'user_age' may be computed using a birthdate lookup in training but a cached value at serving time.",
       hints: [
@@ -88,7 +88,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Delta Lake\'s ACID transaction support allows concurrent readers and writers on the same table without data corruption.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Delta Lake uses optimistic concurrency control and a transaction log to provide ACID guarantees, enabling safe concurrent reads and writes on object storage.",
       hints: [
@@ -145,7 +145,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Weights & Biases (W&B) can automatically log gradients and model topology without any additional code beyond `wandb.init()`.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Automatic gradient and topology logging requires calling `wandb.watch(model)` explicitly; `wandb.init()` alone only sets up the run context.",
       hints: [
@@ -203,7 +203,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "NVIDIA Triton Inference Server can serve models from multiple frameworks (TensorFlow, PyTorch, ONNX) simultaneously on the same server instance.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Triton\'s backend architecture allows multiple framework backends to coexist, enabling a single deployment to host models from different frameworks simultaneously. Each backend (TensorFlow, PyTorch, ONNX Runtime) is a separate plugin that Triton manages. This is critical for organizations migrating between frameworks: a team can run TensorFlow models alongside PyTorch models during a transition period without separate infrastructure.",
       hints: [
@@ -258,7 +258,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A model registry should store model binaries directly in the same database as its metadata.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Best practice is to store model artifacts in object storage (e.g., S3, GCS) and keep only references (URIs) in the metadata database, keeping the registry lightweight and scalable. A model binary (10 MB to 10 GB) stored as a BLOB in a relational database causes: (1) database bloat, (2) slow backup/restore, (3) connection pool exhaustion. Object storage is designed for large binary objects with built-in versioning, replication, and lifecycle policies.",
       hints: [
@@ -317,7 +317,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Fully Sharded Data Parallel (FSDP) shards optimizer states, gradients, AND model parameters across GPUs, unlike DDP which only replicates them.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "FSDP shards all three components (parameters, gradients, optimizer states) to fit larger models in aggregate GPU memory, whereas DDP holds a full replica on each GPU.",
       hints: [
@@ -374,7 +374,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CPU offloading in DeepSpeed moves optimizer states to CPU RAM during the optimizer step, reducing GPU memory pressure.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DeepSpeed\'s CPU offloading (ZeRO-Offload) moves optimizer states and gradients to CPU memory, allowing training of models that far exceed GPU VRAM capacity at the cost of PCIe bandwidth.",
       hints: [
@@ -431,7 +431,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TensorRT\'s kernel fusion optimization merges multiple sequential operations into a single GPU kernel, reducing memory bandwidth consumption.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv → BatchNorm → ReLU becomes a single fused kernel). Without fusion: each op writes its output to VRAM, then the next op reads it back — 3 separate kernel launches and 3 VRAM round-trips. With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
       hints: [
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Population Stability Index (PSI) can detect distribution drift even when ground-truth labels are unavailable.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PSI compares feature distributions between a reference dataset and current predictions using only the feature values, making it label-free and practical for online monitoring. PSI formula: $\\text{PSI} = \\sum_{i=1}^{n} (A_i - E_i) \\times \\ln(A_i / E_i)$ where $A_i$ is actual % and $E_i$ is expected % in bin $i$. Standard thresholds: PSI < 0.1 = no action, 0.1-0.25 = investigate, > 0.25 = significant drift requiring model retraining. PSI = 0 means identical distributions; PSI → ∞ means completely disjoint distributions.",
       hints: [
@@ -549,7 +549,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Data validation should ideally be performed both at data ingestion time and immediately before model training to catch issues introduced during preprocessing.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Validating at ingestion catches upstream issues while validating pre-training catches bugs introduced during feature engineering and preprocessing transformations.",
       hints: [
@@ -606,7 +606,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Target encoding a categorical feature on the full training set (before cross-validation splits) leads to target leakage.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Computing target encoding statistics using the full dataset — including validation folds — allows the model to indirectly see validation labels during training, inflating performance estimates.",
       hints: [
@@ -664,7 +664,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Real-time inference always produces fresher predictions than batch inference.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Real-time inference uses the latest available features at request time (e.g., current cart contents, today's browsing history), while batch inference uses features as of the last batch run (e.g., last night's snapshot). For rapidly changing signals (stock prices, breaking news relevance, current inventory), this freshness difference is critical. The trade-off: real-time inference requires low-latency feature retrieval infrastructure.",
       hints: [
@@ -722,7 +722,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Integration tests for ML pipelines should verify that the full training pipeline produces a model with performance above a minimum threshold on a held-out dataset.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "ML integration tests should go beyond code correctness to verify end-to-end pipeline behavior, including that the output model meets minimum performance criteria on a validation set.",
       hints: [
@@ -779,7 +779,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Stopping an A/B test early as soon as statistical significance is reached (p < 0.05) is a valid and recommended practice.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Early stopping inflates the false positive rate because peeking at results repeatedly increases the chance of spuriously crossing the significance threshold; pre-specified sample sizes and testing durations must be respected.",
       hints: [
@@ -837,7 +837,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A shadow deployment and a canary deployment both expose real users to the new model\'s predictions.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Shadow deployments run the new model in parallel but serve only the production model's predictions to users — zero user impact. Canary deployments actually serve the new model's predictions to a small user subset (1-5%) — real exposure, real feedback. Shadow is for validation; canary is for live testing with real user behavior as the metric.",
       hints: [
@@ -896,7 +896,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Post-training quantization to INT8 typically requires no retraining and can be applied directly to a pretrained model.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Post-training quantization calibrates scale factors using a small calibration dataset without gradient-based retraining, though quantization-aware training generally achieves better accuracy.",
       hints: [
@@ -953,7 +953,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Semantic caching for LLM APIs stores embeddings of past queries and returns cached responses for semantically similar (not just identical) future queries.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Semantic caching computes embeddings of queries and retrieves cached responses when a new query\'s embedding is within a cosine similarity threshold, dramatically reducing API calls for paraphrased but equivalent questions.",
       hints: [
@@ -1010,7 +1010,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Continuous Training (CT) is a distinct MLOps practice from Continuous Delivery (CD) and involves automatically retraining models when data drift or performance degradation is detected.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "CT extends standard CD with the ability to automatically trigger retraining pipelines based on monitoring signals, keeping models fresh without manual intervention.",
       hints: [
@@ -1067,7 +1067,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Inter-annotator agreement (IAA) is a metric used to assess the consistency and reliability of human labelers.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "IAA metrics (e.g., Cohen\'s Kappa, Fleiss' Kappa) measure how consistently multiple annotators assign labels, identifying ambiguous cases and unreliable annotators that can degrade training data quality.",
       hints: [
@@ -1124,7 +1124,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HNSW (Hierarchical Navigable Small World) is an exact search algorithm that always returns the true nearest neighbors.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "HNSW is an approximate nearest-neighbor algorithm. It trades a small recall loss for dramatically better query speed and scalability compared to exact brute-force search.",
       hints: [
@@ -1181,7 +1181,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Apache Flink supports exactly-once processing semantics for stateful stream processing, even in the presence of failures.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Flink achieves exactly-once semantics through distributed snapshots (Chandy-Lamport algorithm) and two-phase commit to sinks, ensuring each event affects state exactly once even after recovery.",
       hints: [
@@ -1238,7 +1238,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Kubernetes resource limits for GPU are specified with the resource key `nvidia.com/gpu` and a GPU is always shared between multiple pods by default.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "By default, Kubernetes GPU resources are not shared — a GPU requested by a pod is exclusively assigned to it. GPU sharing requires additional mechanisms like NVIDIA MPS or time-slicing plugins.",
       hints: [
@@ -1295,7 +1295,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GCP Vertex AI Pipelines and AWS SageMaker Pipelines are both built on top of the open-source Kubeflow Pipelines SDK.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Vertex AI Pipelines is built on Kubeflow Pipelines, but SageMaker Pipelines uses AWS\'s own proprietary pipeline definition format and execution engine, not the Kubeflow SDK.",
       hints: [
@@ -1351,7 +1351,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "It is mathematically possible to simultaneously satisfy demographic parity, equalized odds, and calibration when base rates differ between groups.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Chouldechova\'s impossibility theorem proves that when base rates differ between groups, the three fairness criteria cannot all be satisfied simultaneously — a fundamental tension in algorithmic fairness.",
       hints: [
@@ -1408,7 +1408,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Rate limiting and query monitoring on a model\'s prediction API can help detect and mitigate model extraction attacks.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Extraction attacks require a large number of queries; rate limiting reduces the attacker\'s query budget, and anomaly detection on query patterns (e.g., systematically exploring the input space) can identify ongoing attacks.",
       hints: [
@@ -1465,7 +1465,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "P99 latency is a more conservative and safety-relevant metric than mean latency for user-facing ML systems.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "P99 (99th percentile) latency represents the worst case for 99% of requests, capturing tail latency that mean completely hides. In user-facing systems, tail latency determines user experience for a significant fraction of users.",
       hints: [
@@ -1522,7 +1522,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Prefix caching in LLM serving (as used in vLLM) reuses KV cache for the common system prompt portion across requests, reducing time-to-first-token.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "When multiple requests share a long system prompt prefix, prefix caching avoids recomputing the KV cache for that prefix, directly reducing prefill latency and compute cost.",
       hints: [
@@ -1579,7 +1579,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Scaling laws imply that doubling model parameters always doubles model performance on downstream tasks.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Scaling laws show a power-law (sub-linear) relationship between scale and loss — performance improves predictably but with diminishing returns, not linearly with parameter count.",
       hints: [
@@ -1636,7 +1636,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Distributed tracing (e.g., with Jaeger or Zipkin) provides visibility into the latency contribution of each microservice hop in a multi-service ML inference pipeline.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Distributed tracing propagates a trace context across service calls, recording spans for each hop, allowing engineers to identify which service in a chain is responsible for latency anomalies.",
       hints: [
@@ -1693,7 +1693,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'The "data flywheel" effect describes how a deployed ML product that attracts more users generates more training data, which improves the model, which attracts more users.',
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The data flywheel is a virtuous cycle where user engagement generates labeled data that improves the model, creating a compounding competitive advantage that is difficult for competitors to replicate.",
       hints: [

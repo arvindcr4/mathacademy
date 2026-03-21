@@ -173,7 +173,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "EfficientNet uses a compound scaling coefficient φ to jointly scale depth (d = 1.2^φ), width (w = 1.1^φ), and resolution (r = 1.15^φ) so that total FLOPs grow as approximately 2^φ.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "EfficientNet\'s compound scaling multiplies depth by α·β²·γ² ≈ 2 (so FLOPs ≈ 2φ). The coefficients α=1.2, β=1.1, γ=1.15 were found by grid search on EfficientNet-B0, giving a principled multi-dimensional scaling law outperforming single-dimension scaling at equal FLOPs.",
       hints: [
@@ -231,7 +231,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Batch Normalization eliminates the need for careful weight initialisation in deep neural networks.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "While Batch Norm greatly reduces sensitivity to initialisation by stabilising activations across layers, good initialisation (e.g., He initialisation for ReLU: std = √(2/fan_in)) still improves early convergence and avoids saturated or exploding activations in the very first forward pass before BN statistics stabilise.",
       hints: [
@@ -413,7 +413,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Semantic segmentation and instance segmentation produce the same output for a scene with multiple objects of the same class.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'Semantic segmentation labels all pixels of a given class identically (e.g., all cars share the label "car" with no further distinction), while instance segmentation assigns each individual object a unique mask ID — so two cars receive different instance labels but the same semantic label.',
       hints: [
@@ -471,7 +471,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Instance segmentation requires detecting individual object instances, so it is impossible to achieve without a region proposal or anchor-based detection stage.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Anchor-free methods like SOLO and SOLOv2 perform instance segmentation by predicting masks directly based on instance location and size categories, without any region proposal or anchor mechanism.",
       hints: [
@@ -549,7 +549,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Transfer learning from a model pretrained on a large dataset (e.g., ImageNet) always degrades performance compared to training from scratch when the target dataset is large and very different in domain from the source dataset.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Even when the target domain is very different from the source (e.g., satellite imagery vs. natural photos), transfer learning almost always matches or exceeds training from scratch — especially with large pretrained models. Low-level features (edges, textures, Gabor-like filters) are universally useful across domains, providing a better initialisation and faster convergence even if the final performance is similar.",
       hints: [
@@ -563,7 +563,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "TimeSformer applies transformer self-attention separately over the spatial and temporal dimensions (divided space-time attention) to make video classification tractable.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TimeSformer uses divided attention — separate temporal and spatial attention operations per layer — rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
       hints: [
@@ -641,7 +641,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CutMix replaces a rectangular patch of one image with pixels from another, and adjusts the mixed label proportionally to the area ratio of the patch, so if a 112×112 patch is cut into a 224×224 image the label weight for the pasted image is 0.25.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'CutMix label weight = cut area / total image area = (112×112) / (224×224) = 12544/50176 = 0.25. If image i is "cat" and the 25%-area patch comes from image j "dog", the label is 0.75·yᵢ + 0.25·yⱼ = [0.75, 0.25]. Unlike Mixup which blends pixels, CutMix creates hard regional boundaries — teaching models to focus on discriminative local regions.',
       hints: [
@@ -699,7 +699,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "ViT uses positional encodings for its patch sequence because self-attention is permutation-invariant and cannot infer spatial order from patch content alone.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Self-attention is a set operation: attention(Q, K, V) is unchanged if tokens are permuted consistently. Without positional encodings, a ViT processing row-by-row vs. column-by-column shuffled patches would produce identical outputs — destroying spatial structure. Learnable 1D position embeddings added to each patch embedding inject spatial order.",
       hints: [
@@ -757,7 +757,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Masked Image Modelling (MIM, as in MAE) trains a ViT encoder to reconstruct randomly masked patches from visible patches, learning rich visual representations without any labelled data.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MAE (Masked Autoencoders, He et al. 2022) randomly masks 75% of patches, passes only visible patches through a ViT encoder, then uses a lightweight decoder to reconstruct the masked patches in pixel space. Despite no labels, MAE-pretrained ViT-L achieves 87.8% ImageNet top-1 accuracy after fine-tuning — outperforming supervised pretraining on smaller datasets.",
       hints: [
@@ -815,7 +815,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A Variational Autoencoder (VAE) learns to encode images into a continuous latent space from which new images can be sampled by decoding random latent vectors.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The VAE encoder outputs parameters of a Gaussian distribution in latent space; the decoder maps samples from this distribution back to image space; the KL divergence term regularises the latent space to be smooth and continuous for generative sampling.",
       hints: [
@@ -873,7 +873,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Optical flow is a single vector field that describes the motion of all pixels in a video frame.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Optical flow is a dense 2D vector field where each vector describes the motion of a specific pixel from one frame to the next. It is not a single vector field for all pixels.",
       hints: [
@@ -931,7 +931,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Transfer learning from ImageNet-pretrained models is always less effective for medical imaging than training from scratch on medical data.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Despite the domain gap (natural vs. medical images), ImageNet-pretrained models transfer well to medical imaging when data is limited; low-level feature detectors (edges, textures) remain useful, and fine-tuning typically outperforms training from scratch on small medical datasets.",
       hints: [
@@ -989,7 +989,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Self-supervised pretraining in computer vision requires large amounts of labelled data to generate the pretraining signal.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Self-supervised methods derive their learning signal from the data itself (e.g., augmentation agreement, masked patch prediction) without any human-provided labels, making them applicable to large unlabelled image collections.",
       hints: [
@@ -1045,7 +1045,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "IoU (Intersection over Union) of 0.5 is the standard threshold for a detection to be considered a true positive in the Pascal VOC object detection benchmark.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Pascal VOC benchmark defines a detection as a true positive if its IoU with a ground truth box exceeds 0.5; COCO extends this by evaluating across IoU thresholds from 0.50 to 0.95 in steps of 0.05.",
       hints: [
@@ -1102,7 +1102,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In panoptic segmentation, a single pixel can belong to more than one instance.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Panoptic segmentation requires a unique, non-overlapping assignment — every pixel is assigned to exactly one segment (either a stuff region or a single thing instance), unlike instance segmentation which may produce overlapping masks.",
       hints: [
@@ -1160,7 +1160,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "TimeSformer applies transformer self-attention separately over the spatial and temporal dimensions (divided space-time attention) to make video classification tractable.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TimeSformer uses divided attention — separate temporal and spatial attention operations per layer — rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
       hints: [
@@ -1218,7 +1218,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Scene recognition models trained on Places365 can be used as feature extractors for downstream visual tasks beyond scene classification.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Places365-pretrained features encode rich environmental context (materials, spatial layout, lighting) useful for tasks like visual question answering, image captioning, and indoor localisation where scene semantics matter.",
       hints: [
@@ -1276,7 +1276,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Visual anomaly detection models are typically evaluated using the AUROC (Area Under the ROC Curve) metric.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AUROC measures the model\'s ability to rank anomalous samples higher than normal samples across all possible thresholds; it is threshold-agnostic and accounts for the class imbalance common in anomaly detection benchmarks.",
       hints: [
@@ -1334,7 +1334,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Modern end-to-end OCR systems can jointly detect text regions and recognise characters without a separate text detection stage.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "End-to-end models (e.g., FOTS, ABCNet) simultaneously detect text regions and transcribe them in a single forward pass, whereas traditional OCR pipelines separate text detection (finding where text is) from recognition (what the text says).",
       hints: [
@@ -1392,7 +1392,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Change detection in satellite imagery aims to identify regions where land cover or surface conditions have changed between two images captured at different times.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Change detection compares multi-temporal satellite images to identify areas of significant change (e.g., deforestation, urban expansion, flood damage), and is a key application of remote sensing for environmental monitoring.",
       hints: [
@@ -1450,7 +1450,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A Variational Autoencoder (VAE) learns to encode images into a continuous latent space from which new images can be sampled by decoding random latent vectors.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The VAE encoder outputs parameters of a Gaussian distribution in latent space; the decoder maps samples from this distribution back to image space; the KL divergence term regularises the latent space to be smooth and continuous for generative sampling.",
       hints: [
@@ -1507,7 +1507,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Channel shuffling in ShuffleNet is a permutation operation that reorders channels across groups, enabling cross-group information exchange at essentially zero computational cost.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "ShuffleNet applies grouped convolutions (which keep channels isolated) followed by a channel shuffle operation that reorders channels across groups, enabling cross-group information exchange at essentially zero computational cost.",
       hints: [
@@ -1565,7 +1565,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "ShuffleNet uses channel shuffling to enable information flow between feature channels after grouped convolutions, without incurring the full cost of standard convolutions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Grouped convolution partitions C channels into g groups, each operating independently — preventing inter-group information flow. Channel shuffle physically reorders the output channels so that features from different groups are interleaved before the next grouped conv. This is a zero-parameter, O(1) permutation that costs negligible compute while restoring cross-group communication.",
       hints: [
@@ -1643,7 +1643,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In Pascal VOC evaluation, a detection is a true positive only if its IoU with a ground truth box exceeds 0.5 AND the same ground truth box has not already been matched by a higher-confidence detection.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "VOC AP matching is greedy in confidence order: sort detections by score, assign each to the highest-IoU unmatched GT (if IoU ≥ 0.5). Once a GT is matched, all further detections overlapping it are FPs regardless of IoU. This prevents a single GT from generating multiple TPs and ensures the precision-recall curve reflects genuine detection performance.",
       hints: [
@@ -1741,7 +1741,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'CLIP (Contrastive Language-Image Pretraining) can be used for zero-shot image classification by comparing image embeddings to text embeddings of class descriptions like "a photo of a {class}".',
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'CLIP trains dual ViT/ResNet image and text encoders with InfoNCE contrastive loss on 400M (image, text) pairs to produce aligned embeddings. At inference, class prompts "a photo of a {class}" are embedded as text; the image is embedded; cosine similarity identifies the closest class — enabling zero-shot classification on unseen classes without any task-specific training.',
       hints: [

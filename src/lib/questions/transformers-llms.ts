@@ -50,7 +50,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "According to d2l.ai §11.6.2's comparison of CNN, RNN, and self-attention, self-attention achieves O(1) maximum path length between any two positions — a key advantage over RNNs where path length is O(n).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "D2l.ai §11.6.2 explicitly compares maximum path lengths: RNNs require O(n) sequential steps to propagate information between distant tokens, while self-attention connects any two positions in a single layer — O(1) maximum path length, enabling much better long-range gradient flow.",
       hints: [
@@ -88,7 +88,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h × d_k = d_model) and then projected by a weight matrix W^O ∈ ℝ^{d_model × d_model} to produce the final output.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "D2l.ai §11.5 describes the multi-head output as: MultiHead(Q,K,V) = Concat(head_1,...,head_h)W^O, where each head_i = Attention(QW_i^Q, KW_i^K, VW_i^V). The final projection W^O mixes information across all heads into a unified d_model-dimensional representation.",
       hints: [
@@ -165,7 +165,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "RoPE (Rotary Position Embedding) encodes relative position directly into attention scores by rotating Q and K vectors by a position-dependent angle, so that the dot product q_i · k_j depends only on (i − j), not on i and j separately.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "RoPE applies rotation matrices R(i) and R(j) to Q and K respectively; since (R(i)q)·(R(j)k) = q·(R(j-i)k), the dot product encodes only the relative position (i-j). This property is absent in absolute positional encodings and is why RoPE enables better length generalization.",
       hints: [
@@ -222,7 +222,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,β) = Swish_β(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression — unlike ReLU\'s hard zero cutoff.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Shazeer (2020) showed that gated linear units including SwiGLU consistently improve language model perplexity over ReLU. The gating term (xV+c) acts as a learned soft switch that scales each feature by a learned sigmoid-like gate, providing smoother gradient flow than ReLU\'s hard zero at negative inputs.",
       hints: [
@@ -259,7 +259,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Pre-norm (applying LayerNorm before each sublayer rather than after, as in most modern LLMs) stabilizes training because at initialization, the residual branch output is near-zero, making the gradient signal flow cleanly through the skip connection.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "With Pre-norm, the sublayer input is normalized before transformation: x + Sublayer(LayerNorm(x)). At initialization, Sublayer(LayerNorm(x)) ≈ 0, so the residual path carries the gradient signal cleanly. Post-norm normalizes the sum x + Sublayer(x), which can produce large early gradients that destabilize training.",
       hints: [
@@ -316,7 +316,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 × d_model rows — roughly 4× the size of GPT-2's 50,257-token vocabulary embedding table.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The embedding table (and tied output projection) has one row per vocabulary token of dimension d_model. A 100K vocabulary with d_model = 4096 uses ~410M parameters just for embeddings — a significant fraction of total model parameters, motivating careful vocabulary size decisions.",
       hints: [
@@ -393,7 +393,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Emergent abilities in LLMs (Wei et al., 2022) — capabilities that appear abruptly above a parameter threshold — challenge the smooth power-law extrapolation from scaling laws, since they predict sudden non-linear improvements that pretraining loss alone does not anticipate.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Scaling laws predict smooth, continuous improvement in pretraining loss with scale. But emergent abilities like multi-step arithmetic or in-context learning appear suddenly at certain scales — the underlying capability may exist but remains below the benchmark threshold until the model crosses a critical scale, producing discontinuous benchmark curves.",
       hints: [
@@ -430,7 +430,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Data mixing ratios (e.g., 80% web, 10% code, 10% academic text) are a critical training hyperparameter for LLMs because the relative frequency of each domain in pretraining directly shapes the model\'s capability distribution across tasks.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The LLaMA 3 and Falcon papers both report that deliberate over-sampling of high-quality domains (code, math, books) improved performance on targeted benchmarks while slightly reducing performance on others — demonstrating that data mixture is a direct dial for capability tuning even before instruction fine-tuning.",
       hints: [
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPT-style (decoder-only) models are now preferred over encoder-decoder architectures (like T5) for most tasks because they unify generation and understanding in a single autoregressive framework, and can perform tasks like classification via conditional generation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Decoder-only models generate text autoregressively and can perform any task through appropriately framed prompts — classification becomes "the sentiment of this review is [positive/negative]", summarization becomes "TL;DR:", etc. This in-context learning capability scales well and eliminates the need for a separate encoder.',
       hints: [
@@ -544,7 +544,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'The "lost in the middle" phenomenon (Liu et al., 2023) showed that LLMs exhibit a U-shaped recall curve: information at the beginning and end of a long context is retrieved well, but information in the middle is poorly utilized even when it fits within the context window.',
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Liu et al. (2023) demonstrated this with multi-document QA tasks where the relevant document was placed at varying positions within the context. Models showed primacy (beginning) and recency (end) effects — the middle portion was consistently underutilized regardless of context length, mirroring human serial position effects.",
       hints: [
@@ -601,7 +601,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "FlashAttention computes mathematically identical results to standard attention — it is not an approximation — but uses the online softmax algorithm to compute softmax incrementally over tiles without seeing the entire row simultaneously.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The online softmax trick (Milakov & Gimelshein, 2018) maintains running max and sum statistics across tiles, enabling exact softmax computation without materializing the full row. FlashAttention uses this to compute exact attention in O(1) SRAM rather than O(n²) HBM, with zero accuracy trade-off.",
       hints: [
@@ -658,7 +658,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "During autoregressive decoding, the KV cache allows each new token to be generated with a single forward pass through only the new token\'s position (not the entire prefix), because previous tokens' K and V representations are already cached and can be directly used in attention.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch — O(n²) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
       hints: [
@@ -735,7 +735,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Beam search consistently outperforms sampling-based methods on open-ended creative generation tasks (stories, dialogue) according to human preference evaluations.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'Holtzman et al. (2020) "The Curious Case of Neural Text Degeneration" showed that beam search produces text that is high-probability but bland, generic, and repetitive — humans consistently prefer nucleus-sampled text for open-ended generation. Beam search is better for constrained tasks (translation, summarization) where there is a clearly correct output.',
       hints: [
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Speculative decoding (Leviathan et al., 2023) guarantees that the output token distribution is identical to the target model\'s distribution — not the draft model\'s — through an acceptance-rejection mechanism that corrects draft tokens whenever they deviate from the target.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "For each draft token x, speculative decoding accepts it with probability min(1, p_target(x)/p_draft(x)). If rejected, a correction token is sampled from a modified distribution (p_target - p_draft normalized). This guarantees the output is exactly distributed as the target model, making speculative decoding lossless.",
       hints: [
@@ -829,7 +829,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPTQ quantizes weights to INT4 by minimizing per-layer quantization error using the inverse Hessian of the layer\'s input activations, compensating remaining weights for the error introduced by already-quantized weights.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "GPTQ (Frantar et al., 2022) applies Optimal Brain Quantization (OBQ) layer-by-layer: for each weight column being quantized, it computes the Hessian (second-order information about sensitivity) and adjusts remaining weights to compensate for the introduced error — achieving near-lossless INT4 quantization with perplexity degradation < 1 point on most models.",
       hints: [
@@ -886,7 +886,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "After LoRA fine-tuning, the adapter matrices B and A can be merged into the base model by computing W_new = W + BA, resulting in zero inference overhead compared to the original model.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Since W_new = W + BA is just matrix addition, the merged model has the exact same architecture and forward pass as the original — no adapter branching at inference time. The merge trades a one-time matrix addition (cheap) for zero per-inference overhead (critical for latency-sensitive serving).",
       hints: [
@@ -943,7 +943,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "When fine-tuning with instruction data, computing cross-entropy loss on prompt/instruction tokens as well as response tokens trains the model equally well as computing loss only on response tokens.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Including the prompt in the loss trains the model to predict given instructions — an uninformative signal that may cause instruction memorization. The InstructGPT and Alpaca papers both mask the loss on prompt tokens: only response tokens contribute to the gradient, focusing training on the generative objective of producing correct responses.",
       hints: [
@@ -1000,7 +1000,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "To convert a pretrained MHA model to GQA without full retraining, Ainslie et al. (2023) showed that mean-pooling the original H KV heads into G groups provides a strong initialization for subsequent GQA fine-tuning with modest compute.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'The GQA paper proposed "uptrained" conversion: group the H original KV head projections into G groups of H/G, mean-pool each group into a single KV head, and fine-tune on 5% of the original pretraining budget to recover nearly full MHA quality — making GQA accessible without full retraining from scratch.',
       hints: [
@@ -1057,7 +1057,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Without an auxiliary load balancing loss, MoE models collapse: the router learns to always route tokens to the same 1–2 experts, making most expert capacity permanently unused and eliminating the benefit of having multiple experts.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Router collapse is a well-documented MoE failure mode: a popular expert gets more gradient signal → improves faster → gets routed to more → gets even more signal (positive feedback loop). The load balancing loss (e.g., auxiliary cross-entropy over expert assignment uniformity) breaks this cycle by penalizing unequal routing.",
       hints: [
@@ -1114,7 +1114,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A model with L = 32 transformer layers using SWA with window size w = 4096 can propagate information from position 1 to position 131,073 (32 × 4096 = 131,072 positions), despite each layer attending to at most 4096 neighboring positions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "This is the receptive field argument: layer 1 sees positions within w of each token; layer 2 sees positions within w of layer-1 representations (which already aggregate w-wide neighborhoods); after L layers, each position has an effective receptive field of L × w. Like deep CNNs, local attention layers compose into global context.",
       hints: [
@@ -1171,7 +1171,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RAG (Lewis et al., 2020) showed that jointly training the retriever and generator using non-differentiable retrieval (via marginalization over discrete retrieved documents) is possible through MIPS (Maximum Inner Product Search) and gradient approximation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = Σ_z p_η(z|x) × p_θ(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
       hints: [
@@ -1228,7 +1228,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Parallel tool calling — where the LLM outputs multiple tool call objects in a single response — reduces total latency for independent tool lookups by allowing concurrent execution rather than serial (one tool at a time) execution.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "If a task requires querying weather in 3 cities, serial tool calling requires 3 LLM calls (one per tool + response incorporation); parallel tool calling allows the LLM to output all 3 tool requests at once, the application executes them concurrently, and returns all results in a single tool message batch — reducing 3 round-trips to 1.",
       hints: [
@@ -1285,7 +1285,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "LLM agents with temperature = 0 (greedy decoding) are fully deterministic: given identical inputs and tool outputs, they always produce identical action sequences.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Even with temperature = 0, LLM agents can behave non-deterministically due to: (1) floating-point non-determinism in GPU parallel operations, (2) external tool variability (web search results change), (3) API-level batching affecting softmax computation. Perfect reproducibility requires identical hardware, software, random seeds, and deterministic tool outputs.",
       hints: [
@@ -1342,7 +1342,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "LLM-as-judge evaluation (e.g., using GPT-4 to score model outputs) exhibits positional bias — preferring the response listed first — and verbosity bias — preferring longer responses even when length does not indicate quality.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MT-Bench (Zheng et al., 2023) systematically studied LLM judge biases and confirmed both: positional bias (first/second position preference varies by model) and verbosity bias (LLM judges consistently prefer longer responses even when human evaluators do not). Standard mitigations include swapping response order and running both orderings, averaging results.",
       hints: [
@@ -1399,7 +1399,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'Constitutional AI (CAI, Anthropic 2022) trains helpful and harmless models without requiring human harm ratings by using the LLM itself to critique and revise its own outputs according to a set of principles (the "constitution").',
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "CAI\'s two-phase approach: (1) SL-CAI: the model generates a response, critiques it against constitutional principles, then revises it — supervised learning on the revised responses without human harm labels. (2) RL-CAI: use an AI preference model (trained on AI-generated comparison labels) instead of human raters to scale RLHF-style training.",
       hints: [
@@ -1456,7 +1456,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Mistral-7B-v0.1 achieves better benchmark performance than LLaMA-2-13B on many tasks, demonstrating that architectural choices (GQA, SWA) and training data quality can compensate for a 2× deficit in parameter count.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Jiang et al. (2023) showed Mistral-7B outperforms LLaMA-2-13B on commonsense reasoning, math, and code benchmarks. The key factors: sliding window attention enabling longer effective context, GQA for better inference efficiency, and aggressive data quality filtering — demonstrating that raw parameter count is not the dominant determinant of capability.",
       hints: [
@@ -1513,7 +1513,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GPT-4V (and LLaVA-1.6) use dynamic high-resolution processing: low-resolution images are processed as a single 336×336 tile (576 tokens), while high-resolution images are divided into multiple 336×336 tiles (each producing 576 tokens), adaptively scaling visual token count with image complexity.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Dynamic tiling addresses the resolution-context tradeoff: a fixed 336×336 encoding cannot capture fine text or small objects in high-resolution images. By tiling (e.g., a 672×672 image → 4 tiles), the model allocates more tokens to detail-rich images, trading context budget for visual fidelity. The total token count scales with the number of tiles used.",
       hints: [
@@ -1570,7 +1570,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         'DeepSeek-R1 and OpenAI o1 train extended reasoning ("thinking") using pure outcome-based RL — they use no human-annotated reasoning traces, relying solely on final answer correctness as the reward signal.',
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DeepSeek-R1 (2025) demonstrated that RL with sparse outcome rewards (correct/incorrect final answer) causes the model to spontaneously develop effective reasoning strategies including self-verification, backtracking, and exploration — without any human annotation of intermediate steps. The model discovers CoT-like reasoning as an emergent strategy for maximizing the outcome reward.",
       hints: [
@@ -1627,7 +1627,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HumanEval\'s 164 problems all involve standalone Python functions evaluated with unit tests — the benchmark does not test repository-level understanding, multi-file navigation, debugging existing code, or generating code in languages other than Python.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "HumanEval (Chen et al., 2021) is explicitly function-completion: given a Python function signature and docstring, complete the body. It measures atomic function-level coding ability but fails to capture real-world software engineering tasks like understanding dependencies across files, refactoring, or debugging — motivating benchmarks like SWE-bench, which uses real GitHub issues.",
       hints: [
@@ -1684,7 +1684,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SGLang\'s RadixAttention achieves KV cache reuse across requests sharing a common prompt prefix (e.g., the same system prompt) by indexing cached K/V states in a radix tree, allowing multiple requests to share prefix pages rather than recomputing them.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Zheng et al. (2023) showed that in production, many requests share long prefixes (system prompts, few-shot examples) that are recomputed wastefully per-request. RadixAttention\'s radix tree maps prefix token sequences to cached KV pages — a new request matching an existing prefix skips prefill for those tokens, dramatically reducing time-to-first-token for prefix-heavy workloads.",
       hints: [

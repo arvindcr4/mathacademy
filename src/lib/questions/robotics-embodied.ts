@@ -28,7 +28,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In factor graph SLAM (as implemented in GTSAM or g2o), the key computational advantage over EKF-SLAM is that the information (Fisher) matrix is sparse, enabling efficient incremental updates via methods like iSAM2 without full matrix inversion.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Factor graphs represent SLAM as a bipartite graph of variable nodes (poses, landmarks) and factor nodes (motion, measurement). The resulting information matrix is sparse because each factor connects only a small number of variables. iSAM2 exploits this sparsity with a Bayes tree data structure, enabling O(log N) incremental updates for most steps rather than O(N²) full relinearization.",
       hints: [
@@ -85,7 +85,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Voxel-based 3D object detection methods such as VoxelNet partition the point cloud into a regular 3D grid and apply 3D convolutions within each voxel.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "VoxelNet divides the point cloud into equally-spaced 3D voxels, encodes points within each voxel using a Voxel Feature Encoding layer, and then applies 3D convolutional layers on the resulting dense feature volume.",
       hints: [
@@ -141,7 +141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Monocular visual odometry can recover the absolute metric scale of translation without any additional sensor or known reference.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "A single camera observing a scene has an inherent scale ambiguity: the same image sequence is consistent with a small scene close-up or a large scene far away, so absolute metric scale cannot be recovered from monocular images alone without extra information (e.g., known object size, stereo baseline, or IMU).",
       hints: [
@@ -198,7 +198,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Camera-LiDAR fusion requires extrinsic calibration to transform point cloud data into the camera coordinate frame before projecting onto the image plane.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Extrinsic calibration determines the rigid body transformation (rotation R and translation t) between the LiDAR and camera frames; without it, LiDAR points cannot be accurately projected onto the image, making pixel-level fusion impossible. Intrinsic calibration (camera matrix K, distortion coefficients) is additionally required to map 3D camera-frame points to 2D pixel coordinates via perspective projection: p = K[R|t]P.",
       hints: [
@@ -253,7 +253,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Panoptic segmentation unifies semantic segmentation (stuff classes) and instance segmentation (thing classes) into a single output.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Panoptic segmentation assigns every pixel a semantic label and, for countable objects (things), a unique instance ID, while uncountable regions (stuff like floor or sky) receive only a category label — combining both tasks in one framework.",
       hints: [
@@ -309,7 +309,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GraspNet-1Billion and similar large-scale grasp datasets provide grasp annotations in 6-DoF pose (position + orientation) rather than only top-down 2D pixel grasp rectangles.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Modern grasp datasets like GraspNet-1Billion annotate 6-DoF grasps (3D position and 3D orientation) sampled on object point clouds, enabling methods that plan grasps from any approach direction rather than only overhead planar grasps.",
       hints: [
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "OpenAI\'s Dactyl system demonstrated dexterous cube manipulation by training entirely in simulation with domain randomization and then transferring the policy to a physical Shadow Hand.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Dactyl trained a deep RL policy in the OpenAI Gym / MuJoCo simulator with extensive domain randomization (physics parameters, visual appearance) and successfully transferred it zero-shot to a real Shadow Hand robot, solving the Rubik\'s cube face rotation task.",
       hints: [
@@ -442,7 +442,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Representing deformable object state as a learned low-dimensional latent embedding can make manipulation planning tractable by reducing the effective state space dimensionality.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Learning a compact latent representation (e.g., via a variational autoencoder or graph neural network) of the high-dimensional deformable object configuration enables planning and control algorithms that would be infeasible in the full configuration space.",
       hints: [
@@ -499,7 +499,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Impedance control allows a robot to regulate the relationship between end-effector force and position, making it suitable for contact-rich tasks where pure position control would cause large, damaging forces.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Impedance control sets a desired mechanical impedance (spring-damper relationship) between the robot\'s end-effector and the environment; when contact occurs, forces are regulated naturally rather than fighting against a stiff position controller.",
       hints: [
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PDDLStream is a TAMP framework that extends PDDL with streams — functions that lazily sample continuous values (e.g., grasp poses, IK solutions) conditioned on symbolic bindings.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PDDLStream augments PDDL with certified streams that produce continuous parameter values (poses, trajectories) on demand; the planner interleaves symbolic search with stream evaluation, avoiding exhaustive pre-enumeration of continuous parameter spaces.",
       hints: [
@@ -611,7 +611,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DAgger (Dataset Aggregation) addresses the compounding error problem of behavior cloning by iteratively collecting new demonstrations at states the learned policy actually visits.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DAgger\'s algorithm: (1) Train initial policy π₁ on expert dataset D. (2) Roll out πᵢ to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
       hints: [
@@ -688,7 +688,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Maximum Entropy IRL (MaxEnt IRL) resolves the ambiguity in reward function recovery by choosing the reward that makes all expert trajectories equally likely under a maximum entropy distribution over trajectories.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MaxEnt IRL applies the maximum entropy principle: among all reward functions consistent with observed expert feature expectations, it selects the one that produces a maximum entropy distribution over trajectories, avoiding overfitting to a single deterministic explanation.",
       hints: [
@@ -758,7 +758,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A key advantage of Diffusion Policy over standard behavior cloning with an MSE loss is its ability to represent multimodal action distributions without explicitly modeling the mixture components.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MSE-based behavior cloning averages over multiple valid actions, producing blurry, averaged predictions. Diffusion Policy models the full action distribution implicitly via the denoising process and can capture multiple modes (e.g., go left or go right) without requiring explicit mixture modeling.",
       hints: [
@@ -815,7 +815,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ACT uses a Conditional Variational Autoencoder (CVAE) during training to capture the style or variation in demonstrations, and at inference time the CVAE encoder is replaced by a fixed zero latent vector.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The CVAE style encoder captures demonstration variability during training, providing the decoder with a latent code; at inference (without access to future actions), the encoder is replaced by a zero vector, and the decoder generates actions conditioned only on the current observation.",
       hints: [
@@ -872,7 +872,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ALOHA (A Low-cost Open-source Hardware System for Bimanual Teleoperation) uses leader-follower arm pairs where the human moves the leader arms and the follower arms on the robot replicate the motion.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "ALOHA uses two pairs of low-cost robot arms: the operator physically moves the lightweight leader arms, and joint-angle commands are mirrored to the follower arms that perform the actual manipulation task, enabling intuitive bilateral teleoperation for bimanual tasks.",
       hints: [
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PRM (Probabilistic Roadmap Method) has two phases: a learning phase that builds a roadmap of collision-free configurations, and a query phase that connects start/goal to the roadmap and finds a path.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "PRM first samples many random configurations, checks them for collision-free status, and connects nearby valid configurations with local planners to build a roadmap graph; subsequent queries then simply connect start and goal to the graph and run a graph search (e.g., Dijkstra\'s).",
       hints: [
@@ -998,7 +998,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Neural motion planners trained in simulation can generalize to novel unseen environments at test time because they learn to encode environment context (e.g., obstacle point clouds) as part of their input.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Neural planners like MPNets encode the current environment (as a point cloud or occupancy map) alongside start and goal configurations; this conditioning allows generalization to new obstacle configurations not seen during training, unlike planners tied to a fixed environment.",
       hints: [
@@ -1055,7 +1055,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Social Force Model (SFM) represents pedestrian interaction as attractive forces toward goals and repulsive forces from obstacles and other pedestrians.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Social Force Model by Helbing & Molnar models pedestrian dynamics using social forces: a motivational force toward the destination, repulsive forces that keep pedestrians away from walls and each other, and optional attractive forces for groups — together reproducing emergent crowd behavior.",
       hints: [
@@ -1112,7 +1112,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "EmbodiedBERT and similar pre-trained transformers for embodied navigation are trained on room-to-room navigation datasets and fine-tuned for downstream tasks such as object goal navigation.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Large pre-trained transformer models for embodied navigation learn representations from large-scale navigation datasets (e.g., R2R) and can be fine-tuned on downstream embodied tasks, following the pre-train/fine-tune paradigm from NLP.",
       hints: [
@@ -1169,7 +1169,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Terrain traversability estimation for off-road robots can be performed by analyzing geometric properties of LiDAR point clouds (e.g., local surface normals, slope, roughness) without any learned semantic labels.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Geometry-based traversability analysis computes local surface properties — normal vectors, slope angles, step heights, and roughness metrics — directly from LiDAR point clouds to classify terrain as drivable or not, without requiring semantic scene understanding.",
       hints: [
@@ -1226,7 +1226,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Visual domain randomization (randomizing textures, colors, and lighting) is most effective when the downstream policy uses visual observations, as it prevents the policy from overfitting to simulation-specific visual features.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "When policies receive raw image observations, they can overfit to simulation-specific colors, textures, and lighting; visual domain randomization trains the perception module to be invariant to these low-level visual variations, improving real-world generalization.",
       hints: [
@@ -1283,7 +1283,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Isaac Gym (NVIDIA) achieves massive simulation throughput by running thousands of physics environments in parallel entirely on the GPU, eliminating CPU-GPU data transfer bottlenecks.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Isaac Gym moves the full simulation loop (physics stepping, observation generation, reward computation) onto the GPU using NVIDIA PhysX; with thousands of parallel environments on a single GPU, it achieves training throughputs orders of magnitude higher than CPU-based simulators like MuJoCo.",
       hints: [
@@ -1339,7 +1339,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "3D Gaussian Splatting can be used for real-to-sim by reconstructing a scene from multi-view images into a set of 3D Gaussians that can be rendered photorealistically from novel viewpoints for robot training.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "3D Gaussian Splatting reconstructs scenes as collections of 3D Gaussian primitives optimized to match multi-view photographs; these representations render at real-time speeds and produce photorealistic novel views, making them attractive for building visual robot training environments from real-world scans.",
       hints: [
@@ -1395,7 +1395,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Online adaptive control methods can adjust controller parameters in real-time as the robot\'s dynamics change (e.g., due to payload variation or wear), without requiring an offline re-identification procedure.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Adaptive controllers (e.g., MRAC — Model Reference Adaptive Control, or online Gaussian process-based methods) continuously update model or controller parameters based on real-time prediction errors, enabling the robot to compensate for changing dynamics without stopping for offline recalibration.",
       hints: [
@@ -1452,7 +1452,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Privileged learning in robot locomotion often provides the critic with exteroceptive information like ground contact forces and terrain height maps, which would be unavailable from a robot\'s onboard sensors at deployment.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "In simulation, privileged information such as exact foot contact forces, terrain height fields, and object masses is directly accessible; providing this to the critic during RL training produces a better teacher signal, enabling the actor — trained on only proprioceptive observations — to learn more robust policies.",
       hints: [
@@ -1509,7 +1509,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "RT-2 demonstrates emergent capabilities in robot manipulation, such as reasoning about novel object categories and multi-step semantic reasoning, that were not present in the robot training data.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Because RT-2 leverages a pre-trained VLM\'s internet-scale knowledge, it exhibits emergent behaviors at test time — for example, identifying which object is "recyclable" or understanding "move the banana to the dinosaur" — tasks not explicitly present in the robot demonstration data.',
       hints: [
@@ -1637,7 +1637,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Learning-based humanoid locomotion controllers trained with deep RL in simulation (e.g., on Unitree H1 or Figure robots) have demonstrated robust real-world walking and running without relying on simplified ZMP (Zero Moment Point) controllers.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Recent RL-trained humanoid controllers (e.g., from Carnegie Mellon, ETH, and robot companies) have surpassed traditional ZMP-based control in agility and robustness by learning complex whole-body dynamics directly from simulation, enabling running, jumping, and recovery from pushes.",
       hints: [
