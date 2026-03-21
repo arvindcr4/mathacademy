@@ -242,11 +242,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Patient visits occur at irregular intervals and many measurements are missing (not collected if not clinically indicated), requiring models that handle variable-length sequences and missingness explicitly.",
-      hints: [
-        "Think about how often a patient visits a doctor - it is not on a fixed daily or weekly schedule.",
-        "When a lab test is not ordered, there is no value recorded - that information is absent, not zero.",
-      ],
+        "First, let's recall that Electronic Health Records (EHR) capture patient data over multiple visits spanning months or years. " +
+        "A fundamental challenge is that patient visits occur at irregular intervals - a patient might return in 3 days or 6 months depending on their condition. " +
+        "Additionally, not all measurements are taken at every visit; many values are missing because they were not clinically indicated at that time. " +
+        "**Step 1:** Recognize that patient visits are inherently irregular and do not follow fixed time schedules. " +
+        "**Step 2:** Understand that EHR data has high rates of missingness - many observations are absent because they were not measured or recorded. " +
+        "**Step 3:** Note that deep learning models must explicitly handle variable-length sequences and missing data, often using techniques like RNNs with masking, attention mechanisms, or imputation strategies. " +
+        "Therefore, the answer is irregular time intervals between patient visits and high rates of missing data.",
     },
     {
       id: "q-hc-kp5-2",
@@ -256,11 +258,13 @@ const questions: Record<string, Question[]> = {
         "MIMIC-III is a freely accessible critical care EHR database that is widely used for clinical ML research.",
       correctAnswer: "True",
       explanation:
-        "MIMIC-III (Medical Information Mart for Intensive Care) contains de-identified data from over 40,000 ICU patients at Beth Israel Deaconess Medical Center and is a standard benchmark for clinical prediction tasks.",
-      hints: [
-        "MIMIC stands for Medical Information Mart for Intensive Care.",
-        "It was released by MIT and requires a data use agreement, but is publicly available to credentialed researchers.",
-      ],
+        "First, let's recall that MIMIC-III (Medical Information Mart for Intensive Care) is a large, publicly available database of critical care patients. " +
+        "It was developed by MIT and contains de-identified electronic health records from over 40,000 patients who stayed in the ICU at Beth Israel Deaconess Medical Center. " +
+        "The dataset includes vital signs, laboratory tests, medications, notes, and other clinical data collected during routine care. " +
+        "**Step 1:** Understand that MIMIC-III is freely accessible to credentialed researchers after completing a data use agreement. " +
+        "**Step 2:** Recognize that it has become a standard benchmark dataset for developing and evaluating clinical machine learning models. " +
+        "**Step 3:** Note that the dataset covers diverse clinical prediction tasks including mortality prediction, length of stay estimation, and organ failure assessment. " +
+        "Therefore, the answer is True.",
     },
     {
       id: "q-hc-kp5-3",
@@ -276,11 +280,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RETAIN (REverse Time AttentIoN) uses two attention mechanisms - one over visits and one over medical codes - producing interpretable weights that show which clinical events most influenced the prediction.",
-      hints: [
-        "RETAIN was designed with clinician trust in mind, not just accuracy.",
-        'Its name contains the word "Attention" - think about what attention weights tell you.',
-      ],
+        "First, let's recall that RETAIN (REverse Time AttentIoN) is an interpretable deep learning model designed for longitudinal EHR analysis. " +
+        "Clinical deployment of AI models requires clinician trust, which is difficult to achieve with black-box predictions. " +
+        "RETAIN addresses this by using a hierarchical attention mechanism that produces interpretable weights. " +
+        "**Step 1:** Understand that RETAIN uses two levels of attention - one at the visit level and one at the medical code level within each visit. " +
+        "**Step 2:** Recognize that these attention weights reveal which visits and which specific medical codes most influenced the model's prediction. " +
+        "**Step 3:** Note that clinicians can examine these weights to validate whether the model's reasoning aligns with clinical intuition, building trust in the model's predictions. " +
+        "Therefore, the answer is interpretability - clinicians could see which visits and medical codes influenced the prediction.",
     },
   ],
 
@@ -298,11 +304,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "ADMET properties determine how a drug moves through and is processed by the body (pharmacokinetics) and whether it is toxic - these are critical filters in early drug discovery to reduce late-stage failures.",
-      hints: [
-        "These five terms describe the journey of a compound from ingestion through the body to elimination.",
-        "The last letter stands for a property that can cause a drug candidate to fail safety trials.",
-      ],
+        "First, let's recall that ADMET represents the five key pharmacokinetic properties used to evaluate drug candidates. " +
+        "These properties determine how a drug is absorbed, distributed throughout the body, metabolized, excreted, and whether it causes toxicity. " +
+        "Evaluating these properties early in drug discovery helps identify and eliminate candidates likely to fail in later, more expensive clinical trials. " +
+        "**Step 1:** Absorption - how the drug enters the bloodstream from its site of administration. " +
+        "**Step 2:** Distribution - how the drug spreads through body tissues and compartments. " +
+        "**Step 3:** Metabolism, Excretion, and Toxicity - how the body processes and eliminates the drug, and whether the compound causes harmful effects. " +
+        "Therefore, the answer is Absorption, Distribution, Metabolism, Excretion, Toxicity.",
     },
     {
       id: "q-hc-kp6-2",
@@ -312,11 +320,13 @@ const questions: Record<string, Question[]> = {
         "Graph Neural Networks (GNNs) are particularly well-suited for molecular property prediction because molecules have a natural graph structure with atoms as nodes and bonds as edges.",
       correctAnswer: "True",
       explanation:
-        "Molecular graphs naturally encode chemical structure; GNNs like MPNN, Chemprop, and AttentiveFP learn from these graphs by passing messages between atoms, capturing local chemical environments effectively.",
-      hints: [
-        "Think about what a molecule looks like drawn on paper - circles (atoms) connected by lines (bonds).",
-        "GNNs operate on graph-structured data, passing information along edges between nodes.",
-      ],
+        "First, let's recall that molecules have a natural graph representation where atoms are nodes and chemical bonds are edges. " +
+        "This graph structure encodes important chemical information about connectivity and local chemical environments. " +
+        "Traditional ML approaches require fixed-size feature vectors, but molecular data varies in size and connectivity. " +
+        "**Step 1:** Understand that GNNs operate directly on graph-structured data, making them well-suited for molecules with their natural graph representation. " +
+        "**Step 2:** Recognize that GNNs like MPNN, Chemprop, and AttentiveFP pass messages between atoms along bonds, learning to capture local chemical environments. " +
+        "**Step 3:** Note that this message-passing approach allows GNNs to learn molecular representations that outperform hand-crafted features for property prediction. " +
+        "Therefore, the answer is True.",
     },
     {
       id: "q-hc-kp6-3",
@@ -332,11 +342,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Morgan/ECFP fingerprints hash circular atom neighborhoods into bit vectors; each bit signals the presence of a specific chemical substructure, enabling fast similarity search and use with classical ML models.",
-      hints: [
-        "This representation is a long binary or count vector, not a string or 3D coordinate file.",
-        "It is based on circular neighborhoods around each atom, at a specified radius.",
-      ],
+        "First, let's recall that molecular fingerprints are fixed-length binary vectors used to represent molecular structure computationally. " +
+        "Morgan fingerprints (also known as Extended-Connectivity Fingerprints or ECFP) are computed by analyzing circular neighborhoods around each atom up to a specified radius. " +
+        "Each bit position in the fingerprint corresponds to whether a particular chemical substructure is present in the molecule. " +
+        "**Step 1:** Understand that Morgan/ECFP fingerprints encode the presence of specific chemical substructures as bits in a fixed-length vector. " +
+        "**Step 2:** Recognize that these fingerprints enable fast molecular similarity search by comparing bit vectors using metrics like Tanimoto similarity. " +
+        "**Step 3:** Note that fingerprints are particularly useful with classical ML models that require fixed-size numerical input. " +
+        "Therefore, the answer is Molecular fingerprint (e.g., ECFP/Morgan fingerprint).",
     },
   ],
 
@@ -355,7 +367,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "pLDDT is AlphaFold2's per-residue confidence metric. Scores >90 indicate very high confidence (backbone RMSD typically <1.5 Å from true structure). Scores 70-90 indicate good confidence; 50-70 indicate low confidence (often loops/linkers); <50 indicates disordered or unreliable regions. AlphaFold2 colors its 3D models by pLDDT to guide interpretation.",
+        "First, let's recall that pLDDT (predicted Local Distance Difference Test) is AlphaFold2's per-residue confidence metric, ranging from 0 to 100. " +
+        "AlphaFold2 uses this score to indicate how confident the model is about the predicted position of each amino acid in the 3D structure. " +
+        "This self-assessed confidence helps biologists interpret which parts of the prediction are reliable. " +
+        "**Step 1:** Understand that scores above 90 indicate very high confidence in the predicted residue positions. " +
+        "**Step 2:** Recognize that such high confidence typically corresponds to backbone RMSD errors of approximately 1.5 Angstroms or less from the true structure. " +
+        "**Step 3:** Note that AlphaFold2 visualizes this by coloring the 3D structure by pLDDT score, allowing researchers to quickly identify reliable vs. disordered regions. " +
+        "Therefore, the answer is Very high per-residue structural confidence - the prediction is expected to be accurate to within ~1.5 Å.",
       hints: [
         "pLDDT is a self-assessed confidence score, not an external validation metric - higher means the model is confident in that residue\'s position.",
         "Disordered regions of proteins that lack a fixed 3D structure tend to receive low pLDDT scores, which is actually informative.",
@@ -369,7 +387,13 @@ const questions: Record<string, Question[]> = {
         "AlphaFold2's Evoformer module processes a Multiple Sequence Alignment (MSA) of homologous sequences as a key input, exploiting co-evolutionary signals to infer residue-residue contacts.",
       correctAnswer: "True",
       explanation:
-        "The Evoformer takes an MSA representation (rows = homologous sequences, columns = residue positions) and jointly updates it with a pairwise residue-residue representation. Correlated mutations between residue pairs across evolution - co-evolutionary signals - provide strong geometric constraints that guide 3D structure prediction.",
+        "First, let's recall that AlphaFold2's Evoformer module is the core neural network architecture that processes multiple representations of the protein sequence. " +
+        "One of its key inputs is a Multiple Sequence Alignment (MSA) containing homologous sequences from diverse species, which provides evolutionary information. " +
+        "The MSA captures which residues tend to co-vary across evolution - when two residues are spatially close, mutations in one often select for compensating mutations in the other. " +
+        "**Step 1:** Understand that the MSA representation has shape (N_sequences x N_residues) while a pairwise representation captures residue-residue relationships. " +
+        "**Step 2:** Recognize that the Evoformer jointly updates both representations, allowing co-evolutionary signals to inform contact predictions. " +
+        "**Step 3:** Note that correlated mutations (co-evolution) provide geometric constraints that guide the model toward accurate 3D structure prediction. " +
+        "Therefore, the answer is True.",
       hints: [
         "If two residues that are spatially close in 3D mutate together across evolution, this co-variation is a strong signal for proximity.",
         "The MSA representation has shape (N_seq \\times N_res); the pair representation has shape (N_res \\times N_res) - Evoformer updates both jointly.",
@@ -389,7 +413,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GDT_TS (Global Distance Test Total Score) averages the percentage of C\\alpha atoms within 1, 2, 4, and 8 Å of the reference structure: GDT_TS = (P1 + P2 + P4 + P8) / 4. A score of 92 means AlphaFold2 predictions were competitive with experimental accuracy for the majority of CASP14 targets, a historic milestone in structural biology.",
+        "First, let's recall that GDT_TS (Global Distance Test Total Score) is the primary metric used in CASP (Critical Assessment of protein Structure Prediction) to evaluate predicted protein structures. " +
+        "It measures how well the C-alpha atoms of a predicted structure align with those of the experimental reference structure. " +
+        "The metric averages the percentage of C-alpha atoms that fall within four different distance thresholds (1, 2, 4, and 8 Angstroms). " +
+        "**Step 1:** Understand that GDT_TS computes the percentage of C-alpha atoms within 1, 2, 4, and 8 Angstroms of the reference. " +
+        "**Step 2:** Recognize that GDT_TS = (P1 + P2 + P4 + P8) / 4, averaging these four percentages. " +
+        "**Step 3:** Note that AlphaFold2's median GDT_TS of ~92 on CASP14 free-modeling targets was transformative, as prior methods scored in the 40-60 range. " +
+        "Therefore, the answer is the global distance test score - the average percentage of C\\alpha atoms within 1, 2, 4, and 8 Å cutoffs of the reference structure.",
       hints: [
         "GDT_TS uses four distance cutoffs (1, 2, 4, 8 Å) and averages the fraction of C\\alpha atoms within each - near 100 is perfect.",
         "Prior state-of-the-art methods scored in the 40-60 range on free-modelling targets at CASP13; AlphaFold2's 92 was transformative.",
@@ -412,7 +442,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Variant calling identifies single nucleotide polymorphisms (SNPs) and insertions/deletions (indels) by comparing aligned sequencing reads to a reference genome - a fundamental step in genomics pipelines.",
+        "First, let's recall that variant calling is a fundamental computational step in genomics pipelines. " +
+        "When sequencing a genome, the resulting reads are aligned to a reference genome to identify where they differ. " +
+        "These differences from the reference are called genomic variants and include single nucleotide polymorphisms (SNPs) and insertions/deletions (indels). " +
+        "**Step 1:** Understand that variant callers compare aligned sequencing reads against a reference genome to identify differences. " +
+        "**Step 2:** Recognize that SNPs are single nucleotide changes, while indels are insertions or deletions of nucleotides. " +
+        "**Step 3:** Note that variant calling is a foundational step that enables downstream analyses like GWAS, disease association studies, and precision medicine. " +
+        "Therefore, the answer is positions in the genome where the sample differs from a reference genome (SNPs, indels).",
       hints: [
         'Think about what "variant" means in a genomic context - differences from a reference.',
         "SNPs and indels are the two most common types of genomic variants.",
@@ -426,7 +462,13 @@ const questions: Record<string, Question[]> = {
         "DeepVariant, developed by Google, models variant calling as an image classification problem by converting read pileups into image tensors.",
       correctAnswer: "True",
       explanation:
-        "DeepVariant encodes aligned sequencing read pileups as RGB-like images and uses an Inception-based CNN to classify each candidate position as reference, heterozygous variant, or homozygous variant.",
+        "First, let's recall that DeepVariant, developed by Google Brain, revolutionized variant calling by applying deep learning to the problem. " +
+        "The key insight was to convert the problem of classifying genomic positions into an image classification problem. " +
+        "At each candidate genomic position, sequencing reads are stacked in a pileup visualization that resembles an image. " +
+        "**Step 1:** Understand that DeepVariant converts read pileups at each genomic position into RGB-like image tensors. " +
+        "**Step 2:** Recognize that these images capture patterns in the sequencing data - coverage, base quality, and alignment patterns. " +
+        "**Step 3:** Note that an Inception-based convolutional neural network (CNN) then classifies each position as reference, heterozygous variant, or homozygous variant. " +
+        "Therefore, the answer is True.",
       hints: [
         "Think about how sequencing reads stacked at a genomic position can be visualized - it looks like an image.",
         "Google used a well-known image classification CNN architecture for this task.",
@@ -446,7 +488,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Traditional GWAS tests each SNP independently (marginal associations), missing epistatic interactions. ML methods like polygenic risk score models and neural networks can capture non-linear, combinatorial genetic effects.",
+        "First, let's recall that traditional Genome-Wide Association Studies (GWAS) test each genetic variant independently for association with a trait. " +
+        "This approach is statistically simple and computationally efficient, but it cannot capture the complex way that multiple variants interact to influence traits. " +
+        "Most complex traits are influenced by many genetic variants with small effects, and these variants often interact with each other (epistasis). " +
+        "**Step 1:** Understand that GWAS applies a statistical test at each variant position one at a time, missing interactions between variants. " +
+        "**Step 2:** Recognize that epistatic interactions - where the effect of one variant depends on another variant - are missed by marginal testing. " +
+        "**Step 3:** Note that ML methods like polygenic risk scores and neural networks can learn non-linear, combinatorial genetic effects that traditional GWAS cannot capture. " +
+        "Therefore, the answer is GWAS tests each variant independently, missing complex polygenic interactions and non-linear effects.",
       hints: [
         "GWAS applies a statistical test at each variant position one at a time.",
         'Think about what "epistasis" means - interaction effects between multiple genetic variants.',
@@ -469,7 +517,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Randomization distributes both measured and unmeasured confounders evenly across groups, enabling a causal interpretation of the observed treatment effect - the gold standard for causal inference.",
+        "First, let's recall that randomization is a fundamental principle of clinical trial design that helps ensure the validity of causal inference. " +
+        "By randomly assigning participants to treatment or control groups, we balance both measured and unmeasured confounding factors between the groups. " +
+        "This balance is critical because there may be unknown factors that influence both who receives a treatment and the outcome. " +
+        "**Step 1:** Understand that randomization helps balance both known and unknown confounders between treatment and control groups. " +
+        "**Step 2:** Recognize that without randomization, researchers cannot distinguish whether differences in outcomes are due to the treatment or due to pre-existing differences between groups. " +
+        "**Step 3:** Note that this balance enables causal interpretation of the observed treatment effect, making randomization the gold standard for causal inference in clinical research. " +
+        "Therefore, the answer is to balance known and unknown confounding factors between treatment and control groups.",
       hints: [
         "Without randomization, patients who choose treatment may differ systematically from those who do not.",
         "Randomization handles confounders we know about and ones we have not even measured.",
@@ -483,7 +537,13 @@ const questions: Record<string, Question[]> = {
         "Adaptive clinical trial designs use interim data to modify trial parameters (e.g., sample size, dose allocation) while maintaining type I error control.",
       correctAnswer: "True",
       explanation:
-        "Adaptive designs use pre-specified decision rules and statistical adjustments (e.g., alpha spending functions) to allow mid-trial modifications based on accumulating data without inflating the false positive rate.",
+        "First, let's recall that traditional clinical trials fix all parameters (sample size, dose, allocation ratios) before enrollment begins. " +
+        "Adaptive trial designs allow modifications to these parameters based on interim data collected during the trial. " +
+        "The key challenge is that looking at data during the trial can inflate the false positive rate (type I error), requiring careful statistical adjustments. " +
+        "**Step 1:** Understand that adaptive designs allow mid-trial modifications based on accumulating data using pre-specified decision rules. " +
+        "**Step 2:** Recognize that these modifications might include adjusting sample size, reallocating doses, or dropping treatment arms. " +
+        "**Step 3:** Note that statistical methods like alpha spending functions maintain type I error control despite multiple interim looks at the data. " +
+        "Therefore, the answer is True.",
       hints: [
         "Traditional trials fix all parameters before starting; adaptive trials allow changes based on early results.",
         "The key challenge is maintaining statistical validity despite looking at the data during the trial.",
@@ -503,7 +563,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By predicting treatment responders using biomarker and EHR data, ML-guided enrollment enriches the trial with likely responders, reducing required sample size and trial duration while maintaining scientific validity.",
+        "First, let's recall that clinical trials often struggle with patient enrollment, taking years to complete due to difficulty finding patients who meet all criteria. " +
+        "A key insight is that if we can identify patients most likely to respond to the treatment, we can enrich the trial population to detect treatment effects faster. " +
+        "ML methods analyze biomarker data and EHR records to predict which patients are most likely to benefit from the experimental treatment. " +
+        "**Step 1:** Understand that ML-guided enrollment uses predictive models to identify patients most likely to respond to treatment. " +
+        "**Step 2:** Recognize that enrolling these patients enriches the trial, making the treatment effect signal stronger and easier to detect. " +
+        "**Step 3:** Note that this approach can reduce required sample size and trial duration while maintaining scientific validity. " +
+        "Therefore, the answer is identify patients most likely to respond to treatment and enrich the trial population for faster signal detection.",
       hints: [
         "Think about what happens to statistical power when you enroll patients who are unlikely to respond.",
         "The goal is to make the treatment effect signal stronger and detectable with fewer patients.",
@@ -525,7 +591,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Censoring occurs when a patient leaves the study, is lost to follow-up, or the study ends before the event occurs - we know they survived at least until censoring, but not when (or if) the event occurs later.",
+        "First, let's recall that survival analysis studies time-to-event data, such as time until death or disease recurrence. " +
+        "A fundamental challenge is that we often cannot observe the event for all patients - the study may end before the event occurs, or patients may drop out. " +
+        "Censoring occurs when we have partial information about a patient's survival time. " +
+        "**Step 1:** Understand that censoring happens when a patient leaves the study, is lost to follow-up, or the study ends before the event is observed. " +
+        "**Step 2:** Recognize that censored patients provide partial information: we know they survived at least until the censoring time, but not what happened afterward. " +
+        "**Step 3:** Note that survival analysis methods like the Kaplan-Meier estimator and Cox regression are designed to handle censoring appropriately. " +
+        "Therefore, the answer is the situation where the event of interest has not been observed for a patient by the end of follow-up.",
       hints: [
         "Think about a patient who moves away before the study ends - you stop observing them.",
         "Censored patients provide partial information: they survived at least up to the censoring time.",
@@ -539,7 +611,13 @@ const questions: Record<string, Question[]> = {
         "The Cox proportional hazards model assumes that the ratio of hazard rates between any two individuals remains constant over time.",
       correctAnswer: "True",
       explanation:
-        "The proportional hazards assumption means the hazard ratio between two covariate patterns is constant across time, allowing Cox regression to estimate covariate effects without specifying the baseline hazard function.",
+        "First, let's recall that the Cox proportional hazards model is one of the most widely used methods in survival analysis. " +
+        "It estimates the effect of covariates (like treatment assignment) on the hazard rate, but it makes a key assumption about how hazards compare between individuals. " +
+        "The proportional hazards assumption states that the ratio of hazard rates between any two individuals remains constant over time. " +
+        "**Step 1:** Understand that the hazard rate represents the instantaneous risk of the event occurring at a given time. " +
+        "**Step 2:** Recognize that proportional hazards means if one group has twice the hazard of another at any given time, this ratio stays the same throughout the study. " +
+        "**Step 3:** Note that this assumption allows Cox regression to estimate covariate effects without needing to specify the baseline hazard function. " +
+        "Therefore, the answer is True.",
       hints: [
         'This is the "proportional" part of the Cox proportional hazards model name.',
         "If the treatment effect grows or diminishes over time, this assumption would be violated.",
@@ -559,7 +637,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DeepHit learns a discrete joint distribution over time-to-first-event for competing risks without any parametric assumptions, outperforming Cox models when the proportional hazards assumption is violated.",
+        "First, let's recall that classical survival models like Cox regression assume proportional hazards, which may not hold in many real-world scenarios. " +
+        "DeepHit is a deep learning model for survival analysis that addresses these limitations. " +
+        "It uses a discrete-time formulation and can model complex, non-proportional hazard shapes that classical methods cannot capture. " +
+        "**Step 1:** Understand that DeepHit learns a joint distribution over time-to-event without parametric assumptions about the hazard shape. " +
+        "**Step 2:** Recognize that DeepHit handles competing risks (when multiple events can occur) by modeling them jointly. " +
+        "**Step 3:** Note that this approach outperforms Cox models when the proportional hazards assumption is violated. " +
+        "Therefore, the answer is jointly modeling the time to event and competing risks without the proportional hazards assumption.",
       hints: [
         "Think about competing risks - a patient can die from cancer or from heart disease, not both.",
         "Deep learning can model complex, non-proportional hazard shapes that Cox cannot.",
@@ -582,7 +666,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Med-PaLM 2 scored over 85% on USMLE-style questions, matching or exceeding the passing threshold of expert clinicians - a landmark for clinical AI question answering.",
+        "First, let's recall that Med-PaLM 2 is a large language model developed by Google Research specifically for medical applications. " +
+        "It was developed to answer complex medical questions that require expert-level domain knowledge. " +
+        "The US Medical Licensing Examination (USMLE) is a standardized test that medical professionals must pass to become licensed physicians in the United States. " +
+        "**Step 1:** Understand that Med-PaLM 2 was evaluated on USMLE-style medical licensing examination questions. " +
+        "**Step 2:** Recognize that Med-PaLM 2 scored over 85% on these questions, matching or exceeding the passing threshold for expert clinicians. " +
+        "**Step 3:** Note that this performance represented a landmark achievement for clinical AI question-answering systems. " +
+        "Therefore, the answer is US Medical Licensing Examination (USMLE) questions.",
       hints: [
         "Think about the exam that medical students must pass to practice medicine in the US.",
         'The "Med" prefix in Med-PaLM suggests it was evaluated on medical knowledge questions.',
@@ -596,7 +686,13 @@ const questions: Record<string, Question[]> = {
         "BioGPT was pre-trained on biomedical literature from PubMed to improve performance on biomedical text mining tasks.",
       correctAnswer: "True",
       explanation:
-        "BioGPT (Microsoft) is a GPT-2-style causal language model pre-trained on 15 million PubMed abstracts, achieving state-of-the-art results on biomedical relation extraction, QA, and text generation benchmarks.",
+        "First, let's recall that BioGPT is a large language model developed by Microsoft specifically for biomedical text mining tasks. " +
+        "It follows the GPT-2 architecture, which is a causal (decoder-only) language model trained to predict the next token. " +
+        "The key innovation is domain-specific pre-training on biomedical literature from PubMed, which contains millions of scientific abstracts. " +
+        "**Step 1:** Understand that BioGPT was pre-trained on 15 million PubMed abstracts to learn the specialized language of biomedical literature. " +
+        "**Step 2:** Recognize that this domain-specific pre-training enables BioGPT to better understand biomedical terminology and relationships. " +
+        "**Step 3:** Note that BioGPT achieved state-of-the-art results on biomedical relation extraction, question answering, and text generation benchmarks. " +
+        "Therefore, the answer is True.",
       hints: [
         "BioGPT follows the same pattern as BioBERT - domain-specific pre-training on biomedical text.",
         "PubMed is the primary corpus of biomedical literature containing millions of scientific abstracts.",
@@ -615,7 +711,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LLaVA-Med adapts LLaVA (Large Language and Vision Assistant) with biomedical image-text instruction tuning using figure-caption pairs from PMC, enabling visual question answering over X-rays, pathology slides, and other medical images.",
+        "First, let's recall that LLaVA (Large Language and Vision Assistant) is a multimodal model that connects a vision encoder with a language model for visual question answering. " +
+        "LLaVA-Med extends this architecture to the biomedical domain by adapting it with domain-specific training. " +
+        "The training uses figure-caption pairs from PubMed Central (PMC), which pair medical images with their text descriptions from scientific papers. " +
+        "**Step 1:** Understand that LLaVA-Med fine-tunes a multimodal (vision + language) model on biomedical image-text pairs. " +
+        "**Step 2:** Recognize that this training uses figure-caption pairs from scientific papers, which naturally pair medical images with descriptive text. " +
+        "**Step 3:** Note that this enables visual question answering over medical images including X-rays, pathology slides, and other clinical images. " +
+        "Therefore, the answer is fine-tuning on biomedical image-text pairs to enable visual question answering over medical images.",
       hints: [
         "LLaVA-Med extends a multimodal (vision + language) model into the medical domain.",
         "The training data comes from figure-caption pairs in biomedical papers, pairing images with text descriptions.",
