@@ -876,6 +876,99 @@ export const courses: Course[] = [
     ]
   },
 
+  // AGENTIC AI & MULTI-AGENT SYSTEMS
+  {
+    id: 'agentic-ai',
+    slug: 'agentic-ai',
+    name: 'Agentic AI & Multi-Agent Systems',
+    description: 'Build autonomous AI agents that reason, plan, use tools, and collaborate in multi-agent frameworks.',
+    category: 'reinforcement-learning',
+    icon: '🕵️',
+    color: '#14B8A6',
+    topicCount: 6,
+    estimatedHours: 30,
+    topics: [
+      {
+        id: 'agent-foundations',
+        slug: 'agent-foundations',
+        name: 'Agent Foundations',
+        description: 'Core concepts: what makes an agent, reasoning loops, and agent taxonomy.',
+        knowledgePoints: [
+          { id: 'ag-kp-1', slug: 'agent-definition', name: 'What Makes an AI Agent?' },
+          { id: 'ag-kp-2', slug: 'react-framework', name: 'ReAct: Reasoning + Acting Framework' },
+          { id: 'ag-kp-3', slug: 'agent-memory', name: 'Agent Memory (Short-term, Long-term, Episodic)' },
+          { id: 'ag-kp-4', slug: 'planning-agents', name: 'Planning: Tree-of-Thought, MCTS' },
+          { id: 'ag-kp-5', slug: 'agent-eval', name: 'Agent Evaluation & Benchmarks (SWE-Bench, GAIA)' },
+        ]
+      },
+      {
+        id: 'tool-use',
+        slug: 'tool-use',
+        name: 'Tool Use & Function Calling',
+        description: 'Enable LLMs to use external tools, APIs, and code interpreters.',
+        knowledgePoints: [
+          { id: 'ag-kp-6', slug: 'function-calling', name: 'Function Calling (OpenAI, Claude Tool Use)' },
+          { id: 'ag-kp-7', slug: 'code-interpreter', name: 'Code Interpreter & Sandboxed Execution' },
+          { id: 'ag-kp-8', slug: 'browser-tools', name: 'Browser & Web Scraping Tools' },
+          { id: 'ag-kp-9', slug: 'api-integration', name: 'External API Integration Patterns' },
+          { id: 'ag-kp-10', slug: 'tool-selection', name: 'Tool Selection & Routing Strategies' },
+        ]
+      },
+      {
+        id: 'multi-agent-frameworks',
+        slug: 'multi-agent-frameworks',
+        name: 'Multi-Agent Frameworks',
+        description: 'Orchestrate multiple agents to solve complex tasks collaboratively.',
+        knowledgePoints: [
+          { id: 'ag-kp-11', slug: 'agent-orchestration', name: 'Agent Orchestration Patterns' },
+          { id: 'ag-kp-12', slug: 'autogen', name: 'AutoGen & Conversational Agents' },
+          { id: 'ag-kp-13', slug: 'crewai', name: 'CrewAI & Role-Based Multi-Agent Teams' },
+          { id: 'ag-kp-14', slug: 'langgraph', name: 'LangGraph & Stateful Agent Graphs' },
+          { id: 'ag-kp-15', slug: 'agent-communication', name: 'Agent Communication Protocols (A2A, MCP)' },
+        ]
+      },
+      {
+        id: 'rag-and-memory',
+        slug: 'rag-and-memory',
+        name: 'RAG & Agent Memory',
+        description: 'Augment agents with retrieval and persistent memory systems.',
+        knowledgePoints: [
+          { id: 'ag-kp-16', slug: 'vector-databases', name: 'Vector Databases (Qdrant, Pinecone, Weaviate)' },
+          { id: 'ag-kp-17', slug: 'embedding-models', name: 'Embedding Models for RAG' },
+          { id: 'ag-kp-18', slug: 'hybrid-search', name: 'Hybrid Search (Sparse + Dense)' },
+          { id: 'ag-kp-19', slug: 'reranking', name: 'Reranking & Cross-Encoders' },
+          { id: 'ag-kp-20', slug: 'graphrag', name: 'GraphRAG & Knowledge Graph-Enhanced RAG' },
+        ]
+      },
+      {
+        id: 'agent-safety',
+        slug: 'agent-safety',
+        name: 'Agent Safety & Alignment',
+        description: 'Ensure agents behave safely, avoid harmful actions, and remain controllable.',
+        knowledgePoints: [
+          { id: 'ag-kp-21', slug: 'prompt-injection', name: 'Prompt Injection & Jailbreaking' },
+          { id: 'ag-kp-22', slug: 'sandboxing-agents', name: 'Sandboxing & Capability Limits' },
+          { id: 'ag-kp-23', slug: 'human-in-loop', name: 'Human-in-the-Loop (HitL) Patterns' },
+          { id: 'ag-kp-24', slug: 'agent-monitoring', name: 'Agent Monitoring & Audit Logging' },
+          { id: 'ag-kp-25', slug: 'corrigibility', name: 'Corrigibility & Interruptibility' },
+        ]
+      },
+      {
+        id: 'agent-rl-training',
+        slug: 'agent-rl-training',
+        name: 'Training Agents with RL',
+        description: 'Use reinforcement learning to train autonomous agents for real-world tasks.',
+        knowledgePoints: [
+          { id: 'ag-kp-26', slug: 'grpo-agents', name: 'GRPO for Agentic Tasks' },
+          { id: 'ag-kp-27', slug: 'process-rewards', name: 'Process Reward Models for Agents' },
+          { id: 'ag-kp-28', slug: 'trajectory-optimization', name: 'Trajectory Optimization for Agents' },
+          { id: 'ag-kp-29', slug: 'self-play-agents', name: 'Self-Play & Adversarial Training' },
+          { id: 'ag-kp-30', slug: 'curriculum-agents', name: 'Curriculum Learning for Agents' },
+        ]
+      },
+    ]
+  },
+
   // DEEP LEARNING FUNDAMENTALS
   {
     id: 'deep-learning-fundamentals',
