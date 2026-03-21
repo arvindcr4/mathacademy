@@ -1555,6 +1555,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'matrix-decompositions',
+        slug: 'matrix-decompositions',
         name: 'Matrix Decompositions',
         description: 'SVD, eigendecomposition, QR, and Cholesky for ML applications.',
         knowledgePoints: [
@@ -1567,6 +1568,7 @@ export const courses: Course[] = [
       },
       {
         id: 'tensor-algebra',
+        slug: 'tensor-algebra',
         name: 'Tensor Algebra & Operations',
         description: 'Tensor products, contractions, and tensor decompositions for ML.',
         knowledgePoints: [
@@ -1579,6 +1581,7 @@ export const courses: Course[] = [
       },
       {
         id: 'linear-maps-transformations',
+        slug: 'linear-maps-transformations',
         name: 'Linear Maps & Geometric Transformations',
         description: 'Projections, rotations, and geometric interpretations in high dimensions.',
         knowledgePoints: [
@@ -1591,6 +1594,7 @@ export const courses: Course[] = [
       },
       {
         id: 'matrix-calculus',
+        slug: 'matrix-calculus',
         name: 'Matrix Calculus & Gradients',
         description: 'Jacobians, Hessians, and matrix derivatives for backpropagation.',
         knowledgePoints: [
@@ -1603,6 +1607,7 @@ export const courses: Course[] = [
       },
       {
         id: 'random-matrix-theory',
+        slug: 'random-matrix-theory',
         name: 'Random Matrix Theory & High-Dimensional Stats',
         description: 'Concentration inequalities, random projections, and high-dimensional phenomena.',
         knowledgePoints: [
@@ -1615,6 +1620,7 @@ export const courses: Course[] = [
       },
       {
         id: 'numerical-linear-algebra',
+        slug: 'numerical-linear-algebra',
         name: 'Numerical Linear Algebra',
         description: 'Condition numbers, numerical stability, and efficient linear system solvers.',
         knowledgePoints: [
