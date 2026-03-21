@@ -2223,8 +2223,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Bayesian optimization is the most sample-efficient hyperparameter search strategy: it builds a probabilistic model (surrogate) of the objective function and uses acquisition functions (Expected Improvement, Upper Confidence Bound) to select the next trial that is most likely to improve upon the best known result. This converges to good hyperparameters in 50–100 trials vs. 1000+ for grid search. Optuna (TPE), Ray Tune (BOHB), and Weights & Biases Sweeps implement this.",
       hints: [
-        "Grid search: exponential in number of hyperparameters. Bayesian: learns which regions are promising and focuses there.",
-        "Bergstra & Bengio (2012): random search outperforms grid search; Bayesian optimization outperforms random search.",
+        "How does Bayesian optimization use previous trial results to select the next trial, compared to grid search which tries all combinations independently?",
+        "Which search strategy is most sample-efficient: one that tries all combinations, one that samples randomly, or one that learns from previous results?",
       ],
     },
     {

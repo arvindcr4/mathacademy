@@ -1916,6 +1916,90 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-ssl-kp6-1": {
+    type: "multiple-choice",
+    question: "In BYOL, how is the target network updated?",
+    options: [
+      "By gradient descent on the BYOL loss, just like the online network",
+      "By exponential moving average (EMA) of the online network parameters",
+      "By random re-initialization at the start of each epoch",
+      "By averaging the online network parameters across all GPU workers",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp10-1": {
+    type: "multiple-choice",
+    question: "In DINO, how is the teacher network updated during training?",
+    options: [
+      "By backpropagating the student-teacher cross-entropy loss through the teacher",
+      "By exponential moving average (EMA) of the student parameters, with no gradients through the teacher",
+      "By re-initializing the teacher every 100 epochs",
+      "By training the teacher separately on labeled data",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp33-1": {
+    type: "multiple-choice",
+    question: "Why does MAE run the encoder only on visible patches?",
+    options: [
+      "To prevent the encoder from seeing any context around masked regions",
+      "To reduce encoder compute by processing only the unmasked patches",
+      "Because the decoder must be deeper than the encoder",
+      "To force the encoder to learn only global image statistics",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ssl-kp45-1": {
+    type: "multiple-choice",
+    question: "In wav2vec 2.0, what is the quantization module used for during pre-training?",
+    options: [
+      "Compressing audio waveforms before training",
+      "Turning continuous audio features into discrete targets for the contrastive loss",
+      "Quantizing gradients to reduce distributed-training communication",
+      "Converting raw audio into mel-spectrogram phoneme labels",
+    ],
+    correctAnswer: 1,
+  },
+  "q-meta-kp3-3": {
+    question:
+      "In Koch et al. (2015), Siamese Networks for one-shot image recognition are best described by which setup?",
+    options: [
+      "Two identical CNN branches with shared weights, trained with binary cross-entropy on a sigmoid same/different score.",
+      "Two independent CNN branches trained with cross-entropy over the episode classes.",
+      "Three shared branches trained with triplet loss on anchor, positive, and negative examples.",
+      "A single CNN fine-tuned separately on each support example at test time.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp6-3": {
+    question:
+      "In a standard single-step MAML episode, which split is used for adaptation and which for the meta-update?",
+    options: [
+      "Adapt on the support set; compute the meta-update from the query set.",
+      "Adapt on the query set; compute the meta-update from the support set.",
+      "Use the support set for both adaptation and meta-update.",
+      "Use the query set for both adaptation and meta-update.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp7-2": {
+    question:
+      "When Reptile uses k = 1 inner SGD step on a sampled task, what does its update reduce to?",
+    options: [
+      "A step proportional to the sampled task gradient at theta, matching FOMAML with one inner step.",
+      "An exact second-order MAML meta-gradient through the inner update.",
+      "Zero, because phi and theta are identical after one step.",
+      "An average over all previously seen task gradients stored in memory.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-meta-kp41-3": {
+    type: "true-false",
+    question:
+      "With a single inner-loop gradient step, Reptile and FOMAML reduce to the same plain task-gradient update.",
+    options: ["True", "False"],
+    correctAnswer: "true",
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
