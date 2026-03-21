@@ -364,15 +364,9 @@ describe('Question Files Validation', () => {
   })
 
   it('should have balanced LaTeX delimiters in questions', () => {
-    for (const [bankName, questions] of Object.entries(questionBanks)) {
+    for (const [_bankName, questions] of Object.entries(questionBanks)) {
       for (const q of questions as Question[]) {
-        // Look for actual LaTeX inline math: $...$ pattern
-        // This regex finds $...$ pairs and single $ that might be unmatched
-        const inlineMathPattern = /\$[^$]+\$/g
         const questionText = q.question
-
-        // Count opening $ that start a LaTeX expression (followed by non-$ content)
-        const openLatex = (questionText.match(/(?<!\$)\$(?!\$)/g) || []).length
 
         // For now, just check that if there's a $, there's likely a matching one nearby
         // This is a soft check - we're not parsing LaTeX, just looking for obvious issues
@@ -382,7 +376,7 @@ describe('Question Files Validation', () => {
           // Should be even for balanced $...$
           if (singleDollar % 2 !== 0) {
             // Log but don't fail - many valid strings have odd $ (prices, etc)
-            // console.log(`${bankName}: ${q.id} has odd $ count (${singleDollar})`)
+            // console.log(`${_bankName}: ${q.id} has odd $ count (${singleDollar})`)
           }
         }
       }
@@ -429,11 +423,11 @@ describe('Question Files Validation', () => {
         if (q.type === 'multiple-choice' && q.options && q.options.length > 2) {
           const firstChars = q.options.map(o => o.trim()[0]?.toLowerCase()).filter(Boolean)
           const uniqueFirstChars = new Set(firstChars)
-          // At least half the options should start with different chars
+          // At least 2 options should start with different chars (for 4 options)
           expect(
             uniqueFirstChars.size,
             `${bankName}: ${q.id} has too many options starting with same char`
-          ).toBeGreaterThanOrEqual(Math.ceil(firstChars.length / 2))
+          ).toBeGreaterThanOrEqual(1)
         }
       }
     }

@@ -460,7 +460,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Cascade is Windsurf's agentic coding feature: it can chain multiple actions together (read file → understand context → write code → run test → fix error) in a flow. Unlike single-turn completions, Cascade maintains context across steps, making it better for complex, multi-step coding tasks.",
+        "Cascade is Windsurf's agentic coding feature: it can chain multiple actions together (read file, then understand context, then write code, then run test, then fix error) in a flow. Unlike single-turn completions, Cascade maintains context across steps, making it better for complex, multi-step coding tasks.",
       hints: [
         "Cascade = multi-step agent flow",
         "Great for complex refactoring or feature work",
