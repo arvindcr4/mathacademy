@@ -1,18 +1,18 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import Link from 'next/link'
-import XPBar from '@/components/XPBar'
-import CourseCard from '@/components/CourseCard'
-import LeagueBadge from '@/components/LeagueBadge'
-import { courses, categories } from '@/lib/curriculum'
+import { useState } from "react";
+import Link from "next/link";
+import XPBar from "@/components/XPBar";
+import CourseCard from "@/components/CourseCard";
+import LeagueBadge from "@/components/LeagueBadge";
+import { courses, categories } from "@/lib/curriculum";
 
 export default function Home() {
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const filteredCourses = selectedCategory
-    ? courses.filter(c => c.category === selectedCategory)
-    : courses
+    ? courses.filter((c) => c.category === selectedCategory)
+    : courses;
 
   return (
     <div className="min-h-screen">
@@ -26,9 +26,19 @@ export default function Home() {
             <span className="text-xl font-bold">MathAcademy</span>
           </div>
           <nav className="hidden md:flex items-center gap-6">
-            <Link href="#courses" className="hover:text-yellow-400 transition">Courses</Link>
-            <Link href="#how-it-works" className="hover:text-yellow-400 transition">How It Works</Link>
-            <Link href="/dashboard" className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition">
+            <Link href="#courses" className="hover:text-yellow-400 transition">
+              Courses
+            </Link>
+            <Link
+              href="#how-it-works"
+              className="hover:text-yellow-400 transition"
+            >
+              How It Works
+            </Link>
+            <Link
+              href="/dashboard"
+              className="px-4 py-2 bg-yellow-500 text-black font-semibold rounded-lg hover:bg-yellow-400 transition"
+            >
               Start Learning
             </Link>
           </nav>
@@ -46,15 +56,21 @@ export default function Home() {
             Master Skills 4x Faster
           </h1>
           <p className="text-xl text-gray-300 mb-8 max-w-2xl mx-auto">
-            From mathematics to reinforcement learning to software engineering interviews.
-            Our AI-powered platform adapts to your knowledge frontier and guides you through
-            the most efficient learning path.
+            From mathematics to reinforcement learning to software engineering
+            interviews. Our AI-powered platform adapts to your knowledge
+            frontier and guides you through the most efficient learning path.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/dashboard" className="px-8 py-4 bg-yellow-500 text-black font-bold text-lg rounded-xl hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30">
+            <Link
+              href="/dashboard"
+              className="px-8 py-4 bg-yellow-500 text-black font-bold text-lg rounded-xl hover:bg-yellow-400 transition shadow-lg shadow-yellow-500/30"
+            >
               Start Your Journey
             </Link>
-            <Link href="#courses" className="px-8 py-4 bg-white/10 backdrop-blur font-semibold text-lg rounded-xl hover:bg-white/20 transition">
+            <Link
+              href="#courses"
+              className="px-8 py-4 bg-white/10 backdrop-blur font-semibold text-lg rounded-xl hover:bg-white/20 transition"
+            >
               Browse Courses
             </Link>
           </div>
@@ -72,7 +88,9 @@ export default function Home() {
                 </div>
                 <div>
                   <div className="font-semibold">John Doe</div>
-                  <div className="text-sm text-gray-400">Level 12 • 2,450 XP</div>
+                  <div className="text-sm text-gray-400">
+                    Level 12 • 2,450 XP
+                  </div>
                 </div>
               </div>
               <LeagueBadge league="gold" />
@@ -108,20 +126,20 @@ export default function Home() {
               onClick={() => setSelectedCategory(null)}
               className={`px-4 py-2 rounded-lg font-medium transition ${
                 !selectedCategory
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-white/10 hover:bg-white/20'
+                  ? "bg-blue-500 text-white"
+                  : "bg-white/10 hover:bg-white/20"
               }`}
             >
               All Courses
             </button>
-            {categories.map(cat => (
+            {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 className={`px-4 py-2 rounded-lg font-medium transition flex items-center gap-2 ${
                   selectedCategory === cat.id
-                    ? 'bg-blue-500 text-white'
-                    : 'bg-white/10 hover:bg-white/20'
+                    ? "bg-blue-500 text-white"
+                    : "bg-white/10 hover:bg-white/20"
                 }`}
               >
                 <span>{cat.icon}</span>
@@ -131,7 +149,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredCourses.map(course => (
+            {filteredCourses.map((course) => (
               <CourseCard key={course.id} course={course} />
             ))}
           </div>
@@ -148,10 +166,12 @@ export default function Home() {
               <div className="w-12 h-12 rounded-xl bg-blue-500 flex items-center justify-center text-xl font-bold mb-4">
                 1
               </div>
-              <h3 className="text-xl font-semibold mb-2">Adaptive Diagnostic</h3>
+              <h3 className="text-xl font-semibold mb-2">
+                Adaptive Diagnostic
+              </h3>
               <p className="text-gray-400">
-                Take our 30-45 minute adaptive assessment. We&apos;ll identify your knowledge
-                frontier and create a personalized learning path.
+                Take our 30-45 minute adaptive assessment. We&apos;ll identify
+                your knowledge frontier and create a personalized learning path.
               </p>
             </div>
 
@@ -161,8 +181,9 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Learn with XP</h3>
               <p className="text-gray-400">
-                Complete lessons, solve problems, and earn XP. Our mastery-based system
-                ensures you truly understand each concept before moving on.
+                Complete lessons, solve problems, and earn XP. Our mastery-based
+                system ensures you truly understand each concept before moving
+                on.
               </p>
             </div>
 
@@ -172,8 +193,9 @@ export default function Home() {
               </div>
               <h3 className="text-xl font-semibold mb-2">Spaced Repetition</h3>
               <p className="text-gray-400">
-                Our algorithm schedules reviews at optimal intervals. Build long-term
-                retention through scientifically-backed distributed practice.
+                Our algorithm schedules reviews at optimal intervals. Build
+                long-term retention through scientifically-backed distributed
+                practice.
               </p>
             </div>
           </div>
@@ -185,17 +207,22 @@ export default function Home() {
         <div className="max-w-6xl mx-auto text-center">
           <h2 className="text-3xl font-bold mb-4">Compete in Weekly Leagues</h2>
           <p className="text-gray-400 mb-12 max-w-2xl mx-auto">
-            Climb through Bronze, Silver, Gold, Platinum, Diamond, and Master leagues.
-            Earn XP each week to advance, but don&apos;t worry—your XP is never lost!
+            Climb through Bronze, Silver, Gold, Platinum, Diamond, and Master
+            leagues. Earn XP each week to advance, but don&apos;t worry—your XP
+            is never lost!
           </p>
 
           <div className="flex justify-center gap-4 flex-wrap">
-            {['bronze', 'silver', 'gold', 'platinum', 'diamond', 'master'].map((league, i) => (
-              <div key={league} className="flex flex-col items-center">
-                <LeagueBadge league={league} size={i < 3 ? 'sm' : 'md'} />
-                <span className="text-sm text-gray-400 mt-2 capitalize">{league}</span>
-              </div>
-            ))}
+            {["bronze", "silver", "gold", "platinum", "diamond", "master"].map(
+              (league, i) => (
+                <div key={league} className="flex flex-col items-center">
+                  <LeagueBadge league={league} size={i < 3 ? "sm" : "md"} />
+                  <span className="text-sm text-gray-400 mt-2 capitalize">
+                    {league}
+                  </span>
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>
@@ -207,5 +234,5 @@ export default function Home() {
         </div>
       </footer>
     </div>
-  )
+  );
 }

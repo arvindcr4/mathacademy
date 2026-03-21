@@ -1,43 +1,53 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from "react";
 
 interface XPBarProps {
-  current: number
-  goal: number
-  showDaily?: boolean
+  current: number;
+  goal: number;
+  showDaily?: boolean;
 }
 
-export default function XPBar({ current, goal, showDaily = false }: XPBarProps) {
-  const [animatedCurrent, setAnimatedCurrent] = useState(showDaily ? 0 : current)
-  const percentage = Math.min((animatedCurrent / goal) * 100, 100)
+export default function XPBar({
+  current,
+  goal,
+  showDaily = false,
+}: XPBarProps) {
+  const [animatedCurrent, setAnimatedCurrent] = useState(
+    showDaily ? 0 : current,
+  );
+  const percentage = Math.min((animatedCurrent / goal) * 100, 100);
 
   useEffect(() => {
     if (!showDaily) {
-      setAnimatedCurrent(current)
-      return
+      setAnimatedCurrent(current);
+      return;
     }
 
     // Animate XP gain
-    const duration = 1000
-    const steps = 30
-    const increment = current / steps
-    let step = 0
+    const duration = 1000;
+    const steps = 30;
+    const increment = current / steps;
+    let step = 0;
 
     const timer = setInterval(() => {
-      step++
-      setAnimatedCurrent(Math.min(increment * step, current))
-      if (step >= steps) clearInterval(timer)
-    }, duration / steps)
+      step++;
+      setAnimatedCurrent(Math.min(increment * step, current));
+      if (step >= steps) clearInterval(timer);
+    }, duration / steps);
 
-    return () => clearInterval(timer)
-  }, [current, showDaily])
+    return () => clearInterval(timer);
+  }, [current, showDaily]);
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between text-sm">
-        <span className={showDaily ? 'text-yellow-400 font-medium' : 'text-gray-400'}>
-          {showDaily ? 'Daily XP' : 'Total XP'}
+        <span
+          className={
+            showDaily ? "text-yellow-400 font-medium" : "text-gray-400"
+          }
+        >
+          {showDaily ? "Daily XP" : "Total XP"}
         </span>
         <span className="font-medium">
           {animatedCurrent.toLocaleString()} / {goal.toLocaleString()}
@@ -56,5 +66,5 @@ export default function XPBar({ current, goal, showDaily = false }: XPBarProps) 
         </div>
       </div>
     </div>
-  )
+  );
 }
