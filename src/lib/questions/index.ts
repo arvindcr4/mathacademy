@@ -69,6 +69,7 @@ import "./rl-finetuning-platforms";
 import "./llm-inference-optimization";
 import "./rag-systems";
 import "./ai-engineering-sdks";
+import "./ai-coding-assistants";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

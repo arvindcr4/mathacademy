@@ -1602,9 +1602,9 @@ const additionalQuestions2: Record<string, Question[]> = {
         'Automated judges produce legally binding evaluations that can be used in deployment decisions',
       ],
       correctAnswer: 1,
-      explanation: 'MT-Bench (Zheng et al., 2023): GPT-4 evaluates responses to 80 multi-turn questions across writing, roleplay, reasoning, math, coding, extraction. Agreement with human experts is ~80% (comparable to inter-human agreement). The main benefit: running 1000 model comparisons with GPT-4 costs ~$50 and 30 minutes vs. weeks and thousands of dollars for human annotation.',
+      explanation: 'MT-Bench (Zheng et al., 2023): GPT-4 evaluates responses to 80 multi-turn questions across writing, roleplay, reasoning, math, coding, extraction. Agreement with human experts is ~80% (comparable to inter-human agreement). The main benefit: running 1000 model comparisons with GPT-4 costs approximately 50 USD and 30 minutes vs. weeks and thousands of dollars for human annotation.',
       hints: [
-        'Cost: GPT-4 API at $0.03/1K tokens \\times 1000 comparisons \\times ~1K tokens each = $30. Human annotation: much more.',
+        'Cost: GPT-4 API at \\$0.03/1K tokens × 1000 comparisons × ~1K tokens each = \\$30. Human annotation: much more.',
         'Agreement with humans: ~80% - not perfect, but sufficient for ranking models during development.'
       ],
     },

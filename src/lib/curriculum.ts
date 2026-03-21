@@ -12591,4 +12591,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "ai-coding-assistants",
+    slug: "ai-coding-assistants",
+    name: "AI Coding Assistants & Developer Tools",
+    description:
+      "Master AI-powered development tools: GitHub Copilot, Cursor, Windsurf, and best practices for AI-assisted coding.",
+    category: "software-engineering",
+    icon: "💻",
+    color: "#6366F1",
+    topicCount: 6,
+    estimatedHours: 8,
+    topics: [
+      {
+        id: "copilot-fundamentals",
+        slug: "copilot-fundamentals",
+        name: "GitHub Copilot Fundamentals",
+        description:
+          "Using GitHub Copilot effectively in your development workflow.",
+        knowledgePoints: [
+          {
+            id: "code-kp-1",
+            slug: "copilot-setup",
+            name: "Copilot Setup & Configuration",
+          },
+          {
+            id: "code-kp-2",
+            slug: "inline-suggestions",
+            name: "Inline Code Suggestions",
+          },
+          {
+            id: "code-kp-3",
+            slug: "copilot-chat",
+            name: "Copilot Chat & Explanations",
+          },
+          {
+            id: "code-kp-4",
+            slug: "copilot-context",
+            name: "Context Window & File Awareness",
+          },
+          {
+            id: "code-kp-5",
+            slug: "copilot-best-practices",
+            name: "Prompting Copilot Effectively",
+          },
+        ],
+      },
+      {
+        id: "cursor-ide",
+        slug: "cursor-ide",
+        name: "Cursor IDE Deep Dive",
+        description:
+          "Advanced usage of Cursor AI-first code editor.",
+        knowledgePoints: [
+          {
+            id: "code-kp-6",
+            slug: "cursor-setup",
+            name: "Cursor Installation & Setup",
+          },
+          {
+            id: "code-kp-7",
+            slug: "cursor-compose",
+            name: "Composer Mode for Multi-file Edits",
+          },
+          {
+            id: "code-kp-8",
+            slug: "cursor-context",
+            name: "@codebase & Context Inclusion",
+          },
+          {
+            id: "code-kp-9",
+            slug: "cursor-rules",
+            name: ".cursorrules Configuration",
+          },
+          {
+            id: "code-kp-10",
+            slug: "cursor-tab",
+            name: "Tab Autocomplete Tuning",
+          },
+        ],
+      },
+      {
+        id: "ai-assisted-workflows",
+        slug: "ai-assisted-workflows",
+        name: "AI-Assisted Development Workflows",
+        description:
+          "Best practices for integrating AI into your development process.",
+        knowledgePoints: [
+          {
+            id: "code-kp-11",
+            slug: "ai-code-review",
+            name: "AI Code Review Patterns",
+          },
+          {
+            id: "code-kp-12",
+            slug: "ai-refactoring",
+            name: "Refactoring with AI Assistance",
+          },
+          {
+            id: "code-kp-13",
+            slug: "ai-debugging",
+            name: "Debugging with AI Tools",
+          },
+          {
+            id: "code-kp-14",
+            slug: "ai-testing",
+            name: "Test Generation with AI",
+          },
+          {
+            id: "code-kp-15",
+            slug: "ai-documentation",
+            name: "Documentation Generation",
+          },
+        ],
+      },
+      {
+        id: "prompt-engineering-code",
+        slug: "prompt-engineering-code",
+        name: "Prompt Engineering for Code",
+        description:
+          "How to write effective prompts for code generation tasks.",
+        knowledgePoints: [
+          {
+            id: "code-kp-16",
+            slug: "code-context-setting",
+            name: "Setting Context for Code Tasks",
+          },
+          {
+            id: "code-kp-17",
+            slug: "few-shot-code",
+            name: "Few-Shot Examples for Code",
+          },
+          {
+            id: "code-kp-18",
+            slug: "iterative-refinement",
+            name: "Iterative Code Refinement",
+          },
+          {
+            id: "code-kp-19",
+            slug: "constraint-specification",
+            name: "Specifying Constraints & Requirements",
+          },
+          {
+            id: "code-kp-20",
+            slug: "output-formats",
+            name: "Controlling Output Formats",
+          },
+        ],
+      },
+      {
+        id: "code-quality-ai",
+        slug: "code-quality-ai",
+        name: "Code Quality & AI Output",
+        description:
+          "Ensuring AI-generated code meets quality standards.",
+        knowledgePoints: [
+          {
+            id: "code-kp-21",
+            slug: "hallucination-risks",
+            name: "Hallucination Risks in Code",
+          },
+          {
+            id: "code-kp-22",
+            slug: "security-review-ai",
+            name: "Security Review of AI Code",
+          },
+          {
+            id: "code-kp-23",
+            slug: "testing-ai-code",
+            name: "Testing AI-Generated Code",
+          },
+          {
+            id: "code-kp-24",
+            slug: "style-consistency",
+            name: "Maintaining Style Consistency",
+          },
+          {
+            id: "code-kp-25",
+            slug: "human-oversight",
+            name: "Human Oversight Patterns",
+          },
+        ],
+      },
+      {
+        id: "advanced-tools",
+        slug: "advanced-tools",
+        name: "Advanced AI Dev Tools",
+        description:
+          "Other AI development tools and emerging platforms.",
+        knowledgePoints: [
+          {
+            id: "code-kp-26",
+            slug: "windsurf-cascade",
+            name: "Windsurf & Cascade",
+          },
+          {
+            id: "code-kp-27",
+            slug: "aider-cli",
+            name: "Aider CLI Tool",
+          },
+          {
+            id: "code-kp-28",
+            slug: "continue-dev",
+            name: "Continue.dev Extension",
+          },
+          {
+            id: "code-kp-29",
+            slug: "codeium",
+            name: "Codeium & Tabnine",
+          },
+          {
+            id: "code-kp-30",
+            slug: "choosing-tools",
+            name: "Choosing the Right Tool",
+          },
+        ],
+      },
+    ],
+  },
 ];

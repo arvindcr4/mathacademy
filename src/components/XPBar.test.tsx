@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
 import { describe, it, expect, vi } from "vitest";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen, act } from "@testing-library/react";
 import XPBar from "./XPBar";
 
 describe("XPBar", () => {
@@ -39,20 +39,23 @@ describe("XPBar", () => {
       expect(screen.getByText("Daily XP")).toBeInTheDocument();
     });
 
-    it("should animate XP gain when showDaily is true", async () => {
+    it("should animate XP gain when showDaily is true", () => {
       vi.useFakeTimers();
 
-      render(<XPBar current={100} goal={200} showDaily />);
+      act(() => {
+        render(<XPBar current={100} goal={200} showDaily />);
+      });
 
       // Initially starts at 0
       expect(screen.getByText("0 / 200")).toBeInTheDocument();
 
       // Fast-forward time to complete animation
-      vi.advanceTimersByTime(1000);
-
-      await waitFor(() => {
-        expect(screen.getByText("100 / 200")).toBeInTheDocument();
+      act(() => {
+        vi.runAllTimers();
       });
+
+      // After animation completes, should show the final value
+      expect(screen.getByText("100 / 200")).toBeInTheDocument();
 
       vi.useRealTimers();
     });

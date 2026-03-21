@@ -68,9 +68,9 @@ const questions: Record<string, Question[]> = {
         "Spinning Up distinguishes two types of policies. A deterministic policy $\\mu(s)$ and a stochastic policy $\\pi(a|s)$. What is the key structural difference in their outputs?",
       options: [
         "$\\mu(s)$ outputs a single action; $\\pi(a|s)$ outputs a probability distribution over actions",
-        "$\\mu(s)$ is always optimal; $\\pi(a|s)$ is only used for exploration",
-        "$\\mu(s)$ requires a discrete action space; $\\pi(a|s)$ works only in continuous spaces",
-        "$\\mu(s)$ uses neural networks; $\\pi(a|s)$ uses lookup tables",
+        "Deterministic policies $\\mu(s)$ are always optimal; stochastic $\\pi(a|s)$ is only for exploration",
+        "Discrete action spaces require $\\mu(s)$; continuous spaces need $\\pi(a|s)$",
+        "Neural networks use $\\mu(s)$; lookup tables use $\\pi(a|s)$",
       ],
       correctAnswer: 0,
       explanation:

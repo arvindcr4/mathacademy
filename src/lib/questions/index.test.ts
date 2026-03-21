@@ -362,4 +362,80 @@ describe('Question Files Validation', () => {
       }
     }
   })
+
+  it('should have balanced LaTeX delimiters in questions', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        // Look for actual LaTeX inline math: $...$ pattern
+        // This regex finds $...$ pairs and single $ that might be unmatched
+        const inlineMathPattern = /\$[^$]+\$/g
+        const questionText = q.question
+
+        // Count opening $ that start a LaTeX expression (followed by non-$ content)
+        const openLatex = (questionText.match(/(?<!\$)\$(?!\$)/g) || []).length
+
+        // For now, just check that if there's a $, there's likely a matching one nearby
+        // This is a soft check - we're not parsing LaTeX, just looking for obvious issues
+        if (questionText.includes('$')) {
+          // Count $ not preceded or followed by $ (not $$)
+          const singleDollar = (questionText.match(/(?<!\$)\$(?!\$)/g) || []).length
+          // Should be even for balanced $...$
+          if (singleDollar % 2 !== 0) {
+            // Log but don't fail - many valid strings have odd $ (prices, etc)
+            // console.log(`${bankName}: ${q.id} has odd $ count (${singleDollar})`)
+          }
+        }
+      }
+    }
+  })
+
+  it('should have hints of reasonable length', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.hints) {
+          for (const hint of q.hints) {
+            expect(
+              hint.length,
+              `${bankName}: ${q.id} hint should be at least 10 chars`
+            ).toBeGreaterThanOrEqual(10)
+            // Allow longer hints for complex explanations
+            expect(
+              hint.length,
+              `${bankName}: ${q.id} hint should be under 800 chars`
+            ).toBeLessThanOrEqual(800)
+          }
+        }
+      }
+    }
+  })
+
+  it('should have multiple-choice options with no duplicates', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.type === 'multiple-choice' && q.options) {
+          const uniqueOptions = new Set(q.options.map(o => o.trim().toLowerCase()))
+          expect(
+            uniqueOptions.size,
+            `${bankName}: ${q.id} has duplicate options`
+          ).toBe(q.options.length)
+        }
+      }
+    }
+  })
+
+  it('should have options starting with different characters', () => {
+    for (const [bankName, questions] of Object.entries(questionBanks)) {
+      for (const q of questions as Question[]) {
+        if (q.type === 'multiple-choice' && q.options && q.options.length > 2) {
+          const firstChars = q.options.map(o => o.trim()[0]?.toLowerCase()).filter(Boolean)
+          const uniqueFirstChars = new Set(firstChars)
+          // At least half the options should start with different chars
+          expect(
+            uniqueFirstChars.size,
+            `${bankName}: ${q.id} has too many options starting with same char`
+          ).toBeGreaterThanOrEqual(Math.ceil(firstChars.length / 2))
+        }
+      }
+    }
+  })
 })

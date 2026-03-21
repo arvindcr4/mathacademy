@@ -732,8 +732,8 @@ const questions: Record<string, Question[]> = {
         "**Intuition:** SAM seeks parameters where the loss is low even under the worst-case perturbation. A flat minimum has small gradient everywhere in the neighborhood, so \\(\\hat{\\varepsilon}\\) would cause little loss increase. A sharp minimum has large gradients, so \\(\\hat{\\varepsilon}\\) would cause large loss increase.\n\n" +
         "By minimizing the worst-case loss, SAM explicitly finds flatter regions that empirically generalize better.",
       hints: [
-        "SAM has two steps: (1) find the perturbation \\(\\varepsilon\\) that maximizes the loss within the \\(\\varepsilon\\)-ball, (2) take a gradient step on the loss at \\(\\theta + \\varepsilon\\).",
-        "Minimizing \\(\\max_{\\|\\varepsilon\\| \\leq \\rho} L(\\theta + \\varepsilon)\\) encourages the loss to be low even at the worst nearby point - a flat minimum.",
+        "SAM has two steps: (1) find the perturbation that maximizes loss within the epsilon-ball, (2) take a gradient step at the perturbed point.",
+        "Minimizing the worst-case loss encourages the loss to be low even at nearby points - a flat minimum.",
       ],
     },
     {
