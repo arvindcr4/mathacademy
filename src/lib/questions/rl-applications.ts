@@ -185,7 +185,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Double DQN selects the best action using the online network argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', argmax_a Q(s',a;\\theta); \\theta\\^\{-\}, reducing the upward bias from using one network for both.",
+        "Double DQN selects the best action using the online network \argmax_a Q(s',a;\\theta), but evaluates that action\'s Q-value using the target network Q(s', \argmax_a Q(s',a;\\theta); \\theta\\^\{-\}, reducing the upward bias from using one network for both.",
       hints: [
         "The bias in Q-learning comes from using the same values for both selection and evaluation.",
         "What if you use one network to pick the action and another to judge its value?",
@@ -443,7 +443,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Policy gradient methods directly optimize a parametric policy \\pi_\\theta(a|s), which can output continuous action distributions (e.g., Gaussian) - making them naturally suited for continuous action spaces where argmax over Q-values is intractable.",
+        "Policy gradient methods directly optimize a parametric policy \\pi_\\theta(a|s), which can output continuous action distributions (e.g., Gaussian) - making them naturally suited for continuous action spaces where \argmax over Q-values is intractable.",
       hints: [
         "How does DQN handle continuous actions? What about a policy that outputs a Gaussian distribution?",
         "Stochastic policies are natural outputs of policy gradient methods.",
@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The PPO objective L^{CLIP}(\\theta) = E[min(r\_t(\\theta)A\_t, clip(r\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\_t)] uses the min operation to:",
+        "The PPO objective L^{CLIP}(\\theta) = E[min(r\_t(\\theta)A\_t, clip(r\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\_t)] uses the \min operation to:",
       options: [
         "Average the clipped and unclipped objectives for a smoother gradient",
         "Pessimistically bound the objective, preventing the policy from benefiting from going outside the trust region",
@@ -726,10 +726,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
+        "The \min selects the worse of the unclipped and clipped objectives: when the policy move is beneficial (A\_t > 0) but the ratio is already large, the clipped term is smaller and wins, preventing further reward from pushing the policy outside the trust region.",
       hints: [
-        "When A > 0 and r > 1+\\epsilon, which term (clipped or unclipped) gives a smaller value under min?",
-        "The min ensures no benefit from making the policy update too large.",
+        "When A > 0 and r > 1+\\epsilon, which term (clipped or unclipped) gives a smaller value under \min?",
+        "The \min ensures no benefit from making the policy update too large.",
       ],
     },
   ],
@@ -892,7 +892,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "\\pi_\\theta(a|s) = softmax(Q_\\theta(s,a)/\\alpha) - a direct Boltzmann distribution",
         "a = f_\\theta(\\epsilon; s) where \\epsilon ~ N(0,I) - a deterministic function of noise, enabling low-variance gradients",
-        "\\pi_\\theta(a|s) = argmax_a Q_\\theta(s,a) with added Gaussian noise",
+        "\\pi_\\theta(a|s) = \argmax_a Q_\\theta(s,a) with added Gaussian noise",
         "A tabular distribution learned by gradient descent on the entropy objective",
       ],
       correctAnswer: 1,
@@ -920,7 +920,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TD3 trains two independent critic networks Q\_1 and Q\_2 and uses min(Q\_1, Q\_2) for the target, penalizing overestimated Q-values - analogous to Double DQN\'s decoupling of selection and evaluation.",
+        "TD3 trains two independent critic networks Q\_1 and Q\_2 and uses \min(Q\_1, Q\_2) for the target, penalizing overestimated Q-values - analogous to Double DQN\'s decoupling of selection and evaluation.",
       hints: [
         "Two critics both estimate the same Q - which estimate is safer to use as a target?",
         "Taking the minimum is a conservative approach - why does this help with overestimation?",
@@ -979,7 +979,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DDPG uses a deterministic actor \\mu_\\theta(s) \\to a (no discrete maximization needed) and trains it by gradient ascent on Q_\\phi(s, \\mu_\\theta(s)) w.r.t. \\theta, enabling DQN-like off-policy learning in continuous action spaces.",
       hints: [
-        "DQN\'s argmax over Q-values is intractable in continuous spaces - what replaces it in DDPG?",
+        "DQN\'s \argmax over Q-values is intractable in continuous spaces - what replaces it in DDPG?",
         "The actor network outputs a specific action, not a distribution.",
       ],
     },
@@ -1679,7 +1679,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Lagrangian relaxation applied to CMDP optimization converts the constrained problem into an unconstrained one by:",
       options: [
-        "Adding a penalty term \\lambda\_i \\cdot max(0, E[C_i] − d\_i) to the objective and optimizing jointly over policy and \\lambda",
+        "Adding a penalty term \\lambda\_i \\cdot \max(0, E[C_i] − d\_i) to the objective and optimizing jointly over policy and \\lambda",
         "Projecting the policy gradient onto the constraint manifold at each step",
         "Running a separate safety critic that blocks unsafe actions before they are executed",
         "Solving a linear program over the space of occupancy measures",
@@ -1935,7 +1935,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       explanation:
         'Continuous control requires parameterizing action distributions (typically Gaussian \\pi(a|s) = N(\\mu_\\theta(s), \\Sigma_\\theta(s))) and using algorithms like PPO, SAC, or TD3 that can optimize over continuous action spaces without exhaustive enumeration.',
       hints: [
-        'DQN requires argmax over actions - intractable for continuous spaces.',
+        'DQN requires \argmax over actions - intractable for continuous spaces.',
         'Gaussian policies output mean and variance, allowing reparameterization for gradients.',
       ],
     },
@@ -2190,7 +2190,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'IQL (Kostrikov et al. 2021) replaces max_a Q(s\',a) with V(s\') learned via expectile regression at a high quantile \\tau \\approx 0.7-0.9, approximating the max without querying OOD actions. Advantage-weighted regression then extracts a policy. This enables stable offline RL without any OOD action queries.',
+        'IQL (Kostrikov et al. 2021) replaces max_a Q(s\',a) with V(s\') learned via expectile regression at a high quantile \\tau \\approx 0.7-0.9, approximating the \max without querying OOD actions. Advantage-weighted regression then extracts a policy. This enables stable offline RL without any OOD action queries.',
       hints: [
         'Expectile regression at high \\tau approximates the maximum of a distribution.',
         'IQL never evaluates Q(s\',a\') for actions a\' not in the dataset - no OOD extrapolation.',
@@ -2283,10 +2283,10 @@ const extra2: Record<string, Question[]> = {
       difficulty: "medium",
       question: "QMIX (Rashid et al., 2018) factorizes the joint Q-function as a sum of individual Q-functions: Q_tot = \\Sigma_i Q_i(o_i, a_i).",
       correctAnswer: "False",
-      explanation: "QMIX uses a more expressive factorization: Q_tot = f(Q_1(o_1,a_1), ..., Q_n(o_n,a_n)) where f is a monotone mixing network with weights conditioned on the global state. This satisfies the IGM (Individual-Global-Max) property: argmax Q_tot = (argmax Q_1, ..., argmax Q_n). Simple additive factorization (VDN) is a special case of QMIX. The monotone mixing network allows QMIX to represent cooperative strategies beyond simple summation while maintaining decentralized execution.",
+      explanation: "QMIX uses a more expressive factorization: Q_tot = f(Q_1(o_1,a_1), ..., Q_n(o_n,a_n)) where f is a monotone mixing network with weights conditioned on the global state. This satisfies the IGM (Individual-Global-Max) property: \argmax Q_tot = (\argmax Q_1, ..., \argmax Q_n). Simple additive factorization (VDN) is a special case of QMIX. The monotone mixing network allows QMIX to represent cooperative strategies beyond simple summation while maintaining decentralized execution.",
       hints: [
         "A simple sum \\Sigma_i Q_i would be VDN (Value Decomposition Network). Is QMIX the same as VDN?",
-        "QMIX requires that argmax Q_tot can be found by each agent independently maximizing its own Q_i. What constraint on the mixing function ensures this?",
+        "QMIX requires that \argmax Q_tot can be found by each agent independently maximizing its own Q_i. What constraint on the mixing function ensures this?",
       ],
     },
     {
@@ -2322,10 +2322,10 @@ const extra2: Record<string, Question[]> = {
         "CQL clips Q-values at zero for any action not observed in the offline dataset",
       ],
       correctAnswer: 1,
-      explanation: "CQL's conservative penalty is: \\alpha * (E_{s}[log \\Sigma_a exp Q(s,a)] - E_{(s,a)~D}[Q(s,a)]). The first term pushes down Q-values for all actions (softmax-weighted average), the second pushes up Q-values for dataset actions. Combined with the Bellman loss, CQL learns Q-values that are lower bounds on the true Q-values under the dataset policy, preventing overestimation for OOD actions. This stops the policy from exploiting spurious high Q-values for actions the agent should never take.",
+      explanation: "CQL's conservative penalty is: \\alpha * (E_{s}[log \\Sigma_a \exp Q(s,a)] - E_{(s,a)~D}[Q(s,a)]). The first term pushes down Q-values for all actions (softmax-weighted average), the second pushes up Q-values for dataset actions. Combined with the Bellman loss, CQL learns Q-values that are lower bounds on the true Q-values under the dataset policy, preventing overestimation for OOD actions. This stops the policy from exploiting spurious high Q-values for actions the agent should never take.",
       hints: [
         "The penalty has two terms: one that pushes Q-values DOWN for all actions, and one that pushes Q-values UP for dataset actions. Why the asymmetry?",
-        "log \\Sigma_a exp Q(s,a) = log softmax partition function. Which actions does this term most penalize?",
+        "log \\Sigma_a \exp Q(s,a) = log softmax partition function. Which actions does this term most penalize?",
       ],
     },
     {
@@ -2365,7 +2365,7 @@ const extra2: Record<string, Question[]> = {
       id: "q-rla-kp43-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "TD3+BC (Fujimoto & Gu, 2021) is a minimal offline RL algorithm that adds a behavioral cloning term to TD3. Its policy objective is: \\pi = argmax_a [\\lambda * Q(s,a) - (a - \\pi_\\beta(s))^2]. What does the BC term do?",
+      question: "TD3+BC (Fujimoto & Gu, 2021) is a minimal offline RL algorithm that adds a behavioral cloning term to TD3. Its policy objective is: \\pi = \argmax_a [\\lambda * Q(s,a) - (a - \\pi_\\beta(s))^2]. What does the BC term do?",
       options: [
         "It forces the learned policy to exactly replicate the behavior policy \\pi_\\beta from the dataset",
         "It regularizes the policy toward the dataset's actions, preventing large deviations from the data distribution that would require evaluating Q at OOD states",
@@ -2653,7 +2653,7 @@ const extra2: Record<string, Question[]> = {
       question: "Lagrangian methods for constrained RL convert the CMDP into an unconstrained problem. A key challenge in practice is the choice of the Lagrange multiplier update rule. Which approach is most stable?",
       options: [
         "Set \\lambda to a large fixed constant to ensure constraints are always satisfied",
-        "Update \\lambda using dual gradient ascent: \\lambda_{k+1} = max(0, \\lambda_k + \\alpha_\\lambda * (E[C(\\pi)] - d)), where the step size \\alpha_\\lambda is tuned to balance constraint violation speed against policy update speed",
+        "Update \\lambda using dual gradient ascent: \\lambda_{k+1} = \max(0, \\lambda_k + \\alpha_\\lambda * (E[C(\\pi)] - d)), where the step size \\alpha_\\lambda is tuned to balance constraint violation speed against policy update speed",
         "Update \\lambda only after the policy has fully converged to ensure a stable target",
         "Use \\lambda=0 during early training and increase it linearly after the policy becomes competent",
       ],
@@ -2694,7 +2694,7 @@ const extra3: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In cooperative MARL, achieving global optimality is generally harder than in single-agent RL because the joint action space grows exponentially with the number of agents.",
       correctAnswer: "True",
-      explanation: "In cooperative MARL with n agents each having |A| actions, the joint action space has |A|^n elements. Computing the joint Q-function Q(s, a_1, ..., a_n) and finding argmax over the joint space is exponential in n. This is why value decomposition methods (VDN, QMIX, QPLEX) factorize the joint Q-function into individual contributions that can be maximized independently (the IGM condition). Even with factorization, representing and learning from the exponentially large joint state-action space remains a fundamental challenge in cooperative MARL.",
+      explanation: "In cooperative MARL with n agents each having |A| actions, the joint action space has |A|^n elements. Computing the joint Q-function Q(s, a_1, ..., a_n) and finding \argmax over the joint space is exponential in n. This is why value decomposition methods (VDN, QMIX, QPLEX) factorize the joint Q-function into individual contributions that can be maximized independently (the IGM condition). Even with factorization, representing and learning from the exponentially large joint state-action space remains a fundamental challenge in cooperative MARL.",
       hints: [
         "With 10 agents each having 5 actions, how large is the joint action space?",
         "If we can factorize Q_tot = f(Q_1,...,Q_n) where each agent maximizes Q_i independently, how does the complexity scale?",
@@ -2712,7 +2712,7 @@ const extra3: Record<string, Question[]> = {
         "Communication increases the dimensionality of the observation space, causing the curse of dimensionality",
       ],
       correctAnswer: 1,
-      explanation: "Learning emergent communication end-to-end requires gradients to flow through discrete message symbols. Since argmax(logits) is non-differentiable, methods like DIAL (Foerster et al., 2016) use continuous relaxations during training (Gumbel-softmax or straight-through estimators). CommNet (Sukhbaatar et al., 2016) uses continuous communication vectors and differentiable pooling. The core challenge: discrete communication is naturally discrete (language uses symbols), but gradient-based training requires differentiability. This creates a tension between expressivity and trainability.",
+      explanation: "Learning emergent communication end-to-end requires gradients to flow through discrete message symbols. Since \argmax(logits) is non-differentiable, methods like DIAL (Foerster et al., 2016) use continuous relaxations during training (Gumbel-softmax or straight-through estimators). CommNet (Sukhbaatar et al., 2016) uses continuous communication vectors and differentiable pooling. The core challenge: discrete communication is naturally discrete (language uses symbols), but gradient-based training requires differentiability. This creates a tension between expressivity and trainability.",
       hints: [
         "If agents communicate using discrete symbols (e.g., one of 10 messages), why can't standard backpropagation compute gradients through message selection?",
         "Gumbel-softmax and straight-through estimators provide approximate gradients for discrete choices. What problem do they solve?",

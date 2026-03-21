@@ -336,7 +336,7 @@ const questions: Record<string, Question[]> = {
       id: "q-sdip-28",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "During a systems design interview, you have designed a system with: Load Balancer \u2192 10 App Servers \u2192 1 Primary DB. The system handles 50,000 reads/sec and 5,000 writes/sec. Where is the likely bottleneck?",
+      question: "During a systems design interview, you have designed a system with: Load Balancer -> 10 App Servers -> 1 Primary DB. The system handles 50,000 reads/sec and 5,000 writes/sec. Where is the likely bottleneck?",
       options: [
         "The load balancer \u2014 it cannot distribute 55,000 QPS",
         "The app servers \u2014 10 servers cannot handle 50,000 reads/sec",

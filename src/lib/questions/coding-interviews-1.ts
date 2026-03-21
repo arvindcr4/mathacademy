@@ -1289,8 +1289,9 @@ const questions: Record<string, Question[]> = {
         "As the recursion unwinds, what is being compared against the forward traversal?"
       ],
       explanation:
-        "Using the recursion call stack. The recursive function returns the current node as it unwinds. As it returns, it compares the node from the parameter (moving forward) with the node being returned (moving backward from the end). A mismatch indicates non-palindrome.\n\n" +
-        "This still uses $\\mathrm{O}(n)$ space (the call stack), but it achieves palindrome checking without explicit data structure allocation. However, it risks stack overflow for very long lists."
+        "**Step 1:** Recursion builds up a call stack as it traverses deeper into the list.\n\n" +
+        "**Step 2:** As the recursion unwinds, it compares the node from the parameter (moving forward) with the node being returned (moving backward from the end). A mismatch indicates non-palindrome.\n\n" +
+        "**Step 3:** This still uses $\\mathrm{O}(n)$ space (the call stack), but it achieves palindrome checking without explicit data structure allocation. However, it risks stack overflow for very long lists."
     },
     {
       id: "q-pll-4",
@@ -1320,11 +1321,10 @@ const questions: Record<string, Question[]> = {
         "What does reversing the second half in-place use?"
       ],
       explanation:
-        "$\\mathrm{O}(1)$ is achievable. The approach:\n\n" +
-        "1. Find the middle using slow/fast pointers (O(n) time).\n" +
-        "2. Reverse the second half in-place (O(n) time, O(1) space).\n" +
-        "3. Compare the first half with the reversed second half.\n" +
-        "4. (Optional) Restore the list by reversing the second half again.\n\n" +
+        "**Step 1:** Find the middle using slow/fast pointers ($\\mathrm{O}(n)$ time).\n\n" +
+        "**Step 2:** Reverse the second half in-place ($\\mathrm{O}(n)$ time, $\\mathrm{O}(1)$ space).\n\n" +
+        "**Step 3:** Compare the first half with the reversed second half.\n\n" +
+        "**Step 4:** (Optional) Restore the list by reversing the second half again.\n\n" +
         "This uses only a constant number of pointer variables: $\\mathrm{O}(1)$ extra space."
     },
   ],
@@ -1389,13 +1389,15 @@ const questions: Record<string, Question[]> = {
         "When ')' is read, what is on top of the stack?"
       ],
       explanation:
-        '"([)]" is not balanced.\n\n' +
-        "\\begin align*\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } ( \\\\\n" +
-        "\\text{Read } '[': &\\quad \\text{push } \\[ \\quad &\\quad \\text{Stack: } ( \\[ \\\\\n" +
-        "\\text{Read } ')': &\\quad \\text{Top of stack is } \\[ \\neq ( \\Rightarrow \\text{REJECT}\n" +
-        "\\end align*\n\n" +
-        "The other three are all balanced."
+        "**Step 1:** Trace through \"([)]\" character by character with a stack.\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(' \\quad &\\quad \\text{Stack: } '('\\\\\n" +
+        "\\text{Read } '[': &\\quad \\text{push } '[' \\quad &\\quad \\text{Stack: } '( \\; ['\\\\\n" +
+        "\\text{Read } ')': &\\quad \\text{Top of stack is } '[' \\neq '(' \\; \\Rightarrow \\text{MISMATCH}.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** The other three strings are all balanced."
     },
     {
       id: "q-bp-5",
@@ -1415,16 +1417,18 @@ const questions: Record<string, Question[]> = {
         "Processing is character-by-character: push for openers, pop-and-verify for closers."
       ],
       explanation:
-        "Push on each opener, pop and verify on each closer.\n\n" +
-        "\\begin align*\n" +
-        "\\text{Read } '{': &\\quad \\text{push } \\{ \\\\\n" +
-        "\\text{Read } '[': &\\quad \\text{push } \\[ \\\\\n" +
-        "\\text{Read } '(': &\\quad \\text{push } ( \\\\\n" +
-        "\\text{Read } ')': &\\quad \\text{pop } (, \\text{ matches } ) \\\\\n" +
-        "\\text{Read } ']': &\\quad \\text{pop } \\[ , \\text{ matches } ] \\\\\n" +
-        "\\text{Read } '}': &\\quad \\text{pop } \\{, \\text{ matches } \\}\n" +
-        "\\end align*\n\n" +
-        "Stack is empty at end - balanced."
+        "**Step 1:** Push on each opener, pop and verify on each closer:\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Read } '\\{': &\\quad \\text{push } '\\{',\\\\\n" +
+        "\\text{Read } '[': &\\quad \\text{push } '[',\\\\\n" +
+        "\\text{Read } '(': &\\quad \\text{push } '(',\\\\\n" +
+        "\\text{Read } ')': &\\quad \\text{pop } '(', \\; \\text{matches } ')',\\\\\n" +
+        "\\text{Read } ']': &\\quad \\text{pop } '[', \\; \\text{matches } ']',\\\\\n" +
+        "\\text{Read } '\\}': &\\quad \\text{pop } '\\{', \\; \\text{matches } '\\}'.\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** Stack is empty at end — balanced."
     },
     {
       id: "q-bp-6",
@@ -1752,13 +1756,14 @@ const questions: Record<string, Question[]> = {
         "From index 2, look at index 0 (value 1, not greater), then index 1 (value 2, greater)."
       ],
       explanation:
-        "$2$.\n\n" +
-        "In a circular array, we wrap around after the last index. From index 2 (value 1):\n\n" +
-        "\\begin align*\n" +
-        "\\text{Next: index } (2+1) \\bmod 3 = 0, &\\quad \\text{value } 1 \\; (1 \\not> 1) \\\\\n" +
-        "\\text{Then: index } (0+1) \\bmod 3 = 1, &\\quad \\text{value } 2 \\; (2 > 1, \\text{found})\n" +
-        "\\end align*\n\n" +
-        "The next greater element for index 2 is 2.\n\n" +
+        "**Step 1:** In a circular array, we wrap around after the last index. From index 2 (value 1):\n\n" +
+        "\\[\n" +
+        "\\begin{aligned}\n" +
+        "\\text{Next: index } (2+1) \\bmod 3 = 0, &\\quad \\text{value } 1 \\; (1 \\not> 1), \\\\\n" +
+        "\\text{Then: index } (0+1) \\bmod 3 = 1, &\\quad \\text{value } 2 \\; (2 > 1, \\text{found}).\n" +
+        "\\end{aligned}\n" +
+        "\\]\n\n" +
+        "**Step 2:** The next greater element for index 2 is 2.\n\n" +
         "Implementation note: we iterate through the array twice (indices $0$ to $2n-1$, using $i \\bmod n$) to simulate circular wrapping."
     },
     {

@@ -3040,6 +3040,226 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 0,
   },
+  "q-ci-kp4-3": {
+    question:
+      "In the DAG X -> M -> Y and X -> Y, with no unmeasured confounding, controlling for M isolates which effect of X on Y?",
+    options: [
+      "The total effect of X on Y",
+      "The direct effect of X on Y not through M",
+      "The indirect effect of X on Y through M",
+      "No causal effect of X on Y",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ci-kp6-2": {
+    question: "Besides random assignment, which condition is sufficient for ATT = ATE?",
+    options: [
+      "The treatment effect is constant across units",
+      "The treated group is larger than the control group",
+      "The outcome is binary",
+      "The propensity score is near 0.5 for everyone",
+    ],
+    correctAnswer: 0,
+  },
+  "q-ci-kp19-1": {
+    question: "Why does DML use cross-fitting?",
+    options: [
+      "To make overlap hold by construction",
+      "To keep nuisance-model overfitting from biasing the treatment-effect estimate",
+      "To guarantee lower variance than no sample-splitting",
+      "To let every observation be both treated and control",
+    ],
+    correctAnswer: 1,
+  },
+  "q-ci-kp20-2": {
+    question: "In a fuzzy RDD, the local treatment effect at the cutoff equals:",
+    options: [
+      "The jump in the outcome at the cutoff",
+      "The jump in treatment probability at the cutoff",
+      "The jump in the outcome divided by the jump in treatment probability",
+      "The pre/post difference in the treated group",
+    ],
+    correctAnswer: 2,
+  },
+  "q-dm-kp2-3": {
+    question: "Why is the LT term usually omitted in DDPM training?",
+    options: [
+      "It has no closed form.",
+      "It only measures reconstruction error at t=0.",
+      "With a good schedule, q(x_T|x_0) is already close to N(0, I), so this term is nearly constant and does not train theta.",
+      "It depends only on the decoder variance, not on the forward process.",
+    ],
+    correctAnswer: 2,
+  },
+  "q-dm-kp4-2": {
+    type: "multiple-choice",
+    question: "With DDIM, what does setting eta=0 do?",
+    options: [
+      "It turns DDIM back into the stochastic DDPM sampler.",
+      "It removes the need for a text encoder or other conditioning.",
+      "It makes sampling deterministic, so a real image can be approximately inverted to a latent and edited.",
+      "It makes the model predict x_0 exactly from a single noisy sample.",
+    ],
+    correctAnswer: 2,
+  },
+  "q-dm-kp5-2": {
+    type: "multiple-choice",
+    question: 'What makes classifier-free guidance "classifier-free"?',
+    options: [
+      "It trains a separate classifier only at low noise levels.",
+      "It trains one diffusion model on conditioned and unconditioned examples, instead of training a separate noisy classifier.",
+      "It drops the conditioning signal at sampling time and uses only the unconditional branch.",
+      "It replaces the text encoder with a linear classifier during fine-tuning.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-dm-kp6-3": {
+    question: "Why keep the KL weight small in Stable Diffusion's VAE?",
+    options: [
+      "To regularize the U-Net's cross-attention layers.",
+      "To remove the need to scale latents before diffusion.",
+      "To force the latent distribution to equal N(0, I) exactly, even if reconstructions worsen.",
+      "To keep latents roughly Gaussian for diffusion without destroying reconstruction detail.",
+    ],
+    correctAnswer: 3,
+  },
+  "q-gnn-kp4-3": {
+    question: "Why is vanilla GCN considered transductive?",
+    options: [
+      "Its normalized propagation matrix is built from the full graph, so unseen nodes require recomputing the operator.",
+      "Its shared weight matrix cannot be reused on a new graph.",
+      "Its 1-hop aggregation rule prevents any generalization to unseen nodes.",
+      "Its self-loops force node IDs to be part of the input.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gnn-kp6-2": {
+    type: "multiple-choice",
+    question: "What does standard GAT attention directly use to score neighbor j for node i?",
+    options: [
+      "Only the transformed features of the two endpoint nodes",
+      "The transformed features plus a shortest-path-distance bias",
+      "The transformed features plus a fixed 1/sqrt(d_i d_j) normalization",
+      "Only edge weights and node degrees",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gnn-kp7-2": {
+    type: "multiple-choice",
+    question: "Which statement about GIN is correct?",
+    options: [
+      "GIN matches 1-WL in expressiveness, so it still cannot distinguish all non-isomorphic graphs.",
+      "GIN is a complete graph isomorphism test for finite graphs.",
+      "GIN can distinguish every pair of regular non-isomorphic graphs because SUM counts neighbors.",
+      "GIN is less expressive than 1-WL unless epsilon is learned.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-gnn-kp12-3": {
+    question: "Why can scoring a candidate edge from h_u and h_v alone be insufficient for link prediction?",
+    options: [
+      "It ignores the pair's shared local structure, so a triangle-closing edge and a bridge can get the same score.",
+      "It prevents node embeddings from containing multi-hop information.",
+      "It requires a separate parameter set for every candidate edge.",
+      "It makes negative sampling impossible.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sdi-dist-13": {
+    question: "Which pattern isolates thread pools so one slow dependency cannot exhaust all threads?",
+    options: ["Circuit breaker", "Backpressure", "Bulkhead isolation", "Exponential backoff"],
+    correctAnswer: 2,
+  },
+  "q-sdi-dist-14": {
+    question: "What is the standard way to prevent split-brain during a partition?",
+    options: [
+      "Replicate every write synchronously to all replicas",
+      "Require a majority quorum before a node can act as primary",
+      "Add jitter to retry delays during elections",
+      "Attach version numbers to every record",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sdi-dist-16": {
+    question: "Why is a distributed lock on one Redis master unsafe under failover?",
+    options: [
+      "Redis cannot set expirations on lock keys",
+      "SET NX is non-atomic on a single server",
+      "Replicas can safely grant independent locks while following the master",
+      "A promoted replica may not know the lock was granted, so another client can acquire it",
+    ],
+    correctAnswer: 3,
+  },
+  "q-sdi-dist-27": {
+    question: "Burn rate is 10x with 30 days left in the window. About when does the error budget run out?",
+    options: ["In about 3 days", "In about 10 days", "In about 20 days", "At the end of the 30-day window"],
+    correctAnswer: 0,
+  },
+  "q-mlp-21": {
+    question: "Which example is concept drift in fraud detection?",
+    options: [
+      "Fraudsters stop making large fraudulent purchases and start testing stolen cards with many $1-$5 charges.",
+      "Average transaction amounts rise 30% across all users because of inflation.",
+      "Mobile-wallet transactions become more common than card transactions.",
+      "More purchases happen on weekends during the holiday season.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mlp-22": {
+    question: "Which three entity types does MLMD use to build lineage?",
+    options: [
+      "Artifacts, Executions, and Contexts",
+      "Experiments, Runs, and Models",
+      "Schemas, Tables, and Jobs",
+      "Metrics, Parameters, and Tags",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mlp-23": {
+    question: "Why is ANN search used for 100M-item embedding retrieval?",
+    options: [
+      "It trades a little recall for much lower query latency at 100M scale.",
+      "It guarantees exact top-k neighbors while using a smaller index.",
+      "It mainly speeds up index building, not query serving.",
+      "It only matters when embeddings are very high-dimensional.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mlp-30": {
+    question: "What makes speculative decoding lossless relative to the target model?",
+    options: [
+      "The target model verifies draft tokens with rejection sampling, preserving the target distribution.",
+      "The draft model is distilled from the target model, so their next-token probabilities match.",
+      "The target model only needs to check the last token in each drafted block.",
+      "Greedy decoding removes any mismatch between the two models.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sdi-url-3": {
+    question: "Which redirect should a shortener use if it wants repeat clicks to keep hitting its server for analytics?",
+    options: ["301 Permanent Redirect", "302 Temporary Redirect", "304 Not Modified", "308 Permanent Redirect"],
+    correctAnswer: 1,
+  },
+  "q-sdi-ride-2": {
+    question: "1 million drivers send one location update every 4 seconds. What sustained write rate is required?",
+    options: ["25K writes/s", "125K writes/s", "250K writes/s", "1M writes/s"],
+    correctAnswer: 2,
+  },
+  "q-sdi-payment-3": {
+    question: "Which SQL clause serializes two concurrent debits on the same account row?",
+    options: [
+      "SELECT ... FOR UPDATE",
+      "SELECT ... FOR SHARE",
+      "SET TRANSACTION ISOLATION LEVEL READ COMMITTED",
+      "CHECK (balance >= 0)",
+    ],
+    correctAnswer: 0,
+  },
+  "q-sdi-lb-2": {
+    question: "With user_id hash sharding across 10 Redis nodes, how many shards must a global top-10 query read?",
+    options: ["1 shard", "2 shards", "5 shards", "10 shards"],
+    correctAnswer: 3,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

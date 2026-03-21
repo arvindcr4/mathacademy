@@ -194,7 +194,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/\\tau) / \\Sigma_{k\$\\neq\$i}^{2N} exp(sim(z_i,z_k)/\\tau)], evaluated symmetrically.",
+        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: \\[ L_i = -\\log\\frac{\\exp(\\sim(z_i,z_j)/\\tau)}{\\sum_{k \\neq i}^{2N} \\exp(\\sim(z_i,z_k)/\\tau)} \\], evaluated symmetrically.",
       hints: [
         "NT-Xent is the full name - Normalized (cosine similarity) Temperature-scaled Cross Entropy.",
         "Each image produces 2 views; so N images \\to 2N views \\to 2(N−1) negatives per anchor.",
@@ -2089,7 +2089,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)\\^2 + \\lambda \\times sum_{i\$\\neq\$j} C_ij\\^2. First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
+        "Barlow Twins computes the cross-correlation matrix $C$ where $C_{ij} = \\text{correlation}(z_i^{(\\text{view }1)}, z_j^{(\\text{view }2)})$ across the batch. The loss is: \\[ \\mathcal{L} = \\sum_i (1 - C_{ii})^2 + \\lambda \\sum_{i \\neq j} C_{ij}^2. \\] First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow's efficient coding hypothesis in neuroscience.",
       hints: [
         "Identity cross-correlation matrix = each feature dimension is invariant to augmentation AND uncorrelated with other dimensions.",
         "No negative pairs needed - the off-diagonal penalty prevents collapse by decorrelating dimensions.",

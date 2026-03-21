@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For diffusion models, LoRA typically targets the U-Net's attention weight matrices and sometimes the feed-forward layers. Each weight matrix $W \\in \\mathbb{R}^{d \\times k}$ is augmented with $B A$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d, k)$.\n\nOnly $A$ and $B$ are trained; $W$ remains frozen. This allows fine-tuning a Stable Diffusion model for a new style or concept with approximately $1$-$50$ MB of additional weights (vs. the full $2$-$4$ GB model). Multiple LoRA adapters can be merged additively, enabling style mixing.",
+        "For diffusion models, LoRA typically targets the U-Net's attention weight matrices and sometimes the feed-forward layers.\n\n**Step 1**\n\nEach weight matrix $W \\in \\mathbb{R}^{d \\times k}$ is augmented with $B A$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d, k)$.\n\n**Step 2**\n\nOnly $A$ and $B$ are trained; $W$ remains frozen. This allows fine-tuning a Stable Diffusion model for a new style or concept with approximately $1$-$50$ MB of additional weights (vs. the full $2$-$4$ GB model).\n\n**Step 3**\n\nMultiple LoRA adapters can be merged additively, enabling style mixing.",
       hints: [
         "LoRA for diffusion is conceptually identical to LoRA for LLMs - just applied to the diffusion U-Net's linear layers instead of transformer layers.",
         "Multiple LoRA adapters can be merged additively before inference, allowing style and concept mixing in a single forward pass.",
@@ -511,7 +511,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DreamBooth fine-tunes on only 3-5 subject images (e.g., photos of your dog). Without regularization, the model quickly forgets what 'dog' means more broadly - after fine-tuning, 'dog' may refer only to your specific dog in those particular poses.\n\nThe prior preservation loss addresses this: the original model generates approximately $100$-$200$ class-representative images (e.g., diverse dogs). These are included in fine-tuning alongside subject images, with class captions (e.g., 'a dog'). The model simultaneously learns $[V] = \\text{your dog}$ while maintaining general dog-generation capability.",
+        "DreamBooth fine-tunes on only 3-5 subject images (e.g., photos of your dog). Without regularization, the model quickly forgets what 'dog' means more broadly.\n\n**Step 1**\n\nAfter fine-tuning, 'dog' may refer only to your specific dog in those particular poses.\n\n**Step 2**\n\nThe prior preservation loss addresses this: the original model generates approximately $100$-$200$ class-representative images (e.g., diverse dogs). These are included in fine-tuning alongside subject images, with class captions (e.g., 'a dog').\n\n**Step 3**\n\nThe model simultaneously learns $[V] = \\text{your dog}$ while maintaining general dog-generation capability.",
       hints: [
         "Prior preservation = using the original model to generate its own regularization data for the class - a form of data augmentation for preventing forgetting.",
         "Without prior preservation, the model collapses to generating only the training subjects in training poses.",
@@ -531,7 +531,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Direct linear addition of LoRA deltas can cause interference when the updates have conflicting directions (sign conflicts) or overlapping subspaces. For example, if $B_1 A_1$ and $B_2 A_2$ push the same weight in opposite directions, they partially cancel.\n\nSVD-based merging addresses this by decomposing each $B_i A_i$ via SVD, identifying principal update directions, and combining them orthogonally. TIES-merging (Yadav et al., 2023) resolves sign conflicts by keeping only parameters with consistent signs across models and trimming small magnitudes. These methods produce better merged adapters than naive linear combination.",
+        "Direct linear addition of LoRA deltas can cause interference when the updates have conflicting directions (sign conflicts) or overlapping subspaces.\n\n**Step 1**\n\nFor example, if $B_1 A_1$ and $B_2 A_2$ push the same weight in opposite directions, they partially cancel.\n\n**Step 2**\n\nSVD-based merging addresses this by decomposing each $B_i A_i$ via SVD, identifying principal update directions, and combining them orthogonally.\n\n**Step 3**\n\nTIES-merging (Yadav et al., 2023) resolves sign conflicts by keeping only parameters with consistent signs across models and trimming small magnitudes. These methods produce better merged adapters than naive linear combination.",
       hints: [
         "Interference is more severe when LoRAs are trained on very different data distributions or tasks - they conflict in their effective subspaces.",
         "TIES, DARE, and task arithmetic are common approaches in the model merging literature for resolving interference.",
@@ -554,7 +554,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The RePaint algorithm (Lugmayr et al., 2022) and most inpainting methods use a masked noising-renoising approach. At each denoising step $t$:\n1. The known region of $x_t$ is replaced by $q(x_t \\mid x_0^\\text{known})$ - the correctly noised version of the original known pixels at noise level $t$.\n2. The unknown region is denoised via $p_\\theta(x_{t-1} \\mid x_t)$.\n\nThis ensures the generated content is consistent with the known pixels at every noise level. Without this replacement, the model would denoise the entire image independently, ignoring the known region.",
+        "The RePaint algorithm (Lugmayr et al., 2022) and most inpainting methods use a masked noising-renoising approach.\n\n**Step 1**\n\nAt each denoising step $t$:\n1. The known region of $x_t$ is replaced by $q(x_t \\mid x_0^\\text{known})$ - the correctly noised version of the original known pixels at noise level $t$.\n2. The unknown region is denoised via $p_\\theta(x_{t-1} \\mid x_t)$.\n\n**Step 2**\n\nThis ensures the generated content is consistent with the known pixels at every noise level.\n\n**Step 3**\n\nWithout this replacement, the model would denoise the entire image independently, ignoring the known region.",
       hints: [
         "The key insight: known pixels must always be at the correct noise level for step $t$, not at a different level or fully denoised.",
         "Some inpainting models (e.g., Stable Diffusion Inpaint) add the mask as an extra input channel to the U-Net instead of this replacement strategy.",
@@ -568,7 +568,7 @@ const questions: Record<string, Question[]> = {
         "Outpainting (extending an image beyond its original boundaries) cannot be performed with a standard text-to-image diffusion model - it requires a model specifically trained for outpainting.",
       correctAnswer: "False",
       explanation:
-        "Outpainting can be performed using a standard inpainting model by treating the outpainting region as a 'hole' at the image boundary. The existing pixels guide the generation of the new region to maintain consistency.\n\nMultiDiffusion and tiling approaches enable outpainting at arbitrary aspect ratios by running overlapping denoising windows that enforce consistency in overlapping regions. No dedicated outpainting training is strictly required, though models fine-tuned specifically for outpainting (e.g., DALL-E's outpainting) may yield better results.",
+        "Outpainting can be performed using a standard inpainting model by treating the outpainting region as a 'hole' at the image boundary.\n\n**Step 1**\n\nThe existing pixels guide the generation of the new region to maintain consistency.\n\n**Step 2**\n\nMultiDiffusion and tiling approaches enable outpainting at arbitrary aspect ratios by running overlapping denoising windows that enforce consistency in overlapping regions.\n\n**Step 3**\n\nNo dedicated outpainting training is strictly required, though models fine-tuned specifically for outpainting (e.g., DALL-E's outpainting) may yield better results.",
       hints: [
         "Outpainting = inpainting where the 'hole' is at the boundary of the image.",
         "Tiling with overlapping patches allows extending an image to arbitrary canvas sizes while maintaining global consistency.",
@@ -588,7 +588,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Boundary artifacts arise because the model must match fine-grained texture, lighting, and color exactly at the mask edge. At intermediate noise levels, the pixels just outside the boundary are noisy and poorly constrained, so the generated region and the known region - which come from different noise realizations - often have subtle discontinuities in color or texture.\n\nRemedies include: using a feathered (soft) mask rather than a hard binary mask; harmonic inpainting for blending; overlap-and-stitch approaches that enforce consistency in overlapping regions; and Poisson blending as a post-processing step.",
+        "Boundary artifacts arise because the model must match fine-grained texture, lighting, and color exactly at the mask edge.\n\n**Step 1**\n\nAt intermediate noise levels, the pixels just outside the boundary are noisy and poorly constrained, so the generated region and the known region - which come from different noise realizations - often have subtle discontinuities in color or texture.\n\n**Step 2**\n\nRemedies include: using a feathered (soft) mask rather than a hard binary mask; harmonic inpainting for blending; overlap-and-stitch approaches that enforce consistency in overlapping regions.\n\n**Step 3**\n\nPoisson blending is sometimes applied as a post-processing step to smooth boundary discontinuities.",
       hints: [
         "Even with perfect semantic coherence, color and lighting mismatches at the boundary are common because the model has no direct pixel-level constraint at the seam.",
         "Poisson blending (gradient-domain compositing) is sometimes applied as a post-processing step to smooth boundary discontinuities.",
@@ -611,7 +611,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DiT patchifies the latent (e.g., $32 \\times 32 \\times 4$ latent divided into $2 \\times 2$ patches $\\rightarrow$ $256$ tokens of dimension $16$). These are processed by standard Transformer blocks with multi-head self-attention and feed-forward layers, analogous to ViT's handling of image patches.\n\nClass labels and timestep are injected via adaptive layer normalization (adaLN-Zero). DiT demonstrated that transformer scaling laws apply to diffusion: larger DiT models with more compute consistently achieve lower FID, following a predictable power-law - mirroring the scaling laws discovered in language models.",
+        "DiT patchifies the latent (e.g., $32 \\times 32 \\times 4$ latent divided into $2 \\times 2$ patches $\\rightarrow$ $256$ tokens of dimension $16$).\n\n**Step 1**\n\nThese are processed by standard Transformer blocks with multi-head self-attention and feed-forward layers, analogous to ViT's handling of image patches.\n\n**Step 2**\n\nClass labels and timestep are injected via adaptive layer normalization (adaLN-Zero).\n\n**Step 3**\n\nDiT demonstrated that transformer scaling laws apply to diffusion: larger DiT models with more compute consistently achieve lower FID, following a predictable power-law - mirroring the scaling laws discovered in language models.",
       hints: [
         "DiT-XL/2 (the largest DiT with patch size 2) achieves state-of-the-art class-conditional ImageNet generation.",
         "The key advantage over U-Net: global self-attention across all patches from the first layer, not just at the bottleneck.",
@@ -631,7 +631,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AdaLN-Zero initializes the linear layers that predict the scale $\\gamma$ and shift $\\beta$ parameters (used in adaptive layer normalization) to output zero. At initialization, $\\gamma = 1$ and $\\beta = 0$, so each DiT block reduces to a standard layer norm - an identity residual connection.\n\nThis 'zero initialization' trick ensures stable early training: gradients flow well from the beginning since the network starts as identity. As training progresses, the adaLN layers gradually learn meaningful conditioning. This is analogous to the zero-convolution trick in ControlNet.",
+        "AdaLN-Zero initializes the linear layers that predict the scale $\\gamma$ and shift $\\beta$ parameters (used in adaptive layer normalization) to output zero.\n\n**Step 1**\n\nAt initialization, $\\gamma = 1$ and $\\beta = 0$, so each DiT block reduces to a standard layer norm - an identity residual connection.\n\n**Step 2**\n\nThis 'zero initialization' trick ensures stable early training: gradients flow well from the beginning since the network starts as identity.\n\n**Step 3**\n\nAs training progresses, the adaLN layers gradually learn meaningful conditioning. This is analogous to the zero-convolution trick in ControlNet.",
       hints: [
         "Zero initialization of residual branches is a standard practice in deep network training (ReZero, FixUp initialization).",
         "Starting as an identity function ensures gradient flow is well-behaved from the very first training steps.",
