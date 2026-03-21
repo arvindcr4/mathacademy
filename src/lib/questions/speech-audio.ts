@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The mel scale is a perceptually motivated frequency scale where equal perceptual pitch intervals are equally spaced. The mel filterbank applies wider filters at high frequencies and narrower filters at low frequencies, reflecting that humans perceive pitch changes more finely at low frequencies and less precisely at high frequencies. This compression of high-frequency resolution is what gives MFCCs their perceptual character.",
+        "**Step 1:** The mel scale is a perceptually motivated frequency scale where equal perceptual pitch intervals are equally spaced.\n\n**Step 2:** The mel filterbank applies wider filters at high frequencies and narrower filters at low frequencies, reflecting that humans perceive pitch changes more finely at low frequencies and less precisely at high frequencies.\n\n**Step 3:** This compression of high-frequency resolution is what gives MFCCs their perceptual character.",
       hints: [
         "At low frequencies, two close notes sound different; at high frequencies, the same frequency difference sounds like a single tone. How should the filterbank reflect this?",
         'The word "mel" comes from "melody" - it is a perceptual scale, not a physical one.',
@@ -32,7 +32,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Adjacent mel filterbank channels overlap heavily and are therefore correlated. The DCT projects the log-energy vector into a space where most information is concentrated in the first approximately 13 coefficients and the coefficients are nearly decorrelated. This decorrelation means that a simple diagonal-covariance model (e.g., Gaussian) can represent the features well, making MFCCs compact and effective for downstream models.",
+        "**Step 1:** Adjacent mel filterbank channels overlap heavily and are therefore correlated.\n\n**Step 2:** The DCT projects the log-energy vector into a space where most information is concentrated in the first approximately 13 coefficients and the coefficients are nearly decorrelated.\n\n**Step 3:** This decorrelation means that a simple diagonal-covariance model (e.g., Gaussian) can represent the features well, making MFCCs compact and effective for downstream models.",
       hints: [
         "Decorrelation means the covariance matrix of the transformed features is close to diagonal - why is this important for compact modeling?",
         "The DCT is the optimal linear transform for decorrelating Gaussian sources under MSE - it plays a role analogous to PCA here.",
@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A mel spectrogram is computed as \\[\\text{STFT} \\rightarrow \\text{mel filterbank} \\rightarrow \\log \\], stopping before the DCT. MFCCs apply one additional step - the DCT - to decorrelate and compress these log-mel energies into approximately 13 coefficients. Because the mel spectrogram skips the DCT, it retains the full high-dimensional spectral envelope (typically 80 or 128 mel bins), preserving richer spectral shape information that deep neural networks can exploit.",
+        "**Step 1:** A mel spectrogram is computed as \\[\\text{STFT} \\rightarrow \\text{mel filterbank} \\rightarrow \\log \\], stopping before the DCT.\n\n**Step 2:** MFCCs apply one additional step - the DCT - to decorrelate and compress these log-mel energies into approximately 13 coefficients.\n\n**Step 3:** Because the mel spectrogram skips the DCT, it retains the full high-dimensional spectral envelope (typically 80 or 128 mel bins), preserving richer spectral shape information that deep neural networks can exploit.",
       hints: [
         "MFCCs apply one more transformation after the log-mel filterbank - what is it, and why might skipping it be beneficial?",
         "Deep networks can learn their own data-driven compression; the DCT's fixed linear decorrelation may discard information useful for the task.",
@@ -75,7 +75,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The acoustic model estimates the emission probability \\[P(\\text{observations} \\mid \\text{phoneme state})\\], describing what acoustic features look like when a particular phoneme is spoken. Combined with the HMM transition model and the language model via Bayes' rule, this enables finding the most likely word sequence.",
+        "**Step 1:** The acoustic model estimates the emission probability \\[P(\\text{observations} \\mid \\text{phoneme state})\\], describing what acoustic features look like when a particular phoneme is spoken.\n\n**Step 2:** Combined with the HMM transition model and the language model via Bayes' rule, this enables finding the most likely word sequence.",
       hints: [
         "Bayes' rule for ASR: \\[P(W \\mid O) \\propto P(O \\mid W) P(W)\\]. Which term comes from the acoustic model?",
         'The acoustic model encodes what each phoneme "sounds like" as a distribution over feature vectors.',
@@ -90,7 +90,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "GMMs model \\[P(\\text{MFCCs} \\mid \\text{HMM state})\\] as a weighted sum of Gaussians. Since acoustic distributions for each phoneme are typically multimodal (different speakers, phonetic contexts), a single Gaussian would be insufficient. A mixture of K Gaussians can approximate any smooth density with enough components, making GMMs the dominant acoustic modeling approach before DNNs.",
+        "**Step 1:** GMMs model \\[P(\\text{MFCCs} \\mid \\text{HMM state})\\] as a weighted sum of Gaussians.\n\n**Step 2:** Since acoustic distributions for each phoneme are typically multimodal (different speakers, phonetic contexts), a single Gaussian would be insufficient.\n\n**Step 3:** A mixture of K Gaussians can approximate any smooth density with enough components, making GMMs the dominant acoustic modeling approach before DNNs.",
       hints: [
         "Why would a single Gaussian fail to model the MFCC distribution of a phoneme spoken by many different people?",
         "With enough mixture components, a GMM can model arbitrarily complex density shapes - what mathematical property makes this possible?",
@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Viterbi trellis is a states-by-time matrix. Each cell \\[\\delta_t(s)\\] holds the maximum log-probability of any path ending in state s at time t, computed via:\n\\[\n\\delta_t(s) = \\max_{s'} \\left[ \\delta_{t-1}(s') + \\log a_{s's} \\right] + \\log b_s(O_t)\n\\]\nwhere \\[a_{s's}\\] is the transition probability and \\[b_s(O_t)\\] is the emission score. A back-pointer records which previous state achieved the maximum. This avoids exponential enumeration, reducing complexity from O(S^T) to O(T \\cdot S^2).",
+        "**Step 1:** The Viterbi trellis is a states-by-time matrix. Each cell \\[\\delta_t(s)\\] holds the maximum log-probability of any path ending in state s at time t.\n\n**Step 2:** The recurrence \\[\\delta_t(s) = \\max_{s'} \\left[ \\delta_{t-1}(s') + \\log a_{s's} \\right] + \\log b_s(O_t)\\] computes this by taking the best previous state, adding the transition log-probability and emission score.\n\n**Step 3:** A back-pointer records which previous state achieved the maximum, enabling recovery of the optimal state sequence. This avoids exponential enumeration, reducing complexity from O(S^T) to O(T \\cdot S^2).",
       hints: [
         "Each trellis cell encodes the best partial path ending there - what sub-problem does this represent?",
         "The back-pointer enables reconstructing the full optimal state sequence after the forward pass completes.",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CTC eliminates the need for the expensive forced-alignment step required in HMM-GMM training, where each audio frame must be explicitly labelled with the corresponding phoneme state. Instead, CTC introduces a blank token and marginalises over all valid alignments between the variable-length input sequence and the shorter output label sequence, allowing the network to learn an implicit alignment during training.",
+        "**Step 1:** CTC eliminates the need for the expensive forced-alignment step required in HMM-GMM training, where each audio frame must be explicitly labelled with the corresponding phoneme state.\n\n**Step 2:** Instead, CTC introduces a blank token and marginalises over all valid alignments between the variable-length input sequence and the shorter output label sequence.\n\n**Step 3:** This allows the network to learn an implicit alignment during training.",
       hints: [
         "Traditional HMM-GMM acoustic model training requires a separate forced-alignment step that labels every audio frame with its corresponding phoneme - how does CTC remove this requirement?",
         'CTC sums the probability over all "valid" ways to map the output sequence to the target label sequence, using a blank token to handle repetitions.',
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        'The CTC collapsing rule applies two steps in order: (1) remove all blank tokens, then (2) collapse any remaining consecutive repeated characters into a single instance. For example, the output sequence "c-a-b-blank-a-a-blank-c" collapses to "cabac", and both "c-blank-c" and "c-c" collapse to "c" - which is why the blank token is essential: it allows the model to emit the same character over multiple non-consecutive frames without confusion.',
+        "**Step 1:** The CTC collapsing rule applies two steps in order: (1) remove all blank tokens, then (2) collapse any remaining consecutive repeated characters into a single instance.\n\n**Step 2:** For example, the output sequence \"c-a-b-blank-a-a-blank-c\" collapses to \"cabac\", and both \"c-blank-c\" and \"c-c\" collapse to \"c\".\n\n**Step 3:** This is why the blank token is essential: it allows the model to emit the same character over multiple non-consecutive frames without confusion.",
       hints: [
         'Consider the sequence "a-a" emitted over two frames vs. "a-blank-a" emitted over two frames - what does each collapse to, and why does this distinction matter?',
         'The blank token acts as a "separator" signal - it tells CTC "this frame did not emit any output character."',
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Attention-based seq2seq models use a cross-attention mechanism to compute a dynamic weighted combination of all encoder states at each decoding step. This enables each output token to depend on the entire input and on previously generated output tokens, capturing output-to-output dependencies (similar to an implicit language model). CTC, by contrast, assumes each output label is conditionally independent of all other outputs given the encoder states - \\[P(y_1, ..., y_T \\mid x) = \\prod_t P(y_t \\mid x)\\] - which is a key limitation that attention-based models overcome.",
+        "**Step 1:** Attention-based seq2seq models use a cross-attention mechanism to compute a dynamic weighted combination of all encoder states at each decoding step.\n\n**Step 2:** This enables each output token to depend on the entire input and on previously generated output tokens, capturing output-to-output dependencies (similar to an implicit language model).\n\n**Step 3:** CTC, by contrast, assumes each output label is conditionally independent of all other outputs given the encoder states - \\[P(y_1, ..., y_T \\mid x) = \\prod_t P(y_t \\mid x)\\] - which is a key limitation that attention-based models overcome.",
       hints: [
         "CTC's conditional independence assumption: \\[P(y_t \\mid y_{<t}, x) = P(y_t \\mid x)\\]. How does attention violate this?",
         'The attention mechanism lets the decoder "look back" at any encoded audio frame when generating each output token, and also attend to previously generated tokens.',
@@ -193,7 +193,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Whisper\'s key contribution is scale and diversity: training on 680k hours of internet-sourced multilingual audio with paired transcripts provides enough coverage of accents, languages, and conditions to generalise robustly without task-specific fine-tuning.",
+        "**Step 1:** Whisper\'s key contribution is scale and diversity: training on 680k hours of internet-sourced multilingual audio with paired transcripts.\n\n**Step 2:** This provides enough coverage of accents, languages, and conditions to generalise robustly.\n\n**Step 3:** The model achieves strong performance without task-specific fine-tuning.",
       hints: [
         "Previous ASR systems required careful domain-specific data curation-what did Whisper trade this for?",
         "The transcripts used for supervision were not manually labelled but collected from existing aligned audio-text sources.",
@@ -208,7 +208,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Whisper applies a standard transformer encoder to the mel spectrogram and a causal transformer decoder to generate transcription tokens; special tokens encode the task (transcribe vs. translate), language, and timestamp mode.",
+        "**Step 1:** Whisper applies a standard transformer encoder to the mel spectrogram.\n\n**Step 2:** A causal transformer decoder generates transcription tokens autoregressively.\n\n**Step 3:** Special tokens encode the task (transcribe vs. translate), language, and timestamp mode.",
       hints: [
         "The architecture is deliberately standard-Whisper\'s novelty is in the data and training setup, not novel architecture components.",
         "Task and language are communicated to the decoder via special prefix tokens, not separate model components.",
@@ -227,7 +227,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Whisper\'s larger models (medium, large) require significant GPU compute; achieving real-time transcription on CPU or resource-constrained hardware requires distillation (e.g., Whisper Distil) or quantisation techniques.",
+        "**Step 1:** Whisper\'s larger models (medium, large) require significant GPU compute.\n\n**Step 2:** Achieving real-time transcription on CPU or resource-constrained hardware is challenging.\n\n**Step 3:** Solutions include distillation (e.g., Whisper Distil) or quantisation techniques.",
       hints: [
         "Whisper large-v3 has 1.5B parameters-what does inference speed look like on a CPU?",
         "The 30-second chunking constraint (answer A) exists but is addressable via sliding window; compute is a harder constraint.",
@@ -250,7 +250,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Beam search keeps the top-B hypotheses at each step; B=1 is greedy decoding, larger B explores more of the search space at greater computational cost, trading off speed for transcription accuracy.",
+        "**Step 1:** Beam search keeps the top-B hypotheses at each step.\n\n**Step 2:** B=1 is greedy decoding, while larger B explores more of the search space at greater computational cost.\n\n**Step 3:** This trades off speed for transcription accuracy.",
       hints: [
         "Larger beam width increases accuracy (closer to exhaustive search) but also increases memory and compute.",
         'Think about what "beam" metaphorically means-a narrow beam vs. a wide beam of light.',
@@ -265,7 +265,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Shallow fusion adds \\lambda\\cdotlog P_LM(w) to the acoustic log-score at each step during decoding (no retraining required); deep fusion (and cold/warm fusion variants) incorporates LM hidden states into the end-to-end model during training for tighter integration.",
+        "**Step 1:** Shallow fusion adds \\lambda\\cdotlog P_LM(w) to the acoustic log-score at each step during decoding.\n\n**Step 2:** This requires no retraining - it is a plug-and-play approach.\n\n**Step 3:** Deep fusion (and cold/warm fusion variants) incorporates LM hidden states into the end-to-end model during training for tighter integration.",
       hints: [
         'Shallow fusion is "plug-in"-no model retraining needed, just score interpolation at decode time.',
         "Deep fusion requires modifying and retraining the acoustic model to accept LM representations as additional input.",
@@ -285,7 +285,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "N-best rescoring runs beam search with the acoustic model alone to produce the top-N complete transcriptions, then re-scores each with a (potentially slow) neural LM; the final hypothesis is the highest-scoring after LM rescoring, without the LM affecting search directions.",
+        "**Step 1:** N-best rescoring runs beam search with the acoustic model alone to produce the top-N complete transcriptions.\n\n**Step 2:** Each transcription is then re-scored with a (potentially slow) neural LM.\n\n**Step 3:** The final hypothesis is the highest-scoring after LM rescoring, without the LM affecting search directions.",
       hints: [
         "Shallow fusion requires the LM to score partial hypotheses in real time-N-best rescoring avoids this constraint.",
         "A large neural LM that is too slow for step-by-step beam search can still be used for post-hoc rescoring.",
@@ -308,7 +308,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tacotron 2 uses an attention-based encoder-decoder to produce mel spectrogram frames from character or phoneme input, then passes the predicted mel spectrogram through a WaveNet vocoder to generate the final audio waveform.",
+        "**Step 1:** Tacotron 2 uses an attention-based encoder-decoder to produce mel spectrogram frames from character or phoneme input.\n\n**Step 2:** The predicted mel spectrogram is then passed through a WaveNet vocoder.\n\n**Step 3:** The WaveNet vocoder generates the final audio waveform.",
       hints: [
         "Tacotron 2 is a two-stage system: spectrogram synthesis then waveform synthesis.",
         "The mel spectrogram is an intermediate representation-which separately trained model converts it to audio?",
@@ -323,7 +323,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Location-sensitive attention incorporates the previous attention distribution as a convolutional feature, encouraging monotonically advancing alignment and reducing failure modes like repeated phonemes or skipped words common in content-based attention.",
+        "**Step 1:** Location-sensitive attention incorporates the previous attention distribution as a convolutional feature.\n\n**Step 2:** This encourages monotonically advancing alignment.\n\n**Step 3:** It reduces failure modes like repeated phonemes or skipped words common in content-based attention.",
       hints: [
         "Standard attention can focus anywhere-why is monotonic, left-to-right attention preferable for TTS?",
         'Location-based features encode "where attention was previously" to bias toward moving forward in the input sequence.',
@@ -342,7 +342,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tacotron 2 trains a binary stop token classifier at each decoder step that predicts whether synthesis should terminate; this replaces fixed-length output, enabling variable-length synthesis without prior knowledge of utterance duration.",
+        "**Step 1:** Tacotron 2 trains a binary stop token classifier at each decoder step.\n\n**Step 2:** This classifier predicts whether synthesis should terminate.\n\n**Step 3:** This replaces fixed-length output, enabling variable-length synthesis without prior knowledge of utterance duration.",
       hints: [
         "The decoder generates frames until something tells it to stop-without a stop token, how would you know when to end?",
         "The stop token is trained on the final frame position label from the training data.",
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "WaveNet is an autoregressive model using dilated causal convolutions to model P(x_t | x_{<t}, c), where c is optional conditioning (e.g., mel spectrogram); it achieves high quality but is slow to generate because each sample depends on all prior samples.",
+        "**Step 1:** WaveNet is an autoregressive model using dilated causal convolutions to model P(x_t | x_{<t}, c).\n\n**Step 2:** Here c is optional conditioning (e.g., mel spectrogram).\n\n**Step 3:** WaveNet achieves high quality but is slow to generate because each sample depends on all prior samples.",
       hints: [
         "Autoregressive means each output depends on previous outputs-why does this make generation slow?",
         "Dilated convolutions expand the receptive field exponentially without proportionally increasing parameters.",
@@ -380,7 +380,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "HiFi-GAN\'s generator uses multi-receptive field fusion (parallel dilated convolutions with different kernel sizes) for high-quality mel inversion; its multi-period and multi-scale discriminators enforce both fine-grained and macro-level waveform quality, enabling high-fidelity synthesis at high speed.",
+        "**Step 1:** HiFi-GAN\'s generator uses multi-receptive field fusion (parallel dilated convolutions with different kernel sizes) for high-quality mel inversion.\n\n**Step 2:** Its multi-period and multi-scale discriminators enforce both fine-grained and macro-level waveform quality.\n\n**Step 3:** This enables high-fidelity synthesis at high speed.",
       hints: [
         "GAN-based vocoders generate all samples in a single forward pass, unlike autoregressive models-how does this affect speed?",
         "Multiple discriminator periods (2, 3, 5, 7, 11) ensure the generator cannot exploit blind spots in any single discriminator.",
@@ -400,7 +400,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Normalising flows are bijective; training maps audio to a simple noise distribution (forward pass), while inference samples noise and runs the inverse transform conditioned on the mel spectrogram, generating audio in a single non-autoregressive pass.",
+        "**Step 1:** Normalising flows are bijective; training maps audio to a simple noise distribution (forward pass).\n\n**Step 2:** During inference, noise is sampled and the inverse transform is applied, conditioned on the mel spectrogram.\n\n**Step 3:** This generates audio in a single non-autoregressive pass.",
       hints: [
         "Flows learn an invertible mapping between the data distribution and a simple prior-which direction is used for generation?",
         "Because the flow is non-autoregressive, all audio samples are generated simultaneously, enabling fast inference.",
@@ -424,7 +424,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FastSpeech 1 required a Tacotron teacher to extract phone durations via attention; FastSpeech 2 uses an MFA-derived duration aligner and extracts fundamental frequency (F0) and energy from ground-truth audio directly, removing the teacher dependency.",
+        "**Step 1:** FastSpeech 1 required a Tacotron teacher to extract phone durations via attention.\n\n**Step 2:** FastSpeech 2 uses an MFA-derived duration aligner and extracts fundamental frequency (F0) and energy from ground-truth audio directly.\n\n**Step 3:** This removes the teacher dependency.",
       hints: [
         "FastSpeech 1's attention-extracted durations were noisy because they came from a teacher\'s soft attention.",
         "Montreal Forced Aligner provides forced-alignment durations directly from audio-text pairs.",
@@ -439,7 +439,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "FastSpeech predicts all mel frames simultaneously (after length regulation to match predicted phoneme durations), enabling GPU-parallel inference that is orders of magnitude faster than autoregressive decoding, with marginal quality loss on most benchmarks.",
+        "**Step 1:** FastSpeech predicts all mel frames simultaneously after length regulation to match predicted phoneme durations.\n\n**Step 2:** This enables GPU-parallel inference that is orders of magnitude faster than autoregressive decoding.\n\n**Step 3:** There is marginal quality loss on most benchmarks.",
       hints: [
         "Autoregressive models generate one frame at a time sequentially-how does parallel generation change wall-clock inference time?",
         "The quality trade-off exists because non-autoregressive models lose fine-grained sequential dependencies.",
@@ -459,7 +459,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The length regulator duplicates each phoneme\'s encoder representation by its predicted (or ground-truth) duration in frames, expanding the phoneme-length sequence into a frame-length sequence that the decoder can use for parallel mel generation.",
+        "**Step 1:** The length regulator duplicates each phoneme\'s encoder representation by its predicted (or ground-truth) duration in frames.\n\n**Step 2:** This expands the phoneme-length sequence into a frame-length sequence.\n\n**Step 3:** The decoder can then use this frame-level sequence for parallel mel generation.",
       hints: [
         "The encoder has one vector per phoneme; the decoder needs one vector per output frame-how do you bridge this length mismatch?",
         "If phoneme /a/ lasts 5 frames, its encoder output is simply replicated 5 times in the frame-level sequence.",
@@ -483,7 +483,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Few-shot cloning encodes the target speaker\'s voice characteristics into a fixed-dimensional embedding using a pretrained speaker encoder, then conditions the mel spectrogram synthesiser on this embedding-no fine-tuning of the TTS model is required.",
+        "**Step 1:** Few-shot cloning encodes the target speaker\'s voice characteristics into a fixed-dimensional embedding using a pretrained speaker encoder.\n\n**Step 2:** This embedding is used to condition the mel spectrogram synthesiser.\n\n**Step 3:** No fine-tuning of the TTS model is required.",
       hints: [
         'If you needed to retrain the whole model, "few-shot" would be impractical-what is the fast alternative?',
         "A speaker encoder maps raw audio to a point in speaker space that captures voice identity.",
@@ -498,7 +498,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Fine-tuning updates model weights specifically for the target speaker, capturing fine-grained prosodic and acoustic idiosyncrasies that a fixed embedding cannot fully encode; however, it requires minutes-to-hours of training data and GPU time per new speaker.",
+        "**Step 1:** Fine-tuning updates model weights specifically for the target speaker.\n\n**Step 2:** This captures fine-grained prosodic and acoustic idiosyncrasies that a fixed embedding cannot fully encode.\n\n**Step 3:** However, it requires minutes-to-hours of training data and GPU time per new speaker.",
       hints: [
         "A fixed embedding vector has limited capacity compared to updating millions of model parameters.",
         "Zero-shot approaches are faster to deploy but compress speaker identity into a single vector.",
@@ -518,7 +518,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        'Correct pronunciation depends on part-of-speech context: "read" (reed) vs "read" (red), "lead" (leed) vs "lead" (led); text analysis (tokenisation, POS tagging, grapheme-to-phoneme conversion) ensures correct pronunciation in synthesised speech.',
+        "**Step 1:** Correct pronunciation depends on part-of-speech context: \"read\" (reed) vs \"read\" (red), \"lead\" (leed) vs \"lead\" (led).\n\n**Step 2:** Text analysis including tokenisation, POS tagging, and grapheme-to-phoneme conversion ensures correct pronunciation.\n\n**Step 3:** Without this processing, synthesised speech would mispronounce context-dependent words.",
       hints: [
         "A voice cloning system that mispronounces context-dependent words sounds unnatural regardless of voice quality.",
         "G2P (grapheme-to-phoneme) conversion is the standard step that maps written words to phoneme sequences.",
@@ -542,7 +542,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "VALL-E frames TTS as in-context learning: it tokenises audio with EnCodec into discrete codes, then trains an autoregressive language model to predict these codes conditioned on text tokens and a short speaker prompt, enabling zero-shot speaker generalisation.",
+        "**Step 1:** VALL-E frames TTS as in-context learning: it tokenises audio with EnCodec into discrete codes.\n\n**Step 2:** It then trains an autoregressive language model to predict these codes conditioned on text tokens and a short speaker prompt.\n\n**Step 3:** This enables zero-shot speaker generalisation.",
       hints: [
         "The key insight is that discrete audio tokens behave like text tokens-what well-established architecture handles sequences of discrete tokens?",
         'The 3-second prompt provides the voice "context" analogous to a few-shot example in a language model.',
@@ -557,7 +557,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Zero-shot systems generalise across speakers seen during large-scale training but cannot fully capture every nuance of an unseen speaker\'s voice from a 3-10 second clip; fine-tuned systems that update weights for a specific speaker achieve higher similarity at the cost of per-speaker training.",
+        "**Step 1:** Zero-shot systems generalise across speakers seen during large-scale training.\n\n**Step 2:** They cannot fully capture every nuance of an unseen speaker\'s voice from a 3-10 second clip.\n\n**Step 3:** Fine-tuned systems that update weights for a specific speaker achieve higher similarity at the cost of per-speaker training.",
       hints: [
         "A short reference clip constrains how much speaker information can be extracted.",
         "Fine-tuning provides a much richer adaptation signal than a single forward-pass encoding of the reference.",
@@ -577,7 +577,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "EnCodec uses residual vector quantisation with multiple codebook layers; VALL-E predicts the first (coarsest) codebook tokens autoregressively for speaker and prosody, then uses a non-autoregressive model to fill in the remaining residual codebooks that add acoustic detail.",
+        "**Step 1:** EnCodec uses residual vector quantisation with multiple codebook layers.\n\n**Step 2:** VALL-E predicts the first (coarsest) codebook tokens autoregressively for speaker and prosody.\n\n**Step 3:** A non-autoregressive model then fills in the remaining residual codebooks that add acoustic detail.",
       hints: [
         "Residual VQ encodes audio at progressively finer detail in successive codebooks-which level captures the most speaker-relevant structure?",
         "The first codebook captures the broadest acoustic properties; later codebooks refine acoustic quality.",
@@ -600,7 +600,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "wav2vec 2.0 is self-supervised: it quantises raw audio with a codebook, masks spans of the latent representations, and trains the transformer to identify the correct quantised target among a set of negative distractors via a contrastive objective-no transcripts are needed.",
+        "**Step 1:** wav2vec 2.0 is self-supervised: it quantises raw audio with a codebook.\n\n**Step 2:** It masks spans of the latent representations and trains the transformer to identify the correct quantised target among a set of negative distractors via a contrastive objective.\n\n**Step 3:** No transcripts are needed.",
       hints: [
         "Self-supervised learning creates its own supervision signal from the data-where does wav2vec 2.0 get its labels?",
         "The contrastive objective forces the model to distinguish correct masked representations from random distractors.",
@@ -615,7 +615,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "The rich representations learned during self-supervised pre-training on unlabelled audio encode phonetic structure; subsequent fine-tuning with CTC loss on very small labelled sets (10 min, 1 hour) achieves WERs competitive with supervised models trained on hundreds of hours.",
+        "**Step 1:** The rich representations learned during self-supervised pre-training on unlabelled audio encode phonetic structure.\n\n**Step 2:** Subsequent fine-tuning with CTC loss on very small labelled sets (10 min, 1 hour) achieves WERs competitive with supervised models.\n\n**Step 3:** This is competitive with models trained on hundreds of hours.",
       hints: [
         "Pre-training on 960 hours of LibriSpeech unlabelled audio gives the model a head start-how little supervision is then needed?",
         "This is the key practical value of self-supervised learning: reducing the labelled data requirement.",
@@ -635,7 +635,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "wav2vec 2.0 uses product quantisation (PQ) with Gumbel-softmax. The latent vector \\[z\\] is split into G groups, each with a codebook of V entries. During training, the Gumbel-softmax selection:\n\\[\\hat{c}_g = \\text{one-hot}\\left(\\arg\\max_i\\left[\\frac{z_g \\cdot e_i}{\\tau} + g_i\\right]\\right)\\]\nwhere \\[g_i \\sim \\text{Gumbel}(0,1)\\] and \\[\\tau\\] is temperature, provides a differentiable approximation to argmax (\\[\\tau \\to 0\\] makes it nearly one-hot). This allows end-to-end gradient flow through the discrete bottleneck. PQ with G groups yields an effective codebook of size V^G, enabling high-dimensional quantisation without storing a single large codebook.",
+        "**Step 1:** wav2vec 2.0 uses product quantisation (PQ) with Gumbel-softmax. The latent vector \\[z\\] is split into G groups, each with a codebook of V entries.\n\n**Step 2:** During training, the Gumbel-softmax selection provides a differentiable approximation to argmax, allowing end-to-end gradient flow through the discrete bottleneck.\n\n**Step 3:** PQ with G groups yields an effective codebook of size V^G, enabling high-dimensional quantisation without storing a single large codebook.",
       hints: [
         "Hard argmax is not differentiable-what technique provides a differentiable approximation to discrete one-hot selection?",
         "Product quantisation: if each of G groups has V entries, the total number of unique codes is V^G - exponentially larger than V with a single codebook.",
@@ -659,7 +659,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HuBERT uses a BERT-style masked prediction objective: offline k-means clusters are computed on MFCC features (or previous HuBERT representations), and the transformer must predict these cluster assignments for masked time steps-a classification loss rather than contrastive.",
+        "**Step 1:** HuBERT uses a BERT-style masked prediction objective.\n\n**Step 2:** Offline k-means clusters are computed on MFCC features (or previous HuBERT representations), and the transformer must predict these cluster assignments for masked time steps.\n\n**Step 3:** This is a classification loss rather than contrastive.",
       hints: [
         "BERT predicts masked tokens using a cross-entropy loss-HuBERT\'s audio analogue is predicting masked ___.",
         'The cluster labels are "pseudo-labels" because they are not human-annotated but computed automatically.',
@@ -674,7 +674,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Iterative refinement improves the pseudo-label quality: MFCC-based clusters are phonetically coarse, while clusters from a trained HuBERT capture richer linguistic structure; retraining on better pseudo-labels bootstraps progressively more informative representations.",
+        "**Step 1:** Iterative refinement improves the pseudo-label quality.\n\n**Step 2:** MFCC-based clusters are phonetically coarse, while clusters from a trained HuBERT capture richer linguistic structure.\n\n**Step 3:** Retraining on better pseudo-labels bootstraps progressively more informative representations.",
       hints: [
         "Better teacher labels lead to a better student model-how does HuBERT improve its own teacher?",
         "This is analogous to self-training in semi-supervised learning, where the model iteratively improves its own pseudo-labels.",
@@ -694,7 +694,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If loss were computed on all frames, the model could trivially predict the cluster label of an unmasked frame by encoding its features directly without understanding context; masking forces the model to use surrounding context to infer the hidden representation.",
+        "**Step 1:** If loss were computed on all frames, the model could trivially predict the cluster label of an unmasked frame by encoding its features directly.\n\n**Step 2:** This would not require understanding context.\n\n**Step 3:** Masking forces the model to use surrounding context to infer the hidden representation.",
       hints: [
         "BERT masks input tokens-what would happen if BERT also had to predict the tokens it can see?",
         "Learning from context (the surrounding frames) is the point; predicting what you can see is not a learning challenge.",
@@ -718,7 +718,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AST views the mel spectrogram as a 2D time-frequency image, splits it into fixed-size overlapping patches (analogous to image patches in ViT), and processes them with a standard transformer encoder pre-trained on ImageNet via transfer learning.",
+        "**Step 1:** AST views the mel spectrogram as a 2D time-frequency image.\n\n**Step 2:** It splits the spectrogram into fixed-size overlapping patches, analogous to image patches in ViT.\n\n**Step 3:** These patches are processed with a standard transformer encoder pre-trained on ImageNet via transfer learning.",
       hints: [
         "ViT splits images into patches-AST applies the same idea to spectrograms as 2D images.",
         "Time and frequency are the two axes of a spectrogram, analogous to the spatial axes of an image.",
@@ -733,7 +733,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "AST transfers ViT weights pre-trained on ImageNet; since the patch grid shape may differ between images and spectrograms, positional embeddings are bilinearly interpolated to match the new 2D grid, enabling cross-modal transfer learning from vision to audio.",
+        "**Step 1:** AST transfers ViT weights pre-trained on ImageNet.\n\n**Step 2:** Since the patch grid shape may differ between images and spectrograms, positional embeddings are bilinearly interpolated to match the new 2D grid.\n\n**Step 3:** This enables cross-modal transfer learning from vision to audio.",
       hints: [
         "Low-level visual features (edges, textures) learned on images may transfer to time-frequency patterns in spectrograms.",
         "Interpolating positional embeddings adapts the learned spatial structure to the new patch layout.",
@@ -753,7 +753,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Convolutional layers have a fixed local receptive field; attention allows every patch to directly attend to every other patch, capturing global time-frequency relationships (e.g., harmonic overtones spread across frequency) that CNNs model only after many layers.",
+        "**Step 1:** Convolutional layers have a fixed local receptive field.\n\n**Step 2:** Attention allows every patch to directly attend to every other patch.\n\n**Step 3:** This captures global time-frequency relationships (e.g., harmonic overtones spread across frequency) that CNNs model only after many layers.",
       hints: [
         "A CNN\'s receptive field grows with depth-how many layers are needed to model global dependencies?",
         'Attention is "all-pairs"-every input position can directly influence every output position in one layer.',
@@ -777,7 +777,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CLAP trains an audio encoder and a text encoder jointly using InfoNCE contrastive loss: paired audio-text descriptions are pulled together in embedding space while unpaired combinations are pushed apart, enabling zero-shot audio classification via text queries.",
+        "**Step 1:** CLAP trains an audio encoder and a text encoder jointly using InfoNCE contrastive loss.\n\n**Step 2:** Paired audio-text descriptions are pulled together in embedding space while unpaired combinations are pushed apart.\n\n**Step 3:** This enables zero-shot audio classification via text queries.",
       hints: [
         "CLIP does the same for image-text pairs-CLAP is the audio-text equivalent.",
         "After training, you can classify audio by comparing its embedding to embeddings of category descriptions.",
@@ -812,7 +812,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'InfoNCE treats each sample in the batch as a "query": it forms a softmax distribution over similarities to all other samples and maximises the probability assigned to the true positive, which is equivalent to maximising a lower bound on mutual information.',
+        "**Step 1:** InfoNCE treats each sample in the batch as a \"query\".\n\n**Step 2:** It forms a softmax distribution over similarities to all other samples and maximises the probability assigned to the true positive.\n\n**Step 3:** This is equivalent to maximising a lower bound on mutual information.",
       hints: [
         "Think of InfoNCE as an N-way classification problem per sample: which of the N audio clips matches this text?",
         "Larger batch sizes provide more negatives, making the contrastive task harder and representations richer.",
@@ -836,7 +836,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Both EnCodec and SoundStream use a 1D CNN encoder-decoder with residual VQ (RVQ) in the latent space; RVQ applies multiple VQ layers sequentially, each quantising the residual from the previous, enabling high-quality reconstruction at low bitrates.",
+        "**Step 1:** Both EnCodec and SoundStream use a 1D CNN encoder-decoder with residual VQ (RVQ) in the latent space.\n\n**Step 2:** RVQ applies multiple VQ layers sequentially, each quantising the residual from the previous.\n\n**Step 3:** This enables high-quality reconstruction at low bitrates.",
       hints: [
         "Traditional codecs use hand-crafted signal processing; neural codecs learn the compression end-to-end.",
         "Residual VQ means each codebook layer encodes the error not captured by previous layers.",
@@ -851,7 +851,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "RVQ applies the first codebook to the raw latent, computes the quantisation residual, applies a second codebook to that residual, and so on; more codebook layers mean lower reconstruction error and higher bitrate (since more code indices must be transmitted).",
+        "**Step 1:** RVQ applies the first codebook to the raw latent and computes the quantisation residual.\n\n**Step 2:** It then applies a second codebook to that residual, and so on.\n\n**Step 3:** More codebook layers mean lower reconstruction error and higher bitrate.",
       hints: [
         "After the first VQ step, there is still an error signal-what does the next codebook encode?",
         "Adding more RVQ layers increases the codebook depth, allowing finer-grained reconstruction.",
@@ -1688,7 +1688,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CFG jointly trains a conditional and unconditional denoiser; at inference, the predicted noise is interpolated as: \\epsilon_guided = \\epsilon_uncond + \\gamma\\cdot(\\epsilon_cond − \\epsilon_uncond), where \\gamma > 1 amplifies the direction from unconditional to conditional, producing outputs that more strongly adhere to the conditioning at the cost of diversity.",
+        "CFG jointly trains a conditional and unconditional denoiser; at inference, the predicted noise is interpolated as: \\epsilon_guided = \\epsilon_uncond + \\gamma\\cdot\\left(\\epsilon_cond − \\epsilon_uncond\\right), where \\gamma > 1 amplifies the direction from unconditional to conditional, producing outputs that more strongly adhere to the conditioning at the cost of diversity.",
       hints: [
         "Compare the output with and without conditioning-CFG amplifies the difference to increase conditioning adherence.",
         "The guidance scale \\gamma controls the trade-off between sample diversity and conditioning fidelity.",
@@ -1832,7 +1832,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       difficulty: 'easy',
       question: 'WaveGlow is a flow-based vocoder that can be trained to maximise exact log-likelihood and performs inference by running the flow in reverse, making it non-autoregressive and parallelisable.',
       correctAnswer: 'True',
-      explanation: 'WaveGlow (Prenger et al., 2019) combines WaveNet-style affine coupling layers with Glow\'s multi-scale architecture. Training maximises the exact log-likelihood p(x) = p(z)|det J|\\^{-1} via the change-of-variables formula (z = f(x)). Inference inverts f: x = f\\^{-1}(z) - all samples are generated in parallel, giving real-time or faster synthesis without the sequential bottleneck of WaveNet.',
+      explanation: 'WaveGlow (Prenger et al., 2019) combines WaveNet-style affine coupling layers with Glow\'s multi-scale architecture. Training maximises the exact log-likelihood p(x) = p(z)|det J|^{-1} via the change-of-variables formula (z = f(x)). Inference inverts f: x = f^{-1}(z) - all samples are generated in parallel, giving real-time or faster synthesis without the sequential bottleneck of WaveNet.',
       hints: [
         'Normalising flows are invertible by design: train z = f(x), infer x = f\\^{-1}(z).',
         'No autoregression means all waveform samples are computed simultaneously - O(1) latency in the number of steps.',
@@ -2232,7 +2232,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Classifier-free guidance (CFG) is commonly used in audio diffusion models to improve prompt adherence: during inference, the model\'s score is extrapolated between the unconditional and conditional predictions, with a guidance scale > 1 amplifying the effect of the condition.',
       correctAnswer: 'True',
-      explanation: 'CFG for audio: \\epsilon_guided = \\epsilon_uncond + \\gamma\\cdot(\\epsilon_cond − \\epsilon_uncond), where \\gamma is the guidance scale. At \\gamma=1, standard conditional generation. At \\gamma>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with \\gamma typically 3-7 for audio generation.',
+      explanation: 'CFG for audio: \\epsilon_guided = \\epsilon_uncond + \\gamma\\cdot\\left(\\epsilon_cond − \\epsilon_uncond\\right), where \\gamma is the guidance scale. At \\gamma=1, standard conditional generation. At \\gamma>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with \\gamma typically 3-7 for audio generation.',
       hints: [
         'CFG training: randomly drop the condition (replace with null/empty) during training so the model learns both conditional and unconditional score.',
         'Higher \\gamma: more like the text prompt; lower \\gamma: more diverse but less adherent. Trade-off similar to temperature in LLMs.',
