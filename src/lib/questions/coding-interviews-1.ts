@@ -50,14 +50,9 @@ const questions: Record<string, Question[]> = {
         "At $i=1$, the complement is again $6-3=3$. Now 3 is in the map (from step $i=0$), at index 0. Does this form a valid pair?"
       ],
       explanation:
-        "Walking through the algorithm step by step:\n\n" +
-        "\\begin align*\n" +
-        "i = 0: &\\quad \\text{nums}[0] = 3, \\quad \\text{complement} = 6 - 3 = 3. \\\\\n" +
-        "        &\\quad \\text{Map is empty} \\Rightarrow \\text{store } \\{3: 0\\}. \\\\[4pt]\n" +
-        "i = 1: &\\quad \\text{nums}[1] = 3, \\quad \\text{complement} = 6 - 3 = 3. \\\\\n" +
-        "        &\\quad 3 \\text{ found in map at index } 0. \\quad 0 \\neq 1, \\text{ so this is valid.} \\\\\n" +
-        "        &\\quad \\text{Return } [0, 1], \\text{ since } 3 + 3 = 6 = \\text{target}.\n" +
-        "\\end align*\n\n" +
+        "**Step 1:** Trace through the algorithm. At $i = 0$: $\\text{nums}[0] = 3$, $\\text{complement} = 6 - 3 = 3$. The map is empty, so store $\\{3: 0\\}$.\n\n" +
+        "**Step 2:** At $i = 1$: $\\text{nums}[1] = 3$, $\\text{complement} = 6 - 3 = 3$. The map contains 3 at index 0. Since $0 \\neq 1$, this is a valid pair. Return $[0, 1]$, since $3 + 3 = 6 = \\text{target}$.\n\n" +
+        "\\[\n[0, 1] \\text{ is returned, since } 3 + 3 = 6.\n\\]\n\n" +
         "Note that the algorithm must verify the stored index differs from the current index $i$ to handle the case where $\\text{target} = 2 \\times \\text{nums}[i]$ and the same element appears twice."
     },
     {
@@ -77,8 +72,8 @@ const questions: Record<string, Question[]> = {
         "Two pointers work correctly on a sorted array, but what happened to the original indices?"
       ],
       explanation:
-        "Sorting costs $\\mathrm{O}(n \\log n)$ time and $\\mathrm{O}(1)$ extra space. Two pointers then solve Two Sum in $\\mathrm{O}(n)$ on the sorted array.\n\n" +
-        "However, the Two Sum problem requires returning the original indices of the pair. After sorting, the elements are in new positions - we no longer know which original indices they came from. To recover the original indices we would need additional bookkeeping costing $\\mathrm{O}(n)$ space.\n\n" +
+        "**Step 1:** Sorting costs $\\mathrm{O}(n \\log n)$ time and $\\mathrm{O}(1)$ extra space. Two pointers then solve Two Sum in $\\mathrm{O}(n)$ on the sorted array.\n\n" +
+        "**Step 2:** However, the Two Sum problem requires returning the original indices of the pair. After sorting, the elements are in new positions — we no longer know which original indices they came from. To recover the original indices we would need additional bookkeeping costing $\\mathrm{O}(n)$ space.\n\n" +
         "Therefore, the sorting approach yields:\n" +
         "\\[\n\\text{Time} = \\mathrm{O}(n \\log n), \\quad \\text{Space} = \\mathrm{O}(1).\n\\]\n\n" +
         "The hash-map approach is preferred because it gives $\\mathrm{O}(n)$ time while correctly tracking original indices."
@@ -124,13 +119,10 @@ const questions: Record<string, Question[]> = {
         "If we naively check whether the complement (3) exists in the map, what would happen at index 0?"
       ],
       explanation:
-        "The algorithm stores $\\{\\text{value}: \\text{index}\\}$ mappings. When we reach index $i$, we compute $\\text{complement} = \\text{target} - \\text{nums}[i]$. If $\\text{complement} = \\text{nums}[i]$, we must verify that the stored index of that value differs from $i$.\n\n" +
-        "Example with $\\text{nums} = [3, 3]$, $\\text{target} = 6$:\n\n" +
-        "\\begin align*\n" +
-        "i = 0: &\\quad \\text{complement} = 6 - 3 = 3. \\; 3 \\notin \\text{map} \\Rightarrow \\text{store } \\{3: 0\\}. \\\\[4pt]\n" +
-        "i = 1: &\\quad \\text{complement} = 6 - 3 = 3. \\; 3 \\in \\text{map} \\text{ at index } 0. \\; 0 \\neq 1 \\Rightarrow \\text{return } [0, 1].\n" +
-        "\\end align*\n\n" +
-        "Without this verification, we might incorrectly return $[0, 0]$ when an element is paired with itself - which is not a valid distinct-pair solution."
+        "**Step 1:** The algorithm stores $\\{\\text{value}: \\text{index}\\}$ mappings. When we reach index $i$, we compute $\\text{complement} = \\text{target} - \\text{nums}[i]$. If $\\text{complement} = \\text{nums}[i]$, we must verify that the stored index of that value differs from $i$.\n\n" +
+        "**Step 2:** Example with $\\text{nums} = [3, 3]$, $\\text{target} = 6$: at $i = 0$, store $\\{3: 0\\}$. At $i = 1$, the complement is 3, found in the map at index 0. Since $0 \\neq 1$, the pair $[0, 1]$ is valid.\n\n" +
+        "\\[\n\\text{Return } [0, 1], \\text{ since } 3 + 3 = 6 = \\text{target}.\n\\]\n\n" +
+        "Without this verification, we might incorrectly return $[0, 0]$ when an element is paired with itself — which is not a valid distinct-pair solution."
     },
   ],
 

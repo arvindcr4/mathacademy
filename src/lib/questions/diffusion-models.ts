@@ -17,10 +17,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The key insight is the reparameterization trick for Gaussians. Since each forward step adds Gaussian noise, the composition of $T$ Gaussian perturbations is itself Gaussian. Defining $\\alpha_t = 1 - \\beta_t$ and $\\bar{\\alpha}_t = \\prod_{s=1}^{t} \\alpha_s$, the marginal at timestep $t$ is:\n\n\\[\nq(x_t \\mid x_0) = \\mathcal{N}\\!\\left(x_t; \\sqrt{\\bar{\\alpha}_t}\\,x_0,\\; (1-\\bar{\\alpha}_t)\\,I\\right).\n\\]\n\nIn other words:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\nThis means we can directly sample $x_t$ from $x_0$ at any timestep $t$ in a single step - no need to iterate through the full chain. This is essential for training efficiency.",
+        "The key insight is the reparameterization trick for Gaussians. Since each forward step adds Gaussian noise, the composition of $T$ Gaussian perturbations is itself Gaussian.\n\n**Step 1**\n\nDefine $\\alpha_t = 1 - \\beta_t$ and $\\bar{\\alpha}_t = \\prod_{s=1}^{t} \\alpha_s$. The marginal distribution at timestep $t$ is:\n\n\\[\nq(x_t \\mid x_0) = \\mathcal{N}\\!\\left(x_t; \\sqrt{\\bar{\\alpha}_t}\\,x_0,\\; \\left(1-\\bar{\\alpha}_t\\right)\\,I\\right).\n\\]\n\n**Step 2**\n\nEquivalently, we can write this in reparameterized form:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\n**Step 3**\n\nThis means we can directly sample $x_t$ from $x_0$ at any timestep $t$ in a single step - no need to iterate through the full chain of $T$ steps. This direct sampling property is essential for training efficiency.",
       hints: [
-        "The marginal $q(x_t \\mid x_0)$ is a Gaussian whose mean is a scaled version of $x_0$ and whose variance grows with the cumulative noise.",
-        "If $\\bar{\\alpha}_t \\approx 0$ (i.e., $t \\to T$), then $x_t \\approx \\varepsilon \\sim \\mathcal{N}(0, I)$ - pure noise.",
+        "When noise is added at each step, the cumulative effect after $T$ steps follows a specific pattern - think about what happens when you add Gaussians to Gaussians.",
+        "As $\\bar{\\alpha}_t$ decreases toward zero, the scaling factor on $x_0$ shrinks while the noise scaling grows - what does this imply about the final distribution?",
       ],
     },
     {

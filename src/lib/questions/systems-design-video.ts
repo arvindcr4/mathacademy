@@ -15,7 +15,7 @@ const questions: Record<string, Question[]> = {
         "Use WebSockets to stream the raw bytes in real time and buffer server-side",
       ],
       correctAnswer: 1,
-      explanation: "The TUS (Tus Resumable Upload) protocol is an open standard for resumable uploads. The client PATCHes chunks to an upload URL with an Upload-Offset header; the server acknowledges each chunk. On reconnect, the client queries the server for the current offset (HEAD request) and resumes from there. YouTube, Vimeo, and AWS S3 multipart uploads all use this pattern. S3 multipart upload is functionally identical: initiate → upload parts (5 MB–5 GB each) → complete. The key benefit is that network failures lose at most one in-flight chunk, not the entire upload.",
+      explanation: "The TUS (Tus Resumable Upload) protocol is an open standard for resumable uploads. The client PATCHes chunks to an upload URL with an Upload-Offset header; the server acknowledges each chunk. On reconnect, the client queries the server for the current offset (HEAD request) and resumes from there. YouTube, Vimeo, and AWS S3 multipart uploads all use this pattern. S3 multipart upload is functionally identical: initiate -> upload parts (5 MB–5 GB each) -> complete. The key benefit is that network failures lose at most one in-flight chunk, not the entire upload.",
       hints: [
         "Consider what happens with a single PUT if the connection drops after 950 MB of a 1 GB file — does the entire upload restart?",
         "TUS tracks progress server-side so any client (even on a different device) can resume the same upload.",
@@ -33,7 +33,7 @@ const questions: Record<string, Question[]> = {
         "A Lambda function continuously scans the S3 bucket using ListObjectsV2 with pagination",
       ],
       correctAnswer: 1,
-      explanation: "The event-driven pattern is the industry standard: S3 → SQS (or SNS → SQS) → transcoding workers. S3 ObjectCreated events fire immediately when an upload completes, eliminating polling lag. SQS provides decoupling, retry logic, and backpressure — if workers fall behind, messages queue up rather than jobs being dropped. The orchestrator validates the video (checks codec, detects corruption), then fans out multiple encoding jobs (one per output rendition). YouTube's upload pipeline follows this pattern, as does AWS Elemental MediaConvert.",
+      explanation: "The event-driven pattern is the industry standard: S3 -> SQS (or SNS -> SQS) -> transcoding workers. S3 ObjectCreated events fire immediately when an upload completes, eliminating polling lag. SQS provides decoupling, retry logic, and backpressure — if workers fall behind, messages queue up rather than jobs being dropped. The orchestrator validates the video (checks codec, detects corruption), then fans out multiple encoding jobs (one per output rendition). YouTube's upload pipeline follows this pattern, as does AWS Elemental MediaConvert.",
       hints: [
         "Polling with ListObjectsV2 at scale is expensive and adds latency proportional to the poll interval.",
         "S3 event notifications are free and near-instant — pairing with SQS gives you durability and decoupling.",
@@ -285,9 +285,9 @@ const questions: Record<string, Question[]> = {
         "Using QUIC transport instead of TCP for segment delivery",
       ],
       correctAnswer: 1,
-      explanation: "Low-Latency HLS (LL-HLS), introduced by Apple in 2019, addresses HLS's inherent latency by publishing partial segments (parts) of ~200ms before the full 2-6 second segment is complete. The player can start buffering immediately upon receiving the first part. Blocking playlist requests (the server holds the playlist response until a new part is available, up to a timeout) eliminate polling delay. Playlist delta updates send only the diff, reducing payload size. Combined: latency drops from ~15s (traditional HLS, 3 segment buffer × 4s segments + propagation) to 1-3s. DASH's equivalent is Common Media Client Data (CMCD) + Chunked Transfer Encoding. Netflix uses LL-HLS for its live sports offerings.",
+      explanation: "Low-Latency HLS (LL-HLS), introduced by Apple in 2019, addresses HLS's inherent latency by publishing partial segments (parts) of ~200ms before the full 2-6 second segment is complete. The player can start buffering immediately upon receiving the first part. Blocking playlist requests (the server holds the playlist response until a new part is available, up to a timeout) eliminate polling delay. Playlist delta updates send only the diff, reducing payload size. Combined: latency drops from ~15s (traditional HLS, 3 segment buffer x 4s segments + propagation) to 1-3s. DASH's equivalent is Common Media Client Data (CMCD) + Chunked Transfer Encoding. Netflix uses LL-HLS for its live sports offerings.",
       hints: [
-        "Traditional HLS latency = (number of buffered segments) × (segment duration) + CDN propagation + packager delay.",
+        "Traditional HLS latency = (number of buffered segments) x (segment duration) + CDN propagation + packager delay.",
         "LL-HLS partial segments are the key innovation — you don't wait for a 4-second segment to fully encode before delivering.",
       ],
     },
@@ -321,7 +321,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "CENC (Common Encryption, ISO 23001-7) standardizes the encryption scheme (AES-CTR or AES-CBC mode) and the format of encryption metadata in MP4 and MPEG-TS containers. A single CENC-encrypted fMP4 file embeds 'pssh' (Protection System Specific Header) boxes for multiple DRM systems. Each DRM system's CDM reads its own pssh box to obtain key ID information, then fetches the decryption key from its respective license server. The actual video content is encrypted once; only the key delivery mechanism differs per DRM. This dramatically reduces storage costs — platforms don't need to store Widevine-encrypted, FairPlay-encrypted, and PlayReady-encrypted copies separately.",
       hints: [
-        "Without CENC, a platform would need to store 3× the video data — one copy per DRM system.",
+        "Without CENC, a platform would need to store 3x the video data — one copy per DRM system.",
         "The 'pssh' box in the MP4 container is like a DRM system's business card saying 'here is how to get the key from my license server'.",
       ],
     },
@@ -382,7 +382,7 @@ const questions: Record<string, Question[]> = {
         "Hash-matching against a database of known-bad content is the only moderation technique used",
       ],
       correctAnswer: 1,
-      explanation: "At 500 hours/minute scale, human-first review is impossible. The pipeline is: (1) Automated classifiers analyze sampled frames (e.g., every 5 seconds) and full-frame key frames for visual policy violations. Audio is transcribed via ASR (automatic speech recognition) and scanned for hate speech, threats. (2) Known CSAM and terrorist content is detected via PhotoDNA / NCMEC hash matching (100% recall on known material). (3) Risk scoring tiers content: high-risk → auto-remove and human audit; medium-risk → human review queue (prioritized by view velocity); low-risk → publish with monitoring. (4) Human reviewers use a custom tool to see flagged frames and make binary decisions. YouTube's Trust & Safety team works with regional contractors for language-specific content. The system is a mix of automated enforcement at scale plus human judgment for edge cases.",
+      explanation: "At 500 hours/minute scale, human-first review is impossible. The pipeline is: (1) Automated classifiers analyze sampled frames (e.g., every 5 seconds) and full-frame key frames for visual policy violations. Audio is transcribed via ASR (automatic speech recognition) and scanned for hate speech, threats. (2) Known CSAM and terrorist content is detected via PhotoDNA / NCMEC hash matching (100% recall on known material). (3) Risk scoring tiers content: high-risk -> auto-remove and human audit; medium-risk -> human review queue (prioritized by view velocity); low-risk -> publish with monitoring. (4) Human reviewers use a custom tool to see flagged frames and make binary decisions. YouTube's Trust & Safety team works with regional contractors for language-specific content. The system is a mix of automated enforcement at scale plus human judgment for edge cases.",
       hints: [
         "Frame sampling (not frame-by-frame analysis) is a pragmatic tradeoff — analyzing every frame of 500 hours/minute of video is computationally prohibitive.",
         "PhotoDNA generates a perceptual hash of known CSAM images; any match is a high-confidence true positive.",
@@ -424,9 +424,9 @@ const questions: Record<string, Question[]> = {
         "ASR captions are sent as a JSON API response and rendered by the page JavaScript, separate from the video player",
       ],
       correctAnswer: 1,
-      explanation: "Sidecar delivery is the industry standard because it allows captions to be: (1) Toggled on/off without re-encoding video; (2) Delivered in multiple languages simultaneously (each as a separate track); (3) Updated independently of the video (corrections, translations). In HLS, each subtitle track is declared in the master playlist with #EXT-X-MEDIA:TYPE=SUBTITLES pointing to a WebVTT media playlist. In DASH, subtitle tracks are separate AdaptationSets in the MPD. The ASR pipeline: audio extraction → speech-to-text model (Google's Universal ASR, or Whisper) → timed text generation → WebVTT/SRT formatting → upload to subtitle CDN. YouTube also runs automatic translation using Neural Machine Translation (NMT) to generate captions in 100+ languages from the original ASR output.",
+      explanation: "Sidecar delivery is the industry standard because it allows captions to be: (1) Toggled on/off without re-encoding video; (2) Delivered in multiple languages simultaneously (each as a separate track); (3) Updated independently of the video (corrections, translations). In HLS, each subtitle track is declared in the master playlist with #EXT-X-MEDIA:TYPE=SUBTITLES pointing to a WebVTT media playlist. In DASH, subtitle tracks are separate AdaptationSets in the MPD. The ASR pipeline: audio extraction -> speech-to-text model (Google's Universal ASR, or Whisper) -> timed text generation -> WebVTT/SRT formatting -> upload to subtitle CDN. YouTube also runs automatic translation using Neural Machine Translation (NMT) to generate captions in 100+ languages from the original ASR output.",
       hints: [
-        "If captions were burned into video, a Spanish speaker and an English speaker would need separate video files — 2× storage and transcoding cost.",
+        "If captions were burned into video, a Spanish speaker and an English speaker would need separate video files — 2x storage and transcoding cost.",
         "WebVTT format: each cue has a start time, end time, and text — simple but sufficient for most captioning needs.",
       ],
     },
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
         "Individual JPEG files are generated for each second and stored in S3 with time-based URLs",
       ],
       correctAnswer: 1,
-      explanation: "Sprite sheet delivery is the standard approach. A single sprite sheet image (e.g., a 10×10 grid of 160×90 thumbnails) contains 100 preview frames, replacing 100 individual HTTP requests with a single ~50-200 KB image download. A companion WebVTT file maps time ranges to sprite sheet coordinates: e.g., '00:10:00 --> 00:10:10 thumbs.jpg#xywh=160,0,160,90' tells the player to CSS-offset by (160,0) and show a 160×90 crop. The player pre-loads sprite sheets for the video's duration. Netflix generates 2-second-interval sprites; YouTube uses 5-10 seconds. For very long content, multiple sprite sheets are used (one per N minutes). This technique eliminates scrubber-induced network traffic spikes.",
+      explanation: "Sprite sheet delivery is the standard approach. A single sprite sheet image (e.g., a 10x10 grid of 160x90 thumbnails) contains 100 preview frames, replacing 100 individual HTTP requests with a single ~50-200 KB image download. A companion WebVTT file maps time ranges to sprite sheet coordinates: e.g., '00:10:00 --> 00:10:10 thumbs.jpg#xywh=160,0,160,90' tells the player to CSS-offset by (160,0) and show a 160x90 crop. The player pre-loads sprite sheets for the video's duration. Netflix generates 2-second-interval sprites; YouTube uses 5-10 seconds. For very long content, multiple sprite sheets are used (one per N minutes). This technique eliminates scrubber-induced network traffic spikes.",
       hints: [
         "At 1 request per second of scrubbing, a user previewing a 2-hour film would trigger 7200 HTTP requests — sprite sheets collapse that to ~72 requests.",
         "WebVTT's xywh= fragment identifier is a W3C standard for spatial media fragment URIs.",
@@ -573,7 +573,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "MCU (legacy approach): the server decodes every participant's audio and video, mixes/composites them (computationally expensive), and encodes+sends a single mixed stream to each participant. CPU cost scales as O(N²) with participant count. Quality is limited by the MCU's encode settings. SFU (modern approach): the server receives each participant's RTP stream and routes (forwards) individual streams to subscribers based on subscription topology. No decoding or compositing — the server is a smart router. CPU cost scales as O(N) (receive + forward). Client apps handle layout/compositing. Simulcast: senders transmit 3 quality layers (e.g., 1080p, 360p, 180p); the SFU sends each receiver the layer matching their bandwidth and screen size. Zoom, Google Meet, Discord, and Jitsi all use SFU architectures. MCU survives only in legacy enterprise systems or when client CPU is severely constrained (embedded devices).",
       hints: [
-        "In a 100-person call, an MCU must decode 99 streams and encode 99 mixed outputs — 100× the compute of a point-to-point call.",
+        "In a 100-person call, an MCU must decode 99 streams and encode 99 mixed outputs — 100x the compute of a point-to-point call.",
         "Simulcast is an SFU superpower: each sender transmits all layers once; the SFU selectively forwards different layers to different receivers based on their conditions.",
       ],
     },

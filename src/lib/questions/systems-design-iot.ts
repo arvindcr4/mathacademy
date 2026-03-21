@@ -7,7 +7,7 @@ const questions: Record<string, Question[]> = {
       id: "q-iot-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "MQTT QoS level 2 guarantees exactly-once delivery using a four-step handshake (PUBLISH → PUBREC → PUBREL → PUBCOMP). What is the PRIMARY trade-off of using QoS 2 compared to QoS 0?",
+      question: "MQTT QoS level 2 guarantees exactly-once delivery using a four-step handshake (PUBLISH -> PUBREC -> PUBREL -> PUBCOMP). What is the PRIMARY trade-off of using QoS 2 compared to QoS 0?",
       options: [
         "QoS 2 requires TLS, while QoS 0 does not",
         "QoS 2 incurs higher latency and bandwidth overhead due to the four-message handshake per published message",
@@ -15,7 +15,7 @@ const questions: Record<string, Question[]> = {
         "QoS 2 drops messages when the broker restarts, just like QoS 0",
       ],
       correctAnswer: 1,
-      explanation: "QoS 0 is fire-and-forget (no acknowledgment), QoS 1 ensures at-least-once delivery via PUBACK, and QoS 2 ensures exactly-once delivery via the PUBLISH → PUBREC → PUBREL → PUBCOMP four-way handshake. The cost of exactly-once is four network round-trips per message and persistent session state on both client and broker. For high-frequency sensor telemetry (temperature every second), QoS 0 is typically preferred. For commands with financial or safety implications, QoS 2 is warranted.",
+      explanation: "QoS 0 is fire-and-forget (no acknowledgment), QoS 1 ensures at-least-once delivery via PUBACK, and QoS 2 ensures exactly-once delivery via the PUBLISH -> PUBREC -> PUBREL -> PUBCOMP four-way handshake. The cost of exactly-once is four network round-trips per message and persistent session state on both client and broker. For high-frequency sensor telemetry (temperature every second), QoS 0 is typically preferred. For commands with financial or safety implications, QoS 2 is warranted.",
       hints: [
         "Count the number of network messages exchanged per delivery at each QoS level: QoS 0 = 1, QoS 1 = 2, QoS 2 = 4.",
         "Ask yourself: does a temperature reading lost once in a thousand matter more or less than a 4x increase in message overhead?",
@@ -210,7 +210,7 @@ const questions: Record<string, Question[]> = {
       question: "You are rolling out a critical firmware update to 500,000 Ring doorbells. Which staged deployment strategy best minimizes blast radius while balancing update velocity?",
       options: [
         "Push to all 500,000 devices simultaneously to complete the rollout in the shortest possible time",
-        "Canary deployment: push to 0.1% (500) devices, monitor error rates and crash reports for 24 hours, then exponentially expand to 1% → 5% → 20% → 100% with automated rollback triggers at each stage",
+        "Canary deployment: push to 0.1% (500) devices, monitor error rates and crash reports for 24 hours, then exponentially expand to 1% -> 5% -> 20% -> 100% with automated rollback triggers at each stage",
         "Push to all devices in a single geographic region first, then expand region by region",
         "Only update devices that have been online for more than 30 days to target the most stable fleet",
       ],
@@ -236,7 +236,7 @@ const questions: Record<string, Question[]> = {
         "Partitioning the table by geographic region to reduce query latency for regional dashboards",
       ],
       correctAnswer: 1,
-      explanation: "InfluxDB and TimescaleDB both support automatic downsampling via continuous queries (InfluxDB) or continuous aggregates (TimescaleDB). The pattern: (1) raw data written to a '7-day' retention policy bucket; (2) a continuous query runs every 5 minutes computing avg/min/max and writes results to a '1-year' retention policy bucket; (3) the 7-day bucket auto-expires raw data after 168 hours, freeing storage. This is called a 'rollup' or 'downsampling pipeline'. For 10M devices × 1 reading/30s = 333K writes/sec, this raw-to-rollup pipeline is critical. AWS Timestream, InfluxDB Cloud, and TimescaleDB all implement this natively.",
+      explanation: "InfluxDB and TimescaleDB both support automatic downsampling via continuous queries (InfluxDB) or continuous aggregates (TimescaleDB). The pattern: (1) raw data written to a '7-day' retention policy bucket; (2) a continuous query runs every 5 minutes computing avg/min/max and writes results to a '1-year' retention policy bucket; (3) the 7-day bucket auto-expires raw data after 168 hours, freeing storage. This is called a 'rollup' or 'downsampling pipeline'. For 10M devices x 1 reading/30s = 333K writes/sec, this raw-to-rollup pipeline is critical. AWS Timestream, InfluxDB Cloud, and TimescaleDB all implement this natively.",
       hints: [
         "How much storage would 1 year of 30-second readings for 10M devices consume? Downsampling to 5-minute reduces that by 10x.",
         "Continuous queries run on the server side automatically — you do not need an external scheduler.",
@@ -254,10 +254,10 @@ const questions: Record<string, Question[]> = {
         "Use a columnar store (Parquet on S3) with hourly partitioning and query via Athena",
       ],
       correctAnswer: 1,
-      explanation: "In InfluxDB's data model, 'tags' are indexed metadata (device_id, machine_type) and 'fields' are the actual measurements (vibration, temperature). The query filters on tags (machine_type = 'compressor') and then scans the field values within the time range — this is far more efficient than full-table scans. 500,000 writes/sec (50K sensors × 10/sec) requires a storage engine optimized for time-series: TSM (Time-Structured Merge Tree) in InfluxDB, or hypertables in TimescaleDB. A JSON document store like MongoDB will struggle with cardinality and range queries at this scale. The Parquet/Athena approach works for batch analytics but has unacceptable latency for real-time alerting.",
+      explanation: "In InfluxDB's data model, 'tags' are indexed metadata (device_id, machine_type) and 'fields' are the actual measurements (vibration, temperature). The query filters on tags (machine_type = 'compressor') and then scans the field values within the time range — this is far more efficient than full-table scans. 500,000 writes/sec (50K sensors x 10/sec) requires a storage engine optimized for time-series: TSM (Time-Structured Merge Tree) in InfluxDB, or hypertables in TimescaleDB. A JSON document store like MongoDB will struggle with cardinality and range queries at this scale. The Parquet/Athena approach works for batch analytics but has unacceptable latency for real-time alerting.",
       hints: [
         "In InfluxDB: tags are indexed (use for filtering), fields are not indexed (use for values). Design your schema accordingly.",
-        "50K sensors × 10 readings/sec = 500K writes/sec — only a purpose-built time-series engine handles this efficiently.",
+        "50K sensors x 10 readings/sec = 500K writes/sec — only a purpose-built time-series engine handles this efficiently.",
       ],
     },
   ],
@@ -269,10 +269,10 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Design an IoT data ingestion pipeline for 1 million devices each sending 1 message/second (1M msg/sec total). The pipeline must route messages to: a time-series DB, a rule engine for alerting, and a cold storage archive. What is the most appropriate architecture?",
       options: [
-        "MQTT broker → direct writes to each destination (time-series DB, rule engine, cold storage) in the broker's message handler",
-        "MQTT broker → Kafka (topics per device-type) → multiple consumer groups: (1) Kafka Streams for rule engine, (2) InfluxDB Telegraf consumer, (3) S3 sink connector — fan-out via consumer groups, not broker-level routing",
-        "MQTT broker → a single Lambda function that writes to all three destinations synchronously per message",
-        "MQTT broker → Redis pub/sub → application servers that write to each destination",
+        "MQTT broker -> direct writes to each destination (time-series DB, rule engine, cold storage) in the broker's message handler",
+        "MQTT broker -> Kafka (topics per device-type) -> multiple consumer groups: (1) Kafka Streams for rule engine, (2) InfluxDB Telegraf consumer, (3) S3 sink connector — fan-out via consumer groups, not broker-level routing",
+        "MQTT broker -> a single Lambda function that writes to all three destinations synchronously per message",
+        "MQTT broker -> Redis pub/sub -> application servers that write to each destination",
       ],
       correctAnswer: 1,
       explanation: "This is the classic IoT data highway pattern. At 1M msg/sec, the MQTT broker (AWS IoT Core, EMQX, or HiveMQ) acts as the ingestion front end. Kafka serves as the durable, replayable message bus — messages are written to Kafka once and consumed by multiple independent consumer groups without coupling: (1) a Kafka Streams application evaluates alert rules with low latency; (2) a Telegraf or custom consumer batch-writes to InfluxDB/TimescaleDB; (3) a Kafka S3 Sink Connector archives to S3 in Parquet format for cheap long-term storage. This decouples producers from consumers, enables independent scaling, and allows replay if a downstream consumer falls behind. Direct MQTT broker fanout (option A) creates tight coupling and no replay capability. Lambda per-message (option C) at 1M/sec would cost ~$1.5M/month and have severe throttling issues.",
@@ -293,7 +293,7 @@ const questions: Record<string, Question[]> = {
         "Best-effort — because network conditions make stronger guarantees impossible",
       ],
       correctAnswer: 2,
-      explanation: "At-least-once with application-level deduplication is the practical choice for most IoT analytics pipelines. Exactly-once processing in Kafka (using transactions and idempotent producers) adds latency and complexity. For a 5-minute rolling average, a duplicate reading has minimal impact if the pipeline deduplicates using the device-timestamp (or sequence number) as the key — the device sends timestamp with each reading, so the processor can use a keyed state store to detect duplicates within the window. Pure exactly-once end-to-end across MQTT → Kafka → stream processor → DB is extremely difficult to achieve. Most production systems at AWS IoT, Google Cloud Pub/Sub, and Azure Event Hub use at-least-once + idempotent sinks.",
+      explanation: "At-least-once with application-level deduplication is the practical choice for most IoT analytics pipelines. Exactly-once processing in Kafka (using transactions and idempotent producers) adds latency and complexity. For a 5-minute rolling average, a duplicate reading has minimal impact if the pipeline deduplicates using the device-timestamp (or sequence number) as the key — the device sends timestamp with each reading, so the processor can use a keyed state store to detect duplicates within the window. Pure exactly-once end-to-end across MQTT -> Kafka -> stream processor -> DB is extremely difficult to achieve. Most production systems at AWS IoT, Google Cloud Pub/Sub, and Azure Event Hub use at-least-once + idempotent sinks.",
       hints: [
         "Exactly-once across system boundaries (MQTT, Kafka, stream processor, DB) requires coordination that may not be feasible.",
         "If you can make your sink idempotent (writing the same reading twice produces the same result), at-least-once becomes equivalent to exactly-once.",
@@ -329,7 +329,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "False",
       explanation: "While 'edge' and 'fog' are often used interchangeably, fog computing (coined by Cisco) specifically refers to a distributed compute layer BETWEEN the end devices and the cloud — typically edge gateways, cloudlets, or local servers in a hierarchical architecture. True edge computing can refer to processing on the end device itself OR on nearby infrastructure. In practice: a Raspberry Pi gateway aggregating data from 50 Bluetooth sensors is 'fog computing'; a microcontroller running TensorFlow Lite inference locally is 'on-device edge inference'; an AWS Wavelength node at a cellular tower is 'edge computing'. The NIST definition distinguishes these layers: device edge, near edge (gateway), and far edge (regional data center).",
       hints: [
-        "Fog computing is a Cisco-coined term for a multi-tier hierarchy — device → fog node → cloud — not just two layers.",
+        "Fog computing is a Cisco-coined term for a multi-tier hierarchy — device -> fog node -> cloud — not just two layers.",
         "A sensor running a neural network is 'on-device inference'; a local server aggregating from 1,000 sensors is a 'fog node'.",
       ],
     },
@@ -343,14 +343,14 @@ const questions: Record<string, Question[]> = {
       question: "You need to run a defect detection model on a Cortex-M4 microcontroller with 256 KB RAM and 1 MB flash. The original PyTorch model is 45 MB. Which pipeline of techniques makes deployment feasible?",
       options: [
         "Deploy the model on AWS Lambda and call it via HTTPS from the microcontroller for each inference",
-        "Quantize the model from FP32 to INT8 (4x size reduction → ~11 MB), then apply weight pruning to remove 80% of near-zero weights (~2 MB), then convert to TensorFlow Lite FlatBuffer format optimized for ARM Cortex-M with the CMSIS-NN kernel library",
+        "Quantize the model from FP32 to INT8 (4x size reduction -> ~11 MB), then apply weight pruning to remove 80% of near-zero weights (~2 MB), then convert to TensorFlow Lite FlatBuffer format optimized for ARM Cortex-M with the CMSIS-NN kernel library",
         "Use knowledge distillation to train a smaller student model (5 MB), quantize to INT8 (1.25 MB), compile with TVM for ARM Cortex-M, targeting the CMSIS-NN operator library within the 1 MB flash constraint",
         "Both B and C are valid multi-step pipelines; C (distillation + quantization + TVM compilation) produces a smaller model at the cost of training a new student model",
       ],
       correctAnswer: 3,
       explanation: "Getting a 45 MB model into 1 MB flash requires an aggressive combination of techniques. Knowledge distillation trains a small student network from scratch (targeting 5-10 MB), then INT8 quantization reduces it to ~1-2 MB by replacing 32-bit floats with 8-bit integers (minimal accuracy loss with quantization-aware training). TVM or TensorFlow Lite Micro then compiles the model into C code using CMSIS-NN kernels (ARM's optimized neural network routines for Cortex-M) that fit in 1 MB flash. Both option B (prune + quantize existing model) and option C (distill + quantize + compile) are real techniques — which is better depends on whether you need maximum accuracy (B, keeps original architecture) or minimum size (C, designs a smaller architecture). This question is asked at Google TPU team, Qualcomm AI Research, and AWS Inferentia interviews.",
       hints: [
-        "INT8 quantization alone gives 4x reduction (45 MB → ~11 MB) — still too large for 1 MB flash. What else is needed?",
+        "INT8 quantization alone gives 4x reduction (45 MB -> ~11 MB) — still too large for 1 MB flash. What else is needed?",
         "Knowledge distillation lets you design a much smaller architecture from scratch rather than compressing an existing large one.",
       ],
     },
@@ -369,7 +369,7 @@ const questions: Record<string, Question[]> = {
         explanation: "The three key advantages of on-device inference are: (1) Latency — a decision made locally in microseconds vs. a cloud round-trip of 10-200ms; (2) Availability — the device keeps functioning during network outages (critical for industrial safety systems); (3) Bandwidth efficiency — instead of streaming 1 KB/s of sensor data continuously, only a rare anomaly event (100 bytes) is sent to the cloud. This is the core design principle of AWS IoT Greengrass ML inference, Azure Percept, and NVIDIA Jetson. The trade-off is model management: on-device models must be updated via OTA, which adds operational complexity.",
       hints: [
         "What happens to a cloud-dependent system when the internet connection goes down for 10 minutes in a factory?",
-        "Bandwidth = raw sensor data rate × number of devices; on-device inference can reduce this by 99%+ by only sending anomaly events.",
+        "Bandwidth = raw sensor data rate x number of devices; on-device inference can reduce this by 99%+ by only sending anomaly events.",
       ],
     },
   ],
@@ -408,7 +408,7 @@ const questions: Record<string, Question[]> = {
         "Use MQTT QoS 2 with a 10-second timeout; if no PUBCOMP is received, retry indefinitely",
       ],
       correctAnswer: 1,
-      explanation: "For safety-critical commands, the device shadow pattern provides: (1) Persistence — the desired state is stored even if the device is offline; (2) Confirmation — the backend monitors reported state for convergence; (3) Visibility — the delta document shows which devices have not yet executed the command; (4) Idempotency — setting desired.lock_state = 'unlocked' multiple times is safe. QoS 2 (option D) only guarantees broker delivery, not execution by the device. HTTP to device IP (option C) requires the device to have a public IP and be online at the time. QoS 0 (option A) has no delivery guarantee. The pattern is: desired → device executes → reports → backend verifies reported matches desired → closes the command. AWS IoT Jobs uses this same pattern for firmware commands.",
+      explanation: "For safety-critical commands, the device shadow pattern provides: (1) Persistence — the desired state is stored even if the device is offline; (2) Confirmation — the backend monitors reported state for convergence; (3) Visibility — the delta document shows which devices have not yet executed the command; (4) Idempotency — setting desired.lock_state = 'unlocked' multiple times is safe. QoS 2 (option D) only guarantees broker delivery, not execution by the device. HTTP to device IP (option C) requires the device to have a public IP and be online at the time. QoS 0 (option A) has no delivery guarantee. The pattern is: desired -> device executes -> reports -> backend verifies reported matches desired -> closes the command. AWS IoT Jobs uses this same pattern for firmware commands.",
       hints: [
         "MQTT QoS levels guarantee message delivery to the broker, not execution on the device — what additional confirmation is needed?",
         "The device shadow 'reported' state is the device's acknowledgment that it executed the command.",
@@ -481,7 +481,7 @@ const questions: Record<string, Question[]> = {
       id: "q-iot-26",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "You need to push a configuration change (new sampling rate: 10 Hz → 100 Hz) to all 2 million Nest thermostats in a fleet. Some devices are offline. Which delivery mechanism ensures eventual consistency across the entire fleet?",
+      question: "You need to push a configuration change (new sampling rate: 10 Hz -> 100 Hz) to all 2 million Nest thermostats in a fleet. Some devices are offline. Which delivery mechanism ensures eventual consistency across the entire fleet?",
       options: [
         "Send a broadcast MQTT message to all devices simultaneously and log which devices acknowledge within 5 minutes",
         "Update the device shadow desired state for each device in the fleet registry; devices receive the delta when they next connect and confirm receipt by updating reported state; track convergence via shadow reported state",
@@ -510,7 +510,7 @@ const questions: Record<string, Question[]> = {
         "Use the server-side ingestion timestamp as the authoritative event time, discarding the device timestamp entirely",
       ],
       correctAnswer: 1,
-      explanation: "Clock drift correction is a standard challenge in disconnected IoT systems. The recommended approach: (1) The device synchronizes with an NTP server on reconnect and measures its current offset (e.g., 'my clock is 45 seconds ahead of NTP'); (2) Assuming linear drift, the offset is distributed across the offline period proportionally to the number of readings; (3) Corrected_timestamp = device_timestamp - (elapsed_time / total_offline_time) × total_drift. This linear interpolation is a reasonable approximation for quartz crystal oscillators whose drift rate is roughly constant. Alternative: embed a sequence number in each reading so the pipeline can order and re-timestamp based on relative ordering even without the absolute drift measurement. Using ingestion timestamp (option D) is wrong because it destroys event time ordering for offline data.",
+      explanation: "Clock drift correction is a standard challenge in disconnected IoT systems. The recommended approach: (1) The device synchronizes with an NTP server on reconnect and measures its current offset (e.g., 'my clock is 45 seconds ahead of NTP'); (2) Assuming linear drift, the offset is distributed across the offline period proportionally to the number of readings; (3) Corrected_timestamp = device_timestamp - (elapsed_time / total_offline_time) x total_drift. This linear interpolation is a reasonable approximation for quartz crystal oscillators whose drift rate is roughly constant. Alternative: embed a sequence number in each reading so the pipeline can order and re-timestamp based on relative ordering even without the absolute drift measurement. Using ingestion timestamp (option D) is wrong because it destroys event time ordering for offline data.",
       hints: [
         "The clock drifted 45 seconds over 12 hours — approximately 3.75 seconds per hour. How would you distribute this correction across stored readings?",
         "Server ingestion timestamp records when data arrived, not when the event happened — why does that matter for time-series analysis?",
@@ -573,7 +573,7 @@ const questions: Record<string, Question[]> = {
         "Use WebSockets to maintain a persistent bidirectional connection to the cloud with automatic reconnection to minimize outage impact",
       ],
       correctAnswer: 1,
-      explanation: "The Matter protocol (formerly Project CHIP, backed by Apple, Google, Amazon, Samsung) was specifically designed to solve local control reliability. A Matter-compliant hub acts as a Thread Border Router: devices on the Thread mesh network communicate locally via IPv6 without any cloud dependency. The local automation engine (running on the hub) processes 'when motion detected → turn on light' rules without internet. The cloud layer handles: (1) voice assistant processing (requires internet); (2) remote access from outside the home network; (3) cross-ecosystem integration. During outage: local commands, automations, and schedules all work; only voice commands and remote access fail. This is the architecture Apple HomeKit local control, Google Home (offline routines), and Amazon Alexa Local Voice Control all implement.",
+      explanation: "The Matter protocol (formerly Project CHIP, backed by Apple, Google, Amazon, Samsung) was specifically designed to solve local control reliability. A Matter-compliant hub acts as a Thread Border Router: devices on the Thread mesh network communicate locally via IPv6 without any cloud dependency. The local automation engine (running on the hub) processes 'when motion detected -> turn on light' rules without internet. The cloud layer handles: (1) voice assistant processing (requires internet); (2) remote access from outside the home network; (3) cross-ecosystem integration. During outage: local commands, automations, and schedules all work; only voice commands and remote access fail. This is the architecture Apple HomeKit local control, Google Home (offline routines), and Amazon Alexa Local Voice Control all implement.",
       hints: [
         "What is the user experience if a cloud-dependent smart lock stops working during a 2-hour internet outage? Is that acceptable?",
         "Matter/Thread enables IPv6 mesh networking among devices so they can communicate without any cloud dependency — the hub is just a border router.",

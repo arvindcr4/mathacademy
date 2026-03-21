@@ -172,7 +172,7 @@ const questions: Record<string, Question[]> = {
       id: "q-ride-12",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "A trip in a ride-sharing app transitions through states: REQUESTED → ACCEPTED → DRIVER_ARRIVED → IN_TRIP → COMPLETED (or CANCELLED at any point). Which storage approach best models this state machine for reliability and auditability?",
+      question: "A trip in a ride-sharing app transitions through states: REQUESTED -> ACCEPTED -> DRIVER_ARRIVED -> IN_TRIP -> COMPLETED (or CANCELLED at any point). Which storage approach best models this state machine for reliability and auditability?",
       options: [
         "Store only the current state in a single MySQL column; update it in place on each transition",
         "Use an event sourcing pattern: append an immutable event (e.g., TripAccepted, DriverArrived) to an event log; derive current state by replaying events",

@@ -542,7 +542,7 @@ const questions: Record<string, Question[]> = {
       question: "A security team wants to integrate observability infrastructure with SIEM (Security Information and Event Management) for threat detection. What is the most effective architecture for detecting threats from observability signals?",
       options: [
         "Export all Prometheus metrics to the SIEM; metrics contain all necessary security context.",
-        "Stream structured application logs, Kubernetes audit logs, cloud trail logs (AWS CloudTrail, GCP Audit Logs), and network flow logs through a log aggregation pipeline (Kafka → enrichment → SIEM); define detection rules in the SIEM that correlate signals across sources to identify anomalies like privilege escalation, data exfiltration, or unusual API call patterns.",
+        "Stream structured application logs, Kubernetes audit logs, cloud trail logs (AWS CloudTrail, GCP Audit Logs), and network flow logs through a log aggregation pipeline (Kafka -> enrichment -> SIEM); define detection rules in the SIEM that correlate signals across sources to identify anomalies like privilege escalation, data exfiltration, or unusual API call patterns.",
         "Install an agent on each server that scans filesystem changes every minute and reports to the SIEM.",
         "Use distributed traces to detect security threats; traces contain all user actions in the call graph.",
       ],

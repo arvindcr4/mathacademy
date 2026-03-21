@@ -124,12 +124,12 @@ const questions: Record<string, Question[]> = {
       question: "In the standard web map tile system (TMS/XYZ), how many tiles exist at zoom level z?",
       options: [
         "2^z tiles",
-        "4^z tiles (2^z × 2^z grid)",
+        "4^z tiles (2^z x 2^z grid)",
         "z^2 tiles",
-        "256 × z tiles"
+        "256 x z tiles"
       ],
       correctAnswer: 1,
-      explanation: "The web tile system recursively subdivides the world map: at zoom level 0 there is 1 tile (the whole world), at zoom level 1 there are 4 tiles (2×2 grid), at zoom level 2 there are 16 tiles (4×4 grid), and so on. Each zoom level doubles the number of tiles in each axis, so zoom level z has 2^z × 2^z = 4^z total tiles. Each tile is a 256×256 pixel image (raster) or a vector data bundle. At zoom 20 (city block detail), there are over 1 trillion tiles — serving them all on demand requires aggressive caching, CDNs, and on-the-fly generation for vector tiles.",
+      explanation: "The web tile system recursively subdivides the world map: at zoom level 0 there is 1 tile (the whole world), at zoom level 1 there are 4 tiles (2x2 grid), at zoom level 2 there are 16 tiles (4x4 grid), and so on. Each zoom level doubles the number of tiles in each axis, so zoom level z has 2^z x 2^z = 4^z total tiles. Each tile is a 256x256 pixel image (raster) or a vector data bundle. At zoom 20 (city block detail), there are over 1 trillion tiles — serving them all on demand requires aggressive caching, CDNs, and on-the-fly generation for vector tiles.",
       hints: [
         "At zoom 0: 1 tile. At zoom 1: 4 tiles. At zoom 2: 16 tiles. What's the pattern?",
         "Each zoom level doubles resolution in both x and y — so total tiles multiply by 4 each level."
@@ -204,10 +204,10 @@ const questions: Record<string, Question[]> = {
         "Accumulate pings in an S3 data lake and run MapReduce jobs every hour to compute segment speeds"
       ],
       correctAnswer: 1,
-      explanation: "10 million vehicles × 2 pings/minute = ~333,000 events/second, which rules out batch approaches with multi-minute latency. A streaming architecture is required: Kafka ingests raw pings, Flink processes them in real time. Keying by vehicle ID is critical because Hidden Markov Model (HMM) map-matching is sequential — it uses the previous matched road segment to constrain which segments are candidates for the current ping, dramatically reducing false matches on parallel roads or GPS multipath errors. After map-matching, segment-level speed readings are aggregated using exponential weighted moving average (EWMA) to smooth noise while reacting quickly to changes. The result is published to a speed map service consumed by the routing engine. This is architecturally similar to Uber's real-time data platform and HERE's traffic pipeline.",
+      explanation: "10 million vehicles x 2 pings/minute = ~333,000 events/second, which rules out batch approaches with multi-minute latency. A streaming architecture is required: Kafka ingests raw pings, Flink processes them in real time. Keying by vehicle ID is critical because Hidden Markov Model (HMM) map-matching is sequential — it uses the previous matched road segment to constrain which segments are candidates for the current ping, dramatically reducing false matches on parallel roads or GPS multipath errors. After map-matching, segment-level speed readings are aggregated using exponential weighted moving average (EWMA) to smooth noise while reacting quickly to changes. The result is published to a speed map service consumed by the routing engine. This is architecturally similar to Uber's real-time data platform and HERE's traffic pipeline.",
       hints: [
         "Why must map-matching be keyed per vehicle? Because the previous position constrains which road the vehicle is currently on — a stateless approach would match each ping independently with far more errors.",
-        "Exponential smoothing on segment speed: new_speed = α × observed_speed + (1-α) × previous_speed. What does a high α value mean for responsiveness vs. noise?"
+        "Exponential smoothing on segment speed: new_speed = α x observed_speed + (1-α) x previous_speed. What does a high α value mean for responsiveness vs. noise?"
       ],
     },
     {
@@ -276,10 +276,10 @@ const questions: Record<string, Question[]> = {
         "Split on commas, convert each token to an integer, and compute a bounding box"
       ],
       correctAnswer: 0,
-      explanation: "Robust geocoding requires a multi-stage pipeline: (1) Tokenization — segment the raw string into structured fields (house number, pre-direction, street name, suffix, city, state, ZIP). (2) Normalization — expand abbreviations ('St' → 'Street', 'CA' → 'California') and standardize casing. (3) Fuzzy matching — use edit distance (Levenshtein) or phonetic algorithms (Soundex, Double Metaphone) to handle typos like 'Mian' → 'Main' and 'Fransico' → 'Francisco'. (4) Candidate retrieval — query a spatial/inverted index of known addresses (from USPS, OpenAddresses, proprietary data). (5) Scoring and ranking — weight matches by address component confidence and geographic plausibility (e.g., does the ZIP code match the city?). Google Maps Geocoding API and HERE Geocoder all follow this architecture.",
+      explanation: "Robust geocoding requires a multi-stage pipeline: (1) Tokenization — segment the raw string into structured fields (house number, pre-direction, street name, suffix, city, state, ZIP). (2) Normalization — expand abbreviations ('St' -> 'Street', 'CA' -> 'California') and standardize casing. (3) Fuzzy matching — use edit distance (Levenshtein) or phonetic algorithms (Soundex, Double Metaphone) to handle typos like 'Mian' -> 'Main' and 'Fransico' -> 'Francisco'. (4) Candidate retrieval — query a spatial/inverted index of known addresses (from USPS, OpenAddresses, proprietary data). (5) Scoring and ranking — weight matches by address component confidence and geographic plausibility (e.g., does the ZIP code match the city?). Google Maps Geocoding API and HERE Geocoder all follow this architecture.",
       hints: [
         "How would a naive exact-string match handle the typos 'Mian' and 'Fransico'? It would fail entirely — fuzzy matching is essential.",
-        "Reverse geocoding (coordinates → address) is the inverse: find the nearest known address or road segment to the given lat/lng."
+        "Reverse geocoding (coordinates -> address) is the inverse: find the nearest known address or road segment to the given lat/lng."
       ],
     },
     {
@@ -294,7 +294,7 @@ const questions: Record<string, Question[]> = {
         "Store addresses as unstructured blobs and use only character-level n-gram similarity for all matching"
       ],
       correctAnswer: 1,
-      explanation: "Address formats are highly country-specific: Japan uses a top-down hierarchy (prefecture → city → ward → block → lot number) that is completely inverted from the US bottom-up style (number → street → city → state). Germany has no ZIP+4, France uses cedex codes, and many countries lack street names entirely (relying on what3words or plus codes). The correct architecture is: (1) Detect country from an explicit field or IP-based geolocation. (2) Route to a country-specific parser with locale-aware tokenization rules (e.g., Japanese requires kanji/kana normalization). (3) Normalize into a canonical internal schema with typed fields. (4) Query country-partitioned indexes to limit search space. This is how the Google Maps Geocoding API and HERE Geocoder handle global addresses — each country is a separate normalization config.",
+      explanation: "Address formats are highly country-specific: Japan uses a top-down hierarchy (prefecture -> city -> ward -> block -> lot number) that is completely inverted from the US bottom-up style (number -> street -> city -> state). Germany has no ZIP+4, France uses cedex codes, and many countries lack street names entirely (relying on what3words or plus codes). The correct architecture is: (1) Detect country from an explicit field or IP-based geolocation. (2) Route to a country-specific parser with locale-aware tokenization rules (e.g., Japanese requires kanji/kana normalization). (3) Normalize into a canonical internal schema with typed fields. (4) Query country-partitioned indexes to limit search space. This is how the Google Maps Geocoding API and HERE Geocoder handle global addresses — each country is a separate normalization config.",
       hints: [
         "In Japan, '東京都渋谷区恵比寿1丁目' is a perfectly valid address — can a US-style street parser handle that?",
         "Country partitioning of the index also helps performance: you only search addresses within the relevant country, not globally."
@@ -318,7 +318,7 @@ const questions: Record<string, Question[]> = {
       explanation: "Google Maps place ranking is a multi-factor model combining: (1) Relevance — does the business match 'coffee'? This uses the POI's category tags (cafe, coffee shop), name, and description against an inverted index. (2) Proximity — how far or how long to travel there? Travel time is better than straight-line distance because a 500m walk may take longer than a 2km drive. (3) Prominence — higher-rated, more-reviewed, and more-linked businesses (web signals) rank higher, similar to PageRank. (4) Personalization — Google uses past search history, saved places, and demographic signals. (5) Real-time signals — is the place currently open? This multi-factor ranking is why a slightly further coffee shop with thousands of excellent reviews often ranks above a closer one with no reviews.",
       hints: [
         "If distance were the only factor, a closed coffee shop 50m away would beat an excellent open one 500m away — why is this wrong?",
-        "Prominence is essentially a business quality score: review count × recency × rating + web mentions + claimed/verified status."
+        "Prominence is essentially a business quality score: review count x recency x rating + web mentions + claimed/verified status."
       ],
     },
     {
@@ -467,7 +467,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Adjacency list with linked list nodes (pointer-based), one per edge",
         "Compressed Sparse Row (CSR): two flat integer arrays — one for edge targets and weights, one for node offset pointers into the first array — enabling cache-friendly sequential access to a node's neighbors",
-        "Adjacency matrix of size 500M × 500M bitmask",
+        "Adjacency matrix of size 500M x 500M bitmask",
         "Hash map from node ID to a dynamic vector of (neighbor, weight) pairs"
       ],
       correctAnswer: 1,
@@ -510,7 +510,7 @@ const questions: Record<string, Question[]> = {
         "Store geofences as polygons in a relational DB and use a LIKE query on the WKT string"
       ],
       correctAnswer: 1,
-      explanation: "Full table scan per update: 100,000 drivers × N geofences × 1 update/sec = O(100K × N) containment checks per second — infeasible for large N. The scalable approach: (1) Spatial partitioning — index all geofences in a spatial index (R-tree or S2-based hash map). Each driver location update queries only geofences in nearby cells (~4–9 cells), reducing candidates from millions to tens. (2) Containment check — for each candidate geofence, a circle containment check is a simple distance calculation (haversine for accuracy or Euclidean approximation for small radii). (3) State machine — track each driver's current 'inside' set of geofences. An entry event fires only on the 0→1 transition (was outside, now inside), avoiding duplicate events on every update inside the zone. This is how Uber Eats and DoorDash implement pickup/delivery zone detection.",
+      explanation: "Full table scan per update: 100,000 drivers x N geofences x 1 update/sec = O(100K x N) containment checks per second — infeasible for large N. The scalable approach: (1) Spatial partitioning — index all geofences in a spatial index (R-tree or S2-based hash map). Each driver location update queries only geofences in nearby cells (~4–9 cells), reducing candidates from millions to tens. (2) Containment check — for each candidate geofence, a circle containment check is a simple distance calculation (haversine for accuracy or Euclidean approximation for small radii). (3) State machine — track each driver's current 'inside' set of geofences. An entry event fires only on the 0->1 transition (was outside, now inside), avoiding duplicate events on every update inside the zone. This is how Uber Eats and DoorDash implement pickup/delivery zone detection.",
       hints: [
         "A driver in San Francisco only needs to check against San Francisco geofences — spatial partitioning eliminates geofences from other cities entirely.",
         "The state machine is essential: if a driver sends 10 location updates per second while stationary inside a geofence, you want exactly 1 'enter' event, not 10."
@@ -545,14 +545,14 @@ const questions: Record<string, Question[]> = {
       options: [
         "Run BFS from the origin on the road graph; the challenge is BFS ignores edge weights",
         "Run Dijkstra from the origin, collecting all nodes reachable within 30 minutes of travel time; then compute the concave hull (alpha shape or contour via kernel density estimation) of the reachable node set to generate the visual boundary polygon",
-        "Draw a circle of radius equal to 30 min × average speed; no road graph needed",
+        "Draw a circle of radius equal to 30 min x average speed; no road graph needed",
         "Run Floyd-Warshall to find all-pairs shortest paths, then filter destinations reachable in 30 min"
       ],
       correctAnswer: 1,
       explanation: "Isochrone computation: (1) Run a time-constrained Dijkstra (or CH query) from the origin, expanding the search until all nodes within 30 minutes of travel time are settled. This gives a set of reachable nodes with their exact travel times. (2) Boundary generation — the reachable node set is a cloud of points on the road network, not a smooth polygon. To generate a visual polygon, compute an alpha shape (a generalization of convex hull with a parameter controlling 'tightness') or use kernel density estimation + contour lines. A simpler approach: snap nodes to a geospatial grid, mark reachable cells, then trace the boundary of marked cells. Challenges: dead-end roads (reachable but isolated from the boundary), one-way streets (asymmetric isochrones from source vs. to source), and ferry/transit mode transitions. Google Maps 'Reachable Area' and Mapbox Isochrone API use these techniques.",
       hints: [
         "Why is a simple circle incorrect for isochrones? Because road networks are anisotropic — you can drive 60 km along a highway in 30 min but only 5 km in a congested city grid.",
-        "Alpha shapes: decrease α parameter → tighter boundary that follows the road network shape. Increase α → looser, more convex shape."
+        "Alpha shapes: decrease α parameter -> tighter boundary that follows the road network shape. Increase α -> looser, more convex shape."
       ],
     },
     {
@@ -569,7 +569,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "50,000 scooter location updates (typically every 30 seconds) and thousands of concurrent user queries require a purpose-built spatial index, not a relational DB sequential scan. Redis GEO commands use a sorted set where each member's score is its geohash integer. GEORADIUS (or the newer GEOSEARCH command) queries members within a given radius in O(N+log M) time where N is results and M is total members — extremely fast for bounded radii. At 50,000 scooters, a 400m radius query returns ~10–50 candidates in < 1ms. Position updates are GEOADD operations — O(log M). This pattern is used by Lime, Bird, and Spin for real-time availability maps. Client-side filtering would require sending 50,000 locations to every user — a massive bandwidth waste and privacy problem.",
       hints: [
-        "Walking speed ~5 km/h → 5 minutes ≈ 400m radius. What query does Redis GEOSEARCH need?",
+        "Walking speed ~5 km/h -> 5 minutes approx 400m radius. What query does Redis GEOSEARCH need?",
         "Redis GEO internally uses a 52-bit geohash as the sorted set score — proximity queries become range scans on the sorted set."
       ],
     },

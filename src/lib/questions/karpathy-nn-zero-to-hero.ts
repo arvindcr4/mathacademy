@@ -1399,8 +1399,7 @@ registerQuestions({
         "Because one-hot encoding does not support backpropagation.",
         "Because float32 one-hot tensors cannot be multiplied by weight matrices.",
       ],
-      correctAnswer:
-        "Because a one-hot matrix of shape [N, vocab_size] is dense and grows linearly with vocab_size, wasting memory on mostly-zero values that an embedding lookup avoids.",
+      correctAnswer: 1,
       explanation:
         "For a vocabulary of 50,000 tokens (like GPT-2), each one-hot vector would be 50,000 floats. A dataset of 1M tokens would require 200GB of memory just for the inputs. Embedding lookup stores only the embedding table (50000 x embed_dim) and accesses it by index, using a tiny fraction of the memory.",
       hints: [
