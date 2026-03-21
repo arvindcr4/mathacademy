@@ -1,0 +1,734 @@
+import type { Question } from '@/lib/curriculum'
+import { registerQuestions } from '@/lib/questions'
+
+const questions: Record<string, Question[]> = {
+  'requirements-ml': [
+    {
+      id: 'q-msd-kp1-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A product manager asks you to design an ML-powered search ranking system for an e-commerce site that receives 50,000 queries per second (QPS) at peak. Which requirement must be defined BEFORE choosing a model architecture?',
+      options: [
+        'Whether to use BERT or a gradient boosted tree as the ranking model.',
+        'The p99 latency SLO for the ranking call, the QPS budget per model inference, and the acceptable recall@10 floor.',
+        'How many GPU nodes the training cluster will have.',
+        'The specific learning rate schedule for model training.',
+      ],
+      correctAnswer: 1,
+      explanation: 'At 50K QPS, a 200 ms p99 SLO means the model must complete inference in <50 ms (leaving headroom for feature retrieval and I/O). This SLO eliminates large transformer models immediately. Specifying QPS, latency SLO, and recall floor as hard requirements prevents building a system that cannot serve at production scale.',
+      hints: [
+        '50K QPS × 200 ms SLO implies a throughput requirement of 10,000 concurrent inflight requests — a concrete capacity constraint.',
+        'Latency and throughput requirements directly constrain model selection.',
+      ],
+    },
+    {
+      id: 'q-msd-kp1-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'A p99 latency SLO (e.g., p99 < 100 ms) is a functional requirement because it directly determines which ML model to use.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Latency SLOs are non-functional (quality-of-service) requirements: they constrain how well the system performs, not what it computes. They do influence model selection as a hard constraint, but they describe system properties, not behaviors. Functional requirements describe what outputs the system produces (e.g., "return ranked list of 10 items").',
+      hints: [
+        'Functional: what the system does. Non-functional: how well it does it.',
+        'SLOs, throughput, availability, and cost are all non-functional quality attributes.',
+      ],
+    },
+    {
+      id: 'q-msd-kp1-3',
+      type: 'multiple-choice',
+      difficulty: 'medium',
+      question: 'You are sizing a real-time ML inference cluster. The model has p50 latency of 20 ms and p99 latency of 80 ms, serving 10,000 QPS. Approximately how many model replicas are needed if each replica handles 100 requests concurrently?',
+      options: [
+        '1 replica — one server can handle all requests since p50 latency is only 20 ms.',
+        '100 replicas — 10,000 QPS ÷ 100 concurrent requests per replica.',
+        '10 replicas — p99 latency of 80 ms means only 10 requests per second per replica.',
+        '1,000 replicas — one per QPS unit.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Using Little\'s Law: throughput = concurrency ÷ latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 ÷ 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20–30% headroom.',
+      hints: [
+        'Little\'s Law: L = λ × W (concurrency = throughput × latency). Rearranged: throughput = concurrency ÷ latency.',
+        'At p99 latency = 80 ms and 100 concurrent slots: each replica handles 100/0.08 = 1,250 req/s max.',
+      ],
+    },
+  ],
+
+  'problem-framing': [
+    {
+      id: 'q-msd-kp2-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A ride-sharing company wants to predict surge pricing multipliers (1.0×, 1.5×, 2.0×, 2.5×, 3.0×). What is the most appropriate ML framing?',
+      options: [
+        'Binary classification: surge vs. no surge.',
+        'Multi-class classification with 5 ordered classes, or ordinal regression — since the classes have a meaningful order.',
+        'Regression to a continuous multiplier value.',
+        'Clustering riders and drivers into demand zones.',
+      ],
+      correctAnswer: 1,
+      explanation: 'The 5 surge multipliers are discrete but ordered (1.0 < 1.5 < 2.0 < 2.5 < 3.0). Multi-class classification ignores the ordering; ordinal regression exploits it. Regression to a continuous value is also valid if the downstream system can threshold to the 5 levels. The key is that the ordered nature of the output should inform model design.',
+      hints: [
+        'Ordinal classes have a natural order — predicting 2.0 when the truth is 1.5 is a smaller error than predicting 3.0.',
+        'Standard cross-entropy loss treats all misclassifications equally — it ignores the ordering.',
+      ],
+    },
+    {
+      id: 'q-msd-kp2-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A search ranking problem can always be reduced to pointwise regression (predicting a relevance score per document) without any loss in ranking quality.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Pointwise regression ignores inter-document relationships: predicting scores independently cannot capture relative ordering constraints. Listwise losses (e.g., ListNet, LambdaLoss) directly optimize ranking metrics like NDCG by considering the full ranked list jointly. Pointwise approaches often underperform pairwise and listwise on NDCG because they optimize the wrong objective.',
+      hints: [
+        'NDCG rewards placing highly relevant documents at rank 1 — pointwise MSE does not directly optimize for this.',
+        'Two documents with scores 0.9 and 0.1 are ranked the same as 0.8 and 0.1 by pointwise models, but differently by NDCG.',
+      ],
+    },
+    {
+      id: 'q-msd-kp2-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A credit card fraud detection model must decide within 150 ms (total authorization timeout) whether to approve or decline a transaction. The fraud rate is 0.05%. Which framing and evaluation approach is correct?',
+      options: [
+        'Binary classification optimized for accuracy; 99.95% accuracy is sufficient.',
+        'Binary classification with extreme class imbalance handling (focal loss or oversampling); evaluated by precision-recall AUC and precision@recall=80%, not accuracy.',
+        'Regression predicting a continuous fraud probability; threshold selected post-hoc.',
+        'Multi-class: legitimate, suspicious, fraud — with three different downstream actions.',
+      ],
+      correctAnswer: 1,
+      explanation: 'At 0.05% fraud rate, a model predicting "not fraud" always achieves 99.95% accuracy — useless. The relevant metrics are precision-recall AUC and operational precision@recall (e.g., at 80% recall, what fraction of flagged transactions are truly fraudulent?). Focal loss or oversampling addresses the extreme imbalance, and the 150 ms SLO constrains model complexity.',
+      hints: [
+        '0.05% fraud rate: if 10M transactions/day, 50K are fraud. 40% recall = 20K caught; 30K missed (false negatives).',
+        'The correct metrics: recall (did we catch enough fraud?) and precision (how many flags are real fraud?).',
+      ],
+    },
+  ],
+
+  'data-collection-design': [
+    {
+      id: 'q-msd-kp3-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A recommendation system logs every item shown to users and whether they clicked. Training a model on this logged data to predict clicks will suffer from which specific bias?',
+      options: [
+        'Confirmation bias — users always click what they already know.',
+        'Exposure bias (position bias) — items shown at the top are clicked more regardless of quality, so the model learns position artifacts instead of true relevance.',
+        'Survivorship bias — only popular items are ever shown, so only they appear in logs.',
+        'Label noise bias — click signals are too noisy to learn from.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Position bias is the dominant issue in recommendation/search logs: items ranked higher receive disproportionately more clicks regardless of their true relevance (simply because they are seen). A model trained on raw logs learns to predict "was shown at position 1" rather than "is relevant." Inverse propensity scoring (IPS) or position-aware models are needed to debias.',
+      hints: [
+        'If item A appears at rank 1 and item B at rank 10, A gets more clicks even if B is more relevant.',
+        'The model cannot distinguish "clicked because relevant" from "clicked because shown first."',
+      ],
+    },
+    {
+      id: 'q-msd-kp3-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Collecting training data from production logs is always safe because production data reflects the true real-world distribution the model will serve.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., ε-greedy or logging policies) is needed to collect unbiased training data.',
+      hints: [
+        'If the current model never shows category X, production logs have no signal on how users would respond to X.',
+        'Logged data captures only what the existing system chose to act on — a biased sample.',
+      ],
+    },
+    {
+      id: 'q-msd-kp3-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'You have 1 million unlabeled examples and a budget for 10,000 human labels. Active learning selects which examples to label. Which uncertainty sampling criterion is most appropriate for a binary classifier?',
+      options: [
+        'Label the 10,000 examples with the highest predicted positive probability.',
+        'Label the 10,000 examples where predicted probability is closest to 0.5 (maximum margin uncertainty), as these are the examples the model is most uncertain about.',
+        'Label 10,000 randomly selected examples to ensure unbiased coverage.',
+        'Label the 10,000 examples with the lowest predicted positive probability.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Uncertainty sampling for binary classification selects examples where the model\'s predicted probability is closest to 0.5 — the decision boundary. These are the examples where the model is most uncertain and where a label provides the most information gain. Labeling examples with high or low confidence (far from 0.5) teaches the model things it already knows.',
+      hints: [
+        'Examples near the decision boundary most change the model — that\'s where labeled data has the highest value.',
+        'P(y=1|x) ≈ 0.5 means the model cannot decide — a human label resolves the uncertainty entirely.',
+      ],
+    },
+  ],
+
+  'feature-store-design': [
+    {
+      id: 'q-msd-kp4-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A feature store has an online store (Redis) and an offline store (BigQuery). A real-time fraud detection model needs the "user\'s total spend in the past 30 days" feature during a payment authorization call that must complete in <150 ms. Which store handles this request?',
+      options: [
+        'The offline store (BigQuery) — it has the full 30-day history.',
+        'The online store (Redis) — pre-materialized 30-day spend values are served via sub-millisecond point lookups.',
+        'Both stores are queried and results are merged at inference time.',
+        'The feature is computed on-the-fly by querying the transaction database during inference.',
+      ],
+      correctAnswer: 1,
+      explanation: 'The online store (Redis) serves pre-materialized feature values with sub-millisecond latency. A BigQuery query scanning 30 days of data would take seconds — incompatible with a 150 ms total authorization timeout. A scheduled materialization job (e.g., hourly) pre-computes the 30-day spend and writes it to Redis so it is available for instant point lookup.',
+      hints: [
+        'BigQuery is optimized for analytical batch queries (minutes); Redis is optimized for point lookups (sub-ms).',
+        'Materialization bridges the gap: compute offline, serve from the fast store.',
+      ],
+    },
+    {
+      id: 'q-msd-kp4-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Train-serve skew in an ML system occurs when features are computed differently during training (offline) vs. serving (online), causing the model to receive different inputs at inference time than it was trained on.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'Train-serve skew is one of the most common production ML bugs. Example: during training, "user age in days" is computed as (current_date − birthdate) using a static training date; at serving, it is recomputed with today\'s date — always giving the correct age. But if the serving code uses a different formula (e.g., age in years vs. days), the model receives a wildly different feature value. Feature stores prevent this by enforcing one shared computation for both training and serving.',
+      hints: [
+        'A feature computed in PySpark for training and in SQL for serving may use different rounding or timezone assumptions.',
+        'The model was trained on feature distribution X; serving it feature distribution Y causes silent degradation.',
+      ],
+    },
+    {
+      id: 'q-msd-kp4-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'You are designing a feature store for a recommendation system that needs user-item interaction counts over 1-hour, 1-day, and 7-day windows, updated in real time as users click. What architecture correctly handles this?',
+      options: [
+        'Batch ETL job runs every 7 days to recompute all window aggregations and load into Redis.',
+        'A streaming pipeline (e.g., Flink/Kafka) computes rolling window aggregations in real time and writes to the online store; a separate batch pipeline writes to the offline store for training.',
+        'The model queries the raw event log at inference time and computes aggregations on-the-fly.',
+        'A Lambda cache stores raw events; the model computes aggregations using the cache at inference time.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Real-time window features require a dual-path architecture: (1) a streaming pipeline (Flink keyed sliding windows) computes rolling aggregations and writes to the online store (Redis) with low latency; (2) a batch pipeline writes historical window values to the offline store (BigQuery/Parquet) for training data generation. This ensures training-serving consistency and real-time freshness.',
+      hints: [
+        'A 7-day ETL job means features are 7 days stale — unacceptable for real-time click signals.',
+        'Flink\'s keyed sliding windows are exactly designed for per-user rolling aggregations with sub-second latency.',
+      ],
+    },
+  ],
+
+  'model-selection-design': [
+    {
+      id: 'q-msd-kp5-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'You are comparing Model A (AUC-ROC 0.91, p99 latency 80 ms, 2 GB memory) vs. Model B (AUC-ROC 0.93, p99 latency 250 ms, 8 GB memory). Your SLA requires p99 < 100 ms. What is the correct decision?',
+      options: [
+        'Deploy Model B — higher AUC always means better user experience.',
+        'Deploy Model A — it meets the latency SLA; pursue knowledge distillation or architecture pruning to close the 0.02 AUC gap.',
+        'Reject both models and retrain from scratch with a different algorithm.',
+        'Negotiate the SLA to 300 ms to accommodate Model B.',
+      ],
+      correctAnswer: 1,
+      explanation: 'A p99 latency SLA is a hard constraint: a model that violates it cannot be deployed regardless of accuracy. Model A is the only viable option. Knowledge distillation (training a small student model to mimic Model B) or pruning Model B can often recover most of the 0.02 AUC gap while meeting the latency constraint. Never negotiate SLAs downward to accommodate a model.',
+      hints: [
+        'SLAs are contractual commitments — violating them has business consequences.',
+        'Knowledge distillation: a 7B model can often match a 70B model\'s AUC at a fraction of the latency.',
+      ],
+    },
+    {
+      id: 'q-msd-kp5-2',
+      type: 'true-false',
+      difficulty: 'easy',
+      question: 'Offline evaluation metrics (e.g., AUC on a held-out test set) reliably predict online A/B test results, so A/B testing is optional once offline metrics are satisfactory.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Offline metrics measure model quality on static historical data and cannot capture feedback loops, user behavior changes, novelty effects, or system-level interactions that only appear in live traffic. It is common for a model with better offline AUC to perform worse in an A/B test due to factors invisible in the training data. Online A/B testing is mandatory before full promotion.',
+      hints: [
+        'A model trained on last month\'s data is evaluated on a test set from last month — but deployed into next month\'s world.',
+        'User behavior adapts to recommendations — a feedback loop that static offline evaluation cannot model.',
+      ],
+    },
+    {
+      id: 'q-msd-kp5-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A new LLM-based product description generator has ROUGE-L score 0.72 vs. 0.68 for the current template-based system, but A/B test shows no statistically significant difference in purchase conversion rate (p=0.34, 95% CI: −1.2% to +1.4%). What should you do?',
+      options: [
+        'Deploy the LLM model — higher ROUGE-L proves it is better.',
+        'Do not deploy the LLM model — it shows no business lift and carries significant inference cost and operational complexity.',
+        'Run the A/B test longer until significance is reached regardless of cost.',
+        'Deploy to 10% of traffic permanently as a "shadow" to collect more data.',
+      ],
+      correctAnswer: 1,
+      explanation: 'ROUGE-L is a proxy metric for text quality, not business outcome. The A/B test (the ground truth) shows no statistically significant purchase conversion improvement. Deploying the LLM model would add substantial inference cost, latency, and operational complexity for zero measured business gain. The null result is the signal: the current system is adequate for this metric.',
+      hints: [
+        'The A/B test CI includes zero — the LLM might be worse, better, or neutral. The null result is valid.',
+        'An LLM model may cost 100× more to serve — that cost requires a commensurate business gain to justify.',
+      ],
+    },
+  ],
+
+  'training-pipeline-design': [
+    {
+      id: 'q-msd-kp6-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'In an ML training pipeline, which combination of versioned artifacts is required to guarantee full experiment reproducibility?',
+      options: [
+        'Model weights + training script only.',
+        'Data version + code commit hash + hyperparameter config + random seeds + environment (Docker image/conda lock file).',
+        'Hyperparameter config + model weights + evaluation metrics.',
+        'Training script + learning rate schedule + GPU hardware specification.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Full reproducibility requires all five: (1) data version — which dataset split; (2) code commit — exact training code; (3) hyperparameter config — all tunable parameters; (4) random seeds — Python, NumPy, PyTorch, CUDA; (5) environment — pinned library versions (Docker image or conda lock file). Any single missing element breaks reproducibility.',
+      hints: [
+        'A hyperparameter config without a data version doesn\'t tell you what data the model was trained on.',
+        'Library version drift (e.g., PyTorch 1.13 vs. 2.0) can change numerical results even with fixed seeds.',
+      ],
+    },
+    {
+      id: 'q-msd-kp6-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Continuous training (automatically retraining on new production data) always improves model quality compared to periodic manual retraining.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Continuous training introduces risks: a data pipeline bug can corrupt training data, a sudden distribution shift can degrade the model, and noisy labels from a new data source can reduce quality. Continuous training pipelines require validation gates (e.g., "new model must achieve AUC ≥ current model − 0.01 on a holdout set") and automated rollback before promotion.',
+      hints: [
+        'Automation increases velocity but requires guard rails — otherwise a bad data batch retrains a worse model.',
+        'A feedback loop bug (wrong labels) will silently degrade a continuously-training model.',
+      ],
+    },
+    {
+      id: 'q-msd-kp6-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Training a large recommendation model on 8 GPUs, you observe GPU utilization at 25% despite CPU utilization at 95%. What is the bottleneck and the fix?',
+      options: [
+        'The optimizer step is too slow; switch from Adam to SGD.',
+        'The data preprocessing pipeline is CPU-bound and cannot feed data to GPUs fast enough. Fix: use multiple workers (num_workers), prefetching, pre-tokenization/caching, and possibly GPU-resident data loading.',
+        'The model is too large and causes GPU memory fragmentation.',
+        'The learning rate is too high, causing frequent NaN losses that stall computation.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Low GPU utilization with high CPU utilization is the classic signature of a data pipeline bottleneck: the GPU sits idle waiting for batches the CPU is still preprocessing. Fixes include: increasing num_workers (parallel data loading), using prefetch_factor (prefetch batches into GPU memory), pre-caching tokenized data to disk, and using DALI or other GPU-accelerated data pipelines.',
+      hints: [
+        'GPU utilization = (time GPU is computing) / (total time). Low GPU, high CPU means GPU is waiting for data.',
+        'The fix is always on the data pipeline side — not the model or optimizer.',
+      ],
+    },
+  ],
+
+  'serving-design': [
+    {
+      id: 'q-msd-kp7-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A content platform needs to serve personalized home feed recommendations to 50 million daily active users when they open the app. The app opening latency SLO is p99 < 200 ms. Which serving strategy is most appropriate?',
+      options: [
+        'Real-time online serving: run the recommendation model for each user at app-open time.',
+        'Pre-computed batch inference: run a nightly batch job to compute top-100 recommendations for each user, store in a fast key-value store (Redis), and serve the cached result at app-open time.',
+        'Edge inference: run the model on the user\'s device.',
+        'Only serve recommendations for users who opened the app in the past hour.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Running a heavy recommendation model for 50M users at app-open time is infeasible at p99 < 200 ms. Pre-computing recommendations in a nightly batch job and caching in Redis enables sub-millisecond retrieval. The trade-off is recommendation staleness (up to 24 hours), which is acceptable for home feed content. Real-time signals (e.g., recent clicks) can be layered on top.',
+      hints: [
+        '50M requests at app-open peak could be 1M+ QPS — serving a heavy model in real time at that scale requires enormous infrastructure.',
+        'Redis GET latency is ~0.1 ms; a recommendation model call is 10–100 ms — a 100–1000× difference.',
+      ],
+    },
+    {
+      id: 'q-msd-kp7-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'vLLM\'s continuous batching (also called iteration-level scheduling) improves LLM serving throughput by allowing new requests to join an in-progress batch when earlier requests in that batch finish generating their sequences.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'Traditional static batching waits for all requests in a batch to finish before starting new ones — requests that finish early leave GPU capacity idle. vLLM\'s continuous batching schedules at the token generation step level: when a sequence completes (hits EOS or max_tokens), its slot is immediately filled by a waiting request. This dramatically improves GPU utilization and throughput for variable-length LLM outputs.',
+      hints: [
+        'LLM outputs vary greatly in length — one request may finish in 10 tokens while another takes 1000.',
+        'Static batching wastes GPU cycles waiting for the longest request; continuous batching fills those cycles.',
+      ],
+    },
+    {
+      id: 'q-msd-kp7-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'You must serve a 70B-parameter LLM with p99 first-token latency < 500 ms for a customer-facing chat application at 1,000 QPS. Which combination of techniques is MOST effective?',
+      options: [
+        'Run on a single A100 80 GB GPU with FP32 precision.',
+        'Use tensor parallelism across 4–8 GPUs (e.g., 4×A100), FP16 quantization, vLLM continuous batching, and KV cache with PagedAttention.',
+        'Run on CPU cluster with 128 cores and aggressive caching.',
+        'Distill to a 7B model and serve on a single T4 GPU with no other optimizations.',
+      ],
+      correctAnswer: 1,
+      explanation: 'A 70B model in FP16 requires ~140 GB VRAM — exceeding a single 80 GB GPU. Tensor parallelism across 4–8 A100s splits the model across devices. FP16 halves memory vs. FP32. vLLM\'s continuous batching maximizes GPU utilization; PagedAttention manages KV cache memory without fragmentation. Together these achieve the throughput and latency targets at 1,000 QPS.',
+      hints: [
+        '70B × 2 bytes/param (FP16) = 140 GB — requires at least 2× A100 80 GB. 4× gives compute headroom.',
+        'PagedAttention (vLLM) stores KV cache in non-contiguous pages, eliminating memory waste from reserved-but-unused cache slots.',
+      ],
+    },
+  ],
+
+  'recommendation-design': [
+    {
+      id: 'q-msd-kp8-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A streaming service has 100 million items in its catalog. For real-time recommendations, a two-stage pipeline is used. Why can\'t the expensive ranking model be run over all 100M items?',
+      options: [
+        'The ranking model is not capable of scoring more than 1000 items.',
+        'Running a 100 ms ranking model over 100M items sequentially takes 10,000 seconds — far beyond any real-time SLO. The retrieval stage narrows candidates to ~hundreds in milliseconds.',
+        'Copyright law prevents running models over unlicensed content at scale.',
+        'Ranking all items simultaneously causes GPU memory overflow.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Serving latency is the hard constraint. A 100M-item catalog with even a 1 µs ranking model takes 100 seconds per query — unusable. The retrieval stage uses ANN search over user/item embeddings (FAISS, HNSW) to narrow 100M items to ~1,000 candidates in <10 ms. The heavy ranker then scores only those ~1,000 items, meeting latency SLOs.',
+      hints: [
+        'ANN retrieval: O(log n) or O(√n) to find top-k; sequential scoring: O(n). For n=100M, the difference is billions of operations.',
+        'The two-stage pipeline trades retrieval recall for serving feasibility — a well-engineered trade-off.',
+      ],
+    },
+    {
+      id: 'q-msd-kp8-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Matrix factorization (a form of collaborative filtering) requires explicit item content features (title, genre, description) to generate item embeddings.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Matrix factorization learns item (and user) embeddings purely from the user-item interaction matrix (ratings, clicks, watch history). It requires no content features. Content-based filtering uses item features to recommend similar items. Hybrid systems combine both. Netflix\'s original recommendation system used collaborative filtering before it had rich content metadata.',
+      hints: [
+        '"Collaborative" refers to leveraging the collective interactions of all users — no content required.',
+        'Item embeddings from MF capture latent factors (e.g., genre taste) purely from interaction patterns.',
+      ],
+    },
+    {
+      id: 'q-msd-kp8-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A recommendation system optimized purely for 7-day click-through rate (CTR) starts promoting increasingly sensational and polarizing content. The platform\'s 90-day user retention drops 15%. What design failure does this represent?',
+      options: [
+        'Underfitting — the CTR model has insufficient capacity.',
+        'Reward hacking / metric misalignment: the system maximizes the proxy metric (7-day CTR) at the expense of the true objective (long-term user satisfaction and retention). CTR optimizes for clickability, not value.',
+        'Data leakage from training labels into features.',
+        'Cold start failure for new users who have no click history.',
+      ],
+      correctAnswer: 1,
+      explanation: 'This is the classic recommendation alignment failure: CTR is a proxy for engagement, not satisfaction. Sensational content drives clicks (high proxy metric) while eroding trust and long-term retention (the true objective). YouTube, Facebook, and Twitter have all documented this failure. Mitigation requires optimizing multi-objective rewards that include long-term signals (e.g., subscription retention, explicit satisfaction surveys).',
+      hints: [
+        'This is Goodhart\'s Law applied to ML: "When a measure becomes a target, it ceases to be a good measure."',
+        'CTR ≠ user value. A click and immediate regret still counts as a click in the training signal.',
+      ],
+    },
+  ],
+
+  'search-ranking-design': [
+    {
+      id: 'q-msd-kp9-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'NDCG@10 is the standard ranking quality metric for search systems. What property makes it more appropriate than accuracy for evaluating search rankings?',
+      options: [
+        'NDCG@10 is faster to compute than accuracy for large document sets.',
+        'NDCG@10 rewards systems that place highly relevant documents at the top of the list, applying a logarithmic discount to positions lower in the ranking.',
+        'NDCG@10 is scale-invariant and does not require normalization.',
+        'NDCG@10 only considers binary relevance (relevant/not relevant), making it simpler.',
+      ],
+      correctAnswer: 1,
+      explanation: 'NDCG (Normalized Discounted Cumulative Gain) sums relevance scores with position discounts: DCG@k = Σ (rel_i / log_2(i+1)) for i=1..k. The log discount means rank 1 gets full credit, rank 2 gets half, rank 3 gets one-third, etc. Normalization by ideal DCG makes it comparable across queries. This captures that a highly relevant document at rank 5 is worse than at rank 1.',
+      hints: [
+        'A system returning all relevant documents at rank 10 would score high on accuracy but low on NDCG.',
+        'The "D" in NDCG stands for Discounted — positions further down contribute logarithmically less.',
+      ],
+    },
+    {
+      id: 'q-msd-kp9-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = α × BM25 + (1−α) × cosine_similarity. This combination typically outperforms either alone.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'BM25 excels at exact keyword matching (high precision for rare terms); dense bi-encoders excel at semantic matching (capturing paraphrases and synonyms). Their failure modes differ: BM25 misses semantic matches, dense models miss rare/specific terms. Linear interpolation (with α tuned on a validation set) combines their strengths, a technique called hybrid retrieval. Reciprocal Rank Fusion (RRF) is an alternative that does not require score normalization.',
+      hints: [
+        'Query "myocardial infarction": BM25 finds exact matches; dense model also finds "heart attack" documents.',
+        'Query "Apple Inc. Q3 earnings": BM25 is reliable for specific terms; dense models may hallucinate semantic similarity.',
+      ],
+    },
+    {
+      id: 'q-msd-kp9-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A two-tower (bi-encoder) retrieval model encodes queries and documents independently. A cross-encoder reranker receives (query, document) pairs. Why are cross-encoders used only for reranking a small candidate set rather than retrieval over the full corpus?',
+      options: [
+        'Cross-encoders cannot process text longer than 512 tokens.',
+        'Cross-encoders perform full attention between query and document tokens, requiring O(n × d) inference for n documents — infeasible at corpus scale. Bi-encoders pre-compute document embeddings offline, enabling ANN retrieval in O(log n).',
+        'Cross-encoders are less accurate than bi-encoders for relevance scoring.',
+        'Cross-encoders do not support GPU acceleration.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Cross-encoders process query and document together in a single forward pass, enabling deep interaction modeling for high accuracy. But this requires running the model for every (query, document) pair at query time — O(corpus_size) inference per query, infeasible for millions of documents. Bi-encoders pre-compute document embeddings offline; at query time only the query is encoded and ANN search finds top-k candidates in milliseconds.',
+      hints: [
+        '1M documents × 50 ms cross-encoder inference = 50,000 seconds per query. Unusable.',
+        'The two-stage pattern: fast bi-encoder retrieval (100K→1K) → accurate cross-encoder reranking (1K→10).',
+      ],
+    },
+  ],
+
+  'fraud-detection-design': [
+    {
+      id: 'q-msd-kp10-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A real-time fraud detection system must decide within the payment authorization window. What is the realistic end-to-end latency budget for the ML inference call itself?',
+      options: [
+        '5–10 seconds — payment authorization is an asynchronous process.',
+        '<50 ms — the total authorization timeout is ~200 ms, leaving <50 ms for ML inference after feature retrieval and I/O overhead.',
+        'Exactly 1 second — regulatory standards require 1-second fraud decisions.',
+        'Latency does not matter for fraud detection since it runs asynchronously.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Payment authorization has a hard total timeout of ~200 ms (Visa/Mastercard standards). Subtracting network round-trip (~20 ms), feature store lookup (~5 ms), and response processing (~10 ms), the ML model inference must complete in <50 ms. This eliminates transformer-based models and favors gradient boosted trees (GBDT) or shallow neural networks with pre-materialized features.',
+      hints: [
+        'The 200 ms total authorization budget is split across: network, feature retrieval, ML inference, response — each must be fast.',
+        'LightGBM/XGBoost inference typically runs in 1–5 ms — well within budget; a BERT model takes 50–200 ms.',
+      ],
+    },
+    {
+      id: 'q-msd-kp10-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Using the raw transaction timestamp as a feature in a fraud detection model is always safe and does not risk data leakage.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Raw timestamps can cause label leakage because fraud labels (chargebacks) are typically assigned days to weeks after the transaction occurs. If the training dataset is built with the chargeback-date timestamp rather than the transaction-date timestamp, the model learns to associate temporal patterns with future labels it could not know at inference time. Safe alternatives include derived temporal features (hour of day, day of week) computed from the transaction timestamp only.',
+      hints: [
+        'A chargeback filed 30 days after the transaction means the label was not available at transaction time.',
+        'Using any feature that encodes information about the future label is leakage.',
+      ],
+    },
+    {
+      id: 'q-msd-kp10-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A fraud detection model achieves 99.5% accuracy but a fraud recall of only 40%. The fraud rate in production is 0.5%. What is the false positive rate implied by these numbers, and what explains the apparent paradox?',
+      options: [
+        'False positive rate is ~0%; the model is highly accurate and the recall failure is due to class imbalance.',
+        'At 0.5% fraud rate, predicting "not fraud" 100% of the time achieves 99.5% accuracy; the model has collapsed to the majority class, catching 0% of fraud — "40% recall" implies some minimal fraud detection with very high false negative rate.',
+        'The model is overfitting to training data; accuracy does not generalize to test data.',
+        'False positive rate is 60%, equal to the false negative rate.',
+      ],
+      correctAnswer: 1,
+      explanation: 'With 0.5% fraud rate, a trivial model predicting "not fraud" always achieves 99.5% accuracy. If the model catches 40% of actual fraud (recall=0.4) and the fraud rate is 0.5%, then: frauds caught = 0.4 × 0.5% = 0.2% of all transactions flagged as fraud; false positive rate is effectively near 0% but the useful metric — precision and recall at the fraud class — is what matters. This illustrates why accuracy is a misleading metric for imbalanced classification.',
+      hints: [
+        '0.5% fraud rate: if 10M transactions/day, 50K are fraud. 40% recall = 20K caught; 30K missed (false negatives).',
+        'The correct metrics: recall (did we catch enough fraud?) and precision (how many flags are real fraud?).',
+      ],
+    },
+  ],
+
+  'ads-ranking-design': [
+    {
+      id: 'q-msd-kp11-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'In a real-time ads auction, expected revenue per slot is computed as bid × pCTR (predicted click-through rate). Advertiser A bids $5 with pCTR 0.02; Advertiser B bids $2 with pCTR 0.08. Which wins the auction and by how much?',
+      options: [
+        'A wins: $5 bid > $2 bid.',
+        'B wins: expected revenue $2 × 0.08 = $0.16 > $5 × 0.02 = $0.10.',
+        'A wins: 0.02 pCTR is more precise than 0.08.',
+        'Tie: both have positive expected revenue.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Ad auctions rank by expected revenue = bid × pCTR, not by bid alone. Advertiser B: $2 × 0.08 = $0.16. Advertiser A: $5 × 0.02 = $0.10. B wins despite the lower bid because its higher pCTR more than compensates. This is why pCTR model quality directly impacts auction revenue — miscalibrated pCTR can misrank advertisers and cost the platform money.',
+      hints: [
+        'A high bid with low CTR may generate less revenue than a lower bid with high CTR.',
+        'This is why both bid accuracy (advertiser) and pCTR accuracy (platform model) are critical.',
+      ],
+    },
+    {
+      id: 'q-msd-kp11-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'For ads ranking systems, calibration of pCTR (i.e., predicted probabilities match observed click rates) is more important than AUC because auction pricing and budget pacing depend on the absolute probability value.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'AUC-ROC measures ranking quality (can you distinguish clickers from non-clickers?) but not calibration (does pCTR=0.02 mean ~2% of similar ads are clicked?). Auction clearing prices, second-price auction mechanics, and advertiser budget pacing all depend on absolute pCTR values. A perfectly ranked but poorly calibrated model can systematically over- or under-charge advertisers, causing billing errors and budget misallocation.',
+      hints: [
+        'A model with pCTR=0.10 when true CTR is 0.01 will over-charge winners and mis-pace budgets.',
+        'IPS is the standard causal debiasing technique in recommender systems.',
+      ],
+    },
+    {
+      id: 'q-msd-kp11-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Position bias in ads — where ads shown at higher positions receive more clicks regardless of quality — causes pCTR models trained on observed clicks to be biased. Which technique corrects for this during training?',
+      options: [
+        'Remove all training examples from the first 3 feed positions.',
+        'Use inverse propensity scoring (IPS): weight each training example by 1/P(shown at position p), where P(shown at p) is the propensity of that position in the logging policy.',
+        'Add position as a feature during both training and serving to let the model learn the bias.',
+        'Only train on items that appear in positions 5–20 where position bias is minimal.',
+      ],
+      correctAnswer: 1,
+      explanation: 'IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.',
+      hints: [
+        'Without debiasing: the model learns "top positions → high CTR" rather than "relevant items → high CTR."',
+        'IPS is the standard causal debiasing technique in recommender systems.',
+      ],
+    },
+  ],
+
+  'feed-ranking-design': [
+    {
+      id: 'q-msd-kp12-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A social media feed ranking model uses engagement signals as training labels. Which signal is the WORST proxy for long-term user satisfaction?',
+      options: [
+        'Comment with 3+ sentences (indicates deep engagement).',
+        'Reshare to close friends only.',
+        'Rage click / angry reaction on inflammatory content — the user engaged but felt worse afterward.',
+        '30-second video view completion rate.',
+      ],
+      correctAnswer: 2,
+      explanation: 'Angry reactions indicate emotional arousal and engagement (the model\'s signal) but negative user experience (the true objective). Content that triggers outrage maximizes short-term engagement signals while degrading long-term satisfaction and mental health. This is the metric misalignment problem: the proxy (engagement) diverges from the true objective (user wellbeing and retention).',
+      hints: [
+        'Engagement ≠ satisfaction. A user spending 5 minutes in outrage is "engaging" but not benefiting.',
+        'Long-term signals like weekly active return rate or satisfaction surveys better capture true user value.',
+      ],
+    },
+    {
+      id: 'q-msd-kp12-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Optimizing a news feed purely for dwell time (seconds spent reading a post) reliably improves long-term user retention and satisfaction.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'Dwell time can be maximized by outrage-inducing, anxiety-provoking, or clickbait content that holds attention without providing value. Multiple platforms have found that dwell-time optimization decreases long-term retention, increases churn, and correlates with negative user wellbeing. Multi-objective optimization combining dwell time with explicit satisfaction signals (surveys) and return visit rate better captures true user value.',
+      hints: [
+        'A user angry-scrolling for 20 minutes has high dwell time but low satisfaction.',
+        'Dwell time on low-quality content is indistinguishable from dwell time on high-quality content in the training signal.',
+      ],
+    },
+    {
+      id: 'q-msd-kp12-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A feed ranking model is trained on user clicks, but clicks are heavily influenced by position (position bias). Training directly on observed clicks will produce a biased model. Which approach correctly addresses this?',
+      options: [
+        'Remove all training examples from the first 3 feed positions.',
+        'Use inverse propensity scoring (IPS) weighted by the probability of each item being shown at its logged position, or train a position-aware model that explicitly models the observation probability.',
+        'Add position as a feature during both training and serving.',
+        'Only train on items that appear in positions 5–20 where position bias is minimal.',
+      ],
+      correctAnswer: 1,
+      explanation: 'IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.',
+      hints: [
+        'Without debiasing: the model learns "top positions → high CTR" rather than "relevant items → high CTR."',
+        'IPS is the standard causal debiasing technique in recommender systems.',
+      ],
+    },
+  ],
+
+  'content-moderation-design': [
+    {
+      id: 'q-msd-kp13-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'A content moderation classifier is deployed at 100,000 QPS on a platform with 0.1% harmful content rate. The classifier has 99% precision and 85% recall. Approximately how many false positives (safe content incorrectly removed) does the system generate per second?',
+      options: [
+        '~0 — 99% precision means almost no false positives.',
+        '~1,000 per second — of ~99,900 safe posts/second, 1% are incorrectly flagged.',
+        '~15 per second — from the 15% recall miss rate.',
+        '~100 per second — the harmful content rate drives false positives.',
+      ],
+      correctAnswer: 1,
+      explanation: 'At 100K QPS with 0.1% harmful rate: ~100 harmful posts/second, ~99,900 safe posts/second. At 99% precision, 1% of flagged posts are false positives. The model flags: 100 × 0.85 = 85 true positives (recall=85%) and FP/(FP+TP) = 0.01 → FP = 85 × 0.01/0.99 ≈ 0.86 ≈ ~1 FP/second from the flagged set. However, at 99% precision with high QPS, even 1% of 8,500 flagged posts = 85 false positives/second if recall is higher. The key insight is that at scale, even 99% precision generates substantial false positive volume.',
+      hints: [
+        'False positive rate (of safe posts) = FP / total_safe. Even 0.1% of 99,900 = ~100 false positives/second.',
+        'Volume amplifies small error rates into large absolute counts at 100K QPS.',
+      ],
+    },
+    {
+      id: 'q-msd-kp13-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'A content moderation classifier with 99% accuracy on a held-out test set is production-ready if the harmful content rate is 0.1% of all posts.',
+      options: ['True', 'False'],
+      correctAnswer: 'false',
+      explanation: 'At 0.1% harmful content rate, a classifier predicting "safe" for every post achieves 99.9% accuracy. A 99% accurate model may be worse than this trivial baseline. The relevant metrics are precision and recall on the harmful class: how many true harmful posts are caught (recall) and how many flagged posts are truly harmful (precision). Accuracy is a misleading metric for rare-class detection.',
+      hints: [
+        'Apply the base-rate calculation: P(harmful) = 0.001. A model predicting "always safe" achieves 99.9% accuracy.',
+        'Precision@recall=90% is more informative: "what fraction of flagged posts are actually harmful when we catch 90% of them?"',
+      ],
+    },
+    {
+      id: 'q-msd-kp13-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'A content moderation system serves 10 languages with abundant English data (5M labeled examples) but only 500–5,000 labeled examples for 8 other languages. What is the most effective approach?',
+      options: [
+        'Train separate monolingual classifiers for each of the 10 languages.',
+        'Fine-tune a multilingual pretrained model (e.g., XLM-RoBERTa) on all available data, leveraging cross-lingual transfer from English to low-resource languages.',
+        'Machine-translate all non-English content to English, then apply an English-only classifier.',
+        'Use rule-based filters for low-resource languages and ML only for English.',
+      ],
+      correctAnswer: 1,
+      explanation: 'XLM-RoBERTa and similar multilingual models are pretrained on 100+ languages with shared subword representations. Fine-tuning on English data and even small amounts of target-language data enables effective cross-lingual transfer. Machine translation introduces errors and latency. Monolingual models require large per-language datasets. Multilingual fine-tuning achieves strong performance even for languages with only hundreds of labeled examples.',
+      hints: [
+        'XLM-RRoBERTa was pretrained on 2.5 TB of multilingual data — its representations generalize across languages.',
+        'Transfer from English to Spanish is much stronger than from scratch with 500 Spanish examples.',
+      ],
+    },
+  ],
+
+  'entity-resolution-design': [
+    {
+      id: 'q-msd-kp14-1',
+      type: 'multiple-choice',
+      difficulty: 'easy',
+      question: 'Entity resolution (record linkage) without blocking has O(n²) complexity for n records. With blocking, complexity drops to near-linear. What is the trade-off introduced by blocking?',
+      options: [
+        'Blocking increases memory usage exponentially.',
+        'Blocking reduces recall: record pairs in different blocks are never compared, so true matches across blocks are missed.',
+        'Blocking requires labeled data to learn the blocking key.',
+        'Blocking eliminates the need for a similarity function, reducing accuracy.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched — a recall loss. The trade-off is computational feasibility (O(n²)→near-linear) at the cost of some missed matches.',
+      hints: [
+        'Without blocking, comparing all n=10M records requires 50 trillion pairs — infeasible.',
+        'Multiple blocking passes (union of blocked sets) improve recall at the cost of more comparisons.',
+      ],
+    },
+    {
+      id: 'q-msd-kp14-2',
+      type: 'true-false',
+      difficulty: 'medium',
+      question: 'Blocking in entity resolution reduces the number of record pairs that must be compared, at the cost of potentially missing some true matches.',
+      options: ['True', 'False'],
+      correctAnswer: 'true',
+      explanation: 'Blocking is a precision-recall trade-off: it dramatically reduces the number of comparisons (enabling scalability) but introduces false negatives when true matches are assigned to different blocks. Well-designed blocking (using multiple blocking keys, "canopy clustering," or LSH-based blocking) minimizes this recall loss while maintaining tractable candidate pair counts.',
+      hints: [
+        'Without blocking, comparing all n=10M records requires 50 trillion pairs — infeasible.',
+        'Multiple blocking passes (union of blocked sets) improve recall at the cost of more comparisons.',
+      ],
+    },
+    {
+      id: 'q-msd-kp14-3',
+      type: 'multiple-choice',
+      difficulty: 'hard',
+      question: 'Two customer records from different databases: {name: "Microsoft Corp", address: "1 Microsoft Way, Redmond WA"} and {name: "Microsoft Corporation", address: "One Microsoft Way, Redmond, WA 98052"}. Which similarity features should be used for matching?',
+      options: [
+        'Exact string equality on both fields — only exact matches are reliable.',
+        'Edit distance (Levenshtein) on name, address normalization + fuzzy matching, and blocking on zip code prefix to limit comparisons.',
+        'TF-IDF cosine similarity on the full concatenated record string.',
+        'Embedding similarity using a general-purpose sentence encoder.',
+      ],
+      correctAnswer: 1,
+      explanation: 'Entity resolution for business names requires: (1) fuzzy name matching (Jaro-Winkler, Levenshtein) to handle "Corp" vs. "Corporation"; (2) address normalization (standardizing "One" vs. "1", expanding "WA" to "Washington") followed by fuzzy matching; (3) zip code blocking to reduce candidate pairs. General sentence encoders are effective but add latency; rule-based normalization + edit distance is more interpretable and often more precise for structured records.',
+      hints: [
+        '"Corp" and "Corporation" are semantically identical but have edit distance 5 — fuzzy matching handles this.',
+        'Address normalization (USPS standard forms) converts "One Microsoft Way" and "1 Microsoft Way" to the same canonical form.',
+      ],
+    },
+  ],
+}
+
+registerQuestions(questions)
