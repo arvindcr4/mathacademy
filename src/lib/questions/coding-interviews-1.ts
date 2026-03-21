@@ -2259,7 +2259,7 @@ const questions: Record<string, Question[]> = {
         "Staircase search: start at matrix[0][n-1]. If target == val: found. If target < val: move left (col--). If target > val: move down (row++). Each step eliminates a row or column, giving O(m + n) time, O(1) space. This is optimal for independently sorted matrix; for row-major sorted matrix, binary search gives O(log(mn)).",
     },
     {
-      id: "q-ms-2",
+      id: "q-ms-2b",
       type: "multiple-choice",
       difficulty: "easy",
       question: "For a strictly row-major sorted 2D matrix (row i last element < row i+1 first element), binary search complexity is:",
@@ -2273,7 +2273,7 @@ const questions: Record<string, Question[]> = {
         "The matrix is a sorted array of m*n elements. Binary search: lo=0, hi=m*n-1. mid = (lo+hi)/2; map to 2D: row=mid/n, col=mid%n. Compare matrix[row][col] with target. Total: O(log(mn)) = O(log m + log n) time, O(1) space.",
     },
     {
-      id: "q-ms-3",
+      id: "q-ms-3b",
       type: "true-false",
       difficulty: "hard",
       question: "The staircase search for a matrix with sorted rows and columns runs in O(m + n) regardless of matrix dimensions.",

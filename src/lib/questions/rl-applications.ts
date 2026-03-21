@@ -717,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The PPO objective L^{CLIP}(\\theta) = E[min(r\_t(\\theta)A\_t, clip(r\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\_t)] uses the \min operation to:",
+        "The PPO objective L^{CLIP}(\\theta) = E[\min(r\_t(\\theta)A\_t, clip(r\_t(\\theta), 1-\\epsilon, 1+\\epsilon)A\_t)] uses the \min operation to:",
       options: [
         "Average the clipped and unclipped objectives for a smoother gradient",
         "Pessimistically bound the objective, preventing the policy from benefiting from going outside the trust region",
@@ -2475,7 +2475,7 @@ const extra2: Record<string, Question[]> = {
         "DPO trains the reward model and policy simultaneously in a single optimization step",
       ],
       correctAnswer: 1,
-      explanation: "The RLHF objective J(\\pi) = E[R(x,y)] - \\beta*KL(\\pi||\\pi_ref) has optimal solution \\pi* \\propto \\pi_ref \cdot exp(R*/\\beta), giving R* = \\beta \cdot log(\\pi*/\\pi_ref) + Z(x). Plugging into the Bradley-Terry preference model P(y_w > y_l) = \\sigma(R(x,y_w) - R(x,y_l)), the reward difference becomes \\beta*(log(\\pi*/\\pi_ref)(y_w) - log(\\pi*/\\pi_ref)(y_l)). DPO directly minimizes -log \\sigma(\\beta * (log(\\pi_\\theta/\\pi_ref)(y_w) - log(\\pi_\\theta/\\pi_ref)(y_l))) over the policy \\pi_\\theta - no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
+      explanation: "The RLHF objective $J(\\pi) = \\mathbb{E}[R(x,y)] - \\beta \\cdot \\text{KL}(\\pi||\\pi_{\\text{ref}})$ has optimal solution $\\pi^* \\propto \\pi_{\\text{ref}} \\cdot \\exp(R^*/\\beta)$, giving $R^* = \\beta \\cdot \\log(\\pi^*/\\pi_{\\text{ref}}) + Z(x)$. Plugging into the Bradley-Terry preference model $P(y_w \\succ y_l) = \\sigma(R(x,y_w) - R(x,y_l))$, the reward difference becomes $\\beta \\cdot (\\log(\\pi^*/\\pi_{\\text{ref}})(y_w) - \\log(\\pi^*/\\pi_{\\text{ref}})(y_l))$. DPO directly minimizes\n\\[\n-\\log \\sigma\\big(\\beta \\cdot (\\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_w) - \\log(\\pi_\\theta/\\pi_{\\text{ref}})(y_l))\\big)\n\\]\nover the policy $\\pi_\\theta$ — no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
       hints: [
         "The optimal RL policy satisfies \\pi* \\propto \\pi_ref \cdot exp(R/\\beta). Can we express R in terms of \\pi* and \\pi_ref?",
         "If R appears in the preference model P(y_w > y_l), and R can be expressed in terms of \\pi, can we optimize \\pi directly on the preference data?",

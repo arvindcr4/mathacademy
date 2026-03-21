@@ -387,9 +387,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Dexterous manipulation involves many interacting contacts (fingertip, pad, side) with high sensitivity to contact geometry and friction; this creates sparse rewards, difficult exploration, and large sim-to-real gaps compared to the relatively simple foot-ground contacts in locomotion.",
+        "**Step 1.** Dexterous manipulation involves many interacting contacts (fingertip, pad, side) with high sensitivity to contact geometry and friction.\n\n**Step 2.** This creates sparse rewards, difficult exploration, and large sim-to-real gaps compared to the relatively simple foot-ground contacts in locomotion.",
       hints: [
-        "Think about how many contact points and degrees of freedom are involved with five fingers vs a walking foot.",
+        "Think about how many contact points and degrees of freedom are involved with five fingers vs. a walking foot.",
         "Consider what makes reward design and exploration harder when contact is critical.",
       ],
     },
@@ -407,10 +407,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "During in-hand manipulation, fingers occlude the contact area from any external camera; tactile sensors (e.g., GelSight, DIGIT) embedded in the fingertips directly measure contact deformation, shear, and slip - enabling sub-millimeter feedback for closed-loop control that vision cannot provide through occlusion.",
+        "**Step 1.** During in-hand manipulation, fingers occlude the contact area from any external camera.\n\n**Step 2.** Tactile sensors (e.g., GelSight, DIGIT) embedded in the fingertips directly measure contact deformation, shear, and slip, enabling sub-millimeter feedback for closed-loop control that vision cannot provide through occlusion.",
       hints: [
         "Think about what a camera can see when your hand is closed around an object being rotated.",
-        "Slip detection requires knowing the force distribution at the contact interface - tactile sensors provide this directly.",
+        "Slip detection requires knowing the force distribution at the contact interface — tactile sensors provide this directly.",
       ],
     },
   ],
@@ -430,7 +430,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Unlike rigid objects that are fully described by 6-DoF pose, deformable objects have high-dimensional (effectively infinite) shape states and exhibit complex dynamics (elasticity, plasticity, friction) that vary with the object\'s current configuration.",
+        "**Step 1.** Rigid objects are fully described by a 6-DoF pose; deformable objects have high-dimensional (effectively infinite) shape states.\n\n**Step 2.** They exhibit complex dynamics (elasticity, plasticity, friction) that vary with the object's current configuration and history.",
       hints: [
         "Think about how many numbers you need to describe the position of every point on a cloth sheet.",
         "Consider how pulling one part of a rope affects all other parts in a history-dependent way.",
@@ -444,7 +444,7 @@ const questions: Record<string, Question[]> = {
         "Representing deformable object state as a learned low-dimensional latent embedding can make manipulation planning tractable by reducing the effective state space dimensionality.",
       correctAnswer: "True",
       explanation:
-        "Learning a compact latent representation (e.g., via a variational autoencoder or graph neural network) of the high-dimensional deformable object configuration enables planning and control algorithms that would be infeasible in the full configuration space.",
+        "**Step 1.** Learning a compact latent representation (e.g., via a variational autoencoder or graph neural network) of the high-dimensional deformable object configuration enables planning and control algorithms that would be infeasible in the full configuration space.",
       hints: [
         "Think about how dimensionality reduction is used in other domains to make problems tractable.",
         "A neural encoder can compress visual or point-cloud observations of cloth into a small vector.",
@@ -464,7 +464,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Cloth is commonly simulated with mass-spring networks (fast, approximate) or FEM (physically accurate) that model stretch, shear, and bending forces between mesh vertices, enabling physics-based prediction of cloth dynamics under robot actions.",
+        "**Step 1.** Cloth is commonly simulated with mass-spring networks (fast, approximate) or FEM (physically accurate).\n\n**Step 2.** Both model stretch, shear, and bending forces between mesh vertices, enabling physics-based prediction of cloth dynamics under robot actions.",
       hints: [
         "Think about what physical forces govern how cloth deforms when pulled at one corner.",
         "These representations are the same ones used in computer graphics for cloth animation.",
