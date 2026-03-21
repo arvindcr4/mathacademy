@@ -254,7 +254,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "The softmax normalises the raw alignment scores $e_{t,s}$ so that $\\sum_s \\alpha_{t,s} = 1$ - each $\\alpha_{t,s}$ behaves like a probability.",
         "Hard alignment (IBM Model 1-4): each target position links to exactly one source position. Soft alignment (Bahdanau): every target attends to every source with fractional weights - differentiable and end-to-end trainable.",
-        "The context vector $\\mathbf{c}_t = \\sum_s \\alpha_{t,s} \\hat{\\mathbf{h}}_s$ is a weighted average of all encoder states.",
       ],
     },
     {
@@ -289,7 +288,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Mnemonic: **B**ahdanau = **B**efore = MLP (additive) came first (2015). **L**uong = **L**ater = dot-product (multiplicative) came second (2015).",
         "Additive: uses $\\tanh$ non-linearity and an extra learnable vector $\\mathbf{v}$. Multiplicative: uses only matrix multiplication and optionally a weight matrix $\\mathbf{W}$ - no $\\tanh$.",
-        "The Transformer's scaled dot-product attention $\\frac{\\mathbf{Q}\\mathbf{K}^\\top}{\\sqrt{d_k}}$ is a dot-product attention (Luong-style), scaled to prevent saturation.",
       ],
     },
   ],
@@ -314,7 +312,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Each head projects into a $d_k = d_\\text{model}/h$ dimensional subspace. 8 heads $\\times$ 64 dims = 512 dims total - same total dimensionality as one 512-dim head.",
         "The key advantage is representational diversity: different heads learn different $\\mathbf{W}_i^Q, \\mathbf{W}_i^K, \\mathbf{W}_i^V$ matrices, attending to different aspects of the input simultaneously.",
-        "Compute comparison: single-head 512-dim attention vs. 8-head 64-dim attention - both require $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ FLOPs.",
       ],
     },
     {
@@ -335,7 +332,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Use the angle-addition formulas: $\\sin(x+y) = \\sin x \\cos y + \\cos x \\sin y$ and $\\cos(x+y) = \\cos x \\cos y - \\sin x \\sin y$. Apply with $x = \\text{pos}/10000^{2i/d}$ and $y = k/10000^{2i/d}$.",
         "The constants $A_{ki}, B_{ki}$ depend only on the offset $k$, not on $\\text{pos}$. This means: given any two position vectors $PE(i)$ and $PE(j)$, their dot product reveals $|i-j|$ - not the absolute positions $i$ and $j$.",
-        "Learned embeddings: no row exists for positions never trained. Sinusoidal: the formula produces a valid vector for any integer position, and dot products between positions encode relative distance.",
       ],
     },
     {
@@ -350,7 +346,6 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Draw the $n \\times n$ attention score matrix for $n=4$ tokens. Encoder: all entries are finite. Decoder: entries above the diagonal (future positions) are masked to $-\\infty$ before softmax.",
         "BERT = encoder only = bidirectional attention. GPT = decoder only = causal attention. This is the fundamental architectural difference between BERT and GPT.",
-        "Causal masking is necessary because the decoder generates tokens sequentially - if position $t$ could attend to position $t+1$ (which hasn't been generated yet), it would be \"cheating\" during inference.",
       ],
     },
   ],
