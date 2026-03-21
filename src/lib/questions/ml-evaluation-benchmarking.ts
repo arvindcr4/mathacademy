@@ -131,9 +131,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MAE = (1/n)\\Sigma|y\\_i − ŷ\\_i| weights all errors equally. RMSE = √((1/n)\\Sigma(y\\_i − ŷ\\_i)\\^2) squares errors before averaging, amplifying large errors disproportionately. In this example, the third prediction has an error of 100K - 5\\times and 10\\times larger than the other errors. Its contribution to MSE = (100K)\\^2 = 10¹⁰, vs. 10K error = (10K)\\^2 = 10⁸ (100\\times smaller). This one outlier drives RMSE >> MAE. The gap RMSE − MAE > 0 always indicates the presence of outlier predictions; when RMSE \\approx MAE, all errors are approximately equal. Use MAE when outlier predictions should not dominate the metric; use RMSE when large errors are especially costly.",
+        "**Step 1:** Define MAE and RMSE. MAE = (1/n)\\sum|y_i − ŷ_i| weights all errors equally. RMSE = \\sqrt{(1/n)\\sum(y_i − ŷ_i)^2} squares errors before averaging, amplifying large errors disproportionately.\n**Step 2:** Identify the outlier effect. In this example, the third prediction has an error of 100K \\text{—} 5\\times and 10\\times larger than the other errors. Its contribution to MSE = (100K)^2 = 10^{10}, vs. 10K error = (10K)^2 = 10^8 (100\\times smaller). This one outlier drives RMSE \\gg MAE.\n**Step 3:** Interpret the gap. The gap RMSE − MAE > 0 always indicates the presence of outlier predictions; when RMSE \\approx MAE, all errors are approximately equal. Use MAE when outlier predictions should not dominate the metric; use RMSE when large errors are especially costly.",
       hints: [
-        "MSE = MAE\\^2 + Var(errors) by the variance decomposition. When all |errors| are equal, RMSE = MAE. When errors vary, RMSE > MAE.",
+        "MSE = $MAE^2$ + Var(errors) by the variance decomposition. When all |errors| are equal, RMSE = MAE. When errors vary, RMSE > MAE.",
         "Gap grows with variance of the error distribution.",
       ],
     },
@@ -142,13 +142,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "R\\^2 = 1 − SS_res / SS_tot = 0.90 always indicates an excellent model fit, regardless of context.",
+        "$R^2 = 1 − SS_{res} / SS_{tot} = 0.90$ always indicates an excellent model fit, regardless of context.",
       correctAnswer: "False",
       explanation:
-        "R\\^2 = 1 − \\Sigma(y\\_i − ŷ\\_i)\\^2 / \\Sigma(y\\_i − ȳ)\\^2. It measures variance explained relative to predicting the mean ȳ. Three scenarios where R\\^2 = 0.90 is misleading: (1) The baseline (predicting ȳ) is trivial - if all y values are nearly identical, any model easily exceeds it. (2) Residual plots show clear structure (heteroscedasticity, nonlinearity) that the model misses - R\\^2 ignores residual patterns. (3) Time series: R\\^2 computed on a random split includes future leakage. Additionally, R\\^2 can be negative for non-linear models evaluated on held-out data (prediction worse than the mean baseline). Always inspect residuals, not just R\\^2.",
+        "**Step 1:** Recall the $R^2$ formula. $R^2 = 1 − \\sum(y_i − ŷ_i)^2 / \\sum(y_i − \\bar{y})^2$, where $\\bar{y}$ is the mean of observed values. It measures variance explained relative to predicting the mean.\n**Step 2:** Recognize three failure modes. (1) If all $y$ values are nearly identical, any model easily exceeds the baseline \\textit{—} $R^2$ will be high even for trivial models. (2) Residual plots showing heteroscedasticity or nonlinearity are invisible to $R^2$ \\textit{—} it ignores residual structure. (3) In time series, a random train/test split can include future leakage, inflating $R^2$.\n**Step 3:** Know that $R^2$ can be negative. For non-linear models evaluated on held-out data, a prediction worse than the mean baseline yields $R^2 < 0$. Always inspect residual plots, not just $R^2$.",
       hints: [
-        "R\\^2 = 1 means perfect fit; R\\^2 = 0 means no better than predicting the mean; R\\^2 < 0 means worse than predicting the mean (possible on test sets).",
-        "Anscombe\'s quartet: four datasets with identical R\\^2, mean, and variance but completely different scatter plots - R\\^2 alone is never sufficient.",
+        "$R^2 = 1$ means perfect fit; $R^2 = 0$ means no better than predicting the mean; $R^2 < 0$ means worse than predicting the mean (possible on test sets).",
+        "Anscombe's quartet: four datasets with identical $R^2$, mean, and variance but completely different scatter plots \\textit{—} $R^2$ alone is never sufficient.",
       ],
     },
     {
@@ -156,7 +156,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A house-price model achieves MSE = 10,000,000,000 (10¹⁰) and MAE = 50,000 on the test set. RMSE = √(10¹⁰) = 100,000. Since RMSE (100K) >> MAE (50K), this implies:",
+        "A house-price model achieves MSE = 10,000,000,000 (10$^{10}$) and MAE = 50,000 on the test set. RMSE = \\sqrt{10^{10}} = 100,000. Since RMSE (100K) \\gg MAE (50K), this implies:",
       options: [
         "The model has both high bias and high variance, requiring regularization",
         "There are likely a small number of very large prediction errors (outliers), inflating the squared-error metric",
@@ -165,10 +165,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The ratio RMSE/MAE = 100K/50K = 2.0. For errors from a Gaussian distribution N(0, \\sigma\\^2), RMSE/MAE \\to √(\\pi/2) \\approx 1.25. A ratio of 2.0 indicates heavy-tailed error distribution - a few very large errors are pulling up RMSE substantially. Mathematical proof: RMSE\\^2 = MAE\\^2 + Var(|errors|) (not exact, but illustrative). If most errors are near 20K but a few are 500K, MAE is pulled modestly upward but RMSE is dominated by the 500K\\^2 = 250,000,000,000 term. Actionable: inspect the distribution of raw errors (histogram or QQ-plot) to identify which samples have extreme errors and diagnose whether they share a pattern (e.g., all luxury properties, all unusual floor plans).",
+        "**Step 1:** Compute the RMSE/MAE ratio. Ratio = 100K/50K = 2.0. For errors from a Gaussian distribution $N(0, \\sigma^2)$, the theoretical ratio is RMSE/MAE \\to \\sqrt{\\pi/2} \\approx 1.25.\n**Step 2:** Identify the diagnostic signal. A ratio of 2.0 \\gg 1.25 indicates a heavy-tailed error distribution \\textit{—} a few very large errors are pulling up RMSE substantially. The mathematical relationship RMSE$^2$ \\approx MAE$^2$ + Var(|errors|) shows that variance in error magnitudes inflates RMSE faster than MAE.\n**Step 3:** Take action. If most errors are near 20K but a few are 500K, RMSE is dominated by the 500K$^2$ = 250,000,000,000 term. Inspect a histogram or QQ-plot of raw errors to identify extreme-error samples and diagnose whether they share a pattern (e.g., all luxury properties, all unusual floor plans).",
       hints: [
-        "RMSE/MAE ratio for Gaussian errors: E[|N(0,\\sigma)|] = \\sigma√(2/\\pi), E[N(0,\\sigma)\\^2]^0.5 = \\sigma. Ratio = √(\\pi/2) \\approx 1.25.",
-        "Ratio >> 1.25 \\to heavy-tailed errors (outlier predictions). Ratio \\approx 1 \\to all errors nearly equal magnitude.",
+        "RMSE/MAE ratio for Gaussian errors: E$[|N(0,\\sigma)|] = \\sigma\\sqrt{2/\\pi}$, E$[N(0,\\sigma)^2]^{0.5} = \\sigma$. Ratio = \\sqrt{\\pi/2} \\approx 1.25.",
+        "Ratio \\gg 1.25 \\to heavy-tailed errors (outlier predictions). Ratio \\approx 1 \\to all errors nearly equal magnitude.",
       ],
     },
   ],
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Terminology: the "positive" class is spam. TP = correctly flagged spam (True Positive). FP = legitimate email flagged as spam (False Positive - the alarm is false). FN = spam delivered to inbox (False Negative - missed the positive). TN = legitimate email delivered correctly (True Negative). Precision = TP/(TP+FP) = 25/35 \\approx 0.714: of all flagged emails, 71.4% are genuinely spam. Recall = TP/(TP+FN) = 25/30 \\approx 0.833: 83.3% of spam was caught. FP rate = FP/(FP+TN) = 10/70 \\approx 0.143: 14.3% of legitimate emails were incorrectly filtered.',
+        "**Step 1:** Identify each term. TP = correctly flagged spam (True Positive). FP = legitimate email flagged as spam (False Positive \\textit{—} the alarm is false). FN = spam delivered to inbox (False Negative \\textit{—} missed the positive). TN = legitimate email delivered correctly (True Negative).\n**Step 2:** Compute the metrics. Precision = TP/(TP+FP) = 25/35 \\approx 0.714 \\textit{—} of all flagged emails, 71.4% are genuinely spam. Recall = TP/(TP+FN) = 25/30 \\approx 0.833 \\textit{—} 83.3% of spam was caught. FP rate = FP/(FP+TN) = 10/70 \\approx 0.143 \\textit{—} 14.3% of legitimate emails were incorrectly filtered.\n**Step 3:** Note the trade-off. Lowering the spam threshold catches more spam (higher recall) but also flags more legitimate email (higher FPR).",
       hints: [
         'False Positive: "false" = the prediction is wrong, "positive" = the predicted label. Wrong positive prediction \\to actual label is negative.',
         "In spam filtering: FP is usually more irritating to users (lost important email) than FN (unwanted email slips through).",
@@ -222,10 +222,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Micro-averaged precision: pool all true positives and false positives across classes. Micro-P = \\SigmaTP_k / (\\SigmaTP_k + \\SigmaFP_k). In single-label classification: every prediction is either a TP for the predicted class or an FP for the predicted class AND an FN for the true class. Crucially, every sample contributes exactly one TP or one FP, and \\SigmaFP_k = total incorrect predictions. Therefore: Micro-P = \\SigmaTP_k / n_samples = total correct / n_samples = Overall Accuracy. This equivalence holds for both micro-precision and micro-recall in single-label multi-class settings. It breaks in multi-label settings where a single prediction can be partially correct.",
+        "**Step 1:** Define micro-averaged precision. Pool all true positives and false positives across classes: Micro-P = \\sum TP_k / (\\sum TP_k + \\sum FP_k).\n**Step 2:** Exploit single-label structure. Every prediction is either a TP for the predicted class or an FP for the predicted class \\textit{and} an FN for the true class. Crucially, every sample contributes exactly one TP or one FP, and \\sum FP_k = total incorrect predictions.\n**Step 3:** Derive the equivalence. Therefore: Micro-P = \\sum TP_k / n_samples = total correct / n_samples = Overall Accuracy. This equivalence holds for both micro-precision and micro-recall in single-label multi-class settings. It breaks in multi-label settings where a single prediction can be partially correct.",
       hints: [
         "Single-label: each sample has one true class. If the model predicts class A for a class-B sample: FP for class A, FN for class B. No FP for classes B or C.",
-        "\\SigmaTP_k = total correct predictions. \\SigmaTP_k + \\SigmaFP_k = n_samples (because every prediction adds to exactly one TP or FP count).",
+        "\\sum TP_k = total correct predictions. \\sum TP_k + \\sum FP_k = n_samples (because every prediction adds to exactly one TP or FP count).",
       ],
     },
   ],
@@ -248,7 +248,7 @@ const questions: Record<string, Question[]> = {
         "**Step 1:** Understand the paired t-test setup. The paired t-test applies to the differences $d_k = acc_A(fold\\ k) - acc_B(fold\\ k)$. It assumes these K differences are i.i.d. from approximately $N(\\mu, \\sigma^2)$.\n\n**Step 2:** Verify the validity condition. The CLT ensures this is approximately valid for K \\geq 10 folds even if individual accuracy distributions are not normal. In this example: $t = 0.02 / (0.013/\\sqrt{10}) = 0.02 / 0.00411 \\approx 4.87$, exceeding $t_{0.025, 9} = 2.262$, so $p < 0.05$.\n\n**Step 3:** Note the anti-conservative nature. The CV folds are NOT independent (they share training data with other folds), making the paired t-test anti-conservative (Bouckaert & Frank). Dietterich's 5\\times2 CV test addresses this.",
       hints: [
         "The key assumption: normality of the differences $d_k$ (not of the raw accuracy values). The CLT applies when K is large enough.",
-        "Independence violation: fold k's test set differs from fold k+1's test set, but their training sets overlap heavily. This induces positive correlation between $d_k$ values, inflating Type I error.",
+        "Independence violation: fold $k$'s test set differs from fold $k+1$'s test set, but their training sets overlap heavily. This induces positive correlation between $d_k$ values, inflating Type I error.",
       ],
     },
     {
@@ -394,10 +394,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Suppose Random Forest CV score = 0.850, XGBoost CV score = 0.853. You select XGBoost and report 0.853 as the generalization estimate. Problem: you have used the 5 fold scores as both a tuning signal (model selection) and a generalization estimate. The selected model\'s CV score is biased upward because you chose it specifically because it had the higher score on these folds - the selection process introduces optimism. Nested CV fixes this: outer loop (K\\_1 = 5 folds) provides held-out test folds; inner loop (K\\_2 = 3 folds) performs model selection on the outer training portion. The outer test fold was never used in selection, giving an unbiased estimate of the model-selection procedure\'s expected performance.",
+        "**Step 1:** Identify the bias source. Suppose Random Forest CV score = 0.850, XGBoost CV score = 0.853. You select XGBoost and report 0.853 as the generalization estimate. The problem: you used the 5-fold scores as both a tuning signal (model selection) and a generalization estimate.\n**Step 2:** Understand the optimism from selection. The selected model's CV score is biased upward because you chose it specifically because it had the higher score on these folds \\textit{—} the selection process introduces optimism. The optimism grows with the number of models compared.\n**Step 3:** Use nested CV for an unbiased estimate. Nested CV fixes this: outer loop ($K_1 = 5$ folds) provides held-out test folds; inner loop ($K_2 = 3$ folds) performs model selection on the outer training portion. The outer test fold was never used in selection, giving an unbiased estimate.",
       hints: [
         'The optimism grows with the number of models compared: comparing 100 models at random will almost certainly find one that "overfits" to the specific CV folds.',
-        "Nested CV is expensive but correct: K\\_1 \\times K\\_2 \\times (models) fits. Simplified alternative: hold out 20% as a final test set, use the remaining 80% for model selection via CV.",
+        "Nested CV is expensive but correct: $K_1 \\times K_2 \\times$ (models) fits. Simplified alternative: hold out 20\\% as a final test set, use the remaining 80\\% for model selection via CV.",
       ],
     },
   ],
