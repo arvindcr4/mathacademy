@@ -71,9 +71,9 @@ const questions: Record<string, Question[]> = {
         "\\[\\theta_{t+1} = \\theta_t - \\eta v_t\\]\n\n" +
         "where \\(\\gamma = \\beta\\) is the momentum coefficient.\n\n" +
         "This 'lookahead' gradient is corrective: it measures how the gradient will change after the momentum step, reducing overshoot and oscillation compared to classical momentum.\n\n" +
-        "\\[\\begin{align}" +
-        "\\theta_{t+1} &= \\theta_t - \\eta \\nabla L(\\theta_t + \\beta v_t) - \\eta \\beta v_t\\" +
-        "\\end{align}\\]\n\n" +
+        "\\begin{align}\n" +
+        "\\theta_{t+1} &= \\theta_t - \\eta \\nabla L(\\theta_t + \\beta v_t) - \\eta \\beta v_t\n" +
+        "\\end{align}\n\n" +
         "The second term (\\( -\\eta \\beta v_t \\)) is a correction that dampens the momentum when the gradient is increasing.",
       hints: [
         "Standard momentum evaluates the gradient at \\(\\theta_t\\); NAG evaluates it at \\(\\theta_t + \\beta v_t\\) - the position momentum will carry you to.",

@@ -125,11 +125,11 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: `Let $A$ be an $n \\times n$ matrix. The determinant $\\det(A)$ has several equivalent interpretations:
 
-**Step 1: Volume interpretation.** The determinant measures the signed volume scaling factor of the linear transformation $T(\\mathbf{x}) = A\\mathbf{x}$. If $\\det(A) = 0$, the transformation collapses $n$-dimensional volume to zero - it maps $\\mathbb{R}^n$ to a lower-dimensional subspace.
+**Step 1:** Volume interpretation. The determinant measures the signed volume scaling factor of the linear transformation $T(\\mathbf{x}) = A\\mathbf{x}$. If $\\det(A) = 0$, the transformation collapses $n$-dimensional volume to zero - it maps $\\mathbb{R}^n$ to a lower-dimensional subspace.
 
-**Step 2: Linear dependence.** A set of vectors $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_n\\}$ in $\\mathbb{R}^n$ is linearly dependent if and only if the determinant of the matrix with those vectors as columns (or rows) equals zero. So $\\det(A) = 0$ means the column vectors of $A$ are linearly dependent.
+**Step 2:** Linear dependence. A set of vectors $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_n\\}$ in $\\mathbb{R}^n$ is linearly dependent if and only if the determinant of the matrix with those vectors as columns (or rows) equals zero. So $\\det(A) = 0$ means the column vectors of $A$ are linearly dependent.
 
-**Step 3: Invertibility.** A matrix is invertible (nonsingular) if and only if $\\det(A) \\neq 0$. When $\\det(A) = 0$, the matrix is singular - it has no inverse.
+**Step 3:** Invertibility. A matrix is invertible (nonsingular) if and only if $\\det(A) \\neq 0$. When $\\det(A) = 0$, the matrix is singular - it has no inverse.
 
 **Why the other options are wrong:**
 - The identity matrix has $\\det(I) = 1$, not 0.
@@ -151,10 +151,10 @@ Therefore, $\\boxed{\\text{The matrix is singular and its columns are linearly d
       correctAnswer: "True",
       explanation: `Let us verify this fundamental property of determinants step by step.
 
-**Step 1: Geometric reasoning.** Consider the geometric interpretation of the determinant as a volume scaling factor. If a linear transformation $A$ scales volume by a factor $\\det(A)$ and a second transformation $B$ scales volume by a factor $\\det(B)$, then applying $B$ first and then $A$ scales volume by $\\det(A) \\cdot \\det(B)$. But $AB$ represents the composition of these transformations, so its determinant must be $\\det(A)\\det(B)$.
+**Step 1:** Geometric reasoning. Consider the geometric interpretation of the determinant as a volume scaling factor. If a linear transformation $A$ scales volume by a factor $\\det(A)$ and a second transformation $B$ scales volume by a factor $\\det(B)$, then applying $B$ first and then $A$ scales volume by $\\det(A) \\cdot \\det(B)$. But $AB$ represents the composition of these transformations, so its determinant must be $\\det(A)\\det(B)$.
 
-**Step 2: Algebraic verification for $2 \\times 2$ matrices.** Let:
-$$A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}, \\quad B = \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix}$$
+**Step 2:** Algebraic verification for $2 \\times 2$ matrices. Let:
+\[A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}, \\quad B = \\begin{pmatrix} e & f \\\\ g & h \\end{pmatrix}\]
 
 Then:
 \\[
@@ -173,7 +173,7 @@ Expanding and factoring:
 &= (ad - bc)(eh - fg) = \\det(A) \\cdot \\det(B)
 \\end{align}
 
-**Step 3: General proof.** The multiplicative property extends to all square matrices and can be proven using the fact that $\\det(AB) = \\det(A)\\det(B)$ follows from the product formula for the exterior algebra: $\\det(A \\wedge B) = \\det(A)\\det(B)$.
+**Step 3:** General proof. The multiplicative property extends to all square matrices and can be proven using the fact that $\\det(AB) = \\det(A)\\det(B)$ follows from the product formula for the exterior algebra: $\\det(A \\wedge B) = \\det(A)\\det(B)$.
 
 An immediate corollary: since $AA^{-1} = I$, we have $\\det(A^{-1}) = 1/\\det(A)$.
 
@@ -198,19 +198,19 @@ Therefore, $\\boxed{\\text{True}}$ - determinants compose multiplicatively under
       correctAnswer: 1,
       explanation: `Let us work through the geometric interpretation using the column vectors explicitly.
 
-**Step 1: Identify the matrix.** The matrix with columns $[2, 0]^T$ and $[0, 3]^T$ is:
-$$A = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}$$
+**Step 1:** Identify the matrix. The matrix with columns $[2, 0]^T$ and $[0, 3]^T$ is:
+\[A = \\begin{pmatrix} 2 & 0 \\\\ 0 & 3 \\end{pmatrix}\]
 
-**Step 2: Trace the unit square.** Consider the unit square with corners at $(0,0)$, $(1,0)$, $(0,1)$, and $(1,1)$. Under the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$:
+**Step 2:** Trace the unit square. Consider the unit square with corners at $(0,0)$, $(1,0)$, $(0,1)$, and $(1,1)$. Under the transformation $\\mathbf{x} \\mapsto A\\mathbf{x}$:
 
 \\begin{align}
 (0,0) &\\mapsto (0,0) \\\\\n(1,0) &\\mapsto A\\begin{pmatrix}1\\\\0\\end{pmatrix} = \\begin{pmatrix}2\\\\0\\end{pmatrix} = (2,0) \\\\\n(0,1) &\\mapsto A\\begin{pmatrix}0\\\\1\\end{pmatrix} = \\begin{pmatrix}0\\\\3\\end{pmatrix} = (0,3) \\\\\n(1,1) &\\mapsto A\\begin{pmatrix}1\\\\1\\end{pmatrix} = \\begin{pmatrix}2\\\\3\\end{pmatrix} = (2,3)
 \\end{align}
 
-**Step 3: Compute the area of the image.** The transformed square is a rectangle with corners $(0,0)$, $(2,0)$, $(0,3)$, $(2,3)$, which has area:
-$$\\text{Area} = 2 \\times 3 = 6$$
+**Step 3:** Compute the area of the image. The transformed square is a rectangle with corners $(0,0)$, $(2,0)$, $(0,3)$, $(2,3)$, which has area:
+\[\\text{Area} = 2 \\times 3 = 6\]
 
-**Step 4: Connect to the determinant formula.** For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the area of the parallelogram spanned by its column vectors $[a,c]^T$ and $[b,d]^T$ is $|ad - bc| = |\\det(A)|$. Here, $ad - bc = 2 \\cdot 3 - 0 \\cdot 0 = 6$.
+**Step 4:** Connect to the determinant formula. For a $2 \\times 2$ matrix $A = \\begin{pmatrix} a & b \\\\ c & d \\end{pmatrix}$, the area of the parallelogram spanned by its column vectors $[a,c]^T$ and $[b,d]^T$ is $|ad - bc| = |\\det(A)|$. Here, $ad - bc = 2 \\cdot 3 - 0 \\cdot 0 = 6$.
 
 The diagonal entries of $A$ stretch the $x$-direction by a factor of 2 and the $y$-direction by a factor of 3, so the area scales by $2 \\times 3 = 6$.
 
@@ -242,21 +242,21 @@ Therefore, $\\boxed{\\text{The transformation scales area by a factor of 6 (a un
       correctAnswer: 1,
       explanation: `The rank-nullity theorem is a fundamental result about linear transformations. Let us break it down.
 
-**Step 1: Define the key quantities.**
+**Step 1:** Define the key quantities.
 - $\\text{rank}(A) = \\dim(\\text{col}(A))$: the dimension of the column space of $A$.
 - $\\text{nullity}(A) = \\dim(\\text{null}(A))$: the dimension of the null space (kernel) of $A$.
 - $n$: the number of columns of $A$ (the dimension of the input space $\\mathbb{R}^n$).
 
-**Step 2: Understand the partition.** For a linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ represented by $A$, every input vector $\\mathbf{x} \\in \\mathbb{R}^n$ can be uniquely decomposed as:
-$$\\mathbf{x} = \\mathbf{x}_{\\text{range}} + \\mathbf{x}_{\\text{kernel}}$$
+**Step 2:** Understand the partition. For a linear transformation $T: \\mathbb{R}^n \\to \\mathbb{R}^m$ represented by $A$, every input vector $\\mathbf{x} \\in \\mathbb{R}^n$ can be uniquely decomposed as:
+\[\\mathbf{x} = \\mathbf{x}_{\\text{range}} + \\mathbf{x}_{\\text{kernel}}\]
 where $\\mathbf{x}_{\\text{range}}$ is in the row space (or more precisely, projects nontrivially onto the column space) and $\\mathbf{x}_{\\text{kernel}}$ lies in the null space.
 
-**Step 3: Apply the theorem.** The column space and null space are orthogonal complements (in the row space sense). The dimensions must add up to the input dimension:
-$$\\text{rank}(A) + \\text{nullity}(A) = n$$
+**Step 3:** Apply the theorem. The column space and null space are orthogonal complements (in the row space sense). The dimensions must add up to the input dimension:
+\[\\text{rank}(A) + \\text{nullity}(A) = n\]
 
 This holds because the null space captures "lost" input dimensions (mapped to zero), and the column space captures the "useful" output dimensions.
 
-**Step 4: Verify with an example.** For a rank-1 matrix $A = \\mathbf{u}\\mathbf{v}^T$ of size $m \\times n$:
+**Step 4:** Verify with an example. For a rank-1 matrix $A = \\mathbf{u}\\mathbf{v}^T$ of size $m \\times n$:
 - $\\text{rank}(A) = 1$
 - $\\text{nullity}(A) = n - 1$
 - $\\text{rank}(A) + \\text{nullity}(A) = 1 + (n-1) = n$ ✓
@@ -276,20 +276,20 @@ Therefore, $\\boxed{\\text{rank}(A) + \\text{nullity}(A) = n}$ is the correct st
       correctAnswer: "True",
       explanation: `Let us prove this fundamental equivalence between uniqueness of solutions and the trivial null space.
 
-**Step 1: Set up the claim.** Suppose $Ax = b$ has a unique solution $\\mathbf{x}^*$. We want to show that the only vector in $\\text{null}(A)$ is $\\mathbf{0}$.
+**Step 1:** Set up the claim. Suppose $Ax = b$ has a unique solution $\\mathbf{x}^*$. We want to show that the only vector in $\\text{null}(A)$ is $\\mathbf{0}$.
 
-**Step 2: Proof by contradiction.** Assume there exists a nonzero vector $\\mathbf{x}_0 \\in \\text{null}(A)$, so $A\\mathbf{x}_0 = \\mathbf{0}$ and $\\mathbf{x}_0 \\neq \\mathbf{0}$.
+**Step 2:** Proof by contradiction. Assume there exists a nonzero vector $\\mathbf{x}_0 \\in \\text{null}(A)$, so $A\\mathbf{x}_0 = \\mathbf{0}$ and $\\mathbf{x}_0 \\neq \\mathbf{0}$.
 
-**Step 3: Construct a second solution.** Consider $\\mathbf{x}^* + \\mathbf{x}_0$:
-$$A(\\mathbf{x}^* + \\mathbf{x}_0) = A\\mathbf{x}^* + A\\mathbf{x}_0 = b + \\mathbf{0} = b$$
+**Step 3:** Construct a second solution. Consider $\\mathbf{x}^* + \\mathbf{x}_0$:
+\[A(\\mathbf{x}^* + \\mathbf{x}_0) = A\\mathbf{x}^* + A\\mathbf{x}_0 = b + \\mathbf{0} = b\]
 
 So $\\mathbf{x}^* + \\mathbf{x}_0$ is also a solution to $Ax = b$.
 
-**Step 4: Show the contradiction.** Since $\\mathbf{x}_0 \\neq \\mathbf{0}$, we have $\\mathbf{x}^* + \\mathbf{x}_0 \\neq \\mathbf{x}^*$. This means $Ax = b$ has at least two distinct solutions: $\\mathbf{x}^*$ and $\\mathbf{x}^* + \\mathbf{x}_0$.
+**Step 4:** Show the contradiction. Since $\\mathbf{x}_0 \\neq \\mathbf{0}$, we have $\\mathbf{x}^* + \\mathbf{x}_0 \\neq \\mathbf{x}^*$. This means $Ax = b$ has at least two distinct solutions: $\\mathbf{x}^*$ and $\\mathbf{x}^* + \\mathbf{x}_0$.
 
 This contradicts our assumption that the solution is unique.
 
-**Step 5: Conclude.** Therefore, if $Ax = b$ has a unique solution, the null space must be trivial: $\\text{null}(A) = \\{\\mathbf{0}\\}$, which means $\\text{nullity}(A) = 0$.
+**Step 5:** Conclude. Therefore, if $Ax = b$ has a unique solution, the null space must be trivial: $\\text{null}(A) = \\{\\mathbf{0}\\}$, which means $\\text{nullity}(A) = 0$.
 
 **Geometric interpretation:** A linear transformation has a unique inverse on its image if and only if it is injective (one-to-one) - no two different inputs map to the same output. The null space being trivial is exactly the condition for injectivity.
 
@@ -314,22 +314,22 @@ Therefore, $\\boxed{\\text{True}}$.`,
       correctAnswer: 3,
       explanation: `Let us apply the rank-nullity theorem systematically to find both dimensions.
 
-**Step 1: Identify the given information.**
+**Step 1:** Identify the given information.
 - Matrix $A$ is of size $5 \\times 8$: $m = 5$ rows, $n = 8$ columns.
 - $\\text{rank}(A) = 3$.
 
-**Step 2: Apply rank-nullity.** The rank-nullity theorem states:
-$$\\text{rank}(A) + \\text{nullity}(A) = n = 8$$
+**Step 2:** Apply rank-nullity. The rank-nullity theorem states:
+\[\\text{rank}(A) + \\text{nullity}(A) = n = 8\]
 
 Solving for nullity:
-$$\\text{nullity}(A) = 8 - \\text{rank}(A) = 8 - 3 = 5$$
+\[\\text{nullity}(A) = 8 - \\text{rank}(A) = 8 - 3 = 5\]
 
-**Step 3: Determine the column space dimension.** The column space $\\text{col}(A)$ is a subspace of $\\mathbb{R}^5$ (the output space), and its dimension equals the rank:
-$$\\dim(\\text{col}(A)) = \\text{rank}(A) = 3$$
+**Step 3:** Determine the column space dimension. The column space $\\text{col}(A)$ is a subspace of $\\mathbb{R}^5$ (the output space), and its dimension equals the rank:
+\[\\dim(\\text{col}(A)) = \\text{rank}(A) = 3\]
 
 So the column space lives in $\\mathbb{R}^5$ but only has dimension 3 - it is a 3-dimensional hyperplane (flat) inside 5-dimensional space.
 
-**Step 4: Verify the dimensional balance.** Think of the transformation $T: \\mathbb{R}^8 \\to \\mathbb{R}^5$ as a "filter":
+**Step 4:** Verify the dimensional balance. Think of the transformation $T: \\mathbb{R}^8 \\to \\mathbb{R}^5$ as a "filter":
 - 3 dimensions of input are "preserved" as useful output (rank).
 - 5 dimensions of input are "collapsed to zero" (nullity).
 - Total: $3 + 5 = 8$ input dimensions accounted for.
@@ -359,22 +359,22 @@ Therefore, $\\boxed{\\text{Null space: dimension 5 }(8 - 3),\\text{ Column space
       correctAnswer: 1,
       explanation: `Let us derive the projection formula from first principles using the orthogonality condition.
 
-**Step 1: Define the problem.** We want to find the orthogonal projection $\\mathbf{p}$ of $\\mathbf{b}$ onto the line spanned by $\\mathbf{a}$. The projection $\\mathbf{p}$ must lie on this line, so it has the form:
-$$\\mathbf{p} = \\lambda \\mathbf{a}$$
+**Step 1:** Define the problem. We want to find the orthogonal projection $\\mathbf{p}$ of $\\mathbf{b}$ onto the line spanned by $\\mathbf{a}$. The projection $\\mathbf{p}$ must lie on this line, so it has the form:
+\[\\mathbf{p} = \\lambda \\mathbf{a}\]
 for some scalar $\\lambda$.
 
-**Step 2: Impose the orthogonality condition.** The error vector $\\mathbf{b} - \\mathbf{p}$ must be orthogonal to $\\mathbf{a}$:
-$$\\mathbf{a}^T(\\mathbf{b} - \\lambda\\mathbf{a}) = 0$$
+**Step 2:** Impose the orthogonality condition. The error vector $\\mathbf{b} - \\mathbf{p}$ must be orthogonal to $\\mathbf{a}$:
+\[\\mathbf{a}^T(\\mathbf{b} - \\lambda\\mathbf{a}) = 0\]
 
-**Step 3: Solve for \\lambda.** Expanding:
+**Step 3:** Solve for \\lambda. Expanding:
 \\begin{align}
 \\mathbf{a}^T\\mathbf{b} - \\lambda\\mathbf{a}^T\\mathbf{a} &= 0 \\\\\n\\lambda\\mathbf{a}^T\\mathbf{a} &= \\mathbf{a}^T\\mathbf{b} \\\\\n\\lambda &= \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}}
 \\end{align}
 
-**Step 4: Write the projection vector.** Substituting $\\lambda$:
-$$\\mathbf{p} = \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}} \\cdot \\mathbf{a}$$
+**Step 4:** Write the projection vector. Substituting $\\lambda$:
+\[\\mathbf{p} = \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}} \\cdot \\mathbf{a}\]
 
-**Step 5: Interpret geometrically.** The scalar $\\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}}$ is the signed length of the projection along $\\mathbf{a}$ (note: if $\\mathbf{a}$ is not a unit vector, $\\mathbf{a}^T\\mathbf{a} \\neq 1$). The projection $\\mathbf{p}$ points in the same direction as $\\mathbf{a}$ when $\\mathbf{a}^T\\mathbf{b} > 0$ and in the opposite direction when $\\mathbf{a}^T\\mathbf{b} < 0$.
+**Step 5:** Interpret geometrically. The scalar $\\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T\\mathbf{a}}$ is the signed length of the projection along $\\mathbf{a}$ (note: if $\\mathbf{a}$ is not a unit vector, $\\mathbf{a}^T\\mathbf{a} \\neq 1$). The projection $\\mathbf{p}$ points in the same direction as $\\mathbf{a}$ when $\\mathbf{a}^T\\mathbf{b} > 0$ and in the opposite direction when $\\mathbf{a}^T\\mathbf{b} < 0$.
 
 **Geometric intuition:** The projection $\\mathbf{p}$ is the "shadow" of $\\mathbf{b}$ cast onto the line through the origin in the direction of $\\mathbf{a}$, following the rule that the shadow line (error $\\mathbf{b} - \\mathbf{p}$) is perpendicular to $\\mathbf{a}$.
 
@@ -393,23 +393,23 @@ Therefore, $\\boxed{\\mathbf{p} = \\frac{\\mathbf{a}^T\\mathbf{b}}{\\mathbf{a}^T
       correctAnswer: "True",
       explanation: `The Gram-Schmidt process is an algorithm for constructing an orthonormal basis from a set of linearly independent vectors. Let us walk through it step by step.
 
-**Step 1: The algorithm.** Given linearly independent vectors $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\ldots, \\mathbf{v}_n\\}$, we construct an orthonormal set $\\{\\mathbf{u}_1, \\mathbf{u}_2, \\ldots, \\mathbf{u}_n\\}$ as follows:
+**Step 1:** The algorithm. Given linearly independent vectors $\\{\\mathbf{v}_1, \\mathbf{v}_2, \\ldots, \\mathbf{v}_n\\}$, we construct an orthonormal set $\\{\\mathbf{u}_1, \\mathbf{u}_2, \\ldots, \\mathbf{u}_n\\}$ as follows:
 
 For $k = 1$:
-$$\\tilde{\\mathbf{u}}_1 = \\mathbf{v}_1, \\quad \\mathbf{u}_1 = \\frac{\\tilde{\\mathbf{u}}_1}{\\|\\tilde{\\mathbf{u}}_1\\|}$$
+\[\\tilde{\\mathbf{u}}_1 = \\mathbf{v}_1, \\quad \\mathbf{u}_1 = \\frac{\\tilde{\\mathbf{u}}_1}{\\|\\tilde{\\mathbf{u}}_1\\|}\]
 
 For each $k = 2, 3, \\ldots, n$:
 \\begin{align}
 \\tilde{\\mathbf{u}}_k &= \\mathbf{v}_k - \\sum_{i=1}^{k-1} (\\mathbf{u}_i^T \\mathbf{v}_k) \\mathbf{u}_i \\quad \\text{(subtract projections onto previous orthonormal vectors)} \\\\\n\\mathbf{u}_k &= \\frac{\\tilde{\\mathbf{u}}_k}{\\|\\tilde{\\mathbf{u}}_k\\|} \\quad \\text{(normalize)}
 \\end{align}
 
-**Step 2: Verification of orthogonality.** At step $k$, $\\tilde{\\mathbf{u}}_k$ is orthogonal to each $\\mathbf{u}_i$ for $i < k$ because:
-$$\\mathbf{u}_i^T \\tilde{\\mathbf{u}}_k = \\mathbf{u}_i^T\\mathbf{v}_k - \\sum_{j=1}^{k-1}(\\mathbf{u}_j^T\\mathbf{v}_k)(\\mathbf{u}_i^T\\mathbf{u}_j) = \\mathbf{u}_i^T\\mathbf{v}_k - \\mathbf{u}_i^T\\mathbf{v}_k = 0$$
+**Step 2:** Verification of orthogonality. At step $k$, $\\tilde{\\mathbf{u}}_k$ is orthogonal to each $\\mathbf{u}_i$ for $i < k$ because:
+\[\\mathbf{u}_i^T \\tilde{\\mathbf{u}}_k = \\mathbf{u}_i^T\\mathbf{v}_k - \\sum_{j=1}^{k-1}(\\mathbf{u}_j^T\\mathbf{v}_k)(\\mathbf{u}_i^T\\mathbf{u}_j) = \\mathbf{u}_i^T\\mathbf{v}_k - \\mathbf{u}_i^T\\mathbf{v}_k = 0\]
 (using orthonormality: $\\mathbf{u}_i^T\\mathbf{u}_j = \\delta_{ij}$).
 
-**Step 3: Verification of span.** Each $\\tilde{\\mathbf{u}}_k$ is a linear combination of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$, so by induction the span of $\\{\\mathbf{u}_1, \\ldots, \\mathbf{u}_k\\}$ equals the span of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$. After $n$ steps, the spans are identical.
+**Step 3:** Verification of span. Each $\\tilde{\\mathbf{u}}_k$ is a linear combination of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$, so by induction the span of $\\{\\mathbf{u}_1, \\ldots, \\mathbf{u}_k\\}$ equals the span of $\\{\\mathbf{v}_1, \\ldots, \\mathbf{v}_k\\}$. After $n$ steps, the spans are identical.
 
-**Step 4: Geometric intuition.** At each step, we "peel off" the components of $\\mathbf{v}_k$ that lie along previously computed orthonormal directions, keeping only the residual (which is orthogonal to all of them). This residual becomes the next orthonormal basis vector.
+**Step 4:** Geometric intuition. At each step, we "peel off" the components of $\\mathbf{v}_k$ that lie along previously computed orthonormal directions, keeping only the residual (which is orthogonal to all of them). This residual becomes the next orthonormal basis vector.
 
 Therefore, $\\boxed{\\text{True}}$ - Gram-Schmidt produces an orthonormal basis spanning the same subspace as the original linearly independent set.`,
       hints: [
@@ -431,30 +431,30 @@ Therefore, $\\boxed{\\text{True}}$ - Gram-Schmidt produces an orthonormal basis 
       correctAnswer: 1,
       explanation: `Let us verify the properties of orthogonal matrices systematically.
 
-**Step 1: Length preservation.** For any vector $\\mathbf{x} \\in \\mathbb{R}^n$:
-$$\\|Q\\mathbf{x}\\|^2 = (Q\\mathbf{x})^T(Q\\mathbf{x}) = \\mathbf{x}^TQ^TQ\\mathbf{x} = \\mathbf{x}^T I \\mathbf{x} = \\mathbf{x}^T\\mathbf{x} = \\|\\mathbf{x}\\|^2$$
+**Step 1:** Length preservation. For any vector $\\mathbf{x} \\in \\mathbb{R}^n$:
+\[\\|Q\\mathbf{x}\\|^2 = (Q\\mathbf{x})^T(Q\\mathbf{x}) = \\mathbf{x}^TQ^TQ\\mathbf{x} = \\mathbf{x}^T I \\mathbf{x} = \\mathbf{x}^T\\mathbf{x} = \\|\\mathbf{x}\\|^2\]
 
 So $Q$ preserves the length of every vector. Since the angle between two vectors is defined via the dot product:
-$$\\cos\\theta = \\frac{\\mathbf{x}^T\\mathbf{y}}{\\|\\mathbf{x}\\|\\|\\mathbf{y}\\|}$$
+\[\\cos\\theta = \\frac{\\mathbf{x}^T\\mathbf{y}}{\\|\\mathbf{x}\\|\\|\\mathbf{y}\\|}\]
 and both numerator and denominator are preserved under $Q$, the angle is also preserved.
 
-**Step 2: Determinant.** Taking determinants of $Q^TQ = I$:
-$$\\det(Q^TQ) = \\det(Q^T)\\det(Q) = \\det(Q)^2 = \\det(I) = 1$$
+**Step 2:** Determinant. Taking determinants of $Q^TQ = I$:
+\[\\det(Q^TQ) = \\det(Q^T)\\det(Q) = \\det(Q)^2 = \\det(I) = 1\]
 
 So $\\det(Q)^2 = 1$, which means $\\det(Q) = \\pm 1$. The value $+1$ corresponds to rotations (orientation-preserving), and $-1$ corresponds to improper rotations/reflections (orientation-reversing).
 
-**Step 3: Why orthogonality does NOT imply symmetry.** Consider:
-$$Q = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}$$
+**Step 3:** Why orthogonality does NOT imply symmetry. Consider:
+\[Q = \\begin{pmatrix} \\cos\\theta & -\\sin\\theta \\\\ \\sin\\theta & \\cos\\theta \\end{pmatrix}\]
 
 This rotation matrix is orthogonal but not symmetric (unless $\\theta = 0$ or $\\pi$). Orthogonality and symmetry are independent properties.
 
-**Step 4: Why eigenvalues are not all 1.** The eigenvalues of an orthogonal matrix lie on the unit circle in $\\mathbb{C}$: if $Q\\mathbf{v} = \\lambda\\mathbf{v}$, then:
-$$\\|\\mathbf{v}\\| = \\|Q\\mathbf{v}\\| = |\\lambda|\\|\\mathbf{v}\\| \\implies |\\lambda| = 1$$
+**Step 4:** Why eigenvalues are not all 1. The eigenvalues of an orthogonal matrix lie on the unit circle in $\\mathbb{C}$: if $Q\\mathbf{v} = \\lambda\\mathbf{v}$, then:
+\[\\|\\mathbf{v}\\| = \\|Q\\mathbf{v}\\| = |\\lambda|\\|\\mathbf{v}\\| \\implies |\\lambda| = 1\]
 
 But $\\lambda$ can be complex (e.g., rotation by $\\theta \\neq 0, \\pi$ gives eigenvalues $e^{\\pm i\\theta}$), and even for real eigenvalues, only $\\lambda = \\pm 1$ are possible.
 
-**Step 5: Counterexample for option 3 (always +1 determinant).** A reflection matrix like:
-$$Q = \\begin{pmatrix} -1 & 0 \\\\ 0 & 1 \\end{pmatrix}$$
+**Step 5:** Counterexample for option 3 (always +1 determinant). A reflection matrix like:
+\[Q = \\begin{pmatrix} -1 & 0 \\\\ 0 & 1 \\end{pmatrix}\]
 has $\\det(Q) = -1$, is orthogonal, but is not a rotation.
 
 Therefore, $\\boxed{Q\\text{ preserves vector lengths and angles (det}(Q) = \\pm 1\\text{)}}$ is the correct property.`,
@@ -476,20 +476,20 @@ Therefore, $\\boxed{Q\\text{ preserves vector lengths and angles (det}(Q) = \\pm
       correctAnswer: 1,
       explanation: `Least squares is the standard method for solving overdetermined linear systems. Let us understand the minimization objective.
 
-**Step 1: Understand the problem.** When $Ax = b$ has more equations than unknowns ( $m > n$ ), an exact solution generally does not exist because $b$ typically lies outside the column space of $A$.
+**Step 1:** Understand the problem. When $Ax = b$ has more equations than unknowns ( $m > n$ ), an exact solution generally does not exist because $b$ typically lies outside the column space of $A$.
 
-**Step 2: Define the residual.** For a candidate solution $\\mathbf{x}$, the residual vector is:
-$$\\mathbf{r}(\\mathbf{x}) = A\\mathbf{x} - \\mathbf{b}$$
+**Step 2:** Define the residual. For a candidate solution $\\mathbf{x}$, the residual vector is:
+\[\\mathbf{r}(\\mathbf{x}) = A\\mathbf{x} - \\mathbf{b}\]
 
 The residual measures how far $A\\mathbf{x}$ is from $\\mathbf{b}$.
 
-**Step 3: The least squares criterion.** We seek $\\hat{\\mathbf{x}}$ that minimizes the squared Euclidean norm of the residual:
-$$\\hat{\\mathbf{x}} = \\arg\\min_{\\mathbf{x} \\in \\mathbb{R}^n} \\|A\\mathbf{x} - \\mathbf{b}\\|^2$$
+**Step 3:** The least squares criterion. We seek $\\hat{\\mathbf{x}}$ that minimizes the squared Euclidean norm of the residual:
+\[\\hat{\\mathbf{x}} = \\arg\\min_{\\mathbf{x} \\in \\mathbb{R}^n} \\|A\\mathbf{x} - \\mathbf{b}\\|^2\]
 
 This is the sum of squared residuals (the $\\|\\cdot\\|^2$ notation means $\\mathbf{r}^T\\mathbf{r} = \\sum_i r_i^2$):
-$$\\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b}) = \\sum_{i=1}^m r_i^2$$
+\[\\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b}) = \\sum_{i=1}^m r_i^2\]
 
-**Step 4: Geometric interpretation.** The least squares solution $\\hat{\\mathbf{x}}$ makes $A\\hat{\\mathbf{x}}$ the orthogonal projection of $\\mathbf{b}$ onto the column space of $A$. The quantity $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ is the squared distance between $\\mathbf{b}$ and its projection in the column space.
+**Step 4:** Geometric interpretation. The least squares solution $\\hat{\\mathbf{x}}$ makes $A\\hat{\\mathbf{x}}$ the orthogonal projection of $\\mathbf{b}$ onto the column space of $A$. The quantity $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ is the squared distance between $\\mathbf{b}$ and its projection in the column space.
 
 **Step 5: Why squared norm?** Minimizing $\\|A\\mathbf{x} - \\mathbf{b}\\|$ and $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$ give the same $\\hat{\\mathbf{x}}$ (since the square root is monotonic), but the squared form avoids the square root and leads to a linear system (the normal equations).
 
@@ -513,25 +513,25 @@ Therefore, $\\boxed{\\|Ax - b\\|^2}$ is the quantity minimized by least squares.
       correctAnswer: "False",
       explanation: `The normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$ are derived from the least squares problem, but their solvability depends on the rank of $A$.
 
-**Step 1: Derive the normal equations.** To minimize $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$, we set the gradient to zero:
-$$\\nabla_\\mathbf{x} \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = 2A^T(A\\mathbf{x} - \\mathbf{b}) = 0$$
+**Step 1:** Derive the normal equations. To minimize $\\|A\\mathbf{x} - \\mathbf{b}\\|^2$, we set the gradient to zero:
+\[\\nabla_\\mathbf{x} \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = 2A^T(A\\mathbf{x} - \\mathbf{b}) = 0\]
 which gives:
-$$A^TA\\mathbf{x} = A^T\\mathbf{b}$$
+\[A^TA\\mathbf{x} = A^T\\mathbf{b}\]
 
 **Step 2: When does $A^TA$ have full rank?** The matrix $A^TA$ is $n \\times n$. It is invertible (and thus the normal equations have a unique solution) if and only if $A$ has full column rank - that is, $\\text{rank}(A) = n$.
 
-**Step 3: The rank-deficient case.** If $A$ has linearly dependent columns ( $\\text{rank}(A) < n$ ), then:
+**Step 3:** The rank-deficient case. If $A$ has linearly dependent columns ( $\\text{rank}(A) < n$ ), then:
 - $\\text{rank}(A^TA) = \\text{rank}(A) < n$ (rank does not increase under $A^TA$)
 - $A^TA$ is singular - it has no inverse.
 - The normal equations have infinitely many solutions (if any exist at all).
 
-**Step 4: Concrete counterexample.** Let:
-$$A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 0 \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} 1 \\\\ 1 \\\\ 1 \\end{pmatrix}$$
+**Step 4:** Concrete counterexample. Let:
+\[A = \\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\\\ 1 & 0 \\end{pmatrix}, \\quad \\mathbf{b} = \\begin{pmatrix} 1 \\\\ 1 \\\\ 1 \\end{pmatrix}\]
 
 The columns of $A$ are linearly independent, so the normal equations have a unique solution $\\hat{\\mathbf{x}} = (0.5, 1)^T$.
 
 But if we modify $A$ to have dependent columns:
-$$A = \\begin{pmatrix} 1 & 2 \\\\ 1 & 2 \\\\ 0 & 0 \\end{pmatrix}$$
+\[A = \\begin{pmatrix} 1 & 2 \\\\ 1 & 2 \\\\ 0 & 0 \\end{pmatrix}\]
 
 Then $A^TA = \\begin{pmatrix} 2 & 4 \\\\ 4 & 8 \\end{pmatrix}$ has determinant 0 (singular), and the normal equations may have no unique solution.
 
@@ -553,33 +553,33 @@ Therefore, $\\boxed{\\text{False}}$ - the normal equations have a unique solutio
       correctAnswer: 1,
       explanation: `When $A$ has full column rank, the Moore-Penrose pseudoinverse simplifies significantly. Let us work through this carefully.
 
-**Step 1: Full column rank condition.** $A$ has full column rank means $\\text{rank}(A) = n$ (all columns are linearly independent). This requires $m \\geq n$ (more rows than columns, or equal).
+**Step 1:** Full column rank condition. $A$ has full column rank means $\\text{rank}(A) = n$ (all columns are linearly independent). This requires $m \\geq n$ (more rows than columns, or equal).
 
-**Step 2: Properties of the pseudoinverse.** The Moore-Penrose pseudoinverse $A^+$ satisfies four conditions:
+**Step 2:** Properties of the pseudoinverse. The Moore-Penrose pseudoinverse $A^+$ satisfies four conditions:
 1. $AA^+A = A$
 2. $A^+AA^+ = A^+$
 3. $(AA^+)^T = AA^+$
 4. $(A^+A)^T = A^+A$
 
-**Step 3: The left inverse when $A$ has full column rank.** When $A$ has full column rank, it has a left inverse:
-$$A^+A = I_n$$
+**Step 3:** The left inverse when $A$ has full column rank. When $A$ has full column rank, it has a left inverse:
+\[A^+A = I_n\]
 
 To find $A^+$, we require $A^+A = I$, which means $A^+$ must be a left inverse of $A$. Since $A^T A$ is invertible (full column rank), we can compute:
-$$A^+ = (A^T A)^{-1} A^T$$
+\[A^+ = (A^T A)^{-1} A^T\]
 
-**Step 4: Verification.** Let us verify that this $A^+$ satisfies the pseudoinverse properties:
+**Step 4:** Verification. Let us verify that this $A^+$ satisfies the pseudoinverse properties:
 \\begin{align}
 AA^+ &= A(A^T A)^{-1} A^T \\quad \\text{(an } m \\times m \\text{ matrix, typically not identity)} \\\\\nA^+A &= (A^T A)^{-1} A^T A = I_n \\quad \\checkmark
 \\end{align}
 
 So $A^+A = I_n$ is the key property when $A$ has full column rank.
 
-**Step 5: The least squares solution.** With this pseudoinverse, the least squares solution is:
-$$\\hat{\\mathbf{x}} = A^+ \\mathbf{b} = (A^T A)^{-1} A^T \\mathbf{b}$$
+**Step 5:** The least squares solution. With this pseudoinverse, the least squares solution is:
+\[\\hat{\\mathbf{x}} = A^+ \\mathbf{b} = (A^T A)^{-1} A^T \\mathbf{b}\]
 
 This is exactly the solution to the normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$.
 
-**Step 6: Why the other options are wrong.**
+**Step 6:** Why the other options are wrong.
 - $A^+ = A$: Only true for identity-like matrices, not in general.
 - $A^+ = A^T(AA^T)^{-1}$: This is the formula for the pseudoinverse when $A$ has full row rank (not column rank).
 - $A^+A^+ = I$: This is meaningless; $A^+$ is not idempotent.
@@ -602,20 +602,20 @@ Therefore, $\\boxed{A^+ = (A^TA)^{-1}A^T}$ is correct when $A$ has full column r
       correctAnswer: 1,
       explanation: `The eigenvalue-eigenvector equation is the fundamental definition in eigendecomposition. Let us clarify it carefully.
 
-**Step 1: The defining equation.** By definition, $\\lambda$ is an eigenvalue of $A$ and $\\mathbf{v} \\neq \\mathbf{0}$ is a corresponding eigenvector if and only if:
-$$A\\mathbf{v} = \\lambda\\mathbf{v}$$
+**Step 1:** The defining equation. By definition, $\\lambda$ is an eigenvalue of $A$ and $\\mathbf{v} \\neq \\mathbf{0}$ is a corresponding eigenvector if and only if:
+\[A\\mathbf{v} = \\lambda\\mathbf{v}\]
 
 This is the only correct form of the equation.
 
-**Step 2: What it means geometrically.** The equation $A\\mathbf{v} = \\lambda\\mathbf{v}$ says that when $A$ acts on the eigenvector $\\mathbf{v}$, it only stretches (or shrinks, if $\\lambda < 0$) the vector - it does not change its direction. The eigenvalue $\\lambda$ is the scaling factor.
+**Step 2:** What it means geometrically. The equation $A\\mathbf{v} = \\lambda\\mathbf{v}$ says that when $A$ acts on the eigenvector $\\mathbf{v}$, it only stretches (or shrinks, if $\\lambda < 0$) the vector - it does not change its direction. The eigenvalue $\\lambda$ is the scaling factor.
 
-**Step 3: Why the other options are wrong.**
+**Step 3:** Why the other options are wrong.
 - $A\\mathbf{v} = \\mathbf{0}$: This defines a vector in the null space, not an eigenvector. The zero vector is never considered an eigenvector.
 - $A\\mathbf{v} = \\mathbf{v}\\lambda\\mathbf{v}$: This is not a valid matrix-vector equation (dimensions do not match).
 - $A + \\lambda = \\mathbf{v}$: You cannot add a scalar to a matrix - this is dimensionally meaningless.
 
-**Step 4: How to find eigenvalues.** From $A\\mathbf{v} = \\lambda\\mathbf{v}$, we get $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. For a nonzero $\\mathbf{v}$ to exist, the matrix $A - \\lambda I$ must be singular, so:
-$$\\det(A - \\lambda I) = 0$$
+**Step 4:** How to find eigenvalues. From $A\\mathbf{v} = \\lambda\\mathbf{v}$, we get $(A - \\lambda I)\\mathbf{v} = \\mathbf{0}$. For a nonzero $\\mathbf{v}$ to exist, the matrix $A - \\lambda I$ must be singular, so:
+\[\\det(A - \\lambda I) = 0\]
 
 This characteristic equation gives the eigenvalues $\\lambda_1, \\lambda_2, \\ldots, \\lambda_n$.
 
@@ -634,24 +634,24 @@ Therefore, $\\boxed{A\\mathbf{v} = \\lambda\\mathbf{v}}$ is the correct eigenval
       correctAnswer: "False",
       explanation: `Not all matrices can be diagonalized. Let us examine the conditions and a counterexample.
 
-**Step 1: Diagonalizability requires n independent eigenvectors.** A matrix $A$ is diagonalizable if and only if there exists an invertible matrix $P$ such that:
-$$A = PDP^{-1}$$
+**Step 1:** Diagonalizability requires n independent eigenvectors. A matrix $A$ is diagonalizable if and only if there exists an invertible matrix $P$ such that:
+\[A = PDP^{-1}\]
 where $D = \\text{diag}(\\lambda_1, \\ldots, \\lambda_n)$ is diagonal. The columns of $P$ are the $n$ linearly independent eigenvectors.
 
-**Step 2: The defective counterexample.** Consider the Jordan block matrix:
-$$J = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}$$
+**Step 2:** The defective counterexample. Consider the Jordan block matrix:
+\[J = \\begin{pmatrix} 1 & 1 \\\\ 0 & 1 \\end{pmatrix}\]
 
-**Step 3: Find its eigenvalues.** The characteristic polynomial is:
-$$\\det(J - \\lambda I) = \\det\\begin{pmatrix} 1-\\lambda & 1 \\\\ 0 & 1-\\lambda \\end{pmatrix} = (1-\\lambda)^2$$
+**Step 3:** Find its eigenvalues. The characteristic polynomial is:
+\[\\det(J - \\lambda I) = \\det\\begin{pmatrix} 1-\\lambda & 1 \\\\ 0 & 1-\\lambda \\end{pmatrix} = (1-\\lambda)^2\]
 
 So $J$ has a single eigenvalue $\\lambda = 1$ of algebraic multiplicity 2.
 
-**Step 4: Find its eigenvectors.** Solve $(J - I)\\mathbf{v} = \\mathbf{0}$:
-$$(J - I) = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\quad \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}\\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} v_2 \\\\ 0 \\end{pmatrix} = \\mathbf{0}$$
+**Step 4:** Find its eigenvectors. Solve $(J - I)\\mathbf{v} = \\mathbf{0}$:
+\[(J - I) = \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}, \\quad \\begin{pmatrix} 0 & 1 \\\\ 0 & 0 \\end{pmatrix}\\begin{pmatrix} v_1 \\\\ v_2 \\end{pmatrix} = \\begin{pmatrix} v_2 \\\\ 0 \\end{pmatrix} = \\mathbf{0}\]
 
 So $v_2 = 0$, giving eigenvectors of the form $\\mathbf{v} = (v_1, 0)^T = v_1(1, 0)^T$. All eigenvectors are scalar multiples of $(1, 0)^T$ - there is only **one** linearly independent eigenvector.
 
-**Step 5: Conclusion.** This matrix has $n = 2$ eigenvalues (counting multiplicity) but only 1 linearly independent eigenvector. It cannot be diagonalized and is called a **defective matrix**.
+**Step 5:** Conclusion. This matrix has $n = 2$ eigenvalues (counting multiplicity) but only 1 linearly independent eigenvector. It cannot be diagonalized and is called a **defective matrix**.
 
 **General rule:** A matrix with $n$ distinct eigenvalues is always diagonalizable (each eigenvalue gives at least one independent eigenvector). But repeated eigenvalues may not.
 
@@ -676,27 +676,27 @@ Therefore, $\\boxed{\\text{False}}$ - only diagonalizable matrices (a proper sub
       correctAnswer: 1,
       explanation: `The spectral theorem is one of the most important results in linear algebra. Let us prove and interpret it carefully.
 
-**Step 1: The spectral theorem statement.** For a real symmetric matrix $A \\in \\mathbb{R}^{n \\times n}$ (where $A = A^T$), there exists an orthogonal matrix $Q$ such that:
-$$A = Q\\Lambda Q^T = Q\\begin{pmatrix} \\lambda_1 & & 0 \\\\ & \\ddots & \\\\ 0 & & \\lambda_n \\end{pmatrix}Q^T$$
+**Step 1:** The spectral theorem statement. For a real symmetric matrix $A \\in \\mathbb{R}^{n \\times n}$ (where $A = A^T$), there exists an orthogonal matrix $Q$ such that:
+\[A = Q\\Lambda Q^T = Q\\begin{pmatrix} \\lambda_1 & & 0 \\\\ & \\ddots & \\\\ 0 & & \\lambda_n \\end{pmatrix}Q^T\]
 
 The columns of $Q$ are orthonormal eigenvectors $\\{\\mathbf{q}_1, \\ldots, \\mathbf{q}_n\\}$, and $\\{\\lambda_1, \\ldots, \\lambda_n\\}$ are the real eigenvalues.
 
-**Step 2: Proof sketch - orthogonality of eigenvectors.** Let $\\lambda_1 \\neq \\lambda_2$ be two distinct eigenvalues with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$. We show they are orthogonal:
+**Step 2:** Proof sketch - orthogonality of eigenvectors. Let $\\lambda_1 \\neq \\lambda_2$ be two distinct eigenvalues with eigenvectors $\\mathbf{v}_1, \\mathbf{v}_2$. We show they are orthogonal:
 \\begin{align}
 \\mathbf{v}_1^T(A\\mathbf{v}_2) &= \\mathbf{v}_1^T(\\lambda_2\\mathbf{v}_2) = \\lambda_2 \\mathbf{v}_1^T\\mathbf{v}_2 \\\\\n(A\\mathbf{v}_1)^T\\mathbf{v}_2 &= (\\lambda_1\\mathbf{v}_1)^T\\mathbf{v}_2 = \\lambda_1 \\mathbf{v}_1^T\\mathbf{v}_2
 \\end{align}
 
 But since $A$ is symmetric, $\\mathbf{v}_1^T(A\\mathbf{v}_2) = (A\\mathbf{v}_1)^T\\mathbf{v}_2$, so:
-$$\\lambda_2 \\mathbf{v}_1^T\\mathbf{v}_2 = \\lambda_1 \\mathbf{v}_1^T\\mathbf{v}_2$$
+\[\\lambda_2 \\mathbf{v}_1^T\\mathbf{v}_2 = \\lambda_1 \\mathbf{v}_1^T\\mathbf{v}_2\]
 
 Since $\\lambda_1 \\neq \\lambda_2$, we must have $\\mathbf{v}_1^T\\mathbf{v}_2 = 0$.
 
-**Step 3: Real eigenvalues.** For symmetric $A$, all eigenvalues are real. (Proof: if $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $\\lambda \\in \\mathbb{C}$, taking complex conjugates and using $A = \\bar{A} = A^T$ shows $\\lambda = \\bar{\\lambda}$.)
+**Step 3:** Real eigenvalues. For symmetric $A$, all eigenvalues are real. (Proof: if $A\\mathbf{v} = \\lambda\\mathbf{v}$ with $\\lambda \\in \\mathbb{C}$, taking complex conjugates and using $A = \\bar{A} = A^T$ shows $\\lambda = \\bar{\\lambda}$.)
 
-**Step 4: Constructing an orthonormal basis.** For each eigenvalue, we can find an orthonormal basis of its eigenspace using Gram-Schmidt (since eigenspaces are subspaces). Combined with the orthogonality between eigenspaces, we get an orthonormal eigenbasis.
+**Step 4:** Constructing an orthonormal basis. For each eigenvalue, we can find an orthonormal basis of its eigenspace using Gram-Schmidt (since eigenspaces are subspaces). Combined with the orthogonality between eigenspaces, we get an orthonormal eigenbasis.
 
-**Step 5: Covariance matrices and PCA.** Covariance matrices $\\Sigma$ are symmetric positive semi-definite ($\\Sigma = \\Sigma^T, \\mathbf{x}^T\\Sigma\\mathbf{x} \\geq 0$). By the spectral theorem:
-$$\\Sigma = Q\\text{diag}(\\lambda_1, \\ldots, \\lambda_n)Q^T$$
+**Step 5:** Covariance matrices and PCA. Covariance matrices $\\Sigma$ are symmetric positive semi-definite ($\\Sigma = \\Sigma^T, \\mathbf{x}^T\\Sigma\\mathbf{x} \\geq 0$). By the spectral theorem:
+\[\\Sigma = Q\\text{diag}(\\lambda_1, \\ldots, \\lambda_n)Q^T\]
 
 The columns of $Q$ are the principal component directions, and the eigenvalues give the explained variances - this is the mathematical foundation of PCA.
 
@@ -840,7 +840,7 @@ The defining property of positive definiteness involves the **quadratic form** $
 For any vector $\\mathbf{x} = \\begin{pmatrix} x_1 \\\\ x_2 \\\\ \\vdots \\\\ x_n \\end{pmatrix}$, the quantity $\\mathbf{x}^T A \\mathbf{x}$ is a scalar.
 
 **Step 1:** A symmetric matrix $A$ is **positive definite** if and only if:
-$$\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all } \\mathbf{x} \\neq \\mathbf{0}$$
+\[\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all } \\mathbf{x} \\neq \\mathbf{0}\]
 
 **Step 2:** This is NOT equivalent to:
 - All entries being positive (a matrix can have all positive entries but not be PD)
@@ -871,13 +871,13 @@ Therefore, $\\boxed{\\mathbf{x}^T A \\mathbf{x} > 0 \\text{ for all nonzero } \\
       explanation: `First, let\'s recall what the Cholesky decomposition claims.
 
 For a symmetric positive definite matrix $A$, we seek a lower triangular matrix $L$ such that:
-$$A = LL^T$$
+\[A = LL^T\]
 
-**Step 1: Existence by induction.**
+**Step 1:** Existence by induction.
 
 For a $1 \\times 1$ matrix $A = [a_{11}]$: Since $A$ is PD, we have $a_{11} > 0$. Set $L = [\\sqrt{a_{11}}]$.
 
-**Step 2: Inductive step.**
+**Step 2:** Inductive step.
 
 Write $A = \\begin{pmatrix} a_{11} & \\mathbf{b}^T \\\\ \\mathbf{b} & C \\end{pmatrix}$ where $C$ is $(n-1) \\times (n-1)$.
 
@@ -885,11 +885,11 @@ Since $A$ is PD: $a_{11} > 0$ and the Schur complement $C - \\frac{1}{a_{11}}\\m
 
 By induction hypothesis, this Schur complement has a Cholesky factorization.
 
-**Step 3: Uniqueness.**
+**Step 3:** Uniqueness.
 
 The factor $L$ is unique when we require positive diagonal entries.
 
-**Step 4: Computational advantage.**
+**Step 4:** Computational advantage.
 
 Cholesky requires $\\frac{n^3}{3}$ operations vs. $\\frac{2n^3}{3}$ for LU - a factor of 2 savings.
 
@@ -916,33 +916,33 @@ Therefore, $\\boxed{\\text{True}}$ - every symmetric PD matrix has a unique Chol
       explanation: `First, let\'s recall the definition of a covariance matrix.
 
 For a random vector $\\mathbf{x}$ with mean $\\boldsymbol{\\mu} = \\mathbb{E}[\\mathbf{x}]$, the covariance matrix is:
-$$\\Sigma = \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T]$$
+\[\\Sigma = \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T]\]
 
-**Step 1: Test the quadratic form.**
+**Step 1:** Test the quadratic form.
 
 To prove $\\Sigma$ is PSD, we need to show $\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0$ for any vector $\\mathbf{v}$.
 
-**Step 2: Expand the quadratic form.**
+**Step 2:** Expand the quadratic form.
 
-$$\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbf{v}^T \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T] \\mathbf{v}$$
+\[\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbf{v}^T \\mathbb{E}[(\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T] \\mathbf{v}\]
 
 Since expectation is linear, we can bring $\\mathbf{v}$ inside:
-$$= \\mathbb{E}[\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T \\mathbf{v}]$$
+\[= \\mathbb{E}[\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu})(\\mathbf{x} - \\boldsymbol{\\mu})^T \\mathbf{v}]\]
 
-**Step 3: Recognize this as a squared scalar.**
+**Step 3:** Recognize this as a squared scalar.
 
 Note that $\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu})$ is a scalar, and for any scalar $s$:
-$$s \\cdot s = s^2$$
+\[s \\cdot s = s^2\]
 
 So:
-$$\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2]$$
+\[\\mathbf{v}^T \\Sigma \\mathbf{v} = \\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2]\]
 
-**Step 4: The key insight.**
+**Step 4:** The key insight.
 
 The quantity $(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2$ is a **squared real number**, which is always $\\geq 0$.
 
 Since the expectation of a non-negative quantity is non-negative:
-$$\\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2] \\geq 0$$
+\[\\mathbb{E}[(\\mathbf{v}^T (\\mathbf{x} - \\boldsymbol{\\mu}))^2] \\geq 0\]
 
 Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathbf{v}$, proving $\\Sigma$ is PSD.
 
@@ -1448,22 +1448,22 @@ Therefore, $\\boxed{\\mathbf{v}^T \\Sigma \\mathbf{v} \\geq 0}$ for all $\\mathb
       correctAnswer: 1,
       explanation: `Convolutional neural networks apply 4-dimensional filter tensors to input feature maps. A typical convolutional layer has weight tensors of shape:
 
-$$\\mathcal{W} \\in \\mathbb{R}^{C_{\\text{out}} \\times C_{\\text{in}} \\times k_H \\times k_W}$$
+\[\\mathcal{W} \\in \\mathbb{R}^{C_{\\text{out}} \\times C_{\\text{in}} \\times k_H \\times k_W}\]
 
-**Step 1: The parameter count problem.** For a layer with 256 output channels, 128 input channels, and $3 \\times 3$ kernels:
-$$\\text{Parameters} = 256 \\times 128 \\times 3 \\times 3 \\approx 295{,}000$$
+**Step 1:** The parameter count problem. For a layer with 256 output channels, 128 input channels, and $3 \\times 3$ kernels:
+\[\\text{Parameters} = 256 \\times 128 \\times 3 \\times 3 \\approx 295{,}000\]
 
 This is expensive for edge deployment.
 
-**Step 2: Tucker decomposition as compression.** Tucker decomposition factorizes the 4-way tensor $\\mathcal{W}$ as:
-$$\\mathcal{W} \\approx \\mathcal{G} \\times_1 U_1 \\times_2 U_2 \\times_3 U_3 \\times_4 U_4$$
+**Step 2:** Tucker decomposition as compression. Tucker decomposition factorizes the 4-way tensor $\\mathcal{W}$ as:
+\[\\mathcal{W} \\approx \\mathcal{G} \\times_1 U_1 \\times_2 U_2 \\times_3 U_3 \\times_4 U_4\]
 
 where $\\mathcal{G}$ is a small **core tensor** and $U_1, U_2, U_3, U_4$ are orthogonal factor matrices.
 
-**Step 3: Compression ratio.** If the core tensor has shape $(r_1, r_2, r_3, r_4)$ with $r_i \\ll$ the original dimension, the compressed parameter count is:
-$$\\text{Compressed} = r_1 r_2 r_3 r_4 + C_{\\text{out}} r_1 + C_{\\text{in}} r_2 + k_H r_3 + k_W r_4 \\ll 295{,}000$$
+**Step 3:** Compression ratio. If the core tensor has shape $(r_1, r_2, r_3, r_4)$ with $r_i \\ll$ the original dimension, the compressed parameter count is:
+\[\\text{Compressed} = r_1 r_2 r_3 r_4 + C_{\\text{out}} r_1 + C_{\\text{in}} r_2 + k_H r_3 + k_W r_4 \\ll 295{,}000\]
 
-**Step 4: Why this works.** The filters in CNNs often have low Tucker rank - they can be accurately approximated by low-rank factors. This is the foundation of methods like **Tucker Compression** (used in TensorFlow Model Optimization Toolkit) and **CP decomposition** (used inMobileNet-v3).
+**Step 4:** Why this works. The filters in CNNs often have low Tucker rank - they can be accurately approximated by low-rank factors. This is the foundation of methods like **Tucker Compression** (used in TensorFlow Model Optimization Toolkit) and **CP decomposition** (used inMobileNet-v3).
 
 Therefore, $\\boxed{\\text{Option 1}}$ - tensor decomposition compresses CNN weight tensors for efficient inference.`,
       hints: [
@@ -1522,19 +1522,19 @@ Therefore, $\\boxed{\\text{Option 1}}$ - tensor decomposition compresses CNN wei
       correctAnswer: 1,
       explanation: `Spectral clustering works by embedding graph nodes into $\\mathbb{R}^k$ using the eigenvectors of the graph Laplacian, then applying k-means in this embedded space.
 
-**Step 1: The graph Laplacian.** For a graph with adjacency matrix $A$ and degree matrix $D$, the (unnormalized) Laplacian is $L = D - A$. The normalized Laplacian is $L_{\\text{sym}} = D^{-1/2} L D^{-1/2}$.
+**Step 1:** The graph Laplacian. For a graph with adjacency matrix $A$ and degree matrix $D$, the (unnormalized) Laplacian is $L = D - A$. The normalized Laplacian is $L_{\\text{sym}} = D^{-1/2} L D^{-1/2}$.
 
 **Step 2: What do the eigenvectors represent?** The eigenvectors of $L$ encode smooth functions on the graph. If $L\\mathbf{v} = \\lambda \\mathbf{v}$, then:
-$$\\sum_{(i,j) \\in E} (v_i - v_j)^2 = \\mathbf{v}^T L \\mathbf{v} = \\lambda \\|\\mathbf{v}\\|^2$$
+\[\\sum_{(i,j) \\in E} (v_i - v_j)^2 = \\mathbf{v}^T L \\mathbf{v} = \\lambda \\|\\mathbf{v}\\|^2\]
 
 Small $\\lambda$ means the eigenvector $\\mathbf{v}$ varies little across edges - adjacent nodes have similar values.
 
-**Step 3: The spectral embedding.** The bottom $k$ eigenvectors (ignoring the trivial all-ones eigenvector for connected graphs) give coordinates:
-$$\\mathbf{x}_i \\in \\mathbb{R}^k, \\quad \\text{where } x_i^{(j)} = v_j(i)$$
+**Step 3:** The spectral embedding. The bottom $k$ eigenvectors (ignoring the trivial all-ones eigenvector for connected graphs) give coordinates:
+\[\\mathbf{x}_i \\in \\mathbb{R}^k, \\quad \\text{where } x_i^{(j)} = v_j(i)\]
 
 Nodes in the same **densely connected subgraph** will have similar coordinates because the Laplacian smooths over edges.
 
-**Step 4: Why k-means works here.** In the Laplacian eigenbasis, nodes that are tightly connected (same community) cluster together in Euclidean space. This is a **nonlinear** embedding of the graph structure - k-means on original features cannot capture this.
+**Step 4:** Why k-means works here. In the Laplacian eigenbasis, nodes that are tightly connected (same community) cluster together in Euclidean space. This is a **nonlinear** embedding of the graph structure - k-means on original features cannot capture this.
 
 **Why the other options are wrong:**
 - Option 0: Eigenvectors can have the same dimension as features - this is not the reason.
@@ -1599,22 +1599,22 @@ Therefore, $\\boxed{\\text{Option 1}}$ - the Laplacian eigenvector embedding cap
       correctAnswer: 0,
       explanation: `LoRA (Hu et al., 2021) addresses the key bottleneck in fine-tuning large language models: the massive memory cost of training.
 
-**Step 1: The full fine-tuning problem.** A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{m \\times n}$ (e.g., for a language model attention layer) has $m \\times n$ parameters. Full fine-tuning updates all $mn$ parameters and must store gradients and optimizer states for each.
+**Step 1:** The full fine-tuning problem. A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{m \\times n}$ (e.g., for a language model attention layer) has $m \\times n$ parameters. Full fine-tuning updates all $mn$ parameters and must store gradients and optimizer states for each.
 
-**Step 2: LoRA's low-rank update.** LoRA freezes $W_0$ and approximates the weight update as:
-$$\\Delta W = B A, \\quad B \\in \\mathbb{R}^{m \\times r}, \\; A \\in \\mathbb{R}^{r \\times n}$$
+**Step 2:** LoRA's low-rank update. LoRA freezes $W_0$ and approximates the weight update as:
+\[\\Delta W = B A, \\quad B \\in \\mathbb{R}^{m \\times r}, \\; A \\in \\mathbb{R}^{r \\times n}\]
 
 with $r \\ll \\min(m, n)$. Only $B$ and $A$ are trained.
 
-**Step 3: Parameter count comparison.** For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with rank $r = 8$:
-$$\\text{Full fine-tuning:} \\quad mn = 4096^2 \\approx 16.8 \\text{ million parameters}$$
-$$\\text{LoRA:} \\quad mr + rn = 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ parameters}$$
+**Step 3:** Parameter count comparison. For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with rank $r = 8$:
+\[\\text{Full fine-tuning:} \\quad mn = 4096^2 \\approx 16.8 \\text{ million parameters}\]
+\[\\text{LoRA:} \\quad mr + rn = 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ parameters}\]
 
 This is a **250\\times reduction** in trainable parameters.
 
-**Step 4: Memory savings.** Adam optimizer states require $2\\times$ the parameter count (first and second moment estimates). With LoRA's small $B$ and $A$, the optimizer state memory is tiny compared to full fine-tuning.
+**Step 4:** Memory savings. Adam optimizer states require $2\\times$ the parameter count (first and second moment estimates). With LoRA's small $B$ and $A$, the optimizer state memory is tiny compared to full fine-tuning.
 
-**Step 5: Why it works.** Pre-trained language models have low-rank weight updates - the fine-tuning adaptation lives in a small subspace. By explicitly constraining $\\Delta W$ to rank $r$, LoRA captures this structure efficiently.
+**Step 5:** Why it works. Pre-trained language models have low-rank weight updates - the fine-tuning adaptation lives in a small subspace. By explicitly constraining $\\Delta W$ to rank $r$, LoRA captures this structure efficiently.
 
 Therefore, $\\boxed{\\text{Option 0}}$ - LoRA reduces VRAM by training far fewer parameters ($mr + rn \\ll mn$).`,
       hints: [
@@ -1980,15 +1980,15 @@ Therefore, $\\boxed{\\text{Option 0}}$ - LoRA reduces VRAM by training far fewer
       correctAnswer: 1,
       explanation: `The adjacency matrix $A$ of an undirected graph encodes which vertices are connected by edges.
 
-**Step 1: Definition.** For an undirected graph with $n$ vertices:
-$$A_{ij} = \\begin{cases} 1 & \\text{if vertices } i \\text{ and } j \\text{ are connected by an edge} \\\\ 0 & \\text{otherwise} \\end{cases}$$
+**Step 1:** Definition. For an undirected graph with $n$ vertices:
+\[A_{ij} = \\begin{cases} 1 & \\text{if vertices } i \\text{ and } j \\text{ are connected by an edge} \\\\ 0 & \\text{otherwise} \\end{cases}\]
 
-**Step 2: Symmetry.** Since edges in an undirected graph have no direction - an edge between $i$ and $j$ means $j$ is connected to $i$ as well - the matrix must satisfy:
-$$A_{ij} = A_{ji} \\implies A = A^T$$
+**Step 2:** Symmetry. Since edges in an undirected graph have no direction - an edge between $i$ and $j$ means $j$ is connected to $i$ as well - the matrix must satisfy:
+\[A_{ij} = A_{ji} \\implies A = A^T\]
 
 This means $A$ is a **symmetric matrix**.
 
-**Step 3: Why the other options are wrong.**
+**Step 3:** Why the other options are wrong.
 - Option 0: This describes a **directed graph** adjacency matrix (where $A_{ij} \\neq A_{ji}$ in general).
 - Option 2: Self-loops ($A_{ii} = 1$) are not present in standard graph definitions unless explicitly added. Most simple undirected graphs have $A_{ii} = 0$.
 - Option 3: Symmetric matrices have real eigenvalues, but they need not all be positive. For example, a path graph can have negative eigenvalues.
@@ -2008,16 +2008,16 @@ Therefore, $\\boxed{A = A^T \\text{ (symmetric) with } A_{ij} = 1 \\text{ if nod
       correctAnswer: "True",
       explanation: `This is a fundamental property of the adjacency matrix, proven by induction on $k$.
 
-**Step 1: Base case $k = 1$.** By definition, $A_{ij} = 1$ if and only if there is an edge between $i$ and $j$ - a walk of length 1. So the claim holds for $k = 1$.
+**Step 1:** Base case $k = 1$. By definition, $A_{ij} = 1$ if and only if there is an edge between $i$ and $j$ - a walk of length 1. So the claim holds for $k = 1$.
 
-**Step 2: Inductive step.** Assume $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$. Then:
-$$(A^{k+1})_{ij} = \\sum_{\\ell=1}^n (A^k)_{i\\ell} \\cdot A_{\\ell j}$$
+**Step 2:** Inductive step. Assume $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$. Then:
+\[(A^{k+1})_{ij} = \\sum_{\\ell=1}^n (A^k)_{i\\ell} \\cdot A_{\\ell j}\]
 
 Each term $(A^k)_{i\\ell} \\cdot A_{\\ell j}$ counts walks of length $k$ from $i$ to $\\ell$ followed by an edge from $\\ell$ to $j$ (a walk of length 1). Summing over all intermediate nodes $\\ell$ gives all walks of length $k+1$ from $i$ to $j$.
 
 **Step 3: Walks vs. paths.** Note that this counts **walks** (which may revisit nodes), not simple **paths** (which do not revisit nodes).
 
-**Step 4: Example.** For $k=2$: $(A^2)_{ij} = \\sum_\\ell A_{i\\ell} A_{\\ell j}$. The term $A_{i\\ell} A_{\\ell j}$ is 1 if $\\ell$ is a common neighbor of $i$ and $j$, so $(A^2)_{ij}$ counts common neighbors - the number of length-2 walks.
+**Step 4:** Example. For $k=2$: $(A^2)_{ij} = \\sum_\\ell A_{i\\ell} A_{\\ell j}$. The term $A_{i\\ell} A_{\\ell j}$ is 1 if $\\ell$ is a common neighbor of $i$ and $j$, so $(A^2)_{ij}$ counts common neighbors - the number of length-2 walks.
 
 This property is used in spectral GNNs: polynomial filters $p(L) = p_0 I + p_1 L + p_2 L^2 + \\cdots$ use powers of $L$ to aggregate information from multi-hop neighbors.
 
@@ -2042,22 +2042,22 @@ Therefore, $\\boxed{\\text{True}}$ - $(A^k)_{ij}$ counts walks of length $k$ fro
       correctAnswer: 1,
       explanation: `The normalized Laplacian $\\tilde{L} = D^{-1/2}LD^{-1/2}$ addresses two key problems with the raw Laplacian in deep GNNs.
 
-**Step 1: Raw Laplacian issues.** For a graph with degree heterogeneity (some nodes with degree 1000, others with degree 3), the raw Laplacian $L = D - A$ has eigenvalues unbounded by graph structure. In deep GNNs, repeated message passing with $L$ amplifies some directions exponentially, causing gradient explosion or vanishing.
+**Step 1:** Raw Laplacian issues. For a graph with degree heterogeneity (some nodes with degree 1000, others with degree 3), the raw Laplacian $L = D - A$ has eigenvalues unbounded by graph structure. In deep GNNs, repeated message passing with $L$ amplifies some directions exponentially, causing gradient explosion or vanishing.
 
-**Step 2: Eigenvalue bound of normalized Laplacian.** The normalized Laplacian $\\tilde{L} = D^{-1/2}LD^{-1/2}$ satisfies:
-$$0 = \\lambda_1 \\leq \\lambda_2 \\leq \\cdots \\leq \\lambda_n \\leq 2$$
+**Step 2:** Eigenvalue bound of normalized Laplacian. The normalized Laplacian $\\tilde{L} = D^{-1/2}LD^{-1/2}$ satisfies:
+\[0 = \\lambda_1 \\leq \\lambda_2 \\leq \\cdots \\leq \\lambda_n \\leq 2\]
 
 This eigenvalue bound $[0, 2]$ holds for **any** graph, regardless of degree distribution. Message passing with $\\tilde{L}^k$ never amplifies directions by more than $2^k$.
 
-**Step 3: Degree-aware aggregation.** In message passing, the raw Laplacian uses:
-$$h_i^{(k+1)} = \\sigma\\left(\\sum_j L_{ij} h_j^{(k)}\\right)$$
+**Step 3:** Degree-aware aggregation. In message passing, the raw Laplacian uses:
+\[h_i^{(k+1)} = \\sigma\\left(\\sum_j L_{ij} h_j^{(k)}\\right)\]
 
 High-degree nodes (large $L_{ij}$ values) dominate this aggregation. The normalized Laplacian uses:
-$$h_i^{(k+1)} = \\sigma\\left(\\sum_j \\frac{1}{\\sqrt{d_i d_j}} A_{ij} \\, h_j^{(k)}\\right)$$
+\[h_i^{(k+1)} = \\sigma\\left(\\sum_j \\frac{1}{\\sqrt{d_i d_j}} A_{ij} \\, h_j^{(k)}\\right)\]
 
 This **symmetric normalization** scales messages by $1/\\sqrt{d_i d_j}$, ensuring a node with 1000 neighbors contributes equally to one with 3 neighbors.
 
-**Step 4: Why asymmetry is not the goal.** Option 3 is wrong because $\\tilde{L}$ is still **symmetric** ( $\\tilde{L}^T = \\tilde{L}$ ) - degree normalization does not introduce asymmetry.
+**Step 4:** Why asymmetry is not the goal. Option 3 is wrong because $\\tilde{L}$ is still **symmetric** ( $\\tilde{L}^T = \\tilde{L}$ ) - degree normalization does not introduce asymmetry.
 
 Therefore, $\\boxed{\\text{Option 1}}$ - normalization bounds eigenvalues to $[0,2]$ and handles degree heterogeneity.`,
       hints: [
@@ -2117,22 +2117,22 @@ Therefore, $\\boxed{\\text{Option 1}}$ - normalization bounds eigenvalues to $[0
       correctAnswer: 1,
       explanation: `Entanglement detection uses the Schmidt decomposition of the two-qubit state.
 
-**Step 1: The state vector.** A two-qubit state $|\psi\\rangle \\in \\mathbb{C}^4$ can be written in the computational basis as:
-$$|\\psi\\rangle = \\sum_{i,j=0}^1 \\alpha_{ij} |i\\rangle \\otimes |j\\rangle, \\quad \\sum_{i,j} |\\alpha_{ij}|^2 = 1$$
+**Step 1:** The state vector. A two-qubit state $|\psi\\rangle \\in \\mathbb{C}^4$ can be written in the computational basis as:
+\[|\\psi\\rangle = \\sum_{i,j=0}^1 \\alpha_{ij} |i\\rangle \\otimes |j\\rangle, \\quad \\sum_{i,j} |\\alpha_{ij}|^2 = 1\]
 
-**Step 2: Reshape to a matrix.** Define the $2 \\times 2$ matrix $M$ with entries $M_{ij} = \\alpha_{ij}$:
-$$M = \\begin{pmatrix} \\alpha_{00} & \\alpha_{01} \\\\ \\alpha_{10} & \\alpha_{11} \\end{pmatrix}$$
+**Step 2:** Reshape to a matrix. Define the $2 \\times 2$ matrix $M$ with entries $M_{ij} = \\alpha_{ij}$:
+\[M = \\begin{pmatrix} \\alpha_{00} & \\alpha_{01} \\\\ \\alpha_{10} & \\alpha_{11} \\end{pmatrix}\]
 
-**Step 3: SVD of the matrix.** Perform SVD on $M$:
-$$M = U \\Sigma V^\\dagger$$
+**Step 3:** SVD of the matrix. Perform SVD on $M$:
+\[M = U \\Sigma V^\\dagger\]
 
-**Step 4: The Schmidt criterion.** The number of non-zero singular values of $M$ equals the **Schmidt rank**. 
+**Step 4:** The Schmidt criterion. The number of non-zero singular values of $M$ equals the **Schmidt rank**. 
 
 - If $\\operatorname{rank}(M) = 1$: $|\psi\\rangle$ is a **product state** $|\psi\\rangle = |\\psi_1\\rangle \\otimes |\\psi_2\\rangle$ (not entangled).
 - If $\\operatorname{rank}(M) > 1$: $|\psi\\rangle$ is **entangled**.
 
-**Step 5: Example - Bell state.** The Bell state $|\psi^+\\rangle = \\frac{1}{\\sqrt{2}}(|00\\rangle + |11\\rangle)$ has:
-$$M = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = \\frac{1}{\\sqrt{2}}I$$
+**Step 5:** Example - Bell state. The Bell state $|\psi^+\\rangle = \\frac{1}{\\sqrt{2}}(|00\\rangle + |11\\rangle)$ has:
+\[M = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = \\frac{1}{\\sqrt{2}}I\]
 
 which has full rank 2 (two equal singular values) - maximally entangled.
 
@@ -2231,53 +2231,53 @@ const moreAlgQ: Record<string, Question[]> = {
   "matrix-calculus-v2": [
     { id: "q-alg-kp36-1", type: "multiple-choice", difficulty: "medium", question: "The gradient of $f(X) = \\operatorname{tr}(AX)$ with respect to matrix $X$ is:", options: ["$A$", "$A^T$", "$X^TA^T$", "$\\operatorname{tr}(A) \\cdot I$"], correctAnswer: 1, explanation: `Using the matrix derivative identity, let us derive $\\frac{\\partial \\operatorname{tr}(AX)}{\\partial X}$.
 
-**Step 1: Use the differential.** The differential of $f(X) = \\operatorname{tr}(AX)$ is:
-$$df = \\operatorname{tr}(A \\, dX)$$
+**Step 1:** Use the differential. The differential of $f(X) = \\operatorname{tr}(AX)$ is:
+\[df = \\operatorname{tr}(A \\, dX)\]
 
-**Step 2: Apply the trace inner product identity.** For any matrix $M$, the inner product with $dX$ can be rewritten using the cyclic property of trace:
-$$\\operatorname{tr}(A \\, dX) = \\operatorname{tr}((A^T)^T \\, dX) = \\left\\langle A^T, \\, dX \\right\\rangle$$
+**Step 2:** Apply the trace inner product identity. For any matrix $M$, the inner product with $dX$ can be rewritten using the cyclic property of trace:
+\[\\operatorname{tr}(A \\, dX) = \\operatorname{tr}((A^T)^T \\, dX) = \\left\\langle A^T, \\, dX \\right\\rangle\]
 
-**Step 3: Identify the gradient.** By the definition of the matrix gradient: if $df = \\operatorname{tr}(G^T dX)$ for all $dX$, then $\\frac{\\partial f}{\\partial X} = G$. Here $G = A^T$.
+**Step 3:** Identify the gradient. By the definition of the matrix gradient: if $df = \\operatorname{tr}(G^T dX)$ for all $dX$, then $\\frac{\\partial f}{\\partial X} = G$. Here $G = A^T$.
 
 **Verification for backpropagation:** If the forward pass is $Y = WX$ and the loss is $L$, then by the chain rule:
-$$\\frac{\\partial L}{\\partial W} = \\left(\\frac{\\partial L}{\\partial Y}\\right) X^T$$
+\[\\frac{\\partial L}{\\partial W} = \\left(\\frac{\\partial L}{\\partial Y}\\right) X^T\]
 
 This is the matrix generalization of the scalar gradient $\\frac{\\partial}{\\partial w}(Xw - y)^2 = 2X^T(Xw - y)$.
 
 Therefore, $\\boxed{A^T}$ is the correct gradient.`, hints: ["The key identity is $d\\operatorname{tr}(AX) = \\operatorname{tr}(A\\,dX)$. What matrix $G$ satisfies $d\\operatorname{tr}(AX) = \\operatorname{tr}(G^T\\, dX)$ for all $dX$?", "Using the cyclic property of trace: $\\operatorname{tr}(A\\,dX) = \\operatorname{tr}((A^T)^T\\,dX)$ - this identifies the gradient as $A^T$."] },
     { id: "q-alg-kp36-2", type: "true-false", difficulty: "medium", question: "The Jacobian of a vector-valued function $f: \\mathbb{R}^n \\to \\mathbb{R}^m$ is an $m \\times n$ matrix where entry $(i,j)$ is $\\frac{\\partial f_i}{\\partial x_j}$.", correctAnswer: "True", explanation: `This statement is **true**. Let us verify the dimensions and entries carefully.
 
-**Step 1: Dimensions.** $f$ maps from $\\mathbb{R}^n$ (input dimension $n$) to $\\mathbb{R}^m$ (output dimension $m$). The Jacobian $J$ is the matrix of all first-order partial derivatives:
-$$J \\in \\mathbb{R}^{m \\times n}$$
+**Step 1:** Dimensions. $f$ maps from $\\mathbb{R}^n$ (input dimension $n$) to $\\mathbb{R}^m$ (output dimension $m$). The Jacobian $J$ is the matrix of all first-order partial derivatives:
+\[J \\in \\mathbb{R}^{m \\times n}\]
 
-**Step 2: Entry formula.** The entry in row $i$, column $j$ of $J$ is:
-$$J_{ij} = \\frac{\\partial f_i}{\\partial x_j}$$
+**Step 2:** Entry formula. The entry in row $i$, column $j$ of $J$ is:
+\[J_{ij} = \\frac{\\partial f_i}{\\partial x_j}\]
 
 where $f_i$ is the $i$-th component of the output and $x_j$ is the $j$-th component of the input.
 
-**Step 3: Full matrix form.** Writing it out:
-$$J = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x_1} & \\frac{\\partial f_1}{\\partial x_2} & \\cdots & \\frac{\\partial f_1}{\\partial x_n} \\\\ \\frac{\\partial f_2}{\\partial x_1} & \\frac{\\partial f_2}{\\partial x_2} & \\cdots & \\frac{\\partial f_2}{\\partial x_n} \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ \\frac{\\partial f_m}{\\partial x_1} & \\frac{\\partial f_m}{\\partial x_2} & \\cdots & \\frac{\\partial f_m}{\\partial x_n} \\end{pmatrix}$$
+**Step 3:** Full matrix form. Writing it out:
+\[J = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x_1} & \\frac{\\partial f_1}{\\partial x_2} & \\cdots & \\frac{\\partial f_1}{\\partial x_n} \\\\ \\frac{\\partial f_2}{\\partial x_1} & \\frac{\\partial f_2}{\\partial x_2} & \\cdots & \\frac{\\partial f_2}{\\partial x_n} \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ \\frac{\\partial f_m}{\\partial x_1} & \\frac{\\partial f_m}{\\partial x_2} & \\cdots & \\frac{\\partial f_m}{\\partial x_n} \\end{pmatrix}\]
 
-**Step 4: Special cases.** For $m = 1$ (scalar function), the Jacobian reduces to the gradient row vector. For $n = 1$, it is a column vector of partial derivatives.
+**Step 4:** Special cases. For $m = 1$ (scalar function), the Jacobian reduces to the gradient row vector. For $n = 1$, it is a column vector of partial derivatives.
 
-**Step 5: Backpropagation connection.** In reverse-mode automatic differentiation (used in PyTorch/JAX), the vector-Jacobian product $\\mathbf{v}^T J$ is computed without ever materializing the full Jacobian $J$ - this is the computational foundation of efficient gradient computation.
+**Step 5:** Backpropagation connection. In reverse-mode automatic differentiation (used in PyTorch/JAX), the vector-Jacobian product $\\mathbf{v}^T J$ is computed without ever materializing the full Jacobian $J$ - this is the computational foundation of efficient gradient computation.
 
 Therefore, $\\boxed{\\text{True}}$ - the Jacobian has shape $m \\times n$ with $J_{ij} = \\partial f_i / \\partial x_j$.`, hints: ["For a scalar function $f: \\mathbb{R}^n \\to \\mathbb{R}$ (i.e., $m=1$), the Jacobian has shape $1 \\times n$ and is simply the gradient row vector $\\nabla f$.", "In backpropagation, we never compute the full Jacobian explicitly - we only need vector-Jacobian products $\\mathbf{v}^T J$, which can be computed efficiently by chain-ruling through the computation graph."] },
     { id: "q-alg-kp36-3", type: "multiple-choice", difficulty: "hard", question: "The gradient of $f(W) = \\frac{1}{2}\\|Y - WX\\|_F^2$ with respect to $W$ (Frobenius norm loss for linear regression with matrix outputs) is:", options: ["$-(Y - WX)$", "$-(Y - WX)X^T$", "$(WX - Y)^T X$", "$X(Y - WX)^T$"], correctAnswer: 1, explanation: `Let us derive the gradient step by step using the chain rule and matrix differential calculus.
 
-**Step 1: Set up the loss.** Define the error matrix $E = Y - WX$. Then:
-$$f(W) = \\frac{1}{2} \\|E\\|_F^2 = \\frac{1}{2} \\operatorname{tr}(EE^T)$$
+**Step 1:** Set up the loss. Define the error matrix $E = Y - WX$. Then:
+\[f(W) = \\frac{1}{2} \\|E\\|_F^2 = \\frac{1}{2} \\operatorname{tr}(EE^T)\]
 
-**Step 2: Compute the differential.** Using $dE = -dW \\cdot X$:
+**Step 2:** Compute the differential. Using $dE = -dW \\cdot X$:
 \\begin{align}
 df &= \\frac{1}{2} \\operatorname{tr}(dE \\cdot E^T + E \\cdot dE^T) = \\operatorname{tr}(E \\cdot dE^T) \\\\
 &= \\operatorname{tr}\\big(E \\cdot (-X^T dW^T)\\big) = -\\operatorname{tr}\\big((EX^T)^T dW\\big)
 \\end{align}
 
-**Step 3: Identify the gradient.** By the trace identity, if $df = \\operatorname{tr}(G^T dW)$, then $\\frac{\\partial f}{\\partial W} = G$. Here:
-$$df = -\\operatorname{tr}\\big((EX^T)^T dW\\big) \\implies \\frac{\\partial f}{\\partial W} = -EX^T = -(Y - WX)X^T$$
+**Step 3:** Identify the gradient. By the trace identity, if $df = \\operatorname{tr}(G^T dW)$, then $\\frac{\\partial f}{\\partial W} = G$. Here:
+\[df = -\\operatorname{tr}\\big((EX^T)^T dW\\big) \\implies \\frac{\\partial f}{\\partial W} = -EX^T = -(Y - WX)X^T\]
 
-**Step 4: Vector case check.** For the scalar case with $w \\in \\mathbb{R}^n$, $y \\in \\mathbb{R}^m$, and $X \\in \\mathbb{R}^{n \\times m}$, the gradient of $\\frac{1}{2}\\|y - Xw\\|^2$ is $X(Xw - y)$. The matrix case $-(Y - WX)X^T = (WX - Y)X^T$ is the direct generalization.
+**Step 4:** Vector case check. For the scalar case with $w \\in \\mathbb{R}^n$, $y \\in \\mathbb{R}^m$, and $X \\in \\mathbb{R}^{n \\times m}$, the gradient of $\\frac{1}{2}\\|y - Xw\\|^2$ is $X(Xw - y)$. The matrix case $-(Y - WX)X^T = (WX - Y)X^T$ is the direct generalization.
 
 **Why the other options are wrong:**
 - Option 0: $-(Y - WX)$ has the wrong shape - it ignores the $X^T$ factor from the chain rule.
@@ -2294,34 +2294,34 @@ Therefore, $\\boxed{-(Y - WX)X^T}$ is the correct gradient.`,
   "low-rank-approximation": [
     { id: "q-alg-kp37-1", type: "multiple-choice", difficulty: "medium", question: "LoRA (Low-Rank Adaptation) for fine-tuning large language models represents weight updates as $\\Delta W = BA$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d,k)$. This reduces trainable parameters because:", options: ["It eliminates the need for backpropagation", "Instead of training a $d \\times k$ matrix ($dk$ parameters), only $B$ and $A$ are trained ($r(d+k)$ parameters $\\ll dk$ for small $r$)", "It compresses the base model weights", "It removes attention heads"], correctAnswer: 1, explanation: `LoRA (Hu et al., 2021) reduces the parameter count of fine-tuning by exploiting low-rank structure in weight updates.
 
-**Step 1: Full fine-tuning.** A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ has $dk$ parameters. Full fine-tuning updates all of them and stores gradients and Adam optimizer states for each.
+**Step 1:** Full fine-tuning. A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ has $dk$ parameters. Full fine-tuning updates all of them and stores gradients and Adam optimizer states for each.
 
-**Step 2: LoRA's parameterization.** LoRA freezes $W_0$ and represents the update as:
-$$\\Delta W = B A, \\quad B \\in \\mathbb{R}^{d \\times r}, \\; A \\in \\mathbb{R}^{r \\times k}$$
+**Step 2:** LoRA's parameterization. LoRA freezes $W_0$ and represents the update as:
+\[\\Delta W = B A, \\quad B \\in \\mathbb{R}^{d \\times r}, \\; A \\in \\mathbb{R}^{r \\times k}\]
 
-**Step 3: Parameter count.** With $r \\ll \\min(d, k)$:
-$$\\text{LoRA parameters} = dr + rk = r(d+k)$$
+**Step 3:** Parameter count. With $r \\ll \\min(d, k)$:
+\[\\text{LoRA parameters} = dr + rk = r(d+k)\]
 
 For a $4096 \\times 4096$ weight matrix with $r = 8$:
-$$\\text{Full:} \\; 4096^2 \\approx 16.8 \\text{M params} \\quad vs. \\quad \\text{LoRA:} \\; 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ params}$$
+\[\\text{Full:} \\; 4096^2 \\approx 16.8 \\text{M params} \\quad vs. \\quad \\text{LoRA:} \\; 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ params}\]
 
-**Step 4: Memory reduction.** The base model weights $W_0$ are frozen (forward only), and only $B$ and $A$ require gradient storage and optimizer states. This enables fine-tuning large models on consumer GPUs.
+**Step 4:** Memory reduction. The base model weights $W_0$ are frozen (forward only), and only $B$ and $A$ require gradient storage and optimizer states. This enables fine-tuning large models on consumer GPUs.
 
 Therefore, $\\boxed{\\text{Option 1}}$ - LoRA reduces trainable parameters from $dk$ to $r(d+k) \\ll dk$.`, hints: ["Count parameters: a $d \\times k$ matrix needs $dk$ parameters, while LoRA's $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ need $dr + rk = r(d+k)$ parameters.", "For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with $r=8$: full fine-tuning $\\approx 16.8$M params; LoRA $\\approx 65$K params - roughly 250\\times fewer."] },
     { id: "q-alg-kp37-2", type: "true-false", difficulty: "easy", question: "The Eckart-Young theorem guarantees that the best rank-k approximation to a matrix A in both the Frobenius norm and the spectral norm is given by truncated SVD A\\_k = U\\_k\\Sigma\\_kV\\_k^T.", correctAnswer: "True", explanation: "Eckart-Young: ‖A - A\\_k‖\\_2 = \\sigma\\_k₊\\_1 and ‖A - A\\_k‖_F = √(\\Sigma\\_i>\\_k \\sigma\\_i\\^2), and no rank-k matrix achieves smaller error in either norm. This is why SVD-based compression is optimal for dimensionality reduction.", hints: ["The theorem applies to both operator (spectral) and Frobenius norms - an unusually strong result.", "The optimal rank-k approximation error in Frobenius norm is √(\\sigma\\_k₊\\_1\\^2 + ... + \\sigma\\_n\\^2)."] },
     { id: "q-alg-kp37-3", type: "multiple-choice", difficulty: "hard", question: "The stable rank of a matrix $A$ is defined as $\\operatorname{sr}(A) = \\|A\\|_F^2 / \\|A\\|_2^2 = \\frac{\\sum_i \\sigma_i^2}{\\sigma_1^2}$. It is used in randomized algorithms because:", options: ["$\\operatorname{sr}(A) = \\operatorname{rank}(A)$ always", "$\\operatorname{sr}(A) \\leq \\operatorname{rank}(A)$ and quantifies how numerically low-rank $A$ is - randomized algorithms require $O(\\operatorname{sr}(A))$ samples to achieve an $\\varepsilon$-approximation", "$\\operatorname{sr}(A)$ determines the computational complexity of Cholesky decomposition", "$\\operatorname{sr}(A)$ is always an integer"], correctAnswer: 1, explanation: `The stable rank (also called numerical rank) provides a more nuanced measure of matrix "size" than rank.
 
-**Step 1: Definition.** For a matrix $A$ with singular values $\\sigma_1 \\geq \\sigma_2 \\geq \\cdots \\geq \\sigma_r > 0$:
-$$\\operatorname{sr}(A) = \\frac{\\|A\\|_F^2}{\\|A\\|_2^2} = \\frac{\\sigma_1^2 + \\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2}$$
+**Step 1:** Definition. For a matrix $A$ with singular values $\\sigma_1 \\geq \\sigma_2 \\geq \\cdots \\geq \\sigma_r > 0$:
+\[\\operatorname{sr}(A) = \\frac{\\|A\\|_F^2}{\\|A\\|_2^2} = \\frac{\\sigma_1^2 + \\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2}\]
 
-**Step 2: Relationship to rank.** Since $\\|A\\|_F^2 = \\sum_i \\sigma_i^2$ and $\\|A\\|_2 = \\sigma_1$:
-$$\\operatorname{sr}(A) = 1 + \\frac{\\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2} \\geq 1$$
+**Step 2:** Relationship to rank. Since $\\|A\\|_F^2 = \\sum_i \\sigma_i^2$ and $\\|A\\|_2 = \\sigma_1$:
+\[\\operatorname{sr}(A) = 1 + \\frac{\\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2} \\geq 1\]
 
 and because $\\sigma_i \\leq \\sigma_1$ for all $i$, we have $\\operatorname{sr}(A) \\leq r = \\operatorname{rank}(A)$.
 
-**Step 3: Interpretation.** A matrix with $\\operatorname{sr}(A) \\approx 1$ has most of its Frobenius norm concentrated in the top singular value - it is numerically rank-1. A matrix with $\\operatorname{sr}(A) = \\operatorname{rank}(A)$ has energy spread uniformly across all singular values.
+**Step 3:** Interpretation. A matrix with $\\operatorname{sr}(A) \\approx 1$ has most of its Frobenius norm concentrated in the top singular value - it is numerically rank-1. A matrix with $\\operatorname{sr}(A) = \\operatorname{rank}(A)$ has energy spread uniformly across all singular values.
 
-**Step 4: Role in randomized algorithms.** Random sampling-based algorithms (for SVD, least squares, etc.) require $O(\\operatorname{sr}(A)/\\varepsilon^2)$ samples to achieve relative $\\varepsilon$-approximation in Frobenius norm. This is much smaller than $O(\\operatorname{rank}(A)/\\varepsilon^2)$ when singular values decay rapidly.
+**Step 4:** Role in randomized algorithms. Random sampling-based algorithms (for SVD, least squares, etc.) require $O(\\operatorname{sr}(A)/\\varepsilon^2)$ samples to achieve relative $\\varepsilon$-approximation in Frobenius norm. This is much smaller than $O(\\operatorname{rank}(A)/\\varepsilon^2)$ when singular values decay rapidly.
 
 Therefore, $\\boxed{\\text{Option 1}}$ - stable rank captures effective dimensionality and controls sample complexity in randomized numerical linear algebra.`,
       hints: [
@@ -2333,8 +2333,8 @@ Therefore, $\\boxed{\\text{Option 1}}$ - stable rank captures effective dimensio
   "linear-systems": [
     { id: "q-alg-kp38-1", type: "multiple-choice", difficulty: "medium", question: "A least-squares problem $\\min_{\\mathbf{x}} \\|A\\mathbf{x} - \\mathbf{b}\\|_2$ where $A \\in \\mathbb{R}^{m \\times n}$ with $m > n$ (overdetermined) has the unique solution:", options: ["$\\mathbf{x} = A^{-1}\\mathbf{b}$", "$\\mathbf{x} = (A^TA)^{-1}A^T\\mathbf{b}$ (normal equations solution)", "$\\mathbf{x} = (AA^T)^{-1}A^T\\mathbf{b}$", "$\\mathbf{x} = A^T\\mathbf{b} / \\|A\\|^2$"], correctAnswer: 1, explanation: `The least-squares problem finds $\\hat{\\mathbf{x}}$ that minimizes $\|A\\mathbf{x} - \\mathbf{b}\\|^2$.
 
-**Step 1: Set up the normal equations.** The objective is:
-$$J(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b})$$
+**Step 1:** Set up the normal equations. The objective is:
+\[J(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b})\]
 
 Setting the gradient to zero:
 \\begin{align}
@@ -2342,12 +2342,12 @@ Setting the gradient to zero:
 A^TA\\mathbf{x} &= A^T\\mathbf{b}
 \\end{align}
 
-**Step 2: Solve for $\\hat{\\mathbf{x}}$.** When $A$ has full column rank ($\\operatorname{rank}(A) = n$), $A^TA$ is invertible, giving:
-$$\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}$$
+**Step 2:** Solve for $\\hat{\\mathbf{x}}$. When $A$ has full column rank ($\\operatorname{rank}(A) = n$), $A^TA$ is invertible, giving:
+\[\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}\]
 
-**Step 3: Why this is unique.** With full column rank, the columns of $A$ are linearly independent. The map $\\mathbf{x} \\mapsto A\\mathbf{x}$ is injective, so there is a unique minimizer of $\|A\\mathbf{x} - \\mathbf{b}\|^2$.
+**Step 3:** Why this is unique. With full column rank, the columns of $A$ are linearly independent. The map $\\mathbf{x} \\mapsto A\\mathbf{x}$ is injective, so there is a unique minimizer of $\|A\\mathbf{x} - \\mathbf{b}\|^2$.
 
-**Step 4: Practical considerations.** In numerical practice, solving $A^TA\\mathbf{x} = A^T\\mathbf{b}$ directly can be ill-conditioned. Numerically stable alternatives include:
+**Step 4:** Practical considerations. In numerical practice, solving $A^TA\\mathbf{x} = A^T\\mathbf{b}$ directly can be ill-conditioned. Numerically stable alternatives include:
 - **QR decomposition:** $A = QR$ gives $\\hat{\\mathbf{x}} = R^{-1}Q^T\\mathbf{b}$
 - **SVD:** $\\hat{\\mathbf{x}} = V\\Sigma^{-1}U^T\\mathbf{b}$
 
