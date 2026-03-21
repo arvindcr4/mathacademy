@@ -28,14 +28,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Given u = [1, 2, 3] and v = [4, 0, −1], compute the dot product u \\cdot v. The formula is u \\cdot v = \\Sigma\\_i u\\_iv\\_i.",
+        "Given u = [1, 2, 3] and v = [4, 0, -1], compute the dot product u \\cdot v. The formula is u \\cdot v = \\sum\_i u\\_iv\\_i.",
       options: ["1", "2", "3", "5"],
       correctAnswer: 0,
       explanation:
-        "u \\cdot v = 1\\times4 + 2\\times0 + 3\\times(−1) = 4 + 0 − 3 = 1. Only the first and third terms are nonzero.",
+        "u \\cdot v = 1\\times4 + 2\\times0 + 3\\times(-1) = 4 + 0 - 3 = 1. Only the first and third terms are nonzero.",
       hints: [
-        "Multiply element-wise: (1)(4) = 4, (2)(0) = 0, (3)(−1) = −3.",
-        "Sum the products: 4 + 0 + (−3) = 1.",
+        "Multiply element-wise: (1)(4) = 4, (2)(0) = 0, (3)(-1) = -3.",
+        "Sum the products: 4 + 0 + (-3) = 1.",
       ],
     },
     {
@@ -113,19 +113,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "For matrix A = [[2, 1], [1, 2]], find the eigenvalues by solving det(A − \\lambdaI) = 0.",
+        "For matrix A = [[2, 1], [1, 2]], find the eigenvalues by solving det(A - \\lambdaI) = 0.",
       options: [
         "\\lambda = 1 and \\lambda = 3",
         "\\lambda = 2 and \\lambda = 2",
         "\\lambda = 0 and \\lambda = 4",
-        "\\lambda = −1 and \\lambda = 3",
+        "\\lambda = -1 and \\lambda = 3",
       ],
       correctAnswer: 0,
       explanation:
-        "det(A − \\lambdaI) = det([[2−\\lambda, 1],[1, 2−\\lambda]]) = (2−\\lambda)\\^2 − 1 = \\lambda\\^2 − 4\\lambda + 3 = (\\lambda−1)(\\lambda−3) = 0. So \\lambda\\_1 = 1, \\lambda\\_2 = 3.",
+        "det(A - \\lambdaI) = det([[2-\\lambda, 1],[1, 2-\\lambda]]) = (2-\\lambda)\\^2 - 1 = \\lambda\\^2 - 4\\lambda + 3 = (\\lambda-1)(\\lambda-3) = 0. So \\lambda\\_1 = 1, \\lambda\\_2 = 3.",
       hints: [
-        "Form A − \\lambdaI = [[2−\\lambda, 1],[1, 2−\\lambda]] and compute its determinant: (2−\\lambda)\\^2 − 1\\cdot1.",
-        "Expand: (2−\\lambda)\\^2 − 1 = 4 − 4\\lambda + \\lambda\\^2 − 1 = \\lambda\\^2 − 4\\lambda + 3. Factor as (\\lambda−1)(\\lambda−3).",
+        "Form A - \\lambdaI = [[2-\\lambda, 1],[1, 2-\\lambda]] and compute its determinant: (2-\\lambda)\\^2 - 1\\cdot1.",
+        "Expand: (2-\\lambda)\\^2 - 1 = 4 - 4\\lambda + \\lambda\\^2 - 1 = \\lambda\\^2 - 4\\lambda + 3. Factor as (\\lambda-1)(\\lambda-3).",
       ],
     },
     {
@@ -144,7 +144,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Spectral Theorem guarantees that every real symmetric matrix has real eigenvalues and orthonormal eigenvectors. \\Lambda = diag(\\lambda\\_1, …, \\lambda\\_n) contains the real eigenvalues, and the columns of Q are the corresponding orthonormal eigenvectors.",
       hints: [
-        "For A = [[2,1],[1,2]], \\Lambda = diag(1,3) and Q has columns [1/√2, 1/√2]\\^T and [1/√2, −1/√2]\\^T.",
+        "For A = [[2,1],[1,2]], \\Lambda = diag(1,3) and Q has columns [1/√2, 1/√2]\\^T and [1/√2, -1/√2]\\^T.",
         "Symmetry A = A\\^T forces all eigenvalues to be real and eigenvectors for distinct eigenvalues to be orthogonal.",
       ],
     },
@@ -156,9 +156,9 @@ const questions: Record<string, Question[]> = {
         "Every n \\times n square matrix can be diagonalized over the real numbers.",
       correctAnswer: "False",
       explanation:
-        "Diagonalization requires n linearly independent eigenvectors. The matrix A = [[1,1],[0,1]] has characteristic polynomial (1−\\lambda)\\^2 = 0, so \\lambda = 1 with algebraic multiplicity 2, but only one independent eigenvector [1,0]\\^T. It cannot be diagonalized over \\mathbb{R}.",
+        "Diagonalization requires n linearly independent eigenvectors. The matrix A = [[1,1],[0,1]] has characteristic polynomial (1-\\lambda)\\^2 = 0, so \\lambda = 1 with algebraic multiplicity 2, but only one independent eigenvector [1,0]\\^T. It cannot be diagonalized over \\mathbb{R}.",
       hints: [
-        "Check A = [[1,1],[0,1]]: det(A−\\lambdaI) = (1−\\lambda)\\^2. Solving gives \\lambda = 1 only. Then A−I = [[0,1],[0,0]] has null space spanned by [1,0]\\^T - only one eigenvector.",
+        "Check A = [[1,1],[0,1]]: det(A-\\lambdaI) = (1-\\lambda)\\^2. Solving gives \\lambda = 1 only. Then A-I = [[0,1],[0,0]] has null space spanned by [1,0]\\^T - only one eigenvector.",
         "A matrix is diagonalizable iff algebraic multiplicity = geometric multiplicity for each eigenvalue.",
       ],
     },
@@ -190,13 +190,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The matrix A = [[3,0],[0,2],[0,0]] has SVD with singular values \\sigma\\_1 = 3, \\sigma\\_2 = 2. Its best rank-1 approximation A\\_1 has Frobenius-norm error ‖A − A\\_1‖_F equal to:",
+        "The matrix A = [[3,0],[0,2],[0,0]] has SVD with singular values \\sigma\\_1 = 3, \\sigma\\_2 = 2. Its best rank-1 approximation A\\_1 has Frobenius-norm error ‖A - A\\_1‖_F equal to:",
       options: ["3", "2", "√13", "1"],
       correctAnswer: 1,
       explanation:
-        "By the Eckart-Young theorem, the rank-1 truncated SVD minimizes the Frobenius norm error. The error is ‖A − A\\_1‖_F = √(\\sigma\\_2\\^2 + \\sigma\\_3\\^2 + …) = √(2\\^2) = 2, since \\sigma\\_3 = 0 here.",
+        "By the Eckart-Young theorem, the rank-1 truncated SVD minimizes the Frobenius norm error. The error is ‖A - A\\_1‖_F = √(\\sigma\\_2\\^2 + \\sigma\\_3\\^2 + …) = √(2\\^2) = 2, since \\sigma\\_3 = 0 here.",
       hints: [
-        "‖A‖_F\\^2 = \\Sigma\\_i \\sigma\\_i\\^2 = 3\\^2 + 2\\^2 = 9 + 4 = 13. Keeping rank-1 uses \\sigma\\_1=3, discarding \\sigma\\_2=2.",
+        "‖A‖_F\\^2 = \\sum\_i \\sigma\\_i\\^2 = 3\\^2 + 2\\^2 = 9 + 4 = 13. Keeping rank-1 uses \\sigma\\_1=3, discarding \\sigma\\_2=2.",
         "Error\\^2 = \\sigma\\_2\\^2 = 4, so error = 2.",
       ],
     },
@@ -225,16 +225,16 @@ const questions: Record<string, Question[]> = {
         "Given centered data matrix X̃ \\in \\mathbb{R}\\^nˣᵈ, PCA finds directions of maximum variance by computing eigenvectors of which matrix?",
       options: [
         "X̃ directly (n \\times d)",
-        "The sample covariance matrix C = X̃\\^TX̃/(n−1) \\in \\mathbb{R}ᵈˣᵈ",
+        "The sample covariance matrix C = X̃\\^TX̃/(n-1) \\in \\mathbb{R}ᵈˣᵈ",
         "The Gram matrix X̃X̃\\^T \\in \\mathbb{R}\\^nˣ\\^n",
         "The Hessian of the reconstruction loss",
       ],
       correctAnswer: 1,
       explanation:
-        "PCA maximizes variance of projected data. For unit vector w, variance of X̃w is w\\^TCw where C = X̃\\^TX̃/(n−1). Maximizing this subject to ‖w‖=1 by Lagrange multipliers gives Cw = \\lambdaw - an eigenvector problem.",
+        "PCA maximizes variance of projected data. For unit vector w, variance of X̃w is w\\^TCw where C = X̃\\^TX̃/(n-1). Maximizing this subject to ‖w‖=1 by Lagrange multipliers gives Cw = \\lambdaw - an eigenvector problem.",
       hints: [
         "Projection of X̃ onto unit vector w: the projected coordinates are X̃w \\in \\mathbb{R}\\^n.",
-        "Variance of X̃w = (1/(n−1))‖X̃w‖\\^2 = w\\^T(X̃\\^TX̃/(n−1))w = w\\^TCw. Maximize over ‖w‖=1.",
+        "Variance of X̃w = (1/(n-1))‖X̃w‖\\^2 = w\\^T(X̃\\^TX̃/(n-1))w = w\\^TCw. Maximize over ‖w‖=1.",
       ],
     },
     {
@@ -278,10 +278,10 @@ const questions: Record<string, Question[]> = {
       options: ["1/2", "2/3", "5/6", "1/3"],
       correctAnswer: 2,
       explanation:
-        "P(A) = 3/6 = 1/2, P(B) = 3/6 = 1/2, P(A \\cap B) = P({2}) = 1/6. By inclusion-exclusion: P(A \\cup B) = P(A) + P(B) − P(A \\cap B) = 1/2 + 1/2 − 1/6 = 5/6.",
+        "P(A) = 3/6 = 1/2, P(B) = 3/6 = 1/2, P(A \\cap B) = P({2}) = 1/6. By inclusion-exclusion: P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = 1/2 + 1/2 - 1/6 = 5/6.",
       hints: [
         "A \\cap B = {2} (elements in both A and B). P(A \\cap B) = 1/6.",
-        "Inclusion-exclusion: P(A \\cup B) = P(A) + P(B) − P(A \\cap B) = 3/6 + 3/6 − 1/6 = 5/6.",
+        "Inclusion-exclusion: P(A \\cup B) = P(A) + P(B) - P(A \\cap B) = 3/6 + 3/6 - 1/6 = 5/6.",
       ],
     },
     {
@@ -309,7 +309,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Using Bayes' theorem: P(disease|+) = P(+|disease)\\cdotP(disease) / P(+). P(+) = 0.90\\times0.01 + 0.05\\times0.99 = 0.009 + 0.0495 = 0.0585. P(disease|+) = 0.009/0.0585 \\approx 0.154 \\approx 15%.",
       hints: [
-        "P(+) = P(+|D)P(D) + P(+|¬D)P(¬D) = 0.90\\times0.01 + (1−0.95)\\times0.99.",
+        "P(+) = P(+|D)P(D) + P(+|¬D)P(¬D) = 0.90\\times0.01 + (1-0.95)\\times0.99.",
         "The base rate (1%) is low, so most positives are false positives even with a good test.",
       ],
     },
@@ -325,9 +325,9 @@ const questions: Record<string, Question[]> = {
       options: ["120/1024 \\approx 0.117", "3/10 = 0.3", "1/10 = 0.1", "0.5\\^3 = 0.125"],
       correctAnswer: 0,
       explanation:
-        "P(X=k) = C(n,k)\\cdotp\\^k\\cdot(1−p)\\^n\\^{-\\^k. Here P(X=3) = C(10,3)\\cdot(0.5)\\^3\\cdot(0.5)⁷ = 120\\cdot(0.5)¹⁰ = 120/1024 \\approx 0.117.",
+        "P(X=k) = C(n,k)\\cdotp\\^k\\cdot(1-p)\\^n\\^{-\\^k. Here P(X=3) = C(10,3)\\cdot(0.5)\\^3\\cdot(0.5)⁷ = 120\\cdot(0.5)¹⁰ = 120/1024 \\approx 0.117.",
       hints: [
-        "Binomial PMF: P(X=k) = C(n,k)\\cdotp\\^k\\cdot(1−p)\\^n\\^{-\\^k. With p=0.5: P(X=3) = C(10,3)\\cdot(0.5)¹⁰.",
+        "Binomial PMF: P(X=k) = C(n,k)\\cdotp\\^k\\cdot(1-p)\\^n\\^{-\\^k. With p=0.5: P(X=3) = C(10,3)\\cdot(0.5)¹⁰.",
         "C(10,3) = 10!/(3!7!) = 120. (0.5)¹⁰ = 1/1024. Product: 120/1024.",
       ],
     },
@@ -359,9 +359,9 @@ const questions: Record<string, Question[]> = {
         "The Poisson distribution can be derived as the limit of Binomial(n,p) as n \\to \\infty, p \\to 0, with np = \\lambda fixed.",
       correctAnswer: "True",
       explanation:
-        "As n\\to\\infty, p\\to0 with np=\\lambda: C(n,k)\\cdotp\\^k\\cdot(1−p)\\^n\\^{-\\^k \\to e\\^{-\\lambda\\lambda\\^k/k!. This is the Poisson PMF. Practically: the Poisson models rare-event counts (\\lambda small) over many trials (n large).",
+        "As n\\to\\infty, p\\to0 with np=\\lambda: C(n,k)\\cdotp\\^k\\cdot(1-p)\\^n\\^{-\\^k \\to e\\^{-\\lambda\\lambda\\^k/k!. This is the Poisson PMF. Practically: the Poisson models rare-event counts (\\lambda small) over many trials (n large).",
       hints: [
-        "C(n,k)\\cdotp\\^k \\approx n\\^kp\\^k/k! = \\lambda\\^k/k! for large n. And (1−p)\\^n \\approx (1−\\lambda/n)\\^n \\to e\\^{-\\lambda.",
+        "C(n,k)\\cdotp\\^k \\approx n\\^kp\\^k/k! = \\lambda\\^k/k! for large n. And (1-p)\\^n \\approx (1-\\lambda/n)\\^n \\to e\\^{-\\lambda.",
         "This justifies using Poisson for rare events: website clicks per second, radioactive decays per minute.",
       ],
     },
@@ -395,16 +395,16 @@ const questions: Record<string, Question[]> = {
       question:
         "In Bayesian inference for a coin with unknown bias p, you observe 7 heads in 10 flips. With a uniform prior P(p) = 1 on [0,1], the posterior is proportional to:",
       options: [
-        "p⁷(1−p)\\^3 (a Beta(8,4) distribution)",
+        "p⁷(1-p)\\^3 (a Beta(8,4) distribution)",
         "7/10 (a point mass at the MLE)",
-        "(1−p)⁷p\\^3",
+        "(1-p)⁷p\\^3",
         "1/10 for all p",
       ],
       correctAnswer: 0,
       explanation:
-        "With Binomial likelihood P(7H,3T|p) = C(10,7)p⁷(1−p)\\^3 and uniform prior P(p)=1, posterior \\propto p⁷(1−p)\\^3 which is a Beta(8,4) distribution. The posterior mean is 8/(8+4) = 2/3 \\approx 0.667.",
+        "With Binomial likelihood P(7H,3T|p) = C(10,7)p⁷(1-p)\\^3 and uniform prior P(p)=1, posterior \\propto p⁷(1-p)\\^3 which is a Beta(8,4) distribution. The posterior mean is 8/(8+4) = 2/3 \\approx 0.667.",
       hints: [
-        "Posterior \\propto likelihood \\times prior = p⁷(1−p)\\^3 \\times 1 = p⁷(1−p)\\^3.",
+        "Posterior \\propto likelihood \\times prior = p⁷(1-p)\\^3 \\times 1 = p⁷(1-p)\\^3.",
         "This matches Beta(\\alpha,\\beta) with \\alpha = 7+1 = 8, \\beta = 3+1 = 4. Uniform prior = Beta(1,1).",
       ],
     },
@@ -429,14 +429,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "For X ~ Uniform(0, 4), compute Var(X) using the formula Var(X) = E[X\\^2] − (E[X])\\^2.",
+        "For X ~ Uniform(0, 4), compute Var(X) using the formula Var(X) = E[X\\^2] - (E[X])\\^2.",
       options: ["4/3", "16/3", "4", "2"],
       correctAnswer: 0,
       explanation:
-        "E[X] = (0+4)/2 = 2. E[X\\^2] = \\int\\_0\\^4 x\\^2\\cdot(1/4)dx = [x\\^3/12]\\_0\\^4 = 64/12 = 16/3. Var(X) = 16/3 − 4 = 16/3 − 12/3 = 4/3. General formula: Var(Uniform(a,b)) = (b−a)\\^2/12 = 16/12 = 4/3. ✓",
+        "E[X] = (0+4)/2 = 2. E[X\\^2] = \\int\\_0\\^4 x\\^2\\cdot(1/4)dx = [x\\^3/12]\\_0\\^4 = 64/12 = 16/3. Var(X) = 16/3 - 4 = 16/3 - 12/3 = 4/3. General formula: Var(Uniform(a,b)) = (b-a)\\^2/12 = 16/12 = 4/3. ✓",
       hints: [
         "For Uniform(0,4): E[X] = 2, E[X\\^2] = \\int\\_0\\^4 x\\^2/4 dx = (1/4)[x\\^3/3]\\_0\\^4 = 64/12 = 16/3.",
-        "Var(X) = E[X\\^2] − (E[X])\\^2 = 16/3 − 4 = 4/3.",
+        "Var(X) = E[X\\^2] - (E[X])\\^2 = 16/3 - 4 = 4/3.",
       ],
     },
     {
@@ -444,10 +444,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question: "Random variable X ~ N(0,1) and Y = X\\^2. What is Cov(X, Y)?",
-      options: ["1", "0", "2", "−1"],
+      options: ["1", "0", "2", "-1"],
       correctAnswer: 1,
       explanation:
-        "Cov(X,Y) = E[XY] − E[X]E[Y] = E[X\\cdotX\\^2] − E[X]E[X\\^2] = E[X\\^3] − 0\\cdot1 = E[X\\^3]. For N(0,1), all odd moments are 0 by symmetry. So Cov(X,X\\^2) = 0. Yet X and Y = X\\^2 are clearly dependent! Zero covariance \$\\neq\$ independence.",
+        "Cov(X,Y) = E[XY] - E[X]E[Y] = E[X\\cdotX\\^2] - E[X]E[X\\^2] = E[X\\^3] - 0\\cdot1 = E[X\\^3]. For N(0,1), all odd moments are 0 by symmetry. So Cov(X,X\\^2) = 0. Yet X and Y = X\\^2 are clearly dependent! Zero covariance \$\\neq\$ independence.",
       hints: [
         "E[X\\^3] = 0 because N(0,1) is symmetric around 0 (odd moments vanish).",
         "X and X\\^2 are functionally dependent (knowing X determines Y) but have zero covariance - illustrating that uncorrelated \$\\neq\$ independent.",
@@ -478,16 +478,16 @@ const questions: Record<string, Question[]> = {
         "You observe n i.i.d. samples x\\_1,…,x\\_n from N(\\mu, \\sigma\\^2) with \\sigma\\^2 known. The MLE for \\mu is:",
       options: [
         "The sample median",
-        "x̄ = (1/n)\\Sigmax\\_i (the sample mean)",
-        "(1/n)\\Sigmax\\_i\\^2 (the second moment)",
+        "x̄ = (1/n)\\sumx\\_i (the sample mean)",
+        "(1/n)\\sumx\\_i\\^2 (the second moment)",
         "max(x\\_1,…,x\\_n)",
       ],
       correctAnswer: 1,
       explanation:
-        "Log-likelihood: ℓ(\\mu) = −n/(2\\sigma\\^2)\\cdot\\sum(x\\_i−\\mu)\\^2. Taking dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i−\\mu) = 0 gives \\mû_MLE = (1/n)\\Sigmax\\_i = x̄. The MLE for a Gaussian mean is the sample mean.",
+        "Log-likelihood: ℓ(\\mu) = -n/(2\\sigma\\^2)\\cdot\\sum(x\\_i-\\mu)\\^2. Taking dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i-\\mu) = 0 gives \\mû_MLE = (1/n)\\sumx\\_i = x̄. The MLE for a Gaussian mean is the sample mean.",
       hints: [
-        "Maximize log-likelihood ℓ(\\mu) = const − (1/2\\sigma\\^2)\\sum(x\\_i−\\mu)\\^2.",
-        "Differentiate with respect to \\mu: dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i−\\mu) = 0 ⟹ \\mû = x̄.",
+        "Maximize log-likelihood ℓ(\\mu) = const - (1/2\\sigma\\^2)\\sum(x\\_i-\\mu)\\^2.",
+        "Differentiate with respect to \\mu: dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i-\\mu) = 0 ⟹ \\mû = x̄.",
       ],
     },
     {
@@ -497,16 +497,16 @@ const questions: Record<string, Question[]> = {
       question:
         "MAP estimation with a Gaussian prior N(0, \\tau\\^2) on weights w is equivalent to which regularized objective?",
       options: [
-        "Minimize \\Sigma(y\\_i − w\\^Tx\\_i)\\^2 + (\\sigma\\^2/\\tau\\^2)‖w‖\\_1  (L1 regularization)",
-        "Minimize \\Sigma(y\\_i − w\\^Tx\\_i)\\^2 + (\\sigma\\^2/\\tau\\^2)‖w‖\\^2  (L2/ridge regularization)",
-        "Minimize \\Sigma(y\\_i − w\\^Tx\\_i)\\^2 with no regularization",
-        "Minimize ‖w‖\\^2 subject to \\Sigma(y\\_i − w\\^Tx\\_i)\\^2 \\leq \\epsilon",
+        "Minimize \\sum(y\\_i - w\\^Tx\\_i)\\^2 + (\\sigma\\^2/\\tau\\^2)‖w‖\\_1  (L1 regularization)",
+        "Minimize \\sum(y\\_i - w\\^Tx\\_i)\\^2 + (\\sigma\\^2/\\tau\\^2)‖w‖\\^2  (L2/ridge regularization)",
+        "Minimize \\sum(y\\_i - w\\^Tx\\_i)\\^2 with no regularization",
+        "Minimize ‖w‖\\^2 subject to \\sum(y\\_i - w\\^Tx\\_i)\\^2 \\leq \\epsilon",
       ],
       correctAnswer: 1,
       explanation:
-        "MAP: arg max_w [log P(data|w) + log P(w)]. With Gaussian likelihood and prior N(0,\\tau\\^2): log P(w) = −‖w‖\\^2/(2\\tau\\^2) + const. This adds an L2 penalty: minimize \\Sigma(y\\_i−w\\^Tx\\_i)\\^2/(2\\sigma\\^2) + ‖w‖\\^2/(2\\tau\\^2), equivalently minimize MSE + \\lambda‖w‖\\^2 with \\lambda = \\sigma\\^2/\\tau\\^2.",
+        "MAP: arg max_w [log P(data|w) + log P(w)]. With Gaussian likelihood and prior N(0,\\tau\\^2): log P(w) = -‖w‖\\^2/(2\\tau\\^2) + const. This adds an L2 penalty: minimize \\sum(y\\_i-w\\^Tx\\_i)\\^2/(2\\sigma\\^2) + ‖w‖\\^2/(2\\tau\\^2), equivalently minimize MSE + \\lambda‖w‖\\^2 with \\lambda = \\sigma\\^2/\\tau\\^2.",
       hints: [
-        "log P(w) = −w\\^2/(2\\tau\\^2) for Gaussian prior. A Laplace prior gives L1.",
+        "log P(w) = -w\\^2/(2\\tau\\^2) for Gaussian prior. A Laplace prior gives L1.",
         "The ratio \\sigma\\^2/\\tau\\^2 controls regularization strength: small \\tau\\^2 (strong prior toward 0) \\leftrightarrow large \\lambda.",
       ],
     },
@@ -515,13 +515,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "The MLE for the variance of a normal distribution, \\sigmâ\\^2 = (1/n)\\sum(x\\_i−x̄)\\^2, is an unbiased estimator.",
+        "The MLE for the variance of a normal distribution, \\sigmâ\\^2 = (1/n)\\sum(x\\_i-x̄)\\^2, is an unbiased estimator.",
       correctAnswer: "False",
       explanation:
-        "E[\\sigmâ\\^2_MLE] = (n−1)/n \\cdot \\sigma\\^2. The MLE divides by n but the unbiased estimator divides by (n−1) (Bessel\'s correction). For n=10: E[\\sigmâ\\^2_MLE] = 0.9\\sigma\\^2 - it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
+        "E[\\sigmâ\\^2_MLE] = (n-1)/n \\cdot \\sigma\\^2. The MLE divides by n but the unbiased estimator divides by (n-1) (Bessel\'s correction). For n=10: E[\\sigmâ\\^2_MLE] = 0.9\\sigma\\^2 - it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
       hints: [
-        "E[(1/n)\\sum(x\\_i−x̄)\\^2] = (n−1)\\sigma\\^2/n \$\\neq\$ \\sigma\\^2. Use s\\^2 = (1/(n−1))\\sum(x\\_i−x̄)\\^2 for unbiasedness.",
-        "Dividing by n−1 rather than n corrects for the one degree of freedom lost to estimating the mean.",
+        "E[(1/n)\\sum(x\\_i-x̄)\\^2] = (n-1)\\sigma\\^2/n \$\\neq\$ \\sigma\\^2. Use s\\^2 = (1/(n-1))\\sum(x\\_i-x̄)\\^2 for unbiasedness.",
+        "Dividing by n-1 rather than n corrects for the one degree of freedom lost to estimating the mean.",
       ],
     },
   ],
@@ -747,7 +747,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Find the maximum of f(x,y) = xy subject to the constraint g(x,y) = x + y − 4 = 0 using Lagrange multipliers.",
+        "Find the maximum of f(x,y) = xy subject to the constraint g(x,y) = x + y - 4 = 0 using Lagrange multipliers.",
       options: [
         "Maximum is 4 at (2, 2)",
         "Maximum is 8 at (4, 4)",
@@ -781,7 +781,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In the dual formulation of SVMs, KKT complementary slackness \\alpha\\_i(y\\_i(w\\^Tx\\_i+b)−1) = 0 implies:",
+        "In the dual formulation of SVMs, KKT complementary slackness \\alpha\\_i(y\\_i(w\\^Tx\\_i+b)-1) = 0 implies:",
       options: [
         "All \\alpha\\_i are equal at the optimum",
         "\\alpha\\_i > 0 only for points on the margin boundary y\\_i(w\\^Tx\\_i+b) = 1 (support vectors); all others have \\alpha\\_i = 0",
@@ -804,14 +804,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = −\\sum p(x) log\\_2 p(x).",
+        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = -\\sum p(x) log\\_2 p(x).",
       options: ["0 bits", "0.5 bits", "1 bit", "2 bits"],
       correctAnswer: 2,
       explanation:
-        "H = −[0.5\\cdotlog\\_2(0.5) + 0.5\\cdotlog\\_2(0.5)] = −[0.5\\cdot(−1) + 0.5\\cdot(−1)] = −(−1) = 1 bit. A fair coin has maximum entropy for a binary variable - one bit of uncertainty. A biased coin (e.g., P(H)=1) has H = 0.",
+        "H = -[0.5\\cdotlog\\_2(0.5) + 0.5\\cdotlog\\_2(0.5)] = -[0.5\\cdot(-1) + 0.5\\cdot(-1)] = -(-1) = 1 bit. A fair coin has maximum entropy for a binary variable - one bit of uncertainty. A biased coin (e.g., P(H)=1) has H = 0.",
       hints: [
-        "log\\_2(0.5) = log\\_2(1/2) = −1.",
-        'H = −[0.5\\cdot(−1) + 0.5\\cdot(−1)] = 1 bit. The unit "bit" comes from using log base 2.',
+        "log\\_2(0.5) = log\\_2(1/2) = -1.",
+        'H = -[0.5\\cdot(-1) + 0.5\\cdot(-1)] = 1 bit. The unit "bit" comes from using log base 2.',
       ],
     },
     {
@@ -828,9 +828,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By Jensen\'s inequality applied to the convex function −log: D_KL(P‖Q) = E_P[log(P/Q)] = −E_P[log(Q/P)] \\geq −log(E_P[Q/P]) = −log(1) = 0. Equality holds iff P/Q is constant, i.e., P = Q. KL is asymmetric: D_KL(P‖Q) \$\\neq\$ D_KL(Q‖P) in general.",
+        "By Jensen\'s inequality applied to the convex function -log: D_KL(P‖Q) = E_P[log(P/Q)] = -E_P[log(Q/P)] \\geq -log(E_P[Q/P]) = -log(1) = 0. Equality holds iff P/Q is constant, i.e., P = Q. KL is asymmetric: D_KL(P‖Q) \$\\neq\$ D_KL(Q‖P) in general.",
       hints: [
-        "Jensen\'s inequality: for convex f, E[f(X)] \\geq f(E[X]). Apply with f = −log and X = Q(x)/P(x).",
+        "Jensen\'s inequality: for convex f, E[f(X)] \\geq f(E[X]). Apply with f = -log and X = Q(x)/P(x).",
         "KL asymmetry: P = N(0,1), Q = N(1,1): D_KL(P‖Q) = 0.5 but D_KL(Q‖P) = 0.5 (symmetric here due to equal variances). Try different variances for asymmetry.",
       ],
     },
@@ -844,7 +844,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "I(X;Y) = D_KL(P(X,Y) ‖ P(X)P(Y)). Since KL \\geq 0 with equality iff P(X,Y) = P(X)P(Y), we have I(X;Y) = 0 iff X and Y are independent. Unlike correlation (which only measures linear dependence), MI captures all statistical dependence including nonlinear.",
       hints: [
-        "I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X). If X,Y independent: H(X|Y) = H(X), so I = 0.",
+        "I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X). If X,Y independent: H(X|Y) = H(X), so I = 0.",
         "I(X;Y) = 0 detects all forms of dependence: linear, quadratic, etc. Correlation = 0 does not imply independence.",
       ],
     },
@@ -871,14 +871,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "X has mean \\mu=10 and standard deviation \\sigma=2. Chebyshev\'s inequality bounds P(|X−10| \\geq 6) by:",
+        "X has mean \\mu=10 and standard deviation \\sigma=2. Chebyshev\'s inequality bounds P(|X-10| \\geq 6) by:",
       options: ["1/9", "1/4", "2/3", "1/3"],
       correctAnswer: 0,
       explanation:
-        "Chebyshev: P(|X−\\mu| \\geq k\\sigma) \\leq 1/k\\^2. Here |X−10| \\geq 6 = 3\\cdot\\sigma, so k=3. P(|X−10|\\geq6) \\leq 1/9. This bound holds for any distribution with finite variance, using both mean and variance.",
+        "Chebyshev: P(|X-\\mu| \\geq k\\sigma) \\leq 1/k\\^2. Here |X-10| \\geq 6 = 3\\cdot\\sigma, so k=3. P(|X-10|\\geq6) \\leq 1/9. This bound holds for any distribution with finite variance, using both mean and variance.",
       hints: [
         "6 = k\\cdot\\sigma = k\\cdot2. So k = 3.",
-        "Chebyshev: P(|X−\\mu| \\geq k\\sigma) \\leq 1/k\\^2 = 1/9.",
+        "Chebyshev: P(|X-\\mu| \\geq k\\sigma) \\leq 1/k\\^2 = 1/9.",
       ],
     },
     {
@@ -889,9 +889,9 @@ const questions: Record<string, Question[]> = {
         "Hoeffding\'s inequality gives an exponential tail bound for bounded random variables, making it much tighter than Chebyshev\'s 1/k\\^2 bound for large deviations.",
       correctAnswer: "True",
       explanation:
-        "For bounded i.i.d. X\\_i \\in [0,1] with mean \\mu, Hoeffding gives P(|X̄−\\mu| \\geq t) \\leq 2exp(−2nt\\^2). Chebyshev gives 1/(nt/\\sigma)\\^2. For n=100, t=0.1: Hoeffding \\leq 2e\\^{-\\^2 \\approx 0.27 while Chebyshev gives \\sigma\\^2/(n\\cdott\\^2) - much looser. The exponential decay enables PAC learning sample complexity bounds.",
+        "For bounded i.i.d. X\\_i \\in [0,1] with mean \\mu, Hoeffding gives P(|X̄-\\mu| \\geq t) \\leq 2exp(-2nt\\^2). Chebyshev gives 1/(nt/\\sigma)\\^2. For n=100, t=0.1: Hoeffding \\leq 2e\\^{-\\^2 \\approx 0.27 while Chebyshev gives \\sigma\\^2/(n\\cdott\\^2) - much looser. The exponential decay enables PAC learning sample complexity bounds.",
       hints: [
-        "Compare 2exp(−2nt\\^2) vs. \\sigma\\^2/(nt\\^2) for large n or large t: exponential decays much faster.",
+        "Compare 2exp(-2nt\\^2) vs. \\sigma\\^2/(nt\\^2) for large n or large t: exponential decays much faster.",
         "Hoeffding requires boundedness [a,b]; Chebyshev only requires finite variance but gives weaker bounds.",
       ],
     },
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
         "Statistical significance depends heavily on sample size. With n = 1,000,000, a 0.001% change in click rate might give p < 0.001 but have zero business impact. Effect size (e.g., Cohen\'s d) measures practical significance. Always report both p-values and effect sizes.",
       hints: [
         'p-value shrinks with larger n even for trivial effects. A massive n can make any effect "significant".',
-        "Cohen\'s d = (\\mu\\_1−\\mu\\_2)/\\sigma measures effect magnitude independently of sample size.",
+        "Cohen\'s d = (\\mu\\_1-\\mu\\_2)/\\sigma measures effect magnitude independently of sample size.",
       ],
     },
     {
@@ -936,7 +936,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Power of a statistical test is defined as P(reject H\\_0 | H\\_0 is false) = 1 − \\beta. If power = 0.8 and \\alpha = 0.05, which statement is true?",
+        "Power of a statistical test is defined as P(reject H\\_0 | H\\_0 is false) = 1 - \\beta. If power = 0.8 and \\alpha = 0.05, which statement is true?",
       options: [
         "80% chance of a false positive, 5% chance of a true positive",
         "80% chance of detecting a real effect (true positive), 5% chance of falsely rejecting H\\_0 (false positive)",
@@ -945,10 +945,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Power = P(reject H\\_0 | H\\_0 false) = 1 − \\beta = 0.8: 80% chance of correctly detecting a real effect. \\alpha = 0.05 = P(reject H\\_0 | H\\_0 true): 5% false positive rate. \\beta = 0.2 = P(fail to reject | H\\_0 false): 20% false negative rate (Type II error).",
+        "Power = P(reject H\\_0 | H\\_0 false) = 1 - \\beta = 0.8: 80% chance of correctly detecting a real effect. \\alpha = 0.05 = P(reject H\\_0 | H\\_0 true): 5% false positive rate. \\beta = 0.2 = P(fail to reject | H\\_0 false): 20% false negative rate (Type II error).",
       hints: [
         "Type I error (\\alpha): falsely reject H\\_0 when it is true. Type II error (\\beta): fail to reject H\\_0 when it is false.",
-        "Power = 1 − \\beta. Higher power means more sensitive test. Power increases with larger n and larger effect size.",
+        "Power = 1 - \\beta. Higher power means more sensitive test. Power increases with larger n and larger effect size.",
       ],
     },
   ],
@@ -961,17 +961,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The bias-variance decomposition of expected squared error for a predictor f̂ at a point x is:",
       options: [
-        "E[(f̂(x)−y)\\^2] = Bias\\^2(f̂) + Variance(f̂)",
-        "E[(f̂(x)−y)\\^2] = Bias\\^2(f̂) + Variance(f̂) + \\sigma\\^2_noise",
-        "E[(f̂(x)−y)\\^2] = Bias(f̂) + √Variance(f̂)",
-        "E[(f̂(x)−y)\\^2] = Bias\\^2(f̂) \\cdot Variance(f̂)",
+        "E[(f̂(x)-y)\\^2] = Bias\\^2(f̂) + Variance(f̂)",
+        "E[(f̂(x)-y)\\^2] = Bias\\^2(f̂) + Variance(f̂) + \\sigma\\^2_noise",
+        "E[(f̂(x)-y)\\^2] = Bias(f̂) + √Variance(f̂)",
+        "E[(f̂(x)-y)\\^2] = Bias\\^2(f̂) \\cdot Variance(f̂)",
       ],
       correctAnswer: 1,
       explanation:
-        "MSE = E[(f̂−y)\\^2] = [E[f̂]−f]\\^2 + E[(f̂−E[f̂])\\^2] + \\sigma\\^2 = Bias\\^2 + Variance + Noise. The irreducible noise \\sigma\\^2 comes from y = f(x) + \\epsilon where \\epsilon ~ N(0,\\sigma\\^2) and cannot be eliminated by any model.",
+        "MSE = E[(f̂-y)\\^2] = [E[f̂]-f]\\^2 + E[(f̂-E[f̂])\\^2] + \\sigma\\^2 = Bias\\^2 + Variance + Noise. The irreducible noise \\sigma\\^2 comes from y = f(x) + \\epsilon where \\epsilon ~ N(0,\\sigma\\^2) and cannot be eliminated by any model.",
       hints: [
-        "Bias = E[f̂(x)] − f(x): systematic error of the predictor.",
-        "Variance = E[(f̂(x) − E[f̂(x)])\\^2]: how much the predictor changes across training sets.",
+        "Bias = E[f̂(x)] - f(x): systematic error of the predictor.",
+        "Variance = E[(f̂(x) - E[f̂(x)])\\^2]: how much the predictor changes across training sets.",
       ],
     },
     {
@@ -1036,7 +1036,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Fundamental Theorem of Statistical Learning: a binary hypothesis class H is (agnostic) PAC learnable if and only if its VC dimension is finite. With infinite VC dimension, H can shatter arbitrarily large sets, so no finite sample size guarantees generalization for all distributions.",
       hints: [
-        "PAC learning requires: for any \\epsilon, \\delta, with m \\geq m(\\epsilon,\\delta) samples, error \\leq \\epsilon+opt with probability 1−\\delta.",
+        "PAC learning requires: for any \\epsilon, \\delta, with m \\geq m(\\epsilon,\\delta) samples, error \\leq \\epsilon+opt with probability 1-\\delta.",
         "Infinite VC dim \\to no such finite m(\\epsilon,\\delta) exists - the class is too expressive to generalize from finite data.",
       ],
     },
@@ -1086,7 +1086,7 @@ const questions: Record<string, Question[]> = {
         "A function k(x,z) is a valid Mercer kernel iff the kernel (Gram) matrix K with K\\_i\\_j = k(x\\_i,x\\_j) is positive semi-definite for any finite input set.",
       correctAnswer: "True",
       explanation:
-        "Mercer\'s theorem: k is a valid kernel (i.e., \\exists feature map \\phi such that k(x,z) = ⟨\\phi(x),\\phi(z)⟩) iff for all finite sets {x\\_1,…,x\\_n} and all vectors c: \\Sigma\\_i\\_j c\\_ic\\_jk(x\\_i,x\\_j) \\geq 0, i.e., the Gram matrix is PSD.",
+        "Mercer\'s theorem: k is a valid kernel (i.e., \\exists feature map \\phi such that k(x,z) = ⟨\\phi(x),\\phi(z)⟩) iff for all finite sets {x\\_1,…,x\\_n} and all vectors c: \\sum\_i\\_j c\\_ic\\_jk(x\\_i,x\\_j) \\geq 0, i.e., the Gram matrix is PSD.",
       hints: [
         "PSD Gram matrix iff all eigenvalues \\geq 0. This is the kernel validity condition.",
         "To verify a new kernel: construct a random Gram matrix K for sample points, check if PSD (all eigenvalues \\geq 0).",
@@ -1097,7 +1097,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The RBF (Gaussian) kernel k(x,z) = exp(−‖x−z‖\\^2/(2\\sigma\\^2)) corresponds to a feature map \\phi: \\mathbb{R}\\^n \\to ?",
+        "The RBF (Gaussian) kernel k(x,z) = exp(-‖x-z‖\\^2/(2\\sigma\\^2)) corresponds to a feature map \\phi: \\mathbb{R}\\^n \\to ?",
       options: [
         "\\mathbb{R}\\^n (same dimension)",
         "\\mathbb{R}\\^n\\^2 (polynomial of degree 2)",
@@ -1106,7 +1106,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The Taylor expansion of exp(−‖x−z‖\\^2/(2\\sigma\\^2)) = exp(−‖x‖\\^2/2\\sigma\\^2)\\cdotexp(x\\^Tz/\\sigma\\^2)\\cdotexp(−‖z‖\\^2/2\\sigma\\^2) involves all orders of monomials x\\_i\\_1x\\_i\\_2…x\\_i\\_k, giving infinitely many features. The RKHS of the RBF kernel is infinite-dimensional - SVM with RBF kernel implicitly operates in \\infty-dim space.",
+        "The Taylor expansion of exp(-‖x-z‖\\^2/(2\\sigma\\^2)) = exp(-‖x‖\\^2/2\\sigma\\^2)\\cdotexp(x\\^Tz/\\sigma\\^2)\\cdotexp(-‖z‖\\^2/2\\sigma\\^2) involves all orders of monomials x\\_i\\_1x\\_i\\_2…x\\_i\\_k, giving infinitely many features. The RKHS of the RBF kernel is infinite-dimensional - SVM with RBF kernel implicitly operates in \\infty-dim space.",
       hints: [
         "exp(x\\^Tz/\\sigma\\^2) = \\Sigma\\_k (x\\^Tz)\\^k/(\\sigma\\^2\\^kk!): this series has infinitely many terms \\to infinite-dimensional feature space.",
         "The kernel trick is especially powerful here: comparing in \\infty-dim space costs only O(n) (one kernel evaluation).",
@@ -1122,14 +1122,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Fourier transform decomposes a signal f(t) into sinusoidal components. For a discrete signal of length N, the DFT gives N frequency components at frequencies:",
       options: [
-        "0, 1/N, 2/N, …, (N−1)/N cycles per sample",
-        "0, 1, 2, …, N−1 Hz always",
-        "−N/2, …, 0, …, N/2 cycles per second",
+        "0, 1/N, 2/N, …, (N-1)/N cycles per sample",
+        "0, 1, 2, …, N-1 Hz always",
+        "-N/2, …, 0, …, N/2 cycles per second",
         "Only the DC component (frequency 0)",
       ],
       correctAnswer: 0,
       explanation:
-        "The DFT X[k] = \\Sigma\\_n x[n]\\cdote^(−2\\piikn/N) for k=0,1,…,N−1 represents N frequencies at k/N cycles per sample. k=0 is the DC (mean) component; k=N/2 is the Nyquist frequency (highest representable). These N complex coefficients contain all information about the length-N signal.",
+        "The DFT X[k] = \\Sigma\\_n x[n]\\cdote^(-2\\piikn/N) for k=0,1,…,N-1 represents N frequencies at k/N cycles per sample. k=0 is the DC (mean) component; k=N/2 is the Nyquist frequency (highest representable). These N complex coefficients contain all information about the length-N signal.",
       hints: [
         "k=0: DC component (average). k=1: one full cycle over the entire signal length N.",
         "The DFT is a change of basis from time domain (standard basis e\\_n) to frequency domain (complex exponential basis).",
@@ -1154,7 +1154,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Random Fourier Features (Rahimi & Recht 2007) approximate a shift-invariant kernel k(x−z) by:",
+        "Random Fourier Features (Rahimi & Recht 2007) approximate a shift-invariant kernel k(x-z) by:",
       options: [
         "Computing the exact DFT of the kernel",
         "Drawing random frequencies \\omega ~ p(\\omega) (the spectral density) and using z(x) = cos(\\omega\\^Tx + b) to approximate k(x,z) \\approx z(x)\\^Tz(z)",
@@ -1163,7 +1163,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x−z) = \\intp(\\omega)e^(i\\omega^T(x−z))d\\omega for some spectral density p(\\omega). Sampling \\omega\\_1,…,\\omegaD ~ p(\\omega) and b\\_j ~ Uniform(0,2\\pi), the feature map z(x) = √(2/D)[cos(\\omega\\_1\\^Tx+b\\_1),…,cos(\\omegaD\\^Tx+bD)] satisfies E[z(x)\\^Tz(z)] = k(x,z).",
+        "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x-z) = \\intp(\\omega)e^(i\\omega^T(x-z))d\\omega for some spectral density p(\\omega). Sampling \\omega\\_1,…,\\omegaD ~ p(\\omega) and b\\_j ~ Uniform(0,2\\pi), the feature map z(x) = √(2/D)[cos(\\omega\\_1\\^Tx+b\\_1),…,cos(\\omegaD\\^Tx+bD)] satisfies E[z(x)\\^Tz(z)] = k(x,z).",
       hints: [
         "RFF reduces kernel machines from O(n\\^2) kernel matrix to O(nD) feature matrix, enabling scalability.",
         "Bochner\'s theorem: PD shift-invariant kernel \\leftrightarrow Fourier transform of a non-negative measure (spectral density p(\\omega)).",
@@ -1234,7 +1234,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The graph Laplacian L = D − A for an undirected graph with degree matrix D and adjacency matrix A is always:",
+        "The graph Laplacian L = D - A for an undirected graph with degree matrix D and adjacency matrix A is always:",
       options: [
         "Invertible for any connected graph",
         "Positive semi-definite with at least one zero eigenvalue",
@@ -1243,10 +1243,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For any vector f: f\\^TLf = (1/2)\\Sigma\\_i\\_j A\\_i\\_j(f\\_i−f\\_j)\\^2 \\geq 0, so L is PSD. The constant vector 1 satisfies L\\cdot1 = 0 (since rows sum to zero), so 0 is always an eigenvalue. For a graph with k connected components, there are exactly k zero eigenvalues.",
+        "For any vector f: f\\^TLf = (1/2)\\sum\_i\\_j A\\_i\\_j(f\\_i-f\\_j)\\^2 \\geq 0, so L is PSD. The constant vector 1 satisfies L\\cdot1 = 0 (since rows sum to zero), so 0 is always an eigenvalue. For a graph with k connected components, there are exactly k zero eigenvalues.",
       hints: [
-        "f\\^TLf = \\Sigma\\_i\\_j A\\_i\\_j(f\\_i−f\\_j)\\^2/2 \\geq 0 since all terms are non-negative squares.",
-        "L\\cdot1 = D\\cdot1 − A\\cdot1 = (degrees) − (row sums of A) = 0. So \\lambda=0 is always an eigenvalue with eigenvector 1.",
+        "f\\^TLf = \\sum\_i\\_j A\\_i\\_j(f\\_i-f\\_j)\\^2/2 \\geq 0 since all terms are non-negative squares.",
+        "L\\cdot1 = D\\cdot1 - A\\cdot1 = (degrees) - (row sums of A) = 0. So \\lambda=0 is always an eigenvalue with eigenvector 1.",
       ],
     },
     {
@@ -1309,9 +1309,9 @@ const questions: Record<string, Question[]> = {
         "Catastrophic cancellation occurs when subtracting two nearly equal floating-point numbers, causing significant loss of significant digits.",
       correctAnswer: "True",
       explanation:
-        "Example: a = 1.000000001, b = 1.000000000 (both representable to 10 significant digits). a−b = 0.000000001 = 1\\times10\\^{-⁹ - only 1 significant digit! The leading digits cancel, leaving only the noisy low-order bits. This affects the naive variance formula E[X\\^2]−(E[X])\\^2 when mean >> std.",
+        "Example: a = 1.000000001, b = 1.000000000 (both representable to 10 significant digits). a-b = 0.000000001 = 1\\times10\\^{-⁹ - only 1 significant digit! The leading digits cancel, leaving only the noisy low-order bits. This affects the naive variance formula E[X\\^2]-(E[X])\\^2 when mean >> std.",
       hints: [
-        "If a \\approx b with 15 significant digits each, a−b may have only 1 significant digit.",
+        "If a \\approx b with 15 significant digits each, a-b may have only 1 significant digit.",
         "Welford\'s online algorithm computes variance without catastrophic cancellation by updating incrementally.",
       ],
     },
@@ -1342,7 +1342,7 @@ const questions: Record<string, Question[]> = {
       options: ["3.14", "3.00", "3.93", "2.47"],
       correctAnswer: 0,
       explanation:
-        "P(inside quarter-circle) = \\pi/4. So \\pî = 4\\cdotk/n = 4\\cdot785/1000 = 3.14. Standard error: √(\\pi(4−\\pi)/(4n)) \\approx √(3.14\\cdot0.86/4000) \\approx 0.026. The error scales as O(1/√n) - independent of dimension.",
+        "P(inside quarter-circle) = \\pi/4. So \\pî = 4\\cdotk/n = 4\\cdot785/1000 = 3.14. Standard error: √(\\pi(4-\\pi)/(4n)) \\approx √(3.14\\cdot0.86/4000) \\approx 0.026. The error scales as O(1/√n) - independent of dimension.",
       hints: [
         "Area of quarter-circle radius 1 = \\pi/4. Area of unit square = 1. Fraction inside = \\pi/4.",
         "Estimate: \\pî = 4\\times(fraction inside) = 4\\times0.785 = 3.14.",
@@ -1358,11 +1358,11 @@ const questions: Record<string, Question[]> = {
         "w(x) = q(x)/p(x)",
         "w(x) = p(x)/q(x)",
         "w(x) = p(x)\\cdotq(x)",
-        "w(x) = |p(x)−q(x)|",
+        "w(x) = |p(x)-q(x)|",
       ],
       correctAnswer: 1,
       explanation:
-        "E_p[f(X)] = \\intf(x)p(x)dx = \\intf(x)[p(x)/q(x)]q(x)dx = E_q[f(X)\\cdotw(X)] where w(x) = p(x)/q(x). Estimate: (1/n)\\Sigma\\_i f(x\\_i)w(x\\_i) for x\\_i ~ q. Choose q \\propto |f|\\cdotp to minimize variance.",
+        "E_p[f(X)] = \\intf(x)p(x)dx = \\intf(x)[p(x)/q(x)]q(x)dx = E_q[f(X)\\cdotw(X)] where w(x) = p(x)/q(x). Estimate: (1/n)\\sum\_i f(x\\_i)w(x\\_i) for x\\_i ~ q. Choose q \\propto |f|\\cdotp to minimize variance.",
       hints: [
         "Key identity: E_p[f] = E_q[f\\cdot(p/q)]. The weight p/q corrects for sampling under q instead of p.",
         "Large weights (p(x) >> q(x)) mean x is sampled too rarely under q - those points are upweighted.",
@@ -1395,11 +1395,11 @@ const questions: Record<string, Question[]> = {
         "max_q H(q) (maximize entropy of q)",
         "min_{q \\in Q} D_KL(q(z) ‖ p(z|x)) (minimize KL divergence to true posterior)",
         "max_q E_q[log p(x,z)] (maximize ELBO without entropy term)",
-        "min_q ‖q − p‖\\_2\\^2 (minimize L2 distance)",
+        "min_q ‖q - p‖\\_2\\^2 (minimize L2 distance)",
       ],
       correctAnswer: 1,
       explanation:
-        "VI turns posterior inference into optimization: find q*(z) = argmin_{q\\inQ} D_KL(q‖p(z|x)), where Q is a tractable family (e.g., mean-field). Since p(z|x) is intractable, this is equivalently done by maximizing the ELBO = E_q[log p(x,z)] − E_q[log q(z)].",
+        "VI turns posterior inference into optimization: find q*(z) = argmin_{q\\inQ} D_KL(q‖p(z|x)), where Q is a tractable family (e.g., mean-field). Since p(z|x) is intractable, this is equivalently done by maximizing the ELBO = E_q[log p(x,z)] - E_q[log q(z)].",
       hints: [
         "Maximizing ELBO = minimizing KL(q‖p): log p(x) = ELBO + KL(q‖p) \\geq ELBO.",
         "Mean-field Q: q(z) = \\Pi\\_i q\\_i(z\\_i) - each latent variable independent. Tractable but approximate.",
@@ -1410,12 +1410,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The ELBO (Evidence Lower BOund) is defined as ELBO = E_q[log p(x,z)] − E_q[log q(z)]. Which identity connects ELBO to the log-evidence log p(x)?",
+        "The ELBO (Evidence Lower BOund) is defined as ELBO = E_q[log p(x,z)] - E_q[log q(z)]. Which identity connects ELBO to the log-evidence log p(x)?",
       options: [
-        "log p(x) = ELBO − KL(q‖p(z|x))",
+        "log p(x) = ELBO - KL(q‖p(z|x))",
         "log p(x) = ELBO + KL(q(z) ‖ p(z|x))",
         "log p(x) = ELBO \\times KL(q‖p)",
-        "log p(x) = KL(q‖p) − ELBO",
+        "log p(x) = KL(q‖p) - ELBO",
       ],
       correctAnswer: 1,
       explanation:
@@ -1456,10 +1456,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By the GP definition, any finite collection of function values is jointly Gaussian. For zero-mean GP: [f(x\\_1),f(x\\_2)] ~ N(0, K) where K is the 2\\times2 kernel (Gram) matrix. k(x\\_1,x\\_2) encodes correlation - nearby inputs (small ‖x\\_1−x\\_2‖ for RBF kernel) are highly correlated.",
+        "By the GP definition, any finite collection of function values is jointly Gaussian. For zero-mean GP: [f(x\\_1),f(x\\_2)] ~ N(0, K) where K is the 2\\times2 kernel (Gram) matrix. k(x\\_1,x\\_2) encodes correlation - nearby inputs (small ‖x\\_1-x\\_2‖ for RBF kernel) are highly correlated.",
       hints: [
         "GP is a distribution over functions: any finite evaluation is a multivariate Gaussian.",
-        "K_{ij} = k(x\\_i,x\\_j). For RBF kernel: k(x,x') = \\sigma\\^2exp(−‖x−x'‖\\^2/2ℓ\\^2). K is always PSD.",
+        "K_{ij} = k(x\\_i,x\\_j). For RBF kernel: k(x,x') = \\sigma\\^2exp(-‖x-x'‖\\^2/2ℓ\\^2). K is always PSD.",
       ],
     },
     {
@@ -1470,7 +1470,7 @@ const questions: Record<string, Question[]> = {
         "GP regression produces both a predictive mean (point prediction) and a predictive variance (uncertainty estimate) at each test point.",
       correctAnswer: "True",
       explanation:
-        "GP posterior at test point x*: \\mu* = k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}y and \\sigma*\\^2 = k(x*,x*) − k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}k(X,x*). The variance \\sigma*\\^2 is zero at training points and grows far from data - automatic uncertainty quantification without approximation.",
+        "GP posterior at test point x*: \\mu* = k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}y and \\sigma*\\^2 = k(x*,x*) - k(x*,X)[K(X,X)+\\sigma\\^2I]\\^{-1}k(X,x*). The variance \\sigma*\\^2 is zero at training points and grows far from data - automatic uncertainty quantification without approximation.",
       hints: [
         "GP posterior mean is the prediction; posterior variance measures uncertainty.",
         "This exact uncertainty is why GPs are preferred for Bayesian optimization (acquisition functions need uncertainty).",
@@ -1529,7 +1529,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Solutions to SDEs driven by Brownian motion are Markov processes: given X(t), the future {X(s):s>t} is independent of the past {X(s):s<t}. This follows because Wiener increments dW are independent of the past. This Markov property is fundamental to diffusion models, enabling the forward/reverse process formulation.",
       hints: [
-        'Wiener increments: W(t)−W(s) ⊥ {W(u):u\\leqs} for t>s. The SDE is "driven" by these independent increments.',
+        'Wiener increments: W(t)-W(s) ⊥ {W(u):u\\leqs} for t>s. The SDE is "driven" by these independent increments.',
         "Markov property: future depends only on present state, not the entire history.",
       ],
     },
@@ -1547,7 +1547,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The time-reversal of dX=f dt+g dW (forward SDE) is dX=[f−g\\^2\\nablaₓ log p\\_t(X)]dt + g dW̃ (reverse SDE, from t=T to 0). Learning \\nablaₓ log p\\_t(x) (score) for all t via score matching enables exact reversal, generating samples from p\\_t₌\\_0 (data distribution) from noise p\\_t₌T \\approx N(0,I).",
+        "The time-reversal of dX=f dt+g dW (forward SDE) is dX=[f-g\\^2\\nablaₓ log p\\_t(X)]dt + g dW̃ (reverse SDE, from t=T to 0). Learning \\nablaₓ log p\\_t(x) (score) for all t via score matching enables exact reversal, generating samples from p\\_t₌\\_0 (data distribution) from noise p\\_t₌T \\approx N(0,I).",
       hints: [
         "Forward: data \\to noise. Reverse: noise \\to data. The score \\nablaₓ log p\\_t(x) guides denoising.",
         "DDPM discretizes the reverse SDE. Song et al. (2021) unified DDPM and score matching in this SDE framework.",
@@ -1561,7 +1561,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'Persistent homology tracks topological features (connected components, loops, voids) as a scale parameter \\epsilon varies. A "birth-death" pair (b, d) with large persistence |d−b| indicates:',
+        'Persistent homology tracks topological features (connected components, loops, voids) as a scale parameter \\epsilon varies. A "birth-death" pair (b, d) with large persistence |d-b| indicates:',
       options: [
         "A numerical artifact due to noise",
         "A robust topological feature present across a wide range of scales",
@@ -1570,10 +1570,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a persistence diagram, points near the diagonal (d−b \\approx 0) represent short-lived features likely due to noise. Points far from the diagonal (large d−b) represent robust topological features (genuine holes/loops/voids). This scale-invariant signal/noise separation is persistent homology\'s key property.",
+        "In a persistence diagram, points near the diagonal (d-b \\approx 0) represent short-lived features likely due to noise. Points far from the diagonal (large d-b) represent robust topological features (genuine holes/loops/voids). This scale-invariant signal/noise separation is persistent homology\'s key property.",
       hints: [
-        "Born at \\epsilon=b, dies at \\epsilon=d. Persistence = d−b. Small persistence: noise. Large persistence: signal.",
-        "Example: a circular data manifold has one persistent 1-cycle (loop) with large d−b, plus many short-lived loops from noise.",
+        "Born at \\epsilon=b, dies at \\epsilon=d. Persistence = d-b. Small persistence: noise. Large persistence: signal.",
+        "Example: a circular data manifold has one persistent 1-cycle (loop) with large d-b, plus many short-lived loops from noise.",
       ],
     },
     {
@@ -1581,13 +1581,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Euler characteristic χ = V − E + F (vertices − edges + faces) is a topological invariant, unchanged by continuous deformations of a shape.",
+        "The Euler characteristic χ = V - E + F (vertices - edges + faces) is a topological invariant, unchanged by continuous deformations of a shape.",
       correctAnswer: "True",
       explanation:
-        "For a sphere: χ = 2. For a torus: χ = 0. For a pretzel (2 holes): χ = −2. The Euler characteristic depends only on topology, not geometry. Equivalent formula: χ = \\Sigma (−1)\\^k\\beta\\_k where \\beta\\_k are Betti numbers (number of k-dimensional holes).",
+        "For a sphere: χ = 2. For a torus: χ = 0. For a pretzel (2 holes): χ = -2. The Euler characteristic depends only on topology, not geometry. Equivalent formula: χ = \\Sigma (-1)\\^k\\beta\\_k where \\beta\\_k are Betti numbers (number of k-dimensional holes).",
       hints: [
         "Coffee mug and donut are topologically equivalent (both have one hole) - same χ = 0.",
-        "\\beta\\_0 = connected components, \\beta\\_1 = loops, \\beta\\_2 = enclosed voids. χ = \\beta\\_0 − \\beta\\_1 + \\beta\\_2.",
+        "\\beta\\_0 = connected components, \\beta\\_1 = loops, \\beta\\_2 = enclosed voids. χ = \\beta\\_0 - \\beta\\_1 + \\beta\\_2.",
       ],
     },
     {
@@ -1623,8 +1623,8 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       options: [
         '\\sum_x P(x) log(Q(x)/P(x))',
         '\\sum_x P(x) log(P(x)/Q(x))',
-        '\\sum_x |P(x) − Q(x)|',
-        '√(\\sum_x (P(x) − Q(x))\\^2)',
+        '\\sum_x |P(x) - Q(x)|',
+        '√(\\sum_x (P(x) - Q(x))\\^2)',
       ],
       correctAnswer: 1,
       explanation:
@@ -1662,7 +1662,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'I(X;Y) = KL(P(X,Y) || P(X)P(Y)) = E_{P(X,Y)}[log P(X,Y)/P(X)P(Y)]. This is the KL divergence from the joint to the product of marginals, measuring dependence. I(X;Y) = H(X) − H(X|Y) = H(Y) − H(Y|X) = H(X) + H(Y) − H(X,Y).',
+        'I(X;Y) = KL(P(X,Y) || P(X)P(Y)) = E_{P(X,Y)}[log P(X,Y)/P(X)P(Y)]. This is the KL divergence from the joint to the product of marginals, measuring dependence. I(X;Y) = H(X) - H(X|Y) = H(Y) - H(Y|X) = H(X) + H(Y) - H(X,Y).',
       hints: [
         'If X and Y are independent, P(X,Y) = P(X)P(Y), so KL = 0 and I(X;Y) = 0.',
         'MI measures how much knowing Y reduces uncertainty about X.',
@@ -1677,7 +1677,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'easy',
       question: 'The Evidence Lower BOund (ELBO) in variational inference relates to log evidence log p(x) as:',
       options: [
-        'log p(x) = ELBO − KL(q(z|x) || p(z|x))',
+        'log p(x) = ELBO - KL(q(z|x) || p(z|x))',
         'log p(x) = ELBO + KL(q(z|x) || p(z|x))',
         'ELBO = log p(x) \\cdot KL(q(z|x) || p(z))',
         'log p(x) = ELBO only when q is the true posterior',
@@ -1754,7 +1754,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'The Hessian matrix H of a scalar function f: \\mathbb{R}\\^n \\to \\mathbb{R} is the matrix of second partial derivatives H_ij = \\partial\\^2f/\\partialx_i\\partialx_j, and is always symmetric for twice continuously differentiable functions.',
       correctAnswer: 'True',
       explanation:
-        'Schwarz\'s theorem (symmetry of second derivatives): if f is twice continuously differentiable (C\\^2), then \\partial\\^2f/\\partialx_i\\partialx_j = \\partial\\^2f/\\partialx_j\\partialx_i, so H = H\\^T. The Hessian characterizes the local curvature of f; its eigenvalues determine whether a critical point is a minimum (all +), maximum (all −), or saddle point (mixed).',
+        'Schwarz\'s theorem (symmetry of second derivatives): if f is twice continuously differentiable (C\\^2), then \\partial\\^2f/\\partialx_i\\partialx_j = \\partial\\^2f/\\partialx_j\\partialx_i, so H = H\\^T. The Hessian characterizes the local curvature of f; its eigenvalues determine whether a critical point is a minimum (all +), maximum (all -), or saddle point (mixed).',
       hints: [
         'Schwarz\'s theorem: mixed partials commute for C\\^2 functions.',
         'Hessian eigenvalues: all positive \\to local min; all negative \\to local max; mixed \\to saddle.',
@@ -1765,16 +1765,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'For loss L = ‖Ax − b‖\\^2, the gradient \\partialL/\\partialx using matrix calculus is:',
+        'For loss L = ‖Ax - b‖\\^2, the gradient \\partialL/\\partialx using matrix calculus is:',
       options: [
-        '2(Ax − b)',
-        '2A\\^T(Ax − b)',
-        '2A(Ax − b)',
-        'A\\^TA \\cdot x − A\\^Tb',
+        '2(Ax - b)',
+        '2A\\^T(Ax - b)',
+        '2A(Ax - b)',
+        'A\\^TA \\cdot x - A\\^Tb',
       ],
       correctAnswer: 1,
       explanation:
-        'L = (Ax−b)\\^T(Ax−b). Using matrix calculus: \\partialL/\\partialx = 2A\\^T(Ax−b). Derivation: Let r = Ax−b. Then L = r\\^Tr, \\partialL/\\partialr = 2r, \\partialr/\\partialx = A (Jacobian of Ax−b w.r.t. x). Chain rule: \\partialL/\\partialx = (\\partialr/\\partialx)\\^T \\cdot \\partialL/\\partialr = A\\^T \\cdot 2r = 2A\\^T(Ax−b).',
+        'L = (Ax-b)\\^T(Ax-b). Using matrix calculus: \\partialL/\\partialx = 2A\\^T(Ax-b). Derivation: Let r = Ax-b. Then L = r\\^Tr, \\partialL/\\partialr = 2r, \\partialr/\\partialx = A (Jacobian of Ax-b w.r.t. x). Chain rule: \\partialL/\\partialx = (\\partialr/\\partialx)\\^T \\cdot \\partialL/\\partialr = A\\^T \\cdot 2r = 2A\\^T(Ax-b).',
       hints: [
         'The chain rule for matrix expressions: \\partialf/\\partialx = (\\partialg/\\partialx)\\^T \\cdot \\partialf/\\partialg.',
         'The Jacobian of Ax w.r.t. x is A (dimension check: \\partial(m\\times1)/\\partial(n\\times1) = m\\timesn = A).',
@@ -1789,14 +1789,14 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'easy',
       question: 'A function f: \\mathbb{R}\\^n \\to \\mathbb{R} is convex if for all x, y and \\lambda \\in [0,1]:',
       options: [
-        'f(\\lambdax + (1−\\lambda)y) \\geq \\lambdaf(x) + (1−\\lambda)f(y)',
-        'f(\\lambdax + (1−\\lambda)y) \\leq \\lambdaf(x) + (1−\\lambda)f(y)',
+        'f(\\lambdax + (1-\\lambda)y) \\geq \\lambdaf(x) + (1-\\lambda)f(y)',
+        'f(\\lambdax + (1-\\lambda)y) \\leq \\lambdaf(x) + (1-\\lambda)f(y)',
         'f(x) \\leq f(y) whenever ‖x‖ \\leq ‖y‖',
         '\\nablaf(x) = 0 has a unique solution',
       ],
       correctAnswer: 1,
       explanation:
-        'Convexity: the function value at any convex combination of points lies below the chord connecting those points. Equivalent conditions: (1) Hessian is positive semidefinite everywhere, (2) f(y) \\geq f(x) + \\nablaf(x)\\^T(y−x) (first-order characterization). Convexity guarantees any local minimum is a global minimum.',
+        'Convexity: the function value at any convex combination of points lies below the chord connecting those points. Equivalent conditions: (1) Hessian is positive semidefinite everywhere, (2) f(y) \\geq f(x) + \\nablaf(x)\\^T(y-x) (first-order characterization). Convexity guarantees any local minimum is a global minimum.',
       hints: [
         'The chord between (x, f(x)) and (y, f(y)) lies above the function graph for convex f.',
         'Key property: for convex f, any local minimum is a global minimum.',
@@ -1881,7 +1881,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       options: [
         'P and Q are equal as measures on all measurable sets',
         'There exists a measurable function f = dP/dQ such that P(A) = \\int_A f dQ for all measurable A',
-        'The KL divergence KL(P||Q) is bounded by the L\\^2 norm of P − Q',
+        'The KL divergence KL(P||Q) is bounded by the L\\^2 norm of P - Q',
         'P and Q share the same support and have equal marginals',
       ],
       correctAnswer: 1,
@@ -1942,7 +1942,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'MAP: \\theta_MAP = argmax [log P(x|\\theta) + log P(\\theta)]. Gaussian prior N(0,\\sigma\\^2I): log P(\\theta) = −‖\\theta‖\\^2/(2\\sigma\\^2) \\propto −\\lambda‖\\theta‖\\^2 = L2 regularization (Ridge). Laplace prior \\propto exp(−\\lambda‖\\theta‖\\_1): log P(\\theta) \\propto −\\lambda‖\\theta‖\\_1 = L1 regularization (LASSO). L1 promotes sparsity because the Laplace prior has sharper peak at zero.',
+        'MAP: \\theta_MAP = argmax [log P(x|\\theta) + log P(\\theta)]. Gaussian prior N(0,\\sigma\\^2I): log P(\\theta) = -‖\\theta‖\\^2/(2\\sigma\\^2) \\propto -\\lambda‖\\theta‖\\^2 = L2 regularization (Ridge). Laplace prior \\propto exp(-\\lambda‖\\theta‖\\_1): log P(\\theta) \\propto -\\lambda‖\\theta‖\\_1 = L1 regularization (LASSO). L1 promotes sparsity because the Laplace prior has sharper peak at zero.',
       hints: [
         'Gaussian is quadratic \\to L2 penalty. Laplace has exponential tails \\to L1 penalty.',
         'Laplace prior \\to L1 \\to sparse solutions (many parameters go to exactly zero).',
@@ -1978,7 +1978,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'In GP regression, the posterior predictive mean at a new point x* is a weighted sum of training outputs y, where the weights depend on the kernel function k(x*, x\\_i) evaluated between x* and training points.',
       correctAnswer: 'True',
       explanation:
-        'GP posterior: \\mu*(x*) = k(x*, X)[K(X,X) + \\sigma\\^2I]\\^{-1}y = \\Sigma\\_i \\alpha\\_i k(x*, x\\_i) where \\alpha = [K+\\sigma\\^2I]\\^{-1}y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance \\sigma\\^2*(x*) = k(x*,x*) − k(x*,X)[K+\\sigma\\^2I]\\^{-1}k(X,x*) quantifies uncertainty.',
+        'GP posterior: \\mu*(x*) = k(x*, X)[K(X,X) + \\sigma\\^2I]\\^{-1}y = \\sum\_i \\alpha\\_i k(x*, x\\_i) where \\alpha = [K+\\sigma\\^2I]\\^{-1}y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance \\sigma\\^2*(x*) = k(x*,x*) - k(x*,X)[K+\\sigma\\^2I]\\^{-1}k(X,x*) quantifies uncertainty.',
       hints: [
         'Kernel k(x*,x\\_i) measures similarity between x* and training point x\\_i.',
         'Far from training data: k(x*,x\\_i) \\approx 0, posterior variance \\approx prior variance.',
@@ -1991,16 +1991,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'GP hyperparameter optimization (e.g., kernel length scale ℓ) is typically performed by maximizing:',
       options: [
         'The posterior predictive accuracy on a held-out validation set using cross-validation',
-        'The log marginal likelihood log P(y|X, \\theta_hyp) = −½ y\\^T(K+\\sigma\\^2I)\\^{-1}y − ½ log|K+\\sigma\\^2I| − n/2 log(2\\pi)',
+        'The log marginal likelihood log P(y|X, \\theta_hyp) = -½ y\\^T(K+\\sigma\\^2I)\\^{-1}y - ½ log|K+\\sigma\\^2I| - n/2 log(2\\pi)',
         'The ELBO of a variational approximation to the GP posterior',
         'The squared error between predicted and actual outputs on the training set',
       ],
       correctAnswer: 1,
       explanation:
-        'The log marginal likelihood (type-II MLE / evidence) balances data fit (−½ y\\^T(K+\\sigma\\^2I)\\^{-1}y) against model complexity (−½ log|K+\\sigma\\^2I|). Gradient-based optimization w.r.t. hyperparameters (ℓ, \\sigma_f, \\sigma_n) yields an automatic Occam\'s razor - it penalizes overly complex kernels that overfit.',
+        'The log marginal likelihood (type-II MLE / evidence) balances data fit (-½ y\\^T(K+\\sigma\\^2I)\\^{-1}y) against model complexity (-½ log|K+\\sigma\\^2I|). Gradient-based optimization w.r.t. hyperparameters (ℓ, \\sigma_f, \\sigma_n) yields an automatic Occam\'s razor - it penalizes overly complex kernels that overfit.',
       hints: [
         'Log marginal likelihood = log P(y|X, hyp): integrated over all function values (GP prior).',
-        'Complexity penalty −½ log|K| prevents overfitting by penalizing high model complexity.',
+        'Complexity penalty -½ log|K| prevents overfitting by penalizing high model complexity.',
       ],
     },
   ],
@@ -2013,7 +2013,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'Importance sampling estimates E_P[f(x)] when sampling from P is difficult by:',
       options: [
         'Sampling x ~ P directly and computing the sample mean of f(x)',
-        'Sampling x ~ Q and computing the weighted mean (1/N) \\Sigma\\_i f(x\\_i) w(x\\_i) where w(x\\_i) = P(x\\_i)/Q(x\\_i)',
+        'Sampling x ~ Q and computing the weighted mean (1/N) \\sum\_i f(x\\_i) w(x\\_i) where w(x\\_i) = P(x\\_i)/Q(x\\_i)',
         'Using rejection sampling to accept only samples that satisfy f(x) > 0',
         'Computing the expectation analytically using moment-generating functions',
       ],
@@ -2047,15 +2047,15 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Control variates reduce the variance of a Monte Carlo estimator ê = (1/N)\\Sigma f(x\\_i) by:',
       options: [
         'Increasing N (sample size) to reduce variance at rate 1/√N',
-        'Subtracting a correlated function c\\cdotg(x) with known mean E[g] = \\mu_g, giving ê_CV = (1/N)\\Sigma [f(x\\_i) − c(g(x\\_i) − \\mu_g)]',
+        'Subtracting a correlated function c\\cdotg(x) with known mean E[g] = \\mu_g, giving ê_CV = (1/N)\\Sigma [f(x\\_i) - c(g(x\\_i) - \\mu_g)]',
         'Importance-weighting samples to match a lower-variance proposal distribution',
         'Truncating extreme outliers that inflate the variance of f(x)',
       ],
       correctAnswer: 1,
       explanation:
-        'Control variate estimator: ê_CV = (1/N)\\Sigma[f(x_i) − c(g(x_i) − \\mu_g)] is unbiased (since E[g − \\mu_g] = 0). Optimal c* = Cov(f,g)/Var(g) minimizes Var(ê_CV) = Var(f)(1 − \\rho\\^2_{fg}). When |\\rho_{fg}| \\approx 1, variance reduction is dramatic. The REINFORCE baseline in RL is a control variate for the policy gradient estimator.',
+        'Control variate estimator: ê_CV = (1/N)\\Sigma[f(x_i) - c(g(x_i) - \\mu_g)] is unbiased (since E[g - \\mu_g] = 0). Optimal c* = Cov(f,g)/Var(g) minimizes Var(ê_CV) = Var(f)(1 - \\rho\\^2_{fg}). When |\\rho_{fg}| \\approx 1, variance reduction is dramatic. The REINFORCE baseline in RL is a control variate for the policy gradient estimator.',
       hints: [
-        'Subtracting zero-mean term c(g − \\mu_g) doesn\'t change the mean but can reduce variance.',
+        'Subtracting zero-mean term c(g - \\mu_g) doesn\'t change the mean but can reduce variance.',
         'Optimal coefficient c* = Cov(f,g)/Var(g). Higher correlation \\to larger variance reduction.',
       ],
     },
@@ -2069,16 +2069,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'The graph Laplacian L of an undirected graph G = (V, E) with adjacency matrix A and degree matrix D is defined as:',
       options: [
         'L = A + D',
-        'L = D − A',
+        'L = D - A',
         'L = A \\cdot D\\^{-1}',
         'L = D\\^{-½ A D\\^{-½',
       ],
       correctAnswer: 1,
       explanation:
-        'The combinatorial graph Laplacian L = D − A where D_ii = \\Sigma_j A_ij (degree of node i). L is symmetric, positive semidefinite, with smallest eigenvalue 0 (eigenvector 1). The number of zero eigenvalues equals the number of connected components. L captures graph connectivity and is fundamental to spectral graph theory.',
+        'The combinatorial graph Laplacian L = D - A where D_ii = \\Sigma_j A_ij (degree of node i). L is symmetric, positive semidefinite, with smallest eigenvalue 0 (eigenvector 1). The number of zero eigenvalues equals the number of connected components. L captures graph connectivity and is fundamental to spectral graph theory.',
       hints: [
         'D is diagonal with node degrees; A is the adjacency matrix.',
-        'Normalized Laplacian: L_norm = D^{-1/2}(D−A)D^{-1/2} = I − D^{-1/2}AD^{-1/2}.',
+        'Normalized Laplacian: L_norm = D^{-1/2}(D-A)D^{-1/2} = I - D^{-1/2}AD^{-1/2}.',
       ],
     },
     {
@@ -2086,12 +2086,12 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'PageRank computes a stationary distribution of a random walk on the web graph, where at each step the surfer either follows a random outgoing link with probability d, or teleports to a random page with probability (1−d).',
+        'PageRank computes a stationary distribution of a random walk on the web graph, where at each step the surfer either follows a random outgoing link with probability d, or teleports to a random page with probability (1-d).',
       correctAnswer: 'True',
       explanation:
-        'PageRank vector \\pi satisfies \\pi = d\\cdotA\\^T\\pi + (1−d)\\cdot1/n. The damping factor d \\approx 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1−d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
+        'PageRank vector \\pi satisfies \\pi = d\\cdotA\\^T\\pi + (1-d)\\cdot1/n. The damping factor d \\approx 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1-d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
       hints: [
-        'Random surfer model: follow link with prob d, teleport with prob 1−d.',
+        'Random surfer model: follow link with prob d, teleport with prob 1-d.',
         'Without teleportation, dangling nodes (no outlinks) accumulate all rank - it leaks.',
       ],
     },
@@ -2126,15 +2126,15 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       options: [
         'P(X \\geq t) \\leq E[X\\^2]/t\\^2',
         'P(X \\geq t) \\leq E[X]/t',
-        'P(|X − E[X]| \\geq t) \\leq Var(X)/t\\^2',
-        'P(X \\geq t) \\leq exp(−t/E[X])',
+        'P(|X - E[X]| \\geq t) \\leq Var(X)/t\\^2',
+        'P(X \\geq t) \\leq exp(-t/E[X])',
       ],
       correctAnswer: 1,
       explanation:
-        'Markov\'s inequality: P(X \\geq t) \\leq E[X]/t. It requires only finite mean. Proof: E[X] \\geq E[X\\cdot1(X\\geqt)] \\geq t\\cdotP(X\\geqt). Chebyshev\'s inequality (requires finite variance) is Markov applied to (X−E[X])\\^2: P(|X−\\mu|\\geqt) \\leq \\sigma\\^2/t\\^2.',
+        'Markov\'s inequality: P(X \\geq t) \\leq E[X]/t. It requires only finite mean. Proof: E[X] \\geq E[X\\cdot1(X\\geqt)] \\geq t\\cdotP(X\\geqt). Chebyshev\'s inequality (requires finite variance) is Markov applied to (X-E[X])\\^2: P(|X-\\mu|\\geqt) \\leq \\sigma\\^2/t\\^2.',
       hints: [
         'Markov requires only E[X] < \\infty and X \\geq 0 - extremely weak assumption.',
-        'Chebyshev\'s = apply Markov to (X − E[X])\\^2 with threshold t\\^2 - gives tighter bound.',
+        'Chebyshev\'s = apply Markov to (X - E[X])\\^2 with threshold t\\^2 - gives tighter bound.',
       ],
     },
     {
@@ -2142,10 +2142,10 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'Hoeffding\'s inequality states that for independent bounded random variables X\\_i \\in [a\\_i, b\\_i] with S_n = \\Sigma X\\_i, the tail bound P(S_n − E[S_n] \\geq t) \\leq exp(−2t\\^2/\\Sigma(b\\_i−a\\_i)\\^2) decays exponentially in t.',
+        'Hoeffding\'s inequality states that for independent bounded random variables X\\_i \\in [a\\_i, b\\_i] with S_n = \\Sigma X\\_i, the tail bound P(S_n - E[S_n] \\geq t) \\leq exp(-2t\\^2/\\sum(b\\_i-a\\_i)\\^2) decays exponentially in t.',
       correctAnswer: 'True',
       explanation:
-        'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables - much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n − \\mu \\geq \\epsilon) \\leq exp(−2n\\epsilon\\^2). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
+        'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables - much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n - \\mu \\geq \\epsilon) \\leq exp(-2n\\epsilon\\^2). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
       hints: [
         'Exponential decay vs. Chebyshev\'s 1/t\\^2 polynomial decay - Hoeffding is exponentially tighter.',
         'Hoeffding requires bounded variables; Gaussian concentration requires sub-Gaussian variables.',
@@ -2156,16 +2156,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'The union bound (Boole\'s inequality) P(\\cup\\_i A\\_i) \\leq \\Sigma\\_i P(A\\_i) is used in ML theory to:',
+        'The union bound (Boole\'s inequality) P(\\cup\\_i A\\_i) \\leq \\sum\_i P(A\\_i) is used in ML theory to:',
       options: [
         'Prove that the sample mean concentrates around the true mean for Gaussian data',
-        'Convert per-hypothesis Hoeffding bounds into a uniform convergence guarantee over a finite hypothesis class: P(\\existsh\\inH: |err_S(h) − err(h)| \\geq \\epsilon) \\leq |H|\\cdotexp(−2n\\epsilon\\^2)',
+        'Convert per-hypothesis Hoeffding bounds into a uniform convergence guarantee over a finite hypothesis class: P(\\existsh\\inH: |err_S(h) - err(h)| \\geq \\epsilon) \\leq |H|\\cdotexp(-2n\\epsilon\\^2)',
         'Derive the Vapnik-Chervonenkis dimension of a hypothesis class from its size',
         'Bound the mutual information between inputs and predictions',
       ],
       correctAnswer: 1,
       explanation:
-        'The union bound converts per-hypothesis Hoeffding bounds into a uniform convergence guarantee: P(\\existsh\\inH: |err_S(h) − err(h)| \\geq \\epsilon) \\leq \\Sigma_{h\\inH} P(|err_S(h) − err(h)| \\geq \\epsilon) \\leq |H|\\cdotexp(−2n\\epsilon\\^2). Setting this \\leq \\delta and solving for \\epsilon: with probability \\geq 1−\\delta, all hypotheses satisfy |training error − true error| \\leq √((log|H| + log(1/\\delta))/(2n)).',
+        'The union bound converts per-hypothesis Hoeffding bounds into a uniform convergence guarantee: P(\\existsh\\inH: |err_S(h) - err(h)| \\geq \\epsilon) \\leq \\Sigma_{h\\inH} P(|err_S(h) - err(h)| \\geq \\epsilon) \\leq |H|\\cdotexp(-2n\\epsilon\\^2). Setting this \\leq \\delta and solving for \\epsilon: with probability \\geq 1-\\delta, all hypotheses satisfy |training error - true error| \\leq √((log|H| + log(1/\\delta))/(2n)).',
       hints: [
         'Union bound: probability of any bad event \\leq sum of individual bad event probabilities.',
         'The log|H| factor in the generalization bound is the hypothesis class complexity penalty.',
@@ -2190,9 +2190,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "H(X) = n bits",
       ],
       correctAnswer: 1,
-      explanation: "For a uniform distribution over n outcomes: H(X) = −\\Sigma\\_i (1/n) log\\_2(1/n) = log\\_2(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log\\_26\\approx2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
+      explanation: "For a uniform distribution over n outcomes: H(X) = -\\sum\_i (1/n) log\\_2(1/n) = log\\_2(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log\\_26\\approx2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
       hints: [
-        "Each outcome has probability 1/n. Plug into H = −\\sum p log p.",
+        "Each outcome has probability 1/n. Plug into H = -\\sum p log p.",
         "Entropy is maximized by the uniform distribution - all outcomes equally surprising.",
       ],
     },
@@ -2203,9 +2203,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       question: "A source emits symbols A (prob 0.5), B (prob 0.25), C (prob 0.125), D (prob 0.125). What is its entropy in bits?",
       options: ["1.75", "1.875", "2.0", "2.25"],
       correctAnswer: 1,
-      explanation: "H = −(0.5 log\\_20.5 + 0.25 log\\_20.25 + 0.125 log\\_20.125 + 0.125 log\\_20.125) = 0.5\\times1 + 0.25\\times2 + 0.125\\times3 + 0.125\\times3 = 0.5 + 0.5 + 0.375 + 0.375 = 1.75. Wait: the Huffman code assigns lengths 1, 2, 3, 3, so average length = 1.75 bits, which equals entropy H = 1.75 bits - achieving the theoretical optimum.",
+      explanation: "H = -(0.5 log\\_20.5 + 0.25 log\\_20.25 + 0.125 log\\_20.125 + 0.125 log\\_20.125) = 0.5\\times1 + 0.25\\times2 + 0.125\\times3 + 0.125\\times3 = 0.5 + 0.5 + 0.375 + 0.375 = 1.75. Wait: the Huffman code assigns lengths 1, 2, 3, 3, so average length = 1.75 bits, which equals entropy H = 1.75 bits - achieving the theoretical optimum.",
       hints: [
-        "H = −\\sum p\\_i log\\_2p\\_i. For each symbol: −0.5\\timeslog\\_20.5 = 0.5, −0.25\\timeslog\\_20.25 = 0.5, each −0.125\\timeslog\\_20.125 = 0.375.",
+        "H = -\\sum p\\_i log\\_2p\\_i. For each symbol: -0.5\\timeslog\\_20.5 = 0.5, -0.25\\timeslog\\_20.25 = 0.5, each -0.125\\timeslog\\_20.125 = 0.375.",
         "Sum: 0.5 + 0.5 + 0.375 + 0.375 = 1.75 bits.",
       ],
     },
@@ -2233,9 +2233,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "The conditional entropy H(Y|X) is always less than or equal to H(Y), with equality if and only if X and Y are independent.",
       correctAnswer: "True",
-      explanation: "Conditioning reduces entropy (or leaves it unchanged): H(Y|X) \\leq H(Y). Proof: H(Y) − H(Y|X) = I(X;Y) \\geq 0. Equality H(Y|X) = H(Y) holds iff I(X;Y) = 0 iff X and Y are independent. This formalises the intuition that knowing X cannot increase uncertainty about Y.",
+      explanation: "Conditioning reduces entropy (or leaves it unchanged): H(Y|X) \\leq H(Y). Proof: H(Y) - H(Y|X) = I(X;Y) \\geq 0. Equality H(Y|X) = H(Y) holds iff I(X;Y) = 0 iff X and Y are independent. This formalises the intuition that knowing X cannot increase uncertainty about Y.",
       hints: [
-        "I(X;Y) = H(Y) − H(Y|X) \\geq 0. Mutual information is always non-negative.",
+        "I(X;Y) = H(Y) - H(Y|X) \\geq 0. Mutual information is always non-negative.",
         "If X is perfectly correlated with Y: H(Y|X) = 0. If independent: H(Y|X) = H(Y).",
       ],
     },
@@ -2261,9 +2261,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp41-6",
       type: "true-false",
       difficulty: "easy",
-      question: "Cross-entropy H(P, Q) = −\\sum P(x) log Q(x) is always greater than or equal to the entropy H(P) = −\\sum P(x) log P(x), with equality iff P = Q.",
+      question: "Cross-entropy H(P, Q) = -\\sum P(x) log Q(x) is always greater than or equal to the entropy H(P) = -\\sum P(x) log P(x), with equality iff P = Q.",
       correctAnswer: "True",
-      explanation: "H(P, Q) − H(P) = KL(P||Q) \\geq 0 (Gibbs' inequality). Equivalently: −\\sum P log Q \\geq −\\sum P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
+      explanation: "H(P, Q) - H(P) = KL(P||Q) \\geq 0 (Gibbs' inequality). Equivalently: -\\sum P log Q \\geq -\\sum P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
       hints: [
         "H(P,Q) = H(P) + KL(P||Q). Since KL \\geq 0, cross-entropy \\geq entropy.",
         "In ML training, minimising cross-entropy H(P_data, P_model) = H(P_data) + KL(P_data||P_model), so minimising cross-entropy = minimising KL.",
@@ -2279,15 +2279,15 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       question: "Gradient descent with constant learning rate \\eta on a strongly convex function with Lipschitz gradient (L-smooth, \\mu-strongly convex) converges at rate:",
       options: [
         "O(1/t) - sublinear convergence",
-        "O((1 − \\mu/L)^t) - linear (geometric) convergence",
+        "O((1 - \\mu/L)^t) - linear (geometric) convergence",
         "O(1/t\\^2) - accelerated sublinear convergence",
-        "O(exp(−t\\^2)) - super-linear convergence",
+        "O(exp(-t\\^2)) - super-linear convergence",
       ],
       correctAnswer: 1,
-      explanation: "For L-smooth \\mu-strongly convex f, gradient descent with \\eta=1/L achieves f(x\\_t)−f* \\leq (1 − \\mu/L)^t (f(x\\_0)−f*). The condition number κ = L/\\mu \\geq 1 controls convergence: small κ \\to fast. Nesterov acceleration (momentum) improves this to O((1−√(\\mu/L))^t), the optimal first-order rate.",
+      explanation: "For L-smooth \\mu-strongly convex f, gradient descent with \\eta=1/L achieves f(x\\_t)-f* \\leq (1 - \\mu/L)^t (f(x\\_0)-f*). The condition number κ = L/\\mu \\geq 1 controls convergence: small κ \\to fast. Nesterov acceleration (momentum) improves this to O((1-√(\\mu/L))^t), the optimal first-order rate.",
       hints: [
         "The ratio \\mu/L \\in (0,1] is the progress per step. Small κ=L/\\mu means function is well-conditioned.",
-        "Momentum (Nesterov): replaces factor (1−\\mu/L) with (1−√(\\mu/L)) - exploits the geometric mean structure.",
+        "Momentum (Nesterov): replaces factor (1-\\mu/L) with (1-√(\\mu/L)) - exploits the geometric mean structure.",
       ],
     },
     {
@@ -2314,7 +2314,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "The QR decomposition A = QR (Q orthogonal, R upper triangular) can be used to solve least-squares problems Ax \\approx b more numerically stably than forming the normal equations A\\^TAx = A\\^Tb.",
       correctAnswer: "True",
-      explanation: "Normal equations A\\^TAx = A\\^Tb square the condition number: κ(A\\^TA) = κ(A)\\^2. For κ(A) = 10⁸, κ(A\\^TA) = 10¹⁶, exhausting float64 precision. QR solves min‖Ax−b‖ via Rx=Q\\^Tb without squaring the condition number, using orthogonal transformations (Householder, Givens) that are numerically stable. Standard numerical libraries (LAPACK's dgels) use QR for least-squares.",
+      explanation: "Normal equations A\\^TAx = A\\^Tb square the condition number: κ(A\\^TA) = κ(A)\\^2. For κ(A) = 10⁸, κ(A\\^TA) = 10¹⁶, exhausting float64 precision. QR solves min‖Ax-b‖ via Rx=Q\\^Tb without squaring the condition number, using orthogonal transformations (Householder, Givens) that are numerically stable. Standard numerical libraries (LAPACK's dgels) use QR for least-squares.",
       hints: [
         "Normal equations condition number = κ(A)\\^2: for ill-conditioned A, this can catastrophically amplify errors.",
         "QR preserves condition number: solving Rx=Q\\^Tb has the same conditioning as the original A.",
@@ -2327,12 +2327,12 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       question: "The Singular Value Decomposition A = U\\SigmaV\\^T provides the best rank-k approximation A\\_k = U\\_k\\Sigma\\_kV\\_k\\^T in the sense that:",
       options: [
         "A\\_k has the smallest Frobenius norm among all rank-k matrices",
-        "‖A − A\\_k‖\\_2 = \\sigma\\_k₊\\_1 is minimal - no other rank-k matrix approximates A better in spectral or Frobenius norm (Eckart-Young theorem)",
+        "‖A - A\\_k‖\\_2 = \\sigma\\_k₊\\_1 is minimal - no other rank-k matrix approximates A better in spectral or Frobenius norm (Eckart-Young theorem)",
         "A\\_k minimizes the number of non-zero entries (sparsity)",
         "A\\_k is the rank-k matrix closest to A in the L\\infty norm",
       ],
       correctAnswer: 1,
-      explanation: "Eckart-Young-Mirsky theorem: among all rank-k matrices B, the SVD truncation A\\_k = U\\_k\\Sigma\\_kV\\_k\\^T minimizes both ‖A−B‖\\_2 = \\sigma\\_k₊\\_1 (spectral norm) and ‖A−B‖_F = √(\\sigma\\_k₊\\_1\\^2 + ⋯ + \\sigmaᵣ\\^2) (Frobenius norm). This makes SVD the theoretically optimal dimensionality reduction for linear methods, underlying PCA, LSA, and collaborative filtering.",
+      explanation: "Eckart-Young-Mirsky theorem: among all rank-k matrices B, the SVD truncation A\\_k = U\\_k\\Sigma\\_kV\\_k\\^T minimizes both ‖A-B‖\\_2 = \\sigma\\_k₊\\_1 (spectral norm) and ‖A-B‖_F = √(\\sigma\\_k₊\\_1\\^2 + ⋯ + \\sigmaᵣ\\^2) (Frobenius norm). This makes SVD the theoretically optimal dimensionality reduction for linear methods, underlying PCA, LSA, and collaborative filtering.",
       hints: [
         "Truncate after k singular values: the approximation error in spectral norm = \\sigma\\_k₊\\_1, the (k+1)-th singular value.",
         "PCA is SVD on the centered data matrix: the k principal components are the top-k right singular vectors V\\_k.",
@@ -2344,7 +2344,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "Newton's method for finding the root of f(x)=0 has quadratic convergence near the root: the error at step t+1 satisfies |e\\_t₊\\_1| \\approx C|e\\_t|\\^2, meaning the number of correct decimal digits doubles each iteration.",
       correctAnswer: "True",
-      explanation: "Newton's method: x\\_t₊\\_1 = x\\_t − f(x\\_t)/f'(x\\_t). Taylor expansion around root x*: e\\_t₊\\_1 \\approx f''(x*)/(2f'(x*)) \\cdot e\\_t\\^2. This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 \\to 2 \\to 4 \\to 8 \\to 16 significant digits per iteration. Applied to f(\\theta) = \\nablaL(\\theta): Newton step = −H\\^{-1}\\nablaL is the full Newton method for optimization.",
+      explanation: "Newton's method: x\\_t₊\\_1 = x\\_t - f(x\\_t)/f'(x\\_t). Taylor expansion around root x*: e\\_t₊\\_1 \\approx f''(x*)/(2f'(x*)) \\cdot e\\_t\\^2. This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 \\to 2 \\to 4 \\to 8 \\to 16 significant digits per iteration. Applied to f(\\theta) = \\nablaL(\\theta): Newton step = -H\\^{-1}\\nablaL is the full Newton method for optimization.",
       hints: [
         "Quadratic convergence: error ~ C \\times (previous error)\\^2. Starting at 10\\^{-1}: next step 10\\^{-\\^2, then 10\\^{-\\^4, then 10\\^{-⁸.",
         "Newton requires computing and inverting the Hessian H: O(n\\^2) storage, O(n\\^3) per step - expensive in high dimensions.",
@@ -2362,10 +2362,10 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "CG is only applicable to diagonal matrices",
       ],
       correctAnswer: 1,
-      explanation: "CG generates mutually A-conjugate search directions (d\\_i\\^TAd\\_j = 0 for i\$\\neq\$j), ensuring each new step makes progress in a previously unexplored direction. For an n\\timesn SPD system: CG terminates in \\leq n steps exactly. Convergence rate: ‖e\\_t‖_A \\leq 2((√κ−1)/(√κ+1))^t ‖e\\_0‖_A - dependent on √κ rather than κ for gradient descent.",
+      explanation: "CG generates mutually A-conjugate search directions (d\\_i\\^TAd\\_j = 0 for i\$\\neq\$j), ensuring each new step makes progress in a previously unexplored direction. For an n\\timesn SPD system: CG terminates in \\leq n steps exactly. Convergence rate: ‖e\\_t‖_A \\leq 2((√κ-1)/(√κ+1))^t ‖e\\_0‖_A - dependent on √κ rather than κ for gradient descent.",
       hints: [
         "CG termination in n steps: n search directions span \\mathbb{R}\\^n - x* is found exactly.",
-        "Condition number dependence: GD converges as (1−2/(κ+1))^t; CG as ((√κ−1)/(√κ+1))^t - CG is faster by factor √κ.",
+        "Condition number dependence: GD converges as (1-2/(κ+1))^t; CG as ((√κ-1)/(√κ+1))^t - CG is faster by factor √κ.",
       ],
     },
   ],
@@ -2413,7 +2413,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "Hamiltonian Monte Carlo (HMC) uses gradient information \\nablalog \\pi(x) to propose distant moves that are accepted with high probability, making it more efficient than random-walk Metropolis for smooth high-dimensional targets.",
       correctAnswer: "True",
-      explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = −log \\pi(x) + ½p\\^TM\\^{-1}p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
+      explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = -log \\pi(x) + ½p\\^TM\\^{-1}p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
       hints: [
         "Random-walk MH explores by diffusion (O(n) steps to traverse the target). HMC uses gradient to slide along level sets - much more efficient.",
         "The leapfrog integrator preserves volume in phase space (symplectic), enabling high acceptance rates without detailed computation of the Jacobian.",
@@ -2431,7 +2431,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "Independent of K because MH has geometric convergence guarantees",
       ],
       correctAnswer: 1,
-      explanation: "Multimodal targets are the Achilles heel of local MCMC methods. If modes are separated by a low-density region, proposals that cross the barrier are rejected with probability 1 − \\pi(x')/\\pi(x) \\approx 1. The chain explores within one mode for an exponentially long time before crossing. Solutions: parallel tempering (run chains at multiple temperatures), transdimensional MCMC, or normalizing flows as proposals.",
+      explanation: "Multimodal targets are the Achilles heel of local MCMC methods. If modes are separated by a low-density region, proposals that cross the barrier are rejected with probability 1 - \\pi(x')/\\pi(x) \\approx 1. The chain explores within one mode for an exponentially long time before crossing. Solutions: parallel tempering (run chains at multiple temperatures), transdimensional MCMC, or normalizing flows as proposals.",
       hints: [
         "Energy barrier = region where \\pi(x) \\approx 0 between modes. Crossing it requires a proposal with very low acceptance.",
         "Parallel tempering: high-temperature chains mix faster and occasionally swap states with the cold chain, enabling cross-mode jumps.",
@@ -2459,12 +2459,12 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp43-6",
       type: "true-false",
       difficulty: "medium",
-      question: "Gibbs sampling is a special case of Metropolis-Hastings where each coordinate is updated from its full conditional distribution P(x\\_i|x_{−i}), and all proposed updates are accepted with probability 1.",
+      question: "Gibbs sampling is a special case of Metropolis-Hastings where each coordinate is updated from its full conditional distribution P(x\\_i|x_{-i}), and all proposed updates are accepted with probability 1.",
       correctAnswer: "True",
-      explanation: "In Gibbs sampling, the proposal for coordinate i is Q(x\\_i'|x) = P(x\\_i'|x_{−i}). The MH acceptance ratio: \\pi(x')Q(x|x')/\\pi(x)Q(x'|x) = P(x')/P(x\\_i|x_{−i}) \\times P(x\\_i'|x_{−i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) - otherwise MH with a different proposal is needed.",
+      explanation: "In Gibbs sampling, the proposal for coordinate i is Q(x\\_i'|x) = P(x\\_i'|x_{-i}). The MH acceptance ratio: \\pi(x')Q(x|x')/\\pi(x)Q(x'|x) = P(x')/P(x\\_i|x_{-i}) \\times P(x\\_i'|x_{-i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) - otherwise MH with a different proposal is needed.",
       hints: [
         "Gibbs = MH with acceptance rate 1. The proposal already places probability according to the target's full conditional.",
-        "Gibbs works for models with conjugate priors where P(\\theta\\_i|\\theta_{−i}, data) has a known form (Beta, Gaussian, etc.).",
+        "Gibbs works for models with conjugate priors where P(\\theta\\_i|\\theta_{-i}, data) has a known form (Beta, Gaussian, etc.).",
       ],
     },
   ],
@@ -2494,17 +2494,17 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "Strong duality holds for convex optimization problems satisfying Slater's condition (existence of a strictly feasible point), meaning the primal and dual optimal values are equal: p* = d*.",
       correctAnswer: "True",
-      explanation: "Slater's condition: \\existsx with g\\_i(x)<0 for all i. For convex f, g\\_i: Slater's condition guarantees strong duality (p*=d*). The duality gap p*−d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max \\Sigma\\alpha\\_i − ½\\Sigma\\_i\\_j\\alpha\\_i\\alpha\\_jy\\_iy\\_jx\\_i\\^Tx\\_j s.t. \\alpha\\_i\\geq0, \\Sigma\\alpha\\_iy\\_i=0 - enabling the kernel trick.",
+      explanation: "Slater's condition: \\existsx with g\\_i(x)<0 for all i. For convex f, g\\_i: Slater's condition guarantees strong duality (p*=d*). The duality gap p*-d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max \\Sigma\\alpha\\_i - ½\\sum\_i\\_j\\alpha\\_i\\alpha\\_jy\\_iy\\_jx\\_i\\^Tx\\_j s.t. \\alpha\\_i\\geq0, \\Sigma\\alpha\\_iy\\_i=0 - enabling the kernel trick.",
       hints: [
         "Slater's condition: there is a point that strictly satisfies all inequality constraints - not just on the boundary.",
-        "Without Slater's condition, the duality gap p*−d* \\geq 0 but may be positive even for convex problems.",
+        "Without Slater's condition, the duality gap p*-d* \\geq 0 but may be positive even for convex problems.",
       ],
     },
     {
       id: "q-mfml-kp44-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The dual of the primal SVM (min ½‖w‖\\^2 s.t. y\\_i(w\\^Tx\\_i+b) \\geq 1) has the dual variables \\alpha\\_i \\geq 0 satisfying complementary slackness: \\alpha\\_i(y\\_i(w\\^Tx\\_i+b)−1) = 0. This means:",
+      question: "The dual of the primal SVM (min ½‖w‖\\^2 s.t. y\\_i(w\\^Tx\\_i+b) \\geq 1) has the dual variables \\alpha\\_i \\geq 0 satisfying complementary slackness: \\alpha\\_i(y\\_i(w\\^Tx\\_i+b)-1) = 0. This means:",
       options: [
         "All \\alpha\\_i > 0 (all training points contribute to the decision boundary)",
         "Only the support vectors (points with y\\_i(w\\^Tx\\_i+b) = 1) have \\alpha\\_i > 0; all other points have \\alpha\\_i = 0",
@@ -2515,24 +2515,24 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       explanation: "By complementary slackness: either \\alpha\\_i=0 or y\\_i(w\\^Tx\\_i+b)=1. For points strictly inside the margin (y\\_i(w\\^Tx\\_i+b)>1): their constraint is inactive \\to \\alpha\\_i=0. They do not contribute to w = \\Sigma\\alpha\\_iy\\_ix\\_i. Only support vectors (on the margin boundary) have \\alpha\\_i>0. This is why SVM is memory-efficient: the solution depends only on the support vectors.",
       hints: [
         "\\alpha\\_i>0 requires the constraint to be active: y\\_i(w\\^Tx\\_i+b) = 1 exactly - on the margin boundary.",
-        "w = \\Sigma\\_i \\alpha\\_iy\\_ix\\_i: only support vectors (\\alpha\\_i>0) contribute. Far-from-margin points have \\alpha\\_i=0 and are irrelevant.",
+        "w = \\sum\_i \\alpha\\_iy\\_ix\\_i: only support vectors (\\alpha\\_i>0) contribute. Far-from-margin points have \\alpha\\_i=0 and are irrelevant.",
       ],
     },
     {
       id: "q-mfml-kp44-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The proximal operator of a function g with step size \\eta is defined as prox_{\\etag}(v) = argmin_x (g(x) + ‖x−v‖\\^2/(2\\eta)). For g(x) = \\lambda‖x‖\\_1 (LASSO), the proximal operator is:",
+      question: "The proximal operator of a function g with step size \\eta is defined as prox_{\\etag}(v) = argmin_x (g(x) + ‖x-v‖\\^2/(2\\eta)). For g(x) = \\lambda‖x‖\\_1 (LASSO), the proximal operator is:",
       options: [
         "prox(v) = v/(1 + 2\\eta\\lambda) (ridge shrinkage)",
-        "prox(v) = sign(v)\\cdotmax(|v| − \\eta\\lambda, 0) (soft-thresholding)",
+        "prox(v) = sign(v)\\cdotmax(|v| - \\eta\\lambda, 0) (soft-thresholding)",
         "prox(v) = v if |v| > \\eta\\lambda, else 0 (hard-thresholding)",
-        "prox(v) = v − \\eta\\lambda\\cdotsign(v) (gradient step of L1)",
+        "prox(v) = v - \\eta\\lambda\\cdotsign(v) (gradient step of L1)",
       ],
       correctAnswer: 1,
-      explanation: "The proximal operator of \\eta\\lambda‖\\cdot‖\\_1 is the soft-thresholding operator: S_{\\eta\\lambda}(v) = sign(v)\\cdotmax(|v|−\\eta\\lambda, 0). It shrinks each coordinate toward zero by \\eta\\lambda, setting small coordinates exactly to zero (sparsity). This arises in ISTA/FISTA for solving LASSO: x\\_t₊\\_1 = prox_{\\eta\\lambda‖\\cdot‖\\_1}(x\\_t − \\eta\\nablaf(x\\_t)).",
+      explanation: "The proximal operator of \\eta\\lambda‖\\cdot‖\\_1 is the soft-thresholding operator: S_{\\eta\\lambda}(v) = sign(v)\\cdotmax(|v|-\\eta\\lambda, 0). It shrinks each coordinate toward zero by \\eta\\lambda, setting small coordinates exactly to zero (sparsity). This arises in ISTA/FISTA for solving LASSO: x\\_t₊\\_1 = prox_{\\eta\\lambda‖\\cdot‖\\_1}(x\\_t - \\eta\\nablaf(x\\_t)).",
       hints: [
-        "Soft-thresholding: values in [−\\eta\\lambda, \\eta\\lambda] map to 0; values outside shrink by \\eta\\lambda toward 0.",
+        "Soft-thresholding: values in [-\\eta\\lambda, \\eta\\lambda] map to 0; values outside shrink by \\eta\\lambda toward 0.",
         "ISTA (Iterative Shrinkage Thresholding Algorithm) = gradient step on smooth part f + proximal step on L1.",
       ],
     },
@@ -2542,7 +2542,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "easy",
       question: "A function f is convex if and only if its epigraph epi(f) = {(x,t): f(x) \\leq t} is a convex set.",
       correctAnswer: "True",
-      explanation: "The epigraph definition is equivalent to the standard definition f(\\lambdax+(1−\\lambda)y) \\leq \\lambdaf(x)+(1−\\lambda)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x\\_1,t\\_1) and (x\\_2,t\\_2) in epi(f): f(x\\_1)\\leqt\\_1, f(x\\_2)\\leqt\\_2, and by convexity of epi(f): f(\\lambdax\\_1+(1−\\lambda)x\\_2) \\leq \\lambdat\\_1+(1−\\lambda)t\\_2.",
+      explanation: "The epigraph definition is equivalent to the standard definition f(\\lambdax+(1-\\lambda)y) \\leq \\lambdaf(x)+(1-\\lambda)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x\\_1,t\\_1) and (x\\_2,t\\_2) in epi(f): f(x\\_1)\\leqt\\_1, f(x\\_2)\\leqt\\_2, and by convexity of epi(f): f(\\lambdax\\_1+(1-\\lambda)x\\_2) \\leq \\lambdat\\_1+(1-\\lambda)t\\_2.",
       hints: [
         "epi(f) = region above the graph. Convex epigraph = the 'bowl' above a convex function.",
         "This definition extends naturally to functions on infinite-dimensional spaces and allows f(x)=+\\infty (convex indicator functions).",
@@ -2552,18 +2552,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp44-6",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Mirror descent generalizes gradient descent by replacing the Euclidean proximity measure with a Bregman divergence D_\\phi(x, y) = \\phi(x) − \\phi(y) − \\nabla\\phi(y)\\^T(x−y). For online learning with the simplex constraint and \\phi(x) = \\Sigma x\\_i log x\\_i (negative entropy), mirror descent becomes:",
+      question: "Mirror descent generalizes gradient descent by replacing the Euclidean proximity measure with a Bregman divergence D_\\phi(x, y) = \\phi(x) - \\phi(y) - \\nabla\\phi(y)\\^T(x-y). For online learning with the simplex constraint and \\phi(x) = \\Sigma x\\_i log x\\_i (negative entropy), mirror descent becomes:",
       options: [
         "Gradient descent with L1 projection onto the simplex",
-        "The multiplicative weights (Hedge) algorithm: x\\_t₊\\_1 \\propto x\\_t \\cdot exp(−\\eta\\nablaf\\_t(x\\_t))",
+        "The multiplicative weights (Hedge) algorithm: x\\_t₊\\_1 \\propto x\\_t \\cdot exp(-\\eta\\nablaf\\_t(x\\_t))",
         "Projected gradient descent with Euclidean projection onto the simplex",
         "Stochastic gradient descent with batch normalization",
       ],
       correctAnswer: 1,
-      explanation: "With mirror map \\phi(x)=\\Sigmax\\_ilogx\\_i (KL-divergence-based Bregman), the mirror descent update is: x\\_t₊\\_1 \\propto x\\_t\\_i exp(−\\etag\\_t\\_i) where g\\_t=\\nablaf\\_t(x\\_t). This is the multiplicative weights / Hedge algorithm, achieving regret O(√(T log K)) for K experts - optimal for the simplex. Compared to projected gradient descent, mirror descent adapts the geometry to the constraint set.",
+      explanation: "With mirror map \\phi(x)=\\sumx\\_ilogx\\_i (KL-divergence-based Bregman), the mirror descent update is: x\\_t₊\\_1 \\propto x\\_t\\_i exp(-\\etag\\_t\\_i) where g\\_t=\\nablaf\\_t(x\\_t). This is the multiplicative weights / Hedge algorithm, achieving regret O(√(T log K)) for K experts - optimal for the simplex. Compared to projected gradient descent, mirror descent adapts the geometry to the constraint set.",
       hints: [
         "Mirror map \\phi = negative entropy \\to Bregman divergence = KL(x||y). The update maintains the simplex constraint naturally.",
-        "Multiplicative weights: multiply each weight by exp(−\\eta \\times gradient). Exponentials automatically keep weights non-negative.",
+        "Multiplicative weights: multiply each weight by exp(-\\eta \\times gradient). Exponentials automatically keep weights non-negative.",
       ],
     },
   ],
@@ -2576,12 +2576,12 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       question: "The Beta distribution Beta(\\alpha,\\beta) is a conjugate prior for the Bernoulli likelihood. After observing k successes in n trials, the posterior is:",
       options: [
         "Beta(\\alpha+n, \\beta+k)",
-        "Beta(\\alpha+k, \\beta+n−k)",
+        "Beta(\\alpha+k, \\beta+n-k)",
         "Normal(\\alpha/(\\alpha+\\beta), \\alpha\\beta/(\\alpha+\\beta)\\^2(\\alpha+\\beta+1))",
-        "Dirichlet(\\alpha+k, \\beta+n−k)",
+        "Dirichlet(\\alpha+k, \\beta+n-k)",
       ],
       correctAnswer: 1,
-      explanation: "Likelihood: P(k|\\theta) \\propto \\theta\\^k(1−\\theta)^{n−k}. Prior: Beta(\\alpha,\\beta) \\propto \\theta^{\\alpha−1}(1−\\theta)^{\\beta−1}. Posterior: \\theta^{\\alpha+k−1}(1−\\theta)^{\\beta+n−k−1} = Beta(\\alpha+k, \\beta+n−k). The counts simply add to the prior pseudocounts. Prior mean E[\\theta] = \\alpha/(\\alpha+\\beta); posterior mean = (\\alpha+k)/(\\alpha+\\beta+n). With large n, posterior approaches MLE k/n.",
+      explanation: "Likelihood: P(k|\\theta) \\propto \\theta\\^k(1-\\theta)^{n-k}. Prior: Beta(\\alpha,\\beta) \\propto \\theta^{\\alpha-1}(1-\\theta)^{\\beta-1}. Posterior: \\theta^{\\alpha+k-1}(1-\\theta)^{\\beta+n-k-1} = Beta(\\alpha+k, \\beta+n-k). The counts simply add to the prior pseudocounts. Prior mean E[\\theta] = \\alpha/(\\alpha+\\beta); posterior mean = (\\alpha+k)/(\\alpha+\\beta+n). With large n, posterior approaches MLE k/n.",
       hints: [
         "Beta conjugate update: just add observed successes to \\alpha and failures to \\beta.",
         "Effective prior sample size = \\alpha+\\beta. Large \\alpha+\\beta \\to posterior less affected by data (strong prior).",
@@ -2605,13 +2605,13 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "The Dirichlet distribution Dir(\\alpha\\_1,...,\\alpha\\_k) is a conjugate prior for the Categorical/Multinomial likelihood. Its mean and mode are:",
       options: [
-        "Mean = \\alpha\\_i/\\Sigma\\alpha\\_j; Mode = (\\alpha\\_i−1)/(\\Sigma\\alpha\\_j−K) for \\alpha\\_i > 1",
+        "Mean = \\alpha\\_i/\\Sigma\\alpha\\_j; Mode = (\\alpha\\_i-1)/(\\Sigma\\alpha\\_j-K) for \\alpha\\_i > 1",
         "Mean = \\Sigma\\alpha\\_j/K; Mode = K/\\Sigma\\alpha\\_j",
         "Mean = \\alpha\\_i; Mode = \\alpha\\_i/max(\\alpha\\_j)",
         "Mean = 1/K (uniform regardless of \\alpha); Mode = argmax \\alpha\\_i",
       ],
       correctAnswer: 0,
-      explanation: "Dir(\\alpha): Mean_i = \\alpha\\_i/\\Sigma\\alpha\\_j (normalized counts). Mode_i = (\\alpha\\_i−1)/(\\Sigma\\alpha\\_j−K) for \\alpha\\_i>1 (valid when all \\alpha\\_i>1). With prior Dir(\\alpha\\_1,...,\\alphaK) and observed counts (n\\_1,...,nK): posterior is Dir(\\alpha\\_1+n\\_1,...,\\alphaK+nK). LDA uses Dir(\\alpha) prior on topic mixtures and Dir(\\beta) prior on word distributions.",
+      explanation: "Dir(\\alpha): Mean_i = \\alpha\\_i/\\Sigma\\alpha\\_j (normalized counts). Mode_i = (\\alpha\\_i-1)/(\\Sigma\\alpha\\_j-K) for \\alpha\\_i>1 (valid when all \\alpha\\_i>1). With prior Dir(\\alpha\\_1,...,\\alphaK) and observed counts (n\\_1,...,nK): posterior is Dir(\\alpha\\_1+n\\_1,...,\\alphaK+nK). LDA uses Dir(\\alpha) prior on topic mixtures and Dir(\\beta) prior on word distributions.",
       hints: [
         "Dirichlet mean: normalize the \\alpha parameters. Posterior: simply add observed counts to \\alpha.",
         "\\alpha\\_i < 1: sparse mode (pushes probability mass to corners of simplex). \\alpha\\_i > 1: smooth distribution.",
@@ -2664,7 +2664,7 @@ const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "In a Gaussian mixture model (GMM) fit with the EM algorithm, the E-step computes the posterior probability that each data point belongs to each component, and the M-step updates the component parameters (means, covariances, weights) to maximize the expected complete-data log-likelihood.",
       correctAnswer: "True",
-      explanation: "EM for GMM: E-step: r\\_i\\_k = P(z\\_i=k|x\\_i, \\theta) = \\pi\\_kN(x\\_i|\\mu\\_k,\\Sigma\\_k)/\\Sigma\\_j\\pi\\_j N(x\\_i|\\mu\\_j,\\Sigma\\_j) (soft cluster assignments). M-step: \\pi\\_k = (1/n)\\Sigma\\_ir\\_i\\_k, \\mu\\_k = \\Sigma\\_ir\\_i\\_kx\\_i/\\Sigma\\_ir\\_i\\_k, \\Sigma\\_k = \\Sigma\\_ir\\_i\\_k(x\\_i−\\mu\\_k)(x\\_i−\\mu\\_k)\\^T/\\Sigma\\_ir\\_i\\_k. EM monotonically increases the marginal log-likelihood log p(X|\\theta) and converges to a local maximum.",
+      explanation: "EM for GMM: E-step: r\\_i\\_k = P(z\\_i=k|x\\_i, \\theta) = \\pi\\_kN(x\\_i|\\mu\\_k,\\Sigma\\_k)/\\sum\_j\\pi\\_j N(x\\_i|\\mu\\_j,\\sum\_j) (soft cluster assignments). M-step: \\pi\\_k = (1/n)\\sum\_ir\\_i\\_k, \\mu\\_k = \\sum\_ir\\_i\\_kx\\_i/\\sum\_ir\\_i\\_k, \\Sigma\\_k = \\sum\_ir\\_i\\_k(x\\_i-\\mu\\_k)(x\\_i-\\mu\\_k)\\^T/\\sum\_ir\\_i\\_k. EM monotonically increases the marginal log-likelihood log p(X|\\theta) and converges to a local maximum.",
       hints: [
         "E-step: soft assignment r\\_i\\_k = responsibility of component k for point i. M-step: update parameters using weighted statistics.",
         "EM does not guarantee global optimum - multiple random restarts are used to find a good local maximum.",
