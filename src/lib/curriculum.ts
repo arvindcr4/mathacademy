@@ -65,6 +65,8 @@ export const courses: Course[] = [
           { id: 'kp-5', slug: 'value-function', name: 'Value Function' },
           { id: 'kp-6', slug: 'action-value', name: 'Action-Value Function Q(s,a)' },
           { id: 'kp-7', slug: 'bellman-optimality', name: 'Bellman Optimality Equation' },
+          { id: 'kp-27', slug: 'bellman-recursion', name: 'Bellman Recursion & Bootstrapping' },
+          { id: 'kp-28', slug: 'contraction-mapping', name: 'Contraction Mapping Theorem' },
         ]
       },
       {
@@ -76,6 +78,8 @@ export const courses: Course[] = [
           { id: 'kp-8', slug: 'policy-evaluation', name: 'Policy Evaluation' },
           { id: 'kp-9', slug: 'policy-iteration', name: 'Policy Iteration' },
           { id: 'kp-10', slug: 'value-iteration', name: 'Value Iteration' },
+          { id: 'kp-29', slug: 'dp-convergence', name: 'DP Convergence & Complexity' },
+          { id: 'kp-30', slug: 'asynchronous-dp', name: 'Asynchronous Dynamic Programming' },
         ]
       },
       {
@@ -87,6 +91,8 @@ export const courses: Course[] = [
           { id: 'kp-11', slug: 'mc-prediction', name: 'Monte Carlo Prediction' },
           { id: 'kp-12', slug: 'mc-control', name: 'Monte Carlo Control' },
           { id: 'kp-13', slug: 'epsilon-greedy', name: 'Epsilon-Greedy Exploration' },
+          { id: 'kp-31', slug: 'first-visit-mc', name: 'First-Visit vs Every-Visit MC' },
+          { id: 'kp-32', slug: 'importance-sampling', name: 'Importance Sampling in MC' },
         ]
       },
       {
@@ -110,6 +116,8 @@ export const courses: Course[] = [
           { id: 'kp-18', slug: 'linear-features', name: 'Linear Feature Approximation' },
           { id: 'kp-19', slug: 'deep-rl', name: 'Deep Q-Networks' },
           { id: 'kp-20', slug: 'experience-replay', name: 'Experience Replay' },
+          { id: 'kp-33', slug: 'target-networks', name: 'Target Networks & Stability' },
+          { id: 'kp-34', slug: 'double-dqn', name: 'Double DQN & Dueling Architecture' },
         ]
       },
       {
@@ -121,6 +129,8 @@ export const courses: Course[] = [
           { id: 'kp-21', slug: 'reinforce', name: 'REINFORCE Algorithm' },
           { id: 'kp-22', slug: 'actor-critic', name: 'Actor-Critic Architecture' },
           { id: 'kp-23', slug: 'gae', name: 'Generalized Advantage Estimation' },
+          { id: 'kp-35', slug: 'baseline-variance', name: 'Baseline & Variance Reduction' },
+          { id: 'kp-36', slug: 'natural-policy-gradient', name: 'Natural Policy Gradient' },
         ]
       },
       {
@@ -132,6 +142,8 @@ export const courses: Course[] = [
           { id: 'kp-24', slug: 'ppo', name: 'Proximal Policy Optimization (PPO)' },
           { id: 'kp-25', slug: 'sac', name: 'Soft Actor-Critic (SAC)' },
           { id: 'kp-26', slug: 'td3', name: 'Twin Delayed DDPG (TD3)' },
+          { id: 'kp-37', slug: 'rainbow-dqn', name: 'Rainbow DQN' },
+          { id: 'kp-38', slug: 'model-based-rl', name: 'Model-Based RL (MBPO, Dreamer)' },
         ]
       },
     ]
@@ -213,6 +225,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-1', slug: 'pretrained-models', name: 'Pre-trained Models' },
           { id: 'ft-kp-2', slug: 'fine-tuning-vs-rag', name: 'Fine-tuning vs RAG' },
           { id: 'ft-kp-3', slug: 'transfer-learning-types', name: 'Types of Transfer Learning' },
+          { id: 'ft-kp-30', slug: 'when-to-finetune', name: 'When to Fine-Tune vs Prompt Engineer' },
+          { id: 'ft-kp-31', slug: 'finetune-cost-benefit', name: 'Cost-Benefit Analysis of Fine-Tuning' },
         ]
       },
       {
@@ -224,6 +238,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-4', slug: 'lora-intuition', name: 'LoRA Intuition' },
           { id: 'ft-kp-5', slug: 'lora-config', name: 'LoRA Configuration' },
           { id: 'ft-kp-6', slug: 'lora-training', name: 'Training with LoRA' },
+          { id: 'ft-kp-32', slug: 'lora-rank-selection', name: 'Choosing LoRA Rank & Alpha' },
+          { id: 'ft-kp-33', slug: 'lora-merge', name: 'Merging LoRA Weights into Base Model' },
         ]
       },
       {
@@ -235,6 +251,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-7', slug: 'qlora-intuition', name: 'QLoRA Intuition' },
           { id: 'ft-kp-8', slug: '4bit-quantization', name: '4-bit NormalFloat Quantization' },
           { id: 'ft-kp-9', slug: 'qlora-training', name: 'Training with QLoRA' },
+          { id: 'ft-kp-34', slug: 'double-quantization', name: 'Double Quantization & Paged Optimizers' },
+          { id: 'ft-kp-35', slug: 'bnb-setup', name: 'BitsAndBytes Setup & Configuration' },
         ]
       },
       {
@@ -246,6 +264,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-10', slug: 'full-finetune-when', name: 'When to Full Fine-Tune' },
           { id: 'ft-kp-11', slug: 'learning-rate-scheduling', name: 'Learning Rate Scheduling' },
           { id: 'ft-kp-12', slug: 'gradient-checkpointing', name: 'Gradient Checkpointing' },
+          { id: 'ft-kp-36', slug: 'mixed-precision-training', name: 'Mixed Precision Training (bf16/fp16)' },
+          { id: 'ft-kp-37', slug: 'optimizer-selection', name: 'Optimizer Selection (AdamW, Lion, SGD)' },
         ]
       },
       {
@@ -257,6 +277,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-13', slug: 'instruction-datasets', name: 'Instruction Datasets' },
           { id: 'ft-kp-14', slug: 'chat-template', name: 'Chat Templates' },
           { id: 'ft-kp-15', slug: 'data-quality', name: 'Data Quality Filtering' },
+          { id: 'ft-kp-38', slug: 'alpaca-format', name: 'Alpaca & ShareGPT Formats' },
+          { id: 'ft-kp-39', slug: 'dataset-deduplication', name: 'Dataset Deduplication Strategies' },
         ]
       },
       {
@@ -267,7 +289,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'ft-kp-16', slug: 'perplexity', name: 'Perplexity' },
           { id: 'ft-kp-17', slug: 'task-eval', name: 'Task-Specific Evaluation' },
-          { id: 'ft-kp-18', slug: 'llm- judges', name: 'LLM-as-a-Judge' },
+          { id: 'ft-kp-18', slug: 'llm-judges', name: 'LLM-as-a-Judge' },
+          { id: 'ft-kp-40', slug: 'mt-bench', name: 'MT-Bench & AlpacaEval' },
+          { id: 'ft-kp-41', slug: 'evals-suite', name: 'Open LLM Leaderboard Evals' },
         ]
       },
       {
@@ -279,6 +303,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-19', slug: 'reward-modeling', name: 'Reward Modeling' },
           { id: 'ft-kp-20', slug: 'ppo-finetuning', name: 'PPO Fine-Tuning' },
           { id: 'ft-kp-21', slug: 'dpo', name: 'Direct Preference Optimization (DPO)' },
+          { id: 'ft-kp-42', slug: 'constitutional-ai', name: 'Constitutional AI & RLAIF' },
+          { id: 'ft-kp-43', slug: 'kl-penalty', name: 'KL Divergence Penalty & Reference Model' },
         ]
       },
       {
@@ -289,6 +315,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'ft-kp-22', slug: 'domain-data', name: 'Domain-Specific Data Collection' },
           { id: 'ft-kp-23', slug: 'catastrophic-forgetting', name: 'Avoiding Catastrophic Forgetting' },
+          { id: 'ft-kp-44', slug: 'continual-learning', name: 'Continual Learning Strategies' },
+          { id: 'ft-kp-45', slug: 'domain-pretraining', name: 'Domain-Adaptive Pre-training' },
+          { id: 'ft-kp-46', slug: 'few-shot-adaptation', name: 'Few-Shot Domain Adaptation' },
         ]
       },
       {
@@ -300,6 +329,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-24', slug: 'prompt-tuning', name: 'Prompt Tuning' },
           { id: 'ft-kp-25', slug: 'adapters', name: 'Adapter Layers' },
           { id: 'ft-kp-26', slug: 'prefix-tuning', name: 'Prefix Tuning' },
+          { id: 'ft-kp-47', slug: 'ia3-method', name: 'IA³ (Infused Adapter by Inhibiting and Amplifying)' },
+          { id: 'ft-kp-48', slug: 'vera-method', name: 'VeRA: Vector-based Random Matrix Adaptation' },
         ]
       },
       {
@@ -311,6 +342,8 @@ export const courses: Course[] = [
           { id: 'ft-kp-27', slug: 'distributed-training', name: 'Distributed Training' },
           { id: 'ft-kp-28', slug: 'model-merge', name: 'Model Merging' },
           { id: 'ft-kp-29', slug: 'deployment', name: 'Deployment Strategies' },
+          { id: 'ft-kp-49', slug: 'vllm-serving', name: 'vLLM & PagedAttention for Serving' },
+          { id: 'ft-kp-50', slug: 'quantization-inference', name: 'Quantization for Inference (AWQ, GPTQ)' },
         ]
       },
     ]
@@ -337,6 +370,8 @@ export const courses: Course[] = [
           { id: 'oc-kp-1', slug: 'what-is-openclaw', name: 'What is OpenClaw-RL?' },
           { id: 'oc-kp-2', slug: 'async-architecture', name: '4-Component Async Architecture' },
           { id: 'oc-kp-3', slug: 'self-hosted', name: 'Self-Hosted & Private by Design' },
+          { id: 'oc-kp-30', slug: 'vs-verl-oat', name: 'OpenClaw-RL vs VeRL vs OAT' },
+          { id: 'oc-kp-31', slug: 'personalization-loop', name: 'Personalization Feedback Loop' },
         ]
       },
       {
@@ -348,6 +383,8 @@ export const courses: Course[] = [
           { id: 'oc-kp-4', slug: 'prm-intro', name: 'Process Reward Models (PRM)' },
           { id: 'oc-kp-5', slug: 'grpo-advantage', name: 'GRPO Advantage Estimation' },
           { id: 'oc-kp-6', slug: 'clip-surrogate', name: 'PPO-Style Clipped Surrogate Loss' },
+          { id: 'oc-kp-32', slug: 'turn-level-rewards', name: 'Turn-Level Reward Assignment' },
+          { id: 'oc-kp-33', slug: 'kl-regularization', name: 'KL Regularization in Binary RL' },
         ]
       },
       {
@@ -359,6 +396,8 @@ export const courses: Course[] = [
           { id: 'oc-kp-7', slug: 'hindsight-hints', name: 'Hindsight Hint Extraction' },
           { id: 'oc-kp-8', slug: 'teacher-student', name: 'Teacher-Student Architecture' },
           { id: 'oc-kp-9', slug: 'directional-advantage', name: 'Token-Level Directional Advantage' },
+          { id: 'oc-kp-34', slug: 'hindsight-replay', name: 'Hindsight Experience Replay for OPD' },
+          { id: 'oc-kp-35', slug: 'jsd-divergence', name: 'JSD vs KL Divergence in Distillation' },
         ]
       },
       {
@@ -369,6 +408,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-10', slug: 'hybrid-signals', name: 'Hybrid Scalar + Token Signals' },
           { id: 'oc-kp-11', slug: 'training-recipe', name: 'Unified Training Recipe' },
+          { id: 'oc-kp-36', slug: 'loss-weighting', name: 'Loss Weighting Between Binary RL & OPD' },
+          { id: 'oc-kp-37', slug: 'curriculum-mixing', name: 'Curriculum Mixing Strategies' },
+          { id: 'oc-kp-38', slug: 'ablation-study', name: 'Ablation Study: Binary RL vs OPD vs Combined' },
         ]
       },
       {
@@ -379,6 +421,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-12', slug: 'lora-intuition', name: 'LoRA Intuition for RL' },
           { id: 'oc-kp-13', slug: 'lora-config', name: 'LoRA Configuration' },
+          { id: 'oc-kp-39', slug: 'lora-target-modules', name: 'Target Modules Selection for RL' },
+          { id: 'oc-kp-40', slug: 'lora-warmup', name: 'LoRA Warmup & Stability Tricks' },
+          { id: 'oc-kp-41', slug: 'lora-rank-rl', name: 'Rank Selection for RL Fine-Tuning' },
         ]
       },
       {
@@ -401,6 +446,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-18', slug: 'session-trajectories', name: 'Session-Aware Trajectories' },
           { id: 'oc-kp-19', slug: 'mainline-turns', name: 'Main-line vs Side Turns' },
+          { id: 'oc-kp-42', slug: 'async-rollout-buffer', name: 'Async Rollout Buffer Design' },
+          { id: 'oc-kp-43', slug: 'rejection-sampling-rl', name: 'Rejection Sampling in Rollout Collection' },
+          { id: 'oc-kp-44', slug: 'trajectory-filtering', name: 'Trajectory Filtering & Quality Control' },
         ]
       },
       {
@@ -411,6 +459,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-20', slug: 'async-judging', name: 'Async Judging Architecture' },
           { id: 'oc-kp-21', slug: 'majority-voting', name: 'Majority Voting Strategy' },
+          { id: 'oc-kp-45', slug: 'scoring-rubric', name: 'Scoring Rubric Design for PRM' },
+          { id: 'oc-kp-46', slug: 'judge-calibration', name: 'Judge Calibration & Agreement Metrics' },
+          { id: 'oc-kp-47', slug: 'multi-judge-ensemble', name: 'Multi-Judge Ensemble Scoring' },
         ]
       },
       {
@@ -421,6 +472,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-22', slug: 'tinker-setup', name: 'Tinker Setup' },
           { id: 'oc-kp-23', slug: 'cloud-deployment', name: 'Cloud Training Deployment' },
+          { id: 'oc-kp-48', slug: 'gpu-scheduling', name: 'GPU Scheduling & Resource Allocation' },
+          { id: 'oc-kp-49', slug: 'checkpoint-management', name: 'Checkpoint Management & Recovery' },
+          { id: 'oc-kp-50', slug: 'cost-optimization', name: 'Training Cost Optimization' },
         ]
       },
       {
@@ -431,6 +485,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-24', slug: 'sdft', name: 'SDFT Integration' },
           { id: 'oc-kp-25', slug: 'sdpo', name: 'SDPO Integration' },
+          { id: 'oc-kp-51', slug: 'grpo-vs-ppo-comparison', name: 'GRPO vs PPO: Tradeoffs' },
+          { id: 'oc-kp-52', slug: 'reward-shaping', name: 'Reward Shaping for Agentic Tasks' },
+          { id: 'oc-kp-53', slug: 'curiosity-driven-rl', name: 'Curiosity-Driven Exploration' },
         ]
       },
       {
@@ -441,6 +498,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-26', slug: 'eval-metrics', name: 'Evaluation Metrics' },
           { id: 'oc-kp-27', slug: 'benchmarking', name: 'Benchmarking Strategies' },
+          { id: 'oc-kp-54', slug: 'success-rate-eval', name: 'Success Rate & Task Completion Metrics' },
+          { id: 'oc-kp-55', slug: 'length-penalty', name: 'Length Penalty & Efficiency Metrics' },
+          { id: 'oc-kp-56', slug: 'human-eval-protocol', name: 'Human Evaluation Protocol' },
         ]
       },
       {
@@ -451,6 +511,9 @@ export const courses: Course[] = [
         knowledgePoints: [
           { id: 'oc-kp-28', slug: 'distributed-training', name: 'Distributed Training' },
           { id: 'oc-kp-29', slug: 'model-serving', name: 'Model Serving' },
+          { id: 'oc-kp-57', slug: 'model-sharding', name: 'Model Sharding & Pipeline Parallelism' },
+          { id: 'oc-kp-58', slug: 'inference-optimization', name: 'Inference Optimization Techniques' },
+          { id: 'oc-kp-59', slug: 'production-monitoring', name: 'Production Monitoring & Drift Detection' },
         ]
       },
     ]
