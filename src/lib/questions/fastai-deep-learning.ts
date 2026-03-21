@@ -1590,6 +1590,606 @@ registerQuestions({
       ],
     },
   ],
+  "tabular-learner": [
+    {
+      id: "q-fai-kp-31",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which class is used to create DataLoaders for tabular (structured) data from a pandas DataFrame?",
+      options: [
+        "DataBlock(blocks=(TabularBlock, CategoryBlock))",
+        "TabularDataLoaders.from_df()",
+        "DataLoader.from_pandas()",
+        "TabularLearner.from_csv()",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`TabularDataLoaders.from_df()` is the high-level fastai API for building DataLoaders directly from a pandas DataFrame for tabular learning. It handles categorical embedding setup, continuous normalization, and train/valid splitting in one call.",
+      hints: [
+        "fastai provides task-specific DataLoaders factories: `TabularDataLoaders`, `ImageDataLoaders`, `TextDataLoaders`.",
+        "You pass lists of `cat_names`, `cont_names`, and `y_names` to specify column roles.",
+      ],
+    },
+    {
+      id: "q-fai-kp-31b",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "How does fastai's `TabularLearner` automatically determine the embedding dimension for a categorical variable?",
+      options: [
+        "It always uses an embedding dimension of 50 for every categorical variable.",
+        "It uses the rule `min(600, round(1.6 * cardinality**0.56))`, capping at 600.",
+        "It sets the embedding dimension equal to the cardinality (number of unique values).",
+        "The user must always specify embedding dimensions manually.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "fastai applies the empirical rule `min(600, round(1.6 * n_cat**0.56))` to automatically choose embedding sizes for each categorical variable, where `n_cat` is the number of unique categories. This heuristic (derived from Kaggle competitions) balances representational capacity with parameter efficiency.",
+      hints: [
+        "A categorical column with 10 unique values gets a smaller embedding than one with 10,000.",
+        "The cap of 600 prevents excessively large embeddings for high-cardinality columns.",
+      ],
+    },
+    {
+      id: "q-fai-kp-31c",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In fastai's `TabularLearner`, categorical variables are passed through learnable embedding layers, while continuous variables are concatenated directly as floats after normalization.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "fastai's tabular neural network architecture embeds each categorical variable through its own `Embedding` layer (converting integer codes to dense vectors) and concatenates those embeddings with the normalized continuous variables before passing everything through fully connected layers.",
+      hints: [
+        "Embeddings turn integer category codes into dense, meaningful float vectors.",
+        "Continuous variables are already numeric, so they just need normalization before concatenation.",
+      ],
+    },
+  ],
+  "collab-filtering": [
+    {
+      id: "q-fai-kp-32",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which class is used to create DataLoaders for collaborative filtering from a ratings DataFrame?",
+      options: [
+        "TabularDataLoaders.from_df()",
+        "CollabDataLoaders.from_df()",
+        "ImageDataLoaders.from_folder()",
+        "DataBlock(blocks=(UserBlock, ItemBlock))",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`CollabDataLoaders.from_df()` builds DataLoaders for collaborative filtering directly from a DataFrame with user, item, and rating columns. It handles vocabulary creation for users and items, and sets up the data pipeline for embedding-based recommender models.",
+      hints: [
+        "fastai uses task-specific DataLoaders factories for each domain.",
+        "You specify `user_name`, `item_name`, and `rating_name` column arguments.",
+      ],
+    },
+    {
+      id: "q-fai-kp-32b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "fastai's `EmbeddingDotBias` model for collaborative filtering adds bias terms to both users and items. What do these bias terms capture?",
+      options: [
+        "They capture the GPU memory offset for each embedding lookup.",
+        "They capture the overall tendency of a user to rate highly and the overall popularity/quality of an item, independent of the latent factor interactions.",
+        "They replace the dot product with an additive combination.",
+        "They prevent gradient explosion during backpropagation.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "User bias captures how much a particular user rates above or below average (some users are generous raters, others harsh). Item bias captures the global popularity/quality of an item. The prediction is: `dot(user_emb, item_emb) + user_bias + item_bias`, so biases handle the \'easy\' part while embeddings capture interaction effects.",
+      hints: [
+        "Think of user bias as: does this user always rate 0.5 stars above average?",
+        "Item bias: is this movie consistently rated highly regardless of the user?",
+      ],
+    },
+    {
+      id: "q-fai-kp-32c",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In collaborative filtering with fastai, what does a high dot product between a user embedding and an item embedding indicate?",
+      options: [
+        "The user has rated the item many times.",
+        "The user and item share similar latent factors, meaning the user is likely to enjoy that item.",
+        "The item has a high average rating across all users.",
+        "The model has overfit to that user-item pair.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The dot product between user and item embeddings measures alignment of their latent factor vectors. A high dot product means the user's preferences (captured by their embedding) align strongly with the item's characteristics (captured by its embedding), predicting a high rating.",
+      hints: [
+        "Latent factors might correspond to genres, styles, or other abstract properties.",
+        "If a user embedding vector and item embedding vector point in similar directions, their dot product is large.",
+      ],
+    },
+  ],
+  "text-learner": [
+    {
+      id: "q-fai-kp-33",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which function creates a `TextDataLoaders` for language model fine-tuning from a folder of text files?",
+      options: [
+        "TextDataLoaders.from_folder(path, is_lm=True)",
+        "DataBlock(blocks=TextBlock.from_folder(path))",
+        "LanguageModelDataLoaders(path)",
+        "TextLearner.from_folder(path)",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "`TextDataLoaders.from_folder(path, is_lm=True)` creates DataLoaders for language model training/fine-tuning. The `is_lm=True` flag tells fastai to use language model targets (next-token prediction) rather than classification labels.",
+      hints: [
+        "Setting `is_lm=True` shifts the targets to be the next tokens rather than class labels.",
+        "This is the starting point for ULMFiT-style language model fine-tuning.",
+      ],
+    },
+    {
+      id: "q-fai-kp-33b",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, after fine-tuning a language model, which function creates a text classifier learner using the fine-tuned encoder?",
+      options: [
+        "vision_learner(dls, AWD_LSTM)",
+        "text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5)",
+        "Learner(dls, TextClassificationModel())",
+        "TextDataLoaders.to_classifier()",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`text_classifier_learner(dls, AWD_LSTM, drop_mult=0.5)` creates a `Learner` that wraps an AWD-LSTM body with a classification head. After creating it, you load the fine-tuned language model encoder with `learn.load_encoder('finetuned_enc')` to initialize the body with pre-trained weights.",
+      hints: [
+        "The architecture (`AWD_LSTM`) is the second argument, analogous to `vision_learner(dls, resnet34)`.",
+        "`drop_mult` scales all dropout rates in the model, allowing regularization strength control.",
+      ],
+    },
+    {
+      id: "q-fai-kp-33c",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In fastai's ULMFiT workflow, language model fine-tuning on the target corpus is a self-supervised step that requires no labeled data.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Language model fine-tuning uses next-token prediction as its objective. The targets are automatically derived from the input text itself (shifted by one position), so no human-provided labels are needed. This allows leveraging large amounts of unlabeled domain text.",
+      hints: [
+        "The label for each token is simply the next token in the sequence — no annotation needed.",
+        "This is why it's called self-supervised: the data creates its own supervision signal.",
+      ],
+    },
+  ],
+  "multi-label-classification": [
+    {
+      id: "q-fai-kp-34",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which metric is appropriate for evaluating multi-label classification where each sample can have multiple correct labels?",
+      options: [
+        "accuracy (standard single-label accuracy)",
+        "accuracy_multi (which applies a threshold to independent sigmoid outputs)",
+        "RocAuc (which requires a single positive class)",
+        "error_rate (1 minus top-1 accuracy)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`accuracy_multi` applies a threshold (default 0.5) to each class's sigmoid output independently and counts a prediction as correct for a class if it exceeds the threshold. This is appropriate for multi-label tasks where softmax-based accuracy is meaningless.",
+      hints: [
+        "Multi-label problems use sigmoid per class, not softmax across classes.",
+        "`accuracy_multi` has a `thresh` parameter you can tune for precision/recall trade-off.",
+      ],
+    },
+    {
+      id: "q-fai-kp-34b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Why must multi-label classification use sigmoid activation rather than softmax?",
+      options: [
+        "Softmax is computationally more expensive for multi-label tasks.",
+        "Softmax forces all class probabilities to sum to 1, preventing multiple classes from simultaneously having high probability; sigmoid treats each class as an independent binary decision.",
+        "Sigmoid outputs are always higher than softmax outputs, making it easier to train.",
+        "fastai only supports sigmoid in its multi-label DataBlock.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Softmax creates a competition between classes (probabilities sum to 1), which is correct for single-label tasks but wrong for multi-label. Sigmoid squashes each logit independently to [0, 1], allowing multiple classes to simultaneously have probabilities near 1 — which is what we want when an image can be both 'dog' and 'outdoor'.",
+      hints: [
+        "An image can be both 'dog' and 'running' — softmax would force the model to choose one.",
+        "sigmoid(x) = 1/(1+e^-x) is applied elementwise; softmax normalizes across all elements.",
+      ],
+    },
+    {
+      id: "q-fai-kp-34c",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which loss function is automatically used when `MultiCategoryBlock` is detected in the DataBlock?",
+      options: [
+        "CrossEntropyLoss",
+        "BCEWithLogitsLoss (binary cross-entropy with logits)",
+        "MSELoss",
+        "LabelSmoothingCrossEntropy",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "fastai automatically selects `BCEWithLogitsLoss` for multi-label classification. This combines sigmoid activation with binary cross-entropy in a numerically stable way, computing an independent binary loss for each class.",
+      hints: [
+        "fastai infers the loss function from the DataBlock's output block type.",
+        "`BCEWithLogitsLoss` is more numerically stable than applying sigmoid then `BCELoss` separately.",
+      ],
+    },
+  ],
+  "image-segmentation-fastai": [
+    {
+      id: "q-fai-kp-35",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, which function creates a learner suitable for semantic image segmentation tasks?",
+      options: [
+        "vision_learner(dls, resnet34)",
+        "unet_learner(dls, resnet34)",
+        "seg_learner(dls, resnet34)",
+        "SegmentationLearner(dls, resnet34)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`unet_learner(dls, resnet34)` builds a U-Net architecture dynamically, using a pretrained encoder (e.g., ResNet-34) as the downsampling body and generating a matching decoder with skip connections. This is fastai's standard API for semantic segmentation.",
+      hints: [
+        "U-Net's encoder-decoder with skip connections is the standard segmentation architecture.",
+        "The pre-trained ResNet acts as the encoder; fastai builds the decoder automatically.",
+      ],
+    },
+    {
+      id: "q-fai-kp-35b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In semantic segmentation with fastai, which loss function is used, and how does it differ from image classification?",
+      options: [
+        "MSELoss applied to the pixel color values.",
+        "Cross-entropy loss applied independently to each pixel, treating each pixel as a separate classification problem.",
+        "Binary cross-entropy applied globally to the entire image mask.",
+        "Dice loss, which fastai uses by default for all segmentation tasks.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Semantic segmentation classifies every pixel in the image into one of N classes. fastai applies cross-entropy loss pixel-wise: for each pixel, the model outputs N logits and the loss is computed as if that pixel were a standalone single-label classification problem. The total loss averages over all pixels.",
+      hints: [
+        "Think of each pixel as a tiny single-label classification problem.",
+        "The target mask assigns one class label per pixel; cross-entropy compares the model's N-class output at each pixel.",
+      ],
+    },
+    {
+      id: "q-fai-kp-35c",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In fastai, which DataLoaders factory is designed for image segmentation tasks?",
+      options: [
+        "ImageDataLoaders.from_folder()",
+        "SegmentationDataLoaders.from_label_func()",
+        "DataBlock(blocks=(ImageBlock, MaskBlock))",
+        "Both B and C are valid approaches",
+      ],
+      correctAnswer: 3,
+      explanation:
+        "fastai provides two equivalent approaches for segmentation DataLoaders: `SegmentationDataLoaders.from_label_func()` is a high-level convenience factory, while using `DataBlock(blocks=(ImageBlock, MaskBlock(...)))` offers more flexibility. Both ultimately produce the same type of DataLoaders.",
+      hints: [
+        "`MaskBlock` is the output block for segmentation in the DataBlock API.",
+        "The label function maps each image path to its corresponding segmentation mask path.",
+      ],
+    },
+  ],
+  "object-detection-fastai": [
+    {
+      id: "q-fai-kp-36",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In object detection, what does bounding box regression mean, and what does the model predict?",
+      options: [
+        "The model classifies whether an object exists in the image without locating it.",
+        "The model predicts continuous coordinates (x, y, width, height) for each detected object's bounding box in addition to its class label.",
+        "The model segments every pixel and groups them into bounding boxes post-hoc.",
+        "The model only predicts the center coordinates, not width and height.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Bounding box regression is the task of predicting the spatial location of objects as rectangles defined by continuous coordinates (typically center_x, center_y, width, height or x1, y1, x2, y2). This is a regression problem over the box coordinates, separate from the classification head that predicts the object class.",
+      hints: [
+        "Object detection has two outputs per detected object: class (classification) and box coordinates (regression).",
+        "The loss combines a classification loss for the class and a regression loss (e.g., L1 or smooth L1) for the box.",
+      ],
+    },
+    {
+      id: "q-fai-kp-36b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What is anchor-free object detection, and how does it differ from anchor-based methods like Faster R-CNN?",
+      options: [
+        "Anchor-free detection uses no neural networks; it relies on classical image processing.",
+        "Anchor-free detectors predict bounding boxes as offsets from predefined fixed anchor boxes; anchor-based methods predict boxes from image key points or feature map centers.",
+        "Anchor-free detectors predict object locations directly from feature map positions (e.g., object centers) without needing predefined anchor boxes, simplifying design and removing the anchor hyperparameter burden.",
+        "The terms are synonymous; both methods work identically.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Anchor-based detectors (Faster R-CNN, SSD, YOLO v2-v3) predefine a set of fixed anchor boxes at each feature map location and predict offsets from those anchors. Anchor-free detectors (FCOS, CenterNet, DETR) directly predict object centers or corners without relying on anchors, eliminating anchor hyperparameter tuning and simplifying the pipeline.",
+      hints: [
+        "Anchor boxes are hand-designed templates; anchor-free methods learn to predict boxes directly.",
+        "DETR (DEtection TRansformer) is a prominent anchor-free model using transformers.",
+      ],
+    },
+    {
+      id: "q-fai-kp-36c",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, how would you build DataLoaders for a single-object bounding box detection task using the DataBlock API?",
+      options: [
+        "DataBlock(blocks=(ImageBlock, BBoxBlock))",
+        "DataBlock(blocks=(ImageBlock, BBoxLblBlock))",
+        "DataBlock(blocks=(ImageBlock, BBoxBlock), get_y=[get_bbox, get_lbl]) with appropriate `get_y` functions",
+        "ObjectDetectionDataLoaders.from_json(path)",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "For detection DataLoaders with fastai's DataBlock API, you use `blocks=(ImageBlock, BBoxBlock)` or `blocks=(ImageBlock, BBoxLblBlock)` depending on whether you need class labels. You supply separate `get_y` functions that return the bounding box coordinates and class labels from your annotation source.",
+      hints: [
+        "`BBoxBlock` handles bounding box coordinate transforms; `BBoxLblBlock` adds class labels.",
+        "The annotations are typically stored in JSON (COCO format) or CSV files.",
+      ],
+    },
+  ],
+  "callbacks-advanced": [
+    {
+      id: "q-fai-kp-37",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai's callback system, which two events bracket the processing of a single training batch?",
+      options: [
+        "`before_epoch` and `after_epoch`",
+        "`before_batch` and `after_batch`",
+        "`before_step` and `after_step`",
+        "`on_batch_begin` and `on_batch_end`",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "fastai's training loop fires `before_batch` immediately before forward pass + loss computation for each batch, and `after_batch` immediately after the optimizer step. Callbacks that need to modify inputs or outputs per-batch (like Mixup or gradient clipping) hook into these events.",
+      hints: [
+        "fastai uses `before_*` / `after_*` naming conventions for callback events.",
+        "Other batch-level events include `before_forward`, `after_forward`, `before_backward`, `after_backward`.",
+      ],
+    },
+    {
+      id: "q-fai-kp-37b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What does fastai's `MixedPrecision` callback (previously `to_fp16()`) do, and what is the primary benefit?",
+      options: [
+        "It quantizes the model to INT8 for deployment, halving model size.",
+        "It trains using 16-bit floating point (FP16) for forward and backward passes while maintaining 32-bit master weights, reducing memory usage and speeding up training on supported GPUs.",
+        "It mixes FP32 and FP64 precision dynamically to improve numerical stability.",
+        "It converts the model to BFloat16 and disables gradient scaling.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Mixed precision training (AMP) uses FP16 for most computations (reducing memory bandwidth and exploiting Tensor Cores on modern GPUs) while keeping a FP32 master copy of weights for updates. A gradient scaler prevents underflow during FP16 backward passes. This typically provides 2-3x speedup with no accuracy loss.",
+      hints: [
+        "FP16 uses half the memory of FP32 and is faster on GPUs with Tensor Cores (NVIDIA Volta+).",
+        "The key challenge in FP16 training is that very small gradients can underflow to zero — the scaler prevents this.",
+      ],
+    },
+    {
+      id: "q-fai-kp-37c",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the role of the `CudaCallback` in fastai's training loop?",
+      options: [
+        "It manually allocates GPU memory for each batch.",
+        "It moves each batch of data and the model to the GPU automatically before each forward pass.",
+        "It monitors GPU temperature and pauses training if it overheats.",
+        "It enables CUDA graph capture for faster kernel launch.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`CudaCallback` is a lightweight fastai callback that hooks into `before_batch` and moves the input data (and labels) from CPU to GPU memory. It works alongside the model being placed on GPU, ensuring that each batch is on the correct device before the forward pass runs.",
+      hints: [
+        "Data is loaded on CPU by DataLoaders; it must be moved to GPU for neural network forward passes.",
+        "Forgetting to move data to GPU is a common PyTorch error: 'Expected all tensors to be on the same device'.",
+      ],
+    },
+  ],
+  "distributed-training-fastai": [
+    {
+      id: "q-fai-kp-38",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, what does calling `learn.to_fp16()` return, and what does it enable?",
+      options: [
+        "It returns a new Learner with the model quantized to INT16.",
+        "It returns the same Learner with a `MixedPrecision` callback added, enabling automatic mixed precision (AMP) training.",
+        "It converts all model weights to FP16 permanently, with no master FP32 copy.",
+        "It enables FP16 only for the final linear layer.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`learn.to_fp16()` is a convenience method that adds fastai's `MixedPrecision` callback to the Learner and returns `self`. This enables PyTorch's Automatic Mixed Precision (AMP) for subsequent training calls, providing faster training and lower memory usage on modern GPUs.",
+      hints: [
+        "`to_fp16()` is syntactic sugar for adding `MixedPrecision()` to the Learner's callback list.",
+        "You chain it like: `learn = vision_learner(dls, resnet50).to_fp16()`.",
+      ],
+    },
+    {
+      id: "q-fai-kp-38b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When using `DistributedDataParallel` (DDP) with fastai for multi-GPU training, how does gradient synchronization work across GPUs?",
+      options: [
+        "One GPU computes gradients and broadcasts them to all other GPUs after each epoch.",
+        "Each GPU computes gradients on its local batch independently; DDP uses an all-reduce operation after each backward pass to average gradients across all GPUs before the optimizer step.",
+        "Gradients are accumulated on the CPU and then distributed back to GPUs.",
+        "DDP trains separate models on each GPU and merges weights at the end of training.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In DDP, each GPU holds a full copy of the model and processes a shard of the batch. After each backward pass, DDP automatically performs an all-reduce (typically NCCL ring-allreduce) to average gradients across all GPUs. Each GPU then performs the same optimizer step with the averaged gradients, keeping all model copies in sync.",
+      hints: [
+        "All-reduce = sum gradients across all GPUs then divide by the number of GPUs.",
+        "The effective batch size is `per_gpu_batch_size × num_gpus`, so the learning rate often needs scaling.",
+      ],
+    },
+    {
+      id: "q-fai-kp-38c",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In fastai's multi-GPU training with `DistributedDataParallel`, the effective batch size increases proportionally with the number of GPUs, which typically requires scaling the learning rate accordingly.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch × num_gpus`. The linear scaling rule (Goyal et al., 2017) states that the learning rate should be scaled proportionally (LR × num_gpus) to maintain equivalent optimization dynamics. fastai's `DistributedTrainer` callback handles much of the DDP setup automatically.",
+      hints: [
+        "Larger effective batch size → smoother gradient estimates → can use a larger learning rate.",
+        "The linear scaling rule works well up to moderate GPU counts; warmup is recommended for very large batches.",
+      ],
+    },
+  ],
+  "transfer-learning-advanced": [
+    {
+      id: "q-fai-kp-39",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In fastai, what is the difference between the 'body' and the 'head' of a vision model created with `vision_learner`?",
+      options: [
+        "The body is the custom classification layers; the head is the pretrained backbone.",
+        "The body is the pretrained backbone (encoder) that extracts features; the head is the newly added task-specific layers (typically pooling + linear layers) appended for the target task.",
+        "They are identical; fastai uses the terms interchangeably.",
+        "The head refers to attention layers; the body refers to convolutional layers.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In fastai's `vision_learner`, the 'body' is the pretrained CNN backbone (e.g., ResNet-34 without its ImageNet classification head), which is transferred from ImageNet. The 'head' is the new task-specific layers that fastai appends (adaptive average pooling, batch norm, dropout, linear layers) to adapt the model to the target number of classes.",
+      hints: [
+        "The body is frozen by default during the first training phase of `fine_tune()`.",
+        "`learn.model[0]` is the body; `learn.model[1]` is the head in most fastai vision models.",
+      ],
+    },
+    {
+      id: "q-fai-kp-39b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What does `Learner.freeze_to(-2)` do in fastai, and when would you use it?",
+      options: [
+        "It freezes the last 2 layers of the model and leaves all others trainable.",
+        "It freezes all layer groups except the last 2 layer groups, allowing progressive unfreezing from the top of the network.",
+        "It freezes the model for 2 epochs then automatically unfreezes.",
+        "It freezes only the batch normalization layers with indices -2.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`freeze_to(-2)` freezes all layer groups except the last 2. Negative indexing works like Python list slicing: -2 means 'leave the last 2 groups trainable'. This is useful for progressive unfreezing: you unfreeze layers gradually from the top (head) downward, training each newly unfrozen group before proceeding to earlier layers.",
+      hints: [
+        "fastai groups model layers into layer groups for freeze/unfreeze and discriminative LR purposes.",
+        "Progressive unfreezing order: unfreeze head first, then upper body, then lower body.",
+      ],
+    },
+    {
+      id: "q-fai-kp-39c",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What is a 'splitter function' in fastai, and why is it important for transfer learning?",
+      options: [
+        "A function that splits the dataset into train and validation sets.",
+        "A function that divides a model's parameters into groups for discriminative learning rates and freeze/unfreeze operations.",
+        "A function that splits large images into patches before feeding to the model.",
+        "A function that controls how fastai splits batches across multiple GPUs.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A splitter function takes a model and returns a list of parameter groups (body layers grouped by depth, plus the head). fastai uses this grouping to apply discriminative learning rates (different LR per group) and for `freeze_to()` / `unfreeze()` operations. Custom architectures need a custom splitter to enable these features.",
+      hints: [
+        "Standard architectures like ResNet have built-in splitters in fastai.",
+        "You pass `splitter=my_splitter` to `Learner` when using a non-standard architecture.",
+      ],
+    },
+  ],
+  "production-fastai": [
+    {
+      id: "q-fai-kp-40",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "What is the difference between `learn.save('checkpoint')` and `learn.export('model.pkl')` in fastai?",
+      options: [
+        "They are identical; both save the full Learner including DataLoaders.",
+        "`learn.save()` saves only the model weights for checkpointing/resuming; `learn.export()` saves the complete Learner (weights + DataLoaders config + transforms) as a self-contained deployment artifact.",
+        "`learn.save()` saves as ONNX; `learn.export()` saves as pickle.",
+        "`learn.export()` compresses the model; `learn.save()` does not.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "`learn.save('name')` saves a state dict of model weights (and optionally optimizer state) — useful for training checkpoints. `learn.export('model.pkl')` pickles the complete Learner including all preprocessing transforms and vocabulary, making it self-contained for inference without needing to recreate the DataLoaders.",
+      hints: [
+        "For deployment, use `export()`; for resuming training, use `save()`.",
+        "`load_learner('model.pkl')` can restore an exported learner in one line.",
+      ],
+    },
+    {
+      id: "q-fai-kp-40b",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "What is ONNX export, and what problem does it solve compared to fastai's native pickle-based export?",
+      options: [
+        "ONNX exports the model as a PNG image of the architecture diagram.",
+        "ONNX (Open Neural Network Exchange) exports the model's computation graph in a framework-agnostic format, enabling deployment without requiring PyTorch or fastai and avoiding pickle version incompatibilities.",
+        "ONNX compresses the model weights using lossy compression for smaller file sizes.",
+        "ONNX is a fastai-specific export format that only works with Hugging Face Spaces.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "ONNX is an open format for ML models that can be run by many runtimes (ONNX Runtime, TensorRT, CoreML, OpenVINO) without Python, PyTorch, or fastai. Unlike pickle export, ONNX is version-agnostic and works across languages and platforms. You export via `torch.onnx.export(learn.model, ...)` after getting the model from the learner.",
+      hints: [
+        "ONNX Runtime can run models in C++, C#, Java, etc. — no Python needed.",
+        "This is useful for edge deployment (mobile, embedded) or high-performance serving.",
+      ],
+    },
+    {
+      id: "q-fai-kp-40c",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "When serving a fastai model in production using `learn.predict()`, the preprocessing transforms defined in the original DataLoaders are automatically applied to new inputs.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "When you export a fastai Learner with `learn.export()` and reload it with `load_learner()`, the DataLoaders (including all item transforms and batch transforms like resizing and normalization) are embedded in the exported file. Calling `learn.predict(new_item)` automatically runs the complete preprocessing pipeline before inference.",
+      hints: [
+        "This is why `export()` is preferred over `save()` for deployment: preprocessing comes along.",
+        "You don't need to manually resize or normalize your input — the Learner handles it.",
+      ],
+    },
+  ],
   autoencoders: [
     {
       id: "q-fai-kp-26",
