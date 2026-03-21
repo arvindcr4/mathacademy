@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // DIFFUSION MODELS & GENERATIVE AI
+  {
+    id: 'diffusion-models',
+    slug: 'diffusion-models',
+    name: 'Diffusion Models & Generative AI',
+    description: 'Score-based models, DDPM, latent diffusion, and state-of-the-art image/audio/video generation.',
+    topics: [
+      {
+        id: 'diffusion-foundations',
+        name: 'Diffusion Model Foundations',
+        description: 'Forward process, reverse denoising, and the DDPM framework.',
+        knowledgePoints: [
+          { id: 'diff-kp-1', slug: 'forward-diffusion-process', name: 'Forward Diffusion Process & Noise Scheduling' },
+          { id: 'diff-kp-2', slug: 'ddpm', name: 'Denoising Diffusion Probabilistic Models (DDPM)' },
+          { id: 'diff-kp-3', slug: 'score-matching', name: 'Score Matching & Score-Based Models' },
+          { id: 'diff-kp-4', slug: 'ddim', name: 'DDIM & Accelerated Sampling' },
+          { id: 'diff-kp-5', slug: 'classifier-free-guidance', name: 'Classifier-Free Guidance (CFG)' },
+        ]
+      },
+      {
+        id: 'latent-diffusion',
+        name: 'Latent Diffusion & Stable Diffusion',
+        description: 'Latent space diffusion, text-to-image, and Stable Diffusion architecture.',
+        knowledgePoints: [
+          { id: 'diff-kp-6', slug: 'latent-diffusion-models', name: 'Latent Diffusion Models (LDM)' },
+          { id: 'diff-kp-7', slug: 'stable-diffusion-arch', name: 'Stable Diffusion Architecture (VAE + UNet + CLIP)' },
+          { id: 'diff-kp-8', slug: 'controlnet', name: 'ControlNet & Conditional Generation' },
+          { id: 'diff-kp-9', slug: 'lora-diffusion', name: 'LoRA Fine-Tuning for Diffusion Models' },
+          { id: 'diff-kp-10', slug: 'inpainting-outpainting', name: 'Inpainting, Outpainting & Image Editing' },
+        ]
+      },
+      {
+        id: 'advanced-diffusion',
+        name: 'Advanced Diffusion Architectures',
+        description: 'DiT, flow matching, consistency models, and rectified flow.',
+        knowledgePoints: [
+          { id: 'diff-kp-11', slug: 'dit', name: 'Diffusion Transformers (DiT)' },
+          { id: 'diff-kp-12', slug: 'flow-matching', name: 'Flow Matching & Rectified Flow' },
+          { id: 'diff-kp-13', slug: 'consistency-models', name: 'Consistency Models & Distillation' },
+          { id: 'diff-kp-14', slug: 'sdxl', name: 'SDXL & High-Resolution Generation' },
+          { id: 'diff-kp-15', slug: 'flux-model', name: 'FLUX & Next-Gen Diffusion Models' },
+        ]
+      },
+      {
+        id: 'video-audio-generation',
+        name: 'Video & Audio Generation',
+        description: 'Temporal diffusion, text-to-video, and audio synthesis models.',
+        knowledgePoints: [
+          { id: 'diff-kp-16', slug: 'video-diffusion', name: 'Video Diffusion Models (Sora, CogVideo)' },
+          { id: 'diff-kp-17', slug: 'audio-diffusion', name: 'Audio Diffusion (AudioLDM, Stable Audio)' },
+          { id: 'diff-kp-18', slug: '3d-generation', name: '3D Generation (NeRF, Gaussian Splatting)' },
+          { id: 'diff-kp-19', slug: 'motion-generation', name: 'Motion & Avatar Generation' },
+          { id: 'diff-kp-20', slug: 'world-models', name: 'World Models & Simulation' },
+        ]
+      },
+      {
+        id: 'diffusion-training',
+        name: 'Training & Fine-Tuning Diffusion Models',
+        description: 'DreamBooth, textual inversion, RLHF for diffusion, and efficient training.',
+        knowledgePoints: [
+          { id: 'diff-kp-21', slug: 'dreambooth', name: 'DreamBooth & Few-Shot Personalization' },
+          { id: 'diff-kp-22', slug: 'textual-inversion', name: 'Textual Inversion & Concept Embedding' },
+          { id: 'diff-kp-23', slug: 'rlhf-diffusion', name: 'RLHF for Diffusion (DDPO, DPO-Diffusion)' },
+          { id: 'diff-kp-24', slug: 'distillation-diffusion', name: 'Knowledge Distillation for Fast Inference' },
+          { id: 'diff-kp-25', slug: 'diffusion-eval', name: 'Evaluation Metrics (FID, CLIP Score, IS)' },
+        ]
+      },
+      {
+        id: 'diffusion-applications',
+        name: 'Diffusion Applications & Multimodal',
+        description: 'Real-world applications in science, medicine, and multimodal generation.',
+        knowledgePoints: [
+          { id: 'diff-kp-26', slug: 'molecular-generation', name: 'Molecular Generation with Diffusion' },
+          { id: 'diff-kp-27', slug: 'medical-imaging-diffusion', name: 'Medical Imaging & Anomaly Detection' },
+          { id: 'diff-kp-28', slug: 'image-restoration', name: 'Image Restoration & Super-Resolution' },
+          { id: 'diff-kp-29', slug: 'multimodal-diffusion', name: 'Multimodal Diffusion (Image + Text + Audio)' },
+          { id: 'diff-kp-30', slug: 'diffusion-agents', name: 'Diffusion Models as World Model Agents' },
+        ]
+      },
+    ]
+  },
+
   // GRAPH NEURAL NETWORKS & GEOMETRIC DEEP LEARNING
   {
     id: 'graph-neural-networks',
