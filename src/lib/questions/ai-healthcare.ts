@@ -783,12 +783,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "Blood glucose level",
         "Bone mineral density",
-        "Blood oxygen saturation (SpO\\_2) and heart rate",
+        "Blood oxygen saturation (SpO$_2$) and heart rate",
         "Intracranial pressure",
       ],
       correctAnswer: 2,
       explanation:
-        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO\\_2 via Beer-Lambert law, and heart rate from pulse timing - both now standard in consumer smartwatches.",
+        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO$_2$ via Beer-Lambert law, and heart rate from pulse timing - both now standard in consumer smartwatches.",
       hints: [
         "PPG uses light - think about what physical property of blood changes with each heartbeat.",
         "Pulse oximeters in hospitals use the same physical principle as wearable PPG sensors.",
