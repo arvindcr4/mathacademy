@@ -1994,7 +1994,7 @@ const questions: Record<string, Question[]> = {
     },
   ],
 
-  "ml-performance-engineering": [
+  "ml-performance-engineering-advanced": [
     {
       id: "q-prod-kp38-1",
       type: "multiple-choice",
@@ -2686,6 +2686,64 @@ const questions: Record<string, Question[]> = {
       hints: [
         "PIT join: for each training label at time T, look up feature value at the most recent timestamp <= T.",
         "Without PIT correctness, your training data contains future feature values — a severe form of feature leakage.",
+      ],
+    },
+  ],
+
+  "ml-experiment-versioning": [
+    {
+      id: "q-prod-kp50-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A team runs 200 ML experiments and needs to identify which experiment produced the best model for a specific user segment (mobile, non-English speakers). How should MLflow experiments be structured to enable this query efficiently?",
+      options: [
+        "Log all experiments to a single MLflow experiment and search by run name.",
+        "Use MLflow tags and per-slice metrics: tag each run with the model architecture and dataset version, log per-slice metrics (e.g., auc_mobile_non_english) as named metrics alongside aggregate metrics, and use the MLflow search_runs API to filter runs by tag and sort by the slice metric of interest.",
+        "Store experiment results in a spreadsheet and search manually.",
+        "Create a separate MLflow experiment for each hyperparameter configuration.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Per-slice metrics in MLflow: logging `mlflow.log_metric('auc_mobile_non_english', 0.87)` alongside `mlflow.log_metric('auc_overall', 0.92)` enables the MLflow UI and search API to surface the best model for that slice specifically. Combined with tags (model_type, dataset_version, feature_set), runs become queryable: `search_runs(filter_string='tags.model_type = \"xgboost\" and metrics.auc_mobile_non_english > 0.85')`. This is the difference between reproducible experiment management and archaeological digging through old runs.",
+      hints: [
+        "Log per-slice metrics as named MLflow metrics — not just in a confusion matrix artifact — so they are queryable.",
+        "MLflow tags + per-slice metrics = structured search across 200 experiments in seconds vs. hours of manual comparison.",
+      ],
+    },
+    {
+      id: "q-prod-kp50-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ML team runs experiments on a shared GPU cluster using MLflow. Two engineers run experiments simultaneously, and one overwrites the other\'s best run by promoting a lower-performing model. How do you prevent this?",
+      options: [
+        "Only allow one experiment at a time on the shared cluster.",
+        "Implement promotion gates: model promotion to Production in the MLflow registry requires a pull-request-style review (at least one approver besides the author), uses metric comparisons against the current production model (not just absolute thresholds), and logs promotion decisions with the reviewer\'s identity and rationale in the model version description.",
+        "Lock the MLflow registry so only one engineer can access it at a time.",
+        "Require all experiments to be run sequentially to prevent conflicts.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Model registry governance: promotion should require explicit sign-off, not just API access. MLflow Model Registry supports custom promotion workflows via CI/CD integration: a promotion request triggers a CI pipeline that: (1) compares the candidate model against production on the full evaluation suite; (2) requires approval from a designated reviewer via PR review or approval workflow; (3) logs the approver identity and comparison metrics in the model version metadata. This prevents accidental overwrites and creates an audit trail of every promotion decision.",
+      hints: [
+        "Model promotion should be a reviewed, logged operation — not an API call any team member can make unilaterally.",
+        "The audit trail requirement: who promoted this model, when, and based on what metrics comparison?",
+      ],
+    },
+    {
+      id: "q-prod-kp50-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Storing the git commit hash of the training code as an MLflow tag on each experiment run enables exact reproduction of any historical model by checking out that commit and rerunning the training job with the logged hyperparameters and dataset version.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Full experiment reproducibility requires four components, all logged: (1) code version (git commit hash — `mlflow.set_tag('git_commit', subprocess.check_output(['git', 'rev-parse', 'HEAD']).decode())`); (2) data version (dataset artifact hash or DVC commit); (3) hyperparameters (logged via log_param); (4) environment (Docker image tag or conda lock file). With all four, any engineer can reproduce any historical model: checkout the commit, use the data version, set the hyperparameters, run in the same environment.",
+      hints: [
+        "The git commit hash + dataset version + hyperparameters + environment = fully reproducible experiment.",
+        "Without the git commit hash, 'same hyperparameters' may run different code if the training script was modified.",
       ],
     },
   ],
