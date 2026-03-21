@@ -231,6 +231,11 @@ const questions: Record<string, Question[]> = {
         'The model invoking tool names or parameters that do not exist in the provided schema',
         'Tool calls executing too slowly',
         'Circular tool calls that never terminate',
+      ],
+      correctAnswer: 1,
+      explanation: 'Tool call hallucination occurs when the LLM generates tool calls that reference non-existent tools or invalid parameters. This breaks the agent loop and requires error handling.',
+      hints: ['The LLM is a text generator, not a validator. It can output any text, including invalid tool calls.'],
+    },
     {
       id: 'q-agent-kp4-4',
       type: 'multiple-choice',

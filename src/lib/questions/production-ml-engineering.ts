@@ -1682,6 +1682,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Training-serving skew fixes require careful sequencing: (1) fix the computation in a shared library to prevent future divergence; (2) deploy the serving fix first since it is the live system; (3) retrain with the corrected feature (the old model was trained on different data than it now receives); (4) validate that the retrained model performs as expected. Never accept training-serving skew — it compounds over time as the model adapts to incorrect features during future retraining.",
+      hints: [
+        "Fix serving first, not training — the live model is what affects users right now.",
+        "A shared library enforces consistency by construction: both training and serving import the same function.",
+      ],
     },
     {
       id: "q-prod-kp32-3",
@@ -1690,10 +1694,13 @@ const questions: Record<string, Question[]> = {
       question:
         "Normalizing features using statistics computed on the training set (mean, standard deviation) and applying those same statistics at inference time is necessary to prevent training-serving skew in preprocessing.",
       options: ["True", "False"],
-
       correctAnswer: "True",
       explanation:
         "Feature normalization must use training-time statistics at serving time: (1) fit the scaler on training data only; (2) serialize the fitted scaler as part of the model artifact; (3) apply the same scaler at inference time. Using serving-time statistics would cause training-serving skew and potentially expose future information. This is why preprocessing pipelines must be versioned alongside model weights.",
+      hints: [
+        "The scaler is trained once on training data and frozen — it is part of the model artifact, not recomputed at inference.",
+        "Recomputing normalization stats on production data leaks future information and creates training-serving skew.",
+      ],
     },
   ],
 
