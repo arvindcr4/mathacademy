@@ -2415,6 +2415,50 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 2,
   },
+  "q-fin-kp3-2": {
+    type: "multiple-choice",
+    question: "What is multiple-testing bias?",
+    options: [
+      "Trying many signals makes some look significant by chance alone",
+      "Using future data in training or validation",
+      "Trading too frequently, which raises turnover",
+      "Ranking stocks instead of predicting absolute returns",
+    ],
+    correctAnswer: 0,
+  },
+  "q-fin-kp11-2": {
+    type: "multiple-choice",
+    question: "What is CVaR at 99%?",
+    options: [
+      "The loss threshold exceeded on 1% of days",
+      "The average loss on the worst 1% of days",
+      "The probability of losing more than VaR",
+      "The standard deviation of losses beyond VaR",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp24-2": {
+    type: "multiple-choice",
+    question: "How do disparate treatment and disparate impact differ?",
+    options: [
+      "Treatment requires intent; impact can arise from a facially neutral policy",
+      "Impact requires intent; treatment does not",
+      "Both require proving discriminatory intent",
+      "Neither can be shown with group-level outcome differences",
+    ],
+    correctAnswer: 0,
+  },
+  "q-fin-kp36-2": {
+    type: "multiple-choice",
+    question: "Which stylized fact is GARCH built to model?",
+    options: [
+      "Volatility clustering",
+      "Strong autocorrelation in raw returns",
+      "Exact price mean reversion to a fixed level",
+      "Constant variance over time",
+    ],
+    correctAnswer: 0,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────
