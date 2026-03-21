@@ -486,8 +486,7 @@ registerQuestions({
         "It automatically publishes the model’s answers to a public web page.",
         "It bypasses token limits.",
       ],
-      correctAnswer:
-        "It allows the model to augment its training data with real-time, up-to-date information from the web to reduce hallucinations.",
+      correctAnswer: 1,
       explanation:
         "Grounding with Google Search connects the model to the live internet, significantly reducing hallucinations and allowing it to answer queries about recent events.",
       hints: [
