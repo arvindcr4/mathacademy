@@ -64,9 +64,8 @@ const questions: Record<string, Question[]> = {
         "First, let's recall the two key instability problems that DQN faces when training a neural network:\n\n**Step 1. Correlated data.** Sequential transitions $(s_t, a_t, r_t, s_{t+1})$ are highly correlated in time. If the network trains on these sequentially, the data distribution shifts during training, causing gradient descent to oscillate or diverge.\n\n**Step 2. Moving target.** The DQN update uses $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ as the target. Since $\\theta$ changes with every update, the target keeps moving - a moving target for a supervised learning problem.\n\nExperience replay and the target network address these respectively:\n\n**Step 3.** Experience replay stores transitions in a replay buffer and samples uniformly at random for each gradient update. This decorrelates the training data, making it closer to i.i.d., and allows each transition to be reused many times for data efficiency.\n\n**Step 4.** The target network $Q(s',a';\\theta^-)$ is a separate, periodically-copied network kept fixed for many steps, providing stable targets $y = R + \\gamma \\max_{a'} Q(s',a';\\theta^-)$ while the online network $\\theta$ is updated. This prevents the moving-target problem.\n\nTherefore, the answer is Experience replay and a separate target network.",
       stepByStep: {
         step1: "Sequential transitions are highly correlated in time, causing the data distribution to shift during training and leading to gradient oscillation or divergence.",
-        step2: "Since the DQN update target $y = R + \\gamma \\max_{a'} Q(s',a';\\theta)$ uses the same network parameters $\\theta$ that are being updated, the target keeps changing at every step.",
-        step3: "Experience replay decorrelates training data by sampling uniformly from a replay buffer, making data i.i.d. and enabling reuse of each transition.",
-        step4: "The target network provides stable TD targets by being frozen for many steps before being updated, preventing the moving-target problem.",
+        step2: "Since the DQN update target changes with every gradient step (moving target problem), the network chases a non-stationary goal.",
+        step3: "Experience replay decorrelates training data by sampling uniformly from a replay buffer, while the target network provides stable fixed targets, addressing both instability sources.",
       },
       hints: [
         "Training on correlated sequential data causes instability in gradient descent.",
@@ -249,7 +248,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Double DQN produces Q-value estimates closer to the true values, leading to better policies particularly in environments with many actions where maximization bias is most severe. The computational overhead is minimal.",
+        "First, let's recall that maximization bias is worst in environments with many actions, because the probability that the max of estimated Q-values exceeds the true max grows with the number of actions.\n\n**Step 1.** With many actions, the chance that at least one action's Q-value is overestimated increases, and the max of the estimated Q-values is therefore systematically biased upward.\n\n**Step 2.** Double DQN reduces this bias by decoupling selection (online network) from evaluation (target network), breaking the positive feedback loop that causes overestimation.\n\n**Step 3.** More accurate Q-values lead directly to better policies: the agent selects actions based on more reliable value estimates, especially in large action spaces where overestimation is most harmful.\n\nTherefore, the answer is Produce more accurate Q-value estimates and better policies, especially in environments with many actions.",
+      stepByStep: {
+        step1: "Maximation bias grows with the number of actions: the probability that max of estimated Q-values exceeds the true max increases with more actions.",
+        step2: "Double DQN reduces this bias by decoupling selection (online network) from evaluation (target network), breaking the overestimation feedback loop.",
+        step3: "More accurate Q-values lead to better action selection, especially in large action spaces where overestimation is most harmful.",
+      },
       hints: [
         "Where is maximization bias worst - few or many actions? Why?",
         "Better Q-value estimates should lead to better what?",
