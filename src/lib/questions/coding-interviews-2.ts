@@ -1116,6 +1116,552 @@ const questions: Record<string, Question[]> = {
       hints: ["Brute force = Word Search I run W times independently."],
     },
   ],
+
+  // ── SERIALIZE / DESERIALIZE TREE ──────────────────────────────────────────
+  "serialize-deserialize-tree": [
+    {
+      id: "q-sdt-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In BFS serialization of a binary tree, null children are represented by:",
+      options: [
+        "Omitting them entirely from the output",
+        "A sentinel marker (e.g., 'null' or '#') in the output string",
+        "Storing -1 at those positions",
+        "Doubling the value of the parent node",
+      ],
+      correctAnswer: 1,
+      explanation:
+        'BFS serialization encodes every node position, including absent children, using a sentinel so deserialization knows the exact tree shape:\n\n\\[\n\\text{Tree: } 1 \\to 2, 3 \\to 4, null, null, 5\n\\]\n\\[\n\\text{Serialized: "1,2,3,4,null,null,5"}\n\\]\n\nWithout sentinels the decoder cannot distinguish a missing left child from a present one.',
+      hints: [
+        "Think of the LeetCode array representation — it includes nulls to mark absent children.",
+        "Null markers preserve structural information that pure value lists lose.",
+      ],
+    },
+    {
+      id: "q-sdt-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "During BFS deserialization, nodes are linked to their children using:",
+      options: [
+        "A stack that holds pending parent nodes",
+        "A queue that tracks nodes whose children have not yet been assigned",
+        "A hash map from index to node",
+        "Recursive calls that consume the string left to right",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The deserializer maintains a queue of nodes waiting for children. Each token from the string either creates a new node (non-null) or skips assignment (null):\n\n\\[\n\\text{while queue not empty: } parent = dequeue();\n\\]\n\\[\n\\text{left\\_token} \\to parent.\\text{left};\\ \\text{right\\_token} \\to parent.\\text{right};\\ \\text{enqueue non-null children}\n\\]\n\nTime: O(n), Space: O(n) for the queue (widest level).",
+      hints: [
+        "BFS serialization pairs naturally with a BFS deserialization queue.",
+        "Each dequeued node is the parent of the next two tokens.",
+      ],
+    },
+    {
+      id: "q-sdt-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Compared to BFS serialization, preorder (DFS) serialization of a binary tree:",
+      options: [
+        "Cannot handle null nodes correctly",
+        "Produces a shorter output for balanced trees",
+        "Supports unique reconstruction with null markers and is often simpler to implement recursively",
+        "Requires O(n^2) time for deserialization",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Preorder DFS with null markers uniquely encodes any binary tree:\n\n\\[\n\\text{serialize}(node):\\; \\text{if null → emit \'#\';}\\; \\text{else emit val, recurse left, recurse right}\n\\]\n\nDeserialization consumes one token at a time via a pointer or iterator:\n\n\\[\n\\text{deserialize}(iter):\\; tok = next(iter);\\; \\text{if \'#\' → null;}\\; \\text{else node(tok, left=des(iter), right=des(iter))}\n\\]\n\nBoth BFS and DFS approaches are O(n) time and O(n) space. DFS is often simpler to code recursively.",
+      hints: [
+        "Preorder emits root before children — the first token is always the root during deserialization.",
+        "Null markers in preorder serialization make the tree shape unambiguous without needing level information.",
+      ],
+    },
+  ],
+
+  // ── BINARY TREE MAX PATH SUM ───────────────────────────────────────────────
+  "binary-tree-max-path": [
+    {
+      id: "q-btmp-1",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "In the binary tree maximum path sum problem (LeetCode 124), the path must pass through the root of the tree.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "The path can start and end at any nodes in the tree — it does not need to pass through the root:\n\n\\[\n\\text{answer} = \\max_{\\text{all paths}} \\sum_{v \\in path} v.\\text{val}\n\\]\n\nA path is any sequence of nodes where each adjacent pair shares an edge. The optimal path could be entirely within a subtree.",
+      hints: [
+        "Consider a tree where all large values are in the left subtree — the best path stays there.",
+        "The path must be contiguous along edges but can start and end anywhere.",
+      ],
+    },
+    {
+      id: "q-btmp-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In the max path sum DFS helper, the function returns the maximum gain from the current node going in ONE direction. Why?",
+      options: [
+        "Because paths must always go left",
+        "Because a subtree can only contribute one branch to its parent\'s path — the parent connects both branches",
+        "Because the right subtree is always ignored",
+        "Because only leaf nodes contribute to the answer",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "When a node n is used as an intermediate node in a path above it, only one branch (left or right) can extend upward. The maximum path through n combining both children is:\n\n\\[\n\\text{path\\_through\\_n} = \\text{left\\_gain} + n.\\text{val} + \\text{right\\_gain}\n\\]\n\nThis is recorded in the global max, but the return value to n\'s parent is:\n\n\\[\n\\text{return} = n.\\text{val} + \\max(\\text{left\\_gain},\\; \\text{right\\_gain})\n\\]\n\nTime: O(n), Space: O(h) recursion stack.",
+      hints: [
+        "A node can be the 'elbow' of a path (using both branches) but can only extend one branch upward.",
+        "The global max is updated at every node; the return value extends only one branch.",
+      ],
+    },
+    {
+      id: "q-btmp-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When all node values are negative, the max path sum equals:",
+      options: [
+        "0 (empty path allowed)",
+        "The value of the single node with the largest (least negative) value",
+        "Negative infinity",
+        "The sum of all negative values",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "LeetCode 124 requires the path to contain at least one node, so an empty path is not valid:\n\n\\[\n\\text{If all values} < 0:\\; \\text{answer} = \\max_{v} v.\\text{val}\n\\]\n\nIn the DFS helper, gains from children are clamped to zero:\n\n\\[\n\\text{left\\_gain} = \\max(0,\\; \\text{dfs}(node.\\text{left}))\n\\]\n\nThis ensures that a subtree with negative sum is simply not included in the path. However, the node itself must still be counted, so the local max is initialized to the node\'s value (not 0).",
+      hints: [
+        "Clamping child gains to zero (max(0, gain)) handles negative subtrees automatically.",
+        "Initialize the global maximum to -Infinity (or the root\'s value) to handle all-negative cases.",
+      ],
+    },
+  ],
+
+  // ── CONSTRUCT TREE FROM TRAVERSALS ────────────────────────────────────────
+  "construct-from-traversals": [
+    {
+      id: "q-cft-1",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Given only the inorder traversal of a binary tree with distinct values, the original tree can be uniquely reconstructed.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation:
+        "Inorder traversal alone is insufficient to determine a unique tree. Many different tree shapes yield the same inorder sequence:\n\n\\[\n\\text{Inorder: } [1, 2, 3] \\text{ could be: root=2 (balanced) or root=1 (right-skewed) or root=3 (left-skewed)}\n\\]\n\nUniqueness requires inorder paired with EITHER preorder or postorder (not two copies of the same traversal type).",
+      hints: [
+        "Inorder gives sorted order for BSTs but does not reveal the root position.",
+        "You need at least two different traversal types to reconstruct a general binary tree.",
+      ],
+    },
+    {
+      id: "q-cft-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In the preorder + inorder tree construction algorithm, how is the root\'s index in the inorder array used?",
+      options: [
+        "To compute the height of the tree",
+        "To split inorder into left and right subtrees, determining the number of nodes in each subtree",
+        "To decide whether the tree is balanced",
+        "To skip null nodes in preorder",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Preorder[0] is the root. Finding its index i in inorder:\n\n\\[\n\\text{inorder}[0..i-1] \\to \\text{left subtree} \\quad (i \\text{ nodes})\n\\]\n\\[\n\\text{inorder}[i+1..] \\to \\text{right subtree}\n\\]\n\nThe left subtree size i tells us the corresponding preorder slice:\n\n\\[\n\\text{preorder}[1..i] \\to \\text{left preorder}, \\quad \\text{preorder}[i+1..] \\to \\text{right preorder}\n\\]\n\nUsing a hash map for inorder index lookup: O(n) total time, O(n) space.",
+      hints: [
+        "The root splits inorder into left and right halves. The size of each half partitions preorder too.",
+        "Use a HashMap<value, index> on inorder to avoid O(n) scans — reduces total to O(n).",
+      ],
+    },
+    {
+      id: "q-cft-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Constructing a binary tree from postorder + inorder: compared to preorder + inorder, the key difference is:",
+      options: [
+        "Postorder approach is O(n^2) while preorder is O(n)",
+        "In postorder the root is the LAST element; left/right subtree sizes are computed the same way from inorder",
+        "Postorder cannot handle trees with null children",
+        "Postorder requires an additional stack to determine root position",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In postorder, the root is always the last element (vs. first in preorder):\n\n\\[\n\\text{postorder} = [\\ldots\\text{left subtree}\\ldots,\\;\\ldots\\text{right subtree}\\ldots,\\;\\text{root}]\n\\]\n\nThe algorithm mirrors preorder construction:\n1. root = postorder[end]\n2. Find root in inorder → i\n3. Right subtree size = len(inorder) - i - 1 (important: build right before left when iterating postorder in reverse)\n\nBoth approaches are O(n) with a hash map. Complexity analysis:\n\n\\[\nT(n) = 2T(n/2) + O(1) \\implies O(n)\n\\]",
+      hints: [
+        "Postorder root is at the END of the array, not the beginning.",
+        "Build right subtree before left when consuming postorder array from right to left.",
+      ],
+    },
+  ],
+
+  // ── BINARY SEARCH TREE ITERATOR ───────────────────────────────────────────
+  "binary-search-tree-iterator": [
+    {
+      id: "q-bsti-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A BST iterator that calls next() in order returns nodes in what sequence?",
+      options: [
+        "Preorder (root, left, right)",
+        "Inorder (left, root, right) — ascending sorted order",
+        "Postorder (left, right, root)",
+        "Level order (breadth-first)",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A BST iterator simulates inorder traversal, which for a BST produces ascending sorted order:\n\n\\[\n\\text{Inorder}(BST) = \\text{sorted ascending sequence}\n\\]\n\nThis is LeetCode 173. The challenge is doing it lazily (one node per next() call) rather than materializing the full list.",
+      hints: [
+        "BST inorder = sorted order. The iterator exposes this one element at a time.",
+        "Think of it as a lazy inorder traversal.",
+      ],
+    },
+    {
+      id: "q-bsti-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The stack-based BST iterator: what does the constructor push onto the stack initially?",
+      options: [
+        "The root and all its right descendants",
+        "The root and all nodes on the leftmost path from root",
+        "All leaf nodes",
+        "Nothing — the stack starts empty",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The constructor pushes all nodes along the leftmost path (root, root.left, root.left.left, …) until null:\n\n\\[\n\\text{pushLeft}(node): \\text{while } node \\neq null:\\; \\text{push}(node);\\; node = node.\\text{left}\n\\]\n\nnext() pops the top node (smallest not yet returned), pushes its right child\'s leftmost path, and returns the value. Amortized O(1) per next(): each node is pushed and popped exactly once across all calls → O(n) total.",
+      hints: [
+        "The stack top is always the next smallest element — the leftmost unprocessed node.",
+        "After popping a node, push its right child\'s leftmost path to maintain the invariant.",
+      ],
+    },
+    {
+      id: "q-bsti-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "The stack-based BST iterator uses O(h) space. An alternative achieving O(1) space uses:",
+      options: [
+        "A pre-built sorted array (O(n) space)",
+        "Morris traversal — threading right pointers temporarily to avoid a stack",
+        "A doubly linked list embedded in the BST nodes",
+        "Recursion with a global counter",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Morris inorder traversal achieves O(1) auxiliary space by temporarily creating threads (back-edges via right pointers) to the inorder successor:\n\n\\[\n\\text{For each node } x:\\; \\text{find predecessor } p = \\text{rightmost in } x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = null: \\text{thread } p.\\text{right} = x,\\; x = x.\\text{left}\n\\]\n\\[\n\\text{if } p.\\text{right} = x: \\text{remove thread},\\; \\text{visit } x,\\; x = x.\\text{right}\n\\]\n\nEach node is visited at most twice → O(n) total, O(1) space. The iterator state is just the current pointer.",
+      hints: [
+        "Morris traversal modifies right pointers temporarily and restores them — no stack needed.",
+        "O(1) space comes at the cost of temporarily mutating the tree structure.",
+      ],
+    },
+  ],
+
+  // ── COUNT COMPLETE TREE NODES ──────────────────────────────────────────────
+  "count-complete-tree-nodes": [
+    {
+      id: "q-cctn-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A complete binary tree is defined as:",
+      options: [
+        "Every node has exactly 0 or 2 children",
+        "All levels are fully filled except possibly the last, which is filled from left to right",
+        "The tree is both full and balanced",
+        "Every leaf is at the same depth",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "A complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible:\n\n\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\]\n\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
+      hints: [
+        "Complete ≠ perfect. Perfect means every level is fully filled.",
+        "Heap arrays represent complete binary trees: parent at i, children at 2i+1 and 2i+2.",
+      ],
+    },
+    {
+      id: "q-cctn-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Counting nodes in a complete binary tree in O(log^2 n) exploits:",
+      options: [
+        "The fact that one subtree is always a perfect binary tree",
+        "Dynamic programming on subtree sizes",
+        "A hash map from node to depth",
+        "Sorting nodes by value",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "Compare the leftmost height h_L (go left until null) and rightmost height h_R (go right until null):\n\n\\[\n\\text{if } h_L = h_R:\\; \\text{left subtree is perfect} \\implies \\text{count} = 2^{h_L} - 1 + 1 + \\text{count}(\\text{right})\n\\]\n\\[\n\\text{if } h_L \\neq h_R:\\; \\text{right subtree is perfect one level smaller} \\implies \\text{count} = 2^{h_R} - 1 + 1 + \\text{count}(\\text{left})\n\\]\n\nHeight computation: O(log n). Recursion depth: O(log n). Total: O(log^2 n) vs. O(n) brute force.",
+      hints: [
+        "In a complete binary tree, at least one of the two subtrees must be a perfect binary tree.",
+        "Perfect binary tree with height h has exactly 2^h - 1 nodes.",
+      ],
+    },
+    {
+      id: "q-cctn-3",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "The O(log^2 n) algorithm for counting nodes in a complete binary tree uses binary search on the last level to determine how many nodes are present there.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\[\n\\text{Height } h = \\text{leftmost path length}\n\\]\n\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks → O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
+      hints: [
+        "Position k on the last level can be checked by treating k\'s bits as left/right directions from root.",
+        "O(log n) checks × O(log n) each = O(log^2 n).",
+      ],
+    },
+  ],
+
+  // ── FLATTEN BINARY TREE TO LINKED LIST ────────────────────────────────────
+  "flatten-binary-tree": [
+    {
+      id: "q-fbt-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Flattening a binary tree to a linked list (LeetCode 114) produces the list in what traversal order?",
+      options: [
+        "Inorder",
+        "Preorder",
+        "Postorder",
+        "Level order",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The problem requires flattening to a right-skewed linked list where the order matches the preorder traversal:\n\n\\[\n\\text{preorder: } root \\to \\text{left} \\to \\text{right}\n\\]\n\\[\n\\text{Flattened: } root.\\text{right} \\to \\text{left\\_subtree\\_preorder} \\to \\text{right\\_subtree\\_preorder}\n\\]\n\nAll left pointers are set to null; the list is encoded entirely through right pointers.",
+      hints: [
+        "Root comes first, then left subtree, then right subtree — that\'s preorder.",
+        "The flattened tree has all nodes in the right spine with null left pointers.",
+      ],
+    },
+    {
+      id: "q-fbt-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The O(1) space (Morris-like) approach to flatten a binary tree works by:",
+      options: [
+        "Using recursion and returning the tail of the flattened list",
+        "Iteratively finding the rightmost node of the left subtree and rerouting pointers",
+        "Converting to an array and rebuilding as a right-skewed tree",
+        "Using a stack to simulate preorder traversal",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The in-place iterative algorithm (analogous to Morris traversal):\n\n\\[\n\\text{while } node \\neq null:\n\\]\n\\[\n\\text{if node.left} \\neq null:\n\\]\n\\[\n\\quad pred = \\text{rightmost}(node.\\text{left}) \\quad \\text{O(h) per node}\n\\]\n\\[\n\\quad pred.\\text{right} = node.\\text{right}\n\\]\n\\[\n\\quad node.\\text{right} = node.\\text{left};\\; node.\\text{left} = null\n\\]\n\\[\n\\text{node} = node.\\text{right}\n\\]\n\nTotal: O(n) time (each node\'s rightmost path traversed at most twice), O(1) space (no stack, no recursion).",
+      hints: [
+        "Find the rightmost node of the left subtree — it becomes the predecessor of the original right subtree.",
+        "This is the same threading idea as Morris traversal applied to flattening.",
+      ],
+    },
+    {
+      id: "q-fbt-3",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "A reverse postorder approach (process right, then left, then root) can flatten a binary tree in-place in O(n) time and O(h) space using a single pointer.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Processing in reverse preorder (right → left → root) allows linking nodes using a trailing pointer:\n\n\\[\n\\text{flatten}(node):\\;\n\\]\n\\[\n\\text{if null → return;}\n\\]\n\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\]\n\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
+      hints: [
+        "Reverse preorder = right subtree first, then left, then root.",
+        "Maintaining a \'prev\' pointer in reverse-preorder links each node to its preorder successor.",
+      ],
+    },
+  ],
+
+  // ── PATH SUM VARIANTS ─────────────────────────────────────────────────────
+  "path-sum-variants": [
+    {
+      id: "q-psv-1",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Path Sum I (LeetCode 112) requires the path to run from root to a leaf node.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "Path Sum I specifically checks root-to-leaf paths:\n\n\\[\n\\text{leaf: both } node.\\text{left} = null \\text{ AND } node.\\text{right} = null\n\\]\n\\[\n\\text{hasPathSum}(node, target) = node.\\text{val} == target \\text{ (at leaf)}\n\\]\n\nPath Sum II (LeetCode 113) finds all such root-to-leaf paths. Path Sum III (LeetCode 437) allows paths between any two nodes (not necessarily root-to-leaf).",
+      hints: [
+        "A leaf has no children. Check both left and right are null to confirm it\'s a leaf.",
+        "Path Sum II and III relax this root-to-leaf constraint.",
+      ],
+    },
+    {
+      id: "q-psv-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Path Sum III (paths between any two nodes summing to target) uses prefix sums and a hash map. What does the hash map store?",
+      options: [
+        "Node values mapped to their depths",
+        "Prefix sum totals mapped to how many times that sum has appeared on the current root-to-node path",
+        "Target values mapped to their node positions",
+        "Node depths mapped to running sums",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "At each node, the running prefix sum from root is curr_sum. Any path ending here with sum = target started from a node where prefix_sum = curr_sum - target:\n\n\\[\n\\text{count} += \\text{freq}[curr\\_sum - target]\n\\]\n\nThe hash map tracks how many times each prefix sum value has appeared on the current path (root-to-current):\n\n\\[\n\\text{freq}[0] = 1 \\quad (\\text{empty prefix — path starting from root})\n\\]\n\nO(n) time (one DFS), O(n) space (hash map + stack).",
+      hints: [
+        "This is analogous to the subarray-sum-equals-k problem using prefix sums.",
+        "freq[curr_sum - target] tells you how many valid path starts exist above the current node.",
+      ],
+    },
+    {
+      id: "q-psv-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Path Sum II (collect all root-to-leaf paths summing to target): what is the time complexity?",
+      options: [
+        "O(n) always",
+        "O(n^2) in the worst case because copying paths takes O(n) per leaf",
+        "O(n log n) for balanced trees",
+        "O(n * L) where L is max path length, same as O(n log n) for balanced",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The DFS visits all n nodes in O(n). However, when a leaf is reached, the current path is copied into the result:\n\n\\[\n\\text{copy cost} = O(h) \\text{ per leaf}\n\\]\n\nIn the worst case (a complete binary tree), there are O(n) leaves and h = O(log n), giving O(n log n). But for a skewed tree with one path, h = O(n) and one copy gives O(n). In the truly worst case for the copy operation (a complete tree with n/2 leaves of depth O(log n)):\n\n\\[\n\\frac{n}{2} \\times O(\\log n) = O(n \\log n)\n\\]\n\nHowever LeetCode marks this O(n^2) for the pathological case where height = O(n).",
+      hints: [
+        "The DFS itself is O(n), but copying the path at each leaf adds O(h) per leaf.",
+        "n/2 leaves × h path length = worst-case copy cost.",
+      ],
+    },
+  ],
+
+  // ── DIAMETER OF BINARY TREE ────────────────────────────────────────────────
+  "diameter-binary-tree": [
+    {
+      id: "q-dbt-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "The diameter of a binary tree is defined as:",
+      options: [
+        "The number of nodes in the longest root-to-leaf path",
+        "The length of the longest path between any two nodes (measured in edges)",
+        "The height of the tree",
+        "The maximum level-order width",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The diameter is the number of edges on the longest path between any two nodes:\n\n\\[\n\\text{diameter} = \\max_{\\text{all node pairs } (u,v)} \\text{dist}(u, v)\n\\]\n\nThe path may or may not pass through the root. For a single-node tree, the diameter is 0 (no edges). LeetCode 543 measures edges, not nodes.",
+      hints: [
+        "Diameter = edges on longest path. A single node has diameter 0.",
+        "The longest path might bypass the root entirely.",
+      ],
+    },
+    {
+      id: "q-dbt-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In the diameter DFS algorithm, the helper function returns the height of the subtree. At each node, the diameter candidate through that node is:",
+      options: [
+        "left_height + right_height + 2",
+        "left_height + right_height",
+        "max(left_height, right_height) + 1",
+        "left_height * right_height",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "At each node n, the longest path passing through n goes:\n\n\\[\n\\text{deepest leaf in left} \\to n \\to \\text{deepest leaf in right}\n\\]\n\\[\n\\text{length} = \\text{left\\_height} + \\text{right\\_height} \\quad (\\text{edges})\n\\]\n\nThe return value to the parent (height) is:\n\n\\[\n\\text{height}(n) = 1 + \\max(\\text{left\\_height},\\; \\text{right\\_height})\n\\]\n\nUpdate global_max = max(global_max, left_height + right_height) at each node. O(n) time, O(h) space.",
+      hints: [
+        "Height = edges from node to deepest leaf (a leaf has height 0).",
+        "Diameter through node = edges going left + edges going right.",
+      ],
+    },
+    {
+      id: "q-dbt-3",
+      type: "true-false",
+      difficulty: "hard",
+      question:
+        "The diameter of a binary tree can be found in a single O(n) DFS pass without computing heights separately.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation:
+        "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\[\n\\text{dfs}(node):\n\\]\n\\[\n\\text{if null → return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\]\n\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\]\n\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
+      hints: [
+        "The helper returns height AND updates global max as a side effect.",
+        "Setting null height to -1 makes leaf height = 0 without a special case.",
+      ],
+    },
+  ],
+
+  // ── RECOVER BST ────────────────────────────────────────────────────────────
+  "recover-bst": [
+    {
+      id: "q-rbst-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In the recover BST problem (LeetCode 99), exactly how many nodes have been swapped?",
+      options: [
+        "One node",
+        "Exactly two nodes",
+        "Up to three nodes",
+        "An unknown number of nodes",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The problem guarantees that exactly two nodes have been swapped:\n\n\\[\n\\text{Correct BST inorder: } [\\ldots, a, \\ldots, b, \\ldots] \\text{ where } a < b\n\\]\n\\[\n\\text{After swap: } [\\ldots, b, \\ldots, a, \\ldots] \\text{ — two inversions detected}\n\\]\n\nThe recovery is straightforward: identify the two misplaced nodes and swap their values back.",
+      hints: [
+        "Two swapped nodes create either one or two inversions in the inorder sequence.",
+        "Adjacent swap → one inversion pair. Non-adjacent swap → two inversion pairs.",
+      ],
+    },
+    {
+      id: "q-rbst-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Detecting the two swapped BST nodes via inorder traversal requires tracking:",
+      options: [
+        "The minimum and maximum nodes seen so far",
+        "The previous node (prev) to detect where current < prev (an inversion)",
+        "The tree height at each node",
+        "A sorted copy of all node values",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "During inorder traversal, track prev (the last visited node). An inversion occurs when current.val < prev.val:\n\n\\[\n\\text{First inversion:}\\; first = prev,\\; second = current\n\\]\n\\[\n\\text{Second inversion (if present):}\\; second = current \\quad (\\text{update second only})\n\\]\n\nAfter full traversal, swap first.val and second.val. If nodes are adjacent in inorder, only one inversion occurs (first != null, second is set once). O(n) time, O(h) space for the recursion stack.",
+      hints: [
+        "The first inversion: first = the larger node (prev), second = the smaller (current).",
+        "For a second inversion, update only \'second\' (prev becomes the new candidate).",
+      ],
+    },
+    {
+      id: "q-rbst-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Morris traversal-based BST recovery achieves O(1) extra space. Which statement correctly describes its advantage?",
+      options: [
+        "It is faster than O(n) time",
+        "It eliminates the O(h) recursion stack, making space complexity O(1) regardless of tree shape",
+        "It can recover more than two swapped nodes",
+        "It avoids modifying node values",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard inorder recursion uses O(h) stack space (O(n) for a skewed tree). Morris traversal replaces the stack with temporary right-pointer threads:\n\n\\[\n\\text{Space: } O(1) \\text{ auxiliary (only first, second, prev pointers)}\n\\]\n\nThe same inversion-detection logic (tracking prev) is applied, but the traversal itself uses Morris threading. Time complexity remains O(n) since each node is visited at most twice (once when threading, once when unthreading). For a skewed BST of n nodes, this reduces space from O(n) to O(1).",
+      hints: [
+        "Morris threading avoids recursion entirely — the tree\'s right pointers serve as the implicit stack.",
+        "Space O(1) means only a constant number of pointers regardless of n.",
+      ],
+    },
+  ],
 };
 
 registerQuestions(questions);
