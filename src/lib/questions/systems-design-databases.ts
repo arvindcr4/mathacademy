@@ -11,7 +11,7 @@ const questions: Record<string, Question[]> = {
       options: ["Consistency and Availability", "Consistency and Partition Tolerance", "Availability and Partition Tolerance", "All three: Consistency, Availability, and Partition Tolerance"],
       correctAnswer: 1,
       explanation: "CAP theorem states you can only guarantee two of the three. Because network partitions are unavoidable in real distributed systems, partition tolerance (P) is non-negotiable. The real design choice is between Consistency (CP) and Availability (AP). CP systems (e.g., ZooKeeper, HBase) reject requests during a partition to stay consistent; AP systems (e.g., Cassandra, DynamoDB) return potentially stale data to stay available.",
-      hints: ["Network partitions are considered an unavoidable reality in distributed systems.", "Think about what happens when two nodes cannot communicate — must the system reject requests or serve potentially stale data?"],
+      hints: ["Network partitions are considered an unavoidable reality in distributed systems.", "Think about what happens when two nodes cannot communicate - must the system reject requests or serve potentially stale data?"],
     },
     {
       id: "q-sdi-db-2",
@@ -20,8 +20,8 @@ const questions: Record<string, Question[]> = {
       question: "Which of the following databases is classified as an AP system under the CAP theorem?",
       options: ["ZooKeeper", "HBase", "Apache Cassandra", "PostgreSQL (single-node)"],
       correctAnswer: 2,
-      explanation: "Apache Cassandra is an AP system: it prioritizes availability and partition tolerance. During a network partition it continues to accept reads and writes, potentially returning stale data. ZooKeeper and HBase are CP systems — they reject writes to non-quorum nodes to guarantee consistency. PostgreSQL is a single-node RDBMS and the CAP theorem applies to distributed systems.",
-      hints: ["AP systems serve requests even when some nodes are unreachable, accepting the risk of stale reads.", "ZooKeeper is commonly used as a coordination service that needs strong consistency — which category does that suggest?"],
+      explanation: "Apache Cassandra is an AP system: it prioritizes availability and partition tolerance. During a network partition it continues to accept reads and writes, potentially returning stale data. ZooKeeper and HBase are CP systems - they reject writes to non-quorum nodes to guarantee consistency. PostgreSQL is a single-node RDBMS and the CAP theorem applies to distributed systems.",
+      hints: ["AP systems serve requests even when some nodes are unreachable, accepting the risk of stale reads.", "ZooKeeper is commonly used as a coordination service that needs strong consistency - which category does that suggest?"],
     },
     {
       id: "q-sdi-db-3",
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       question: "The PACELC model extends CAP by adding a tradeoff that applies even when the network is healthy (no partition). What is that tradeoff?",
       options: ["Performance vs Correctness", "Latency vs Consistency", "Availability vs Partition Tolerance", "Throughput vs Durability"],
       correctAnswer: 1,
-      explanation: "PACELC (Partition-Availability-Consistency-Else-Latency-Consistency) was proposed by Daniel Abadi. It states: if there is a Partition (P), choose between Availability (A) and Consistency (C); Else (E), when operating normally, choose between Latency (L) and Consistency (C). For example, DynamoDB is PA/EL — it favors availability during partitions and low latency during normal operation, at the cost of consistency in both cases.",
+      explanation: "PACELC (Partition-Availability-Consistency-Else-Latency-Consistency) was proposed by Daniel Abadi. It states: if there is a Partition (P), choose between Availability (A) and Consistency (C); Else (E), when operating normally, choose between Latency (L) and Consistency (C). For example, DynamoDB is PA/EL - it favors availability during partitions and low latency during normal operation, at the cost of consistency in both cases.",
       hints: ["PACELC asks: even on a perfect network, can you always read your own writes instantly without coordination overhead?", "Achieving strong consistency during normal operation requires coordination (e.g., quorum reads), which adds latency."],
     },
     {
@@ -41,7 +41,7 @@ const questions: Record<string, Question[]> = {
       options: ["Linearizability applies to transactions; serializability applies to single operations", "Linearizability applies to single operations with real-time ordering; serializability applies to multi-operation transactions with logical ordering", "Linearizability is weaker than serializability", "They are equivalent; both guarantee the same consistency level"],
       correctAnswer: 1,
       explanation: "Linearizability (also called atomic consistency) is a per-operation guarantee: every operation appears to take effect instantaneously at some point between its invocation and completion, consistent with real-time ordering. Serializability is a per-transaction guarantee: the result of executing concurrent transactions is equivalent to some serial execution of those transactions, but without a real-time constraint. Strict serializability combines both: transactions are serializable AND linearizable, which is the strongest guarantee.",
-      hints: ["Linearizability cares about wall-clock time — an operation that finishes before another starts must appear before it.", "Serializability is about transactions (groups of operations) and their logical ordering, not necessarily real-time."],
+      hints: ["Linearizability cares about wall-clock time - an operation that finishes before another starts must appear before it.", "Serializability is about transactions (groups of operations) and their logical ordering, not necessarily real-time."],
     },
   ],
 
@@ -53,7 +53,7 @@ const questions: Record<string, Question[]> = {
       question: "Which sharding strategy distributes data by applying a hash function to the shard key, producing roughly uniform distribution but making range queries inefficient?",
       options: ["Range-based sharding", "Hash-based sharding", "Directory-based sharding", "Geographic sharding"],
       correctAnswer: 1,
-      explanation: "Hash-based sharding applies a hash function (e.g., MD5, MurmurHash) to the shard key and uses the result (or modulo) to determine the target shard. This distributes data uniformly, avoiding hot spots. The downside: range queries (e.g., users with IDs 1000–2000) must scatter to all shards because adjacent keys hash to different shards. Range-based sharding preserves key ordering, enabling efficient range queries but risking hot spots on monotonically increasing keys (e.g., timestamps).",
+      explanation: "Hash-based sharding applies a hash function (e.g., MD5, MurmurHash) to the shard key and uses the result (or modulo) to determine the target shard. This distributes data uniformly, avoiding hot spots. The downside: range queries (e.g., users with IDs 1000-2000) must scatter to all shards because adjacent keys hash to different shards. Range-based sharding preserves key ordering, enabling efficient range queries but risking hot spots on monotonically increasing keys (e.g., timestamps).",
       hints: ["Think about what happens to the sorted order of keys after applying a hash function.", "If you need to query 'all orders placed this week', hash-based sharding would require hitting every shard."],
     },
     {
@@ -73,8 +73,8 @@ const questions: Record<string, Question[]> = {
       question: "What is the primary problem with using Two-Phase Commit (2PC) for cross-shard transactions?",
       options: ["It requires all shards to use the same database engine", "The coordinator can fail after the prepare phase but before sending commit, leaving participants in a blocking uncertain state", "It does not support rollback", "It cannot handle more than two shards"],
       correctAnswer: 1,
-      explanation: "In 2PC, the coordinator sends a Prepare message to all participants. If they all vote Yes, the coordinator logs the commit decision and sends Commit to each participant. If the coordinator crashes after logging the commit but before all participants receive the Commit message, those participants are stuck in a prepared state — they have locked resources and cannot decide independently. This is the blocking problem of 2PC. Solutions include 3PC (adds a pre-commit phase), Paxos/Raft-based commit, or redesigning to avoid cross-shard transactions using the Saga pattern.",
-      hints: ["Participants in the prepared state have locked rows and are waiting for the coordinator's decision — what happens if the coordinator never responds?", "The Saga pattern avoids 2PC by breaking a distributed transaction into a sequence of local transactions with compensating rollback transactions."],
+      explanation: "In 2PC, the coordinator sends a Prepare message to all participants. If they all vote Yes, the coordinator logs the commit decision and sends Commit to each participant. If the coordinator crashes after logging the commit but before all participants receive the Commit message, those participants are stuck in a prepared state - they have locked resources and cannot decide independently. This is the blocking problem of 2PC. Solutions include 3PC (adds a pre-commit phase), Paxos/Raft-based commit, or redesigning to avoid cross-shard transactions using the Saga pattern.",
+      hints: ["Participants in the prepared state have locked rows and are waiting for the coordinator's decision - what happens if the coordinator never responds?", "The Saga pattern avoids 2PC by breaking a distributed transaction into a sequence of local transactions with compensating rollback transactions."],
     },
     {
       id: "q-sdi-db-8",
@@ -84,7 +84,7 @@ const questions: Record<string, Question[]> = {
       options: ["Stop all writes during migration (maintenance window)", "Double-write to both old and new shards during migration, then switch reads to the new shard", "Use a read replica of the old shard as the new shard", "Delete data from the old shard before copying to the new shard"],
       correctAnswer: 1,
       explanation: "Double-write is the standard online resharding technique: during migration, all writes go to both the old and new shards. Meanwhile, a background job copies existing data from old to new. Once the backfill is complete and the new shard is confirmed consistent, reads are atomically switched to the new shard, and double-writing is stopped. This ensures no writes are lost and reads can seamlessly switch without a maintenance window. Tools like Vitess and AWS DMS use variants of this pattern.",
-      hints: ["A maintenance window (stopping all writes) is the simplest but least available approach — what can be done to keep serving traffic during the move?", "Writing to both shards simultaneously means the new shard is always at most slightly behind the old shard."],
+      hints: ["A maintenance window (stopping all writes) is the simplest but least available approach - what can be done to keep serving traffic during the move?", "Writing to both shards simultaneously means the new shard is always at most slightly behind the old shard."],
     },
   ],
 
@@ -97,7 +97,7 @@ const questions: Record<string, Question[]> = {
       options: ["It ensures replicas never return stale data to any user", "It ensures a user always reads their own recent writes, even when reads are served from replicas", "It guarantees that all replicas are always fully synchronized with the primary", "It prevents the primary from accepting writes during replication lag"],
       correctAnswer: 1,
       explanation: "Replication lag means a replica may not yet have applied recent writes from the primary. If a user writes data and immediately reads from a replica, they might see stale data (not seeing their own write). Read-after-write consistency (also called read-your-writes) is a guarantee that a user will always see their own most recent writes. Implementation: route reads for a user's own data to the primary (or wait for the replica to catch up past the write's LSN/timestamp) for a short window after a write.",
-      hints: ["Imagine posting a comment and immediately refreshing the page — only to not see your own comment.", "The fix doesn't require all users to read from the primary, just users who recently performed a write."],
+      hints: ["Imagine posting a comment and immediately refreshing the page - only to not see your own comment.", "The fix doesn't require all users to read from the primary, just users who recently performed a write."],
     },
     {
       id: "q-sdi-db-10",
@@ -136,11 +136,11 @@ const questions: Record<string, Question[]> = {
       id: "q-sdi-db-13",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "Which ACID property ensures that a transaction either completes fully or has no effect at all — there is no partial update?",
+      question: "Which ACID property ensures that a transaction either completes fully or has no effect at all - there is no partial update?",
       options: ["Consistency", "Isolation", "Durability", "Atomicity"],
       correctAnswer: 3,
-      explanation: "Atomicity means a transaction is treated as an indivisible unit. Either all of its operations succeed and are committed, or — if any operation fails — all changes are rolled back and the database is left as if the transaction never started. This prevents partial updates (e.g., debiting one account without crediting another in a bank transfer). Atomicity is implemented via write-ahead logging (WAL): before any page is modified, the intended change is logged, enabling rollback on failure.",
-      hints: ["Think of 'atom' — the smallest indivisible unit in chemistry. A transaction is indivisible.", "In a bank transfer, both the debit and credit must succeed together, or neither should happen."],
+      explanation: "Atomicity means a transaction is treated as an indivisible unit. Either all of its operations succeed and are committed, or - if any operation fails - all changes are rolled back and the database is left as if the transaction never started. This prevents partial updates (e.g., debiting one account without crediting another in a bank transfer). Atomicity is implemented via write-ahead logging (WAL): before any page is modified, the intended change is logged, enabling rollback on failure.",
+      hints: ["Think of 'atom' - the smallest indivisible unit in chemistry. A transaction is indivisible.", "In a bank transfer, both the debit and credit must succeed together, or neither should happen."],
     },
     {
       id: "q-sdi-db-14",
@@ -149,7 +149,7 @@ const questions: Record<string, Question[]> = {
       question: "Which isolation level prevents dirty reads and non-repeatable reads, but still allows phantom reads?",
       options: ["Read Uncommitted", "Read Committed", "Repeatable Read", "Serializable"],
       correctAnswer: 2,
-      explanation: "Repeatable Read ensures that if you read a row once in a transaction, subsequent reads of the same row return the same data (preventing non-repeatable reads). It also prevents dirty reads (reading uncommitted data). However, it does not lock the set of rows matching a query predicate, so another transaction can INSERT new rows that match your WHERE clause — these 'phantom' rows appear in subsequent range queries within your transaction. Serializable (the highest level) prevents phantoms by locking the predicate range.",
+      explanation: "Repeatable Read ensures that if you read a row once in a transaction, subsequent reads of the same row return the same data (preventing non-repeatable reads). It also prevents dirty reads (reading uncommitted data). However, it does not lock the set of rows matching a query predicate, so another transaction can INSERT new rows that match your WHERE clause - these 'phantom' rows appear in subsequent range queries within your transaction. Serializable (the highest level) prevents phantoms by locking the predicate range.",
       hints: ["A non-repeatable read: you read row X, another transaction updates row X and commits, you read row X again and see different data.", "A phantom read: you query 'SELECT COUNT(*) WHERE salary > 100k', another transaction inserts a high-salary row, you run the same query and get a different count."],
     },
     {
@@ -169,8 +169,8 @@ const questions: Record<string, Question[]> = {
       question: "In Two-Phase Commit (2PC), what is the 'uncertain period' and why is it problematic?",
       options: ["The time between client request and coordinator receiving it, causing latency uncertainty", "The window after a coordinator crashes post-prepare but pre-commit, during which participants have locked resources but cannot safely commit or abort without coordinator recovery", "The time replicas take to catch up after a commit, causing temporary inconsistency", "The delay between issuing a read and receiving a response across shards"],
       correctAnswer: 1,
-      explanation: "In 2PC's prepare phase, each participant votes Yes and durably logs the prepared state (locking the relevant resources). The coordinator then decides Commit or Abort and logs this decision. If the coordinator crashes after its decision log entry but before sending the decision to all participants, those participants are in the uncertain period: they have locked resources, voted Yes, and cannot safely unilaterally commit (risk inconsistency) or abort (might violate atomicity if the coordinator decided Commit). They must wait for the coordinator to recover. This blocking nature is 2PC's fundamental flaw — a slow or crashed coordinator stalls all participants.",
-      hints: ["Participants have already said 'I'm ready to commit' and locked their resources — they can't just give up without risking inconsistency.", "The coordinator's decision is the single point of truth in 2PC, which is why its failure is so disruptive."],
+      explanation: "In 2PC's prepare phase, each participant votes Yes and durably logs the prepared state (locking the relevant resources). The coordinator then decides Commit or Abort and logs this decision. If the coordinator crashes after its decision log entry but before sending the decision to all participants, those participants are in the uncertain period: they have locked resources, voted Yes, and cannot safely unilaterally commit (risk inconsistency) or abort (might violate atomicity if the coordinator decided Commit). They must wait for the coordinator to recover. This blocking nature is 2PC's fundamental flaw - a slow or crashed coordinator stalls all participants.",
+      hints: ["Participants have already said 'I'm ready to commit' and locked their resources - they can't just give up without risking inconsistency.", "The coordinator's decision is the single point of truth in 2PC, which is why its failure is so disruptive."],
     },
   ],
 
@@ -193,7 +193,7 @@ const questions: Record<string, Question[]> = {
       options: ["Cassandra auto-generates query plans, so schema design does not matter", "You design your tables around the specific queries your application will run, denormalizing data and duplicating it across tables if necessary to avoid slow scatter-gather queries", "Cassandra uses a SQL-like query language identical to relational databases", "Column families automatically normalize data to eliminate redundancy"],
       correctAnswer: 1,
       explanation: "Cassandra does not support server-side joins or ad-hoc secondary index queries at scale. The partition key determines which node stores the data, and the clustering key determines sort order within a partition. To efficiently answer a query, the data must be pre-arranged so it lives in a single partition (or a small, known set of partitions). This means you create one table per query pattern, accepting data duplication. For example, to support 'messages by user' and 'messages by room', you maintain two separate tables with the same message data partitioned differently.",
-      hints: ["Cassandra has no server-side joins — all joins must happen in the application layer or be pre-joined at write time.", "If you need to look up orders by user ID and also by order date, you may need two separate Cassandra tables."],
+      hints: ["Cassandra has no server-side joins - all joins must happen in the application layer or be pre-joined at write time.", "If you need to look up orders by user ID and also by order date, you may need two separate Cassandra tables."],
     },
     {
       id: "q-sdi-db-19",
@@ -201,8 +201,8 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Key-value stores like Redis natively support efficient secondary index queries (e.g., 'find all users with age > 30') without any additional infrastructure.",
       correctAnswer: "False",
-      explanation: "False. Key-value stores provide O(1) get/put operations by primary key only. There is no built-in mechanism to query by arbitrary attributes. To support secondary index queries in Redis, you must manually maintain additional data structures (e.g., sorted sets for range queries) or use an external search layer like Elasticsearch. DynamoDB similarly requires Global Secondary Indexes (GSIs), which are separate index tables you explicitly create and pay for. This is a fundamental limitation of the key-value model — the entire design is optimized for single-key lookup.",
-      hints: ["The defining feature of a key-value store is O(1) lookup by key. What happens to that guarantee if you need to scan by a non-key attribute?", "Think about how Redis implements sorted sets — those are an explicit data structure you manage, not automatic secondary indexing."],
+      explanation: "False. Key-value stores provide O(1) get/put operations by primary key only. There is no built-in mechanism to query by arbitrary attributes. To support secondary index queries in Redis, you must manually maintain additional data structures (e.g., sorted sets for range queries) or use an external search layer like Elasticsearch. DynamoDB similarly requires Global Secondary Indexes (GSIs), which are separate index tables you explicitly create and pay for. This is a fundamental limitation of the key-value model - the entire design is optimized for single-key lookup.",
+      hints: ["The defining feature of a key-value store is O(1) lookup by key. What happens to that guarantee if you need to scan by a non-key attribute?", "Think about how Redis implements sorted sets - those are an explicit data structure you manage, not automatic secondary indexing."],
     },
     {
       id: "q-sdi-db-20",
@@ -212,7 +212,7 @@ const questions: Record<string, Question[]> = {
       options: ["Graph databases use faster hardware than relational databases", "Graph databases store edges as direct physical pointers, making each hop O(1) regardless of graph size, while SQL joins require O(n) index lookups per hop", "Graph databases replicate data more aggressively, reducing read latency", "Graph databases avoid network I/O by storing everything in RAM"],
       correctAnswer: 1,
       explanation: "In a relational database, a multi-hop traversal (e.g., 3 degrees of separation) requires multiple JOIN operations. Each JOIN scans an index of size O(n) where n is the number of edges/rows in the relationship table. With millions of users, these joins become very expensive. Graph databases use index-free adjacency: each node directly stores pointers to its neighboring nodes. Traversing one hop follows a pointer in O(1) time regardless of total graph size. The cost of traversal scales with the number of edges traversed, not the total size of the graph, making graph databases orders of magnitude faster for connected data queries.",
-      hints: ["In SQL, finding 'friends of friends' means: SELECT friend_id FROM friendships WHERE user_id IN (SELECT friend_id FROM friendships WHERE user_id = ?) — two full index scans.", "Graph databases store the adjacency list directly on each node, so following an edge is a pointer dereference, not an index lookup."],
+      hints: ["In SQL, finding 'friends of friends' means: SELECT friend_id FROM friendships WHERE user_id IN (SELECT friend_id FROM friendships WHERE user_id = ?) - two full index scans.", "Graph databases store the adjacency list directly on each node, so following an edge is a pointer dereference, not an index lookup."],
     },
   ],
 
@@ -224,8 +224,8 @@ const questions: Record<string, Question[]> = {
       question: "B-tree storage engines (used in PostgreSQL and MySQL InnoDB) update data in-place. What problem does this cause under heavy random write workloads?",
       options: ["B-trees cannot support transactions under heavy writes", "In-place updates cause frequent page splits and random I/O, as modified pages must be flushed to their fixed disk locations, which is expensive on spinning disks and causes write amplification", "B-trees require a full table scan for every write", "B-trees cannot store variable-length values"],
       correctAnswer: 1,
-      explanation: "B-trees maintain sorted pages on disk. When a page is full and a new key must be inserted, the page splits into two, and the parent page must be updated — potentially propagating up the tree. These page splits cause random writes to multiple disk locations. On spinning HDDs, random I/O is orders of magnitude slower than sequential I/O. Even on SSDs, frequent in-place updates cause write amplification (each logical write triggers multiple physical writes due to the SSD's flash translation layer and garbage collection). LSM trees address this by converting random writes to sequential writes via the MemTable and SSTable compaction pipeline.",
-      hints: ["Consider the difference between writing to a sequential log vs. updating a specific location in a large sorted file.", "Page splits require writing to multiple disk pages — the split page, the new page, and the parent page pointer update."],
+      explanation: "B-trees maintain sorted pages on disk. When a page is full and a new key must be inserted, the page splits into two, and the parent page must be updated - potentially propagating up the tree. These page splits cause random writes to multiple disk locations. On spinning HDDs, random I/O is orders of magnitude slower than sequential I/O. Even on SSDs, frequent in-place updates cause write amplification (each logical write triggers multiple physical writes due to the SSD's flash translation layer and garbage collection). LSM trees address this by converting random writes to sequential writes via the MemTable and SSTable compaction pipeline.",
+      hints: ["Consider the difference between writing to a sequential log vs. updating a specific location in a large sorted file.", "Page splits require writing to multiple disk pages - the split page, the new page, and the parent page pointer update."],
     },
     {
       id: "q-sdi-db-22",
@@ -234,8 +234,8 @@ const questions: Record<string, Question[]> = {
       question: "In an LSM-tree storage engine (e.g., RocksDB, Cassandra), what is the role of a Bloom filter?",
       options: ["A Bloom filter compresses SSTables to reduce disk usage", "A Bloom filter quickly determines whether a key is definitely NOT in a given SSTable, avoiding unnecessary disk reads during lookups", "A Bloom filter sorts keys within an SSTable for binary search", "A Bloom filter tracks which keys have been deleted (tombstones)"],
       correctAnswer: 1,
-      explanation: "LSM trees store data in multiple levels of SSTables on disk. A point lookup for a key must check the MemTable (in memory) and then potentially each SSTable from newest to oldest — this is read amplification. Bloom filters solve this: each SSTable has an associated Bloom filter (a probabilistic data structure) in memory. Before reading an SSTable from disk, the engine checks its Bloom filter. A negative result (key definitely not present) allows skipping the SSTable entirely with no disk I/O. A positive result (key might be present) triggers an actual disk read. Bloom filters have zero false negatives but a small false positive rate, dramatically reducing read amplification.",
-      hints: ["LSM trees have great write performance but poor read performance — you might need to check many SSTables for one key.", "A Bloom filter can tell you 'this key is definitely not here' with 100% accuracy, saving a disk read."],
+      explanation: "LSM trees store data in multiple levels of SSTables on disk. A point lookup for a key must check the MemTable (in memory) and then potentially each SSTable from newest to oldest - this is read amplification. Bloom filters solve this: each SSTable has an associated Bloom filter (a probabilistic data structure) in memory. Before reading an SSTable from disk, the engine checks its Bloom filter. A negative result (key definitely not present) allows skipping the SSTable entirely with no disk I/O. A positive result (key might be present) triggers an actual disk read. Bloom filters have zero false negatives but a small false positive rate, dramatically reducing read amplification.",
+      hints: ["LSM trees have great write performance but poor read performance - you might need to check many SSTables for one key.", "A Bloom filter can tell you 'this key is definitely not here' with 100% accuracy, saving a disk read."],
     },
     {
       id: "q-sdi-db-23",
@@ -245,7 +245,7 @@ const questions: Record<string, Question[]> = {
       options: ["Write amplification is the ratio of bytes written to disk vs bytes written by the application; LSM trees have high write amplification because compaction rewrites data multiple times as SSTables are merged across levels", "Write amplification means a single client write triggers writes to multiple replicas; LSM trees replicate more aggressively", "Write amplification refers to the WAL log size; LSM trees write to WAL more frequently than B-trees", "Write amplification is only relevant for SSDs and does not apply to cloud storage"],
       correctAnswer: 0,
       explanation: "Write amplification (WA) is the ratio of actual bytes written to disk divided by bytes written by the application. In LSM trees, data flows through multiple levels (L0, L1, L2, ...). Each time a level's size threshold is exceeded, the engine compacts (merges and rewrites) SSTables to the next level. A single key may be rewritten during compaction at each level it passes through. With 10x size ratio per level and 4 levels, a key might be written up to 10-40 times total. This wears out SSDs faster and consumes I/O bandwidth. Tuning compaction strategy (Leveled vs Size-Tiered) trades off write amplification against read amplification and space amplification.",
-      hints: ["In a leveled compaction with 4 levels, data may be rewritten once per level as it cascades down — how many total writes does that represent?", "B-trees have write amplification too (page splits, WAL), but LSM compaction tends to be more severe for write-heavy workloads."],
+      hints: ["In a leveled compaction with 4 levels, data may be rewritten once per level as it cascades down - how many total writes does that represent?", "B-trees have write amplification too (page splits, WAL), but LSM compaction tends to be more severe for write-heavy workloads."],
     },
     {
       id: "q-sdi-db-24",
@@ -254,8 +254,8 @@ const questions: Record<string, Question[]> = {
       question: "Why is column-oriented storage (e.g., Parquet, Redshift) well-suited for OLAP but poor for OLTP workloads?",
       options: ["Column stores are slower to compress data than row stores", "OLAP queries aggregate a few columns across millions of rows (column scans are efficient); OLTP operations access all columns of specific rows (column stores must read from many separate column files per row)", "Column stores do not support SQL queries", "Column stores cannot handle concurrent writes from multiple users"],
       correctAnswer: 1,
-      explanation: "Column-oriented storage stores each column's values contiguously on disk. For OLAP queries like 'SUM(revenue) WHERE region = US', only the revenue and region columns need to be read — massive I/O savings vs reading entire rows. Columns of the same type also compress extremely well (10-50x), enabling SIMD vectorized operations directly on compressed data. For OLTP, each individual row access (e.g., fetch one customer record) requires reading from N separate column files and reconstructing the row — far more I/O than a row-store which stores all columns together. Row stores also support efficient single-row updates; column stores typically batch-load and compress, making individual row mutations expensive.",
-      hints: ["An OLAP query on 100 columns but only needing 3 columns — how much I/O does each storage model require?", "OLTP workloads frequently update individual rows; how does modifying one value in a column-oriented store compare to a row-oriented store?"],
+      explanation: "Column-oriented storage stores each column's values contiguously on disk. For OLAP queries like 'SUM(revenue) WHERE region = US', only the revenue and region columns need to be read - massive I/O savings vs reading entire rows. Columns of the same type also compress extremely well (10-50x), enabling SIMD vectorized operations directly on compressed data. For OLTP, each individual row access (e.g., fetch one customer record) requires reading from N separate column files and reconstructing the row - far more I/O than a row-store which stores all columns together. Row stores also support efficient single-row updates; column stores typically batch-load and compress, making individual row mutations expensive.",
+      hints: ["An OLAP query on 100 columns but only needing 3 columns - how much I/O does each storage model require?", "OLTP workloads frequently update individual rows; how does modifying one value in a column-oriented store compare to a row-oriented store?"],
     },
   ],
 
@@ -277,8 +277,8 @@ const questions: Record<string, Question[]> = {
       question: "A composite index exists on (country, city, last_name). Which of the following queries can use this index efficiently via an index seek (not a full index scan)?",
       options: ["WHERE city = 'London'", "WHERE last_name = 'Smith'", "WHERE country = 'UK' AND city = 'London'", "WHERE city = 'London' AND last_name = 'Smith'"],
       correctAnswer: 2,
-      explanation: "Composite indexes are sorted by columns left to right: first by country, then by city within each country, then by last_name within each city. The 'leftmost prefix rule' states: a query can use an index prefix if it provides equality conditions on a leading subset of the indexed columns. WHERE country = 'UK' AND city = 'London' matches the first two columns and enables an efficient index seek. WHERE city = 'London' cannot use the index for a seek because city is not the leading column — the index is not sorted by city alone. WHERE last_name = 'Smith' similarly skips over country and city. WHERE city AND last_name skips the leading country column.",
-      hints: ["Think of the composite index as a phone book sorted first by last name, then first name — can you efficiently find all entries with a specific first name without knowing the last name?", "The leftmost prefix rule: you can use columns (a), (a, b), or (a, b, c) but not (b), (c), or (b, c) alone."],
+      explanation: "Composite indexes are sorted by columns left to right: first by country, then by city within each country, then by last_name within each city. The 'leftmost prefix rule' states: a query can use an index prefix if it provides equality conditions on a leading subset of the indexed columns. WHERE country = 'UK' AND city = 'London' matches the first two columns and enables an efficient index seek. WHERE city = 'London' cannot use the index for a seek because city is not the leading column - the index is not sorted by city alone. WHERE last_name = 'Smith' similarly skips over country and city. WHERE city AND last_name skips the leading country column.",
+      hints: ["Think of the composite index as a phone book sorted first by last name, then first name - can you efficiently find all entries with a specific first name without knowing the last name?", "The leftmost prefix rule: you can use columns (a), (a, b), or (a, b, c) but not (b), (c), or (b, c) alone."],
     },
     {
       id: "q-sdi-db-27",
@@ -287,7 +287,7 @@ const questions: Record<string, Question[]> = {
       question: "A covering index (index-only scan) eliminates the need to access the main table heap for queries where all needed columns are included in the index.",
       correctAnswer: "True",
       explanation: "True. A covering index includes all columns referenced by a query (both in WHERE clauses and SELECT projections). When the query planner recognizes this, it performs an index-only scan: it reads the required data directly from the index pages without looking up the corresponding heap (table) pages. This can dramatically reduce I/O, especially for queries that touch a small fraction of columns on a large table. Example: CREATE INDEX ON orders (user_id, created_at, amount) covers SELECT amount FROM orders WHERE user_id = 42 AND created_at > '2024-01-01' entirely without heap access.",
-      hints: ["If the index already contains everything the query needs, why would the database bother reading the original table?", "The 'heap' in PostgreSQL refers to the main table storage — index-only scans skip this entirely when possible."],
+      hints: ["If the index already contains everything the query needs, why would the database bother reading the original table?", "The 'heap' in PostgreSQL refers to the main table storage - index-only scans skip this entirely when possible."],
     },
     {
       id: "q-sdi-db-28",
@@ -297,7 +297,7 @@ const questions: Record<string, Question[]> = {
       options: ["More indexes slow down SELECT queries due to index contention", "Every INSERT, UPDATE, or DELETE must update all indexes on the table, increasing write latency and I/O proportionally to the number of indexes", "Indexes on write-heavy tables automatically become corrupted over time", "Too many indexes cause the query planner to choose the wrong index"],
       correctAnswer: 1,
       explanation: "Every index is a separate data structure (B-tree or hash table) that the database maintains in sync with the base table. When a row is inserted, every index on that table must be updated to include the new key. When a row is updated, any index whose indexed column changed must update the old and new key entries. When a row is deleted, all indexes must remove the key. For write-heavy tables (e.g., a high-volume event log), having 10 indexes means each write triggers up to 10 additional index update operations. The general rule of thumb: keep fewer than 5 indexes on write-heavy OLTP tables; OLAP tables with batch-loaded read-only data can have many indexes.",
-      hints: ["Think of maintaining a physical book's index — every time you add a new entry to the book, you must update the index too.", "If a table has 8 indexes and you insert 1 million rows, how many index entries are written?"],
+      hints: ["Think of maintaining a physical book's index - every time you add a new entry to the book, you must update the index too.", "If a table has 8 indexes and you insert 1 million rows, how many index entries are written?"],
     },
   ],
 
@@ -319,8 +319,8 @@ const questions: Record<string, Question[]> = {
       question: "Why is partitioning time-series data by time range (e.g., one partition per day or week) particularly effective for time-series query performance?",
       options: ["Time-range partitioning automatically replicates data to multiple nodes", "Time-series queries almost always include a time range filter, so the query engine can skip entire partitions outside the range; recent partitions fit in memory and old partitions can be independently compressed or archived", "Time-range partitioning enables hash-based sharding by timestamp", "Time-range partitioning prevents write hotspots by distributing writes across all partitions equally"],
       correctAnswer: 1,
-      explanation: "Time-series workloads have highly predictable query patterns: almost every query includes a time range filter (e.g., 'metrics from the last hour'). Partitioning by time range means each partition contains data for a specific window (e.g., one day). The query planner performs partition pruning: it reads partition metadata and skips all partitions whose time range does not overlap with the query's filter — eliminating most partitions from consideration. Additionally, recent partitions (frequently queried) fit in the OS page cache (effectively in memory), while old partitions can be compressed aggressively and tiered to cheaper storage. TimescaleDB calls these partitions 'chunks' and manages them automatically.",
-      hints: ["If you always query 'data from the last 24 hours', and each partition holds exactly 24 hours of data, how many partitions does the query need to read?", "Old partitions are rarely queried and never modified — what storage optimizations become possible for immutable, infrequently-accessed data?"],
+      explanation: "Time-series workloads have highly predictable query patterns: almost every query includes a time range filter (e.g., 'metrics from the last hour'). Partitioning by time range means each partition contains data for a specific window (e.g., one day). The query planner performs partition pruning: it reads partition metadata and skips all partitions whose time range does not overlap with the query's filter - eliminating most partitions from consideration. Additionally, recent partitions (frequently queried) fit in the OS page cache (effectively in memory), while old partitions can be compressed aggressively and tiered to cheaper storage. TimescaleDB calls these partitions 'chunks' and manages them automatically.",
+      hints: ["If you always query 'data from the last 24 hours', and each partition holds exactly 24 hours of data, how many partitions does the query need to read?", "Old partitions are rarely queried and never modified - what storage optimizations become possible for immutable, infrequently-accessed data?"],
     },
   ],
 };

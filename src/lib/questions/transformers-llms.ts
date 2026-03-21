@@ -39,7 +39,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The full attention score matrix $\\mathbf{S} \\in \\mathbb{R}^{n \\times n}$ has one entry for every ordered pair $(i, j)$ of positions. Computing each entry requires one dot product of two $d_k$-dimensional vectors:\n\\[S_{ij} = \\mathbf{q}_i \\cdot \\mathbf{k}_j = \\sum_{t=1}^{d_k} q_{it} k_{jt}.\\]\nEach dot product involves $d_k$ multiply-add operations, but the question asks for the number of **scalar dot products** (the number of $(i, j)$ pairs, i.e., the number of entries in the matrix).\n\nAs d2l.ai §11.6.2 notes, self-attention has $\\mathcal{O}(n^2 \\cdot d_k)$ computational complexity and $\\mathcal{O}(n^2)$ memory complexity. For $n = 512$: the attention matrix alone stores $262{,}144$ entries, requiring $262{,}144 \\times 64 \\approx 16.8$ million scalar operations for the full matrix multiplication $\\mathbf{Q}\\mathbf{K}^\\top$.",
       hints: [
-        "The attention score matrix $\\mathbf{S} = \\mathbf{Q}\\mathbf{K}^\\top$ has shape $(n, n)$. Each entry $S_{ij}$ is one dot product — so there are $n^2$ entries and $n^2$ dot products.",
+        "The attention score matrix $\\mathbf{S} = \\mathbf{Q}\\mathbf{K}^\\top$ has shape $(n, n)$. Each entry $S_{ij}$ is one dot product - so there are $n^2$ entries and $n^2$ dot products.",
         "At FP16 (2 bytes/entry), storing $\\mathbf{S}$ requires $512^2 \\times 2 \\approx 0.5$ MB per attention layer.",
       ],
     },
@@ -48,13 +48,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "According to d2l.ai §11.6.2's comparison of CNN, RNN, and self-attention, self-attention achieves O(1) maximum path length between any two positions — a key advantage over RNNs where path length is O(n).",
+        "According to d2l.ai §11.6.2's comparison of CNN, RNN, and self-attention, self-attention achieves O(1) maximum path length between any two positions - a key advantage over RNNs where path length is O(n).",
       correctAnswer: "True",
       explanation:
-        "D2l.ai \\S 11.6.2 compares path lengths formally:\n\nRNNs: to communicate from position $i$ to position $j$ where $j > i$, the hidden state at position $j$ depends on the hidden state at $j-1$, which depends on $j-2$, and so on — requiring $j - i = \\mathcal{O}(n)$ sequential steps. Information must traverse the full chain.\n\nSelf-attention: every query $\\mathbf{q}_i$ attends directly to every key $\\mathbf{k}_j$ via $\\mathbf{q}_i \\cdot \\mathbf{k}_j$, producing attention weights $\\alpha_{ij}$ in a single parallel operation. The maximum path between any two positions is therefore $\\mathcal{O}(1)$. This direct connectivity also means gradients from any position can flow to any other position in one step, preventing vanishing gradients that plague deep RNNs.",
+        "D2l.ai \\S 11.6.2 compares path lengths formally:\n\nRNNs: to communicate from position $i$ to position $j$ where $j > i$, the hidden state at position $j$ depends on the hidden state at $j-1$, which depends on $j-2$, and so on - requiring $j - i = \\mathcal{O}(n)$ sequential steps. Information must traverse the full chain.\n\nSelf-attention: every query $\\mathbf{q}_i$ attends directly to every key $\\mathbf{k}_j$ via $\\mathbf{q}_i \\cdot \\mathbf{k}_j$, producing attention weights $\\alpha_{ij}$ in a single parallel operation. The maximum path between any two positions is therefore $\\mathcal{O}(1)$. This direct connectivity also means gradients from any position can flow to any other position in one step, preventing vanishing gradients that plague deep RNNs.",
       hints: [
         "In an RNN, to connect position 1 to position 512, information must traverse 511 recurrent steps.",
-        "Self-attention creates direct edges between all position pairs in one matrix multiplication — no sequential propagation needed.",
+        "Self-attention creates direct edges between all position pairs in one matrix multiplication - no sequential propagation needed.",
       ],
     },
   ],
@@ -68,17 +68,17 @@ const questions: Record<string, Question[]> = {
         "A transformer uses $d_\\text{model} = 512$ with $h = 8$ attention heads. Each head projects to $d_k = d_\\text{model}/h = 64$ dimensions for queries and keys, and $d_v = 64$ for values. What is the key reason multi-head attention keeps total compute comparable to single-head attention of dimension 512?",
       options: [
         "$d_k = 512$; total compute is 8\\times higher than single-head because 8 heads run in parallel",
-        "$d_k = 512/8 = 64$; total compute is comparable because $h$ heads of dimension $d_\\text{model}/h$ each require $\\mathcal{O}(n^2 \\cdot d_\\text{model}/h)$ FLOPs, giving total $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ — same as single-head",
+        "$d_k = 512/8 = 64$; total compute is comparable because $h$ heads of dimension $d_\\text{model}/h$ each require $\\mathcal{O}(n^2 \\cdot d_\\text{model}/h)$ FLOPs, giving total $\\mathcal{O}(n^2 \\cdot d_\\text{model})$ - same as single-head",
         "$d_k = 8$; heads use tiny projections, making compute negligible",
         "$d_k = 512$; all heads share the same $\\mathbf{W}^Q, \\mathbf{W}^K, \\mathbf{W}^V$ matrices",
       ],
       correctAnswer: 1,
       explanation:
-        "Each head $i$ performs attention in a $d_k$-dimensional subspace:\n\\[\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^Q, \\mathbf{K}\\mathbf{W}_i^K, \\mathbf{V}\\mathbf{W}_i^V\\right),\\]\nrequiring $\\mathcal{O}(n^2 \\cdot d_k)$ FLOPs. With $h$ heads in parallel:\n\\[\\text{total FLOPs} = h \\times \\mathcal{O}(n^2 \\cdot d_k) = \\mathcal{O}\\bigl(n^2 \\cdot \\underbrace{h \\cdot d_k}_{=d_\\text{model}}\\bigr) = \\mathcal{O}(n^2 \\cdot d_\\text{model}).\\]\nAs \"Attention is All You Need\" specifies (d2l.ai §11.5), this equals the FLOPs of a single attention head with dimension $d_\\text{model}$ — the per-head dimension reduction exactly compensates for having $h$ heads. Total projection parameters: $h \\times (d_\\text{model} \\times d_k) = d_\\text{model} \\times (h \\cdot d_k) = d_\\text{model}^2$ — same as single-head.",
+        "Each head $i$ performs attention in a $d_k$-dimensional subspace:\n\\[\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^Q, \\mathbf{K}\\mathbf{W}_i^K, \\mathbf{V}\\mathbf{W}_i^V\\right),\\]\nrequiring $\\mathcal{O}(n^2 \\cdot d_k)$ FLOPs. With $h$ heads in parallel:\n\\[\\text{total FLOPs} = h \\times \\mathcal{O}(n^2 \\cdot d_k) = \\mathcal{O}\\bigl(n^2 \\cdot \\underbrace{h \\cdot d_k}_{=d_\\text{model}}\\bigr) = \\mathcal{O}(n^2 \\cdot d_\\text{model}).\\]\nAs \"Attention is All You Need\" specifies (d2l.ai §11.5), this equals the FLOPs of a single attention head with dimension $d_\\text{model}$ - the per-head dimension reduction exactly compensates for having $h$ heads. Total projection parameters: $h \\times (d_\\text{model} \\times d_k) = d_\\text{model} \\times (h \\cdot d_k) = d_\\text{model}^2$ - same as single-head.",
       hints: [
         "Compute per head: $\\mathcal{O}(n^2 \\cdot d_k)$. With $h$ heads: $h \\times \\mathcal{O}(n^2 \\cdot d_k) = \\mathcal{O}(n^2 \\cdot d_\\text{model})$.",
-        "Parameter count: each head needs $\\mathbf{W}_i^Q, \\mathbf{W}_i^K, \\mathbf{W}_i^V \\in \\mathbb{R}^{d_\\text{model} \\times d_k}$. Total: $3h d_\\text{model} d_k = 3 d_\\text{model}^2$ — same as 3 $d_\\text{model} \\times d_\\text{model}$ projections for single-head.",
-        "The representational benefit of multiple heads is \"free\" in terms of compute — the dimension reduction exactly cancels the multiplicity.",
+        "Parameter count: each head needs $\\mathbf{W}_i^Q, \\mathbf{W}_i^K, \\mathbf{W}_i^V \\in \\mathbb{R}^{d_\\text{model} \\times d_k}$. Total: $3h d_\\text{model} d_k = 3 d_\\text{model}^2$ - same as 3 $d_\\text{model} \\times d_\\text{model}$ projections for single-head.",
+        "The representational benefit of multiple heads is \"free\" in terms of compute - the dimension reduction exactly cancels the multiplicity.",
       ],
     },
     {
@@ -92,7 +92,7 @@ const questions: Record<string, Question[]> = {
         "D2l.ai \\S 11.5 defines the multi-head attention output as:\n\\[\n\\text{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)\\,\\mathbf{W}^\\text{O},\n\\]\nwhere each $\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{K}\\mathbf{W}_i^\\mathbf{K}, \\mathbf{V}\\mathbf{W}_i^\\mathbf{V}\\right)$. The concatenation $\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)$ produces a vector of length $h \\times d_v = h \\times (d_\\text{model}/h) = d_\\text{model}$. The weight matrix $\\mathbf{W}^\\text{O} \\in \\mathbb{R}^{d_\\text{model} \\times d_\\text{model}}$ then linearly combines the head outputs into a single $d_\\text{model}$-dimensional vector. Without $\\mathbf{W}^\\text{O}$, no information would flow between heads after concatenation, leaving each head's representation isolated.",
       hints: [
         "Concatenation produces $h \\times d_v = d_\\text{model}$ dimensions; $\\mathbf{W}^\\text{O}$ linearly combines them back to $d_\\text{model}$.",
-        "If $\\mathbf{W}^\\text{O}$ were omitted, each head would be independent — there would be no learned interaction between heads in the output.",
+        "If $\\mathbf{W}^\\text{O}$ were omitted, each head would be independent - there would be no learned interaction between heads in the output.",
       ],
     },
     {
@@ -100,7 +100,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Empirical analysis of BERT\'s attention heads (Clark et al., 2019) found that different heads specialize in distinct syntactic and semantic patterns. Which finding best explains why 8–16 heads outperform 1 head of equal total compute?",
+        "Empirical analysis of BERT\'s attention heads (Clark et al., 2019) found that different heads specialize in distinct syntactic and semantic patterns. Which finding best explains why 8-16 heads outperform 1 head of equal total compute?",
       options: [
         "More heads always produce lower training loss regardless of what they learn",
         "Different heads can capture different relationship types simultaneously (e.g., one head tracks subject-verb agreement, another tracks coreference), combining complementary representations",
@@ -109,10 +109,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-head attention\'s representational power comes from subspace diversity. Each head $i$ has its own learned projections $\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{W}_i^\\mathbf{K}, \\mathbf{W}_i^\\mathbf{V}$, mapping $\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}$ into different $d_k$-dimensional subspaces where it learns distinct attention patterns.\n\nClark et al. (2019) found that different heads specialize: some heads track syntactic dependencies (subject-verb agreement), others capture coreference chains, others attend broadly across the sequence. These specializations are complementary — combining them yields richer representation than any single head.\n\nIf all heads learned identical projections, multi-head attention would collapse to single-head attention: $\\text{Concat}(\\text{head}, \\ldots, \\text{head})\\mathbf{W}^\\text{O}$ with identical heads is equivalent to one head scaled by $h$. The \"free\" representational benefit comes from diversity in learned subspaces, not from multiplicity alone.",
+        "Multi-head attention\'s representational power comes from subspace diversity. Each head $i$ has its own learned projections $\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{W}_i^\\mathbf{K}, \\mathbf{W}_i^\\mathbf{V}$, mapping $\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}$ into different $d_k$-dimensional subspaces where it learns distinct attention patterns.\n\nClark et al. (2019) found that different heads specialize: some heads track syntactic dependencies (subject-verb agreement), others capture coreference chains, others attend broadly across the sequence. These specializations are complementary - combining them yields richer representation than any single head.\n\nIf all heads learned identical projections, multi-head attention would collapse to single-head attention: $\\text{Concat}(\\text{head}, \\ldots, \\text{head})\\mathbf{W}^\\text{O}$ with identical heads is equivalent to one head scaled by $h$. The \"free\" representational benefit comes from diversity in learned subspaces, not from multiplicity alone.",
       hints: [
         "If all $h$ heads learned identical projections, $\\text{Concat}(\\text{head}, \\ldots, \\text{head})\\mathbf{W}^\\text{O}$ would be equivalent to a single head scaled by $h$.",
-        "Clark et al. (2019) found different BERT heads specialize: some track subject-verb agreement, others track coreference — complementary patterns combined by $\\mathbf{W}^\\text{O}$.",
+        "Clark et al. (2019) found different BERT heads specialize: some track subject-verb agreement, others track coreference - complementary patterns combined by $\\mathbf{W}^\\text{O}$.",
       ],
     },
   ],
@@ -132,10 +132,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "As shown in d2l.ai \\S 11.6.3, the sinusoidal positional encoding is defined dimension-by-dimension:\n\\[\np_{i,2j} = \\sin\\!\\left(\\frac{i}{10000^{2j/d}}\\right),\\quad\np_{i,2j+1} = \\cos\\!\\left(\\frac{i}{10000^{2j/d}}\\right).\n\\]\nAt position $i = 0$, the argument of both $\\sin$ and $\\cos$ is always 0 regardless of $j$. Therefore:\n\\[\np_{0,2j} = \\sin(0) = 0 \\quad \\text{for all even dimensions},\\]\np_{0,2j+1} = \\cos(0) = 1 \\quad \\text{for all odd dimensions}.\n\\]\nThis gives the position-0 encoding vector $\\mathbf{p}_0 = [0, 1, 0, 1, 0, 1, \\ldots]$ — a unique binary signature that differs from every other position's encoding.",
+        "As shown in d2l.ai \\S 11.6.3, the sinusoidal positional encoding is defined dimension-by-dimension:\n\\[\np_{i,2j} = \\sin\\!\\left(\\frac{i}{10000^{2j/d}}\\right),\\quad\np_{i,2j+1} = \\cos\\!\\left(\\frac{i}{10000^{2j/d}}\\right).\n\\]\nAt position $i = 0$, the argument of both $\\sin$ and $\\cos$ is always 0 regardless of $j$. Therefore:\n\\[\np_{0,2j} = \\sin(0) = 0 \\quad \\text{for all even dimensions},\\]\np_{0,2j+1} = \\cos(0) = 1 \\quad \\text{for all odd dimensions}.\n\\]\nThis gives the position-0 encoding vector $\\mathbf{p}_0 = [0, 1, 0, 1, 0, 1, \\ldots]$ - a unique binary signature that differs from every other position's encoding.",
       hints: [
         "At $i = 0$: the argument $i/10000^{2j/d} = 0$ for every dimension $j$, so $\\sin(0) = 0$ and $\\cos(0) = 1$ for all $j$.",
-        "The result is the binary vector $[0, 1, 0, 1, \\ldots]$ — a distinctive signature for position 0 unlike any other position.",
+        "The result is the binary vector $[0, 1, 0, 1, \\ldots]$ - a distinctive signature for position 0 unlike any other position.",
       ],
     },
     {
@@ -146,16 +146,16 @@ const questions: Record<string, Question[]> = {
         "What property of sinusoidal positional encodings (d2l.ai §11.6.3) makes them theoretically suitable for generalizing to sequences longer than seen during training?",
       options: [
         "The encoding values are always between -1 and 1, preventing numerical overflow",
-        "The sinusoidal functions are deterministic — positions beyond the training length have well-defined encodings computed from the same formula, unlike learned position embeddings",
+        "The sinusoidal functions are deterministic - positions beyond the training length have well-defined encodings computed from the same formula, unlike learned position embeddings",
         "Higher-frequency components in later dimensions capture long-range dependencies",
         "Sinusoidal encodings are orthogonal across all positions, ensuring no information overlap",
       ],
       correctAnswer: 1,
       explanation:
-        "D2l.ai \\S 11.6.3 notes that sinusoidal encodings are fixed, not learned — the formula applies to any position $i$, including $i > \\text{training\\_length}$. By contrast, learned position embeddings have no defined representation for unseen positions: a lookup table indexed by position has no entry for positions it never encountered during training. The sinusoidal formula produces a valid encoding vector for any integer position without any training, making it theoretically generalizable to longer sequences.",
+        "D2l.ai \\S 11.6.3 notes that sinusoidal encodings are fixed, not learned - the formula applies to any position $i$, including $i > \\text{training\\_length}$. By contrast, learned position embeddings have no defined representation for unseen positions: a lookup table indexed by position has no entry for positions it never encountered during training. The sinusoidal formula produces a valid encoding vector for any integer position without any training, making it theoretically generalizable to longer sequences.",
       hints: [
         "Learned embeddings: a lookup table indexed by position. If position 2048 was never in the training data, there is no learned embedding for it.",
-        "The sinusoidal formula computes a valid $\\mathbb{R}^d$ vector for any integer $i$ — no lookup table required.",
+        "The sinusoidal formula computes a valid $\\mathbb{R}^d$ vector for any integer $i$ - no lookup table required.",
       ],
     },
     {
@@ -189,7 +189,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The FFN has two weight matrices: W_1 \\in \\mathbb{R}^{512\\times2048} (1,048,576 params) and W_2 \\in \\mathbb{R}^{2048\\times512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) — totaling \\approx 2.1M parameters. The 4\\times expansion (2048 = 4 \\times 512) is standard across the original architecture.",
+        "The FFN has two weight matrices: W_1 \\in \\mathbb{R}^{512\\times2048} (1,048,576 params) and W_2 \\in \\mathbb{R}^{2048\\times512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) - totaling \\approx 2.1M parameters. The 4\\times expansion (2048 = 4 \\times 512) is standard across the original architecture.",
       hints: [
         "Two weight matrices: d_model \\times d_ff and d_ff \\times d_model, where d_ff = 4 \\times d_model.",
         "The FFN typically has roughly twice the parameters of the multi-head attention sublayer.",
@@ -200,19 +200,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'D2l.ai §11.7.3 notes the FFN is "positionwise" — it applies the same MLP to each token position independently. What architectural principle does this embody, and how does it complement the attention sublayer?',
+        'D2l.ai §11.7.3 notes the FFN is "positionwise" - it applies the same MLP to each token position independently. What architectural principle does this embody, and how does it complement the attention sublayer?',
       options: [
         "It provides parameter sharing across positions, reducing model size by a factor of n",
-        "The FFN performs per-token feature transformation (no cross-token mixing), while attention performs cross-token information aggregation — the two sublayers provide complementary operations",
+        "The FFN performs per-token feature transformation (no cross-token mixing), while attention performs cross-token information aggregation - the two sublayers provide complementary operations",
         "It allows the model to process tokens in parallel across the sequence length dimension",
         "Positionwise application ensures the model is invariant to token ordering",
       ],
       correctAnswer: 1,
       explanation:
-        "D2l.ai §11.7.3 describes the architectural division of labor: self-attention mixes information across positions (but applies the same learned mixing to any position), while the FFN transforms each position\'s representation independently using a shared MLP — together they provide both cross-token and per-token computation.",
+        "D2l.ai §11.7.3 describes the architectural division of labor: self-attention mixes information across positions (but applies the same learned mixing to any position), while the FFN transforms each position\'s representation independently using a shared MLP - together they provide both cross-token and per-token computation.",
       hints: [
         "Attention = information routing between positions; FFN = per-token feature processing.",
-        "The same FFN weights are used for every position — weight sharing across the sequence.",
+        "The same FFN weights are used for every position - weight sharing across the sequence.",
       ],
     },
     {
@@ -220,12 +220,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,\\beta) = Swish_\\beta(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression — unlike ReLU\'s hard zero cutoff.",
+        "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,\\beta) = Swish_\\beta(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression - unlike ReLU\'s hard zero cutoff.",
       correctAnswer: "True",
       explanation:
         "SwiGLU (Shazeer, 2020) defines:\n\\[\n\\text{SwiGLU}(\\mathbf{x}, \\mathbf{W}, \\mathbf{V}, \\mathbf{b}, \\mathbf{c}, \\beta) = \\text{Swish}_\\beta(\\mathbf{x}\\mathbf{W} + \\mathbf{b}) \\otimes (\\mathbf{x}\\mathbf{V} + \\mathbf{c}),\n\\]\nwhere $\\otimes$ is element-wise multiplication and $\\text{Swish}_\\beta(z) = \\sigma(\\beta z)$ is a smooth activation with a learnable gating parameter $\\beta$.\n\nComparing to ReLU: ReLU$(\\mathbf{x}) = \\max(0, \\mathbf{x}\\mathbf{W} + \\mathbf{b})$, which applies a hard zero to all negative pre-activations. SwiGLU replaces this hard threshold with a learned sigmoid gate $(\\mathbf{x}\\mathbf{V} + \\mathbf{c})$ that scales each feature dimension by a value in $(0, 1)$. Since $\\sigma(z)$ is smooth and data-dependent, the gate value adapts per-input, providing soft, differentiable feature suppression rather than ReLU's all-or-nothing cutoff. This smoother gradient flow in the negative region consistently improves language model perplexity in experiments (LLaMA, PaLM).",
       hints: [
-        "ReLU hard-zeroes negative pre-activations; SwiGLU replaces this with $\\sigma(\\beta z) \\cdot (\\mathbf{x}\\mathbf{V})$ — a learned, smooth gate.",
+        "ReLU hard-zeroes negative pre-activations; SwiGLU replaces this with $\\sigma(\\beta z) \\cdot (\\mathbf{x}\\mathbf{V})$ - a learned, smooth gate.",
         "The element-wise product with a sigmoid-gated value allows information to flow in the negative region rather than being permanently blocked.",
       ],
     },
@@ -262,8 +262,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In Pre-norm (used by most modern LLMs), the residual branch input is normalized:\n\\[\n\\mathbf{x}_{\\ell+1} = \\mathbf{x}_\\ell + \\text{Sublayer}\\!\\bigl(\\text{LayerNorm}(\\mathbf{x}_\\ell)\\bigr).\n\\]\nAt initialization, the sublayer weights are small, so $\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x})) \\approx \\mathbf{0}$. The identity branch therefore carries the gradient directly: $\\nabla_{\\mathbf{x}_\\ell} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L}$, and the gradient through the sublayer is $\\nabla_{\\text{Sublayer}} \\mathcal{L} \\approx \\nabla_{\\mathbf{x}_{\\ell+1}} \\mathcal{L} \\cdot \\nabla_{\\text{Sublayer}} \\approx \\text{small}$, giving stable gradients.\n\nIn Post-norm (original transformer):\n\\[\n\\mathbf{x}_{\\ell+1} = \\text{LayerNorm}\\!\\bigl(\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)\\bigr).\n\\]\nAt initialization, $\\mathbf{x}_\\ell + \\text{Sublayer}(\\mathbf{x}_\\ell)$ has large variance (sum of two independent random vectors), so the LayerNorm output has high variance. This produces large gradient magnitudes at early steps, requiring careful learning rate warmup to avoid destabilization.",
       hints: [
-        "Pre-norm: $\\mathbf{x}+\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x}))$ — the residual branch starts near $\\mathbf{0}$, so gradients flow cleanly through the skip connection.",
-        "Post-norm: $\\text{LayerNorm}(\\mathbf{x}+\\text{Sublayer}(\\mathbf{x}))$ — the sum of two random vectors has large variance, producing large early gradients.",
+        "Pre-norm: $\\mathbf{x}+\\text{Sublayer}(\\text{LayerNorm}(\\mathbf{x}))$ - the residual branch starts near $\\mathbf{0}$, so gradients flow cleanly through the skip connection.",
+        "Post-norm: $\\text{LayerNorm}(\\mathbf{x}+\\text{Sublayer}(\\mathbf{x}))$ - the sum of two random vectors has large variance, producing large early gradients.",
       ],
     },
     {
@@ -274,7 +274,7 @@ const questions: Record<string, Question[]> = {
         "The original transformer\'s learning rate warmup addresses Adam\'s \"cold start\" problem. In Adam, the effective learning rate is \\alpha \\times m_t / (√v_t + \\epsilon). Why is the effective LR dangerously large in the first ~100 steps without warmup?",
       options: [
         "The momentum term m_t is too large because gradients are large at initialization",
-        "The variance estimate v_t is near zero at initialization (no history), making 1/√v_t very large — amplifying the gradient signal regardless of \\alpha",
+        "The variance estimate v_t is near zero at initialization (no history), making 1/√v_t very large - amplifying the gradient signal regardless of \\alpha",
         "The bias correction 1/(1-\\beta^t) overcorrects and produces negative learning rates",
         "Adam computes incorrect gradients in the first few steps due to numerical precision",
       ],
@@ -282,7 +282,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Adam's update for parameter $\\theta_i$ at step $t$ is:\n\\[\n\\theta_{t,i} \\leftarrow \\theta_{t-1,i} - \\alpha \\cdot \\frac{\\hat{m}_{t,i}}{\\sqrt{\\hat{v}_{t,i}} + \\varepsilon},\n\\]\nwhere the effective learning rate is $\\alpha_i^\\text{eff} = \\alpha \\cdot \\hat{m}_{t,i} / (\\sqrt{\\hat{v}_{t,i}} + \\varepsilon)$.\n\nThe second moment is updated as $v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2$. With $\\beta_2 = 0.999$:\n\\[\nv_1 = (1 - 0.999) \\cdot g_1^2 = 0.001 \\cdot g_1^2.\n\\]\nBias correction gives $\\hat{v}_1 = v_1 / (1 - \\beta_2^1) = v_1 / 0.999 \\approx v_1$, so $\\sqrt{\\hat{v}_1} \\approx 0.032 \\cdot |g_1|$. With $\\varepsilon = 10^{-8}$, the denominator $\\sqrt{\\hat{v}_1} + \\varepsilon \\approx 0.032|g_1|$ is tiny for moderate gradients. This amplifies the effective learning rate by roughly $1/0.032 \\approx 30\\times$ beyond the nominal $\\alpha$. Warmup keeps $\\alpha$ small during the first few thousand steps until $v_t$ accumulates to meaningful values.",
       hints: [
-        "At step 1: $v_1 = 0.001 \\cdot g_1^2 \\Rightarrow \\sqrt{v_1} \\approx 0.032|g_1|$ — extremely small.",
+        "At step 1: $v_1 = 0.001 \\cdot g_1^2 \\Rightarrow \\sqrt{v_1} \\approx 0.032|g_1|$ - extremely small.",
         "Small $\\sqrt{v_t}$ in the denominator makes the effective learning rate $\\alpha / \\sqrt{v_t}$ very large, causing disproportionately large steps early in training.",
       ],
     },
@@ -314,10 +314,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 \\times d_model rows — roughly 4\\times the size of GPT-2's 50,257-token vocabulary embedding table.",
+        "The GPT-4 tokenizer (cl100k_base) has a vocabulary of ~100,000 tokens, meaning its embedding table has ~100,000 \\times d_model rows - roughly 4\\times the size of GPT-2's 50,257-token vocabulary embedding table.",
       correctAnswer: "True",
       explanation:
-        "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ — one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger — not $4\\times$ as the statement claims. The claim of \"roughly 4\\times\" is therefore incorrect. (The statement is False.)",
+        "The token embedding table has shape $(\\text{vocab\\_size}, d_\\text{model})$ - one $d_\\text{model}$-dimensional vector per vocabulary token. For GPT-4's cl100k_base tokenizer with $\\text{vocab\\_size} \\approx 100{,}000$ and $d_\\text{model} = 4096$, the embedding table alone has:\n\\[\n100{,}000 \\times 4096 \\times 2 \\text{ bytes} \\approx 820 \\text{ MB},\n\\]\nplus a tied output projection of the same size.\n\nGPT-2's vocabulary has 50,257 tokens, so its embedding table is:\n\\[\n50{,}257 \\times 4096 \\times 2 \\text{ bytes} \\approx 411 \\text{ MB}.\n\\]\nThe ratio is $100{,}000 / 50{,}257 \\approx 1.99$, meaning GPT-4's embedding table is roughly $2\\times$ larger - not $4\\times$ as the statement claims. The claim of \"roughly 4\\times\" is therefore incorrect. (The statement is False.)",
       hints: [
         "Embedding table size = vocab_size \\times d_model \\times bytes_per_param. For GPT-4: 100K \\times 4096 \\times 2 bytes \\approx 820 MB. For GPT-2: 50K \\times 4096 \\times 2 bytes \\approx 411 MB.",
         "The ratio is approximately 2\\times, not 4\\times. The \"4\\times\" claim in the statement is incorrect.",
@@ -331,13 +331,13 @@ const questions: Record<string, Question[]> = {
         "LLMs tokenized with BPE consistently fail at counting letters (e.g., \"how many 'r\'s in strawberry?\"). The root cause is most accurately described as:",
       options: [
         "The attention mechanism cannot count discrete symbols",
-        'BPE merges "straw" and "berry" (or similar) into multi-character tokens, so the model never explicitly represents individual characters as distinct entities — character-level information is not preserved in the token stream',
+        'BPE merges "straw" and "berry" (or similar) into multi-character tokens, so the model never explicitly represents individual characters as distinct entities - character-level information is not preserved in the token stream',
         "LLMs lack a counting mechanism and cannot perform any numerical reasoning",
         "The causal mask prevents the model from re-reading previously generated tokens",
       ],
       correctAnswer: 1,
       explanation:
-        'With BPE, "strawberry" may become ["straw","berry"] or ["st","raw","berry"]. The model sees token IDs, not characters — it has no mechanism to "look inside" a token. This fundamental information loss at tokenization time, not architectural limitation, causes character-counting failures.',
+        'With BPE, "strawberry" may become ["straw","berry"] or ["st","raw","berry"]. The model sees token IDs, not characters - it has no mechanism to "look inside" a token. This fundamental information loss at tokenization time, not architectural limitation, causes character-counting failures.',
       hints: [
         'Tokenize "strawberry" with a BPE tokenizer and see how many "r" characters appear in the token stream vs. the original.',
         "The failure is in the interface (tokenization), not the model architecture itself.",
@@ -360,7 +360,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Kaplan et al.'s power law states $L(N) = L_0 + a \\cdot N^{-\\alpha_N}$ with $\\alpha_N = 0.076$. For two model sizes $N_1$ and $N_2$:\n\\[\n\\frac{L(N_2)}{L(N_1)} = \\left(\\frac{N_2}{N_1}\\right)^{-\\alpha_N}.\n\\]\nWith $N_2 = 10N_1 = 10\\text{B}$ and $\\alpha_N = 0.076$:\n\\[\n\\frac{L(10\\text{B})}{L(1\\text{B})} = 10^{-0.076} \\approx 0.839.\n\\]\nTherefore $L(10\\text{B}) \\approx 3.0 \\times 0.839 \\approx 2.52$. The exponent $0.076$ is small: a 10\\times increase in parameters reduces loss by only about 16%. This is why scaling laws predict that enormous compute investments yield only incremental loss improvements — a fundamental inefficiency of the current scaling paradigm.",
+        "Kaplan et al.'s power law states $L(N) = L_0 + a \\cdot N^{-\\alpha_N}$ with $\\alpha_N = 0.076$. For two model sizes $N_1$ and $N_2$:\n\\[\n\\frac{L(N_2)}{L(N_1)} = \\left(\\frac{N_2}{N_1}\\right)^{-\\alpha_N}.\n\\]\nWith $N_2 = 10N_1 = 10\\text{B}$ and $\\alpha_N = 0.076$:\n\\[\n\\frac{L(10\\text{B})}{L(1\\text{B})} = 10^{-0.076} \\approx 0.839.\n\\]\nTherefore $L(10\\text{B}) \\approx 3.0 \\times 0.839 \\approx 2.52$. The exponent $0.076$ is small: a 10\\times increase in parameters reduces loss by only about 16%. This is why scaling laws predict that enormous compute investments yield only incremental loss improvements - a fundamental inefficiency of the current scaling paradigm.",
       hints: [
         "Power law: $L(N) \\propto N^{-0.076}$. Compute the ratio: $L(10\\text{B})/L(1\\text{B}) = 10^{-0.076} \\approx 0.84$.",
         "Small exponent means slow loss reduction: 10\\times more parameters \\to only ~16% loss reduction.",
@@ -380,10 +380,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Chinchilla's finding: for a compute budget $C$, the optimal model size $N^*$ and training tokens $D^*$ satisfy:\n\\[\nN^* \\propto C^{0.5}, \\quad D^* \\propto C^{0.5}.\n\\]\nBoth $N$ and $D$ should scale equally with compute — hence the name \"equal scaling.\" The specific ratio found empirically was:\n\\[\nD_\\text{optimal} \\approx 20 \\times N.\n\\]\nFor $N = 70$B parameters, this prescribes:\n\\[\nD_\\text{optimal} = 20 \\times 70\\text{B} = 1.4\\text{ trillion tokens}.\n\\]\nLlama-2-70B was trained on 2T tokens — deliberate over-training. The rationale: if inference is performed at scale, a model trained on more tokens (per parameter) has better quality per parameter, reducing inference cost while improving quality. Over-training trades training compute for inference efficiency.",
+        "Chinchilla's finding: for a compute budget $C$, the optimal model size $N^*$ and training tokens $D^*$ satisfy:\n\\[\nN^* \\propto C^{0.5}, \\quad D^* \\propto C^{0.5}.\n\\]\nBoth $N$ and $D$ should scale equally with compute - hence the name \"equal scaling.\" The specific ratio found empirically was:\n\\[\nD_\\text{optimal} \\approx 20 \\times N.\n\\]\nFor $N = 70$B parameters, this prescribes:\n\\[\nD_\\text{optimal} = 20 \\times 70\\text{B} = 1.4\\text{ trillion tokens}.\n\\]\nLlama-2-70B was trained on 2T tokens - deliberate over-training. The rationale: if inference is performed at scale, a model trained on more tokens (per parameter) has better quality per parameter, reducing inference cost while improving quality. Over-training trades training compute for inference efficiency.",
       hints: [
         "Chinchilla rule: $D_\\text{optimal} \\approx 20N$. For $N = 70$B, $D \\approx 1.4$T tokens.",
-        "Over-training (2T tokens vs. 1.4T optimal) is common when inference cost dominates — better quality per parameter reduces serving cost.",
+        "Over-training (2T tokens vs. 1.4T optimal) is common when inference cost dominates - better quality per parameter reduces serving cost.",
       ],
     },
     {
@@ -391,13 +391,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "Emergent abilities in LLMs (Wei et al., 2022) — capabilities that appear abruptly above a parameter threshold — challenge the smooth power-law extrapolation from scaling laws, since they predict sudden non-linear improvements that pretraining loss alone does not anticipate.",
+        "Emergent abilities in LLMs (Wei et al., 2022) - capabilities that appear abruptly above a parameter threshold - challenge the smooth power-law extrapolation from scaling laws, since they predict sudden non-linear improvements that pretraining loss alone does not anticipate.",
       correctAnswer: "True",
       explanation:
-        "Scaling laws predict smooth, continuous improvement in pretraining loss with scale. But emergent abilities like multi-step arithmetic or in-context learning appear suddenly at certain scales — the underlying capability may exist but remains below the benchmark threshold until the model crosses a critical scale, producing discontinuous benchmark curves.",
+        "Scaling laws predict smooth, continuous improvement in pretraining loss with scale. But emergent abilities like multi-step arithmetic or in-context learning appear suddenly at certain scales - the underlying capability may exist but remains below the benchmark threshold until the model crosses a critical scale, producing discontinuous benchmark curves.",
       hints: [
         "Power laws are smooth; emergence is step-like. Benchmark metrics can hide gradual underlying progress.",
-        'The apparent discontinuity may partly reflect metric sensitivity — a task requiring 5 correct steps only "passes" when all 5 are correct simultaneously.',
+        'The apparent discontinuity may partly reflect metric sensitivity - a task requiring 5 correct steps only "passes" when all 5 are correct simultaneously.',
       ],
     },
   ],
@@ -417,10 +417,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Carlini et al. (2023) showed that training data memorization scales with repetition count — documents seen many times are memorized verbatim. Deduplication also improves compute efficiency since each unique example carries more learning signal than the 100th copy of the same document.",
+        "Carlini et al. (2023) showed that training data memorization scales with repetition count - documents seen many times are memorized verbatim. Deduplication also improves compute efficiency since each unique example carries more learning signal than the 100th copy of the same document.",
       hints: [
         "If the same article appears 500 times, each pass through it adds ~0 marginal information after the first few.",
-        "Memorization of repeated content enables training data extraction attacks — a direct safety concern.",
+        "Memorization of repeated content enables training data extraction attacks - a direct safety concern.",
       ],
     },
     {
@@ -431,7 +431,7 @@ const questions: Record<string, Question[]> = {
         "Data mixing ratios (e.g., 80% web, 10% code, 10% academic text) are a critical training hyperparameter for LLMs because the relative frequency of each domain in pretraining directly shapes the model\'s capability distribution across tasks.",
       correctAnswer: "True",
       explanation:
-        "The LLaMA 3 and Falcon papers both report that deliberate over-sampling of high-quality domains (code, math, books) improved performance on targeted benchmarks while slightly reducing performance on others — demonstrating that data mixture is a direct dial for capability tuning even before instruction fine-tuning.",
+        "The LLaMA 3 and Falcon papers both report that deliberate over-sampling of high-quality domains (code, math, books) improved performance on targeted benchmarks while slightly reducing performance on others - demonstrating that data mixture is a direct dial for capability tuning even before instruction fine-tuning.",
       hints: [
         "A model trained on 50% code vs. 5% code will differ significantly in coding ability, all else equal.",
         "Data mixture is effectively a prior on which tasks you want the model to prioritize.",
@@ -451,7 +451,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If the model memorized exact solutions during pretraining, the measured pass@1 reflects memorization + generalization — not pure generalization ability. Standard practice is to report both overall and contamination-filtered results, and to use held-out private benchmarks for fair comparison.",
+        "If the model memorized exact solutions during pretraining, the measured pass@1 reflects memorization + generalization - not pure generalization ability. Standard practice is to report both overall and contamination-filtered results, and to use held-out private benchmarks for fair comparison.",
       hints: [
         "A model that memorized 40% of HumanEval has an unfair advantage on those problems.",
         "Separating contaminated from uncontaminated problems reveals the true generalization score.",
@@ -474,7 +474,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RoPE (Su et al., 2021) encodes position by rotating Q and K vectors such that their dot product depends only on relative distance — enabling better extrapolation to longer sequences. Pre-RMSNorm (applied before sublayers) improves training stability without learnable shift parameters, and SwiGLU empirically improves perplexity with similar compute.",
+        "RoPE (Su et al., 2021) encodes position by rotating Q and K vectors such that their dot product depends only on relative distance - enabling better extrapolation to longer sequences. Pre-RMSNorm (applied before sublayers) improves training stability without learnable shift parameters, and SwiGLU empirically improves perplexity with similar compute.",
       hints: [
         "Absolute encodings encode position i; relative encodings encode the offset (i-j) between positions.",
         "RoPE\'s key property: the attention score between positions i and j depends only on (i-j).",
@@ -488,10 +488,10 @@ const questions: Record<string, Question[]> = {
         "GPT-style (decoder-only) models are now preferred over encoder-decoder architectures (like T5) for most tasks because they unify generation and understanding in a single autoregressive framework, and can perform tasks like classification via conditional generation.",
       correctAnswer: "True",
       explanation:
-        'Decoder-only models generate text autoregressively and can perform any task through appropriately framed prompts — classification becomes "the sentiment of this review is [positive/negative]", summarization becomes "TL;DR:", etc. This in-context learning capability scales well and eliminates the need for a separate encoder.',
+        'Decoder-only models generate text autoregressively and can perform any task through appropriately framed prompts - classification becomes "the sentiment of this review is [positive/negative]", summarization becomes "TL;DR:", etc. This in-context learning capability scales well and eliminates the need for a separate encoder.',
       hints: [
         "Encoder-decoder models require a fixed input-output format; decoder-only models are task-agnostic through prompting.",
-        "GPT-4, Claude, LLaMA — virtually all frontier models are decoder-only.",
+        "GPT-4, Claude, LLaMA - virtually all frontier models are decoder-only.",
       ],
     },
     {
@@ -508,7 +508,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "GQA reduces KV cache by 32/8 = 4\\times (4 query heads share each KV head). SWA limits the attention window but each token still accumulates KV entries up to the window size — it reduces attention compute from O(n\\^2) to O(n\\timesw) but the KV cache still grows with sequence length for the rolling window implementation.",
+        "GQA reduces KV cache by 32/8 = 4\\times (4 query heads share each KV head). SWA limits the attention window but each token still accumulates KV entries up to the window size - it reduces attention compute from O(n\\^2) to O(n\\timesw) but the KV cache still grows with sequence length for the rolling window implementation.",
       hints: [
         "GQA: KV cache reduction = n_Q_heads / n_KV_heads = 32/8 = 4\\times.",
         "SWA reduces attention FLOPs quadratically but the KV buffer still stores w entries per layer.",
@@ -524,17 +524,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A model trained with absolute learned position embeddings up to position 2048 is asked to process a 4096-token sequence. What is the most likely failure mode?",
       options: [
-        "A hard error — the model will crash or produce NaN because position 2049 is out of range",
-        "Silent degradation — positions 2049–4096 receive out-of-distribution embeddings the model never learned, producing incoherent outputs for the second half",
+        "A hard error - the model will crash or produce NaN because position 2049 is out of range",
+        "Silent degradation - positions 2049-4096 receive out-of-distribution embeddings the model never learned, producing incoherent outputs for the second half",
         "The model truncates the sequence to 2048 tokens automatically",
         "Performance remains identical since transformers are permutation-invariant",
       ],
       correctAnswer: 1,
       explanation:
-        "With learned absolute position embeddings, each position index maps to a learnable vector. Positions > training_max (e.g., 2049+) simply have no learned embedding — typically implemented by clipping or zero-padding, producing out-of-distribution inputs that cause sharp quality degradation without error messages.",
+        "With learned absolute position embeddings, each position index maps to a learnable vector. Positions > training_max (e.g., 2049+) simply have no learned embedding - typically implemented by clipping or zero-padding, producing out-of-distribution inputs that cause sharp quality degradation without error messages.",
       hints: [
-        "A lookup table for positions 0–2047 has no defined entry for position 2048.",
-        "The failure is silent and gradual — not a hard error, but severely degraded quality for the out-of-range positions.",
+        "A lookup table for positions 0-2047 has no defined entry for position 2048.",
+        "The failure is silent and gradual - not a hard error, but severely degraded quality for the out-of-range positions.",
       ],
     },
     {
@@ -545,7 +545,7 @@ const questions: Record<string, Question[]> = {
         'The "lost in the middle" phenomenon (Liu et al., 2023) showed that LLMs exhibit a U-shaped recall curve: information at the beginning and end of a long context is retrieved well, but information in the middle is poorly utilized even when it fits within the context window.',
       correctAnswer: "True",
       explanation:
-        "Liu et al. (2023) demonstrated this with multi-document QA tasks where the relevant document was placed at varying positions within the context. Models showed primacy (beginning) and recency (end) effects — the middle portion was consistently underutilized regardless of context length, mirroring human serial position effects.",
+        "Liu et al. (2023) demonstrated this with multi-document QA tasks where the relevant document was placed at varying positions within the context. Models showed primacy (beginning) and recency (end) effects - the middle portion was consistently underutilized regardless of context length, mirroring human serial position effects.",
       hints: [
         "Even with a 32k context window, information at position 16k may be effectively invisible to the model.",
         "This motivates RAG pipeline design: put the most important context at the start or end, not the middle.",
@@ -561,11 +561,11 @@ const questions: Record<string, Question[]> = {
         "High-frequency dimensions are more important and need more parameters",
         "High-frequency components already see repeated sinusoidal patterns within training length (many cycles complete) and interpolate well; low-frequency components have barely completed one cycle at training length and need extrapolation to produce meaningful signals at longer positions",
         "Low-frequency dimensions are always zero at short contexts so they need extrapolation to activate",
-        "The asymmetry is purely for numerical stability — both approaches give equivalent results",
+        "The asymmetry is purely for numerical stability - both approaches give equivalent results",
       ],
       correctAnswer: 1,
       explanation:
-        "RoPE uses wavelengths ranging from 2\\pi (highest frequency) to 2\\pi\\times10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles — interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle — extrapolation is needed to generate meaningful positions beyond T.",
+        "RoPE uses wavelengths ranging from 2\\pi (highest frequency) to 2\\pi\\times10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles - interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle - extrapolation is needed to generate meaningful positions beyond T.",
       hints: [
         "High-frequency = short wavelength = many complete cycles within training length \\to safe interpolation.",
         "Low-frequency = long wavelength = fraction of a cycle within training length \\to must extrapolate.",
@@ -588,10 +588,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For standard attention, the full $n \\times n$ attention matrix $\\mathbf{A}$ must be materialized in HBM to compute the softmax and the final output. At $n = 4096$ and FP16 (2 bytes):\n\\[\n\\text{HBM for } \\mathbf{A} = 4096 \\times 4096 \\times 2 \\approx 33.6 \\text{ MB per layer}.\n\\]\nWith 32 layers: over 1 GB just for the attention matrices. This HBM read/write is the bottleneck: the GPU spends most of its time moving data, not performing FLOPs.\n\nFlashAttention avoids this by tiling the computation into SRAM-sized blocks. For each row, the online softmax algorithm maintains running statistics:\n\\[\nm_j = \\max(m_{j-1}, x_j),\\quad s_j = s_{j-1} \\cdot e^{m_{j-1} - m_j} + e^{x_j - m_j},\n\\]\nenabling exact softmax computation tile-by-tile without ever materializing the full row. This reduces HBM accesses from $\\mathcal{O}(n^2)$ to $\\mathcal{O}(n)$ per layer, yielding 2–4\\times wall-clock speedup.",
+        "For standard attention, the full $n \\times n$ attention matrix $\\mathbf{A}$ must be materialized in HBM to compute the softmax and the final output. At $n = 4096$ and FP16 (2 bytes):\n\\[\n\\text{HBM for } \\mathbf{A} = 4096 \\times 4096 \\times 2 \\approx 33.6 \\text{ MB per layer}.\n\\]\nWith 32 layers: over 1 GB just for the attention matrices. This HBM read/write is the bottleneck: the GPU spends most of its time moving data, not performing FLOPs.\n\nFlashAttention avoids this by tiling the computation into SRAM-sized blocks. For each row, the online softmax algorithm maintains running statistics:\n\\[\nm_j = \\max(m_{j-1}, x_j),\\quad s_j = s_{j-1} \\cdot e^{m_{j-1} - m_j} + e^{x_j - m_j},\n\\]\nenabling exact softmax computation tile-by-tile without ever materializing the full row. This reduces HBM accesses from $\\mathcal{O}(n^2)$ to $\\mathcal{O}(n)$ per layer, yielding 2-4\\times wall-clock speedup.",
       hints: [
-        "Standard attention: write $n^2$ entries to HBM, read them back for softmax. FlashAttention: keep tiles in SRAM (~20–40 MB capacity) and compute softmax incrementally.",
-        "The online softmax tracks $m_j = \\max(x_1, \\ldots, x_j)$ and $s_j = \\sum_{i=1}^j e^{x_i - m_j}$ — the softmax denominator — across tiles.",
+        "Standard attention: write $n^2$ entries to HBM, read them back for softmax. FlashAttention: keep tiles in SRAM (~20-40 MB capacity) and compute softmax incrementally.",
+        "The online softmax tracks $m_j = \\max(x_1, \\ldots, x_j)$ and $s_j = \\sum_{i=1}^j e^{x_i - m_j}$ - the softmax denominator - across tiles.",
       ],
     },
     {
@@ -599,7 +599,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "FlashAttention computes mathematically identical results to standard attention — it is not an approximation — but uses the online softmax algorithm to compute softmax incrementally over tiles without seeing the entire row simultaneously.",
+        "FlashAttention computes mathematically identical results to standard attention - it is not an approximation - but uses the online softmax algorithm to compute softmax incrementally over tiles without seeing the entire row simultaneously.",
       correctAnswer: "True",
       explanation:
         "The online softmax trick (Milakov & Gimelshein, 2018) maintains running max and sum statistics across tiles, enabling exact softmax computation without materializing the full row. FlashAttention uses this to compute exact attention in O(1) SRAM rather than O(n\\^2) HBM, with zero accuracy trade-off.",
@@ -616,13 +616,13 @@ const questions: Record<string, Question[]> = {
         "FlashAttention-2 achieves ~2\\times speedup over FA-1 by: (1) reducing non-matrix-multiply FLOPs (rescaling operations), (2) better parallelizing across GPU warps, and (3) restructuring loops to minimize warp-level synchronization. Which of these is the dominant win?",
       options: [
         "Reducing non-matmul FLOPs is dominant because matrix multiplications are the slowest operation",
-        "Better warp parallelization across the sequence length dimension is dominant — FA-1 had poor GPU utilization because it only parallelized across batch and heads, leaving sequence-length parallelism unused",
+        "Better warp parallelization across the sequence length dimension is dominant - FA-1 had poor GPU utilization because it only parallelized across batch and heads, leaving sequence-length parallelism unused",
         "Warp synchronization reduction is dominant because it eliminates deadlocks in attention computation",
-        "All three contribute equally — the 2\\times speedup is split precisely among the three improvements",
+        "All three contribute equally - the 2\\times speedup is split precisely among the three improvements",
       ],
       correctAnswer: 1,
       explanation:
-        "FA-2's primary improvement is parallelizing over the sequence length dimension: FA-1 only parallelized across batch \\times heads (leaving GPUs idle for small batch or few heads), while FA-2 also parallelizes the outer loop over query blocks — dramatically improving GPU occupancy and SRAM utilization.",
+        "FA-2's primary improvement is parallelizing over the sequence length dimension: FA-1 only parallelized across batch \\times heads (leaving GPUs idle for small batch or few heads), while FA-2 also parallelizes the outer loop over query blocks - dramatically improving GPU occupancy and SRAM utilization.",
       hints: [
         "A GPU with 108 SMs but only 32 attention heads has 76 idle SMs without sequence-length parallelism.",
         "Distributing query blocks across SMs is the key insight that FA-2 adds over FA-1.",
@@ -645,7 +645,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The KV cache stores key and value representations for every cached token position. For a single layer, one KV head requires head_dim \\times seq_len \\times bytes. With 8 KV heads and both K and V:\n\\[\n\\text{KV cache per layer} = 2 \\times 8 \\times 128 \\times 4096 \\times 2 \\text{ bytes}.\n\\]\nMultiplying by 80 layers:\n\\[\n\\text{KV cache} = 2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2\n= 5{,}368{,}709{,}120 \\text{ bytes} \\approx 5.4 \\text{ GB}.\n\\]\nA 70B model in FP16 is ~140 GB, so the KV cache for 4096 tokens is ~4% of model weight per sequence — growing linearly with context length and potentially dominating memory for long prompts.",
+        "The KV cache stores key and value representations for every cached token position. For a single layer, one KV head requires head_dim \\times seq_len \\times bytes. With 8 KV heads and both K and V:\n\\[\n\\text{KV cache per layer} = 2 \\times 8 \\times 128 \\times 4096 \\times 2 \\text{ bytes}.\n\\]\nMultiplying by 80 layers:\n\\[\n\\text{KV cache} = 2 \\times 80 \\times 8 \\times 128 \\times 4096 \\times 2\n= 5{,}368{,}709{,}120 \\text{ bytes} \\approx 5.4 \\text{ GB}.\n\\]\nA 70B model in FP16 is ~140 GB, so the KV cache for 4096 tokens is ~4% of model weight per sequence - growing linearly with context length and potentially dominating memory for long prompts.",
       hints: [
         "Formula: 2 (K and V) \\times n_layers \\times n_KV_heads \\times head_dim \\times seq_len \\times bytes_per_element.",
         "With GQA (8 KV heads vs. 64 Q heads), the cache is already 8\\times smaller than standard MHA would be.",
@@ -659,10 +659,10 @@ const questions: Record<string, Question[]> = {
         "During autoregressive decoding, the KV cache allows each new token to be generated with a single forward pass through only the new token\'s position (not the entire prefix), because previous tokens' K and V representations are already cached and can be directly used in attention.",
       correctAnswer: "True",
       explanation:
-        "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch — O(n\\^2) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
+        "Without the KV cache, generating token t would require recomputing K and V for all t-1 previous tokens from scratch - O(n\\^2) total compute for n-token generation. With the cache, each new token requires only one forward pass: compute Q, K, V for the new token, retrieve cached K, V for all previous tokens, compute attention. Total compute becomes O(n).",
       hints: [
-        "Cache hit: previous tokens' K and V are already computed and stored — no recomputation needed.",
-        "The tradeoff is memory (KV cache) for compute — standard in LLM serving.",
+        "Cache hit: previous tokens' K and V are already computed and stored - no recomputation needed.",
+        "The tradeoff is memory (KV cache) for compute - standard in LLM serving.",
       ],
     },
     {
@@ -679,10 +679,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "With naive contiguous allocation, each request reserves $\\text{max\\_seq\\_len}$ slots in the KV cache upfront. For 4 concurrent requests each with $\\text{max\\_seq\\_len} = 512$, the allocation is $4 \\times 512 = 2048$ slots. If each request generates only 200 tokens, only 800 slots are used — wasting $2048 - 800 = 1248$ slots.\n\nThis wasted memory cannot be reallocated: the reserved slots for tokens 201–512 of request A are unavailable to request B, even after request A completes. Across a batch of many requests, this fragmentation can waste 60–80% of GPU memory.\n\nPagedAttention solves this by allocating KV cache in fixed-size pages (e.g., 16 tokens/page). A block table maps logical sequence positions to physical page addresses:\n\\[\n\\text{block\\_table}[\\text{logical\\_pos}] \\rightarrow \\text{physical\\_page\\_addr}.\n\\]\nPages are allocated on-demand as tokens are generated and immediately freed when a request completes. For 200 tokens: $\\lceil 200 / 16 \\rceil = 13$ pages are allocated (not 32), reclaiming the rest for other requests.",
+        "With naive contiguous allocation, each request reserves $\\text{max\\_seq\\_len}$ slots in the KV cache upfront. For 4 concurrent requests each with $\\text{max\\_seq\\_len} = 512$, the allocation is $4 \\times 512 = 2048$ slots. If each request generates only 200 tokens, only 800 slots are used - wasting $2048 - 800 = 1248$ slots.\n\nThis wasted memory cannot be reallocated: the reserved slots for tokens 201-512 of request A are unavailable to request B, even after request A completes. Across a batch of many requests, this fragmentation can waste 60-80% of GPU memory.\n\nPagedAttention solves this by allocating KV cache in fixed-size pages (e.g., 16 tokens/page). A block table maps logical sequence positions to physical page addresses:\n\\[\n\\text{block\\_table}[\\text{logical\\_pos}] \\rightarrow \\text{physical\\_page\\_addr}.\n\\]\nPages are allocated on-demand as tokens are generated and immediately freed when a request completes. For 200 tokens: $\\lceil 200 / 16 \\rceil = 13$ pages are allocated (not 32), reclaiming the rest for other requests.",
       hints: [
         "Waste with naive allocation: $(2048 - 800) / 2048 \\approx 61\\%$ of reserved slots unused.",
-        "PagedAttention: allocate only $\\lceil 200/16 \\rceil = 13$ pages (16 tokens each), not 32 — the block table maps logical positions to physical pages.",
+        "PagedAttention: allocate only $\\lceil 200/16 \\rceil = 13$ pages (16 tokens each), not 32 - the block table maps logical positions to physical pages.",
       ],
     },
   ],
@@ -705,7 +705,7 @@ const questions: Record<string, Question[]> = {
         "Beam search with B \\geq 1 is a superset of greedy search (B=1 is greedy). It always finds sequences with probability \\geq greedy because it explores B alternatives at each step instead of 1, and any sequence greedy would find is in beam search\'s candidate set.",
       hints: [
         "Greedy = beam search with B = 1. Beam search with B \\geq 2 keeps more candidates.",
-        '"Guaranteed" is the key word — P_beam \\geq P_greedy is a formal property of the algorithm.',
+        '"Guaranteed" is the key word - P_beam \\geq P_greedy is a formal property of the algorithm.',
       ],
     },
     {
@@ -716,13 +716,13 @@ const questions: Record<string, Question[]> = {
         "Top-p sampling with p = 0.9 samples from the smallest set of tokens whose cumulative probability \\geq 0.9. For a very peaked distribution (e.g., one token has probability 0.95), how many tokens are in the nucleus?",
       options: [
         "Always exactly 90 tokens (p = 0.9 means top 90%)",
-        "Just 1 token — the single token with p = 0.95 already exceeds the threshold of 0.9",
+        "Just 1 token - the single token with p = 0.95 already exceeds the threshold of 0.9",
         "All tokens with probability > 0.01 (1%)",
-        "10 tokens — the top 10% of the vocabulary",
+        "10 tokens - the top 10% of the vocabulary",
       ],
       correctAnswer: 1,
       explanation:
-        "The nucleus is the minimal set with cumulative probability \\geq p. If one token already has probability 0.95 > 0.9, it alone forms the entire nucleus — top-p sampling essentially becomes deterministic for peaked distributions, while using a broader set for uncertain (flat) distributions.",
+        "The nucleus is the minimal set with cumulative probability \\geq p. If one token already has probability 0.95 > 0.9, it alone forms the entire nucleus - top-p sampling essentially becomes deterministic for peaked distributions, while using a broader set for uncertain (flat) distributions.",
       hints: [
         '"Smallest set" means we stop adding tokens as soon as cumulative probability crosses p.',
         "This adaptive behavior is top-p\'s advantage over top-k: it naturally handles both peaked and flat distributions.",
@@ -736,9 +736,9 @@ const questions: Record<string, Question[]> = {
         "Beam search consistently outperforms sampling-based methods on open-ended creative generation tasks (stories, dialogue) according to human preference evaluations.",
       correctAnswer: "False",
       explanation:
-        'Holtzman et al. (2020) "The Curious Case of Neural Text Degeneration" showed that beam search produces text that is high-probability but bland, generic, and repetitive — humans consistently prefer nucleus-sampled text for open-ended generation. Beam search is better for constrained tasks (translation, summarization) where there is a clearly correct output.',
+        'Holtzman et al. (2020) "The Curious Case of Neural Text Degeneration" showed that beam search produces text that is high-probability but bland, generic, and repetitive - humans consistently prefer nucleus-sampled text for open-ended generation. Beam search is better for constrained tasks (translation, summarization) where there is a clearly correct output.',
       hints: [
-        "High probability \$\\neq\$ high quality for creative tasks — unexpected choices make text interesting.",
+        "High probability \$\\neq\$ high quality for creative tasks - unexpected choices make text interesting.",
         'Beam search\'s repetition problem: "the company said the company said the company said..." maximizes P(token | prefix) locally.',
       ],
     },
@@ -752,17 +752,17 @@ const questions: Record<string, Question[]> = {
       question:
         "In speculative decoding, a draft model proposes k = 5 tokens and the target model verifies them in one forward pass. If k = 5 draft tokens are accepted on average, what is the approximate speedup factor compared to standard autoregressive decoding?",
       options: [
-        "5\\times speedup — generating 5 tokens per target model call instead of 1",
-        "10\\times speedup — the draft model processes 5 tokens twice as fast",
-        "2\\times speedup — the draft and target models run in parallel",
-        "No speedup — the draft model adds overhead that cancels the gains",
+        "5\\times speedup - generating 5 tokens per target model call instead of 1",
+        "10\\times speedup - the draft model processes 5 tokens twice as fast",
+        "2\\times speedup - the draft and target models run in parallel",
+        "No speedup - the draft model adds overhead that cancels the gains",
       ],
       correctAnswer: 0,
       explanation:
         "Each target model forward pass now verifies k (on average) draft tokens instead of producing 1. If the acceptance rate allows average 5 tokens per call, throughput is ~5\\times higher. The draft model overhead is small because it is much smaller (e.g., 7B draft for a 70B target), running ~10\\times faster per token.",
       hints: [
         "Speedup \\approx average accepted tokens per target call. If all k tokens are accepted, speedup \\approx k.",
-        "The target model call is the bottleneck — getting more tokens per call directly improves throughput.",
+        "The target model call is the bottleneck - getting more tokens per call directly improves throughput.",
       ],
     },
     {
@@ -770,13 +770,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Speculative decoding (Leviathan et al., 2023) guarantees that the output token distribution is identical to the target model\'s distribution — not the draft model\'s — through an acceptance-rejection mechanism that corrects draft tokens whenever they deviate from the target.",
+        "Speculative decoding (Leviathan et al., 2023) guarantees that the output token distribution is identical to the target model\'s distribution - not the draft model\'s - through an acceptance-rejection mechanism that corrects draft tokens whenever they deviate from the target.",
       correctAnswer: "True",
       explanation:
-        "For each draft token $x$ with draft probability $q(x)$ and target probability $p(x)$:\n\n**Acceptance**: if $q(x) \\leq p(x)$ (draft is less confident than target), the token is always accepted — min$(1, p/q) = 1$. The target model is more confident, so accepting is safe.\n\n**Rejection**: if $q(x) > p(x)$ (draft is more confident than target), the token is accepted with probability $p(x)/q(x)$. The correction token is sampled from the adjusted distribution:\n\\[\np_\\text{adj}(x) \\propto \\max\\bigl(0,\\; p(x) - q(x)\\bigr).\n\\]\nThis correction ensures the marginal distribution over accepted/rejected tokens exactly matches $p(x)$. Intuitively: the correction \"takes back\" the excess probability mass that the draft assigned to rejected tokens.\n\nLeviathan et al. (2023) prove that the resulting sequence is distributed exactly as the target model — no approximation, no distribution mismatch. The draft accelerates throughput; the correction guarantees correctness.",
+        "For each draft token $x$ with draft probability $q(x)$ and target probability $p(x)$:\n\n**Acceptance**: if $q(x) \\leq p(x)$ (draft is less confident than target), the token is always accepted - min$(1, p/q) = 1$. The target model is more confident, so accepting is safe.\n\n**Rejection**: if $q(x) > p(x)$ (draft is more confident than target), the token is accepted with probability $p(x)/q(x)$. The correction token is sampled from the adjusted distribution:\n\\[\np_\\text{adj}(x) \\propto \\max\\bigl(0,\\; p(x) - q(x)\\bigr).\n\\]\nThis correction ensures the marginal distribution over accepted/rejected tokens exactly matches $p(x)$. Intuitively: the correction \"takes back\" the excess probability mass that the draft assigned to rejected tokens.\n\nLeviathan et al. (2023) prove that the resulting sequence is distributed exactly as the target model - no approximation, no distribution mismatch. The draft accelerates throughput; the correction guarantees correctness.",
       hints: [
-        "Accept: if $q \\leq p$, min$(1, p/q) = 1$ — always accept tokens the target would produce more confidently.",
-        "Reject: if $q > p$, accept with probability $p/q$. Sample correction from $p - q$ (normalized) — this adds back the probability mass \"lost\" on rejected tokens.",
+        "Accept: if $q \\leq p$, min$(1, p/q) = 1$ - always accept tokens the target would produce more confidently.",
+        "Reject: if $q > p$, accept with probability $p/q$. Sample correction from $p - q$ (normalized) - this adds back the probability mass \"lost\" on rejected tokens.",
       ],
     },
     {
@@ -787,7 +787,7 @@ const questions: Record<string, Question[]> = {
         "Self-speculative decoding (e.g., Medusa, EAGLE) avoids requiring a separate draft model by generating draft tokens using lightweight heads attached to the target model itself. What is the key limitation compared to using a separate smaller draft model?",
       options: [
         "Self-speculative methods cannot guarantee output quality equivalence with the target model",
-        "The draft heads must still run the full target model backbone to generate candidates — the speedup is limited by the target model\'s sequential execution, whereas a separate small draft model can run on different hardware or in parallel",
+        "The draft heads must still run the full target model backbone to generate candidates - the speedup is limited by the target model\'s sequential execution, whereas a separate small draft model can run on different hardware or in parallel",
         "Self-speculative methods only work for models with fewer than 7B parameters",
         "Draft heads cannot be trained because there is no labeled data for multi-token prediction",
       ],
@@ -795,8 +795,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Methods like Medusa add parallel prediction heads to predict multiple future tokens simultaneously from the same hidden state, without sequential draft generation. The limitation is that speculative token quality depends on the single hidden state, which may not capture future context as well as a small autoregressive draft model running multiple steps.",
       hints: [
-        "Medusa heads generate k candidates in parallel from one position — no sequential draft rollout.",
-        "A proper small draft model runs multiple autoregressive steps, each conditioned on previous drafts — richer context for candidate generation.",
+        "Medusa heads generate k candidates in parallel from one position - no sequential draft rollout.",
+        "A proper small draft model runs multiple autoregressive steps, each conditioned on previous drafts - richer context for candidate generation.",
       ],
     },
   ],
@@ -819,7 +819,7 @@ const questions: Record<string, Question[]> = {
         "With 4-bit precision, each weight occupies 4 bits = 0.5 bytes:\n\\[\n7\\text{B params} \\times 0.5 \\text{ bytes/param} = 3.5 \\text{ GB}.\n\\]\nGPTQ and AWQ use group quantization: weights are grouped in blocks of 128, and each block stores a scale factor $s$ and optional zero-point $z$ in FP16 (2 bytes each):\n\\[\n\\hat{w} = \\text{clamp}\\!\\left(\\left\\lfloor \\frac{w}{s}\\right\\rceil + z,\\; -8,\\; 7\\right) \\times s.\n\\]\nScale overhead: $\\frac{7\\text{B}}{128} \\times (2 \\text{ bytes}) \\times 2 \\text{ (scale + zero-point)} \\approx 219$ MB. Practical size:\n\\[\n3.5 \\text{ GB (weights)} + 0.22 \\text{ GB (scales)} \\approx 3.7 \\text{ GB},\n\\]\napproximately 6% overhead versus the theoretical 3.5 GB.",
       hints: [
         "4 bits = 0.5 bytes per weight: $7\\text{B} \\times 0.5 = 3.5$ GB.",
-        "Overhead: $\\frac{7\\text{B}}{128} \\times 2 \\times 2$ bytes $\\approx 219$ MB — one FP16 scale + one zero-point per 128-weight group.",
+        "Overhead: $\\frac{7\\text{B}}{128} \\times 2 \\times 2$ bytes $\\approx 219$ MB - one FP16 scale + one zero-point per 128-weight group.",
       ],
     },
     {
@@ -833,7 +833,7 @@ const questions: Record<string, Question[]> = {
         "GPTQ (Frantar et al., 2022) applies the Optimal Brain Quantization framework layer-by-layer. For a weight row $\\mathbf{w} \\in \\mathbb{R}^{d_\\text{out}}$, the quantization error for quantizing weight $w_j$ to $\\hat{w}_j$ is:\n\\[\n\\text{error} = (\\mathbf{w} - \\hat{\\mathbf{w}})_i \\cdot x_j \\quad \\text{for output neuron } i.\n\\]\nThe Hessian of the layer loss w.r.t. $\\mathbf{w}$ is $\\mathbf{H} = 2\\mathbf{x}\\mathbf{x}^\\top$ (ignoring constants), where $\\mathbf{x}$ are the input activations. The OBQ update for remaining weights after quantizing $w_j$ is:\n\\[\nw_i \\leftarrow w_i - \\frac{H_{ij}}{H_{jj}} (\\hat{w}_j - w_j).\n\\]\nThis compensates for the quantization error of $w_j$ by adjusting all other weights in the row, using second-order sensitivity information ($H_{ij}/H_{jj}$). GPTQ applies this iteratively across all weights, achieving near-lossless INT4 quantization with < 1 perplexity point degradation on most models.",
       hints: [
         "Hessian diagonal $H_{jj}$: sensitivity of the loss to weight $w_j$. Large $H_{jj}$ = this weight matters more; quantize it more carefully.",
-        "After quantizing $w_j$ to $\\hat{w}_j$, update remaining weights to approximately restore the original output — OBQ's core idea.",
+        "After quantizing $w_j$ to $\\hat{w}_j$, update remaining weights to approximately restore the original output - OBQ's core idea.",
       ],
     },
     {
@@ -841,7 +841,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'AWQ (Activation-Aware Weight Quantization) identifies "salient" weights — those that produce large output activations — and protects them by applying per-channel input scaling before quantization. Why does scaling the input channel protect these weights without changing model output?',
+        'AWQ (Activation-Aware Weight Quantization) identifies "salient" weights - those that produce large output activations - and protects them by applying per-channel input scaling before quantization. Why does scaling the input channel protect these weights without changing model output?',
       options: [
         "Scaling inputs makes activations smaller, so the model naturally ignores those weights",
         "If input channel i is scaled by s, weight w_i must be divided by s to preserve output (s \\times x_i \\times w_i/s = x_i \\times w_i); the effective weight w_i/s is now smaller in magnitude and quantizes more accurately",
@@ -852,7 +852,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "AWQ's insight exploits a simple algebraic identity. For input channel $i$ with input $x_i$ and weight $w_i$:\n\\[\n(s \\cdot x_i) \\cdot \\frac{w_i}{s} = x_i \\cdot w_i.\n\\]\nThe output is mathematically unchanged, but the effective weight value changes from $w_i$ to $w_i/s$. For salient weights (those producing large activations), $w_i$ is large in magnitude. Scaling it down by $s > 1$ reduces its magnitude, which reduces the absolute quantization error when rounding to 4 bits.\n\nAWQ finds the optimal per-channel scale $s$ by measuring which weights produce large activations (using a calibration set) and applying $w_i \\leftarrow w_i / s$ before quantization. The scale $s$ is absorbed into the preceding LayerNorm's output, so the net effect on the model's computation is zero.",
       hints: [
-        "Identity: $(s x_i)(w_i/s) = x_i w_i$. Scale input UP by $s$ and weight DOWN by $s$ — output unchanged, but weight magnitude reduced.",
+        "Identity: $(s x_i)(w_i/s) = x_i w_i$. Scale input UP by $s$ and weight DOWN by $s$ - output unchanged, but weight magnitude reduced.",
         "Smaller $|w_i|$ \\to quantization to 4 bits introduces less absolute error \\to better preserved signal after dequantization.",
       ],
     },
@@ -866,7 +866,7 @@ const questions: Record<string, Question[]> = {
       question:
         "LoRA (Hu et al., 2021) adds \\DeltaW = BA where B \\in \\mathbb{R}^{d\\timesr} and A \\in \\mathbb{R}^{r\\timesk}. For a weight matrix W \\in \\mathbb{R}^{4096\\times4096} with rank r = 16, how many trainable parameters does the LoRA adapter add, vs. the full weight matrix?",
       options: [
-        "LoRA adds 4096 \\times 16 + 16 \\times 4096 = 131,072 params vs. 4096 \\times 4096 = 16,777,216 — about 0.78% of the full matrix",
+        "LoRA adds 4096 \\times 16 + 16 \\times 4096 = 131,072 params vs. 4096 \\times 4096 = 16,777,216 - about 0.78% of the full matrix",
         "LoRA adds 4096 \\times 4096 = 16,777,216 params (same as full fine-tuning)",
         "LoRA adds 16 \\times 16 = 256 params per weight matrix",
         "LoRA adds 4096 \\times 16 = 65,536 params (only matrix A is trainable)",
@@ -887,9 +887,9 @@ const questions: Record<string, Question[]> = {
         "After LoRA fine-tuning, the adapter matrices B and A can be merged into the base model by computing W_new = W + BA, resulting in zero inference overhead compared to the original model.",
       correctAnswer: "True",
       explanation:
-        "Since W_new = W + BA is just matrix addition, the merged model has the exact same architecture and forward pass as the original — no adapter branching at inference time. The merge trades a one-time matrix addition (cheap) for zero per-inference overhead (critical for latency-sensitive serving).",
+        "Since W_new = W + BA is just matrix addition, the merged model has the exact same architecture and forward pass as the original - no adapter branching at inference time. The merge trades a one-time matrix addition (cheap) for zero per-inference overhead (critical for latency-sensitive serving).",
       hints: [
-        "W + BA produces a single matrix of the same shape as W — no architectural change.",
+        "W + BA produces a single matrix of the same shape as W - no architectural change.",
         "Without merging, LoRA adds two extra matrix multiplications per adapted layer at inference time.",
       ],
     },
@@ -909,7 +909,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "For a quantization level set $\{q_1, \\ldots, q_{16}\}$ at 4-bit precision, the mean squared error is:\n\\[\n\\text{MSE} = \\int_{q_1}^{q_{16}} (x - \\hat{x})^2 \\cdot p(x)\\, dx,\n\\]\nwhere $\\hat{x}$ is the quantized value and $p(x)$ is the weight distribution. The optimal $q_k$ values are the quantiles of $p(x)$: each of the 16 levels captures $1/16$ of the probability mass.\n\nFor normally distributed weights $x \\sim \\mathcal{N}(0, \\sigma^2)$, most probability mass is concentrated near zero, with sparse tails. NF4 sets its 16 quantization levels at the 16 quantiles of $\\mathcal{N}(0, 1)$, so:\n\\[\n\\text{Levels}_{\\rm NF4}: \\{F^{-1}\\!\\left(\\tfrac{1}{16}\\right), F^{-1}\\!\\left(\\tfrac{2}{16}\\right), \\ldots, F^{-1}\\!\\left(\\tfrac{15}{16}\\right)\\}.\n\\]\nUniform INT4 places levels at equal intervals across the full range $[-3\\sigma, +3\\sigma]$, wasting precision on sparse tail regions. NF4 concentrates precision in the dense center where most weight values lie, minimizing MSE for the normal distribution.",
       hints: [
-        "Optimal quantization: place levels at equal-probability boundaries of the data distribution. For $x \\sim \\mathcal{N}(0,1)$, most mass is near 0 — NF4's center is denser than uniform INT4.",
+        "Optimal quantization: place levels at equal-probability boundaries of the data distribution. For $x \\sim \\mathcal{N}(0,1)$, most mass is near 0 - NF4's center is denser than uniform INT4.",
         "Uniform INT4: levels at $-3\\sigma, -2\\sigma, -\\sigma, 0, \\sigma, 2\\sigma, 3\\sigma$. NF4: levels at the actual quantiles, which are closer together near 0.",
       ],
     },
@@ -924,16 +924,16 @@ const questions: Record<string, Question[]> = {
         "The FLAN paper (Wei et al., 2021) showed that instruction tuning on a diverse set of task descriptions dramatically improves zero-shot performance on held-out tasks. What does this demonstrate about what instruction tuning teaches the model?",
       options: [
         "Instruction tuning memorizes the training task examples and generalizes via lookup",
-        'Instruction tuning teaches the model to follow the instruction format — "what it means to follow an instruction" — enabling generalization to novel task types never seen during tuning',
+        'Instruction tuning teaches the model to follow the instruction format - "what it means to follow an instruction" - enabling generalization to novel task types never seen during tuning',
         "Instruction tuning only improves performance on tasks similar to the training tasks",
         "Instruction tuning reduces perplexity on the pretraining data distribution",
       ],
       correctAnswer: 1,
       explanation:
-        'FLAN\'s key finding: a model instruction-tuned on 62 task clusters achieves strong zero-shot performance on held-out clusters not seen during tuning. This suggests instruction tuning teaches a general pattern of "interpret the instruction and produce a response" that transfers across task types — not just memorization of training tasks.',
+        'FLAN\'s key finding: a model instruction-tuned on 62 task clusters achieves strong zero-shot performance on held-out clusters not seen during tuning. This suggests instruction tuning teaches a general pattern of "interpret the instruction and produce a response" that transfers across task types - not just memorization of training tasks.',
       hints: [
         "If instruction tuning only memorized training tasks, performance on held-out tasks would not improve.",
-        "The diversity of training tasks is crucial — the model learns instruction-following as a skill.",
+        "The diversity of training tasks is crucial - the model learns instruction-following as a skill.",
       ],
     },
     {
@@ -944,9 +944,9 @@ const questions: Record<string, Question[]> = {
         "When fine-tuning with instruction data, computing cross-entropy loss on prompt/instruction tokens as well as response tokens trains the model equally well as computing loss only on response tokens.",
       correctAnswer: "False",
       explanation:
-        "Including the prompt in the loss trains the model to predict given instructions — an uninformative signal that may cause instruction memorization. The InstructGPT and Alpaca papers both mask the loss on prompt tokens: only response tokens contribute to the gradient, focusing training on the generative objective of producing correct responses.",
+        "Including the prompt in the loss trains the model to predict given instructions - an uninformative signal that may cause instruction memorization. The InstructGPT and Alpaca papers both mask the loss on prompt tokens: only response tokens contribute to the gradient, focusing training on the generative objective of producing correct responses.",
       hints: [
-        "Prompt tokens are the input — training to predict them is like predicting your own question.",
+        "Prompt tokens are the input - training to predict them is like predicting your own question.",
         "Loss masking on prompts: set the target tokens for the prompt to -100 (ignored by cross-entropy).",
       ],
     },
@@ -964,10 +964,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The DPO loss is:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log \\sigma\\bigl(\\beta \\ln \\frac{\\pi_\\theta(y_w|x)}{\\pi_\\text{ref}(y_w|x)} - \\beta \\ln \\frac{\\pi_\\theta(y_l|x)}{\\pi_\\text{ref}(y_l|x)}\\bigr).\n\\]\nThe term $\\beta \\ln \\frac{\\pi_\\theta(y|x)}{\\pi_\\text{ref}(y|x)}$ is $\\beta$ times the log-ratio of the policy to the reference. This is proportional to the KL divergence $D_\\text{KL}(\\pi_\\theta \\| \\pi_\\text{ref})$ between the fine-tuned and reference policies.\n\nIncreasing $\\beta$ scales up the KL penalty: the optimizer strongly minimizes the difference $\\pi_\\theta - \\pi_\\text{ref}$, keeping the model close to the reference. Decreasing $\\beta$ reduces the KL penalty, allowing $\\pi_\\theta$ to deviate further in order to maximize preference alignment — trading off proximity to the base model against preference accuracy.",
+        "The DPO loss is:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log \\sigma\\bigl(\\beta \\ln \\frac{\\pi_\\theta(y_w|x)}{\\pi_\\text{ref}(y_w|x)} - \\beta \\ln \\frac{\\pi_\\theta(y_l|x)}{\\pi_\\text{ref}(y_l|x)}\\bigr).\n\\]\nThe term $\\beta \\ln \\frac{\\pi_\\theta(y|x)}{\\pi_\\text{ref}(y|x)}$ is $\\beta$ times the log-ratio of the policy to the reference. This is proportional to the KL divergence $D_\\text{KL}(\\pi_\\theta \\| \\pi_\\text{ref})$ between the fine-tuned and reference policies.\n\nIncreasing $\\beta$ scales up the KL penalty: the optimizer strongly minimizes the difference $\\pi_\\theta - \\pi_\\text{ref}$, keeping the model close to the reference. Decreasing $\\beta$ reduces the KL penalty, allowing $\\pi_\\theta$ to deviate further in order to maximize preference alignment - trading off proximity to the base model against preference accuracy.",
       hints: [
         "The argument of $\\sigma$ is $\\beta \\times (\\text{log pref for } y_w - \\text{log pref for } y_l)$. High $\\beta$ amplifies this signal.",
-        "High $\\beta$: strong KL penalty — model stays close to base. Low $\\beta$: weak KL penalty — model maximizes preference signal at the cost of diverging from base.",
+        "High $\\beta$: strong KL penalty - model stays close to base. Low $\\beta$: weak KL penalty - model maximizes preference signal at the cost of diverging from base.",
       ],
     },
   ],
@@ -980,14 +980,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Grouped Query Attention (GQA) uses G groups of KV heads for H query heads (G < H). LLaMA-3-70B has 64 query heads and 8 KV heads. What is G and how does this reduce KV cache compared to full MHA?",
       options: [
-        "G = 64; no reduction — all heads still require their own K and V",
+        "G = 64; no reduction - all heads still require their own K and V",
         "G = 8; KV cache is 64/8 = 8\\times smaller than MHA since 8 K/V heads serve all 64 Q heads",
         "G = 8; KV cache is 8\\times larger because GQA stores extra metadata",
         "G = 1 (MQA); KV cache is reduced to a single K and V for all heads",
       ],
       correctAnswer: 1,
       explanation:
-        "With G = 8 KV groups and H = 64 Q heads, each group serves 64/8 = 8 query heads. KV cache size = 2 \\times layers \\times 8 \\times head_dim \\times seq_len, vs. 2 \\times layers \\times 64 \\times head_dim \\times seq_len for MHA — an 8\\times reduction. Ainslie et al. (2023) showed GQA achieves near-MHA quality at near-MQA inference efficiency.",
+        "With G = 8 KV groups and H = 64 Q heads, each group serves 64/8 = 8 query heads. KV cache size = 2 \\times layers \\times 8 \\times head_dim \\times seq_len, vs. 2 \\times layers \\times 64 \\times head_dim \\times seq_len for MHA - an 8\\times reduction. Ainslie et al. (2023) showed GQA achieves near-MHA quality at near-MQA inference efficiency.",
       hints: [
         "G = n_KV_heads = 8. KV cache reduction factor = n_Q_heads / n_KV_heads = 64/8 = 8\\times.",
         "Each KV group is shared by H/G = 64/8 = 8 query heads during attention computation.",
@@ -1001,9 +1001,9 @@ const questions: Record<string, Question[]> = {
         "To convert a pretrained MHA model to GQA without full retraining, Ainslie et al. (2023) showed that mean-pooling the original H KV heads into G groups provides a strong initialization for subsequent GQA fine-tuning with modest compute.",
       correctAnswer: "True",
       explanation:
-        'The GQA paper proposed "uptrained" conversion: group the H original KV head projections into G groups of H/G, mean-pool each group into a single KV head, and fine-tune on 5% of the original pretraining budget to recover nearly full MHA quality — making GQA accessible without full retraining from scratch.',
+        'The GQA paper proposed "uptrained" conversion: group the H original KV head projections into G groups of H/G, mean-pool each group into a single KV head, and fine-tune on 5% of the original pretraining budget to recover nearly full MHA quality - making GQA accessible without full retraining from scratch.',
       hints: [
-        "Averaging H/G KV heads into 1 is an initialization strategy — not the final trained state.",
+        "Averaging H/G KV heads into 1 is an initialization strategy - not the final trained state.",
         "5% retraining budget is much cheaper than the full pretraining cost, making GQA conversion practical.",
       ],
     },
@@ -1015,16 +1015,16 @@ const questions: Record<string, Question[]> = {
         "Multi-Query Attention (MQA, Shazeer 2019) is the extreme case of GQA with G = 1. Compared to GQA with G = 8, what is the quality trade-off and inference benefit of MQA for a model with 64 query heads?",
       options: [
         "MQA achieves identical quality to GQA-8 but with 64\\times smaller KV cache",
-        "MQA achieves 8\\times smaller KV cache than GQA-8 (64 vs. 8 KV heads), but shows more quality degradation — GQA-8 better balances efficiency and quality",
+        "MQA achieves 8\\times smaller KV cache than GQA-8 (64 vs. 8 KV heads), but shows more quality degradation - GQA-8 better balances efficiency and quality",
         "MQA always outperforms GQA because fewer parameters means less overfitting",
         "MQA and GQA-8 have identical KV cache sizes because head_dim is scaled accordingly",
       ],
       correctAnswer: 1,
       explanation:
-        "MQA (G=1): KV cache is 64\\times smaller than MHA. GQA-8 (G=8): KV cache is 8\\times smaller than MHA, 8\\times larger than MQA. Ainslie et al. showed MQA has noticeable quality loss (especially on tasks requiring fine-grained attention), while GQA-8 recovers most of MHA quality while retaining most of MQA\'s efficiency — making GQA the Pareto-optimal choice for modern LLMs.",
+        "MQA (G=1): KV cache is 64\\times smaller than MHA. GQA-8 (G=8): KV cache is 8\\times smaller than MHA, 8\\times larger than MQA. Ainslie et al. showed MQA has noticeable quality loss (especially on tasks requiring fine-grained attention), while GQA-8 recovers most of MHA quality while retaining most of MQA\'s efficiency - making GQA the Pareto-optimal choice for modern LLMs.",
       hints: [
-        "MQA: 1 KV head for all 64 Q heads — extreme memory saving, but a single KV must serve all diversity of Q heads.",
-        "GQA-8: 8 KV heads, each serving 8 Q heads — more diverse representations than MQA with 8\\times less cache than MHA.",
+        "MQA: 1 KV head for all 64 Q heads - extreme memory saving, but a single KV must serve all diversity of Q heads.",
+        "GQA-8: 8 KV heads, each serving 8 Q heads - more diverse representations than MQA with 8\\times less cache than MHA.",
       ],
     },
   ],
@@ -1040,14 +1040,14 @@ const questions: Record<string, Question[]> = {
         "8 \\times 7B = 56B parameters are active for every token",
         "~13B parameters active per token: attention layers (~7B) are always active, plus 2/8 of the total FFN expert parameters",
         "2 \\times 7B = 14B parameters active (2 experts \\times full model size)",
-        "7B parameters active — same as a dense 7B model since 2/8 = 1/4 of experts compensates",
+        "7B parameters active - same as a dense 7B model since 2/8 = 1/4 of experts compensates",
       ],
       correctAnswer: 1,
       explanation:
         "Mixtral 8\\times7B has 8 FFN expert blocks per layer, each the size of a standard 7B model's FFN. With 32 layers:\n\\[\n\\text{total params} \\approx 46.7B = \\underbrace{7B}_{\\text{attention}} + \\underbrace{8 \\times 7B}_{8 \\times \\text{FFN expert} \\times 32 \\text{ layers}}.\n\\]\nAt inference, the router activates $k = 2$ experts per token per layer. Breaking down active parameters:\n\\[\n\\underbrace{7B}_{\\text{attention (always-on)}} + \\underbrace{2}_{\\text{active experts}} \\times \\underbrace{\\frac{1}{8}}_{\\text{fraction}} \\times \\underbrace{8 \\times 7B}_{\\text{total FFN params}} \\approx 7B + 6B = 13B.\n\\]\nThis gives Mixtral quality comparable to a dense 13B model at the inference cost of a dense 7B model (only ~13B parameters processed per forward pass).",
       hints: [
         "Always-on: attention parameters (~7B). Active FFN: $k/8$ of the total FFN params per layer.",
-        "Mixtral's MoE magic: 46.7B total params, but only ~13B active per token — 2 experts per 8 \\times 7B experts \\times 32 layers + 7B attention.",
+        "Mixtral's MoE magic: 46.7B total params, but only ~13B active per token - 2 experts per 8 \\times 7B experts \\times 32 layers + 7B attention.",
       ],
     },
     {
@@ -1055,7 +1055,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Without an auxiliary load balancing loss, MoE models collapse: the router learns to always route tokens to the same 1–2 experts, making most expert capacity permanently unused and eliminating the benefit of having multiple experts.",
+        "Without an auxiliary load balancing loss, MoE models collapse: the router learns to always route tokens to the same 1-2 experts, making most expert capacity permanently unused and eliminating the benefit of having multiple experts.",
       correctAnswer: "True",
       explanation:
         "Router collapse is a well-documented MoE failure mode: a popular expert gets more gradient signal \\to improves faster \\to gets routed to more \\to gets even more signal (positive feedback loop). The load balancing loss (e.g., auxiliary cross-entropy over expert assignment uniformity) breaks this cycle by penalizing unequal routing.",
@@ -1072,16 +1072,16 @@ const questions: Record<string, Question[]> = {
         'DeepSeek-V2\'s fine-grained MoE architecture uses 160 routed experts with top-6 routing, plus 2 always-on "shared experts". Why are shared (always-on) experts beneficial in addition to routed experts?',
       options: [
         "Shared experts handle the routing computation, reducing router overhead",
-        "Shared experts capture common knowledge and representations needed by all tokens (e.g., basic language modeling), while routed experts specialize in domain-specific patterns — preventing specialization from damaging general capability",
+        "Shared experts capture common knowledge and representations needed by all tokens (e.g., basic language modeling), while routed experts specialize in domain-specific patterns - preventing specialization from damaging general capability",
         "Shared experts prevent router collapse by providing a guaranteed gradient path",
         "Shared experts are replicated across GPUs for load balancing without communication overhead",
       ],
       correctAnswer: 1,
       explanation:
-        "Routed experts can over-specialize: if all experts compete for specific niches, general-purpose representations may degrade. Shared experts that all tokens always pass through maintain stable general-purpose feature extraction, while routed experts add specialization on top — a divide between general and specialized processing.",
+        "Routed experts can over-specialize: if all experts compete for specific niches, general-purpose representations may degrade. Shared experts that all tokens always pass through maintain stable general-purpose feature extraction, while routed experts add specialization on top - a divide between general and specialized processing.",
       hints: [
         'Shared experts \\approx the "general" backbone; routed experts \\approx the "specialist" modules.',
-        "Without shared experts, every expert must balance generalism and specialism — leading to worse specialization.",
+        "Without shared experts, every expert must balance generalism and specialism - leading to worse specialization.",
       ],
     },
   ],
@@ -1095,13 +1095,13 @@ const questions: Record<string, Question[]> = {
         "Sliding Window Attention (SWA) with window size w = 4096 processes a sequence of n = 32768 tokens. What is the memory cost of the attention matrix vs. full self-attention?",
       options: [
         "SWA attention matrix: n \\times n = 32768\\^2 \\approx 1.1B elements; same as full attention",
-        "SWA attention matrix: n \\times w = 32768 \\times 4096 \\approx 134M elements — 8\\times smaller than full attention\'s n\\^2 \\approx 1.1B elements",
-        "SWA attention matrix: w \\times w = 4096\\^2 \\approx 16.8M elements — 67\\times smaller",
-        "SWA has no attention matrix — it replaces attention with linear convolutions",
+        "SWA attention matrix: n \\times w = 32768 \\times 4096 \\approx 134M elements - 8\\times smaller than full attention\'s n\\^2 \\approx 1.1B elements",
+        "SWA attention matrix: w \\times w = 4096\\^2 \\approx 16.8M elements - 67\\times smaller",
+        "SWA has no attention matrix - it replaces attention with linear convolutions",
       ],
       correctAnswer: 1,
       explanation:
-        "In SWA, each of n tokens attends to its w nearest neighbors — the attention matrix is n \\times w instead of n \\times n. For n = 32768 and w = 4096: n \\times w = 134M vs. n\\^2 = 1.07B — an n/w = 8\\times reduction. This enables linear O(n\\timesw) memory scaling rather than quadratic O(n\\^2) for full attention.",
+        "In SWA, each of n tokens attends to its w nearest neighbors - the attention matrix is n \\times w instead of n \\times n. For n = 32768 and w = 4096: n \\times w = 134M vs. n\\^2 = 1.07B - an n/w = 8\\times reduction. This enables linear O(n\\timesw) memory scaling rather than quadratic O(n\\^2) for full attention.",
       hints: [
         "Each row of the attention matrix has w non-zero entries instead of n.",
         "Total attention matrix size: n rows \\times w columns = n\\timesw, vs. n\\timesn for full attention.",
@@ -1118,7 +1118,7 @@ const questions: Record<string, Question[]> = {
         "This is the receptive field argument: layer 1 sees positions within w of each token; layer 2 sees positions within w of layer-1 representations (which already aggregate w-wide neighborhoods); after L layers, each position has an effective receptive field of L \\times w. Like deep CNNs, local attention layers compose into global context.",
       hints: [
         "Analogy: a CNN with kernel size 3 has receptive field 3 at layer 1, 5 at layer 2, 2L+1 at layer L.",
-        "SWA effective receptive field = L \\times w — grows linearly with depth.",
+        "SWA effective receptive field = L \\times w - grows linearly with depth.",
       ],
     },
     {
@@ -1128,17 +1128,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Longformer uses a hybrid of SWA (local attention) + global attention tokens. The [CLS] token and task-relevant tokens are given global attention. What is the computational complexity of this hybrid scheme for n tokens with w window and g global tokens?",
       options: [
-        "O(n\\^2) — global tokens make it equivalent to full attention",
-        "O(n \\times (w + g)) — linear in n (with n >> w, g), much cheaper than O(n\\^2) full attention while enabling long-range integration through the g global tokens",
-        "O(n \\times w + g\\^2) — local window is linear; global tokens form a quadratic bottleneck",
-        "O(n \\times g) — only global token interactions matter; local attention is free",
+        "O(n\\^2) - global tokens make it equivalent to full attention",
+        "O(n \\times (w + g)) - linear in n (with n >> w, g), much cheaper than O(n\\^2) full attention while enabling long-range integration through the g global tokens",
+        "O(n \\times w + g\\^2) - local window is linear; global tokens form a quadratic bottleneck",
+        "O(n \\times g) - only global token interactions matter; local attention is free",
       ],
       correctAnswer: 1,
       explanation:
-        "Longformer complexity: local attention = O(n \\times w); global attention = O(n \\times g) (each of n tokens attends to all g global tokens, and g global tokens attend to all n). Total = O(n \\times (w + g)), which is linear in n when w and g are fixed constants << n — enabling efficient processing of very long documents.",
+        "Longformer complexity: local attention = O(n \\times w); global attention = O(n \\times g) (each of n tokens attends to all g global tokens, and g global tokens attend to all n). Total = O(n \\times (w + g)), which is linear in n when w and g are fixed constants << n - enabling efficient processing of very long documents.",
       hints: [
         "Local: n \\times w interactions. Global: n \\times g interactions (n tokens \\times g globals each way).",
-        "Total O(n(w+g)) is linear in n — the quadratic bottleneck of full attention is eliminated.",
+        "Total O(n(w+g)) is linear in n - the quadratic bottleneck of full attention is eliminated.",
       ],
     },
   ],
@@ -1158,9 +1158,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'RAG faithfulness depends on retrieval precision: irrelevant chunks can actively harm generation by providing misleading context. LLMs tend to "stay grounded" in provided context even when it is wrong — a behavior called faithfulness to context that backfires when retrieval retrieves the wrong documents.',
+        'RAG faithfulness depends on retrieval precision: irrelevant chunks can actively harm generation by providing misleading context. LLMs tend to "stay grounded" in provided context even when it is wrong - a behavior called faithfulness to context that backfires when retrieval retrieves the wrong documents.',
       hints: [
-        "LLMs are trained to use provided context — they don\'t automatically ignore irrelevant information.",
+        "LLMs are trained to use provided context - they don\'t automatically ignore irrelevant information.",
         "Retrieval precision is often more important than recall for RAG quality.",
       ],
     },
@@ -1172,10 +1172,10 @@ const questions: Record<string, Question[]> = {
         "RAG (Lewis et al., 2020) showed that jointly training the retriever and generator using non-differentiable retrieval (via marginalization over discrete retrieved documents) is possible through MIPS (Maximum Inner Product Search) and gradient approximation.",
       correctAnswer: "True",
       explanation:
-        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) \\times p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
+        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) \\times p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable - approximated via in-batch updates.",
       hints: [
         "Marginalization: sum over top-k retrieved documents weighted by their retrieval probability.",
-        "The retriever is updated to retrieve documents that help the generator — not just documents with keyword overlap.",
+        "The retriever is updated to retrieve documents that help the generator - not just documents with keyword overlap.",
       ],
     },
     {
@@ -1186,7 +1186,7 @@ const questions: Record<string, Question[]> = {
         "HyDE (Hypothetical Document Embeddings, Gao et al., 2022) improves RAG retrieval by generating a hypothetical answer first and using its embedding (not the query embedding) for retrieval. Why does this improve retrieval quality?",
       options: [
         "Hypothetical answers have shorter text than questions, reducing embedding computation cost",
-        "The embedding space is trained on documents — document-to-document similarity is more reliable than query-to-document similarity; a hypothetical answer written in document style better matches the retrieval corpus embedding distribution",
+        "The embedding space is trained on documents - document-to-document similarity is more reliable than query-to-document similarity; a hypothetical answer written in document style better matches the retrieval corpus embedding distribution",
         "HyDE uses the LLM to directly search the database, bypassing embedding similarity",
         "Generating a hypothetical answer forces the LLM to commit to one interpretation of the query, reducing retrieval ambiguity",
       ],
@@ -1194,7 +1194,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Dense retrieval models are trained to embed queries and documents in the same space, but the distributional gap between question-style queries and answer-style documents creates a "query-document gap". HyDE bridges this by generating a hypothetical document (answer-style text) whose embedding naturally aligns with the target document distribution, improving recall.',
       hints: [
-        'The retriever embeds both query and documents — but queries ("What is X?") and documents ("X is...") have different text distributions.',
+        'The retriever embeds both query and documents - but queries ("What is X?") and documents ("X is...") have different text distributions.',
         "A generated answer in document style inhabits the same embedding space as real answers.",
       ],
     },
@@ -1215,9 +1215,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The LLM generates structured JSON with function name and arguments — not executable code or API calls. The application layer parses this JSON, executes the actual function call, and returns the result as a tool message back to the LLM for incorporation into the final response.",
+        "The LLM generates structured JSON with function name and arguments - not executable code or API calls. The application layer parses this JSON, executes the actual function call, and returns the result as a tool message back to the LLM for incorporation into the final response.",
       hints: [
-        "LLMs are text models — they output text/JSON, never directly execute code or make HTTP requests.",
+        "LLMs are text models - they output text/JSON, never directly execute code or make HTTP requests.",
         "The tool call JSON is parsed by the application, not by the LLM itself.",
       ],
     },
@@ -1226,10 +1226,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Parallel tool calling — where the LLM outputs multiple tool call objects in a single response — reduces total latency for independent tool lookups by allowing concurrent execution rather than serial (one tool at a time) execution.",
+        "Parallel tool calling - where the LLM outputs multiple tool call objects in a single response - reduces total latency for independent tool lookups by allowing concurrent execution rather than serial (one tool at a time) execution.",
       correctAnswer: "True",
       explanation:
-        "If a task requires querying weather in 3 cities, serial tool calling requires 3 LLM calls (one per tool + response incorporation); parallel tool calling allows the LLM to output all 3 tool requests at once, the application executes them concurrently, and returns all results in a single tool message batch — reducing 3 round-trips to 1.",
+        "If a task requires querying weather in 3 cities, serial tool calling requires 3 LLM calls (one per tool + response incorporation); parallel tool calling allows the LLM to output all 3 tool requests at once, the application executes them concurrently, and returns all results in a single tool message batch - reducing 3 round-trips to 1.",
       hints: [
         "Serial: request tool 1 \\to wait \\to request tool 2 \\to wait \\to request tool 3 \\to final answer.",
         "Parallel: request all 3 tools at once \\to wait once \\to final answer. Fewer round-trips = lower latency.",
@@ -1243,16 +1243,16 @@ const questions: Record<string, Question[]> = {
         "Prompt injection in tool-calling agents occurs when malicious content in tool outputs contains instructions that override the agent\'s original task. Which defense mechanism most directly addresses this attack?",
       options: [
         "Increasing the temperature parameter so the LLM ignores injected instructions",
-        'Structurally separating tool output content from the instruction namespace — e.g., placing tool results in a sandboxed "data" context with lower trust than the system prompt, so injected instructions are not interpreted as authoritative commands',
+        'Structurally separating tool output content from the instruction namespace - e.g., placing tool results in a sandboxed "data" context with lower trust than the system prompt, so injected instructions are not interpreted as authoritative commands',
         "Restricting tool calls to a whitelist of 5 pre-approved functions",
         "Running the agent with a smaller context window to limit the impact of injected content",
       ],
       correctAnswer: 1,
       explanation:
-        'Prompt injection exploits the LLM\'s inability to distinguish data from instructions — both appear as text in the context. Structural defenses create privilege levels: system prompt > user message > tool output. If the LLM is trained to treat tool outputs as data (not instructions), injected "Ignore previous instructions" in tool results has no effect.',
+        'Prompt injection exploits the LLM\'s inability to distinguish data from instructions - both appear as text in the context. Structural defenses create privilege levels: system prompt > user message > tool output. If the LLM is trained to treat tool outputs as data (not instructions), injected "Ignore previous instructions" in tool results has no effect.',
       hints: [
         "The root cause: LLMs treat all text in context equally, regardless of source.",
-        "Defense principle: privilege separation — system instructions >> data from external tools.",
+        "Defense principle: privilege separation - system instructions >> data from external tools.",
       ],
     },
   ],
@@ -1272,10 +1272,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ReAct (Yao et al., 2022) interleaves three step types at each turn:\n\n1. **Thought** $\\tau$: the LLM reasons about the current state and decides what to do next. Example: \"The question asks for Paris's population, so I need to search for 'Paris population.'\"\n\n2. **Action** $a$: the LLM outputs a tool call. Example: `search(\"Paris population\")`.\n\n3. **Observation** $o$: the tool result is injected back into the context. Example: \"Paris population is 2.1 million.\"\n\nThe cycle $\\tau \\rightarrow a \\rightarrow o \\rightarrow \\tau \\rightarrow \\cdots$ repeats until the LLM produces a Final Answer. For \"Find the population of the capital of France\":\n\\[\n\\tau_1: & \\text{\"France's capital is Paris\"} \\rightarrow a_1: \\text{search}(\\text{Paris population}) \\\\\n\\tau_2: & o_1 = \\text{\"2.1M\"} \\rightarrow \\text{\"I have the answer\"} \\rightarrow \\text{Final Answer: 2.1M}\n\\]\nThe explicit Thought steps make the agent's reasoning traceable — unlike Action-only agents (which act without visible reasoning) or Thought-only agents (which cannot observe tool results).",
+        "ReAct (Yao et al., 2022) interleaves three step types at each turn:\n\n1. **Thought** $\\tau$: the LLM reasons about the current state and decides what to do next. Example: \"The question asks for Paris's population, so I need to search for 'Paris population.'\"\n\n2. **Action** $a$: the LLM outputs a tool call. Example: `search(\"Paris population\")`.\n\n3. **Observation** $o$: the tool result is injected back into the context. Example: \"Paris population is 2.1 million.\"\n\nThe cycle $\\tau \\rightarrow a \\rightarrow o \\rightarrow \\tau \\rightarrow \\cdots$ repeats until the LLM produces a Final Answer. For \"Find the population of the capital of France\":\n\\[\n\\tau_1: & \\text{\"France's capital is Paris\"} \\rightarrow a_1: \\text{search}(\\text{Paris population}) \\\\\n\\tau_2: & o_1 = \\text{\"2.1M\"} \\rightarrow \\text{\"I have the answer\"} \\rightarrow \\text{Final Answer: 2.1M}\n\\]\nThe explicit Thought steps make the agent's reasoning traceable - unlike Action-only agents (which act without visible reasoning) or Thought-only agents (which cannot observe tool results).",
       hints: [
         "The cycle is: Thought (reason) \\to Action (tool call) \\to Observation (result) \\to repeat \\to Final Answer.",
-        "Explicit thoughts make the agent debuggable — you can inspect the reasoning trace step by step.",
+        "Explicit thoughts make the agent debuggable - you can inspect the reasoning trace step by step.",
       ],
     },
     {
@@ -1288,8 +1288,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Even with temperature = 0, LLM agents can behave non-deterministically due to: (1) floating-point non-determinism in GPU parallel operations, (2) external tool variability (web search results change), (3) API-level batching affecting softmax computation. Perfect reproducibility requires identical hardware, software, random seeds, and deterministic tool outputs.",
       hints: [
-        "Floating-point addition is not associative — parallel GPU reductions can give different results across runs.",
-        "Real-world tools (search, APIs) return time-varying results — a major source of agent non-determinism.",
+        "Floating-point addition is not associative - parallel GPU reductions can give different results across runs.",
+        "Real-world tools (search, APIs) return time-varying results - a major source of agent non-determinism.",
       ],
     },
     {
@@ -1308,8 +1308,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Single-agent limitations: context window fills with interleaved subtask history, reducing attention quality on current task; all subtasks are serialized; one prompt must serve all specializations. Multi-agent addresses all three: focused context per subagent (better attention quality), parallel execution, and per-subagent specialization via targeted system prompts.",
       hints: [
-        "A 128k context shared across 10 subtasks gives each subtask ~12k effective context — degraded vs. a dedicated 128k.",
-        "Independent subtasks (e.g., search 3 different topics) can parallelize — 3\\times throughput for free.",
+        "A 128k context shared across 10 subtasks gives each subtask ~12k effective context - degraded vs. a dedicated 128k.",
+        "Independent subtasks (e.g., search 3 different topics) can parallelize - 3\\times throughput for free.",
       ],
     },
   ],
@@ -1329,7 +1329,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MMLU's 57 subjects include STEM, law, medicine, and humanities. The format is strictly multiple-choice: for each question, the model picks one of 4 options. This tests knowledge recognition — whether the model can identify the correct answer when it is explicitly listed.\n\n90% MMLU tells us the model can correctly identify the answer from a list in 90% of cases. It does NOT tell us whether the model can:\n- Generate explanations (open-ended, no options given)\n- Perform multi-step reasoning (MMLU tests single-step knowledge retrieval)\n- Follow instructions in novel formats (no instruction-following required)\n- Complete practical tasks (benchmark tests closed-book knowledge, not real-world task completion)\n\nThis is a critical distinction: recognition is much easier than generation, and choosing from 4 options is much easier than producing an answer from scratch.",
+        "MMLU's 57 subjects include STEM, law, medicine, and humanities. The format is strictly multiple-choice: for each question, the model picks one of 4 options. This tests knowledge recognition - whether the model can identify the correct answer when it is explicitly listed.\n\n90% MMLU tells us the model can correctly identify the answer from a list in 90% of cases. It does NOT tell us whether the model can:\n- Generate explanations (open-ended, no options given)\n- Perform multi-step reasoning (MMLU tests single-step knowledge retrieval)\n- Follow instructions in novel formats (no instruction-following required)\n- Complete practical tasks (benchmark tests closed-book knowledge, not real-world task completion)\n\nThis is a critical distinction: recognition is much easier than generation, and choosing from 4 options is much easier than producing an answer from scratch.",
       hints: [
         "Recognition (choose from 4 options) is fundamentally easier than generation (produce the answer unprompted).",
         "MMLU tests: \"Which is correct?\" It does not test: \"Explain why X is correct.\"",
@@ -1340,7 +1340,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "LLM-as-judge evaluation (e.g., using GPT-4 to score model outputs) exhibits positional bias — preferring the response listed first — and verbosity bias — preferring longer responses even when length does not indicate quality.",
+        "LLM-as-judge evaluation (e.g., using GPT-4 to score model outputs) exhibits positional bias - preferring the response listed first - and verbosity bias - preferring longer responses even when length does not indicate quality.",
       correctAnswer: "True",
       explanation:
         "MT-Bench (Zheng et al., 2023) systematically studied LLM judge biases and confirmed both: positional bias (first/second position preference varies by model) and verbosity bias (LLM judges consistently prefer longer responses even when human evaluators do not). Standard mitigations include swapping response order and running both orderings, averaging results.",
@@ -1363,7 +1363,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The naive approach — generate $k$ samples and check if any pass — has very high variance because a single run of $k$ samples either succeeds (if at least one is correct) or fails (if all are wrong). Repeating this experiment gives different results each time.\n\nThe unbiased estimator uses all $n$ generated samples. Let $c$ be the number of correct samples among $n$. The probability that $k$ new samples would all fail is:\n\\[\nP(\\text{all } k \\text{ fail}) = \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nTherefore:\n\\[\n\\widehat{\\text{pass}@k} = 1 - \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nThis uses the fraction $c/n$ of correct samples to estimate the probability that a batch of $k$ samples contains at least one correct. It is unbiased because it does not cherry-pick the single best $k$ from $n$ — it conditions on the observed correct rate $c/n$ and computes the expected pass rate for any $k$.",
+        "The naive approach - generate $k$ samples and check if any pass - has very high variance because a single run of $k$ samples either succeeds (if at least one is correct) or fails (if all are wrong). Repeating this experiment gives different results each time.\n\nThe unbiased estimator uses all $n$ generated samples. Let $c$ be the number of correct samples among $n$. The probability that $k$ new samples would all fail is:\n\\[\nP(\\text{all } k \\text{ fail}) = \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nTherefore:\n\\[\n\\widehat{\\text{pass}@k} = 1 - \\frac{\\binom{n-c}{k}}{\\binom{n}{k}}.\n\\]\nThis uses the fraction $c/n$ of correct samples to estimate the probability that a batch of $k$ samples contains at least one correct. It is unbiased because it does not cherry-pick the single best $k$ from $n$ - it conditions on the observed correct rate $c/n$ and computes the expected pass rate for any $k$.",
       hints: [
         "The key insight: if $c/n$ of samples are correct, then a fresh batch of $k$ samples has $(1 - c/n)^k$ probability of all being wrong.",
         "The combinatorial formula $1 - \\binom{n-c}{k}/\\binom{n}{k}$ implements this logic without actually running multiple independent batches.",
@@ -1388,7 +1388,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "PPO requires thousands of reward evaluations per update; having humans evaluate each output would take weeks per training run. The reward model (trained once on human preference comparisons) provides instant scalar rewards for any generated output, enabling efficient RL training at scale.",
       hints: [
-        "PPO generates many rollouts per step — each needing a reward signal. Humans can\'t keep up.",
+        "PPO generates many rollouts per step - each needing a reward signal. Humans can\'t keep up.",
         "The reward model generalizes from ~10-100K human comparisons to evaluate any generated text.",
       ],
     },
@@ -1400,10 +1400,10 @@ const questions: Record<string, Question[]> = {
         'Constitutional AI (CAI, Anthropic 2022) trains helpful and harmless models without requiring human harm ratings by using the LLM itself to critique and revise its own outputs according to a set of principles (the "constitution").',
       correctAnswer: "True",
       explanation:
-        "CAI\'s two-phase approach: (1) SL-CAI: the model generates a response, critiques it against constitutional principles, then revises it — supervised learning on the revised responses without human harm labels. (2) RL-CAI: use an AI preference model (trained on AI-generated comparison labels) instead of human raters to scale RLHF-style training.",
+        "CAI\'s two-phase approach: (1) SL-CAI: the model generates a response, critiques it against constitutional principles, then revises it - supervised learning on the revised responses without human harm labels. (2) RL-CAI: use an AI preference model (trained on AI-generated comparison labels) instead of human raters to scale RLHF-style training.",
       hints: [
         "The LLM acts as its own red-teamer and reviser using the constitution as a reference.",
-        "AI feedback (not human feedback) scales Constitutional AI — reducing human annotation cost dramatically.",
+        "AI feedback (not human feedback) scales Constitutional AI - reducing human annotation cost dramatically.",
       ],
     },
     {
@@ -1413,17 +1413,17 @@ const questions: Record<string, Question[]> = {
       question:
         "DPO\'s loss is L_DPO = -E[(log \\sigma(\\beta \\times (log \\pi_\\theta(y_w|x) - log \\pi_ref(y_w|x)) - \\beta \\times (log \\pi_\\theta(y_l|x) - log \\pi_ref(y_l|x))))]. What happens mathematically when \\pi_\\theta = \\pi_ref (the fine-tuned model equals the reference)?",
       options: [
-        "The loss is maximized — the model must diverge from the reference to minimize DPO loss",
-        "All log-ratios are 0, making the argument of \\sigma equal to 0, so \\sigma(0) = 0.5 and loss = -log(0.5) \\approx 0.693 — a non-zero loss indicating the model hasn\'t learned preferences yet",
+        "The loss is maximized - the model must diverge from the reference to minimize DPO loss",
+        "All log-ratios are 0, making the argument of \\sigma equal to 0, so \\sigma(0) = 0.5 and loss = -log(0.5) \\approx 0.693 - a non-zero loss indicating the model hasn\'t learned preferences yet",
         "The loss is undefined since log(\\pi_\\theta/\\pi_ref) = log(1) = 0 is an edge case",
-        "The gradient of the DPO loss at \\pi_\\theta = \\pi_ref is 0 — it is always a fixed point",
+        "The gradient of the DPO loss at \\pi_\\theta = \\pi_ref is 0 - it is always a fixed point",
       ],
       correctAnswer: 1,
       explanation:
         "When the fine-tuned policy equals the reference ($\\pi_\\theta = \\pi_\\text{ref}$):\n\\[\n\\log \\frac{\\pi_\\theta(y_w|x)}{\\pi_\\text{ref}(y_w|x)} = \\log 1 = 0,\n\\]\n\\[\n\\log \\frac{\\pi_\\theta(y_l|x)}{\\pi_\\text{ref}(y_l|x)} = \\log 1 = 0.\n\\]\nSubstituting into the DPO loss:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log \\sigma\\bigl(\\beta \\cdot 0 - \\beta \\cdot 0\\bigr) = -\\log \\sigma(0).\n\\]\nSince $\\sigma(z) = 1/(1 + e^{-z})$, we have $\\sigma(0) = 1/2$. Therefore:\n\\[\n\\mathcal{L}_\\text{DPO} = -\\log\\!\\left(\\tfrac{1}{2}\\right) = \\log 2 \\approx 0.693.\n\\]\nThis is a non-zero loss, confirming the model has not yet learned preferences. The gradient at this point is non-zero and pushes $\\pi_\\theta$ to increase the log-probability gap between preferred and rejected responses.",
       hints: [
         "At $\\pi_\\theta = \\pi_\\text{ref}$: both log-ratios are 0, so $\\sigma(0) = 1/2$ and loss $= -\\log(1/2) = \\log 2 \\approx 0.693$.",
-        "The non-zero gradient means training will improve preference alignment from this starting point — $\\pi_\\theta = \\pi_\\text{ref}$ is not a fixed point.",
+        "The non-zero gradient means training will improve preference alignment from this starting point - $\\pi_\\theta = \\pi_\\text{ref}$ is not a fixed point.",
       ],
     },
   ],
@@ -1443,7 +1443,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The LLaMA 3 license specifically restricts: (1) using LLaMA outputs to train other models except LLaMA derivatives, (2) deploying to users of services with > 700M MAU without Meta approval. Most common commercial uses (hosting, fine-tuning for products) are permitted — the restrictions target large-scale deployment and competitor training.",
+        "The LLaMA 3 license specifically restricts: (1) using LLaMA outputs to train other models except LLaMA derivatives, (2) deploying to users of services with > 700M MAU without Meta approval. Most common commercial uses (hosting, fine-tuning for products) are permitted - the restrictions target large-scale deployment and competitor training.",
       hints: [
         '"Open-weights" = weights are downloadable; "open-source" = code + data + weights under OSI-approved license.',
         "True open-source (Apache 2.0, MIT) permits any use including training competitors' models.",
@@ -1457,9 +1457,9 @@ const questions: Record<string, Question[]> = {
         "Mistral-7B-v0.1 achieves better benchmark performance than LLaMA-2-13B on many tasks, demonstrating that architectural choices (GQA, SWA) and training data quality can compensate for a 2\\times deficit in parameter count.",
       correctAnswer: "True",
       explanation:
-        "Jiang et al. (2023) showed Mistral-7B outperforms LLaMA-2-13B on commonsense reasoning, math, and code benchmarks. The key factors: sliding window attention enabling longer effective context, GQA for better inference efficiency, and aggressive data quality filtering — demonstrating that raw parameter count is not the dominant determinant of capability.",
+        "Jiang et al. (2023) showed Mistral-7B outperforms LLaMA-2-13B on commonsense reasoning, math, and code benchmarks. The key factors: sliding window attention enabling longer effective context, GQA for better inference efficiency, and aggressive data quality filtering - demonstrating that raw parameter count is not the dominant determinant of capability.",
       hints: [
-        "Model quality is determined by architecture, data, and training recipe — not just parameter count.",
+        "Model quality is determined by architecture, data, and training recipe - not just parameter count.",
         "Mistral-7B\'s KV cache efficiency (GQA) also makes it practically preferable for deployment despite similar raw performance.",
       ],
     },
@@ -1477,9 +1477,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Falcon\'s key contribution was demonstrating that extensive web data curation (removing duplicates, low-quality text, and harmful content via RefinedWeb) combined with a largely standard architecture could match or beat models trained on similar compute with more architectural complexity — reinforcing Chinchilla\'s data-quality message at the 180B scale.",
+        "Falcon\'s key contribution was demonstrating that extensive web data curation (removing duplicates, low-quality text, and harmful content via RefinedWeb) combined with a largely standard architecture could match or beat models trained on similar compute with more architectural complexity - reinforcing Chinchilla\'s data-quality message at the 180B scale.",
       hints: [
-        "RefinedWeb is the differentiator — aggressive filtering of Common Crawl to high-quality text.",
+        "RefinedWeb is the differentiator - aggressive filtering of Common Crawl to high-quality text.",
         '"Data-optimal" training: more tokens of higher quality often outperforms fewer tokens of lower quality.',
       ],
     },
@@ -1500,7 +1500,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "A 336\\times336 image with 14\\times14 patch size gives (336/14)\\^2 = 576 patch tokens. This is substantial — roughly equivalent to 400–600 text tokens depending on the text. For high-resolution images, newer models like LLaVA-1.6 use dynamic tiling, producing 2880+ tokens per image, consuming much of the context window.",
+        "A 336\\times336 image with 14\\times14 patch size gives (336/14)\\^2 = 576 patch tokens. This is substantial - roughly equivalent to 400-600 text tokens depending on the text. For high-resolution images, newer models like LLaVA-1.6 use dynamic tiling, producing 2880+ tokens per image, consuming much of the context window.",
       hints: [
         "576 image tokens \\approx a dense paragraph of text in context budget terms.",
         "High-res images with tiling (e.g., 4 tiles \\times 576 = 2304 tokens) can dominate the context window.",
@@ -1536,8 +1536,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Post-hoc VLMs face the "modality gap" problem: CLIP and the LLM are trained separately, then bridged by a learned projection. The projection must compensate for the independently-optimized embedding spaces. Native models (trained end-to-end on interleaved text and image data) develop representations where visual and textual features are inherently aligned, enabling deeper integration.',
       hints: [
-        "CLIP embeds images for contrastive image-text matching; LLMs embed text for next-token prediction — different objectives, different spaces.",
-        "Native co-training: from the first training step, visual tokens interact with text tokens — representations evolve jointly.",
+        "CLIP embeds images for contrastive image-text matching; LLMs embed text for next-token prediction - different objectives, different spaces.",
+        "Native co-training: from the first training step, visual tokens interact with text tokens - representations evolve jointly.",
       ],
     },
   ],
@@ -1557,7 +1557,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CoT prompting elicits intermediate reasoning steps: first compute 3 \\times 8 = 24, then 2 \\times 12 = 24, then sum 24 + 24 = 48. Wei et al. showed that providing few-shot CoT examples dramatically improves accuracy on arithmetic, symbolic, and commonsense reasoning — particularly for large models (\\geq100B parameters in 2022, now effective at smaller scale with instruction tuning).",
+        "CoT prompting elicits intermediate reasoning steps: first compute 3 \\times 8 = 24, then 2 \\times 12 = 24, then sum 24 + 24 = 48. Wei et al. showed that providing few-shot CoT examples dramatically improves accuracy on arithmetic, symbolic, and commonsense reasoning - particularly for large models (\\geq100B parameters in 2022, now effective at smaller scale with instruction tuning).",
       hints: [
         "CoT = explicit intermediate steps before the final answer.",
         "Models prompted with step-by-step reasoning examples produce step-by-step reasoning themselves.",
@@ -1568,12 +1568,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        'DeepSeek-R1 and OpenAI o1 train extended reasoning ("thinking") using pure outcome-based RL — they use no human-annotated reasoning traces, relying solely on final answer correctness as the reward signal.',
+        'DeepSeek-R1 and OpenAI o1 train extended reasoning ("thinking") using pure outcome-based RL - they use no human-annotated reasoning traces, relying solely on final answer correctness as the reward signal.',
       correctAnswer: "True",
       explanation:
-        "DeepSeek-R1 (2025) demonstrated that RL with sparse outcome rewards (correct/incorrect final answer) causes the model to spontaneously develop effective reasoning strategies including self-verification, backtracking, and exploration — without any human annotation of intermediate steps. The model discovers CoT-like reasoning as an emergent strategy for maximizing the outcome reward.",
+        "DeepSeek-R1 (2025) demonstrated that RL with sparse outcome rewards (correct/incorrect final answer) causes the model to spontaneously develop effective reasoning strategies including self-verification, backtracking, and exploration - without any human annotation of intermediate steps. The model discovers CoT-like reasoning as an emergent strategy for maximizing the outcome reward.",
       hints: [
-        "Outcome reward = 1 if final answer correct, 0 otherwise — no credit for intermediate steps.",
+        "Outcome reward = 1 if final answer correct, 0 otherwise - no credit for intermediate steps.",
         "Despite sparse rewards, the model learns rich intermediate behaviors (verification, exploration) as optimal strategies.",
       ],
     },
@@ -1582,19 +1582,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Process Reward Models (PRMs, Lightman et al., 2023) assign step-level rewards to reasoning chains. For a 10-step solution where steps 1–8 are correct but step 9 is subtly wrong (leading to a wrong answer), how do PRMs differ from Outcome Reward Models (ORMs) in the training signal they provide?",
+        "Process Reward Models (PRMs, Lightman et al., 2023) assign step-level rewards to reasoning chains. For a 10-step solution where steps 1-8 are correct but step 9 is subtly wrong (leading to a wrong answer), how do PRMs differ from Outcome Reward Models (ORMs) in the training signal they provide?",
       options: [
         "PRM: reward = 0 for all steps (fails at step 9); ORM: reward = 0 for the full solution",
-        "PRM: reward = +1 for steps 1–8 (correct), reward = 0 for steps 9–10 (incorrect); ORM: reward = 0 for the entire solution — PRMs provide dense positive signal for correct reasoning even when the final answer is wrong",
+        "PRM: reward = +1 for steps 1-8 (correct), reward = 0 for steps 9-10 (incorrect); ORM: reward = 0 for the entire solution - PRMs provide dense positive signal for correct reasoning even when the final answer is wrong",
         "PRM and ORM give identical signals for this case since the solution is ultimately wrong",
         "PRM: reward = -1 for step 9; ORM: reward = +0.8 for the 80% correct solution",
       ],
       correctAnswer: 1,
       explanation:
-        "Lightman et al. showed ORMs are too sparse for long reasoning chains: a mostly-correct 10-step solution with one error gets 0 reward — wasting the learning signal from the 8 correct steps. PRMs provide +1 for each correct step (1–8) and 0 for incorrect steps (9–10), enabling dense credit assignment that significantly improves reasoning training efficiency.",
+        "Lightman et al. showed ORMs are too sparse for long reasoning chains: a mostly-correct 10-step solution with one error gets 0 reward - wasting the learning signal from the 8 correct steps. PRMs provide +1 for each correct step (1-8) and 0 for incorrect steps (9-10), enabling dense credit assignment that significantly improves reasoning training efficiency.",
       hints: [
-        "ORM sees only the final answer — a wrong answer gets 0 regardless of how many steps were correct.",
-        "PRM sees each step — 8 correct steps get +8 in reward signal even if the conclusion is wrong.",
+        "ORM sees only the final answer - a wrong answer gets 0 regardless of how many steps were correct.",
+        "PRM sees each step - 8 correct steps get +8 in reward signal even if the conclusion is wrong.",
       ],
     },
   ],
@@ -1605,19 +1605,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Fill-in-the-Middle (FIM) training — used in CodeLlama, DeepSeek-Coder — trains the model to predict a masked middle segment given prefix and suffix. The input format is: <PRE>[prefix]<SUF>[suffix]<MID>. What task does this enable that standard left-to-right autoregressive training does not?",
+        "Fill-in-the-Middle (FIM) training - used in CodeLlama, DeepSeek-Coder - trains the model to predict a masked middle segment given prefix and suffix. The input format is: <PRE>[prefix]<SUF>[suffix]<MID>. What task does this enable that standard left-to-right autoregressive training does not?",
       options: [
         "FIM enables the model to generate code from natural language descriptions",
-        "FIM enables code infilling: given existing code before and after a cursor position, generate the missing middle — critical for IDE autocomplete, where the programmer has typed ahead",
+        "FIM enables code infilling: given existing code before and after a cursor position, generate the missing middle - critical for IDE autocomplete, where the programmer has typed ahead",
         "FIM enables the model to translate code between programming languages",
         "FIM improves next-token prediction by seeing future context during training",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard autoregressive models can only append to a prefix — they cannot fill gaps in existing code. FIM training (Bavarian et al., 2022) teaches models to complete missing segments given both prefix and suffix context, enabling IDE infilling where the user has written surrounding code but needs the middle section completed.",
+        "Standard autoregressive models can only append to a prefix - they cannot fill gaps in existing code. FIM training (Bavarian et al., 2022) teaches models to complete missing segments given both prefix and suffix context, enabling IDE infilling where the user has written surrounding code but needs the middle section completed.",
       hints: [
         "FIM training objective: predict the [MID] token given [prefix] and [suffix] as context.",
-        "IDE autocomplete often needs to fill in the middle of an expression or function — not append to the end.",
+        "IDE autocomplete often needs to fill in the middle of an expression or function - not append to the end.",
       ],
     },
     {
@@ -1625,13 +1625,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "HumanEval\'s 164 problems all involve standalone Python functions evaluated with unit tests — the benchmark does not test repository-level understanding, multi-file navigation, debugging existing code, or generating code in languages other than Python.",
+        "HumanEval\'s 164 problems all involve standalone Python functions evaluated with unit tests - the benchmark does not test repository-level understanding, multi-file navigation, debugging existing code, or generating code in languages other than Python.",
       correctAnswer: "True",
       explanation:
-        "HumanEval (Chen et al., 2021) is explicitly function-completion: given a Python function signature and docstring, complete the body. It measures atomic function-level coding ability but fails to capture real-world software engineering tasks like understanding dependencies across files, refactoring, or debugging — motivating benchmarks like SWE-bench, which uses real GitHub issues.",
+        "HumanEval (Chen et al., 2021) is explicitly function-completion: given a Python function signature and docstring, complete the body. It measures atomic function-level coding ability but fails to capture real-world software engineering tasks like understanding dependencies across files, refactoring, or debugging - motivating benchmarks like SWE-bench, which uses real GitHub issues.",
       hints: [
         "Each HumanEval problem: one function, one docstring, automated unit tests. No project context.",
-        "SWE-bench uses actual GitHub PRs requiring multi-file edits — much harder and more realistic.",
+        "SWE-bench uses actual GitHub PRs requiring multi-file edits - much harder and more realistic.",
       ],
     },
     {
@@ -1642,7 +1642,7 @@ const questions: Record<string, Question[]> = {
         "SWE-bench (Yang et al., 2024) evaluates LLM agents on resolving real GitHub issues requiring multi-file edits. The benchmark uses automated testing (pytest) for evaluation. What are the two key differences from HumanEval that make SWE-bench much harder?",
       options: [
         "SWE-bench uses JavaScript instead of Python, and allows 10 attempts per problem",
-        "SWE-bench requires: (1) understanding the issue description and existing codebase to localize the bug across potentially thousands of files; and (2) making consistent edits across multiple files without breaking existing tests — requiring planning, navigation, and code comprehension beyond single-function generation",
+        "SWE-bench requires: (1) understanding the issue description and existing codebase to localize the bug across potentially thousands of files; and (2) making consistent edits across multiple files without breaking existing tests - requiring planning, navigation, and code comprehension beyond single-function generation",
         "SWE-bench problems are only solvable with tool use, and HumanEval prohibits tool use",
         "SWE-bench evaluates documentation quality, not code correctness",
       ],
@@ -1650,7 +1650,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "HumanEval: read docstring \\to write one function body \\to done. SWE-bench: (1) parse a GitHub issue description, (2) navigate a real repository to identify which files need changes, (3) understand complex existing code and its test suite, (4) make coordinated multi-file changes that fix the issue without regressions. The localization and multi-file consistency requirements are the primary difficulty amplifiers.",
       hints: [
-        "Localization = finding which lines in which files cause the bug from an issue description — no pointers given.",
+        "Localization = finding which lines in which files cause the bug from an issue description - no pointers given.",
         "Multi-file consistency = changes in file A must work with unchanged file B\'s assumptions.",
       ],
     },
@@ -1664,14 +1664,14 @@ const questions: Record<string, Question[]> = {
       question:
         "vLLM\'s PagedAttention divides KV cache into fixed-size memory pages (e.g., 16 tokens/page). If 4 requests are queued with maximum sequence lengths 512, 512, 512, 512 (total reserved: 4 \\times 512 = 2048 slots), but actual generation averages 200 tokens/request, how much GPU memory does naive pre-allocation waste vs. PagedAttention?",
       options: [
-        "Naive wastes 0% — it always allocates exactly the tokens generated",
-        "Naive pre-allocates 2048 slots but uses 4 \\times 200 = 800 — wasting 2048 - 800 = 1248 slots (61% waste); PagedAttention allocates pages on-demand, using only 800 slots",
+        "Naive wastes 0% - it always allocates exactly the tokens generated",
+        "Naive pre-allocates 2048 slots but uses 4 \\times 200 = 800 - wasting 2048 - 800 = 1248 slots (61% waste); PagedAttention allocates pages on-demand, using only 800 slots",
         "PagedAttention wastes more memory due to page-boundary fragmentation",
         "Both approaches use identical memory since KV cache is always freed after each request",
       ],
       correctAnswer: 1,
       explanation:
-        "Naive contiguous allocation reserves max_seq_len per request upfront — the 1248 reserved-but-unused slots cannot be used by other requests. PagedAttention allocates pages (e.g., 16-token blocks) only as tokens are actually generated, reclaiming unused pages immediately, allowing the saved memory to serve additional concurrent requests.",
+        "Naive contiguous allocation reserves max_seq_len per request upfront - the 1248 reserved-but-unused slots cannot be used by other requests. PagedAttention allocates pages (e.g., 16-token blocks) only as tokens are actually generated, reclaiming unused pages immediately, allowing the saved memory to serve additional concurrent requests.",
       hints: [
         "Waste = (reserved − used) / reserved = (2048 − 800) / 2048 \\approx 61% for this example.",
         "PagedAttention\'s on-demand allocation: if a request generates 200 tokens, it uses ceil(200/16) = 13 pages, not ceil(512/16) = 32 pages.",
@@ -1685,7 +1685,7 @@ const questions: Record<string, Question[]> = {
         "SGLang\'s RadixAttention achieves KV cache reuse across requests sharing a common prompt prefix (e.g., the same system prompt) by indexing cached K/V states in a radix tree, allowing multiple requests to share prefix pages rather than recomputing them.",
       correctAnswer: "True",
       explanation:
-        "Zheng et al. (2023) showed that in production, many requests share long prefixes (system prompts, few-shot examples) that are recomputed wastefully per-request. RadixAttention\'s radix tree maps prefix token sequences to cached KV pages — a new request matching an existing prefix skips prefill for those tokens, dramatically reducing time-to-first-token for prefix-heavy workloads.",
+        "Zheng et al. (2023) showed that in production, many requests share long prefixes (system prompts, few-shot examples) that are recomputed wastefully per-request. RadixAttention\'s radix tree maps prefix token sequences to cached KV pages - a new request matching an existing prefix skips prefill for those tokens, dramatically reducing time-to-first-token for prefix-heavy workloads.",
       hints: [
         "Radix tree key = token sequence prefix; value = physical KV cache pages.",
         "System prompt (e.g., 500 tokens) shared by 1000 requests: recomputed 1000\\times without caching, once with RadixAttention.",
@@ -1705,10 +1705,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Tensor-parallel attention: each GPU computes Q_i, K_i, V_i from its shard W_i; after computing partial attention outputs, an all-reduce sums contributions across all T GPUs to get the full d_model output. This happens at every transformer layer — with 80 layers \\times 2 all-reduces (attention + FFN) = 160 all-reduce operations per forward pass. NVLink\'s 3–5\\times higher bandwidth vs. InfiniBand makes it dramatically faster for this dense communication pattern.",
+        "Tensor-parallel attention: each GPU computes Q_i, K_i, V_i from its shard W_i; after computing partial attention outputs, an all-reduce sums contributions across all T GPUs to get the full d_model output. This happens at every transformer layer - with 80 layers \\times 2 all-reduces (attention + FFN) = 160 all-reduce operations per forward pass. NVLink\'s 3-5\\times higher bandwidth vs. InfiniBand makes it dramatically faster for this dense communication pattern.",
       hints: [
         "All-reduce = every GPU sends its partial result; all GPUs receive the summed result.",
-        "With 80 layers and T = 8, all-reduce latency \\times 160 rounds dominates inference latency — bandwidth matters enormously.",
+        "With 80 layers and T = 8, all-reduce latency \\times 160 rounds dominates inference latency - bandwidth matters enormously.",
       ],
     },
   ],
@@ -1730,7 +1730,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "RoPE's rotational structure ensures q_m * k_n = f(x_m, x_n, m-n) — the attention score depends on relative displacement m-n rather than absolute positions. This relative-position property is the basis for length generalization extensions like YaRN and LongRoPE.",
+        "RoPE's rotational structure ensures q_m * k_n = f(x_m, x_n, m-n) - the attention score depends on relative displacement m-n rather than absolute positions. This relative-position property is the basis for length generalization extensions like YaRN and LongRoPE.",
       hints: [
         "Absolute positional embeddings treat position 500 and 5000 as completely different learned vectors; RoPE encodes the difference.",
         "Rotation by angle theta(m-n) in each 2D subspace: the q_m\\cdotk_n dot product encodes relative position m-n.",
@@ -1744,10 +1744,10 @@ Object.assign(questions, {
         "YaRN (Yet another RoPE extensioN) extends the context length of a RoPE-based LLM (e.g., from 4K to 128K tokens) without full retraining by adjusting the RoPE base frequency and applying NTK-aware interpolation, requiring only a small fine-tuning step on long-context data.",
       correctAnswer: "True",
       explanation:
-        "YaRN modifies the RoPE frequency spectrum — keeping high-frequency components (for short-range) unchanged and interpolating low-frequency components (for long-range) — combined with a temperature scaling of attention logits. After a brief fine-tuning on long-context documents, the model can handle sequences far beyond the original training length.",
+        "YaRN modifies the RoPE frequency spectrum - keeping high-frequency components (for short-range) unchanged and interpolating low-frequency components (for long-range) - combined with a temperature scaling of attention logits. After a brief fine-tuning on long-context documents, the model can handle sequences far beyond the original training length.",
       hints: [
         "NTK-aware interpolation avoids the out-of-distribution extrapolation problem that naive position interpolation causes.",
-        "YaRN requires roughly 1000 steps of fine-tuning on long documents — far cheaper than pretraining from scratch on long contexts.",
+        "YaRN requires roughly 1000 steps of fine-tuning on long documents - far cheaper than pretraining from scratch on long contexts.",
       ],
     },
     {
@@ -1782,7 +1782,7 @@ Object.assign(questions, {
       options: [
         "Above roughly 1B parameters",
         "Above roughly 100B parameters",
-        "Above roughly 10M parameters — even small models benefit from CoT",
+        "Above roughly 10M parameters - even small models benefit from CoT",
         "CoT helps equally at all scales; the threshold was a measurement artifact",
       ],
       correctAnswer: 1,
@@ -1790,7 +1790,7 @@ Object.assign(questions, {
         "Wei et al. (2022) showed CoT prompting only improved performance on arithmetic and symbolic reasoning for models above roughly 100B parameters. Smaller models produced incoherent intermediate steps leading to wrong answers. This threshold has since lowered through instruction tuning.",
       hints: [
         "Emergent ability = performance jumps discontinuously as scale crosses a threshold.",
-        "Since 2022, instruction-tuning on CoT traces has reduced the scale needed — smaller models can now benefit.",
+        "Since 2022, instruction-tuning on CoT traces has reduced the scale needed - smaller models can now benefit.",
       ],
     },
     {
@@ -1798,13 +1798,13 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Scratchpad reasoning — allowing a model to generate intermediate working text before the final answer — is beneficial even when the scratchpad content is not supervised by the training loss, because it extends the model's effective computational depth.",
+        "Scratchpad reasoning - allowing a model to generate intermediate working text before the final answer - is beneficial even when the scratchpad content is not supervised by the training loss, because it extends the model's effective computational depth.",
       correctAnswer: "True",
       explanation:
         "Scratchpad reasoning trades token generation (cheap) for additional transformer depth (fixed). Each generated token adds an implicit layer of computation: the model can think out loud using sequential token generation as extra compute steps, effectively performing more computation than a single forward pass allows.",
       hints: [
         "A single transformer forward pass has fixed depth; each generated token adds another forward pass of depth.",
-        "Scratchpad tokens act as working memory — they store intermediate values the model cannot hold in activations alone.",
+        "Scratchpad tokens act as working memory - they store intermediate values the model cannot hold in activations alone.",
       ],
     },
     {
@@ -1815,13 +1815,13 @@ Object.assign(questions, {
         "OpenAI o1-style models use extended test-time compute (long thinking chains) trained via RL with outcome rewards. What is the theoretical basis for why more test-time tokens improve reasoning accuracy?",
       options: [
         "More tokens allow the model to memorize more training examples during inference",
-        "Test-time compute scales the effective search over reasoning strategies: longer thinking chains enable the model to explore, backtrack, and verify — effectively performing implicit search over reasoning trajectories using sequential autoregression",
+        "Test-time compute scales the effective search over reasoning strategies: longer thinking chains enable the model to explore, backtrack, and verify - effectively performing implicit search over reasoning trajectories using sequential autoregression",
         "More tokens increase the temperature of the softmax, reducing greedy decoding errors",
         "Longer outputs trigger a special high-accuracy mode in the transformer architecture",
       ],
       correctAnswer: 1,
       explanation:
-        "Extended thinking chains implement implicit search: the model can generate a hypothesis, detect inconsistency, backtrack, and try alternative approaches — all within a single generation. This is equivalent to tree-search over reasoning paths but implemented through autoregressive generation, making it trainable via outcome RL.",
+        "Extended thinking chains implement implicit search: the model can generate a hypothesis, detect inconsistency, backtrack, and try alternative approaches - all within a single generation. This is equivalent to tree-search over reasoning paths but implemented through autoregressive generation, making it trainable via outcome RL.",
       hints: [
         "Each moment of reconsidering in the thinking chain is a branch in the reasoning tree being explored.",
         "RL with outcome rewards trains the model to allocate tokens to search strategies that maximize final answer correctness.",
@@ -1858,7 +1858,7 @@ Object.assign(questions, {
         "LLaVA (Large Language and Vision Assistant) connects a frozen CLIP vision encoder to a large language model using a trainable MLP projection layer, where only the projection (and optionally the LLM) is fine-tuned on instruction-following visual QA data.",
       correctAnswer: "True",
       explanation:
-        "LLaVA's two-stage training: (1) pre-training — freeze CLIP and LLM, train only the MLP projection on image-caption pairs to align visual tokens with text embedding space; (2) instruction fine-tuning — unfreeze the LLM (keep CLIP frozen) and train on visual instruction-following data.",
+        "LLaVA's two-stage training: (1) pre-training - freeze CLIP and LLM, train only the MLP projection on image-caption pairs to align visual tokens with text embedding space; (2) instruction fine-tuning - unfreeze the LLM (keep CLIP frozen) and train on visual instruction-following data.",
       hints: [
         "Stage 1: projection training aligns image token space with LLM word embedding space.",
         "Stage 2: instruction tuning teaches the LLM to follow visual questions using the already-aligned tokens.",
@@ -1872,15 +1872,15 @@ Object.assign(questions, {
         "Flamingo (Alayrac et al., 2022) introduces cross-attention layers interleaved with frozen LLM layers to handle interleaved image-text sequences. What problem does this design solve that a simple prefix-image approach cannot?",
       options: [
         "Flamingo's cross-attention reduces memory usage by avoiding storing visual tokens in the KV cache",
-        "Cross-attention layers allow the model to handle arbitrarily many images interleaved with text at any position — the language model can attend to image features at any point in generation, not only using a fixed prefix of image tokens before all text",
+        "Cross-attention layers allow the model to handle arbitrarily many images interleaved with text at any position - the language model can attend to image features at any point in generation, not only using a fixed prefix of image tokens before all text",
         "Cross-attention improves vision encoder training by providing gradients back to CLIP",
         "Flamingo's design eliminates the need for a vision encoder by computing visual features on-the-fly",
       ],
       correctAnswer: 1,
       explanation:
-        "The prefix-image design places all image tokens before the text prompt — this fails for interleaved sequences. Flamingo's cross-attention layers query visual features at any position during generation, naturally supporting documents with images mixed throughout text.",
+        "The prefix-image design places all image tokens before the text prompt - this fails for interleaved sequences. Flamingo's cross-attention layers query visual features at any position during generation, naturally supporting documents with images mixed throughout text.",
       hints: [
-        "Prefix design: image tokens come first, text follows — position fixed at prompt start.",
+        "Prefix design: image tokens come first, text follows - position fixed at prompt start.",
         "Cross-attention: each text token can attend to any image's features at generation time, regardless of position.",
       ],
     },
@@ -1901,7 +1901,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "pass@k = 1 - (1-p)^k where p is per-sample pass rate. For p=0.40, k=3: pass@3 = 1 - 0.6^3 = 1 - 0.216 = 0.784. A model with 40% per-sample rate has 78.4% chance of producing at least one correct solution in 3 tries — making best-of-k sampling practically useful for code generation.",
+        "pass@k = 1 - (1-p)^k where p is per-sample pass rate. For p=0.40, k=3: pass@3 = 1 - 0.6^3 = 1 - 0.216 = 0.784. A model with 40% per-sample rate has 78.4% chance of producing at least one correct solution in 3 tries - making best-of-k sampling practically useful for code generation.",
       hints: [
         "Complement rule: P(at least 1 passes) = 1 - P(all fail) = 1 - (1-p)^k.",
         "For p=0.4, k=3: 1 - (0.6)^3 = 1 - 0.216 = 0.784.",
@@ -1912,13 +1912,13 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question:
-        "DeepSeek-Coder and CodeLlama both use Fill-in-the-Middle (FIM) training, which enables them to infill code at cursor positions given both the preceding and following context — unlike standard left-to-right models that can only append to a prefix.",
+        "DeepSeek-Coder and CodeLlama both use Fill-in-the-Middle (FIM) training, which enables them to infill code at cursor positions given both the preceding and following context - unlike standard left-to-right models that can only append to a prefix.",
       correctAnswer: "True",
       explanation:
         "FIM training rearranges training sequences as PRE-prefix, SUF-suffix, MID-middle tokens, teaching the model to predict the middle given both sides. This is essential for IDE autocomplete where the programmer has typed both before and after the cursor.",
       hints: [
         "Standard autoregressive: given tokens 1..n, predict n+1. FIM: given tokens 1..k and m..n, predict k+1..m-1.",
-        "IDE infilling (GitHub Copilot ghost text) requires FIM capability — the user types ahead, leaving a gap.",
+        "IDE infilling (GitHub Copilot ghost text) requires FIM capability - the user types ahead, leaving a gap.",
       ],
     },
     {
@@ -1935,7 +1935,7 @@ Object.assign(questions, {
       ],
       correctAnswer: 1,
       explanation:
-        "Log-likelihood rewards syntactically plausible code (which could be wrong); human ratings are expensive and subjective. Unit test execution is the objective ground truth: code either passes all tests (correct) or does not. This binary signal is unambiguous, scalable, and directly measures functional correctness — the actual goal of code generation.",
+        "Log-likelihood rewards syntactically plausible code (which could be wrong); human ratings are expensive and subjective. Unit test execution is the objective ground truth: code either passes all tests (correct) or does not. This binary signal is unambiguous, scalable, and directly measures functional correctness - the actual goal of code generation.",
       hints: [
         "A model optimizing log-likelihood can produce elegant-looking but functionally wrong code.",
         "Tests define the specification precisely: pass all tests = meets requirements. No human judgment needed.",
@@ -1986,15 +1986,15 @@ Object.assign(questions, {
         "In a multi-tool agent, the LLM must decide when to stop calling tools and produce a final answer. The stopping problem refers to the risk of premature answers or infinite tool-calling loops. What training signal most directly addresses this?",
       options: [
         "Increasing the maximum context length so the model can see all tool outputs",
-        "Fine-tuning on trajectories where the terminal state receives positive reward and over-tool-calling trajectories receive negative reward — teaching the model when continued tool use is and is not beneficial",
+        "Fine-tuning on trajectories where the terminal state receives positive reward and over-tool-calling trajectories receive negative reward - teaching the model when continued tool use is and is not beneficial",
         "Using temperature 0 to ensure deterministic stopping behavior",
         "Adding a hardcoded maximum tool-call count enforced at the API layer",
       ],
       correctAnswer: 1,
       explanation:
-        "Optimal stopping in agentic systems requires the model to estimate whether additional tool calls will improve the answer — a value estimation problem. RL training on labeled trajectories teaches this stopping policy directly, generalizing better than hard limits.",
+        "Optimal stopping in agentic systems requires the model to estimate whether additional tool calls will improve the answer - a value estimation problem. RL training on labeled trajectories teaches this stopping policy directly, generalizing better than hard limits.",
       hints: [
-        "The model needs to estimate: will one more tool call help? — this is a value function estimation problem.",
+        "The model needs to estimate: will one more tool call help? - this is a value function estimation problem.",
         "Hard API limits (max tools) are a patch; RL-trained stopping generalizes to novel tool combinations.",
       ],
     },
@@ -2018,7 +2018,7 @@ Object.assign(questions, {
         "Aggregation hides variance: a model strong on 50 humanities subjects and weak on 7 STEM subjects can score 90% overall while being unreliable for scientific applications. Subject-level breakdown is crucial for understanding actual capability distribution.",
       hints: [
         "If 50 subjects are 95%+ and 7 STEM subjects are 60%, the aggregate is high but STEM is clearly a gap.",
-        "Aggregate accuracy summarizes across 57 subjects — it necessarily loses subject-specific information.",
+        "Aggregate accuracy summarizes across 57 subjects - it necessarily loses subject-specific information.",
       ],
     },
     {
@@ -2032,7 +2032,7 @@ Object.assign(questions, {
         "Since LLMs are trained on large web crawls and the internet contains many benchmarks, contamination is a real concern. Detection methods include n-gram overlap detection, canary insertion (checking if the model can complete withheld benchmark suffixes), and using newer benchmarks post-dating the training cutoff.",
       hints: [
         "If MMLU test questions appear on the training web crawl, the model may have memorized answers rather than reasoning.",
-        "Canary test: insert a unique string in the test set, check if the model knows it — if yes, the test set was in training data.",
+        "Canary test: insert a unique string in the test set, check if the model knows it - if yes, the test set was in training data.",
       ],
     },
     {
@@ -2043,16 +2043,16 @@ Object.assign(questions, {
         "BIG-bench Hard (Suzgun et al., 2022) consists of 23 tasks where LLMs scored below human performance on BIG-bench. What makes BIG-bench Hard tasks uniquely valuable for evaluating frontier LLMs compared to standard benchmarks?",
       options: [
         "BIG-bench Hard tests are longer, requiring more tokens to answer",
-        "BIG-bench Hard tasks are specifically those that remained unsolved at evaluation time — they track genuine capability frontiers rather than settled capabilities, providing headroom for measuring future model improvements without immediate saturation",
+        "BIG-bench Hard tasks are specifically those that remained unsolved at evaluation time - they track genuine capability frontiers rather than settled capabilities, providing headroom for measuring future model improvements without immediate saturation",
         "BIG-bench Hard contains only math problems, isolating pure arithmetic capability",
         "BIG-bench Hard tasks are automatically generated, preventing contamination",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard benchmarks like MMLU and HellaSwag are already near-saturated by frontier models (90%+), making them uninformative for discriminating between top models. BIG-bench Hard was selected specifically because these tasks challenged models at evaluation time — providing a moving frontier for measuring genuine capability advances.",
+        "Standard benchmarks like MMLU and HellaSwag are already near-saturated by frontier models (90%+), making them uninformative for discriminating between top models. BIG-bench Hard was selected specifically because these tasks challenged models at evaluation time - providing a moving frontier for measuring genuine capability advances.",
       hints: [
-        "When a benchmark hits 95%+ accuracy, it stops differentiating between models — it is saturated.",
-        "BIG-bench Hard is the unsolved residual — the tasks that remained hard — useful precisely because they are not saturated.",
+        "When a benchmark hits 95%+ accuracy, it stops differentiating between models - it is saturated.",
+        "BIG-bench Hard is the unsolved residual - the tasks that remained hard - useful precisely because they are not saturated.",
       ],
     },
   ],
@@ -2065,7 +2065,7 @@ Object.assign(questions, {
       question:
         "Magnitude-based weight pruning removes the smallest-magnitude weights from an LLM, setting them to zero. For a 70B parameter model where 50% of weights are pruned, what is the theoretical memory reduction if sparse weights are stored efficiently?",
       options: [
-        "No reduction — zeros must still be stored in the weight matrix",
+        "No reduction - zeros must still be stored in the weight matrix",
         "Up to 2 times reduction using sparse storage formats (CSR/CSC), since only non-zero values and their indices are stored",
         "Exactly 4 times reduction because pruning always removes 75% of parameters",
         "50% reduction in compute but no memory reduction since matrix shapes are unchanged",
@@ -2083,13 +2083,13 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Alpaca and Vicuna demonstrated that a 7B-parameter LLaMA model fine-tuned on GPT-4/ChatGPT outputs can achieve instruction-following quality comparable to much larger models — making teacher-student distillation from proprietary LLMs practical at low cost.",
+        "Alpaca and Vicuna demonstrated that a 7B-parameter LLaMA model fine-tuned on GPT-4/ChatGPT outputs can achieve instruction-following quality comparable to much larger models - making teacher-student distillation from proprietary LLMs practical at low cost.",
       correctAnswer: "True",
       explanation:
         "Alpaca (Stanford, 2023) fine-tuned LLaMA-7B on 52K GPT-3.5-generated instruction-following examples for under $100, producing a model competitive with GPT-3.5 on many conversational tasks. Vicuna fine-tuned LLaMA on ChatGPT conversations. Both demonstrated that high-quality output distillation can efficiently transfer instruction-following abilities from large proprietary models to small open models.",
       hints: [
         "Distillation here uses the teacher's outputs (not logits): fine-tune the student to imitate the teacher's responses.",
-        "52K examples at roughly $0.002 per 1K tokens gives approximately $100 total data cost for Alpaca — extremely efficient knowledge transfer.",
+        "52K examples at roughly $0.002 per 1K tokens gives approximately $100 total data cost for Alpaca - extremely efficient knowledge transfer.",
       ],
     },
     {
@@ -2100,13 +2100,13 @@ Object.assign(questions, {
         "ShortGPT and LaCo show that many transformer layers in trained LLMs can be dropped with minimal performance loss. The block influence metric (cosine similarity between layer input and output) identifies redundant layers. What does high cosine similarity between a layer's input and output indicate?",
       options: [
         "The layer is performing maximum transformation and is essential",
-        "The layer output is nearly identical to its input — the layer is performing nearly the identity function and contributing little to the representation change, making it a candidate for removal",
+        "The layer output is nearly identical to its input - the layer is performing nearly the identity function and contributing little to the representation change, making it a candidate for removal",
         "High cosine similarity indicates the layer has learned very large weight magnitudes",
         "The layer is performing dimension reduction and compressing the representation",
       ],
       correctAnswer: 1,
       explanation:
-        "Block influence (1 minus cosine similarity between input and output) measures how much a layer changes its input representation. A high cosine similarity (near 1) means the layer barely changes the representation — an identity-like layer adds little value and can be dropped. ShortGPT found that certain middle layers exhibit very high input-output similarity.",
+        "Block influence (1 minus cosine similarity between input and output) measures how much a layer changes its input representation. A high cosine similarity (near 1) means the layer barely changes the representation - an identity-like layer adds little value and can be dropped. ShortGPT found that certain middle layers exhibit very high input-output similarity.",
       hints: [
         "cosine_sim(input, output) near 1 means the vectors are nearly parallel, so the layer barely changes the representation.",
         "Block influence near 0 = identity layer; block influence near 2 = maximum orthogonal transformation.",
@@ -2140,7 +2140,7 @@ Object.assign(questions, {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Deduplication of pretraining data (exact and near-exact duplicate removal) is critical not only to prevent memorization but also to improve model quality on downstream tasks — deduplicated datasets produce better models even controlling for total training tokens.",
+        "Deduplication of pretraining data (exact and near-exact duplicate removal) is critical not only to prevent memorization but also to improve model quality on downstream tasks - deduplicated datasets produce better models even controlling for total training tokens.",
       correctAnswer: "True",
       explanation:
         "Lee et al. (2022) and Penedo et al. (2023, RefinedWeb) demonstrated that deduplication consistently improves model quality: training on deduplicated data produces better models than training on the same data with duplicates, even at equal token count. Duplicates cause the model to disproportionately memorize repeated content and bias the data distribution.",
@@ -2156,9 +2156,9 @@ Object.assign(questions, {
       question:
         "The Chinchilla scaling law (Hoffmann et al., 2022) prescribes compute-optimal training. For a model with 10B parameters, approximately how many training tokens does Chinchilla recommend?",
       options: [
-        "10B tokens — equal parameters and tokens",
+        "10B tokens - equal parameters and tokens",
         "200B tokens (approximately 20 tokens per parameter, as Chinchilla prescribes roughly 20 tokens per parameter for compute-optimal training)",
-        "1T tokens — Chinchilla recommends 100 tokens per parameter",
+        "1T tokens - Chinchilla recommends 100 tokens per parameter",
         "Train until validation loss stops improving, regardless of token count",
       ],
       correctAnswer: 1,
@@ -2177,12 +2177,12 @@ Object.assign(questions, {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Emergent abilities of LLMs (Wei et al., 2022) are defined as capabilities that appear suddenly at a scale threshold — absent in smaller models and present in larger ones. Which of the following is an example of an emergent ability?",
+        "Emergent abilities of LLMs (Wei et al., 2022) are defined as capabilities that appear suddenly at a scale threshold - absent in smaller models and present in larger ones. Which of the following is an example of an emergent ability?",
       options: [
-        "Improved perplexity on held-out text as model size increases — a smooth, predictable improvement",
+        "Improved perplexity on held-out text as model size increases - a smooth, predictable improvement",
         "Multi-step arithmetic reasoning emerging around 100B parameters with few-shot prompting, while being near-random at 10B parameters",
-        "Faster inference speed as model size decreases — a predictable scaling trend",
-        "Increased vocabulary coverage with larger training datasets — a smooth data scaling effect",
+        "Faster inference speed as model size decreases - a predictable scaling trend",
+        "Increased vocabulary coverage with larger training datasets - a smooth data scaling effect",
       ],
       correctAnswer: 1,
       explanation:
@@ -2200,7 +2200,7 @@ Object.assign(questions, {
         "Schaeffer et al. (2023) argued that many reported emergent abilities are metric artifacts: when using nonlinear metrics such as exact match, smooth underlying capability improvements appear as sharp jumps, while switching to linear metrics such as token edit distance shows smooth scaling.",
       correctAnswer: "True",
       explanation:
-        "Schaeffer et al. challenged the emergence narrative: exact match requires every token to be correct (a step function of underlying accuracy), so smooth improvements appear as sharp phase transitions. When measured with continuous metrics such as BPB or edit distance, the same tasks show smooth scaling — suggesting emergence is often a measurement artifact.",
+        "Schaeffer et al. challenged the emergence narrative: exact match requires every token to be correct (a step function of underlying accuracy), so smooth improvements appear as sharp phase transitions. When measured with continuous metrics such as BPB or edit distance, the same tasks show smooth scaling - suggesting emergence is often a measurement artifact.",
       hints: [
         "Exact match on a 5-token answer: getting 4/5 tokens right = 0% exact match. Getting 5/5 = 100%. Smooth underlying progress appears as a sharp jump in the metric.",
         "The debate is still active: some researchers argue genuine phase transitions exist beyond metric artifacts.",
@@ -2214,7 +2214,7 @@ Object.assign(questions, {
         "Few-shot in-context learning shows a growing performance gap versus zero-shot at larger scales on hard reasoning tasks. What mechanistic explanation has been proposed for why few-shot examples help large but not small models?",
       options: [
         "Few-shot examples provide more tokens for the model to attend to, increasing attention head utilization",
-        "Large models can perform in-context Bayesian inference — inferring the latent task structure from examples to adapt their computation dynamically; small models lack the capacity for this implicit task inference",
+        "Large models can perform in-context Bayesian inference - inferring the latent task structure from examples to adapt their computation dynamically; small models lack the capacity for this implicit task inference",
         "Few-shot examples act as retrieval keys that match memorized training examples, working better in larger models with more memorized content",
         "Few-shot examples reduce the effective vocabulary the model needs to predict, making generation easier for all model sizes",
       ],
@@ -2222,7 +2222,7 @@ Object.assign(questions, {
       explanation:
         "Mechanistic interpretability research (Olsson et al., 2022 on induction heads; Xie et al., 2021 on ICL as Bayesian inference) suggests large models develop meta-learning circuits that infer the latent task distribution from examples. Small models lack these circuits and use examples for surface-level pattern matching rather than genuine task adaptation.",
       hints: [
-        "Induction heads (Olsson et al.) implement a form of copy-what-follows-this-pattern — a primitive ICL circuit.",
+        "Induction heads (Olsson et al.) implement a form of copy-what-follows-this-pattern - a primitive ICL circuit.",
         "Bayesian ICL interpretation: the model updates a posterior over tasks given examples, then generates accordingly.",
       ],
     },
@@ -2241,7 +2241,7 @@ Object.assign(questions, {
         "Caching the attention matrix in L2 cache instead of SRAM"
       ],
       correctAnswer: 1,
-      explanation: "FlashAttention-2 improves on FA-1 by: (1) reducing non-matmul FLOPs that dominated runtime (rescaling operations), (2) parallelizing the forward pass across the sequence length dimension — not just batch and head dimensions — for better GPU utilization, and (3) better partitioning work between warps. The core tiling strategy (Q/K/V blocks in SRAM) is unchanged, but execution efficiency improves substantially.",
+      explanation: "FlashAttention-2 improves on FA-1 by: (1) reducing non-matmul FLOPs that dominated runtime (rescaling operations), (2) parallelizing the forward pass across the sequence length dimension - not just batch and head dimensions - for better GPU utilization, and (3) better partitioning work between warps. The core tiling strategy (Q/K/V blocks in SRAM) is unchanged, but execution efficiency improves substantially.",
       hints: [
         "FlashAttention-1 parallelized across batch and heads only; FA-2 also parallelizes across sequence length for better occupancy.",
         "Non-matmul FLOP reduction: FA-2 reorganizes the online softmax rescaling to reduce the number of operations per block."
@@ -2253,7 +2253,7 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "FlashAttention avoids materializing the full n\\timesn attention matrix in GPU HBM by computing attention in tiles that fit in on-chip SRAM, reducing memory complexity from O(n^2) to O(n).",
       correctAnswer: "True",
-      explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n\\timesn attention matrix is never written to HBM — memory complexity drops from O(n^2) to O(n).",
+      explanation: "The key FlashAttention insight: GPU SRAM (~20 MB on A100) is much faster than HBM (~2 TB/s), but tiny. FlashAttention tiles Q, K, V into blocks that fit in SRAM, uses the online softmax trick to correctly accumulate partial results, and writes only the final output O to HBM. The n\\timesn attention matrix is never written to HBM - memory complexity drops from O(n^2) to O(n).",
       hints: [
         "Standard attention writes the full n\\timesn score matrix to HBM: O(n^2) memory writes at HBM bandwidth.",
         "Online softmax allows correct normalization across tiles without ever materializing the full attention matrix."
@@ -2286,16 +2286,16 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "Linear attention replaces the softmax kernel with a function phi(x) and uses associativity of matrix multiplication: phi(Q)(phi(K)^T V) instead of softmax(QK^T)V. What complexity does this achieve for a sequence of length n with head dimension d?",
       options: [
-        "O(n^2 d) — same as standard attention, just reorganized differently",
-        "O(n d^2) — linear in sequence length n, quadratic in head dimension d",
-        "O(n log n d) — sub-quadratic via divide-and-conquer",
-        "O(d^3) — independent of sequence length entirely"
+        "O(n^2 d) - same as standard attention, just reorganized differently",
+        "O(n d^2) - linear in sequence length n, quadratic in head dimension d",
+        "O(n log n d) - sub-quadratic via divide-and-conquer",
+        "O(d^3) - independent of sequence length entirely"
       ],
       correctAnswer: 1,
-      explanation: "Standard attention: (QK^T)V costs O(n^2 d) because QK^T is n\\timesn. With kernel phi: compute phi(K)^T V first — a d\\timesd matrix at cost O(n d^2) — then multiply phi(Q) by it at cost O(n d^2). Total O(n d^2) — linear in n. For typical values (d=64, n=4096), this reduces from 4096^2 * 64 = 1.07B to 4096 * 64^2 = 16.8M operations — a 64x reduction.",
+      explanation: "Standard attention: (QK^T)V costs O(n^2 d) because QK^T is n\\timesn. With kernel phi: compute phi(K)^T V first - a d\\timesd matrix at cost O(n d^2) - then multiply phi(Q) by it at cost O(n d^2). Total O(n d^2) - linear in n. For typical values (d=64, n=4096), this reduces from 4096^2 * 64 = 1.07B to 4096 * 64^2 = 16.8M operations - a 64x reduction.",
       hints: [
         "Key identity: (phi(Q) phi(K)^T) V = phi(Q) (phi(K)^T V). The right-to-left evaluation costs O(n d^2) not O(n^2 d).",
-        "Linear attention trades the n\\timesn bottleneck for a constant-size d\\timesd context matrix — linear in n for fixed d."
+        "Linear attention trades the n\\timesn bottleneck for a constant-size d\\timesd context matrix - linear in n for fixed d."
       ]
     },
     {
@@ -2304,7 +2304,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "Sparse attention patterns (e.g., Longformer's local + global, BigBird's random + local + global) achieve sub-quadratic complexity by restricting which query-key pairs are computed, at the cost of potentially missing long-range interactions for tasks requiring dense all-to-all attention.",
       correctAnswer: "True",
-      explanation: "Sparse attention computes only O(n * w) pairs (w = window/global token count) instead of O(n^2). Tasks where every token genuinely needs to attend to every other (e.g., some global reasoning tasks) may degrade. However, most NLP tasks depend primarily on local structure, and global tokens provide sufficient long-range bridges — Longformer and BigBird show near-parity on most benchmarks with major compute savings.",
+      explanation: "Sparse attention computes only O(n * w) pairs (w = window/global token count) instead of O(n^2). Tasks where every token genuinely needs to attend to every other (e.g., some global reasoning tasks) may degrade. However, most NLP tasks depend primarily on local structure, and global tokens provide sufficient long-range bridges - Longformer and BigBird show near-parity on most benchmarks with major compute savings.",
       hints: [
         "Sparse attention works because most useful interactions are local; global tokens act as information hubs for long-range signals.",
         "Tasks requiring verbatim cross-reference of all pairs (e.g., complex deduction over all tokens) may see quality loss."
@@ -2317,14 +2317,14 @@ Object.assign(questions, {
       question: "Multi-Query Attention (MQA, Shazeer 2019) uses a single shared K and V head for all H query heads. During autoregressive decoding, is the primary speedup due to reduced compute or reduced memory bandwidth?",
       options: [
         "Reduced compute: MQA performs H times fewer dot products per token",
-        "Reduced memory bandwidth: the KV cache is H times smaller, so loading K and V per decode step consumes H times less memory bandwidth — the dominant bottleneck during the decode phase",
+        "Reduced memory bandwidth: the KV cache is H times smaller, so loading K and V per decode step consumes H times less memory bandwidth - the dominant bottleneck during the decode phase",
         "Reduced parameter count: fewer parameters means faster model execution on all hardware",
         "Reduced attention computation: shared KV enables batching all H heads into one large matmul"
       ],
       correctAnswer: 1,
-      explanation: "During autoregressive decoding (one token at a time), compute per step is low (one row of Q \\times KV cache), but memory bandwidth is the bottleneck: loading the entire KV cache from HBM per step. MQA reduces KV cache size by H times (1 K and 1 V vs. H), directly cutting memory bandwidth per decode step by H times. Compute FLOPs are only marginally affected — bandwidth is the binding constraint.",
+      explanation: "During autoregressive decoding (one token at a time), compute per step is low (one row of Q \\times KV cache), but memory bandwidth is the bottleneck: loading the entire KV cache from HBM per step. MQA reduces KV cache size by H times (1 K and 1 V vs. H), directly cutting memory bandwidth per decode step by H times. Compute FLOPs are only marginally affected - bandwidth is the binding constraint.",
       hints: [
-        "Decode phase: compute = O(1 \\times n \\times d) — tiny. Loading KV cache = O(n \\times d) per layer — this is the bottleneck.",
+        "Decode phase: compute = O(1 \\times n \\times d) - tiny. Loading KV cache = O(n \\times d) per layer - this is the bottleneck.",
         "MQA benefit is almost entirely bandwidth reduction: H times less KV data transferred from HBM per decode step."
       ]
     }
@@ -2345,7 +2345,7 @@ Object.assign(questions, {
       correctAnswer: 1,
       explanation: "Classical SSMs use fixed (input-independent) transition parameters. Mamba's key innovation: the discretized SSM parameters (delta, B, C) are computed from the input token via linear projections. Large delta integrates the current input heavily into the state (remember); small delta lets the state decay without integrating (forget). This input-dependent selectivity gives content-based gating that fixed SSMs cannot achieve.",
       hints: [
-        "Fixed SSM: same A, B, C for every token — cannot selectively ignore tokens based on content.",
+        "Fixed SSM: same A, B, C for every token - cannot selectively ignore tokens based on content.",
         "Large delta = long integration window (strongly remember this input). Small delta = state decays quickly (ignore this input)."
       ]
     },
@@ -2357,7 +2357,7 @@ Object.assign(questions, {
       correctAnswer: "True",
       explanation: "The parallel scan algorithm computes prefix products of SSM state matrices in O(n log n) parallel steps during training. At inference, the model runs in sequential recurrent mode: h_t = A_t h_{t-1} + B_t x_t, one token at a time, with constant-size hidden state h. This dual mode gives Mamba parallel training efficiency and fast autoregressive generation without the KV cache memory growth of Transformers.",
       hints: [
-        "Parallel scan: tree-structured prefix product computation — O(log n) depth, O(n) work total.",
+        "Parallel scan: tree-structured prefix product computation - O(log n) depth, O(n) work total.",
         "Inference recurrence: h_t = A_t h_{t-1} + B_t x_t. State h has fixed dimension regardless of sequence length."
       ]
     },
@@ -2368,15 +2368,15 @@ Object.assign(questions, {
       question: "Mamba's theoretical disadvantage for tasks requiring precise retrieval of specific tokens from very long contexts compared to Transformers is:",
       options: [
         "Mamba is slower at training than Transformers due to parallel scan overhead",
-        "Mamba's SSM state is a fixed-dimension compressed summary of the entire past — specific information about distant tokens may be compressed away, while Transformer KV cache stores exact key/value vectors for every past token enabling direct retrieval",
+        "Mamba's SSM state is a fixed-dimension compressed summary of the entire past - specific information about distant tokens may be compressed away, while Transformer KV cache stores exact key/value vectors for every past token enabling direct retrieval",
         "Mamba cannot handle variable-length sequences unlike Transformers with padding masks",
         "Mamba requires significantly more parameters than Transformers for equivalent quality"
       ],
       correctAnswer: 1,
-      explanation: "The SSM hidden state h has fixed dimension (e.g., 16) regardless of sequence length — compressing all past context into a fixed-size vector. For tasks requiring exact recall of a specific value from thousands of tokens ago, that information must have been retained through all subsequent state updates. Transformers maintain an explicit KV cache that stores each past token's exact key/value vectors, enabling direct O(1) retrieval via attention.",
+      explanation: "The SSM hidden state h has fixed dimension (e.g., 16) regardless of sequence length - compressing all past context into a fixed-size vector. For tasks requiring exact recall of a specific value from thousands of tokens ago, that information must have been retained through all subsequent state updates. Transformers maintain an explicit KV cache that stores each past token's exact key/value vectors, enabling direct O(1) retrieval via attention.",
       hints: [
-        "SSM state: 16-dimensional vector summarizing all past context — 'needle in a haystack' facts may be compressed away.",
-        "Transformer KV cache: every past token's exact K and V vectors are stored — direct attention retrieval with no compression loss."
+        "SSM state: 16-dimensional vector summarizing all past context - 'needle in a haystack' facts may be compressed away.",
+        "Transformer KV cache: every past token's exact K and V vectors are stored - direct attention retrieval with no compression loss."
       ]
     }
   ],
@@ -2396,8 +2396,8 @@ Object.assign(questions, {
       correctAnswer: 1,
       explanation: "Static batching: form a batch, run to completion for all sequences, then start the next batch. Requests that finish early idle until the slowest sequence completes. Continuous batching (iteration-level scheduling): at each decode step, sequences that have finished (hit EOS) are removed and new requests are added. GPU utilization jumps from ~30% to ~90% in production workloads by eliminating these idle periods.",
       hints: [
-        "Static: a 10-token request waits for a 200-token request in the same batch — 190 idle decode steps wasted.",
-        "Continuous: the 10-token request finishes, immediately replaced by a new request from the queue — no idle steps."
+        "Static: a 10-token request waits for a 200-token request in the same batch - 190 idle decode steps wasted.",
+        "Continuous: the 10-token request finishes, immediately replaced by a new request from the queue - no idle steps."
       ]
     },
     {
@@ -2414,8 +2414,8 @@ Object.assign(questions, {
       correctAnswer: 0,
       explanation: "Naive allocation: each request pre-allocates max_seq_len KV slots contiguously. A 100-token response occupying a 4096-token allocation wastes 3996 slots that cannot be used by other requests. PagedAttention divides the KV cache into fixed-size pages (e.g., 16 tokens/page), allocating on-demand via a page table. Non-contiguous physical pages serve a single sequence. Memory waste drops from ~30% to ~4%, enabling 2-4x higher batch concurrency.",
       hints: [
-        "OS analogy: virtual memory pages eliminate contiguous physical allocation — same principle applied to LLM KV caches.",
-        "Page table: maps logical token positions to physical page addresses — sequences use non-contiguous physical pages safely."
+        "OS analogy: virtual memory pages eliminate contiguous physical allocation - same principle applied to LLM KV caches.",
+        "Page table: maps logical token positions to physical page addresses - sequences use non-contiguous physical pages safely."
       ]
     },
     {
@@ -2426,8 +2426,8 @@ Object.assign(questions, {
       correctAnswer: "False",
       explanation: "The acceptance criterion (Leviathan et al., 2023) compares draft and target token probabilities: accept if draft_prob <= target_prob, otherwise accept with probability target_prob/draft_prob. This is a token-level rejection sampling procedure that is mathematically correct regardless of draft architecture. In practice, same-family smaller models achieve higher acceptance rates, but architecturally different drafts (n-gram models, Medusa prediction heads, EAGLE self-drafting heads) also achieve substantial speedups.",
       hints: [
-        "Mathematical guarantee: accepted tokens are distributed exactly as the target model — regardless of draft model architecture.",
-        "EAGLE trains a single-layer head on top of the target model's own hidden states — no separate architecture required."
+        "Mathematical guarantee: accepted tokens are distributed exactly as the target model - regardless of draft model architecture.",
+        "EAGLE trains a single-layer head on top of the target model's own hidden states - no separate architecture required."
       ]
     }
   ],
@@ -2439,16 +2439,16 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "LoRA (Hu et al., 2021) parameterizes a weight update as W = W_0 + BA where B is d\\timesr and A is r\\timesk. For a 7B model with d=k=4096 and rank r=16, how many trainable parameters does one LoRA adapter for a single weight matrix add?",
       options: [
-        "4096 * 4096 = 16.8M — same as the full weight matrix",
-        "2 * 4096 * 16 = 131,072 — about 128x fewer than the full 16.8M parameter matrix",
-        "16 * 16 = 256 — only the inner rank-r core",
-        "4096 * 16 = 65,536 — only the down-projection B matrix"
+        "4096 * 4096 = 16.8M - same as the full weight matrix",
+        "2 * 4096 * 16 = 131,072 - about 128x fewer than the full 16.8M parameter matrix",
+        "16 * 16 = 256 - only the inner rank-r core",
+        "4096 * 16 = 65,536 - only the down-projection B matrix"
       ],
       correctAnswer: 1,
-      explanation: "LoRA trainable params: d*r + r*k = 4096*16 + 16*4096 = 131,072 (plus tiny biases). Full matrix: d*k = 16.77M. Reduction ratio: ~128x. A 7B LLM applies LoRA to ~224 matrices (Q, K, V, O, 2 FFN per 32 layers). Full LoRA adapters for all matrices total ~29M trainable params vs. 7B frozen — a ~240x reduction in trainable parameters.",
+      explanation: "LoRA trainable params: d*r + r*k = 4096*16 + 16*4096 = 131,072 (plus tiny biases). Full matrix: d*k = 16.77M. Reduction ratio: ~128x. A 7B LLM applies LoRA to ~224 matrices (Q, K, V, O, 2 FFN per 32 layers). Full LoRA adapters for all matrices total ~29M trainable params vs. 7B frozen - a ~240x reduction in trainable parameters.",
       hints: [
         "LoRA params per matrix: r*(d + k). For r=16, d=k=4096: 16*(4096+4096) = 131,072.",
-        "Initialization: A is random Gaussian, B is zero — so BA = 0 at step 0, preserving pretrained behavior."
+        "Initialization: A is random Gaussian, B is zero - so BA = 0 at step 0, preserving pretrained behavior."
       ]
     },
     {
@@ -2457,10 +2457,10 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "After LoRA fine-tuning, the adapter weights B and A can be merged into the base model (W = W_0 + BA) before deployment, eliminating any inference latency overhead compared to the original base model.",
       correctAnswer: "True",
-      explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d\\timesk — identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically — a different deployment pattern.",
+      explanation: "LoRA merge: W_merged = W_0 + B@A. Shape is d\\timesk - identical to W_0. Serving code sees a normal weight matrix with zero adapter overhead. The merged model is mathematically equivalent to running the base model with adapter applied. Merge is a one-time O(d*k) operation. Multi-tenant serving (many adapters per base) keeps adapters separate and switches dynamically - a different deployment pattern.",
       hints: [
-        "W_merged = W_0 + B@A. The result is a d\\timesk matrix — indistinguishable from any other weight matrix to the serving infrastructure.",
-        "Adapter switching for multi-tenant serving: keep B and A separate and add them dynamically per request — no merge needed."
+        "W_merged = W_0 + B@A. The result is a d\\timesk matrix - indistinguishable from any other weight matrix to the serving infrastructure.",
+        "Adapter switching for multi-tenant serving: keep B and A separate and add them dynamically per request - no merge needed."
       ]
     },
     {
@@ -2470,15 +2470,15 @@ Object.assign(questions, {
       question: "QLoRA (Dettmers et al., 2023) trains LoRA adapters in BF16 on top of a 4-bit NF4 quantized base model. What does 'double quantization' in QLoRA refer to?",
       options: [
         "Quantizing both the weight matrices and the LoRA adapter gradients to 4-bit",
-        "Quantizing the quantization constants (FP32 scale factors) themselves to INT8, reducing the memory overhead of the per-block scale factors by ~75% — a secondary savings on top of the NF4 weight quantization",
+        "Quantizing the quantization constants (FP32 scale factors) themselves to INT8, reducing the memory overhead of the per-block scale factors by ~75% - a secondary savings on top of the NF4 weight quantization",
         "Applying 4-bit quantization twice in sequence to achieve effective 2-bit precision",
         "Quantizing the activation tensors during the forward pass in addition to the weights"
       ],
       correctAnswer: 1,
-      explanation: "NF4 quantization groups weights into blocks of 64, each with an FP32 scale factor (32 bits per 64 weights = 0.5 bits/weight overhead). QLoRA's double quantization quantizes these FP32 scale factors to INT8 with their own block scale factors — reducing the constant overhead from 0.5 to ~0.125 bits/weight. On a 65B model this saves ~3 GB, which is the difference between fitting and not fitting on a single 48 GB GPU.",
+      explanation: "NF4 quantization groups weights into blocks of 64, each with an FP32 scale factor (32 bits per 64 weights = 0.5 bits/weight overhead). QLoRA's double quantization quantizes these FP32 scale factors to INT8 with their own block scale factors - reducing the constant overhead from 0.5 to ~0.125 bits/weight. On a 65B model this saves ~3 GB, which is the difference between fitting and not fitting on a single 48 GB GPU.",
       hints: [
         "Scale factors are FP32 constants shared across 64 weights. Double quantization compresses these constants to INT8.",
-        "Savings: ~3 GB on a 65B model — significant when every GB matters for single-GPU fine-tuning."
+        "Savings: ~3 GB on a 65B model - significant when every GB matters for single-GPU fine-tuning."
       ]
     }
   ],
@@ -2491,15 +2491,15 @@ Object.assign(questions, {
       question: "Prefix tuning (Li and Liang, 2021) prepends trainable vectors to K and V at every transformer layer, while prompt tuning (Lester et al., 2021) prepends trainable soft tokens only at the input embedding layer. What is the key advantage of prefix tuning?",
       options: [
         "Prefix tuning uses fewer trainable parameters than prompt tuning for equivalent control",
-        "Prefix tuning directly conditions K and V at every layer, giving the prefix direct influence over attention patterns at each depth — prompt tuning's soft tokens must propagate their influence through all L layers via the first layer's attention only",
+        "Prefix tuning directly conditions K and V at every layer, giving the prefix direct influence over attention patterns at each depth - prompt tuning's soft tokens must propagate their influence through all L layers via the first layer's attention only",
         "Prefix tuning is faster to optimize because it does not require backpropagation through the transformer",
         "Prefix tuning works with fully frozen models while prompt tuning requires unfreezing some attention layers"
       ],
       correctAnswer: 1,
-      explanation: "Prompt tuning: soft tokens at the input only — task conditioning must propagate through L layers of frozen transformer via self-attention, a weak signal at depth. Prefix tuning: trainable K/V at every layer directly steer attention patterns at that depth. This richer per-layer control enables better adaptation, especially at smaller model sizes where Li and Liang showed prefix tuning significantly outperforms prompt tuning.",
+      explanation: "Prompt tuning: soft tokens at the input only - task conditioning must propagate through L layers of frozen transformer via self-attention, a weak signal at depth. Prefix tuning: trainable K/V at every layer directly steer attention patterns at that depth. This richer per-layer control enables better adaptation, especially at smaller model sizes where Li and Liang showed prefix tuning significantly outperforms prompt tuning.",
       hints: [
         "Prompt tuning's tokens compete with content tokens at layer 1 only; their gradient must traverse L frozen layers to reach output.",
-        "Prefix tuning's K/V influence: every head at every layer attends to prefix keys — direct top-down control at every depth."
+        "Prefix tuning's K/V influence: every head at every layer attends to prefix keys - direct top-down control at every depth."
       ]
     },
     {
@@ -2508,7 +2508,7 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "Soft prompt tuning (Lester et al., 2021) becomes competitive with full fine-tuning at larger model scales (>11B parameters), suggesting large frozen models can effectively leverage gradient-optimized soft prompts for task conditioning.",
       correctAnswer: "True",
-      explanation: "Lester et al.'s key finding: at T5-Small (77M parameters), prompt tuning significantly underperforms full fine-tuning. At T5-XXL (11B), prompt tuning achieves near-parity. Larger frozen models have sufficient capacity to modulate their outputs strongly through attention on soft prompt tokens — the same scale effect seen in in-context learning improving with model size.",
+      explanation: "Lester et al.'s key finding: at T5-Small (77M parameters), prompt tuning significantly underperforms full fine-tuning. At T5-XXL (11B), prompt tuning achieves near-parity. Larger frozen models have sufficient capacity to modulate their outputs strongly through attention on soft prompt tokens - the same scale effect seen in in-context learning improving with model size.",
       hints: [
         "Small frozen models cannot adapt enough via attention on soft prompts; large models have capacity to use the soft prompts as strong conditioning.",
         "This scaling property makes prompt tuning attractive for very large proprietary models where weight updates are expensive or impossible."
@@ -2520,10 +2520,10 @@ Object.assign(questions, {
       difficulty: "hard",
       question: "Adapter layers (Houlsby et al., 2019) insert bottleneck FFN modules inside each transformer block. For d_model=1024 and bottleneck r=64, what is the parameter overhead per adapter relative to the original FFN with d_ff=4096?",
       options: [
-        "Adapter: 2 * 1024 * 64 = 131,072 params; original FFN: 2 * 1024 * 4096 = 8.4M — adapter is ~1.6% overhead per layer",
-        "Adapter: 1024 * 64 = 65,536 params — same order as the FFN",
-        "Adapter: 64 * 64 = 4,096 params — negligible compared to the FFN",
-        "Adapter: 2 * 4096 * 64 = 524,288 params — about 6% of the FFN"
+        "Adapter: 2 * 1024 * 64 = 131,072 params; original FFN: 2 * 1024 * 4096 = 8.4M - adapter is ~1.6% overhead per layer",
+        "Adapter: 1024 * 64 = 65,536 params - same order as the FFN",
+        "Adapter: 64 * 64 = 4,096 params - negligible compared to the FFN",
+        "Adapter: 2 * 4096 * 64 = 524,288 params - about 6% of the FFN"
       ],
       correctAnswer: 0,
       explanation: "Each adapter: down-project (d_model \\times r) + up-project (r \\times d_model) = 2 * 1024 * 64 = 131,072 params plus biases. Original FFN: 2 * (1024 * 4096) = 8.39M params. Ratio: 131K / 8.39M \\approx 1.56%. Houlsby et al. insert adapters after both attention and FFN sublayers (2 per transformer block), achieving near fine-tuning quality at only ~3% total parameter overhead per layer.",
@@ -2541,9 +2541,9 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "The Chinchilla scaling law (Hoffmann et al., 2022) prescribes compute-optimal training. What is the recommended ratio of training tokens D to model parameters N?",
       options: [
-        "D = N — equal parameters and tokens (1:1 ratio)",
-        "D \\approx 20 * N — roughly 20 training tokens per model parameter",
-        "D \\approx 100 * N — 100 tokens per parameter",
+        "D = N - equal parameters and tokens (1:1 ratio)",
+        "D \\approx 20 * N - roughly 20 training tokens per model parameter",
+        "D \\approx 100 * N - 100 tokens per parameter",
         "D is fixed at 300B tokens regardless of model size"
       ],
       correctAnswer: 1,
@@ -2561,8 +2561,8 @@ Object.assign(questions, {
       correctAnswer: "True",
       explanation: "Kaplan et al. fit power law relationships: L(N) = (N_c/N)^alpha, L(D) = (D_c/D)^alpha, L(C) = (C_c/C)^alpha, all with alpha around 0.07-0.08. These clean power laws held across 6+ orders of magnitude with no observed saturation, supporting the view that more compute reliably yields better models. Chinchilla later showed the Kaplan laws slightly undervalued data relative to model size, but the power law form itself holds.",
       hints: [
-        "Power law: every doubling of compute reduces loss by a fixed multiplicative factor — predictable and reliable.",
-        "No plateau observed up to 10^23 FLOPs in the original Kaplan study — loss kept decreasing smoothly."
+        "Power law: every doubling of compute reduces loss by a fixed multiplicative factor - predictable and reliable.",
+        "No plateau observed up to 10^23 FLOPs in the original Kaplan study - loss kept decreasing smoothly."
       ]
     },
     {
@@ -2571,13 +2571,13 @@ Object.assign(questions, {
       difficulty: "hard",
       question: "A team wants to maximize model quality at a fixed inference budget (fixed FLOPs per token at serving time, i.e., fixed model size N). According to the inference-optimal training perspective used in LLaMA-1, what is the right training strategy?",
       options: [
-        "Train for exactly Chinchilla-optimal tokens (20 * N) and stop — adding more tokens is wasteful",
-        "Train on far more tokens than Chinchilla-optimal — the quality of a fixed-N model keeps improving with more tokens, so overtrain relative to Chinchilla to maximize serving quality at fixed inference cost",
-        "Use a larger N and fewer tokens to hit the same compute budget — N dominates quality",
+        "Train for exactly Chinchilla-optimal tokens (20 * N) and stop - adding more tokens is wasteful",
+        "Train on far more tokens than Chinchilla-optimal - the quality of a fixed-N model keeps improving with more tokens, so overtrain relative to Chinchilla to maximize serving quality at fixed inference cost",
+        "Use a larger N and fewer tokens to hit the same compute budget - N dominates quality",
         "Chinchilla-optimal and inference-optimal prescribe identical training runs at all scales"
       ],
       correctAnswer: 1,
-      explanation: "Chinchilla optimizes for training compute efficiency. But if inference cost dominates (billions of requests), the correct objective is: given fixed N (fixed inference cost), maximize quality by training on as many tokens as practically possible. LLaMA-1-7B trained on 1T tokens vs. Chinchilla's ~140B optimal — the overtraining produced better quality per inference FLOP. This is the training-vs-inference cost trade-off formalized by Touvron et al.",
+      explanation: "Chinchilla optimizes for training compute efficiency. But if inference cost dominates (billions of requests), the correct objective is: given fixed N (fixed inference cost), maximize quality by training on as many tokens as practically possible. LLaMA-1-7B trained on 1T tokens vs. Chinchilla's ~140B optimal - the overtraining produced better quality per inference FLOP. This is the training-vs-inference cost trade-off formalized by Touvron et al.",
       hints: [
         "Chinchilla: for fixed training FLOPs, what (N, D) minimizes loss? LLaMA: for fixed N (inference cost), what D maximizes quality?",
         "Overtraining (D >> 20N) reduces training efficiency but improves the deployed model's quality for every inference call."
@@ -2598,7 +2598,7 @@ Object.assign(questions, {
         "8 * 128 * 8192 * 32 * 2 bytes \\approx 0.5 GB total"
       ],
       correctAnswer: 0,
-      explanation: "KV cache formula: 2 (K+V) * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes = 2 * 80 * 8 * 128 * 8192 * 32 * 2 = ~42.9 GB. Without GQA (using 64 Q heads as KV): 2 * 80 * 64 * 128 * 8192 * 32 * 2 = ~344 GB — impossible on a single A100. GQA's 8-KV-head design is what makes 70B models practical: 344 GB \\to 43 GB, an 8x reduction.",
+      explanation: "KV cache formula: 2 (K+V) * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes = 2 * 80 * 8 * 128 * 8192 * 32 * 2 = ~42.9 GB. Without GQA (using 64 Q heads as KV): 2 * 80 * 64 * 128 * 8192 * 32 * 2 = ~344 GB - impossible on a single A100. GQA's 8-KV-head design is what makes 70B models practical: 344 GB \\to 43 GB, an 8x reduction.",
       hints: [
         "KV cache: 2 * n_layers * n_kv_heads * head_dim * seq_len * batch * bytes_per_element.",
         "GQA-8 vs. MHA-64: 8/64 = 1/8 the KV heads \\to 1/8 the KV cache. 344 GB \\to 43 GB for this configuration."
@@ -2610,10 +2610,10 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "During autoregressive generation, the KV cache grows by exactly one new K and V vector per layer per decode step, and attention computation scales O(n) with the current sequence length n.",
       correctAnswer: "True",
-      explanation: "At decode step t, the KV cache holds keys/values for positions 1 through t-1. One new K and V are computed for position t and appended (O(1) per layer). The new query attends to all t cached keys: O(t * d) compute — linear in current sequence length t. Total decode cost grows linearly with sequence length, unlike prefill (O(n^2) over the full prompt).",
+      explanation: "At decode step t, the KV cache holds keys/values for positions 1 through t-1. One new K and V are computed for position t and appended (O(1) per layer). The new query attends to all t cached keys: O(t * d) compute - linear in current sequence length t. Total decode cost grows linearly with sequence length, unlike prefill (O(n^2) over the full prompt).",
       hints: [
-        "Prefill: process all n prompt tokens at once — O(n^2) attention. Decode: one token at a time — O(n) per step.",
-        "KV cache avoids recomputing K and V for previous tokens — trading O(n) memory growth for O(n) per-step compute."
+        "Prefill: process all n prompt tokens at once - O(n^2) attention. Decode: one token at a time - O(n) per step.",
+        "KV cache avoids recomputing K and V for previous tokens - trading O(n) memory growth for O(n) per-step compute."
       ]
     },
     {
@@ -2628,7 +2628,7 @@ Object.assign(questions, {
         "Token frequency: evict the most common tokens since they are informationally redundant"
       ],
       correctAnswer: 1,
-      explanation: "H2O and StreamingLLM track cumulative attention scores. Tokens receiving low total attention across recent decode steps are eviction candidates. The critical finding (StreamingLLM, Xiao et al.): initial token positions (0-3) act as 'attention sinks' — softmax must sum to 1, and initial tokens accumulate excess probability mass as a normalization artifact. Evicting these sink tokens causes quality collapse even if many more recent tokens are retained. Fix: always keep the first few tokens plus the most recent window.",
+      explanation: "H2O and StreamingLLM track cumulative attention scores. Tokens receiving low total attention across recent decode steps are eviction candidates. The critical finding (StreamingLLM, Xiao et al.): initial token positions (0-3) act as 'attention sinks' - softmax must sum to 1, and initial tokens accumulate excess probability mass as a normalization artifact. Evicting these sink tokens causes quality collapse even if many more recent tokens are retained. Fix: always keep the first few tokens plus the most recent window.",
       hints: [
         "Attention sink: softmax forces probability to sum to 1; initial tokens absorb excess probability when no other token is relevant.",
         "StreamingLLM: retain first 4 sink tokens + sliding window of recent tokens \\to infinite context with constant cache size."
@@ -2661,7 +2661,7 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "Speculative decoding requires that the draft model and target model share the same vocabulary and tokenizer, since token acceptance/rejection compares probability distributions over the same token IDs.",
       correctAnswer: "True",
-      explanation: "The acceptance criterion compares target_prob(token_id) with draft_prob(token_id) at the same vocabulary position. If tokenizers differ, token ID 42 means different tokens in each model — the comparison is meaningless. All practical speculative decoding systems require identical tokenizers. This is why speculative decoding pairs models from the same family (GPT-4 + GPT-4o-mini share tokenizers) or uses architecture-agnostic drafters that operate on the shared token space.",
+      explanation: "The acceptance criterion compares target_prob(token_id) with draft_prob(token_id) at the same vocabulary position. If tokenizers differ, token ID 42 means different tokens in each model - the comparison is meaningless. All practical speculative decoding systems require identical tokenizers. This is why speculative decoding pairs models from the same family (GPT-4 + GPT-4o-mini share tokenizers) or uses architecture-agnostic drafters that operate on the shared token space.",
       hints: [
         "Acceptance: if draft_prob(x) <= target_prob(x), accept token x. Requires x to be the same token in both models.",
         "Different vocabulary = different token IDs = incomparable probability distributions = broken acceptance criterion."
@@ -2674,12 +2674,12 @@ Object.assign(questions, {
       question: "EAGLE (speculative decoding with a single auto-regressive draft head on the target model's hidden states) achieves higher acceptance rates than using a separate smaller draft model. What is the fundamental reason?",
       options: [
         "EAGLE's single-layer head is 100x faster to execute than any separate draft model",
-        "EAGLE drafts tokens conditioned on the target model's exact internal representations — capturing the same features the target uses — producing distributions more aligned with the target than a separately trained model operating on different learned representations",
+        "EAGLE drafts tokens conditioned on the target model's exact internal representations - capturing the same features the target uses - producing distributions more aligned with the target than a separately trained model operating on different learned representations",
         "EAGLE eliminates the tokenizer compatibility requirement by operating on raw embeddings",
         "EAGLE can draft all next tokens in parallel across all positions simultaneously"
       ],
       correctAnswer: 1,
-      explanation: "Separate draft models have a representation gap: they produce probability distributions based on their own learned features, which may diverge from the target model's features even for the same input. EAGLE's draft head takes the target model's last-layer hidden states as input — it conditions on exactly the features the target uses, producing tightly aligned distributions. This raises acceptance rates from ~70% (small separate model) to ~80-85%, achieving 3-4x speedup vs. 2x for typical separate-model speculative decoding.",
+      explanation: "Separate draft models have a representation gap: they produce probability distributions based on their own learned features, which may diverge from the target model's features even for the same input. EAGLE's draft head takes the target model's last-layer hidden states as input - it conditions on exactly the features the target uses, producing tightly aligned distributions. This raises acceptance rates from ~70% (small separate model) to ~80-85%, achieving 3-4x speedup vs. 2x for typical separate-model speculative decoding.",
       hints: [
         "EAGLE head input: target model's hidden state h_t. It predicts the distribution the target model would produce from those exact features.",
         "Higher acceptance rate = more draft tokens accepted per verification step = fewer expensive target model forward passes needed."
@@ -2694,9 +2694,9 @@ Object.assign(questions, {
       difficulty: "easy",
       question: "Grouped Query Attention (GQA) with G=4 groups applied to a model with H=32 query heads means:",
       options: [
-        "4 separate Q, K, and V projections total — the same as MHA with 4 heads",
-        "32 Q heads organized into 4 groups, each group sharing 1 K head and 1 V head — so there are 4 K matrices and 4 V matrices total, giving a KV cache 8x smaller than MHA",
-        "All 32 query heads share a single K and V — equivalent to Multi-Query Attention",
+        "4 separate Q, K, and V projections total - the same as MHA with 4 heads",
+        "32 Q heads organized into 4 groups, each group sharing 1 K head and 1 V head - so there are 4 K matrices and 4 V matrices total, giving a KV cache 8x smaller than MHA",
+        "All 32 query heads share a single K and V - equivalent to Multi-Query Attention",
         "4 separate transformer blocks each with independent attention mechanisms"
       ],
       correctAnswer: 1,
@@ -2712,10 +2712,10 @@ Object.assign(questions, {
       difficulty: "medium",
       question: "Ring Attention (Liu et al., 2023) enables training on sequences longer than a single GPU's memory by distributing the sequence across GPUs in a ring, where each GPU holds a segment of Q, K, V and passes K, V to the next GPU while computing local attention blocks.",
       correctAnswer: "True",
-      explanation: "Ring Attention: GPU i holds Q_i (its segment of queries) and processes K_j, V_j blocks received from the ring. At each ring step, GPU i computes Q_i K_j^T V_j, accumulates into its output using online softmax, and passes K_j, V_j forward to the next GPU. After n_gpu ring steps, each GPU has its full attention output. Communication per step is proportional to segment_size — constant regardless of total sequence length, enabling sequences of 1M+ tokens.",
+      explanation: "Ring Attention: GPU i holds Q_i (its segment of queries) and processes K_j, V_j blocks received from the ring. At each ring step, GPU i computes Q_i K_j^T V_j, accumulates into its output using online softmax, and passes K_j, V_j forward to the next GPU. After n_gpu ring steps, each GPU has its full attention output. Communication per step is proportional to segment_size - constant regardless of total sequence length, enabling sequences of 1M+ tokens.",
       hints: [
         "Ring step: receive K_j, V_j \\to compute partial attention \\to accumulate with online softmax \\to pass K_j, V_j to next GPU.",
-        "Total communication: n_gpu steps \\times (seq/n_gpu) \\times d_model — same as total sequence processing, no overhead from ring topology."
+        "Total communication: n_gpu steps \\times (seq/n_gpu) \\times d_model - same as total sequence processing, no overhead from ring topology."
       ]
     },
     {
@@ -2725,15 +2725,15 @@ Object.assign(questions, {
       question: "ALiBi (Attention with Linear Biases, Press et al., 2021) adds a negative linear penalty m*|i-j| to attention scores based on query-key distance. What key inference property does this enable that RoPE and absolute positional embeddings do not provide?",
       options: [
         "ALiBi enables faster attention computation by linearizing the attention score function",
-        "ALiBi provides length extrapolation: the linear bias extends smoothly to positions beyond training length — models trained at 1024 tokens can generalize to 2048+ tokens without fine-tuning, since the penalty at unseen distances is a smooth extension of the trained range",
+        "ALiBi provides length extrapolation: the linear bias extends smoothly to positions beyond training length - models trained at 1024 tokens can generalize to 2048+ tokens without fine-tuning, since the penalty at unseen distances is a smooth extension of the trained range",
         "ALiBi eliminates the need for the 1/sqrt(d_k) scaling factor in attention",
         "ALiBi forces uniform attention patterns across all heads, improving training stability"
       ],
       correctAnswer: 1,
-      explanation: "RoPE and absolute learned embeddings fail at positions beyond training context (the model encounters out-of-distribution rotation angles or unseen position IDs). ALiBi's penalty m*|i-j| has no learned parameters and extends naturally: positions beyond training length simply receive a larger negative bias — smoothly discouraging very long-range attention without any out-of-distribution discontinuity. Press et al. showed ALiBi trained at 1024 tokens achieves reasonable perplexity at 2048+ tokens with zero fine-tuning.",
+      explanation: "RoPE and absolute learned embeddings fail at positions beyond training context (the model encounters out-of-distribution rotation angles or unseen position IDs). ALiBi's penalty m*|i-j| has no learned parameters and extends naturally: positions beyond training length simply receive a larger negative bias - smoothly discouraging very long-range attention without any out-of-distribution discontinuity. Press et al. showed ALiBi trained at 1024 tokens achieves reasonable perplexity at 2048+ tokens with zero fine-tuning.",
       hints: [
-        "RoPE at positions > training length: unseen rotation angles — model has never learned to interpret these rotations.",
-        "ALiBi at position 2000 (trained to 1024): penalty = m * 2000 — a smooth extrapolation of the m * 1024 training maximum."
+        "RoPE at positions > training length: unseen rotation angles - model has never learned to interpret these rotations.",
+        "ALiBi at position 2000 (trained to 1024): penalty = m * 2000 - a smooth extrapolation of the m * 1024 training maximum."
       ]
     }
   ],
@@ -2747,16 +2747,16 @@ Object.assign(questions, {
         "RLHF trains a reward model on human preference rankings, then uses PPO to optimize the LLM to maximize reward. RLAIF (RL from AI Feedback, Bai et al., 2022) replaces human raters with an AI annotator. What is the primary practical advantage of RLAIF?",
       options: [
         "RLAIF produces higher quality preference labels than human raters on all tasks",
-        "RLAIF scales preference labeling at a fraction of the cost and time of human annotation — enabling continuous improvement without the bottleneck of human labeling throughput",
+        "RLAIF scales preference labeling at a fraction of the cost and time of human annotation - enabling continuous improvement without the bottleneck of human labeling throughput",
         "RLAIF eliminates the need for a reward model by using the LLM's own log-probabilities directly",
-        "RLAIF uses RL without requiring any preference comparisons — it learns from scalar rewards only",
+        "RLAIF uses RL without requiring any preference comparisons - it learns from scalar rewards only",
       ],
       correctAnswer: 1,
       explanation:
         "Human preference labeling is expensive and slow (human throughput is limited). RLAIF uses a capable LLM to generate preference comparisons automatically, enabling millions of preference labels at minimal cost. Bai et al. showed AI-labeled preferences produce comparable or better alignment quality than human labels for harmlessness training.",
       hints: [
         "RLHF bottleneck: human labelers can produce roughly 1000 comparisons per day. RLAIF: millions per day via API calls.",
-        "Quality concern: AI annotators may have systematic biases — but they are consistent and highly scalable.",
+        "Quality concern: AI annotators may have systematic biases - but they are consistent and highly scalable.",
       ],
     },
     {
@@ -2767,10 +2767,10 @@ Object.assign(questions, {
         "Constitutional AI (CAI) trains a model to be harmless using a list of principles without requiring human harm labels: the model critiques and revises its own outputs against the principles, and these revised outputs are used for supervised fine-tuning.",
       correctAnswer: "True",
       explanation:
-        "CAI's SL-CAI phase: (1) sample an initial (potentially harmful) response; (2) ask the model to critique the response against a constitutional principle; (3) ask the model to revise the response; (4) fine-tune on the revised responses. No human labels are needed for the harm dimension — the model self-supervises using the constitution.",
+        "CAI's SL-CAI phase: (1) sample an initial (potentially harmful) response; (2) ask the model to critique the response against a constitutional principle; (3) ask the model to revise the response; (4) fine-tune on the revised responses. No human labels are needed for the harm dimension - the model self-supervises using the constitution.",
       hints: [
         "Critique step: identify ways your response is harmful. Revision step: rewrite to avoid those issues.",
-        "Human labels are still used for helpfulness, but harmlessness training uses AI self-critique — eliminating expensive harm labeling.",
+        "Human labels are still used for helpfulness, but harmlessness training uses AI self-critique - eliminating expensive harm labeling.",
       ],
     },
     {
@@ -2781,7 +2781,7 @@ Object.assign(questions, {
         "Refusal calibration in safety-trained LLMs involves balancing over-refusal (refusing benign requests that superficially resemble harmful ones) against under-refusal (complying with genuinely harmful requests). What training approach most directly addresses over-refusal without compromising safety?",
       options: [
         "Reducing the weight of the harmlessness reward in RLHF to allow more refusals to be overridden",
-        "Including contrast pairs in fine-tuning: pairs of superficially similar benign and harmful prompts where the model is trained to respond helpfully to the benign version and refuse the harmful one — teaching fine-grained discrimination between surface similarity and true harm",
+        "Including contrast pairs in fine-tuning: pairs of superficially similar benign and harmful prompts where the model is trained to respond helpfully to the benign version and refuse the harmful one - teaching fine-grained discrimination between surface similarity and true harm",
         "Removing all safety fine-tuning and relying only on pretraining data distribution",
         "Increasing the temperature at inference time so the model is less conservative in refusing",
       ],

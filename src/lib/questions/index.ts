@@ -47,6 +47,9 @@ import "./systems-design-networking";
 import "./systems-design-distributed";
 import "./systems-design-scalability";
 import "./systems-design-cloud";
+import "./systems-design-social";
+import "./systems-design-ecommerce";
+import "./systems-design-streaming";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

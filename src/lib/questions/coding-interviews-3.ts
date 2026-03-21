@@ -152,7 +152,7 @@ const questions: Record<string, Question[]> = {
       options: ["0", "-1", "Infinity (represented as amount+1)", "amount"],
       correctAnswer: 2,
       explanation:
-        "We use $\\text{amount} + 1$ as a sentinel value representing \"infinity\" (since no valid solution can use more than $\\text{amount}$ coins—a coin of value 1 would be the worst case).\n\n$$\\begin{align}\n\\text{Initialize: } &dp[i] = \\infty = \\text{amount} + 1\\n\\text{After DP: } &\\text{if } dp[\\text{amount}] > \\text{amount} \\Rightarrow \\text{impossible, return } -1\n\\end{align}$$",
+        "We use $\\text{amount} + 1$ as a sentinel value representing \"infinity\" (since no valid solution can use more than $\\text{amount}$ coins-a coin of value 1 would be the worst case).\n\n$$\\begin{align}\n\\text{Initialize: } &dp[i] = \\infty = \\text{amount} + 1\\n\\text{After DP: } &\\text{if } dp[\\text{amount}] > \\text{amount} \\Rightarrow \\text{impossible, return } -1\n\\end{align}$$",
       hints: [
         "Impossible states start as a sentinel value larger than any real answer.",
         "If no transition improves $dp[\\text{amount}]$, it stays at the sentinel value.",
@@ -289,7 +289,7 @@ const questions: Record<string, Question[]> = {
         "The Longest Increasing Subsequence (LIS) is $[2, 3, 7, 18]$ or $[2, 3, 7, 101]$, both of length **4**.\n\nStep-by-step:\n- $10$: $\\text{tails} = [10]$\n- $9$: $\\text{tails} = [9]$ (replace 10)\n- $2$: $\\text{tails} = [2]$\n- $5$: $\\text{tails} = [2, 5]$\n- $3$: $\\text{tails} = [2, 3]$\n- $7$: $\\text{tails} = [2, 3, 7]$\n- $101$: $\\text{tails} = [2, 3, 7, 101]$\n- $18$: $\\text{tails} = [2, 3, 7, 18]$ (replace 101)\n\nLength = 4.",
       hints: [
         "The subsequence must be increasing but does not need to be contiguous.",
-        "The LIS is a strictly increasing subsequence — look for the longest one.",
+        "The LIS is a strictly increasing subsequence - look for the longest one.",
       ],
     },
     {
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In the **Segmented Sieve**, we divide the range $[2, n]$ into segments of size $\\Delta$. For each segment, we only need to mark multiples of primes $p \\leq \\sqrt{n}$:\n\n- For each prime $p \\leq \\sqrt{n}$, find the first multiple in the segment and mark by $p$\n- Process segments sequentially, maintaining a rolling list of primes up to $\\sqrt{n}$\n\nThis reduces space from $O(n)$ to $O(\\sqrt{n} + \\Delta)$.",
       hints: [
-        "If $p > \\sqrt{n}$, then $p^2 > n$—its multiples in $[2, n]$ are already marked by smaller primes.",
+        "If $p > \\sqrt{n}$, then $p^2 > n$-its multiples in $[2, n]$ are already marked by smaller primes.",
         "The segmented sieve processes small chunks of the range at a time.",
       ],
     },
@@ -2596,7 +2596,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In the XOR swap, each operation depends on the result of the previous one:\n\n$$a = a \\oplus b \\to b = a \\oplus b \\to a = a \\oplus b$$\n\nThis chain of data dependencies prevents instruction-level parallelism (ILP). A modern out-of-order CPU cannot pipeline these three operations.\n\nBy contrast, a temp-variable swap allows the CPU to issue loads and stores in parallel.",
       hints: [
-        "Each XOR depends on the previous result — no parallelism possible.",
+        "Each XOR depends on the previous result - no parallelism possible.",
         "Modern CPUs exploit ILP; sequential data dependencies prevent this.",
       ],
     },
@@ -2737,7 +2737,7 @@ const questions: Record<string, Question[]> = {
       question: "The binary string $101$ is a palindrome.",
       correctAnswer: "True",
       explanation:
-        "A palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ — identical. So yes, it is a binary palindrome.",
+        "A palindrome reads the same forward and backward.\n\n$101$ reversed is $101$ - identical. So yes, it is a binary palindrome.",
       hints: [
         "Reverse the bits: does it equal the original?",
         "$101$ reads the same in both directions.",
@@ -2756,7 +2756,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "XOR the number with its bit-reversed form. If the result is 0, all corresponding bits match — it is a palindrome.\n\n$$\\text{isPalindrome}(n) = (n \\oplus \\text{reverseBits}(n)) == 0$$\n\nThis works in $O(1)$ if $\\text{reverseBits}$ is $O(1)$ (using precomputed lookup tables or the magic-constant method for 32-bit integers).",
+        "XOR the number with its bit-reversed form. If the result is 0, all corresponding bits match - it is a palindrome.\n\n$$\\text{isPalindrome}(n) = (n \\oplus \\text{reverseBits}(n)) == 0$$\n\nThis works in $O(1)$ if $\\text{reverseBits}$ is $O(1)$ (using precomputed lookup tables or the magic-constant method for 32-bit integers).",
       hints: [
         "XOR of equal values is 0.",
         "If $n \\oplus \\text{reverse}(n) = 0$, every bit matches its mirror.",
@@ -2949,7 +2949,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If $\\gcd(h_2(k), m) = d > 1$, the probe sequence only visits $m/d$ distinct slots before cycling.\n\nThis means at most $m/d$ slots are ever probed — some slots become unreachable, potentially causing spurious lookup failures even when empty slots exist.\n\nRequiring $h_2(k)$ coprime to $m$ (e.g., $m$ prime, or $h_2(k)$ always odd with $m$ a power of 2) guarantees a full permutation of all $m$ slots.",
+        "If $\\gcd(h_2(k), m) = d > 1$, the probe sequence only visits $m/d$ distinct slots before cycling.\n\nThis means at most $m/d$ slots are ever probed - some slots become unreachable, potentially causing spurious lookup failures even when empty slots exist.\n\nRequiring $h_2(k)$ coprime to $m$ (e.g., $m$ prime, or $h_2(k)$ always odd with $m$ a power of 2) guarantees a full permutation of all $m$ slots.",
       hints: [
         "A probe sequence of step size $d$ cycles after $m/d$ steps if $\\gcd(d, m) = d$.",
         "Full coverage requires the step size to generate all residues modulo $m$.",
@@ -3058,7 +3058,7 @@ const questions: Record<string, Question[]> = {
       question: 'Two strings are anagrams of each other if and only if they have the same character frequencies.',
       correctAnswer: "True",
       explanation:
-        "Anagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters — that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
+        "Anagrams are rearrangements of the same characters. Two strings are anagrams iff they have identical multisets of characters - that is, the same count for each character.\n\nExample: \"listen\" and \"silent\" both have the same character counts.",
       hints: [
         "Anagrams use the same characters, just in a different order.",
         "Character frequency (count) is the canonical comparison.",
@@ -3077,7 +3077,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Multiple $O(k)$ canonical forms exist:\n\n1. **Frequency count array**: `[2,0,0,0,1,0,...,0,1]` for \"aae\"\n2. **Character-count pairs**: sorted `(a,2),(e,1)` representation\n3. **Prime product hash**: assign a prime to each letter; multiply their primes — but this can overflow for long strings\n\nAll three uniquely identify an anagram group. The frequency array is most common in practice.",
+        "Multiple $O(k)$ canonical forms exist:\n\n1. **Frequency count array**: `[2,0,0,0,1,0,...,0,1]` for \"aae\"\n2. **Character-count pairs**: sorted `(a,2),(e,1)` representation\n3. **Prime product hash**: assign a prime to each letter; multiply their primes - but this can overflow for long strings\n\nAll three uniquely identify an anagram group. The frequency array is most common in practice.",
       hints: [
         "Any representation that captures character frequencies is a valid canonical key.",
         "Sorting is one approach; counting is another.",
@@ -3275,7 +3275,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The first pass of Boyer-Moore guarantees: **if a majority element exists, the candidate must be it**.\n\nHowever, it does NOT guarantee a majority element exists. For example, $[1, 2, 3]$ — the candidate is 3 (or any element), but no majority element exists.\n\nThe second pass counts occurrences of the candidate to confirm $\\text{count} > n/2$.",
+        "The first pass of Boyer-Moore guarantees: **if a majority element exists, the candidate must be it**.\n\nHowever, it does NOT guarantee a majority element exists. For example, $[1, 2, 3]$ - the candidate is 3 (or any element), but no majority element exists.\n\nThe second pass counts occurrences of the candidate to confirm $\\text{count} > n/2$.",
       hints: [
         "Boyer-Moore guarantees the candidate is the majority element IF one exists.",
         "The algorithm cannot tell on the first pass whether a majority element truly exists.",
@@ -3321,7 +3321,7 @@ const questions: Record<string, Question[]> = {
       question: "A Bloom filter uses a bit array and multiple hash functions to check set membership.",
       correctAnswer: "True",
       explanation:
-        "A Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set — if any is 0, $x$ was not inserted",
+        "A Bloom filter consists of:\n- A bit array of size $m$ (initially all 0)\n- $k$ independent hash functions\n\n**Insert**: set bits at $h_1(x), h_2(x), \\ldots, h_k(x)$\n**Query**: check if all $k$ bits are set - if any is 0, $x$ was not inserted",
       hints: [
         "Multiple hash functions reduce false positive probability.",
         "A single hash function would have too many collisions.",
@@ -3765,7 +3765,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Interval DP builds up from subintervals of length 1 (single elements) to the full interval.\n\nBase case: $dp[i][i]$ for all $i$ (interval of length 1).\nFill order: increasing interval length $2, 3, \\ldots, n$.\n\nThis ensures all subintervals are computed before the intervals that depend on them.",
       hints: [
-        "A single element has no meaningful split point — it is a trivial base case.",
+        "A single element has no meaningful split point - it is a trivial base case.",
         "Larger intervals are built from smaller ones.",
       ],
     },
@@ -3887,7 +3887,7 @@ const questions: Record<string, Question[]> = {
         "DP can be applied to graphs with cycles when combined with appropriate state design.\n\nExamples:\n- **Shortest paths with negative edges**: Bellman-Ford DP works on general graphs\n- **Floyd-Warshall**: all-pairs shortest paths on general graphs\n- **Bitmask DP (TSP)**: works on complete graphs with cycles\n\nThe key is that the DP state must avoid circular dependencies.",
       hints: [
         "DAGs are the simplest case, but DP also works elsewhere.",
-        "Think of Bellman-Ford or Floyd-Warshall — both handle cyclic graphs.",
+        "Think of Bellman-Ford or Floyd-Warshall - both handle cyclic graphs.",
       ],
     },
   ],

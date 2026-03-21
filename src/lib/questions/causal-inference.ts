@@ -12,15 +12,15 @@ const questions: Record<string, Question[]> = {
       options: [
         "Ice cream causes drowning by impairing swimming ability",
         "Drowning risk increases appetite for ice cream",
-        "Both are driven by a common cause — hot weather — making the correlation spurious",
+        "Both are driven by a common cause - hot weather - making the correlation spurious",
         "The sample size is too small to draw any conclusion",
       ],
       correctAnswer: 2,
       explanation:
-        "This is a classic example of confounding: hot weather independently increases both ice cream consumption and swimming (raising drowning risk). There is no direct causal link between ice cream and drowning — the correlation is entirely spurious.",
+        "This is a classic example of confounding: hot weather independently increases both ice cream consumption and swimming (raising drowning risk). There is no direct causal link between ice cream and drowning - the correlation is entirely spurious.",
       hints: [
         "Ask: is there a third variable that could independently cause both phenomena?",
-        "Hot summers drive both behaviors — this is the classic 'confounder' or 'common cause'.",
+        "Hot summers drive both behaviors - this is the classic 'confounder' or 'common cause'.",
       ],
     },
     {
@@ -74,7 +74,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For any individual unit i, we can only observe Y_i(1) or Y_i(0) — the outcome under treatment or control — but never both simultaneously. The individual causal effect Y_i(1) - Y_i(0) is therefore never directly observed, making causal inference inherently a missing data problem.",
+        "For any individual unit i, we can only observe Y_i(1) or Y_i(0) - the outcome under treatment or control - but never both simultaneously. The individual causal effect Y_i(1) - Y_i(0) is therefore never directly observed, making causal inference inherently a missing data problem.",
       hints: [
         "Think about counterfactuals: you cannot observe what would have happened to a patient who received treatment if they had instead received a placebo, at the same point in time.",
         "The word 'fundamental' indicates this is an in-principle limitation, not just a practical one.",
@@ -94,7 +94,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "SUTVA has two components: (1) No interference — the potential outcome of unit i does not depend on the treatment received by other units (no spillovers); (2) No hidden variations of treatment — there is only one version of the treatment, so Y_i(1) is well-defined. Violations occur in network experiments (interference) or when treatment implementation varies (hidden versions).",
+        "SUTVA has two components: (1) No interference - the potential outcome of unit i does not depend on the treatment received by other units (no spillovers); (2) No hidden variations of treatment - there is only one version of the treatment, so Y_i(1) is well-defined. Violations occur in network experiments (interference) or when treatment implementation varies (hidden versions).",
       hints: [
         "SUTVA is required to define individual potential outcomes Y_i(t) unambiguously.",
         "Vaccine trials may violate the interference assumption through herd immunity effects.",
@@ -151,7 +151,7 @@ const questions: Record<string, Question[]> = {
         "Two different SCMs (with different structural equations) can generate the same observational joint distribution P(X_1, ..., X_n).",
       correctAnswer: "True",
       explanation:
-        "This is the problem of 'Markov equivalence' and 'causal non-identifiability from observational data alone'. Multiple SCMs — even with different causal structures — can be consistent with the same observational distribution. This is why additional assumptions (e.g., functional form restrictions, interventional data) are needed for causal discovery.",
+        "This is the problem of 'Markov equivalence' and 'causal non-identifiability from observational data alone'. Multiple SCMs - even with different causal structures - can be consistent with the same observational distribution. This is why additional assumptions (e.g., functional form restrictions, interventional data) are needed for causal discovery.",
       hints: [
         "Think about X \\to Y vs Y \\to X: both can be consistent with the same bivariate distribution under certain noise models.",
         "This is why causal discovery is harder than structure learning in Bayesian networks.",
@@ -171,7 +171,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pearl's causal hierarchy is: (1) Association (seeing) — P(Y|X); (2) Intervention (doing) — P(Y|do(X=x)); (3) Counterfactual (imagining) — P(Y_x | X=x', Y=y'). Each level requires strictly more information than the one below. Observational data answers rung-1 queries; interventional data answers rung-2; SCMs with structural equations are needed for rung-3.",
+        "Pearl's causal hierarchy is: (1) Association (seeing) - P(Y|X); (2) Intervention (doing) - P(Y|do(X=x)); (3) Counterfactual (imagining) - P(Y_x | X=x', Y=y'). Each level requires strictly more information than the one below. Observational data answers rung-1 queries; interventional data answers rung-2; SCMs with structural equations are needed for rung-3.",
       hints: [
         "Rung 1 is what statistical models answer with observational data.",
         "Rung 3 requires reasoning about what would have happened under a different treatment for a unit we already observed.",
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
         "In a Directed Acyclic Graph (DAG) used for causal modeling, an arrow X \\to Y means:",
       options: [
         "X and Y are correlated in the data",
-        "X is a direct cause of Y — intervening on X changes the distribution of Y",
+        "X is a direct cause of Y - intervening on X changes the distribution of Y",
         "Y temporally precedes X in the data collection process",
         "X is sufficient to predict Y with high accuracy",
       ],
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "d-separation is a graphical criterion for reading off conditional independence statements. X and Y are d-separated by Z if every path between X and Y is blocked by Z (either through a chain/fork where a node in Z is on the path, or a collider not in Z and with no descendant in Z). Under the Markov and faithfulness assumptions, d-separation implies conditional independence in the joint distribution.",
       hints: [
-        "d-separation is 'directed separation' — the directionality of arrows matters for whether a path is blocked.",
+        "d-separation is 'directed separation' - the directionality of arrows matters for whether a path is blocked.",
         "Colliders (X \\to Z \\leftarrow Y) have special behavior: conditioning on a collider opens the path.",
       ],
     },
@@ -259,8 +259,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The do-operator models a physical intervention: do(X=x) sets X to value x and severs all causal mechanisms that previously determined X (removing all arrows into X in the 'mutilated' graph). In contrast, conditioning on X=x is an observational operation that does not change the underlying mechanisms. They coincide only when there are no confounders between X and Y.",
       hints: [
-        "An intervention makes X exogenous — it removes the influence of X's causes.",
-        "P(Y|X=x) \$\\neq\$ P(Y|do(X=x)) when there are confounders — this is the key insight of causal inference.",
+        "An intervention makes X exogenous - it removes the influence of X's causes.",
+        "P(Y|X=x) \$\\neq\$ P(Y|do(X=x)) when there are confounders - this is the key insight of causal inference.",
       ],
     },
     {
@@ -291,7 +291,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Do-calculus is a sound and complete axiomatic system for causal reasoning. Its three rules (insertion/deletion of observations, action/observation exchange, insertion/deletion of actions) can be applied to any expression involving do-operators. Together, they characterize exactly which causal effects can be identified from observational data given a causal graph — a query is identifiable if and only if it can be reduced to an observational expression using do-calculus.",
+        "Do-calculus is a sound and complete axiomatic system for causal reasoning. Its three rules (insertion/deletion of observations, action/observation exchange, insertion/deletion of actions) can be applied to any expression involving do-operators. Together, they characterize exactly which causal effects can be identified from observational data given a causal graph - a query is identifiable if and only if it can be reduced to an observational expression using do-calculus.",
       hints: [
         "The front-door criterion is an example of a non-obvious identifiability result provable using do-calculus.",
         "Completeness means: if do-calculus cannot reduce an expression to observational quantities, no method can identify the causal effect from observational data alone.",
@@ -356,7 +356,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Horvitz-Thompson IPW estimator reweights each observation by the inverse of its probability of receiving the treatment it received: treated units by 1/e(X) and controls by 1/(1-e(X)). This creates a pseudo-population where treatment is independent of X, enabling unbiased estimation of the ATE. Poor overlap (propensity scores near 0 or 1) leads to high-variance estimates.",
       hints: [
-        "IPW is analogous to survey sampling weights — units with unusual treatment probabilities are upweighted to represent the full population.",
+        "IPW is analogous to survey sampling weights - units with unusual treatment probabilities are upweighted to represent the full population.",
         "The doubly robust estimator combines IPW with outcome regression, being consistent if either model is correctly specified.",
       ],
     },
@@ -379,7 +379,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Randomization balances both observed and unobserved confounders across treatment and control groups in expectation. This breaks the association between treatment assignment and potential outcomes (T ⊥ (Y(0),Y(1))), making the naive difference in means an unbiased estimator of the ATE. This is the 'gold standard' for causal identification.",
       hints: [
-        "The key word is 'in expectation' — any single randomized experiment may have imbalance by chance.",
+        "The key word is 'in expectation' - any single randomized experiment may have imbalance by chance.",
         "Randomization is powerful because it balances variables you haven't even measured.",
       ],
     },
@@ -411,10 +411,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "In a two-sided marketplace, riders and drivers are linked through a shared pool. If treated riders get faster pickups, they consume driver capacity, leaving fewer drivers for control riders — creating a 'market-level' interference effect. Rider-level randomization understates the treatment effect. Solutions include cluster randomization by geography (city-level A/B), holdout experiments, or synthetic control methods.",
+        "In a two-sided marketplace, riders and drivers are linked through a shared pool. If treated riders get faster pickups, they consume driver capacity, leaving fewer drivers for control riders - creating a 'market-level' interference effect. Rider-level randomization understates the treatment effect. Solutions include cluster randomization by geography (city-level A/B), holdout experiments, or synthetic control methods.",
       hints: [
         "Uber, Lyft, and DoorDash face this challenge: you can't randomize individual riders independently when they share a driver pool.",
-        "The fix is to randomize at the level where interference is contained — e.g., city or time period.",
+        "The fix is to randomize at the level where interference is contained - e.g., city or time period.",
       ],
     },
   ],
@@ -428,13 +428,13 @@ const questions: Record<string, Question[]> = {
         "The propensity score e(X) = P(T=1|X) was shown by Rosenbaum and Rubin (1983) to have what key property?",
       options: [
         "It is always sufficient to block all backdoor paths in any causal graph",
-        "If (Y(0),Y(1)) ⊥ T | X, then (Y(0),Y(1)) ⊥ T | e(X) — the propensity score is a balancing score",
+        "If (Y(0),Y(1)) ⊥ T | X, then (Y(0),Y(1)) ⊥ T | e(X) - the propensity score is a balancing score",
         "It uniquely identifies the causal graph structure from observational data",
         "It equals the probability that unit i is in the treatment group after matching",
       ],
       correctAnswer: 1,
       explanation:
-        "Rosenbaum and Rubin's key theorem: if treatment is unconfounded given X, it is also unconfounded given the scalar propensity score e(X). This dimensionality reduction is powerful — instead of matching or conditioning on all of X, you can condition on a single scalar. This is the foundation of propensity score matching, stratification, and IPW.",
+        "Rosenbaum and Rubin's key theorem: if treatment is unconfounded given X, it is also unconfounded given the scalar propensity score e(X). This dimensionality reduction is powerful - instead of matching or conditioning on all of X, you can condition on a single scalar. This is the foundation of propensity score matching, stratification, and IPW.",
       hints: [
         "The propensity score collapses all confounders into a single number while preserving the balancing property.",
         "This theorem justifies why propensity score methods work: balance on e(X) implies balance on X in expectation.",
@@ -454,7 +454,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Common support (overlap) requires that every value of X has a positive probability of being treated and a positive probability of being control: 0 < e(X) < 1. Without this, there are regions of X where we cannot estimate the counterfactual — e.g., if all doctors with a certain profile always prescribe drug A, we have no comparable controls to estimate the effect on those doctors.",
+        "Common support (overlap) requires that every value of X has a positive probability of being treated and a positive probability of being control: 0 < e(X) < 1. Without this, there are regions of X where we cannot estimate the counterfactual - e.g., if all doctors with a certain profile always prescribe drug A, we have no comparable controls to estimate the effect on those doctors.",
       hints: [
         "If e(X) = 0 for some X, we have no treated units with that covariate profile to compare against.",
         "Trimming the sample to regions of common support is a common practical fix.",
@@ -474,7 +474,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The doubly robust estimator (Augmented IPW) combines IPW and outcome regression: \\taû_DR = (1/n)\\Sigma[ T_i(Y_i - \\mû_1(X_i))/ê(X_i) - (1-T_i)(Y_i - \\mû_0(X_i))/(1-ê(X_i)) + \\mû_1(X_i) - \\mû_0(X_i) ]. It is consistent if either the propensity score model ê or the outcome model \\mû is correctly specified — hence 'doubly robust'. This provides important protection against model misspecification.",
+        "The doubly robust estimator (Augmented IPW) combines IPW and outcome regression: \\taû_DR = (1/n)\\Sigma[ T_i(Y_i - \\mû_1(X_i))/ê(X_i) - (1-T_i)(Y_i - \\mû_0(X_i))/(1-ê(X_i)) + \\mû_1(X_i) - \\mû_0(X_i) ]. It is consistent if either the propensity score model ê or the outcome model \\mû is correctly specified - hence 'doubly robust'. This provides important protection against model misspecification.",
       hints: [
         "The DR estimator provides two 'chances' to get the right answer: one from the propensity model, one from the outcome model.",
         "With flexible machine learning estimators for both components, you can achieve semiparametric efficiency.",
@@ -497,9 +497,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A valid IV satisfies: (1) Relevance: Cov(Z,T) \$\\neq\$ 0 — Z predicts treatment; (2) Exogeneity: Z ⊥ U where U represents unmeasured confounders — Z is 'as good as random'; (3) Exclusion restriction: Z affects Y only through T, not through any other pathway. The classic example is a lottery randomizing access to treatment satisfying all three conditions.",
+        "A valid IV satisfies: (1) Relevance: Cov(Z,T) \$\\neq\$ 0 - Z predicts treatment; (2) Exogeneity: Z ⊥ U where U represents unmeasured confounders - Z is 'as good as random'; (3) Exclusion restriction: Z affects Y only through T, not through any other pathway. The classic example is a lottery randomizing access to treatment satisfying all three conditions.",
       hints: [
-        "The exclusion restriction is the hardest to verify empirically — it is an untestable assumption.",
+        "The exclusion restriction is the hardest to verify empirically - it is an untestable assumption.",
         "A 'weak instrument' satisfies relevance only weakly (small first-stage F-statistic), leading to large finite-sample bias.",
       ],
     },
@@ -517,9 +517,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "2SLS: Stage 1 — regress T on Z (and any controls) to get T̂ = Ẑ\\cdot\\gammâ. Stage 2 — regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
+        "2SLS: Stage 1 - regress T on Z (and any controls) to get T̂ = Ẑ\\cdot\\gammâ. Stage 2 - regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
       hints: [
-        "T̂ captures only the part of T variation that comes from the instrument Z — which is exogenous by assumption.",
+        "T̂ captures only the part of T variation that comes from the instrument Z - which is exogenous by assumption.",
         "The IV estimate is consistent but generally less efficient (higher variance) than OLS when there is no confounding.",
       ],
     },
@@ -531,13 +531,13 @@ const questions: Record<string, Question[]> = {
         "Under heterogeneous treatment effects, the IV estimator (Wald estimator) identifies the LATE (Local Average Treatment Effect), which is the ATE for:",
       options: [
         "The entire population",
-        "Units who comply with the instrument — i.e., compliers who take treatment when Z=1 and do not when Z=0",
+        "Units who comply with the instrument - i.e., compliers who take treatment when Z=1 and do not when Z=0",
         "Always-takers who would take treatment regardless of Z",
         "Never-takers who would never take treatment regardless of Z",
       ],
       correctAnswer: 1,
       explanation:
-        "With binary T and Z, the population decomposes into: Compliers (T=1 iff Z=1), Always-takers (T=1 always), Never-takers (T=0 always), and Defiers (excluded by monotonicity). The Wald estimator E[Y|Z=1]-E[Y|Z=0]) / (E[T|Z=1]-E[T|Z=0]) = LATE — the ATE only for compliers. Always-takers and never-takers are unaffected by Z, so the instrument provides no information about their treatment effects.",
+        "With binary T and Z, the population decomposes into: Compliers (T=1 iff Z=1), Always-takers (T=1 always), Never-takers (T=0 always), and Defiers (excluded by monotonicity). The Wald estimator E[Y|Z=1]-E[Y|Z=0]) / (E[T|Z=1]-E[T|Z=0]) = LATE - the ATE only for compliers. Always-takers and never-takers are unaffected by Z, so the instrument provides no information about their treatment effects.",
       hints: [
         "The LATE is the effect for the subpopulation whose treatment status is changed by the instrument.",
         "If you want the ATE for the whole population, IV alone is insufficient without additional assumptions.",
@@ -574,7 +574,7 @@ const questions: Record<string, Question[]> = {
         "The parallel trends assumption in DiD is directly testable using pre-treatment data alone.",
       correctAnswer: "False",
       explanation:
-        "The parallel trends assumption — that treated and control groups would have had the same trend in outcomes absent the treatment — is fundamentally untestable for the post-treatment period. However, researchers use pre-treatment placebo tests (testing parallel trends in pre-treatment periods) as supporting evidence. These tests are necessary but not sufficient: groups may have parallel pre-trends but diverge post-treatment for reasons unrelated to the intervention.",
+        "The parallel trends assumption - that treated and control groups would have had the same trend in outcomes absent the treatment - is fundamentally untestable for the post-treatment period. However, researchers use pre-treatment placebo tests (testing parallel trends in pre-treatment periods) as supporting evidence. These tests are necessary but not sufficient: groups may have parallel pre-trends but diverge post-treatment for reasons unrelated to the intervention.",
       hints: [
         "You can test parallel pre-trends, but you can't test what the counterfactual post-trend would have been.",
         "Pre-trend tests are common practice but only partially validate the key assumption.",
@@ -631,7 +631,7 @@ const questions: Record<string, Question[]> = {
         "The PC algorithm can always identify a unique causal DAG from observational data, given infinite data and correct conditional independence tests.",
       correctAnswer: "False",
       explanation:
-        "The PC algorithm recovers a CPDAG (Completed Partially Directed Acyclic Graph) — the Markov equivalence class of all DAGs consistent with the observed conditional independence structure. Within a Markov equivalence class, the causal direction of some edges cannot be determined from observational data alone. Unique identification requires additional assumptions (e.g., non-Gaussian noise in LiNGAM, equal variances in specific models, or interventional data).",
+        "The PC algorithm recovers a CPDAG (Completed Partially Directed Acyclic Graph) - the Markov equivalence class of all DAGs consistent with the observed conditional independence structure. Within a Markov equivalence class, the causal direction of some edges cannot be determined from observational data alone. Unique identification requires additional assumptions (e.g., non-Gaussian noise in LiNGAM, equal variances in specific models, or interventional data).",
       hints: [
         "Two DAGs are Markov equivalent if they have the same skeleton and the same v-structures (immoralities).",
         "Markov equivalence is a fundamental limit: some causal directions are unidentifiable from distributions alone.",
@@ -674,7 +674,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GES operates in two phases: (1) Forward phase — greedily adds edges (single-edge additions to the CPDAG) that most increase the score; (2) Backward phase — greedily removes edges that increase the score. GES is provably consistent under Gaussian linear models with the BIC score and the faithfulness assumption. It searches CPDAGs directly, avoiding redundancy from Markov-equivalent DAGs.",
+        "GES operates in two phases: (1) Forward phase - greedily adds edges (single-edge additions to the CPDAG) that most increase the score; (2) Backward phase - greedily removes edges that increase the score. GES is provably consistent under Gaussian linear models with the BIC score and the faithfulness assumption. It searches CPDAGs directly, avoiding redundancy from Markov-equivalent DAGs.",
       hints: [
         "GES is a score-based method, unlike constraint-based PC. Both output a CPDAG.",
         "The score (e.g., BIC) trades off fit and model complexity, preventing overfitting to all possible edges.",
@@ -690,7 +690,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Exact optimization over the space of DAGs is NP-hard (superexponential in the number of variables). GES uses greedy search in CPDAG space, which is provably consistent under faithfulness but not guaranteed to find the global optimum in finite samples or when faithfulness is violated. Exact methods (e.g., dynamic programming for small p) become intractable for large graphs.",
       hints: [
-        "The DAG space has superexponential size — there are roughly 2^(p\\^2/2) possible DAGs for p variables.",
+        "The DAG space has superexponential size - there are roughly 2^(p\\^2/2) possible DAGs for p variables.",
         "GES trades global optimality for computational feasibility while maintaining asymptotic consistency.",
       ],
     },
@@ -734,7 +734,7 @@ const questions: Record<string, Question[]> = {
         "Under Gaussian noise, X\\toY and Y\\toX are statistically indistinguishable in the linear bivariate case (Markov equivalence). LiNGAM exploits the fact that under non-Gaussian noise with a linear SEM, the joint distribution is only consistent with one causal ordering. Shimizu et al. showed that ICA (Independent Component Analysis) can recover the unique causal DAG by finding the causal ordering via non-Gaussianity.",
       hints: [
         "Gaussianity is the 'special case' where causal direction is unidentifiable from observational data.",
-        "ICA finds statistically independent components — the non-Gaussian noise variables U_i in the LiNGAM SEM.",
+        "ICA finds statistically independent components - the non-Gaussian noise variables U_i in the LiNGAM SEM.",
       ],
     },
     {
@@ -765,7 +765,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DirectLiNGAM iteratively finds the most 'exogenous' variable — one whose residuals (after regressing out all other variables) are independent of all other residuals. Since in the true causal ordering the most exogenous variable's noise is not caused by any other variable, it shows maximum non-Gaussian independence from others' residuals. This variable is placed first in the causal ordering, removed from the system, and the process repeats.",
+        "DirectLiNGAM iteratively finds the most 'exogenous' variable - one whose residuals (after regressing out all other variables) are independent of all other residuals. Since in the true causal ordering the most exogenous variable's noise is not caused by any other variable, it shows maximum non-Gaussian independence from others' residuals. This variable is placed first in the causal ordering, removed from the system, and the process repeats.",
       hints: [
         "The 'most exogenous' variable has the property that no other variable in the system is its cause.",
         "Non-Gaussianity is tested using mutual information or kernel-based independence tests.",
@@ -790,7 +790,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "NOTEARS introduced the key insight that the DAG acyclicity constraint can be expressed as h(W) = tr(e^(W⊙W)) - d = 0 (where W is the weighted adjacency matrix and ⊙ is element-wise product). This smooth constraint enables gradient-based optimization (augmented Lagrangian method) for continuous structure learning, bypassing the combinatorial search over DAG space that made previous methods intractable at scale.",
       hints: [
-        "h(W) = 0 iff the graph with adjacency W has no directed cycles — verified via the matrix exponential.",
+        "h(W) = 0 iff the graph with adjacency W has no directed cycles - verified via the matrix exponential.",
         "NOTEARS enabled DAG learning with standard gradient descent, opening the door to neural network extensions like DAG-GNN.",
       ],
     },
@@ -845,7 +845,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Granger causality is a predictive notion: X Granger-causes Y if including lagged values of X in a regression for Y significantly reduces prediction error compared to using only lagged Y. It is operationalized via an F-test on the restriction that coefficients on lagged X are all zero in a VAR model. Note: Granger causality is about predictive precedence, not structural causation — X could Granger-cause Y even if they share a common cause.",
+        "Granger causality is a predictive notion: X Granger-causes Y if including lagged values of X in a regression for Y significantly reduces prediction error compared to using only lagged Y. It is operationalized via an F-test on the restriction that coefficients on lagged X are all zero in a VAR model. Note: Granger causality is about predictive precedence, not structural causation - X could Granger-cause Y even if they share a common cause.",
       hints: [
         "Granger causality is about incremental predictability, not structural causation.",
         "A confounder that affects X before Y can create Granger causality without a direct structural link.",
@@ -902,9 +902,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The CATE \\tau(x) captures treatment effect heterogeneity: it estimates the average causal effect of treatment for a specific subpopulation characterized by covariates X=x. Integrating \\tau(x) over the distribution of X gives the ATE. The CATE is the key estimand for personalized decision-making — choosing treatment for each individual based on their characteristics.",
+        "The CATE \\tau(x) captures treatment effect heterogeneity: it estimates the average causal effect of treatment for a specific subpopulation characterized by covariates X=x. Integrating \\tau(x) over the distribution of X gives the ATE. The CATE is the key estimand for personalized decision-making - choosing treatment for each individual based on their characteristics.",
       hints: [
-        "The ATE = E[\\tau(X)] — averaging the CATE over the population distribution of X.",
+        "The ATE = E[\\tau(X)] - averaging the CATE over the population distribution of X.",
         "CATE is what personalized medicine aims to estimate: will this drug work for this patient?",
       ],
     },
@@ -922,7 +922,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Since individual counterfactuals are never observed, CATE evaluation uses: (1) RCT validation — in held-out experimental data, the empirical mean within groups stratified by estimated \\taû(x); (2) Doubly-robust pseudo-outcomes \\taũ_i as approximate individual treatment effects, enabling regression-style evaluation (R-loss); (3) Decision-value metrics like AUTOC or QINI curves that evaluate the policy implied by the CATE.",
+        "Since individual counterfactuals are never observed, CATE evaluation uses: (1) RCT validation - in held-out experimental data, the empirical mean within groups stratified by estimated \\taû(x); (2) Doubly-robust pseudo-outcomes \\taũ_i as approximate individual treatment effects, enabling regression-style evaluation (R-loss); (3) Decision-value metrics like AUTOC or QINI curves that evaluate the policy implied by the CATE.",
       hints: [
         "You cannot directly check if \\taû(x_i) is close to Y_i(1)-Y_i(0) because Y_i(1)-Y_i(0) is unobserved.",
         "R-loss (Robinson decomposition) is a popular approach: \\taû minimizes E[(Ỹ_i - \\taû(X_i)\\cdotT̃_i)\\^2] where tildes denote residuals.",
@@ -988,7 +988,7 @@ const questions: Record<string, Question[]> = {
         "The X-learner (Künzel et al., 2019) is designed for highly imbalanced treatment assignment. Step 1: fit outcome models \\mû_0, \\mû_1 (like T-learner). Step 2: compute imputed treatment effects D̃_i^1 = Y_i - \\mû_0(X_i) for treated units and D̃_i^0 = \\mû_1(X_i) - Y_i for controls. Step 3: fit separate CATE models \\taû_1 and \\taû_0 on D̃^1 and D̃^0 respectively. Step 4: combine via propensity weighting: \\taû(x) = e(x)\\taû_0(x) + (1-e(x))\\taû_1(x). The propensity weighting upweights \\taû_1 when e(x) is large (many treated).",
       hints: [
         "With 1000 treated and 10 controls, \\taû_1 (from imputed effects for treated) is more reliable and should be upweighted.",
-        "The propensity score e(X) acts as a natural weighting — regions with many treated units weight \\taû_1 more.",
+        "The propensity score e(X) acts as a natural weighting - regions with many treated units weight \\taû_1 more.",
       ],
     },
     {
@@ -1062,9 +1062,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GRF frames any estimation problem via a local moment condition: find \\theta(x) such that E[\\psi_{\\theta,ν}(O_i) | X_i=x] = 0, where \\psi is a score function and ν are nuisance parameters. The forest provides adaptive weights \\alpha_i(x) — the fraction of trees where observation i and query point x land in the same leaf — which define a weighted local estimating equation \\Sigma_i \\alpha_i(x)\\cdot\\psi_{\\theta,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
+        "GRF frames any estimation problem via a local moment condition: find \\theta(x) such that E[\\psi_{\\theta,ν}(O_i) | X_i=x] = 0, where \\psi is a score function and ν are nuisance parameters. The forest provides adaptive weights \\alpha_i(x) - the fraction of trees where observation i and query point x land in the same leaf - which define a weighted local estimating equation \\Sigma_i \\alpha_i(x)\\cdot\\psi_{\\theta,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
       hints: [
-        "The forest weights \\alpha_i(x) measure 'local similarity' to x — a data-adaptive kernel.",
+        "The forest weights \\alpha_i(x) measure 'local similarity' to x - a data-adaptive kernel.",
         "The moment condition framework allows GRF to estimate any semiparametric estimand, not just the CATE.",
       ],
     },
@@ -1087,7 +1087,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "If the same sample is used to estimate nuisance functions (e.g., propensity score ê and outcome model m̂) and the treatment effect \\theta, overfitting in the nuisance estimates can create bias in \\thetâ that is O(n^{-1/2}), as large as the signal. Cross-fitting (K-fold: estimate nuisance on K-1 folds, apply to held-out fold) ensures that nuisance estimates are independent of the observations used for \\theta estimation, so overfitting bias is O(n^{-1}) and asymptotic normality of \\thetâ is preserved.",
       hints: [
-        "This is analogous to why you evaluate a model on held-out test data — in-sample evaluation is biased.",
+        "This is analogous to why you evaluate a model on held-out test data - in-sample evaluation is biased.",
         "Cross-fitting allows flexible ML nuisance models (random forests, neural nets) while maintaining valid inference.",
       ],
     },
@@ -1121,7 +1121,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DML solves the Neyman-orthogonal score equation: E[(Y - \\theta_0\\cdotD - g_0(X))\\cdot(D - l_0(X))] = 0, where l_0(X) = E[D|X] and g_0(X) = E[Y-\\theta_0\\cdotD|X]. Using estimates ĝ and l̂: \\thetâ = {\\Sigma V̂_i(Y_i - ĝ(X_i))} / {\\Sigma V̂_i\\cdotD_i}, where V̂_i = D_i - l̂(X_i). This is equivalent to: regress (Y-ĝ(X)) on V̂ = (D-l̂(X)) without intercept. The orthogonality of V̂ to the nuisance g(X) eliminates the first-order bias from nuisance estimation errors.",
       hints: [
-        "V̂ = D - ê(X) is the residual treatment after removing the effect of X — analogous to an instrumental variable.",
+        "V̂ = D - ê(X) is the residual treatment after removing the effect of X - analogous to an instrumental variable.",
         "This is the Frisch-Waugh-Lovell theorem applied to the partially linear model with ML nuisance estimation.",
       ],
     },
@@ -1142,10 +1142,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In an RDD, treatment is determined by whether a running variable X crosses a known threshold c: T = 1(X \\geq c). Units near the cutoff are assumed to be very similar (quasi-random assignment near the threshold), so the jump in outcomes at the cutoff is attributed to the treatment. The identifying assumption is that all other factors influencing the outcome are continuous through the cutoff — only treatment status is discontinuous.",
+        "In an RDD, treatment is determined by whether a running variable X crosses a known threshold c: T = 1(X \\geq c). Units near the cutoff are assumed to be very similar (quasi-random assignment near the threshold), so the jump in outcomes at the cutoff is attributed to the treatment. The identifying assumption is that all other factors influencing the outcome are continuous through the cutoff - only treatment status is discontinuous.",
       hints: [
         "Classic examples: scholarship eligibility based on exam score threshold; legal drinking age at 21; electoral outcomes at 50% vote share.",
-        "RDD provides local identification — the LATE at the threshold, not the ATE for the whole population.",
+        "RDD provides local identification - the LATE at the threshold, not the ATE for the whole population.",
       ],
     },
     {
@@ -1156,7 +1156,7 @@ const questions: Record<string, Question[]> = {
         "In a fuzzy RDD (as opposed to a sharp RDD), the treatment probability changes discontinuously at the threshold but does not jump from 0 to 1. The fuzzy RDD estimator is:",
       options: [
         "The difference in mean outcomes just above and below the threshold",
-        "The ratio of the discontinuity in the outcome to the discontinuity in the treatment probability at the threshold — equivalent to a local IV estimator",
+        "The ratio of the discontinuity in the outcome to the discontinuity in the treatment probability at the threshold - equivalent to a local IV estimator",
         "An OLS regression of outcome on treatment with a bandwidth-restricted sample",
         "A difference-in-differences estimator using the threshold as a natural experiment",
       ],
@@ -1176,7 +1176,7 @@ const questions: Record<string, Question[]> = {
         "The McCrary (2008) density test in RDD is used to detect:",
       options: [
         "Whether the running variable is normally distributed, which is required for valid inference",
-        "Manipulation of the running variable around the cutoff — if units can precisely control their score to be just above/below the threshold, the density of the running variable should be discontinuous at the cutoff",
+        "Manipulation of the running variable around the cutoff - if units can precisely control their score to be just above/below the threshold, the density of the running variable should be discontinuous at the cutoff",
         "Whether the bandwidth selection for local polynomial regression is optimal",
         "Violations of the parallel trends assumption near the threshold",
       ],
@@ -1184,7 +1184,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The McCrary density test checks whether there is a statistically significant discontinuity in the density of the running variable at the cutoff. A smooth density (no jump) is consistent with no manipulation. If agents can manipulate their score to land just above the threshold (e.g., students retaking tests, firms managing earnings), the density will be bunched just above c and depleted just below, violating the identifying assumption that units cannot precisely control their assignment.",
       hints: [
-        "If students know the scholarship threshold, they may retake the exam to exceed it — creating a density jump.",
+        "If students know the scholarship threshold, they may retake the exam to exceed it - creating a density jump.",
         "A significant density discontinuity suggests sorting: units just above the threshold are not comparable to those just below.",
       ],
     },
@@ -1205,7 +1205,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Causal disentanglement goes beyond statistical independence: a truly disentangled representation has each latent z_i corresponding to an independent causal mechanism — one of the exogenous factors in the underlying SCM. This means interventions on z_i have predictable effects on the generative process, and the representation is transferable across domains that share the same causal mechanisms but different distributions.",
+        "Causal disentanglement goes beyond statistical independence: a truly disentangled representation has each latent z_i corresponding to an independent causal mechanism - one of the exogenous factors in the underlying SCM. This means interventions on z_i have predictable effects on the generative process, and the representation is transferable across domains that share the same causal mechanisms but different distributions.",
       hints: [
         "Statistical disentanglement (independent z_i's) is necessary but not sufficient for causal disentanglement.",
         "Causal disentanglement is connected to the Independent Causal Mechanisms (ICM) principle.",
@@ -1219,7 +1219,7 @@ const questions: Record<string, Question[]> = {
         "\\beta-VAE achieves causal disentanglement by increasing the weight on the KL divergence term, which is sufficient to learn causally meaningful latent factors from observational data alone.",
       correctAnswer: "False",
       explanation:
-        "Locatello et al. (2019) proved that disentanglement (even in the statistical sense) is provably impossible without inductive biases or additional supervision from observational data alone — any entangled representation can be reparameterized to appear disentangled. \\beta-VAE's KL regularization encourages statistical independence of latents but provides no causal guarantees without additional constraints (supervision, interventional data, or inductive biases encoding causal structure).",
+        "Locatello et al. (2019) proved that disentanglement (even in the statistical sense) is provably impossible without inductive biases or additional supervision from observational data alone - any entangled representation can be reparameterized to appear disentangled. \\beta-VAE's KL regularization encourages statistical independence of latents but provides no causal guarantees without additional constraints (supervision, interventional data, or inductive biases encoding causal structure).",
       hints: [
         "Locatello et al.'s impossibility result applies to all unsupervised methods, not just \\beta-VAE.",
         "Supervised or weakly supervised signals (e.g., labels for generative factors, data from multiple environments) are needed to break the identifiability impasse.",
@@ -1239,7 +1239,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "iVAE exploits auxiliary observed variables u (e.g., class labels, time index, domain) that modulate the prior p(z|u). Under mild conditions (sufficient variability of u and a non-linear exponential family prior), the latents z are provably identifiable up to permutation and element-wise reparameterization. This is essentially a conditional non-linear ICA result — the auxiliary variable breaks the permutation ambiguity that makes unconditional disentanglement impossible.",
+        "iVAE exploits auxiliary observed variables u (e.g., class labels, time index, domain) that modulate the prior p(z|u). Under mild conditions (sufficient variability of u and a non-linear exponential family prior), the latents z are provably identifiable up to permutation and element-wise reparameterization. This is essentially a conditional non-linear ICA result - the auxiliary variable breaks the permutation ambiguity that makes unconditional disentanglement impossible.",
       hints: [
         "The key is that different values of u must modulate the latent prior in sufficiently diverse ways.",
         "iVAE connects VAE-based disentanglement to the theory of identifiable non-linear ICA.",
@@ -1256,15 +1256,15 @@ const questions: Record<string, Question[]> = {
         "The Independent Causal Mechanisms (ICM) principle states that:",
       options: [
         "All causal variables must be statistically independent of each other in the joint distribution",
-        "The causal mechanisms generating each variable from its parents are autonomous and do not share information — they are independently manipulable and do not inform each other",
+        "The causal mechanisms generating each variable from its parents are autonomous and do not share information - they are independently manipulable and do not inform each other",
         "Each node in a causal DAG must have an independent noise variable with zero variance",
         "Causal models must factorize as products of independent Gaussian distributions",
       ],
       correctAnswer: 1,
       explanation:
-        "The ICM principle (Schölkopf et al., 2012) states that the causal generative process consists of modules P(X_i | PA_i) (the mechanism generating X_i from its parents) that are autonomous — they do not share parameters, can be independently intervened upon, and do not inform each other. Crucially, in the causal direction, knowing P(cause) tells you nothing about P(effect|cause), unlike the anti-causal direction. This asymmetry can be used for causal direction identification.",
+        "The ICM principle (Schölkopf et al., 2012) states that the causal generative process consists of modules P(X_i | PA_i) (the mechanism generating X_i from its parents) that are autonomous - they do not share parameters, can be independently intervened upon, and do not inform each other. Crucially, in the causal direction, knowing P(cause) tells you nothing about P(effect|cause), unlike the anti-causal direction. This asymmetry can be used for causal direction identification.",
       hints: [
-        "ICM implies that perturbations to one mechanism don't affect other mechanisms — modular causal structure.",
+        "ICM implies that perturbations to one mechanism don't affect other mechanisms - modular causal structure.",
         "The 'no information sharing' property means the mechanism parameters are orthogonal/independent.",
       ],
     },
@@ -1273,10 +1273,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "According to the ICM principle, in the causal direction X\\toY, the marginal distribution P(X) (cause) and the conditional P(Y|X) (mechanism) should be statistically independent — knowing P(X) provides no information about P(Y|X).",
+        "According to the ICM principle, in the causal direction X\\toY, the marginal distribution P(X) (cause) and the conditional P(Y|X) (mechanism) should be statistically independent - knowing P(X) provides no information about P(Y|X).",
       correctAnswer: "True",
       explanation:
-        "The ICM principle implies that in the causal direction, P(cause) and P(effect|cause) are 'algorithmically independent' — they contain no shared information. In the anti-causal direction, P(Y) and P(X|Y) are typically dependent (knowing the marginal of Y gives information about the conditional). This asymmetry is the basis for causal direction tests: if P(X) and P(Y|X) are simpler to describe jointly than P(Y) and P(X|Y), X\\toY is the causal direction.",
+        "The ICM principle implies that in the causal direction, P(cause) and P(effect|cause) are 'algorithmically independent' - they contain no shared information. In the anti-causal direction, P(Y) and P(X|Y) are typically dependent (knowing the marginal of Y gives information about the conditional). This asymmetry is the basis for causal direction tests: if P(X) and P(Y|X) are simpler to describe jointly than P(Y) and P(X|Y), X\\toY is the causal direction.",
       hints: [
         "This is related to the Minimum Description Length principle: the causal direction has a shorter joint description.",
         "Complexity measures like Kolmogorov complexity formalize 'algorithmic independence'.",
@@ -1299,7 +1299,7 @@ const questions: Record<string, Question[]> = {
         "The sparse mechanism shift hypothesis suggests that natural distribution shifts change only a few causal mechanisms. If we can identify which P(X_i|PA_i) changed (e.g., via change-point detection on the factorized components), we only need to adapt those modules. Invariant mechanisms transfer unchanged. This is more efficient than full model retraining and underpins methods like Invariant Risk Minimization (IRM) and causal transfer learning.",
       hints: [
         "Dataset shift due to a change in the environment often affects only the distribution of the cause, not the mechanism P(Y|X).",
-        "If P(X) changes but P(Y|X) doesn't, a model trained on P(Y|X) transfers well — this is anti-causal adaptation.",
+        "If P(X) changes but P(Y|X) doesn't, a model trained on P(Y|X) transfers well - this is anti-causal adaptation.",
       ],
     },
   ],
@@ -1313,7 +1313,7 @@ const questions: Record<string, Question[]> = {
         "Invariant Risk Minimization (IRM, Arjovsky et al. 2019) seeks to learn a feature representation \\Phi such that:",
       options: [
         "The total risk across all training environments is minimized",
-        "There exists a single linear classifier w on top of \\Phi that is simultaneously optimal across all training environments — the causal features that are invariant across environments",
+        "There exists a single linear classifier w on top of \\Phi that is simultaneously optimal across all training environments - the causal features that are invariant across environments",
         "The feature distribution P(\\Phi(X)) is the same across all environments",
         "The representation \\Phi maximizes the mutual information between features and labels",
       ],
@@ -1353,7 +1353,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{\\Phi,w} \\Sigma_e [R^e(w\\cdot\\Phi) + \\lambda\\cdot||\\nabla_{w|w=1} R^e(w\\cdot\\Phi)||\\^2]. The penalty term ||\\nabla_w R^e(w\\cdot\\Phi)||\\^2 measures how much the gradient of the loss w.r.t. the classifier w deviates from zero — if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
+        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{\\Phi,w} \\Sigma_e [R^e(w\\cdot\\Phi) + \\lambda\\cdot||\\nabla_{w|w=1} R^e(w\\cdot\\Phi)||\\^2]. The penalty term ||\\nabla_w R^e(w\\cdot\\Phi)||\\^2 measures how much the gradient of the loss w.r.t. the classifier w deviates from zero - if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
       hints: [
         "If w is optimal for an environment, the gradient of the loss w.r.t. w should be zero.",
         "IRMv1 is a differentiable approximation that can be optimized with gradient descent, unlike the original bi-level problem.",
@@ -1376,9 +1376,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Individual counterfactuals are rung-3 queries on Pearl's hierarchy. Computing Y_i(0) given that we observed Y_i(1)=y requires: (1) Abduction — infer the specific noise realization u_i that explains the observed outcome given the structural equations; (2) Mutation — modify the SCM by setting T=0; (3) Prediction — compute Y under the modified SCM with the inferred u_i. This requires the structural equations (not just the distribution), making counterfactuals strictly more demanding than interventional queries.",
+        "Individual counterfactuals are rung-3 queries on Pearl's hierarchy. Computing Y_i(0) given that we observed Y_i(1)=y requires: (1) Abduction - infer the specific noise realization u_i that explains the observed outcome given the structural equations; (2) Mutation - modify the SCM by setting T=0; (3) Prediction - compute Y under the modified SCM with the inferred u_i. This requires the structural equations (not just the distribution), making counterfactuals strictly more demanding than interventional queries.",
       hints: [
-        "Rung-3 requires 'imagination' — reasoning about specific individuals, not populations.",
+        "Rung-3 requires 'imagination' - reasoning about specific individuals, not populations.",
         "The abduction step requires knowing the structural equations to infer u_i from observed (T_i, X_i, Y_i).",
       ],
     },
@@ -1392,7 +1392,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Under strong ignorability (unconfoundedness + overlap), the ATE = E[Y(1)-Y(0)] and CATE = E[Y(1)-Y(0)|X=x] are identifiable, but individual treatment effects (ITEs) Y_i(1)-Y_i(0) are not. The fundamental problem of causal inference means we can never observe both Y_i(1) and Y_i(0). Strong ignorability identifies population-level averages but not individual counterfactuals. ITEs require stronger structural assumptions (SCMs with known functional forms).",
       hints: [
-        "Population-level identification (ATE, CATE) is achievable; individual-level identification (ITE) is not — without a fully specified SCM.",
+        "Population-level identification (ATE, CATE) is achievable; individual-level identification (ITE) is not - without a fully specified SCM.",
         "CATE gives the best achievable approximation to ITE from observational data alone.",
       ],
     },
@@ -1410,7 +1410,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Algorithmic recourse counterfactuals must be: (1) Actionable — only modifiable features (not age, race) can be suggested; (2) Causal — changing one feature may require changing causally downstream features too (e.g., increasing income may require changing job); (3) Plausible — the counterfactual should lie in a region of high data density. These constraints require a causal model of the feature space. Wachter et al. (2017) nearest-counterfactual ignores causal constraints; Karimi et al. (2021) CSCF addresses them.",
+        "Algorithmic recourse counterfactuals must be: (1) Actionable - only modifiable features (not age, race) can be suggested; (2) Causal - changing one feature may require changing causally downstream features too (e.g., increasing income may require changing job); (3) Plausible - the counterfactual should lie in a region of high data density. These constraints require a causal model of the feature space. Wachter et al. (2017) nearest-counterfactual ignores causal constraints; Karimi et al. (2021) CSCF addresses them.",
       hints: [
         "'You should get a college degree' is not actionable for a 60-year-old; 'You should increase savings' is.",
         "Causal recourse accounts for the fact that changing loan amount also changes debt-to-income ratio.",
@@ -1427,7 +1427,7 @@ const questions: Record<string, Question[]> = {
         "The key insight of causal OOD generalization is that predictive models relying on spurious correlations fail under distribution shift because:",
       options: [
         "Spurious correlations are statistically weaker than causal relationships and thus harder to learn",
-        "Spurious correlations are environment-specific — they change when the environment (data-generating process) changes — while the causal mechanism P(Y|causes) remains stable across environments",
+        "Spurious correlations are environment-specific - they change when the environment (data-generating process) changes - while the causal mechanism P(Y|causes) remains stable across environments",
         "Spurious features have higher variance than causal features, causing overfitting",
         "Spurious correlations violate the faithfulness assumption required by causal discovery algorithms",
       ],
@@ -1436,7 +1436,7 @@ const questions: Record<string, Question[]> = {
         "Causal OOD approaches (IRM, DRO, CORAL, etc.) are motivated by the invariance principle: the causal mechanism P(Y|X_causal) is stable across distribution shifts, while spurious correlations P(Y|X_spurious) are environment-dependent. A classifier relying only on causal features generalizes across environments; one relying on spurious features does not. The 'cow on grass' example is classic: grass color is spurious (not causal) for predicting cows, and fails when cows appear on beaches.",
       hints: [
         "Invariant predictors = predictors that use features causally related to Y, not those that happen to be correlated in the training data.",
-        "The causal mechanism P(Y|causes) is determined by physics/biology, not data collection — it's stable across contexts.",
+        "The causal mechanism P(Y|causes) is determined by physics/biology, not data collection - it's stable across contexts.",
       ],
     },
     {
@@ -1447,7 +1447,7 @@ const questions: Record<string, Question[]> = {
         "Empirical Risk Minimization (ERM) with sufficient data will eventually converge to the optimal OOD-generalizing predictor that relies only on causal features.",
       correctAnswer: "False",
       explanation:
-        "ERM minimizes the average loss on the training distribution. If spurious features are more predictive than causal features on the training distribution (e.g., because the spurious correlation is stronger), ERM will exploit spurious features. With infinite data from the same distribution, ERM converges to the Bayes-optimal predictor for that distribution — which includes spurious features. Causal OOD generalization requires explicitly constraining the learning to ignore spurious correlations, which ERM does not do.",
+        "ERM minimizes the average loss on the training distribution. If spurious features are more predictive than causal features on the training distribution (e.g., because the spurious correlation is stronger), ERM will exploit spurious features. With infinite data from the same distribution, ERM converges to the Bayes-optimal predictor for that distribution - which includes spurious features. Causal OOD generalization requires explicitly constraining the learning to ignore spurious correlations, which ERM does not do.",
       hints: [
         "More training data from the same distribution reinforces the spurious correlations present in that distribution.",
         "OOD generalization requires data from multiple environments or additional causal assumptions.",
@@ -1467,7 +1467,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "From a causal perspective, the relevant distributional set for OOD generalization is the set of distributions resulting from interventions on 'non-causal' parts of the graph — changes to P(X_spurious) or the selection mechanism, but not to P(Y|X_causal). This aligns DRO with causal invariance: the worst case over this intervention set is a predictor that doesn't rely on features that can change under plausible interventions. This connects DRO to the causal invariance motivation of IRM.",
+        "From a causal perspective, the relevant distributional set for OOD generalization is the set of distributions resulting from interventions on 'non-causal' parts of the graph - changes to P(X_spurious) or the selection mechanism, but not to P(Y|X_causal). This aligns DRO with causal invariance: the worst case over this intervention set is a predictor that doesn't rely on features that can change under plausible interventions. This connects DRO to the causal invariance motivation of IRM.",
       hints: [
         "Generic DRO (worst-case over all distributions within a ball) may be overly conservative.",
         "Causally-motivated DRO restricts the adversary to interventions that match plausible environment shifts.",
@@ -1485,12 +1485,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "Users who will convert regardless of treatment (sure things)",
         "Users who would not convert regardless of treatment (lost causes)",
-        "Users for whom the treatment has a positive causal effect (persuadables) — maximizing the CATE across individuals to target those with highest marginal returns",
+        "Users for whom the treatment has a positive causal effect (persuadables) - maximizing the CATE across individuals to target those with highest marginal returns",
         "Users who will convert only if not treated (sleeping dogs)",
       ],
       correctAnswer: 2,
       explanation:
-        "Uplift modeling estimates the individual-level causal effect of a treatment (e.g., email, discount, ad) to identify 'persuadables' — users whose behavior is genuinely changed by the treatment. The four segments are: (1) Sure Things — convert with or without treatment; (2) Persuadables — convert only with treatment; (3) Do Not Disturbs/Sleeping Dogs — convert only without treatment; (4) Lost Causes — never convert. Targeting sure things and lost causes wastes resources or is harmful; persuadables are the valuable segment.",
+        "Uplift modeling estimates the individual-level causal effect of a treatment (e.g., email, discount, ad) to identify 'persuadables' - users whose behavior is genuinely changed by the treatment. The four segments are: (1) Sure Things - convert with or without treatment; (2) Persuadables - convert only with treatment; (3) Do Not Disturbs/Sleeping Dogs - convert only without treatment; (4) Lost Causes - never convert. Targeting sure things and lost causes wastes resources or is harmful; persuadables are the valuable segment.",
       hints: [
         "Sending a discount to a 'sure thing' wastes marketing budget; they would have bought anyway.",
         "The CATE \\tau(x) > 0 identifies persuadables; \\tau(x) < 0 identifies 'sleeping dogs'.",
@@ -1501,7 +1501,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Qini curve (and AUUC — Area Under the Uplift Curve) is used to evaluate uplift models. It plots:",
+        "The Qini curve (and AUUC - Area Under the Uplift Curve) is used to evaluate uplift models. It plots:",
       options: [
         "Precision vs recall for the binary treatment classification task",
         "Cumulative incremental gain (cumulative lift) as a function of the fraction of the population targeted, ordered by decreasing estimated CATE",
@@ -1510,7 +1510,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Qini/uplift curve ranks individuals by their estimated CATE (descending), then plots the cumulative incremental conversions (treated conversions - control conversions, normalized) as we target increasing fractions of the population. An ideal model concentrates persuadables at the top of the ranking. The area under the curve (AUUC or Qini coefficient) measures ranking quality — higher = better targeting of persuadables over sure things and lost causes.",
+        "The Qini/uplift curve ranks individuals by their estimated CATE (descending), then plots the cumulative incremental conversions (treated conversions - control conversions, normalized) as we target increasing fractions of the population. An ideal model concentrates persuadables at the top of the ranking. The area under the curve (AUUC or Qini coefficient) measures ranking quality - higher = better targeting of persuadables over sure things and lost causes.",
       hints: [
         "Unlike ROC curves (which evaluate prediction of a fixed label), uplift curves evaluate the ordering of causal effects.",
         "A random model gives a diagonal line; a perfect model curves sharply upward before flattening.",
@@ -1530,7 +1530,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A 'response model' trained on P(Y=1|T=1,X) will score sure things highly (high probability under treatment) without accounting for E[Y(0)|X]. The CATE \\tau(x) = E[Y(1)|X=x] - E[Y(0)|X=x] explicitly subtracts the baseline conversion rate, so sure things (with high Y(0)) get low CATE despite high Y(1). Persuadables with low Y(0) and high Y(1) — the true targets — get high CATE scores. This is why CATE estimation (not response modeling) is the correct approach for uplift.",
+        "A 'response model' trained on P(Y=1|T=1,X) will score sure things highly (high probability under treatment) without accounting for E[Y(0)|X]. The CATE \\tau(x) = E[Y(1)|X=x] - E[Y(0)|X=x] explicitly subtracts the baseline conversion rate, so sure things (with high Y(0)) get low CATE despite high Y(1). Persuadables with low Y(0) and high Y(1) - the true targets - get high CATE scores. This is why CATE estimation (not response modeling) is the correct approach for uplift.",
       hints: [
         "Response model shortcut: E[Y=1|T=1,X] is high for sure things because they always convert, but their incremental value is zero.",
         "The incremental value of treatment = Y(1) - Y(0), not Y(1) alone.",
@@ -1547,7 +1547,7 @@ const questions: Record<string, Question[]> = {
         "Optimal policy learning in causal inference seeks to find a treatment assignment rule \\pi: X \\to T that maximizes expected outcome. The optimal policy is:",
       options: [
         "Always treating everyone (\\pi(x) = 1 for all x)",
-        "\\pi*(x) = argmax_t E[Y(t)|X=x] — treating unit x with the treatment that maximizes their conditional expected potential outcome",
+        "\\pi*(x) = argmax_t E[Y(t)|X=x] - treating unit x with the treatment that maximizes their conditional expected potential outcome",
         "\\pi*(x) = 1(e(x) > 0.5) where e(x) is the propensity score",
         "The policy that achieves the highest lift on the validation set",
       ],
@@ -1573,7 +1573,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The IPS estimator for policy value is: V̂(\\pi) = (1/n)\\Sigma Y_i \\cdot 1(T_i = \\pi(X_i)) / P(T_i | X_i). When the observed action matches the policy \\pi(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias — units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
+        "The IPS estimator for policy value is: V̂(\\pi) = (1/n)\\Sigma Y_i \\cdot 1(T_i = \\pi(X_i)) / P(T_i | X_i). When the observed action matches the policy \\pi(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias - units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
       hints: [
         "IPS reweights observed outcomes to simulate what would happen under the target policy \\pi.",
         "When the target policy \\pi matches the behavior policy (how data was collected), IPS reduces to the sample mean.",
@@ -1596,7 +1596,7 @@ const questions: Record<string, Question[]> = {
         "Athey & Wager showed: maximizing E[Y(\\pi(X))] - E[Y(0)] \\approx E[\\tau(X)\\cdot\\pi(X)] = E[\\taũ_i\\cdot\\pi(X_i)] where \\taũ_i are doubly-robust pseudo-outcomes for \\tau(X_i). This is a weighted classification problem: find \\pi that maximizes \\Sigma \\taũ_i\\cdot1(\\pi(X_i)=1), equivalent to classifying X_i into treatment when \\taũ_i > 0. The doubly-robust pseudo-outcomes \\taũ are used as 'soft labels', and the problem is solvable with any weighted classification algorithm (SVM, trees, etc.).",
       hints: [
         "The reduction to classification is powerful: any classification algorithm becomes a policy learning algorithm.",
-        "The pseudo-outcome \\taũ_i approximates the individual treatment effect — positive means treatment is better for unit i.",
+        "The pseudo-outcome \\taũ_i approximates the individual treatment effect - positive means treatment is better for unit i.",
       ],
     },
   ],
@@ -1611,12 +1611,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "The prediction accuracy is equal across groups defined by A",
         "P(Ŷ=y | X=x, A=a) = P(Ŷ=y | X=x, A=a') for all a, a' (demographic parity given X)",
-        "P(Ŷ_{A\\leftarrowa}=y | X=x, A=a) = P(Ŷ_{A\\leftarrowa'}=y | X=x, A=a) — the prediction is the same in the factual and counterfactual world where A is set to a different value",
+        "P(Ŷ_{A\\leftarrowa}=y | X=x, A=a) = P(Ŷ_{A\\leftarrowa'}=y | X=x, A=a) - the prediction is the same in the factual and counterfactual world where A is set to a different value",
         "The protected attribute A is not used as a direct input to the prediction model",
       ],
       correctAnswer: 2,
       explanation:
-        "Counterfactual fairness asks: if person x had belonged to a different demographic group (A=a' instead of A=a), all else being equal, would their predicted outcome have changed? Formally: P(Ŷ_{A\\leftarrowa} | X=x, A=a) = P(Ŷ_{A\\leftarrowa'} | X=x, A=a). This is a counterfactual (rung-3) criterion — it requires a causal model of how A influences the other features X. It avoids using features that are causally downstream of A (proxy discrimination).",
+        "Counterfactual fairness asks: if person x had belonged to a different demographic group (A=a' instead of A=a), all else being equal, would their predicted outcome have changed? Formally: P(Ŷ_{A\\leftarrowa} | X=x, A=a) = P(Ŷ_{A\\leftarrowa'} | X=x, A=a). This is a counterfactual (rung-3) criterion - it requires a causal model of how A influences the other features X. It avoids using features that are causally downstream of A (proxy discrimination).",
       hints: [
         "Removing A from the input doesn't guarantee counterfactual fairness if other features are caused by A (proxy discrimination).",
         "Computing counterfactual fairness requires knowing the causal graph relating A to other features and the outcome.",

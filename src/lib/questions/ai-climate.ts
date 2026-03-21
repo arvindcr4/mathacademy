@@ -24,7 +24,7 @@ const questions: Record<string, Question[]> = {
         "Using a single model for all horizons would require compromising between these conflicting resolution and scale requirements.",
       hints: [
         "The atmosphere has different dominant spatial patterns at short (hours) versus medium (days) timescales. What implications does this have for model design?",
-        "PanGu-Weather chains its models like building blocks (24h + 6h + 1h for 31h). This is analogous to representing any integer using powers of 2 — what property makes this composition work?",
+        "PanGu-Weather chains its models like building blocks (24h + 6h + 1h for 31h). This is analogous to representing any integer using powers of 2 - what property makes this composition work?",
       ],
     },
     {
@@ -40,7 +40,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\frac{\\partial \\mathbf{u}}{\\partial t} + (\\mathbf{u} \\cdot \\nabla)\\mathbf{u} = -\\frac{1}{\\rho}\\nabla p - f\\mathbf{k} \\times \\mathbf{u} + \\mathbf{F}_{\\text{dissipation}}\\]\n\n" +
         "PanGu-Weather generates a 10-day global forecast (0.25° resolution, 13 pressure levels) in approximately 1.4 seconds on a single A100 GPU, compared to thousands of CPU-hours for operational NWP systems like ECMWF's IFS.",
       hints: [
-        "Once trained, a neural network performs only forward inference — no iterative numerical solvers are needed. How does this compare to solving differential equations at each time step?",
+        "Once trained, a neural network performs only forward inference - no iterative numerical solvers are needed. How does this compare to solving differential equations at each time step?",
         "Traditional NWP requires a large HPC cluster; ML models reduce this computational burden dramatically at inference time.",
       ],
     },
@@ -102,16 +102,16 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "GraphCast was trained on ECMWF's ERA5 reanalysis dataset, which provides gridded historical atmospheric states at 0.25° resolution (~28 km at the equator) covering the period 1979–2018.",
+        "GraphCast was trained on ECMWF's ERA5 reanalysis dataset, which provides gridded historical atmospheric states at 0.25° resolution (~28 km at the equator) covering the period 1979-2018.",
       correctAnswer: "True",
       explanation:
-        "GraphCast (Lam et al., DeepMind 2023) was trained on 40 years of ERA5 reanalysis data (1979–2018). Each training example consists of:\n\n" +
+        "GraphCast (Lam et al., DeepMind 2023) was trained on 40 years of ERA5 reanalysis data (1979-2018). Each training example consists of:\n\n" +
         "\\[- \\text{Input: atmospheric state at time } t\\]" +
         "\\[- \\text{Target: atmospheric state at time } t + 6\\text{h}\\]" +
         "\n" +
         "The model learns to auto-regressively predict the next 6-hour atmospheric state for 227 variables across 37 pressure levels. ERA5 (ECMWF's fifth-generation atmospheric reanalysis) is the gold-standard gridded climate dataset, providing consistent, quality-controlled historical weather estimates.",
       hints: [
-        "ERA5 is the European Centre for Medium-Range Weather Forecasts' fifth generation reanalysis — essentially a physically consistent, gridded reconstruction of past weather.",
+        "ERA5 is the European Centre for Medium-Range Weather Forecasts' fifth generation reanalysis - essentially a physically consistent, gridded reconstruction of past weather.",
         "0.25° resolution corresponds to roughly 28 km at the equator. Why might this resolution be considered fine for global reanalysis?",
       ],
     },
@@ -135,7 +135,7 @@ const questions: Record<string, Question[]> = {
         "\n" +
         "Each fine-mesh node is connected to corresponding nodes at all coarser resolutions, creating \"shortcut\" edges for long-range atmospheric teleconnections (e.g., El Nino's effect on North American weather). The decoder then maps mesh outputs back to the lat-lon grid.",
       hints: [
-        "On a fine mesh, a GNN message propagates only to nearest neighbors per step. How many such hops are needed to span the globe? A coarser mesh changes this calculation — how?",
+        "On a fine mesh, a GNN message propagates only to nearest neighbors per step. How many such hops are needed to span the globe? A coarser mesh changes this calculation - how?",
         "The multi-mesh connects each fine-mesh node to nodes at all coarser resolutions. What does this connection structure enable that a single-resolution mesh cannot?",
       ],
     },
@@ -155,7 +155,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Global climate models (GCMs) typically run at 50--100 km horizontal resolution. However, local impact studies — for agriculture, urban planning, or infrastructure — often require 1--10 km resolution. Statistical downscaling bridges this gap by learning a mapping:\n\n" +
+        "Global climate models (GCMs) typically run at 50--100 km horizontal resolution. However, local impact studies - for agriculture, urban planning, or infrastructure - often require 1--10 km resolution. Statistical downscaling bridges this gap by learning a mapping:\n\n" +
         "\\[\\hat{X}_{\\text{high-res}} = f\\left(X_{\\text{coarse}}\\right)\\]\n\n" +
         "where \\(f\\) is learned from paired coarse-fine historical data. This enables high-resolution projections without running prohibitively expensive fine-grid climate simulations.",
       hints: [
@@ -171,7 +171,7 @@ const questions: Record<string, Question[]> = {
         "Deep learning super-resolution methods (e.g., SRCNN, ESRGAN) have been adapted for climate downscaling by treating coarse climate grids as low-resolution images and learning to add fine-scale spatial detail.",
       correctAnswer: "True",
       explanation:
-        "Climate fields on a grid are 2D arrays of values — structurally identical to image pixel grids. Methods such as DeepSD and ClimateGAN apply image super-resolution architectures to climate data:\n\n" +
+        "Climate fields on a grid are 2D arrays of values - structurally identical to image pixel grids. Methods such as DeepSD and ClimateGAN apply image super-resolution architectures to climate data:\n\n" +
         "\\[I_{\\text{coarse}} \\xrightarrow{\\text{SR model}} \\hat{I}_{\\text{high-res}}\\]\n\n" +
         "These models are trained on paired coarse-fine datasets (e.g., coarse GCM output matched with high-resolution observations) and learn to hallucinate physically plausible fine-scale features consistent with the coarse pattern.",
       hints: [
@@ -239,14 +239,14 @@ const questions: Record<string, Question[]> = {
         "Convolutional neural networks (CNNs) have been applied to detect extreme weather patterns (e.g., tropical cyclones, atmospheric rivers) in climate model output.",
       correctAnswer: "True",
       explanation:
-        "CNNs excel at identifying spatial patterns in gridded data. Climate model output is structurally identical to image data: a 2D spatial grid of values. By treating climate fields as 'images,' CNN architectures — the same ones used in computer vision — can be applied directly:\n\n" +
+        "CNNs excel at identifying spatial patterns in gridded data. Climate model output is structurally identical to image data: a 2D spatial grid of values. By treating climate fields as 'images,' CNN architectures - the same ones used in computer vision - can be applied directly:\n\n" +
         "\\[\\text{Input:} \\quad T(x, y, t), \\; u(x, y, t), \\; v(x, y, t) \\quad \\text{(temperature, wind components)}\\]" +
         "\\[\\downarrow \\text{Conv layers}\\]" +
         "\\[\\text{Output:} \\quad \\text{event label (cyclone / no cyclone)}\\]" +
         "\n" +
         "This enables automated detection across petabytes of climate simulation data.",
       hints: [
-        "Climate data on a grid is spatially structured — the same convolution operations that detect edges and features in images can detect spatial weather patterns.",
+        "Climate data on a grid is spatially structured - the same convolution operations that detect edges and features in images can detect spatial weather patterns.",
         "Manual labeling of extreme events is time-consuming; CNNs can automate detection across large climate archives at scale.",
       ],
     },
@@ -264,13 +264,13 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "A model predicting 'no extreme event' 99% of the time can achieve 99% accuracy if extremes are rare — yet it is completely useless for early warning. This is the class imbalance problem.\n\n" +
+        "A model predicting 'no extreme event' 99% of the time can achieve 99% accuracy if extremes are rare - yet it is completely useless for early warning. This is the class imbalance problem.\n\n" +
         "Data-level solutions:\n" +
         "\\[- \\text{Oversampling: SMOTE generates synthetic minority examples}\\]" +
         "\\[- \\text{Undersampling: remove majority (non-event) samples}\\]" +
         "\n" +
         "Algorithm-level solutions:\n" +
-        "\\[- \\text{Focal loss: } \\mathcal{L}_{\\text{focal}} = -(1 - p_t)^\\gamma \\log(p_t) \\text{ — focuses on hard, rare examples}\\]" +
+        "\\[- \\text{Focal loss: } \\mathcal{L}_{\\text{focal}} = -(1 - p_t)^\\gamma \\log(p_t) \\text{ - focuses on hard, rare examples}\\]" +
         "\\[- \\text{Asymmetric loss: penalize false negatives more than false positives}\\]",
       hints: [
         "If a model achieves 99% accuracy by predicting 'no extreme' always, what is the problem with this model for early warning applications?",
@@ -320,7 +320,7 @@ const questions: Record<string, Question[]> = {
         "This is a form of distribution shift requiring careful validation and domain adaptation.",
       hints: [
         "ML models generalize within the distribution they were trained on. What happens when inputs are very different from anything in training data?",
-        "An emulator trained on 1.5–4°C warming scenarios may extrapolate poorly to a 6°C scenario. What physical processes become dominant at very high warming levels that may not appear in moderate scenarios?",
+        "An emulator trained on 1.5-4°C warming scenarios may extrapolate poorly to a 6°C scenario. What physical processes become dominant at very high warming levels that may not appear in moderate scenarios?",
       ],
     },
     {
@@ -370,7 +370,7 @@ const questions: Record<string, Question[]> = {
         "where \\(A\\) is panel area and \\(\\eta\\) is efficiency. GHI (Global Horizontal Irradiance) is the total solar radiation on a horizontal surface; DNI (Direct Normal Irradiance) is used for concentrating solar systems. ML models forecast irradiance from NWP outputs, satellite imagery, or sky camera images, then convert to power using efficiency curves.",
       hints: [
         "Photovoltaic panels convert light energy directly to electricity. What measure of light reaching the surface is most relevant for predicting power output?",
-        "GHI (global horizontal irradiance) is the total solar radiation on a horizontal surface — why is this the standard input for flat PV panel models?",
+        "GHI (global horizontal irradiance) is the total solar radiation on a horizontal surface - why is this the standard input for flat PV panel models?",
       ],
     },
     {
@@ -385,7 +385,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{Forecast horizon} \\approx \\frac{\\text{camera range}}{\\text{cloud speed}} \\approx \\frac{10\\text{ km}}{10\\text{ m/s}} \\approx 1000\\text{ s} \\approx 15\\text{ minutes}\\]\n\n" +
         "Beyond this horizon, clouds have moved out of the camera's field of view. Sky cameras therefore excel at nowcasting (0--30 minutes) but cannot provide reliable multi-hour ahead forecasts. For longer horizons, NWP model output or satellite data is required.",
       hints: [
-        "Sky cameras capture a local view of the sky. Clouds move at 5--20 m/s — how far can they travel in one hour? Is this within a typical sky camera's field of view?",
+        "Sky cameras capture a local view of the sky. Clouds move at 5--20 m/s - how far can they travel in one hour? Is this within a typical sky camera's field of view?",
         "The forecasting horizon of sky cameras is physically limited by the time it takes clouds to traverse the camera's field of view. What data source is needed for multi-hour ahead forecasts?",
       ],
     },
@@ -444,7 +444,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "SCADA data from wind turbines — including rotor speed, pitch angle, power output, and vibration measurements — can be used to train ML models for predictive maintenance.",
+        "SCADA data from wind turbines - including rotor speed, pitch angle, power output, and vibration measurements - can be used to train ML models for predictive maintenance.",
       correctAnswer: "True",
       explanation:
         "SCADA (Supervisory Control and Data Acquisition) systems continuously record high-frequency operational data from wind turbines:\n\n" +
@@ -455,8 +455,8 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Efficiency drops (same wind, less power)}\\]\n\n" +
         "ML models trained on historical failure data learn to detect these precursor signatures, predicting failures days to weeks in advance.",
       hints: [
-        "SCADA data contains rich real-time operational signals. What happens to these signals when a component starts to degrade — do they remain the same?",
-        "Predictive maintenance uses historical failure data to train models. What do the models learn to recognize — the signatures of failure or the normal operating patterns?",
+        "SCADA data contains rich real-time operational signals. What happens to these signals when a component starts to degrade - do they remain the same?",
+        "Predictive maintenance uses historical failure data to train models. What do the models learn to recognize - the signatures of failure or the normal operating patterns?",
       ],
     },
     {
@@ -554,7 +554,7 @@ const questions: Record<string, Question[]> = {
         "\\[h_i^{(k+1)} = \\sigma\\left(W^{(k)} h_i^{(k)} + \\sum_{j \\in \\mathcal{N}_i} M^{(k)}(h_i^{(k)}, h_j^{(k)}, e_{ij})\\right)\\]\n\n" +
         "This enables physics-informed optimization that respects grid topology.",
       hints: [
-        "A power grid connects generation sources to loads through transmission infrastructure. What are the natural 'atoms' of this network — the entities connected and the connections between them?",
+        "A power grid connects generation sources to loads through transmission infrastructure. What are the natural 'atoms' of this network - the entities connected and the connections between them?",
         "The graph structure of a GNN mirrors the physical topology of the power grid. In physics-informed GNNs for power systems, what physical laws are encoded in the message passing?",
       ],
     },
@@ -590,7 +590,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "The State of Charge (SoC) of a battery must be maintained within safe bounds (e.g., 20%–90%) to prevent degradation, and this represents a key constraint in RL-based battery management.",
+        "The State of Charge (SoC) of a battery must be maintained within safe bounds (e.g., 20%-90%) to prevent degradation, and this represents a key constraint in RL-based battery management.",
       correctAnswer: "True",
       explanation:
         "Lithium-ion batteries degrade when:\n\n" +
@@ -603,9 +603,9 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Hard constraints: clip actions that would violate bounds}\\]" +
         "\\[- \\text{Constrained RL: project to feasible set after each step}\\]" +
         "\\[- \\text{Penalty method: add degradation cost to reward}\\]\n\n" +
-        "Safe exploration is critical — in a physical system, unsafe actions during training can damage equipment.",
+        "Safe exploration is critical - in a physical system, unsafe actions during training can damage equipment.",
       hints: [
-        "Batteries have physical limits on charge — exceeding these limits degrades capacity permanently. What does this mean for the SoC range in which a battery should operate?",
+        "Batteries have physical limits on charge - exceeding these limits degrades capacity permanently. What does this mean for the SoC range in which a battery should operate?",
         "Safe RL or constrained MDP formulations are needed to enforce SoC bounds during both training and deployment. Why is this particularly important during training (exploration)?",
       ],
     },
@@ -630,7 +630,7 @@ const questions: Record<string, Question[]> = {
         "where \\(\\hat{p}_{t:t+H}\\) represents a price scenario tree. The agent learns a policy that is robust across scenarios:\n\n" +
         "\\[\\pi^* = \\arg\\max_\\pi \\mathbb{E}\\left[\\sum_t r(s_t, a_t)\\right]\\]\n\n" +
         "This is critical because:\n" +
-        "\\[- \\text{Deterministic MPC assumes perfect foresight — fails in practice}\\]" +
+        "\\[- \\text{Deterministic MPC assumes perfect foresight - fails in practice}\\]" +
         "\\[- \\text{Greedy optimization ignores future price trajectories}\\]" +
         "\\[- \\text{Stochastic MDP learns risk-aware policies across diverse scenarios}\\]\n\n" +
         "The agent trained on diverse price scenarios learns to be robust rather than optimizing for a single predicted trajectory.",
@@ -705,7 +705,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Local differential privacy can further protect individual data}\\]\n\n" +
         "The approach enables system-wide VPP optimization without compromising customer privacy.",
       hints: [
-        "Home energy data is sensitive — smart meter data can reveal when people wake up, sleep, leave for work, and more. How does federated learning address this privacy concern?",
+        "Home energy data is sensitive - smart meter data can reveal when people wake up, sleep, leave for work, and more. How does federated learning address this privacy concern?",
         "In federated learning, what specifically is shared with the central server (model weights, gradients, or raw data)? What stays local?",
       ],
     },
@@ -732,7 +732,7 @@ const questions: Record<string, Question[]> = {
         "Satellites like OCO-2, GOSAT, and Sentinel-5P measure the reflected solar spectrum in these absorption bands. The depth of the absorption feature encodes the column concentration of the gas above the surface. Spectral inversion algorithms retrieve the concentration:\n\n" +
         "\\[I_{\\text{observed}}(\\lambda) = I_{\\text{surface}}(\\lambda) \\cdot T(\\lambda; C_{\\text{GHG}})\\]",
       hints: [
-        "Greenhouse gases absorb infrared radiation — this is the physical basis for how remote sensing detects them. In which portion of the spectrum do these absorption features appear?",
+        "Greenhouse gases absorb infrared radiation - this is the physical basis for how remote sensing detects them. In which portion of the spectrum do these absorption features appear?",
         "The specific wavelengths at which CO\\_2 and CH\\_4 absorb are determined by their molecular structure. What do these characteristic absorption wavelengths define in the satellite instrument design?",
       ],
     },
@@ -752,7 +752,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{CH}_4 \\text{ absorption feature at } 2.3\\;\\mu\\text{m} \\Rightarrow \\text{enhanced radiance deficit}\\]\n\n" +
         "ML models (matched filters, CNNs) identify super-emitter plumes from oil/gas facilities, landfills, and agriculture against the background atmospheric concentration.",
       hints: [
-        "Individual facility plumes create small, localized spectral anomalies — what property of the spectrum is being analyzed to detect these plumes?",
+        "Individual facility plumes create small, localized spectral anomalies - what property of the spectrum is being analyzed to detect these plumes?",
         "EMIT (Earth Surface Mineral Dust Source Investigation) was designed for mineral mapping but has been used to detect what specific greenhouse gas from thousands of industrial facilities?",
       ],
     },
@@ -778,7 +778,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{Transport chaos: } \\quad \\text{Small errors in transport model propagate to large emission errors}\\]\n\n" +
         "ML accelerates this by learning a surrogate for the expensive transport model \\(\\mathcal{M}\\), enabling fast posterior estimation via Bayesian inversion.",
       hints: [
-        "Forward modeling predicts atmospheric concentrations given emissions. What does inverse modeling do — what is being solved for from what?",
+        "Forward modeling predicts atmospheric concentrations given emissions. What does inverse modeling do - what is being solved for from what?",
         "Atmospheric transport (wind patterns, turbulence) introduces uncertainty. Can different emission patterns produce the same observed concentration pattern? What makes this problem ill-posed?",
       ],
     },
@@ -826,10 +826,10 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{Storage tanks:} \\quad \\text{circular structures with floating roofs}\\]\n\n" +
         "Projects like Global Energy Monitor and Climate TRACE (WattTime) use these detections for bottom-up emissions accounting:\n\n" +
         "\\[\\text{Emissions} = \\sum_{\\text{facilities}} \\text{Activity} \\times \\text{Emission Factor}\\]\n\n" +
-        "Automating facility detection across the globe is only feasible with ML — manual annotation of millions of square km of imagery is impossible.",
+        "Automating facility detection across the globe is only feasible with ML - manual annotation of millions of square km of imagery is impossible.",
       hints: [
         "Industrial facilities have distinctive visual signatures from space (cooling towers, stacks, storage tanks). What computer vision task identifies and localizes these objects in imagery?",
-        "Automating facility detection across the globe at scale — why is this task infeasible for human analysts but feasible for ML?",
+        "Automating facility detection across the globe at scale - why is this task infeasible for human analysts but feasible for ML?",
       ],
     },
     {
@@ -854,7 +854,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Cross-validation: consistent signals strengthen confidence}\\]\n\n" +
         "The goal is independent estimation without relying on self-reported data, which may be incomplete or inaccurate.",
       hints: [
-        "No single data source captures all aspects of facility activity and emissions. What does multi-modal fusion provide — redundancy, complementarity, or both?",
+        "No single data source captures all aspects of facility activity and emissions. What does multi-modal fusion provide - redundancy, complementarity, or both?",
         "The goal is independent estimation of emissions without relying on self-reported data. Why might self-reported data be unreliable?",
       ],
     },
@@ -884,7 +884,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{End-of-life: scrapping, recycling (grave)}\\]\n\n" +
         "Partial LCA (e.g., only use phase) misses significant upstream or downstream emissions, potentially leading to misleading conclusions.",
       hints: [
-        "The metaphor of 'cradle' (birth/raw materials) to 'grave' (disposal/end-of-life) — what stages of a product's existence does this span?",
+        "The metaphor of 'cradle' (birth/raw materials) to 'grave' (disposal/end-of-life) - what stages of a product's existence does this span?",
         "A partial LCA considering only the use phase of a gasoline car misses what major emissions sources?",
       ],
     },
@@ -933,8 +933,8 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{Scope 3}_{\\text{company}} = \\sum_{\\text{suppliers } j} E_j \\cdot T_{ij}\\]\n\n" +
         "where \\(E_j\\) is supplier \\(j\\)'s emissions and \\(T_{ij}\\) is the contribution of supplier \\(j\\)'s input to product \\(i\\). A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined.",
       hints: [
-        "Scope 1 is direct emissions (own facilities), Scope 2 is purchased energy. Scope 3 is 'everything else' — what does this include?",
-        "A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined. What makes collecting this data difficult — is it the number of entities involved or something else?",
+        "Scope 1 is direct emissions (own facilities), Scope 2 is purchased energy. Scope 3 is 'everything else' - what does this include?",
+        "A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined. What makes collecting this data difficult - is it the number of entities involved or something else?",
       ],
     },
   ],
@@ -956,7 +956,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Planet Labs' Dove constellation consists of over 100 CubeSats in Sun-synchronous orbits providing daily global coverage at 3-5 m resolution:\n\n" +
         "\\[\\text{Revisit frequency} \\approx 1\\text{ day} \\quad (360\\text{ orbits/day over poles})\\]\n\n" +
-        "Traditional Landsat satellites revisit every 16 days — insufficient for rapid deforestation events that can remove forest cover in days. Planet's high temporal frequency enables near-real-time change detection systems like GLAD (Global Land Analysis and Discovery) deforestation alerts.",
+        "Traditional Landsat satellites revisit every 16 days - insufficient for rapid deforestation events that can remove forest cover in days. Planet's high temporal frequency enables near-real-time change detection systems like GLAD (Global Land Analysis and Discovery) deforestation alerts.",
       hints: [
         "Near-real-time deforestation monitoring requires high revisit frequency. Planet Labs' Dove constellation was specifically designed for what temporal resolution?",
         "Traditional satellites like Landsat revisit every 16 days. Why might this be insufficient for monitoring deforestation in the Amazon?",
@@ -977,7 +977,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Penetrate cloud cover (clouds are largely transparent to microwaves)}\\]" +
         "\\[- \\text{Provide day/night operation (active sensor)}\\]" +
         "\\[- \\text{Capture canopy structure from backscatter intensity}\\]\n\n" +
-        "Tropical rainforests are perpetually cloud-covered — SAR provides reliable, continuous monitoring.",
+        "Tropical rainforests are perpetually cloud-covered - SAR provides reliable, continuous monitoring.",
       hints: [
         "Optical sensors need sunlight and clear skies to see the surface. What physical property of radar waves allows them to 'see' through clouds?",
         "The Amazon and Congo Basin are frequently cloud-covered. What type of satellite sensor provides reliable deforestation monitoring in these regions?",
@@ -1005,7 +1005,7 @@ const questions: Record<string, Question[]> = {
         "\\[P(\\text{change} | \\text{NDVI}_{t:t+T}) > \\tau \\Rightarrow \\text{alert}\\]\n\n" +
         "Decision trees classify pixels as forest/non-forest based on NDVI thresholds and temporal consistency. Alerts are generated near-weekly when a pixel's NDVI drops below the forest threshold.",
       hints: [
-        "GLAD needs to detect sudden changes in dense vegetation. Which spectral index specifically measures vegetation greenness — what does this index compare?",
+        "GLAD needs to detect sudden changes in dense vegetation. Which spectral index specifically measures vegetation greenness - what does this index compare?",
         "A pixel that was 'dense forest' (NDVI ~0.8) suddenly shows NDVI ~0.1. What does this temporal signature suggest about what happened?",
       ],
     },
@@ -1053,10 +1053,10 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Rapid exploration of the policy solution space}\\]" +
         "\\[- \\text{Monte Carlo uncertainty quantification (1000s of runs)}\\]" +
         "\\[- \\text{Optimization over policy parameters}\\]\n\n" +
-        "This is the same emulator concept used for climate models — fast ML approximations of expensive simulations.",
+        "This is the same emulator concept used for climate models - fast ML approximations of expensive simulations.",
       hints: [
         "Running a full IAM scenario takes hours to days on a supercomputer. What does ML compression enable this to be reduced to?",
-        "What is the 'emulator' concept in climate science — how does it relate to IAMs?",
+        "What is the 'emulator' concept in climate science - how does it relate to IAMs?",
       ],
     },
     {
@@ -1079,7 +1079,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Bioenergy (low-carbon but land-intensive)} \\Leftrightarrow \\text{Food security, Biodiversity}\\]" +
         "\\[- \\text{Rapid decarbonization} \\Leftrightarrow \\text{Economic disruption, Equity (just transition)}\\]" +
         "\\[- \\text{Energy independence} \\Leftrightarrow \\text{Cost minimization}\\]\n\n" +
-        "These objectives are often in tension — a pathway minimizing cost might require massive land use for bioenergy, conflicting with biodiversity goals. Multi-objective optimization produces a Pareto frontier of optimal trade-offs, not a single solution.",
+        "These objectives are often in tension - a pathway minimizing cost might require massive land use for bioenergy, conflicting with biodiversity goals. Multi-objective optimization produces a Pareto frontier of optimal trade-offs, not a single solution.",
       hints: [
         "A pathway that minimizes cost might require massive land use for bioenergy. What other objectives does this potentially conflict with?",
         "Multi-objective problems with competing objectives don't have a single 'optimal' solution. What do they have instead?",
@@ -1108,7 +1108,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{Object detection: bounding boxes around objects}\\]" +
         "\\[- \\text{Instance segmentation: unique IDs per object instance}\\]" +
         "\\[- \\text{Semantic segmentation: class label per pixel}\\]\n\n" +
-        "For deforestation monitoring, semantic segmentation provides pixel-level area estimates — more precise than counting bounding boxes.",
+        "For deforestation monitoring, semantic segmentation provides pixel-level area estimates - more precise than counting bounding boxes.",
       hints: [
         "Segmentation answers 'what is this pixel?' for every pixel in the image simultaneously. What specific information is assigned to each pixel?",
         "For measuring urban expansion, why is pixel-level labeling (segmentation) more informative than bounding boxes (object detection)?",
@@ -1129,7 +1129,7 @@ const questions: Record<string, Question[]> = {
         "Skip connections preserve fine spatial details that would otherwise be lost during downsampling. This is critical for satellite imagery where precise boundary delineation (e.g., forest edges) matters. The architecture transfers effectively because both biomedical and satellite images are dense prediction tasks requiring spatial precision.",
       hints: [
         "During downsampling in the encoder, spatial resolution is reduced. What architectural feature of U-Net allows high-resolution spatial information from the encoder to reach the decoder?",
-        "U-Net was designed for biomedical cell segmentation. What property makes it applicable to satellite imagery — is it the architecture type or the specific feature extraction?",
+        "U-Net was designed for biomedical cell segmentation. What property makes it applicable to satellite imagery - is it the architecture type or the specific feature extraction?",
       ],
     },
     {
@@ -1152,7 +1152,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\begin{array}{c|c|c} \\text{Property} & \\text{Sentinel-2} & \\text{Planet}\\\\ \\hline \\text{Spatial resolution} & 10\\text{ m} & 3\\text{ m}\\\\ \\text{Spectral bands} & 13\\; (\\text{VNIR/SWIR}) & 4\\; (\\text{RGB/NIR}) \\\\ \\text{Radiometric calibration} & \\text{ESA calibrated} & \\text{Planet calibrated} \\end{array}\\]\n\n" +
         "These differences cause spectral and spatial characteristics to differ, leading to distribution shift that degrades model performance when transferring between sensors.",
       hints: [
-        "A model trained on Sentinel-2 imagery fails when deployed on Planet imagery. What changed — the model architecture or the input data distribution?",
+        "A model trained on Sentinel-2 imagery fails when deployed on Planet imagery. What changed - the model architecture or the input data distribution?",
         "Satellite sensors vary in spectral bands, ground sampling distance, and radiometric calibration. Which of these creates the most fundamental change in the statistical distribution of pixel values?",
       ],
     },
@@ -1175,10 +1175,10 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Prithvi uses a Vision Transformer (ViT) trained with Masked AutoEncoder objectives:\n\n" +
         "\\[\\mathcal{L}_{\\text{MAE}} = \\mathbb{E}\\left[\\|\\text{Decoder}(\\text{Encoder}(I_{\\text{masked}})) - I_{\\text{original}}\\|^2\\right]\\]\n\n" +
-        "The model learns by predicting randomly masked patches of multi-spectral satellite time series. Pre-training on Harmonized Landsat Sentinel (HLS) data — which provides consistent, harmonized Landsat 8/9 and Sentinel-2 products — teaches rich spatiotemporal representations that transfer to downstream Earth observation tasks.",
+        "The model learns by predicting randomly masked patches of multi-spectral satellite time series. Pre-training on Harmonized Landsat Sentinel (HLS) data - which provides consistent, harmonized Landsat 8/9 and Sentinel-2 products - teaches rich spatiotemporal representations that transfer to downstream Earth observation tasks.",
       hints: [
         "MAE (masked autoencoding) learns by predicting masked patches. How is this applied to satellite time-series data rather than natural images?",
-        "Self-supervised pre-training on large unlabeled satellite archives avoids the need for what — labeled datasets or unlabeled data?",
+        "Self-supervised pre-training on large unlabeled satellite archives avoids the need for what - labeled datasets or unlabeled data?",
       ],
     },
     {
@@ -1196,7 +1196,7 @@ const questions: Record<string, Question[]> = {
         "\\[- \\text{High-level semantic features are task-specific and learned during fine-tuning}\\]\n\n" +
         "This mirrors BERT fine-tuning in NLP: strong pre-trained features + small labeled dataset = good downstream performance.",
       hints: [
-        "What does the pre-training on massive unlabeled satellite data provide — is it task-specific knowledge or generalizable representations?",
+        "What does the pre-training on massive unlabeled satellite data provide - is it task-specific knowledge or generalizable representations?",
         "In NLP, BERT pre-training + fine-tuning on small labeled data produces strong results. What does this paradigm look like when applied to satellite imagery?",
       ],
     },
@@ -1266,7 +1266,7 @@ const questions: Record<string, Question[]> = {
         "Siamese networks use twin encoders with shared weights to process bi-temporal images:\n\n" +
         "\\[h^{(1)} = f_\\theta(I^{(t_1)}), \\quad h^{(2)} = f_\\theta(I^{(t_2)})\\]" +
         "\\[\\hat{y} = g\\left(h^{(1)}, h^{(2)}\\right) = \\text{change map}\\]\n\n" +
-        "Shared weights ensure both images are projected into the same feature space, making comparison meaningful. The difference head produces an attention or distance map highlighting changed regions. This architecture was first used for face verification — change detection is directly analogous.",
+        "Shared weights ensure both images are projected into the same feature space, making comparison meaningful. The difference head produces an attention or distance map highlighting changed regions. This architecture was first used for face verification - change detection is directly analogous.",
       hints: [
         "Siamese networks were originally designed for face verification (comparing two images to determine if they show the same person). How does this map to change detection?",
         "Why is it important that both encoders in a Siamese network share weights? What does this ensure about the feature representations?",
@@ -1295,7 +1295,7 @@ const questions: Record<string, Question[]> = {
         "\\[|\\text{NDVI}_{\\text{observed}}(t) - \\text{NDVI}_{\\text{fitted}}(t)| > \\tau \\Rightarrow \\text{change detected}\\]",
       hints: [
         "Vegetation has strong seasonal cycles (green-up in spring, senescence in fall). What type of mathematical model captures these periodic cycles?",
-        "When deforestation occurs, the NDVI trajectory changes abruptly. How does CCDC detect this — is it the trajectory matching a pattern or failing to match one?",
+        "When deforestation occurs, the NDVI trajectory changes abruptly. How does CCDC detect this - is it the trajectory matching a pattern or failing to match one?",
       ],
     },
   ],
@@ -1358,7 +1358,7 @@ const questions: Record<string, Question[]> = {
         "\\[R_{\\text{rs}}(\\lambda) = \\frac{L_w(\\lambda)}{E_d(\\lambda)}\\]\n\n" +
         "The ratio of blue to green reflectance encodes chlorophyll-a concentration. ML algorithms (neural networks, mixture density networks) retrieve chlorophyll-a concentrations:\n\n" +
         "\\[\\hat{C}_{\\text{chla}} = f_\\theta(R_{\\text{rs}}(\\lambda_1), R_{\\text{rs}}(\\lambda_2), \\ldots)\\]\n\n" +
-        "Phytoplankton are the base of the marine food web and a major carbon sink — satellite chlorophyll maps provide global ocean productivity estimates.",
+        "Phytoplankton are the base of the marine food web and a major carbon sink - satellite chlorophyll maps provide global ocean productivity estimates.",
       hints: [
         "Phytoplankton are microscopic organisms at the base of the marine food web. How can satellites detect them in the open ocean?",
         "Ocean color changes from blue (clear deep water) to green as phytoplankton concentration increases. What specific pigment causes this color change?",
@@ -1390,7 +1390,7 @@ const questions: Record<string, Question[]> = {
         "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q}\\]\n\n" +
         "where \\(I_{\\text{R}}\\) is the reaction intensity, \\(\\rho_b\\) is fuel bulk density. Wind and slope modify the spread rate exponentially.",
       hints: [
-        "Fire requires fuel, heat, and oxygen — think about which environmental variables control each leg of this triangle.",
+        "Fire requires fuel, heat, and oxygen - think about which environmental variables control each leg of this triangle.",
         "Wind drives fire spread rate and direction; fuel moisture controls ignition probability. Both are key predictors in the Rothermel model.",
       ],
     },
@@ -1474,7 +1474,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{Morning peak:} \\quad \\text{lights, coffee makers, HVAC ramp-up}\\]" +
         "\\[\\text{Afternoon low:} \\quad \\text{workday, minimal occupancy}\\]" +
         "\\[\\text{Evening peak:} \\quad \\text{cooking, entertainment, HVAC}\\]\n\n" +
-        "LSTM and Transformer models learn these temporal patterns from historical consumption data, enabling implicit occupancy detection without dedicated sensors. This is both technically useful and a privacy concern — meter data reveals daily routines even without explicit tracking.",
+        "LSTM and Transformer models learn these temporal patterns from historical consumption data, enabling implicit occupancy detection without dedicated sensors. This is both technically useful and a privacy concern - meter data reveals daily routines even without explicit tracking.",
       hints: [
         "Human presence causes predictable energy use patterns. Can these patterns be learned from meter data alone, or do you need explicit occupancy sensors?",
         "What does smart meter data reveal about daily routines even without explicit occupancy sensors?",
@@ -1528,7 +1528,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\text{PPD} = 100 - 95 \\cdot e^{-(0.03353 \\cdot \\text{PMV}^4 + 0.2179 \\cdot \\text{PMV}^2)}\\]\n\n" +
         "The trade-off weights \\(\\alpha, \\beta\\) encode the desired comfort-energy compromise.",
       hints: [
-        "Comfort and energy are often in tension — cooling more maintains comfort but uses more electricity. How is this trade-off formalized in RL?",
+        "Comfort and energy are often in tension - cooling more maintains comfort but uses more electricity. How is this trade-off formalized in RL?",
         "Multi-objective RL combines competing objectives into a single weighted reward. What do the weights encode?",
       ],
     },
@@ -1669,7 +1669,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "High-resolution transportation emission models combine GPS probe vehicle data, traffic count sensors, fleet composition surveys, and speed profiles to estimate link-level emissions using vehicle emission factor models (MOVES, EMEP), enabling spatial mapping of transportation emissions.",
       hints: [
-        "Emissions vary by vehicle type, speed, and road grade — fine-resolution estimation requires all of these inputs.",
+        "Emissions vary by vehicle type, speed, and road grade - fine-resolution estimation requires all of these inputs.",
         "GPS trace data from connected vehicles and navigation apps provides unprecedented detail on actual driving behavior.",
       ],
     },
@@ -1683,7 +1683,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "RL agents for EV charging management learn to schedule charging sessions to avoid grid peaks (valley filling), align with periods of high renewable generation (e.g., solar midday), and minimize electricity costs, while ensuring vehicles are charged by their departure time.",
       hints: [
-        "EV charging is flexible in time — a vehicle plugged in for 8 hours only needs 2 hours of charging, giving 6 hours of flexibility.",
+        "EV charging is flexible in time - a vehicle plugged in for 8 hours only needs 2 hours of charging, giving 6 hours of flexibility.",
         "This flexibility makes EV charging a natural demand response resource that RL can optimize.",
       ],
     },
@@ -1703,8 +1703,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "V2G optimization must ensure batteries are sufficiently charged when drivers need their vehicles, but departure times and trip energy needs are uncertain; the resulting partially observable MDP requires learning robust policies under uncertainty about future user behavior.",
       hints: [
-        "If you discharge the battery too aggressively for V2G, the driver may not have enough range for their trip — how do you handle this uncertainty?",
-        "Partial observability arises because the agent cannot observe future driver behavior — only past behavior and stated preferences.",
+        "If you discharge the battery too aggressively for V2G, the driver may not have enough range for their trip - how do you handle this uncertainty?",
+        "Partial observability arises because the agent cannot observe future driver behavior - only past behavior and stated preferences.",
       ],
     },
   ],
@@ -1740,8 +1740,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "City-scale digital twins (e.g., Singapore\'s Virtual Singapore) combine 3D urban models, sensor data, and AI simulation to test urban planning scenarios (building placements, transit routes, green space additions) and predict their impact on energy use, traffic, and emissions before costly physical changes.",
       hints: [
-        "A digital twin is a real-time virtual replica of a physical system — cities can run experiments in the digital world first.",
-        "Testing a new bus route in a simulation costs nothing; building a new road costs millions — digital twins enable cheap experimentation.",
+        "A digital twin is a real-time virtual replica of a physical system - cities can run experiments in the digital world first.",
+        "Testing a new bus route in a simulation costs nothing; building a new road costs millions - digital twins enable cheap experimentation.",
       ],
     },
     {
@@ -1758,10 +1758,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In MARL, all agents learn simultaneously, so the environment each agent faces changes as other agents update their policies — this non-stationarity violates the stationarity assumption of single-agent RL and makes convergence guarantees much harder to establish.",
+        "In MARL, all agents learn simultaneously, so the environment each agent faces changes as other agents update their policies - this non-stationarity violates the stationarity assumption of single-agent RL and makes convergence guarantees much harder to establish.",
       hints: [
         "Single-agent RL assumes a stationary environment (fixed transition probabilities); what happens when other agents are also learning and changing?",
-        "This is the multi-agent credit assignment and non-stationarity problem — a central challenge in MARL theory.",
+        "This is the multi-agent credit assignment and non-stationarity problem - a central challenge in MARL theory.",
       ],
     },
   ],
@@ -1784,7 +1784,7 @@ const questions: Record<string, Question[]> = {
         "Flood risk = hazard \\times exposure \\times vulnerability; hazard (inundation depth/frequency) comes from hydrological and hydraulic models, while exposure (buildings, infrastructure, population) and vulnerability (damage functions) come from land use and socioeconomic data.",
       hints: [
         "Risk in hazard science has a standard formula: risk is not just where flooding occurs, but also what and who is affected.",
-        "A flood in an uninhabited desert is a hazard but not a risk — exposure and vulnerability complete the picture.",
+        "A flood in an uninhabited desert is a hazard but not a risk - exposure and vulnerability complete the picture.",
       ],
     },
     {
@@ -1797,7 +1797,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Kratzert et al. (2018, 2019) demonstrated that LSTM networks trained on rainfall-runoff data from large basins outperform the SAC-SMA and VIC hydrological models in many catchments, leveraging data-driven learning of complex rainfall-runoff relationships.",
       hints: [
-        "Streamflow depends on rainfall patterns accumulated over hours to days — which architecture is designed for temporal sequences?",
+        "Streamflow depends on rainfall patterns accumulated over hours to days - which architecture is designed for temporal sequences?",
         'LSTMs can learn the "memory" of a catchment (soil moisture, groundwater) implicitly from historical rainfall-runoff pairs.',
       ],
     },
@@ -1840,7 +1840,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "NDVI = (NIR − Red)/(NIR + Red) exploits the contrast between strong near-infrared reflectance from healthy vegetation and red light absorption by chlorophyll; it is the most widely used index for crop health monitoring, phenology tracking, and yield prediction globally.",
       hints: [
-        "Healthy plants absorb red light for photosynthesis and strongly reflect near-infrared — which index captures this contrast?",
+        "Healthy plants absorb red light for photosynthesis and strongly reflect near-infrared - which index captures this contrast?",
         "NDVI is bounded between −1 and +1; healthy dense vegetation typically has NDVI > 0.6.",
       ],
     },
@@ -1875,7 +1875,7 @@ const questions: Record<string, Question[]> = {
         "NDVI and LAI time-series from satellite sensors capture the crop growth curve from emergence through senescence; ML models that ingest this temporal trajectory can detect stress events, estimate accumulated biomass, and predict final yield months before harvest.",
       hints: [
         "The full growing season trajectory of a crop (not just one snapshot) contains far more information about final yield.",
-        "A crop that showed stress in mid-season will have a different yield trajectory than one that grew consistently — temporal ML captures this.",
+        "A crop that showed stress in mid-season will have a different yield trajectory than one that grew consistently - temporal ML captures this.",
       ],
     },
   ],
@@ -1897,7 +1897,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Climate vulnerability is a function of exposure (magnitude of climate change), sensitivity (how much a system is affected), and adaptive capacity (ability to cope and adjust); ML models integrate hazard maps, agricultural dependence, governance quality, health indicators, and poverty data to map compound vulnerability.",
       hints: [
-        "The IPCC vulnerability framework has three components — a small island nation may have high exposure and low adaptive capacity.",
+        "The IPCC vulnerability framework has three components - a small island nation may have high exposure and low adaptive capacity.",
         "Vulnerability is not just physical proximity to a hazard; social, economic, and institutional factors determine who bears the greatest risk.",
       ],
     },
@@ -1912,7 +1912,7 @@ const questions: Record<string, Question[]> = {
         "Climate migration models use regression and ML approaches trained on historical migration flows, climate anomalies (droughts, floods, temperature extremes), agricultural shocks, and conflict data to project future displacement under different climate scenarios.",
       hints: [
         "Historical data on where people moved and what climate conditions preceded the movement provides the training signal.",
-        "Climate migration is multi-causal — climate shocks interact with economic and political factors, requiring multi-variable ML models.",
+        "Climate migration is multi-causal - climate shocks interact with economic and political factors, requiring multi-variable ML models.",
       ],
     },
     {
@@ -1931,7 +1931,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ABMs simulate each household as an agent with decision rules (incorporating climate stress, social networks, economic resources); collective migration patterns emerge from these individual decisions, capturing threshold effects, network-driven migration corridors, and feedback loops that aggregate regression models miss.",
       hints: [
-        "Migration has strong social network effects — people move where others from their community have moved.",
+        "Migration has strong social network effects - people move where others from their community have moved.",
         "Emergent behaviors (sudden mass displacement when a tipping point is crossed) cannot be captured by linear aggregate models.",
       ],
     },
@@ -1968,7 +1968,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Projects like Wildlife Insights and the Serengeti Camera Trap dataset use CNNs to classify species in camera trap images; models achieve expert-level accuracy on common species, enabling automated processing of millions of images that would take expert years to manually label.",
       hints: [
-        "Camera traps generate enormous volumes of images — manual labeling by experts is the bottleneck for global biodiversity monitoring.",
+        "Camera traps generate enormous volumes of images - manual labeling by experts is the bottleneck for global biodiversity monitoring.",
         "CNNs trained on labeled image datasets transfer well to camera trap images where lighting and scene conditions vary significantly.",
       ],
     },
@@ -1988,7 +1988,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "eDNA metabarcoding sequences DNA fragments from environmental samples (water, soil, air); ML classifiers match these sequences against reference databases to taxonomically identify which species are present in an ecosystem without direct observation, enabling non-invasive biodiversity surveys.",
       hints: [
-        "Animals shed DNA into their environment through skin cells, feces, and mucus — collecting water samples can reveal which fish species inhabit a lake.",
+        "Animals shed DNA into their environment through skin cells, feces, and mucus - collecting water samples can reveal which fish species inhabit a lake.",
         "ML is needed to rapidly classify millions of short DNA sequences against reference databases covering hundreds of thousands of species.",
       ],
     },
@@ -2011,7 +2011,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "NLP models (named entity recognition, relation extraction, text classification) extract structured information from unstructured policy documents: emission targets (NDCs, net-zero pledges), policy instruments (carbon taxes, regulations), and sector-specific mitigation measures for systematic comparative analysis.",
       hints: [
-        "Policy documents contain important commitments in free text — NLP can extract these systematically at scale.",
+        "Policy documents contain important commitments in free text - NLP can extract these systematically at scale.",
         "Comparing hundreds of national climate plans manually would take years; NLP automates this extraction.",
       ],
     },
@@ -2043,7 +2043,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "NLP framing analysis and misinformation detection models identify how climate change is portrayed across media ecosystems, tracking narrative frames (economic cost vs. opportunity, catastrophism vs. denial), misinformation narratives, and their geographic and temporal spread — informing communication strategies.",
+        "NLP framing analysis and misinformation detection models identify how climate change is portrayed across media ecosystems, tracking narrative frames (economic cost vs. opportunity, catastrophism vs. denial), misinformation narratives, and their geographic and temporal spread - informing communication strategies.",
       hints: [
         "How an issue is framed (the economic angle, the moral angle, the national security angle) influences public opinion differently.",
         "Misinformation detection requires identifying specific false claims about climate science at scale across millions of posts.",
@@ -2054,54 +2054,54 @@ const questions: Record<string, Question[]> = {
 
 const moreClimQ: Record<string, Question[]> = {
   "climate-energy": [
-    { id: "q-clim-kp31-1", type: "multiple-choice", difficulty: "medium", question: "AI-driven energy demand forecasting is critical for grid operators. Which ML approach is most effective for day-ahead electricity demand prediction given weather forecasts and historical consumption data?", options: ["K-nearest neighbors on raw consumption", "Gradient boosting models or LSTMs trained on weather variables (temperature, humidity, solar irradiance), calendar features, and lagged consumption — achieving MAPE below 2% for regional grids", "Simple linear regression on temperature alone", "Random forests without weather features"], correctAnswer: 1, explanation: "Day-ahead forecasting uses ensemble methods (gradient boosting: XGBoost/LightGBM) and deep sequence models (LSTM, Temporal Fusion Transformer). Key features include temperature (heating/cooling loads), solar irradiance (solar generation), and temporal patterns. Sub-2% MAPE is routinely achieved by leading utilities.", hints: ["Temperature is the strongest predictor of electricity demand — heat waves and cold snaps cause demand spikes.", "Residual load (demand minus renewable generation) forecasting is increasingly important as variable renewables penetrate grids."] },
-    { id: "q-clim-kp31-2", type: "true-false", difficulty: "medium", question: "Reinforcement learning has been applied to data center cooling optimization (e.g., Google DeepMind's work), reducing cooling energy by 40% by learning optimal chiller and cooling tower setpoints.", correctAnswer: "True", explanation: "DeepMind's RL agent for Google data center cooling (2016, published 2018) reduced cooling energy by ~40% by learning complex multi-variable control policies for chillers, cooling towers, and pumps — a task too complex for traditional rule-based control. The agent outperformed human-engineered heuristics.", hints: ["The state space includes hundreds of sensors; the action space adjusts dozens of setpoints.", "Safety constraints are enforced via model-based rollouts before real-world action deployment."] },
-    { id: "q-clim-kp31-3", type: "multiple-choice", difficulty: "hard", question: "Smart grid demand response uses ML to shift flexible loads (EV charging, HVAC, industrial processes) away from peak demand periods. The primary optimization challenge is:", options: ["Predicting solar panel degradation", "Coordinating distributed flexible assets to flatten the net load curve while respecting individual user preferences and comfort constraints — a multi-agent or hierarchical control problem", "Training convolutional networks on smart meter images", "Detecting grid equipment failures with satellite imagery"], correctAnswer: 1, explanation: "Demand response aggregation is a multi-agent control problem: each flexible asset has local preferences/constraints, and the aggregator must coordinate thousands of assets to provide grid services (peak shaving, frequency regulation). Multi-agent RL and model predictive control (MPC) with learned load models are leading approaches.", hints: ["EV charging: driver wants battery charged by 7am; aggregator wants to minimize charging during 5-8pm peak.", "Federated learning preserves user privacy while learning load flexibility models across millions of smart meters."] },
+    { id: "q-clim-kp31-1", type: "multiple-choice", difficulty: "medium", question: "AI-driven energy demand forecasting is critical for grid operators. Which ML approach is most effective for day-ahead electricity demand prediction given weather forecasts and historical consumption data?", options: ["K-nearest neighbors on raw consumption", "Gradient boosting models or LSTMs trained on weather variables (temperature, humidity, solar irradiance), calendar features, and lagged consumption - achieving MAPE below 2% for regional grids", "Simple linear regression on temperature alone", "Random forests without weather features"], correctAnswer: 1, explanation: "Day-ahead forecasting uses ensemble methods (gradient boosting: XGBoost/LightGBM) and deep sequence models (LSTM, Temporal Fusion Transformer). Key features include temperature (heating/cooling loads), solar irradiance (solar generation), and temporal patterns. Sub-2% MAPE is routinely achieved by leading utilities.", hints: ["Temperature is the strongest predictor of electricity demand - heat waves and cold snaps cause demand spikes.", "Residual load (demand minus renewable generation) forecasting is increasingly important as variable renewables penetrate grids."] },
+    { id: "q-clim-kp31-2", type: "true-false", difficulty: "medium", question: "Reinforcement learning has been applied to data center cooling optimization (e.g., Google DeepMind's work), reducing cooling energy by 40% by learning optimal chiller and cooling tower setpoints.", correctAnswer: "True", explanation: "DeepMind's RL agent for Google data center cooling (2016, published 2018) reduced cooling energy by ~40% by learning complex multi-variable control policies for chillers, cooling towers, and pumps - a task too complex for traditional rule-based control. The agent outperformed human-engineered heuristics.", hints: ["The state space includes hundreds of sensors; the action space adjusts dozens of setpoints.", "Safety constraints are enforced via model-based rollouts before real-world action deployment."] },
+    { id: "q-clim-kp31-3", type: "multiple-choice", difficulty: "hard", question: "Smart grid demand response uses ML to shift flexible loads (EV charging, HVAC, industrial processes) away from peak demand periods. The primary optimization challenge is:", options: ["Predicting solar panel degradation", "Coordinating distributed flexible assets to flatten the net load curve while respecting individual user preferences and comfort constraints - a multi-agent or hierarchical control problem", "Training convolutional networks on smart meter images", "Detecting grid equipment failures with satellite imagery"], correctAnswer: 1, explanation: "Demand response aggregation is a multi-agent control problem: each flexible asset has local preferences/constraints, and the aggregator must coordinate thousands of assets to provide grid services (peak shaving, frequency regulation). Multi-agent RL and model predictive control (MPC) with learned load models are leading approaches.", hints: ["EV charging: driver wants battery charged by 7am; aggregator wants to minimize charging during 5-8pm peak.", "Federated learning preserves user privacy while learning load flexibility models across millions of smart meters."] },
   ],
   "climate-agriculture": [
-    { id: "q-clim-kp32-1", type: "multiple-choice", difficulty: "medium", question: "Crop yield prediction using satellite imagery and ML is critical for food security planning under climate change. Which sensor type is most informative for estimating crop biomass and growth stage?", options: ["RGB camera images", "Multispectral imagery including near-infrared (NIR) bands, enabling computation of NDVI and related vegetation indices", "Thermal infrared only", "Synthetic aperture radar only"], correctAnswer: 1, explanation: "NDVI (Normalized Difference Vegetation Index) = (NIR-Red)/(NIR+Red) correlates strongly with photosynthetic activity, leaf area index, and crop biomass. Multispectral + NIR imagery from Sentinel-2, Landsat, or Planet Scope enables NDVI time series for crop monitoring and yield forecasting via CNNs or LSTMs.", hints: ["Healthy green vegetation absorbs red light (photosynthesis) and strongly reflects NIR — making NIR critical.", "NDVI time series over a growing season captures phenological stages: planting, greenup, heading, senescence."] },
-    { id: "q-clim-kp32-2", type: "true-false", difficulty: "easy", question: "Climate change projections suggest that agricultural yields for staple crops (wheat, maize, rice) will decrease on average in tropical and subtropical regions while potentially increasing in some high-latitude regions — a pattern that ML models trained on historical data may fail to capture accurately.", correctAnswer: "True", explanation: "ML models trained on historical climate-yield relationships may underestimate future impacts because future climate conditions (temperature, precipitation, CO2 concentrations) will be outside the historical training distribution. Process-based crop models (DSSAT, APSIM) combined with ML are preferred for out-of-distribution climate projection.", hints: ["Distribution shift: future extreme heat events are rarer in historical data, causing underestimation of heat stress impacts.", "Hybrid ML + process models: use ML for parameter estimation, process models for mechanistic projections."] },
-    { id: "q-clim-kp32-3", type: "multiple-choice", difficulty: "hard", question: "Precision agriculture systems use ML to optimize variable-rate application of fertilizers and pesticides. The key environmental benefit beyond cost savings is:", options: ["Faster drone battery life", "Reducing excess fertilizer application that causes nitrous oxide (N2O) emissions and nitrogen runoff into waterways — N2O is a potent greenhouse gas (~265x CO2 over 100 years)", "Increasing total crop area", "Eliminating the need for crop rotation"], correctAnswer: 1, explanation: "Nitrogen fertilizer overapplication leads to (1) N2O emissions (strong GHG) from soil microbes, (2) nitrate runoff causing eutrophication of waterways, and (3) economic waste. ML-driven variable-rate fertilization (using soil sensors, yield maps, remote sensing) matches nitrogen supply to crop demand spatially and temporally.", hints: ["Agriculture accounts for ~10% of global GHG emissions, with N2O from fertilizers a major component.", "ML models predict crop nitrogen needs from soil organic matter maps, historical yield data, and real-time NDVI."] },
+    { id: "q-clim-kp32-1", type: "multiple-choice", difficulty: "medium", question: "Crop yield prediction using satellite imagery and ML is critical for food security planning under climate change. Which sensor type is most informative for estimating crop biomass and growth stage?", options: ["RGB camera images", "Multispectral imagery including near-infrared (NIR) bands, enabling computation of NDVI and related vegetation indices", "Thermal infrared only", "Synthetic aperture radar only"], correctAnswer: 1, explanation: "NDVI (Normalized Difference Vegetation Index) = (NIR-Red)/(NIR+Red) correlates strongly with photosynthetic activity, leaf area index, and crop biomass. Multispectral + NIR imagery from Sentinel-2, Landsat, or Planet Scope enables NDVI time series for crop monitoring and yield forecasting via CNNs or LSTMs.", hints: ["Healthy green vegetation absorbs red light (photosynthesis) and strongly reflects NIR - making NIR critical.", "NDVI time series over a growing season captures phenological stages: planting, greenup, heading, senescence."] },
+    { id: "q-clim-kp32-2", type: "true-false", difficulty: "easy", question: "Climate change projections suggest that agricultural yields for staple crops (wheat, maize, rice) will decrease on average in tropical and subtropical regions while potentially increasing in some high-latitude regions - a pattern that ML models trained on historical data may fail to capture accurately.", correctAnswer: "True", explanation: "ML models trained on historical climate-yield relationships may underestimate future impacts because future climate conditions (temperature, precipitation, CO2 concentrations) will be outside the historical training distribution. Process-based crop models (DSSAT, APSIM) combined with ML are preferred for out-of-distribution climate projection.", hints: ["Distribution shift: future extreme heat events are rarer in historical data, causing underestimation of heat stress impacts.", "Hybrid ML + process models: use ML for parameter estimation, process models for mechanistic projections."] },
+    { id: "q-clim-kp32-3", type: "multiple-choice", difficulty: "hard", question: "Precision agriculture systems use ML to optimize variable-rate application of fertilizers and pesticides. The key environmental benefit beyond cost savings is:", options: ["Faster drone battery life", "Reducing excess fertilizer application that causes nitrous oxide (N2O) emissions and nitrogen runoff into waterways - N2O is a potent greenhouse gas (~265x CO2 over 100 years)", "Increasing total crop area", "Eliminating the need for crop rotation"], correctAnswer: 1, explanation: "Nitrogen fertilizer overapplication leads to (1) N2O emissions (strong GHG) from soil microbes, (2) nitrate runoff causing eutrophication of waterways, and (3) economic waste. ML-driven variable-rate fertilization (using soil sensors, yield maps, remote sensing) matches nitrogen supply to crop demand spatially and temporally.", hints: ["Agriculture accounts for ~10% of global GHG emissions, with N2O from fertilizers a major component.", "ML models predict crop nitrogen needs from soil organic matter maps, historical yield data, and real-time NDVI."] },
   ],
   "climate-carbon": [
-    { id: "q-clim-kp33-1", type: "multiple-choice", difficulty: "medium", question: "Methane (CH4) leak detection from oil and gas infrastructure using satellite imagery has been advanced by ML. Which satellite instrument has been particularly transformative for global methane monitoring?", options: ["Landsat 8 multispectral sensor", "TROPOMI (TROPOspheric Monitoring Instrument) on Sentinel-5P, providing daily global CH4 column retrievals at 5.5km resolution", "GOES-16 weather satellite", "ICESat-2 lidar"], correctAnswer: 1, explanation: "TROPOMI provides daily global CH4 total column retrievals at ~5.5km x 3.5km resolution. ML algorithms (e.g., variational inversion models, neural network-based retrievals) dramatically improve detection of point source emitters — oil/gas facilities, coal mines, landfills. GHGSat and MethaneSAT provide even higher resolution.", hints: ["TROPOMI has detected super-emitter facilities responsible for disproportionately large CH4 emissions.", "Atmospheric inversion modeling with ML combines satellite observations with transport models to attribute emissions to sources."] },
-    { id: "q-clim-kp33-2", type: "true-false", difficulty: "medium", question: "Direct Air Capture (DAC) of CO2 is being optimized using ML to discover novel sorbent materials with higher CO2 affinity, lower regeneration energy, and longer operational lifetimes.", correctAnswer: "True", explanation: "ML accelerates DAC sorbent discovery by screening vast chemical spaces (metal-organic frameworks, solid amines, ionic liquids) for CO2 adsorption properties. Graph neural networks predict adsorption isotherms, regeneration kinetics, and degradation rates from molecular structure — reducing the experimental screening burden.", hints: ["Metal-organic frameworks (MOFs) have millions of hypothetical structures — ML screens which to synthesize.", "Regeneration energy (releasing captured CO2 via heat or pressure swing) is the dominant DAC cost — ML targets this."] },
-    { id: "q-clim-kp33-3", type: "multiple-choice", difficulty: "hard", question: "Natural carbon sink monitoring (forests, oceans, soils) uses ML to quantify carbon stocks and fluxes. The primary challenge for forest above-ground biomass estimation is:", options: ["Lack of any satellite data for forests", "Converting remotely sensed signals (LiDAR canopy height, SAR backscatter, optical reflectance) to biomass (Mg/ha) requires locally calibrated allometric equations — introducing large uncertainties in tropical forests where field data is sparse", "Forests don't store significant amounts of carbon", "ML cannot process multisource satellite data"], correctAnswer: 1, explanation: "Forest biomass estimation requires allometric conversion of tree metrics to carbon mass. In tropical forests (which store ~40% of terrestrial carbon), sparse field inventory data creates calibration uncertainty. GEDI LiDAR, Sentinel-1 SAR, and Landsat/Sentinel-2 fusion with ML reduces this uncertainty, but large confidence intervals remain for high-biomass tropical forests.", hints: ["GEDI (Global Ecosystem Dynamics Investigation) LiDAR on ISS measures 3D forest structure globally.", "Bayesian ML approaches quantify estimation uncertainty — critical for carbon credit verification."] },
+    { id: "q-clim-kp33-1", type: "multiple-choice", difficulty: "medium", question: "Methane (CH4) leak detection from oil and gas infrastructure using satellite imagery has been advanced by ML. Which satellite instrument has been particularly transformative for global methane monitoring?", options: ["Landsat 8 multispectral sensor", "TROPOMI (TROPOspheric Monitoring Instrument) on Sentinel-5P, providing daily global CH4 column retrievals at 5.5km resolution", "GOES-16 weather satellite", "ICESat-2 lidar"], correctAnswer: 1, explanation: "TROPOMI provides daily global CH4 total column retrievals at ~5.5km x 3.5km resolution. ML algorithms (e.g., variational inversion models, neural network-based retrievals) dramatically improve detection of point source emitters - oil/gas facilities, coal mines, landfills. GHGSat and MethaneSAT provide even higher resolution.", hints: ["TROPOMI has detected super-emitter facilities responsible for disproportionately large CH4 emissions.", "Atmospheric inversion modeling with ML combines satellite observations with transport models to attribute emissions to sources."] },
+    { id: "q-clim-kp33-2", type: "true-false", difficulty: "medium", question: "Direct Air Capture (DAC) of CO2 is being optimized using ML to discover novel sorbent materials with higher CO2 affinity, lower regeneration energy, and longer operational lifetimes.", correctAnswer: "True", explanation: "ML accelerates DAC sorbent discovery by screening vast chemical spaces (metal-organic frameworks, solid amines, ionic liquids) for CO2 adsorption properties. Graph neural networks predict adsorption isotherms, regeneration kinetics, and degradation rates from molecular structure - reducing the experimental screening burden.", hints: ["Metal-organic frameworks (MOFs) have millions of hypothetical structures - ML screens which to synthesize.", "Regeneration energy (releasing captured CO2 via heat or pressure swing) is the dominant DAC cost - ML targets this."] },
+    { id: "q-clim-kp33-3", type: "multiple-choice", difficulty: "hard", question: "Natural carbon sink monitoring (forests, oceans, soils) uses ML to quantify carbon stocks and fluxes. The primary challenge for forest above-ground biomass estimation is:", options: ["Lack of any satellite data for forests", "Converting remotely sensed signals (LiDAR canopy height, SAR backscatter, optical reflectance) to biomass (Mg/ha) requires locally calibrated allometric equations - introducing large uncertainties in tropical forests where field data is sparse", "Forests don't store significant amounts of carbon", "ML cannot process multisource satellite data"], correctAnswer: 1, explanation: "Forest biomass estimation requires allometric conversion of tree metrics to carbon mass. In tropical forests (which store ~40% of terrestrial carbon), sparse field inventory data creates calibration uncertainty. GEDI LiDAR, Sentinel-1 SAR, and Landsat/Sentinel-2 fusion with ML reduces this uncertainty, but large confidence intervals remain for high-biomass tropical forests.", hints: ["GEDI (Global Ecosystem Dynamics Investigation) LiDAR on ISS measures 3D forest structure globally.", "Bayesian ML approaches quantify estimation uncertainty - critical for carbon credit verification."] },
   ],
   "climate-adaptation": [
-    { id: "q-clim-kp34-1", type: "multiple-choice", difficulty: "medium", question: "Flood risk mapping using ML and remote sensing is critical for climate adaptation planning. Which combination of data sources provides the most accurate 100-year floodplain delineation?", options: ["Only historical flood records", "LiDAR-derived high-resolution DEMs + hydrological ML models calibrated on historical flood events + climate projections — outperforming traditional 1D hydraulic models for large-scale analysis", "Low-resolution SRTM elevation data alone", "Social media flood reports only"], correctAnswer: 1, explanation: "High-accuracy flood mapping requires: (1) LiDAR DEMs for precise terrain (0.1-1m resolution), (2) ML flood extent models calibrated on Sentinel-1 SAR flood observations, and (3) climate-adjusted precipitation frequency statistics. Together these enable probabilistic floodplain mapping at scale — essential for infrastructure planning.", hints: ["Sentinel-1 SAR penetrates clouds and provides flood extent maps during/after flood events globally.", "Physics-informed neural networks can emulate 2D hydraulic models (HEC-RAS, LISFLOOD) at a fraction of the computational cost."] },
-    { id: "q-clim-kp34-2", type: "true-false", difficulty: "medium", question: "Climate migration modeling uses ML to identify populations most vulnerable to climate-induced displacement by integrating climate exposure (flood/drought/heat), socioeconomic vulnerability, and adaptive capacity indicators.", correctAnswer: "True", explanation: "Climate migration risk models (e.g., from World Bank, UNHCR) combine hazard layers (flood depth, drought index, sea level rise) with socioeconomic vulnerability data using ML to identify displacement hotspots — estimating 216M internal climate migrants by 2050 under business-as-usual scenarios.", hints: ["Adaptive capacity (income, education, social networks) reduces displacement risk even under equal climate exposure.", "ML models reveal which specific combinations of hazards and vulnerabilities drive migration decisions — informing targeted adaptation."] },
-    { id: "q-clim-kp34-3", type: "multiple-choice", difficulty: "hard", question: "Compound climate event prediction (simultaneous or cascading extremes, e.g., concurrent drought and heatwave) is a frontier in climate ML. Why is compound event frequency underestimated by analyzing hazards independently?", options: ["Individual hazard models are too accurate for compound analysis", "Climate variables are correlated (heatwaves increase drought severity via evapotranspiration; high soil temperature amplifies heat stress) — joint probability of compound events is higher than the product of marginal probabilities when variables are positively dependent", "Compound events only occur in mountainous regions", "Independent analysis overestimates compound event frequency"], correctAnswer: 1, explanation: "Drought and heatwave co-occurrence is positively correlated: drought reduces latent heat flux (evaporation), causing more surface heating that worsens the heatwave. Joint return period estimation requires copula models or ML that captures multivariate dependencies rather than treating hazards as independent.", hints: ["A 1-in-100-year drought and 1-in-100-year heatwave occurring simultaneously is more likely than 1-in-10,000 if they're positively correlated.", "Vine copulas and multivariate neural density estimators capture the dependence structure between climate extremes."] },
+    { id: "q-clim-kp34-1", type: "multiple-choice", difficulty: "medium", question: "Flood risk mapping using ML and remote sensing is critical for climate adaptation planning. Which combination of data sources provides the most accurate 100-year floodplain delineation?", options: ["Only historical flood records", "LiDAR-derived high-resolution DEMs + hydrological ML models calibrated on historical flood events + climate projections - outperforming traditional 1D hydraulic models for large-scale analysis", "Low-resolution SRTM elevation data alone", "Social media flood reports only"], correctAnswer: 1, explanation: "High-accuracy flood mapping requires: (1) LiDAR DEMs for precise terrain (0.1-1m resolution), (2) ML flood extent models calibrated on Sentinel-1 SAR flood observations, and (3) climate-adjusted precipitation frequency statistics. Together these enable probabilistic floodplain mapping at scale - essential for infrastructure planning.", hints: ["Sentinel-1 SAR penetrates clouds and provides flood extent maps during/after flood events globally.", "Physics-informed neural networks can emulate 2D hydraulic models (HEC-RAS, LISFLOOD) at a fraction of the computational cost."] },
+    { id: "q-clim-kp34-2", type: "true-false", difficulty: "medium", question: "Climate migration modeling uses ML to identify populations most vulnerable to climate-induced displacement by integrating climate exposure (flood/drought/heat), socioeconomic vulnerability, and adaptive capacity indicators.", correctAnswer: "True", explanation: "Climate migration risk models (e.g., from World Bank, UNHCR) combine hazard layers (flood depth, drought index, sea level rise) with socioeconomic vulnerability data using ML to identify displacement hotspots - estimating 216M internal climate migrants by 2050 under business-as-usual scenarios.", hints: ["Adaptive capacity (income, education, social networks) reduces displacement risk even under equal climate exposure.", "ML models reveal which specific combinations of hazards and vulnerabilities drive migration decisions - informing targeted adaptation."] },
+    { id: "q-clim-kp34-3", type: "multiple-choice", difficulty: "hard", question: "Compound climate event prediction (simultaneous or cascading extremes, e.g., concurrent drought and heatwave) is a frontier in climate ML. Why is compound event frequency underestimated by analyzing hazards independently?", options: ["Individual hazard models are too accurate for compound analysis", "Climate variables are correlated (heatwaves increase drought severity via evapotranspiration; high soil temperature amplifies heat stress) - joint probability of compound events is higher than the product of marginal probabilities when variables are positively dependent", "Compound events only occur in mountainous regions", "Independent analysis overestimates compound event frequency"], correctAnswer: 1, explanation: "Drought and heatwave co-occurrence is positively correlated: drought reduces latent heat flux (evaporation), causing more surface heating that worsens the heatwave. Joint return period estimation requires copula models or ML that captures multivariate dependencies rather than treating hazards as independent.", hints: ["A 1-in-100-year drought and 1-in-100-year heatwave occurring simultaneously is more likely than 1-in-10,000 if they're positively correlated.", "Vine copulas and multivariate neural density estimators capture the dependence structure between climate extremes."] },
   ],
   "climate-ocean": [
     { id: "q-clim-kp35-1", type: "multiple-choice", difficulty: "medium", question: "Ocean heat content (OHC) is a critical indicator of climate change, absorbing ~90% of excess energy. ML approaches for OHC estimation from sparse Argo float profiles use which technique to reconstruct the full 3D ocean state?", options: ["Simple spatial interpolation of float observations", "Optimal interpolation with ML-learned covariance structures, or data-driven ocean state estimation combining Argo floats, satellite altimetry, and SST observations via Gaussian processes or neural networks", "Only climate model output", "Ship-based observations only"], correctAnswer: 1, explanation: "Argo floats provide ~4000 temperature/salinity profiles globally but sample sparsely. ML optimal interpolation combines float data with satellite altimetry (sea level), SST, and ocean model prior to reconstruct full 3D temperature fields. Products like ARMOR3D use this approach for global subsurface ocean monitoring.", hints: ["Satellite altimetry measures sea surface height, which integrates the thermal expansion signature of OHC changes.", "Argo floats profile down to 2000m; Deep Argo extends to 6000m for abyssal ocean monitoring."] },
-    { id: "q-clim-kp35-2", type: "true-false", difficulty: "medium", question: "Ocean acidification (decreasing pH from CO2 absorption) is monitored using ML models that predict surface ocean pCO2 (partial pressure of CO2) from satellite observations of temperature, chlorophyll, and salinity.", correctAnswer: "True", explanation: "Surface ocean pCO2 determines CO2 flux direction and rate. Ship-based measurements are sparse; ML (neural networks, XGBoost) trained on ship transect data predicts global surface pCO2 maps from satellite SST, chlorophyll-a, mixed layer depth, and climatological salinity — enabling global ocean carbon flux estimation.", hints: ["The SOCAT dataset provides millions of pCO2 measurements from research vessels and ships of opportunity.", "Ocean net CO2 uptake (currently ~2.5 PgC/yr) is estimated by integrating satellite-predicted pCO2 flux maps."] },
-    { id: "q-clim-kp35-3", type: "multiple-choice", difficulty: "hard", question: "Marine heatwaves (MHWs) — prolonged periods of anomalously warm ocean temperatures — cause coral bleaching and fishery disruption. ML prediction of MHW onset and duration uses:", options: ["Only sea surface temperature anomaly thresholds", "Precursor signals in subsurface ocean heat content, ENSO state, Pacific Decadal Oscillation indices, and atmospheric circulation patterns — learned by LSTMs or transformer models for 4-16 week prediction lead times", "Random forest on cloud cover alone", "MHW prediction is impossible beyond 1 week"], correctAnswer: 1, explanation: "MHW predictability stems from slowly evolving ocean heat content anomalies and large-scale climate modes (ENSO, PDO, AMO). LSTMs and attention models trained on subsurface temperature, satellite SST, and climate indices provide 4-8 week skillful MHW predictions — enabling coral reef early warning systems.", hints: ["The 2013-2015 'Blob' MHW in the North Pacific was predictable 2-3 months in advance from subsurface heat content.", "MHW intensity (how far above the 90th percentile seasonal threshold) and duration both matter for ecosystem impact."] },
+    { id: "q-clim-kp35-2", type: "true-false", difficulty: "medium", question: "Ocean acidification (decreasing pH from CO2 absorption) is monitored using ML models that predict surface ocean pCO2 (partial pressure of CO2) from satellite observations of temperature, chlorophyll, and salinity.", correctAnswer: "True", explanation: "Surface ocean pCO2 determines CO2 flux direction and rate. Ship-based measurements are sparse; ML (neural networks, XGBoost) trained on ship transect data predicts global surface pCO2 maps from satellite SST, chlorophyll-a, mixed layer depth, and climatological salinity - enabling global ocean carbon flux estimation.", hints: ["The SOCAT dataset provides millions of pCO2 measurements from research vessels and ships of opportunity.", "Ocean net CO2 uptake (currently ~2.5 PgC/yr) is estimated by integrating satellite-predicted pCO2 flux maps."] },
+    { id: "q-clim-kp35-3", type: "multiple-choice", difficulty: "hard", question: "Marine heatwaves (MHWs) - prolonged periods of anomalously warm ocean temperatures - cause coral bleaching and fishery disruption. ML prediction of MHW onset and duration uses:", options: ["Only sea surface temperature anomaly thresholds", "Precursor signals in subsurface ocean heat content, ENSO state, Pacific Decadal Oscillation indices, and atmospheric circulation patterns - learned by LSTMs or transformer models for 4-16 week prediction lead times", "Random forest on cloud cover alone", "MHW prediction is impossible beyond 1 week"], correctAnswer: 1, explanation: "MHW predictability stems from slowly evolving ocean heat content anomalies and large-scale climate modes (ENSO, PDO, AMO). LSTMs and attention models trained on subsurface temperature, satellite SST, and climate indices provide 4-8 week skillful MHW predictions - enabling coral reef early warning systems.", hints: ["The 2013-2015 'Blob' MHW in the North Pacific was predictable 2-3 months in advance from subsurface heat content.", "MHW intensity (how far above the 90th percentile seasonal threshold) and duration both matter for ecosystem impact."] },
   ],
   "climate-policy": [
-    { id: "q-clim-kp36-1", type: "multiple-choice", difficulty: "medium", question: "Integrated Assessment Models (IAMs) like DICE, REMIND, and MESSAGE compute optimal climate policy pathways. ML is being integrated into IAMs primarily to:", options: ["Replace all process-based components with neural networks", "Replace computationally expensive damage functions, energy system modules, and economic optimization solvers with emulators — enabling uncertainty quantification across thousands of IAM runs", "Predict stock market responses to climate policy", "Visualize IAM outputs only"], correctAnswer: 1, explanation: "IAM emulators (neural network surrogates) trained on IAM runs can evaluate the full model in milliseconds vs hours, enabling Monte Carlo uncertainty quantification across policy and climate uncertainty dimensions. ML also enables climate-economy damage function estimation from observed economic-climate relationships.", hints: ["The Social Cost of Carbon (SCC) is computed by IAMs — uncertainty quantification across damage function assumptions changes SCC dramatically.", "Emulator-based IAMs enable real-time policy scenario exploration — interactive climate policy dashboards."] },
-    { id: "q-clim-kp36-2", type: "true-false", difficulty: "easy", question: "AI systems themselves have a significant and growing carbon footprint due to energy consumption in training and inference, which is relevant when evaluating AI's net climate impact.", correctAnswer: "True", explanation: "Large model training (GPT-4, Gemini) consumes millions of kWh — comparable to hundreds of transatlantic flights. Inference at scale (billions of daily queries) adds further emissions. However, AI's potential to accelerate clean energy, reduce industrial emissions, and improve grid efficiency may far exceed its own footprint if deployed at scale.", hints: ["ML CO2 emissions depend on energy source: training on renewable energy vs coal has 10-40x different carbon intensity.", "Patterson et al. (2021) estimated GPT-3 training ~552 tCO2e — but also noted this is amortized over all inference uses."] },
-    { id: "q-clim-kp36-3", type: "multiple-choice", difficulty: "hard", question: "Carbon pricing mechanism design (cap-and-trade, carbon tax) is being informed by ML analysis of energy market data, emissions monitoring, and behavioral economics. The key ML contribution is:", options: ["ML sets carbon prices automatically without human input", "ML estimates the price elasticity of emissions across sectors and firms, detects carbon leakage patterns, and identifies optimal price trajectories to meet emissions targets — supporting evidence-based policy design", "ML enforces carbon regulations in real-time", "ML replaces all economic modeling for climate policy"], correctAnswer: 1, explanation: "ML analyzes large administrative datasets (firm-level emissions, energy consumption, production data) to estimate sector-specific price elasticities, detect leakage (firms relocating emissions offshore), and evaluate policy counterfactuals via causal ML methods. This empirical approach complements theoretical economic models for policy design.", hints: ["Carbon leakage: emissions don't decrease if carbon-intensive production simply moves to unregulated regions.", "Causal ML (difference-in-differences, synthetic control) estimates the counterfactual: what would emissions have been without the carbon price?"] },
+    { id: "q-clim-kp36-1", type: "multiple-choice", difficulty: "medium", question: "Integrated Assessment Models (IAMs) like DICE, REMIND, and MESSAGE compute optimal climate policy pathways. ML is being integrated into IAMs primarily to:", options: ["Replace all process-based components with neural networks", "Replace computationally expensive damage functions, energy system modules, and economic optimization solvers with emulators - enabling uncertainty quantification across thousands of IAM runs", "Predict stock market responses to climate policy", "Visualize IAM outputs only"], correctAnswer: 1, explanation: "IAM emulators (neural network surrogates) trained on IAM runs can evaluate the full model in milliseconds vs hours, enabling Monte Carlo uncertainty quantification across policy and climate uncertainty dimensions. ML also enables climate-economy damage function estimation from observed economic-climate relationships.", hints: ["The Social Cost of Carbon (SCC) is computed by IAMs - uncertainty quantification across damage function assumptions changes SCC dramatically.", "Emulator-based IAMs enable real-time policy scenario exploration - interactive climate policy dashboards."] },
+    { id: "q-clim-kp36-2", type: "true-false", difficulty: "easy", question: "AI systems themselves have a significant and growing carbon footprint due to energy consumption in training and inference, which is relevant when evaluating AI's net climate impact.", correctAnswer: "True", explanation: "Large model training (GPT-4, Gemini) consumes millions of kWh - comparable to hundreds of transatlantic flights. Inference at scale (billions of daily queries) adds further emissions. However, AI's potential to accelerate clean energy, reduce industrial emissions, and improve grid efficiency may far exceed its own footprint if deployed at scale.", hints: ["ML CO2 emissions depend on energy source: training on renewable energy vs coal has 10-40x different carbon intensity.", "Patterson et al. (2021) estimated GPT-3 training ~552 tCO2e - but also noted this is amortized over all inference uses."] },
+    { id: "q-clim-kp36-3", type: "multiple-choice", difficulty: "hard", question: "Carbon pricing mechanism design (cap-and-trade, carbon tax) is being informed by ML analysis of energy market data, emissions monitoring, and behavioral economics. The key ML contribution is:", options: ["ML sets carbon prices automatically without human input", "ML estimates the price elasticity of emissions across sectors and firms, detects carbon leakage patterns, and identifies optimal price trajectories to meet emissions targets - supporting evidence-based policy design", "ML enforces carbon regulations in real-time", "ML replaces all economic modeling for climate policy"], correctAnswer: 1, explanation: "ML analyzes large administrative datasets (firm-level emissions, energy consumption, production data) to estimate sector-specific price elasticities, detect leakage (firms relocating emissions offshore), and evaluate policy counterfactuals via causal ML methods. This empirical approach complements theoretical economic models for policy design.", hints: ["Carbon leakage: emissions don't decrease if carbon-intensive production simply moves to unregulated regions.", "Causal ML (difference-in-differences, synthetic control) estimates the counterfactual: what would emissions have been without the carbon price?"] },
   ],
   "climate-ml-risks": [
-    { id: "q-clim-kp37-1", type: "multiple-choice", difficulty: "hard", question: "Climate model emulators (neural networks trained to emulate expensive climate model runs) face a critical challenge for climate change applications that doesn't affect weather forecasting as severely. This challenge is:", options: ["Emulators run too slowly for real-time applications", "Emulators are trained on historical climate data and current model runs (within known forcing ranges) but must generalize to novel forcing scenarios (higher CO2, different aerosols) — severe out-of-distribution extrapolation beyond training data", "Emulators cannot process gridded climate data", "Climate emulators require too much training data"], correctAnswer: 1, explanation: "Weather forecast emulators (like Pangu, GraphCast) operate near the training data distribution. Climate emulators must project decades into the future under forcing scenarios that may exceed anything in training data (e.g., SSP5-8.5 CO2 concentrations). Without physics constraints, purely data-driven climate emulators risk catastrophic extrapolation failures.", hints: ["Physics-informed neural networks (PINNs) and hybrid ML-physical models partially address extrapolation via embedded physical laws.", "Climate model ensembles (CMIP6) provide training data across multiple forcing scenarios, partially mitigating OOD issues."] },
+    { id: "q-clim-kp37-1", type: "multiple-choice", difficulty: "hard", question: "Climate model emulators (neural networks trained to emulate expensive climate model runs) face a critical challenge for climate change applications that doesn't affect weather forecasting as severely. This challenge is:", options: ["Emulators run too slowly for real-time applications", "Emulators are trained on historical climate data and current model runs (within known forcing ranges) but must generalize to novel forcing scenarios (higher CO2, different aerosols) - severe out-of-distribution extrapolation beyond training data", "Emulators cannot process gridded climate data", "Climate emulators require too much training data"], correctAnswer: 1, explanation: "Weather forecast emulators (like Pangu, GraphCast) operate near the training data distribution. Climate emulators must project decades into the future under forcing scenarios that may exceed anything in training data (e.g., SSP5-8.5 CO2 concentrations). Without physics constraints, purely data-driven climate emulators risk catastrophic extrapolation failures.", hints: ["Physics-informed neural networks (PINNs) and hybrid ML-physical models partially address extrapolation via embedded physical laws.", "Climate model ensembles (CMIP6) provide training data across multiple forcing scenarios, partially mitigating OOD issues."] },
     { id: "q-clim-kp37-2", type: "true-false", difficulty: "medium", question: "Bias correction of climate model outputs using ML (quantile delta mapping, neural network correction) can introduce spurious trends if the bias correction method is not designed to preserve the model's climate change signal.", correctAnswer: "True", explanation: "Naive bias correction (e.g., quantile mapping that shifts model outputs to match observed distributions) can distort the climate change delta (future-present difference) if the correction function is applied stationarily. Trend-preserving bias correction methods (quantile delta mapping) correct biases while preserving the relative change signal.", hints: ["The 'delta method': apply the model's climate change delta to the observed baseline, bypassing raw model values.", "Non-stationarity assumption: the bias correction relationship trained on historical data may not hold in future climate states."] },
-    { id: "q-clim-kp37-3", type: "multiple-choice", difficulty: "hard", question: "Geoengineering governance research uses ML to analyze the risk of 'termination shock' if solar radiation management (SRM, e.g., stratospheric aerosol injection) is suddenly stopped. The termination shock risk is:", options: ["SRM causes permanent stratospheric damage", "Rapid rebound warming if SRM is abruptly halted after decades of use, since the underlying CO2 forcing persists — the temperature would rise rapidly to where it would have been without SRM", "SRM can only be operated for 5 years maximum", "Termination shock only affects polar regions"], correctAnswer: 1, explanation: "If SRM is deployed for decades and then suddenly stopped (due to geopolitical conflict, funding failure, or technical failure), temperatures would rebound rapidly (over years, not decades) to what they would have been without SRM — but the world would be unprepared for such rapid change. ML climate models quantify the probability and magnitude of termination shock under different scenarios.", hints: ["The bounce-back rate (degrees C/decade) upon termination could far exceed any historically experienced warming rate.", "This risk creates a 'ratchet effect' — once SRM is deployed, stopping it is itself a major climate risk."] },
+    { id: "q-clim-kp37-3", type: "multiple-choice", difficulty: "hard", question: "Geoengineering governance research uses ML to analyze the risk of 'termination shock' if solar radiation management (SRM, e.g., stratospheric aerosol injection) is suddenly stopped. The termination shock risk is:", options: ["SRM causes permanent stratospheric damage", "Rapid rebound warming if SRM is abruptly halted after decades of use, since the underlying CO2 forcing persists - the temperature would rise rapidly to where it would have been without SRM", "SRM can only be operated for 5 years maximum", "Termination shock only affects polar regions"], correctAnswer: 1, explanation: "If SRM is deployed for decades and then suddenly stopped (due to geopolitical conflict, funding failure, or technical failure), temperatures would rebound rapidly (over years, not decades) to what they would have been without SRM - but the world would be unprepared for such rapid change. ML climate models quantify the probability and magnitude of termination shock under different scenarios.", hints: ["The bounce-back rate (degrees C/decade) upon termination could far exceed any historically experienced warming rate.", "This risk creates a 'ratchet effect' - once SRM is deployed, stopping it is itself a major climate risk."] },
   ],
   "climate-biodiversity": [
     { id: "q-clim-kp38-1", type: "multiple-choice", difficulty: "medium", question: "ML-powered species distribution modeling (SDM) projects how climate change will shift the geographic ranges of species. Which approach captures the nonlinear relationships between climate variables and species occurrence better than traditional MaxEnt models?", options: ["Linear discriminant analysis on species records", "Gradient boosting (BRT/GBM) or deep neural networks that capture nonlinear interactions between temperature, precipitation, soil, and topography predictors across millions of occurrence records", "Principal component analysis of climate variables only", "K-means clustering of species habitats"], correctAnswer: 1, explanation: "Traditional MaxEnt uses linear features; modern SDMs use gradient boosting trees or neural networks that capture nonlinear climate-species relationships. When combined with CMIP6 climate projections, these models project range shifts, contractions, and novel climate refugia under different emissions scenarios.", hints: ["Ensemble SDMs combining multiple algorithms (MaxEnt, BRT, RF) reduce model uncertainty in range projections.", "Bioclim variables (e.g., BIO1-BIO19) from WorldClim provide standard climate predictors for global SDMs."] },
     { id: "q-clim-kp38-2", type: "true-false", difficulty: "medium", question: "Bioacoustic monitoring using ML (training classifiers on audio recordings from forests and reefs) enables scalable, low-cost biodiversity assessment without requiring expert taxonomists in the field.", correctAnswer: "True", explanation: "Passive acoustic monitoring (PAM) with ML classifiers (CNNs on spectrograms, BirdNET, FrogID) identifies species from audio at scale. Coral reef soundscapes indicate reef health; tropical forest recorders detect deforestation. AudioMoth sensors and cloud ML enable continent-scale biodiversity monitoring at unprecedented scale and cost.", hints: ["BirdNET (Cornell Lab) classifies 3000+ bird species from audio spectrograms with high accuracy.", "Acoustic complexity indices (ACI, BIO) provide rapid biodiversity proxies without species-level classification."] },
-    { id: "q-clim-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The IUCN Red List assessment process is being accelerated by ML to predict extinction risk for data-deficient species. The key features used are:", options: ["Only taxonomic classification", "Life history traits (body size, generation length, reproductive rate), range size, habitat specificity, and remotely sensed habitat condition trends — combined in gradient boosting models trained on assessed species", "Social media mentions of species", "Genome sequence length only"], correctAnswer: 1, explanation: "ML extinction risk models trained on IUCN-assessed species use life history traits and range/habitat features to predict risk categories for data-deficient species (currently ~20% of assessed species). This enables rapid, consistent risk screening across millions of unassessed species — essential given accelerating biodiversity loss.", hints: ["Small range size and habitat specialization are among the strongest predictors of extinction risk.", "GARPy, PREDICTS, and similar ML frameworks enable continuous automated IUCN red list screening."] },
+    { id: "q-clim-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The IUCN Red List assessment process is being accelerated by ML to predict extinction risk for data-deficient species. The key features used are:", options: ["Only taxonomic classification", "Life history traits (body size, generation length, reproductive rate), range size, habitat specificity, and remotely sensed habitat condition trends - combined in gradient boosting models trained on assessed species", "Social media mentions of species", "Genome sequence length only"], correctAnswer: 1, explanation: "ML extinction risk models trained on IUCN-assessed species use life history traits and range/habitat features to predict risk categories for data-deficient species (currently ~20% of assessed species). This enables rapid, consistent risk screening across millions of unassessed species - essential given accelerating biodiversity loss.", hints: ["Small range size and habitat specialization are among the strongest predictors of extinction risk.", "GARPy, PREDICTS, and similar ML frameworks enable continuous automated IUCN red list screening."] },
   ],
   "climate-infrastructure": [
-    { id: "q-clim-kp39-1", type: "multiple-choice", difficulty: "medium", question: "Infrastructure climate risk assessment uses ML to estimate physical climate risks (damage probabilities from floods, hurricanes, wildfires) to assets like power grids, bridges, and buildings. The key methodological advance over deterministic engineering assessments is:", options: ["ML replaces all engineering calculations", "Probabilistic damage functions learned from historical damage records + Monte Carlo climate scenario sampling, providing distributions of expected damage across the full uncertainty range of climate projections", "ML only identifies which assets are at risk, not the magnitude", "Infrastructure risk assessment doesn't use remote sensing"], correctAnswer: 1, explanation: "Classical engineering uses deterministic design standards (e.g., 100-year flood). ML enables probabilistic vulnerability curves (damage ratio vs hazard intensity) trained on actual damage records, combined with climate model ensembles — producing expected damage distributions that inform risk-informed infrastructure investment and insurance pricing.", hints: ["Physical risk metrics: expected annual damage (EAD), value at risk (VaR) under 1.5°C vs 4°C scenarios.", "CLIMADA, RiskScape, and similar open platforms combine ML damage functions with climate hazard datasets."] },
+    { id: "q-clim-kp39-1", type: "multiple-choice", difficulty: "medium", question: "Infrastructure climate risk assessment uses ML to estimate physical climate risks (damage probabilities from floods, hurricanes, wildfires) to assets like power grids, bridges, and buildings. The key methodological advance over deterministic engineering assessments is:", options: ["ML replaces all engineering calculations", "Probabilistic damage functions learned from historical damage records + Monte Carlo climate scenario sampling, providing distributions of expected damage across the full uncertainty range of climate projections", "ML only identifies which assets are at risk, not the magnitude", "Infrastructure risk assessment doesn't use remote sensing"], correctAnswer: 1, explanation: "Classical engineering uses deterministic design standards (e.g., 100-year flood). ML enables probabilistic vulnerability curves (damage ratio vs hazard intensity) trained on actual damage records, combined with climate model ensembles - producing expected damage distributions that inform risk-informed infrastructure investment and insurance pricing.", hints: ["Physical risk metrics: expected annual damage (EAD), value at risk (VaR) under 1.5°C vs 4°C scenarios.", "CLIMADA, RiskScape, and similar open platforms combine ML damage functions with climate hazard datasets."] },
     { id: "q-clim-kp39-2", type: "true-false", difficulty: "easy", question: "Building energy retrofitting prioritization using ML can identify which buildings will benefit most from insulation, HVAC upgrades, or solar panel installation by analyzing energy consumption data, building characteristics, and climate projections.", correctAnswer: "True", explanation: "ML building energy models (EnergyScore, data-driven EPC models) trained on smart meter data, building age/type/material, and climate variables identify retrofit opportunities. Targeting high-consumption, low-efficiency buildings in climate-vulnerable zones maximizes both emissions reductions and climate resilience per investment dollar.", hints: ["Energy Performance Certificates (EPC) labels are predicted from building characteristics without full energy audits.", "Federated learning across utility companies enables large-scale building energy modeling without sharing individual customer data."] },
     { id: "q-clim-kp39-3", type: "multiple-choice", difficulty: "hard", question: "Sea level rise (SLR) projections for coastal infrastructure planning must integrate multiple contributing processes. ML is used to improve which component of SLR projections?", options: ["ML replaces all physical oceanographic modeling", "ML emulates ice sheet dynamics (WAIS/Greenland instability), improving probabilistic SLR projections that span a wide range from 0.3m to >2m by 2100 depending on ice sheet behavior assumptions", "ML only projects storm surge, not mean SLR", "SLR projection is fully solved by existing tide gauge records"], correctAnswer: 1, explanation: "Marine ice sheet instability (MISI) is the largest source of SLR uncertainty. ML emulators of ice sheet models (BISICLES, PISM) enable large ensemble explorations of ice dynamics parameters, improving tail-risk quantification. This is critical: a 2m vs 0.5m SLR by 2100 fundamentally changes coastal adaptation needs.", hints: ["Structured Expert Judgment (SEJ) and ML ice sheet emulators provide probabilistic SLR distributions including low-probability high-impact tails.", "Coastal planners use SLR percentiles (e.g., 17th-83rd) for 'likely' scenarios and 95th-99th for 'risk-averse' planning."] },
   ],
   "climate-transport": [
-    { id: "q-clim-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Route optimization for shipping and aviation using ML can reduce transport sector emissions (currently ~25% of global CO2). The key optimization for maritime shipping is:", options: ["Maximizing ship speed at all times", "Weather-routing optimization using ML models of ocean currents, wave height, and wind patterns to find minimum-fuel routes — reducing fuel consumption 5-15% without speed reductions", "Minimizing port waiting times only", "Optimizing crew scheduling only"], correctAnswer: 1, explanation: "ML weather routing combines ocean current forecasts, wave/wind data, and ship performance models (hull fouling, propeller efficiency) to find fuel-optimal routes. Combined with hull cleaning optimization and slow steaming, ML-based route optimization contributes significantly to IMO's target of 50% shipping emissions reduction by 2050.", hints: ["Ocean currents (Gulf Stream, Kuroshio) can add or reduce effective ship speed by 2-3 knots — significant for fuel consumption.", "Digital twin models of individual ships learn vessel-specific fuel consumption curves from AIS and engine telemetry data."] },
-    { id: "q-clim-kp40-2", type: "true-false", difficulty: "medium", question: "Contrail avoidance routing for aviation — rerouting flights to avoid ice-supersaturated regions where persistent contrails form — can reduce aviation's climate forcing by up to 60%, and ML is used to predict contrail formation probability from weather forecasts.", correctAnswer: "True", explanation: "Persistent contrails contribute ~35% of aviation's total climate impact (warming). ML models trained on satellite-detected persistent contrails and ERA5 meteorological reanalysis predict contrail formation probability from humidity, temperature, and aircraft type. Google Research showed contrail avoidance routing in Japan reduced contrail formation by 54% with only 0.3% fuel penalty.", hints: ["Schmidt-Appleman criterion predicts contrail formation from engine exhaust temperature and ambient conditions.", "Contrails only form in ice-supersaturated air masses (RHi > 100%) — ML identifies these volumes from NWP forecasts."] },
-    { id: "q-clim-kp40-3", type: "multiple-choice", difficulty: "hard", question: "Electric vehicle (EV) adoption modeling for climate policy uses ML to forecast EV market penetration. The Bass diffusion model augmented with ML predictors includes which climate-relevant factor?", options: ["Color preferences of car buyers only", "Charging infrastructure density, electricity grid carbon intensity, battery cost learning curves, policy incentives, and consumer range anxiety — together determining the social and economic conditions for mass EV adoption", "Only oil price forecasts", "Vehicle weight regulations only"], correctAnswer: 1, explanation: "ML-augmented adoption models capture the nonlinear interactions between: (1) charging infrastructure (availability determines range anxiety), (2) electricity price and carbon intensity (affects lifecycle emissions), (3) battery cost learning curves (S-curve of technology cost reduction), and (4) policy incentives. These produce scenario-based EV adoption forecasts used by the IEA, IRENA, and national energy agencies.", hints: ["Battery costs have followed Wright's Law: ~18% cost reduction per doubling of cumulative production — from $1200/kWh in 2010 to ~$100/kWh by 2025.", "Grid carbon intensity determines EV lifecycle emissions — EVs charged on coal-heavy grids may have higher lifecycle emissions than efficient ICE vehicles in some regions."] },
+    { id: "q-clim-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Route optimization for shipping and aviation using ML can reduce transport sector emissions (currently ~25% of global CO2). The key optimization for maritime shipping is:", options: ["Maximizing ship speed at all times", "Weather-routing optimization using ML models of ocean currents, wave height, and wind patterns to find minimum-fuel routes - reducing fuel consumption 5-15% without speed reductions", "Minimizing port waiting times only", "Optimizing crew scheduling only"], correctAnswer: 1, explanation: "ML weather routing combines ocean current forecasts, wave/wind data, and ship performance models (hull fouling, propeller efficiency) to find fuel-optimal routes. Combined with hull cleaning optimization and slow steaming, ML-based route optimization contributes significantly to IMO's target of 50% shipping emissions reduction by 2050.", hints: ["Ocean currents (Gulf Stream, Kuroshio) can add or reduce effective ship speed by 2-3 knots - significant for fuel consumption.", "Digital twin models of individual ships learn vessel-specific fuel consumption curves from AIS and engine telemetry data."] },
+    { id: "q-clim-kp40-2", type: "true-false", difficulty: "medium", question: "Contrail avoidance routing for aviation - rerouting flights to avoid ice-supersaturated regions where persistent contrails form - can reduce aviation's climate forcing by up to 60%, and ML is used to predict contrail formation probability from weather forecasts.", correctAnswer: "True", explanation: "Persistent contrails contribute ~35% of aviation's total climate impact (warming). ML models trained on satellite-detected persistent contrails and ERA5 meteorological reanalysis predict contrail formation probability from humidity, temperature, and aircraft type. Google Research showed contrail avoidance routing in Japan reduced contrail formation by 54% with only 0.3% fuel penalty.", hints: ["Schmidt-Appleman criterion predicts contrail formation from engine exhaust temperature and ambient conditions.", "Contrails only form in ice-supersaturated air masses (RHi > 100%) - ML identifies these volumes from NWP forecasts."] },
+    { id: "q-clim-kp40-3", type: "multiple-choice", difficulty: "hard", question: "Electric vehicle (EV) adoption modeling for climate policy uses ML to forecast EV market penetration. The Bass diffusion model augmented with ML predictors includes which climate-relevant factor?", options: ["Color preferences of car buyers only", "Charging infrastructure density, electricity grid carbon intensity, battery cost learning curves, policy incentives, and consumer range anxiety - together determining the social and economic conditions for mass EV adoption", "Only oil price forecasts", "Vehicle weight regulations only"], correctAnswer: 1, explanation: "ML-augmented adoption models capture the nonlinear interactions between: (1) charging infrastructure (availability determines range anxiety), (2) electricity price and carbon intensity (affects lifecycle emissions), (3) battery cost learning curves (S-curve of technology cost reduction), and (4) policy incentives. These produce scenario-based EV adoption forecasts used by the IEA, IRENA, and national energy agencies.", hints: ["Battery costs have followed Wright's Law: ~18% cost reduction per doubling of cumulative production - from $1200/kWh in 2010 to ~$100/kWh by 2025.", "Grid carbon intensity determines EV lifecycle emissions - EVs charged on coal-heavy grids may have higher lifecycle emissions than efficient ICE vehicles in some regions."] },
   ],
 };
 

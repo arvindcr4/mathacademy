@@ -18,14 +18,14 @@ const questions: Record<string, Question[]> = {
       explanation: "Horizontal scaling (scale-out) adds more machines and distributes traffic across them via load balancers. This provides near-linear capacity growth, fault tolerance (one machine failure doesn't take down the service), and avoids the hard ceiling on vertical scaling (you can only get so big a machine). Vertical scaling (scale-up) is simpler but hits hardware limits and creates a SPOF. Cost and latency comparisons depend heavily on workload specifics.",
       hints: [
         "Think about what happens when a single large machine fails versus when one of ten smaller machines fails.",
-        "Vertical scaling has a hard ceiling — you can only make a machine so large. Horizontal scaling has no such ceiling.",
+        "Vertical scaling has a hard ceiling - you can only make a machine so large. Horizontal scaling has no such ceiling.",
       ],
     },
     {
       id: "q-sdi-scale-2",
       type: "true-false",
       difficulty: "medium",
-      question: "A stateless service — one that stores no in-process session state — is a prerequisite for safe horizontal scaling.",
+      question: "A stateless service - one that stores no in-process session state - is a prerequisite for safe horizontal scaling.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation: "Horizontal scaling routes requests across many identical instances. If session state lives in-process on one instance, a user whose next request lands on a different instance will lose their session. Stateless services store all session data externally (e.g., Redis) so any instance can serve any request. This is why statelessness is a foundational prerequisite, not merely a nice-to-have, for horizontal scaling.",
@@ -46,10 +46,10 @@ const questions: Record<string, Question[]> = {
         "Both B and C are valid strategies for enabling stateless horizontal scaling.",
       ],
       correctAnswer: 3,
-      explanation: "Both Redis-backed server-side sessions and signed JWT client-side tokens eliminate in-process state. Redis provides a shared session store any server can access. JWTs embed state in a tamper-proof token the client presents on every request. Sticky sessions (option A) are a workaround that still stores state in-process — it does not truly enable stateless scaling and breaks when a node is removed from the pool.",
+      explanation: "Both Redis-backed server-side sessions and signed JWT client-side tokens eliminate in-process state. Redis provides a shared session store any server can access. JWTs embed state in a tamper-proof token the client presents on every request. Sticky sessions (option A) are a workaround that still stores state in-process - it does not truly enable stateless scaling and breaks when a node is removed from the pool.",
       hints: [
         "Sticky sessions route a user to the same server, but what happens during a deployment or when that server crashes?",
-        "A JWT carries its own payload — the server just validates the signature, no shared store needed.",
+        "A JWT carries its own payload - the server just validates the signature, no shared store needed.",
       ],
     },
     {
@@ -67,7 +67,7 @@ const questions: Record<string, Question[]> = {
       explanation: "CPU-based reactive scaling has an inherent lag equal to (detection delay + provisioning time). Lowering the threshold helps marginally but doesn't solve the 90-second provisioning gap. The correct approach combines: (1) predictive/scheduled scaling based on historical patterns to pre-provision before demand hits, and (2) faster-reacting signals like queue depth (already backlogged) or p99 latency (user-facing impact) as secondary triggers. Pre-warming all the time wastes cost. Vertical scaling still has provisioning delays and a capacity ceiling.",
       hints: [
         "If provisioning takes 90 seconds and the spike lasts 30 seconds, reactive scaling will always be too late for that spike.",
-        "Queue depth and p99 latency reflect actual workload pressure faster than CPU — they rise before CPU does during request bursts.",
+        "Queue depth and p99 latency reflect actual workload pressure faster than CPU - they rise before CPU does during request bursts.",
       ],
     },
   ],
@@ -104,7 +104,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "SQS visibility timeout hides a message from other consumers while one worker processes it. If the worker does not delete or extend the timeout before it expires, SQS assumes the worker failed and makes the message visible again. Another worker can then pick it up, resulting in double processing. The fix is to either set the visibility timeout conservatively longer than the maximum expected processing time, or programmatically extend it (ChangeMessageVisibility) as processing progresses.",
       hints: [
-        "SQS cannot know if a worker succeeded or crashed — it only knows if the message was deleted within the timeout window.",
+        "SQS cannot know if a worker succeeded or crashed - it only knows if the message was deleted within the timeout window.",
         "Visibility timeout is not a hard processing deadline; workers can call ChangeMessageVisibility to extend it.",
       ],
     },
@@ -115,10 +115,10 @@ const questions: Record<string, Question[]> = {
       question: "The optimal number of concurrent worker threads for a CPU-bound task is equal to the number of CPU cores, while for an I/O-bound task it can be significantly higher than the number of cores.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "CPU-bound tasks keep the CPU fully utilized during execution. Adding more threads than cores causes context-switching overhead with no throughput gain — the bottleneck is compute. I/O-bound tasks (DB queries, HTTP calls, disk reads) spend most time waiting; during waits the CPU is idle. More threads than cores allows overlapping waits, increasing throughput. A common heuristic for I/O-bound workers: thread count = cores × (1 + wait_time/compute_time). Thread pools like those in Node.js (async/await), Java (virtual threads), or Python (asyncio) exploit this.",
+      explanation: "CPU-bound tasks keep the CPU fully utilized during execution. Adding more threads than cores causes context-switching overhead with no throughput gain - the bottleneck is compute. I/O-bound tasks (DB queries, HTTP calls, disk reads) spend most time waiting; during waits the CPU is idle. More threads than cores allows overlapping waits, increasing throughput. A common heuristic for I/O-bound workers: thread count = cores \times (1 + wait_time/compute_time). Thread pools like those in Node.js (async/await), Java (virtual threads), or Python (asyncio) exploit this.",
       hints: [
         "For CPU-bound: N cores doing N computations simultaneously is optimal. N+1 threads means one waits, creating overhead.",
-        "For I/O-bound: while thread 1 waits for a DB response (milliseconds), threads 2–100 can all be computing or waiting in parallel.",
+        "For I/O-bound: while thread 1 waits for a DB response (milliseconds), threads 2-100 can all be computing or waiting in parallel.",
       ],
     },
     {
@@ -135,8 +135,8 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       explanation: "A Dead Letter Queue captures messages that exceed the maxReceiveCount threshold. This prevents poison pill messages from cycling endlessly through the main queue and blocking healthy message processing. Engineers can inspect DLQ messages to diagnose bugs, fix them, and replay the messages back to the main queue once resolved. Indefinite retries with exponential backoff waste worker resources and delay discovery of root causes. Deleting failed messages loses data permanently.",
       hints: [
-        "A 'poison pill' message is one that always fails processing — without a DLQ it loops forever, consuming worker capacity.",
-        "DLQs are for isolation, not for giving up — messages there can be replayed after the underlying bug is fixed.",
+        "A 'poison pill' message is one that always fails processing - without a DLQ it loops forever, consuming worker capacity.",
+        "DLQs are for isolation, not for giving up - messages there can be replayed after the underlying bug is fixed.",
       ],
     },
   ],
@@ -155,7 +155,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Most applications are read-heavy; the query path has very different performance requirements than the command path. CQRS splits these: commands go through a write-optimized model (normalized, transactional), while queries hit a read-optimized model (denormalized, cached, potentially read replicas or separate data stores). This lets you scale reads and writes independently, optimize schemas differently, and add query-side caching without affecting write consistency. The trade-off is eventual consistency between the two models.",
       hints: [
-        "If reads are 100× more frequent than writes, why should both share the same normalized relational schema?",
+        "If reads are 100\times more frequent than writes, why should both share the same normalized relational schema?",
         "CQRS often pairs with event sourcing: commands produce events, events update the read model projection.",
       ],
     },
@@ -168,7 +168,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Event sourcing stores the append-only log of state-changing events (e.g., OrderPlaced, ItemAdded, OrderShipped) as the source of truth. Current state is a projection computed by replaying events. This enables full audit history, temporal queries ('what was the state at time T?'), and easy event-driven integration. The downside is replay cost for entities with long histories, which snapshots mitigate.",
       hints: [
-        "Think of a bank account: instead of storing the current balance, store every debit and credit transaction — the balance is the sum.",
+        "Think of a bank account: instead of storing the current balance, store every debit and credit transaction - the balance is the sum.",
         "Event sourcing trades storage space for complete auditability and the ability to rebuild any past state.",
       ],
     },
@@ -186,7 +186,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Snapshots capture the materialized state of an aggregate at event N. On read, load the latest snapshot plus only the events from N+1 onward. This bounds replay cost to (events since last snapshot) rather than all-time events. Snapshots are typically taken periodically (every 100 events, or every hour) and stored alongside the event log. Deleting events would violate event sourcing's immutability and auditability guarantees.",
       hints: [
-        "Snapshots are checkpoints — like saving a game at chapter 10 so you don't replay chapters 1-9 every time.",
+        "Snapshots are checkpoints - like saving a game at chapter 10 so you don't replay chapters 1-9 every time.",
         "The snapshot doesn't replace events; both coexist so full history is still available if needed.",
       ],
     },
@@ -205,7 +205,7 @@ const questions: Record<string, Question[]> = {
       explanation: "A projection subscribes to the event stream and transforms events into a denormalized, query-optimized read model (e.g., a Redis hash, an Elasticsearch index, or a SQL read table). Projections can be rebuilt from scratch by replaying the full event log, making them disposable and evolvable. Multiple projections can serve different query shapes from the same event stream without modifying the write model.",
       hints: [
         "If events are the raw facts, a projection is the report or view you derive from those facts for a specific query purpose.",
-        "Because projections are derived, they can be dropped and rebuilt — the event log is the source of truth, not the projection.",
+        "Because projections are derived, they can be dropped and rebuilt - the event log is the source of truth, not the projection.",
       ],
     },
   ],
@@ -224,7 +224,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Read replicas asynchronously replicate data from the primary and serve read queries, multiplying read throughput proportionally to the number of replicas. Writes still go to the primary, maintaining a single source of truth. This is the standard first step for read-heavy workloads. Sharding is more complex and appropriate when write throughput or data volume exceeds what a single primary can handle. Adding indexes helps per-query performance but doesn't increase overall read throughput.",
       hints: [
-        "Read replicas are cheap to add and don't require application redesign — just route SELECT queries to replicas.",
+        "Read replicas are cheap to add and don't require application redesign - just route SELECT queries to replicas.",
         "Trade-off: replicas have replication lag, so reads may see slightly stale data (eventual consistency).",
       ],
     },
@@ -242,8 +242,8 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "PostgreSQL allocates significant memory per connection (~5-10MB). Setting max_connections to 10,000 would exhaust RAM. PgBouncer is a lightweight connection pooler that sits between the application and Postgres. Applications connect to PgBouncer (which supports thousands of connections cheaply), and PgBouncer multiplexes them over a small real connection pool (e.g., 100 connections). In transaction-mode pooling, a real connection is only held during an active transaction, dramatically increasing effective concurrency.",
       hints: [
-        "Each Postgres connection is a forked OS process — 10,000 connections means 10,000 processes and ~50-100GB RAM just for connections.",
-        "PgBouncer is invisible to the application — it speaks the Postgres wire protocol, so no code changes are needed.",
+        "Each Postgres connection is a forked OS process - 10,000 connections means 10,000 processes and ~50-100GB RAM just for connections.",
+        "PgBouncer is invisible to the application - it speaks the Postgres wire protocol, so no code changes are needed.",
       ],
     },
     {
@@ -258,10 +258,10 @@ const questions: Record<string, Question[]> = {
         "Rewrite the query to use a subquery instead of a WHERE clause.",
       ],
       correctAnswer: 1,
-      explanation: "A sequential scan reads every row in the table (O(n) I/O). A B-tree index on user_id allows the planner to find matching rows in O(log n) comparisons plus direct page reads. For selective predicates (low cardinality fraction), an index scan is dramatically faster — often 100-1000× on large tables. Adding RAM helps if the table fits in the buffer cache, but 10M rows may be gigabytes. Partitioning helps with time-range queries, not user_id lookups. Subqueries don't change the access path.",
+      explanation: "A sequential scan reads every row in the table (O(n) I/O). A B-tree index on user_id allows the planner to find matching rows in O(log n) comparisons plus direct page reads. For selective predicates (low cardinality fraction), an index scan is dramatically faster - often 100-1000\times on large tables. Adding RAM helps if the table fits in the buffer cache, but 10M rows may be gigabytes. Partitioning helps with time-range queries, not user_id lookups. Subqueries don't change the access path.",
       hints: [
         "EXPLAIN ANALYZE output showing 'Seq Scan' with 'rows=10000000' means the DB is reading every row, not just matching ones.",
-        "Index scans are effective when the predicate is selective — filtering to a small fraction of rows.",
+        "Index scans are effective when the predicate is selective - filtering to a small fraction of rows.",
       ],
     },
     {
@@ -271,10 +271,10 @@ const questions: Record<string, Question[]> = {
       question: "The N+1 query problem occurs when an application executes one query to fetch N parent records and then issues N additional queries to fetch related child records, causing N+1 total database round-trips instead of 1 or 2.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "The N+1 problem is a common ORM anti-pattern. For example: fetch 100 blog posts (1 query), then for each post fetch its author (100 queries) = 101 total queries. The fix is eager loading: use a JOIN or an IN (...) query to fetch all related records in a single additional query. ORMs like Hibernate, ActiveRecord, and Sequelize all support eager loading (includes/preload/joinedload) to solve this. At scale, N+1 can turn a fast endpoint into a slow one — 100ms + 100×5ms = 600ms.",
+      explanation: "The N+1 problem is a common ORM anti-pattern. For example: fetch 100 blog posts (1 query), then for each post fetch its author (100 queries) = 101 total queries. The fix is eager loading: use a JOIN or an IN (...) query to fetch all related records in a single additional query. ORMs like Hibernate, ActiveRecord, and Sequelize all support eager loading (includes/preload/joinedload) to solve this. At scale, N+1 can turn a fast endpoint into a slow one - 100ms + 100\times5ms = 600ms.",
       hints: [
         "If you see a loop in code that calls a database method inside each iteration, that's the N+1 pattern.",
-        "Use EXPLAIN or query logging to count queries per request — more than 5-10 for a single API call is often a red flag.",
+        "Use EXPLAIN or query logging to count queries per request - more than 5-10 for a single API call is often a red flag.",
       ],
     },
   ],
@@ -283,7 +283,7 @@ const questions: Record<string, Question[]> = {
       id: "q-sdi-scale-17",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "Arranging caches in a hierarchy (L1: in-process → L2: Redis → L3: CDN → database), what is the primary benefit of checking L1 before L2?",
+      question: "Arranging caches in a hierarchy (L1: in-process -> L2: Redis -> L3: CDN -> database), what is the primary benefit of checking L1 before L2?",
       options: [
         "L1 caches are always more accurate than L2 caches.",
         "L1 in-process cache avoids network round-trips entirely, providing sub-microsecond latency versus Redis which requires a network call (~0.5ms).",
@@ -291,9 +291,9 @@ const questions: Record<string, Question[]> = {
         "L2 Redis caches cannot handle the same data types as L1 caches.",
       ],
       correctAnswer: 1,
-      explanation: "L1 in-process caches (e.g., a LRU HashMap inside the application) are accessed in nanoseconds — no serialization, no network, no I/O. Redis L2 requires a TCP round-trip (~0.1-1ms). For high-frequency reads of small, stable data (config, feature flags, user roles), L1 is orders of magnitude faster. The trade-off is that L1 caches are per-instance (inconsistency across instances) and limited by heap memory, while Redis is shared and larger.",
+      explanation: "L1 in-process caches (e.g., a LRU HashMap inside the application) are accessed in nanoseconds - no serialization, no network, no I/O. Redis L2 requires a TCP round-trip (~0.1-1ms). For high-frequency reads of small, stable data (config, feature flags, user roles), L1 is orders of magnitude faster. The trade-off is that L1 caches are per-instance (inconsistency across instances) and limited by heap memory, while Redis is shared and larger.",
       hints: [
-        "Memory access: ~100ns. Redis network round-trip: ~500μs. The L1 cache is ~5000× faster for a cache hit.",
+        "Memory access: ~100ns. Redis network round-trip: ~500μs. The L1 cache is ~5000\times faster for a cache hit.",
         "L1 works best for rarely-changing data; for user-specific or frequently-updated data, the staleness risk increases.",
       ],
     },
@@ -327,9 +327,9 @@ const questions: Record<string, Question[]> = {
         "Connection pool exhaustion: too many DB connections. Mitigations: PgBouncer and connection limits.",
       ],
       correctAnswer: 0,
-      explanation: "The thundering herd / cache stampede occurs when many requests simultaneously hit an empty cache (after expiry or invalidation) and all concurrently execute the expensive DB query. Mitigations: (1) Mutex lock — only one thread computes the value; others wait and then read from cache. (2) Probabilistic early expiration (XFetch algorithm) — some requests voluntarily re-compute the cache slightly before TTL expires, spreading the refresh load. Additional strategies include cache warming before invalidation, staggered TTLs, and background refresh.",
+      explanation: "The thundering herd / cache stampede occurs when many requests simultaneously hit an empty cache (after expiry or invalidation) and all concurrently execute the expensive DB query. Mitigations: (1) Mutex lock - only one thread computes the value; others wait and then read from cache. (2) Probabilistic early expiration (XFetch algorithm) - some requests voluntarily re-compute the cache slightly before TTL expires, spreading the refresh load. Additional strategies include cache warming before invalidation, staggered TTLs, and background refresh.",
       hints: [
-        "Imagine 10,000 requests all finding an empty cache at the same moment — each independently queries the database.",
+        "Imagine 10,000 requests all finding an empty cache at the same moment - each independently queries the database.",
         "A mutex ensures only one 'lucky' request rebuilds the cache entry; the other 9,999 wait for it and read from cache.",
       ],
     },
@@ -339,16 +339,16 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Which cache invalidation strategy is best suited for a product catalog that changes infrequently but must be fresh within 5 minutes of an update?",
       options: [
-        "No TTL — cache entries live forever and are manually invalidated by the operations team.",
-        "TTL-based expiration set to 5 minutes — entries automatically expire and are lazily reloaded from the database.",
+        "No TTL - cache entries live forever and are manually invalidated by the operations team.",
+        "TTL-based expiration set to 5 minutes - entries automatically expire and are lazily reloaded from the database.",
         "Event-driven invalidation: publish an event when a product changes, cache subscriber invalidates the specific key immediately.",
         "Polling: a background job checks the database every 5 seconds and updates all cache entries.",
       ],
       correctAnswer: 2,
       explanation: "Event-driven invalidation is the most accurate strategy: when a product changes, an event (via a message bus or CDN purge API) invalidates only the affected cache key immediately. This means cache is fresh within seconds, not up to 5 minutes as with TTL. TTL works but has up to 5-minute staleness even for data that changed 1 second after the cache was set. Polling every 5 seconds is expensive and imprecise. No-TTL requires operational intervention and risks perpetually stale data.",
       hints: [
-        "TTL is a blunt instrument — the cache may be stale for almost the full TTL duration right after an update.",
-        "Event-driven invalidation is surgical — it only invalidates what changed, immediately.",
+        "TTL is a blunt instrument - the cache may be stale for almost the full TTL duration right after an update.",
+        "Event-driven invalidation is surgical - it only invalidates what changed, immediately.",
       ],
     },
   ],
@@ -399,7 +399,7 @@ const questions: Record<string, Question[]> = {
       explanation: "Idempotency is a critical property for jobs in distributed systems because networks fail, workers crash, and at-least-once delivery means jobs can be executed more than once. An idempotent job handles this gracefully: sending the same email twice is not idempotent (user receives duplicates), but charging a payment with a unique idempotency key is idempotent (second charge attempt returns the first result without re-charging). Design jobs to be idempotent by using idempotency keys, checking-then-acting patterns, and database upserts.",
       hints: [
         "The mathematical analog: f(f(x)) = f(x). Applying the function twice gives the same result as applying it once.",
-        "Idempotency keys are unique tokens per operation stored in the DB — if seen before, return the cached result instead of re-executing.",
+        "Idempotency keys are unique tokens per operation stored in the DB - if seen before, return the cached result instead of re-executing.",
       ],
     },
     {
@@ -455,7 +455,7 @@ const questions: Record<string, Question[]> = {
       explanation: "Kappa Architecture, proposed by Jay Kreps, simplifies Lambda by using only a streaming system. The key insight is that Kafka (or similar) can retain events indefinitely and allow replay from any offset. When you need to reprocess (e.g., to fix a bug or add a new feature), spin up a new consumer group reading from offset 0, process all historical events through the updated streaming code, and swap the output. This eliminates the two-codebase problem of Lambda while maintaining the ability to recompute from scratch.",
       hints: [
         "Lambda's main drawback is two codebases (batch + streaming) that must produce identical results. Kappa eliminates the batch layer.",
-        "The trick is treating the Kafka log as an infinitely replayable source of truth — like an event-sourced log for your data pipeline.",
+        "The trick is treating the Kafka log as an infinitely replayable source of truth - like an event-sourced log for your data pipeline.",
       ],
     },
     {
@@ -488,7 +488,7 @@ const questions: Record<string, Question[]> = {
         "Using a separate deduplication service that tracks all message IDs and filters duplicates before processing.",
       ],
       correctAnswer: 1,
-      explanation: "Exactly-once in Kafka requires three components working together: (1) Idempotent producers: Kafka assigns sequence numbers to detect and deduplicate retried writes at the broker level. (2) Kafka transactions: allow atomically writing output records and committing consumer offsets in a single transaction — if either fails, both roll back, preventing partial state. (3) Idempotent/transactional consumers: read committed offsets only. Together, these ensure each input event produces its output exactly once even under failures. High replication alone provides durability, not exactly-once semantics.",
+      explanation: "Exactly-once in Kafka requires three components working together: (1) Idempotent producers: Kafka assigns sequence numbers to detect and deduplicate retried writes at the broker level. (2) Kafka transactions: allow atomically writing output records and committing consumer offsets in a single transaction - if either fails, both roll back, preventing partial state. (3) Idempotent/transactional consumers: read committed offsets only. Together, these ensure each input event produces its output exactly once even under failures. High replication alone provides durability, not exactly-once semantics.",
       hints: [
         "At-least-once + idempotent consumers = effectively exactly-once. But Kafka transactions provide atomicity between the output write and offset commit.",
         "The problem without transactions: write output, crash before committing offset, replay event, write output again = duplicate output.",
@@ -508,7 +508,7 @@ const questions: Record<string, Question[]> = {
         "SLA is set first by the business, SLO is derived from the SLA, and SLI measures whether SLO is met.",
       ],
       correctAnswer: 1,
-      explanation: "SLI: the raw measurement (e.g., 'fraction of HTTP requests returning 2xx within 200ms'). SLO: the target for that SLI (e.g., 'SLI >= 99.9% over a 30-day window'). SLA: the legal contract with customers that specifies consequences (credits, refunds) if SLOs are not met. SLOs are typically set more conservatively than SLAs to maintain an error budget — if you breach your internal SLO, you have time to fix before breaching the customer-facing SLA.",
+      explanation: "SLI: the raw measurement (e.g., 'fraction of HTTP requests returning 2xx within 200ms'). SLO: the target for that SLI (e.g., 'SLI >= 99.9% over a 30-day window'). SLA: the legal contract with customers that specifies consequences (credits, refunds) if SLOs are not met. SLOs are typically set more conservatively than SLAs to maintain an error budget - if you breach your internal SLO, you have time to fix before breaching the customer-facing SLA.",
       hints: [
         "SLI = what you measure. SLO = what you promise internally. SLA = what you promise legally (with teeth).",
         "Google's SRE book describes keeping SLOs tighter than SLAs so that an SLO breach is a warning, not yet a contractual failure.",
@@ -523,10 +523,10 @@ const questions: Record<string, Question[]> = {
         "Utilization: CPU usage; Saturation: memory swap usage; Errors: application 5xx errors.",
         "Utilization: how busy the resource is as a percentage of capacity; Saturation: how much work is queued waiting for the resource; Errors: the rate of resource-level errors such as disk I/O errors or TCP retransmits.",
         "Utilization: request rate; Saturation: cache hit ratio; Errors: number of failed deployments.",
-        "USE is the same as the RED method — Rate, Errors, Duration — just applied to infrastructure.",
+        "USE is the same as the RED method - Rate, Errors, Duration - just applied to infrastructure.",
       ],
       correctAnswer: 1,
-      explanation: "The USE method, by Brendan Gregg, is for diagnosing infrastructure resource bottlenecks. For a database server: Utilization = CPU%, disk I/O%, network bandwidth% used. Saturation = run queue length (CPU), I/O wait queue depth, memory paging rate — work waiting because the resource is fully utilized. Errors = hardware errors, disk errors, network packet drops. The RED method (Rate, Errors, Duration) is complementary but applies to services/microservices, not hardware resources.",
+      explanation: "The USE method, by Brendan Gregg, is for diagnosing infrastructure resource bottlenecks. For a database server: Utilization = CPU%, disk I/O%, network bandwidth% used. Saturation = run queue length (CPU), I/O wait queue depth, memory paging rate - work waiting because the resource is fully utilized. Errors = hardware errors, disk errors, network packet drops. The RED method (Rate, Errors, Duration) is complementary but applies to services/microservices, not hardware resources.",
       hints: [
         "USE starts with the hardware layer: CPUs, disks, memory, network interfaces. RED starts with the service layer: request throughput and latency.",
         "High Utilization + high Saturation = the resource is a bottleneck. High Utilization alone may be acceptable if no queue is forming.",
@@ -538,16 +538,16 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "You are monitoring a microservice using the RED method. Rate is high, Errors are low, but Duration (p99 latency) is slowly increasing day over day. What does this indicate and what should you investigate first?",
       options: [
-        "The service is healthy — high rate with low errors means everything is working.",
+        "The service is healthy - high rate with low errors means everything is working.",
         "A gradual resource leak or accumulating technical debt: investigate memory growth, database query plan degradation, growing queue depths, or slow index bloat.",
         "The load balancer is misconfigured and routing unequal traffic to instances.",
         "p99 latency increasing means the SLA is already breached and the incident should be declared immediately.",
       ],
       correctAnswer: 1,
-      explanation: "Gradual p99 latency increase with stable rate and low error rate is a classic signal of a slow resource leak or accumulation: memory leak causing GC pressure, database table bloat slowing queries, growing job queue depth, index fragmentation, or connection pool near exhaustion. This is often a canary for a future outage — the system works but is degrading. Investigate: memory trends (heap, GC pause times), DB query plans (EXPLAIN), queue depths, and connection pool metrics. Proactive fixes prevent the eventual incident.",
+      explanation: "Gradual p99 latency increase with stable rate and low error rate is a classic signal of a slow resource leak or accumulation: memory leak causing GC pressure, database table bloat slowing queries, growing job queue depth, index fragmentation, or connection pool near exhaustion. This is often a canary for a future outage - the system works but is degrading. Investigate: memory trends (heap, GC pause times), DB query plans (EXPLAIN), queue depths, and connection pool metrics. Proactive fixes prevent the eventual incident.",
       hints: [
-        "If p99 grows while p50 stays flat, the tail is getting worse — often a sign of resource contention or background work interfering.",
-        "Set SLO alerts on p99 trends, not just static thresholds — a monotonically increasing p99 is an anomaly even if it hasn't crossed the threshold yet.",
+        "If p99 grows while p50 stays flat, the tail is getting worse - often a sign of resource contention or background work interfering.",
+        "Set SLO alerts on p99 trends, not just static thresholds - a monotonically increasing p99 is an anomaly even if it hasn't crossed the threshold yet.",
       ],
     },
   ],
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       id: "q-sdi-scale-32",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "A service has 1 million users, each making 10 requests per day on average. What is the average requests per second (RPS), and what peak RPS should you plan for assuming an 8-hour peak window with 3× peak-to-average ratio?",
+      question: "A service has 1 million users, each making 10 requests per day on average. What is the average requests per second (RPS), and what peak RPS should you plan for assuming an 8-hour peak window with 3\times peak-to-average ratio?",
       options: [
         "Average: 116 RPS; Peak: ~348 RPS (plan for ~400 RPS with headroom).",
         "Average: 10 RPS; Peak: 30 RPS.",
@@ -564,10 +564,10 @@ const questions: Record<string, Question[]> = {
         "Average: 11.6 RPS; Peak: 34.8 RPS.",
       ],
       correctAnswer: 0,
-      explanation: "1M users × 10 requests/day = 10M requests/day. 10M / 86,400 seconds = ~115.7 RPS average. During an 8-hour peak window, traffic concentrates: if peak is 3× average, peak RPS ≈ 347 RPS. Plan infrastructure for ~400-500 RPS to allow headroom. This back-of-envelope approach is a standard interview technique: convert daily requests to per-second, then apply a peak multiplier based on traffic distribution assumptions.",
+      explanation: "1M users \times 10 requests/day = 10M requests/day. 10M / 86,400 seconds = ~115.7 RPS average. During an 8-hour peak window, traffic concentrates: if peak is 3\times average, peak RPS \approx 347 RPS. Plan infrastructure for ~400-500 RPS to allow headroom. This back-of-envelope approach is a standard interview technique: convert daily requests to per-second, then apply a peak multiplier based on traffic distribution assumptions.",
       hints: [
-        "Seconds in a day: 60 × 60 × 24 = 86,400. Memorize this for estimation interviews.",
-        "Peak multiplier depends on usage patterns — consumer apps often see 5-10× daily peak vs trough; enterprise apps may be flatter.",
+        "Seconds in a day: 60 \times 60 \times 24 = 86,400. Memorize this for estimation interviews.",
+        "Peak multiplier depends on usage patterns - consumer apps often see 5-10\times daily peak vs trough; enterprise apps may be flatter.",
       ],
     },
     {
@@ -582,10 +582,10 @@ const questions: Record<string, Question[]> = {
         "20 TB",
       ],
       correctAnswer: 0,
-      explanation: "10M users × 2KB/user = 20M KB = 20,000 MB = 20 GB. This is surprisingly small — a single commodity server has 1-8TB of SSD storage, so 20GB fits easily. Back-of-envelope estimation helps you reason about whether you need distributed storage or if a single node suffices. Add replication factor (3×) and indexes: 20GB × 3 ≈ 60GB plus overhead. Still very manageable on a single machine. The numbers change dramatically if each profile includes a photo (1MB average → 10TB).",
+      explanation: "10M users \times 2KB/user = 20M KB = 20,000 MB = 20 GB. This is surprisingly small - a single commodity server has 1-8TB of SSD storage, so 20GB fits easily. Back-of-envelope estimation helps you reason about whether you need distributed storage or if a single node suffices. Add replication factor (3\times) and indexes: 20GB \times 3 \approx 60GB plus overhead. Still very manageable on a single machine. The numbers change dramatically if each profile includes a photo (1MB average -> 10TB).",
       hints: [
         "1KB = 1,000 bytes. 1MB = 1,000KB. 1GB = 1,000MB. 1TB = 1,000GB. Build a mental ladder for quick estimation.",
-        "Always state your assumptions: what is a 'profile'? Text only or including profile photos? The answer changes by 500×.",
+        "Always state your assumptions: what is a 'profile'? Text only or including profile photos? The answer changes by 500\times.",
       ],
     },
     {
@@ -594,15 +594,15 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "A product has 50 million monthly active users (MAU). Which is the most accurate estimate of daily active users (DAU) for capacity planning, and what does the DAU/MAU ratio signify?",
       options: [
-        "DAU = MAU / 30 ≈ 1.67M; assumes users are perfectly evenly distributed across days with no engagement patterns.",
-        "DAU = MAU × DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU ≈ 10M.",
+        "DAU = MAU / 30 \approx 1.67M; assumes users are perfectly evenly distributed across days with no engagement patterns.",
+        "DAU = MAU \times DAU/MAU ratio, where the ratio reflects engagement (e.g., 0.5 for highly engaging apps like Facebook, 0.1 for low-engagement apps); for a 0.2 ratio, DAU \approx 10M.",
         "DAU = MAU because all monthly active users are also daily active users.",
         "DAU cannot be estimated from MAU without real traffic data.",
       ],
       correctAnswer: 1,
       explanation: "The DAU/MAU ratio (also called the 'stickiness ratio') measures how often monthly users return daily. Highly engaging social apps (Facebook, TikTok) achieve 0.5-0.65 (50-65% of MAU are active on any given day). Moderate apps: 0.2-0.3. Low-engagement apps: 0.05-0.1. MAU/30 assumes uniform distribution and a ratio of ~0.033, drastically underestimating daily load for sticky apps. For capacity planning, use the DAU/MAU ratio based on app category benchmarks or actual measurement.",
       hints: [
-        "If MAU = 50M and DAU/MAU = 0.5 (Facebook-like), then DAU = 25M. MAU/30 gives 1.67M — 15× underestimate.",
+        "If MAU = 50M and DAU/MAU = 0.5 (Facebook-like), then DAU = 25M. MAU/30 gives 1.67M - 15\times underestimate.",
         "DAU/MAU is also a key investor metric: above 0.5 is considered excellent engagement for a consumer app.",
       ],
     },

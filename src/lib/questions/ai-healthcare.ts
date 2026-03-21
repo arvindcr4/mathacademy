@@ -19,7 +19,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CheXNet is a deep learning model developed by Stanford that detects pneumonia from chest X-rays, achieving radiologist-level performance on the ChestX-ray14 dataset.",
       hints: [
-        "Think about which dataset CheXNet was benchmarked on — it contains 14 chest pathology labels.",
+        "Think about which dataset CheXNet was benchmarked on - it contains 14 chest pathology labels.",
         "CheXNet gained fame for matching radiologists on a very common respiratory illness diagnosis.",
       ],
     },
@@ -34,7 +34,7 @@ const questions: Record<string, Question[]> = {
         "EyePACS is a large-scale fundus image dataset used in the Kaggle Diabetic Retinopathy Detection challenge, containing graded retinal photographs for training automated screening models.",
       hints: [
         "EyePACS operates a diabetic retinopathy screening program in community health settings.",
-        "The dataset contains fundus photographs — images of the back of the eye.",
+        "The dataset contains fundus photographs - images of the back of the eye.",
       ],
     },
     {
@@ -51,7 +51,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Grad-CAM produces heatmaps by computing gradients of the class score with respect to feature maps, highlighting which image regions drove the classification — critical for clinical trust and validation.",
+        "Grad-CAM produces heatmaps by computing gradients of the class score with respect to feature maps, highlighting which image regions drove the classification - critical for clinical trust and validation.",
       hints: [
         "This technique produces a heatmap overlaid on the original image.",
         "It uses gradient information flowing into the final convolutional layer.",
@@ -83,7 +83,7 @@ const questions: Record<string, Question[]> = {
         "MRI images inherently provide ionizing radiation exposure to patients, similar to CT scans.",
       correctAnswer: "False",
       explanation:
-        "MRI uses magnetic fields and radio waves — no ionizing radiation. CT scans use X-rays (ionizing radiation), which is why radiation dose management is a concern for CT but not MRI.",
+        "MRI uses magnetic fields and radio waves - no ionizing radiation. CT scans use X-rays (ionizing radiation), which is why radiation dose management is a concern for CT but not MRI.",
       hints: [
         "Consider the physical principle behind MRI: it uses a strong magnetic field and radio frequency pulses.",
         "Ionizing radiation refers to X-rays and gamma rays, not magnetic fields.",
@@ -103,7 +103,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DSC = 2|A\\capB| / (|A|+|B|), measuring spatial overlap between predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap — it is the standard segmentation evaluation metric.",
+        "DSC = 2|A\\capB| / (|A|+|B|), measuring spatial overlap between predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap - it is the standard segmentation evaluation metric.",
       hints: [
         "DSC involves a ratio that compares the intersection of two sets to their combined size.",
         "It is sometimes called the F1 score for segmentation tasks.",
@@ -128,7 +128,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "WSIs can be 100,000\\times100,000 pixels or more; loading them into GPU memory is impossible. The standard approach is Multiple Instance Learning (MIL) on extracted patches.",
       hints: [
-        "Think about how many pixels a 40\\times magnification slide contains — it is measured in gigapixels.",
+        "Think about how many pixels a 40\\times magnification slide contains - it is measured in gigapixels.",
         "The solution involves dividing the image into smaller pieces called patches or tiles.",
       ],
     },
@@ -160,10 +160,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'In MIL, a slide is treated as a "bag" of patch "instances." Only the bag (slide) label — e.g., cancer/no cancer — is needed; the model learns which patches are informative without costly patch-level annotation.',
+        'In MIL, a slide is treated as a "bag" of patch "instances." Only the bag (slide) label - e.g., cancer/no cancer - is needed; the model learns which patches are informative without costly patch-level annotation.',
       hints: [
         "Pathologists typically label an entire slide as positive or negative, not each individual patch.",
-        'Think about what "weakly supervised" learning means — you have labels at a coarser level than the data.',
+        'Think about what "weakly supervised" learning means - you have labels at a coarser level than the data.',
       ],
     },
   ],
@@ -197,9 +197,9 @@ const questions: Record<string, Question[]> = {
         'Named Entity Recognition (NER) models for clinical de-identification must handle the challenge that the same string (e.g., "Jackson") could be either a patient name (PHI) or a clinical term (e.g., Jackson\'s sign), requiring contextual disambiguation.',
       correctAnswer: "True",
       explanation:
-        "Clinical NER de-identification is harder than general NER because medical text contains eponyms (Jackson\'s sign, Addison\'s disease) and abbreviations that overlap with person names, locations, and other PHI — context-sensitive models like BioBERT-based NER substantially outperform rule-based systems on this disambiguation.",
+        "Clinical NER de-identification is harder than general NER because medical text contains eponyms (Jackson\'s sign, Addison\'s disease) and abbreviations that overlap with person names, locations, and other PHI - context-sensitive models like BioBERT-based NER substantially outperform rule-based systems on this disambiguation.",
       hints: [
-        "Many medical conditions and signs are named after people — these eponyms look identical to person-name PHI.",
+        "Many medical conditions and signs are named after people - these eponyms look identical to person-name PHI.",
         "Contextual models (transformers) capture surrounding words to resolve whether a name-like token is PHI or medical terminology.",
       ],
     },
@@ -217,10 +217,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The i2b2 de-identification challenge evaluates systems using token- or entity-level precision, recall, and F1 over PHI spans (names, dates, locations, IDs, etc.). High recall is especially critical — missing a PHI span (false negative) is a privacy violation worse than over-redacting.",
+        "The i2b2 de-identification challenge evaluates systems using token- or entity-level precision, recall, and F1 over PHI spans (names, dates, locations, IDs, etc.). High recall is especially critical - missing a PHI span (false negative) is a privacy violation worse than over-redacting.",
       hints: [
         "The task is a span-labelling NER problem; standard NER metrics (P/R/F1 over entity spans) apply.",
-        "In privacy-sensitive de-identification, recall of PHI matters more than precision — what does a false negative mean here?",
+        "In privacy-sensitive de-identification, recall of PHI matters more than precision - what does a false negative mean here?",
       ],
     },
   ],
@@ -242,8 +242,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Patient visits occur at irregular intervals and many measurements are missing (not collected if not clinically indicated), requiring models that handle variable-length sequences and missingness explicitly.",
       hints: [
-        "Think about how often a patient visits a doctor — it is not on a fixed daily or weekly schedule.",
-        "When a lab test is not ordered, there is no value recorded — that information is absent, not zero.",
+        "Think about how often a patient visits a doctor - it is not on a fixed daily or weekly schedule.",
+        "When a lab test is not ordered, there is no value recorded - that information is absent, not zero.",
       ],
     },
     {
@@ -268,16 +268,16 @@ const questions: Record<string, Question[]> = {
         "The RETAIN model for EHR was notable because it used attention mechanisms to achieve which property important for clinical deployment?",
       options: [
         "Higher throughput than LSTM baselines",
-        "Interpretability — clinicians could see which visits and medical codes influenced the prediction",
+        "Interpretability - clinicians could see which visits and medical codes influenced the prediction",
         "Elimination of the need for any labeled training data",
         "Perfect handling of missing data through imputation",
       ],
       correctAnswer: 1,
       explanation:
-        "RETAIN (REverse Time AttentIoN) uses two attention mechanisms — one over visits and one over medical codes — producing interpretable weights that show which clinical events most influenced the prediction.",
+        "RETAIN (REverse Time AttentIoN) uses two attention mechanisms - one over visits and one over medical codes - producing interpretable weights that show which clinical events most influenced the prediction.",
       hints: [
         "RETAIN was designed with clinician trust in mind, not just accuracy.",
-        'Its name contains the word "Attention" — think about what attention weights tell you.',
+        'Its name contains the word "Attention" - think about what attention weights tell you.',
       ],
     },
   ],
@@ -296,7 +296,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "ADMET properties determine how a drug moves through and is processed by the body (pharmacokinetics) and whether it is toxic — these are critical filters in early drug discovery to reduce late-stage failures.",
+        "ADMET properties determine how a drug moves through and is processed by the body (pharmacokinetics) and whether it is toxic - these are critical filters in early drug discovery to reduce late-stage failures.",
       hints: [
         "These five terms describe the journey of a compound from ingestion through the body to elimination.",
         "The last letter stands for a property that can cause a drug candidate to fail safety trials.",
@@ -312,7 +312,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Molecular graphs naturally encode chemical structure; GNNs like MPNN, Chemprop, and AttentiveFP learn from these graphs by passing messages between atoms, capturing local chemical environments effectively.",
       hints: [
-        "Think about what a molecule looks like drawn on paper — circles (atoms) connected by lines (bonds).",
+        "Think about what a molecule looks like drawn on paper - circles (atoms) connected by lines (bonds).",
         "GNNs operate on graph-structured data, passing information along edges between nodes.",
       ],
     },
@@ -347,15 +347,15 @@ const questions: Record<string, Question[]> = {
         "In AlphaFold2's output, the pLDDT score (predicted Local Distance Difference Test) ranges from 0 to 100. What does a pLDDT score above 90 indicate?",
       options: [
         "The predicted structure is thermodynamically unstable",
-        "Very high per-residue structural confidence — the prediction is expected to be accurate to within ~1.5 Å",
+        "Very high per-residue structural confidence - the prediction is expected to be accurate to within ~1.5 Å",
         "The region is a disordered loop that AlphaFold2 cannot model",
         "The sequence alignment contains more than 90% identical homologs",
       ],
       correctAnswer: 1,
       explanation:
-        "pLDDT is AlphaFold2's per-residue confidence metric. Scores >90 indicate very high confidence (backbone RMSD typically <1.5 Å from true structure). Scores 70–90 indicate good confidence; 50–70 indicate low confidence (often loops/linkers); <50 indicates disordered or unreliable regions. AlphaFold2 colors its 3D models by pLDDT to guide interpretation.",
+        "pLDDT is AlphaFold2's per-residue confidence metric. Scores >90 indicate very high confidence (backbone RMSD typically <1.5 Å from true structure). Scores 70-90 indicate good confidence; 50-70 indicate low confidence (often loops/linkers); <50 indicates disordered or unreliable regions. AlphaFold2 colors its 3D models by pLDDT to guide interpretation.",
       hints: [
-        "pLDDT is a self-assessed confidence score, not an external validation metric — higher means the model is confident in that residue\'s position.",
+        "pLDDT is a self-assessed confidence score, not an external validation metric - higher means the model is confident in that residue\'s position.",
         "Disordered regions of proteins that lack a fixed 3D structure tend to receive low pLDDT scores, which is actually informative.",
       ],
     },
@@ -367,10 +367,10 @@ const questions: Record<string, Question[]> = {
         "AlphaFold2's Evoformer module processes a Multiple Sequence Alignment (MSA) of homologous sequences as a key input, exploiting co-evolutionary signals to infer residue-residue contacts.",
       correctAnswer: "True",
       explanation:
-        "The Evoformer takes an MSA representation (rows = homologous sequences, columns = residue positions) and jointly updates it with a pairwise residue-residue representation. Correlated mutations between residue pairs across evolution — co-evolutionary signals — provide strong geometric constraints that guide 3D structure prediction.",
+        "The Evoformer takes an MSA representation (rows = homologous sequences, columns = residue positions) and jointly updates it with a pairwise residue-residue representation. Correlated mutations between residue pairs across evolution - co-evolutionary signals - provide strong geometric constraints that guide 3D structure prediction.",
       hints: [
         "If two residues that are spatially close in 3D mutate together across evolution, this co-variation is a strong signal for proximity.",
-        "The MSA representation has shape (N_seq \\times N_res); the pair representation has shape (N_res \\times N_res) — Evoformer updates both jointly.",
+        "The MSA representation has shape (N_seq \\times N_res); the pair representation has shape (N_res \\times N_res) - Evoformer updates both jointly.",
       ],
     },
     {
@@ -381,7 +381,7 @@ const questions: Record<string, Question[]> = {
         "AlphaFold2 achieved a median GDT_TS score of approximately 92 on CASP14 free-modelling targets. What does GDT_TS measure?",
       options: [
         "The percentage of residues within 2 Å of the true structure, averaged over all residue pairs",
-        "The global distance test score — the average percentage of C\\alpha atoms within 1, 2, 4, and 8 Å cutoffs of the reference structure",
+        "The global distance test score - the average percentage of C\\alpha atoms within 1, 2, 4, and 8 Å cutoffs of the reference structure",
         "The TM-score, which measures template-free structural similarity independent of protein length",
         "The RMSD of all heavy atoms between predicted and experimental structures",
       ],
@@ -389,8 +389,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GDT_TS (Global Distance Test Total Score) averages the percentage of C\\alpha atoms within 1, 2, 4, and 8 Å of the reference structure: GDT_TS = (P1 + P2 + P4 + P8) / 4. A score of 92 means AlphaFold2 predictions were competitive with experimental accuracy for the majority of CASP14 targets, a historic milestone in structural biology.",
       hints: [
-        "GDT_TS uses four distance cutoffs (1, 2, 4, 8 Å) and averages the fraction of C\\alpha atoms within each — near 100 is perfect.",
-        "Prior state-of-the-art methods scored in the 40–60 range on free-modelling targets at CASP13; AlphaFold2's 92 was transformative.",
+        "GDT_TS uses four distance cutoffs (1, 2, 4, 8 Å) and averages the fraction of C\\alpha atoms within each - near 100 is perfect.",
+        "Prior state-of-the-art methods scored in the 40-60 range on free-modelling targets at CASP13; AlphaFold2's 92 was transformative.",
       ],
     },
   ],
@@ -410,9 +410,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Variant calling identifies single nucleotide polymorphisms (SNPs) and insertions/deletions (indels) by comparing aligned sequencing reads to a reference genome — a fundamental step in genomics pipelines.",
+        "Variant calling identifies single nucleotide polymorphisms (SNPs) and insertions/deletions (indels) by comparing aligned sequencing reads to a reference genome - a fundamental step in genomics pipelines.",
       hints: [
-        'Think about what "variant" means in a genomic context — differences from a reference.',
+        'Think about what "variant" means in a genomic context - differences from a reference.',
         "SNPs and indels are the two most common types of genomic variants.",
       ],
     },
@@ -426,7 +426,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DeepVariant encodes aligned sequencing read pileups as RGB-like images and uses an Inception-based CNN to classify each candidate position as reference, heterozygous variant, or homozygous variant.",
       hints: [
-        "Think about how sequencing reads stacked at a genomic position can be visualized — it looks like an image.",
+        "Think about how sequencing reads stacked at a genomic position can be visualized - it looks like an image.",
         "Google used a well-known image classification CNN architecture for this task.",
       ],
     },
@@ -447,7 +447,7 @@ const questions: Record<string, Question[]> = {
         "Traditional GWAS tests each SNP independently (marginal associations), missing epistatic interactions. ML methods like polygenic risk score models and neural networks can capture non-linear, combinatorial genetic effects.",
       hints: [
         "GWAS applies a statistical test at each variant position one at a time.",
-        'Think about what "epistasis" means — interaction effects between multiple genetic variants.',
+        'Think about what "epistasis" means - interaction effects between multiple genetic variants.',
       ],
     },
   ],
@@ -467,7 +467,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Randomization distributes both measured and unmeasured confounders evenly across groups, enabling a causal interpretation of the observed treatment effect — the gold standard for causal inference.",
+        "Randomization distributes both measured and unmeasured confounders evenly across groups, enabling a causal interpretation of the observed treatment effect - the gold standard for causal inference.",
       hints: [
         "Without randomization, patients who choose treatment may differ systematically from those who do not.",
         "Randomization handles confounders we know about and ones we have not even measured.",
@@ -523,9 +523,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Censoring occurs when a patient leaves the study, is lost to follow-up, or the study ends before the event occurs — we know they survived at least until censoring, but not when (or if) the event occurs later.",
+        "Censoring occurs when a patient leaves the study, is lost to follow-up, or the study ends before the event occurs - we know they survived at least until censoring, but not when (or if) the event occurs later.",
       hints: [
-        "Think about a patient who moves away before the study ends — you stop observing them.",
+        "Think about a patient who moves away before the study ends - you stop observing them.",
         "Censored patients provide partial information: they survived at least up to the censoring time.",
       ],
     },
@@ -559,7 +559,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DeepHit learns a discrete joint distribution over time-to-first-event for competing risks without any parametric assumptions, outperforming Cox models when the proportional hazards assumption is violated.",
       hints: [
-        "Think about competing risks — a patient can die from cancer or from heart disease, not both.",
+        "Think about competing risks - a patient can die from cancer or from heart disease, not both.",
         "Deep learning can model complex, non-proportional hazard shapes that Cox cannot.",
       ],
     },
@@ -580,7 +580,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Med-PaLM 2 scored over 85% on USMLE-style questions, matching or exceeding the passing threshold of expert clinicians — a landmark for clinical AI question answering.",
+        "Med-PaLM 2 scored over 85% on USMLE-style questions, matching or exceeding the passing threshold of expert clinicians - a landmark for clinical AI question answering.",
       hints: [
         "Think about the exam that medical students must pass to practice medicine in the US.",
         'The "Med" prefix in Med-PaLM suggests it was evaluated on medical knowledge questions.',
@@ -596,7 +596,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "BioGPT (Microsoft) is a GPT-2-style causal language model pre-trained on 15 million PubMed abstracts, achieving state-of-the-art results on biomedical relation extraction, QA, and text generation benchmarks.",
       hints: [
-        "BioGPT follows the same pattern as BioBERT — domain-specific pre-training on biomedical text.",
+        "BioGPT follows the same pattern as BioBERT - domain-specific pre-training on biomedical text.",
         "PubMed is the primary corpus of biomedical literature containing millions of scientific abstracts.",
       ],
     },
@@ -629,16 +629,16 @@ const questions: Record<string, Question[]> = {
       question:
         "The FDA classifies Software as a Medical Device (SaMD) into three risk-based classes. An AI/ML algorithm that analyzes retinal images to definitively diagnose diabetic retinopathy and directly drives treatment decisions would most likely fall under which class?",
       options: [
-        "Class I — General controls, lowest risk, no 510(k) or PMA required",
-        "Class II — Special controls; 510(k) substantial equivalence clearance typically required",
-        "Class III — Most stringent; Premarket Approval (PMA) required for novel high-risk devices",
-        "Class 0 — Exempt from all FDA oversight as clinical decision support",
+        "Class I - General controls, lowest risk, no 510(k) or PMA required",
+        "Class II - Special controls; 510(k) substantial equivalence clearance typically required",
+        "Class III - Most stringent; Premarket Approval (PMA) required for novel high-risk devices",
+        "Class 0 - Exempt from all FDA oversight as clinical decision support",
       ],
       correctAnswer: 2,
       explanation:
         "Under the SaMD framework and FDA\'s risk classification, AI that drives critical treatment decisions for serious/life-threatening conditions (Class III SaMD in IMDRF terms) maps to FDA Class III, requiring Premarket Approval (PMA). The IDx-DR retinal AI was a notable exception cleared via De Novo pathway because it met certain criteria; novel high-stakes diagnostic AIs without predicate devices typically require PMA.",
       hints: [
-        "FDA Class III is for devices that support or sustain human life, prevent impairment of health, or present unreasonable risk — autonomous AI diagnostics driving treatment fall here.",
+        "FDA Class III is for devices that support or sustain human life, prevent impairment of health, or present unreasonable risk - autonomous AI diagnostics driving treatment fall here.",
         "The 510(k) pathway (Class II) requires showing substantial equivalence to a legally marketed predicate device; a novel AI diagnostic algorithm often lacks a predicate.",
       ],
     },
@@ -653,7 +653,7 @@ const questions: Record<string, Question[]> = {
         'The FDA distinguishes "locked" (static, fixed after validation) from "adaptive" (continuously learning) AI/ML SaMD. Even for locked algorithms, significant changes to the AI function, intended use, or performance characteristics require a new 510(k) or PMA supplement. The FDA\'s Predetermined Change Control Plan (PCCP) framework is being developed to pre-specify and pre-approve acceptable post-market modifications.',
       hints: [
         "Any change to an FDA-cleared device that significantly affects safety or effectiveness requires regulatory notification or submission.",
-        "The PCCP concept allows manufacturers to pre-specify planned modifications and get them reviewed upfront — reducing the burden of post-market resubmission for anticipated changes.",
+        "The PCCP concept allows manufacturers to pre-specify planned modifications and get them reviewed upfront - reducing the burden of post-market resubmission for anticipated changes.",
       ],
     },
     {
@@ -672,7 +672,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The 510(k) pathway grants clearance when a new device is substantially equivalent to a predicate (a previously cleared or pre-1976 device) in intended use and technological characteristics. If the technological characteristics differ, the manufacturer must show they do not raise new safety/efficacy questions. For AI/ML SaMD, finding an appropriate predicate and demonstrating equivalence of the algorithm\'s performance characteristics is the core regulatory challenge.",
       hints: [
-        "510(k) does NOT require clinical trials proving superiority — only substantial equivalence to an existing cleared device.",
+        "510(k) does NOT require clinical trials proving superiority - only substantial equivalence to an existing cleared device.",
         "The predicate device anchors the regulatory pathway; if no predicate exists, the De Novo pathway or PMA is required.",
       ],
     },
@@ -687,16 +687,16 @@ const questions: Record<string, Question[]> = {
         "What is the core privacy advantage of federated learning in healthcare?",
       options: [
         "It encrypts patient records using AES-256 before storage",
-        "Patient data never leaves the local institution — only model updates (gradients) are shared",
+        "Patient data never leaves the local institution - only model updates (gradients) are shared",
         "It anonymizes all data before sending to a central server",
         "It trains models only on synthetic data, never on real patients",
       ],
       correctAnswer: 1,
       explanation:
-        "In federated learning, each hospital trains on its local data and sends only gradient updates or model weights to an aggregator — raw patient records are never transmitted, preserving data sovereignty and privacy.",
+        "In federated learning, each hospital trains on its local data and sends only gradient updates or model weights to an aggregator - raw patient records are never transmitted, preserving data sovereignty and privacy.",
       hints: [
         "The key idea is that the data stays local while knowledge (from model parameters) is shared.",
-        "Think about what is sent to the central server — it is not the training data itself.",
+        "Think about what is sent to the central server - it is not the training data itself.",
       ],
     },
     {
@@ -727,7 +727,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FedAvg aggregates by computing \\sum(n_k/n)\\cdotw_k — a weighted average of local model weights proportional to local dataset size — which converges to the same solution as centralized training under IID data conditions.",
+        "FedAvg aggregates by computing \\sum(n_k/n)\\cdotw_k - a weighted average of local model weights proportional to local dataset size - which converges to the same solution as centralized training under IID data conditions.",
       hints: [
         "FedAvg is the most basic aggregation rule; it weights each institution\'s contribution by its data volume.",
         "A hospital with 10,000 patients contributes more to the aggregated model than one with 500.",
@@ -750,9 +750,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "1D CNNs and 1D ResNets naturally process temporal ECG waveforms as 1D sequences, learning local morphological features (P-wave, QRS complex, T-wave) hierarchically — Rajpurkar\'s Stanford model used this for cardiologist-level arrhythmia detection.",
+        "1D CNNs and 1D ResNets naturally process temporal ECG waveforms as 1D sequences, learning local morphological features (P-wave, QRS complex, T-wave) hierarchically - Rajpurkar\'s Stanford model used this for cardiologist-level arrhythmia detection.",
       hints: [
-        "ECG data is a time-series waveform, not a 2D image — consider which convolution dimension fits.",
+        "ECG data is a time-series waveform, not a 2D image - consider which convolution dimension fits.",
         "The same ResNet architecture used for images can be adapted to 1D temporal signals.",
       ],
     },
@@ -766,7 +766,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "EEG has excellent temporal resolution (milliseconds) but poor spatial resolution due to volume conduction through the skull. fMRI has high spatial resolution (~1 mm) but poor temporal resolution (~2 seconds).",
       hints: [
-        "EEG electrodes sit on the scalp and measure electrical activity through bone and tissue — this blurs spatial information.",
+        "EEG electrodes sit on the scalp and measure electrical activity through bone and tissue - this blurs spatial information.",
         "Consider the trade-off: what EEG gains in time precision, it loses in spatial precision.",
       ],
     },
@@ -784,9 +784,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO\\_2 via Beer-Lambert law, and heart rate from pulse timing — both now standard in consumer smartwatches.",
+        "PPG measures light absorption changes caused by blood volume pulsing through tissue; by using red and infrared wavelengths, devices can compute SpO\\_2 via Beer-Lambert law, and heart rate from pulse timing - both now standard in consumer smartwatches.",
       hints: [
-        "PPG uses light — think about what physical property of blood changes with each heartbeat.",
+        "PPG uses light - think about what physical property of blood changes with each heartbeat.",
         "Pulse oximeters in hospitals use the same physical principle as wearable PPG sensors.",
       ],
     },
@@ -806,9 +806,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Da Vinci is a surgeon-controlled teleoperation system — the surgeon sits at a console and controls robotic arms with tremor filtration and motion scaling; it is not autonomous. AI assistance layers are being added on top.",
+        "Da Vinci is a surgeon-controlled teleoperation system - the surgeon sits at a console and controls robotic arms with tremor filtration and motion scaling; it is not autonomous. AI assistance layers are being added on top.",
       hints: [
-        "The surgeon is always in the loop — the robot does not act independently.",
+        "The surgeon is always in the loop - the robot does not act independently.",
         "Teleoperation means controlling a remote device in real time from a distance.",
       ],
     },
@@ -820,7 +820,7 @@ const questions: Record<string, Question[]> = {
         "Surgical phase recognition models that segment a surgical video into workflow phases (e.g., cholecystectomy phases) primarily use temporal models such as TCN or LSTM applied to per-frame feature embeddings.",
       correctAnswer: "True",
       explanation:
-        "Surgical phase recognition pipelines typically extract per-frame features with a CNN, then apply a temporal model (TCN, LSTM, or Transformer) to capture phase transitions across the video — combining spatial and temporal reasoning.",
+        "Surgical phase recognition pipelines typically extract per-frame features with a CNN, then apply a temporal model (TCN, LSTM, or Transformer) to capture phase transitions across the video - combining spatial and temporal reasoning.",
       hints: [
         'Recognizing a "phase" requires understanding not just a single frame but the sequence of actions over time.',
         "The pipeline has two stages: spatial feature extraction per frame, then temporal modeling over the sequence.",
@@ -840,9 +840,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Surgical skill assessment models analyze instrument kinematics or video to score economy of motion, instrument handling, and procedural efficiency — providing objective, automated feedback for surgical training.",
+        "Surgical skill assessment models analyze instrument kinematics or video to score economy of motion, instrument handling, and procedural efficiency - providing objective, automated feedback for surgical training.",
       hints: [
-        "Think about how a surgical trainer evaluates a resident — they watch the movements and technique.",
+        "Think about how a surgical trainer evaluates a resident - they watch the movements and technique.",
         "Automated assessment provides scalable, objective feedback without requiring an expert to watch every recording.",
       ],
     },
@@ -865,7 +865,7 @@ const questions: Record<string, Question[]> = {
         "Stratification finds patient subgroups (by genomics, proteomics, imaging, or clinical features) that respond differently to a treatment, enabling targeted therapies that benefit responders and avoid toxicity in non-responders.",
       hints: [
         'Precision medicine is sometimes called "the right treatment for the right patient at the right time."',
-        "If all patients respond identically, stratification is unnecessary — the challenge is heterogeneous responses.",
+        "If all patients respond identically, stratification is unnecessary - the challenge is heterogeneous responses.",
       ],
     },
     {
@@ -878,7 +878,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "PRS sum the weighted contributions of thousands of SNPs (weights from GWAS effect sizes) to produce a score predicting genetic liability for conditions like coronary artery disease, breast cancer, or type 2 diabetes.",
       hints: [
-        'The word "polygenic" means "many genes" — not a single causal mutation but thousands of small effects.',
+        'The word "polygenic" means "many genes" - not a single causal mutation but thousands of small effects.',
         "PRS is like a weighted sum where each SNP contributes a small amount based on its GWAS association strength.",
       ],
     },
@@ -898,7 +898,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The SHIVA trial randomized patients to molecularly matched vs. physician\'s choice treatment and found no PFS benefit, illustrating that simple biomarker-drug matching without understanding tumor biology context often fails.",
       hints: [
-        "The SHIVA result was surprising and cautionary — simple genomic matching is not always sufficient.",
+        "The SHIVA result was surprising and cautionary - simple genomic matching is not always sufficient.",
         "Cancer biology is complex: a mutation does not always mean the corresponding targeted drug will work.",
       ],
     },
@@ -934,7 +934,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Biomedical knowledge graphs (e.g., Hetionet) represent drugs, genes, diseases, and pathways as nodes with typed edges (treats, binds, causes); graph embedding and link prediction then score plausible new drug-disease edges.",
       hints: [
-        "A knowledge graph connects entities — think of drugs, targets, diseases all linked by biological relationships.",
+        "A knowledge graph connects entities - think of drugs, targets, diseases all linked by biological relationships.",
         "Link prediction asks: given the existing graph, which drug-disease edge is most likely to be true?",
       ],
     },
@@ -952,7 +952,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KG embedding methods learn low-dimensional vectors for entities and relations such that the embedding geometry preserves relational structure — TransE models relation as translation (h + r \\approx t), enabling scoring of candidate drug-disease links.",
+        "KG embedding methods learn low-dimensional vectors for entities and relations such that the embedding geometry preserves relational structure - TransE models relation as translation (h + r \\approx t), enabling scoring of candidate drug-disease links.",
       hints: [
         "These methods learn embeddings of nodes and edges jointly, so entity vectors encode the graph topology.",
         "TransE is named because it models a relation as a translation (vector addition) in embedding space.",
@@ -991,7 +991,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Ensemble and mechanistic-ML hybrid models tend to perform best; purely ML models often excel at short-term forecasts but mechanistic models may outperform at longer horizons where biological constraints matter more.",
       hints: [
-        "FluSight results show that no single model dominates — ensemble approaches win.",
+        "FluSight results show that no single model dominates - ensemble approaches win.",
         "Think about what happens at longer time horizons: pure data-driven models can violate biological constraints.",
       ],
     },
@@ -1009,9 +1009,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mobility data (from Google, Apple, SafeGraph) served as a proxy for contact rate changes — reduction in mobility correlated with reduced transmission rate \\beta in SIR-type models, helping quantify intervention effectiveness.",
+        "Mobility data (from Google, Apple, SafeGraph) served as a proxy for contact rate changes - reduction in mobility correlated with reduced transmission rate \\beta in SIR-type models, helping quantify intervention effectiveness.",
       hints: [
-        "Mobility data tells you how much people moved around — more movement implies more potential contacts.",
+        "Mobility data tells you how much people moved around - more movement implies more potential contacts.",
         "In epidemic models, the transmission rate depends on how frequently susceptible and infectious people come into contact.",
       ],
     },
@@ -1032,7 +1032,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Digital phenotyping captures passively sensed behaviors — GPS mobility, screen time, call/text frequency, accelerometry — and infers mental health states like depression or mania episodes without active user input.",
+        "Digital phenotyping captures passively sensed behaviors - GPS mobility, screen time, call/text frequency, accelerometry - and infers mental health states like depression or mania episodes without active user input.",
       hints: [
         "Think about what your phone knows about you without you telling it: location, app usage, movement.",
         "The goal is to detect changes in behavior that correlate with mental health episodes.",
@@ -1046,10 +1046,10 @@ const questions: Record<string, Question[]> = {
         "NLP analysis of social media text (e.g., Twitter posts) has been validated as a reliable, HIPAA-compliant replacement for clinical psychiatric assessment.",
       correctAnswer: "False",
       explanation:
-        "Social media NLP shows research promise for population-level mental health surveillance but is not a clinical diagnostic tool — it lacks the clinical validity, individual-level accuracy, and privacy protections required for HIPAA-compliant patient care.",
+        "Social media NLP shows research promise for population-level mental health surveillance but is not a clinical diagnostic tool - it lacks the clinical validity, individual-level accuracy, and privacy protections required for HIPAA-compliant patient care.",
       hints: [
         "Population-level trends from social media are different from individual-level clinical diagnosis.",
-        "Clinical assessments require validated instruments and professional judgment — social media analysis cannot replace these.",
+        "Clinical assessments require validated instruments and professional judgment - social media analysis cannot replace these.",
       ],
     },
     {
@@ -1068,7 +1068,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Suicide risk models face dual harm from errors: false positives trigger costly, stigmatizing involuntary holds; false negatives miss at-risk patients. Historical EHR biases also risk perpetuating racial and socioeconomic disparities in care.",
       hints: [
-        "Think about the consequences of being wrong in either direction — too many alerts vs. missing someone at risk.",
+        "Think about the consequences of being wrong in either direction - too many alerts vs. missing someone at risk.",
         "If the training data reflects historical disparities in who received care, those disparities are encoded in the model.",
       ],
     },
@@ -1091,7 +1091,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The commercial algorithm predicted future healthcare costs as a proxy for health needs; because Black patients had historically lower access to care (and thus lower costs), the model systematically assigned them lower risk scores despite similar or worse health status.",
       hints: [
-        "The proxy variable used — healthcare cost — is itself shaped by systemic inequities in healthcare access.",
+        "The proxy variable used - healthcare cost - is itself shaped by systemic inequities in healthcare access.",
         "Lower spending does not mean better health if some groups have historically had less access to care.",
       ],
     },
@@ -1103,7 +1103,7 @@ const questions: Record<string, Question[]> = {
         "It is mathematically impossible to simultaneously satisfy demographic parity, equalized odds, and calibration fairness criteria in a binary classifier when base rates differ across groups.",
       correctAnswer: "True",
       explanation:
-        "Chouldechova\'s impossibility theorem and Kleinberg et al. prove that when base rates differ between groups, no classifier can simultaneously satisfy calibration and equal false positive/negative rates — fairness criteria are fundamentally in tension.",
+        "Chouldechova\'s impossibility theorem and Kleinberg et al. prove that when base rates differ between groups, no classifier can simultaneously satisfy calibration and equal false positive/negative rates - fairness criteria are fundamentally in tension.",
       hints: [
         "When disease prevalence differs between groups, making a test equally accurate for all cannot also make it equally calibrated across groups.",
         "This is a mathematical impossibility result, not just an empirical observation.",
@@ -1123,7 +1123,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Comprehensive fairness audits disaggregate performance by race, sex, age, insurance status, site, and intersectional groups — overall metrics can mask severe underperformance in minority subgroups that are underrepresented in training data.",
+        "Comprehensive fairness audits disaggregate performance by race, sex, age, insurance status, site, and intersectional groups - overall metrics can mask severe underperformance in minority subgroups that are underrepresented in training data.",
       hints: [
         "Think about what happens to statistical power when you enroll patients who are unlikely to respond.",
         "The goal is to make the treatment effect signal stronger and detectable with fewer patients.",
@@ -1160,9 +1160,9 @@ const questions: Record<string, Question[]> = {
         "Diffusion models have been applied to molecular generation by learning to denoise molecular structures from Gaussian noise back to valid 3D conformations.",
       correctAnswer: "True",
       explanation:
-        "Models like DiffSBDD, TargetDiff, and DiffMol apply the diffusion framework to 3D molecular geometry — iteratively refining random noise into valid atom coordinates and types conditioned on a protein pocket or desired properties.",
+        "Models like DiffSBDD, TargetDiff, and DiffMol apply the diffusion framework to 3D molecular geometry - iteratively refining random noise into valid atom coordinates and types conditioned on a protein pocket or desired properties.",
       hints: [
-        "Diffusion models learn to reverse a noise process — the same framework used for image generation (DALL-E, Stable Diffusion).",
+        "Diffusion models learn to reverse a noise process - the same framework used for image generation (DALL-E, Stable Diffusion).",
         "Applying this to molecules means starting from random atom positions and refining them toward a valid structure.",
       ],
     },
@@ -1174,7 +1174,7 @@ const questions: Record<string, Question[]> = {
         "A key challenge in evaluating molecular generation models is assessing whether generated molecules are not just valid and novel, but also:",
       options: [
         "Shorter than 5 atoms in length for computational efficiency",
-        "Drug-like and synthesizable — satisfying properties like Lipinski\'s Rule of Five and having a predicted synthetic route",
+        "Drug-like and synthesizable - satisfying properties like Lipinski\'s Rule of Five and having a predicted synthetic route",
         "Identical to known FDA-approved drugs in the training set",
         "Generated faster than 1 millisecond per molecule on CPU hardware",
       ],
@@ -1182,7 +1182,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Standard metrics (validity, uniqueness, novelty) are necessary but insufficient; generated molecules must also be drug-like (Lipinski, QED) and synthetically accessible (SA score, ASKCOS route prediction) to be practically useful.",
       hints: [
-        "Generating a valid SMILES is easy — the hard part is generating something a chemist can actually make.",
+        "Generating a valid SMILES is easy - the hard part is generating something a chemist can actually make.",
         "Lipinski\'s Rule of Five captures the properties of orally bioavailable drugs: molecular weight, logP, H-bond donors/acceptors.",
       ],
     },
@@ -1203,9 +1203,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RL for drug design uses property predictors (docking engines, ADMET models, QED calculators) as reward oracles — the generator is trained to maximize expected reward, steering generation toward molecules with desired pharmacological profiles.",
+        "RL for drug design uses property predictors (docking engines, ADMET models, QED calculators) as reward oracles - the generator is trained to maximize expected reward, steering generation toward molecules with desired pharmacological profiles.",
       hints: [
-        "In RL, the agent receives a reward signal from the environment — what plays the role of the environment in drug design?",
+        "In RL, the agent receives a reward signal from the environment - what plays the role of the environment in drug design?",
         "External computational tools (docking, property prediction) act as the reward function.",
       ],
     },
@@ -1217,7 +1217,7 @@ const questions: Record<string, Question[]> = {
         "REINVENT is an RL-based molecular generation framework that uses a prior language model to prevent the agent from generating chemically unreasonable molecules during optimization.",
       correctAnswer: "True",
       explanation:
-        "REINVENT uses a pre-trained prior (RNN on SMILES) as a regularizer in the RL objective — the agent is penalized for deviating too far from the prior, maintaining chemical validity and drug-likeness during reward-driven optimization.",
+        "REINVENT uses a pre-trained prior (RNN on SMILES) as a regularizer in the RL objective - the agent is penalized for deviating too far from the prior, maintaining chemical validity and drug-likeness during reward-driven optimization.",
       hints: [
         "Without regularization, RL reward hacking can lead to molecules that maximize the score but are chemically nonsensical.",
         "The prior acts as a constraint: stay reasonably close to drug-like chemical space while optimizing for the target.",
@@ -1237,7 +1237,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Proxy reward models (QSAR models, docking scores) are imperfect surrogates for true activity; the RL agent finds inputs that exploit model blind spots, scoring high in silico but failing in biochemical assays — a critical validation challenge.",
+        "Proxy reward models (QSAR models, docking scores) are imperfect surrogates for true activity; the RL agent finds inputs that exploit model blind spots, scoring high in silico but failing in biochemical assays - a critical validation challenge.",
       hints: [
         "The RL agent is trying to maximize the proxy score, not the true biological activity.",
         "Any gap between the proxy model and reality can be exploited by a powerful optimizer.",
@@ -1260,7 +1260,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-omics integrates multiple molecular layers — DNA variants (genomics), RNA expression (transcriptomics), protein abundance (proteomics), metabolite levels (metabolomics), and methylation (epigenomics) — to get a richer biological picture.",
+        "Multi-omics integrates multiple molecular layers - DNA variants (genomics), RNA expression (transcriptomics), protein abundance (proteomics), metabolite levels (metabolomics), and methylation (epigenomics) - to get a richer biological picture.",
       hints: [
         'Each "-omics" layer captures a different molecular level of biological information.',
         'The suffix "-omics" refers to comprehensive measurement of a class of molecules (genes, transcripts, proteins, metabolites).',
@@ -1296,7 +1296,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "MOFA is a probabilistic factor analysis framework that decomposes multiple omics matrices into shared latent factors, identifying coordinated variation across molecular layers and enabling downstream sample clustering and biomarker discovery.",
       hints: [
-        "Factor analysis finds latent variables that explain observed variance — MOFA extends this to multiple data types simultaneously.",
+        "Factor analysis finds latent variables that explain observed variance - MOFA extends this to multiple data types simultaneously.",
         "The key innovation is discovering which latent factors are shared across omics layers versus specific to one layer.",
       ],
     },
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Medical report generation is an image captioning task: given a chest X-ray (or other medical image), the model generates a free-text radiology report describing findings — requiring joint vision and language modeling.",
+        "Medical report generation is an image captioning task: given a chest X-ray (or other medical image), the model generates a free-text radiology report describing findings - requiring joint vision and language modeling.",
       hints: [
         "The output is a paragraph of text describing what is visible in the image.",
         "This is analogous to image captioning for natural images, but applied to medical images with clinical language.",
@@ -1331,9 +1331,9 @@ const questions: Record<string, Question[]> = {
         "Standard NLP metrics like BLEU and ROUGE are sufficient to fully evaluate the clinical quality of AI-generated radiology reports.",
       correctAnswer: "False",
       explanation:
-        "BLEU/ROUGE measure n-gram overlap, not clinical correctness — a report can score high on BLEU while missing critical findings or containing factual errors. Clinical factuality metrics (e.g., CheXpert label F1, RadGraph F1) and radiologist evaluation are also needed.",
+        "BLEU/ROUGE measure n-gram overlap, not clinical correctness - a report can score high on BLEU while missing critical findings or containing factual errors. Clinical factuality metrics (e.g., CheXpert label F1, RadGraph F1) and radiologist evaluation are also needed.",
       hints: [
-        "BLEU measures word overlap with reference text — is word overlap the same as medical accuracy?",
+        "BLEU measures word overlap with reference text - is word overlap the same as medical accuracy?",
         "A report could use different words than the reference but still be clinically accurate, or use similar words but miss key findings.",
       ],
     },
@@ -1351,7 +1351,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Hallucination in medical report generation is a safety-critical failure: the model produces confident, fluent text describing findings (e.g., "bilateral infiltrates") that are not actually visible in the image — a dangerous error in clinical contexts.',
+        'Hallucination in medical report generation is a safety-critical failure: the model produces confident, fluent text describing findings (e.g., "bilateral infiltrates") that are not actually visible in the image - a dangerous error in clinical contexts.',
       hints: [
         "This is the same hallucination problem seen in general LLMs, but with severe consequences in medical settings.",
         "The model generates text that sounds clinically appropriate but does not accurately describe what is in the image.",
@@ -1374,9 +1374,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CDSS tools augment — not replace — clinician judgment by surfacing relevant evidence, risk scores, or guideline-based alerts at the point of care, keeping the clinician in the decision loop.",
+        "CDSS tools augment - not replace - clinician judgment by surfacing relevant evidence, risk scores, or guideline-based alerts at the point of care, keeping the clinician in the decision loop.",
       hints: [
-        'The key word is "support" — the system assists a human decision-maker rather than acting autonomously.',
+        'The key word is "support" - the system assists a human decision-maker rather than acting autonomously.',
         "Examples include sepsis early warning alerts, drug interaction checkers, and diagnostic suggestion tools.",
       ],
     },
@@ -1388,10 +1388,10 @@ const questions: Record<string, Question[]> = {
         '"Alert fatigue" is a recognized problem with CDSS systems where clinicians begin ignoring or overriding alerts due to excessive, low-specificity notifications.',
       correctAnswer: "True",
       explanation:
-        "Studies show override rates for CDSS alerts can exceed 90%; too many low-value alerts train clinicians to dismiss them reflexively, potentially causing them to miss truly critical alerts — a paradox of over-alerting reducing safety.",
+        "Studies show override rates for CDSS alerts can exceed 90%; too many low-value alerts train clinicians to dismiss them reflexively, potentially causing them to miss truly critical alerts - a paradox of over-alerting reducing safety.",
       hints: [
-        "Think about what happens when a car alarm goes off constantly — people stop paying attention.",
-        "The problem is not the existence of alerts but their volume and specificity — too many false positives desensitize users.",
+        "Think about what happens when a car alarm goes off constantly - people stop paying attention.",
+        "The problem is not the existence of alerts but their volume and specificity - too many false positives desensitize users.",
       ],
     },
     {
@@ -1408,9 +1408,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "APACHE II (Acute Physiology and Chronic Health Evaluation II) uses 12 routine physiological measurements plus age and chronic health points to estimate ICU mortality risk — a foundational clinical scoring tool predating ML-based risk models.",
+        "APACHE II (Acute Physiology and Chronic Health Evaluation II) uses 12 routine physiological measurements plus age and chronic health points to estimate ICU mortality risk - a foundational clinical scoring tool predating ML-based risk models.",
       hints: [
-        "APACHE is used to classify ICU disease severity — what is the most important outcome in an ICU setting?",
+        "APACHE is used to classify ICU disease severity - what is the most important outcome in an ICU setting?",
         "It uses variables like temperature, heart rate, blood pressure, and creatinine that are routinely measured on admission.",
       ],
     },
@@ -1432,7 +1432,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Edge AI runs inference on-device (microcontroller, mobile SoC) enabling real-time, low-latency health monitoring without continuous cloud connectivity, reducing privacy exposure and battery consumption from data transmission.",
       hints: [
-        "Think about a smartwatch detecting atrial fibrillation — should it wait for a cloud connection or alert you immediately?",
+        "Think about a smartwatch detecting atrial fibrillation - should it wait for a cloud connection or alert you immediately?",
         'The "edge" refers to processing at the data source (the device) rather than centralizing it remotely.',
       ],
     },
@@ -1446,8 +1446,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Quantization reduces weight precision from FP32 to INT8/INT4, shrinking model size 4-8\\times and accelerating inference on low-power hardware (NPUs, ARM Cortex-M) with typically <1-2% accuracy degradation for well-quantized models.",
       hints: [
-        "Wearable microcontrollers have kilobytes of RAM, not gigabytes — the model must fit in very limited memory.",
-        "Quantization trades numerical precision for efficiency — fewer bits per weight means smaller, faster models.",
+        "Wearable microcontrollers have kilobytes of RAM, not gigabytes - the model must fit in very limited memory.",
+        "Quantization trades numerical precision for efficiency - fewer bits per weight means smaller, faster models.",
       ],
     },
     {
@@ -1466,7 +1466,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Federated learning with local fine-tuning (or federated meta-learning approaches like Per-FedAvg) allows models to personalize on local user data without transmitting it, adapting to individual physiological baselines and activity patterns.",
       hints: [
-        "Personalization requires using the individual\'s own data — the challenge is doing this without central data collection.",
+        "Personalization requires using the individual\'s own data - the challenge is doing this without central data collection.",
         "Federated learning keeps data on-device; meta-learning provides a model initialization that adapts quickly.",
       ],
     },
@@ -1501,7 +1501,7 @@ const questions: Record<string, Question[]> = {
         "Membership inference attacks can determine whether a specific real patient\'s record was used in training a generative model, posing a privacy risk even for synthetic data.",
       correctAnswer: "True",
       explanation:
-        "Membership inference attacks query a generative model to infer whether a specific record was in the training set; if the model memorizes training data, synthetic outputs can leak information about real individuals — motivating differential privacy in synthesis.",
+        "Membership inference attacks query a generative model to infer whether a specific record was in the training set; if the model memorizes training data, synthetic outputs can leak information about real individuals - motivating differential privacy in synthesis.",
       hints: [
         'Just because data is called "synthetic" does not mean the generative model cannot leak information about its training set.',
         "Membership inference attacks probe the model with a specific record and observe the model\'s response to infer training membership.",
@@ -1521,7 +1521,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TSTR evaluates utility: train a downstream model on synthetic data, test on real — if accuracy matches Train-on-Real-Test-on-Real (TRTR), the synthetic data is useful. Nearest-neighbor ratios and DCR (Distance to Closest Record) assess privacy leakage.",
+        "TSTR evaluates utility: train a downstream model on synthetic data, test on real - if accuracy matches Train-on-Real-Test-on-Real (TRTR), the synthetic data is useful. Nearest-neighbor ratios and DCR (Distance to Closest Record) assess privacy leakage.",
       hints: [
         "The utility of synthetic health data is ultimately measured by how well models trained on it work on real patients.",
         "Privacy is measured by how close synthetic records are to their real training counterparts.",
@@ -1544,9 +1544,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CHADS\\_2 (Congestive heart failure, Hypertension, Age \\geq75, Diabetes, Stroke history) scores stroke risk in atrial fibrillation patients to guide anticoagulation therapy decisions — a simple but effective additive risk score.",
+        "CHADS\\_2 (Congestive heart failure, Hypertension, Age \\geq75, Diabetes, Stroke history) scores stroke risk in atrial fibrillation patients to guide anticoagulation therapy decisions - a simple but effective additive risk score.",
       hints: [
-        "Each letter in CHADS\\_2 is a risk factor — the score sums up how many apply to a patient.",
+        "Each letter in CHADS\\_2 is a risk factor - the score sums up how many apply to a patient.",
         "Atrial fibrillation is a cardiac arrhythmia that increases the risk of a specific serious complication.",
       ],
     },
@@ -1578,7 +1578,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If a model predicts 70% risk, true event frequency among such predictions should be ~70%; miscalibration causes clinicians to over- or under-treat based on misleading probability estimates — calibration curves and Platt scaling are standard correction tools.",
+        "If a model predicts 70% risk, true event frequency among such predictions should be ~70%; miscalibration causes clinicians to over- or under-treat based on misleading probability estimates - calibration curves and Platt scaling are standard correction tools.",
       hints: [
         "Discrimination (AUC) tells you if the model ranks patients correctly; calibration tells you if the predicted probabilities are accurate.",
         "A doctor who trusts model probabilities needs those probabilities to reflect real-world event rates.",
@@ -1602,7 +1602,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Radiomics extracts hundreds or thousands of quantitative features (texture, morphology, wavelet-based features) from medical images, converting visual information into mineable data for biomarker discovery and outcome prediction.",
       hints: [
-        'The "omics" suffix signals high-throughput quantitative analysis — applied to imaging data.',
+        'The "omics" suffix signals high-throughput quantitative analysis - applied to imaging data.',
         "Instead of a radiologist\'s qualitative description, radiomics produces a large feature vector from the image.",
       ],
     },
@@ -1614,7 +1614,7 @@ const questions: Record<string, Question[]> = {
         "Radiomic features extracted from medical images are highly reproducible across different scanners and acquisition protocols without any harmonization.",
       correctAnswer: "False",
       explanation:
-        "Radiomic features are notoriously sensitive to scanner manufacturer, acquisition protocol (slice thickness, reconstruction kernel), and segmentation variability — harmonization methods (ComBat, normalization) are essential for multi-site studies.",
+        "Radiomic features are notoriously sensitive to scanner manufacturer, acquisition protocol (slice thickness, reconstruction kernel), and segmentation variability - harmonization methods (ComBat, normalization) are essential for multi-site studies.",
       hints: [
         "Think about how differently two scanners might reconstruct the same patient\'s CT scan with different settings.",
         "Texture features in particular are strongly affected by image reconstruction parameters.",
@@ -1634,7 +1634,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Deep learning features are learned end-to-end, discovering image patterns most predictive of the target outcome — they can capture subtle, non-obvious features that handcrafted radiomic pipelines miss, at the cost of interpretability.",
+        "Deep learning features are learned end-to-end, discovering image patterns most predictive of the target outcome - they can capture subtle, non-obvious features that handcrafted radiomic pipelines miss, at the cost of interpretability.",
       hints: [
         "Handcrafted radiomics requires domain experts to define which features to extract; deep learning automates this.",
         "The trade-off is interpretability: we know what a texture feature measures, but a deep feature may be opaque.",
@@ -1653,13 +1653,13 @@ const questions: Record<string, Question[]> = {
         "Annotated radiology images from 50 US hospitals",
         "De-identified ICU clinical notes, lab results, and waveforms from Beth Israel Deaconess Medical Center",
         "Genomic sequences from the 1000 Genomes Project",
-        "Transcribed patient–physician conversations from primary care clinics",
+        "Transcribed patient-physician conversations from primary care clinics",
       ],
       correctAnswer: 1,
       explanation:
         "MIMIC-III (Medical Information Mart for Intensive Care) contains de-identified data for over 40,000 ICU patients, including nursing notes, discharge summaries, lab values, and vital signs, making it the gold standard for clinical NLP research.",
       hints: [
-        "MIMIC-III is from a single large academic medical center — Beth Israel Deaconess in Boston.",
+        "MIMIC-III is from a single large academic medical center - Beth Israel Deaconess in Boston.",
         "The dataset is de-identified to allow broad research access while protecting patient privacy.",
       ],
     },
@@ -1691,7 +1691,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Clinical notes are rife with abbreviations (SOB = shortness of breath), negations ('no fever'), section-dependent context, and non-standard spelling — models like ClinicalBERT or BioBERT fine-tuned on MIMIC outperform general BERT on these tasks.",
+        "Clinical notes are rife with abbreviations (SOB = shortness of breath), negations ('no fever'), section-dependent context, and non-standard spelling - models like ClinicalBERT or BioBERT fine-tuned on MIMIC outperform general BERT on these tasks.",
       hints: [
         "Consider that 'SOB' means shortness of breath in a clinical note, but abbreviation resolution requires clinical context.",
         "Negation detection ('denies chest pain') is critical for clinical NER but rare in general text.",
@@ -1714,7 +1714,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ADMET describes the pharmacokinetic and safety profile of drug candidates: how well a compound is absorbed, distributed through the body, metabolized, excreted, and whether it is toxic — all critical for clinical viability.",
+        "ADMET describes the pharmacokinetic and safety profile of drug candidates: how well a compound is absorbed, distributed through the body, metabolized, excreted, and whether it is toxic - all critical for clinical viability.",
       hints: [
         "Think of ADMET as describing what the body does to a drug, and what the drug does to the body.",
         "Most drug candidates fail in clinical trials due to ADMET problems, not lack of target activity.",
@@ -1731,7 +1731,7 @@ const questions: Record<string, Question[]> = {
         "ML-based virtual screening dramatically narrows the chemical space to prioritize candidates, but experimental validation (binding assays, cell-based assays) remains essential because computational models are imperfect proxies for biological activity.",
       hints: [
         "Virtual screening reduces the number of compounds to test, but cannot eliminate experimental validation.",
-        "ML models predict activity based on learned patterns — any model errors propagate to false positives.",
+        "ML models predict activity based on learned patterns - any model errors propagate to false positives.",
       ],
     },
     {
@@ -1774,7 +1774,7 @@ const questions: Record<string, Question[]> = {
         "PRS sums the allele dosages of trait-associated SNPs weighted by their GWAS effect sizes (log odds ratios), providing a continuous genetic liability score for complex diseases like type 2 diabetes or coronary artery disease.",
       hints: [
         "GWAS identifies SNPs associated with a trait; PRS aggregates many small effects into a single score.",
-        "PRS captures common polygenic architecture — many variants each with tiny effects.",
+        "PRS captures common polygenic architecture - many variants each with tiny effects.",
       ],
     },
     {
@@ -1787,7 +1787,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DeepVariant (Google) encodes read pileups as multi-channel images and applies an Inception-based CNN to classify sites as homozygous reference, heterozygous, or homozygous alternate, achieving state-of-the-art SNP and indel calling accuracy.",
       hints: [
-        "Pileup images visualize how sequencing reads stack up at each genomic position — DeepVariant treats this as a 2D image.",
+        "Pileup images visualize how sequencing reads stack up at each genomic position - DeepVariant treats this as a 2D image.",
         "The image classification framing allows DeepVariant to leverage pre-trained vision architectures.",
       ],
     },
@@ -1807,7 +1807,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Linkage disequilibrium (LD) patterns, allele frequencies, and environmental interactions differ across ancestries; PRS derived from European GWAS underperform in African, East Asian, or South Asian populations, raising health equity concerns.",
       hints: [
-        "LD patterns determine which SNPs tag causal variants — these differ by ancestry due to population history.",
+        "LD patterns determine which SNPs tag causal variants - these differ by ancestry due to population history.",
         "The lack of diversity in genomic research is a recognized barrier to equitable PRS applications.",
       ],
     },
@@ -1819,7 +1819,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The first FDA De Novo–authorized autonomous AI diagnostic system for diabetic retinopathy screening was:",
+        "The first FDA De Novo-authorized autonomous AI diagnostic system for diabetic retinopathy screening was:",
       options: [
         "CheXNet by Stanford",
         "IDx-DR by Digital Diagnostics",
@@ -1828,9 +1828,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IDx-DR received FDA De Novo authorization in 2018 as the first AI device authorized to provide a screening decision for diabetic retinopathy without a clinician reviewing the image — a landmark for autonomous AI diagnostics.",
+        "IDx-DR received FDA De Novo authorization in 2018 as the first AI device authorized to provide a screening decision for diabetic retinopathy without a clinician reviewing the image - a landmark for autonomous AI diagnostics.",
       hints: [
-        "This system operates without a specialist needing to review the image — it gives a binary screen result directly.",
+        "This system operates without a specialist needing to review the image - it gives a binary screen result directly.",
         "It was cleared via the De Novo pathway, meaning there was no predicate device.",
       ],
     },
@@ -1842,7 +1842,7 @@ const questions: Record<string, Question[]> = {
         "AI triage systems for chest X-rays that prioritize worklists (e.g., flagging urgent findings) are considered high-risk FDA Class III devices requiring Premarket Approval.",
       correctAnswer: "False",
       explanation:
-        "Worklist prioritization AI that flags potential findings for radiologist review — rather than providing a standalone diagnosis — is typically cleared as Class II via 510(k), as a radiologist remains in the diagnostic loop and the AI functions as decision support.",
+        "Worklist prioritization AI that flags potential findings for radiologist review - rather than providing a standalone diagnosis - is typically cleared as Class II via 510(k), as a radiologist remains in the diagnostic loop and the AI functions as decision support.",
       hints: [
         "The risk classification depends on whether the AI makes autonomous clinical decisions or assists a clinician.",
         "Triage tools that surface cases for human review are lower risk than systems that autonomously diagnose.",
@@ -1864,7 +1864,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Automation bias occurs when clinicians defer to AI outputs rather than applying independent judgment; studies show radiologists may miss findings the AI missed because they anchor on AI-negative results, paradoxically reducing performance despite using AI.",
       hints: [
-        "Automation bias is a human factors problem — over-reliance on automated systems.",
+        "Automation bias is a human factors problem - over-reliance on automated systems.",
         "If a radiologist trusts AI completely, the human provides no additional value beyond the AI alone.",
       ],
     },
@@ -1887,7 +1887,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A single WSI scanned at 40x magnification can exceed 100,000x100,000 pixels; this requires patch-based analysis, multiple instance learning (MIL), or hierarchical approaches rather than treating the whole slide as a single image.",
       hints: [
-        "GPU memory limits how large an image can be processed — a gigapixel image far exceeds any GPU.",
+        "GPU memory limits how large an image can be processed - a gigapixel image far exceeds any GPU.",
         "The solution is to divide the slide into smaller patches and aggregate predictions.",
       ],
     },
@@ -1901,7 +1901,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In MIL, a slide is a 'bag' of patches (instances); the bag label is positive if any patch contains tumor. Models like CLAM and DSMIL learn to identify which patches drive the bag-level prediction without patch-level supervision.",
       hints: [
-        "MIL operates at the bag level — you know the slide has cancer but not which patches contain it.",
+        "MIL operates at the bag level - you know the slide has cancer but not which patches contain it.",
         "This is valuable because pixel-level annotation of pathology slides requires expert pathologists and is expensive.",
       ],
     },
@@ -1922,7 +1922,7 @@ const questions: Record<string, Question[]> = {
         "CLAM adds SVM-based instance-level discriminative loss that pushes high-attention instances toward the correct class cluster, improving the quality of attention maps and enabling interpretable patch-level localization without patch labels.",
       hints: [
         "CLAM uses the attention mechanism to identify which patches are most informative, then adds a constraint to make those patches semantically consistent.",
-        "The clustering constraint is applied at training time, not at inference — it regularizes the learned attention.",
+        "The clustering constraint is applied at training time, not at inference - it regularizes the learned attention.",
       ],
     },
   ],
@@ -1944,7 +1944,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Cohort selection ML models parse trial eligibility criteria (often expressed in natural language) and match them against structured and unstructured EHR data to identify eligible patients, dramatically accelerating enrollment.",
       hints: [
-        "Trial eligibility criteria are complex — a patient must meet many criteria simultaneously.",
+        "Trial eligibility criteria are complex - a patient must meet many criteria simultaneously.",
         "EHR data contains structured data (labs, diagnoses) and unstructured notes that NLP can mine.",
       ],
     },
@@ -1958,7 +1958,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Pre-specified adaptive designs (sample size re-estimation, arm dropping, population enrichment) allow modifications based on accumulating data while maintaining overall type I error control through pre-planned alpha-spending functions or simulation-based error rates.",
       hints: [
-        "The key word is 'pre-specified' — adaptations must be planned before the trial starts to control error rates.",
+        "The key word is 'pre-specified' - adaptations must be planned before the trial starts to control error rates.",
         "Unplanned modifications based on interim results are a serious source of inflated false positive rates.",
       ],
     },
@@ -1979,7 +1979,7 @@ const questions: Record<string, Question[]> = {
         "High dropout rates reduce statistical power and introduce attrition bias; ML dropout prediction allows trial coordinators to target retention resources (extra check-ins, transport assistance) toward participants most likely to withdraw, protecting trial integrity.",
       hints: [
         "Dropout reduces the analyzable sample size, requiring more participants to achieve the same power.",
-        "Proactive intervention is more effective than reactive rescue — you need to identify high-risk participants early.",
+        "Proactive intervention is more effective than reactive rescue - you need to identify high-risk participants early.",
       ],
     },
   ],
@@ -2002,7 +2002,7 @@ const questions: Record<string, Question[]> = {
         "The Patient Health Questionnaire-9 (PHQ-9) consists of 9 items mapping to DSM depressive episode criteria; scores range 0-27, with validated cutoffs for mild, moderate, moderately-severe, and severe depression.",
       hints: [
         "The '9' in PHQ-9 refers to the number of questions, each scoring 0-3.",
-        "The DSM-5 has 9 diagnostic criteria for a major depressive episode — PHQ-9 maps directly to these.",
+        "The DSM-5 has 9 diagnostic criteria for a major depressive episode - PHQ-9 maps directly to these.",
       ],
     },
     {
@@ -2016,7 +2016,7 @@ const questions: Record<string, Question[]> = {
         "As of 2025, digital biomarkers for mental health show research promise but have not been approved as primary clinical endpoints in FDA-regulated trials; they are primarily used as exploratory secondary endpoints or in digital therapeutics research contexts.",
       hints: [
         "FDA clearance as a clinical endpoint requires extensive validation evidence and regulatory review.",
-        "Digital biomarkers are research tools — promising but not yet fully validated for regulatory decision-making.",
+        "Digital biomarkers are research tools - promising but not yet fully validated for regulatory decision-making.",
       ],
     },
     {
@@ -2027,15 +2027,15 @@ const questions: Record<string, Question[]> = {
         "A key ethical challenge specific to mental health AI applications compared to other medical AI is:",
       options: [
         "Mental health AI requires more computational resources than imaging AI",
-        "Mental health data is uniquely sensitive — stigmatization risks, vulnerability of the population, and potential for coercive use (e.g., predicting suicidality for legal purposes) require heightened privacy and consent protections",
+        "Mental health data is uniquely sensitive - stigmatization risks, vulnerability of the population, and potential for coercive use (e.g., predicting suicidality for legal purposes) require heightened privacy and consent protections",
         "Mental health conditions cannot be reliably diagnosed from any data source",
         "Mental health AI must always use reinforcement learning because conditions change over time",
       ],
       correctAnswer: 1,
       explanation:
-        "Mental health data carries exceptional stigma risks; people with mental illness are a vulnerable population requiring special protections; and predictions about suicidality or psychosis could be misused by employers, insurers, or legal systems — requiring especially rigorous ethical frameworks.",
+        "Mental health data carries exceptional stigma risks; people with mental illness are a vulnerable population requiring special protections; and predictions about suicidality or psychosis could be misused by employers, insurers, or legal systems - requiring especially rigorous ethical frameworks.",
       hints: [
-        "Mental health stigma remains pervasive — unauthorized disclosure of a mental health prediction could harm someone's employment or relationships.",
+        "Mental health stigma remains pervasive - unauthorized disclosure of a mental health prediction could harm someone's employment or relationships.",
         "Vulnerability of the population studied raises the bar for ethical conduct and informed consent.",
       ],
     },
@@ -2056,7 +2056,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SDOH encompasses the conditions in which people are born, grow, work, live, and age — including economic stability, education, social context, health systems access, and neighborhood environment — which explain significant variation in health outcomes.",
+        "SDOH encompasses the conditions in which people are born, grow, work, live, and age - including economic stability, education, social context, health systems access, and neighborhood environment - which explain significant variation in health outcomes.",
       hints: [
         "SDOH is about the social context of a patient's life, not their biology.",
         "Examples include food deserts, housing insecurity, and transportation barriers to healthcare access.",
@@ -2072,7 +2072,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Including race can encode historical discrimination into predictions (perpetuating disparities) or mask the underlying SDOH causes; some race-adjusted calculators (e.g., eGFR, VBAC risk) have been criticized for biasing care. The appropriate use of race in models requires careful causal reasoning.",
       hints: [
-        "Race is a social construct, not a biological category — it often proxies for racism and structural inequity.",
+        "Race is a social construct, not a biological category - it often proxies for racism and structural inequity.",
         "Using race as a feature can perpetuate discrimination if the feature encodes historical inequities rather than causal biology.",
       ],
     },
@@ -2090,7 +2090,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Even without explicit protected attributes, correlated proxies (zip code ~ race, insurance ~ income) allow bias to re-enter; underrepresentation in training data causes worse calibration and discrimination in minority groups — a phenomenon called 'fairness through unawareness' failure.",
+        "Even without explicit protected attributes, correlated proxies (zip code ~ race, insurance ~ income) allow bias to re-enter; underrepresentation in training data causes worse calibration and discrimination in minority groups - a phenomenon called 'fairness through unawareness' failure.",
       hints: [
         "Removing the sensitive attribute is not sufficient if other features are correlated with it.",
         "Underrepresentation means the model sees fewer examples from certain groups, reducing its accuracy for those groups.",
@@ -2113,9 +2113,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Interruptive (hard-stop) alerts pause the clinician's workflow and require a response before proceeding — high specificity is critical because low-value interruptions contribute severely to alert fatigue. Non-interruptive (passive) alerts provide ambient information without disrupting workflow.",
+        "Interruptive (hard-stop) alerts pause the clinician's workflow and require a response before proceeding - high specificity is critical because low-value interruptions contribute severely to alert fatigue. Non-interruptive (passive) alerts provide ambient information without disrupting workflow.",
       hints: [
-        "Hard-stop alerts are like a pop-up dialog that must be dismissed — they interrupt whatever the clinician is doing.",
+        "Hard-stop alerts are like a pop-up dialog that must be dismissed - they interrupt whatever the clinician is doing.",
         "The design choice (interruptive vs. non-interruptive) should match the urgency and consequence of the alert.",
       ],
     },
@@ -2127,7 +2127,7 @@ const questions: Record<string, Question[]> = {
         "Studies show that physicians override more than 90% of drug-drug interaction alerts in some EHR systems, primarily because these alerts have low clinical relevance for most patients.",
       correctAnswer: "True",
       explanation:
-        "Multiple studies across major EHRs show override rates of 90-96% for drug-drug interaction alerts; most fire for interactions that are clinically irrelevant for the specific patient context, training clinicians to dismiss alerts reflexively — the classic alert fatigue paradox.",
+        "Multiple studies across major EHRs show override rates of 90-96% for drug-drug interaction alerts; most fire for interactions that are clinically irrelevant for the specific patient context, training clinicians to dismiss alerts reflexively - the classic alert fatigue paradox.",
       hints: [
         "If nearly every alert is a false alarm, the rational response is to stop paying attention to alerts.",
         "This is an unintended consequence of overly sensitive alerting systems.",
@@ -2147,7 +2147,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The 'right time' criterion means alerts must fire when action is still possible; a drug allergy alert after the medication has been given is clinically useless — the intervention window has passed. Timely integration with ordering workflows is essential.",
+        "The 'right time' criterion means alerts must fire when action is still possible; a drug allergy alert after the medication has been given is clinically useless - the intervention window has passed. Timely integration with ordering workflows is essential.",
       hints: [
         "Timeliness is about whether the alert arrives when the clinician can still act on it.",
         "A retrospective alert that fires after an irreversible action has been taken cannot prevent harm.",
@@ -2170,9 +2170,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HIPAA restricts transmission of Protected Health Information (PHI) across covered entities; federated learning sidesteps this by keeping PHI on-premises at each institution and sharing only derived model updates — a key enabler of multi-institutional healthcare AI.",
+        "HIPAA restricts transmission of Protected Health Information (PHI) across covered entities; federated learning sidesteps this by keeping PHI on-premises at each institution and sharing only derived model updates - a key enabler of multi-institutional healthcare AI.",
       hints: [
-        "HIPAA's core concern is preventing unauthorized PHI disclosure — federated learning keeps PHI local.",
+        "HIPAA's core concern is preventing unauthorized PHI disclosure - federated learning keeps PHI local.",
         "Model weights and gradients are not PHI, making their transmission potentially HIPAA-compliant.",
       ],
     },
@@ -2186,7 +2186,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Epsilon-differential privacy provides a formal mathematical guarantee: the probability of any outcome (including model weights) changes by at most e^epsilon when any one individual's data is added or removed, bounding individual information leakage.",
       hints: [
-        "Differential privacy is a formal mathematical definition — it bounds how much one person's data affects the output.",
+        "Differential privacy is a formal mathematical definition - it bounds how much one person's data affects the output.",
         "Smaller epsilon means stronger privacy but typically at the cost of model utility.",
       ],
     },
@@ -2204,7 +2204,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FHE allows arithmetic operations on ciphertext; a federated server can aggregate encrypted gradients without seeing the underlying data, providing stronger guarantees than standard federated learning — at significant computational cost that remains a practical barrier.",
+        "FHE allows arithmetic operations on ciphertext; a federated server can aggregate encrypted gradients without seeing the underlying data, providing stronger guarantees than standard federated learning - at significant computational cost that remains a practical barrier.",
       hints: [
         "Homomorphic means 'structure-preserving': operations on encrypted data produce encrypted results that decrypt to the correct answer.",
         "FHE eliminates the need to trust the aggregating server because it never sees unencrypted data.",
@@ -2227,7 +2227,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RWE comes from real-world data (RWD) collected outside controlled trials — EHR records, insurance claims, patient registries, and wearables — reflecting how treatments perform in diverse real-world patient populations.",
+        "RWE comes from real-world data (RWD) collected outside controlled trials - EHR records, insurance claims, patient registries, and wearables - reflecting how treatments perform in diverse real-world patient populations.",
       hints: [
         "The contrast is with randomized controlled trials, which have strict inclusion/exclusion criteria.",
         "Real-world data reflects actual clinical practice, not a controlled experimental setting.",
@@ -2241,9 +2241,9 @@ const questions: Record<string, Question[]> = {
         "Confounding by indication is a specific bias in observational studies where sicker patients are more likely to receive a treatment, making the treatment appear harmful even if it is beneficial.",
       correctAnswer: "True",
       explanation:
-        "Confounding by indication occurs when the reason a patient receives treatment (they are sicker) is also associated with the outcome — crude observational estimates attribute the poorer outcomes of sick patients to the treatment itself.",
+        "Confounding by indication occurs when the reason a patient receives treatment (they are sicker) is also associated with the outcome - crude observational estimates attribute the poorer outcomes of sick patients to the treatment itself.",
       hints: [
-        "Think about who gets intensive chemotherapy — they have more severe disease, which independently worsens outcomes.",
+        "Think about who gets intensive chemotherapy - they have more severe disease, which independently worsens outcomes.",
         "The confounding variable is disease severity, which affects both treatment assignment and the outcome.",
       ],
     },
@@ -2264,7 +2264,7 @@ const questions: Record<string, Question[]> = {
         "Propensity scores model the probability of receiving treatment given observed covariates; matching or weighting by propensity score creates comparable treated and control groups with similar covariate distributions, reducing observed confounding.",
       hints: [
         "Propensity scores summarize all observed confounders into a single probability.",
-        "By matching patients with similar propensity scores, you create groups that look similar on measured characteristics — like a pseudo-randomization.",
+        "By matching patients with similar propensity scores, you create groups that look similar on measured characteristics - like a pseudo-randomization.",
       ],
     },
   ],
@@ -2298,7 +2298,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "The 510(k) pathway compares a new device to a predicate: if the new device has the same intended use and substantially equivalent technological characteristics (or different characteristics that do not raise new safety questions), it can be cleared without full clinical trials.",
       hints: [
-        "510(k) is a comparative pathway — you need a previously cleared predicate to compare against.",
+        "510(k) is a comparative pathway - you need a previously cleared predicate to compare against.",
         "Substantial equivalence can be based on intended use alone, or intended use plus technology.",
       ],
     },
@@ -2314,9 +2314,9 @@ const extra: Record<string, Question[]> = {
         "Bypass IRB requirements for early feasibility studies with fewer than 10 participants",
       ],
       correctAnswer: 1,
-      explanation: "The Pre-Submission program allows developers to engage FDA early — submitting a briefing document and proposed questions to receive written FDA feedback on study design, data collection plans, and regulatory pathways before investing in a full clinical study.",
+      explanation: "The Pre-Submission program allows developers to engage FDA early - submitting a briefing document and proposed questions to receive written FDA feedback on study design, data collection plans, and regulatory pathways before investing in a full clinical study.",
       hints: [
-        "Pre-Submission is a risk-reduction mechanism — you get FDA's perspective before expensive commitments.",
+        "Pre-Submission is a risk-reduction mechanism - you get FDA's perspective before expensive commitments.",
         "FDA responds in writing, giving developers informal but valuable guidance on their development plan.",
       ],
     },
@@ -2335,7 +2335,7 @@ const extra: Record<string, Question[]> = {
       explanation: "Traditional medical device regulation treats devices as static; AI models may need continuous updates to maintain performance. PCCP allows manufacturers to pre-specify anticipated changes (within defined bounds) so that routine model updates do not each require a new 510(k), while still ensuring safety.",
       hints: [
         "Think about what makes AI devices fundamentally different from a scalpel or a blood pressure cuff.",
-        "PCCP pre-approves the types of changes that are allowed without a new submission — not the changes themselves.",
+        "PCCP pre-approves the types of changes that are allowed without a new submission - not the changes themselves.",
       ],
     },
     {
@@ -2362,9 +2362,9 @@ const extra: Record<string, Question[]> = {
         "Cloud computing infrastructure details and uptime guarantees",
       ],
       correctAnswer: 1,
-      explanation: "FDA requires labeling that clearly specifies the intended patient population, validated performance metrics (including subgroup performance to reveal disparities), known failure modes, and guidance on appropriate clinical use — enabling clinicians to understand when to trust or override the AI.",
+      explanation: "FDA requires labeling that clearly specifies the intended patient population, validated performance metrics (including subgroup performance to reveal disparities), known failure modes, and guidance on appropriate clinical use - enabling clinicians to understand when to trust or override the AI.",
       hints: [
-        "Labeling is the interface between the device and its users — clinicians need to know when the device works and when it does not.",
+        "Labeling is the interface between the device and its users - clinicians need to know when the device works and when it does not.",
         "Subgroup performance disclosure helps prevent automation bias in populations where the device underperforms.",
       ],
     },
@@ -2383,7 +2383,7 @@ const extra: Record<string, Question[]> = {
         "AI diagnostic tools are validated in prospective studies before any retrospective analysis is published",
       ],
       correctAnswer: 1,
-      explanation: "CONSORT-AI adds AI-specific reporting items to the standard CONSORT checklist: description of the AI system version, training data, how the AI output was integrated into clinical workflow, and human-AI interaction details — critical for reproducibility and evidence synthesis.",
+      explanation: "CONSORT-AI adds AI-specific reporting items to the standard CONSORT checklist: description of the AI system version, training data, how the AI output was integrated into clinical workflow, and human-AI interaction details - critical for reproducibility and evidence synthesis.",
       hints: [
         "CONSORT is a checklist for reporting randomized trials; CONSORT-AI adds items specific to AI.",
         "Without knowing which model version was used and how it was applied, trial results cannot be reproduced or generalized.",
@@ -2397,7 +2397,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Retrospective studies use historical data collected under conditions that may not reflect how the AI will be deployed (different acquisition protocols, patient selection, labeling quality); prospective studies collect data in the actual deployment workflow, revealing operational challenges like covariate shift and workflow integration issues.",
       hints: [
-        "Retrospective data was collected in the past for a different purpose — it may not represent the future deployment environment.",
+        "Retrospective data was collected in the past for a different purpose - it may not represent the future deployment environment.",
         "Prospective studies can capture workflow factors (how clinicians interact with the AI) that retrospective studies cannot.",
       ],
     },
@@ -2416,7 +2416,7 @@ const extra: Record<string, Question[]> = {
       explanation: "Spectrum bias occurs when the validation set contains proportionally more clear-cut cases (obvious positives and negatives) than the real clinical setting, inflating sensitivity and specificity; a diagnostically challenging mix representative of actual clinical caseload is required for valid performance estimates.",
       hints: [
         "If your test set has only obvious cancers and clear normals, performance will look better than in real practice where borderline cases are common.",
-        "The 'spectrum' refers to the range of disease severity — from subtle early findings to obvious advanced disease.",
+        "The 'spectrum' refers to the range of disease severity - from subtle early findings to obvious advanced disease.",
       ],
     },
     {
@@ -2446,7 +2446,7 @@ const extra: Record<string, Question[]> = {
       explanation: "External validation routinely reveals substantial performance drops due to covariate shift: differences in imaging equipment, patient population demographics, disease prevalence, acquisition protocols, and labeling conventions between training and deployment sites. Published studies show median AUC drops of 0.05-0.15 on external validation.",
       hints: [
         "Performance drops between internal and external validation are a well-documented phenomenon in medical AI.",
-        "Different hospitals use different scanner models, protocols, and patient populations — all of which can shift the input distribution.",
+        "Different hospitals use different scanner models, protocols, and patient populations - all of which can shift the input distribution.",
       ],
     },
   ],
@@ -2464,10 +2464,10 @@ const extra: Record<string, Question[]> = {
         "FDA requires all Class II medical devices to output calibrated confidence intervals",
       ],
       correctAnswer: 1,
-      explanation: "A model that knows what it does not know can defer uncertain cases to radiologists, concentrating AI efficiency gains on clear cases while preserving human oversight for ambiguous or out-of-distribution inputs — improving overall safety without sacrificing throughput.",
+      explanation: "A model that knows what it does not know can defer uncertain cases to radiologists, concentrating AI efficiency gains on clear cases while preserving human oversight for ambiguous or out-of-distribution inputs - improving overall safety without sacrificing throughput.",
       hints: [
         "A model that is confidently wrong is dangerous; a model that flags its uncertainty enables human-AI collaboration.",
-        "Out-of-distribution inputs (unusual pathology, image artifacts) are exactly where AI models fail most — uncertainty should be high for these.",
+        "Out-of-distribution inputs (unusual pathology, image artifacts) are exactly where AI models fail most - uncertainty should be high for these.",
       ],
     },
     {
@@ -2482,10 +2482,10 @@ const extra: Record<string, Question[]> = {
         "Training a separate uncertainty head alongside the main prediction head",
       ],
       correctAnswer: 1,
-      explanation: "MC Dropout treats dropout as approximate Bayesian inference: at test time, dropout is left on, and T forward passes produce a distribution of predictions. The variance of this distribution approximates predictive uncertainty — high variance signals uncertain, potentially out-of-distribution inputs.",
+      explanation: "MC Dropout treats dropout as approximate Bayesian inference: at test time, dropout is left on, and T forward passes produce a distribution of predictions. The variance of this distribution approximates predictive uncertainty - high variance signals uncertain, potentially out-of-distribution inputs.",
       hints: [
         "Standard dropout is turned off at test time; MC Dropout keeps it on to generate a distribution of outputs.",
-        "Running the model T times with different random dropout masks gives T different predictions — their spread is the uncertainty.",
+        "Running the model T times with different random dropout masks gives T different predictions - their spread is the uncertainty.",
       ],
     },
     {
@@ -2494,9 +2494,9 @@ const extra: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Detection tasks in medical imaging AI (e.g., finding a nodule) are generally easier to evaluate than prognosis tasks (e.g., predicting 5-year survival) because detection has objective ground truth labels.",
       correctAnswer: "True",
-      explanation: "Detection ground truth comes from radiologist annotations or biopsy confirmation; prognosis requires long follow-up, suffers from censoring, and involves outcomes shaped by treatments received after imaging — making label quality, evaluation metrics (concordance index), and confounding far more complex.",
+      explanation: "Detection ground truth comes from radiologist annotations or biopsy confirmation; prognosis requires long follow-up, suffers from censoring, and involves outcomes shaped by treatments received after imaging - making label quality, evaluation metrics (concordance index), and confounding far more complex.",
       hints: [
-        "Detection: is the nodule there? Prognosis: will the patient survive 5 years? — these have very different ground truth challenges.",
+        "Detection: is the nodule there? Prognosis: will the patient survive 5 years? - these have very different ground truth challenges.",
         "Prognosis labels are subject to censoring (patients lost to follow-up) and treatment confounding.",
       ],
     },
@@ -2514,8 +2514,8 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Calibration means predicted probabilities reflect true event frequencies: if the model says '70% risk of malignancy' for 1000 nodules, roughly 700 of them should be malignant. Modern deep learning models are often overconfident (poorly calibrated) and require post-hoc calibration (Platt scaling, temperature scaling).",
       hints: [
-        "AUC measures ranking (discrimination), not probability accuracy (calibration) — a model can have high AUC but be poorly calibrated.",
-        "Calibration curves plot predicted probability (x-axis) against observed frequency (y-axis) — a perfect diagonal means perfect calibration.",
+        "AUC measures ranking (discrimination), not probability accuracy (calibration) - a model can have high AUC but be poorly calibrated.",
+        "Calibration curves plot predicted probability (x-axis) against observed frequency (y-axis) - a perfect diagonal means perfect calibration.",
       ],
     },
     {
@@ -2530,10 +2530,10 @@ const extra: Record<string, Question[]> = {
         "Diagnosis is a binary classification task; prognosis is always a regression task",
       ],
       correctAnswer: 1,
-      explanation: "Diagnosis infers the current pathological state from the image (e.g., 'this lesion is malignant'); prognosis predicts future outcomes (e.g., 'this patient has 60% 5-year survival') — requiring different labels, evaluation metrics (Kaplan-Meier, concordance index), and handling of time-dependent confounders.",
+      explanation: "Diagnosis infers the current pathological state from the image (e.g., 'this lesion is malignant'); prognosis predicts future outcomes (e.g., 'this patient has 60% 5-year survival') - requiring different labels, evaluation metrics (Kaplan-Meier, concordance index), and handling of time-dependent confounders.",
       hints: [
         "Diagnosis answers 'what is wrong now?' Prognosis answers 'what will happen next?'",
-        "Prognosis requires longitudinal follow-up data and must deal with censoring — patients who leave the study before the endpoint.",
+        "Prognosis requires longitudinal follow-up data and must deal with censoring - patients who leave the study before the endpoint.",
       ],
     },
   ],
@@ -2553,7 +2553,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "FHIR standardizes clinical data as RESTful resources (Patient, Observation, Condition, etc.) accessible via HTTP APIs; NLP pipelines can query FHIR endpoints to retrieve clinical notes, lab results, and medication lists programmatically, enabling scalable, interoperable clinical AI systems.",
       hints: [
-        "FHIR makes EHR data accessible via APIs — think of it as a standard programming interface to any EHR system.",
+        "FHIR makes EHR data accessible via APIs - think of it as a standard programming interface to any EHR system.",
         "NLP pipelines need to ingest clinical text reliably; FHIR provides a standardized way to retrieve it.",
       ],
     },
@@ -2563,10 +2563,10 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Automatic ICD-10 coding from clinical notes is a multi-label classification problem because a single patient encounter can warrant multiple diagnosis codes simultaneously.",
       correctAnswer: "True",
-      explanation: "A hospitalization may involve heart failure, pneumonia, type 2 diabetes, and chronic kidney disease — each coded separately with its own ICD-10 code. Models must predict a set of codes, not a single label, making it multi-label rather than multi-class, with strong class imbalance (rare codes vs. common ones).",
+      explanation: "A hospitalization may involve heart failure, pneumonia, type 2 diabetes, and chronic kidney disease - each coded separately with its own ICD-10 code. Models must predict a set of codes, not a single label, making it multi-label rather than multi-class, with strong class imbalance (rare codes vs. common ones).",
       hints: [
         "Multi-class means one correct class; multi-label means multiple correct labels simultaneously.",
-        "Think about a complex hospital admission — many diagnoses can be documented and coded at once.",
+        "Think about a complex hospital admission - many diagnoses can be documented and coded at once.",
       ],
     },
     {
@@ -2581,9 +2581,9 @@ const extra: Record<string, Question[]> = {
         "Detecting adverse events in trial participant notes for safety reporting",
       ],
       correctAnswer: 1,
-      explanation: "Trial eligibility criteria are complex logical expressions over clinical concepts; matching them to EHR notes requires recognizing negated conditions ('no prior stroke'), temporal relationships ('diagnosed within the last 6 months'), and medical concept normalization (aspirin = acetylsalicylic acid) — combining NER, negation detection, and temporal reasoning.",
+      explanation: "Trial eligibility criteria are complex logical expressions over clinical concepts; matching them to EHR notes requires recognizing negated conditions ('no prior stroke'), temporal relationships ('diagnosed within the last 6 months'), and medical concept normalization (aspirin = acetylsalicylic acid) - combining NER, negation detection, and temporal reasoning.",
       hints: [
-        "Eligibility criteria say things like 'no prior MI in the last 3 months' — this requires understanding negation and time.",
+        "Eligibility criteria say things like 'no prior MI in the last 3 months' - this requires understanding negation and time.",
         "Medical concept normalization maps surface text variants ('heart attack', 'MI', 'myocardial infarction') to the same concept.",
       ],
     },
@@ -2594,7 +2594,7 @@ const extra: Record<string, Question[]> = {
       question: "The HIPAA Safe Harbor de-identification method requires removal of which category of identifiers from clinical text that is particularly challenging for rule-based NLP systems?",
       options: [
         "Patient names, which are always in a predictable 'FirstName LastName' format",
-        "Geographic data smaller than state, dates (other than year), phone numbers, and unique identifiers — many of which appear in highly variable, context-dependent formats in free text",
+        "Geographic data smaller than state, dates (other than year), phone numbers, and unique identifiers - many of which appear in highly variable, context-dependent formats in free text",
         "ICD diagnosis codes, which can uniquely identify rare disease patients",
         "Medication lists, which are structured and easy to extract",
       ],
@@ -2613,8 +2613,8 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "False",
       explanation: "Clinical notes vary substantially by institution: documentation culture, specialty mix, EHR template structures, abbreviation conventions, and patient population demographics all differ. Models trained on a single-site academic ICU corpus typically show significant performance degradation on community hospitals, pediatric centers, or notes from different EHR systems.",
       hints: [
-        "Every hospital has its own note-writing culture and EHR template structure — these create site-specific NLP challenges.",
-        "MIMIC is ICU-focused and from a single academic center — community hospitals and other specialties have very different notes.",
+        "Every hospital has its own note-writing culture and EHR template structure - these create site-specific NLP challenges.",
+        "MIMIC is ICU-focused and from a single academic center - community hospitals and other specialties have very different notes.",
       ],
     },
     {
@@ -2629,10 +2629,10 @@ const extra: Record<string, Question[]> = {
         "Operate within HIPAA-compliant environments by default without additional security measures",
       ],
       correctAnswer: 1,
-      explanation: "LLMs enable flexible, instruction-following clinical reasoning — answering complex clinical questions, summarizing records, or synthesizing guidelines without dedicated fine-tuning. However, they hallucinate, lack guaranteed factual accuracy, require careful prompt engineering, and raise deployment challenges around privacy and liability.",
+      explanation: "LLMs enable flexible, instruction-following clinical reasoning - answering complex clinical questions, summarizing records, or synthesizing guidelines without dedicated fine-tuning. However, they hallucinate, lack guaranteed factual accuracy, require careful prompt engineering, and raise deployment challenges around privacy and liability.",
       hints: [
         "Traditional clinical NLP models are task-specific; LLMs can generalize across tasks with prompts.",
-        "Zero-shot means no task-specific training examples — just a description of the task.",
+        "Zero-shot means no task-specific training examples - just a description of the task.",
       ],
     },
   ],
@@ -2653,7 +2653,7 @@ const extra: Record<string, Question[]> = {
       explanation: "FDA SaMD classification is determined by significance (treat/drive) times situation (critical); autonomously treating a life-threatening cardiac arrhythmia is the highest risk combination. Class III requires a PMA with clinical evidence of safety and effectiveness, unlike Class II which uses the 510(k) substantial equivalence pathway.",
       hints: [
         "Autonomous treatment of a critical condition is the highest-risk SaMD category.",
-        "The SaMD framework distinguishes 'inform' from 'drive clinical management' — autonomous treatment is the highest significance.",
+        "The SaMD framework distinguishes 'inform' from 'drive clinical management' - autonomous treatment is the highest significance.",
       ],
     },
     {
@@ -2694,7 +2694,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "IRB oversight applies to human subjects research involving data collection (including medical records, images, and biological specimens); prospective collection of patient data for AI validation constitutes human subjects research requiring IRB review of consent procedures, data privacy protections, and study design.",
       hints: [
-        "IRB approval protects research participants — any prospective human subjects study requires it.",
+        "IRB approval protects research participants - any prospective human subjects study requires it.",
         "The regulatory status of the AI being evaluated does not affect whether IRB oversight is needed for the study.",
       ],
     },
@@ -2713,10 +2713,10 @@ const extra: Record<string, Question[]> = {
         "The model is retrained on the calibration set to adjust weights, not just logits",
       ],
       correctAnswer: 1,
-      explanation: "Temperature scaling divides logits by T before softmax; T > 1 reduces logit magnitudes, softening the distribution and pulling predicted probabilities toward 0.5 for binary — correcting the overconfidence common in deep networks. T < 1 sharpens predictions. Crucially, argmax is unchanged, so accuracy is preserved.",
+      explanation: "Temperature scaling divides logits by T before softmax; T > 1 reduces logit magnitudes, softening the distribution and pulling predicted probabilities toward 0.5 for binary - correcting the overconfidence common in deep networks. T < 1 sharpens predictions. Crucially, argmax is unchanged, so accuracy is preserved.",
       hints: [
-        "Logits divided by T > 1 are smaller in magnitude — smaller logits mean softer softmax outputs.",
-        "Temperature scaling changes confidence levels but not the predicted class — accuracy is unaffected.",
+        "Logits divided by T > 1 are smaller in magnitude - smaller logits mean softer softmax outputs.",
+        "Temperature scaling changes confidence levels but not the predicted class - accuracy is unaffected.",
       ],
     },
     {
@@ -2764,7 +2764,7 @@ const extra: Record<string, Question[]> = {
         "To apply multi-head attention across ICD code hierarchies for code grouping",
       ],
       correctAnswer: 1,
-      explanation: "CAML computes a separate attention vector over the document for each ICD label, allowing the model to focus on different parts of the clinical note for different codes — 'pneumonia' focuses on different sentences than 'heart failure.' This per-label attention also provides interpretable evidence for each predicted code.",
+      explanation: "CAML computes a separate attention vector over the document for each ICD label, allowing the model to focus on different parts of the clinical note for different codes - 'pneumonia' focuses on different sentences than 'heart failure.' This per-label attention also provides interpretable evidence for each predicted code.",
       hints: [
         "Multi-label classification requires the model to produce a separate decision for each of the thousands of ICD codes.",
         "Per-label attention means the model reads the note differently depending on which code it is currently evaluating.",

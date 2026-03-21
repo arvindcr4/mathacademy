@@ -17,10 +17,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The key insight is the reparameterization trick for Gaussians. Since each forward step adds Gaussian noise, the composition of $T$ Gaussian perturbations is itself Gaussian. Defining $\\alpha_t = 1 - \\beta_t$ and $\\bar{\\alpha}_t = \\prod_{s=1}^{t} \\alpha_s$, the marginal at timestep $t$ is:\n\n\\[\nq(x_t \\mid x_0) = \\mathcal{N}\\!\\left(x_t; \\sqrt{\\bar{\\alpha}_t}\\,x_0,\\; (1-\\bar{\\alpha}_t)\\,I\\right).\n\\]\n\nIn other words:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\nThis means we can directly sample $x_t$ from $x_0$ at any timestep $t$ in a single step — no need to iterate through the full chain. This is essential for training efficiency.",
+        "The key insight is the reparameterization trick for Gaussians. Since each forward step adds Gaussian noise, the composition of $T$ Gaussian perturbations is itself Gaussian. Defining $\\alpha_t = 1 - \\beta_t$ and $\\bar{\\alpha}_t = \\prod_{s=1}^{t} \\alpha_s$, the marginal at timestep $t$ is:\n\n\\[\nq(x_t \\mid x_0) = \\mathcal{N}\\!\\left(x_t; \\sqrt{\\bar{\\alpha}_t}\\,x_0,\\; (1-\\bar{\\alpha}_t)\\,I\\right).\n\\]\n\nIn other words:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon, \\qquad \\varepsilon \\sim \\mathcal{N}(0, I).\n\\]\n\nThis means we can directly sample $x_t$ from $x_0$ at any timestep $t$ in a single step - no need to iterate through the full chain. This is essential for training efficiency.",
       hints: [
         "The marginal $q(x_t \\mid x_0)$ is a Gaussian whose mean is a scaled version of $x_0$ and whose variance grows with the cumulative noise.",
-        "If $\\bar{\\alpha}_t \\approx 0$ (i.e., $t \\to T$), then $x_t \\approx \\varepsilon \\sim \\mathcal{N}(0, I)$ — pure noise.",
+        "If $\\bar{\\alpha}_t \\approx 0$ (i.e., $t \\to T$), then $x_t \\approx \\varepsilon \\sim \\mathcal{N}(0, I)$ - pure noise.",
       ],
     },
     {
@@ -31,7 +31,7 @@ const questions: Record<string, Question[]> = {
         "DDPM uses an increasing noise schedule $\\beta_1 < \\beta_2 < \\cdots < \\beta_T$. What is the effect of increasing $\\beta_t$ at a given step $t$?",
       options: [
         "More structure from $x_0$ is preserved at step $t$",
-        "More noise is injected at step $t$, destroying signal faster — the signal-to-noise ratio decreases at that step",
+        "More noise is injected at step $t$, destroying signal faster - the signal-to-noise ratio decreases at that step",
         "The denoising network must predict larger noise magnitudes at step $t$",
         "The total number of denoising steps $T$ required for good samples increases",
       ],
@@ -60,7 +60,7 @@ const questions: Record<string, Question[]> = {
         "We start from the two relevant forward conditionals:\n\n\\[\nq(x_t \\mid x_{t-1}) = \\mathcal{N}\\!\\left(x_t; \\sqrt{1-\\beta_t}\\,x_{t-1},\\; \\beta_t\\,I\\right), \\quad q(x_{t-1} \\mid x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\sqrt{\\bar{\\alpha}_{t-1}}\\,x_0,\\; (1-\\bar{\\alpha}_{t-1})\\,I\\right).\n\\]\n\nApplying Bayes' rule and using the Gaussian product formula (product of two Gaussians yields another Gaussian):\n\n\\[\nq(x_{t-1} \\mid x_t, x_0) = \\mathcal{N}\\!\\left(x_{t-1}; \\tilde{\\mu}_t,\\; \\tilde{\\beta}_t\\,I\\right),\n\\]\n\nwhere:\n\n\\[\n\\tilde{\\mu}_t = \\frac{\\sqrt{\\bar{\\alpha}_{t-1}\\,}\\beta_t}{1-\\bar{\\alpha}_t}\\,x_0 + \\frac{\\sqrt{\\alpha_t}\\,(1-\\bar{\\alpha}_{t-1})}{1-\\bar{\\alpha}_t}\\,x_t, \\qquad\n\\tilde{\\beta}_t = \\frac{(1-\\bar{\\alpha}_{t-1})\\,\\beta_t}{1-\\bar{\\alpha}_t}.\n\\]\n\nThe first term weights $x_0$ by how much signal remains at $t-1$; the second weights the noisy observation $x_t$. The reverse process $p_\\theta(x_{t-1} \\mid x_t)$ learns to approximate this posterior.",
       hints: [
         "Apply the Gaussian product formula: multiplying $q(x_t \\mid x_{t-1})\\,q(x_{t-1} \\mid x_0)$ and normalizing yields another Gaussian.",
-        "The two terms reflect how $x_0$ and $x_t$ each contribute to the posterior — $x_0$ carries the original signal, while $x_t$ carries the noisy observation.",
+        "The two terms reflect how $x_0$ and $x_t$ each contribute to the posterior - $x_0$ carries the original signal, while $x_t$ carries the noisy observation.",
       ],
     },
   ],
@@ -73,10 +73,10 @@ const questions: Record<string, Question[]> = {
       question:
         "Ho et al. (2020) discovered that the DDPM training objective can be simplified to noise prediction. Which expression correctly states the simplified loss?",
       options: [
-        "$\\mathcal{L} = \\mathbb{E}\\big[\\|x_0 - \\hat{x}_0(x_t, t)\\|^2\\big]$ — reconstruct $x_0$ from $x_t$",
-        "$\\mathcal{L} = \\mathbb{E}\\big[\\|\\varepsilon - \\varepsilon_\\theta(\\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon,\\; t)\\|^2\\big]$ — predict the added noise $\\varepsilon$",
-        "$\\mathcal{L} = \\mathbb{E}\\big[\\mathrm{KL}\\big(q(x_{t-1} \\mid x_t, x_0) \\;\\|\\; p_\\theta(x_{t-1} \\mid x_t)\\big)\\big]$ — minimize the full ELBO",
-        "$\\mathcal{L} = \\mathbb{E}\\big[\\|\\nabla_{x_t} \\log p(x_t) - s_\\theta(x_t, t)\\|^2\\big]$ — predict the score function",
+        "$\\mathcal{L} = \\mathbb{E}\\big[\\|x_0 - \\hat{x}_0(x_t, t)\\|^2\\big]$ - reconstruct $x_0$ from $x_t$",
+        "$\\mathcal{L} = \\mathbb{E}\\big[\\|\\varepsilon - \\varepsilon_\\theta(\\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon,\\; t)\\|^2\\big]$ - predict the added noise $\\varepsilon$",
+        "$\\mathcal{L} = \\mathbb{E}\\big[\\mathrm{KL}\\big(q(x_{t-1} \\mid x_t, x_0) \\;\\|\\; p_\\theta(x_{t-1} \\mid x_t)\\big)\\big]$ - minimize the full ELBO",
+        "$\\mathcal{L} = \\mathbb{E}\\big[\\|\\nabla_{x_t} \\log p(x_t) - s_\\theta(x_t, t)\\|^2\\big]$ - predict the score function",
       ],
       correctAnswer: 1,
       explanation:
@@ -94,9 +94,9 @@ const questions: Record<string, Question[]> = {
         "DDPM sampling requires exactly $T$ sequential denoising steps (one per timestep, from $T$ down to $0$) to generate a high-quality sample.",
       correctAnswer: "True",
       explanation:
-        "DDPM's reverse process is Markovian: given $x_t$, the model predicts the noise $\\varepsilon_\\theta(x_t, t)$ and samples:\n\n\\[\nx_{t-1} \\sim p_\\theta(x_{t-1} \\mid x_t) = \\mathcal{N}\\!\\left(x_{t-1}; \\mu_\\theta(x_t, t),\\; \\sigma_t^2 I\\right).\n\\]\n\nEach step $t \\to t-1$ requires one forward pass of the neural network, so generating one sample requires $T$ sequential passes. In the original DDPM paper, $T = 1000$.\n\nThis is DDPM's primary practical limitation: 1000 sequential neural network evaluations make generation slow. DDIM (Song et al., 2020) and other accelerated samplers break the Markovian structure to skip steps, reducing generation to 10–50 steps while maintaining quality.",
+        "DDPM's reverse process is Markovian: given $x_t$, the model predicts the noise $\\varepsilon_\\theta(x_t, t)$ and samples:\n\n\\[\nx_{t-1} \\sim p_\\theta(x_{t-1} \\mid x_t) = \\mathcal{N}\\!\\left(x_{t-1}; \\mu_\\theta(x_t, t),\\; \\sigma_t^2 I\\right).\n\\]\n\nEach step $t \\to t-1$ requires one forward pass of the neural network, so generating one sample requires $T$ sequential passes. In the original DDPM paper, $T = 1000$.\n\nThis is DDPM's primary practical limitation: 1000 sequential neural network evaluations make generation slow. DDIM (Song et al., 2020) and other accelerated samplers break the Markovian structure to skip steps, reducing generation to 10-50 steps while maintaining quality.",
       hints: [
-        "Each denoising step requires one neural network forward pass — $T$ steps means $T$ forward passes per generated sample.",
+        "Each denoising step requires one neural network forward pass - $T$ steps means $T$ forward passes per generated sample.",
         "DDIM exploits the fact that the same noise-prediction network $\\varepsilon_\\theta$ can be used with a non-Markovian reverse process, allowing steps to be skipped without retraining.",
       ],
     },
@@ -114,9 +114,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The ELBO for DDPM is:\n\n\\[\n\\mathcal{L} = \\mathcal{L}_T + \\sum_{t=1}^{T-1} \\mathcal{L}_t + \\mathcal{L}_0,\n\\]\n\nwhere each $\\mathcal{L}_t = \\mathrm{KL}\\big(q(x_t \\mid x_{t+1}, x_0) \\;\\|\\; p_\\theta(x_t \\mid x_{t+1})\\big)$.\n\nThe $\\mathcal{L}_T$ term is:\n\n\\[\n\\mathcal{L}_T = \\mathrm{KL}\\big(q(x_T \\mid x_0) \\;\\|\\; p(x_T)\\big), \\quad p(x_T) = \\mathcal{N}(0, I).\n\\]\n\nWith a well-designed schedule ($\\bar{\\alpha}_T \\approx 0$), we have $q(x_T \\mid x_0) \\approx \\mathcal{N}(0, I) = p(x_T)$, so $\\mathcal{L}_T \\approx 0$. Moreover, $p(x_T)$ has no learnable parameters — backpropagating through $\\mathcal{L}_T$ would not update $\\varepsilon_\\theta$. Hence it is safely dropped from training.",
+        "The ELBO for DDPM is:\n\n\\[\n\\mathcal{L} = \\mathcal{L}_T + \\sum_{t=1}^{T-1} \\mathcal{L}_t + \\mathcal{L}_0,\n\\]\n\nwhere each $\\mathcal{L}_t = \\mathrm{KL}\\big(q(x_t \\mid x_{t+1}, x_0) \\;\\|\\; p_\\theta(x_t \\mid x_{t+1})\\big)$.\n\nThe $\\mathcal{L}_T$ term is:\n\n\\[\n\\mathcal{L}_T = \\mathrm{KL}\\big(q(x_T \\mid x_0) \\;\\|\\; p(x_T)\\big), \\quad p(x_T) = \\mathcal{N}(0, I).\n\\]\n\nWith a well-designed schedule ($\\bar{\\alpha}_T \\approx 0$), we have $q(x_T \\mid x_0) \\approx \\mathcal{N}(0, I) = p(x_T)$, so $\\mathcal{L}_T \\approx 0$. Moreover, $p(x_T)$ has no learnable parameters - backpropagating through $\\mathcal{L}_T$ would not update $\\varepsilon_\\theta$. Hence it is safely dropped from training.",
       hints: [
-        "The prior $p(x_T) = \\mathcal{N}(0, I)$ is fixed with no parameters — gradient signals from $\\mathcal{L}_T$ cannot update $\\varepsilon_\\theta$.",
+        "The prior $p(x_T) = \\mathcal{N}(0, I)$ is fixed with no parameters - gradient signals from $\\mathcal{L}_T$ cannot update $\\varepsilon_\\theta$.",
         "Choosing $T$ large enough that $\\bar{\\alpha}_T \\approx 0$ ensures $q(x_T \\mid x_0) \\approx p(x_T)$, making $\\mathcal{L}_T$ negligible.",
       ],
     },
@@ -128,7 +128,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Score matching (Hyvärinen, 2005) learns a neural network $s_\\theta(x) \\approx \\nabla_x \\log p(x)$ — the score function. Why is the score function useful for generative modeling?",
+        "Score matching (Hyvärinen, 2005) learns a neural network $s_\\theta(x) \\approx \\nabla_x \\log p(x)$ - the score function. Why is the score function useful for generative modeling?",
       options: [
         "The score function directly gives the probability density $p(x)$, enabling exact likelihood computation",
         "Knowing the score enables Langevin dynamics sampling: $x_{t+1} = x_t + \\frac{\\varepsilon}{2}\\,\\nabla_x \\log p(x_t) + \\sqrt{\\varepsilon}\\,z$, which iteratively produces samples from $p(x)$",
@@ -140,7 +140,7 @@ const questions: Record<string, Question[]> = {
         "The score $\\nabla_x \\log p(x)$ points in the direction of steepest increase in log-probability. Starting from arbitrary initialization (e.g., pure noise), we can sample from $p(x)$ using Langevin dynamics:\n\n\\[\nx_{t+1} = x_t + \\frac{\\varepsilon}{2}\\,\\nabla_x \\log p(x_t) + \\sqrt{\\varepsilon}\\,z_t, \\qquad z_t \\sim \\mathcal{N}(0, I).\n\\]\n\nUnder mild conditions, as $\\varepsilon \\to 0$ and $t \\to \\infty$, the chain converges to samples from $p(x)$. Score-based models (Song & Ermon, 2019) learn $s_\\theta(x) \\approx \\nabla_x \\log p(x)$ and use annealed Langevin dynamics at multiple noise scales to handle multi-modal distributions. This directly connects score matching to diffusion models.",
       hints: [
         "Langevin dynamics is like gradient ascent on $\\log p(x)$ with added noise to escape local modes.",
-        "The score does not require knowing the partition function $Z$ — unlike the energy-based model $E(x) = -\\log p(x) + \\log Z$.",
+        "The score does not require knowing the partition function $Z$ - unlike the energy-based model $E(x) = -\\log p(x) + \\log Z$.",
       ],
     },
     {
@@ -157,7 +157,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vanilla score matching requires differentiating through the log-density $\\nabla_x \\log p(x)$, which is intractable for implicit models. Denoising score matching avoids this by instead learning the score of a corrupted distribution.\n\nFor Gaussian noise corruption $\\tilde{x} = x + \\sigma\\,\\varepsilon$, the score of the noisy distribution has a simple closed form:\n\n\\[\n\\nabla_{\\tilde{x}} \\log q_\\sigma(\\tilde{x}) = -\\frac{\\varepsilon}{\\sigma} = \\frac{x - \\tilde{x}}{\\sigma^2}.\n\\]\n\nThe denoising score matching objective is:\n\n\\[\n\\mathbb{E}_{x,\\,\\tilde{x}}\\big[\\|s_\\theta(\\tilde{x}) - (x - \\tilde{x})/\\sigma^2\\|^2\\big],\n\\]\n\nwhich is tractable — no density or partition function needed. This connects directly to DDPM: noise prediction $\\varepsilon_\\theta$ is proportional to the negative score estimation.",
+        "Vanilla score matching requires differentiating through the log-density $\\nabla_x \\log p(x)$, which is intractable for implicit models. Denoising score matching avoids this by instead learning the score of a corrupted distribution.\n\nFor Gaussian noise corruption $\\tilde{x} = x + \\sigma\\,\\varepsilon$, the score of the noisy distribution has a simple closed form:\n\n\\[\n\\nabla_{\\tilde{x}} \\log q_\\sigma(\\tilde{x}) = -\\frac{\\varepsilon}{\\sigma} = \\frac{x - \\tilde{x}}{\\sigma^2}.\n\\]\n\nThe denoising score matching objective is:\n\n\\[\n\\mathbb{E}_{x,\\,\\tilde{x}}\\big[\\|s_\\theta(\\tilde{x}) - (x - \\tilde{x})/\\sigma^2\\|^2\\big],\n\\]\n\nwhich is tractable - no density or partition function needed. This connects directly to DDPM: noise prediction $\\varepsilon_\\theta$ is proportional to the negative score estimation.",
       hints: [
         "For Gaussian corruption, the score of the noisy distribution points directly from $\\tilde{x}$ back toward the clean $x$.",
         "DDPM's noise prediction and score matching are equivalent up to scaling: $s_\\theta(x_t, t) \\approx -\\varepsilon_\\theta(x_t, t)/\\sqrt{1-\\bar{\\alpha}_t}$.",
@@ -200,9 +200,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDIM replaces DDPM's Markovian reverse chain with a generalized, non-Markovian process. The key property is that the reverse process is designed to produce the same forward marginals $q(x_t \\mid x_0)$ — so the model still sees the correct noise levels during training.\n\nBecause the reverse process is non-Markovian, the transition from $x_t$ to $x_{t-1}$ depends on the entire trajectory, not just $x_t$. This allows skipping directly from $x_t$ to $x_{t'}$ for $t' \\ll t$, using the same noise-prediction network $\\varepsilon_\\theta$ without any retraining. High-quality generation in 10–50 steps (instead of 1000) becomes possible.",
+        "DDIM replaces DDPM's Markovian reverse chain with a generalized, non-Markovian process. The key property is that the reverse process is designed to produce the same forward marginals $q(x_t \\mid x_0)$ - so the model still sees the correct noise levels during training.\n\nBecause the reverse process is non-Markovian, the transition from $x_t$ to $x_{t-1}$ depends on the entire trajectory, not just $x_t$. This allows skipping directly from $x_t$ to $x_{t'}$ for $t' \\ll t$, using the same noise-prediction network $\\varepsilon_\\theta$ without any retraining. High-quality generation in 10-50 steps (instead of 1000) becomes possible.",
       hints: [
-        "DDIM uses the same $\\varepsilon_\\theta$ as DDPM — no retraining is needed, only a different sampling algorithm.",
+        "DDIM uses the same $\\varepsilon_\\theta$ as DDPM - no retraining is needed, only a different sampling algorithm.",
         "With $\\eta = 0$, DDIM is fully deterministic (ODE-based sampling); with $\\eta = 1$, it recovers DDPM's stochastic sampling.",
       ],
     },
@@ -214,7 +214,7 @@ const questions: Record<string, Question[]> = {
         "DDIM with $\\eta = 0$ (fully deterministic sampling) enables exact image reconstruction from its latent representation $x_T$, making the generative process invertible.",
       correctAnswer: "True",
       explanation:
-        "With $\\eta = 0$, DDIM uses a deterministic mapping from the initial noise $x_T$ to the generated image $x_0$. Running the reverse DDIM in the forward direction — called DDIM inversion — maps a real image $x_0$ to its corresponding $x_T$.\n\nThis invertibility is the foundation of many image editing methods. A real image is inverted to $x_T$, the latent is edited by modifying the denoising trajectory (e.g., changing text conditioning or latents), and then DDIM regeneration produces the edited image. Methods such as SDEdit, Prompt-to-Prompt, and Null-Text Inversion all rely on DDIM inversion.",
+        "With $\\eta = 0$, DDIM uses a deterministic mapping from the initial noise $x_T$ to the generated image $x_0$. Running the reverse DDIM in the forward direction - called DDIM inversion - maps a real image $x_0$ to its corresponding $x_T$.\n\nThis invertibility is the foundation of many image editing methods. A real image is inverted to $x_T$, the latent is edited by modifying the denoising trajectory (e.g., changing text conditioning or latents), and then DDIM regeneration produces the edited image. Methods such as SDEdit, Prompt-to-Prompt, and Null-Text Inversion all rely on DDIM inversion.",
       hints: [
         "DDIM inversion is used in image editing: SDEdit, Prompt-to-Prompt, and Null-Text Inversion all invert real images to $x_T$ before editing.",
         "The deterministic forward-backward pass is only approximate due to discretization error, but works well in practice.",
@@ -234,9 +234,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDIM reparameterizes the reverse update in terms of a predicted clean image $\\hat{x}_0(x_t)$. This is obtained by inverting the forward marginal relation:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon \\quad \\Longrightarrow \\quad\n\\hat{x}_0(x_t) = \\frac{x_t - \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon_\\theta(x_t, t)}{\\sqrt{\\bar{\\alpha}_t}}.\n\\]\n\nThis is the $x_0$ prediction implied by the current noise estimate — also known as the Tweedie denoising estimate. The full DDIM step then interpolates between $\\hat{x}_0$ and the direction toward $x_t$, taking a larger step than DDPM would allow. This $\\hat{x}_0$ reparameterization is also used in modern distillation methods such as consistency models.",
+        "DDIM reparameterizes the reverse update in terms of a predicted clean image $\\hat{x}_0(x_t)$. This is obtained by inverting the forward marginal relation:\n\n\\[\nx_t = \\sqrt{\\bar{\\alpha}_t}\\,x_0 + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon \\quad \\Longrightarrow \\quad\n\\hat{x}_0(x_t) = \\frac{x_t - \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon_\\theta(x_t, t)}{\\sqrt{\\bar{\\alpha}_t}}.\n\\]\n\nThis is the $x_0$ prediction implied by the current noise estimate - also known as the Tweedie denoising estimate. The full DDIM step then interpolates between $\\hat{x}_0$ and the direction toward $x_t$, taking a larger step than DDPM would allow. This $\\hat{x}_0$ reparameterization is also used in modern distillation methods such as consistency models.",
       hints: [
-        "The $\\hat{x}_0$ prediction is the conditional expectation $\\mathbb{E}[x_0 \\mid x_t]$ under the Gaussian approximation — also called the Tweedie estimate.",
+        "The $\\hat{x}_0$ prediction is the conditional expectation $\\mathbb{E}[x_0 \\mid x_t]$ under the Gaussian approximation - also called the Tweedie estimate.",
         "This reparameterization is foundational in modern distillation: consistency models and progressive distillation both use $\\hat{x}_0$ reparameterization.",
       ],
     },
@@ -251,13 +251,13 @@ const questions: Record<string, Question[]> = {
         "Classifier-Free Guidance (CFG, Ho & Salimans 2022) modifies the score estimate during sampling as $\\tilde{\\varepsilon}_\\theta(x_t, c) = (1+w)\\,\\varepsilon_\\theta(x_t, c) - w\\,\\varepsilon_\\theta(x_t, \\emptyset)$. The guidance weight $w$ controls:",
       options: [
         "The number of denoising steps used during sampling",
-        "The trade-off between sample quality (adherence to the conditioning signal $c$) and diversity — higher $w$ increases adherence to $c$ but reduces diversity and can cause saturation or artifacts",
+        "The trade-off between sample quality (adherence to the conditioning signal $c$) and diversity - higher $w$ increases adherence to $c$ but reduces diversity and can cause saturation or artifacts",
         "The noise schedule $\\beta_t$ applied during sampling",
         "The weighting between the diffusion loss and the classifier loss",
       ],
       correctAnswer: 1,
       explanation:
-        "CFG extrapolates in score space. The guided estimate is:\n\n\\[\n\\tilde{\\varepsilon}_\\theta(x_t, c) = (1+w)\\,\\varepsilon_\\theta(x_t, c) - w\\,\\varepsilon_\\theta(x_t, \\emptyset).\n\\]\n\nWhen $w = 0$, we recover standard conditional sampling. When $w > 0$, the direction toward the conditioning signal $c$ is amplified relative to the unconditional estimate. This improves prompt adherence (better FID-like metrics for specific concepts) but reduces diversity (worse recall). Typical guidance weights for DALL-E/Stable Diffusion are $w = 7$–$15$.",
+        "CFG extrapolates in score space. The guided estimate is:\n\n\\[\n\\tilde{\\varepsilon}_\\theta(x_t, c) = (1+w)\\,\\varepsilon_\\theta(x_t, c) - w\\,\\varepsilon_\\theta(x_t, \\emptyset).\n\\]\n\nWhen $w = 0$, we recover standard conditional sampling. When $w > 0$, the direction toward the conditioning signal $c$ is amplified relative to the unconditional estimate. This improves prompt adherence (better FID-like metrics for specific concepts) but reduces diversity (worse recall). Typical guidance weights for DALL-E/Stable Diffusion are $w = 7$-$15$.",
       hints: [
         "CFG = extrapolation in score space: go further in the conditional direction than the model alone would.",
         "Too high $w$ leads to oversaturation and artifacts; too low $w$ causes the model to ignore the text prompt.",
@@ -271,7 +271,7 @@ const questions: Record<string, Question[]> = {
         "Classifier-Free Guidance requires training a separate classifier on noisy data to compute the class-conditional score.",
       correctAnswer: "False",
       explanation:
-        "CFG is 'classifier-free' precisely because it does not require any separate classifier. Instead, the same diffusion model is jointly trained on two objectives:\n- Conditional: with a conditioning signal $c$ (e.g., a text prompt).\n- Unconditional: with $c$ replaced by a null token $\\emptyset$, which is randomly dropped during training (roughly 10–20\% of the time).\n\nAt sampling time, two forward passes compute the conditional and unconditional noise estimates, and their difference is used for guidance. This avoids the distributional mismatch of classifier-based guidance and requires only one model.",
+        "CFG is 'classifier-free' precisely because it does not require any separate classifier. Instead, the same diffusion model is jointly trained on two objectives:\n- Conditional: with a conditioning signal $c$ (e.g., a text prompt).\n- Unconditional: with $c$ replaced by a null token $\\emptyset$, which is randomly dropped during training (roughly 10-20\% of the time).\n\nAt sampling time, two forward passes compute the conditional and unconditional noise estimates, and their difference is used for guidance. This avoids the distributional mismatch of classifier-based guidance and requires only one model.",
       hints: [
         "Classifier guidance (the earlier approach) required a separately trained noise-robust classifier $p_\\phi(c \\mid x_t)$.",
         "CFG trains a single model with dropout of the conditioning signal to produce both conditional and unconditional scores from one forward pass.",
@@ -285,15 +285,15 @@ const questions: Record<string, Question[]> = {
         "CFG's guided score can be written as $\\tilde{s} = (1+w)\\,\\nabla_x \\log p(x \\mid c) - w\\,\\nabla_x \\log p(x)$. This is equivalent to the score of an unnormalized distribution $p(x \\mid c)\\,[p(x \\mid c)/p(x)]^w$. What does this 'energy tilt' mean intuitively?",
       options: [
         "CFG converts the diffusion model into an energy-based model by computing the energy as $-\\log p(x \\mid c)$",
-        "The guided score exponentially upweights regions where $p(x \\mid c) / p(x)$ is large — i.e., regions strongly consistent with the condition $c$ relative to the unconditional distribution — effectively sharpening the conditional distribution",
+        "The guided score exponentially upweights regions where $p(x \\mid c) / p(x)$ is large - i.e., regions strongly consistent with the condition $c$ relative to the unconditional distribution - effectively sharpening the conditional distribution",
         "CFG is equivalent to maximum likelihood estimation with temperature annealing",
         "The guidance weight $w$ corresponds to the Lagrange multiplier in constrained optimization of the ELBO",
       ],
       correctAnswer: 1,
       explanation:
-        "Rewriting the guided score:\n\n\\[\n(1+w)\\,\\nabla_x \\log p(x \\mid c) - w\\,\\nabla_x \\log p(x)\n= \\nabla_x \\log \\Big[p(x \\mid c)\\, \\big(p(x \\mid c) / p(x)\\big)^w\\Big]\n= \\nabla_x \\log \\Big[\\frac{p(x \\mid c)^{1+w}}{p(x)^w}\\Big].\n\\]\n\nThis corresponds to a distribution that exponentially upweights regions where the likelihood ratio $p(x \\mid c) / p(x)$ is large. By Bayes' rule, $\\frac{p(x \\mid c)}{p(x)} = \\frac{p(c \\mid x)}{p(c)}$, so regions strongly consistent with the condition $c$ (high $p(c \\mid x)$) receive much more probability mass. This is why CFG produces more 'on-topic' but less diverse samples — it is an energy-based tilt of the conditional distribution.",
+        "Rewriting the guided score:\n\n\\[\n(1+w)\\,\\nabla_x \\log p(x \\mid c) - w\\,\\nabla_x \\log p(x)\n= \\nabla_x \\log \\Big[p(x \\mid c)\\, \\big(p(x \\mid c) / p(x)\\big)^w\\Big]\n= \\nabla_x \\log \\Big[\\frac{p(x \\mid c)^{1+w}}{p(x)^w}\\Big].\n\\]\n\nThis corresponds to a distribution that exponentially upweights regions where the likelihood ratio $p(x \\mid c) / p(x)$ is large. By Bayes' rule, $\\frac{p(x \\mid c)}{p(x)} = \\frac{p(c \\mid x)}{p(c)}$, so regions strongly consistent with the condition $c$ (high $p(c \\mid x)$) receive much more probability mass. This is why CFG produces more 'on-topic' but less diverse samples - it is an energy-based tilt of the conditional distribution.",
       hints: [
-        "The ratio $p(x \\mid c) / p(x) = p(c \\mid x) / p(c)$ by Bayes' rule — CFG is implicitly amplifying wherever the model believes the condition $c$ is most likely.",
+        "The ratio $p(x \\mid c) / p(x) = p(c \\mid x) / p(c)$ by Bayes' rule - CFG is implicitly amplifying wherever the model believes the condition $c$ is most likely.",
         "This explains the diversity-quality trade-off: upweighting high-$p(c \\mid x)$ regions necessarily downweights regions the model finds plausible but unrelated to $c$.",
       ],
     },
@@ -314,10 +314,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pixel-space diffusion on $512 \\times 512 \\times 3$ images requires operating on $786{,}432$-dimensional vectors. LDMs compress images by $4$–$8\\times$ per spatial dimension using a VQ-VAE or KL-VAE encoder, then run diffusion in the compressed latent (e.g., $64 \\times 64 \\times 4$).\n\nThis reduces compute by roughly $8$–$64\\times$ while maintaining image quality, because the autoencoder is trained to preserve most perceptually important information. The U-Net denoiser operates on the compact latent, making both training and inference practical at high resolution.",
+        "Pixel-space diffusion on $512 \\times 512 \\times 3$ images requires operating on $786{,}432$-dimensional vectors. LDMs compress images by $4$-$8\\times$ per spatial dimension using a VQ-VAE or KL-VAE encoder, then run diffusion in the compressed latent (e.g., $64 \\times 64 \\times 4$).\n\nThis reduces compute by roughly $8$-$64\\times$ while maintaining image quality, because the autoencoder is trained to preserve most perceptually important information. The U-Net denoiser operates on the compact latent, making both training and inference practical at high resolution.",
       hints: [
         "Stable Diffusion is an LDM: it uses a VAE to compress to $64 \\times 64 \\times 4$ latents and runs diffusion there.",
-        "The autoencoder is pre-trained and frozen during diffusion model training — only the U-Net is trained.",
+        "The autoencoder is pre-trained and frozen during diffusion model training - only the U-Net is trained.",
       ],
     },
     {
@@ -342,7 +342,7 @@ const questions: Record<string, Question[]> = {
         "The VAE in LDMs (such as Stable Diffusion) uses a KL-regularized latent space rather than a standard VAE. What is the role of the KL regularization coefficient?",
       options: [
         "The KL term forces the latent distribution to exactly match $\\mathcal{N}(0, I)$, enabling clean Gaussian noise initialization for diffusion",
-        "A small KL penalty (e.g., weight $\\approx 10^{-6}$) keeps the latent approximately Gaussian and prevents posterior collapse, while remaining small enough to allow the encoder to preserve fine image details — without it, the decoder could exploit non-Gaussian structure that diffusion cannot model",
+        "A small KL penalty (e.g., weight $\\approx 10^{-6}$) keeps the latent approximately Gaussian and prevents posterior collapse, while remaining small enough to allow the encoder to preserve fine image details - without it, the decoder could exploit non-Gaussian structure that diffusion cannot model",
         "The KL term regularizes the cross-attention weights to prevent the model from focusing on single tokens",
         "The KL penalty is set to zero in Stable Diffusion, using VQ-regularization instead",
       ],
@@ -350,7 +350,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The KL coefficient in the LDM VAE balances two competing objectives:\n- Too large: aggressive posterior collapse, where the latent loses information and reconstruction quality drops.\n- Too small: the latent space is non-Gaussian, violating the diffusion model's assumption of Gaussian noise perturbation.\n\nA small KL weight (approximately $10^{-6}$) keeps the latent approximately Gaussian while preserving reconstruction quality. The latent is also scaled to unit variance before diffusion. This balance is crucial: if the latent contains structure the diffusion model cannot represent as Gaussian noise, that information is unrecoverable in generation.",
       hints: [
-        "The diffusion model assumes $z_0$ lies in a space where Gaussian noise perturbation is a sensible operation — too much KL destroys this property.",
+        "The diffusion model assumes $z_0$ lies in a space where Gaussian noise perturbation is a sensible operation - too much KL destroys this property.",
         "VQ-VAEs use discrete codebook quantization instead of KL-regularization as the regularizer, avoiding the Gaussian assumption entirely.",
       ],
     },
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
         "Stable Diffusion's U-Net denoising architecture includes which key components for processing conditioning information?",
       options: [
         "Convolutional layers only, with the text embedding concatenated to the input",
-        "Residual convolution blocks, self-attention layers within spatial feature maps, and cross-attention layers attending to text embeddings — enabling both local feature processing and global conditioning at multiple scales",
+        "Residual convolution blocks, self-attention layers within spatial feature maps, and cross-attention layers attending to text embeddings - enabling both local feature processing and global conditioning at multiple scales",
         "A pure transformer architecture processing the latent as a sequence of patches",
         "A ResNet-50 backbone with text embeddings added to the final pooling layer",
       ],
@@ -385,7 +385,7 @@ const questions: Record<string, Question[]> = {
         "Stable Diffusion uses CLIP's text encoder $\\tau_\\theta(y)$ to encode the text prompt $y$. What is a known limitation of using CLIP for text-to-image conditioning?",
       options: [
         "CLIP cannot process prompts longer than 77 tokens, which restricts prompt complexity",
-        "CLIP was trained on image-text pairs with a contrastive loss, not for fine-grained compositional understanding — it may miss rare words, spatial relations, counting, and attribute binding (e.g., 'a red cube on top of a blue sphere')",
+        "CLIP was trained on image-text pairs with a contrastive loss, not for fine-grained compositional understanding - it may miss rare words, spatial relations, counting, and attribute binding (e.g., 'a red cube on top of a blue sphere')",
         "CLIP embeddings do not capture color information, so colored objects cannot be generated",
         "CLIP requires GPU inference, creating a bottleneck at sampling time",
       ],
@@ -405,13 +405,13 @@ const questions: Record<string, Question[]> = {
         "Stable Diffusion's VAE decodes latents from $64 \\times 64 \\times 4$ to $512 \\times 512 \\times 3$. Why is it important that the VAE decoder is high-fidelity, and what happens if it is the bottleneck?",
       options: [
         "A poor VAE decoder wastes compute during training but does not affect final image quality",
-        "If the VAE decoder is the bottleneck, diffusion model improvements do not translate to perceptual image quality — high-frequency details (text, fine textures) that cannot be reconstructed by the VAE cannot be learned by the diffusion model either, since they are already lost in the encode-decode cycle",
+        "If the VAE decoder is the bottleneck, diffusion model improvements do not translate to perceptual image quality - high-frequency details (text, fine textures) that cannot be reconstructed by the VAE cannot be learned by the diffusion model either, since they are already lost in the encode-decode cycle",
         "The VAE decoder affects only image resolution, not semantic quality",
         "A poor VAE decoder causes gradient vanishing during diffusion model training",
       ],
       correctAnswer: 1,
       explanation:
-        "The VAE decoder is the final step in image generation — its reconstruction quality sets an upper bound on image quality. If the VAE cannot accurately decode fine details (e.g., small text, hair strands, fabric textures), no amount of improvement in the diffusion U-Net can recover them. They are lost in the encode-decode bottleneck.\n\nThis is why text rendering remains challenging in diffusion models: text requires precise high-frequency spatial structure that the VAE typically cannot faithfully reconstruct from a $64 \\times 64 \\times 4$ latent. SDXL and later models use improved VAEs (more channels, better training) to address this. SD3 and FLUX use VAEs with 16 latent channels for better fine-detail representation.",
+        "The VAE decoder is the final step in image generation - its reconstruction quality sets an upper bound on image quality. If the VAE cannot accurately decode fine details (e.g., small text, hair strands, fabric textures), no amount of improvement in the diffusion U-Net can recover them. They are lost in the encode-decode bottleneck.\n\nThis is why text rendering remains challenging in diffusion models: text requires precise high-frequency spatial structure that the VAE typically cannot faithfully reconstruct from a $64 \\times 64 \\times 4$ latent. SDXL and later models use improved VAEs (more channels, better training) to address this. SD3 and FLUX use VAEs with 16 latent channels for better fine-detail representation.",
       hints: [
         "SDXL's improved VAE shows noticeably better text rendering and fine-detail reconstruction compared to SD1.5's VAE.",
         "This bottleneck is why improving VAE quality is a primary research direction alongside improving diffusion models.",
@@ -428,13 +428,13 @@ const questions: Record<string, Question[]> = {
         "ControlNet (Zhang et al. 2023) enables spatially-controlled image generation by:",
       options: [
         "Training a separate image-to-image diffusion model for each control signal type",
-        "Adding trainable copies of the U-Net encoder blocks whose outputs are added (via zero-initialized convolutions) to the frozen original U-Net decoder — preserving the pretrained model's capabilities while incrementally learning to inject spatial conditioning from edge maps, depth, pose, etc.",
+        "Adding trainable copies of the U-Net encoder blocks whose outputs are added (via zero-initialized convolutions) to the frozen original U-Net decoder - preserving the pretrained model's capabilities while incrementally learning to inject spatial conditioning from edge maps, depth, pose, etc.",
         "Fine-tuning the full Stable Diffusion U-Net on paired image-condition data",
         "Replacing the text cross-attention with spatial cross-attention to the conditioning image",
       ],
       correctAnswer: 1,
       explanation:
-        "ControlNet creates a trainable copy of the U-Net encoder blocks. The conditioning image (edge map, depth, pose, segmentation, etc.) is processed by this trainable copy, and its outputs are added to the corresponding decoder blocks of the original frozen U-Net via zero-initialized $1 \\times 1$ convolutions.\n\nThe zero-initialization is critical: at the start of training, ControlNet's contribution is exactly zero — the original U-Net's generation capability is fully preserved. The model then learns incrementally to inject spatial conditioning without catastrophic forgetting of the pre-trained weights.",
+        "ControlNet creates a trainable copy of the U-Net encoder blocks. The conditioning image (edge map, depth, pose, segmentation, etc.) is processed by this trainable copy, and its outputs are added to the corresponding decoder blocks of the original frozen U-Net via zero-initialized $1 \\times 1$ convolutions.\n\nThe zero-initialization is critical: at the start of training, ControlNet's contribution is exactly zero - the original U-Net's generation capability is fully preserved. The model then learns incrementally to inject spatial conditioning without catastrophic forgetting of the pre-trained weights.",
       hints: [
         "The 'zero convolutions' ensure ControlNet starts as a no-op (identity) and learns incrementally without disrupting the frozen backbone.",
         "This architecture allows training on relatively small conditioning datasets without losing the pre-trained generation capability.",
@@ -448,9 +448,9 @@ const questions: Record<string, Question[]> = {
         "ControlNet requires re-training the entire Stable Diffusion model from scratch when adding a new conditioning signal type.",
       correctAnswer: "False",
       explanation:
-        "ControlNet fine-tunes only the trainable copy of the encoder blocks — the original U-Net weights remain frozen. This means:\n1. The pre-trained text-to-image capability is fully preserved.\n2. Training is parameter-efficient (roughly 50% additional parameters over the base model).\n3. Different ControlNet adapters can be swapped for different conditioning signals without retraining the base model.\n4. Multiple ControlNets can even be combined additively for multi-condition control.",
+        "ControlNet fine-tunes only the trainable copy of the encoder blocks - the original U-Net weights remain frozen. This means:\n1. The pre-trained text-to-image capability is fully preserved.\n2. Training is parameter-efficient (roughly 50% additional parameters over the base model).\n3. Different ControlNet adapters can be swapped for different conditioning signals without retraining the base model.\n4. Multiple ControlNets can even be combined additively for multi-condition control.",
       hints: [
-        "The frozen backbone preserves the original model's text-to-image quality and generalization — no catastrophic forgetting.",
+        "The frozen backbone preserves the original model's text-to-image quality and generalization - no catastrophic forgetting.",
         "This is conceptually similar to adapter methods in NLP: parameter-efficient fine-tuning by adding trainable modules to a frozen backbone.",
       ],
     },
@@ -462,15 +462,15 @@ const questions: Record<string, Question[]> = {
         "ControlNet uses a separate $\\text{control\\_strength}$ weight alongside CFG's $\\text{cfg\\_scale}$. What happens when $\\text{control\\_strength}$ is set very high (e.g., $2.0$)?",
       options: [
         "The model ignores the text prompt entirely and generates only from the control signal",
-        "The spatial structure from the conditioning image is over-imposed — the output matches the control geometry precisely but may exhibit artifacts, loss of detail, or deviation from the text prompt, because the control signal overwhelms the generative prior",
+        "The spatial structure from the conditioning image is over-imposed - the output matches the control geometry precisely but may exhibit artifacts, loss of detail, or deviation from the text prompt, because the control signal overwhelms the generative prior",
         "The VAE decoder becomes the bottleneck and image quality drops sharply",
         "High control strength enables higher-resolution generation by increasing the effective receptive field",
       ],
       correctAnswer: 1,
       explanation:
-        "ControlNet strength scales the additive contribution of the control signal to the U-Net decoder. When set very high, the generated image is dominated by the conditioning geometry — the text prompt and creative prior are overwhelmed.\n\nThis can cause 'ControlNet hallucinations': the control map imposes unnatural or over-precise structure, the generated image loses fine detail, and adherence to the text prompt weakens. Conversely, very low strength gives minimal control.\n\nThe optimal balance (typically $0.5$–$1.2$) achieves both structural fidelity to the conditioning image and text adherence. This is analogous to the guidance scale vs. diversity trade-off in CFG.",
+        "ControlNet strength scales the additive contribution of the control signal to the U-Net decoder. When set very high, the generated image is dominated by the conditioning geometry - the text prompt and creative prior are overwhelmed.\n\nThis can cause 'ControlNet hallucinations': the control map imposes unnatural or over-precise structure, the generated image loses fine detail, and adherence to the text prompt weakens. Conversely, very low strength gives minimal control.\n\nThe optimal balance (typically $0.5$-$1.2$) achieves both structural fidelity to the conditioning image and text adherence. This is analogous to the guidance scale vs. diversity trade-off in CFG.",
       hints: [
-        "Control strength is a practical hyperparameter — excessively high values can cause the control signal to override the generative prior, creating unnatural images.",
+        "Control strength is a practical hyperparameter - excessively high values can cause the control signal to override the generative prior, creating unnatural images.",
         "This trade-off is analogous to CFG guidance scale: both tune the balance between conditioning adherence and overall generation quality/diversity.",
       ],
     },
@@ -485,15 +485,15 @@ const questions: Record<string, Question[]> = {
         "LoRA (Low-Rank Adaptation) is applied to Stable Diffusion by adding trainable low-rank matrices. Which layers are typically targeted?",
       options: [
         "The VAE encoder and decoder weight matrices",
-        "The attention projection matrices ($W_Q$, $W_K$, $W_V$, $W_O$) in the U-Net's self-attention and cross-attention layers, and/or the feed-forward layers — with rank $r = 4$–$64$",
+        "The attention projection matrices ($W_Q$, $W_K$, $W_V$, $W_O$) in the U-Net's self-attention and cross-attention layers, and/or the feed-forward layers - with rank $r = 4$-$64$",
         "The noise schedule parameters $\\beta_t$",
         "The CLIP text encoder's final linear projection layer only",
       ],
       correctAnswer: 1,
       explanation:
-        "For diffusion models, LoRA typically targets the U-Net's attention weight matrices and sometimes the feed-forward layers. Each weight matrix $W \\in \\mathbb{R}^{d \\times k}$ is augmented with $B A$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d, k)$.\n\nOnly $A$ and $B$ are trained; $W$ remains frozen. This allows fine-tuning a Stable Diffusion model for a new style or concept with approximately $1$–$50$ MB of additional weights (vs. the full $2$–$4$ GB model). Multiple LoRA adapters can be merged additively, enabling style mixing.",
+        "For diffusion models, LoRA typically targets the U-Net's attention weight matrices and sometimes the feed-forward layers. Each weight matrix $W \\in \\mathbb{R}^{d \\times k}$ is augmented with $B A$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d, k)$.\n\nOnly $A$ and $B$ are trained; $W$ remains frozen. This allows fine-tuning a Stable Diffusion model for a new style or concept with approximately $1$-$50$ MB of additional weights (vs. the full $2$-$4$ GB model). Multiple LoRA adapters can be merged additively, enabling style mixing.",
       hints: [
-        "LoRA for diffusion is conceptually identical to LoRA for LLMs — just applied to the diffusion U-Net's linear layers instead of transformer layers.",
+        "LoRA for diffusion is conceptually identical to LoRA for LLMs - just applied to the diffusion U-Net's linear layers instead of transformer layers.",
         "Multiple LoRA adapters can be merged additively before inference, allowing style and concept mixing in a single forward pass.",
       ],
     },
@@ -505,15 +505,15 @@ const questions: Record<string, Question[]> = {
         "DreamBooth fine-tuning for personalized image generation uses a rare token identifier $[V]$ and requires a 'prior preservation loss'. What is the purpose of this loss?",
       options: [
         "To preserve the diffusion model's noise schedule during fine-tuning",
-        "To prevent catastrophic forgetting of the broader concept class (e.g., 'dog') by simultaneously fine-tuning on class-representative images generated by the original model — maintaining the model's ability to generate diverse instances of the class, not just the specific subject",
+        "To prevent catastrophic forgetting of the broader concept class (e.g., 'dog') by simultaneously fine-tuning on class-representative images generated by the original model - maintaining the model's ability to generate diverse instances of the class, not just the specific subject",
         "To preserve the LoRA rank during fine-tuning and prevent rank collapse",
         "To ensure the CLIP text embeddings of $[V]$ align with the original token embeddings",
       ],
       correctAnswer: 1,
       explanation:
-        "DreamBooth fine-tunes on only 3–5 subject images (e.g., photos of your dog). Without regularization, the model quickly forgets what 'dog' means more broadly — after fine-tuning, 'dog' may refer only to your specific dog in those particular poses.\n\nThe prior preservation loss addresses this: the original model generates approximately $100$–$200$ class-representative images (e.g., diverse dogs). These are included in fine-tuning alongside subject images, with class captions (e.g., 'a dog'). The model simultaneously learns $[V] = \\text{your dog}$ while maintaining general dog-generation capability.",
+        "DreamBooth fine-tunes on only 3-5 subject images (e.g., photos of your dog). Without regularization, the model quickly forgets what 'dog' means more broadly - after fine-tuning, 'dog' may refer only to your specific dog in those particular poses.\n\nThe prior preservation loss addresses this: the original model generates approximately $100$-$200$ class-representative images (e.g., diverse dogs). These are included in fine-tuning alongside subject images, with class captions (e.g., 'a dog'). The model simultaneously learns $[V] = \\text{your dog}$ while maintaining general dog-generation capability.",
       hints: [
-        "Prior preservation = using the original model to generate its own regularization data for the class — a form of data augmentation for preventing forgetting.",
+        "Prior preservation = using the original model to generate its own regularization data for the class - a form of data augmentation for preventing forgetting.",
         "Without prior preservation, the model collapses to generating only the training subjects in training poses.",
       ],
     },
@@ -525,7 +525,7 @@ const questions: Record<string, Question[]> = {
         "When merging multiple LoRA adapters for Stable Diffusion (e.g., style LoRA + character LoRA), the naive interpolation $W' = W + \\alpha_1 B_1 A_1 + \\alpha_2 B_2 A_2$ can cause interference. What technique mitigates this?",
       options: [
         "Increasing the LoRA rank $r$ to reduce interference between adapters",
-        "Using SVD-based merging: decompose each LoRA's $BA$ via SVD, truncate to a shared rank, then combine principal components — or using TIES-merging to resolve sign conflicts between adapters",
+        "Using SVD-based merging: decompose each LoRA's $BA$ via SVD, truncate to a shared rank, then combine principal components - or using TIES-merging to resolve sign conflicts between adapters",
         "Always training both LoRAs jointly from scratch to avoid interference",
         "Increasing the alpha scaling hyperparameter for both LoRAs to offset interference",
       ],
@@ -533,7 +533,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Direct linear addition of LoRA deltas can cause interference when the updates have conflicting directions (sign conflicts) or overlapping subspaces. For example, if $B_1 A_1$ and $B_2 A_2$ push the same weight in opposite directions, they partially cancel.\n\nSVD-based merging addresses this by decomposing each $B_i A_i$ via SVD, identifying principal update directions, and combining them orthogonally. TIES-merging (Yadav et al., 2023) resolves sign conflicts by keeping only parameters with consistent signs across models and trimming small magnitudes. These methods produce better merged adapters than naive linear combination.",
       hints: [
-        "Interference is more severe when LoRAs are trained on very different data distributions or tasks — they conflict in their effective subspaces.",
+        "Interference is more severe when LoRAs are trained on very different data distributions or tasks - they conflict in their effective subspaces.",
         "TIES, DARE, and task arithmetic are common approaches in the model merging literature for resolving interference.",
       ],
     },
@@ -548,13 +548,13 @@ const questions: Record<string, Question[]> = {
         "Diffusion-based image inpainting conditions the denoising process on the known (unmasked) region. During inference, the standard approach is:",
       options: [
         "Masking the unknown region in pixel space and letting the diffusion model generate independently of the known region",
-        "At each denoising step, replacing the known (unmasked) regions of $x_t$ with the correctly noised version of the original pixels from $x_0$, while denoising the unknown (masked) region — ensuring consistency with the known pixels at every noise level",
+        "At each denoising step, replacing the known (unmasked) regions of $x_t$ with the correctly noised version of the original pixels from $x_0$, while denoising the unknown (masked) region - ensuring consistency with the known pixels at every noise level",
         "Running the full denoising process and then pasting the known region on top of the generated image as a post-processing step",
         "Fine-tuning the diffusion model on masked image-completion pairs before inference",
       ],
       correctAnswer: 1,
       explanation:
-        "The RePaint algorithm (Lugmayr et al., 2022) and most inpainting methods use a masked noising-renoising approach. At each denoising step $t$:\n1. The known region of $x_t$ is replaced by $q(x_t \\mid x_0^\\text{known})$ — the correctly noised version of the original known pixels at noise level $t$.\n2. The unknown region is denoised via $p_\\theta(x_{t-1} \\mid x_t)$.\n\nThis ensures the generated content is consistent with the known pixels at every noise level. Without this replacement, the model would denoise the entire image independently, ignoring the known region.",
+        "The RePaint algorithm (Lugmayr et al., 2022) and most inpainting methods use a masked noising-renoising approach. At each denoising step $t$:\n1. The known region of $x_t$ is replaced by $q(x_t \\mid x_0^\\text{known})$ - the correctly noised version of the original known pixels at noise level $t$.\n2. The unknown region is denoised via $p_\\theta(x_{t-1} \\mid x_t)$.\n\nThis ensures the generated content is consistent with the known pixels at every noise level. Without this replacement, the model would denoise the entire image independently, ignoring the known region.",
       hints: [
         "The key insight: known pixels must always be at the correct noise level for step $t$, not at a different level or fully denoised.",
         "Some inpainting models (e.g., Stable Diffusion Inpaint) add the mask as an extra input channel to the U-Net instead of this replacement strategy.",
@@ -565,7 +565,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Outpainting (extending an image beyond its original boundaries) cannot be performed with a standard text-to-image diffusion model — it requires a model specifically trained for outpainting.",
+        "Outpainting (extending an image beyond its original boundaries) cannot be performed with a standard text-to-image diffusion model - it requires a model specifically trained for outpainting.",
       correctAnswer: "False",
       explanation:
         "Outpainting can be performed using a standard inpainting model by treating the outpainting region as a 'hole' at the image boundary. The existing pixels guide the generation of the new region to maintain consistency.\n\nMultiDiffusion and tiling approaches enable outpainting at arbitrary aspect ratios by running overlapping denoising windows that enforce consistency in overlapping regions. No dedicated outpainting training is strictly required, though models fine-tuned specifically for outpainting (e.g., DALL-E's outpainting) may yield better results.",
@@ -588,7 +588,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Boundary artifacts arise because the model must match fine-grained texture, lighting, and color exactly at the mask edge. At intermediate noise levels, the pixels just outside the boundary are noisy and poorly constrained, so the generated region and the known region — which come from different noise realizations — often have subtle discontinuities in color or texture.\n\nRemedies include: using a feathered (soft) mask rather than a hard binary mask; harmonic inpainting for blending; overlap-and-stitch approaches that enforce consistency in overlapping regions; and Poisson blending as a post-processing step.",
+        "Boundary artifacts arise because the model must match fine-grained texture, lighting, and color exactly at the mask edge. At intermediate noise levels, the pixels just outside the boundary are noisy and poorly constrained, so the generated region and the known region - which come from different noise realizations - often have subtle discontinuities in color or texture.\n\nRemedies include: using a feathered (soft) mask rather than a hard binary mask; harmonic inpainting for blending; overlap-and-stitch approaches that enforce consistency in overlapping regions; and Poisson blending as a post-processing step.",
       hints: [
         "Even with perfect semantic coherence, color and lighting mismatches at the boundary are common because the model has no direct pixel-level constraint at the seam.",
         "Poisson blending (gradient-domain compositing) is sometimes applied as a post-processing step to smooth boundary discontinuities.",
@@ -605,13 +605,13 @@ const questions: Record<string, Question[]> = {
         "DiT (Diffusion Transformer, Peebles & Xie 2023) replaces the U-Net backbone with a Transformer. The latent image is processed as:",
       options: [
         "A sequence of 1D tokens representing pixel rows",
-        "Non-overlapping patches of the spatial latent, treated as a sequence of visual tokens processed by standard Transformer blocks — analogous to how ViT processes images",
+        "Non-overlapping patches of the spatial latent, treated as a sequence of visual tokens processed by standard Transformer blocks - analogous to how ViT processes images",
         "A global image embedding passed as a CLS token to the Transformer",
         "A hierarchical set of wavelet coefficients at multiple resolutions",
       ],
       correctAnswer: 1,
       explanation:
-        "DiT patchifies the latent (e.g., $32 \\times 32 \\times 4$ latent divided into $2 \\times 2$ patches $\\rightarrow$ $256$ tokens of dimension $16$). These are processed by standard Transformer blocks with multi-head self-attention and feed-forward layers, analogous to ViT's handling of image patches.\n\nClass labels and timestep are injected via adaptive layer normalization (adaLN-Zero). DiT demonstrated that transformer scaling laws apply to diffusion: larger DiT models with more compute consistently achieve lower FID, following a predictable power-law — mirroring the scaling laws discovered in language models.",
+        "DiT patchifies the latent (e.g., $32 \\times 32 \\times 4$ latent divided into $2 \\times 2$ patches $\\rightarrow$ $256$ tokens of dimension $16$). These are processed by standard Transformer blocks with multi-head self-attention and feed-forward layers, analogous to ViT's handling of image patches.\n\nClass labels and timestep are injected via adaptive layer normalization (adaLN-Zero). DiT demonstrated that transformer scaling laws apply to diffusion: larger DiT models with more compute consistently achieve lower FID, following a predictable power-law - mirroring the scaling laws discovered in language models.",
       hints: [
         "DiT-XL/2 (the largest DiT with patch size 2) achieves state-of-the-art class-conditional ImageNet generation.",
         "The key advantage over U-Net: global self-attention across all patches from the first layer, not just at the bottleneck.",
@@ -625,13 +625,13 @@ const questions: Record<string, Question[]> = {
         "DiT uses 'adaLN-Zero' for conditioning on timestep $t$ and class label $c$. What does the 'Zero' refer to in adaLN-Zero?",
       options: [
         "The layer normalization weights are initialized to zero",
-        "The scale and shift parameters $\\gamma$ and $\\beta$ in adaptive layer norm are predicted by linear layers initialized to output zero, so at initialization each DiT block acts as an identity function — enabling stable training",
+        "The scale and shift parameters $\\gamma$ and $\\beta$ in adaptive layer norm are predicted by linear layers initialized to output zero, so at initialization each DiT block acts as an identity function - enabling stable training",
         "The class embedding $c$ is zero-padded to match the timestep embedding dimension",
         "Zero refers to the zero-noise initialization of the diffusion process at $t = 0$",
       ],
       correctAnswer: 1,
       explanation:
-        "AdaLN-Zero initializes the linear layers that predict the scale $\\gamma$ and shift $\\beta$ parameters (used in adaptive layer normalization) to output zero. At initialization, $\\gamma = 1$ and $\\beta = 0$, so each DiT block reduces to a standard layer norm — an identity residual connection.\n\nThis 'zero initialization' trick ensures stable early training: gradients flow well from the beginning since the network starts as identity. As training progresses, the adaLN layers gradually learn meaningful conditioning. This is analogous to the zero-convolution trick in ControlNet.",
+        "AdaLN-Zero initializes the linear layers that predict the scale $\\gamma$ and shift $\\beta$ parameters (used in adaptive layer normalization) to output zero. At initialization, $\\gamma = 1$ and $\\beta = 0$, so each DiT block reduces to a standard layer norm - an identity residual connection.\n\nThis 'zero initialization' trick ensures stable early training: gradients flow well from the beginning since the network starts as identity. As training progresses, the adaLN layers gradually learn meaningful conditioning. This is analogous to the zero-convolution trick in ControlNet.",
       hints: [
         "Zero initialization of residual branches is a standard practice in deep network training (ReZero, FixUp initialization).",
         "Starting as an identity function ensures gradient flow is well-behaved from the very first training steps.",
@@ -645,13 +645,13 @@ const questions: Record<string, Question[]> = {
         "Scaling experiments in DiT showed that model performance (FID on ImageNet $256 \\times 256$) follows a power law with compute (GFLOPS). What does this imply?",
       options: [
         "There is an optimal model size beyond which performance degrades",
-        "Larger DiT models with more compute consistently achieve lower FID (better quality), and performance is predictable from the compute budget without training to convergence — enabling rational model scaling decisions",
+        "Larger DiT models with more compute consistently achieve lower FID (better quality), and performance is predictable from the compute budget without training to convergence - enabling rational model scaling decisions",
         "Performance saturates quickly, making compute beyond a threshold wasteful",
         "The U-Net is provably optimal at all model sizes, and DiT only catches up at extreme scale",
       ],
       correctAnswer: 1,
       explanation:
-        "DiT's scaling experiments revealed a clear power-law relationship between compute (GFLOPS) and FID:\n\n\\[\n\\text{FID} \\propto \\text{GFLOPS}^{-\\alpha} \\quad (\\text{approximately}).\n\\]\n\nThis predictability — following the scaling laws of Kaplan et al. for language models — means researchers can estimate the FID of a larger DiT model from smaller ablation experiments, without training to convergence. This motivated subsequent large-scale DiT-based models such as SD3 and FLUX, which use the DiT/MMDiT architecture at billions of parameters.",
+        "DiT's scaling experiments revealed a clear power-law relationship between compute (GFLOPS) and FID:\n\n\\[\n\\text{FID} \\propto \\text{GFLOPS}^{-\\alpha} \\quad (\\text{approximately}).\n\\]\n\nThis predictability - following the scaling laws of Kaplan et al. for language models - means researchers can estimate the FID of a larger DiT model from smaller ablation experiments, without training to convergence. This motivated subsequent large-scale DiT-based models such as SD3 and FLUX, which use the DiT/MMDiT architecture at billions of parameters.",
       hints: [
         "Scaling laws in diffusion were motivated by the success of scaling laws in LLMs (Chinchilla, GPT-4).",
         "This result shifted the research paradigm from U-Net architecture search to simply scaling transformer depth and width.",
@@ -688,9 +688,9 @@ const questions: Record<string, Question[]> = {
         "Flow Matching with straight-line (linear) interpolation paths enables generation with far fewer function evaluations (NFEs) than DDPM, because the learned ODE trajectories are approximately straight.",
       correctAnswer: "True",
       explanation:
-        "When the learned vector field is approximately constant along the trajectory (straight-line paths), a simple Euler ODE integrator with very few steps (even $1$–$2$) can accurately follow the path from noise to data.\n\nIn contrast, DDPM's SDE paths are curved and require many steps ($1000$) for accurate simulation. FLUX and SD3 exploit this: they train with flow matching (specifically, rectified flow) and generate high-quality images in approximately $20$–$30$ steps. The 'optimal transport' property of straight-line paths minimizes trajectory curvature, which minimizes integration error per step.",
+        "When the learned vector field is approximately constant along the trajectory (straight-line paths), a simple Euler ODE integrator with very few steps (even $1$-$2$) can accurately follow the path from noise to data.\n\nIn contrast, DDPM's SDE paths are curved and require many steps ($1000$) for accurate simulation. FLUX and SD3 exploit this: they train with flow matching (specifically, rectified flow) and generate high-quality images in approximately $20$-$30$ steps. The 'optimal transport' property of straight-line paths minimizes trajectory curvature, which minimizes integration error per step.",
       hints: [
-        "Euler integration error is proportional to path curvature — the straighter the path, the fewer steps needed for accurate integration.",
+        "Euler integration error is proportional to path curvature - the straighter the path, the fewer steps needed for accurate integration.",
         "FLUX uses rectified flow (a variant of flow matching with straight paths) and generates in roughly 20 steps.",
       ],
     },
@@ -702,7 +702,7 @@ const questions: Record<string, Question[]> = {
         "Rectified Flow (Liu et al. 2022) improves sample quality over standard Flow Matching through 'reflow'. What does the reflow step do?",
       options: [
         "It adds noise back to generated samples and retrains to improve training stability",
-        "It generates $(x_0^\\text{gen}, \\varepsilon)$ pairs from the trained flow (by running the ODE forward and recording the source noise), then trains a new flow to connect these pairs with straight lines — progressively straightening the flow trajectories",
+        "It generates $(x_0^\\text{gen}, \\varepsilon)$ pairs from the trained flow (by running the ODE forward and recording the source noise), then trains a new flow to connect these pairs with straight lines - progressively straightening the flow trajectories",
         "It applies $k$-nearest-neighbors smoothing to the learned vector field to remove discontinuities",
         "It uses consistency distillation to reduce the flow to a single step",
       ],
@@ -710,7 +710,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Reflow (in Rectified Flow) proceeds in two stages:\n1. Train an initial flow model on random $(x_0, \\varepsilon)$ pairs.\n2. Generate coupled $(x_0^\\text{gen}, \\varepsilon)$ pairs by running the ODE forward from each $\\varepsilon$, recording both the noise source and the generated endpoint.\n3. Train a new flow model to connect each $\\varepsilon$ to its $x_0^\\text{gen}$ with a straight line.\n\nThe coupled pairs have straighter trajectories (they come from the same ODE path), so the new flow has more linear paths and can be solved more accurately with fewer steps. This can be applied repeatedly ('$k$-Rectified Flow'). After reflow, even a single-step ODE can achieve reasonable quality, motivating consistency distillation.",
       hints: [
-        "Reflow is essentially 'data augmentation for straighter paths' — using the trained model to generate better $(x_0, \\varepsilon)$ pairs.",
+        "Reflow is essentially 'data augmentation for straighter paths' - using the trained model to generate better $(x_0, \\varepsilon)$ pairs.",
         "After reflow, a single NFE can achieve reasonable quality, which motivates consistency distillation approaches.",
       ],
     },
@@ -725,16 +725,16 @@ const questions: Record<string, Question[]> = {
         "Consistency Models (Song et al. 2023) enable single-step generation. What core property do they enforce?",
       options: [
         "The model generates the same image regardless of the noise schedule used",
-        "The 'consistency property': $f_\\theta(x_t, t) = f_\\theta(x_{t'}, t')$ for any two points $x_t$ and $x_{t'}$ on the same ODE trajectory — all points on the same trajectory map to the same clean image $x_0$",
+        "The 'consistency property': $f_\\theta(x_t, t) = f_\\theta(x_{t'}, t')$ for any two points $x_t$ and $x_{t'}$ on the same ODE trajectory - all points on the same trajectory map to the same clean image $x_0$",
         "The model maintains consistent attention weights across all timesteps",
         "The generated images are perceptually consistent with the text conditioning",
       ],
       correctAnswer: 1,
       explanation:
-        "Consistency models learn a function $f_\\theta$ that maps any point $(x_t, t)$ on the diffusion ODE trajectory to the same endpoint $x_0$. This is the 'self-consistency' property: $f_\\theta(x_t, t) = f_\\theta(x_{t'}, t')$ whenever $x_t$ and $x_{t'}$ lie on the same trajectory.\n\nOnce $f_\\theta$ is learned, a single forward pass from any noisy $x_t$ yields $x_0$ directly — no iterative denoising required. The boundary condition $f_\\theta(x_0, 0) = x_0$ ensures the model is the identity at $t = 0$. Consistency distillation trains $f_\\theta$ to satisfy $f_\\theta(x_t, t) \\approx f_\\theta(x_{t-\\varepsilon}, t-\\varepsilon)$ for adjacent ODE steps.",
+        "Consistency models learn a function $f_\\theta$ that maps any point $(x_t, t)$ on the diffusion ODE trajectory to the same endpoint $x_0$. This is the 'self-consistency' property: $f_\\theta(x_t, t) = f_\\theta(x_{t'}, t')$ whenever $x_t$ and $x_{t'}$ lie on the same trajectory.\n\nOnce $f_\\theta$ is learned, a single forward pass from any noisy $x_t$ yields $x_0$ directly - no iterative denoising required. The boundary condition $f_\\theta(x_0, 0) = x_0$ ensures the model is the identity at $t = 0$. Consistency distillation trains $f_\\theta$ to satisfy $f_\\theta(x_t, t) \\approx f_\\theta(x_{t-\\varepsilon}, t-\\varepsilon)$ for adjacent ODE steps.",
       hints: [
         "Consistency models can also do multi-step refinement for better quality: apply $\\varepsilon$-noise to $x_0$ and reapply $f_\\theta$ iteratively.",
-        "The boundary condition $f_\\theta(x_0, 0) = x_0$ is enforced during training — it ensures the model is the identity at $t=0$.",
+        "The boundary condition $f_\\theta(x_0, 0) = x_0$ is enforced during training - it ensures the model is the identity at $t=0$.",
       ],
     },
     {
@@ -745,7 +745,7 @@ const questions: Record<string, Question[]> = {
         "Consistency Training (CT) and Consistency Distillation (CD) differ in that:",
       options: [
         "CT requires $10\\times$ more training steps than CD",
-        "CD distills from a pretrained diffusion model (using it as a teacher to generate adjacent ODE-consistent pairs), while CT trains consistency from scratch using a self-consistency loss and an exponential moving average (EMA) of $f_\\theta$ as a pseudo-target — without any pretrained teacher",
+        "CD distills from a pretrained diffusion model (using it as a teacher to generate adjacent ODE-consistent pairs), while CT trains consistency from scratch using a self-consistency loss and an exponential moving average (EMA) of $f_\\theta$ as a pseudo-target - without any pretrained teacher",
         "CT only works for pixel-space models while CD works for latent diffusion",
         "CD produces higher-quality single-step samples than CT in all settings",
       ],
@@ -765,7 +765,7 @@ const questions: Record<string, Question[]> = {
         "Improved Consistency Training (iCT, Song & Dhariwal 2023) addresses training instability through 'pseudo-Huber loss' and a 'lognormal noise schedule'. What problem does the lognormal noise schedule solve?",
       options: [
         "It ensures the model focuses equally on all noise levels instead of only high noise",
-        "It allocates training samples to noise levels proportional to the difficulty of predicting $x_0$ from $x_t$ — oversampling the medium-noise regime where learning is most informative and most unstable, which improves training efficiency and stability",
+        "It allocates training samples to noise levels proportional to the difficulty of predicting $x_0$ from $x_t$ - oversampling the medium-noise regime where learning is most informative and most unstable, which improves training efficiency and stability",
         "It replaces the linear interpolation path with an optimal transport path",
         "It prevents gradient explosion at low noise levels by capping the maximum step size",
       ],
@@ -774,7 +774,7 @@ const questions: Record<string, Question[]> = {
         "Uniform timestep sampling wastes compute on easy steps: at very high noise (near $t=T$), all images look like random noise (the learning task is trivial); at very low noise (near $t=0$), the model is already nearly converged.\n\nThe lognormal noise schedule samples timesteps $t \\sim \\text{LogNormal}(\\mu, \\sigma)$, oversampling intermediate timesteps where the ODE curvature is highest and the learning signal is most informative. Combined with pseudo-Huber loss (which is more robust to outliers than MSE) and EMA, iCT achieves much better training stability and sample quality.",
       hints: [
         "The lognormal schedule concentrates training on the 'difficult middle' of the denoising process, where the model needs the most guidance.",
-        "The lognormal schedule is parameterized by $\\mu$ and $\\sigma$ — tunable hyperparameters that control the concentration of training mass around intermediate noise levels.",
+        "The lognormal schedule is parameterized by $\\mu$ and $\\sigma$ - tunable hyperparameters that control the concentration of training mass around intermediate noise levels.",
       ],
     },
   ],
@@ -788,16 +788,16 @@ const questions: Record<string, Question[]> = {
         "DreamBooth (Ruiz et al. 2022) personalizes a text-to-image diffusion model by:",
       options: [
         "Collecting $1000+$ images of the subject and fine-tuning the full model",
-        "Fine-tuning the diffusion model on $3$–$5$ images of a subject, binding the subject to a unique identifier token $[V]$ paired with a class noun (e.g., 'a $[V]$ dog'), with prior preservation loss to prevent language drift and maintain generation of diverse class instances",
+        "Fine-tuning the diffusion model on $3$-$5$ images of a subject, binding the subject to a unique identifier token $[V]$ paired with a class noun (e.g., 'a $[V]$ dog'), with prior preservation loss to prevent language drift and maintain generation of diverse class instances",
         "Training a LoRA adapter on the subject images while freezing the U-Net",
         "Using CLIP to embed the subject image and conditioning generation on this embedding",
       ],
       correctAnswer: 1,
       explanation:
-        "DreamBooth fine-tunes the full diffusion model (text encoder + U-Net) on $3$–$5$ subject images. A rare token identifier $[V]$ is bound to the specific subject via prompts like 'a $[V]$ dog'. The training loss has two components:\n1. Reconstruction loss on subject images with $[V]$ binding.\n2. Prior preservation loss on class images (e.g., 'a dog') generated by the original model.\n\nAfter fine-tuning, prompts like 'a $[V]$ dog in Paris' generate the specific dog in novel contexts. Prior preservation prevents 'language drift' — without it, the model would forget what 'dog' means beyond the training subjects.",
+        "DreamBooth fine-tunes the full diffusion model (text encoder + U-Net) on $3$-$5$ subject images. A rare token identifier $[V]$ is bound to the specific subject via prompts like 'a $[V]$ dog'. The training loss has two components:\n1. Reconstruction loss on subject images with $[V]$ binding.\n2. Prior preservation loss on class images (e.g., 'a dog') generated by the original model.\n\nAfter fine-tuning, prompts like 'a $[V]$ dog in Paris' generate the specific dog in novel contexts. Prior preservation prevents 'language drift' - without it, the model would forget what 'dog' means beyond the training subjects.",
       hints: [
         "DreamBooth is commonly used for personalized portraits, product photography, and pet photos.",
-        "The rare token $[V]$ is a placeholder — in practice, uncommon tokens or special tokens (e.g., 'sks') are used.",
+        "The rare token $[V]$ is a placeholder - in practice, uncommon tokens or special tokens (e.g., 'sks') are used.",
       ],
     },
     {
@@ -808,10 +808,10 @@ const questions: Record<string, Question[]> = {
         "DreamBooth fine-tuning always requires fine-tuning both the U-Net and the text encoder to achieve high-fidelity subject reconstruction.",
       correctAnswer: "False",
       explanation:
-        "The original DreamBooth fine-tunes only the U-Net. Fine-tuning the text encoder (CLIP encoder) can improve concept binding and reconstruction fidelity, but it risks 'language drift' — corrupting the encoding of other words and reducing the model's ability to generalize the subject to new contexts.\n\nMany practical implementations use U-Net-only fine-tuning for safety, or LoRA on both the U-Net and text encoder to reduce the risk of language drift. Extended DreamBooth techniques use lighter fine-tuning (e.g., LoRA on the text encoder) for better results without full fine-tuning.",
+        "The original DreamBooth fine-tunes only the U-Net. Fine-tuning the text encoder (CLIP encoder) can improve concept binding and reconstruction fidelity, but it risks 'language drift' - corrupting the encoding of other words and reducing the model's ability to generalize the subject to new contexts.\n\nMany practical implementations use U-Net-only fine-tuning for safety, or LoRA on both the U-Net and text encoder to reduce the risk of language drift. Extended DreamBooth techniques use lighter fine-tuning (e.g., LoRA on the text encoder) for better results without full fine-tuning.",
       hints: [
         "Text encoder fine-tuning helps the token $[V]$ develop richer semantic associations but risks degrading other concepts the model knows.",
-        "The trade-off is fidelity vs. compositionality — more aggressive fine-tuning improves subject reconstruction but reduces generalization.",
+        "The trade-off is fidelity vs. compositionality - more aggressive fine-tuning improves subject reconstruction but reduces generalization.",
       ],
     },
     {
@@ -819,19 +819,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A common failure mode of DreamBooth is overfitting — the model memorizes the $3$–$5$ training images and loses generalization. Which technique most directly addresses this?",
+        "A common failure mode of DreamBooth is overfitting - the model memorizes the $3$-$5$ training images and loses generalization. Which technique most directly addresses this?",
       options: [
         "Using a lower learning rate ($10^{-6}$ instead of $10^{-5}$)",
-        "The prior preservation loss using class-generated images, which regularizes the model to maintain the broader class distribution while learning the specific subject — preventing the model from collapsing to just the training images",
+        "The prior preservation loss using class-generated images, which regularizes the model to maintain the broader class distribution while learning the specific subject - preventing the model from collapsing to just the training images",
         "Training for fewer steps ($100$ instead of $800$)",
         "Increasing the CFG guidance scale during training",
       ],
       correctAnswer: 1,
       explanation:
-        "Prior preservation directly combats overfitting. By simultaneously training on $100$–$200$ class-representative images generated by the original model, the model is penalized for drifting too far from the general class distribution. Without it, the model quickly overfits to the $3$–$5$ subject images and cannot generate the subject in novel contexts or poses.\n\nThe number of fine-tuning steps before overfitting varies by subject — validation images are used to select the best checkpoint. The failure mode manifests as: the model only generates the training poses, backgrounds, or viewpoints from the few training images.",
+        "Prior preservation directly combats overfitting. By simultaneously training on $100$-$200$ class-representative images generated by the original model, the model is penalized for drifting too far from the general class distribution. Without it, the model quickly overfits to the $3$-$5$ subject images and cannot generate the subject in novel contexts or poses.\n\nThe number of fine-tuning steps before overfitting varies by subject - validation images are used to select the best checkpoint. The failure mode manifests as: the model only generates the training poses, backgrounds, or viewpoints from the few training images.",
       hints: [
         "Overfitting in DreamBooth manifests as: the model only generates the specific poses and backgrounds from the training images, ignoring novel prompts.",
-        "Prior preservation is a form of rehearsal — analogous to replay in continual learning — that prevents catastrophic forgetting of the base concept.",
+        "Prior preservation is a form of rehearsal - analogous to replay in continual learning - that prevents catastrophic forgetting of the base concept.",
       ],
     },
   ],
@@ -851,10 +851,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID compares the statistics of InceptionV3 pool-3 features ($2048$-dimensional) between real and generated image sets. It fits a Gaussian with mean $\\mu$ and covariance $\\Sigma$ to each set, then computes the Fréchet distance:\n\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\mathrm{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2\\sqrt{\\Sigma_r \\Sigma_g}\\right).\n\\]\n\nLower FID means more similar distributions. FID captures both quality and diversity: a generator that simply copies training images has low FID, and so does one that generates diverse, high-quality images matching the real distribution. FID is sample-size dependent — typically computed with $50{,}000$ generated images for fair comparison.",
+        "FID compares the statistics of InceptionV3 pool-3 features ($2048$-dimensional) between real and generated image sets. It fits a Gaussian with mean $\\mu$ and covariance $\\Sigma$ to each set, then computes the Fréchet distance:\n\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\mathrm{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2\\sqrt{\\Sigma_r \\Sigma_g}\\right).\n\\]\n\nLower FID means more similar distributions. FID captures both quality and diversity: a generator that simply copies training images has low FID, and so does one that generates diverse, high-quality images matching the real distribution. FID is sample-size dependent - typically computed with $50{,}000$ generated images for fair comparison.",
       hints: [
-        "FID $= 0$ means the generated distribution is identical to the real distribution in feature space — unlikely in practice.",
-        "FID is sensitive to sample size — using different numbers of generated images makes comparisons unreliable.",
+        "FID $= 0$ means the generated distribution is identical to the real distribution in feature space - unlikely in practice.",
+        "FID is sensitive to sample size - using different numbers of generated images makes comparisons unreliable.",
       ],
     },
     {
@@ -865,7 +865,7 @@ const questions: Record<string, Question[]> = {
         "CLIP Score evaluates text-to-image alignment by computing cosine similarity between CLIP image and text embeddings. A high CLIP Score indicates:",
       options: [
         "High photorealism of the generated image",
-        "High semantic alignment between the generated image and the text prompt — the image content matches what the prompt describes",
+        "High semantic alignment between the generated image and the text prompt - the image content matches what the prompt describes",
         "High diversity of generated images across different prompts",
         "Low FID on the benchmark dataset",
       ],
@@ -891,10 +891,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID conflates two distinct aspects of generation quality:\n- **Precision** (quality/fidelity): what fraction of generated samples are 'realistic' — i.e., fall near the real data manifold?\n- **Recall** (diversity/coverage): what fraction of the real data manifold is 'covered' by generated samples?\n\nA model that generates only one perfect cat image has precision $\\approx 1$ but recall $\\approx 0$ (mode collapse). A model that generates every possible image including unrealistic ones has recall $\\approx 1$ but low precision. CFG guidance scale primarily trades recall for precision: higher guidance $\\rightarrow$ higher precision, lower recall.",
+        "FID conflates two distinct aspects of generation quality:\n- **Precision** (quality/fidelity): what fraction of generated samples are 'realistic' - i.e., fall near the real data manifold?\n- **Recall** (diversity/coverage): what fraction of the real data manifold is 'covered' by generated samples?\n\nA model that generates only one perfect cat image has precision $\\approx 1$ but recall $\\approx 0$ (mode collapse). A model that generates every possible image including unrealistic ones has recall $\\approx 1$ but low precision. CFG guidance scale primarily trades recall for precision: higher guidance $\\rightarrow$ higher precision, lower recall.",
       hints: [
-        "A model with high precision but low recall generates few images but they are all high quality — mode collapse.",
-        "A model with high recall but low precision generates many images but many are unrealistic — low fidelity.",
+        "A model with high precision but low recall generates few images but they are all high quality - mode collapse.",
+        "A model with high recall but low precision generates many images but many are unrealistic - low fidelity.",
       ],
     },
   ],
@@ -914,7 +914,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Molecular diffusion models (e.g., DiffSBDD, DiffDock, EDM) operate on 3D molecular structures. Each atom is represented by its 3D Cartesian coordinates and atom type. The forward process adds Gaussian noise to atomic positions (and may corrupt atom types); the reverse process denoises to produce valid 3D conformations.\n\nEquivariant neural networks (e.g., EGNN, SE(3)-Transformer) are essential because they guarantee the model generates the same molecule regardless of its absolute orientation or position in 3D space — a fundamental physical symmetry.",
+        "Molecular diffusion models (e.g., DiffSBDD, DiffDock, EDM) operate on 3D molecular structures. Each atom is represented by its 3D Cartesian coordinates and atom type. The forward process adds Gaussian noise to atomic positions (and may corrupt atom types); the reverse process denoises to produce valid 3D conformations.\n\nEquivariant neural networks (e.g., EGNN, SE(3)-Transformer) are essential because they guarantee the model generates the same molecule regardless of its absolute orientation or position in 3D space - a fundamental physical symmetry.",
       hints: [
         "3D structure matters for drug design: the shape and charge distribution of a molecule determine how it binds to proteins.",
         "Equivariance to SE(3) (3D rotations and translations) ensures the model does not need to learn separately that a molecule rotated by $45°$ is the same molecule.",
@@ -928,10 +928,10 @@ const questions: Record<string, Question[]> = {
         "Equivariance to the SE(3) group (3D rotations and translations) is essential for molecular diffusion models, because valid molecules must be generated regardless of their absolute orientation in space.",
       correctAnswer: "True",
       explanation:
-        "A valid molecule should have the same physical properties and binding behavior regardless of how it is oriented or positioned in space. If the generative model is not SE(3)-equivariant, it would need to learn separately that a benzene ring rotated by $45°$ is identical to the original — vastly increasing sample complexity and data requirements.\n\nEquivariant models (EGNN, SE(3)-Transformer, SEGNN) encode this symmetry by construction: rotating the input rotates the output by the same amount, and translating the input translates the output by the same amount. Permutation invariance (over atom ordering) is also required since molecules have no canonical atom ordering.",
+        "A valid molecule should have the same physical properties and binding behavior regardless of how it is oriented or positioned in space. If the generative model is not SE(3)-equivariant, it would need to learn separately that a benzene ring rotated by $45°$ is identical to the original - vastly increasing sample complexity and data requirements.\n\nEquivariant models (EGNN, SE(3)-Transformer, SEGNN) encode this symmetry by construction: rotating the input rotates the output by the same amount, and translating the input translates the output by the same amount. Permutation invariance (over atom ordering) is also required since molecules have no canonical atom ordering.",
       hints: [
         "SE(3) = Special Euclidean group in 3D = rotations (SO(3)) + translations.",
-        "Permutation invariance is also necessary — molecules have no canonical atom ordering, so the model must produce the same output regardless of how atoms are indexed.",
+        "Permutation invariance is also necessary - molecules have no canonical atom ordering, so the model must produce the same output regardless of how atoms are indexed.",
       ],
     },
     {
@@ -942,7 +942,7 @@ const questions: Record<string, Question[]> = {
         "DiffDock (Corso et al. 2022) applies diffusion to protein-ligand docking. Its key innovation is diffusing over:",
       options: [
         "The 3D atomic coordinates of both the protein and ligand simultaneously",
-        "A factored pose space: translation ($\\mathbb{R}^3$), rotation (SO(3)), and torsion angles ($\\mathbb{T}^n$) — using separate score networks for each component, which allows efficient generalization across molecules of different sizes and avoids the curse of dimensionality of raw 3D coordinate diffusion",
+        "A factored pose space: translation ($\\mathbb{R}^3$), rotation (SO(3)), and torsion angles ($\\mathbb{T}^n$) - using separate score networks for each component, which allows efficient generalization across molecules of different sizes and avoids the curse of dimensionality of raw 3D coordinate diffusion",
         "SMILES string edits that progressively modify the ligand chemical structure",
         "A combined embedding of the protein pocket and ligand fingerprint",
       ],
@@ -965,7 +965,7 @@ const questions: Record<string, Question[]> = {
         "RLHF for diffusion models (e.g., DDPO, DPOK, Diffusion-DPO) aims to fine-tune a diffusion model to maximize a reward function $r(x_0)$. What is the main challenge compared to RLHF for LLMs?",
       options: [
         "There is no reward function available for image generation",
-        "The diffusion generation process consists of $T$ sequential denoising steps, making it a very long-horizon RL problem with sparse reward (only $x_0$ is evaluated) and extremely long credit assignment chains — the LLM 'sequence' is $T = 1000$ denoising steps of high-dimensional continuous actions",
+        "The diffusion generation process consists of $T$ sequential denoising steps, making it a very long-horizon RL problem with sparse reward (only $x_0$ is evaluated) and extremely long credit assignment chains - the LLM 'sequence' is $T = 1000$ denoising steps of high-dimensional continuous actions",
         "Diffusion models are not differentiable with respect to the generated output",
         "Human feedback cannot be collected for image generation tasks",
       ],
@@ -973,7 +973,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In LLM RLHF, sequences are typically $< 1000$ tokens. In diffusion RLHF, each 'step' of the denoising chain is a high-dimensional continuous action (the denoised image $x_{t-1}$), and there are $T = 1000$ such steps. The reward $r(x_0)$ is only observed at the end of the chain, creating a $T$-step credit assignment problem.\n\nDDPO (Black et al., 2023) adapts PPO to diffusion by treating each denoising step as an RL action and backpropagating through the entire denoising chain (using importance sampling for efficiency). The denoising chain is analogous to a very long Markov decision process.",
       hints: [
-        "The denoising chain is analogous to a very long Markov chain in RL — reward shaping and truncated backpropagation are common practical tricks.",
+        "The denoising chain is analogous to a very long Markov chain in RL - reward shaping and truncated backpropagation are common practical tricks.",
         "DDPO formulates diffusion sampling as a POMDP and applies policy gradient methods adapted to the continuous, high-dimensional action space.",
       ],
     },
@@ -985,10 +985,10 @@ const questions: Record<string, Question[]> = {
         "Diffusion-DPO directly optimizes a diffusion model using preference pairs (winning/losing images) without requiring an explicit trained reward model.",
       correctAnswer: "True",
       explanation:
-        "Diffusion-DPO (Wallace et al., 2023) adapts Direct Preference Optimization (DPO) to diffusion models. Given paired images $(x_w, x_l)$ where a human prefers $x_w$ over $x_l$, it directly optimizes the diffusion model to increase the likelihood of generating $x_w$ over $x_l$, without training a separate reward model.\n\nThe DPO objective for diffusion uses the ELBO to tractably compute the implicit reward difference. This is analogous to how DPO works in LLMs — bypassing the reward model training step entirely.",
+        "Diffusion-DPO (Wallace et al., 2023) adapts Direct Preference Optimization (DPO) to diffusion models. Given paired images $(x_w, x_l)$ where a human prefers $x_w$ over $x_l$, it directly optimizes the diffusion model to increase the likelihood of generating $x_w$ over $x_l$, without training a separate reward model.\n\nThe DPO objective for diffusion uses the ELBO to tractably compute the implicit reward difference. This is analogous to how DPO works in LLMs - bypassing the reward model training step entirely.",
       hints: [
         "Diffusion-DPO $\\approx$ DPO applied to the DDPM ELBO instead of log-likelihoods of token sequences.",
-        "The 'implicit reward' in DPO is $\\log[\\pi_\\theta(x)/\\pi_\\text{ref}(x)]$ — the log-probability ratio of the current model and the reference model.",
+        "The 'implicit reward' in DPO is $\\log[\\pi_\\theta(x)/\\pi_\\text{ref}(x)]$ - the log-probability ratio of the current model and the reference model.",
       ],
     },
     {
@@ -1005,10 +1005,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "DDPO's key insight is adapting PPO's clipped surrogate objective to diffusion. Instead of generating new $T$-step trajectories for every gradient update (prohibitively expensive — each sample requires $T$ forward passes), DDPO stores old trajectories and uses importance sampling weights $\\pi_\\theta(\\tau)/\\pi_{\\theta_\\text{old}}(\\tau)$ to correct for the policy change.\n\nThe PPO clip prevents the importance weight ratio from growing too large, which maintains training stability and prevents the policy from changing too drastically in one update.",
+        "DDPO's key insight is adapting PPO's clipped surrogate objective to diffusion. Instead of generating new $T$-step trajectories for every gradient update (prohibitively expensive - each sample requires $T$ forward passes), DDPO stores old trajectories and uses importance sampling weights $\\pi_\\theta(\\tau)/\\pi_{\\theta_\\text{old}}(\\tau)$ to correct for the policy change.\n\nThe PPO clip prevents the importance weight ratio from growing too large, which maintains training stability and prevents the policy from changing too drastically in one update.",
       hints: [
-        "Reusing old trajectories via importance sampling is the PPO trick that makes on-policy RL tractable — it avoids the cost of generating new trajectories at every gradient step.",
-        "The clipping prevents large policy updates that could destabilize training — analogous to trust region methods.",
+        "Reusing old trajectories via importance sampling is the PPO trick that makes on-policy RL tractable - it avoids the cost of generating new trajectories at every gradient step.",
+        "The clipping prevents large policy updates that could destabilize training - analogous to trust region methods.",
       ],
     },
   ],
@@ -1028,7 +1028,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Progressive Distillation trains a student network to replicate two teacher steps in one. The student takes $x_t$ as input and predicts $x_{t-2}$, while the teacher produces the same quantity via two sequential steps:\n\n\\[\n\\hat{x}_0^\\text{student}(x_t, t) \\approx \\hat{x}_0^{\\text{teacher}, 2\\text{-step}}(x_t, t).\n\\]\n\nThis halves the number of required steps per iteration. After distillation, the student becomes the new teacher, and the process repeats. After approximately 7 rounds, $1000$ steps reduce to $8$ steps. Each round costs roughly $15$–$25\\%$ of the original training compute.",
+        "Progressive Distillation trains a student network to replicate two teacher steps in one. The student takes $x_t$ as input and predicts $x_{t-2}$, while the teacher produces the same quantity via two sequential steps:\n\n\\[\n\\hat{x}_0^\\text{student}(x_t, t) \\approx \\hat{x}_0^{\\text{teacher}, 2\\text{-step}}(x_t, t).\n\\]\n\nThis halves the number of required steps per iteration. After distillation, the student becomes the new teacher, and the process repeats. After approximately 7 rounds, $1000$ steps reduce to $8$ steps. Each round costs roughly $15$-$25\\%$ of the original training compute.",
       hints: [
         "The distillation target is always in $x_0$ space (the denoised image), making it parameterization-independent.",
         "After 3 rounds: $1000 \\to 500 \\to 250 \\to 125$ steps. After roughly 7 rounds: $1000 \\to 8$ steps.",
@@ -1048,10 +1048,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LCM uses accelerated ODE solving during distillation: instead of requiring the consistency condition $f_\\theta(x_t, t) = f_\\theta(x_{t-1}, t-1)$ for adjacent timesteps, it enforces $f_\\theta(x_t, t) = f_\\theta(x_{t-k}, t-k)$ for a larger skip $k > 1$.\n\nThis 'skipping' enforces consistency over longer ODE intervals, making the model more strongly self-consistent across multiple steps. Combined with using an existing LDM as the teacher, LCM achieves $2$–$4$ step generation on Stable Diffusion in roughly $32$ A100 GPU hours. LCM can also be applied as a LoRA (LCM-LoRA) without full fine-tuning.",
+        "LCM uses accelerated ODE solving during distillation: instead of requiring the consistency condition $f_\\theta(x_t, t) = f_\\theta(x_{t-1}, t-1)$ for adjacent timesteps, it enforces $f_\\theta(x_t, t) = f_\\theta(x_{t-k}, t-k)$ for a larger skip $k > 1$.\n\nThis 'skipping' enforces consistency over longer ODE intervals, making the model more strongly self-consistent across multiple steps. Combined with using an existing LDM as the teacher, LCM achieves $2$-$4$ step generation on Stable Diffusion in roughly $32$ A100 GPU hours. LCM can also be applied as a LoRA (LCM-LoRA) without full fine-tuning.",
       hints: [
         "LCM can be applied to Stable Diffusion or SDXL via LoRA (LCM-LoRA) without full fine-tuning of the base model.",
-        "The skip schedule is a key hyperparameter — larger skips yield faster generation but potentially lower quality.",
+        "The skip schedule is a key hyperparameter - larger skips yield faster generation but potentially lower quality.",
       ],
     },
     {
@@ -1062,7 +1062,7 @@ const questions: Record<string, Question[]> = {
         "Score Distillation Sampling (SDS, Poole et al. 2022) uses a diffusion model's score to optimize a NeRF or other differentiable renderer for text-to-3D generation. The SDS gradient with respect to the renderer parameters $\\theta$ is:",
       options: [
         "The gradient of the diffusion model's ELBO with respect to the NeRF parameters",
-        "$\\nabla_\\theta \\mathcal{L}_\\text{SDS} = \\mathbb{E}_{t,\\,\\varepsilon}\\big[ w(t)\\,(\\varepsilon_\\phi(x_t, t, y) - \\varepsilon)\\,\\nabla_\\theta x \\big]$ — the score guidance (difference between predicted and actual noise) backpropagated through the renderer to update NeRF parameters",
+        "$\\nabla_\\theta \\mathcal{L}_\\text{SDS} = \\mathbb{E}_{t,\\,\\varepsilon}\\big[ w(t)\\,(\\varepsilon_\\phi(x_t, t, y) - \\varepsilon)\\,\\nabla_\\theta x \\big]$ - the score guidance (difference between predicted and actual noise) backpropagated through the renderer to update NeRF parameters",
         "The gradient of the rendered image's pixel values with respect to NeRF parameters",
         "The CLIP gradient of text-image similarity backpropagated through the renderer",
       ],
@@ -1070,7 +1070,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SDS (used in DreamFusion):\n1. Render a 2D view $x = g(\\theta)$ from the NeRF with parameters $\\theta$.\n2. Add noise: $x_t = \\sqrt{\\bar{\\alpha}_t}\\,x + \\sqrt{1-\\bar{\\alpha}_t}\\,\\varepsilon$.\n3. Run the diffusion model: predict $\\varepsilon_\\phi(x_t, t, y)$ conditioned on text $y$.\n\nThe SDS gradient is:\n\n\\[\n\\nabla_\\theta \\mathcal{L}_\\text{SDS} = \\mathbb{E}_{t,\\,\\varepsilon}\\big[ w(t)\\,(\\varepsilon_\\phi(x_t, t, y) - \\varepsilon)\\,\\nabla_\\theta x\\big].\n\\]\n\nThis tells the NeRF 'which direction in image space to move to be more consistent with the text prompt $y$'. The U-Net Jacobian is dropped (CFG + diffusion U-Net serves as a perceptual critic). Known artifacts include the 'Janus problem' (multi-face) and over-saturation, addressed by VSD (Variational Score Distillation).",
       hints: [
-        "SDS updates the NeRF using the 2D diffusion model as a perceptual critic for 3D content — the diffusion model guides the NeRF without direct gradient from a 3D critic.",
+        "SDS updates the NeRF using the 2D diffusion model as a perceptual critic for 3D content - the diffusion model guides the NeRF without direct gradient from a 3D critic.",
         "The 'Janus problem' (multi-face artifact) arises because the SDS prior does not enforce 3D consistency across views.",
       ],
     },

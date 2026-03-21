@@ -17,10 +17,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Logistic regression is a linear model in its features:\n\\[\n\\mathrm{P}(y=1 \\mid x) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income})\n\\]\nwhere $\\sigma(z) = 1/(1 + e^{-z})$ is the sigmoid. The decision boundary is the hyperplane $\{x : w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} = 0\\}$. No matter how well it tunes $w_1$ and $w_2$, it cannot learn that the effect of income on churn depends on age — the coefficients are constants, not functions of $x$. Adding the interaction term $\\text{age} \\times \\text{income}$ as a third feature gives:\n\\[\n\\mathrm{P}(y=1) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} + w_3 \\cdot \\text{age} \\times \\text{income})\n\\]\nThe coefficient $w_3$ captures how the income effect changes with age — a joint nonlinear effect a pure linear model cannot represent without explicit interaction features.",
+        "Logistic regression is a linear model in its features:\n\\[\n\\mathrm{P}(y=1 \\mid x) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income})\n\\]\nwhere $\\sigma(z) = 1/(1 + e^{-z})$ is the sigmoid. The decision boundary is the hyperplane $\{x : w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} = 0\\}$. No matter how well it tunes $w_1$ and $w_2$, it cannot learn that the effect of income on churn depends on age - the coefficients are constants, not functions of $x$. Adding the interaction term $\\text{age} \\times \\text{income}$ as a third feature gives:\n\\[\n\\mathrm{P}(y=1) = \\sigma(w_0 + w_1 \\cdot \\text{age} + w_2 \\cdot \\text{income} + w_3 \\cdot \\text{age} \\times \\text{income})\n\\]\nThe coefficient $w_3$ captures how the income effect changes with age - a joint nonlinear effect a pure linear model cannot represent without explicit interaction features.",
       hints: [
         "Geometrically: a linear model in $p$ features defines a $(p-1)$-dimensional hyperplane in $\\mathbb{R}^p$. An interaction term adds a new dimension, allowing the decision boundary to curve and wrap around the feature space.",
-        "Tree-based models learn interactions implicitly through consecutive splits: 'if age > 30 AND income > 50K' — the tree itself partitions the space into regions with different prediction rules. Linear models need explicit $x_i \\cdot x_j$ features to approximate this.",
+        "Tree-based models learn interactions implicitly through consecutive splits: 'if age > 30 AND income > 50K' - the tree itself partitions the space into regions with different prediction rules. Linear models need explicit $x_i \\cdot x_j$ features to approximate this.",
       ],
     },
     {
@@ -31,7 +31,7 @@ const questions: Record<string, Question[]> = {
         "Log-transforming a right-skewed numerical feature always improves model performance regardless of the model type.",
       correctAnswer: "False",
       explanation:
-        "For a decision tree (or any tree ensemble), the splitting criterion evaluates all possible thresholds on the raw feature. A monotonic transformation $f(x)$ (like $\\log(x)$, $\\sqrt{x}$, or any strictly monotone function) preserves the ordering of values:\n\\[\nx_1 < x_2 \\implies f(x_1) < f(x_2)\n\\]\nAt any node, the optimal split on $x$ is a threshold $t$: samples with $x \\leq t$ go left, $x > t$ go right. Since $f$ is monotone, $f(x) \\leq f(t)$ if and only if $x \\leq t$. The same samples fall on the same sides of the split — only the threshold value changes (from $t$ to $f(t)$). The split quality (information gain, Gini reduction) is identical.\n\nLog transforms DO help linear and distance-based models: in logistic regression, the gradient $\\partial L/\\partial w_j$ scales with feature magnitude, so a feature spanning $[1, 10^6]$ dominates one spanning $[0, 6]$. Log compression reduces this scale disparity, improving gradient-based optimization.",
+        "For a decision tree (or any tree ensemble), the splitting criterion evaluates all possible thresholds on the raw feature. A monotonic transformation $f(x)$ (like $\\log(x)$, $\\sqrt{x}$, or any strictly monotone function) preserves the ordering of values:\n\\[\nx_1 < x_2 \\implies f(x_1) < f(x_2)\n\\]\nAt any node, the optimal split on $x$ is a threshold $t$: samples with $x \\leq t$ go left, $x > t$ go right. Since $f$ is monotone, $f(x) \\leq f(t)$ if and only if $x \\leq t$. The same samples fall on the same sides of the split - only the threshold value changes (from $t$ to $f(t)$). The split quality (information gain, Gini reduction) is identical.\n\nLog transforms DO help linear and distance-based models: in logistic regression, the gradient $\\partial L/\\partial w_j$ scales with feature magnitude, so a feature spanning $[1, 10^6]$ dominates one spanning $[0, 6]$. Log compression reduces this scale disparity, improving gradient-based optimization.",
       hints: [
         "Decision trees split by asking: 'is $x \\leq t$?' Since $f$ is monotone, 'is $f(x) \\leq f(t)$?' asks the same question about the same samples. The tree's split on $\\log(x)$ at threshold $\\log(1000)$ is equivalent to splitting on $x$ at threshold $1000$.",
         "For linear models: $\\partial L/\\partial w_j \\propto x_j$. With $x_j$ spanning orders of magnitude, gradients explode or vanish. Log-transform compresses $[1, 10^6]$ to $[0, 6]$, bringing features to comparable scales.",
@@ -45,16 +45,16 @@ const questions: Record<string, Question[]> = {
         'A feature "days_since_last_purchase" shows a U-shaped relationship with churn: churn is high for d < 7 (very recent), low for 7 \\leq d \\leq 90, and high again for d > 90. For a linear model, the best encoding is:',
       options: [
         "Use the raw feature; logistic regression will find the U-shape automatically",
-        "Bin into three intervals (0–7, 7–90, 90+) and one-hot encode, OR encode with a natural cubic spline with interior knots at 7 and 90",
+        "Bin into three intervals (0-7, 7-90, 90+) and one-hot encode, OR encode with a natural cubic spline with interior knots at 7 and 90",
         "Replace the feature with its square to capture the curve",
         "Drop the feature and rely on the model to recover the signal from other features",
       ],
       correctAnswer: 1,
       explanation:
-        "Logistic regression is linear: the log-odds is $w \\cdot d = w \\cdot \\text{days}$. A single coefficient $w$ produces a monotone relationship — it can only increase or decrease with $d$, not both. Squaring $d^2$ creates a parabola $w \\cdot d^2$ centered at $d = 0$ with minimum at $d = 0$ — it cannot shift the minimum to $d = 7$ and allow different slopes on each side.\n\nA natural cubic spline with $K$ interior knots $\{t_1, \\ldots, t_K\}$ adds $K$ basis functions to the linear predictor:\n\\[\n\\text{logit}(p) = w_0 + w_1 d + \\sum_{k=1}^{K} w_{1+k} \\cdot h_k(d)\n\\]\nwhere each $h_k(d)$ is a truncated cubic basis function. With knots at $t_1 = 7$ and $t_2 = 90$, the spline fits a separate cubic on $[0, 7]$, $[7, 90]$, and $[90, \\infty)$, joined with continuous first and second derivatives at each knot. This flexibly captures the U-shape: the churn rate rises toward $d = 7$ from the left, dips to a minimum at $d = 7$, rises again toward $d = 90$, then rises once more beyond $d = 90$ — precisely what a single linear coefficient cannot model.",
+        "Logistic regression is linear: the log-odds is $w \\cdot d = w \\cdot \\text{days}$. A single coefficient $w$ produces a monotone relationship - it can only increase or decrease with $d$, not both. Squaring $d^2$ creates a parabola $w \\cdot d^2$ centered at $d = 0$ with minimum at $d = 0$ - it cannot shift the minimum to $d = 7$ and allow different slopes on each side.\n\nA natural cubic spline with $K$ interior knots $\{t_1, \\ldots, t_K\}$ adds $K$ basis functions to the linear predictor:\n\\[\n\\text{logit}(p) = w_0 + w_1 d + \\sum_{k=1}^{K} w_{1+k} \\cdot h_k(d)\n\\]\nwhere each $h_k(d)$ is a truncated cubic basis function. With knots at $t_1 = 7$ and $t_2 = 90$, the spline fits a separate cubic on $[0, 7]$, $[7, 90]$, and $[90, \\infty)$, joined with continuous first and second derivatives at each knot. This flexibly captures the U-shape: the churn rate rises toward $d = 7$ from the left, dips to a minimum at $d = 7$, rises again toward $d = 90$, then rises once more beyond $d = 90$ - precisely what a single linear coefficient cannot model.",
       hints: [
-        "A linear model with coefficient $w$: the log-odds changes by $w$ for each unit increase in $d$. This is monotone — it cannot go up AND down. The U-shape requires at least one change point in the slope, which needs multiple basis functions.",
-        "Binning ($K=2$ bins with indicators $I(d \\leq 7)$, $I(7 < d \\leq 90)$) is equivalent to a spline with 2 interior knots but with discontinuous derivatives at the knot boundaries — creating kinks. A spline is a smooth (continuous second derivative) version of binning.",
+        "A linear model with coefficient $w$: the log-odds changes by $w$ for each unit increase in $d$. This is monotone - it cannot go up AND down. The U-shape requires at least one change point in the slope, which needs multiple basis functions.",
+        "Binning ($K=2$ bins with indicators $I(d \\leq 7)$, $I(7 < d \\leq 90)$) is equivalent to a spline with 2 interior knots but with discontinuous derivatives at the knot boundaries - creating kinks. A spline is a smooth (continuous second derivative) version of binning.",
       ],
     },
   ],
@@ -74,10 +74,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Rubin (1976) defined MCAR formally as: P(R = 0 | Y_obs, Y_mis) = P(R = 0), where R is the missingness indicator. The probability of being missing does not depend on any data values, observed or unobserved. In this scenario, device malfunction is purely random — unrelated to blood pressure values or any other patient feature. Consequence: complete-case analysis (dropping missing rows) does not introduce bias, though it loses statistical efficiency.",
+        "Rubin (1976) defined MCAR formally as: P(R = 0 | Y_obs, Y_mis) = P(R = 0), where R is the missingness indicator. The probability of being missing does not depend on any data values, observed or unobserved. In this scenario, device malfunction is purely random - unrelated to blood pressure values or any other patient feature. Consequence: complete-case analysis (dropping missing rows) does not introduce bias, though it loses statistical efficiency.",
       hints: [
         "MCAR is the strictest assumption. MAR allows missingness to depend on observed data. MNAR allows it to depend on the missing value itself.",
-        "Clinical example of MNAR: blood pressure is not recorded because the nurse judged the patient to be too unstable to measure — missingness depends on the true blood pressure.",
+        "Clinical example of MNAR: blood pressure is not recorded because the nurse judged the patient to be too unstable to measure - missingness depends on the true blood pressure.",
       ],
     },
     {
@@ -90,7 +90,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Single imputation (e.g., replacing missing values with the column mean) treats imputed values as observed with certainty, artificially deflating variance estimates. Multiple Imputation (MI, Rubin 1987) generates $m$ complete datasets with different plausible imputations drawn from the posterior predictive distribution $\\mathrm{P}(Y_{\\text{mis}} \\mid Y_{\\text{obs}})$. Each dataset is analyzed separately, and results are pooled using Rubin's combining rules:\n\\[\n\\begin{align}\n\\bar{\\theta} &= \\frac{1}{m} \\sum_{j=1}^{m} \\hat{\\theta}_j \\quad \\text{(point estimate)} \\\\\n\\mathrm{Var}(\\bar{\\theta}) &= \\bar{W} + \\left(1 + \\frac{1}{m}\\right) \\cdot B \\quad \\text{(total variance)}\n\\end{align}\n\\]\nwhere $\\bar{W}$ is the average within-imputation variance and $B$ is the between-imputation variance. The extra $B$ term propagates imputation uncertainty. With $m = 20$ and 30% missing data, MI confidence intervals are properly calibrated; single imputation intervals are too narrow.",
       hints: [
-        "If you impute with the mean, every imputed value is identical — you have added no variance. But the true missing values are not all equal to the mean.",
+        "If you impute with the mean, every imputed value is identical - you have added no variance. But the true missing values are not all equal to the mean.",
         "Rubin's formula: total variance $= \\bar{W} + (1 + 1/m) \\cdot B$. Single imputation sets $B = 0$, underestimating variance.",
       ],
     },
@@ -108,10 +108,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Under MNAR, the fact of missingness encodes information about the missing value: high earners are missing, so income is likely high. Two actions are needed: (1) Impute a plausible value to fill the gap — median avoids being pulled by extreme values. (2) Add a binary indicator \"income_was_missing\" $\\in \\{0, 1\\}$ as a feature. The model can then learn: when income_was_missing = 1, adjust the prediction upward, capturing the MNAR signal.\n\nListwise deletion (A) discards 40% of data and biases the remaining sample toward low earners. Mean imputation (C) has the same deletion bias without preserving the distribution. MICE (D) assumes MAR, which is violated here.",
+        "Under MNAR, the fact of missingness encodes information about the missing value: high earners are missing, so income is likely high. Two actions are needed: (1) Impute a plausible value to fill the gap - median avoids being pulled by extreme values. (2) Add a binary indicator \"income_was_missing\" $\\in \\{0, 1\\}$ as a feature. The model can then learn: when income_was_missing = 1, adjust the prediction upward, capturing the MNAR signal.\n\nListwise deletion (A) discards 40% of data and biases the remaining sample toward low earners. Mean imputation (C) has the same deletion bias without preserving the distribution. MICE (D) assumes MAR, which is violated here.",
       hints: [
         'The missingness indicator trick: if "high income \\to missing", then "was_missing" is positively correlated with income, giving the model a proxy for the missing signal.',
-        "MICE assumes $\\mathrm{P}(R \\mid Y_{\\text{obs}})$ — missingness depends only on observed data. MNAR violates this: $\\mathrm{P}(R \\mid Y_{\\text{mis}})$ depends on the unobserved income itself.",
+        "MICE assumes $\\mathrm{P}(R \\mid Y_{\\text{obs}})$ - missingness depends only on observed data. MNAR violates this: $\\mathrm{P}(R \\mid Y_{\\text{mis}})$ depends on the unobserved income itself.",
       ],
     },
   ],
@@ -131,7 +131,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "OHE creates one binary indicator column per unique value. For $k = 1000$ cities, you get 1000 binary columns. However, in a model with an intercept term, one column is perfectly predicted by the other 999 — they sum to 1, creating perfect multicollinearity and a singular design matrix. Dropping one reference category leaves $k - 1 = 999$ columns and removes this collinearity. General rule: for OHE with $k$ categories in a model with an intercept, use $k - 1$ columns.",
+        "OHE creates one binary indicator column per unique value. For $k = 1000$ cities, you get 1000 binary columns. However, in a model with an intercept term, one column is perfectly predicted by the other 999 - they sum to 1, creating perfect multicollinearity and a singular design matrix. Dropping one reference category leaves $k - 1 = 999$ columns and removes this collinearity. General rule: for OHE with $k$ categories in a model with an intercept, use $k - 1$ columns.",
       hints: [
         'The "dummy variable trap": if all $k$ indicator columns are included with an intercept, the design matrix $\\mathbf{X}$ is rank-deficient (perfect collinearity).',
         "With pandas `get_dummies(drop_first=True)`, you get $k - 1$ columns; without it, you get $k$.",
@@ -145,9 +145,9 @@ const questions: Record<string, Question[]> = {
         "Target encoding must use out-of-fold (leave-one-out) encoding during training to avoid target leakage, even though the same data is used to compute mean target values.",
       correctAnswer: "True",
       explanation:
-        "Naive target encoding computes $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i)$ using all training rows, including row $i$ itself. When $c_i$ appears only once, $\\mathrm{enc}(c_i) \\approx y_i$ — the encoded feature directly contains the target (severe leakage). Out-of-fold encoding computes the mean for row $i$ using only the other folds (e.g., in 5-fold CV: $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i, \\text{fold} \\neq \\text{fold}(i))$). This mimics test-time behavior, where the mean is estimated from data the model did not see for that sample.",
+        "Naive target encoding computes $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i)$ using all training rows, including row $i$ itself. When $c_i$ appears only once, $\\mathrm{enc}(c_i) \\approx y_i$ - the encoded feature directly contains the target (severe leakage). Out-of-fold encoding computes the mean for row $i$ using only the other folds (e.g., in 5-fold CV: $\\mathrm{enc}(c_i) = \\mathrm{mean}(y \\mid \\text{category} = c_i, \\text{fold} \\neq \\text{fold}(i))$). This mimics test-time behavior, where the mean is estimated from data the model did not see for that sample.",
       hints: [
-        "Extreme case: a singleton category gets encoded as exactly that sample's target. The model sees the target in its own features at training time — but not at test time.",
+        "Extreme case: a singleton category gets encoded as exactly that sample's target. The model sees the target in its own features at training time - but not at test time.",
         "Kaggle winning solutions almost always use out-of-fold target encoding inside their CV loop.",
       ],
     },
@@ -159,13 +159,13 @@ const questions: Record<string, Question[]> = {
         "A neural network must encode 2 million unique product IDs. The best strategy is:",
       options: [
         "One-hot encoding: 2M binary columns",
-        "Label encoding as integers 0–1,999,999 and feed directly to a dense layer",
+        "Label encoding as integers 0-1,999,999 and feed directly to a dense layer",
         "A learned embedding layer: each ID maps to a trainable d-dimensional dense vector (e.g., d = 50)",
         "Hash encoding into 1,024 buckets with hash collisions handled by averaging",
       ],
       correctAnswer: 2,
       explanation:
-        "OHE with 2M columns creates a 2M-dimensional sparse input — impractical for memory and gradient computation. Label encoding (integers) is worse: it imposes an arbitrary order (ID 500,000 > ID 1 means nothing), and the dense layer treats them as ordinal, producing nonsensical embeddings. Hash encoding loses identity through collisions. Learned embeddings (same technique as word2vec) map each ID to a trainable $\\mathbb{R}^d$ vector. The embedding matrix has shape $2M \\times d$ — with $d = 50$, that is 100M parameters, large but feasible. IDs that co-occur in similar contexts learn similar embeddings. At inference, any ID lookup is $O(1)$.",
+        "OHE with 2M columns creates a 2M-dimensional sparse input - impractical for memory and gradient computation. Label encoding (integers) is worse: it imposes an arbitrary order (ID 500,000 > ID 1 means nothing), and the dense layer treats them as ordinal, producing nonsensical embeddings. Hash encoding loses identity through collisions. Learned embeddings (same technique as word2vec) map each ID to a trainable $\\mathbb{R}^d$ vector. The embedding matrix has shape $2M \\times d$ - with $d = 50$, that is 100M parameters, large but feasible. IDs that co-occur in similar contexts learn similar embeddings. At inference, any ID lookup is $O(1)$.",
       hints: [
         "Entity embeddings (Guo & Berkhahn 2016): learned embeddings for categorical features often match or beat OHE for neural tabular models.",
         "Embedding dimension rule of thumb: $d \\approx \\min\\bigl(50, (k+1)/2\\bigr)$ where $k$ is the cardinality.",
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Random oversampling duplicates existing minority examples — the model sees the same $x_i$ multiple times. SMOTE interpolates:\n\\[\n\\tilde{x} = x_i + \\lambda(x_j - x_i), \\quad \\lambda \\in [0, 1]\n\\]\nThis creates a point anywhere on the segment between two real minority neighbors. It fills the feature-space region around the minority cluster with novel examples, producing a smoother decision boundary and reducing overfitting to duplicated points. The $k$ nearest minority neighbors (default $k = 5$) define which directions are \"safe\" to interpolate in.",
+        "Random oversampling duplicates existing minority examples - the model sees the same $x_i$ multiple times. SMOTE interpolates:\n\\[\n\\tilde{x} = x_i + \\lambda(x_j - x_i), \\quad \\lambda \\in [0, 1]\n\\]\nThis creates a point anywhere on the segment between two real minority neighbors. It fills the feature-space region around the minority cluster with novel examples, producing a smoother decision boundary and reducing overfitting to duplicated points. The $k$ nearest minority neighbors (default $k = 5$) define which directions are \"safe\" to interpolate in.",
       hints: [
         "Draw two minority points A and B. SMOTE generates points on segment AB. Random oversampling only generates copies of A or copies of B.",
         "SMOTE can create problematic samples near the decision boundary when classes overlap; SMOTE-ENN and BorderlineSMOTE address this.",
@@ -202,7 +202,7 @@ const questions: Record<string, Question[]> = {
         'Setting class_weight="balanced" in scikit-learn is exactly equivalent in effect to oversampling the minority class to the majority class count.',
       correctAnswer: "False",
       explanation:
-        'class_weight="balanced" computes $w_k = n_{\\text{samples}} / (n_{\\text{classes}} \\times n_k)$ and scales each sample\'s loss contribution by its class weight. This rescales the gradient from minority samples without changing the training dataset. Oversampling replicates minority samples, changing the training distribution seen by the optimizer — each mini-batch now sees a different class ratio, which affects batch normalization statistics, dropout patterns, and the frequency of minority gradient updates. Class weighting is simpler and avoids inflating the dataset; oversampling can interact differently with regularization. They are not equivalent.',
+        'class_weight="balanced" computes $w_k = n_{\\text{samples}} / (n_{\\text{classes}} \\times n_k)$ and scales each sample\'s loss contribution by its class weight. This rescales the gradient from minority samples without changing the training dataset. Oversampling replicates minority samples, changing the training distribution seen by the optimizer - each mini-batch now sees a different class ratio, which affects batch normalization statistics, dropout patterns, and the frequency of minority gradient updates. Class weighting is simpler and avoids inflating the dataset; oversampling can interact differently with regularization. They are not equivalent.',
       hints: [
         "With balanced weights, the model still sees $n$ minority samples per epoch; with oversampling it sees more. Does this matter for batch-level operations?",
         "For SGD with large imbalance ratios (1:1000), oversampling ensures minority examples appear in most mini-batches; class weighting does not guarantee that.",
@@ -222,10 +222,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Standard cross-entropy for a positive example with predicted probability $p$ is $-\\log(p)$. Focal loss multiplies by $(1 - p)^\\gamma$:\n\\[\n\\mathrm{FL} = -(1 - p)^\\gamma \\log(p)\n\\]\nFor $p_t = 0.9$ and $\\gamma = 2$: modulating factor $= (1 - 0.9)^2 = 0.1^2 = 0.01$. The well-classified example contributes only 1% of its original loss. For a hard example with $p_t = 0.2$: $(1 - 0.2)^2 = 0.64$ — it retains 64% of its loss. This ensures the gradient is dominated by hard misclassified examples rather than abundant easy negatives.",
+        "Standard cross-entropy for a positive example with predicted probability $p$ is $-\\log(p)$. Focal loss multiplies by $(1 - p)^\\gamma$:\n\\[\n\\mathrm{FL} = -(1 - p)^\\gamma \\log(p)\n\\]\nFor $p_t = 0.9$ and $\\gamma = 2$: modulating factor $= (1 - 0.9)^2 = 0.1^2 = 0.01$. The well-classified example contributes only 1% of its original loss. For a hard example with $p_t = 0.2$: $(1 - 0.2)^2 = 0.64$ - it retains 64% of its loss. This ensures the gradient is dominated by hard misclassified examples rather than abundant easy negatives.",
       hints: [
         "Compute $(1 - p_t)^\\gamma$ for $p_t = 0.9$, $\\gamma = 2$. This multiplicative factor is applied to the standard log-loss.",
-        "If the model is 90% confident and correct, training on this example provides little useful gradient — focal loss quantifies this.",
+        "If the model is 90% confident and correct, training on this example provides little useful gradient - focal loss quantifies this.",
       ],
     },
   ],
@@ -248,7 +248,7 @@ const questions: Record<string, Question[]> = {
         "Gini impurity at a node with class proportions p\\_1, p\\_2, …, pK is defined as: G = 1 − \\Sigma\\_k p\\_k\\^2. With p_A = 0.6 and p_B = 0.4: G = 1 − (0.36 + 0.16) = 1 − 0.52 = 0.48. (Option C gives the entropy H = −\\Sigma p\\_k log p\\_k \\approx 0.673, a different criterion.) CART selects the split that maximizes the weighted Gini reduction: \\DeltaG = G(parent) − (nₗ/n)\\cdotG(left) − (nᵣ/n)\\cdotG(right). Gini and entropy usually select the same splits in practice; they differ most for highly imbalanced nodes.",
       hints: [
         "Formula: G = 1 − \\Sigma\\_k p\\_k\\^2. Compute p\\_k\\^2 for each class and subtract from 1.",
-        "A pure node (all one class) has G = 0; a 50/50 split has G = 0.5 for binary classification — the maximum.",
+        "A pure node (all one class) has G = 0; a 50/50 split has G = 0.5 for binary classification - the maximum.",
       ],
     },
     {
@@ -270,7 +270,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Mean Decrease Impurity (MDI) feature importance — the total Gini reduction weighted by node sample count — is biased toward which type of feature, and why?",
+        "Mean Decrease Impurity (MDI) feature importance - the total Gini reduction weighted by node sample count - is biased toward which type of feature, and why?",
       options: [
         "Binary features, because they create pure splits quickly",
         "High-cardinality continuous features, because more possible thresholds give more chances for a spuriously good split",
@@ -279,9 +279,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MDI evaluates all possible split thresholds for each feature. A continuous feature with many unique values (high cardinality) has many candidate thresholds — increasing the probability of finding at least one that gives a large Gini reduction by chance, even for a random feature. A binary feature has only one possible threshold. This inflated search space gives continuous features an unfair advantage in importance rankings. Strobl et al. (2007) formalized this bias. The fix: use permutation importance (break feature-target association by shuffling, measure accuracy drop) or conditional permutation importance, which do not depend on the number of candidate thresholds.",
+        "MDI evaluates all possible split thresholds for each feature. A continuous feature with many unique values (high cardinality) has many candidate thresholds - increasing the probability of finding at least one that gives a large Gini reduction by chance, even for a random feature. A binary feature has only one possible threshold. This inflated search space gives continuous features an unfair advantage in importance rankings. Strobl et al. (2007) formalized this bias. The fix: use permutation importance (break feature-target association by shuffling, measure accuracy drop) or conditional permutation importance, which do not depend on the number of candidate thresholds.",
       hints: [
-        "Imagine a feature that is pure noise but has 10,000 unique values — it will likely find a threshold that happens to reduce Gini on the training set.",
+        "Imagine a feature that is pure noise but has 10,000 unique values - it will likely find a threshold that happens to reduce Gini on the training set.",
         "Permutation importance is threshold-agnostic: it measures the holistic effect of destroying a feature\'s information, not the Gini reduction at any specific split.",
       ],
     },
@@ -319,7 +319,7 @@ const questions: Record<string, Question[]> = {
         "Each bootstrap sample draws n samples with replacement from n training examples. The probability that a specific example is NOT selected in one draw is (1 − 1/n). Over n draws: P(never selected) = (1 − 1/n)\\^n \\to 1/e \\approx 0.368 as n \\to \\infty. So ~36.8% of training samples are out-of-bag for any given tree. Each training sample is predicted using only the trees for which it was OOB, giving a prediction that is truly out-of-sample for those trees. Aggregating these across all trees provides an error estimate equivalent to ~0.632-fraction cross-validation. Breiman showed OOB error converges to the true generalization error as the forest grows.",
       hints: [
         "With n = 100, P(example excluded from bootstrap) \\approx (0.99)¹⁰⁰ \\approx 0.366. With n = 10,000: (1 − 1/10000)^10000 \\approx 1/e.",
-        'OOB predictions are made by the ~37% of trees that did not train on each example — a valid "fresh" model for that sample.',
+        'OOB predictions are made by the ~37% of trees that did not train on each example - a valid "fresh" model for that sample.',
       ],
     },
     {
@@ -336,10 +336,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "From the bias-variance formula: Var(RF) = \\rho\\cdot\\sigma\\^2 + (1−\\rho)\\cdot\\sigma\\^2/T. As T \\to \\infty, the second term vanishes and variance converges to \\rho\\cdot\\sigma\\^2, the floor set by inter-tree correlation. Adding more trees never increases this — averaging more independent estimates can only maintain or reduce variance (law of large numbers). Unlike gradient boosting where adding more iterations after convergence can overfit, random forests cannot overfit by increasing T. The practical trade-off: more trees cost more inference time and memory, so there is a computational optimum but not a statistical one.",
+        "From the bias-variance formula: Var(RF) = \\rho\\cdot\\sigma\\^2 + (1−\\rho)\\cdot\\sigma\\^2/T. As T \\to \\infty, the second term vanishes and variance converges to \\rho\\cdot\\sigma\\^2, the floor set by inter-tree correlation. Adding more trees never increases this - averaging more independent estimates can only maintain or reduce variance (law of large numbers). Unlike gradient boosting where adding more iterations after convergence can overfit, random forests cannot overfit by increasing T. The practical trade-off: more trees cost more inference time and memory, so there is a computational optimum but not a statistical one.",
       hints: [
         "Contrast with boosting: each new boosting iteration fits residuals more precisely on the training set and CAN overfit. Random forest trees are independent, not sequential correctors.",
-        "Practically, test error plateaus by T \\approx 100–300 trees for most datasets. Going to T = 1000 wastes computation but does not hurt accuracy.",
+        "Practically, test error plateaus by T \\approx 100-300 trees for most datasets. Going to T = 1000 wastes computation but does not hurt accuracy.",
       ],
     },
   ],
@@ -359,7 +359,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Gradient boosting (Friedman 2001) performs functional gradient descent in prediction space. At iteration m, the pseudo-residual for sample i is r\\_iₘ = −[\\partialL(y\\_i, Fₘ₋\\_1(x\\_i))/\\partialF(x\\_i)]_{F=Fₘ₋\\_1}. For MSE loss L = ½(y − F)\\^2: \\partialL/\\partialF = F − y, so r\\_iₘ = y − Fₘ₋\\_1(x\\_i) — exactly the residual. The new tree hₘ is fit to these residuals, and the ensemble updates: Fₘ = Fₘ₋\\_1 + \\eta\\cdothₘ. For other losses (log-loss, MAE), pseudo-residuals generalize this concept to any differentiable objective.",
+        "Gradient boosting (Friedman 2001) performs functional gradient descent in prediction space. At iteration m, the pseudo-residual for sample i is r\\_iₘ = −[\\partialL(y\\_i, Fₘ₋\\_1(x\\_i))/\\partialF(x\\_i)]_{F=Fₘ₋\\_1}. For MSE loss L = ½(y − F)\\^2: \\partialL/\\partialF = F − y, so r\\_iₘ = y − Fₘ₋\\_1(x\\_i) - exactly the residual. The new tree hₘ is fit to these residuals, and the ensemble updates: Fₘ = Fₘ₋\\_1 + \\eta\\cdothₘ. For other losses (log-loss, MAE), pseudo-residuals generalize this concept to any differentiable objective.",
       hints: [
         "Gradient descent in parameter space: \\theta \\leftarrow \\theta − \\eta\\cdot\\nabla_\\theta L. Gradient boosting: F \\leftarrow F − \\eta\\cdot\\nabla_F L, where \\nabla_F L evaluated at each point is the pseudo-residual.",
         "For log-loss, the pseudo-residual = y\\_i − p̂\\_i, where p̂\\_i = \\sigma(Fₘ₋\\_1(x\\_i)). Same intuition: predict what the current model missed.",
@@ -373,7 +373,7 @@ const questions: Record<string, Question[]> = {
         "LightGBM\'s leaf-wise (best-first) growth strategy achieves lower training loss than XGBoost\'s level-wise growth for the same number of leaves, but can overfit more on small datasets.",
       correctAnswer: "True",
       explanation:
-        "Level-wise growth (XGBoost default): expand all nodes at depth d before going to d+1. Leaf-wise growth (LightGBM default): at each step, split whichever leaf has the largest loss reduction, regardless of depth. With the same leaf budget, leaf-wise selects the globally best split available, reducing training loss faster. However, it creates asymmetric, deep branches on a single path — which can memorize noise on small datasets. LightGBM controls this via min_child_samples (minimum samples per leaf) and num_leaves; XGBoost uses max_depth. For large datasets (>10K samples), leaf-wise is typically superior; for small datasets, level-wise is safer.",
+        "Level-wise growth (XGBoost default): expand all nodes at depth d before going to d+1. Leaf-wise growth (LightGBM default): at each step, split whichever leaf has the largest loss reduction, regardless of depth. With the same leaf budget, leaf-wise selects the globally best split available, reducing training loss faster. However, it creates asymmetric, deep branches on a single path - which can memorize noise on small datasets. LightGBM controls this via min_child_samples (minimum samples per leaf) and num_leaves; XGBoost uses max_depth. For large datasets (>10K samples), leaf-wise is typically superior; for small datasets, level-wise is safer.",
       hints: [
         "With 31 leaves, level-wise produces a balanced tree of depth 5; leaf-wise may produce one branch 15 levels deep and another 2 levels deep.",
         "LightGBM also uses histogram-based splitting (bucketing features into 255 bins), enabling O(n\\cdotK) split finding vs. O(n\\cdotp\\cdotlog n) for XGBoost\'s exact method.",
@@ -393,9 +393,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard target encoding: enc(c\\_i) = mean(y | category = c\\_i) using ALL training samples — if sample i is in the training set, its own y\\_i contributes to enc(c\\_i), creating leakage. CatBoost\'s solution: randomly permute the training set. For sample at position k in the permutation, compute enc(c\\_i) using only samples at positions 1 to k − 1. This simulates a temporal ordering: each sample\'s encoding uses only \"past\" samples, so no sample encodes its own target. CatBoost generates multiple permutations per training run to avoid sensitivity to a single ordering, applying different permutations for different trees.",
+        "Standard target encoding: enc(c\\_i) = mean(y | category = c\\_i) using ALL training samples - if sample i is in the training set, its own y\\_i contributes to enc(c\\_i), creating leakage. CatBoost\'s solution: randomly permute the training set. For sample at position k in the permutation, compute enc(c\\_i) using only samples at positions 1 to k − 1. This simulates a temporal ordering: each sample\'s encoding uses only \"past\" samples, so no sample encodes its own target. CatBoost generates multiple permutations per training run to avoid sensitivity to a single ordering, applying different permutations for different trees.",
       hints: [
-        "Equivalent intuition: if you\'re encoding sample 500, compute the category mean from samples 1–499 only. Sample 500's own label is never in its own encoding.",
+        "Equivalent intuition: if you\'re encoding sample 500, compute the category mean from samples 1-499 only. Sample 500's own label is never in its own encoding.",
         "This is why CatBoost is particularly strong with high-cardinality categoricals on small datasets where standard target encoding leaks severely.",
       ],
     },
@@ -407,7 +407,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Optuna\'s default sampler — Tree-structured Parzen Estimator (TPE) — proposes new hyperparameter configurations by:",
+        "Optuna\'s default sampler - Tree-structured Parzen Estimator (TPE) - proposes new hyperparameter configurations by:",
       options: [
         "Exhaustively evaluating all combinations in a predefined grid",
         "Modeling two density functions l(x) and g(x) over good and bad trials, and sampling x that maximizes l(x)/g(x)",
@@ -416,10 +416,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'TPE (Bergstra et al. 2011) splits past trials into "good" ($y < y^*$) and "bad" ($y \\geq y^*$) based on a quantile $\\gamma$ of observed objective values (default $\\gamma = 0.25$ means the best 25% are good). It models two density functions using kernel density estimation:\n\\[\np(x \\mid y < y^*) = l(x), \\quad p(x \\mid y \\geq y^*) = g(x)\n\\]\nThe acquisition function (Expected Improvement) is:\n\\[\n\\text{EI}(x) \\propto \\frac{l(x)}{g(x)}\n\\]\nNew configurations are sampled from $l(x)$ and selected where the ratio $l(x)/g(x)$ is largest — i.e., configurations that are likely among good trials and unlikely among bad ones. This is more sample-efficient than grid search (exponential in $p$) or random search, and cheaper than Gaussian Process Bayesian optimization for high-dimensional discrete spaces because KDE scales better with dimensionality.',
+        'TPE (Bergstra et al. 2011) splits past trials into "good" ($y < y^*$) and "bad" ($y \\geq y^*$) based on a quantile $\\gamma$ of observed objective values (default $\\gamma = 0.25$ means the best 25% are good). It models two density functions using kernel density estimation:\n\\[\np(x \\mid y < y^*) = l(x), \\quad p(x \\mid y \\geq y^*) = g(x)\n\\]\nThe acquisition function (Expected Improvement) is:\n\\[\n\\text{EI}(x) \\propto \\frac{l(x)}{g(x)}\n\\]\nNew configurations are sampled from $l(x)$ and selected where the ratio $l(x)/g(x)$ is largest - i.e., configurations that are likely among good trials and unlikely among bad ones. This is more sample-efficient than grid search (exponential in $p$) or random search, and cheaper than Gaussian Process Bayesian optimization for high-dimensional discrete spaces because KDE scales better with dimensionality.',
       hints: [
         "Grid search: $O(k^p)$ evaluations for $k$ values per $p$ parameters. Random search: $O(n)$ evaluations but blindly samples. TPE: $O(n)$ evaluations but adaptively guides search toward promising regions using past observations.",
-        "The $\\gamma$ quantile defines 'good' trials. A lower $\\gamma$ (e.g., 0.10) is more aggressive — it defines 'good' as only the top 10%, focusing exploitation. A higher $\\gamma$ (e.g., 0.40) balances exploration more.",
+        "The $\\gamma$ quantile defines 'good' trials. A lower $\\gamma$ (e.g., 0.10) is more aggressive - it defines 'good' as only the top 10%, focusing exploitation. A higher $\\gamma$ (e.g., 0.40) balances exploration more.",
       ],
     },
     {
@@ -430,7 +430,7 @@ const questions: Record<string, Question[]> = {
         "Optuna\'s pruning feature (MedianPruner, HyperbandPruner) can terminate a trial early based on intermediate validation metrics, reducing total tuning compute without compromising the best configuration found.",
       correctAnswer: "True",
       explanation:
-        "Pruners implement successive halving (SHA) logic: at intermediate step $s$, a trial is pruned if its metric is worse than the median of all completed trials at step $s$. For example, an XGBoost trial with validation AUC $= 0.65$ after 100 trees, when all completed trials at 100 trees have median AUC $= 0.82$, is abandoned — saving the compute of training the remaining 900 trees. The best configurations (those that survive pruning) still run to full budget, so the final result is not compromised.\n\nOptuna's HyperbandPruner implements SHA with adaptive budget allocation: it allocates progressively larger budgets to promising trials and smaller budgets to unpromising ones, stopping the worst trials early and concentrating compute on the most promising configurations. This is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial based on intermediate results.",
+        "Pruners implement successive halving (SHA) logic: at intermediate step $s$, a trial is pruned if its metric is worse than the median of all completed trials at step $s$. For example, an XGBoost trial with validation AUC $= 0.65$ after 100 trees, when all completed trials at 100 trees have median AUC $= 0.82$, is abandoned - saving the compute of training the remaining 900 trees. The best configurations (those that survive pruning) still run to full budget, so the final result is not compromised.\n\nOptuna's HyperbandPruner implements SHA with adaptive budget allocation: it allocates progressively larger budgets to promising trials and smaller budgets to unpromising ones, stopping the worst trials early and concentrating compute on the most promising configurations. This is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial based on intermediate results.",
       hints: [
         "Pruning is orthogonal to the sampler: TPE proposes configurations, the pruner decides whether to continue each trial. This separation means you can combine TPE with any pruner (MedianPruner, HyperbandPruner, etc.).",
         "Not all models support intermediate reporting. Scikit-learn estimators trained as a whole (no callbacks) cannot be pruned. XGBoost, LightGBM (with callbacks), and PyTorch training loops can report per-epoch metrics and thus support pruning.",
@@ -450,7 +450,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The shrinkage factor $\\eta$ (learning_rate) multiplies each tree's contribution to the ensemble:\n\\[\nF_m = F_{m-1} + \\eta \\cdot h_m(x)\n\\]\nwhere $h_m$ is the $m$-th tree's prediction. Smaller $\\eta$ means each tree contributes less — the ensemble learns more slowly but requires more trees to reach the same training loss. Friedman (2002) showed that smaller $\\eta$ with more trees produces a smoother function with better generalization.\n\nOptimal $(\\eta, n)$ pairs lie on a tradeoff curve: $\\eta = 0.01$ might need $n = 5000$ trees; $\\eta = 0.3$ might need only $n = 100$. Tuning $n$ independently of $\\eta$ (or vice versa) finds suboptimal configurations because the interaction is fundamental. The standard approach: fix a small $\\eta \\in [0.05, 0.1]$ and use early stopping to find optimal $n$. Early stopping effectively jointly optimizes both: it trains up to $n_\\text{max}$ trees but stops when validation loss does not improve for $r$ consecutive rounds.",
+        "The shrinkage factor $\\eta$ (learning_rate) multiplies each tree's contribution to the ensemble:\n\\[\nF_m = F_{m-1} + \\eta \\cdot h_m(x)\n\\]\nwhere $h_m$ is the $m$-th tree's prediction. Smaller $\\eta$ means each tree contributes less - the ensemble learns more slowly but requires more trees to reach the same training loss. Friedman (2002) showed that smaller $\\eta$ with more trees produces a smoother function with better generalization.\n\nOptimal $(\\eta, n)$ pairs lie on a tradeoff curve: $\\eta = 0.01$ might need $n = 5000$ trees; $\\eta = 0.3$ might need only $n = 100$. Tuning $n$ independently of $\\eta$ (or vice versa) finds suboptimal configurations because the interaction is fundamental. The standard approach: fix a small $\\eta \\in [0.05, 0.1]$ and use early stopping to find optimal $n$. Early stopping effectively jointly optimizes both: it trains up to $n_\\text{max}$ trees but stops when validation loss does not improve for $r$ consecutive rounds.",
       hints: [
         "Early stopping in XGBoost: $F_m = F_{m-1} + \\eta \\cdot h_m$. If validation AUC does not improve for early_stopping_rounds rounds, stop. This means: large $\\eta$ \\to fewer trees needed \\to stops sooner; small $\\eta$ \\to more trees needed \\to trains longer. The combination of $\\eta$ and early_stopping_rounds effectively jointly tunes $(\\eta, n)$.",
         "Other key regularization params: max_depth (tree depth/complexity), subsample (row subsampling), colsample_bytree (feature subsampling), min_child_weight (minimum leaf weight). These control the complexity of individual trees, while $\\eta$ controls how many trees are combined.",
@@ -475,7 +475,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Stratified K-Fold independently divides the majority and minority class samples into K equal groups, then combines them. With 950 class-0 and 50 class-1 samples in 5-fold: each fold gets 190 class-0 and 10 class-1 samples (10/200 = 5% positive rate). Without stratification, sequential splitting might give fold 5 all 50 class-1 samples (if they are clustered at the end) or zero (if clustered at the start). A fold with no class-1 samples makes ROC-AUC undefined and accuracy trivially 100% for that fold.",
       hints: [
-        "sklearn\'s cross_val_score automatically uses StratifiedKFold when the estimator is a classifier — stratification is the default for classification.",
+        "sklearn\'s cross_val_score automatically uses StratifiedKFold when the estimator is a classifier - stratification is the default for classification.",
         "For regression, ordinary KFold is used; stratification is less critical when the target is continuous.",
       ],
     },
@@ -487,9 +487,9 @@ const questions: Record<string, Question[]> = {
         "For time series data, standard K-fold cross-validation with random shuffling is invalid because it leaks future information into the training set.",
       correctAnswer: "True",
       explanation:
-        "Suppose a model is trained on samples from 2020–2024 and validated on samples from 2022. Random shuffling means samples from 2023–2024 (the future relative to 2022) appear in the training fold — the model learns from future data to predict the past. This violates temporal causality and produces optimistically biased validation scores that do not reflect true deployment performance. The correct approach is walk-forward (expanding window) validation: always train on data up to time t and validate on t to t+\\Delta. Scikit-learn\'s TimeSeriesSplit implements this: fold k trains on [0, k\\cdotn/K] and validates on [k\\cdotn/K, (k+1)\\cdotn/K].",
+        "Suppose a model is trained on samples from 2020-2024 and validated on samples from 2022. Random shuffling means samples from 2023-2024 (the future relative to 2022) appear in the training fold - the model learns from future data to predict the past. This violates temporal causality and produces optimistically biased validation scores that do not reflect true deployment performance. The correct approach is walk-forward (expanding window) validation: always train on data up to time t and validate on t to t+\\Delta. Scikit-learn\'s TimeSeriesSplit implements this: fold k trains on [0, k\\cdotn/K] and validates on [k\\cdotn/K, (k+1)\\cdotn/K].",
       hints: [
-        "Rolling features for a validation sample must be computed from data that would have been available before the prediction date — which random K-fold does not guarantee.",
+        "Rolling features for a validation sample must be computed from data that would have been available before the prediction date - which random K-fold does not guarantee.",
         "TimeSeriesSplit ensures the training fold always precedes the validation fold chronologically, making rolling statistic computation causal.",
       ],
     },
@@ -507,9 +507,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Suppose you use 5-fold CV to tune hyperparameters and then report that same 5-fold CV score as your generalization estimate. Problem: the best hyperparameters were selected to maximize that CV score — so the reported score is optimistically biased (it has "seen" all data through the tuning process). Nested CV fixes this: the outer loop (K\\_1 = 5 folds) provides test folds that are NEVER used for hyperparameter tuning. Inside each outer fold, an inner loop (K\\_2 = 3 folds) runs hyperparameter search on the outer training portion only. The outer test fold is held back until after tuning is complete, giving an honest estimate of the model-selection process\'s expected performance on new data.',
+        'Suppose you use 5-fold CV to tune hyperparameters and then report that same 5-fold CV score as your generalization estimate. Problem: the best hyperparameters were selected to maximize that CV score - so the reported score is optimistically biased (it has "seen" all data through the tuning process). Nested CV fixes this: the outer loop (K\\_1 = 5 folds) provides test folds that are NEVER used for hyperparameter tuning. Inside each outer fold, an inner loop (K\\_2 = 3 folds) runs hyperparameter search on the outer training portion only. The outer test fold is held back until after tuning is complete, giving an honest estimate of the model-selection process\'s expected performance on new data.',
       hints: [
-        "Analogy: if you tune hyperparameters and evaluate on the same validation set, your validation score is inflated — exactly like the training-set error. Nested CV creates a truly held-out test set for each outer fold.",
+        "Analogy: if you tune hyperparameters and evaluate on the same validation set, your validation score is inflated - exactly like the training-set error. Nested CV creates a truly held-out test set for each outer fold.",
         "Nested CV is computationally expensive: K\\_1 \\times K\\_2 \\times (number of hyperparameter trials) model fits. For K\\_1=5, K\\_2=3, 50 trials: 750 model fits.",
       ],
     },
@@ -521,7 +521,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Which feature selection method evaluates features using their statistical relationship to the target — independently of any model — making it the fastest but most limited approach?",
+        "Which feature selection method evaluates features using their statistical relationship to the target - independently of any model - making it the fastest but most limited approach?",
       options: [
         "Recursive Feature Elimination (RFE) with a Random Forest",
         "LASSO regularization during logistic regression training",
@@ -533,7 +533,7 @@ const questions: Record<string, Question[]> = {
         "Filter methods score each feature independently of the model: MI(X; Y) = \\Sigma p(x,y) log[p(x,y)/(p(x)p(y))], or the F-statistic from one-way ANOVA, or |corr(X, Y)|. Features are ranked and selected by threshold or top-k. Advantages: O(p) scaling in the number of features, no model training needed. Limitations: (1) do not account for feature interactions (a feature with low individual MI might be highly useful in combination), (2) feature rankings are model-agnostic (optimal for linear models may not be optimal for trees). Wrapper methods (RFE) train a model repeatedly; embedded methods (LASSO) encode selection in the training objective.",
       hints: [
         "Filter: score \\to rank \\to select. No model, no training. Works even before you choose a model.",
-        "Mutual information is the most general filter — it captures any statistical dependence, not just linear. Pearson correlation only captures linear relationships.",
+        "Mutual information is the most general filter - it captures any statistical dependence, not just linear. Pearson correlation only captures linear relationships.",
       ],
     },
     {
@@ -544,7 +544,7 @@ const questions: Record<string, Question[]> = {
         "LASSO (L1-regularized linear regression) performs automatic feature selection by driving some coefficients to exactly zero during optimization.",
       correctAnswer: "True",
       explanation:
-        'LASSO minimizes: (1/2n)‖y − X\\beta‖\\^2 + \\lambda‖\\beta‖\\_1. The L1 penalty |\\beta\\_j| is non-differentiable at \\beta\\_j = 0, creating a "kink" in the objective. Geometrically, the feasible set {\\beta : ‖\\beta‖\\_1 \\leq s} is a cross-polytope with corners on the coordinate axes. The solution to the constrained problem often occurs at a corner where many \\beta\\_j = 0 exactly. By contrast, Ridge (L2) uses a smooth circular ball — the solution can occur anywhere on the ball, and \\beta\\_j \\to 0 only asymptotically. For a specific coefficient, the LASSO soft-thresholding solution is: \\betâ\\_j = sign(z_j) \\cdot max(|z_j| − \\lambda, 0), where z_j is the OLS estimate — this sets \\betâ\\_j = 0 when |z_j| \\leq \\lambda.',
+        'LASSO minimizes: (1/2n)‖y − X\\beta‖\\^2 + \\lambda‖\\beta‖\\_1. The L1 penalty |\\beta\\_j| is non-differentiable at \\beta\\_j = 0, creating a "kink" in the objective. Geometrically, the feasible set {\\beta : ‖\\beta‖\\_1 \\leq s} is a cross-polytope with corners on the coordinate axes. The solution to the constrained problem often occurs at a corner where many \\beta\\_j = 0 exactly. By contrast, Ridge (L2) uses a smooth circular ball - the solution can occur anywhere on the ball, and \\beta\\_j \\to 0 only asymptotically. For a specific coefficient, the LASSO soft-thresholding solution is: \\betâ\\_j = sign(z_j) \\cdot max(|z_j| − \\lambda, 0), where z_j is the OLS estimate - this sets \\betâ\\_j = 0 when |z_j| \\leq \\lambda.',
       hints: [
         "Soft-thresholding: if the OLS estimate for feature j has |z_j| \\leq \\lambda, LASSO sets that coefficient to exactly 0.",
         "LASSO produces sparse solutions; Ridge produces small but nonzero coefficients. Elastic Net combines both.",
@@ -566,7 +566,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Boruta (Kursa & Rudnicki 2010) creates shadow features: for each of p real features, it adds a randomly shuffled copy (shadow_f\\_j), giving 2p features. A random forest is trained on all 2p features. The null distribution for "unimportant" features is empirically estimated by the maximum MDI among all shadow features (since shadow features are pure noise). A real feature is confirmed important only if its MDI exceeds this null distribution with high statistical confidence (binomial test, Benjamini-Hochberg corrected). Features that never beat any shadow feature are rejected. This converts a heuristic ranking into a statistically grounded yes/no decision with controlled false discovery rate.',
       hints: [
-        "MDI importances have no built-in null distribution — you cannot tell if a score of 0.05 is significant or noise. Boruta constructs one empirically.",
+        "MDI importances have no built-in null distribution - you cannot tell if a score of 0.05 is significant or noise. Boruta constructs one empirically.",
         "Shadow features are the negative control: they have zero true importance by construction. If a real feature cannot beat them, it is not useful.",
       ],
     },
@@ -589,7 +589,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SHAP satisfies three axioms that uniquely determine Shapley values (Shapley 1953, Lundberg & Lee 2017): Efficiency: \\Sigma\\_i \\phi\\_i(x) = f(x) − E[f(X)]. Symmetry: two features contributing equally to all coalitions receive equal SHAP. Dummy: a feature that does not change f for any coalition gets SHAP = 0. In this example: 0.1 + 0.3 + 0.1 = 0.5 = 0.8 − 0.3 ✓. The SHAP values exactly partition the prediction deviation from baseline: credit_score (+0.3) contributed most to pushing this prediction above the mean.",
       hints: [
-        "SHAP explains the gap between this specific prediction and the global average — not the prediction itself.",
+        "SHAP explains the gap between this specific prediction and the global average - not the prediction itself.",
         "Efficiency axiom: all features together explain exactly f(x) − E[f(X)]. No more, no less.",
       ],
     },
@@ -601,9 +601,9 @@ const questions: Record<string, Question[]> = {
         "Global SHAP importance for a feature can be computed as the mean absolute SHAP value across all training (or test) samples: E[|\\phi\\_i(x)|].",
       correctAnswer: "True",
       explanation:
-        "Local SHAP \\phi\\_i(x\\_j) explains how feature i influenced prediction j. To get global importance: aggregate across all n samples. Taking the mean of absolute values — not raw values — is standard because positive and negative contributions are both meaningful: a feature with \\phi\\_i = +0.5 for half the data and −0.5 for the other half is globally important, but raw mean would give 0. Global importance I\\_i = (1/n) \\Sigma\\_j |\\phi\\_i(x\\_j)|. This correctly identifies features with consistently large influence regardless of direction. SHAP summary plots show each sample as a dot, colored by feature value, ordered by mean |SHAP|.",
+        "Local SHAP \\phi\\_i(x\\_j) explains how feature i influenced prediction j. To get global importance: aggregate across all n samples. Taking the mean of absolute values - not raw values - is standard because positive and negative contributions are both meaningful: a feature with \\phi\\_i = +0.5 for half the data and −0.5 for the other half is globally important, but raw mean would give 0. Global importance I\\_i = (1/n) \\Sigma\\_j |\\phi\\_i(x\\_j)|. This correctly identifies features with consistently large influence regardless of direction. SHAP summary plots show each sample as a dot, colored by feature value, ordered by mean |SHAP|.",
       hints: [
-        "Mean SHAP (without absolute value) = 0 by the efficiency axiom summed over all samples, if E[f(X)] is constant — not a useful importance measure.",
+        "Mean SHAP (without absolute value) = 0 by the efficiency axiom summed over all samples, if E[f(X)] is constant - not a useful importance measure.",
         "Mean |SHAP| is the basis of SHAP\'s feature importance bar plot in the shap library.",
       ],
     },
@@ -621,9 +621,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Lundberg et al. (2020) proved that for tree ensembles, exact Shapley values can be computed in O(TLD\\^2) time per sample, where T = number of trees, L = max leaves per tree, D = max depth. Key insight: within a tree, the contribution of a feature to the Shapley value of a specific prediction can be computed by traversing all possible orderings of features encountered on the root-to-leaf path using dynamic programming, without enumerating all 2^D feature subsets. KernelSHAP treats any model as a black box and must approximate via regression on 2^p or sampled subsets of features — O(2^p) exactly or O(M\\cdotp\\^2) with M Monte Carlo samples. For a 1000-tree GBM with depth 6, TreeSHAP is orders of magnitude faster.",
+        "Lundberg et al. (2020) proved that for tree ensembles, exact Shapley values can be computed in O(TLD\\^2) time per sample, where T = number of trees, L = max leaves per tree, D = max depth. Key insight: within a tree, the contribution of a feature to the Shapley value of a specific prediction can be computed by traversing all possible orderings of features encountered on the root-to-leaf path using dynamic programming, without enumerating all 2^D feature subsets. KernelSHAP treats any model as a black box and must approximate via regression on 2^p or sampled subsets of features - O(2^p) exactly or O(M\\cdotp\\^2) with M Monte Carlo samples. For a 1000-tree GBM with depth 6, TreeSHAP is orders of magnitude faster.",
       hints: [
-        "KernelSHAP: treats model as black box. For p=50 features, 2^50 \\approx 10^15 subsets — must approximate.",
+        "KernelSHAP: treats model as black box. For p=50 features, 2^50 \\approx 10^15 subsets - must approximate.",
         "TreeSHAP: exploits tree structure to compute exact Shapley values using polynomial-time DP over the tree nodes.",
       ],
     },
@@ -644,7 +644,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Softmax: \\sigma(z)\\_i = exp(z\\_i) / \\Sigma\\_j exp(z\\_j) — always positive, never exactly zero. A "soft" selector that always attends to all features to some degree. Sparsemax (Martins & Astudillo 2016): argmin_{p \\in \\Delta^K} ‖p − z‖\\^2 over the probability simplex — produces a piecewise-linear projection that maps many components to exactly 0. With sparsemax, TabNet at each decision step selects a sparse subset of features (e.g., 3 out of 100), enabling interpretability (which features were used?) and mimicking the axis-aligned splits of decision trees. The entropy of the sparsemax mask, averaged over steps and samples, is used as a sparsity regularizer.',
+        'Softmax: \\sigma(z)\\_i = exp(z\\_i) / \\Sigma\\_j exp(z\\_j) - always positive, never exactly zero. A "soft" selector that always attends to all features to some degree. Sparsemax (Martins & Astudillo 2016): argmin_{p \\in \\Delta^K} ‖p − z‖\\^2 over the probability simplex - produces a piecewise-linear projection that maps many components to exactly 0. With sparsemax, TabNet at each decision step selects a sparse subset of features (e.g., 3 out of 100), enabling interpretability (which features were used?) and mimicking the axis-aligned splits of decision trees. The entropy of the sparsemax mask, averaged over steps and samples, is used as a sparsity regularizer.',
       hints: [
         "Sparsemax: many features get exactly zero weight. This is hard feature selection.",
         "TabNet: uses sparsemax to select features per step. Entropy encourages sparsity.",
@@ -660,7 +660,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Grinsztajn et al. (2022) "Why tree-based models still outperform deep learning on tabular data" conducted a systematic benchmark across 45 diverse tabular datasets. Gradient-boosted trees won on the majority, especially for (a) small datasets (<10K samples), (b) datasets with many uninformative features, (c) heterogeneous feature types (mixed numerical/categorical). TabNet and other neural tabular models (FT-Transformer, SAINT) can match or exceed trees on large homogeneous datasets or when pre-training on unlabeled data. The paper identified that trees\' resistance to uninformative features and their exact feature selection are key structural advantages.',
       hints: [
-        "Tabular data is fundamentally different from images/text: no spatial locality, mixed types, often small n, many irrelevant features — all properties favoring trees.",
+        "Tabular data is fundamentally different from images/text: no spatial locality, mixed types, often small n, many irrelevant features - all properties favoring trees.",
         'Benchmark papers (Grinsztajn 2022, Shwartz-Ziv & Armon 2022) consistently show GBDT as the default winner for "typical" tabular ML tasks.',
       ],
     },
@@ -680,7 +680,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "TabNet pre-training (Arik & Pfister 2021, Section 4): given a table row x, randomly mask a subset S of feature indices (set them to 0 or noise). The encoder (same sequential attention architecture as supervised TabNet) receives the corrupted row and produces a representation. A decoder network then reconstructs the original values x_S of the masked features. Loss: ‖x_S − x̂_S‖\\^2_F (reconstruction MSE) summed over masked features. The attention masks naturally learn to focus on unmasked features to infer masked ones, learning feature-feature dependencies. After pre-training on unlabeled data, the encoder is fine-tuned with the supervised loss on labeled data.",
       hints: [
-        "BERT masks tokens and predicts them from context. TabNet masks feature values and reconstructs them from other features — the same principle applied to tables.",
+        "BERT masks tokens and predicts them from context. TabNet masks feature values and reconstructs them from other features - the same principle applied to tables.",
         "This enables TabNet to leverage unlabeled rows (often abundant in real-world databases) to improve representations before supervised fine-tuning.",
       ],
     },
@@ -701,7 +701,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The paper identifies that "tabular data is not rotationally invariant" — adding irrelevant features hurts MLPs more than trees. Decision trees automatically ignore uninformative features (they select splits only on informative dimensions). MLPs have densely connected layers: every neuron connects to every input feature, so irrelevant features add noise to every gradient update. The paper also shows trees are better at capturing irregular target functions (non-smooth boundaries, step functions) common in tabular data, and naturally handle mixed numerical/categorical data without careful preprocessing.',
+        'The paper identifies that "tabular data is not rotationally invariant" - adding irrelevant features hurts MLPs more than trees. Decision trees automatically ignore uninformative features (they select splits only on informative dimensions). MLPs have densely connected layers: every neuron connects to every input feature, so irrelevant features add noise to every gradient update. The paper also shows trees are better at capturing irregular target functions (non-smooth boundaries, step functions) common in tabular data, and naturally handle mixed numerical/categorical data without careful preprocessing.',
       hints: [
         "An MLP with 100 input features connects all 100 to every hidden neuron. A tree with max_features=√100 considers only 10 features per split.",
         'The "uninformative features" finding: randomly adding Gaussian noise features degraded MLP performance far more than GBDT performance in controlled experiments.',
@@ -758,7 +758,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        'AutoGluon (Erickson et al. 2020) automates: (1) preprocessing pipelines tailored per model type, (2) training ~20+ model configurations across multiple families, (3) weighted ensembling of best individual models, (4) multi-layer stacking (L1 models \\to L2 meta-learner on cross-validated predictions). It does NOT collect external data — it works only with the data provided. The "best_quality" preset enables multi-layer stacking and ensemble-based hyperparameter selection, which typically outperforms any single model family.',
+        'AutoGluon (Erickson et al. 2020) automates: (1) preprocessing pipelines tailored per model type, (2) training ~20+ model configurations across multiple families, (3) weighted ensembling of best individual models, (4) multi-layer stacking (L1 models \\to L2 meta-learner on cross-validated predictions). It does NOT collect external data - it works only with the data provided. The "best_quality" preset enables multi-layer stacking and ensemble-based hyperparameter selection, which typically outperforms any single model family.',
       hints: [
         "AutoGluon\'s key innovation: it avoids traditional HPO (hyperparameter optimization) and instead trains many fixed configurations, relying on stacking to combine their strengths.",
         "Multi-layer stacking: L1 = base models; L2 = second-layer models trained on OOF (out-of-fold) L1 predictions; repeat for L3.",
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
         "H2O AutoML automatically trains multiple algorithm families in parallel and produces a Stacked Ensemble (SuperLearner) that typically achieves the highest leaderboard accuracy.",
       correctAnswer: "True",
       explanation:
-        'H2O AutoML (LeDell & Poirier 2020) trains: GLM, Distributed Random Forest (DRF), Gradient Boosting Machine (GBM), XGBoost, Deep Learning, and multiple GBM/XGBoost configurations. It then builds two stacked ensembles: (1) "AllModels" — a SuperLearner trained on all models\' cross-validated predictions, (2) "BestOfFamily" — a SuperLearner on the best model per family. The SuperLearner uses a metalearner (typically GLM with non-negative constraints) to find optimal linear combinations. In practice, "StackedEnsemble_AllModels" typically appears at the top of the H2O AutoML leaderboard because combining diverse models reduces variance beyond any individual model.',
+        'H2O AutoML (LeDell & Poirier 2020) trains: GLM, Distributed Random Forest (DRF), Gradient Boosting Machine (GBM), XGBoost, Deep Learning, and multiple GBM/XGBoost configurations. It then builds two stacked ensembles: (1) "AllModels" - a SuperLearner trained on all models\' cross-validated predictions, (2) "BestOfFamily" - a SuperLearner on the best model per family. The SuperLearner uses a metalearner (typically GLM with non-negative constraints) to find optimal linear combinations. In practice, "StackedEnsemble_AllModels" typically appears at the top of the H2O AutoML leaderboard because combining diverse models reduces variance beyond any individual model.',
       hints: [
         "SuperLearner theorem (van der Laan et al. 2007): given a library of base learners, the stacked ensemble performs asymptotically at least as well as the best base learner.",
         "The metalearner in H2O uses OOF predictions from base models, so stacking does not overfit to training data.",
@@ -792,7 +792,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A 50-model AutoGluon stack: to predict one sample, you must (1) run all L1 base models in parallel, (2) collect their outputs, (3) run the L2 meta-models, (4) aggregate. Latency = max(L1 latency) + L2 latency. Memory = sum of all model weights. When concept drift occurs: which sub-model do you retrain? Retraining the full stack is expensive; retraining one model breaks the stacking relationship. Additionally, regulatory requirements (GDPR Article 22, fair lending) may require explaining predictions — a 50-model stack is extremely difficult to explain. Single models (or thin ensembles of 3–5) are far easier to debug, monitor, and retrain selectively.",
+        "A 50-model AutoGluon stack: to predict one sample, you must (1) run all L1 base models in parallel, (2) collect their outputs, (3) run the L2 meta-models, (4) aggregate. Latency = max(L1 latency) + L2 latency. Memory = sum of all model weights. When concept drift occurs: which sub-model do you retrain? Retraining the full stack is expensive; retraining one model breaks the stacking relationship. Additionally, regulatory requirements (GDPR Article 22, fair lending) may require explaining predictions - a 50-model stack is extremely difficult to explain. Single models (or thin ensembles of 3-5) are far easier to debug, monitor, and retrain selectively.",
       hints: [
         "AutoML is excellent for competitions and prototyping; production ML often needs simpler models for latency, interpretability, and maintenance reasons.",
         "Consider the retraining scenario: new data arrives weekly. Retraining 50 models weekly is expensive; selective retraining of a stacked ensemble requires careful dependency management.",
@@ -815,10 +815,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'A lag-k feature for predicting y_t is the observed value y_{t−k}: the value k time steps in the past. Lag features convert a time series into a supervised learning table: row t has features [y_{t−1}, y_{t−2}, y_{t−7}] and target y_t. This is the "time delay embedding" or Takens embedding approach. With lags 1, 2, 7 you capture: yesterday (lag 1), two days ago (lag 2), and one week ago (lag 7) — useful for data with daily seasonality. The model then learns: f(y_{t−1}, y_{t−2}, y_{t−7}) \\to y_t. This is causally valid: features precede the target in time.',
+        'A lag-k feature for predicting y_t is the observed value y_{t−k}: the value k time steps in the past. Lag features convert a time series into a supervised learning table: row t has features [y_{t−1}, y_{t−2}, y_{t−7}] and target y_t. This is the "time delay embedding" or Takens embedding approach. With lags 1, 2, 7 you capture: yesterday (lag 1), two days ago (lag 2), and one week ago (lag 7) - useful for data with daily seasonality. The model then learns: f(y_{t−1}, y_{t−2}, y_{t−7}) \\to y_t. This is causally valid: features precede the target in time.',
       hints: [
         "Lag 1 = yesterday\'s value. Lag 7 = same day last week. Choosing lags requires domain knowledge about seasonality and autocorrelation.",
-        "Causal constraint: features must be available at prediction time. Lag features for t use only data from before t — no future leakage.",
+        "Causal constraint: features must be available at prediction time. Lag features for t use only data from before t - no future leakage.",
       ],
     },
     {
@@ -829,9 +829,9 @@ const questions: Record<string, Question[]> = {
         "Rolling window statistics (e.g., rolling mean over the past 7 days) can be safely computed and used as features during training with any cross-validation strategy, including random K-fold.",
       correctAnswer: "False",
       explanation:
-        "Rolling statistics are computed from historical values. For a random K-fold split: suppose sample at time t = 100 is in the validation fold. Its rolling mean feature = mean(y_{93}...y_{99}). If t = 50 (earlier in time) is in the TRAINING fold, the model has learned from y_{50} — which is used in computing the rolling statistic for t = 100. This is a subtle form of temporal leakage. Correct approach: use TimeSeriesSplit (walk-forward validation). At each outer fold, ALL features (including rolling statistics) must be recomputed from the training window only, and rolling statistics for validation samples must only look back into the training period.",
+        "Rolling statistics are computed from historical values. For a random K-fold split: suppose sample at time t = 100 is in the validation fold. Its rolling mean feature = mean(y_{93}...y_{99}). If t = 50 (earlier in time) is in the TRAINING fold, the model has learned from y_{50} - which is used in computing the rolling statistic for t = 100. This is a subtle form of temporal leakage. Correct approach: use TimeSeriesSplit (walk-forward validation). At each outer fold, ALL features (including rolling statistics) must be recomputed from the training window only, and rolling statistics for validation samples must only look back into the training period.",
       hints: [
-        "Rolling features for a validation sample must be computed from data that would have been available before the prediction date — which random K-fold does not guarantee.",
+        "Rolling features for a validation sample must be computed from data that would have been available before the prediction date - which random K-fold does not guarantee.",
         "TimeSeriesSplit ensures the training fold always precedes the validation fold chronologically, making rolling statistic computation causal.",
       ],
     },
@@ -849,7 +849,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Recursive strategy: train one model f(y_{t−1}, y_{t−2}, …) \\to y_t. Forecast h = 1: ŷ_{t+1} = f(y_t, y_{t−1}, …). Forecast h = 2: ŷ_{t+2} = f(ŷ_{t+1}, y_t, …) — uses the predicted ŷ_{t+1} as input. Prediction errors compound: error in ŷ_{t+1} propagates into ŷ_{t+2}, ŷ_{t+3}, etc. For long horizons (h = 12), error accumulation can be severe. Direct strategy: train 12 separate models, each fₕ(y_t, y_{t−1}, …) \\to y_{t+h}, where each model uses only true historical values as inputs. No error propagation, but 12 models instead of 1, and each model ignores the relationship between consecutive forecast horizons.",
+        "Recursive strategy: train one model f(y_{t−1}, y_{t−2}, …) \\to y_t. Forecast h = 1: ŷ_{t+1} = f(y_t, y_{t−1}, …). Forecast h = 2: ŷ_{t+2} = f(ŷ_{t+1}, y_t, …) - uses the predicted ŷ_{t+1} as input. Prediction errors compound: error in ŷ_{t+1} propagates into ŷ_{t+2}, ŷ_{t+3}, etc. For long horizons (h = 12), error accumulation can be severe. Direct strategy: train 12 separate models, each fₕ(y_t, y_{t−1}, …) \\to y_{t+h}, where each model uses only true historical values as inputs. No error propagation, but 12 models instead of 1, and each model ignores the relationship between consecutive forecast horizons.",
       hints: [
         "Recursive: one model, growing error. Direct: many models, no error propagation but loses inter-horizon coherence.",
         "RECTIFY and other hybrid strategies try to combine benefits: train direct models but use recursive outputs as additional features.",
@@ -894,7 +894,7 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GBM (Friedman, 2001): at each step, compute the negative gradient of loss L(y, F(x)) w.r.t. F(x) — the current ensemble prediction. These gradients are pseudo-residuals. A new tree is fit to these pseudo-residuals, and its prediction scaled by the learning rate is added to the ensemble. For squared error, pseudo-residuals equal ordinary residuals. For other losses, they differ — making GBM a general framework for any differentiable loss.",
+        "GBM (Friedman, 2001): at each step, compute the negative gradient of loss L(y, F(x)) w.r.t. F(x) - the current ensemble prediction. These gradients are pseudo-residuals. A new tree is fit to these pseudo-residuals, and its prediction scaled by the learning rate is added to the ensemble. For squared error, pseudo-residuals equal ordinary residuals. For other losses, they differ - making GBM a general framework for any differentiable loss.",
       hints: [
         "Gradient descent in parameter space updates theta. GBM does gradient descent in function space, updating F(x).",
         "For MSE loss, pseudo-residuals = y - F(x) = ordinary residuals. For log loss, they differ.",
@@ -924,7 +924,7 @@ const extraQuestions: Record<string, Question[]> = {
         "Bayesian optimization for hyperparameter tuning uses a surrogate model to choose the next configuration. What does the acquisition function do?",
       options: [
         "The acquisition function is the surrogate model itself; it maximizes the surrogate predicted performance directly",
-        "The acquisition function balances exploration (high uncertainty regions) and exploitation (high predicted performance) — Expected Improvement is the expected gain over the current best, integrating over the surrogate uncertainty",
+        "The acquisition function balances exploration (high uncertainty regions) and exploitation (high predicted performance) - Expected Improvement is the expected gain over the current best, integrating over the surrogate uncertainty",
         "The acquisition function is the validation loss; Bayesian optimization minimizes it via gradient descent through the surrogate",
         "The acquisition function randomly samples hyperparameters according to the surrogate probability distribution",
       ],
@@ -944,16 +944,16 @@ const extraQuestions: Record<string, Question[]> = {
         "Why does k-fold cross-validation underestimate true generalization error for time series data, and what should be used instead?",
       options: [
         "k-fold CV uses too few folds for time series; using 100-fold CV resolves the issue",
-        "Standard k-fold CV randomly shuffles data, allowing the model to train on future data to predict past data — violating temporal causality. Walk-forward (expanding or sliding window) validation must be used instead",
+        "Standard k-fold CV randomly shuffles data, allowing the model to train on future data to predict past data - violating temporal causality. Walk-forward (expanding or sliding window) validation must be used instead",
         "k-fold CV underestimates error for time series because non-stationary distributions are not accounted for",
         "k-fold CV overestimates error for time series because temporal autocorrelation inflates fold estimate variance",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard k-fold CV randomly assigns samples to folds, so training folds can contain data from after the test fold — data leakage across time. Walk-forward validation: train on months 1-12, test on month 13; train on 1-13, test on 14; etc. Expanding window uses all available history; sliding window uses a fixed history length. This respects temporal causality.",
+        "Standard k-fold CV randomly assigns samples to folds, so training folds can contain data from after the test fold - data leakage across time. Walk-forward validation: train on months 1-12, test on month 13; train on 1-13, test on 14; etc. Expanding window uses all available history; sliding window uses a fixed history length. This respects temporal causality.",
       hints: [
-        "Random shuffle CV: training fold might include January 2024 when test fold is January 2023 — temporal leakage.",
-        "Walk-forward: always train on past, test on future — matches the deployment scenario.",
+        "Random shuffle CV: training fold might include January 2024 when test fold is January 2023 - temporal leakage.",
+        "Walk-forward: always train on past, test on future - matches the deployment scenario.",
       ],
     },
     {
@@ -980,7 +980,7 @@ const extraQuestions: Record<string, Question[]> = {
         "TabNet (Arik and Pfister, 2021) uses sequential attention for feature selection. What is the key innovation over standard MLPs?",
       options: [
         "TabNet uses transformers with self-attention over rows of the dataset, not columns",
-        "TabNet uses a sequential attention mechanism that selects which features to use at each decision step, producing sparse feature masks — enabling instance-wise feature selection and interpretability",
+        "TabNet uses a sequential attention mechanism that selects which features to use at each decision step, producing sparse feature masks - enabling instance-wise feature selection and interpretability",
         "TabNet applies convolutional filters over ordered feature columns, exploiting local feature correlations",
         "TabNet uses a mixture-of-experts architecture where each expert specializes in a subset of feature types",
       ],
@@ -1036,7 +1036,7 @@ const extraQuestions: Record<string, Question[]> = {
         "SHAP values provide model-agnostic feature importance. What game-theoretic concept do they implement?",
       options: [
         "Nash equilibrium: the SHAP value is the equilibrium contribution when features compete for importance",
-        "Shapley values from cooperative game theory: the average marginal contribution of each feature across all possible subsets — the unique fair allocation satisfying efficiency, symmetry, dummy, and linearity axioms",
+        "Shapley values from cooperative game theory: the average marginal contribution of each feature across all possible subsets - the unique fair allocation satisfying efficiency, symmetry, dummy, and linearity axioms",
         "Minimax theorem: SHAP values minimize the maximum explanation error across all feature subsets",
         "Banzhaf power index: SHAP measures how often a feature is pivotal in changing the model prediction",
       ],
@@ -1045,7 +1045,7 @@ const extraQuestions: Record<string, Question[]> = {
         "SHAP implements Shapley values: for each feature, compute its average marginal contribution to the prediction when added to each possible subset, averaging over all orderings. This is the unique allocation satisfying: efficiency (SHAP values sum to prediction minus baseline), symmetry (identical features get equal SHAP), dummy (zero-contribution features get zero), and linearity (SHAP of sum of models = sum of SHAPs). TreeSHAP computes exact values for tree models efficiently.",
       hints: [
         "Shapley value = average marginal contribution over all 2^p possible feature subsets.",
-        "Four axioms uniquely determine the Shapley value — it is the only fair allocation satisfying all four.",
+        "Four axioms uniquely determine the Shapley value - it is the only fair allocation satisfying all four.",
       ],
     },
     {
@@ -1065,7 +1065,7 @@ const extraQuestions: Record<string, Question[]> = {
         'LIME: perturb the input around the instance, get model predictions for perturbations, weight by proximity, fit a weighted linear model. Key assumption: model is locally linear. Limitation: "locality" is defined by a kernel (usually Gaussian distance in feature space), but kernel width choice is arbitrary and dramatically changes explanations. For high-dimensional or structured data, the perturbation strategy and locality definition are especially problematic.',
       hints: [
         "LIME approximation: complex model approximately linear in a small neighborhood around each prediction.",
-        "The kernel width is a hyperparameter that users must set — and explanations are sensitive to it.",
+        "The kernel width is a hyperparameter that users must set - and explanations are sensitive to it.",
       ],
     },
     {
@@ -1098,7 +1098,7 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Isolation Forest: for each tree, randomly select a feature and a split value between min and max. Repeat recursively. Anomalies — being sparse and different — are isolated with fewer splits than normal points. The anomaly score is the average path length across trees: shorter path means more anomalous. This is O(n log n) to train and O(log n) to score, efficient for large datasets.",
+        "Isolation Forest: for each tree, randomly select a feature and a split value between min and max. Repeat recursively. Anomalies - being sparse and different - are isolated with fewer splits than normal points. The anomaly score is the average path length across trees: shorter path means more anomalous. This is O(n log n) to train and O(log n) to score, efficient for large datasets.",
       hints: [
         "Anomalies are few and different; they are isolated early in the random partition process.",
         "Path length = how many splits to isolate a point. Anomalies: short path. Normal: long path.",
@@ -1112,7 +1112,7 @@ const extraQuestions: Record<string, Question[]> = {
         'Local Outlier Factor (LOF) is a density-based anomaly detection method. What does "local" refer to?',
       options: [
         "LOF detects anomalies only in a local geographic region of the dataset",
-        "LOF compares each point local density to the densities of its k-nearest neighbors — a point is anomalous if its local density is much lower than that of its neighbors, capturing anomalies missed by global density methods",
+        "LOF compares each point local density to the densities of its k-nearest neighbors - a point is anomalous if its local density is much lower than that of its neighbors, capturing anomalies missed by global density methods",
         "LOF uses local linear models to estimate density, making it computationally more efficient than kernel density estimation",
         "LOF applies only to features with small variance rather than the full feature space",
       ],
@@ -1134,7 +1134,7 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "Unsupervised methods produce anomaly scores but do not classify anomaly types. Point anomalies are well-handled. Contextual anomalies (normal in isolation but anomalous in context) require contextual features or time-aware methods. Collective anomalies (a sequence of normal points that is anomalous collectively) require sequence modeling. Distinguishing these types requires domain knowledge or specialized methods.",
       hints: [
-        "LOF detects locally sparse points — captures point anomalies but may miss contextual ones.",
+        "LOF detects locally sparse points - captures point anomalies but may miss contextual ones.",
         "Contextual anomaly: temperature 35C is normal in summer but anomalous in winter.",
       ],
     },
@@ -1148,7 +1148,7 @@ const extraQuestions: Record<string, Question[]> = {
         "SMOTE generates synthetic minority class samples. What is the potential problem when there are class overlaps in feature space?",
       options: [
         "SMOTE generates too many samples, causing the model to overfit the minority class",
-        "SMOTE interpolates between minority class samples without checking if the interpolated region contains majority class samples — generating synthetic samples in overlapping regions that can be ambiguous or in majority class territory",
+        "SMOTE interpolates between minority class samples without checking if the interpolated region contains majority class samples - generating synthetic samples in overlapping regions that can be ambiguous or in majority class territory",
         "SMOTE only works for binary classification and cannot handle multi-class imbalance",
         "SMOTE requires the minority class to have at least k-nearest neighbors from the same class, failing when the minority class is extremely rare",
       ],
@@ -1176,8 +1176,8 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "AUROC is misleading under severe imbalance because the ROC curve is dominated by majority class performance. With 99% negatives, a model that identifies all negatives and no positives can still achieve high AUROC. PRAUC focuses on the minority class: precision and recall both measure performance on positives. A random classifier achieves PRAUC equal to the prevalence (e.g., 0.01 for 1% minority), making it a meaningful baseline.",
       hints: [
-        "AUROC: ROC curve dominated by TN rate at high thresholds — easy for majority-class-favoring models.",
-        "PRAUC: both precision and recall focus on the positive class — harder to game.",
+        "AUROC: ROC curve dominated by TN rate at high thresholds - easy for majority-class-favoring models.",
+        "PRAUC: both precision and recall focus on the positive class - harder to game.",
       ],
     },
     {
@@ -1190,7 +1190,7 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "For gradient boosted trees, class weighting and SMOTE often achieve similar performance because GBTs use loss gradients not distances. Class weighting scales the loss for minority class samples. Empirically, class weighting is simpler, faster, and typically competitive with SMOTE for GBTs. SMOTE is more beneficial for distance-based methods (k-NN, SVM) and some neural networks.",
       hints: [
-        "GBTs use loss gradients, not distances — so geometric placement of SMOTE samples matters less.",
+        "GBTs use loss gradients, not distances - so geometric placement of SMOTE samples matters less.",
         "Class weighting achieves the same focus on minority class without modifying the data.",
       ],
     },
@@ -1210,7 +1210,7 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Target encoding leakage: a category with 1 sample has its mean equal to that sample target — perfectly encoding the target. Smoothed target encoding: encoded_value = (n * mean_category + m * mean_global) / (n + m), where n is the count and m is a smoothing parameter. Rare categories (small n) are pulled toward the global mean; frequent categories (large n) stay close to their empirical mean. This prevents overfitting on rare categories.",
+        "Target encoding leakage: a category with 1 sample has its mean equal to that sample target - perfectly encoding the target. Smoothed target encoding: encoded_value = (n * mean_category + m * mean_global) / (n + m), where n is the count and m is a smoothing parameter. Rare categories (small n) are pulled toward the global mean; frequent categories (large n) stay close to their empirical mean. This prevents overfitting on rare categories.",
       hints: [
         "Category with 1 sample: mean = that sample target exactly. Model memorizes it.",
         "Smoothing: n=1 gives approximately the global mean. n=1000 gives approximately the category mean.",
@@ -1230,10 +1230,10 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Target leakage in encoding: if you compute mean(target | category=A) using all training data, then train a model that sees this encoded value for a training sample with category A, the encoding partly reflects that sample own target — direct leakage. Out-of-fold encoding: for each sample in fold i, compute the target statistic using only data from other folds. This ensures the encoding for each sample is computed from data that does not include that sample.",
+        "Target leakage in encoding: if you compute mean(target | category=A) using all training data, then train a model that sees this encoded value for a training sample with category A, the encoding partly reflects that sample own target - direct leakage. Out-of-fold encoding: for each sample in fold i, compute the target statistic using only data from other folds. This ensures the encoding for each sample is computed from data that does not include that sample.",
       hints: [
         "Standard target encoding on training data: each sample own target contributes to its own encoding.",
-        "Out-of-fold: compute encoding for fold 1 samples using only folds 2, 3, 4, 5 — no self-leakage.",
+        "Out-of-fold: compute encoding for fold 1 samples using only folds 2, 3, 4, 5 - no self-leakage.",
       ],
     },
     {
@@ -1316,13 +1316,13 @@ const extraQuestions: Record<string, Question[]> = {
         'What is the "pipeline" pattern in scikit-learn, and why is it critical for avoiding data leakage?',
       options: [
         "A pipeline chains multiple models together for ensemble prediction; it prevents leakage by averaging their outputs",
-        "A pipeline chains preprocessing steps and a final estimator, fitting each step only on training data during cross-validation — preventing validation set information from contaminating preprocessing steps like scaling or imputation",
+        "A pipeline chains preprocessing steps and a final estimator, fitting each step only on training data during cross-validation - preventing validation set information from contaminating preprocessing steps like scaling or imputation",
         "A pipeline applies transformations sequentially to avoid redundant computation; it prevents leakage by caching intermediate results",
         "A pipeline defines the order of feature engineering steps; leakage prevention is handled separately by proper train/test splitting",
       ],
       correctAnswer: 1,
       explanation:
-        "Without a pipeline, fitting a StandardScaler on the full dataset before cross-validation means the scaler mean and std includes information from validation folds — leakage. With a pipeline, during each CV fold, the pipeline fits ALL preprocessing steps (scaler, imputer, encoder) on the training fold only, then transforms both training and validation folds using those training-fold statistics. This ensures preprocessing is correctly conditioned on training data only.",
+        "Without a pipeline, fitting a StandardScaler on the full dataset before cross-validation means the scaler mean and std includes information from validation folds - leakage. With a pipeline, during each CV fold, the pipeline fits ALL preprocessing steps (scaler, imputer, encoder) on the training fold only, then transforms both training and validation folds using those training-fold statistics. This ensures preprocessing is correctly conditioned on training data only.",
       hints: [
         "Fit scaler on all data: validation fold statistics contaminate the scaler. Subtle but real leakage.",
         "Pipeline fit on training fold only: scaler sees only training data statistics. Correct.",
@@ -1344,7 +1344,7 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "QuantileTransformer maps each feature distribution to a target distribution (uniform or normal) using the empirical CDF. This is rank-based: robust to outliers and handles any marginal distribution shape. Most beneficial for highly skewed features (log-normal, Pareto-distributed) where StandardScaler leaves the distribution skewed, affecting linear models and distance-based methods. Tree-based models are insensitive to monotonic transformations, so benefit is limited for them.",
       hints: [
-        "QuantileTransformer uses ranks (empirical CDF), not raw values — extreme outliers map to the edge of [0,1].",
+        "QuantileTransformer uses ranks (empirical CDF), not raw values - extreme outliers map to the edge of [0,1].",
         "Linear models and neural networks benefit from normalized distributions; tree models are invariant to monotonic transforms.",
       ],
     },
@@ -1378,7 +1378,7 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Gradient boosted trees (especially with many trees) tend to produce overconfident predictions — probabilities clustered near 0 and 1. This is because GBTs optimize a cross-entropy or squared error loss that can push probabilities to extremes in well-separated cases. Calibration plots for uncalibrated GBTs often show a sigmoidal curve. Platt scaling or isotonic regression are common calibration techniques.",
+        "Gradient boosted trees (especially with many trees) tend to produce overconfident predictions - probabilities clustered near 0 and 1. This is because GBTs optimize a cross-entropy or squared error loss that can push probabilities to extremes in well-separated cases. Calibration plots for uncalibrated GBTs often show a sigmoidal curve. Platt scaling or isotonic regression are common calibration techniques.",
       hints: [
         "Overconfident: the model says 0.95 but the true positive rate at that threshold is only 0.7.",
         "Reliability diagram: overconfident models show an S-curve below the diagonal.",
@@ -1434,7 +1434,7 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A 37+ percentage point gap between validation and production AUC is a red flag for data leakage. Data leakage occurs when training features contain information not available at prediction time: future data, post-event labels disguised as features, or features constructed using the target. Diagnostic: check feature importance — if one feature has disproportionately high importance, investigate its construction. Verify temporal availability for each feature.",
+        "A 37+ percentage point gap between validation and production AUC is a red flag for data leakage. Data leakage occurs when training features contain information not available at prediction time: future data, post-event labels disguised as features, or features constructed using the target. Diagnostic: check feature importance - if one feature has disproportionately high importance, investigate its construction. Verify temporal availability for each feature.",
       hints: [
         "Extreme validation performance followed by production failure is the canonical leakage signature.",
         "Investigate: is any feature constructed using the target variable, or using data available only after the event?",
@@ -1454,10 +1454,10 @@ const extraQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Target leakage via feature construction: a feature incorporates future information relative to when the prediction is made. Example: predicting loan default at origination using "number of late payments in next 3 months" — this is future information not available at prediction time. More subtle: using account balance at the time of labeling (6 months after origination) rather than at origination time. The model learns a relationship that does not generalize to origination-time data.',
+        'Target leakage via feature construction: a feature incorporates future information relative to when the prediction is made. Example: predicting loan default at origination using "number of late payments in next 3 months" - this is future information not available at prediction time. More subtle: using account balance at the time of labeling (6 months after origination) rather than at origination time. The model learns a relationship that does not generalize to origination-time data.',
       hints: [
         "The test: is this feature available at the moment the prediction needs to be made? If not, it is leakage.",
-        "Subtle leakage: balance at labeling time vs. balance at origination time — a small temporal shift creates leakage.",
+        "Subtle leakage: balance at labeling time vs. balance at origination time - a small temporal shift creates leakage.",
       ],
     },
     {
@@ -1468,10 +1468,10 @@ const extraQuestions: Record<string, Question[]> = {
         "Including a feature with zero missing values in training but high missingness in production is a form of data leakage.",
       correctAnswer: "False",
       explanation:
-        "This is not data leakage (future/target information in features) but rather distribution shift or data quality inconsistency. The feature itself may be valid — the issue is that training and production pipelines produce different missingness patterns. This could arise from different data collection procedures or feature availability changes. While a serious deployment problem, it is categorized as distribution shift, not leakage.",
+        "This is not data leakage (future/target information in features) but rather distribution shift or data quality inconsistency. The feature itself may be valid - the issue is that training and production pipelines produce different missingness patterns. This could arise from different data collection procedures or feature availability changes. While a serious deployment problem, it is categorized as distribution shift, not leakage.",
       hints: [
         "Data leakage: future/target information in features. Distribution shift: training and production statistics differ.",
-        "High missingness in production means the feature is often missing — handle via imputation, not considered leaky.",
+        "High missingness in production means the feature is often missing - handle via imputation, not considered leaky.",
       ],
     },
   ],
@@ -1484,13 +1484,13 @@ const extraQuestions: Record<string, Question[]> = {
         "Knowledge distillation from a large tabular ensemble to a single model uses the ensemble soft probability outputs as training targets. What is the key advantage of soft labels over hard labels?",
       options: [
         "Soft labels allow the student model to train with a lower learning rate, preventing overfitting",
-        'Soft labels encode inter-class similarity information and uncertainty estimates from the ensemble — for example, "60% class A, 30% class B" tells the student more about the decision boundary than a hard label "class A"',
+        'Soft labels encode inter-class similarity information and uncertainty estimates from the ensemble - for example, "60% class A, 30% class B" tells the student more about the decision boundary than a hard label "class A"',
         "Soft labels prevent gradient saturation in the student model output layer",
         "Soft labels allow the student model to use a different architecture without requiring output dimension alignment",
       ],
       correctAnswer: 1,
       explanation:
-        'Hinton et al. (2015) "Distilling the Knowledge": hard labels are one-hot and convey only the correct class. Soft labels convey the ensemble uncertainty and inter-class relationships. A sample where the ensemble predicts "60% A, 30% B" tells the student that B is a plausible alternative — dark knowledge that hard label "A" loses. This helps the student learn a better-calibrated probability surface, especially near decision boundaries.',
+        'Hinton et al. (2015) "Distilling the Knowledge": hard labels are one-hot and convey only the correct class. Soft labels convey the ensemble uncertainty and inter-class relationships. A sample where the ensemble predicts "60% A, 30% B" tells the student that B is a plausible alternative - dark knowledge that hard label "A" loses. This helps the student learn a better-calibrated probability surface, especially near decision boundaries.',
       hints: [
         "Dark knowledge: probabilities assigned to wrong classes encode meaningful similarity information.",
         'Hard label "A": no information about alternatives. Soft label "60% A, 30% B": B is the next most plausible class.',
@@ -1504,13 +1504,13 @@ const extraQuestions: Record<string, Question[]> = {
         "Feature pruning based on permutation feature importance carries what key risk for correlated features?",
       options: [
         "Permutation importance may rank features differently from SHAP, causing pruning to remove the wrong features",
-        "For correlated features, permutation importance underestimates each individual feature importance (since removing one still lets the model use the correlated partner) — aggressive pruning of low-importance correlated features may remove all features in a correlated group, losing the information they collectively encode",
+        "For correlated features, permutation importance underestimates each individual feature importance (since removing one still lets the model use the correlated partner) - aggressive pruning of low-importance correlated features may remove all features in a correlated group, losing the information they collectively encode",
         "Permutation importance is computed on the training set, so pruning may remove features important for the test distribution",
         "Feature pruning based on importance can only be applied to linear models, not gradient boosted trees",
       ],
       correctAnswer: 1,
       explanation:
-        "Correlated feature pruning risk: if features A and B are highly correlated, permuting A has little effect because B still carries the same information — both get low permutation importance. Aggressive pruning removes both, losing the information entirely. The correct approach is to first identify correlated feature groups, select one representative from each group, and then prune across groups based on importance.",
+        "Correlated feature pruning risk: if features A and B are highly correlated, permuting A has little effect because B still carries the same information - both get low permutation importance. Aggressive pruning removes both, losing the information entirely. The correct approach is to first identify correlated feature groups, select one representative from each group, and then prune across groups based on importance.",
       hints: [
         "Correlated pair: permuting A barely hurts because B still contains A information.",
         "Solution: select one from each correlated group first, then prune the selected representatives.",
@@ -1524,10 +1524,10 @@ const extraQuestions: Record<string, Question[]> = {
         "A gradient boosted tree with 1000 trees can be losslessly compressed to fewer trees by identifying and removing trees whose removal does not significantly change ensemble predictions on the training set.",
       correctAnswer: "False",
       explanation:
-        "Removing a tree from a GBT ensemble is not lossless — each tree contributes a small increment to the prediction, and the ensemble calibration depends on all trees. Trees that appear unimportant on training data may be important for specific tail samples. Approximate compression (tree distillation, simpler GBT retraining with fewer trees) always involves some quality tradeoff.",
+        "Removing a tree from a GBT ensemble is not lossless - each tree contributes a small increment to the prediction, and the ensemble calibration depends on all trees. Trees that appear unimportant on training data may be important for specific tail samples. Approximate compression (tree distillation, simpler GBT retraining with fewer trees) always involves some quality tradeoff.",
       hints: [
         'Each tree contributes a small residual correction. Removing even a "small" tree changes predictions for some samples.',
-        "True lossless compression would require mathematical equivalence — not achievable for GBTs.",
+        "True lossless compression would require mathematical equivalence - not achievable for GBTs.",
       ],
     },
   ],
@@ -1540,7 +1540,7 @@ const extraQuestions: Record<string, Question[]> = {
         'Survival analysis handles "censored" observations. What is censoring and why does it make standard regression or classification inappropriate?',
       options: [
         "Censoring occurs when feature values are missing; standard methods treat missing values as zero, biasing estimates",
-        "Censoring occurs when the event of interest has not yet occurred at the observation time — we know the subject survived at least until time t but do not know the actual event time; standard regression on censored observations is biased because it uses the censoring time as if it were the true event time",
+        "Censoring occurs when the event of interest has not yet occurred at the observation time - we know the subject survived at least until time t but do not know the actual event time; standard regression on censored observations is biased because it uses the censoring time as if it were the true event time",
         "Censoring occurs when the target variable exceeds the measurement range; standard methods clip the target",
         "Censoring occurs when some classes have too few samples; survival methods handle this via importance weighting",
       ],
@@ -1548,7 +1548,7 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "Censoring: in a clinical trial ending on date T, patients who have not experienced the event by T are right-censored. We know they survived at least until T but not when or if the event would occur. Using T as the event time in standard regression understates the true event time. Ignoring censored observations biases the estimate (survivorship bias). Survival analysis handles censoring correctly by conditioning on having survived to the censoring time.",
       hints: [
-        "Censored: event has not happened yet. True event time >= censoring time. Standard regression uses censoring time as label — wrong.",
+        "Censored: event has not happened yet. True event time >= censoring time. Standard regression uses censoring time as label - wrong.",
         "Kaplan-Meier estimates survival function accounting for the fact that censored patients contributed follow-up time.",
       ],
     },
@@ -1596,16 +1596,16 @@ const extraQuestions: Record<string, Question[]> = {
         'The Potential Outcomes Framework defines the Average Treatment Effect (ATE). What is the "fundamental problem of causal inference"?',
       options: [
         "The ATE cannot be estimated from observational data because confounders are always unmeasured",
-        "For each individual, we observe only one potential outcome (treated or untreated) — never both simultaneously — making individual treatment effects unobservable and requiring assumptions to estimate population-level effects",
+        "For each individual, we observe only one potential outcome (treated or untreated) - never both simultaneously - making individual treatment effects unobservable and requiring assumptions to estimate population-level effects",
         "The ATE requires a randomized controlled trial; it cannot be estimated from observational data under any assumptions",
         "The fundamental problem is that treatment assignment is always confounded by unmeasured variables",
       ],
       correctAnswer: 1,
       explanation:
-        "The fundamental problem of causal inference: individual i has potential outcomes Y_i(1) if treated and Y_i(0) if untreated, but we observe only one — the one corresponding to the actual treatment received. The individual treatment effect ITE_i = Y_i(1) - Y_i(0) is never directly observable. ATE = E[Y(1) - Y(0)] can be estimated from randomized experiments or from observational data under assumptions (no unmeasured confounders, positivity, consistency).",
+        "The fundamental problem of causal inference: individual i has potential outcomes Y_i(1) if treated and Y_i(0) if untreated, but we observe only one - the one corresponding to the actual treatment received. The individual treatment effect ITE_i = Y_i(1) - Y_i(0) is never directly observable. ATE = E[Y(1) - Y(0)] can be estimated from randomized experiments or from observational data under assumptions (no unmeasured confounders, positivity, consistency).",
       hints: [
         "You cannot be both treated and untreated simultaneously. The missing counterfactual is the core challenge.",
-        "Observational studies: T depends on X (sicker patients get treatment) — confounding must be controlled.",
+        "Observational studies: T depends on X (sicker patients get treatment) - confounding must be controlled.",
       ],
     },
     {
@@ -1616,7 +1616,7 @@ const extraQuestions: Record<string, Question[]> = {
         "Double Machine Learning (DML, Chernozhukov et al., 2018) estimates treatment effects using cross-fitting. What is cross-fitting and why is it necessary?",
       options: [
         "Cross-fitting applies k-fold CV to select the best regularization parameter for nuisance models",
-        "Cross-fitting fits nuisance models on one half of the data and computes residuals on the other half, then swaps — preventing overfitting of nuisance models from biasing the treatment effect estimate via regularization bias",
+        "Cross-fitting fits nuisance models on one half of the data and computes residuals on the other half, then swaps - preventing overfitting of nuisance models from biasing the treatment effect estimate via regularization bias",
         "Cross-fitting averages the treatment effect estimates from multiple data splits to reduce variance",
         "Cross-fitting handles unmeasured confounders by using instrumental variables fitted via cross-validation",
       ],
@@ -1638,7 +1638,7 @@ const extraQuestions: Record<string, Question[]> = {
       explanation:
         "Positivity (overlap/common support): every treated unit must have a control unit with a similar propensity score. If some treated units have no comparable controls (propensity probability near 1.0 for certain subgroups), their counterfactual outcomes cannot be estimated from observational data. Violations lead to extrapolation and biased ATE estimates. Checking propensity score distribution overlap between treated and control groups is a standard diagnostic.",
       hints: [
-        "If treated units have propensity near 1.0 and controls near 0.0, there is no overlap — no valid matching.",
+        "If treated units have propensity near 1.0 and controls near 0.0, there is no overlap - no valid matching.",
         "Common support check: plot propensity score distributions for treated vs. control. They should substantially overlap.",
       ],
     },
@@ -1672,7 +1672,7 @@ const extraQuestions: Record<string, Question[]> = {
         "Why is transfer learning less effective for tabular data than for images or text?",
       options: [
         "Tabular data has too many features for transformer architectures to handle efficiently",
-        "Tabular datasets have heterogeneous schema (different feature names, meanings, and types across datasets) and lack the spatial or sequential structure that enables features learned on one dataset to transfer meaningfully to another — unlike pixels or tokens which are semantically consistent across datasets",
+        "Tabular datasets have heterogeneous schema (different feature names, meanings, and types across datasets) and lack the spatial or sequential structure that enables features learned on one dataset to transfer meaningfully to another - unlike pixels or tokens which are semantically consistent across datasets",
         "Tabular data requires training from scratch because gradient-based methods do not converge on heterogeneous feature spaces",
         "Tabular models cannot be pre-trained because the optimization landscape has too many local minima",
       ],
@@ -1692,10 +1692,10 @@ const extraQuestions: Record<string, Question[]> = {
         "When using a GBM for multi-step-ahead time series forecasting, the recursive strategy has lower error accumulation compared to the direct strategy because it trains fewer models.",
       correctAnswer: "False",
       explanation:
-        "The recursive strategy has HIGHER error accumulation than the direct strategy, not lower. Recursive: train one model, use its predictions as inputs for subsequent predictions — errors propagate. Direct: train one model per horizon h using true historical values as inputs — no error propagation but requires separate models per horizon. The recursive strategy is simpler but accumulates errors at each step, especially for long horizons.",
+        "The recursive strategy has HIGHER error accumulation than the direct strategy, not lower. Recursive: train one model, use its predictions as inputs for subsequent predictions - errors propagate. Direct: train one model per horizon h using true historical values as inputs - no error propagation but requires separate models per horizon. The recursive strategy is simpler but accumulates errors at each step, especially for long horizons.",
       hints: [
-        "Recursive: model predicts y(t+1), then uses that prediction to predict y(t+2) — errors compound.",
-        "Direct: model for horizon h uses only true historical values — no error accumulation from previous horizon predictions.",
+        "Recursive: model predicts y(t+1), then uses that prediction to predict y(t+2) - errors compound.",
+        "Direct: model for horizon h uses only true historical values - no error accumulation from previous horizon predictions.",
       ],
     },
   ],
@@ -1713,7 +1713,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Isotonic regression is a non-parametric calibration method. What is its key advantage over Platt scaling for gradient boosted trees?",
       options: [
         "Isotonic regression is faster to compute than Platt scaling for large calibration datasets",
-        "Isotonic regression is more flexible — it fits any monotonic calibration function rather than the logistic sigmoid shape, making it more effective when the miscalibration pattern is non-sigmoidal",
+        "Isotonic regression is more flexible - it fits any monotonic calibration function rather than the logistic sigmoid shape, making it more effective when the miscalibration pattern is non-sigmoidal",
         "Isotonic regression provides uncertainty estimates for the calibrated probabilities",
         "Isotonic regression is robust to outliers in the calibration set",
       ],
@@ -1722,7 +1722,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Platt scaling fits a logistic function (sigmoid) to model raw scores. GBTs often have more complex miscalibration patterns. Isotonic regression (pool adjacent violators algorithm) fits a piecewise constant monotone function without assuming any functional form. This greater flexibility allows better correction of non-sigmoidal miscalibration, but it risks overfitting on small calibration sets.",
       hints: [
         "Platt = logistic (one shape). Isotonic = any monotone shape. More flexible but more data needed.",
-        "GBT miscalibration is often more complex than a simple sigmoid — isotonic regression can capture this.",
+        "GBT miscalibration is often more complex than a simple sigmoid - isotonic regression can capture this.",
       ],
     },
     {
@@ -1753,7 +1753,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "A model with perfect calibration (ECE = 0) will also have maximum AUROC (AUROC = 1.0) because calibration implies perfect probability estimation.",
       correctAnswer: "False",
       explanation:
-        "Calibration and discrimination are independent: a perfectly calibrated model can have any AUROC from 0.5 (random) to 1.0 (perfect). A model always predicting the base rate has ECE=0 but is completely useless for discrimination (AUROC=0.5). Perfect AUROC requires correctly ranking all pairs — a stronger requirement than calibration. Both are necessary for a fully useful probabilistic classifier.",
+        "Calibration and discrimination are independent: a perfectly calibrated model can have any AUROC from 0.5 (random) to 1.0 (perfect). A model always predicting the base rate has ECE=0 but is completely useless for discrimination (AUROC=0.5). Perfect AUROC requires correctly ranking all pairs - a stronger requirement than calibration. Both are necessary for a fully useful probabilistic classifier.",
       hints: [
         "ECE = 0 means probabilities are accurate on average. AUROC = 1 means the model perfectly ranks all samples.",
         "A constant predictor at the base rate has ECE=0 but cannot rank samples at all.",
@@ -1769,7 +1769,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "A feature with near-zero variance on the training set but high variance on the test set signals what potential problem?",
       options: [
         "The feature was incorrectly standardized; re-standardize using test set statistics",
-        "The feature may have been constant during training data collection (e.g., a system default value) but changed in production, indicating the training and test periods come from different operational contexts — a distribution shift or data quality issue",
+        "The feature may have been constant during training data collection (e.g., a system default value) but changed in production, indicating the training and test periods come from different operational contexts - a distribution shift or data quality issue",
         "The feature was label-encoded with a fixed vocabulary and new categories appear in the test set",
         "The feature was derived from training set labels and its variance reflects label distribution, not a real-world feature",
       ],
@@ -1795,10 +1795,10 @@ const moreTabularQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Temporal leakage in churn: the prediction date is month M (predict whether customer churns in month M+1). A leaky feature: "number of support tickets in month M" — if this is computed at the labeling date when we already know they churned, it might include information from after the prediction date. Detection: for each feature, verify the timestamp of data used to compute it is strictly before the prediction date.',
+        'Temporal leakage in churn: the prediction date is month M (predict whether customer churns in month M+1). A leaky feature: "number of support tickets in month M" - if this is computed at the labeling date when we already know they churned, it might include information from after the prediction date. Detection: for each feature, verify the timestamp of data used to compute it is strictly before the prediction date.',
       hints: [
         "The check: could this feature value be different if computed on the prediction date vs. the labeling date?",
-        'Subtle form: "days since last login" computed at labeling time vs. prediction time — potentially different values.',
+        'Subtle form: "days since last login" computed at labeling time vs. prediction time - potentially different values.',
       ],
     },
     {
@@ -1809,9 +1809,9 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "A model trained with target leakage will show poor performance in cross-validation because cross-validation inherently prevents leakage between folds.",
       correctAnswer: "False",
       explanation:
-        "Standard k-fold cross-validation does NOT prevent target leakage from feature construction. If a leaky feature (containing target information) is included in the feature matrix before splitting into folds, all folds contain the leakage — the model uses leaked information in both training and validation phases, appearing to have high performance in CV but failing in production. CV prevents leakage only from the train/validation split itself, not from features constructed using the target before any splitting.",
+        "Standard k-fold cross-validation does NOT prevent target leakage from feature construction. If a leaky feature (containing target information) is included in the feature matrix before splitting into folds, all folds contain the leakage - the model uses leaked information in both training and validation phases, appearing to have high performance in CV but failing in production. CV prevents leakage only from the train/validation split itself, not from features constructed using the target before any splitting.",
       hints: [
-        "Leaky feature construction: feature is derived from target before CV splits — both train and validation folds contain the leakage.",
+        "Leaky feature construction: feature is derived from target before CV splits - both train and validation folds contain the leakage.",
         "CV can only prevent leakage at the fitting step. Leakage baked into the feature matrix before CV is invisible to CV.",
       ],
     },
@@ -1831,7 +1831,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ADASYN: for each minority sample x_i, compute r_i = (number of majority class neighbors among k-NN) / k. Minority samples with higher r_i are in more majority-dominated regions (harder to classify). ADASYN generates synthetic samples proportional to r_i — more samples where the minority class is most difficult. This focuses oversampling on the decision boundary rather than distributing uniformly across the minority class.",
+        "ADASYN: for each minority sample x_i, compute r_i = (number of majority class neighbors among k-NN) / k. Minority samples with higher r_i are in more majority-dominated regions (harder to classify). ADASYN generates synthetic samples proportional to r_i - more samples where the minority class is most difficult. This focuses oversampling on the decision boundary rather than distributing uniformly across the minority class.",
       hints: [
         "r_i high = surrounded by majority class = hard to classify. Generate more samples here.",
         "SMOTE generates equal samples per minority instance. ADASYN adapts: hard cases get more samples.",
@@ -1881,13 +1881,13 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Leave-one-out encoding is a variant of target encoding that computes the category mean excluding the current sample. What is its advantage?",
       options: [
         "LOOE is faster to compute because it avoids k-fold cross-validation",
-        "LOOE reduces direct target leakage for each training sample by computing the category mean excluding that sample own target value — the encoded value cannot be inflated by the sample own target contribution",
+        "LOOE reduces direct target leakage for each training sample by computing the category mean excluding that sample own target value - the encoded value cannot be inflated by the sample own target contribution",
         "LOOE handles rare categories better by using a leave-one-out estimator with lower variance for small samples",
         "LOOE is equivalent to smoothed target encoding but without requiring a smoothing parameter",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard target encoding for sample i in category A: encode with mean(y | category=A) including y_i — direct leakage. LOOE: encode sample i with mean(y | category=A, excluding sample i). This removes the self-contribution. For large categories, the difference is small. For categories with few samples, LOOE substantially reduces leakage.",
+        "Standard target encoding for sample i in category A: encode with mean(y | category=A) including y_i - direct leakage. LOOE: encode sample i with mean(y | category=A, excluding sample i). This removes the self-contribution. For large categories, the difference is small. For categories with few samples, LOOE substantially reduces leakage.",
       hints: [
         "Standard target encoding: mean includes the sample itself. LOOE: exclude the sample from its own mean.",
         "Category with 2 samples: standard encoding = (y_i + y_j)/2. LOOE = y_j only for sample i. Large difference.",
@@ -1901,13 +1901,13 @@ const moreTabularQuestions: Record<string, Question[]> = {
         'CatBoost handles categorical features natively using "ordered target statistics." What does "ordered" mean and how does it prevent leakage?',
       options: [
         "CatBoost orders categories by their target mean and uses the rank as encoding, preventing leakage by not using raw target values",
-        "CatBoost uses a random permutation of the training set; for each sample, the target statistic is computed only from samples appearing before it in the permutation — ensuring each sample encoding never includes its own target value",
+        "CatBoost uses a random permutation of the training set; for each sample, the target statistic is computed only from samples appearing before it in the permutation - ensuring each sample encoding never includes its own target value",
         "CatBoost orders samples by predicted probability and uses the ordering to compute sequential target statistics",
         "CatBoost uses the temporal ordering of samples (by timestamp) to compute expanding-window target statistics",
       ],
       correctAnswer: 1,
       explanation:
-        "CatBoost ordered target statistics: a random permutation is drawn for the training set. For sample sigma(i), the target statistic for its category is computed from samples sigma(1), ..., sigma(i-1) — all samples appearing before it in the permutation. This ensures no sample encoding includes its own target. A new permutation is drawn for each tree to reduce variance.",
+        "CatBoost ordered target statistics: a random permutation is drawn for the training set. For sample sigma(i), the target statistic for its category is computed from samples sigma(1), ..., sigma(i-1) - all samples appearing before it in the permutation. This ensures no sample encoding includes its own target. A new permutation is drawn for each tree to reduce variance.",
       hints: [
         "Random permutation: sample i only sees samples before it in the permutation order.",
         "Each tree gets a new permutation: reduces variance while maintaining the ordered statistics guarantee.",
@@ -1921,7 +1921,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Embedding categorical features with a learned embedding layer always outperforms one-hot encoding for neural network models on tabular data.",
       correctAnswer: "False",
       explanation:
-        "Learned embeddings outperform one-hot encoding for high-cardinality features where one-hot creates very sparse representations. For low-cardinality features (e.g., gender with 2-3 values), one-hot is often equally effective and simpler. Embeddings require sufficient data to learn meaningful representations — for rare categories, embeddings may overfit. Performance depends on cardinality, dataset size, and embedding dimension.",
+        "Learned embeddings outperform one-hot encoding for high-cardinality features where one-hot creates very sparse representations. For low-cardinality features (e.g., gender with 2-3 values), one-hot is often equally effective and simpler. Embeddings require sufficient data to learn meaningful representations - for rare categories, embeddings may overfit. Performance depends on cardinality, dataset size, and embedding dimension.",
       hints: [
         "High cardinality (1000+ unique values): embeddings far better than one-hot (1000 binary columns).",
         "Low cardinality (2-5 unique values): one-hot is simple and often comparable to embeddings.",
@@ -1938,15 +1938,15 @@ const moreTabularQuestions: Record<string, Question[]> = {
       options: [
         "Using t-tests to compare mean feature values between training and production data at regular intervals",
         "Population Stability Index for feature drift and Kolmogorov-Smirnov or chi-squared test for distribution shift in each feature; monitoring the model output distribution for output drift; and tracking performance metrics with labeled production data",
-        "Using the AUROC of a binary classifier trained to distinguish training samples from production samples — high AUROC indicates distribution shift",
+        "Using the AUROC of a binary classifier trained to distinguish training samples from production samples - high AUROC indicates distribution shift",
         "Both B and C are valid approaches; the choice depends on whether labels are available in production",
       ],
       correctAnswer: 3,
       explanation:
-        "Multiple drift detection approaches are valid: (1) PSI, K-S, chi-squared for individual feature distributions; (2) Discriminative drift detection (train a classifier to distinguish old vs. new data — high accuracy indicates drift); (3) Output distribution monitoring; (4) Performance monitoring with labeled data. In production, labels are often delayed, so feature and output drift monitoring are primary tools. When labels arrive, performance monitoring provides the most direct signal.",
+        "Multiple drift detection approaches are valid: (1) PSI, K-S, chi-squared for individual feature distributions; (2) Discriminative drift detection (train a classifier to distinguish old vs. new data - high accuracy indicates drift); (3) Output distribution monitoring; (4) Performance monitoring with labeled data. In production, labels are often delayed, so feature and output drift monitoring are primary tools. When labels arrive, performance monitoring provides the most direct signal.",
       hints: [
         "PSI measures feature distribution shift. Discriminative test: can a classifier tell old from new data?",
-        "The right answer depends on label availability — B and C are complementary tools, so D is correct.",
+        "The right answer depends on label availability - B and C are complementary tools, so D is correct.",
       ],
     },
     {
@@ -1957,7 +1957,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Elastic Weight Consolidation (EWC) was proposed for continual learning. What is its approach to preventing catastrophic forgetting?",
       options: [
         "EWC uses a replay buffer storing previous task examples, mixing them with new task data during training",
-        "EWC adds a regularization term penalizing changes to parameters important for previous tasks, where importance is measured by the Fisher information matrix diagonal — critical parameters are consolidated and can change only slowly",
+        "EWC adds a regularization term penalizing changes to parameters important for previous tasks, where importance is measured by the Fisher information matrix diagonal - critical parameters are consolidated and can change only slowly",
         "EWC uses separate task-specific output heads for each task, sharing only the lower-layer representations",
         "EWC applies gradient masking, zeroing out gradients for parameters used in previous tasks",
       ],
@@ -1992,7 +1992,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
       question:
         "In multi-label classification, what is the key difference between binary relevance and classifier chains?",
       options: [
-        "Binary relevance trains one binary classifier per label independently; classifier chains train labels sequentially, where each classifier includes predictions of previous classifiers as features — capturing label correlations that binary relevance ignores",
+        "Binary relevance trains one binary classifier per label independently; classifier chains train labels sequentially, where each classifier includes predictions of previous classifiers as features - capturing label correlations that binary relevance ignores",
         "Binary relevance uses a multi-class softmax output; classifier chains use multiple sigmoid outputs",
         "Binary relevance requires a single model; classifier chains require one model per label ordered by frequency",
         "Binary relevance is for label imbalance; classifier chains are for balanced label distributions",
@@ -2033,7 +2033,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "In hierarchical multi-label classification, predicting a child label without predicting its parent is a common failure mode of flat classification approaches.",
       correctAnswer: "True",
       explanation:
-        'Flat classifiers for hierarchical label taxonomies (e.g., Electronics > Phones > Smartphones) treat labels independently and can predict "Smartphones" without predicting "Phones" or "Electronics" — hierarchically inconsistent. Hierarchical classification methods enforce that if a child label is predicted, all ancestor labels are also predicted. Constraint violation rates are a reported metric for hierarchical classification tasks.',
+        'Flat classifiers for hierarchical label taxonomies (e.g., Electronics > Phones > Smartphones) treat labels independently and can predict "Smartphones" without predicting "Phones" or "Electronics" - hierarchically inconsistent. Hierarchical classification methods enforce that if a child label is predicted, all ancestor labels are also predicted. Constraint violation rates are a reported metric for hierarchical classification tasks.',
       hints: [
         "Flat classifier: predicts each label independently. No constraint that child implies parent.",
         'Hierarchical consistency: if "Smartphones" is predicted, "Phones" and "Electronics" must also be predicted.',
@@ -2049,13 +2049,13 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Uplift modeling (heterogeneous treatment effect estimation) differs from standard predictive modeling. What is the target?",
       options: [
         "Uplift modeling predicts the response rate (probability of conversion) for treated customers",
-        "Uplift modeling predicts the incremental effect of treatment on each individual — the difference in outcome probability between treating and not treating — rather than the outcome probability itself",
+        "Uplift modeling predicts the incremental effect of treatment on each individual - the difference in outcome probability between treating and not treating - rather than the outcome probability itself",
         "Uplift modeling predicts whether a customer will churn, weighted by the cost of the prevention treatment",
         "Uplift modeling predicts the optimal treatment dosage for each customer based on their feature profile",
       ],
       correctAnswer: 1,
       explanation:
-        'Uplift modeling target: ITE_i = P(Y=1 | T=1, X=x_i) - P(Y=1 | T=0, X=x_i). This differs from response modeling: a response model predicts P(Y=1 | X, T=1). Customers with high response probability but also high "do-it-anyway" probability have low uplift. Uplift models identify Persuadables — customers who respond because of the treatment, not despite it.',
+        'Uplift modeling target: ITE_i = P(Y=1 | T=1, X=x_i) - P(Y=1 | T=0, X=x_i). This differs from response modeling: a response model predicts P(Y=1 | X, T=1). Customers with high response probability but also high "do-it-anyway" probability have low uplift. Uplift models identify Persuadables - customers who respond because of the treatment, not despite it.',
       hints: [
         'High response rate != high uplift. A "Sure Thing" who converts with or without treatment has zero uplift.',
         "Uplift = marginal effect of treatment. Target: customers who are on the fence and nudged by treatment.",
@@ -2089,10 +2089,10 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "In a randomized controlled trial (RCT), confounding bias is eliminated because treatment assignment is independent of all measured and unmeasured covariates.",
       correctAnswer: "True",
       explanation:
-        "In a perfect RCT, treatment is assigned by a random mechanism (coin flip) independent of all subject characteristics — measured and unmeasured. This satisfies the ignorability assumption: Y(0), Y(1) are independent of T. This eliminates confounding: treated and control groups are statistically identical in expectation. The ATE can be estimated simply as the difference in mean outcomes.",
+        "In a perfect RCT, treatment is assigned by a random mechanism (coin flip) independent of all subject characteristics - measured and unmeasured. This satisfies the ignorability assumption: Y(0), Y(1) are independent of T. This eliminates confounding: treated and control groups are statistically identical in expectation. The ATE can be estimated simply as the difference in mean outcomes.",
       hints: [
-        "Randomization makes T independent of Y(0), Y(1) — no confounding by design.",
-        "Observational studies: T depends on X (sicker patients get treatment) — confounding must be controlled.",
+        "Randomization makes T independent of Y(0), Y(1) - no confounding by design.",
+        "Observational studies: T depends on X (sicker patients get treatment) - confounding must be controlled.",
       ],
     },
   ],
@@ -2113,7 +2113,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
       explanation:
         "Standard GANs struggle with tabular data because: (1) Mixed types require different generation strategies; (2) Multi-modal continuous feature distributions; (3) Highly imbalanced categoricals. CTGAN addresses these with mode-specific normalization (VGM) for continuous features, conditional generation to ensure rare categories are generated, and training-by-sampling to balance across categories.",
       hints: [
-        "Standard GAN output is continuous. Categorical features need discretization — not trivially handled.",
+        "Standard GAN output is continuous. Categorical features need discretization - not trivially handled.",
         "Mode-specific normalization: fit a variational Gaussian mixture, normalize each sample by which mode it belongs to.",
       ],
     },
@@ -2145,7 +2145,7 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "Synthetic data generated by CTGAN or similar tabular GANs provides strong differential privacy guarantees because it does not share the original data directly.",
       correctAnswer: "False",
       explanation:
-        "Synthetic tabular data generated by GANs does NOT provide formal differential privacy guarantees. GANs sometimes reproduce exact training samples — especially rare ones. Membership inference attacks can determine if a specific individual was in the training set. Formal differential privacy requires injecting calibrated noise during training (e.g., DP-SGD). Synthetic data may reduce some privacy risks but should not be equated with differential privacy.",
+        "Synthetic tabular data generated by GANs does NOT provide formal differential privacy guarantees. GANs sometimes reproduce exact training samples - especially rare ones. Membership inference attacks can determine if a specific individual was in the training set. Formal differential privacy requires injecting calibrated noise during training (e.g., DP-SGD). Synthetic data may reduce some privacy risks but should not be equated with differential privacy.",
       hints: [
         "GAN memorization: GANs sometimes reproduce exact training samples, especially rare ones.",
         "Formal DP guarantee: requires DP-SGD or similar during training, not achievable by standard GAN training.",
@@ -2161,13 +2161,13 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "AutoML systems automate model selection and hyperparameter tuning. What is the most significant risk of using AutoML without domain understanding?",
       options: [
         "AutoML systems always choose the most complex model, leading to overfitting regardless of dataset size",
-        "AutoML optimizes for a validation metric without understanding business constraints — it may select models with high validation AUC but poor calibration, high inference latency, or features that constitute data leakage, which only domain knowledge can detect",
+        "AutoML optimizes for a validation metric without understanding business constraints - it may select models with high validation AUC but poor calibration, high inference latency, or features that constitute data leakage, which only domain knowledge can detect",
         "AutoML systems cannot handle categorical features or missing data, requiring manual preprocessing",
         "AutoML is computationally too expensive for real-world tabular datasets with more than 100,000 samples",
       ],
       correctAnswer: 1,
       explanation:
-        "AutoML risk without domain understanding: (1) Leakage: AutoML may include leaky features and achieve perfect validation AUC — only domain knowledge identifies which features are temporally invalid; (2) Business constraints: AutoML optimizes a metric but may select a model too slow for real-time inference or too complex for regulatory requirements; (3) Calibration: AutoML rarely optimizes for calibration; (4) Feature semantics: AutoML may create mathematically valid but semantically nonsensical features.",
+        "AutoML risk without domain understanding: (1) Leakage: AutoML may include leaky features and achieve perfect validation AUC - only domain knowledge identifies which features are temporally invalid; (2) Business constraints: AutoML optimizes a metric but may select a model too slow for real-time inference or too complex for regulatory requirements; (3) Calibration: AutoML rarely optimizes for calibration; (4) Feature semantics: AutoML may create mathematically valid but semantically nonsensical features.",
       hints: [
         'AutoML cannot distinguish "validation AUC is high due to a leaky feature" from legitimate model quality.',
         "Business constraint: a 99% AUC model with 2-second inference is useless for real-time scoring.",
@@ -2187,10 +2187,10 @@ const moreTabularQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Stacking: (1) Train K base models using K-fold CV, generating out-of-fold predictions for all training samples; (2) Train a meta-learner using the K base model OOF predictions as features and true labels as targets. The meta-learner learns the optimal combination — not necessarily equal weights, and potentially non-linear. Simple averaging uses fixed equal weights. Stacking can learn that model A is better for certain subpopulations and model B for others.",
+        "Stacking: (1) Train K base models using K-fold CV, generating out-of-fold predictions for all training samples; (2) Train a meta-learner using the K base model OOF predictions as features and true labels as targets. The meta-learner learns the optimal combination - not necessarily equal weights, and potentially non-linear. Simple averaging uses fixed equal weights. Stacking can learn that model A is better for certain subpopulations and model B for others.",
       hints: [
         "Stacking meta-learner: learns how to weight and combine base models from data.",
-        "OOF predictions are critical to avoid leakage — the meta-learner sees predictions the base models made on held-out data.",
+        "OOF predictions are critical to avoid leakage - the meta-learner sees predictions the base models made on held-out data.",
       ],
     },
     {
@@ -2216,14 +2216,14 @@ const moreTabularQuestions: Record<string, Question[]> = {
       question:
         "Demographic parity and equalized odds are two common fairness metrics. What is the key difference?",
       options: [
-        "Demographic parity requires equal positive prediction rates across groups; equalized odds additionally requires equal true positive rates AND equal false positive rates across groups — accounting for base rate differences",
+        "Demographic parity requires equal positive prediction rates across groups; equalized odds additionally requires equal true positive rates AND equal false positive rates across groups - accounting for base rate differences",
         "Demographic parity applies to binary classification; equalized odds applies to multi-class classification",
         "Demographic parity requires equal accuracy across groups; equalized odds requires equal AUROC",
         "Demographic parity measures outcome disparity; equalized odds measures disparity in treatment decisions",
       ],
       correctAnswer: 0,
       explanation:
-        "Demographic parity: P(Y_hat=1 | group=A) = P(Y_hat=1 | group=B) — equal positive prediction rates. Equalized odds (Hardt et al., 2016): P(Y_hat=1 | Y=y, group=A) = P(Y_hat=1 | Y=y, group=B) for y in {0,1} — equal true positive rates AND equal false positive rates across groups, conditioning on true labels. Equalized odds requires the model to be equally accurate for both classes across groups.",
+        "Demographic parity: P(Y_hat=1 | group=A) = P(Y_hat=1 | group=B) - equal positive prediction rates. Equalized odds (Hardt et al., 2016): P(Y_hat=1 | Y=y, group=A) = P(Y_hat=1 | Y=y, group=B) for y in {0,1} - equal true positive rates AND equal false positive rates across groups, conditioning on true labels. Equalized odds requires the model to be equally accurate for both classes across groups.",
       hints: [
         "Demographic parity: equal selection rate regardless of true label. Can be satisfied by biased selection.",
         "Equalized odds: equal TPR and FPR. Model must make equally few errors for both groups and both true classes.",
@@ -2237,13 +2237,13 @@ const moreTabularQuestions: Record<string, Question[]> = {
         "The impossibility theorem of fairness states that when group base rates differ, certain combinations of fairness criteria cannot simultaneously hold. Which combination is provably impossible?",
       options: [
         "Demographic parity and equalized odds cannot both hold simultaneously when base rates differ",
-        "Calibration (predictive parity) and equalized odds (equal TPR and FPR) cannot both hold when base rates differ — a calibrated model that accurately reflects different base rates will necessarily have different TPRs or FPRs between groups",
+        "Calibration (predictive parity) and equalized odds (equal TPR and FPR) cannot both hold when base rates differ - a calibrated model that accurately reflects different base rates will necessarily have different TPRs or FPRs between groups",
         "Demographic parity and calibration cannot hold simultaneously for any dataset",
         "Individual fairness and group fairness cannot both hold because they make contradictory assumptions about similarity",
       ],
       correctAnswer: 1,
       explanation:
-        "The fairness impossibility: when groups A and B have different base rates, a perfectly calibrated classifier cannot simultaneously achieve equalized odds. Intuitively: different base rates mean different proportions of positive cases at each score, so equal FPR implies unequal FNR. The COMPAS controversy illustrated this exactly: ProPublica found unequal FPR; Northpointe defended with calibration — both were mathematically correct given different base rates.",
+        "The fairness impossibility: when groups A and B have different base rates, a perfectly calibrated classifier cannot simultaneously achieve equalized odds. Intuitively: different base rates mean different proportions of positive cases at each score, so equal FPR implies unequal FNR. The COMPAS controversy illustrated this exactly: ProPublica found unequal FPR; Northpointe defended with calibration - both were mathematically correct given different base rates.",
       hints: [
         "Calibration: a score of 0.7 means 70% positive rate for all groups. If base rates differ, equal FPR implies unequal TPR.",
         "COMPAS case: calibrated for both races AND equal FPR AND equal FNR simultaneously is mathematically impossible with different base rates.",
@@ -2300,9 +2300,9 @@ const extraTabular: Record<string, Question[]> = {
         "Gradient vanishing for categorical features with many unique values",
       ],
       correctAnswer: 1,
-      explanation: "Naive target encoding replaces category c with mean(y | category=c) computed on the training set — the example itself is included in its own encoding, creating target leakage. The model sees its own label in the features during training, inflating training metrics and causing overfitting, especially for low-frequency categories. CatBoost's ordered target encoding: for each training example i in a random permutation, compute the target statistic using only examples 0 through i-1 in that permutation — example i never sees its own label. CatBoost applies multiple random permutations to stabilize estimates. This is equivalent to leave-one-out encoding but without the exact leave-one-out leakage.",
+      explanation: "Naive target encoding replaces category c with mean(y | category=c) computed on the training set - the example itself is included in its own encoding, creating target leakage. The model sees its own label in the features during training, inflating training metrics and causing overfitting, especially for low-frequency categories. CatBoost's ordered target encoding: for each training example i in a random permutation, compute the target statistic using only examples 0 through i-1 in that permutation - example i never sees its own label. CatBoost applies multiple random permutations to stabilize estimates. This is equivalent to leave-one-out encoding but without the exact leave-one-out leakage.",
       hints: [
-        "CatBoost uses a different random permutation for each boosting iteration — this ensures the target statistic for example i is computed from a different set of predecessors each round, further reducing variance.",
+        "CatBoost uses a different random permutation for each boosting iteration - this ensures the target statistic for example i is computed from a different set of predecessors each round, further reducing variance.",
         "Smoothed target encoding with additive smoothing is another approach: TE(c) = (count(c) * mean(c) + k * global_mean) / (count(c) + k). CatBoost's ordered approach is theoretically superior.",
       ],
     },
@@ -2312,7 +2312,7 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Shrinkage (learning rate) in gradient boosting reduces the contribution of each new tree. A smaller learning rate always leads to better final model performance if the number of boosting rounds is held fixed.",
       correctAnswer: "False",
-      explanation: "Shrinkage and number of trees are coupled: optimal performance requires smaller learning rate with proportionally more trees. With fixed n_estimators, reducing the learning rate means the model has not converged — each tree contributes less and the ensemble needs more iterations to fit the residuals. Friedman (2001) showed that learning_rate times n_estimators approximately determines the effective model capacity. The practical rule: use small learning rate (0.01-0.1) with large n_estimators (500-5000) and early stopping to find the optimal number of rounds. Holding n_estimators fixed and reducing learning rate gives an under-fit model.",
+      explanation: "Shrinkage and number of trees are coupled: optimal performance requires smaller learning rate with proportionally more trees. With fixed n_estimators, reducing the learning rate means the model has not converged - each tree contributes less and the ensemble needs more iterations to fit the residuals. Friedman (2001) showed that learning_rate times n_estimators approximately determines the effective model capacity. The practical rule: use small learning rate (0.01-0.1) with large n_estimators (500-5000) and early stopping to find the optimal number of rounds. Holding n_estimators fixed and reducing learning rate gives an under-fit model.",
       hints: [
         "Empirical relationship: halving the learning rate roughly doubles the optimal n_estimators. Use early stopping rather than fixed n_estimators.",
         "Learning rate and regularization interact: lower learning rate also implicitly regularizes (each tree adds less), but explicit regularization is still needed to control tree complexity.",
@@ -2325,15 +2325,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "XGBoost's regularization objective includes a tree complexity penalty with parameters gamma and lambda. What do gamma and lambda control?",
       options: [
         "Gamma controls tree depth and lambda controls the learning rate",
-        "Gamma is the minimum loss reduction required to create a new leaf (pruning threshold) and lambda is the L2 regularization on leaf weights — gamma prunes leaves with insufficient gain while lambda shrinks leaf weights toward zero",
+        "Gamma is the minimum loss reduction required to create a new leaf (pruning threshold) and lambda is the L2 regularization on leaf weights - gamma prunes leaves with insufficient gain while lambda shrinks leaf weights toward zero",
         "Gamma controls the fraction of features sampled per tree and lambda controls the subsampling ratio",
         "Gamma is the minimum number of samples per leaf and lambda is the maximum tree depth",
       ],
       correctAnswer: 1,
-      explanation: "XGBoost's tree complexity penalty has two terms: (1) gamma * T penalizes the number of leaves T — the gain of any split must exceed gamma to be accepted, effectively pruning small-gain splits. Setting gamma=0 allows all positive-gain splits; gamma=1 requires splits to reduce loss by at least 1.0. (2) (lambda/2) * sum(w_j^2) applies L2 regularization to leaf weight values w_j — this shrinks leaf predictions toward zero. The optimal leaf weight given this regularization is w_j* = -G_j / (H_j + lambda), where G_j and H_j are gradient and Hessian sums for leaf j. Larger lambda produces smaller, more conservative leaf weights.",
+      explanation: "XGBoost's tree complexity penalty has two terms: (1) gamma * T penalizes the number of leaves T - the gain of any split must exceed gamma to be accepted, effectively pruning small-gain splits. Setting gamma=0 allows all positive-gain splits; gamma=1 requires splits to reduce loss by at least 1.0. (2) (lambda/2) * sum(w_j^2) applies L2 regularization to leaf weight values w_j - this shrinks leaf predictions toward zero. The optimal leaf weight given this regularization is w_j* = -G_j / (H_j + lambda), where G_j and H_j are gradient and Hessian sums for leaf j. Larger lambda produces smaller, more conservative leaf weights.",
       hints: [
         "Gamma is called 'min_split_loss' in the XGBoost API. Setting gamma > 0 causes post-pruning: leaves with gain < gamma are removed after tree growth.",
-        "Alpha (L1 regularization on leaf weights) also available in XGBoost — produces sparse leaf weight solutions where some leaves are exactly zero.",
+        "Alpha (L1 regularization on leaf weights) also available in XGBoost - produces sparse leaf weight solutions where some leaves are exactly zero.",
       ],
     },
     {
@@ -2348,10 +2348,10 @@ const extraTabular: Record<string, Question[]> = {
         "Clustering correlated features and using only one representative from each cluster",
       ],
       correctAnswer: 1,
-      explanation: "EFB exploits sparsity in high-dimensional datasets such as one-hot encoded features and NLP bag-of-words: if two features A and B are rarely both non-zero simultaneously, they can be encoded into a single bundle by offsetting feature B's values into a disjoint range from A. For example: A in {0, 1} and B in {0, 1} are bundled into a single feature with values {0=both zero, 1=A active, 2=B active} — no information is lost if A and B are truly exclusive. A graph coloring algorithm finds the optimal bundling. EFB is most effective for one-hot features where each category is mutually exclusive — in practice reducing features from 10K to around 600 dimensions for text features.",
+      explanation: "EFB exploits sparsity in high-dimensional datasets such as one-hot encoded features and NLP bag-of-words: if two features A and B are rarely both non-zero simultaneously, they can be encoded into a single bundle by offsetting feature B's values into a disjoint range from A. For example: A in {0, 1} and B in {0, 1} are bundled into a single feature with values {0=both zero, 1=A active, 2=B active} - no information is lost if A and B are truly exclusive. A graph coloring algorithm finds the optimal bundling. EFB is most effective for one-hot features where each category is mutually exclusive - in practice reducing features from 10K to around 600 dimensions for text features.",
       hints: [
-        "EFB is combined with GOSS (Gradient-based One-Side Sampling) in LightGBM — GOSS keeps all high-gradient examples and a random sample of low-gradient examples, reducing training data by 80% while preserving gradient signal.",
-        "EFB's max_conflict_rate parameter (default 0) controls how much non-exclusivity to allow — small conflict rates may introduce approximation but enable bundling of nearly-exclusive features.",
+        "EFB is combined with GOSS (Gradient-based One-Side Sampling) in LightGBM - GOSS keeps all high-gradient examples and a random sample of low-gradient examples, reducing training data by 80% while preserving gradient signal.",
+        "EFB's max_conflict_rate parameter (default 0) controls how much non-exclusivity to allow - small conflict rates may introduce approximation but enable bundling of nearly-exclusive features.",
       ],
     },
     {
@@ -2360,10 +2360,10 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "easy",
       question: "In gradient boosted trees, increasing the subsample ratio (fraction of training data used per tree) from 0.5 to 1.0 always improves model performance by using more training data.",
       correctAnswer: "False",
-      explanation: "Subsampling (stochastic gradient boosting, Friedman 2002) uses a random fraction of training data per tree. This introduces randomness that acts as regularization, reducing overfitting and improving generalization — similar to dropout for neural networks or bagging for random forests. Setting subsample=1.0 (no subsampling) uses all data each round: the model may overfit, especially with small datasets or many boosting rounds. Optimal subsample is typically 0.5-0.8 for noisy datasets. The variance-bias tradeoff: lower subsample reduces variance (better generalization) at the cost of higher bias (each tree is noisier). For very large datasets, subsampling also speeds training proportionally.",
+      explanation: "Subsampling (stochastic gradient boosting, Friedman 2002) uses a random fraction of training data per tree. This introduces randomness that acts as regularization, reducing overfitting and improving generalization - similar to dropout for neural networks or bagging for random forests. Setting subsample=1.0 (no subsampling) uses all data each round: the model may overfit, especially with small datasets or many boosting rounds. Optimal subsample is typically 0.5-0.8 for noisy datasets. The variance-bias tradeoff: lower subsample reduces variance (better generalization) at the cost of higher bias (each tree is noisier). For very large datasets, subsampling also speeds training proportionally.",
       hints: [
-        "Column subsampling (colsample_bytree in XGBoost, feature_fraction in LightGBM) similarly regularizes by using a random feature subset per tree — analogous to random forests.",
-        "Stochastic gradient boosting with subsample=0.5 is equivalent to each tree fitting a bootstrap sample with higher noise — the noise adds diversity to the ensemble.",
+        "Column subsampling (colsample_bytree in XGBoost, feature_fraction in LightGBM) similarly regularizes by using a random feature subset per tree - analogous to random forests.",
+        "Stochastic gradient boosting with subsample=0.5 is equivalent to each tree fitting a bootstrap sample with higher noise - the noise adds diversity to the ensemble.",
       ],
     },
   ],
@@ -2380,10 +2380,10 @@ const extraTabular: Record<string, Question[]> = {
         "MI works with missing data while Pearson correlation requires complete cases",
       ],
       correctAnswer: 1,
-      explanation: "Pearson correlation measures linear dependence: rho(X,Y) = 0 if X and Y are linearly uncorrelated, even if they are strongly nonlinearly dependent (e.g., Y = X^2 with zero-mean X has rho=0 but MI > 0). MI is zero if and only if X and Y are statistically independent — any form of dependence produces MI > 0. In practice: scikit-learn's mutual_info_classif uses k-nearest neighbor estimation for continuous features (Kraskov et al. 2004). MI is particularly valuable for selecting features for tree-based models where nonlinear interactions are expected. Drawback: MI estimation from finite samples is noisy, especially for high-cardinality continuous features.",
+      explanation: "Pearson correlation measures linear dependence: rho(X,Y) = 0 if X and Y are linearly uncorrelated, even if they are strongly nonlinearly dependent (e.g., Y = X^2 with zero-mean X has rho=0 but MI > 0). MI is zero if and only if X and Y are statistically independent - any form of dependence produces MI > 0. In practice: scikit-learn's mutual_info_classif uses k-nearest neighbor estimation for continuous features (Kraskov et al. 2004). MI is particularly valuable for selecting features for tree-based models where nonlinear interactions are expected. Drawback: MI estimation from finite samples is noisy, especially for high-cardinality continuous features.",
       hints: [
         "Normalized MI = MI / sqrt(H(X)*H(Y)) bounds values to [0,1], making it comparable across features with different entropy.",
-        "For discrete features, MI can be computed exactly from frequency tables. For continuous features, binning introduces discretization bias — k-NN estimation is preferred.",
+        "For discrete features, MI can be computed exactly from frequency tables. For continuous features, binning introduces discretization bias - k-NN estimation is preferred.",
       ],
     },
     {
@@ -2393,14 +2393,14 @@ const extraTabular: Record<string, Question[]> = {
       question: "Recursive Feature Elimination (RFE) with cross-validation (RFECV) selects features by iteratively removing the least important feature. The primary limitation of RFE for gradient boosting is:",
       options: [
         "RFE cannot handle features with missing values",
-        "RFE requires fitting the model O(p) times (where p is the number of features) — for expensive models on large datasets this becomes computationally prohibitive, and importance rankings change as features are removed so earlier eliminations can be wrong",
+        "RFE requires fitting the model O(p) times (where p is the number of features) - for expensive models on large datasets this becomes computationally prohibitive, and importance rankings change as features are removed so earlier eliminations can be wrong",
         "RFE always selects too many features, leading to overfit models",
         "RFE cannot handle multicollinear features",
       ],
       correctAnswer: 1,
-      explanation: "RFE eliminates features one at a time (or in steps): fit model, get importances, remove worst feature, repeat. For p=1000 features with a slow model, this requires around 1000 model fits times cross-validation folds, totaling 5000+ model fits. Additionally, RFE has the masking problem: when a redundant feature is present, both the useful feature and its duplicate may get low individual importances — removing the duplicate first reveals the useful feature's importance. RFE is sensitive to this order dependency. Better alternatives: (1) SHAP-based selection (fit one model, rank by mean absolute SHAP), (2) Boruta (shadow feature permutation testing), (3) One-shot importance-based selection with stability across bootstrap samples.",
+      explanation: "RFE eliminates features one at a time (or in steps): fit model, get importances, remove worst feature, repeat. For p=1000 features with a slow model, this requires around 1000 model fits times cross-validation folds, totaling 5000+ model fits. Additionally, RFE has the masking problem: when a redundant feature is present, both the useful feature and its duplicate may get low individual importances - removing the duplicate first reveals the useful feature's importance. RFE is sensitive to this order dependency. Better alternatives: (1) SHAP-based selection (fit one model, rank by mean absolute SHAP), (2) Boruta (shadow feature permutation testing), (3) One-shot importance-based selection with stability across bootstrap samples.",
       hints: [
-        "RFECV is practical for fast models (linear, small random forests) but prohibitive for XGBoost on large datasets — prefer one-shot importance methods.",
+        "RFECV is practical for fast models (linear, small random forests) but prohibitive for XGBoost on large datasets - prefer one-shot importance methods.",
         "Step size matters: eliminating 10% of features per iteration instead of 1 reduces the number of fits by roughly 10x, at the cost of potentially removing a useful feature early.",
       ],
     },
@@ -2411,15 +2411,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "SHAP-based feature selection uses mean absolute SHAP value as the importance measure. Compared to XGBoost's native gain-based importance, SHAP has a key advantage for high-cardinality features:",
       options: [
         "SHAP values are always faster to compute than gain-based importances",
-        "Gain-based importance is biased toward high-cardinality features because more split thresholds are available — SHAP values attribute importance to actual outcome contributions, correcting for this bias",
+        "Gain-based importance is biased toward high-cardinality features because more split thresholds are available - SHAP values attribute importance to actual outcome contributions, correcting for this bias",
         "SHAP values can handle missing values while gain-based importances cannot",
         "SHAP-based selection automatically handles multicollinearity by distributing importance evenly among correlated features",
       ],
       correctAnswer: 1,
-      explanation: "XGBoost's gain importance sums the average gain across all splits on a feature. High-cardinality features (e.g., zip code with 43K values) have more possible split thresholds and are selected more often by chance — inflating their gain importance. SHAP values directly measure each feature's marginal contribution to each prediction, averaging out split selection bias. For correlated features, SHAP distributes importance proportionally to causal contribution. SHAP selection workflow: fit one XGBoost model, compute SHAP values, rank by mean absolute SHAP, select top-k or apply a threshold such as removing features below 1% of the maximum mean absolute SHAP.",
+      explanation: "XGBoost's gain importance sums the average gain across all splits on a feature. High-cardinality features (e.g., zip code with 43K values) have more possible split thresholds and are selected more often by chance - inflating their gain importance. SHAP values directly measure each feature's marginal contribution to each prediction, averaging out split selection bias. For correlated features, SHAP distributes importance proportionally to causal contribution. SHAP selection workflow: fit one XGBoost model, compute SHAP values, rank by mean absolute SHAP, select top-k or apply a threshold such as removing features below 1% of the maximum mean absolute SHAP.",
       hints: [
         "XGBoost supports three importance types: 'weight' (split count), 'gain' (average gain per split), 'cover' (average number of samples per split). 'gain' is most reliable among native importances, but still biased compared to SHAP.",
-        "SHAP TreeExplainer computes exact SHAP values for tree models in O(TLD) time, where T=trees, L=leaves, D=depth — fast enough to compute on training data for feature selection.",
+        "SHAP TreeExplainer computes exact SHAP values for tree models in O(TLD) time, where T=trees, L=leaves, D=depth - fast enough to compute on training data for feature selection.",
       ],
     },
     {
@@ -2430,7 +2430,7 @@ const extraTabular: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Stability is critical for feature selection reliability: if different data splits select completely different features, the selection is driven by sampling noise rather than true signal. Stability can be measured with Jaccard similarity or Spearman rank correlation of selected features across bootstrap samples. Boruta (Kursa & Rudnicki 2010) provides statistical stability guarantees by comparing feature importances to shadow (randomly shuffled) feature importances across many runs. Features consistently outperforming their shadows are confirmed as relevant. Features that consistently underperform are rejected. This repeated testing corrects for the sampling noise that makes single-run feature selection unstable.",
       hints: [
-        "Kuncheva's stability index measures consistency of binary selection vectors across bootstrap runs — values near 1 indicate stable selection.",
+        "Kuncheva's stability index measures consistency of binary selection vectors across bootstrap runs - values near 1 indicate stable selection.",
         "Highly correlated features have inherently unstable selection: both carry the same information, and which one gets selected depends on sampling noise. Clustering correlated features and selecting one representative per cluster improves stability.",
       ],
     },
@@ -2440,13 +2440,13 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "hard",
       question: "The mRMR (minimum Redundancy Maximum Relevance) criterion extends MI-based feature selection by penalizing redundancy. For selecting the k-th feature, mRMR maximizes:",
       options: [
-        "MI(X_k; Y) alone — the marginal relevance with the target",
-        "MI(X_k; Y) minus the average MI between X_k and already-selected features — relevance to target minus average redundancy with features already in the selected set",
+        "MI(X_k; Y) alone - the marginal relevance with the target",
+        "MI(X_k; Y) minus the average MI between X_k and already-selected features - relevance to target minus average redundancy with features already in the selected set",
         "MI(X_k; Y) multiplied by one minus the correlation between X_k and the selected set",
-        "MI(X_k; Y) divided by H(X_k) — normalized mutual information with the target",
+        "MI(X_k; Y) divided by H(X_k) - normalized mutual information with the target",
       ],
       correctAnswer: 1,
-      explanation: "mRMR (Ding & Peng 2005) selects features that are maximally relevant to the target AND minimally redundant with already-selected features. This greedy criterion is computed sequentially: the first feature maximizes MI with Y; subsequent features maximize the difference between relevance and average MI with previously selected features. This prevents selecting correlated features that provide duplicate information. Unlike PCA (which creates new features), mRMR selects original features — maintaining interpretability. The practical MI matrix is computed once, then greedy selection is applied, making it computationally feasible for moderate feature counts.",
+      explanation: "mRMR (Ding & Peng 2005) selects features that are maximally relevant to the target AND minimally redundant with already-selected features. This greedy criterion is computed sequentially: the first feature maximizes MI with Y; subsequent features maximize the difference between relevance and average MI with previously selected features. This prevents selecting correlated features that provide duplicate information. Unlike PCA (which creates new features), mRMR selects original features - maintaining interpretability. The practical MI matrix is computed once, then greedy selection is applied, making it computationally feasible for moderate feature counts.",
       hints: [
         "mRMR is particularly effective for gene expression data where thousands of genes are correlated and only a small subset have independent predictive value.",
         "JMI (Joint Mutual Information) extends mRMR by considering joint mutual information between feature pairs and the target, capturing synergistic interactions that mRMR misses.",
@@ -2458,9 +2458,9 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Adding many irrelevant features to a gradient boosting model typically has minimal impact on performance because tree-based models automatically ignore irrelevant features during splitting.",
       correctAnswer: "False",
-      explanation: "While gradient boosting is more robust to irrelevant features than linear models, irrelevant features still cause harm: (1) Increased training time — the model must evaluate splits on all features at each node, including useless ones. (2) Reduced performance with feature sampling: if colsample_bytree=0.5 and 90% of features are irrelevant, many trees will be built without useful features, degrading ensemble quality. (3) Overfitting on noisy features — spurious correlations in training data can lead to mislabeled splits on irrelevant features. In practice, removing irrelevant features before training gradient boosting improves both training speed and generalization.",
+      explanation: "While gradient boosting is more robust to irrelevant features than linear models, irrelevant features still cause harm: (1) Increased training time - the model must evaluate splits on all features at each node, including useless ones. (2) Reduced performance with feature sampling: if colsample_bytree=0.5 and 90% of features are irrelevant, many trees will be built without useful features, degrading ensemble quality. (3) Overfitting on noisy features - spurious correlations in training data can lead to mislabeled splits on irrelevant features. In practice, removing irrelevant features before training gradient boosting improves both training speed and generalization.",
       hints: [
-        "Feature sampling amplifies the irrelevant feature problem: with 1000 features and colsample_bytree=0.3, each tree samples 300 features — if 900 are irrelevant, there is a high probability of getting mostly irrelevant features in a tree.",
+        "Feature sampling amplifies the irrelevant feature problem: with 1000 features and colsample_bytree=0.3, each tree samples 300 features - if 900 are irrelevant, there is a high probability of getting mostly irrelevant features in a tree.",
         "Variance inflation from irrelevant features: even if the model does not split on irrelevant features, their presence inflates the importance denominator in split selection statistics, adding computational noise.",
       ],
     },
@@ -2473,15 +2473,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "Target encoding replaces a categorical value c with E[Y | X=c]. When applied naively to the training set without regularization, target encoding causes target leakage. The statistical consequence of this leakage is:",
       options: [
         "Higher variance in predictions on the test set",
-        "The model learns to distinguish training examples by their category rather than by the predictive signal — single-occurrence categories are encoded exactly as their label, letting the model memorize training labels instead of generalizing",
+        "The model learns to distinguish training examples by their category rather than by the predictive signal - single-occurrence categories are encoded exactly as their label, letting the model memorize training labels instead of generalizing",
         "The model becomes unable to handle unseen categories at test time",
         "Target encoding without regularization causes gradient instability during XGBoost training",
       ],
       correctAnswer: 1,
-      explanation: "For a category c with only one training example where y=1, naive target encoding sets TE(c) = 1.0 — the feature exactly predicts the training label. The model sees the label embedded in the feature and can memorize training examples with perfect training accuracy but poor test accuracy. For high-cardinality features (e.g., user_id with 100K unique users), most categories appear only a few times, making this leakage severe. Smoothed target encoding: TE(c) = (n_c * mean(c) + k * global_mean) / (n_c + k). For rare categories (small n_c), the encoding regresses toward the global mean. Cross-validated target encoding avoids leakage entirely: encode fold i training data using all other folds.",
+      explanation: "For a category c with only one training example where y=1, naive target encoding sets TE(c) = 1.0 - the feature exactly predicts the training label. The model sees the label embedded in the feature and can memorize training examples with perfect training accuracy but poor test accuracy. For high-cardinality features (e.g., user_id with 100K unique users), most categories appear only a few times, making this leakage severe. Smoothed target encoding: TE(c) = (n_c * mean(c) + k * global_mean) / (n_c + k). For rare categories (small n_c), the encoding regresses toward the global mean. Cross-validated target encoding avoids leakage entirely: encode fold i training data using all other folds.",
       hints: [
-        "The optimal smoothing parameter k can be estimated via cross-validation — it controls the prior strength (global mean) vs the category-specific mean.",
-        "CatBoost's ordered encoding uses a random permutation so each example's encoding is computed without its own label — the most principled solution to target leakage.",
+        "The optimal smoothing parameter k can be estimated via cross-validation - it controls the prior strength (global mean) vs the category-specific mean.",
+        "CatBoost's ordered encoding uses a random permutation so each example's encoding is computed without its own label - the most principled solution to target leakage.",
       ],
     },
     {
@@ -2491,15 +2491,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "Hash encoding (feature hashing) maps high-cardinality categories to a fixed number of bins using a hash function. The primary trade-off of hash encoding compared to one-hot encoding is:",
       options: [
         "Hash encoding is slower than one-hot encoding for large cardinality features",
-        "Hash encoding reduces dimensionality at the cost of hash collisions — two different categories may map to the same bin creating noise, but the encoding is fixed-size and handles unseen categories at test time without expanding feature space",
+        "Hash encoding reduces dimensionality at the cost of hash collisions - two different categories may map to the same bin creating noise, but the encoding is fixed-size and handles unseen categories at test time without expanding feature space",
         "Hash encoding produces dense vectors while one-hot produces sparse vectors, making it incompatible with tree-based models",
         "Hash encoding requires more memory than one-hot encoding for equivalent cardinality",
       ],
       correctAnswer: 1,
-      explanation: "One-hot encoding a 100K-cardinality feature creates 100K binary dimensions — sparse but requires expanding if new categories appear at test time. Hash encoding maps any string to one of n_components bins via a hash function: bin = hash(category) mod n_components. Fixed output size (no expansion for new categories), O(1) lookup, and inherently handles out-of-vocabulary categories. Collision trade-off: if n_components=1000 and cardinality=100K, expected collisions average 100 categories per bin. Collisions introduce noise — two categories that behave differently are merged. In practice, hash encoding works well when cardinality is much smaller than n_components, or when the model is robust to bin-level noise such as gradient boosting with many trees.",
+      explanation: "One-hot encoding a 100K-cardinality feature creates 100K binary dimensions - sparse but requires expanding if new categories appear at test time. Hash encoding maps any string to one of n_components bins via a hash function: bin = hash(category) mod n_components. Fixed output size (no expansion for new categories), O(1) lookup, and inherently handles out-of-vocabulary categories. Collision trade-off: if n_components=1000 and cardinality=100K, expected collisions average 100 categories per bin. Collisions introduce noise - two categories that behave differently are merged. In practice, hash encoding works well when cardinality is much smaller than n_components, or when the model is robust to bin-level noise such as gradient boosting with many trees.",
       hints: [
-        "Signed hash encoding (default in sklearn's FeatureHasher) uses the sign of a second hash to add +1/-1 weights — this ensures that collisions cancel out in expectation, reducing collision bias.",
-        "n_components selection: typically 2^k where k is chosen so n_components is 10-100x smaller than cardinality — balancing collision noise vs dimensionality reduction.",
+        "Signed hash encoding (default in sklearn's FeatureHasher) uses the sign of a second hash to add +1/-1 weights - this ensures that collisions cancel out in expectation, reducing collision bias.",
+        "n_components selection: typically 2^k where k is chosen so n_components is 10-100x smaller than cardinality - balancing collision noise vs dimensionality reduction.",
       ],
     },
     {
@@ -2508,9 +2508,9 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Ordinal encoding (assigning integer codes 0, 1, 2, ... to categories) is always inappropriate for high-cardinality nominal features because it implies a false ordering relationship that tree-based models will exploit to make incorrect splits.",
       correctAnswer: "False",
-      explanation: "Tree-based models only use ordinal-encoded features to find split thresholds (is code <= k?). For a feature with cardinality C, the model must evaluate C-1 possible thresholds at each split — the ordering only affects which splits are considered, not the model's final capability to partition the data. With enough data and boosting rounds, the model effectively learns the right groupings regardless of the arbitrary code ordering. However: for linear models and k-NN, ordinal encoding IS inappropriate — the false ordering creates incorrect distance metrics and regression coefficients. For gradient boosting specifically, ordinal encoding is faster than one-hot and handles cardinality growth without feature space expansion.",
+      explanation: "Tree-based models only use ordinal-encoded features to find split thresholds (is code <= k?). For a feature with cardinality C, the model must evaluate C-1 possible thresholds at each split - the ordering only affects which splits are considered, not the model's final capability to partition the data. With enough data and boosting rounds, the model effectively learns the right groupings regardless of the arbitrary code ordering. However: for linear models and k-NN, ordinal encoding IS inappropriate - the false ordering creates incorrect distance metrics and regression coefficients. For gradient boosting specifically, ordinal encoding is faster than one-hot and handles cardinality growth without feature space expansion.",
       hints: [
-        "CatBoost handles ordinal-encoded features by internally reordering categories at each split — effectively finding the optimal split grouping. Specifying cat_features in CatBoost is preferred over manual ordinal encoding.",
+        "CatBoost handles ordinal-encoded features by internally reordering categories at each split - effectively finding the optimal split grouping. Specifying cat_features in CatBoost is preferred over manual ordinal encoding.",
         "For gradient boosting: ordinal vs one-hot gives similar results given sufficient estimators, but ordinal is faster to compute and handles cardinality growth without feature space expansion.",
       ],
     },
@@ -2526,9 +2526,9 @@ const extraTabular: Record<string, Question[]> = {
         "Automatic handling of unseen categories at test time by averaging existing embeddings",
       ],
       correctAnswer: 1,
-      explanation: "One-hot encoding: each of C categories gets an orthogonal unit vector — all categories are equidistant, with no generalization between similar categories. Entity embeddings: each category c gets a learned vector in R^d. Categories with similar target behavior cluster in embedding space (e.g., 'Monday' and 'Tuesday' may be close while 'Sunday' is distant for a retail churn model). Benefits: (1) d much less than C parameters (10 vs 500 per category), (2) Similarity generalization: rare category embeddings benefit from gradient signal from all training examples via the shared embedding layer, (3) Transferable — embeddings trained on one task can be used as features for other tasks. Guo & Berkhahn showed that city embeddings learned for taxi fare prediction clustered by geographic proximity without any explicit location information.",
+      explanation: "One-hot encoding: each of C categories gets an orthogonal unit vector - all categories are equidistant, with no generalization between similar categories. Entity embeddings: each category c gets a learned vector in R^d. Categories with similar target behavior cluster in embedding space (e.g., 'Monday' and 'Tuesday' may be close while 'Sunday' is distant for a retail churn model). Benefits: (1) d much less than C parameters (10 vs 500 per category), (2) Similarity generalization: rare category embeddings benefit from gradient signal from all training examples via the shared embedding layer, (3) Transferable - embeddings trained on one task can be used as features for other tasks. Guo & Berkhahn showed that city embeddings learned for taxi fare prediction clustered by geographic proximity without any explicit location information.",
       hints: [
-        "Embedding dimension rule of thumb: d = min(50, (C+1)//2) — the half cardinality heuristic from the fast.ai library, capping at 50.",
+        "Embedding dimension rule of thumb: d = min(50, (C+1)//2) - the half cardinality heuristic from the fast.ai library, capping at 50.",
         "Entity embedding transfer: Avito's winning Kaggle solution used entity embeddings from a simple neural network as features for LightGBM, combining the generalization of embeddings with the power of gradient boosting.",
       ],
     },
@@ -2539,14 +2539,14 @@ const extraTabular: Record<string, Question[]> = {
       question: "When using target encoding in a gradient boosting model, which cross-validation scheme correctly prevents target leakage during model evaluation?",
       options: [
         "Compute target encoding statistics on the entire training set, then evaluate with k-fold cross-validation on the same data",
-        "Use nested cross-validation: in each outer fold, compute target encoding statistics from the outer training data only — ensuring no test fold data contaminates encoding statistics at any level",
+        "Use nested cross-validation: in each outer fold, compute target encoding statistics from the outer training data only - ensuring no test fold data contaminates encoding statistics at any level",
         "Compute target encoding on a held-out validation set to avoid using the training set",
         "Apply target encoding after the train-test split but before cross-validation",
       ],
       correctAnswer: 1,
-      explanation: "Target encoding leakage occurs whenever test fold labels are used in computing training fold encodings. Correct procedure in k-fold cross-validation: for fold i (held out as validation), compute target encoding statistics using only the remaining k-1 folds' data. Encode the training data for fold i using those statistics. Then encode validation fold i using the same statistics (no access to fold i's labels for computing statistics). This is what sklearn's TargetEncoder with the cv parameter implements — using cross-validated statistics on training data. The incorrect approach (encode first, then split) allows validation labels to inform training encodings, inflating validation metrics.",
+      explanation: "Target encoding leakage occurs whenever test fold labels are used in computing training fold encodings. Correct procedure in k-fold cross-validation: for fold i (held out as validation), compute target encoding statistics using only the remaining k-1 folds' data. Encode the training data for fold i using those statistics. Then encode validation fold i using the same statistics (no access to fold i's labels for computing statistics). This is what sklearn's TargetEncoder with the cv parameter implements - using cross-validated statistics on training data. The incorrect approach (encode first, then split) allows validation labels to inform training encodings, inflating validation metrics.",
       hints: [
-        "Pipeline wrapping: to prevent leakage in sklearn pipelines, wrap TargetEncoder in a Pipeline so fit() only accesses training fold data — transform() uses fitted statistics on test folds.",
+        "Pipeline wrapping: to prevent leakage in sklearn pipelines, wrap TargetEncoder in a Pipeline so fit() only accesses training fold data - transform() uses fitted statistics on test folds.",
         "The same leakage principle applies to any feature that uses the target for computation: quantile transformations conditioned on target, and response-dependent imputation strategies.",
       ],
     },
@@ -2556,10 +2556,10 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "easy",
       question: "One-hot encoding a categorical feature with 10,000 unique values creates 10,000 binary sparse features. For a gradient boosting model trained on a dataset with 5,000 rows, this creates more features than examples and is likely to cause severe overfitting.",
       correctAnswer: "True",
-      explanation: "When features >> examples (p >> n setting), models with high capacity overfit severely. With 10,000 one-hot features and 5,000 rows, most categories appear only once in the training data. A gradient boosting tree can create a split on a single-occurrence category that perfectly separates that one example — memorizing the training label rather than learning a generalizable pattern. Remediation: (1) Target encoding with strong smoothing, (2) Hash encoding to reduce to 100-200 bins, (3) Frequency encoding (replace category with its count), (4) Group rare categories below a frequency threshold into an 'other' bin, (5) Entity embeddings with a neural network that shares parameters across examples.",
+      explanation: "When features >> examples (p >> n setting), models with high capacity overfit severely. With 10,000 one-hot features and 5,000 rows, most categories appear only once in the training data. A gradient boosting tree can create a split on a single-occurrence category that perfectly separates that one example - memorizing the training label rather than learning a generalizable pattern. Remediation: (1) Target encoding with strong smoothing, (2) Hash encoding to reduce to 100-200 bins, (3) Frequency encoding (replace category with its count), (4) Group rare categories below a frequency threshold into an 'other' bin, (5) Entity embeddings with a neural network that shares parameters across examples.",
       hints: [
         "Minimum frequency threshold: only keep categories with at least k training occurrences (typically k=10-50) and group all rarer categories into 'other'. This reduces effective cardinality dramatically.",
-        "Frequency encoding captures category popularity without target leakage — useful when category frequency itself is predictive (e.g., popular product ID -> higher click-through rate).",
+        "Frequency encoding captures category popularity without target leakage - useful when category frequency itself is predictive (e.g., popular product ID -> higher click-through rate).",
       ],
     },
   ],
@@ -2571,14 +2571,14 @@ const extraTabular: Record<string, Question[]> = {
       question: "TabNet (Arik & Pfister 2021) uses sequential attention to select a sparse subset of features at each decision step. Why is this sequential attention mechanism beneficial for tabular data specifically?",
       options: [
         "Sequential attention reduces memory usage by processing one feature at a time",
-        "Sequential attention enables instance-wise feature selection — different examples use different feature subsets at each step — mimicking how a decision tree selects different features at different nodes for different data regions, while providing end-to-end gradient-based learning",
+        "Sequential attention enables instance-wise feature selection - different examples use different feature subsets at each step - mimicking how a decision tree selects different features at different nodes for different data regions, while providing end-to-end gradient-based learning",
         "Sequential attention allows TabNet to handle missing features better than tree-based models",
         "Sequential attention makes TabNet faster to train than standard feedforward networks",
       ],
       correctAnswer: 1,
-      explanation: "TabNet's key innovation: the attentive transformer at each step computes a soft sparse mask using sparsemax normalization. A prior scale penalizes features already used in previous steps, enforcing: (1) Sparsity — only a few features are used per step, (2) Complementarity — later steps focus on different features than earlier steps, (3) Instance-specific selection — different examples get different masks based on their input features. This mimics the decision tree structure (split on feature A for high-income examples, split on feature B for low-income examples) while being fully differentiable. Interpretability: summing masks over steps gives a global feature importance per example, enabling local explanations without post-hoc methods.",
+      explanation: "TabNet's key innovation: the attentive transformer at each step computes a soft sparse mask using sparsemax normalization. A prior scale penalizes features already used in previous steps, enforcing: (1) Sparsity - only a few features are used per step, (2) Complementarity - later steps focus on different features than earlier steps, (3) Instance-specific selection - different examples get different masks based on their input features. This mimics the decision tree structure (split on feature A for high-income examples, split on feature B for low-income examples) while being fully differentiable. Interpretability: summing masks over steps gives a global feature importance per example, enabling local explanations without post-hoc methods.",
       hints: [
-        "Sparsemax is the attention normalization function in TabNet (vs softmax in transformers) — sparsemax produces sparse output with many exact zeros, forcing the model to select a small number of features.",
+        "Sparsemax is the attention normalization function in TabNet (vs softmax in transformers) - sparsemax produces sparse output with many exact zeros, forcing the model to select a small number of features.",
         "Number of steps (typically 3-10): each step processes features sequentially. More steps allow more complex decision paths in the attention space but increase computation and overfitting risk.",
       ],
     },
@@ -2588,9 +2588,9 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Self-supervised pretraining on unlabeled tabular data (e.g., SCARF, TabTransformer pretraining) consistently improves downstream supervised performance by the same magnitude as self-supervised pretraining improves image and text model performance.",
       correctAnswer: "False",
-      explanation: "Self-supervised pretraining provides much larger gains for images and text than for tabular data. For images and text, pretraining captures rich hierarchical structure that transfers to many downstream tasks. For tabular data: (1) Features are heterogeneous and task-specific — learned representations for one tabular task rarely transfer to unrelated tabular tasks, (2) Tabular feature interactions are dataset-specific and do not follow universal patterns, (3) Gradient boosting does not benefit from pretraining (no parameter sharing), (4) Pretraining gains on tabular benchmarks are typically 1-3% AUC vs 10-20% for images. SCARF (Bahri et al. 2022) reports improvements mainly for small labeled datasets with fewer than 1K labels — on large labeled datasets, supervised GBM still dominates pretrained neural models.",
+      explanation: "Self-supervised pretraining provides much larger gains for images and text than for tabular data. For images and text, pretraining captures rich hierarchical structure that transfers to many downstream tasks. For tabular data: (1) Features are heterogeneous and task-specific - learned representations for one tabular task rarely transfer to unrelated tabular tasks, (2) Tabular feature interactions are dataset-specific and do not follow universal patterns, (3) Gradient boosting does not benefit from pretraining (no parameter sharing), (4) Pretraining gains on tabular benchmarks are typically 1-3% AUC vs 10-20% for images. SCARF (Bahri et al. 2022) reports improvements mainly for small labeled datasets with fewer than 1K labels - on large labeled datasets, supervised GBM still dominates pretrained neural models.",
       hints: [
-        "SCARF pretrains by corrupting random features with random values from marginal distributions and training the model to distinguish corrupted from uncorrupted features — a contrastive approach for tabular data.",
+        "SCARF pretrains by corrupting random features with random values from marginal distributions and training the model to distinguish corrupted from uncorrupted features - a contrastive approach for tabular data.",
         "TabTransformer pretraining uses BERT-style masked categorical features then fine-tunes on labeled data: gains are most pronounced when labeled data is scarce (fewer than 200 examples).",
       ],
     },
@@ -2601,15 +2601,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "On most tabular benchmark datasets, gradient boosting methods consistently outperform transformer-based models. The primary reason transformers struggle on tabular data relative to their performance on text and images is:",
       options: [
         "Transformers require too much memory for tabular feature vectors",
-        "Tabular data lacks the sequential or spatial structure that attention mechanisms are designed to exploit — features in a tabular row have no natural ordering, interactions are dataset-specific not universal, and GBM's inductive biases (axis-aligned splits, tree structure) match the empirical structure of most tabular datasets better than attention over permuted features",
+        "Tabular data lacks the sequential or spatial structure that attention mechanisms are designed to exploit - features in a tabular row have no natural ordering, interactions are dataset-specific not universal, and GBM's inductive biases (axis-aligned splits, tree structure) match the empirical structure of most tabular datasets better than attention over permuted features",
         "Transformers cannot handle mixed data types (numerical and categorical features simultaneously)",
         "Tabular datasets are too small for transformer training to converge",
       ],
       correctAnswer: 1,
-      explanation: "Gorishniy et al. (2021) 'Revisiting Deep Learning Models for Tabular Data' and Grinsztajn et al. (2022) 'Why tree-based models still outperform deep learning on tabular data' provide empirical evidence: GBM outperforms transformers on over 80% of real tabular benchmarks. Key reasons: (1) Tabular features are permutation-invariant — there is no meaningful positional ordering of features like there is for tokens or pixels, (2) GBM's axis-aligned splits naturally handle the piecewise-constant structure common in tabular relationships, (3) Tabular datasets are often small (fewer than 100K rows) — transformers need large datasets to outperform their inductive biases, (4) Numerical features are poorly handled by vanilla attention and require binning or tokenization that adds complexity.",
+      explanation: "Gorishniy et al. (2021) 'Revisiting Deep Learning Models for Tabular Data' and Grinsztajn et al. (2022) 'Why tree-based models still outperform deep learning on tabular data' provide empirical evidence: GBM outperforms transformers on over 80% of real tabular benchmarks. Key reasons: (1) Tabular features are permutation-invariant - there is no meaningful positional ordering of features like there is for tokens or pixels, (2) GBM's axis-aligned splits naturally handle the piecewise-constant structure common in tabular relationships, (3) Tabular datasets are often small (fewer than 100K rows) - transformers need large datasets to outperform their inductive biases, (4) Numerical features are poorly handled by vanilla attention and require binning or tokenization that adds complexity.",
       hints: [
-        "Grinsztajn et al.'s key finding: after removing features with strong non-monotone relationships, transformers close the gap with GBM — GBM's advantage comes partly from handling irregular, non-smooth tabular patterns.",
-        "TabPFN (Muller et al. 2022) achieves competitive results on small tabular datasets (fewer than 1000 rows) by in-context learning — but still underperforms GBM on large datasets.",
+        "Grinsztajn et al.'s key finding: after removing features with strong non-monotone relationships, transformers close the gap with GBM - GBM's advantage comes partly from handling irregular, non-smooth tabular patterns.",
+        "TabPFN (Muller et al. 2022) achieves competitive results on small tabular datasets (fewer than 1000 rows) by in-context learning - but still underperforms GBM on large datasets.",
       ],
     },
     {
@@ -2619,15 +2619,15 @@ const extraTabular: Record<string, Question[]> = {
       question: "NODE (Neural Oblivious Decision Ensembles, Popov et al. 2020) creates a differentiable alternative to gradient boosting using oblivious decision trees with soft splits. The key architectural insight is:",
       options: [
         "NODE replaces softmax with sparsemax in the attention layers",
-        "NODE uses entmax transformations to make tree split decisions differentiable — the split threshold and feature choice at each internal node are continuous and learned via gradient descent rather than greedy search",
+        "NODE uses entmax transformations to make tree split decisions differentiable - the split threshold and feature choice at each internal node are continuous and learned via gradient descent rather than greedy search",
         "NODE trains each tree independently and averages predictions like a random forest",
         "NODE uses layer normalization between tree layers to stabilize training",
       ],
       correctAnswer: 1,
-      explanation: "Standard decision tree splits are discrete (feature j at threshold t -> left or right) — non-differentiable and requiring greedy search. NODE uses: (1) Feature choice via a learned softmax over features selects a weighted combination at each split, (2) Threshold: a learned real-valued threshold with entmax activation makes the split soft — examples near the threshold go partially to both subtrees with continuous weights, (3) Oblivious trees: all nodes at the same depth use the same feature and threshold (simplifying computation). The soft splits are fully differentiable, enabling the entire forest to be learned end-to-end via gradient descent. Training: NODE can be 2-3x slower than XGBoost but often achieves competitive performance, and differentiability enables integration into larger neural architectures.",
+      explanation: "Standard decision tree splits are discrete (feature j at threshold t -> left or right) - non-differentiable and requiring greedy search. NODE uses: (1) Feature choice via a learned softmax over features selects a weighted combination at each split, (2) Threshold: a learned real-valued threshold with entmax activation makes the split soft - examples near the threshold go partially to both subtrees with continuous weights, (3) Oblivious trees: all nodes at the same depth use the same feature and threshold (simplifying computation). The soft splits are fully differentiable, enabling the entire forest to be learned end-to-end via gradient descent. Training: NODE can be 2-3x slower than XGBoost but often achieves competitive performance, and differentiability enables integration into larger neural architectures.",
       hints: [
         "Oblivious trees: all split nodes at depth d use identical (feature, threshold) pairs. This creates axis-aligned partitions that are faster to compute than regular decision trees but less expressive per tree.",
-        "NODE vs TabNet: TabNet selects features via attention per step; NODE selects features via learned weights per tree split — both are differentiable tree approximations with different inductive biases.",
+        "NODE vs TabNet: TabNet selects features via attention per step; NODE selects features via learned weights per tree split - both are differentiable tree approximations with different inductive biases.",
       ],
     },
     {
@@ -2636,7 +2636,7 @@ const extraTabular: Record<string, Question[]> = {
       difficulty: "easy",
       question: "For a tabular dataset with 50,000 rows, 100 features, and a binary classification task, the recommended first model to try is a neural network because neural networks have more expressive power for complex interactions.",
       correctAnswer: "False",
-      explanation: "For most tabular datasets of this size, gradient boosting (XGBoost, LightGBM, or CatBoost) should be the first choice. Empirical benchmarks (Grinsztajn et al. 2022, Shwartz-Ziv & Armon 2022) consistently show GBM outperforms neural networks on medium-sized tabular datasets. Practical reasons: (1) GBM requires less hyperparameter tuning — default settings are often near-optimal, (2) GBM training is faster for this dataset size, (3) GBM handles mixed types and missing values natively, (4) GBM provides native feature importance. Neural networks should be tried if: the dataset is very large (more than 1M rows), the task requires end-to-end learning with other modalities, or structured metadata requires shared embeddings.",
+      explanation: "For most tabular datasets of this size, gradient boosting (XGBoost, LightGBM, or CatBoost) should be the first choice. Empirical benchmarks (Grinsztajn et al. 2022, Shwartz-Ziv & Armon 2022) consistently show GBM outperforms neural networks on medium-sized tabular datasets. Practical reasons: (1) GBM requires less hyperparameter tuning - default settings are often near-optimal, (2) GBM training is faster for this dataset size, (3) GBM handles mixed types and missing values natively, (4) GBM provides native feature importance. Neural networks should be tried if: the dataset is very large (more than 1M rows), the task requires end-to-end learning with other modalities, or structured metadata requires shared embeddings.",
       hints: [
         "Rule of thumb for model selection: start with gradient boosting, establish a strong baseline, then explore neural approaches if the use case justifies the additional complexity.",
         "AutoML frameworks (Auto-sklearn, H2O AutoML) typically allocate 70%+ of their budget to gradient boosting variants when given a medium-sized tabular dataset.",
@@ -2646,18 +2646,18 @@ const extraTabular: Record<string, Question[]> = {
       id: "q-tab-ex4-6",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "SAINT (Self-Attention and Intersample Attention Transformer, Somepalli et al. 2021) extends transformers to tabular data by adding intersample attention — attention computed across rows rather than across features. The purpose of intersample attention is:",
+      question: "SAINT (Self-Attention and Intersample Attention Transformer, Somepalli et al. 2021) extends transformers to tabular data by adding intersample attention - attention computed across rows rather than across features. The purpose of intersample attention is:",
       options: [
         "To reduce the computational cost of feature-wise attention on wide tabular datasets",
-        "To allow each example to condition its prediction on contextually similar examples in the training batch — analogous to k-NN or memory-augmented models, helping the model find relevant comparison cases within the batch",
+        "To allow each example to condition its prediction on contextually similar examples in the training batch - analogous to k-NN or memory-augmented models, helping the model find relevant comparison cases within the batch",
         "To apply batch normalization across the sample dimension of the attention matrix",
         "To enable SAINT to handle variable-length feature vectors across different rows",
       ],
       correctAnswer: 1,
-      explanation: "SAINT's intersample attention: given a batch of n examples each with d features, standard attention attends over the d features within each row. Intersample attention instead attends over the n examples in the batch for each feature: example i learns to weight other examples j based on contextual similarity. This is similar to: (1) k-NN retrieval — find the most similar training examples and use their features as context, (2) In-context learning — examples in the batch serve as context for each other's predictions. The dual-attention (feature-wise and sample-wise) allows SAINT to capture both intra-row feature interactions and inter-row similarity relationships. This is particularly helpful when few labeled examples exist — the model learns to reason by similarity to other batch members.",
+      explanation: "SAINT's intersample attention: given a batch of n examples each with d features, standard attention attends over the d features within each row. Intersample attention instead attends over the n examples in the batch for each feature: example i learns to weight other examples j based on contextual similarity. This is similar to: (1) k-NN retrieval - find the most similar training examples and use their features as context, (2) In-context learning - examples in the batch serve as context for each other's predictions. The dual-attention (feature-wise and sample-wise) allows SAINT to capture both intra-row feature interactions and inter-row similarity relationships. This is particularly helpful when few labeled examples exist - the model learns to reason by similarity to other batch members.",
       hints: [
-        "Intersample attention scales quadratically with batch size n — SAINT uses batch sizes of 256-512, making intersample attention computationally feasible.",
-        "SAINT's pretraining: randomly corrupt features in some examples (similar to SCARF) and use both feature-attention and sample-attention to reconstruct them — pretraining learns richer representations that benefit fine-tuning.",
+        "Intersample attention scales quadratically with batch size n - SAINT uses batch sizes of 256-512, making intersample attention computationally feasible.",
+        "SAINT's pretraining: randomly corrupt features in some examples (similar to SCARF) and use both feature-attention and sample-attention to reconstruct them - pretraining learns richer representations that benefit fine-tuning.",
       ],
     },
   ],
@@ -2674,15 +2674,15 @@ const extraTabular2: Record<string, Question[]> = {
       question: "XGBoost's min_child_weight parameter controls the minimum sum of Hessians required in a leaf node to create a split. For a binary classification task with sigmoid output, why does increasing min_child_weight prevent overfitting?",
       options: [
         "It limits the maximum depth of the tree to prevent memorization",
-        "In classification, the Hessian at each example equals p*(1-p) where p is the predicted probability — min_child_weight ensures each leaf has sufficient second-order gradient information, preventing splits on small, potentially noisy subsets with high-confidence (near 0 or 1) predictions",
+        "In classification, the Hessian at each example equals p*(1-p) where p is the predicted probability - min_child_weight ensures each leaf has sufficient second-order gradient information, preventing splits on small, potentially noisy subsets with high-confidence (near 0 or 1) predictions",
         "It reduces the learning rate proportionally to the tree depth",
         "It enforces a minimum number of positive examples per leaf to handle class imbalance",
       ],
       correctAnswer: 1,
-      explanation: "For logistic loss, the Hessian for example i is h_i = p_i * (1 - p_i), where p_i is the current predicted probability. Examples near the decision boundary (p close to 0.5) have high Hessian (maximum 0.25); examples with high confidence (p near 0 or 1) have near-zero Hessian. min_child_weight = sum(h_i) in a leaf. A leaf with only high-confidence examples has small Hessian sum even with many examples — min_child_weight correctly prevents splitting on tiny, overfit regions of high-confidence predictions. For regression with MSE loss, h_i = 1 for all examples, so min_child_weight is equivalent to minimum sample count.",
+      explanation: "For logistic loss, the Hessian for example i is h_i = p_i * (1 - p_i), where p_i is the current predicted probability. Examples near the decision boundary (p close to 0.5) have high Hessian (maximum 0.25); examples with high confidence (p near 0 or 1) have near-zero Hessian. min_child_weight = sum(h_i) in a leaf. A leaf with only high-confidence examples has small Hessian sum even with many examples - min_child_weight correctly prevents splitting on tiny, overfit regions of high-confidence predictions. For regression with MSE loss, h_i = 1 for all examples, so min_child_weight is equivalent to minimum sample count.",
       hints: [
         "min_child_weight vs min_child_samples: min_child_weight uses second-order gradients (task-aware), while min_child_samples counts raw examples (task-agnostic). min_child_weight is theoretically preferable.",
-        "Imbalanced classification: with 99% negatives, all examples have high confidence (near 0) after a few boosting rounds — Hessians become tiny, so min_child_weight effectively requires many positive examples per leaf.",
+        "Imbalanced classification: with 99% negatives, all examples have high confidence (near 0) after a few boosting rounds - Hessians become tiny, so min_child_weight effectively requires many positive examples per leaf.",
       ],
     },
     {
@@ -2691,7 +2691,7 @@ const extraTabular2: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Bayesian hyperparameter optimization (e.g., Optuna with TPE sampler) consistently outperforms random search for XGBoost hyperparameter tuning when given the same computational budget of evaluations.",
       correctAnswer: "False",
-      explanation: "Bergstra & Bengio (2012) showed that random search outperforms grid search, and Bayesian optimization often outperforms random search — but the margin depends on the hyperparameter space and budget. For gradient boosting with n_estimators controlled by early stopping, the effective hyperparameter space is lower-dimensional (learning rate, max_depth, subsample, colsample, lambda, alpha) and many hyperparameters are weakly correlated with performance in typical ranges. In practice: with budgets under 50 evaluations, random search and Bayesian optimization perform similarly. Bayesian optimization's advantage grows with budget and with highly structured, low-dimensional spaces. For XGBoost on typical tabular tasks, the difference is often less than 0.5% AUC.",
+      explanation: "Bergstra & Bengio (2012) showed that random search outperforms grid search, and Bayesian optimization often outperforms random search - but the margin depends on the hyperparameter space and budget. For gradient boosting with n_estimators controlled by early stopping, the effective hyperparameter space is lower-dimensional (learning rate, max_depth, subsample, colsample, lambda, alpha) and many hyperparameters are weakly correlated with performance in typical ranges. In practice: with budgets under 50 evaluations, random search and Bayesian optimization perform similarly. Bayesian optimization's advantage grows with budget and with highly structured, low-dimensional spaces. For XGBoost on typical tabular tasks, the difference is often less than 0.5% AUC.",
       hints: [
         "Hyperparameter importance: learning rate and n_estimators (controlled jointly via early stopping) account for ~50% of XGBoost performance variance. Bayesian optimization allocates more evaluations to important dimensions.",
         "ASHA (Asynchronous Successive Halving) is often more efficient than Bayesian optimization for gradient boosting: early stopping of poor configurations saves evaluation cost without needing a probabilistic model.",
@@ -2704,12 +2704,12 @@ const extraTabular2: Record<string, Question[]> = {
       question: "CatBoost introduces symmetric (oblivious) decision trees instead of standard decision trees. The primary computational advantage of symmetric trees in CatBoost is:",
       options: [
         "Symmetric trees have fewer parameters and thus train faster",
-        "All nodes at the same depth use the same split condition — enabling vectorized score computation via lookup tables indexed by a binary bitmask, reducing prediction time from O(depth) to O(1) after the bitmask is computed",
+        "All nodes at the same depth use the same split condition - enabling vectorized score computation via lookup tables indexed by a binary bitmask, reducing prediction time from O(depth) to O(1) after the bitmask is computed",
         "Symmetric trees prevent overfitting by enforcing balanced splits",
         "Symmetric trees allow CatBoost to skip the gradient computation at non-split nodes",
       ],
       correctAnswer: 1,
-      explanation: "In a standard decision tree of depth d, prediction requires d comparisons — following the path from root to leaf based on each feature's value. In an oblivious (symmetric) tree, all nodes at depth k apply the same feature and threshold. The path through the tree can be encoded as a binary bitmask of length d: bit k = 1 if the example satisfies the condition at depth k. The bitmask is an index into a lookup table of 2^d leaf values — computed in O(d) comparisons to build the bitmask, then O(1) lookup. For d=6, this uses a table of 64 values. CatBoost's symmetric tree design also enables GPU-friendly parallel evaluation and ONNX export with efficient inference.",
+      explanation: "In a standard decision tree of depth d, prediction requires d comparisons - following the path from root to leaf based on each feature's value. In an oblivious (symmetric) tree, all nodes at depth k apply the same feature and threshold. The path through the tree can be encoded as a binary bitmask of length d: bit k = 1 if the example satisfies the condition at depth k. The bitmask is an index into a lookup table of 2^d leaf values - computed in O(d) comparisons to build the bitmask, then O(1) lookup. For d=6, this uses a table of 64 values. CatBoost's symmetric tree design also enables GPU-friendly parallel evaluation and ONNX export with efficient inference.",
       hints: [
         "Prediction speed comparison: CatBoost is typically 8-10x faster at inference than XGBoost for the same depth and number of trees, due to symmetric tree vectorization.",
         "Training expressiveness trade-off: symmetric trees are less expressive per tree than standard trees (a symmetric tree of depth d has 2^d regions vs up to 2^(2^d-1) for standard trees), requiring more trees to compensate.",
@@ -2739,10 +2739,10 @@ const extraTabular2: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Stacking (stacked generalization) always outperforms the best individual model in a tabular ML ensemble because it uses all available information from multiple base models.",
       correctAnswer: "False",
-      explanation: "Stacking trains a meta-learner on out-of-fold predictions from base models — it can fail to outperform the best base model when: (1) The base models are highly correlated (similar predictions), providing little new information to the meta-learner, (2) The meta-learner overfits to the out-of-fold predictions, especially with small datasets, (3) The best base model is already near-optimal and the additional variance from other models adds noise. Stacking is most beneficial when base models are diverse (different model families: GBM, linear, neural) and the dataset is large enough for reliable out-of-fold estimation. On small datasets (< 1000 rows), simple averaging or the single best model often beats stacking.",
+      explanation: "Stacking trains a meta-learner on out-of-fold predictions from base models - it can fail to outperform the best base model when: (1) The base models are highly correlated (similar predictions), providing little new information to the meta-learner, (2) The meta-learner overfits to the out-of-fold predictions, especially with small datasets, (3) The best base model is already near-optimal and the additional variance from other models adds noise. Stacking is most beneficial when base models are diverse (different model families: GBM, linear, neural) and the dataset is large enough for reliable out-of-fold estimation. On small datasets (< 1000 rows), simple averaging or the single best model often beats stacking.",
       hints: [
-        "Stacking meta-learner choice: linear regression or simple gradient boosting are preferred over deep neural networks — complex meta-learners overfit to out-of-fold predictions.",
-        "Diversity requirement: stacking two XGBoost models trained with different seeds provides minimal diversity — stack different model families (GBM + linear + neural) for meaningful ensemble gains.",
+        "Stacking meta-learner choice: linear regression or simple gradient boosting are preferred over deep neural networks - complex meta-learners overfit to out-of-fold predictions.",
+        "Diversity requirement: stacking two XGBoost models trained with different seeds provides minimal diversity - stack different model families (GBM + linear + neural) for meaningful ensemble gains.",
       ],
     },
     {
@@ -2752,14 +2752,14 @@ const extraTabular2: Record<string, Question[]> = {
       question: "When comparing XGBoost and LightGBM on a dataset with 1 million rows and 500 features, which configuration difference most significantly affects wall-clock training time?",
       options: [
         "XGBoost's default depth-wise tree growth vs LightGBM's leaf-wise growth",
-        "LightGBM's histogram-based feature binning (discretizing continuous features into 256 bins once at the start) vs XGBoost's exact split finding (sorting features for each split) — histogram binning reduces split finding from O(n*p) to O(256*p) per split",
+        "LightGBM's histogram-based feature binning (discretizing continuous features into 256 bins once at the start) vs XGBoost's exact split finding (sorting features for each split) - histogram binning reduces split finding from O(n*p) to O(256*p) per split",
         "LightGBM's built-in support for categorical features vs XGBoost requiring one-hot encoding",
         "XGBoost's support for distributed training across multiple GPUs",
       ],
       correctAnswer: 1,
-      explanation: "The dominant training time factor for large datasets is split finding. Exact split finding (XGBoost default for small/medium data): for each feature, sort all n examples and evaluate n-1 split thresholds — O(n*p*T*D) total where T=trees, D=depth. Histogram binning (LightGBM default): discretize each feature into max 256 bins once (O(n*p)), then at each split, evaluate only 255 bin boundaries — O(256*p*T*D) for split finding. For n=1M, histogram binning reduces split evaluation by a factor of 1M/256 = ~4000x. On 1M rows with 500 features, LightGBM trains 5-10x faster than XGBoost for equivalent tree structures. XGBoost also implements histogram binning (--tree_method=hist), matching LightGBM's speed.",
+      explanation: "The dominant training time factor for large datasets is split finding. Exact split finding (XGBoost default for small/medium data): for each feature, sort all n examples and evaluate n-1 split thresholds - O(n*p*T*D) total where T=trees, D=depth. Histogram binning (LightGBM default): discretize each feature into max 256 bins once (O(n*p)), then at each split, evaluate only 255 bin boundaries - O(256*p*T*D) for split finding. For n=1M, histogram binning reduces split evaluation by a factor of 1M/256 = ~4000x. On 1M rows with 500 features, LightGBM trains 5-10x faster than XGBoost for equivalent tree structures. XGBoost also implements histogram binning (--tree_method=hist), matching LightGBM's speed.",
       hints: [
-        "XGBoost tree_method='hist' enables histogram-based binning matching LightGBM's approach — always use this for large datasets instead of 'exact' or 'approx'.",
+        "XGBoost tree_method='hist' enables histogram-based binning matching LightGBM's approach - always use this for large datasets instead of 'exact' or 'approx'.",
         "GPU training: both XGBoost and LightGBM support GPU histogram binning. For very large datasets, GPU training provides additional 5-10x speedup over CPU histogram methods.",
       ],
     },

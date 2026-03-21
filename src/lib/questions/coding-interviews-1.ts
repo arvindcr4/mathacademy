@@ -21,7 +21,7 @@ const questions: Record<string, Question[]> = {
         "The hash map solution makes a single pass through the array. At each index $i$, we compute the complement $c = \\text{target} - \\text{nums}[i]$ and check in $\\mathrm{O}(1)$ time whether $c$ is already in the map. If it is, we have found our pair; if not, we store $\\{\\text{nums}[i]: i\\}$ and continue.\n\n" +
         "Since each of the $n$ elements is processed exactly once, and each map operation costs $\\mathrm{O}(1)$ on average:\n\n" +
         "\\[\n\\text{Time complexity} = \\mathrm{O}(n) \\quad \\text{and} \\quad \\text{Space complexity} = \\mathrm{O}(n).\n\\]\n\n" +
-        "This is optimal — any algorithm must examine every element at least once, giving a lower bound of $\\Omega(n)$."
+        "This is optimal - any algorithm must examine every element at least once, giving a lower bound of $\\Omega(n)$."
     },
     {
       id: "q-ts-2",
@@ -34,7 +34,7 @@ const questions: Record<string, Question[]> = {
         "In the worst case (no solution found until the last element), every element is stored before the algorithm terminates."
       ],
       explanation:
-        "True. In the worst case — when no valid pair exists until the very last element — the hash map holds all $n$ entries of the form $\\{\\text{value}: \\text{index}\\}$. This is $\\mathrm{O}(n)$ space.\n\n" +
+        "True. In the worst case - when no valid pair exists until the very last element - the hash map holds all $n$ entries of the form $\\{\\text{value}: \\text{index}\\}$. This is $\\mathrm{O}(n)$ space.\n\n" +
         "This is the fundamental space-time trade-off of the hash-map approach: we spend $\\mathrm{O}(n)$ auxiliary space to buy ourselves $\\mathrm{O}(n)$ time."
     },
     {
@@ -78,7 +78,7 @@ const questions: Record<string, Question[]> = {
       ],
       explanation:
         "Sorting costs $\\mathrm{O}(n \\log n)$ time and $\\mathrm{O}(1)$ extra space. Two pointers then solve Two Sum in $\\mathrm{O}(n)$ on the sorted array.\n\n" +
-        "However, the Two Sum problem requires returning the original indices of the pair. After sorting, the elements are in new positions — we no longer know which original indices they came from. To recover the original indices we would need additional bookkeeping costing $\\mathrm{O}(n)$ space.\n\n" +
+        "However, the Two Sum problem requires returning the original indices of the pair. After sorting, the elements are in new positions - we no longer know which original indices they came from. To recover the original indices we would need additional bookkeeping costing $\\mathrm{O}(n)$ space.\n\n" +
         "Therefore, the sorting approach yields:\n" +
         "\\[\n\\text{Time} = \\mathrm{O}(n \\log n), \\quad \\text{Space} = \\mathrm{O}(1).\n\\]\n\n" +
         "The hash-map approach is preferred because it gives $\\mathrm{O}(n)$ time while correctly tracking original indices."
@@ -116,7 +116,7 @@ const questions: Record<string, Question[]> = {
         "The hash-map approach fails for this case",
         "The two-pointer technique must be used instead",
         "Store each element's index in the map; when a complement is found, verify its stored index differs from the current index",
-        "No special handling is needed — the algorithm works as-is"
+        "No special handling is needed - the algorithm works as-is"
       ],
       correctAnswer: 2,
       hints: [
@@ -130,7 +130,7 @@ const questions: Record<string, Question[]> = {
         "i = 0: &\\quad \\text{complement} = 6 - 3 = 3. \\; 3 \\notin \\text{map} \\Rightarrow \\text{store } \\{3: 0\\}. \\\\[4pt]\n" +
         "i = 1: &\\quad \\text{complement} = 6 - 3 = 3. \\; 3 \\in \\text{map} \\text{ at index } 0. \\; 0 \\neq 1 \\Rightarrow \\text{return } [0, 1].\n" +
         "\\end align*\n\n" +
-        "Without this verification, we might incorrectly return $[0, 0]$ when an element is paired with itself — which is not a valid distinct-pair solution."
+        "Without this verification, we might incorrectly return $[0, 0]$ when an element is paired with itself - which is not a valid distinct-pair solution."
     },
   ],
 
@@ -165,7 +165,7 @@ const questions: Record<string, Question[]> = {
         "Consider the array $[-5, -3, -1]$. What does the standard algorithm return? What should it return?"
       ],
       explanation:
-        "The standard Kadane's algorithm resets $\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, 0)$, which assumes the maximum subarray never consists entirely of negative numbers. When all numbers are negative, this always resets to 0 and returns 0 — even though the correct answer is the largest (least negative) element.\n\n" +
+        "The standard Kadane's algorithm resets $\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, 0)$, which assumes the maximum subarray never consists entirely of negative numbers. When all numbers are negative, this always resets to 0 and returns 0 - even though the correct answer is the largest (least negative) element.\n\n" +
         "Example: for $[-5, -3, -1]$, the standard algorithm returns 0 (by picking nothing), but the correct answer is $-1$.\n\n" +
         "The fix is to change the reset condition to:\n" +
         "\\[\\text{maxEndingHere} = \\max(\\text{maxEndingHere} + \\text{num}, \\text{num})\\]\n" +
@@ -298,7 +298,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "False. If the array contains even a single zero, the total product of all elements is zero. Dividing by zero is undefined, so the division approach fails immediately.\n\n" +
         "Example: for $[1, 0, 2]$, the correct answer is $[0, 0, 0]$ (each position excludes the zero at index 1, whose product with everything else is 0). The division approach would attempt $0/0$, which is undefined.\n\n" +
-        "The prefix/suffix approach handles zeros correctly because it never performs division — it multiplies selected factors instead."
+        "The prefix/suffix approach handles zeros correctly because it never performs division - it multiplies selected factors instead."
     },
     {
       id: "q-pe-3",
@@ -404,7 +404,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       hints: [
         "The reversal algorithm performs exactly three reversals. Each reversal visits every element exactly once.",
-        "No additional arrays are allocated — just pointer swaps within the existing array."
+        "No additional arrays are allocated - just pointer swaps within the existing array."
       ],
       explanation:
         "The reversal algorithm rotates an array of length $n$ by $k$ in three steps:\n\n" +
@@ -432,7 +432,7 @@ const questions: Record<string, Question[]> = {
         "Rotation is periodic with period $n$. After $n$ steps, every element returns to its original position."
       ],
       explanation:
-        "Rotating by $k$ positions where $k \\geq n$ is equivalent to rotating by $k \\bmod n$ positions. This is because the array wraps around — after $n$ right rotations, every element is back in its original position.\n\n" +
+        "Rotating by $k$ positions where $k \\geq n$ is equivalent to rotating by $k \\bmod n$ positions. This is because the array wraps around - after $n$ right rotations, every element is back in its original position.\n\n" +
         "\\[k \\;\\text{effective} = k \\bmod n\\]\n\n" +
         "For example, rotating $[1, 2, 3]$ by $k = 7$ is equivalent to $k = 7 \\bmod 3 = 1$. The reversal algorithm (and all standard implementations) should normalize $k$ this way before proceeding."
     },
@@ -465,8 +465,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "True. In the reversal algorithm:\n\n" +
         "1. The entire array is reversed.\n" +
-        "2. The first $k$ elements are reversed again — restoring their original relative order.\n" +
-        "3. The remaining $n-k$ elements are reversed again — restoring their original relative order.\n\n" +
+        "2. The first $k$ elements are reversed again - restoring their original relative order.\n" +
+        "3. The remaining $n-k$ elements are reversed again - restoring their original relative order.\n\n" +
         "Each segment is reversed twice, which returns it to its original order. The net effect is that the last $k$ elements are moved to the front as a block, and the first $n-k$ elements are moved to the back as a block, with internal order preserved."
     },
     {
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
         "After $n$ right rotations, where does each element end up?"
       ],
       explanation:
-        "The original array, unchanged. Since $k \\bmod n = 7 \\bmod 7 = 0$, rotating by 0 positions is a no-op — every element returns to its original position.\n\n" +
+        "The original array, unchanged. Since $k \\bmod n = 7 \\bmod 7 = 0$, rotating by 0 positions is a no-op - every element returns to its original position.\n\n" +
         "In general, rotating by any integer multiple of $n$ (i.e., $k = m \\times n$) leaves the array unchanged."
     },
   ],
@@ -680,7 +680,7 @@ const questions: Record<string, Question[]> = {
       ],
       explanation:
         "The primary advantage of the trie approach is efficient repeated querying.\n\n" +
-        "Building the trie costs $\\mathrm{O}(n \\cdot m)$ upfront. However, once built, answering an LCP query for any subset of strings (or the full set) costs $\\mathrm{O}(m)$ — walking down the trie to the deepest common node.\n\n" +
+        "Building the trie costs $\\mathrm{O}(n \\cdot m)$ upfront. However, once built, answering an LCP query for any subset of strings (or the full set) costs $\\mathrm{O}(m)$ - walking down the trie to the deepest common node.\n\n" +
         "If you need to compute the LCP only once, the trie offers no asymptotic advantage. But if $q$ LCP queries are needed on the same string set, naive repeated queries cost $\\mathrm{O}(q \\cdot n \\cdot m)$ while the trie approach costs $\\mathrm{O}(n \\cdot m + q \\cdot m)$."
     },
   ],
@@ -696,7 +696,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       hints: [
         "When we encounter an opening bracket, we want to remember it and match it with a future closing bracket.",
-        "When we encounter a closing bracket, which opening bracket should it match — the most recent or the oldest unmatched one?"
+        "When we encounter a closing bracket, which opening bracket should it match - the most recent or the oldest unmatched one?"
       ],
       explanation:
         "The **stack** is the optimal data structure. Its LIFO (Last In, First Out) property matches the semantics of bracket matching: the most recently seen opening bracket must be matched by the next closing bracket.\n\n" +
@@ -723,7 +723,7 @@ const questions: Record<string, Question[]> = {
         "\\text{Read } ']': &\\quad \\text{pop } \\[ , \\text{ matches } ] \\quad &\\quad \\text{Stack: } \\{ \\\\\n" +
         "\\text{Read } '}': &\\quad \\text{pop } \\{, \\text{ matches } \\} \\quad &\\quad \\text{Stack: } \\epsilon\n" +
         "\\end align*\n\n" +
-        "Stack is empty at the end — the string is valid."
+        "Stack is empty at the end - the string is valid."
     },
     {
       id: "q-vp-3",
@@ -741,7 +741,7 @@ const questions: Record<string, Question[]> = {
         "Each of the $n$ characters is processed exactly once with at most one stack push or pop. Both operations are $\\mathrm{O}(1)$.\n\n" +
         "\\[\\text{Time complexity: } \\mathrm{O}(n)\\]\n" +
         "\\[\\text{Space complexity: } \\mathrm{O}(n) \\text{ in the worst case (e.g., } \"(((((\" \\text{)}\]\n\n" +
-        "No nested loops — this is optimal since we must look at every character at least once."
+        "No nested loops - this is optimal since we must look at every character at least once."
     },
     {
       id: "q-vp-4",
@@ -796,7 +796,7 @@ const questions: Record<string, Question[]> = {
         "3 insertions are needed.\n\n" +
         "Scanning the string:\n\n" +
         "\\begin align*\n" +
-        "\\text{Read } ')': &\\quad \\text{stack empty — unmatched closer, add 1 opening bracket} \\Rightarrow \\text{total} = 1 \\\\\n" +
+        "\\text{Read } ')': &\\quad \\text{stack empty - unmatched closer, add 1 opening bracket} \\Rightarrow \\text{total} = 1 \\\\\n" +
         "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } ( \\\\\n" +
         "\\text{Read } '(': &\\quad \\text{push } ( \\quad &\\quad \\text{Stack: } (( \\\\\n" +
         "\\text{End}: &\\quad \\text{2 unmatched openers in stack} \\Rightarrow \\text{add 2 closers} \\Rightarrow \\text{total} = 3\n" +
@@ -857,7 +857,7 @@ const questions: Record<string, Question[]> = {
         "Is there any nested looping?"
       ],
       explanation:
-        "$\\mathrm{O}(n)$. Each of the $n$ nodes is visited exactly once. At each node, a constant number of pointer operations are performed. This is optimal — any algorithm must examine every node at least once, giving a lower bound of $\\Omega(n)$."
+        "$\\mathrm{O}(n)$. Each of the $n$ nodes is visited exactly once. At each node, a constant number of pointer operations are performed. This is optimal - any algorithm must examine every node at least once, giving a lower bound of $\\Omega(n)$."
     },
     {
       id: "q-rll-4",
@@ -930,7 +930,7 @@ const questions: Record<string, Question[]> = {
         "If there is a cycle, the faster pointer eventually laps the slower one."
       ],
       explanation:
-        "Two pointers (Floyd's algorithm, also called the Tortoise and Hare algorithm). The slow pointer advances one node at a time; the fast pointer advances two nodes at a time. If a cycle exists, the fast pointer laps the slow pointer — they must meet inside the cycle.\n\n" +
+        "Two pointers (Floyd's algorithm, also called the Tortoise and Hare algorithm). The slow pointer advances one node at a time; the fast pointer advances two nodes at a time. If a cycle exists, the fast pointer laps the slow pointer - they must meet inside the cycle.\n\n" +
         "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(1).\\]"
     },
     {
@@ -1027,7 +1027,7 @@ const questions: Record<string, Question[]> = {
       ],
       explanation:
         "null (or equivalently, the fast pointer reaches the end of the list).\n\n" +
-        "The loop condition is $\\text{fast} \\neq \\text{null} \\land \\text{fast.next} \\neq \\text{null}$. In an acyclic list, the fast pointer eventually skips past the last node (null), and the condition fails. The algorithm returns false/null — no cycle detected."
+        "The loop condition is $\\text{fast} \\neq \\text{null} \\land \\text{fast.next} \\neq \\text{null}$. In an acyclic list, the fast pointer eventually skips past the last node (null), and the condition fails. The algorithm returns false/null - no cycle detected."
     },
   ],
 
@@ -1095,7 +1095,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       hints: [
         "At each step, compare the heads of both lists and pick the smaller value.",
-        "When values are equal, you may pick from either list — the result is the same."
+        "When values are equal, you may pick from either list - the result is the same."
       ],
       explanation:
         "\\begin align*\n" +
@@ -1120,7 +1120,7 @@ const questions: Record<string, Question[]> = {
         "In-place merging changes only the next pointers of existing nodes."
       ],
       explanation:
-        "False. We can merge in-place by rewiring the $\\text{next}$ pointers of the existing nodes — no new nodes are allocated. The algorithm uses only two pointer variables.\n\n" +
+        "False. We can merge in-place by rewiring the $\\text{next}$ pointers of the existing nodes - no new nodes are allocated. The algorithm uses only two pointer variables.\n\n" +
         "\\[\\text{Time: } \\mathrm{O}(m + n), \\quad \\text{Space: } \\mathrm{O}(1).\\]\n\n" +
         "The $\\mathrm{O}(m + n)$ term refers to the time complexity (each node is processed once), not the space usage."
     },
@@ -1331,7 +1331,7 @@ const questions: Record<string, Question[]> = {
       options: ["Queue", "Stack", "Dynamic array", "Min-heap"],
       correctAnswer: 1,
       hints: [
-        "When you see an opening bracket, you want to remember it. When you see a closing bracket, which opener should it match — the most recent or the oldest?",
+        "When you see an opening bracket, you want to remember it. When you see a closing bracket, which opener should it match - the most recent or the oldest?",
         "LIFO = Last In, First Out"
       ],
       explanation:
@@ -1415,7 +1415,7 @@ const questions: Record<string, Question[]> = {
         "\\text{Read } ']': &\\quad \\text{pop } \\[ , \\text{ matches } ] \\\\\n" +
         "\\text{Read } '}': &\\quad \\text{pop } \\{, \\text{ matches } \\}\n" +
         "\\end align*\n\n" +
-        "Stack is empty at end — balanced."
+        "Stack is empty at end - balanced."
     },
     {
       id: "q-bp-6",
@@ -1463,7 +1463,7 @@ const questions: Record<string, Question[]> = {
         "A single stack of $(value, currentMin)$ pairs.\n\n" +
         "When pushing $(v)$: the stored $\\text{currentMin} = \\min(v, \\text{minAtTop})$. When popping: the previous minimum is now at the top of the stack as its $\\text{currentMin}$.\n\n" +
         "Space: $\\mathrm{O}(n)$ in the worst case. Time: all operations are $\\mathrm{O}(1)$.\n\n" +
-        "The two-stacks variant achieves the same space and time but is conceptually equivalent — both store historical minimums."
+        "The two-stacks variant achieves the same space and time but is conceptually equivalent - both store historical minimums."
     },
     {
       id: "q-mns-2",
@@ -1477,7 +1477,7 @@ const questions: Record<string, Question[]> = {
         "If the new value is strictly greater than the current minimum, should the min stack change?"
       ],
       explanation:
-        "True. The min stack stores $(value, minSoFar)$ pairs. We push to the min stack only when $\\text{newValue} \\leq \\text{currentMin}$. When the main stack pops a value that equals the top of the min stack, we pop the min stack as well — revealing the previous minimum."
+        "True. The min stack stores $(value, minSoFar)$ pairs. We push to the min stack only when $\\text{newValue} \\leq \\text{currentMin}$. When the main stack pops a value that equals the top of the min stack, we pop the min stack as well - revealing the previous minimum."
     },
     {
       id: "q-mns-3",
@@ -1521,7 +1521,7 @@ const questions: Record<string, Question[]> = {
       ],
       explanation:
         "Only when the popped value equals the current minimum.\n\n" +
-        "If we pop a value $v$ where $v > \\text{minStack.top}$, then $v$ never affected the minimum — the min stack should remain unchanged. But if $v = \\text{minStack.top}$, then $v$ was the minimum, and popping it reveals the previous minimum (now at the top of the min stack)."
+        "If we pop a value $v$ where $v > \\text{minStack.top}$, then $v$ never affected the minimum - the min stack should remain unchanged. But if $v = \\text{minStack.top}$, then $v$ was the minimum, and popping it reveals the previous minimum (now at the top of the min stack)."
     },
     {
       id: "q-mns-5",
@@ -1588,7 +1588,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "$[3, 2, 1]$.\n\n" +
         "Transfer: pop 1 from stack1, push to stack2; pop 2, push to stack2; pop 3, push to stack2. Stack2 (top to bottom): $[3, 2, 1]$.\n\n" +
-        "The first dequeue returns 1 (the front of the original queue), which is stack1's bottom element — now at stack2's top after reversal."
+        "The first dequeue returns 1 (the front of the original queue), which is stack1's bottom element - now at stack2's top after reversal."
     },
     {
       id: "q-iq-4",
@@ -1600,7 +1600,7 @@ const questions: Record<string, Question[]> = {
         "A stack cannot maintain any ordering",
         "Dequeuing from a single stack requires $\\mathrm{O}(n)$ to access the bottom element",
         "Both A and B",
-        "It is sufficient — two stacks are unnecessary"
+        "It is sufficient - two stacks are unnecessary"
       ],
       correctAnswer: 2,
       hints: [
@@ -1644,7 +1644,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A monotonic decreasing stack.\n\n" +
         "The stack maintains elements in decreasing order from bottom to top. When a new element $x$ is encountered:\n" +
-        "- All elements smaller than $x$ have found their next greater element — pop and assign.\n" +
+        "- All elements smaller than $x$ have found their next greater element - pop and assign.\n" +
         "- $x$ is pushed onto the stack (it is now waiting for its own next greater).\n\n" +
         "\\[\\text{Time: } \\mathrm{O}(n), \\quad \\text{Space: } \\mathrm{O}(n).\\]\n" +
         "Each element is pushed and popped at most once."
@@ -1682,7 +1682,7 @@ const questions: Record<string, Question[]> = {
         "Elements never popped from the stack have no greater element to their right."
       ],
       explanation:
-        "True. Elements that remain in the stack at the end of the single pass have no greater element to their right — they were never popped, so no element greater than them appeared to their right. The standard convention is to assign $-1$ to these elements."
+        "True. Elements that remain in the stack at the end of the single pass have no greater element to their right - they were never popped, so no element greater than them appeared to their right. The standard convention is to assign $-1$ to these elements."
     },
     {
       id: "q-nge-4",
@@ -1723,7 +1723,7 @@ const questions: Record<string, Question[]> = {
         "Amortized $\\mathrm{O}(n)$ (which equals $\\mathrm{O}(n)$ without amortization).\n\n" +
         "Each of the $n$ elements is pushed onto the stack exactly once. Each element is popped at most once (when a greater element is found to its right). Therefore:\n\n" +
         "\\[\\text{Total stack operations} \\leq 2n \\Rightarrow \\mathrm{O}(n) \\text{ time}.\\]\n\n" +
-        "This is tight — we must examine every element at least once."
+        "This is tight - we must examine every element at least once."
     },
     {
       id: "q-nge-6",
@@ -1759,7 +1759,7 @@ const questions: Record<string, Question[]> = {
         "The remaining elements are all $\\geq x$. Is the stack strict or non-strict?"
       ],
       explanation:
-        "True. The stack is monotonically decreasing from bottom to top. When a new element $x$ arrives, we pop all elements smaller than $x$ — they have found their next greater. We then push $x$. The push keeps the decreasing invariant since $x \\leq$ all remaining elements.\n\n" +
+        "True. The stack is monotonically decreasing from bottom to top. When a new element $x$ arrives, we pop all elements smaller than $x$ - they have found their next greater. We then push $x$. The push keeps the decreasing invariant since $x \\leq$ all remaining elements.\n\n" +
         "Note: for the Next Greater Element problem (strictly greater), we use a strictly decreasing stack (pop on $<$). For the Next Greater or Equal problem, we would pop on $\\leq$."
     },
     {
@@ -1956,7 +1956,7 @@ const questions: Record<string, Question[]> = {
         "The frontier at each BFS level is the range of reachable indices",
       ],
       explanation:
-        "Jump Game II greedy is isomorphic to BFS: current range [lo, hi] is one level. Scan [lo, hi] to find farthest reachable index (next hi). Increment jump count and set lo = hi+1. This is O(n) time, O(1) space — faster than O(n^2) DP.",
+        "Jump Game II greedy is isomorphic to BFS: current range [lo, hi] is one level. Scan [lo, hi] to find farthest reachable index (next hi). Increment jump count and set lo = hi+1. This is O(n) time, O(1) space - faster than O(n^2) DP.",
     },
     {
       id: "q-jg-3",
@@ -2103,7 +2103,7 @@ const questions: Record<string, Question[]> = {
         "It processes each position amortized O(1) using a center and right boundary trick",
       ],
       explanation:
-        "Manacher algorithm uses a transformed string (insert # between chars) and an array p[] where p[i] = palindrome radius at i. It maintains (center, right) — the rightmost palindrome center and right boundary. For each i < right, mirror symmetry gives p[i] >= min(p[mirror], right-i), then expand. Each position is touched at most twice: O(n) time, O(n) space for p[] array.",
+        "Manacher algorithm uses a transformed string (insert # between chars) and an array p[] where p[i] = palindrome radius at i. It maintains (center, right) - the rightmost palindrome center and right boundary. For each i < right, mirror symmetry gives p[i] >= min(p[mirror], right-i), then expand. Each position is touched at most twice: O(n) time, O(n) space for p[] array.",
     },
     {
       id: "q-lps-3",
@@ -2125,7 +2125,7 @@ const questions: Record<string, Question[]> = {
       id: "q-av-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Find All Anagrams in a String (LeetCode 438) — optimal approach and complexity?",
+      question: "Find All Anagrams in a String (LeetCode 438) - optimal approach and complexity?",
       options: [
         "Sort each window: O(n * k log k) time",
         "Sliding window with character count array: O(n) time, O(1) space",
@@ -2196,7 +2196,7 @@ const questions: Record<string, Question[]> = {
         "A write pointer tracks where to write the compressed result",
       ],
       explanation:
-        "In-place compression uses two pointers: read (scanning runs) and write (recording compressed output into chars[]). Count is written digit by digit. Space: O(1) auxiliary. Time: O(n) — one pass to count runs, writing digits in-place.",
+        "In-place compression uses two pointers: read (scanning runs) and write (recording compressed output into chars[]). Count is written digit by digit. Space: O(1) auxiliary. Time: O(n) - one pass to count runs, writing digits in-place.",
     },
     {
       id: "q-sc-3",
@@ -2209,7 +2209,7 @@ const questions: Record<string, Question[]> = {
         "A count of 1 adds an extra character per unique char",
       ],
       explanation:
-        "False. For strings with no repeated consecutive characters (e.g., 'abcde'), RLE produces '1a1b1c1d1e' — twice as long. RLE is only beneficial when runs are sufficiently long (run length > 2 for single-digit counts). This is why compression algorithms use adaptive techniques.",
+        "False. For strings with no repeated consecutive characters (e.g., 'abcde'), RLE produces '1a1b1c1d1e' - twice as long. RLE is only beneficial when runs are sufficiently long (run length > 2 for single-digit counts). This is why compression algorithms use adaptive techniques.",
     },
   ],
 
@@ -2218,7 +2218,7 @@ const questions: Record<string, Question[]> = {
       id: "q-ms-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Search a 2D Matrix where rows and columns are independently sorted (LeetCode 240) — best approach?",
+      question: "Search a 2D Matrix where rows and columns are independently sorted (LeetCode 240) - best approach?",
       options: [
         "Binary search each row: O(m log n)",
         "Staircase search from top-right corner: O(m + n)",

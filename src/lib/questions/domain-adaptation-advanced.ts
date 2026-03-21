@@ -16,10 +16,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Covariate shift (Shimodaira, 2000) is the specific case where the marginal input distribution shifts (P_S(X) \$\\neq\$ P_T(X)) while the conditional label distribution remains constant (P_S(Y|X) = P_T(Y|X)). The challenge is that ERM on source data minimizes E_{P_S}[L(h(X),Y)], not E_{P_T}[L(h(X),Y)] — importance weighting corrects this by reweighting source samples by w(x) = P_T(x)/P_S(x).",
+        "Covariate shift (Shimodaira, 2000) is the specific case where the marginal input distribution shifts (P_S(X) \$\\neq\$ P_T(X)) while the conditional label distribution remains constant (P_S(Y|X) = P_T(Y|X)). The challenge is that ERM on source data minimizes E_{P_S}[L(h(X),Y)], not E_{P_T}[L(h(X),Y)] - importance weighting corrects this by reweighting source samples by w(x) = P_T(x)/P_S(x).",
       hints: [
         '"Covariate" refers to the input variables X; "shift" means the distribution of X has changed.',
-        "If P(Y|X) is the same, a model trained on source data would generalize perfectly to the target — the challenge is the input distribution shift.",
+        "If P(Y|X) is the same, a model trained on source data would generalize perfectly to the target - the challenge is the input distribution shift.",
       ],
     },
     {
@@ -33,7 +33,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "High training accuracy does not imply target generalization under covariate shift; the model may have overfit to source-domain input patterns that differ from the target, causing degraded performance despite perfect training accuracy.",
       hints: [
-        "Think about a model trained on sunny outdoor images tested on rainy ones — even if P(Y|X) is the same, input differences can cause failures.",
+        "Think about a model trained on sunny outdoor images tested on rainy ones - even if P(Y|X) is the same, input differences can cause failures.",
         "Overfitting is exacerbated when the input distribution shifts.",
       ],
     },
@@ -53,7 +53,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "KLIEP directly minimizes the KL divergence from the reweighted source to the target:\n\\[\\min_w \\text{KL}(P_T \\| w \\cdot P_S) = \\mathbb{E}_{P_T}[\\log P_T] - \\mathbb{E}_{P_T}[\\log(w(\\mathbf{x}) \\cdot P_S(\\mathbf{x}))].\\]\nSince the first term is constant with respect to $w$, this reduces to maximizing $\\mathbb{E}_{P_T}[\\log w(\\mathbf{x})]$ subject to the normalization constraint $\\mathbb{E}_{P_S}[w(\\mathbf{x})] = 1$ (ensuring $w \\cdot P_S$ integrates to 1). The weight function is modeled as a kernel expansion $w(\\mathbf{x}) = \\sum_l \\alpha_l k(\\mathbf{x}, \\mathbf{x}_l^T)$ using target kernel centers $\\{\\mathbf{x}_l^T\\}$, with $\\alpha_l \\geq 0$ learned by optimization.",
       hints: [
-        "The key insight: instead of estimating $P_T$ and $P_S$ separately (hard), KLIEP directly estimates the ratio $w = P_T/P_S$ by fitting $w$ to satisfy the constraints — avoiding the hard intermediate steps.",
+        "The key insight: instead of estimating $P_T$ and $P_S$ separately (hard), KLIEP directly estimates the ratio $w = P_T/P_S$ by fitting $w$ to satisfy the constraints - avoiding the hard intermediate steps.",
         "The constraint $\\mathbb{E}_{P_S}[w(\\mathbf{x})] = 1$ is a normalization condition: without it, scaling $w$ by any constant would keep KL minimized, but the weighted distribution would not integrate to 1.",
       ],
     },
@@ -103,7 +103,7 @@ const questions: Record<string, Question[]> = {
         "A key practical failure mode of importance weighting under large distribution shift is variance explosion. Concretely, if w(x) has heavy tails, the weighted empirical risk \\Sigma_i w(x_i) L(h(x_i), y_i) / n:",
       options: [
         "Converges faster than standard ERM due to the corrective reweighting",
-        "May have infinite variance even with a finite-variance loss, since weights can be unbounded — causing the estimator to be dominated by a few extreme samples",
+        "May have infinite variance even with a finite-variance loss, since weights can be unbounded - causing the estimator to be dominated by a few extreme samples",
         "Is always lower than the unweighted empirical risk",
         "Converges to the target risk only when source and target are identical distributions",
       ],
@@ -132,10 +132,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The MMD measures the distance between distributions P and Q in the RKHS $\\mathcal{H}$ induced by kernel $k$. It equals $\\|\\mu_P - \\mu_Q\\|_{\\mathcal{H}}^2$, where $\\mu_P = \\mathbb{E}_{x\\sim P}[\\phi(x)]$ is the mean embedding. Expanding the squared norm gives:\n\\[\n\\text{MMD}^2(P,Q) = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\n\\]\nFor a characteristic kernel (e.g., the RBF/Gaussian kernel $k(x,y) = \\exp(-\\|x-y\\|^2 / (2\\sigma^2))$), MMD\\^2 = 0 if and only if P = Q. The empirical estimator uses within-domain terms $k(x_i, x_j)$ for same-domain pairs and cross-domain terms $k(x_i, y_j)$ — diagonal terms $k(x_i, x_i) = 1$ for normalized kernels are typically excluded in the unbiased U-statistic.",
+        "The MMD measures the distance between distributions P and Q in the RKHS $\\mathcal{H}$ induced by kernel $k$. It equals $\\|\\mu_P - \\mu_Q\\|_{\\mathcal{H}}^2$, where $\\mu_P = \\mathbb{E}_{x\\sim P}[\\phi(x)]$ is the mean embedding. Expanding the squared norm gives:\n\\[\n\\text{MMD}^2(P,Q) = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')].\n\\]\nFor a characteristic kernel (e.g., the RBF/Gaussian kernel $k(x,y) = \\exp(-\\|x-y\\|^2 / (2\\sigma^2))$), MMD\\^2 = 0 if and only if P = Q. The empirical estimator uses within-domain terms $k(x_i, x_j)$ for same-domain pairs and cross-domain terms $k(x_i, y_j)$ - diagonal terms $k(x_i, x_i) = 1$ for normalized kernels are typically excluded in the unbiased U-statistic.",
       hints: [
         "Start with $\\|\\mu_P - \\mu_Q\\|^2 = \\langle \\mu_P - \\mu_Q, \\mu_P - \\mu_Q\\rangle = \\langle \\mu_P, \\mu_P\\rangle - 2\\langle \\mu_P, \\mu_Q\\rangle + \\langle \\mu_Q, \\mu_Q\\rangle$. Each inner product expands to an expectation over kernel evaluations.",
-        "For a normalized kernel like RBF, $k(x_i, x_i) = 1$. Including these diagonal terms in the empirical estimate introduces a positive bias — the unbiased U-statistic excludes $i=j$ pairs to fix this.",
+        "For a normalized kernel like RBF, $k(x_i, x_i) = 1$. Including these diagonal terms in the empirical estimate introduces a positive bias - the unbiased U-statistic excludes $i=j$ pairs to fix this.",
       ],
     },
     {
@@ -190,10 +190,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The GRL is defined as: forward pass R(x) = x (identity); backward pass \\partialR/\\partialx = −\\lambdaI. The hyperparameter \\lambda is often annealed during training: \\lambda = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it — both objectives satisfied in a single network.",
+        "The GRL is defined as: forward pass R(x) = x (identity); backward pass \\partialR/\\partialx = −\\lambdaI. The hyperparameter \\lambda is often annealed during training: \\lambda = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it - both objectives satisfied in a single network.",
       hints: [
-        "The GRL is a zero-cost trick in the forward pass — it only affects backpropagation.",
-        "Reversing gradients makes the feature extractor compete against the domain classifier — adversarial alignment.",
+        "The GRL is a zero-cost trick in the forward pass - it only affects backpropagation.",
+        "Reversing gradients makes the feature extractor compete against the domain classifier - adversarial alignment.",
       ],
     },
     {
@@ -205,9 +205,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − \\lambda\\cdotL_d(G_d(G_f(x)), d)].",
+        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion - the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − \\lambda\\cdotL_d(G_d(G_f(x)), d)].",
       hints: [
-        "These two objectives can conflict — the feature extractor must find a balance.",
+        "These two objectives can conflict - the feature extractor must find a balance.",
         "The gradient reversal layer implements the adversarial part without requiring alternating optimization.",
       ],
     },
@@ -219,13 +219,13 @@ const questions: Record<string, Question[]> = {
         "DANN\'s theoretical justification draws on Ben-David et al.'s bound: \\epsilon_T(h) \\leq \\epsilon_S(h) + d_{H△H}(S,T)/2 + \\lambda*. What does the H△H-divergence d_{H△H}(S,T) measure, and why does minimizing it justify DANN?",
       options: [
         "It measures the KL divergence between source and target feature distributions; DANN minimizes it via MMD",
-        "It measures the discrepancy between source and target distributions in terms of the hypothesis class H — specifically the maximum difference in error between the best hypothesis on source and target; DANN minimizes it by making features indistinguishable to a domain classifier in H",
+        "It measures the discrepancy between source and target distributions in terms of the hypothesis class H - specifically the maximum difference in error between the best hypothesis on source and target; DANN minimizes it by making features indistinguishable to a domain classifier in H",
         "It measures the Wasserstein distance between source and target marginal distributions",
         "It measures the mutual information between domain label and input features",
       ],
       correctAnswer: 1,
       explanation:
-        "The H△H-divergence measures how well a classifier in hypothesis class H can distinguish source from target samples. If H contains the domain classifier, d_{H△H}(S,T) is related to domain classification accuracy. DANN minimizes this by training the feature extractor adversarially against the domain classifier — directly minimizing the theoretical upper bound on target error.",
+        "The H△H-divergence measures how well a classifier in hypothesis class H can distinguish source from target samples. If H contains the domain classifier, d_{H△H}(S,T) is related to domain classification accuracy. DANN minimizes this by training the feature extractor adversarially against the domain classifier - directly minimizing the theoretical upper bound on target error.",
       hints: [
         "The bound has three terms: source error, domain divergence, and the irreducible error \\lambda*.",
         "DANN minimizes the H-divergence term by making features indistinguishable across domains.",
@@ -279,13 +279,13 @@ const questions: Record<string, Question[]> = {
         "Backpropagation through the eigendecomposition, which is numerically unstable for repeated eigenvalues",
         "A gradient expression involving (C_S − C_T) and the source feature matrix, making it fully differentiable without requiring matrix square roots at training time",
         "A finite-difference approximation because the Frobenius norm is non-differentiable at zero",
-        "Zero gradient with respect to features — only the transformation matrix is updated",
+        "Zero gradient with respect to features - only the transformation matrix is updated",
       ],
       correctAnswer: 1,
       explanation:
-        "The gradient \\partialL_CORAL/\\partialX_S = (1/d\\^2)(X_S − 1_n \\cdot mean_S^T)(C_S − C_T) / (n−1). This avoids eigendecomposition during backprop — the gradient only involves (C_S − C_T) and the centered features. Mini-batch covariance estimates are noisy but gradient averaging over iterations makes training stable.",
+        "The gradient \\partialL_CORAL/\\partialX_S = (1/d\\^2)(X_S − 1_n \\cdot mean_S^T)(C_S − C_T) / (n−1). This avoids eigendecomposition during backprop - the gradient only involves (C_S − C_T) and the centered features. Mini-batch covariance estimates are noisy but gradient averaging over iterations makes training stable.",
       hints: [
-        "The Frobenius norm ||A||\\^2_F is differentiable everywhere — its gradient is 2A.",
+        "The Frobenius norm ||A||\\^2_F is differentiable everywhere - its gradient is 2A.",
         "With n samples, a covariance matrix has n−1 degrees of freedom in its estimation.",
       ],
     },
@@ -398,7 +398,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mansour et al. show that a weighted mixture of source distributions can approximate the target, with the bound involving weighted source errors and distribution distances — informing practical domain weighting strategies.",
+        "Mansour et al. show that a weighted mixture of source distributions can approximate the target, with the bound involving weighted source errors and distribution distances - informing practical domain weighting strategies.",
       hints: [
         "Sources closer to the target should receive higher weights in the mixture.",
         "The optimal mixture weights minimize the total divergence between the mixture and the target.",
@@ -422,7 +422,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'In PDA, the target label space C_T \\subset C_S; source classes not present in the target are "outlier" classes that can mislead adaptation if treated the same as shared classes.',
       hints: [
-        "Think of adapting an ImageNet classifier to a 10-class target — only 10 of 1000 source classes are relevant.",
+        "Think of adapting an ImageNet classifier to a 10-class target - only 10 of 1000 source classes are relevant.",
         "Standard DA methods that align all classes together are misled by irrelevant source classes.",
       ],
     },
@@ -472,7 +472,7 @@ const questions: Record<string, Question[]> = {
         "Universal Domain Adaptation (UniDA) handles which of the following challenging scenarios?",
       options: [
         "Source and target have the same label space with known overlap",
-        "The label space relationship between source and target is unknown a priori — they may share some classes, have private classes, or have no overlap",
+        "The label space relationship between source and target is unknown a priori - they may share some classes, have private classes, or have no overlap",
         "The target domain has fully labeled data for all classes",
         "The source domain contains samples from all possible target classes",
       ],
@@ -594,7 +594,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SFDA adapts a pre-trained source model to the target domain using only the pre-trained model weights and unlabeled target data — no source data is accessed during adaptation, addressing data privacy and practical deployment constraints.",
+        "SFDA adapts a pre-trained source model to the target domain using only the pre-trained model weights and unlabeled target data - no source data is accessed during adaptation, addressing data privacy and practical deployment constraints.",
       hints: [
         "In practice, source data may be proprietary, no longer stored, or subject to privacy regulations.",
         "The pre-trained source model encodes source knowledge implicitly in its weights.",
@@ -646,7 +646,7 @@ const questions: Record<string, Question[]> = {
         "Zero-shot domain adaptation aims to adapt to a target domain using:",
       options: [
         "Zero labeled target samples, but many unlabeled target samples",
-        "No target samples at all — domain shift is described only by auxiliary information (e.g., domain description or attributes)",
+        "No target samples at all - domain shift is described only by auxiliary information (e.g., domain description or attributes)",
         "Only ten labeled target samples and no unlabeled data",
         "Zero source samples and only labeled target samples",
       ],
@@ -654,7 +654,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Zero-shot DA assumes no access to target data during training; instead, domain shift is parameterized via domain descriptors or attributes, and the model must generalize to unseen domains at test time.",
       hints: [
-        '"Zero-shot" means zero target examples — the model must transfer purely based on domain description.',
+        '"Zero-shot" means zero target examples - the model must transfer purely based on domain description.',
         "This is analogous to zero-shot classification where classes are described by attributes rather than examples.",
       ],
     },
@@ -710,7 +710,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In DG, the model must generalize to completely unseen target domains using only multiple source domains during training — target data is unavailable even for unsupervised alignment.",
+        "In DG, the model must generalize to completely unseen target domains using only multiple source domains during training - target data is unavailable even for unsupervised alignment.",
       hints: [
         "Think about training on three domains (Photo, Sketch, Cartoon) and testing on a fourth (Painting) never seen during training.",
         "DA uses target data for alignment; DG cannot.",
@@ -721,7 +721,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Empirical Risk Minimization (ERM) — simply training on pooled source domains — is a surprisingly strong baseline for domain generalization.",
+        "Empirical Risk Minimization (ERM) - simply training on pooled source domains - is a surprisingly strong baseline for domain generalization.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -785,7 +785,7 @@ const questions: Record<string, Question[]> = {
         "IRMv1 (IRMV1) replaces the intractable bilevel optimization of IRM with a tractable penalty. The gradient penalty\n\\[\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2\\]\nmeasures how far the representation $\\Phi$ is from admitting $w=1$ as its optimal classifier in environment $e$. If $\\Phi$ were truly invariant, then for each environment the scalar $1 \\cdot \\Phi(X)$ would be the optimal linear classifier, making the gradient of the loss w.r.t. $w$ equal to zero at $w=1$. IRMv1 adds this penalty to the standard ERM loss, making the optimization fully differentiable end-to-end.",
       hints: [
         "Fix $w=1$ as a dummy scalar classifier. Then $\\nabla_{w=1} R^e(w \\circ \\Phi) = \\mathbb{E}[\\nabla_{w} L(y, w \\cdot \\Phi(x))]_{w=1} = \\mathbb{E}[\\nabla_{w} L(y, w \\cdot \\Phi(x))]$. This is non-zero whenever the representation $\\Phi$ is not simultaneously optimal across environments.",
-        "The IRM penalty $\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2$ is zero if and only if $w=1$ is a stationary point of $R^e(w \\circ \\Phi)$ in each environment $e$ — i.e., $\\Phi$ supports an invariant optimal classifier.",
+        "The IRM penalty $\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2$ is zero if and only if $w=1$ is a stationary point of $R^e(w \\circ \\Phi)$ in each environment $e$ - i.e., $\\Phi$ supports an invariant optimal classifier.",
       ],
     },
     {
@@ -842,7 +842,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "MAML trains an initialization that can be quickly fine-tuned to any task; using source domains as tasks produces an initialization that adapts efficiently to new target domains with few gradient steps.",
       hints: [
-        "MAML is task-agnostic — any collection of tasks can be used for meta-training.",
+        "MAML is task-agnostic - any collection of tasks can be used for meta-training.",
         "Domain pairs are natural tasks: train on source, evaluate on target after K gradient steps.",
       ],
     },
@@ -1032,7 +1032,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Structural Correspondence Learning (SCL) identifies pivots — words equally informative across domains — and uses them to learn a domain-invariant feature projection, bridging source and target vocabularies.",
+        "Structural Correspondence Learning (SCL) identifies pivots - words equally informative across domains - and uses them to learn a domain-invariant feature projection, bridging source and target vocabularies.",
       hints: [
         'Pivot features are domain-independent signals of the target concept (e.g., "excellent" is a positive pivot for both reviews and news).',
         "Non-pivot features may be domain-specific and mislead cross-domain transfer.",
@@ -1149,7 +1149,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Without task consistency, CycleGAN may hallucinate or erase anatomical structures during translation; adding a segmentation consistency loss ensures translated images preserve clinically relevant anatomy, critical for safe medical AI.",
       hints: [
-        "A GAN optimizes for visual realism, not anatomical accuracy — these can conflict.",
+        "A GAN optimizes for visual realism, not anatomical accuracy - these can conflict.",
         "Segmentation consistency enforces that the translation does not change the clinical content of the image.",
       ],
     },
@@ -1264,7 +1264,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In continual TTA, each round of self-training uses the model\'s own noisy predictions; if not corrected, errors compound over time and can cause catastrophic model drift, requiring regularization or periodic resets.",
       hints: [
-        "Pseudo-label errors in one round become training signal in the next — small errors can snowball.",
+        "Pseudo-label errors in one round become training signal in the next - small errors can snowball.",
         "Methods like EATA and CoTTA add regularization or stochastic weight restoration to combat this.",
       ],
     },
@@ -1403,7 +1403,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Understanding the type of shift (covariate, label, concept) and its magnitude guides method selection; a small shift may require only fine-tuning, while a large gap may need full adversarial adaptation or pixel-level translation.",
       hints: [
-        "Not every domain gap requires a complex adaptation method — sometimes fine-tuning is sufficient.",
+        "Not every domain gap requires a complex adaptation method - sometimes fine-tuning is sufficient.",
         "Feature space visualization (e.g., t-SNE) can reveal whether features are already aligned.",
       ],
     },
@@ -1435,7 +1435,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Negative transfer happens when the adaptation process is harmful — the adapted model performs worse on the target than no adaptation at all, often caused by incompatible source-target distributions or overly aggressive alignment.",
+        "Negative transfer happens when the adaptation process is harmful - the adapted model performs worse on the target than no adaptation at all, often caused by incompatible source-target distributions or overly aggressive alignment.",
       hints: [
         "Negative transfer is most common when the source and target tasks or distributions are fundamentally incompatible.",
         "It can also occur with inappropriate hyperparameter settings in adversarial training.",
@@ -1515,7 +1515,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Concept drift means the relationship between inputs and outputs changes — the same input X no longer maps to the same label Y, making previously trained models incorrect even for inputs they have seen before.",
+        "Concept drift means the relationship between inputs and outputs changes - the same input X no longer maps to the same label Y, making previously trained models incorrect even for inputs they have seen before.",
       hints: [
         '"Concept" refers to the mapping from X to Y; "drift" means this mapping changes over time.',
         "In contrast, covariate shift only changes P(X) while keeping P(Y|X) fixed.",
@@ -1532,7 +1532,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ADWIN adaptively adjusts the window size using a statistical test: when a significant difference is detected between older and newer data within the window, the old data is dropped, signaling a drift event.",
       hints: [
-        "The key innovation of ADWIN is adaptive window sizing — it automatically grows/shrinks the window.",
+        "The key innovation of ADWIN is adaptive window sizing - it automatically grows/shrinks the window.",
         "A significant statistical difference between sub-windows indicates the data distribution has changed.",
       ],
     },
@@ -1552,7 +1552,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Abrupt drift causes a sudden, large statistical change that is easy to detect; gradual drift produces small, incremental changes that are individually within noise thresholds, requiring longer observation windows or more sensitive tests.",
       hints: [
-        "Think of trying to detect a slow temperature increase vs. a sudden temperature jump — which is harder?",
+        "Think of trying to detect a slow temperature increase vs. a sudden temperature jump - which is harder?",
         "By the time gradual drift accumulates to detectable levels, significant model degradation may have already occurred.",
       ],
     },
@@ -1630,7 +1630,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Self-training generates pseudo-labels for unlabeled target data using the current model, retrains on the combined source-labeled and target-pseudo-labeled data, and iterates — gradually adapting the model to the target domain.",
+        "Self-training generates pseudo-labels for unlabeled target data using the current model, retrains on the combined source-labeled and target-pseudo-labeled data, and iterates - gradually adapting the model to the target domain.",
       hints: [
         "Self-training uses the model\'s own predictions as supervision for unlabeled data.",
         "The key risk is error propagation when pseudo-labels are wrong.",
@@ -1690,7 +1690,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "UDA methods are evaluated on a labeled target test set to measure how well adaptation improved target performance; the test labels are not used during training or adaptation.",
       hints: [
-        "The goal of DA is target performance — source accuracy after adaptation is irrelevant.",
+        "The goal of DA is target performance - source accuracy after adaptation is irrelevant.",
         "Using target test labels during adaptation would violate the unsupervised DA assumption.",
       ],
     },
@@ -1705,7 +1705,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Standard hyperparameter selection uses a validation set with labels; in UDA, no target labels are available for validation, requiring proxy metrics (e.g., source validation accuracy, DEV, importance-weighted validation) that may not correlate with target accuracy.",
       hints: [
-        'This is the "model selection problem" in UDA — how do you choose hyperparameters without target labels?',
+        'This is the "model selection problem" in UDA - how do you choose hyperparameters without target labels?',
         "Gulrajani & Lopez-Paz (2021) showed that inconsistent model selection inflates reported DA results.",
       ],
     },
@@ -1742,7 +1742,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Test-Time Adaptation (TTA) differs from standard unsupervised domain adaptation in that:",
       options: [
         "TTA requires labeled target data while UDA does not",
-        "TTA adapts the model during inference using only the unlabeled test data (no source data retained), typically by optimizing a self-supervised objective like entropy minimization or consistency — enabling adaptation to distribution shift on-the-fly without retraining",
+        "TTA adapts the model during inference using only the unlabeled test data (no source data retained), typically by optimizing a self-supervised objective like entropy minimization or consistency - enabling adaptation to distribution shift on-the-fly without retraining",
         "TTA is computationally cheaper than UDA because it requires no training",
         "TTA can only be applied to computer vision tasks, not NLP",
       ],
@@ -1765,7 +1765,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "TTT++ uses SimCLR-style contrastive learning: the auxiliary head minimizes the contrastive loss over augmented views of test examples. Advantages over rotation prediction: (1) Contrastive learning is more tightly coupled to the main task features. (2) Works for non-geometric distribution shifts where rotation prediction may not correlate with the main task. (3) TTT++ achieves better results on corruption robustness benchmarks (ImageNet-C) than rotation-based TTT.",
       hints: [
         "Rotation prediction auxiliary task weakness: for datasets with orientation-invariant objects (satellite images, medical scans), rotation prediction is trivially solved and provides no useful adaptation signal.",
-        "Contrastive auxiliary task strength: augmentation invariance aligns with robustness to distribution shifts caused by corruptions — a form of image transformation.",
+        "Contrastive auxiliary task strength: augmentation invariance aligns with robustness to distribution shifts caused by corruptions - a form of image transformation.",
       ],
     },
     {
@@ -1776,15 +1776,15 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         'Continual test-time adaptation faces "error accumulation" where the model degrades over time. The method used in EATA (Niu et al., 2022) to address this is:',
       options: [
         "Resetting the model to its initial weights after every N test examples",
-        "Filtering out high-entropy (uncertain) test examples before adaptation and applying Fisher information-based regularization to penalize changes to parameters important for the source distribution — preventing noisy updates and catastrophic forgetting",
+        "Filtering out high-entropy (uncertain) test examples before adaptation and applying Fisher information-based regularization to penalize changes to parameters important for the source distribution - preventing noisy updates and catastrophic forgetting",
         "Using a separate memory bank of source examples to provide periodic supervision signals",
         "Applying early stopping based on test set performance to prevent over-adaptation",
       ],
       correctAnswer: 1,
       explanation:
-        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = \\Sigma_i F_i (\\theta_i - \\theta_0_i)\\^2 where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
+        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold - skipping high-uncertainty examples. (2) Fisher regularization: L_reg = \\Sigma_i F_i (\\theta_i - \\theta_0_i)\\^2 where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
       hints: [
-        "Fisher information as parameter importance: F_i = E[(\\partial log p(y|x)/\\partial\\theta_i)\\^2] — high Fisher importance means the parameter strongly affects source task predictions.",
+        "Fisher information as parameter importance: F_i = E[(\\partial log p(y|x)/\\partial\\theta_i)\\^2] - high Fisher importance means the parameter strongly affects source task predictions.",
         "Threshold filtering: examples with H(p) < H_threshold are reliable and provide good gradient signal. Uncertain examples have noisy pseudo-labels that can hurt performance.",
       ],
     },
@@ -1799,7 +1799,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Few-shot domain adaptation uses a small number of labeled target examples to:",
       options: [
         "Replace the source domain training data entirely",
-        "Guide the alignment direction in feature space — the labeled target examples provide supervision to steer the adapted model toward task-relevant alignment (not just distribution matching), often dramatically improving over both UDA and standard fine-tuning",
+        "Guide the alignment direction in feature space - the labeled target examples provide supervision to steer the adapted model toward task-relevant alignment (not just distribution matching), often dramatically improving over both UDA and standard fine-tuning",
         "Enable data augmentation by generating additional labeled target examples",
         "Select which source examples to exclude from training to reduce negative transfer",
       ],
@@ -1819,7 +1819,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Negative transfer in multi-source domain adaptation occurs when including data from an unrelated source domain hurts performance on the target domain compared to using only the most related source domain.",
       correctAnswer: "True",
       explanation:
-        "Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C — but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.",
+        "Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C - but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.",
       hints: [
         "A-distance: measure of domain discrepancy based on the error rate of a binary domain classifier. Higher classifier error \\to more similar domains.",
         "Multi-source DA best practice: always evaluate each source domain\'s contribution separately before combining. If domain C degrades performance, exclude or downweight it.",
@@ -1833,7 +1833,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Mixture of Experts (MoE) architecture for domain adaptation enables adaptive domain handling by:",
       options: [
         "Training one expert model per source domain and selecting the best expert for each target example at inference time",
-        "Learning a gating network that routes each input to a combination of specialized domain experts — the gating learns soft domain membership and the expert combination produces features that are both discriminative and adaptive to the input\'s underlying domain",
+        "Learning a gating network that routes each input to a combination of specialized domain experts - the gating learns soft domain membership and the expert combination produces features that are both discriminative and adaptive to the input\'s underlying domain",
         "Using reinforcement learning to select which source domain examples to include in each training batch",
         "Training experts on different layers of the network and combining their representations via attention",
       ],
@@ -1842,7 +1842,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "MoE for domain adaptation: the gating network g(x) = softmax(Wx) learns domain assignments from input features. Multiple expert feature extractors {E_1,...,E_K} specialize on different domain aspects. The combined representation f(x) = \\Sigma_k g_k(x) E_k(x) adapts to each example\'s domain content. Advantages: (1) Handles multi-domain inputs where examples may come from hybrid distributions. (2) Learns implicit domain structure without requiring domain labels. (3) Can generalize to novel domains via novel gating combinations.",
       hints: [
         "Domain adaptation with MoE: experts implicitly learn domain-specific feature transformations while the gating network learns to detect domain membership from input statistics.",
-        "Sparse MoE (top-K gating): only K experts activated per example — reduces compute while maintaining adaptability. Load balancing loss ensures no expert is ignored.",
+        "Sparse MoE (top-K gating): only K experts activated per example - reduces compute while maintaining adaptability. Load balancing loss ensures no expert is ignored.",
       ],
     },
   ],
@@ -1856,16 +1856,16 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "The Ben-David et al. (2010) theory bound for domain adaptation states that target error is bounded by:",
       options: [
         "Target error \\leq source error only",
-        "Target error \\leq source error + H-divergence between source and target distributions + \\lambda*, where \\lambda* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously",
+        "Target error \\leq source error + H-divergence between source and target distributions + \\lambda*, where \\lambda* is the combined error of the ideal joint hypothesis for both domains - motivating minimizing both source error and domain divergence simultaneously",
         "Target error \\leq source error \\times (1 + H-divergence)",
         "Target error \\leq H-divergence only, independent of source error",
       ],
       correctAnswer: 1,
       explanation:
-        "Ben-David et al. (2010) bound: \\epsilon_T(h) \\leq \\epsilon_S(h) + d_{H△H}(S,T) + \\lambda* where: \\epsilon_T(h) = target error; \\epsilon_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); \\lambda* = min_{h\\inH}[\\epsilon_S(h)+\\epsilon_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The \\lambda* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
+        "Ben-David et al. (2010) bound: \\epsilon_T(h) \\leq \\epsilon_S(h) + d_{H△H}(S,T) + \\lambda* where: \\epsilon_T(h) = target error; \\epsilon_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); \\lambda* = min_{h\\inH}[\\epsilon_S(h)+\\epsilon_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The \\lambda* term is irreducible - it represents tasks where source and target have inherently different optimal classifiers.",
       hints: [
-        "H-divergence: d_{H△H}(S,T) \\approx 2(1 - 2\\cdotmin_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence \\approx 0.",
-        "\\lambda* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — \\lambda* is non-zero.",
+        "H-divergence: d_{H△H}(S,T) \\approx 2(1 - 2\\cdotmin_h error_rate(domain_classifier)) - related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence \\approx 0.",
+        "\\lambda* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error - \\lambda* is non-zero.",
       ],
     },
     {
@@ -1876,7 +1876,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.",
       correctAnswer: "True",
       explanation:
-        "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance \\approx 2(1 - 2\\cdoterror(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance \\approx 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance \\approx 2. A lower A-distance means greater domain similarity — more likely that domain adaptation will succeed without large error.",
+        "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance \\approx 2(1 - 2\\cdoterror(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance \\approx 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance \\approx 2. A lower A-distance means greater domain similarity - more likely that domain adaptation will succeed without large error.",
       hints: [
         "A-distance computation: train a linear SVM on source (label 0) and target (label 1) examples. Error rate estimates 1 - A-distance/2.",
         "Using A-distance to select source domains: compute A-distance between each source domain and the target; upweight or select source domains with lower A-distance.",
@@ -1890,15 +1890,15 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Conditional domain adaptation (vs. marginal adaptation) aligns:",
       options: [
         "The marginal feature distributions P_S(Z) and P_T(Z) separately from the label distributions",
-        "The class-conditional feature distributions P_S(Z|Y) and P_T(Z|Y) — ensuring that source and target examples of the same class have similar representations, rather than just aligning the overall feature distributions which may ignore class structure",
+        "The class-conditional feature distributions P_S(Z|Y) and P_T(Z|Y) - ensuring that source and target examples of the same class have similar representations, rather than just aligning the overall feature distributions which may ignore class structure",
         "The joint distribution P(Z,Y) using a Wasserstein-2 metric between source and target",
         "Only the output logit distributions P_S(Y|Z) and P_T(Y|Z), ignoring the feature space",
       ],
       correctAnswer: 1,
       explanation:
-        "Marginal alignment limitation: aligning P_S(Z) \\approx P_T(Z) can mix classes — class A features from source may align with class B features from target. Conditional DA (CDA) aligns P_S(Z|Y=c) \\approx P_T(Z|Y=c) for each class c. Methods: (1) Joint Maximum Mean Discrepancy (JMMD): match joint (feature, one-hot label) distributions. (2) CDAN (Long et al., 2018): condition the adversarial domain discriminator on the model\'s predicted class distribution.",
+        "Marginal alignment limitation: aligning P_S(Z) \\approx P_T(Z) can mix classes - class A features from source may align with class B features from target. Conditional DA (CDA) aligns P_S(Z|Y=c) \\approx P_T(Z|Y=c) for each class c. Methods: (1) Joint Maximum Mean Discrepancy (JMMD): match joint (feature, one-hot label) distributions. (2) CDAN (Long et al., 2018): condition the adversarial domain discriminator on the model\'s predicted class distribution.",
       hints: [
-        "CDAN discriminator input: D(f ⊗ p(y|f)) — the outer product of features f and predicted class probabilities p(y|f). This conditions the domain discriminator on the predicted label, enabling class-conditional alignment.",
+        "CDAN discriminator input: D(f ⊗ p(y|f)) - the outer product of features f and predicted class probabilities p(y|f). This conditions the domain discriminator on the predicted label, enabling class-conditional alignment.",
         "Pseudo-label quality in conditional DA: the conditional alignment depends on accurate pseudo-labels for target examples. Warmup with marginal alignment before switching to conditional alignment improves stability.",
       ],
     },
@@ -1913,7 +1913,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Prompt tuning for domain adaptation adapts a frozen pre-trained language model to a new domain by:",
       options: [
         "Fine-tuning all model parameters using domain-specific data",
-        'Learning a small set of continuous "soft prompt" vectors prepended to the input — only these prompt parameters are updated during adaptation while the LLM weights remain frozen, enabling efficient multi-domain adaptation by swapping domain-specific prompt vectors',
+        'Learning a small set of continuous "soft prompt" vectors prepended to the input - only these prompt parameters are updated during adaptation while the LLM weights remain frozen, enabling efficient multi-domain adaptation by swapping domain-specific prompt vectors',
         "Searching for the best discrete prompt text using gradient-free optimization",
         "Adding adapter layers between transformer blocks that are fine-tuned while the attention weights remain frozen",
       ],
@@ -1921,7 +1921,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       explanation:
         "Prompt tuning for DA: a domain-specific soft prompt P_d \\in R^{L\\timesd} is prepended to the input embedding. Only P_d is updated by gradient descent on domain-specific data; the pre-trained LLM is frozen. Benefits: (1) Multi-domain deployment: store one small P_d per domain (~L\\timesd parameters) vs. full model copy. (2) Fast adaptation: few-shot domain-specific learning updates only the small prompt. (3) No catastrophic forgetting: frozen LLM retains all pre-training knowledge.",
       hints: [
-        "Prompt tuning parameter count: L=100 tokens \\times d=768 dims = 76,800 parameters for BERT-base vs. 110M for full fine-tuning — ~1400\\times more parameter-efficient.",
+        "Prompt tuning parameter count: L=100 tokens \\times d=768 dims = 76,800 parameters for BERT-base vs. 110M for full fine-tuning - ~1400\\times more parameter-efficient.",
         "Domain prompt library: for 100 domains, store 100 small prompt vectors (~100KB each) instead of 100 full model copies (~440MB for BERT). 4400\\times storage reduction.",
       ],
     },
@@ -1936,7 +1936,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens \\times 12 layers = only 0.03% of ViT-Large parameters.",
       hints: [
         "VPT-Deep vs. VPT-Shallow: VPT-Deep injects prompts at every transformer layer (more expressive, more parameters); VPT-Shallow only at the input. VPT-Deep consistently outperforms shallow on domain adaptation tasks.",
-        "Visual prompt tokens have no direct semantic meaning — they are learned feature modifications that shift the ViT\'s attention patterns to focus on domain-relevant features.",
+        "Visual prompt tokens have no direct semantic meaning - they are learned feature modifications that shift the ViT\'s attention patterns to focus on domain-relevant features.",
       ],
     },
     {
@@ -1947,13 +1947,13 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "CLIP-based domain adaptation (CoOp, CoCoOp) adapts CLIP to downstream domains. CoCoOp improves over CoOp by:",
       options: [
         "Training more prompt tokens with a higher learning rate",
-        "Making the prompt context conditioned on each input image instance (x-conditional prompts) rather than static class-level prompts — enabling the prompt to adapt to the specific visual content of each image, improving generalization to unseen classes",
+        "Making the prompt context conditioned on each input image instance (x-conditional prompts) rather than static class-level prompts - enabling the prompt to adapt to the specific visual content of each image, improving generalization to unseen classes",
         "Using a separate adapter network to process CLIP\'s text embeddings",
         "Replacing the text encoder with a fine-tuned language model specific to the target domain",
       ],
       correctAnswer: 1,
       explanation:
-        "CoOp (Zhou et al., 2022): learn K context tokens [v\\_1,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(\\cdot) takes image features and outputs a per-instance shift \\Deltav_i = h(f(x)). Prompt = [v\\_1+\\Deltav\\_1,...,vK+\\DeltavK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
+        "CoOp (Zhou et al., 2022): learn K context tokens [v\\_1,...,vK] shared across all classes - these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(\\cdot) takes image features and outputs a per-instance shift \\Deltav_i = h(f(x)). Prompt = [v\\_1+\\Deltav\\_1,...,vK+\\DeltavK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
       hints: [
         'Base-to-novel generalization: train on 16-shot of "base" classes, evaluate on completely "novel" classes not seen during prompt training. CoOp hurts novel class accuracy; CoCoOp maintains it.',
         "Meta-net architecture: a single linear layer mapping CLIP image features (512-dim for ViT-B/16) \\to per-token bias (K\\times512). Very lightweight, ~0.01% of CLIP parameters.",
@@ -1970,7 +1970,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Source-free domain adaptation (SFDA) addresses the practical constraint that:",
       options: [
         "The target domain is too large to fit in GPU memory",
-        "Source data cannot be retained at adaptation time due to privacy regulations, data storage limitations, or proprietary constraints — only a pre-trained source model is available, and adaptation must be performed using only unlabeled target data",
+        "Source data cannot be retained at adaptation time due to privacy regulations, data storage limitations, or proprietary constraints - only a pre-trained source model is available, and adaptation must be performed using only unlabeled target data",
         "Source domain labels are unavailable due to the original dataset being unlabeled",
         "The source model was trained on a different computational platform incompatible with adaptation infrastructure",
       ],
@@ -1978,7 +1978,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       explanation:
         "SFDA motivation: (1) GDPR and data privacy: medical images from hospital A cannot be shared with hospital B for adaptation. (2) Proprietary data: a source model is trained on proprietary data; only the model weights are distributed, not the data. SFDA methods: (1) SHOT (Liang et al., 2020): freeze source classifier head, adapt feature extractor via self-supervised clustering + entropy minimization on target. (2) G-SFDA: generate virtual source features from the source model for alignment.",
       hints: [
-        "SHOT insight: the source classifier head encodes source class semantics — keep it frozen. Only adapt the feature extractor to make target features align with what the classifier expects.",
+        "SHOT insight: the source classifier head encodes source class semantics - keep it frozen. Only adapt the feature extractor to make target features align with what the classifier expects.",
         "Pseudo-label quality is critical for SFDA: use self-supervised objectives (entropy minimization, consistency regularization) to improve pseudo-label quality before using them for supervised fine-tuning.",
       ],
     },
@@ -1987,12 +1987,12 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Generative replay in source-free domain adaptation — generating synthetic source-like data from the source model and using it for domain alignment — is inspired by continual learning approaches to prevent catastrophic forgetting.",
+        "Generative replay in source-free domain adaptation - generating synthetic source-like data from the source model and using it for domain alignment - is inspired by continual learning approaches to prevent catastrophic forgetting.",
       correctAnswer: "True",
       explanation:
-        "Generative replay for SFDA: train a generator G to produce synthetic source-like images from the source model. During adaptation, align target features with the generated pseudo-source features — without needing the real source data. Inspiration from continual learning: Experience Replay and Generative Replay (Shin et al., 2017) prevent catastrophic forgetting by replaying past task data (or generated approximations). Methods: GSFDA uses the source model\'s softmax outputs as class prototypes.",
+        "Generative replay for SFDA: train a generator G to produce synthetic source-like images from the source model. During adaptation, align target features with the generated pseudo-source features - without needing the real source data. Inspiration from continual learning: Experience Replay and Generative Replay (Shin et al., 2017) prevent catastrophic forgetting by replaying past task data (or generated approximations). Methods: GSFDA uses the source model\'s softmax outputs as class prototypes.",
       hints: [
-        "Model inversion: given a trained classifier, reconstruct inputs that maximize class probabilities — the inverted images are prototype images for each class, usable as pseudo-source data.",
+        "Model inversion: given a trained classifier, reconstruct inputs that maximize class probabilities - the inverted images are prototype images for each class, usable as pseudo-source data.",
         "Generative replay limitation: for complex distributions (natural images), the generated pseudo-source may not faithfully represent source feature statistics.",
       ],
     },
@@ -2004,7 +2004,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         'In source-free domain adaptation, the "information maximization" objective (combining entropy minimization with diversity regularization) addresses what specific failure mode?',
       options: [
         "Gradient vanishing during adaptation when entropy is already low",
-        "Model collapse to a single class: pure entropy minimization drives the model to predict one dominant class for all target examples (zero entropy, but all predictions are the same class) — diversity regularization (maximizing the marginal entropy H(E_x[p(y|x)])) prevents this by encouraging a uniform class distribution across the target set",
+        "Model collapse to a single class: pure entropy minimization drives the model to predict one dominant class for all target examples (zero entropy, but all predictions are the same class) - diversity regularization (maximizing the marginal entropy H(E_x[p(y|x)])) prevents this by encouraging a uniform class distribution across the target set",
         "Overfitting to the most common classes in the target domain",
         "The model forgetting to predict rare classes due to class imbalance in the target domain",
       ],
@@ -2012,7 +2012,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       explanation:
         "Information maximization = entropy minimization + marginal entropy maximization: L_IM = -H(y|x) + H(y) = \\Sigma_x \\Sigma_y p(y|x) log p(y|x) - H(mean_x p(y|x)). The first term minimizes conditional entropy (confident predictions). The second term maximizes marginal entropy (diverse predictions). Without the diversity term: the model predicts class 1 for all examples (H(y|x)=0 but only one class used). This objective is used in IM, SHOT, and many SFDA methods.",
       hints: [
-        "IM objective equivalence: maximizing I(y;x) = H(y) - H(y|x) — mutual information between predictions and inputs. Maximizes both prediction confidence (low H(y|x)) and diversity (high H(y)).",
+        "IM objective equivalence: maximizing I(y;x) = H(y) - H(y|x) - mutual information between predictions and inputs. Maximizes both prediction confidence (low H(y|x)) and diversity (high H(y)).",
         "Batch size effect: diversity term H(mean_x p(y|x)) requires a sufficiently large batch to accurately estimate the marginal distribution.",
       ],
     },
@@ -2037,10 +2037,10 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CDA unique challenge: adapter the model to domain D_t without forgetting adaptation to D_1...D_{t-1}. Methods: (1) EWC regularization: penalize changes to parameters important for past domains via Fisher information. (2) Experience replay: small buffer of past domain examples interleaved with new domain training. (3) Adapter-based: domain-specific adapter modules that grow with new domains — backbone frozen, zero forgetting by construction. Key metric: backward transfer (BWT) = performance on past domains after new domain learning. Negative BWT indicates catastrophic forgetting.",
+        "CDA unique challenge: adapter the model to domain D_t without forgetting adaptation to D_1...D_{t-1}. Methods: (1) EWC regularization: penalize changes to parameters important for past domains via Fisher information. (2) Experience replay: small buffer of past domain examples interleaved with new domain training. (3) Adapter-based: domain-specific adapter modules that grow with new domains - backbone frozen, zero forgetting by construction. Key metric: backward transfer (BWT) = performance on past domains after new domain learning. Negative BWT indicates catastrophic forgetting.",
       hints: [
-        "Adapter modules (Houlsby 2019): small bottleneck layers inserted into Transformer blocks. Only adapter parameters updated — all other parameters frozen. Near-zero forgetting at cost of O(r\\cdotd) parameters per domain.",
-        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty \\lambda\\Sigma F_i(\\theta_i - \\theta^*_i)\\^2 prevents moving important parameters. Requires storing F per domain — memory cost O(d\\cdotT) for T domains.",
+        "Adapter modules (Houlsby 2019): small bottleneck layers inserted into Transformer blocks. Only adapter parameters updated - all other parameters frozen. Near-zero forgetting at cost of O(r\\cdotd) parameters per domain.",
+        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty \\lambda\\Sigma F_i(\\theta_i - \\theta^*_i)\\^2 prevents moving important parameters. Requires storing F per domain - memory cost O(d\\cdotT) for T domains.",
       ],
     },
     {
@@ -2051,7 +2051,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "In continual domain adaptation, using a larger learning rate for adapter layers while freezing the backbone is a standard technique to reduce catastrophic forgetting.",
       correctAnswer: "True",
       explanation:
-        "Freezing the backbone limits parameter updates to adapter layers (small fraction of total parameters), dramatically reducing catastrophic forgetting. The backbone retains general representations; adapters specialize per domain. L2-SP regularizes fine-tuned parameters toward pre-trained values — an alternative allowing gradual adaptation. Both are standard PEFT techniques for CDA.",
+        "Freezing the backbone limits parameter updates to adapter layers (small fraction of total parameters), dramatically reducing catastrophic forgetting. The backbone retains general representations; adapters specialize per domain. L2-SP regularizes fine-tuned parameters toward pre-trained values - an alternative allowing gradual adaptation. Both are standard PEFT techniques for CDA.",
       hints: [
         "LoRA for CDA: add low-rank adaptation matrices per domain. Existing domain LoRA weights frozen when moving to new domain. Model grows by r(d+k) parameters per domain.",
         "Freeze schedule: freeze backbone after epoch 1 of each domain, when task-specific signal dominates. Earlier freezing = more stability; later freezing = more plasticity.",
@@ -2065,16 +2065,16 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "The stability-plasticity dilemma in CDA is best characterized as:",
       options: [
         "Tradeoff between stable gradients and plastic loss landscapes",
-        "The fundamental tension between retaining past domain knowledge (stability) and rapidly adapting to new domains (plasticity) — high stability prevents catastrophic forgetting but slows new domain learning; high plasticity enables fast adaptation but causes catastrophic forgetting",
+        "The fundamental tension between retaining past domain knowledge (stability) and rapidly adapting to new domains (plasticity) - high stability prevents catastrophic forgetting but slows new domain learning; high plasticity enables fast adaptation but causes catastrophic forgetting",
         "Instability of batch normalization across domains",
         "Tradeoff between model size and inference speed",
       ],
       correctAnswer: 1,
       explanation:
-        "Progressive Neural Networks (Rusu 2016): new column per domain with lateral connections — infinite plasticity, zero forgetting, but model size grows linearly with domains. PackNet: prune task-specific weights, reuse pruned capacity for new tasks — fixed model size, near-zero forgetting. EWC: weighted regularization balancing plasticity and stability. The optimal point depends on the number of domains and available compute.",
+        "Progressive Neural Networks (Rusu 2016): new column per domain with lateral connections - infinite plasticity, zero forgetting, but model size grows linearly with domains. PackNet: prune task-specific weights, reuse pruned capacity for new tasks - fixed model size, near-zero forgetting. EWC: weighted regularization balancing plasticity and stability. The optimal point depends on the number of domains and available compute.",
       hints: [
-        "Progressive NNs never overwrite old weights — zero forgetting by construction. But model grows O(T) with T domains.",
-        "HAT (Hard Attention to Task): binary masks per task select which neurons activate. Different domains use different network subsets — compact and zero-forgetting.",
+        "Progressive NNs never overwrite old weights - zero forgetting by construction. But model grows O(T) with T domains.",
+        "HAT (Hard Attention to Task): binary masks per task select which neurons activate. Different domains use different network subsets - compact and zero-forgetting.",
       ],
     },
   ],
@@ -2087,7 +2087,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "MSDA (Multi-Source Domain Adaptation) addresses which limitation of single-source DA?",
       options: [
         "Single-source DA cannot handle regression",
-        "Single-source DA is limited by one domain\'s diversity — MSDA leverages multiple heterogeneous sources to learn more robust domain-invariant features covering the target domain better",
+        "Single-source DA is limited by one domain\'s diversity - MSDA leverages multiple heterogeneous sources to learn more robust domain-invariant features covering the target domain better",
         "Single-source DA requires more labeled target data",
         "Single-source DA only works with images",
       ],
@@ -2121,7 +2121,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "The MSDA generalization bound motivates learning source mixture weights \\alpha_k by:",
       options: [
         "Maximizing total source data size",
-        "Minimizing \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] — weighting sources by their error + divergence to the target, so closer, more accurate sources receive more weight",
+        "Minimizing \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] - weighting sources by their error + divergence to the target, so closer, more accurate sources receive more weight",
         "Using equal weights for all sources",
         "Weighting by source dataset size only",
       ],
@@ -2130,7 +2130,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "The MSDA bound \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda* suggests optimal \\alpha_k minimizes weighted sum of source error and source-target H-divergence. In practice: learn \\alpha_k as attention weights over source domain discriminator outputs. Sources with low divergence to target and low source error receive the most weight.",
       hints: [
         "H-divergence estimation: domain classifier accuracy \\epsilon_d gives d_{H△H} \\approx 2(1-2\\epsilon_d). Low domain classifier accuracy = high divergence = similar source and target.",
-        "\\lambda* term: if no hypothesis performs well on all sources + target, bound is vacuous — negative transfer regime.",
+        "\\lambda* term: if no hypothesis performs well on all sources + target, bound is vacuous - negative transfer regime.",
       ],
     },
   ],
@@ -2142,7 +2142,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       question: "Domain generalization differs from domain adaptation in that:",
       options: [
         "DG uses more labeled source data",
-        "DG has no access to target domain data at training time — the model must generalize to unseen domains using only source data, whereas DA has access to target samples (labeled or unlabeled) during training",
+        "DG has no access to target domain data at training time - the model must generalize to unseen domains using only source data, whereas DA has access to target samples (labeled or unlabeled) during training",
         "DG only applies to image classification",
         "DG requires 10+ source domains while DA works with one",
       ],
@@ -2150,7 +2150,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "DG is strictly harder than DA. DA leverages target distribution for alignment; DG must learn invariances without seeing the target. DG methods: (1) MixStyle: mix instance-level feature statistics across domains. (2) MLDG: meta-learning using held-out source as simulated target. (3) IRM: force optimal classifier to be domain-invariant. (4) SWAD: flat minima via weight averaging. DomainBed finding: ERM with proper tuning often matches specialized DG algorithms.",
       hints: [
-        "Test-time training (TTT): hybrid between DG and DA — adapts using self-supervised auxiliary task on test batches without test labels.",
+        "Test-time training (TTT): hybrid between DG and DA - adapts using self-supervised auxiliary task on test batches without test labels.",
         "SWAD: finds flat minima by averaging weights along loss basin trajectory. Consistently outperforms ERM on DomainBed under fair evaluation.",
       ],
     },
@@ -2164,7 +2164,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "Gulrajani & Lopez-Paz (2021): ERM with proper hyperparameter tuning matches or beats many specialized DG algorithms on DomainBed. Key reasons: (1) Many DG algorithms tune on target domain (leakage). (2) Strong backbone + ERM is a powerful baseline. (3) True gains require genuinely better OOD generalization, not just better hyperparameter selection. This paper prompted the community to adopt stricter evaluation protocols.",
       hints: [
-        "IID validation vs. leave-one-domain-out model selection gives different algorithm rankings — the choice of validation protocol significantly affects conclusions.",
+        "IID validation vs. leave-one-domain-out model selection gives different algorithm rankings - the choice of validation protocol significantly affects conclusions.",
         "Practical takeaway: always compare to ERM with the same backbone and training budget as a baseline before claiming DG method superiority.",
       ],
     },
@@ -2176,16 +2176,16 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "IRM (Invariant Risk Minimization) forces learning features where:",
       options: [
         "Average risk across all environments is minimized",
-        "The optimal linear classifier w is the same across all environments — the IRM penalty ||\\nabla_{w|w=1} R^e(w∘\\Phi)||\\^2 forces \\Phi such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
+        "The optimal linear classifier w is the same across all environments - the IRM penalty ||\\nabla_{w|w=1} R^e(w∘\\Phi)||\\^2 forces \\Phi such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
         "Data augmentation alone learns domain-invariant features",
         "Adversarial training is more stable than gradient penalties",
       ],
       correctAnswer: 1,
       explanation:
-        "IRM motivation: ERM exploits spurious correlations that differ across environments (cows on grass in training, not test). IRM forces invariant features via the gradient penalty. Causal connection: IRM recovers causal feature set under strong assumptions. Limitations: requires diverse environments; with too few environments, degenerates to ERM. REx alternative: minimize variance of risks across environments — simpler with similar effect.",
+        "IRM motivation: ERM exploits spurious correlations that differ across environments (cows on grass in training, not test). IRM forces invariant features via the gradient penalty. Causal connection: IRM recovers causal feature set under strong assumptions. Limitations: requires diverse environments; with too few environments, degenerates to ERM. REx alternative: minimize variance of risks across environments - simpler with similar effect.",
       hints: [
         "IRM failure modes: with only 2 mildly diverse environments, IRM may overfit to those specific environments rather than learning truly invariant features.",
-        "Practical IRM: \\lambda controls penalty strength. Start with small \\lambda and increase — monitor if penalty conflicts with accuracy.",
+        "Practical IRM: \\lambda controls penalty strength. Start with small \\lambda and increase - monitor if penalty conflicts with accuracy.",
       ],
     },
   ],
@@ -2197,7 +2197,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       question: "Subpopulation shift refers to:",
       options: [
         "Uniform feature distribution change across all groups",
-        "Different group proportions at test vs. training time — a model maximizing average training accuracy performs poorly on minority groups whose test prevalence exceeds training prevalence",
+        "Different group proportions at test vs. training time - a model maximizing average training accuracy performs poorly on minority groups whose test prevalence exceeds training prevalence",
         "Measurement errors in specific groups",
         "Adding new demographic features at test time",
       ],
@@ -2205,7 +2205,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       explanation:
         "Subpopulation shift example: 80% group A, 20% group B in training; 40% A, 60% B at test. Model biased toward A features fails at test. Methods: (1) Group DRO: minimize worst-group risk. (2) JTT: identify misclassified (likely minority) examples, upsample, retrain. (3) EIIL: infer group labels from model disagreement. Waterbirds benchmark: spurious land/water background correlation with bird type.",
       hints: [
-        "Average accuracy is misleading for subpopulation shift — always report worst-group accuracy.",
+        "Average accuracy is misleading for subpopulation shift - always report worst-group accuracy.",
         "JTT two-stage: (1) train ERM until convergence, (2) upsample misclassified examples 10-100\\times for final model.",
       ],
     },
@@ -2231,15 +2231,15 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "Group DRO minimizes max_{g\\inG} R^g(h). The theoretical guarantee is:",
       options: [
         "Low expected loss over the worst possible mixture of all distributions",
-        "Uniformly low loss across all pre-defined groups — bounds worst-case test loss under subpopulation shift within the group structure G",
+        "Uniformly low loss across all pre-defined groups - bounds worst-case test loss under subpopulation shift within the group structure G",
         "Variance minimization of losses across groups",
         "Sum of group losses weighted by estimated test group sizes",
       ],
       correctAnswer: 1,
       explanation:
-        "Group DRO objective: min_\\theta max_{g\\inG} E_{(x,y)~P_g}[L(\\theta;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G — if the test shift is outside G, guarantees may not hold.",
+        "Group DRO objective: min_\\theta max_{g\\inG} E_{(x,y)~P_g}[L(\\theta;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G - if the test shift is outside G, guarantees may not hold.",
       hints: [
-        "Softmax group weighting: \\alpha_g \\propto exp(R^g/\\tau) — smooth approximation of the max operator. Temperature \\tau controls concentration on worst group.",
+        "Softmax group weighting: \\alpha_g \\propto exp(R^g/\\tau) - smooth approximation of the max operator. Temperature \\tau controls concentration on worst group.",
         "Group size and variance: small groups have high-variance empirical risk estimates. Use EMA of per-group losses for stability.",
       ],
     },
@@ -2253,7 +2253,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "Domain adaptation for NLP differs from vision DA primarily because:",
       options: [
         "NLP models cannot be pre-trained and fine-tuned like vision models",
-        "Domain shift in NLP manifests as vocabulary shift, syntactic style, and topic drift rather than visual appearance changes — pre-trained LMs partially mitigate this, but continued pre-training on target domain text (BioBERT, SciBERT) remains important for specialized domains",
+        "Domain shift in NLP manifests as vocabulary shift, syntactic style, and topic drift rather than visual appearance changes - pre-trained LMs partially mitigate this, but continued pre-training on target domain text (BioBERT, SciBERT) remains important for specialized domains",
         "NLP DA only works for sentiment analysis",
         "NLP models are too small to benefit from domain adaptation",
       ],
@@ -2262,7 +2262,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "NLP domain shift: (1) Vocabulary: medical text has specialized terminology. (2) Syntax: legal text uses passive constructions. (3) Topics: different topic distributions across domains. BioBERT: continued pre-training on PubMed abstracts outperforms general BERT by 1-3% on biomedical NER. SciBERT: trained on semantic scholar corpus for scientific text. Domain-adversarial fine-tuning also effective for cross-domain NLP adaptation.",
       hints: [
         "Continued pre-training recipe: take BERT checkpoint, train on target domain text with MLM for 100K steps. Simple and effective baseline for NLP DA.",
-        "Domain-specific vocabularies: BioBERT uses BERT\'s original vocabulary (not domain-specific tokenizer). SciBERT trains its own BPE vocabulary on scientific text — improves subword tokenization quality for technical terms.",
+        "Domain-specific vocabularies: BioBERT uses BERT\'s original vocabulary (not domain-specific tokenizer). SciBERT trains its own BPE vocabulary on scientific text - improves subword tokenization quality for technical terms.",
       ],
     },
     {
@@ -2320,7 +2320,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "TTT splits a model into shared encoder + main-task head + auxiliary-task head. During source training both heads are trained jointly. At test time, the main-task head is frozen and only the encoder is updated using the self-supervised auxiliary loss (e.g., rotation prediction) on each individual test sample or mini-batch. This enables sample-level adaptation without any target labels. Key insight: the auxiliary task provides a learning signal that is correlated with useful representations, so optimizing it at test time shifts the encoder toward the target distribution.",
       hints: [
-        "The auxiliary task must be learnable from unlabeled data — rotation prediction, jigsaw, SimCLR contrastive loss all work.",
+        "The auxiliary task must be learnable from unlabeled data - rotation prediction, jigsaw, SimCLR contrastive loss all work.",
         "TTT adapts the encoder per-sample or per-batch; TTT++ extends this with momentum updates to avoid catastrophic forgetting.",
       ],
     },
@@ -2336,9 +2336,9 @@ const moreAdaptQ3: Record<string, Question[]> = {
         "Training a domain classifier adversarially on test features to align them with source features",
       ],
       correctAnswer: 1,
-      explanation: "TENT (Test ENTropy minimization) freezes all parameters except the scale (gamma) and shift (beta) parameters of BatchNorm layers, then minimizes prediction entropy H(p) = -sum p_i log p_i on the test batch. Only 2 parameters per BN layer are updated, making adaptation extremely lightweight. The entropy objective encourages confident, low-entropy predictions without requiring labels. TENT is effective because BN affine parameters control feature statistics — adapting them corrects the batch norm statistics mismatch between source and target domains.",
+      explanation: "TENT (Test ENTropy minimization) freezes all parameters except the scale (gamma) and shift (beta) parameters of BatchNorm layers, then minimizes prediction entropy H(p) = -sum p_i log p_i on the test batch. Only 2 parameters per BN layer are updated, making adaptation extremely lightweight. The entropy objective encourages confident, low-entropy predictions without requiring labels. TENT is effective because BN affine parameters control feature statistics - adapting them corrects the batch norm statistics mismatch between source and target domains.",
       hints: [
-        "TENT only updates BN affine params (gamma, beta), not the running mean/variance — those are also reset to test-batch statistics.",
+        "TENT only updates BN affine params (gamma, beta), not the running mean/variance - those are also reset to test-batch statistics.",
         "Entropy minimization is a proxy for target accuracy: confident predictions correlate with correct predictions when the domain shift is not too large.",
       ],
     },
@@ -2349,9 +2349,9 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "TENT (entropy minimization at test time) is guaranteed to improve accuracy for any level of domain shift, provided the model was pretrained on a sufficiently large source dataset.",
       options: ["True", "False"],
       correctAnswer: "False",
-      explanation: "TENT can fail or even hurt accuracy under large domain shifts or when the source model's predictions on the target are already highly uncertain. Entropy minimization can collapse to a degenerate solution where the model confidently predicts one class for all inputs (entropy collapse). Additionally, TENT adapts only BN affine parameters — if the feature extractor is deeply mismatched to the target, shallow BN adaptation is insufficient. Robust TTA methods like SAR and EATA add regularization to prevent collapse.",
+      explanation: "TENT can fail or even hurt accuracy under large domain shifts or when the source model's predictions on the target are already highly uncertain. Entropy minimization can collapse to a degenerate solution where the model confidently predicts one class for all inputs (entropy collapse). Additionally, TENT adapts only BN affine parameters - if the feature extractor is deeply mismatched to the target, shallow BN adaptation is insufficient. Robust TTA methods like SAR and EATA add regularization to prevent collapse.",
       hints: [
-        "Entropy collapse: if the model predicts class 0 for everything, entropy is 0 — this is a valid but useless minimum of the TENT objective.",
+        "Entropy collapse: if the model predicts class 0 for everything, entropy is 0 - this is a valid but useless minimum of the TENT objective.",
         "TENT works best for small-to-medium domain shifts (e.g., ImageNet-C corruptions) but struggles with large structural domain gaps.",
       ],
     },
@@ -2367,10 +2367,10 @@ const moreAdaptQ3: Record<string, Question[]> = {
         "Overconfident predictions due to batch normalization statistics being updated too aggressively",
       ],
       correctAnswer: 1,
-      explanation: "CoTTA identifies two compounding failure modes in continual TTA: (1) error accumulation — noisy pseudo-labels at each step compound errors, and (2) catastrophic forgetting — the model drifts from source weights so far that it loses source-domain knowledge. CoTTA addresses both with: (a) stochastic restore — randomly reset a fraction of parameters to source weights at each step to maintain source knowledge, and (b) augmentation-averaged predictions — average predictions across multiple augmented views of each test sample to obtain robust pseudo-labels, reducing noise. This allows stable adaptation across sequences of continuously changing domains.",
+      explanation: "CoTTA identifies two compounding failure modes in continual TTA: (1) error accumulation - noisy pseudo-labels at each step compound errors, and (2) catastrophic forgetting - the model drifts from source weights so far that it loses source-domain knowledge. CoTTA addresses both with: (a) stochastic restore - randomly reset a fraction of parameters to source weights at each step to maintain source knowledge, and (b) augmentation-averaged predictions - average predictions across multiple augmented views of each test sample to obtain robust pseudo-labels, reducing noise. This allows stable adaptation across sequences of continuously changing domains.",
       hints: [
         "Error accumulation analogy: each noisy pseudo-label update moves the model slightly in the wrong direction; over thousands of steps, the model is far from optimal.",
-        "Stochastic restore in CoTTA: with probability p, each neuron's weights are reset to source weights — this acts as an implicit regularizer toward the source model.",
+        "Stochastic restore in CoTTA: with probability p, each neuron's weights are reset to source weights - this acts as an implicit regularizer toward the source model.",
       ],
     },
   ],
@@ -2387,7 +2387,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
         "It transfers the source encoder and aligns target features to source features using a learned discriminator without the source data",
       ],
       correctAnswer: 1,
-      explanation: "SHOT's key insight: the source classifier (hypothesis) encodes source-domain class boundaries. Fix this classifier and only adapt the feature extractor on the target. Objective: Information Maximization (IM) = -H(mean_x p(y|x)) + mean_x H(p(y|x)) — the first term maximizes prediction diversity across the target batch (prevents collapse to one class), the second term minimizes per-sample entropy (encourages confident predictions). Pseudo-labels from nearest-centroid clustering in the feature space further refine adaptation. No source data is needed — only the pretrained model is transferred, addressing privacy concerns.",
+      explanation: "SHOT's key insight: the source classifier (hypothesis) encodes source-domain class boundaries. Fix this classifier and only adapt the feature extractor on the target. Objective: Information Maximization (IM) = -H(mean_x p(y|x)) + mean_x H(p(y|x)) - the first term maximizes prediction diversity across the target batch (prevents collapse to one class), the second term minimizes per-sample entropy (encourages confident predictions). Pseudo-labels from nearest-centroid clustering in the feature space further refine adaptation. No source data is needed - only the pretrained model is transferred, addressing privacy concerns.",
       hints: [
         "Information maximization = maximize marginal entropy (diversity) + minimize conditional entropy (confidence). These two competing objectives prevent both collapse and overconfidence.",
         "SHOT-IM (information maximization only) vs SHOT (IM + pseudo-label self-training): the latter achieves state-of-the-art on Office-Home.",
@@ -2438,10 +2438,10 @@ const moreAdaptQ3: Record<string, Question[]> = {
         "The maximum mean discrepancy (MMD) between feature distributions of different environments",
       ],
       correctAnswer: 1,
-      explanation: "IRM objective: min_{phi,w} sum_e R_e(w circ phi) + lambda * sum_e ||gradient_{w|w=1} R_e(w circ phi)||^2. The penalty term ||gradient_{w|w=1} R_e||^2 measures how far the fixed classifier w=1 is from being simultaneously optimal for environment e. If w=1 is optimal for all environments (gradient=0 everywhere), it means no better linear classifier exists on phi — i.e., the representation already captures the invariant causal features. Spurious correlations (e.g., cow on grass background) are non-invariant: the optimal classifier differs across environments where the correlation holds/breaks.",
+      explanation: "IRM objective: min_{phi,w} sum_e R_e(w circ phi) + lambda * sum_e ||gradient_{w|w=1} R_e(w circ phi)||^2. The penalty term ||gradient_{w|w=1} R_e||^2 measures how far the fixed classifier w=1 is from being simultaneously optimal for environment e. If w=1 is optimal for all environments (gradient=0 everywhere), it means no better linear classifier exists on phi - i.e., the representation already captures the invariant causal features. Spurious correlations (e.g., cow on grass background) are non-invariant: the optimal classifier differs across environments where the correlation holds/breaks.",
       hints: [
         "IRM intuition: if a feature causes the label, the optimal classifier on that feature is the same regardless of environment. If a feature is spuriously correlated, the optimal classifier changes across environments.",
-        "IRMv1 uses w=1 as the fixed point for gradient computation — a linearization that makes the objective tractable but approximate.",
+        "IRMv1 uses w=1 as the fixed point for gradient computation - a linearization that makes the objective tractable but approximate.",
       ],
     },
     {
@@ -2454,7 +2454,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "Gulrajani and Lopez-Paz (2021) showed in a careful DomainBed study that IRM does NOT consistently outperform a well-tuned ERM baseline when controlling for model selection methodology and hyperparameters. IRM's theoretical guarantees require many diverse environments and linear models; with deep nonlinear networks and limited environments, IRM can underfit or fail to find the invariant representation. The study found that ERM with careful data augmentation and model selection often matches or beats IRM on practical benchmarks.",
       hints: [
         "DomainBed finding: the gap between IRM and ERM often disappears when using the same model selection protocol (train-domain validation vs oracle).",
-        "IRM's nonlinear extension (IRMv1) is a relaxation of the original constraint — it is not guaranteed to find the true invariant predictor.",
+        "IRM's nonlinear extension (IRMv1) is a relaxation of the original constraint - it is not guaranteed to find the true invariant predictor.",
       ],
     },
     {
@@ -2491,7 +2491,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "CORAL loss: L_CORAL = (1/4d^2) * ||C_S - C_T||_F^2 where C_S and C_T are the d x d covariance matrices of source and target features respectively, and ||.||_F is the Frobenius norm. By minimizing this loss along with the task loss, the feature extractor is trained to produce distributions with matching second-order statistics. Deep CORAL (Sun and Saenko 2016b) applies this loss to multiple deep layers. Unlike adversarial methods, CORAL has no minimax instability and is simple to implement. It is equivalent to whitening source features and re-coloring with target covariance.",
       hints: [
-        "Covariance alignment captures correlations between feature dimensions — richer than just mean matching (which BN handles).",
+        "Covariance alignment captures correlations between feature dimensions - richer than just mean matching (which BN handles).",
         "CORAL vs MMD: MMD uses a kernel (infinite-dimensional feature map); CORAL explicitly matches up to 2nd order moments. CORAL is simpler but MMD is more general.",
       ],
     },
@@ -2502,10 +2502,10 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "CORAL's domain alignment loss requires labeled data from the target domain to compute the target covariance matrix.",
       options: ["True", "False"],
       correctAnswer: "False",
-      explanation: "CORAL computes the target covariance matrix from unlabeled target features — no target labels are needed. The source covariance is computed from labeled source features, and the CORAL loss penalizes the Frobenius distance between the two covariance matrices. This makes CORAL applicable in the standard UDA (unsupervised domain adaptation) setting where target data is unlabeled. The task loss (cross-entropy) uses only labeled source data, while the CORAL loss uses features from both domains.",
+      explanation: "CORAL computes the target covariance matrix from unlabeled target features - no target labels are needed. The source covariance is computed from labeled source features, and the CORAL loss penalizes the Frobenius distance between the two covariance matrices. This makes CORAL applicable in the standard UDA (unsupervised domain adaptation) setting where target data is unlabeled. The task loss (cross-entropy) uses only labeled source data, while the CORAL loss uses features from both domains.",
       hints: [
         "Covariance computation: C_T = (1/n_T) * X_T^T X_T - mu_T mu_T^T where X_T are target features and mu_T is the target mean. Labels not needed.",
-        "CORAL is an unsupervised alignment method — all target supervision signals come from the covariance structure, not labels.",
+        "CORAL is an unsupervised alignment method - all target supervision signals come from the covariance structure, not labels.",
       ],
     },
   ],
@@ -2517,7 +2517,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "MLDG (Meta-Learning for Domain Generalization, Li et al. 2018) adapts MAML to domain generalization by treating source domains as meta-train and meta-test tasks. What is the key training procedure?",
       options: [
         "Train on all source domains jointly with data augmentation, then fine-tune on one held-out source domain per meta-iteration",
-        "At each meta-iteration, split source domains into meta-train and meta-test sets, take a gradient step on meta-train, evaluate the updated model on meta-test, and backpropagate through the gradient step to update the original parameters — simulating generalization to an unseen domain",
+        "At each meta-iteration, split source domains into meta-train and meta-test sets, take a gradient step on meta-train, evaluate the updated model on meta-test, and backpropagate through the gradient step to update the original parameters - simulating generalization to an unseen domain",
         "Train a domain-agnostic initialization using contrastive learning across source domain pairs, then evaluate zero-shot on target domains",
         "Use the validation loss on held-out source domains as a reward signal for a policy gradient update on the feature extractor parameters",
       ],
@@ -2535,7 +2535,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "When using meta-learning for domain generalization, which assumption must hold for the approach to work well on truly unseen target domains?",
       options: [
         "The target domain must be linearly separable in the original input space",
-        "The domain shift between source meta-train and meta-test domains must be representative of the shift between source and target — i.e., the source domains must span the same type of variation as the source-to-target gap",
+        "The domain shift between source meta-train and meta-test domains must be representative of the shift between source and target - i.e., the source domains must span the same type of variation as the source-to-target gap",
         "The number of source domains must be greater than the number of target domains to ensure coverage",
         "The target domain must share the same label space as at least one source domain",
       ],
@@ -2581,7 +2581,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "Standard within-domain MixUp linearly interpolates between samples of the same domain. Inter-domain MixUp interpolates between samples from different source domains or between source and target samples. The mixed samples lie in the manifold between domains, encouraging the feature extractor to produce smoothly varying features across domains. This acts as a regularizer that prevents abrupt feature changes at domain boundaries, improving generalization. Mixup-based DA methods like DomainMix and DCAN show consistent improvements in multi-source DA settings.",
       hints: [
         "MixUp creates virtual samples on the convex hull of the training set. Inter-domain MixUp extends this to the convex hull spanning multiple domains.",
-        "Target MixUp: mixing source (labeled) and target (unlabeled) samples with label from source only — creates a supervised bridge between domains.",
+        "Target MixUp: mixing source (labeled) and target (unlabeled) samples with label from source only - creates a supervised bridge between domains.",
       ],
     },
     {
@@ -2591,7 +2591,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "In multi-source domain adaptation, it is always optimal to assign equal weight to all source domains regardless of their similarity to the target domain.",
       options: ["True", "False"],
       correctAnswer: "False",
-      explanation: "Source domain weighting based on target similarity consistently improves multi-source DA performance. A source domain closer to the target (measured by domain divergence, MMD, or classifier confidence) should receive higher weight in both the task loss and domain alignment loss. Methods like MDAN-soft, LtC-MSDA, and DCTN all learn to upweight source domains more relevant to the target. Equal weighting can hurt if one source domain is very dissimilar to the target — adapting to a dissimilar source can corrupt features useful for the target. Oracle experiments consistently show that target-similarity-based weighting outperforms uniform weighting.",
+      explanation: "Source domain weighting based on target similarity consistently improves multi-source DA performance. A source domain closer to the target (measured by domain divergence, MMD, or classifier confidence) should receive higher weight in both the task loss and domain alignment loss. Methods like MDAN-soft, LtC-MSDA, and DCTN all learn to upweight source domains more relevant to the target. Equal weighting can hurt if one source domain is very dissimilar to the target - adapting to a dissimilar source can corrupt features useful for the target. Oracle experiments consistently show that target-similarity-based weighting outperforms uniform weighting.",
       hints: [
         "Intuition: if adapting from {photos, sketches, cartoons} to clipart, photos are more relevant than sketches, so they should get higher weight.",
         "Domain similarity can be measured by: (1) Proxy A-distance, (2) MMD between source and target features, (3) source domain model's accuracy on target pseudo-labels.",
@@ -2665,7 +2665,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "TPT works as follows: for a single test image x, generate N augmented views {x_1,...,x_N} using random crop/flip/color jitter. For each augmented view, compute CLIP prediction p_i = softmax(CLIP(x_i, text_prompts)). Filter views with high per-view entropy (top fraction discarded as too ambiguous). Average remaining predictions: p_avg = mean(p_i). Minimize entropy H(p_avg) by backpropagating through the frozen CLIP encoders and updating only the soft prompt tokens in the text encoder. This adapts the text representation toward the current test sample without any auxiliary task or source data. Achieves strong results on ImageNet-A, ImageNet-R, ImageNet-Sketch.",
       hints: [
         "TPT adapts only the prompt tokens (a few learnable vectors prepended to the text sequence), not the CLIP image or text encoder weights.",
-        "High-entropy view filtering removes ambiguous augmentations that would add noise to the entropy objective — typically the top 10% most uncertain views.",
+        "High-entropy view filtering removes ambiguous augmentations that would add noise to the entropy objective - typically the top 10% most uncertain views.",
       ],
     },
     {
@@ -2676,7 +2676,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       options: [
         "Periodic full retraining on a fixed source dataset to reset model parameters",
         "Continual test-time adaptation (CoTTA) with stochastic parameter restore and augmentation-averaged pseudo-labels, combined with a memory buffer of representative target samples for periodic rehearsal to prevent forgetting",
-        "One-time source-trained model with no adaptation — production systems should not update deployed models without human approval",
+        "One-time source-trained model with no adaptation - production systems should not update deployed models without human approval",
         "Full model fine-tuning on all incoming target data using cross-entropy with hard pseudo-labels, with no regularization",
       ],
       correctAnswer: 1,
@@ -2695,7 +2695,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "NRC (Neighborhood Reciprocal Classifier, Yang et al. 2021) improves source-free domain adaptation using nearest-neighbor graph structures. What is the 'reciprocal' concept and why does it improve pseudo-label quality?",
       options: [
         "NRC uses bidirectional domain discriminators (source-to-target and target-to-source) to ensure symmetric alignment",
-        "NRC defines the reciprocal neighborhood of sample x as samples that also have x in their k-NN list — mutual nearest neighbors — which form a more reliable set of similar samples than one-directional k-NN, as mutual proximity indicates genuine feature similarity rather than hubness artifacts",
+        "NRC defines the reciprocal neighborhood of sample x as samples that also have x in their k-NN list - mutual nearest neighbors - which form a more reliable set of similar samples than one-directional k-NN, as mutual proximity indicates genuine feature similarity rather than hubness artifacts",
         "NRC uses a reciprocal learning rate schedule that alternates between high and low LR phases during adaptation",
         "NRC trains two classifiers that mutually supervise each other using reciprocal pseudo-labels, similar to co-training",
       ],
@@ -2703,7 +2703,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "NRC addresses the hubness problem: in high-dimensional spaces, some samples ('hubs') appear as nearest neighbors of many other samples even if they are not genuinely similar. One-directional k-NN suffers from this. Reciprocal nearest neighbors: sample x_i's reciprocal neighborhood is {x_j : x_i in kNN(x_j) AND x_j in kNN(x_i)}. Mutual nearest neighbors are much more reliably similar because both points independently chose each other as close. NRC propagates pseudo-labels through the reciprocal neighborhood graph: each sample's pseudo-label is a weighted average of its reciprocal neighbors' predictions. This graph-based propagation reduces the impact of individual noisy predictions and improves pseudo-label accuracy on Office-Home/VisDA.",
       hints: [
         "Hubness problem: in 256-d feature space, some samples appear in k-NN lists of many points due to the curse of dimensionality, not genuine similarity.",
-        "Reciprocal k-NN is the intersection of kNN(x_i) and {x_j : x_i in kNN(x_j)} — typically much smaller than k, but much higher precision.",
+        "Reciprocal k-NN is the intersection of kNN(x_i) and {x_j : x_i in kNN(x_j)} - typically much smaller than k, but much higher precision.",
       ],
     },
     {
@@ -2713,7 +2713,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "In source-free domain adaptation, the source model's classifier head should always be discarded and re-initialized for target adaptation because it encodes source-domain-specific decision boundaries.",
       options: ["True", "False"],
       correctAnswer: "False",
-      explanation: "SHOT (Liang et al. 2020) demonstrates the opposite: the source classifier head is the 'source hypothesis' that encodes class structure learned from labeled source data. It is FROZEN during target adaptation. Only the feature extractor is adapted. The classifier head's weights define class prototypes in the feature space — these class prototypes are valuable and would be lost if the head were re-initialized. The adaptation goal is to transform target features so they align with the class structure already encoded in the frozen classifier, not to re-learn class structure from scratch.",
+      explanation: "SHOT (Liang et al. 2020) demonstrates the opposite: the source classifier head is the 'source hypothesis' that encodes class structure learned from labeled source data. It is FROZEN during target adaptation. Only the feature extractor is adapted. The classifier head's weights define class prototypes in the feature space - these class prototypes are valuable and would be lost if the head were re-initialized. The adaptation goal is to transform target features so they align with the class structure already encoded in the frozen classifier, not to re-learn class structure from scratch.",
       hints: [
         "SHOT intuition: the frozen classifier head acts as an anchor. Target feature extractor is trained to produce features that satisfy the class boundaries already defined by the source classifier.",
         "If you re-initialize the classifier head, you lose all class discrimination knowledge from the source. You would need labeled target data to re-learn it.",
@@ -2745,10 +2745,10 @@ const moreAdaptQ3: Record<string, Question[]> = {
       difficulty: "hard",
       question: "ETA (Efficient Test-Time Adaptation, Niu et al. 2022) addresses two pathological failure modes of TENT. Which two problems does it solve and how?",
       options: [
-        "Slow convergence and high memory usage — solved by gradient checkpointing and a faster optimizer",
-        "Entropy collapse (confident but wrong) and catastrophic forgetting — solved by a sample selection criterion that filters unreliable samples with extreme entropy, and an anti-forgetting term that regularizes updates to stay close to the source model using a Fisher-weighted L2 penalty on important parameters",
-        "Noisy pseudo-labels and batch size sensitivity — solved by ensembling multiple entropy estimates and using larger batch sizes",
-        "Adversarial robustness and spurious correlations — solved by adversarial augmentation and feature decorrelation regularization",
+        "Slow convergence and high memory usage - solved by gradient checkpointing and a faster optimizer",
+        "Entropy collapse (confident but wrong) and catastrophic forgetting - solved by a sample selection criterion that filters unreliable samples with extreme entropy, and an anti-forgetting term that regularizes updates to stay close to the source model using a Fisher-weighted L2 penalty on important parameters",
+        "Noisy pseudo-labels and batch size sensitivity - solved by ensembling multiple entropy estimates and using larger batch sizes",
+        "Adversarial robustness and spurious correlations - solved by adversarial augmentation and feature decorrelation regularization",
       ],
       correctAnswer: 1,
       explanation: "EATA (Efficient Anti-forgetting Test-Time Adaptation) identifies TENT's two failure modes: (1) Entropy collapse: TENT minimizes entropy of all samples, including those where the model is confidently wrong, reinforcing errors. EATA filters samples to only adapt on those with entropy in a reliable middle range (not too high, not too low). (2) Catastrophic forgetting: adapting on target data degrades source-domain performance. EATA uses an elastic weight consolidation (EWC)-style Fisher information regularizer: weights important for source performance (high Fisher info) are penalized from changing. Together these make TTA both reliable and stable across sequential domain shifts.",
@@ -2763,16 +2763,16 @@ const moreAdaptQ3: Record<string, Question[]> = {
       difficulty: "medium",
       question: "In domain generalization, what is the spurious correlation problem, and why does a model trained with ERM on source domains fail when spurious correlations are broken at test time?",
       options: [
-        "Spurious correlations are correlations between input features and labels that hold in the source but not the target. ERM minimizes average source loss, which makes exploiting spurious correlations optimal on source data — a model trained with ERM learns to rely on spurious features because they improve source accuracy, then fails when those correlations vanish at test time",
+        "Spurious correlations are correlations between input features and labels that hold in the source but not the target. ERM minimizes average source loss, which makes exploiting spurious correlations optimal on source data - a model trained with ERM learns to rely on spurious features because they improve source accuracy, then fails when those correlations vanish at test time",
         "Spurious correlations refer to label noise in the source training data that causes the model to learn incorrect class boundaries",
         "Spurious correlations are correlations between different input modalities that ERM cannot capture due to the cross-modal alignment problem",
         "Spurious correlations arise from data augmentation that inadvertently creates false patterns not present in the original data",
       ],
       correctAnswer: 0,
-      explanation: "Classic example: cows are photographed on grass (source), so the model learns to use grass background as a feature for 'cow'. This spurious correlation (grass -> cow) holds in the source but breaks in the target where cows appear on beaches. ERM minimizes average source loss, and exploiting spurious features reduces this loss — so ERM has no incentive to ignore them. At test time, the spurious feature (grass) is absent, causing failure. IRM, Group DRO, and CausalDA all aim to learn only invariant causal features (the cow's shape/texture) by explicitly penalizing reliance on environment-specific correlations.",
+      explanation: "Classic example: cows are photographed on grass (source), so the model learns to use grass background as a feature for 'cow'. This spurious correlation (grass -> cow) holds in the source but breaks in the target where cows appear on beaches. ERM minimizes average source loss, and exploiting spurious features reduces this loss - so ERM has no incentive to ignore them. At test time, the spurious feature (grass) is absent, causing failure. IRM, Group DRO, and CausalDA all aim to learn only invariant causal features (the cow's shape/texture) by explicitly penalizing reliance on environment-specific correlations.",
       hints: [
         "Waterbirds dataset: waterbirds (water background) vs landbirds (land background). Spurious: background predicts bird type in source. Test: backgrounds are swapped.",
-        "ERM's weakness: it cannot distinguish between invariant causal features and spurious correlations — both reduce training loss equally.",
+        "ERM's weakness: it cannot distinguish between invariant causal features and spurious correlations - both reduce training loss equally.",
       ],
     },
     {
@@ -2782,7 +2782,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       question: "Domain generalization methods are trained using only source domain data and are evaluated on target domains that are completely unseen during training.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "Domain generalization (DG) is the setting where multiple source domains are available during training, but the target domain is never seen — not even as unlabeled data — during training. This distinguishes DG from domain adaptation (DA), which uses target domain data (unlabeled in UDA, or a few labels in few-shot DA) during training. DG methods must generalize purely from source diversity, without any target-specific optimization. Benchmarks like DomainBed (PACS, Office-Home, TerraIncognita) evaluate DG performance on held-out domains with no prior exposure.",
+      explanation: "Domain generalization (DG) is the setting where multiple source domains are available during training, but the target domain is never seen - not even as unlabeled data - during training. This distinguishes DG from domain adaptation (DA), which uses target domain data (unlabeled in UDA, or a few labels in few-shot DA) during training. DG methods must generalize purely from source diversity, without any target-specific optimization. Benchmarks like DomainBed (PACS, Office-Home, TerraIncognita) evaluate DG performance on held-out domains with no prior exposure.",
       hints: [
         "DG vs UDA: DG has no target data during training. UDA has unlabeled target data during training. Both have no target labels during training.",
         "DG evaluation: train on 3 of 4 domains, test on the 4th. Repeat for all 4 choices of target domain and report average accuracy.",
@@ -2800,7 +2800,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
         "DANN can only handle binary classification; CDAN extends adversarial alignment to multi-class and multi-label settings",
       ],
       correctAnswer: 1,
-      explanation: "DANN aligns P_S(f(x)) with P_T(f(x)) globally — it matches the marginal feature distributions. However, this can result in class-conditional misalignment: source 'cat' features aligned with target 'dog' features (if their marginal positions are similar). CDAN conditions the domain discriminator on the outer product of features and classifier outputs: h(x) outer g(x) where g(x) is the softmax prediction. This outer product encodes class information into the domain input. The discriminator thus aligns class-conditional distributions P_S(f|y=k) with P_T(f|y=k) for each class k, preventing cross-class alignment. CDAN achieves state-of-the-art on Office-31 and Office-Home over DANN.",
+      explanation: "DANN aligns P_S(f(x)) with P_T(f(x)) globally - it matches the marginal feature distributions. However, this can result in class-conditional misalignment: source 'cat' features aligned with target 'dog' features (if their marginal positions are similar). CDAN conditions the domain discriminator on the outer product of features and classifier outputs: h(x) outer g(x) where g(x) is the softmax prediction. This outer product encodes class information into the domain input. The discriminator thus aligns class-conditional distributions P_S(f|y=k) with P_T(f|y=k) for each class k, preventing cross-class alignment. CDAN achieves state-of-the-art on Office-31 and Office-Home over DANN.",
       hints: [
         "CDAN outer product: f tensor g is a d_f x d_y dimensional tensor. For large models, a random multi-linear map is used to reduce dimensionality while preserving class conditioning.",
         "Class-conditional alignment prevents the negative transfer problem: forcing class-mismatched features to be indistinguishable actually hurts classification.",
@@ -2812,7 +2812,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Which best describes the key trade-off when choosing between shallow (feature-level) and deep (pixel-level) domain adaptation approaches for image data?",
       options: [
-        "Shallow DA is faster to train; deep DA achieves higher accuracy — so deep DA is always preferred when compute is available",
+        "Shallow DA is faster to train; deep DA achieves higher accuracy - so deep DA is always preferred when compute is available",
         "Shallow (feature-level) DA adapts high-level semantic representations and is efficient, but cannot correct low-level domain gaps (texture, color, style). Deep (pixel-level) DA corrects low-level image statistics via style transfer or CycleGAN but adds significant training complexity, potential hallucination of semantic content, and may not improve task-relevant features if style transfer changes semantics",
         "Shallow DA requires access to source data at test time; deep DA can operate source-free",
         "Shallow DA only works for classification; deep DA is required for detection and segmentation tasks",
@@ -2821,7 +2821,7 @@ const moreAdaptQ3: Record<string, Question[]> = {
       explanation: "Feature-level DA (DANN, CORAL, MMD): aligns representations in a learned feature space. Efficient, end-to-end trainable, preserves semantic content. Limitation: cannot correct low-level domain gaps (e.g., day vs night, real vs synthetic textures) because these are encoded at the pixel level, not the feature level. Pixel-level DA (CycleGAN, FDA, UNIT): translates source images to look like target domain before feeding to the model. Corrects low-level statistics but risks changing semantic content during translation (a car may look like a van after style transfer). Best practice for large low-level gaps (synthetic-to-real, CT-to-MRI): combine pixel-level translation with feature-level alignment for complementary benefits.",
       hints: [
         "GTA5-to-Cityscapes adaptation (synthetic driving to real): pixel-level translation dramatically helps because the texture/color gap is huge. Feature-level alone is insufficient.",
-        "Hallucination risk: CycleGAN style transfer may change car colors, add/remove pedestrians, or alter lane markings — the label remains from the source but the translated image has changed semantics.",
+        "Hallucination risk: CycleGAN style transfer may change car colors, add/remove pedestrians, or alter lane markings - the label remains from the source but the translated image has changed semantics.",
       ],
     },
   ],

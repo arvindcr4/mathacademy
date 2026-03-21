@@ -9,7 +9,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "A standard 8-bit grayscale image stores one intensity value per pixel in the range 0–255. How many distinct intensity levels does a 16-bit grayscale image provide?",
+        "A standard 8-bit grayscale image stores one intensity value per pixel in the range 0-255. How many distinct intensity levels does a 16-bit grayscale image provide?",
       options: [
         "512 levels ($2 \\times 256$)",
         "4096 levels ($16 \\times 256$)",
@@ -58,7 +58,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Each pixel has 3 channels (R, G, B), each stored as 8 bits $= 1$ byte.\n\n\\[\n\\text{Total bytes} = 1920 \\times 1080 \\times 3 = 6{,}220{,}800 \\text{ bytes}.\n\\]\n\nConverting to megabytes ($1 \\text{ MB} = 2^{20} = 1{,}048{,}576$ bytes):\n\\[\n\\frac{6{,}220{,}800}{1{,}048{,}576} \\approx 5.93 \\approx 6.2 \\text{ MB}.\n\\]\n\nJPEG compression typically achieves 10–20$\\times$ reduction, making it essential for storing and transmitting photographs.",
+        "Each pixel has 3 channels (R, G, B), each stored as 8 bits $= 1$ byte.\n\n\\[\n\\text{Total bytes} = 1920 \\times 1080 \\times 3 = 6{,}220{,}800 \\text{ bytes}.\n\\]\n\nConverting to megabytes ($1 \\text{ MB} = 2^{20} = 1{,}048{,}576$ bytes):\n\\[\n\\frac{6{,}220{,}800}{1{,}048{,}576} \\approx 5.93 \\approx 6.2 \\text{ MB}.\n\\]\n\nJPEG compression typically achieves 10-20$\\times$ reduction, making it essential for storing and transmitting photographs.",
       hints: [
         "Compute the total byte count: width $\\times$ height $\\times$ channels $\\times$ bytes-per-channel = $1920 \\times 1080 \\times 3 \\times 1$.",
         "Divide by $2^{20} = 1{,}048{,}576$ to convert bytes to MB.",
@@ -143,7 +143,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The bottleneck design reduces channels from, for example, $256 \\to 64$ with a $1 \\times 1$ conv before the $3 \\times 3$, then expands back $64 \\to 256$ with another $1 \\times 1$.\n\nThe FLOPs of a $3 \\times 3$ conv scale as $\\text{channels}_{\\text{in}} \\times \\text{channels}_{\\text{out}}$. Reducing from 256 to 64 channels cuts the $3 \\times 3$ cost by a factor of $(256/64)^2 = 16\\times$, at the cost of two inexpensive $1 \\times 1$ convs. The net saving is approximately $4\\times$ compared to a plain residual block.",
       hints: [
-        "The $3 \\times 3$ conv is the expensive operation. Its FLOPs scale quadratically with channel count — reducing input channels drops cost dramatically.",
+        "The $3 \\times 3$ conv is the expensive operation. Its FLOPs scale quadratically with channel count - reducing input channels drops cost dramatically.",
         "Bottleneck structure: $256 \\to 64 \\to 64 \\to 256$. The middle is narrow, reducing the expensive $3 \\times 3$ computation.",
       ],
     },
@@ -193,13 +193,13 @@ const questions: Record<string, Question[]> = {
         "The Batch Normalisation forward pass computes $\\hat{x}_i = (x_i - \\mu_B) / \\sqrt{\\sigma_B^2 + \\epsilon}$, then applies $y_i = \\gamma \\hat{x}_i + \\beta$. What roles do the learnable parameters $\\gamma$ and $\\beta$ play?",
       options: [
         "$\\gamma$ clips the normalised activation to $[-1, 1]$ and $\\beta$ re-centres it at $0.5$.",
-        "$\\gamma$ (scale) and $\\beta$ (shift) allow the network to represent any linear function of the normalised activation, including undoing normalisation if optimal — preserving network expressiveness.",
+        "$\\gamma$ (scale) and $\\beta$ (shift) allow the network to represent any linear function of the normalised activation, including undoing normalisation if optimal - preserving network expressiveness.",
         "$\\gamma$ controls the batch size used for computing statistics and $\\beta$ sets the learning rate for BN parameters.",
         "$\\gamma$ replaces the weight matrix and $\\beta$ replaces the bias in the layer following BN.",
       ],
       correctAnswer: 1,
       explanation:
-        "After normalising to zero mean and unit variance with $\\hat{x}_i$, the learned affine transformation\n\\[\ny_i = \\gamma \\hat{x}_i + \\beta\n\\]\nre-introduces a learnable scale and shift. If $\\gamma = \\sigma_B$ and $\\beta = \\mu_B$, the original unnormalised distribution is recovered — meaning Batch Normalisation never restricts the representational capacity of the network. In practice, $\\gamma$ and $\\beta$ are learned to find the optimal activation distribution for each feature.",
+        "After normalising to zero mean and unit variance with $\\hat{x}_i$, the learned affine transformation\n\\[\ny_i = \\gamma \\hat{x}_i + \\beta\n\\]\nre-introduces a learnable scale and shift. If $\\gamma = \\sigma_B$ and $\\beta = \\mu_B$, the original unnormalised distribution is recovered - meaning Batch Normalisation never restricts the representational capacity of the network. In practice, $\\gamma$ and $\\beta$ are learned to find the optimal activation distribution for each feature.",
       hints: [
         "If BN always forced zero mean and unit variance, would that restrict what the network can represent?",
         "Can $\\gamma$ and $\\beta$ be set to recover the original pre-normalisation distribution?",
@@ -221,7 +221,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "During training, Batch Normalisation normalises using the mini-batch statistics:\n\\[\n\\mu_B = \\frac{1}{m} \\sum_{i=1}^{m} x_i, \\quad \\sigma_B^2 = \\frac{1}{m} \\sum_{i=1}^{m} (x_i - \\mu_B)^2.\n\\]\n\nAt inference, a single test sample has no meaningful \"batch\" statistic. Instead, BN uses running estimates accumulated during training via exponential moving average:\n\\[\n\\mu_{\\text{run}} = \\text{momentum} \\cdot \\mu_{\\text{run}} + (1 - \\text{momentum}) \\cdot \\mu_B.\n\\]\nThese fixed population statistics make inference deterministic and independent of batch size.",
       hints: [
-        "With a single test sample, the batch mean would just be that one sample's value — not a population statistic.",
+        "With a single test sample, the batch mean would just be that one sample's value - not a population statistic.",
         "During training, running averages of $\\mu_B$ and $\\sigma_B^2$ are accumulated and stored for use at inference.",
       ],
     },
@@ -233,9 +233,9 @@ const questions: Record<string, Question[]> = {
         "Batch Normalization eliminates the need for careful weight initialisation in deep neural networks.",
       correctAnswer: "False",
       explanation:
-        "While Batch Normalization greatly reduces sensitivity to initialisation by stabilising activations across layers, good initialisation still matters:\n\nIn the very first forward pass — before any running statistics have been accumulated — the batch statistics may be unstable, especially with small batch sizes. Poor initialisation can still cause saturated (e.g., sigmoid/tanh) or exploding activations in this critical first pass.\n\nHe initialisation ($\\text{std} = \\sqrt{2/\\text{fan}_{\\text{in}}}$ for ReLU) sets weight variance to prevent signals from shrinking toward zero or exploding through deep networks, improving early convergence.",
+        "While Batch Normalization greatly reduces sensitivity to initialisation by stabilising activations across layers, good initialisation still matters:\n\nIn the very first forward pass - before any running statistics have been accumulated - the batch statistics may be unstable, especially with small batch sizes. Poor initialisation can still cause saturated (e.g., sigmoid/tanh) or exploding activations in this critical first pass.\n\nHe initialisation ($\\text{std} = \\sqrt{2/\\text{fan}_{\\text{in}}}$ for ReLU) sets weight variance to prevent signals from shrinking toward zero or exploding through deep networks, improving early convergence.",
       hints: [
-        "BN stabilises activations during training — but what happens in the very first forward pass before running statistics are accumulated?",
+        "BN stabilises activations during training - but what happens in the very first forward pass before running statistics are accumulated?",
         "He initialisation sets weight variance to keep signal magnitudes stable through deep ReLU networks.",
       ],
     },
@@ -272,14 +272,14 @@ const questions: Record<string, Question[]> = {
       options: [
         "(1) Sort all detections by confidence descending; (2) label each as TP (IoU $\\geq$ threshold with unmatched GT) or FP; (3) compute cumulative precision and recall at each detection; (4) compute area under the precision-recall curve.",
         "(1) Sort detections by bounding-box area; (2) match each to the nearest GT box; (3) compute F1 at 50% recall; (4) average F1 across all images.",
-        "(1) Compute IoU for all predicted–GT pairs; (2) select the pair with maximum IoU; (3) compute precision at that IoU; (4) repeat for all GT boxes.",
+        "(1) Compute IoU for all predicted-GT pairs; (2) select the pair with maximum IoU; (3) compute precision at that IoU; (4) repeat for all GT boxes.",
         "(1) Threshold confidence at 0.5; (2) remove duplicates with NMS; (3) compute recall; (4) compute precision at 50% recall threshold.",
       ],
       correctAnswer: 0,
       explanation:
-        "Standard AP computation (VOC/COCO) proceeds as follows:\n\n1. Sort all detections by confidence score in descending order.\n2. For each detection in rank order: if its IoU with any unmatched GT box $\\geq$ threshold, label it as TP (and mark that GT as matched); otherwise label it as FP.\n3. Compute cumulative precision $P(k) = \\text{TP}/(\\text{TP} + \\text{FP})$ and recall $R(k) = \\text{TP}/\\text{num\\_GT}$ at each rank $k$.\n4. AP is the area under the $P$–$R$ curve (interpolated at 11 recall points for VOC, continuous for COCO).\n\nmAP averages AP over all classes.",
+        "Standard AP computation (VOC/COCO) proceeds as follows:\n\n1. Sort all detections by confidence score in descending order.\n2. For each detection in rank order: if its IoU with any unmatched GT box $\\geq$ threshold, label it as TP (and mark that GT as matched); otherwise label it as FP.\n3. Compute cumulative precision $P(k) = \\text{TP}/(\\text{TP} + \\text{FP})$ and recall $R(k) = \\text{TP}/\\text{num\\_GT}$ at each rank $k$.\n4. AP is the area under the $P$-$R$ curve (interpolated at 11 recall points for VOC, continuous for COCO).\n\nmAP averages AP over all classes.",
       hints: [
-        "The key first step is sorting by confidence — high-confidence detections are evaluated first.",
+        "The key first step is sorting by confidence - high-confidence detections are evaluated first.",
         "Once a GT box is matched, subsequent detections overlapping it are FPs even if IoU $\\geq$ threshold (greedy matching).",
       ],
     },
@@ -297,7 +297,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Each of the $7 \\times 7 = 49$ grid cells outputs:\n\\[\n2 \\text{ boxes} \\times 5 \\text{ values} + 20 \\text{ class probabilities} = 10 + 20 = 30 \\text{ values}.\n\\]\n\nTotal output tensor:\n\\[\n7 \\times 7 \\times 30 = 1470.\n\\]\n\nYOLO frames object detection as a single regression problem, predicting all outputs in one forward pass — enabling real-time detection at approximately 45 FPS.",
+        "Each of the $7 \\times 7 = 49$ grid cells outputs:\n\\[\n2 \\text{ boxes} \\times 5 \\text{ values} + 20 \\text{ class probabilities} = 10 + 20 = 30 \\text{ values}.\n\\]\n\nTotal output tensor:\n\\[\n7 \\times 7 \\times 30 = 1470.\n\\]\n\nYOLO frames object detection as a single regression problem, predicting all outputs in one forward pass - enabling real-time detection at approximately 45 FPS.",
       hints: [
         "Each box has 5 values: center $(x, y)$, size $(w, h)$, and objectness confidence.",
         "2 boxes $\\times$ 5 values + 20 classes = 30 values per cell. Multiply by $7 \\times 7 = 49$ cells.",
@@ -319,7 +319,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Anchors are placed at every spatial location in the feature map:\n\\[\n\\text{Total anchors} = H \\times W \\times \\text{anchors-per-location} = 50 \\times 38 \\times 9 = 17{,}100.\n\\]\n\nThe Region Proposal Network (RPN) classifies each anchor as foreground/background and regresses bounding-box offsets. Non-maximum suppression then retains the top approximately 2000 proposals for the detection head.",
       hints: [
-        "Anchors are placed at every spatial location in the feature map — multiply $H \\times W \\times$ anchors-per-location.",
+        "Anchors are placed at every spatial location in the feature map - multiply $H \\times W \\times$ anchors-per-location.",
         "$50 \\times 38 = 1900$ spatial locations; each has 9 anchors: $1900 \\times 9 = 17100$.",
       ],
     },
@@ -339,7 +339,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "FPN combines two pathways:\n\n1. **Bottom-up pathway**: the standard CNN forward pass, progressively downsampling to gain strong semantic features but losing spatial resolution.\n2. **Top-down pathway**: coarse, semantically rich feature maps are upsampled by $2\\times$ and merged element-wise with same-resolution features from the bottom-up pathway via $1 \\times 1$ lateral connections.\n\nThis gives every pyramid level both high resolution (from bottom-up) and rich semantic content (from top-down), enabling detectors like Faster R-CNN to accurately detect both small and large objects.",
       hints: [
-        "Coarse feature maps have strong semantics but low resolution; fine maps have high resolution but weak semantics — FPN combines the best of both.",
+        "Coarse feature maps have strong semantics but low resolution; fine maps have high resolution but weak semantics - FPN combines the best of both.",
         "Lateral $1 \\times 1$ convolutions reduce channel dimension and merge top-down (semantic) with bottom-up (high-resolution) features at each scale.",
       ],
     },
@@ -351,13 +351,13 @@ const questions: Record<string, Question[]> = {
         "DETR uses bipartite (Hungarian) matching between predictions and ground truth during training. Why does this eliminate the need for Non-Maximum Suppression (NMS) at inference?",
       options: [
         "DETR uses sigmoid instead of softmax activation, so multiple predictions can be confident about different objects without overlap.",
-        "Hungarian matching enforces a bijective (one-to-one) assignment between object queries and GT boxes during training, so each query learns to predict at most one unique object — duplicates cannot emerge at inference.",
+        "Hungarian matching enforces a bijective (one-to-one) assignment between object queries and GT boxes during training, so each query learns to predict at most one unique object - duplicates cannot emerge at inference.",
         "DETR predicts masks instead of bounding boxes, so bounding-box NMS is not applicable.",
         "DETR applies NMS during training but removes it at inference by clamping confidence scores.",
       ],
       correctAnswer: 1,
       explanation:
-        "DETR uses $N$ object queries (e.g., $N = 100$) and the Hungarian algorithm finds the unique minimum-cost bijection between predictions and ground truth boxes. Each GT is matched to exactly one query, and each query is matched to at most one GT (or to \"no object\").\n\nSince training enforces this one-to-one uniqueness, the model cannot learn to produce duplicate detections for the same object — making NMS unnecessary at inference. This contrasts with anchor-based detectors, where many anchors can propose overlapping boxes for the same object.",
+        "DETR uses $N$ object queries (e.g., $N = 100$) and the Hungarian algorithm finds the unique minimum-cost bijection between predictions and ground truth boxes. Each GT is matched to exactly one query, and each query is matched to at most one GT (or to \"no object\").\n\nSince training enforces this one-to-one uniqueness, the model cannot learn to produce duplicate detections for the same object - making NMS unnecessary at inference. This contrasts with anchor-based detectors, where many anchors can propose overlapping boxes for the same object.",
       hints: [
         "NMS is needed when multiple anchors/proposals detect the same object. What prevents that in DETR?",
         "The Hungarian matching enforces bijective (one-to-one) assignment: each query \"owns\" at most one GT box during training.",
@@ -401,9 +401,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "In Long et al. (2015):\n\n- **FCN-32s**: takes the pool5 feature map ($32\\times$ downsampled relative to the input) and upsamples it $32\\times$ in one bilinear step — the coarsest and blurriest output.\n- **FCN-16s**: adds a skip connection from pool4 ($16\\times$ downsampled) and upsamples by $16\\times$, improving boundary localisation.\n- **FCN-8s**: additionally incorporates pool3 ($8\\times$ downsampled) for an $8\\times$ upsample, yielding the finest boundary predictions.\n\nEach added skip connection recovers spatial detail lost during downsampling.",
+        "In Long et al. (2015):\n\n- **FCN-32s**: takes the pool5 feature map ($32\\times$ downsampled relative to the input) and upsamples it $32\\times$ in one bilinear step - the coarsest and blurriest output.\n- **FCN-16s**: adds a skip connection from pool4 ($16\\times$ downsampled) and upsamples by $16\\times$, improving boundary localisation.\n- **FCN-8s**: additionally incorporates pool3 ($8\\times$ downsampled) for an $8\\times$ upsample, yielding the finest boundary predictions.\n\nEach added skip connection recovers spatial detail lost during downsampling.",
       hints: [
-        "The number refers to the downsampling factor of the coarsest feature map used — larger means coarser predictions.",
+        "The number refers to the downsampling factor of the coarsest feature map used - larger means coarser predictions.",
         "Adding skip connections from earlier, higher-resolution layers recovers spatial detail lost during downsampling.",
       ],
     },
@@ -415,7 +415,7 @@ const questions: Record<string, Question[]> = {
         "Semantic segmentation and instance segmentation produce the same output for a scene with multiple objects of the same class.",
       correctAnswer: "False",
       explanation:
-        'Semantic segmentation labels all pixels of a given class identically (e.g., all cars share the label "car" with no further distinction), while instance segmentation assigns each individual object a unique mask ID — so two cars receive different instance labels but the same semantic label.',
+        'Semantic segmentation labels all pixels of a given class identically (e.g., all cars share the label "car" with no further distinction), while instance segmentation assigns each individual object a unique mask ID - so two cars receive different instance labels but the same semantic label.',
       hints: [
         'If three people are in the image, semantic segmentation labels all their pixels "person" with no further distinction.',
         "What additional information does instance segmentation provide that semantic segmentation withholds?",
@@ -439,9 +439,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mask R-CNN adds a small FCN (Fully Convolutional Network) mask head in parallel with the existing box and class heads. For each ROI, it predicts a binary mask of fixed spatial size (e.g., $14 \\times 14$ or $28 \\times 28$) indicating which pixels belong to the detected object instance. This mask prediction is independent of the class prediction — the mask head operates on each ROI regardless of its predicted class.",
+        "Mask R-CNN adds a small FCN (Fully Convolutional Network) mask head in parallel with the existing box and class heads. For each ROI, it predicts a binary mask of fixed spatial size (e.g., $14 \\times 14$ or $28 \\times 28$) indicating which pixels belong to the detected object instance. This mask prediction is independent of the class prediction - the mask head operates on each ROI regardless of its predicted class.",
       hints: [
-        "Faster R-CNN already detects and classifies objects — what extra output does instance segmentation need?",
+        "Faster R-CNN already detects and classifies objects - what extra output does instance segmentation need?",
         "The mask head runs per-ROI, predicting a binary mask for each detected instance, independently of class prediction.",
       ],
     },
@@ -459,10 +459,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "ROI Pool discretises (quantises) ROI coordinates to the nearest integer grid point:\n\\[\n\\text{quantised bin start} = \\lfloor \\text{float bin start} \\rfloor.\n\\]\n\nThis introduces a systematic spatial misalignment — the extracted features no longer precisely correspond to the original ROI coordinates — which degrades mask accuracy.\n\nROI Align avoids quantisation by using bilinear interpolation at exact sub-pixel locations, preserving spatial alignment and greatly improving mask quality.",
+        "ROI Pool discretises (quantises) ROI coordinates to the nearest integer grid point:\n\\[\n\\text{quantised bin start} = \\lfloor \\text{float bin start} \\rfloor.\n\\]\n\nThis introduces a systematic spatial misalignment - the extracted features no longer precisely correspond to the original ROI coordinates - which degrades mask accuracy.\n\nROI Align avoids quantisation by using bilinear interpolation at exact sub-pixel locations, preserving spatial alignment and greatly improving mask quality.",
       hints: [
-        "Rounding coordinates to integers introduces a small but systematic spatial shift — why does that matter for precise mask prediction?",
-        "Bilinear interpolation allows sampling at non-integer grid positions — how does that preserve alignment?",
+        "Rounding coordinates to integers introduces a small but systematic spatial shift - why does that matter for precise mask prediction?",
+        "Bilinear interpolation allows sampling at non-integer grid positions - how does that preserve alignment?",
       ],
     },
     {
@@ -475,7 +475,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Anchor-free methods like SOLO and SOLOv2 perform instance segmentation by predicting masks directly based on instance location and size categories, without any region proposal or anchor mechanism.",
       hints: [
-        "SOLO (Segmenting Objects by LOcations) assigns each location to an instance — does it use anchors?",
+        "SOLO (Segmenting Objects by LOcations) assigns each location to an instance - does it use anchors?",
         "Think about whether instance segmentation is fundamentally tied to the two-stage detection paradigm.",
       ],
     },
@@ -499,8 +499,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "3D convolutional filters extend into the time dimension, learning spatiotemporal patterns (e.g., motion of body parts) directly from raw video frames, unlike 2D CNNs which process each frame independently.",
       hints: [
-        "A 2D CNN applied per frame captures appearance but not motion — what does adding the time dimension enable?",
-        "3D filters have shape (T\\timesH\\timesW) — what does the T dimension capture?",
+        "A 2D CNN applied per frame captures appearance but not motion - what does adding the time dimension enable?",
+        "3D filters have shape (T\\timesH\\timesW) - what does the T dimension capture?",
       ],
     },
     {
@@ -517,10 +517,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SlowFast has a Slow pathway (few frames, high channel capacity) for semantic content and a Fast pathway (many frames, few channels) for motion, with lateral connections fusing them — inspired by the primate visual system\'s P and M cell pathways.",
+        "SlowFast has a Slow pathway (few frames, high channel capacity) for semantic content and a Fast pathway (many frames, few channels) for motion, with lateral connections fusing them - inspired by the primate visual system\'s P and M cell pathways.",
       hints: [
         "If the model only sees normal images during training, what does it learn?",
-        "The momentum teacher provides stable targets — how does centering prevent the teacher from always outputting the same thing?",
+        "The momentum teacher provides stable targets - how does centering prevent the teacher from always outputting the same thing?",
       ],
     },
     {
@@ -539,7 +539,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "For a small target dataset, the best strategy is typically to fine-tune all layers with a small global learning rate, using lower learning rates for early layers (which contain general features like edges) and higher rates for later layers (which contain task-specific features). This discriminative fine-tuning (introduced in ULMFiT) prevents catastrophic forgetting of useful low-level features while adapting high-level representations to the new domain.",
       hints: [
-        "Early conv layers detect universal features (edges, textures) — do these need large updates for a new domain?",
+        "Early conv layers detect universal features (edges, textures) - do these need large updates for a new domain?",
         "Using a smaller LR for pretrained layers and larger LR for new layers is called discriminative fine-tuning.",
       ],
     },
@@ -551,10 +551,10 @@ const questions: Record<string, Question[]> = {
         "Transfer learning from a model pretrained on a large dataset (e.g., ImageNet) always degrades performance compared to training from scratch when the target dataset is large and very different in domain from the source dataset.",
       correctAnswer: "False",
       explanation:
-        "Even when the target domain is very different from the source (e.g., satellite imagery vs. natural photos), transfer learning almost always matches or exceeds training from scratch — especially with large pretrained models. Low-level features (edges, textures, Gabor-like filters) are universally useful across domains, providing a better initialisation and faster convergence even if the final performance is similar.",
+        "Even when the target domain is very different from the source (e.g., satellite imagery vs. natural photos), transfer learning almost always matches or exceeds training from scratch - especially with large pretrained models. Low-level features (edges, textures, Gabor-like filters) are universally useful across domains, providing a better initialisation and faster convergence even if the final performance is similar.",
       hints: [
         "What do the earliest convolutional layers of any image network learn, regardless of the specific dataset?",
-        "Training from scratch requires more data and compute to reach the same loss level — does pretraining help even in a different domain?",
+        "Training from scratch requires more data and compute to reach the same loss level - does pretraining help even in a different domain?",
       ],
     },
     {
@@ -565,9 +565,9 @@ const questions: Record<string, Question[]> = {
         "TimeSformer applies transformer self-attention separately over the spatial and temporal dimensions (divided space-time attention) to make video classification tractable.",
       correctAnswer: "True",
       explanation:
-        "TimeSformer uses divided attention — separate temporal and spatial attention operations per layer — rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
+        "TimeSformer uses divided attention - separate temporal and spatial attention operations per layer - rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
       hints: [
-        "The forward process destroys the image by adding noise — the reverse process is learned to undo this.",
+        "The forward process destroys the image by adding noise - the reverse process is learned to undo this.",
         "Think about how starting from noise and iteratively refining it could produce a coherent image.",
       ],
     },
@@ -591,8 +591,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Data augmentation applies label-preserving transforms (flips, crops, colour jitter, rotation) to create diverse training variants, exposing the model to a wider input distribution and reducing overfitting without collecting new data. Standard augmentation (random crop + horizontal flip) improved AlexNet top-5 error by ~1.5% on ImageNet.",
       hints: [
-        "A model trained only on upright objects may fail when they appear rotated — how does augmentation address this?",
-        "The label stays the same after a horizontal flip of a cat image — why is label preservation critical?",
+        "A model trained only on upright objects may fail when they appear rotated - how does augmentation address this?",
+        "The label stays the same after a horizontal flip of a cat image - why is label preservation critical?",
       ],
     },
     {
@@ -602,10 +602,10 @@ const questions: Record<string, Question[]> = {
       question:
         "Mixup creates a training sample by forming $\\tilde{x} = \\lambda x_i + (1-\\lambda)x_j$ and $\\tilde{y} = \\lambda y_i + (1-\\lambda)y_j$ where $\\lambda \\sim \\text{Beta}(\\alpha, \\alpha)$. If $\\alpha = 0.2$ and $\\lambda = 0.7$, and image $i$ is class \"cat\" (one-hot $[1, 0]$) while image $j$ is class \"dog\" ($[0, 1]$), what is the mixed label $\\tilde{y}$?",
       options: [
-        "$[1, 0]$ — the dominant class (cat) wins",
-        "$[0.7, 0.3]$ — 70% cat, 30% dog",
-        "$[0.5, 0.5]$ — always uniform regardless of $\\lambda$",
-        "$[0.2, 0.8]$ — $\\alpha$ directly controls the label",
+        "$[1, 0]$ - the dominant class (cat) wins",
+        "$[0.7, 0.3]$ - 70% cat, 30% dog",
+        "$[0.5, 0.5]$ - always uniform regardless of $\\lambda$",
+        "$[0.2, 0.8]$ - $\\alpha$ directly controls the label",
       ],
       correctAnswer: 1,
       explanation:
@@ -629,10 +629,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AutoAugment defines a policy as K sub-policies, each consisting of two (operation, probability, magnitude) triplets. A controller RNN proposes policies evaluated on a proxy task via RL. The searched CIFAR-10 policy achieves SOTA but requires ~5000 GPU-hours of search — making it impractical for new datasets. RandAugment later showed that randomly sampling operations with a single shared magnitude achieves similar accuracy without any search.",
+        "AutoAugment defines a policy as K sub-policies, each consisting of two (operation, probability, magnitude) triplets. A controller RNN proposes policies evaluated on a proxy task via RL. The searched CIFAR-10 policy achieves SOTA but requires ~5000 GPU-hours of search - making it impractical for new datasets. RandAugment later showed that randomly sampling operations with a single shared magnitude achieves similar accuracy without any search.",
       hints: [
-        "Each sub-policy is a pair of (transform, probability, magnitude) — what does the RL controller optimise?",
-        "The search runs thousands of child model evaluations — how does RandAugment avoid this cost?",
+        "Each sub-policy is a pair of (transform, probability, magnitude) - what does the RL controller optimise?",
+        "The search runs thousands of child model evaluations - how does RandAugment avoid this cost?",
       ],
     },
     {
@@ -643,10 +643,10 @@ const questions: Record<string, Question[]> = {
         "CutMix replaces a rectangular patch of one image with pixels from another, and adjusts the mixed label proportionally to the area ratio of the patch, so if a 112\\times112 patch is cut into a 224\\times224 image the label weight for the pasted image is 0.25.",
       correctAnswer: "True",
       explanation:
-        'CutMix label weight = cut area / total image area = (112\\times112) / (224\\times224) = 12544/50176 = 0.25. If image i is "cat" and the 25%-area patch comes from image j "dog", the label is 0.75\\cdoty\\_i + 0.25\\cdoty\\_j = [0.75, 0.25]. Unlike Mixup which blends pixels, CutMix creates hard regional boundaries — teaching models to focus on discriminative local regions.',
+        'CutMix label weight = cut area / total image area = (112\\times112) / (224\\times224) = 12544/50176 = 0.25. If image i is "cat" and the 25%-area patch comes from image j "dog", the label is 0.75\\cdoty\\_i + 0.25\\cdoty\\_j = [0.75, 0.25]. Unlike Mixup which blends pixels, CutMix creates hard regional boundaries - teaching models to focus on discriminative local regions.',
       hints: [
-        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy — is that useful?",
-        "Dice loss penalises based on overlap, not pixel count — how does that help when foreground is rare?",
+        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy - is that useful?",
+        "Dice loss penalises based on overlap, not pixel count - how does that help when foreground is rare?",
       ],
     },
   ],
@@ -680,7 +680,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Self-attention in a transformer has O(N\\^2) complexity in the number of tokens N. For ViT with 196 patch tokens, how does this compare to a CNN layer with local 3\\times3 receptive fields at the same resolution?",
       options: [
-        "ViT self-attention is O(196\\^2) = O(38416) pairwise interactions per head, while the CNN\'s local 3\\times3 attention is O(196 \\times 9) = O(1764) — ViT attends globally at quadratically higher cost but captures long-range dependencies the CNN cannot in a single layer",
+        "ViT self-attention is O(196\\^2) = O(38416) pairwise interactions per head, while the CNN\'s local 3\\times3 attention is O(196 \\times 9) = O(1764) - ViT attends globally at quadratically higher cost but captures long-range dependencies the CNN cannot in a single layer",
         "ViT self-attention is cheaper because transformers use sparse attention patterns trained by backpropagation",
         "Both have identical complexity because ViT patches and CNN receptive fields process the same number of pixels",
         "ViT self-attention is O(N log N) due to the softmax normalisation in the attention formula",
@@ -701,9 +701,9 @@ const questions: Record<string, Question[]> = {
         "ViT uses positional encodings for its patch sequence because self-attention is permutation-invariant and cannot infer spatial order from patch content alone.",
       correctAnswer: "True",
       explanation:
-        "Self-attention is a set operation: attention(Q, K, V) is unchanged if tokens are permuted consistently. Without positional encodings, a ViT processing row-by-row vs. column-by-column shuffled patches would produce identical outputs — destroying spatial structure. Learnable 1D position embeddings added to each patch embedding inject spatial order.",
+        "Self-attention is a set operation: attention(Q, K, V) is unchanged if tokens are permuted consistently. Without positional encodings, a ViT processing row-by-row vs. column-by-column shuffled patches would produce identical outputs - destroying spatial structure. Learnable 1D position embeddings added to each patch embedding inject spatial order.",
       hints: [
-        "Shuffle 196 patches randomly — without positional encodings, does the transformer produce a different output?",
+        "Shuffle 196 patches randomly - without positional encodings, does the transformer produce a different output?",
         'Position embeddings encode "patch at row i, column j" so the model knows spatial arrangement.',
       ],
     },
@@ -727,8 +727,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SimCLR creates two random augmented views of each image, projects them through an encoder + projection head, and maximises cosine similarity between views of the same image (positive pair) while minimising it against views of all other images in the batch (negatives) using NT-Xent loss. With batch size N, each sample has 1 positive and 2(N−1) negatives.",
       hints: [
-        "Different crops of the same photo should produce similar representations — what loss enforces this?",
-        'The "contrastive" part compares positive pairs against many negatives — large batches are needed for enough negatives.',
+        "Different crops of the same photo should produce similar representations - what loss enforces this?",
+        'The "contrastive" part compares positive pairs against many negatives - large batches are needed for enough negatives.',
       ],
     },
     {
@@ -748,7 +748,7 @@ const questions: Record<string, Question[]> = {
         "DINO uses EMA teacher + student: the student tries to match the teacher\'s output on different augmented views. Two mechanisms prevent collapse: (1) centering subtracts a running mean g_c from teacher logits, preventing any single dimension from dominating; (2) sharpening uses low temperature \\tau_t\\approx0.04 in teacher softmax to produce peaked distributions that carry more signal.",
       hints: [
         "Collapse = all embeddings identical. Centering prevents one mode from dominating; sharpening prevents uniform outputs.",
-        "The EMA teacher is more stable than the student — it provides consistent targets.",
+        "The EMA teacher is more stable than the student - it provides consistent targets.",
       ],
     },
     {
@@ -759,9 +759,9 @@ const questions: Record<string, Question[]> = {
         "Masked Image Modelling (MIM, as in MAE) trains a ViT encoder to reconstruct randomly masked patches from visible patches, learning rich visual representations without any labelled data.",
       correctAnswer: "True",
       explanation:
-        "MAE (Masked Autoencoders, He et al. 2022) randomly masks 75% of patches, passes only visible patches through a ViT encoder, then uses a lightweight decoder to reconstruct the masked patches in pixel space. Despite no labels, MAE-pretrained ViT-L achieves 87.8% ImageNet top-1 accuracy after fine-tuning — outperforming supervised pretraining on smaller datasets.",
+        "MAE (Masked Autoencoders, He et al. 2022) randomly masks 75% of patches, passes only visible patches through a ViT encoder, then uses a lightweight decoder to reconstruct the masked patches in pixel space. Despite no labels, MAE-pretrained ViT-L achieves 87.8% ImageNet top-1 accuracy after fine-tuning - outperforming supervised pretraining on smaller datasets.",
       hints: [
-        "Masking 75% leaves only 25% visible — reconstructing missing patches forces understanding of global structure.",
+        "Masking 75% leaves only 25% visible - reconstructing missing patches forces understanding of global structure.",
         "The reconstruction loss is computed only on masked patches (not visible ones), preventing trivial solutions.",
       ],
     },
@@ -785,7 +785,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The discriminator is a binary classifier trained to tell real images from generated (fake) ones; its feedback provides the adversarial signal that drives the generator to produce increasingly realistic images.",
       hints: [
-        "The generator and discriminator are trained adversarially — what signal does the generator receive?",
+        "The generator and discriminator are trained adversarially - what signal does the generator receive?",
         "If the discriminator cannot tell real from fake, has the generator succeeded?",
       ],
     },
@@ -805,7 +805,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DDPMs define a forward process that gradually adds Gaussian noise to data over T steps, then train a network to reverse this process step by step; image generation starts from pure noise and iteratively denoises to a clean image.",
       hints: [
-        "The forward process destroys the image by adding noise — the reverse process is learned to undo this.",
+        "The forward process destroys the image by adding noise - the reverse process is learned to undo this.",
         "Think about how starting from noise and iteratively refining it could produce a coherent image.",
       ],
     },
@@ -819,7 +819,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The VAE encoder outputs parameters of a Gaussian distribution in latent space; the decoder maps samples from this distribution back to image space; the KL divergence term regularises the latent space to be smooth and continuous for generative sampling.",
       hints: [
-        "Unlike a plain autoencoder, the VAE encodes to a distribution rather than a point — why does that enable sampling?",
+        "Unlike a plain autoencoder, the VAE encodes to a distribution rather than a point - why does that enable sampling?",
         "If the latent space is continuous and structured, interpolating between latent vectors should produce coherent images.",
       ],
     },
@@ -842,7 +842,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Optical flow is a dense 2D vector field where each vector represents the displacement (u, v) of a pixel from one frame to the next, capturing apparent motion of objects or the camera.",
       hints: [
-        "Optical flow is a field of 2D vectors, one per pixel — what does each vector describe?",
+        "Optical flow is a field of 2D vectors, one per pixel - what does each vector describe?",
         "Think about why this assumption is useful for optical flow estimation.",
         "What would optical flow be if brightness could change arbitrarily between frames?",
       ],
@@ -901,8 +901,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "U-Net was designed for biomedical image segmentation where training data is scarce; skip connections recover high-resolution spatial detail lost during downsampling, enabling precise boundary delineation critical for medical analysis.",
       hints: [
-        "Medical datasets are often small — what properties of U-Net help with limited data?",
-        "Precise segmentation of tumours or organs requires fine spatial detail — how do skip connections preserve this?",
+        "Medical datasets are often small - what properties of U-Net help with limited data?",
+        "Precise segmentation of tumours or organs requires fine spatial detail - how do skip connections preserve this?",
       ],
     },
     {
@@ -921,8 +921,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In medical segmentation, foreground lesions may occupy <1% of pixels, causing standard cross-entropy to underperform; Dice loss directly optimises overlap between predictions and ground truth, naturally handling class imbalance.",
       hints: [
-        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy — is that useful?",
-        "Dice loss penalises based on overlap, not pixel count — how does that help when foreground is rare?",
+        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy - is that useful?",
+        "Dice loss penalises based on overlap, not pixel count - how does that help when foreground is rare?",
       ],
     },
     {
@@ -957,10 +957,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'CLIP aligns image and text embeddings in a shared space; at inference, a prompt like "a photo of a {class}" is encoded as text and compared to the image embedding — the class with the highest similarity is selected without any class-specific visual training.',
+        'CLIP aligns image and text embeddings in a shared space; at inference, a prompt like "a photo of a {class}" is encoded as text and compared to the image embedding - the class with the highest similarity is selected without any class-specific visual training.',
       hints: [
-        "CLIP is trained with paired image-text data — what shared space does this produce?",
-        '"Zero-shot" means no labelled images of the test class — what acts as the class descriptor instead?',
+        "CLIP is trained with paired image-text data - what shared space does this produce?",
+        '"Zero-shot" means no labelled images of the test class - what acts as the class descriptor instead?',
       ],
     },
     {
@@ -979,8 +979,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DINO uses a student-teacher framework where the teacher is an exponential moving average of the student; centering (subtracting a running mean) and sharpening (low temperature) of teacher outputs prevent collapse without requiring negative pairs.",
       hints: [
-        "Collapse occurs when all representations become identical — what prevents this if there are no explicit negatives?",
-        "The momentum teacher provides stable targets — how does centering prevent the teacher from always outputting the same thing?",
+        "Collapse occurs when all representations become identical - what prevents this if there are no explicit negatives?",
+        "The momentum teacher provides stable targets - how does centering prevent the teacher from always outputting the same thing?",
       ],
     },
     {
@@ -993,7 +993,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Self-supervised methods derive their learning signal from the data itself (e.g., augmentation agreement, masked patch prediction) without any human-provided labels, making them applicable to large unlabelled image collections.",
       hints: [
-        'The term "self-supervised" implies the supervision comes from the data itself — where do labels come from?',
+        'The term "self-supervised" implies the supervision comes from the data itself - where do labels come from?',
         "Think about how you can construct a pretraining task using only the image and transformations applied to it.",
       ],
     },
@@ -1016,8 +1016,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CBIR retrieves images whose visual content (encoded as feature embeddings) is most similar to the query image, enabling search by visual similarity without relying on text annotations.",
       hints: [
-        '"Content-based" contrasts with text-based search — what replaces keywords?',
-        "Feature embeddings encode visual semantics — how can similarity in embedding space relate to visual similarity?",
+        '"Content-based" contrasts with text-based search - what replaces keywords?',
+        "Feature embeddings encode visual semantics - how can similarity in embedding space relate to visual similarity?",
       ],
     },
     {
@@ -1035,8 +1035,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Hashing methods (e.g., LSH, deep hashing) map image embeddings to short binary codes; Hamming distance between binary codes can be computed very efficiently (XOR + popcount), enabling sub-linear retrieval in massive databases.",
       hints: [
-        "Comparing billions of high-dimensional float vectors is slow — what property of binary codes makes comparison faster?",
-        "Hamming distance counts differing bits — can modern hardware compute this faster than float arithmetic?",
+        "Comparing billions of high-dimensional float vectors is slow - what property of binary codes makes comparison faster?",
+        "Hamming distance counts differing bits - can modern hardware compute this faster than float arithmetic?",
       ],
     },
     {
@@ -1050,7 +1050,7 @@ const questions: Record<string, Question[]> = {
         "The Pascal VOC benchmark defines a detection as a true positive if its IoU with a ground truth box exceeds 0.5; COCO extends this by evaluating across IoU thresholds from 0.50 to 0.95 in steps of 0.05.",
       hints: [
         "An IoU of 0.5 means the predicted box overlaps with at least half of the ground truth box area.",
-        "Different benchmarks use different IoU thresholds — VOC uses 0.5, COCO uses 0.50:0.95.",
+        "Different benchmarks use different IoU thresholds - VOC uses 0.5, COCO uses 0.50:0.95.",
       ],
     },
   ],
@@ -1073,8 +1073,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Panoptic segmentation assigns every pixel a semantic class label and additionally provides a unique instance ID for countable "things" (e.g., cars, people), while "stuff" classes (e.g., road, sky) receive class labels but no instance IDs.',
       hints: [
-        '"Panoptic" means all-encompassing — what two tasks does it combine?',
-        "Think about a street scene: the road has no distinct instances but cars do — how does panoptic handle both?",
+        '"Panoptic" means all-encompassing - what two tasks does it combine?',
+        "Think about a street scene: the road has no distinct instances but cars do - how does panoptic handle both?",
       ],
     },
     {
@@ -1092,7 +1092,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Panoptic Quality (PQ) = Segmentation Quality (SQ, mean IoU of matched pairs) \\times Recognition Quality (RQ, F1 of matched vs. unmatched predictions), capturing both how well matched segments overlap and how well detection precision/recall performs.",
       hints: [
-        "PQ rewards both accurate segment boundaries and correct detection — which two factors does it multiply?",
+        "PQ rewards both accurate segment boundaries and correct detection - which two factors does it multiply?",
         "A model that detects all instances but with poor masks would score low on which component of PQ?",
       ],
     },
@@ -1104,10 +1104,10 @@ const questions: Record<string, Question[]> = {
         "In panoptic segmentation, a single pixel can belong to more than one instance.",
       correctAnswer: "False",
       explanation:
-        "Panoptic segmentation requires a unique, non-overlapping assignment — every pixel is assigned to exactly one segment (either a stuff region or a single thing instance), unlike instance segmentation which may produce overlapping masks.",
+        "Panoptic segmentation requires a unique, non-overlapping assignment - every pixel is assigned to exactly one segment (either a stuff region or a single thing instance), unlike instance segmentation which may produce overlapping masks.",
       hints: [
-        "The panoptic task is defined as assigning exactly one label per pixel — can that allow overlap?",
-        "Instance segmentation models like Mask R-CNN can produce overlapping masks — how is this resolved in panoptic segmentation?",
+        "The panoptic task is defined as assigning exactly one label per pixel - can that allow overlap?",
+        "Instance segmentation models like Mask R-CNN can produce overlapping masks - how is this resolved in panoptic segmentation?",
       ],
     },
   ],
@@ -1130,8 +1130,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "3D convolutional filters extend into the time dimension, learning spatiotemporal patterns (e.g., motion of body parts) directly from raw video frames, unlike 2D CNNs which process each frame independently.",
       hints: [
-        "A 2D CNN applied per frame captures appearance but not motion — what does adding the time dimension enable?",
-        "3D filters have shape (T\\timesH\\timesW) — what does the T dimension capture?",
+        "A 2D CNN applied per frame captures appearance but not motion - what does adding the time dimension enable?",
+        "3D filters have shape (T\\timesH\\timesW) - what does the T dimension capture?",
       ],
     },
     {
@@ -1148,10 +1148,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SlowFast has a Slow pathway (few frames, high channel capacity) for semantic content and a Fast pathway (many frames, few channels) for motion, with lateral connections fusing them — inspired by the primate visual system\'s P and M cell pathways.",
+        "SlowFast has a Slow pathway (few frames, high channel capacity) for semantic content and a Fast pathway (many frames, few channels) for motion, with lateral connections fusing them - inspired by the primate visual system\'s P and M cell pathways.",
       hints: [
-        "Semantic understanding (what action is happening) requires fewer frames than capturing fast motion — which pathway handles each?",
-        "The Fast pathway samples more frames per second — what does higher temporal resolution help capture?",
+        "Semantic understanding (what action is happening) requires fewer frames than capturing fast motion - which pathway handles each?",
+        "The Fast pathway samples more frames per second - what does higher temporal resolution help capture?",
       ],
     },
     {
@@ -1162,9 +1162,9 @@ const questions: Record<string, Question[]> = {
         "TimeSformer applies transformer self-attention separately over the spatial and temporal dimensions (divided space-time attention) to make video classification tractable.",
       correctAnswer: "True",
       explanation:
-        "TimeSformer uses divided attention — separate temporal and spatial attention operations per layer — rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
+        "TimeSformer uses divided attention - separate temporal and spatial attention operations per layer - rather than full space-time attention over all patch-frame pairs, reducing the quadratic cost of attending over both dimensions simultaneously.",
       hints: [
-        "The forward process destroys the image by adding noise — the reverse process is learned to undo this.",
+        "The forward process destroys the image by adding noise - the reverse process is learned to undo this.",
         "Think about how starting from noise and iteratively refining it could produce a coherent image.",
       ],
     },
@@ -1186,9 +1186,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Scene recognition identifies the high-level environment or place type from the holistic image context — global layout, materials, and spatial configuration — rather than detecting specific object instances.",
+        "Scene recognition identifies the high-level environment or place type from the holistic image context - global layout, materials, and spatial configuration - rather than detecting specific object instances.",
       hints: [
-        "A kitchen can be recognised even if you cover all the individual objects — what cues remain?",
+        "A kitchen can be recognised even if you cover all the individual objects - what cues remain?",
         'Think about whether recognising "bedroom" requires identifying a bed, or just the overall spatial context.',
       ],
     },
@@ -1208,8 +1208,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Places365 contains over 1.8 million images across 365 scene categories (e.g., airport, forest, kitchen); CNNs pretrained on Places365 learn scene-centric features complementary to object-centric ImageNet features.",
       hints: [
-        "ImageNet is object-centric — what dataset fills the need for scene-centric pretraining?",
-        "Think about what 365 categories at the scene level covers — not objects but environments.",
+        "ImageNet is object-centric - what dataset fills the need for scene-centric pretraining?",
+        "Think about what 365 categories at the scene level covers - not objects but environments.",
       ],
     },
     {
@@ -1222,7 +1222,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Places365-pretrained features encode rich environmental context (materials, spatial layout, lighting) useful for tasks like visual question answering, image captioning, and indoor localisation where scene semantics matter.",
       hints: [
-        "Transfer learning from any well-trained model can be beneficial — what scene-specific information might Places365 features encode?",
+        "Transfer learning from any well-trained model can be beneficial - what scene-specific information might Places365 features encode?",
         "Think about tasks where knowing the scene type (indoor vs. outdoor, type of room) is a useful prior.",
       ],
     },
@@ -1246,7 +1246,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In industrial anomaly detection, defects are rare and their types are often unknown in advance; models are trained on abundant normal images only and flag test images that deviate significantly from the learned normality model.",
       hints: [
-        "Defects in manufacturing are by definition rare — can you collect enough labelled defect examples for supervised learning?",
+        "Defects in manufacturing are by definition rare - can you collect enough labelled defect examples for supervised learning?",
         "If the model only sees normal images during training, what does it learn?",
       ],
     },
@@ -1264,10 +1264,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "PatchCore extracts patch-level features from a pretrained CNN for normal training images, stores a coreset in a memory bank, and scores test patches by their distance to the nearest stored normal patch — no training on anomalies needed.",
+        "PatchCore extracts patch-level features from a pretrained CNN for normal training images, stores a coreset in a memory bank, and scores test patches by their distance to the nearest stored normal patch - no training on anomalies needed.",
       hints: [
-        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy — is that useful?",
-        "Dice loss penalises based on overlap, not pixel count — how does that help when foreground is rare?",
+        "If 99% of pixels are background, a model that always predicts background achieves 99% pixel accuracy - is that useful?",
+        "Dice loss penalises based on overlap, not pixel count - how does that help when foreground is rare?",
       ],
     },
     {
@@ -1280,7 +1280,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "AUROC measures the model\'s ability to rank anomalous samples higher than normal samples across all possible thresholds; it is threshold-agnostic and accounts for the class imbalance common in anomaly detection benchmarks.",
       hints: [
-        "An anomaly detector needs a threshold — AUROC evaluates performance across all thresholds simultaneously.",
+        "An anomaly detector needs a threshold - AUROC evaluates performance across all thresholds simultaneously.",
         "Think about how you can construct a pretraining task using only the image and transformations applied to it.",
       ],
     },
@@ -1304,7 +1304,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "OCR takes an image containing text and outputs a digital text string, enabling downstream processing; modern OCR systems use deep learning to handle diverse fonts, handwriting styles, and image quality.",
       hints: [
-        "Before OCR, scanned pages were just images — what does OCR enable you to do with the content?",
+        "Before OCR, scanned pages were just images - what does OCR enable you to do with the content?",
         "Think about converting a photo of a book page into searchable, editable text.",
       ],
     },
@@ -1324,7 +1324,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "LayoutLM embedss just text tokens but also their 2D spatial positions (x1, y1, x2, y2) within the document page; LayoutLMv2/v3 additionally incorporate visual features from the page image, enabling layout-aware document understanding.",
       hints: [
-        "Static appearance and motion are both cues for recognising actions — why process them separately?",
+        "Static appearance and motion are both cues for recognising actions - why process them separately?",
         "Optical flow captures motion patterns that RGB frames alone cannot easily encode.",
       ],
     },
@@ -1338,7 +1338,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "End-to-end models (e.g., FOTS, ABCNet) simultaneously detect text regions and transcribe them in a single forward pass, whereas traditional OCR pipelines separate text detection (finding where text is) from recognition (what the text says).",
       hints: [
-        "Traditional OCR has two stages — can a single neural network learn both detection and recognition jointly?",
+        "Traditional OCR has two stages - can a single neural network learn both detection and recognition jointly?",
         "End-to-end training allows detection and recognition to benefit from each other\'s gradients.",
       ],
     },
@@ -1360,10 +1360,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Satellite sensors capture multiple spectral bands beyond visible RGB (e.g., near-infrared for vegetation), cover thousands of km\\^2, and view scenes from directly above — all of which require adapted preprocessing and models.",
+        "Satellite sensors capture multiple spectral bands beyond visible RGB (e.g., near-infrared for vegetation), cover thousands of km\\^2, and view scenes from directly above - all of which require adapted preprocessing and models.",
       hints: [
-        "Earth observation satellites capture light beyond the visible spectrum — what extra information do those bands provide?",
-        "A nadir (top-down) view differs from typical ground-level photos — how does that affect object appearance?",
+        "Earth observation satellites capture light beyond the visible spectrum - what extra information do those bands provide?",
+        "A nadir (top-down) view differs from typical ground-level photos - how does that affect object appearance?",
       ],
     },
     {
@@ -1373,17 +1373,17 @@ const questions: Record<string, Question[]> = {
       question:
         "What is the Normalised Difference Vegetation Index (NDVI) and how is it computed from satellite imagery?",
       options: [
-        "NDVI = (Red - Blue) / (Red + Blue) — measures water content of vegetation",
-        "NDVI = (NIR - Red) / (NIR + Red) — measures vegetation density using the contrast between near-infrared and red reflectance",
-        "NDVI = (Green - Red) / (Green + Red) — distinguishes vegetation from urban areas using visible bands only",
-        "NDVI = NIR / Red — measures the ratio of photosynthetically active radiation to total radiation",
+        "NDVI = (Red - Blue) / (Red + Blue) - measures water content of vegetation",
+        "NDVI = (NIR - Red) / (NIR + Red) - measures vegetation density using the contrast between near-infrared and red reflectance",
+        "NDVI = (Green - Red) / (Green + Red) - distinguishes vegetation from urban areas using visible bands only",
+        "NDVI = NIR / Red - measures the ratio of photosynthetically active radiation to total radiation",
       ],
       correctAnswer: 1,
       explanation:
         "NDVI exploits the fact that healthy vegetation strongly reflects NIR and absorbs Red; NDVI = (NIR - Red)/(NIR + Red) ranges from -1 to 1, with values near 1 indicating dense healthy vegetation.",
       hints: [
-        "Healthy leaves absorb red light for photosynthesis and reflect NIR — how does the formula capture this contrast?",
-        "NDVI requires spectral bands beyond RGB — which bands are needed?",
+        "Healthy leaves absorb red light for photosynthesis and reflect NIR - how does the formula capture this contrast?",
+        "NDVI requires spectral bands beyond RGB - which bands are needed?",
       ],
     },
     {
@@ -1396,7 +1396,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Change detection compares multi-temporal satellite images to identify areas of significant change (e.g., deforestation, urban expansion, flood damage), and is a key application of remote sensing for environmental monitoring.",
       hints: [
-        "Two satellite images of the same area taken months apart may show different land cover — how would you detect changes?",
+        "Two satellite images of the same area taken months apart may show different land cover - how would you detect changes?",
         "Applications include monitoring disaster damage, tracking urban growth, and detecting illegal deforestation.",
       ],
     },
@@ -1420,7 +1420,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The discriminator is a binary classifier trained to tell real images from generated (fake) ones; its feedback provides the adversarial signal that drives the generator to produce increasingly realistic images.",
       hints: [
-        "The generator and discriminator are trained adversarially — what signal does the generator receive?",
+        "The generator and discriminator are trained adversarially - what signal does the generator receive?",
         "If the discriminator cannot tell real from fake, has the generator succeeded?",
       ],
     },
@@ -1440,7 +1440,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DDPMs define a forward process that gradually adds Gaussian noise to data over T steps, then train a network to reverse this process step by step; image generation starts from pure noise and iteratively denoises to a clean image.",
       hints: [
-        "The forward process destroys the image by adding noise — the reverse process is learned to undo this.",
+        "The forward process destroys the image by adding noise - the reverse process is learned to undo this.",
         "Think about how starting from noise and iteratively refining it could produce a coherent image.",
       ],
     },
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The VAE encoder outputs parameters of a Gaussian distribution in latent space; the decoder maps samples from this distribution back to image space; the KL divergence term regularises the latent space to be smooth and continuous for generative sampling.",
       hints: [
-        "Unlike a plain autoencoder, the VAE encodes to a distribution rather than a point — why does that enable sampling?",
+        "Unlike a plain autoencoder, the VAE encodes to a distribution rather than a point - why does that enable sampling?",
         "If the latent space is continuous and structured, interpolating between latent vectors should produce coherent images.",
       ],
     },
@@ -1478,7 +1478,7 @@ const questions: Record<string, Question[]> = {
         "Adversarial examples are inputs with small, often human-imperceptible pixel perturbations intentionally crafted to maximise the model\'s loss, causing it to misclassify with high confidence.",
       hints: [
         "The perturbation is chosen to specifically fool the model, not just add random noise.",
-        'A human sees a cat; the model confidently predicts "guacamole" — what caused this?',
+        'A human sees a cat; the model confidently predicts "guacamole" - what caused this?',
       ],
     },
     {
@@ -1497,7 +1497,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SRCNN pioneers deep learning for super-resolution by training a three-layer CNN to directly learn the mapping from bicubic-upsampled LR images to HR images, outperforming classical methods like sparse coding.",
       hints: [
-        "Before deep learning, super-resolution used sparse coding with hand-crafted dictionaries — how does SRCNN differ?",
+        "Before deep learning, super-resolution used sparse coding with hand-crafted dictionaries - how does SRCNN differ?",
         "An end-to-end CNN learns the LR-to-HR mapping jointly rather than in separate stages.",
       ],
     },
@@ -1511,8 +1511,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ShuffleNet applies grouped convolutions (which keep channels isolated) followed by a channel shuffle operation that reorders channels across groups, enabling cross-group information exchange at essentially zero computational cost.",
       hints: [
-        "Grouped convolutions partition channels into independent groups — preventing inter-group information flow.",
-        "Shuffling is a permutation (rearranging indices) — how much compute does that require?",
+        "Grouped convolutions partition channels into independent groups - preventing inter-group information flow.",
+        "Shuffling is a permutation (rearranging indices) - how much compute does that require?",
       ],
     },
   ],
@@ -1533,7 +1533,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard 3\\times3 conv FLOPs \\propto 3\\times3\\timesC\\timesC = 9C\\^2. Depthwise separable: depthwise 3\\times3 per channel = 3\\times3\\timesC = 9C, pointwise 1\\times1 = 1\\timesC\\timesC = C\\^2. Total = 9C + C\\^2 = C(9 + C). Ratio = C(9+C)/(9C\\^2) = (9+C)/(9C) \\approx 1/9 for large C. MobileNet uses this to achieve ~8–9\\times fewer FLOPs than a standard conv, enabling mobile deployment.",
+        "Standard 3\\times3 conv FLOPs \\propto 3\\times3\\timesC\\timesC = 9C\\^2. Depthwise separable: depthwise 3\\times3 per channel = 3\\times3\\timesC = 9C, pointwise 1\\times1 = 1\\timesC\\timesC = C\\^2. Total = 9C + C\\^2 = C(9 + C). Ratio = C(9+C)/(9C\\^2) = (9+C)/(9C) \\approx 1/9 for large C. MobileNet uses this to achieve ~8-9\\times fewer FLOPs than a standard conv, enabling mobile deployment.",
       hints: [
         "Standard: F\\timesF\\timesC_in\\timesC_out. Depthwise: F\\timesF\\timesC (one filter per channel). Pointwise: 1\\times1\\timesC\\timesC.",
         "For 3\\times3 filter and C channels: ratio = (9C + C\\^2) / (9C\\^2) = (9+C)/(9C) \\to 1/9 as C\\to\\infty.",
@@ -1553,7 +1553,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Soft labels are computed as $\\softmax(z / \\tau)$.  \n\nAt $\\tau = 1$:\n\\[\np \\propto [e^4, e^1, e^{-2}] \\approx [0.952, 0.047, 0.001],\n\\]\nwhich is very peaked toward class 1.\n\nAt $\\tau = 4$:\n\\[\np \\propto [e^{4/4}, e^{1/4}, e^{-2/4}] = [e^1, e^{0.25}, e^{-0.5}] \\approx [0.574, 0.282, 0.144],\n\\]\nwhich is much more uniform. Higher $\\tau$ reveals that the teacher considers class 2 more plausible than class 3 even when predicting class 1 — transferring structural knowledge beyond the top-1 prediction.",
+        "Soft labels are computed as $\\softmax(z / \\tau)$.  \n\nAt $\\tau = 1$:\n\\[\np \\propto [e^4, e^1, e^{-2}] \\approx [0.952, 0.047, 0.001],\n\\]\nwhich is very peaked toward class 1.\n\nAt $\\tau = 4$:\n\\[\np \\propto [e^{4/4}, e^{1/4}, e^{-2/4}] = [e^1, e^{0.25}, e^{-0.5}] \\approx [0.574, 0.282, 0.144],\n\\]\nwhich is much more uniform. Higher $\\tau$ reveals that the teacher considers class 2 more plausible than class 3 even when predicting class 1 - transferring structural knowledge beyond the top-1 prediction.",
       hints: [
         "Temperature $\\tau$ divides all logits before softmax. With larger $\\tau$, the logit differences are compressed, producing a more uniform distribution.",
         "As $\\tau \\to \\infty$, soft labels approach a uniform distribution; as $\\tau \\to 0$, they approach a one-hot distribution.",
@@ -1567,10 +1567,10 @@ const questions: Record<string, Question[]> = {
         "ShuffleNet uses channel shuffling to enable information flow between feature channels after grouped convolutions, without incurring the full cost of standard convolutions.",
       correctAnswer: "True",
       explanation:
-        "Grouped convolution partitions C channels into g groups, each operating independently — preventing inter-group information flow. Channel shuffle physically reorders the output channels so that features from different groups are interleaved before the next grouped conv. This is a zero-parameter, O(1) permutation that costs negligible compute while restoring cross-group communication.",
+        "Grouped convolution partitions C channels into g groups, each operating independently - preventing inter-group information flow. Channel shuffle physically reorders the output channels so that features from different groups are interleaved before the next grouped conv. This is a zero-parameter, O(1) permutation that costs negligible compute while restoring cross-group communication.",
       hints: [
-        "Grouped convolutions with g=4 create 4 isolated feature groups — without shuffling, information never crosses group boundaries.",
-        "Shuffling is a permutation (rearranging indices) — how much compute does that require?",
+        "Grouped convolutions with g=4 create 4 isolated feature groups - without shuffling, information never crosses group boundaries.",
+        "Shuffling is a permutation (rearranging indices) - how much compute does that require?",
       ],
     },
   ],
@@ -1614,7 +1614,7 @@ const questions: Record<string, Question[]> = {
         "FID is the Fréchet (Wasserstein-2) distance between two multivariate Gaussians:\n\\[\n\\text{FID} = \\|\\mu_r - \\mu_g\\|^2 + \\text{Tr}\\!\\left(\\Sigma_r + \\Sigma_g - 2(\\Sigma_r \\Sigma_g)^{1/2}\\right).\n\\]\n\nHere $\\mu_r, \\Sigma_r$ are the mean and covariance of Inception-v3 pool3 features for real images, and $\\mu_g, \\Sigma_g$ are for generated images. Lower FID indicates more similar distributions. FID penalises both poor image quality (feature mean drifts from real) and mode collapse (low generated covariance).",
       hints: [
         "FID is the Fréchet/Wasserstein-2 distance between two multivariate Gaussians $\\mathcal{N}(\\mu_r, \\Sigma_r)$ and $\\mathcal{N}(\\mu_g, \\Sigma_g)$.",
-        "The matrix square-root term $(\\Sigma_r \\Sigma_g)^{1/2}$ penalises when the covariances of real and generated features differ — this catches mode collapse.",
+        "The matrix square-root term $(\\Sigma_r \\Sigma_g)^{1/2}$ penalises when the covariances of real and generated features differ - this catches mode collapse.",
       ],
     },
     {
@@ -1625,16 +1625,16 @@ const questions: Record<string, Question[]> = {
         "COCO mAP is reported as the mean of AP values computed across 10 IoU thresholds (0.50, 0.55, …, 0.95). A model achieves AP\\_0.\\_5\\_0=0.72 and AP\\_0.\\_7\\_5=0.52 but very low AP at stricter thresholds. Which statement best explains why COCO mAP (AP[.50:.95]) might be around 0.48 while VOC mAP (AP@0.5) is 0.72?",
       options: [
         "COCO mAP is lower because COCO has more object categories than Pascal VOC",
-        "Averaging AP over thresholds 0.50–0.95 penalises imprecise localisation; a model with loose bounding boxes scores well at IoU=0.5 but poorly at IoU=0.75–0.95, dragging the average below AP@0.5",
+        "Averaging AP over thresholds 0.50-0.95 penalises imprecise localisation; a model with loose bounding boxes scores well at IoU=0.5 but poorly at IoU=0.75-0.95, dragging the average below AP@0.5",
         "COCO mAP uses a different P-R interpolation method that always produces lower values than the 11-point VOC interpolation",
         "COCO mAP subtracts the FID score from AP@0.5, which reduces the reported metric",
       ],
       correctAnswer: 1,
       explanation:
-        "COCO mAP = (1/10) \\times \\Sigma AP@IoU_threshold for thresholds 0.50, 0.55, …, 0.95. A model that localises objects loosely will achieve high AP@0.5 (50% overlap suffices) but low AP@0.75 and near-zero AP@0.90–0.95 (tight overlap required). The average over all 10 thresholds rewards precise box localisation, encouraging detectors to produce tighter boxes rather than just the correct class.",
+        "COCO mAP = (1/10) \\times \\Sigma AP@IoU_threshold for thresholds 0.50, 0.55, …, 0.95. A model that localises objects loosely will achieve high AP@0.5 (50% overlap suffices) but low AP@0.75 and near-zero AP@0.90-0.95 (tight overlap required). The average over all 10 thresholds rewards precise box localisation, encouraging detectors to produce tighter boxes rather than just the correct class.",
       hints: [
-        "Higher IoU thresholds demand that the predicted box nearly perfectly overlaps the ground truth — loose boxes fail these stricter thresholds.",
-        "mAP[.50:.95] is the unweighted mean of 10 AP values — if most values above IoU=0.6 are near zero, the mean will be much lower than AP@0.5.",
+        "Higher IoU thresholds demand that the predicted box nearly perfectly overlaps the ground truth - loose boxes fail these stricter thresholds.",
+        "mAP[.50:.95] is the unweighted mean of 10 AP values - if most values above IoU=0.6 are near zero, the mean will be much lower than AP@0.5.",
       ],
     },
     {
@@ -1669,9 +1669,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SAM uses a ViT-H (huge) image encoder with MAE pretraining to produce dense image embeddings at 1/16 scale (64\\times64 for a 1024\\times1024 input). Crucially, the image encoder runs once and the resulting embedding is stored — allowing fast interactive segmentation at < 50ms per prompt using only the lightweight prompt encoder and mask decoder.",
+        "SAM uses a ViT-H (huge) image encoder with MAE pretraining to produce dense image embeddings at 1/16 scale (64\\times64 for a 1024\\times1024 input). Crucially, the image encoder runs once and the resulting embedding is stored - allowing fast interactive segmentation at < 50ms per prompt using only the lightweight prompt encoder and mask decoder.",
       hints: [
-        "The image encoder is the expensive part — SAM amortises its cost by caching the embedding across prompts.",
+        "The image encoder is the expensive part - SAM amortises its cost by caching the embedding across prompts.",
         "ViT-H has 632M parameters; the prompt encoder and mask decoder together have ~4M.",
       ],
     },
@@ -1691,7 +1691,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DINOv2 combines two self-supervised objectives: (1) DINO self-distillation where a student ViT matches a momentum-teacher\'s global CLS token predictions; (2) iBOT masked image modelling where masked patch tokens are predicted. Training on the curated LVD-142M dataset (deduplicated, filtered web images) gives features that work as a universal visual backbone without fine-tuning for depth, segmentation, and classification.",
       hints: [
-        "DINOv2 is purely self-supervised — it uses no text pairs (unlike CLIP) and no manual labels.",
+        "DINOv2 is purely self-supervised - it uses no text pairs (unlike CLIP) and no manual labels.",
         "Combining DINO (CLS-level) and iBOT (patch-level) objectives encourages both global and local feature quality.",
       ],
     },
@@ -1709,9 +1709,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "SAM\'s prompt encoder accepts points, bounding boxes, and low-resolution masks as geometric prompts — it does NOT natively accept free-form text descriptions. Text-prompted segmentation requires an additional text-grounding module (e.g., Grounding DINO + SAM). SAM\'s mask decoder then generates up to 3 candidate masks with confidence scores from any combination of supported prompts.",
+        "SAM\'s prompt encoder accepts points, bounding boxes, and low-resolution masks as geometric prompts - it does NOT natively accept free-form text descriptions. Text-prompted segmentation requires an additional text-grounding module (e.g., Grounding DINO + SAM). SAM\'s mask decoder then generates up to 3 candidate masks with confidence scores from any combination of supported prompts.",
       hints: [
-        "SAM\'s prompt encoder converts sparse (points, boxes) and dense (masks) inputs — which input format is it missing?",
+        "SAM\'s prompt encoder converts sparse (points, boxes) and dense (masks) inputs - which input format is it missing?",
         "Text-to-segmentation requires first grounding the text to image regions, which SAM itself does not do.",
       ],
     },
@@ -1729,7 +1729,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CLIP constructs an $N \\times N$ similarity matrix. Each of the $N$ diagonal entries (image $i$ with text $i$) is a positive pair. All off-diagonal entries are negative pairs — each image is paired with every other text, and vice versa.\n\nFor $N = 4$:\n\\[\n\\text{positives} = 4, \\quad \\text{negatives} = N^2 - N = 16 - 4 = 12.\n\\]\n\nThe InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image$\\to$text and text$\\to$image directions. Large batch sizes ($N = 32768$) provide abundant negatives, which is crucial for CLIP's performance.",
+        "CLIP constructs an $N \\times N$ similarity matrix. Each of the $N$ diagonal entries (image $i$ with text $i$) is a positive pair. All off-diagonal entries are negative pairs - each image is paired with every other text, and vice versa.\n\nFor $N = 4$:\n\\[\n\\text{positives} = 4, \\quad \\text{negatives} = N^2 - N = 16 - 4 = 12.\n\\]\n\nThe InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image$\\to$text and text$\\to$image directions. Large batch sizes ($N = 32768$) provide abundant negatives, which is crucial for CLIP's performance.",
       hints: [
         "An $N \\times N$ matrix has $N$ diagonal (positive) and $N^2 - N$ off-diagonal (negative) entries.",
         "For $N = 4$: $4^2 = 16$ total pairs, 4 on the diagonal are positives, $16 - 4 = 12$ are negatives.",
@@ -1743,10 +1743,10 @@ const questions: Record<string, Question[]> = {
         'CLIP (Contrastive Language-Image Pretraining) can be used for zero-shot image classification by comparing image embeddings to text embeddings of class descriptions like "a photo of a {class}".',
       correctAnswer: "True",
       explanation:
-        'CLIP trains dual ViT/ResNet image and text encoders with InfoNCE contrastive loss on 400M (image, text) pairs to produce aligned embeddings. At inference, class prompts "a photo of a {class}" are embedded as text; the image is embedded; cosine similarity identifies the closest class — enabling zero-shot classification on unseen classes without any task-specific training.',
+        'CLIP trains dual ViT/ResNet image and text encoders with InfoNCE contrastive loss on 400M (image, text) pairs to produce aligned embeddings. At inference, class prompts "a photo of a {class}" are embedded as text; the image is embedded; cosine similarity identifies the closest class - enabling zero-shot classification on unseen classes without any task-specific training.',
       hints: [
-        "CLIP learns a shared image-text embedding space where matching pairs are close — class names can act as label embeddings.",
-        '"Zero-shot" means no labelled images of the test class are needed — the text description substitutes.',
+        "CLIP learns a shared image-text embedding space where matching pairs are close - class names can act as label embeddings.",
+        '"Zero-shot" means no labelled images of the test class are needed - the text description substitutes.',
       ],
     },
   ],
@@ -1770,7 +1770,7 @@ const questions: Record<string, Question[]> = {
         "Two-stream networks (Simonyan & Zisserman, 2014) split video understanding into appearance (spatial stream: individual RGB frames) and motion (temporal stream: stacked optical flow frames). Each stream is a CNN independently trained for action classification; predictions are fused by late fusion (averaging or SVM). The spatial stream captures object appearance; the temporal stream captures motion patterns. This decomposition achieved state-of-the-art on UCF-101 and HMDB-51.",
       hints: [
         "Action recognition needs both what objects look like (RGB) and how they move (optical flow).",
-        "Optical flow encodes pixel displacement between consecutive frames as a 2D vector field — a natural motion descriptor.",
+        "Optical flow encodes pixel displacement between consecutive frames as a 2D vector field - a natural motion descriptor.",
       ],
     },
     {
@@ -1789,7 +1789,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "C3D (Tran et al., 2015) replaces all 2D conv kernels (H\\timesW) with 3D kernels (T\\timesH\\timesW = 3\\times3\\times3), allowing the network to jointly learn spatial and temporal features. I3D (Carreira & Zisserman, 2017) inflates Inception-v1 2D kernels to 3D and initialises them by repeating 2D weights along the time axis (exploiting ImageNet pre-training). 3D CNNs capture local motion patterns better than RNN-based approaches and are the backbone of modern video models (SlowFast, Video Swin Transformer).",
       hints: [
-        "A 2D conv kernel slides over H\\timesW. A 3D kernel slides over T\\timesH\\timesW — it sees multiple frames at once.",
+        "A 2D conv kernel slides over H\\timesW. A 3D kernel slides over T\\timesH\\timesW - it sees multiple frames at once.",
         "I3D's inflation trick: copy each 2D kernel T times along the temporal axis so it starts with ImageNet-level representations.",
       ],
     },
@@ -1801,7 +1801,7 @@ const questions: Record<string, Question[]> = {
         "Optical flow estimation computes the apparent motion of pixels between consecutive video frames and is represented as a 2D vector field (dx, dy) per pixel.",
       correctAnswer: "True",
       explanation:
-        "Optical flow assigns each pixel in frame t a 2D displacement vector (dx, dy) pointing to where that pixel moved in frame t+1. Classical methods: Lucas-Kanade (sparse, patch-based), Horn-Schunck (dense, regularised). Deep learning methods: FlowNet, PWC-Net, RAFT (Teed & Deng, 2020 — state-of-the-art on KITTI and MPI-Sintel). Optical flow is used in two-stream action recognition, video stabilisation, and frame interpolation.",
+        "Optical flow assigns each pixel in frame t a 2D displacement vector (dx, dy) pointing to where that pixel moved in frame t+1. Classical methods: Lucas-Kanade (sparse, patch-based), Horn-Schunck (dense, regularised). Deep learning methods: FlowNet, PWC-Net, RAFT (Teed & Deng, 2020 - state-of-the-art on KITTI and MPI-Sintel). Optical flow is used in two-stream action recognition, video stabilisation, and frame interpolation.",
       hints: [
         "Optical flow is a dense vector field: every pixel gets an (x, y) displacement, not just feature keypoints.",
         "A moving car: pixels in the car region have large dx (horizontal displacement); stationary background has near-zero flow.",
@@ -1825,10 +1825,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A LiDAR sensor emits laser pulses and measures the return time to produce a set of 3D points — a point cloud. Unlike camera images (dense, ordered H\\timesW grid), point clouds are sparse (e.g., 100K points covering a 360-degree scene), unordered (no fixed grid structure), and irregular (point density varies with distance and occlusion). This requires special processing methods: PointNet operates directly on points; VoxelNet/SECOND voxelise first; PointPillars uses vertical column (pillar) compression for efficiency.",
+        "A LiDAR sensor emits laser pulses and measures the return time to produce a set of 3D points - a point cloud. Unlike camera images (dense, ordered H\\timesW grid), point clouds are sparse (e.g., 100K points covering a 360-degree scene), unordered (no fixed grid structure), and irregular (point density varies with distance and occlusion). This requires special processing methods: PointNet operates directly on points; VoxelNet/SECOND voxelise first; PointPillars uses vertical column (pillar) compression for efficiency.",
       hints: [
-        "A camera captures all pixels in an H\\timesW grid. A LiDAR returns only points where the laser hit a surface — sparse and irregular.",
-        "Point clouds have no inherent ordering — row 5, column 12 has no meaning in a LiDAR scan.",
+        "A camera captures all pixels in an H\\timesW grid. A LiDAR returns only points where the laser hit a surface - sparse and irregular.",
+        "Point clouds have no inherent ordering - row 5, column 12 has no meaning in a LiDAR scan.",
       ],
     },
     {
@@ -1839,16 +1839,16 @@ const questions: Record<string, Question[]> = {
         "PointPillars (Lang et al., 2019) achieves fast LiDAR 3D detection by voxelising the point cloud into vertical pillars. What is the key efficiency advantage of pillars over full 3D voxels?",
       options: [
         "Pillars use a smaller voxel size in the xy-plane than full voxelisation, increasing spatial resolution",
-        "Pillars collapse the z-dimension into a learned feature, producing a 2D pseudo-image that can be processed with a standard 2D CNN backbone — avoiding expensive 3D sparse convolutions",
+        "Pillars collapse the z-dimension into a learned feature, producing a 2D pseudo-image that can be processed with a standard 2D CNN backbone - avoiding expensive 3D sparse convolutions",
         "Pillars discard ground-plane points, reducing the input point count by approximately 50% before any further processing",
         "Pillars use fixed average pooling per column, which is faster than learned PointNet aggregation",
       ],
       correctAnswer: 1,
       explanation:
-        "PointPillars partitions the LiDAR point cloud into vertical columns (pillars) in the Bird's Eye View (BEV) plane. Within each pillar, a small PointNet aggregates all points into a fixed-length feature vector. The pillar features are then scattered back to a 2D BEV grid, creating a pseudo-image. A standard 2D SSD-style detection head runs on this pseudo-image. By eliminating 3D convolutions entirely, PointPillars achieves ~62 Hz inference on a single GPU — 2-4x faster than SECOND/VoxelNet — while maintaining competitive mAP on KITTI.",
+        "PointPillars partitions the LiDAR point cloud into vertical columns (pillars) in the Bird's Eye View (BEV) plane. Within each pillar, a small PointNet aggregates all points into a fixed-length feature vector. The pillar features are then scattered back to a 2D BEV grid, creating a pseudo-image. A standard 2D SSD-style detection head runs on this pseudo-image. By eliminating 3D convolutions entirely, PointPillars achieves ~62 Hz inference on a single GPU - 2-4x faster than SECOND/VoxelNet - while maintaining competitive mAP on KITTI.",
       hints: [
         "VoxelNet uses 3D sparse convolutions (slow). PointPillars collapses the vertical (z) axis first, then uses 2D convolutions (fast).",
-        "The output of PointPillars' encoding is a 2D BEV feature map — exactly the input a standard 2D detection head expects.",
+        "The output of PointPillars' encoding is a 2D BEV feature map - exactly the input a standard 2D detection head expects.",
       ],
     },
     {
@@ -1859,9 +1859,9 @@ const questions: Record<string, Question[]> = {
         "In autonomous driving 3D detection, the Bird's Eye View (BEV) representation is preferred over perspective view because it preserves metric scale and avoids the scale ambiguity inherent to monocular perspective projections.",
       correctAnswer: "True",
       explanation:
-        "In a camera perspective image, a distant large object and a nearby small object can have identical pixel footprints — monocular depth is ambiguous without additional cues. BEV (top-down) maps derived from LiDAR or camera-based depth estimation preserve actual metric positions. Objects at different distances are not confused by scale: a pedestrian 50m away occupies a different BEV region from one 5m away. BEV also enables straightforward ego-motion integration over time. The BEV representation is the cornerstone of modern end-to-end autonomous driving stacks (BEVFusion, BEVDet).",
+        "In a camera perspective image, a distant large object and a nearby small object can have identical pixel footprints - monocular depth is ambiguous without additional cues. BEV (top-down) maps derived from LiDAR or camera-based depth estimation preserve actual metric positions. Objects at different distances are not confused by scale: a pedestrian 50m away occupies a different BEV region from one 5m away. BEV also enables straightforward ego-motion integration over time. The BEV representation is the cornerstone of modern end-to-end autonomous driving stacks (BEVFusion, BEVDet).",
       hints: [
-        "In perspective images, a truck at 100m can appear smaller than a bicycle at 5m. BEV encodes actual metric positions — no scale ambiguity.",
+        "In perspective images, a truck at 100m can appear smaller than a bicycle at 5m. BEV encodes actual metric positions - no scale ambiguity.",
         "Think of a map vs. a photograph: a map preserves distances, a photo distorts them by perspective projection.",
       ],
     },
@@ -1883,10 +1883,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Medical images vary substantially across acquisition sites: different MRI field strengths (1.5T vs. 3T), CT reconstruction kernels, scanner manufacturers, and patient demographics create distribution shifts. A model trained on data from Hospital A may fail on Hospital B due to these shifts — even though the underlying anatomy is the same. Mitigations: domain adaptation, domain generalisation, federated learning (training across sites without sharing data), and test-time adaptation.",
+        "Medical images vary substantially across acquisition sites: different MRI field strengths (1.5T vs. 3T), CT reconstruction kernels, scanner manufacturers, and patient demographics create distribution shifts. A model trained on data from Hospital A may fail on Hospital B due to these shifts - even though the underlying anatomy is the same. Mitigations: domain adaptation, domain generalisation, federated learning (training across sites without sharing data), and test-time adaptation.",
       hints: [
-        "A chest X-ray model trained on Siemens scanners may produce different intensity distributions than a Philips scanner — same anatomy, different pixel statistics.",
-        "Domain shift is analogous to a model trained on US English performing poorly on British English — distribution mismatch, not task change.",
+        "A chest X-ray model trained on Siemens scanners may produce different intensity distributions than a Philips scanner - same anatomy, different pixel statistics.",
+        "Domain shift is analogous to a model trained on US English performing poorly on British English - distribution mismatch, not task change.",
       ],
     },
     {
@@ -1897,7 +1897,7 @@ const questions: Record<string, Question[]> = {
         "Self-supervised learning (SSL) methods like SimCLR and MAE are particularly valuable in medical imaging because they can leverage large amounts of unlabelled medical images to learn useful representations before fine-tuning on scarce labelled datasets.",
       correctAnswer: "True",
       explanation:
-        "Medical image annotation is expensive and slow — it requires domain expert radiologists or pathologists. SSL pre-training on large unlabelled medical image databases (CheXpert, MIMIC-CXR, or large private hospitals) produces representations that transfer well with few labelled examples. Studies (e.g., MoCo/SimCLR pre-training on radiology images) consistently show SSL representations outperform ImageNet pre-training for medical tasks, as the learned features are domain-specific rather than natural-image-specific.",
+        "Medical image annotation is expensive and slow - it requires domain expert radiologists or pathologists. SSL pre-training on large unlabelled medical image databases (CheXpert, MIMIC-CXR, or large private hospitals) produces representations that transfer well with few labelled examples. Studies (e.g., MoCo/SimCLR pre-training on radiology images) consistently show SSL representations outperform ImageNet pre-training for medical tasks, as the learned features are domain-specific rather than natural-image-specific.",
       hints: [
         "Unlabelled medical images are abundant (hospitals generate millions); labelled images are scarce (radiologist annotation bottleneck).",
         "SSL pre-training requires no labels: it learns from augmented views of the same image (contrastive) or masked patches (MAE).",
@@ -1941,7 +1941,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CLIP constructs an N-by-N similarity matrix for a batch of N (image, text) pairs. The N diagonal entries (i-th image with i-th text) are positives. All N(N-1) off-diagonal entries are negatives — the i-th image paired with every other text, and vice versa. The InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image-to-text and text-to-image directions. Using large batch sizes (N=32,768) provides abundant in-batch negatives, which is critical for the quality of learned representations.",
+        "CLIP constructs an N-by-N similarity matrix for a batch of N (image, text) pairs. The N diagonal entries (i-th image with i-th text) are positives. All N(N-1) off-diagonal entries are negatives - the i-th image paired with every other text, and vice versa. The InfoNCE loss maximises similarity of diagonal entries relative to all negatives in both image-to-text and text-to-image directions. Using large batch sizes (N=32,768) provides abundant in-batch negatives, which is critical for the quality of learned representations.",
       hints: [
         "In a batch of N pairs, there are N correct matches (diagonal) and N squared minus N incorrect pairings (off-diagonal).",
         "Large batches are essential: more negatives = harder contrastive task = better representations.",
@@ -1955,9 +1955,9 @@ const questions: Record<string, Question[]> = {
         "ALIGN (Jia et al., 2021) demonstrated that noisy image-text pairs scraped from the web (without expensive curation) can be used effectively for contrastive vision-language pre-training when scale is sufficiently large.",
       correctAnswer: "True",
       explanation:
-        "ALIGN (Google, 2021) scales contrastive image-text training to 1.8 billion noisy image-text pairs scraped from the web using only minimal frequency-based filtering — no expensive human curation. Despite the noise, the sheer scale compensates, and ALIGN matches or exceeds CLIP performance on zero-shot classification and image-text retrieval. This demonstrates a 'scale is all you need' principle for noisy web data in vision-language learning.",
+        "ALIGN (Google, 2021) scales contrastive image-text training to 1.8 billion noisy image-text pairs scraped from the web using only minimal frequency-based filtering - no expensive human curation. Despite the noise, the sheer scale compensates, and ALIGN matches or exceeds CLIP performance on zero-shot classification and image-text retrieval. This demonstrates a 'scale is all you need' principle for noisy web data in vision-language learning.",
       hints: [
-        "CLIP used 400M carefully filtered pairs. ALIGN used 1.8B noisy pairs with minimal filtering — scale outweighs curation at sufficient size.",
+        "CLIP used 400M carefully filtered pairs. ALIGN used 1.8B noisy pairs with minimal filtering - scale outweighs curation at sufficient size.",
         "Noise robustness at scale: individual noisy examples are outvoted by the consistent signal in billions of correctly matched pairs.",
       ],
     },
@@ -1977,8 +1977,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CLIP's text encoder was trained on image captions from the internet, which are natural sentences ('a photo of a dog running in a park'), not bare class labels ('dog'). When doing zero-shot classification, using a prompt template that mimics this caption style (e.g., 'a photo of a {class}') shifts the text embedding into the region of the embedding space that CLIP associates with image content, improving alignment. Prompt ensembling (averaging embeddings across multiple templates) further improves results.",
       hints: [
-        "CLIP never saw bare class names during training — it saw captions. Template prompts mimic caption style.",
-        "Think of distribution mismatch: 'cat' as text vs. 'a photo of a cat' as text — which better matches what CLIP saw during pre-training?",
+        "CLIP never saw bare class names during training - it saw captions. Template prompts mimic caption style.",
+        "Think of distribution mismatch: 'cat' as text vs. 'a photo of a cat' as text - which better matches what CLIP saw during pre-training?",
       ],
     },
   ],
@@ -1999,10 +1999,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDPM (Ho et al., 2020) defines:\n\n- **Forward process**: a fixed Markov chain $q(x_t | x_{t-1})$ that incrementally adds small Gaussian noise over $T$ steps (typically $T = 1000$) until $x_T \\approx \\mathcal{N}(0, I)$.\n\n- **Reverse process**: a learned model $p_\\theta(x_{t-1} | x_t)$ (a U-Net) trained to denoise — predict and remove the noise added at each step.\n\nAt inference, sampling starts from pure Gaussian noise $x_T$ and iteratively denoises for $T$ steps to produce a clean image $x_0$. The ELBO training objective reduces to predicting the noise $\\epsilon$ added at each forward step.",
+        "DDPM (Ho et al., 2020) defines:\n\n- **Forward process**: a fixed Markov chain $q(x_t | x_{t-1})$ that incrementally adds small Gaussian noise over $T$ steps (typically $T = 1000$) until $x_T \\approx \\mathcal{N}(0, I)$.\n\n- **Reverse process**: a learned model $p_\\theta(x_{t-1} | x_t)$ (a U-Net) trained to denoise - predict and remove the noise added at each step.\n\nAt inference, sampling starts from pure Gaussian noise $x_T$ and iteratively denoises for $T$ steps to produce a clean image $x_0$. The ELBO training objective reduces to predicting the noise $\\epsilon$ added at each forward step.",
       hints: [
         "Forward process = add noise (fixed, no parameters). Reverse process = remove noise (learned U-Net).",
-        "The model predicts the noise $\\epsilon$ that was added — so given noisy $x_t$, predict $\\epsilon$, subtract it to get $x_{t-1}$.",
+        "The model predicts the noise $\\epsilon$ that was added - so given noisy $x_t$, predict $\\epsilon$, subtract it to get $x_{t-1}$.",
       ],
     },
     {
@@ -2019,10 +2019,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Classifier-free guidance (CFG, Ho & Salimans, 2022) trains a single model both with (conditional) and without (unconditional) the class/text condition — the condition is dropped with probability p_uncond during training, forcing the model to also learn unconditional generation. At inference, the noise prediction is: epsilon_guided = epsilon_uncond + w*(epsilon_cond - epsilon_uncond) where w > 1 is the guidance scale. Higher w increases fidelity/alignment but reduces diversity. CFG underpins Stable Diffusion, DALL-E 2, and Imagen.",
+        "Classifier-free guidance (CFG, Ho & Salimans, 2022) trains a single model both with (conditional) and without (unconditional) the class/text condition - the condition is dropped with probability p_uncond during training, forcing the model to also learn unconditional generation. At inference, the noise prediction is: epsilon_guided = epsilon_uncond + w*(epsilon_cond - epsilon_uncond) where w > 1 is the guidance scale. Higher w increases fidelity/alignment but reduces diversity. CFG underpins Stable Diffusion, DALL-E 2, and Imagen.",
       hints: [
         "Classifier guidance needs a separate noisy-image classifier (hard to train). CFG bakes guidance into the diffusion model itself.",
-        "The linear combination amplifies the difference between conditional and unconditional predictions — pushing generation toward the condition.",
+        "The linear combination amplifies the difference between conditional and unconditional predictions - pushing generation toward the condition.",
       ],
     },
     {
@@ -2036,7 +2036,7 @@ const questions: Record<string, Question[]> = {
         "Rombach et al. (2022) showed that a VAE can compress images into a spatially smaller latent space (e.g., 512x512 pixels to 64x64 latents) while preserving perceptual quality. Running DDPM in this compressed latent space reduces compute substantially compared to pixel-space diffusion. The VAE decoder then maps the denoised latent back to pixel space. LDMs achieve competitive image quality at much lower computational cost, democratising high-resolution image generation.",
       hints: [
         "Pixel-space diffusion on 512x512 images requires the U-Net to process many pixels per step. Latent-space reduces spatial size by roughly 8x.",
-        "The VAE in Stable Diffusion encodes 512x512 to 64x64x4 latents — the diffusion U-Net operates on the smaller 64x64 tensors.",
+        "The VAE in Stable Diffusion encodes 512x512 to 64x64x4 latents - the diffusion U-Net operates on the smaller 64x64 tensors.",
       ],
     },
   ],
@@ -2079,7 +2079,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DeepSORT (Wojke et al., 2017) adds a CNN-based appearance model: each detection is embedded into a 128-dimensional descriptor via a ReID network trained on a person re-identification dataset. When matching detections to tracks, the cost matrix combines IoU distance (motion model) with cosine distance between appearance descriptors. The appearance similarity allows re-association after long occlusions when IoU alone fails. DeepSORT is widely used for pedestrian tracking in surveillance and autonomous driving.",
       hints: [
-        "SORT uses only IoU for matching. DeepSORT adds appearance similarity — 'does this detected person look like track #3?'",
+        "SORT uses only IoU for matching. DeepSORT adds appearance similarity - 'does this detected person look like track #3?'",
         "ReID networks learn identity-preserving embeddings: the same person at different times/views maps to similar descriptors.",
       ],
     },
@@ -2093,7 +2093,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "MOTA (Bernardin & Stiefelhagen, 2008) = 1 minus (FP + FN + IDSW) / GT, where GT is total ground-truth detections. It penalises missed detections (FN), false alarms (FP), and identity switches (IDSW). MOTA can be negative. A complementary metric, MOTP, measures localisation precision (IoU between matched tracks and ground truth). IDF1 (Ristani et al., 2016) focuses specifically on identification continuity. The MOTChallenge benchmark uses all these metrics.",
       hints: [
-        "MOTA = 1 minus the sum of three error types divided by total ground-truth objects — lower errors yield higher MOTA.",
+        "MOTA = 1 minus the sum of three error types divided by total ground-truth objects - lower errors yield higher MOTA.",
         "Identity switch: a tracker says 'that's person #2' in frame 50, then switches to 'that's person #5' in frame 51 for the same person.",
       ],
     },
@@ -2115,7 +2115,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Heatmap-based pose estimation (Newell et al., 2016 — Stacked Hourglass; Sun et al., 2019 — HRNet) represents each of K keypoints as a 2D Gaussian activation map of shape H-by-W. The peak location gives the keypoint coordinates; the Gaussian spread provides spatial uncertainty. L2 loss is computed between predicted and ground-truth Gaussians. This avoids the difficulty of directly regressing pixel coordinates with a linear head and produces spatially precise predictions. The final keypoint location is obtained by argmax over the heatmap.",
+        "Heatmap-based pose estimation (Newell et al., 2016 - Stacked Hourglass; Sun et al., 2019 - HRNet) represents each of K keypoints as a 2D Gaussian activation map of shape H-by-W. The peak location gives the keypoint coordinates; the Gaussian spread provides spatial uncertainty. L2 loss is computed between predicted and ground-truth Gaussians. This avoids the difficulty of directly regressing pixel coordinates with a linear head and produces spatially precise predictions. The final keypoint location is obtained by argmax over the heatmap.",
       hints: [
         "Heatmap = one map per joint, with a Gaussian blob centred at the true joint pixel location.",
         "Regressing (x,y) directly is hard. Predicting a spatial probability map with the peak at the joint is easier for the model.",
@@ -2135,10 +2135,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "OpenPose uses a bottom-up strategy: first detect all keypoints (heatmaps) across all persons in the image, then group them into individuals. PAFs encode, for each limb (e.g., right shoulder to right elbow), a 2D unit vector field pointing from one joint to the other at pixels along the limb. During association, the dot product between the PAF direction and the vector connecting two candidate keypoints determines whether they belong to the same limb — enabling correct grouping even in crowded scenes without person bounding boxes.",
+        "OpenPose uses a bottom-up strategy: first detect all keypoints (heatmaps) across all persons in the image, then group them into individuals. PAFs encode, for each limb (e.g., right shoulder to right elbow), a 2D unit vector field pointing from one joint to the other at pixels along the limb. During association, the dot product between the PAF direction and the vector connecting two candidate keypoints determines whether they belong to the same limb - enabling correct grouping even in crowded scenes without person bounding boxes.",
       hints: [
         "OpenPose is bottom-up: detect all joints, then connect them into skeletons. PAFs provide the connecting information.",
-        "PAF at a pixel on a limb points from joint A to joint B — high dot product with the A-to-B direction confirms they are connected.",
+        "PAF at a pixel on a limb points from joint A to joint B - high dot product with the A-to-B direction confirms they are connected.",
       ],
     },
     {
@@ -2151,8 +2151,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ViTPose uses a plain ViT (no hierarchical structure, no task-specific modifications) as a pose estimation backbone, with a lightweight decoder head predicting heatmaps. It achieves state-of-the-art on COCO Keypoint Detection, outperforming HRNet and other CNN-based methods. Key findings: ViT backbones benefit from pre-training with MAE; model scalability is excellent (larger ViT = better pose). This demonstrated that transformer backbones can excel at dense prediction tasks like pose estimation.",
       hints: [
-        "ViTPose uses a standard ViT with no task-specific architectural changes — just a different decoder head for heatmap prediction.",
-        "ViTPose + MAE pre-training achieves state-of-the-art on COCO — showing pre-training strategy matters more than architecture engineering.",
+        "ViTPose uses a standard ViT with no task-specific architectural changes - just a different decoder head for heatmap prediction.",
+        "ViTPose + MAE pre-training achieves state-of-the-art on COCO - showing pre-training strategy matters more than architecture engineering.",
       ],
     },
   ],
@@ -2167,7 +2167,7 @@ const questions: Record<string, Question[]> = {
         "Mask2Former (Cheng et al., 2022) unifies semantic, instance, and panoptic segmentation in a single architecture. What is its core mechanism for producing per-segment masks?",
       options: [
         "A sliding window that classifies every NxN image patch independently into one of K semantic categories",
-        "Learned mask queries that cross-attend to image features via a Transformer decoder, producing per-query binary masks and class predictions — each query corresponds to one predicted segment",
+        "Learned mask queries that cross-attend to image features via a Transformer decoder, producing per-query binary masks and class predictions - each query corresponds to one predicted segment",
         "A separate branch for each task (semantic, instance, panoptic) with shared early encoder features",
         "A graph neural network that groups superpixels into segments using learned edge weights",
       ],
@@ -2176,7 +2176,7 @@ const questions: Record<string, Question[]> = {
         "Mask2Former uses a universal architecture: a pixel decoder (multi-scale deformable attention) produces high-resolution features; a Transformer decoder with N learned queries cross-attends to these features. Each query learns to represent one segment (thing or stuff); it predicts a binary mask (via dot product with pixel features) and a class label. The same architecture handles semantic, instance, and panoptic segmentation. Masked attention restricts each query's attention to its predicted mask region, improving training efficiency.",
       hints: [
         "Think of each query as a slot that competes to represent one segment. The query cross-attends to image features to fill its slot.",
-        "Masked attention = the query can only attend to pixels within its current predicted mask region — focusing the gradient signal.",
+        "Masked attention = the query can only attend to pixels within its current predicted mask region - focusing the gradient signal.",
       ],
     },
     {
@@ -2187,16 +2187,16 @@ const questions: Record<string, Question[]> = {
         "The Segment Anything Model (SAM, Kirillov et al., 2023) supports which types of user prompts to specify what to segment?",
       options: [
         "Only free-form text descriptions (e.g., 'segment the red car on the left')",
-        "Points (clicks), bounding boxes, and coarse masks — but not free-form text",
-        "Only bounding boxes — SAM requires a bounding box around the target region",
+        "Points (clicks), bounding boxes, and coarse masks - but not free-form text",
+        "Only bounding boxes - SAM requires a bounding box around the target region",
         "Only semantic category names from a pre-defined vocabulary of 80 COCO classes",
       ],
       correctAnswer: 1,
       explanation:
-        "SAM's prompt encoder accepts: (1) sparse prompts — foreground/background point clicks encoded as learned position and type embeddings, and bounding boxes; (2) dense prompts — low-resolution mask inputs (e.g., from a previous prediction). SAM does NOT natively accept text prompts. Text-prompted segmentation requires grounding the text to image regions first (e.g., Grounding DINO) before passing resulting boxes to SAM. SAM's mask decoder generates up to 3 candidate masks with confidence scores, handling ambiguous prompts.",
+        "SAM's prompt encoder accepts: (1) sparse prompts - foreground/background point clicks encoded as learned position and type embeddings, and bounding boxes; (2) dense prompts - low-resolution mask inputs (e.g., from a previous prediction). SAM does NOT natively accept text prompts. Text-prompted segmentation requires grounding the text to image regions first (e.g., Grounding DINO) before passing resulting boxes to SAM. SAM's mask decoder generates up to 3 candidate masks with confidence scores, handling ambiguous prompts.",
       hints: [
         "SAM's three prompt types: points (click here), boxes (frame this region), and masks (rough prior). No text.",
-        "For text-to-segment pipelines, Grounding DINO detects the region and SAM segments it — two models in sequence.",
+        "For text-to-segment pipelines, Grounding DINO detects the region and SAM segments it - two models in sequence.",
       ],
     },
     {
@@ -2207,9 +2207,9 @@ const questions: Record<string, Question[]> = {
         "Panoptic segmentation assigns every pixel in an image to either a semantic category (for background 'stuff' regions like sky or road) or a specific object instance (for foreground 'thing' classes like cars or people).",
       correctAnswer: "True",
       explanation:
-        "Panoptic segmentation (Kirillov et al., 2019) unifies semantic segmentation (assigning category labels to 'stuff' — amorphous regions like grass, road, sky) and instance segmentation (detecting and delineating individual 'things' — countable objects like cars, people, animals with unique instance IDs). Every pixel receives both a class label and (for 'things') an instance ID. The Panoptic Quality (PQ) metric = DQ times SQ evaluates joint performance on both stuff and thing categories.",
+        "Panoptic segmentation (Kirillov et al., 2019) unifies semantic segmentation (assigning category labels to 'stuff' - amorphous regions like grass, road, sky) and instance segmentation (detecting and delineating individual 'things' - countable objects like cars, people, animals with unique instance IDs). Every pixel receives both a class label and (for 'things') an instance ID. The Panoptic Quality (PQ) metric = DQ times SQ evaluates joint performance on both stuff and thing categories.",
       hints: [
-        "Stuff: background regions (sky, road, grass) — no instance distinction. Things: countable objects (car #1, car #2, person #1) — each instance is unique.",
+        "Stuff: background regions (sky, road, grass) - no instance distinction. Things: countable objects (car #1, car #2, person #1) - each instance is unique.",
         "Panoptic segmentation output: each pixel has a (class, instance_id) pair such as (sky, 0), (car, 1), (car, 2), (person, 3).",
       ],
     },
@@ -2231,10 +2231,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In early fusion VQA (the baseline of Antol et al., 2015 — VQA v1), the image (CNN global feature vector) and question (LSTM encoding) are combined immediately (e.g., concatenation or element-wise product) and fed to a classifier. Late fusion trains separate image and text streams and combines them only at prediction time (e.g., ensembling softmax outputs). Early fusion allows the combined representation to be jointly optimised for VQA, but simpler fusion operations can miss fine-grained cross-modal reasoning needed for spatial and relational questions.",
+        "In early fusion VQA (the baseline of Antol et al., 2015 - VQA v1), the image (CNN global feature vector) and question (LSTM encoding) are combined immediately (e.g., concatenation or element-wise product) and fed to a classifier. Late fusion trains separate image and text streams and combines them only at prediction time (e.g., ensembling softmax outputs). Early fusion allows the combined representation to be jointly optimised for VQA, but simpler fusion operations can miss fine-grained cross-modal reasoning needed for spatial and relational questions.",
       hints: [
         "Early fusion = combine modalities early in the pipeline. Late fusion = keep modalities separate until the final prediction.",
-        "Simple early fusion (concat + MLP) struggles with spatial relational questions — it lacks precise spatial reasoning over combined features.",
+        "Simple early fusion (concat + MLP) struggles with spatial relational questions - it lacks precise spatial reasoning over combined features.",
       ],
     },
     {
@@ -2245,10 +2245,10 @@ const questions: Record<string, Question[]> = {
         "The VQA v2 dataset was designed to reduce language bias in VQA by balancing answer distributions, so that a model cannot achieve high accuracy on the test set by ignoring the image entirely.",
       correctAnswer: "True",
       explanation:
-        "VQA v1 suffered from language priors: 'Is there a...' questions were almost always answered 'yes'; sports questions were answered 'tennis'. Goyal et al. (2017) designed VQA v2 by adding complementary image pairs — for each question, a second image is paired where the correct answer is different. This balancing ensures that question-only models (which ignore images) achieve only ~50% accuracy on balanced pairs, forcing models to actually look at the image to answer correctly.",
+        "VQA v1 suffered from language priors: 'Is there a...' questions were almost always answered 'yes'; sports questions were answered 'tennis'. Goyal et al. (2017) designed VQA v2 by adding complementary image pairs - for each question, a second image is paired where the correct answer is different. This balancing ensures that question-only models (which ignore images) achieve only ~50% accuracy on balanced pairs, forcing models to actually look at the image to answer correctly.",
       hints: [
         "VQA v1 flaw: language models without seeing any image achieved ~50% accuracy by exploiting question-answer statistics.",
-        "VQA v2 fix: for every (question, image, answer) triple, add (question, image', different_answer) — now language bias cannot help.",
+        "VQA v2 fix: for every (question, image, answer) triple, add (question, image', different_answer) - now language bias cannot help.",
       ],
     },
     {
@@ -2265,7 +2265,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Visual grounding in VQA means the model learns to attend to or localise the specific image region(s) needed to answer the question. Attention-based models (BAN, UpDown — Anderson et al., 2018) compute cross-attention between question tokens and image region features (from Faster R-CNN) to ground question tokens to relevant objects. Grounding is evaluated explicitly in benchmarks like RefCOCO (referring expression comprehension) where the model must produce a bounding box corresponding to the question's referent.",
+        "Visual grounding in VQA means the model learns to attend to or localise the specific image region(s) needed to answer the question. Attention-based models (BAN, UpDown - Anderson et al., 2018) compute cross-attention between question tokens and image region features (from Faster R-CNN) to ground question tokens to relevant objects. Grounding is evaluated explicitly in benchmarks like RefCOCO (referring expression comprehension) where the model must produce a bounding box corresponding to the question's referent.",
       hints: [
         "Visual grounding: 'What color is the car?' causes the model to attend to the car region, not the background.",
         "Grounding produces interpretable models: you can visualise where the model looked when producing its answer.",
@@ -2283,15 +2283,15 @@ const questions: Record<string, Question[]> = {
         "Masked Autoencoders (MAE, He et al., 2022) pre-train a Vision Transformer by masking patches and reconstructing them. Which masking ratio did MAE find optimal, and why is this ratio much higher than BERT's 15% masking ratio?",
       options: [
         "15% masking ratio, same as BERT, because visual and linguistic redundancy are similar",
-        "75% masking ratio, because images have high spatial redundancy — nearby patches are strongly correlated — making it too easy to reconstruct masked patches from their immediate neighbours at lower masking ratios",
+        "75% masking ratio, because images have high spatial redundancy - nearby patches are strongly correlated - making it too easy to reconstruct masked patches from their immediate neighbours at lower masking ratios",
         "50% masking ratio, balancing the reconstruction difficulty with sufficient visible context for the encoder",
         "90% masking ratio, because ViT encoders are powerful enough to reconstruct images from only 10% of patches",
       ],
       correctAnswer: 1,
       explanation:
-        "MAE uses a 75% masking ratio — far higher than BERT's 15% token masking. Images are spatially redundant: a masked patch can be trivially reconstructed from adjacent visible patches by interpolation at low masking ratios. By masking 75%, MAE forces the encoder to learn high-level semantic understanding rather than low-level texture interpolation. The MAE decoder operates only on the masked tokens (efficient), and reconstruction is in pixel space. This pre-training scales excellently with ViT-Large and ViT-Huge.",
+        "MAE uses a 75% masking ratio - far higher than BERT's 15% token masking. Images are spatially redundant: a masked patch can be trivially reconstructed from adjacent visible patches by interpolation at low masking ratios. By masking 75%, MAE forces the encoder to learn high-level semantic understanding rather than low-level texture interpolation. The MAE decoder operates only on the masked tokens (efficient), and reconstruction is in pixel space. This pre-training scales excellently with ViT-Large and ViT-Huge.",
       hints: [
-        "At 15% masking, an image encoder can reconstruct patches by averaging adjacent visible patches — no semantic understanding needed.",
+        "At 15% masking, an image encoder can reconstruct patches by averaging adjacent visible patches - no semantic understanding needed.",
         "75% masking = only 25% visible patches. The model must understand object structure to reconstruct missing regions.",
       ],
     },
@@ -2309,10 +2309,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SimCLR (Chen et al., 2020) showed that two components dramatically improve representation quality: (1) a non-linear projection head — a 2-layer MLP applied after the ResNet encoder before computing the NT-Xent loss. The contrastive loss is applied in projection space, preserving the encoder's representations for downstream tasks. (2) Composition of strong augmentations — random resized cropping, colour distortion, and Gaussian blur — creates hard positive pairs that force the encoder to learn invariant features. Ablating either component significantly drops downstream accuracy.",
+        "SimCLR (Chen et al., 2020) showed that two components dramatically improve representation quality: (1) a non-linear projection head - a 2-layer MLP applied after the ResNet encoder before computing the NT-Xent loss. The contrastive loss is applied in projection space, preserving the encoder's representations for downstream tasks. (2) Composition of strong augmentations - random resized cropping, colour distortion, and Gaussian blur - creates hard positive pairs that force the encoder to learn invariant features. Ablating either component significantly drops downstream accuracy.",
       hints: [
-        "Why a projection head? The features used for the contrastive loss are shaped by the auxiliary objective — the head absorbs this, keeping encoder features clean for transfer.",
-        "Strong augmentation: two different crops of the same image look very different but must map to similar embeddings — forcing semantic invariance.",
+        "Why a projection head? The features used for the contrastive loss are shaped by the auxiliary objective - the head absorbs this, keeping encoder features clean for transfer.",
+        "Strong augmentation: two different crops of the same image look very different but must map to similar embeddings - forcing semantic invariance.",
       ],
     },
     {
@@ -2323,10 +2323,10 @@ const questions: Record<string, Question[]> = {
         "DINO (Caron et al., 2021) applies self-supervised knowledge distillation to Vision Transformers and, without any supervision, produces CLS token features that directly perform well at nearest-neighbour image retrieval and k-NN classification.",
       correctAnswer: "True",
       explanation:
-        "DINO (Self-DIstillation with NO labels) trains a student ViT to match the output distribution of a teacher ViT (exponential moving average of student). The student sees different augmented views from the teacher; the teacher's output is sharpened via a centering operation to prevent collapse. A key emergent property: DINO CLS tokens encode rich semantic features — k-NN classification on ImageNet with frozen DINO features achieves ~78% top-1 accuracy without any fine-tuning. Additionally, DINO's attention maps segment objects without supervision, revealing that ViTs learn semantic segmentation as a byproduct of self-distillation.",
+        "DINO (Self-DIstillation with NO labels) trains a student ViT to match the output distribution of a teacher ViT (exponential moving average of student). The student sees different augmented views from the teacher; the teacher's output is sharpened via a centering operation to prevent collapse. A key emergent property: DINO CLS tokens encode rich semantic features - k-NN classification on ImageNet with frozen DINO features achieves ~78% top-1 accuracy without any fine-tuning. Additionally, DINO's attention maps segment objects without supervision, revealing that ViTs learn semantic segmentation as a byproduct of self-distillation.",
       hints: [
-        "DINO's k-NN classification: take frozen CLS embeddings, find 20 nearest training neighbours, majority-vote — no linear head, no fine-tuning.",
-        "DINO attention maps show the model focusing on the subject and ignoring the background — emergent unsupervised segmentation.",
+        "DINO's k-NN classification: take frozen CLS embeddings, find 20 nearest training neighbours, majority-vote - no linear head, no fine-tuning.",
+        "DINO attention maps show the model focusing on the subject and ignoring the background - emergent unsupervised segmentation.",
       ],
     },
   ],
@@ -2361,7 +2361,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "ViT positional embeddings are learned for the pretraining sequence length (e.g., 196 tokens for 224x224/16x16). At higher resolution (e.g., 384x384 giving 576 patches), the sequence is longer. The original paper interpolates the pretrained 2D positional embedding grid (14x14) bilinearly to the new grid size (24x24), allowing ViT to adapt to higher resolution without full retraining.",
       hints: [
-        "Pretraining at 224x224 gives 14x14=196 positions. Fine-tuning at 384x384 gives 24x24=576 positions — new positions need embeddings.",
+        "Pretraining at 224x224 gives 14x14=196 positions. Fine-tuning at 384x384 gives 24x24=576 positions - new positions need embeddings.",
         "Interpolation treats the 14x14 grid as a 2D map and bilinearly upsamples it to 24x24, retaining spatial structure.",
       ],
     },
@@ -2374,8 +2374,8 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "ViT-B/16 and ViT-B/32 share the same base (B) architecture: 12 transformer layers, embedding dimension 768, 12 attention heads. The only difference is the patch size: /16 creates 14x14=196 tokens; /32 creates 7x7=49 tokens. ViT-B/32 is much cheaper in self-attention cost but ViT-B/16 achieves better accuracy due to finer spatial resolution.",
       hints: [
-        "The letter B in ViT-B denotes base model size — same parameters. The number after the slash is the patch size.",
-        "Self-attention costs O(n^2) in tokens. 196^2=38416 vs 49^2=2401 — about 16x fewer attention operations for /32.",
+        "The letter B in ViT-B denotes base model size - same parameters. The number after the slash is the patch size.",
+        "Self-attention costs O(n^2) in tokens. 196^2=38416 vs 49^2=2401 - about 16x fewer attention operations for /32.",
       ],
     },
     {
@@ -2392,7 +2392,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: "Plain ViT has two weaknesses for dense prediction: O(n^2) global attention is expensive for large images; and it has no multi-scale feature maps, making it incompatible with FPN-based detectors. Swin addresses both: window attention reduces each layer cost to O(n times window_size^2) which is linear in image size; the hierarchical patch merging produces 4x, 8x, 16x, 32x downsampled feature maps matching ResNet multi-scale structure.",
       hints: [
-        "Dense tasks need multi-scale features. Plain ViT outputs one scale — Swin hierarchy outputs four.",
+        "Dense tasks need multi-scale features. Plain ViT outputs one scale - Swin hierarchy outputs four.",
         "Window attention limits each token to attending within a local W times W window (e.g., 7x7). Shifted windows enable cross-window communication every other layer.",
       ],
     },
@@ -2408,7 +2408,7 @@ const extraCV: Record<string, Question[]> = {
         "ViT lacks max-pooling for downsampling; the solution was to use strided convolutions for patch projection",
       ],
       correctAnswer: 0,
-      explanation: "CNNs encode translation equivariance (same filter at every position) and locality (small receptive field grows gradually) — powerful priors for natural images that reduce sample complexity. ViT has neither: each patch attends globally from layer 1, and there is no weight sharing across positions. The original paper showed excellent performance only after pretraining on JFT-300M (300M images), not when trained from scratch on ImageNet-1k alone.",
+      explanation: "CNNs encode translation equivariance (same filter at every position) and locality (small receptive field grows gradually) - powerful priors for natural images that reduce sample complexity. ViT has neither: each patch attends globally from layer 1, and there is no weight sharing across positions. The original paper showed excellent performance only after pretraining on JFT-300M (300M images), not when trained from scratch on ImageNet-1k alone.",
       hints: [
         "CNNs learn translation equivariance for free via weight sharing; ViT must learn it from data, requiring more examples.",
         "ViT trained on ImageNet-21k or JFT-300M matches CNNs on ImageNet-1k, but training from scratch on ImageNet-1k fails.",
@@ -2431,7 +2431,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "NeRF (Mildenhall et al., 2020) maps a 5D input (3D position x,y,z and 2D viewing direction theta,phi) to 4D output (RGB colour and volume density sigma) via an MLP with positional encoding. Volume rendering composites colours along rays to produce 2D images. Training requires multi-view images with known camera poses; inference renders novel views by marching rays through the volume.",
       hints: [
-        "NeRF is a continuous implicit representation — no explicit mesh or voxel grid. The scene is stored in MLP weights.",
+        "NeRF is a continuous implicit representation - no explicit mesh or voxel grid. The scene is stored in MLP weights.",
         "Volume rendering integrates colour and density along each pixel ray. Points with high density contribute more to the final pixel colour.",
       ],
     },
@@ -2450,7 +2450,7 @@ const extraCV: Record<string, Question[]> = {
       explanation: "By similar triangles in the stereo geometry: Z = B * f / d. Larger baseline B or longer focal length f gives more depth resolution; larger disparity d means the object is closer (smaller depth). Doubling the baseline B doubles the depth resolution. Disparity d is computed by finding matching pixels between left and right rectified images.",
       hints: [
         "Closer objects have larger disparity (they appear further apart in the two images). Z is inversely proportional to d.",
-        "Doubling the baseline B doubles the depth range — stereo cameras for autonomous driving use baselines of 0.5 to 1.5 metres.",
+        "Doubling the baseline B doubles the depth range - stereo cameras for autonomous driving use baselines of 0.5 to 1.5 metres.",
       ],
     },
     {
@@ -2462,8 +2462,8 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: "False",
       explanation: "Monocular depth estimation is fundamentally scale-ambiguous: a scene at twice the depth with twice the object sizes produces an identical image. Monocular methods (MiDaS, DPT, Depth Anything) predict relative or affine-invariant depth, not metric depth. To obtain true metric scale, additional information is required: camera intrinsics plus known object sizes, stereo, LiDAR supervision, or IMU data.",
       hints: [
-        "A tiny room and a giant room can look identical in a photo if proportions are the same — the camera cannot tell them apart.",
-        "MiDaS and DPT produce affine-invariant depth — the absolute scale and offset are undefined without a reference.",
+        "A tiny room and a giant room can look identical in a photo if proportions are the same - the camera cannot tell them apart.",
+        "MiDaS and DPT produce affine-invariant depth - the absolute scale and offset are undefined without a reference.",
       ],
     },
     {
@@ -2493,7 +2493,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Occupancy networks (Mescheder et al., 2019) learn a function f_theta mapping 3D points and a latent code to occupancy probability in [0,1]. The 3D surface is the iso-surface where occupancy = 0.5, extracted via Marching Cubes. Unlike explicit meshes (fixed connectivity) or voxels (fixed resolution), occupancy networks represent continuous surfaces and can handle complex topologies.",
       hints: [
-        "The surface is implicitly defined as the 0.5 occupancy level-set — points inside have high occupancy, outside have low.",
+        "The surface is implicitly defined as the 0.5 occupancy level-set - points inside have high occupancy, outside have low.",
         "Neural implicit representations (NeRF, occupancy nets, SDFs) represent scenes without discrete structure, enabling unlimited resolution.",
       ],
     },
@@ -2511,7 +2511,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Instant-NGP replaces NeRF slow positional encoding plus large MLP with a multi-resolution hash table: L resolution levels each mapping 3D positions to feature vectors via hashing. Bilinear interpolation between hash table entries provides smooth spatial features. A tiny MLP decodes these features to colour and density. The hash table is much faster to query than evaluating a large MLP, enabling convergence in seconds.",
       hints: [
-        "The hash table stores features at spatial grid vertices at multiple resolutions — fast O(1) lookup vs. slow MLP forward pass.",
+        "The hash table stores features at spatial grid vertices at multiple resolutions - fast O(1) lookup vs. slow MLP forward pass.",
         "Multi-resolution: coarse grid captures global scene structure; fine grid captures local detail. Features are interpolated and concatenated.",
       ],
     },
@@ -2613,10 +2613,10 @@ const extraCV: Record<string, Question[]> = {
         "It uses few-shot in-context learning to adapt to new categories from a single exemplar image",
       ],
       correctAnswer: 1,
-      explanation: "Grounding DINO (Liu et al., 2023) follows the GLIP approach: text and image modalities are fused via a feature enhancer that performs cross-modal attention between the text token sequence (encoded from category names or free-text descriptions) and the image feature maps. At inference, any text query can be used — the model has learned text-vision alignment that generalises to novel categories described in language, enabling open-vocabulary detection without per-category training.",
+      explanation: "Grounding DINO (Liu et al., 2023) follows the GLIP approach: text and image modalities are fused via a feature enhancer that performs cross-modal attention between the text token sequence (encoded from category names or free-text descriptions) and the image feature maps. At inference, any text query can be used - the model has learned text-vision alignment that generalises to novel categories described in language, enabling open-vocabulary detection without per-category training.",
       hints: [
         "Closed-set detectors learn fixed category embeddings (e.g., 80 COCO classes). Grounding DINO replaces these with dynamic text embeddings.",
-        "At inference, describe what to detect in text — the model cross-attends text to image and finds matching regions.",
+        "At inference, describe what to detect in text - the model cross-attends text to image and finds matching regions.",
       ],
     },
     {
@@ -2633,7 +2633,7 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Geirhos et al. (2019) showed ImageNet-trained CNNs are strongly texture-biased (a cat with elephant-skin texture is classified as elephant). CLIP text supervision introduces semantic descriptions that describe object identity, providing a weak shape-biasing signal. Studies show CLIP has reduced texture bias compared to supervised CNNs but is not fully shape-biased. Web captions describing function and identity implicitly favour semantic (shape-based) features over surface statistics (textures).",
       hints: [
-        "Text captions describe objects semantically not texturally — this biases the visual encoder toward semantic features.",
+        "Text captions describe objects semantically not texturally - this biases the visual encoder toward semantic features.",
         "Stylization-based training directly enforces shape bias; CLIP benefit is indirect via semantic supervision.",
       ],
     },
@@ -2662,10 +2662,10 @@ const extraCV: Record<string, Question[]> = {
         "Foundation models eliminate the need for any data collection for downstream tasks",
       ],
       correctAnswer: 1,
-      explanation: "Foundation models (CLIP, DINOv2, DINO, MAE-ViT) are pretrained on massive datasets and encode rich, general-purpose visual representations. A linear probe on frozen DINOv2 features achieves 86% ImageNet top-1 accuracy; CLIP enables zero-shot classification without any downstream labelled data. The key advantage is sample efficiency — excellent performance with minimal labelled downstream data.",
+      explanation: "Foundation models (CLIP, DINOv2, DINO, MAE-ViT) are pretrained on massive datasets and encode rich, general-purpose visual representations. A linear probe on frozen DINOv2 features achieves 86% ImageNet top-1 accuracy; CLIP enables zero-shot classification without any downstream labelled data. The key advantage is sample efficiency - excellent performance with minimal labelled downstream data.",
       hints: [
-        "DINOv2 frozen features: linear probe on ImageNet gives 86% top-1 — no fine-tuning of the backbone needed.",
-        "CLIP zero-shot: no downstream labels at all — just text descriptions of target classes.",
+        "DINOv2 frozen features: linear probe on ImageNet gives 86% top-1 - no fine-tuning of the backbone needed.",
+        "CLIP zero-shot: no downstream labels at all - just text descriptions of target classes.",
       ],
     },
     {
@@ -2680,9 +2680,9 @@ const extraCV: Record<string, Question[]> = {
         "DINO uses masked image modelling at the patch level, training each patch to predict its true label from the ImageNet-21k vocabulary",
       ],
       correctAnswer: 1,
-      explanation: "DINO trains the CLS token of a student ViT to match the teacher ViT CLS token output distribution. An emergent property: the self-attention maps of the last transformer layer CLS token query show high attention on foreground objects and low attention on background — without any segmentation supervision. This occurs because the CLS token must aggregate all semantically relevant information for the distillation objective, and the most relevant information is the object.",
+      explanation: "DINO trains the CLS token of a student ViT to match the teacher ViT CLS token output distribution. An emergent property: the self-attention maps of the last transformer layer CLS token query show high attention on foreground objects and low attention on background - without any segmentation supervision. This occurs because the CLS token must aggregate all semantically relevant information for the distillation objective, and the most relevant information is the object.",
       hints: [
-        "Visualise the CLS-token self-attention maps from DINO last layer — they show the model attending to the object, ignoring background.",
+        "Visualise the CLS-token self-attention maps from DINO last layer - they show the model attending to the object, ignoring background.",
         "DINO emergent segmentation: no labels, no training, just thresholding the self-attention map of the CLS token.",
       ],
     },
@@ -2701,10 +2701,10 @@ const extraCV: Record<string, Question[]> = {
         "It applies attention at multiple image scales simultaneously using a fixed 3x3 grid of sampling points per scale",
       ],
       correctAnswer: 1,
-      explanation: "Vanilla DETR computes full cross-attention between all N_q decoder queries and all HW/P^2 encoder tokens — O(N_q * HW) cost. Deformable DETR (Zhu et al., 2021) replaces this with deformable attention: each query attends to K=4 sampling points around a reference point, selected via predicted offsets. Cost: O(N_q * K * num_scales). The reference points are refined iteratively across decoder layers, focusing attention on relevant image regions. This reduces convergence from 500 epochs to 50 epochs.",
+      explanation: "Vanilla DETR computes full cross-attention between all N_q decoder queries and all HW/P^2 encoder tokens - O(N_q * HW) cost. Deformable DETR (Zhu et al., 2021) replaces this with deformable attention: each query attends to K=4 sampling points around a reference point, selected via predicted offsets. Cost: O(N_q * K * num_scales). The reference points are refined iteratively across decoder layers, focusing attention on relevant image regions. This reduces convergence from 500 epochs to 50 epochs.",
       hints: [
         "Vanilla DETR: each of N_q queries attends to ALL HW encoder tokens. Deformable: each query attends to K=4 points only.",
-        "The K sampling points are predicted as offsets from a reference point — they adaptively focus on relevant image regions.",
+        "The K sampling points are predicted as offsets from a reference point - they adaptively focus on relevant image regions.",
       ],
     },
     {
@@ -2714,9 +2714,9 @@ const extraCV: Record<string, Question[]> = {
       question: "Depth estimation from a single RGB image is an ill-posed problem because the mapping from 3D to 2D loses depth information irreversibly, requiring learned statistical priors to produce plausible estimates.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "The perspective projection from 3D world to 2D image is a many-to-one mapping: infinitely many 3D scenes project to the same 2D image. This makes monocular depth estimation fundamentally ill-posed — there is no unique correct answer given only a single image. Deep networks learn statistical priors from large training datasets to disambiguate depth from monocular cues (object size, atmospheric perspective, texture gradients, occlusion), but cannot recover true metric depth without additional constraints.",
+      explanation: "The perspective projection from 3D world to 2D image is a many-to-one mapping: infinitely many 3D scenes project to the same 2D image. This makes monocular depth estimation fundamentally ill-posed - there is no unique correct answer given only a single image. Deep networks learn statistical priors from large training datasets to disambiguate depth from monocular cues (object size, atmospheric perspective, texture gradients, occlusion), but cannot recover true metric depth without additional constraints.",
       hints: [
-        "A small nearby object and a large far object can produce identical image projections — depth cannot be uniquely determined from one view.",
+        "A small nearby object and a large far object can produce identical image projections - depth cannot be uniquely determined from one view.",
         "Monocular depth networks learn scene statistics: objects like cars and doors have known sizes that serve as implicit depth cues.",
       ],
     },
@@ -2732,10 +2732,10 @@ const extraCV: Record<string, Question[]> = {
         "Training on a mixture of stereo image pairs and sparse LiDAR scans, using sparse-to-dense propagation to generate dense depth maps",
       ],
       correctAnswer: 1,
-      explanation: "Depth Anything V2 (Yang et al., 2024) uses a two-stage approach: (1) train a teacher model on large-scale synthetic datasets (Hypersim, VKITTI, etc.) with perfect pixel-level depth annotations — these provide precision; (2) use the teacher to generate pseudo-labels for a massive real-image dataset, then train the student on both synthetic and pseudo-labelled real data. The key insight is that synthetic data provides accurate depth labels while real data provides visual diversity.",
+      explanation: "Depth Anything V2 (Yang et al., 2024) uses a two-stage approach: (1) train a teacher model on large-scale synthetic datasets (Hypersim, VKITTI, etc.) with perfect pixel-level depth annotations - these provide precision; (2) use the teacher to generate pseudo-labels for a massive real-image dataset, then train the student on both synthetic and pseudo-labelled real data. The key insight is that synthetic data provides accurate depth labels while real data provides visual diversity.",
       hints: [
         "Synthetic datasets have perfect depth labels but limited visual diversity. Real images have high visual diversity but sparse or no depth labels.",
-        "Pseudo-labelling: use a well-trained teacher to label unlabelled real images, then train student on these labels — a form of semi-supervised learning.",
+        "Pseudo-labelling: use a well-trained teacher to label unlabelled real images, then train student on these labels - a form of semi-supervised learning.",
       ],
     },
     {
@@ -2750,9 +2750,9 @@ const extraCV: Record<string, Question[]> = {
         "It uses a hash-encoded NeRF stored in a sparse octree, enabling real-time rendering via early ray termination at occupied voxels",
       ],
       correctAnswer: 1,
-      explanation: "3D Gaussian Splatting (3DGS) represents scenes as millions of 3D Gaussians, each with learned centre (x,y,z), covariance matrix (encodes shape and orientation), opacity, and spherical harmonic coefficients (view-dependent colour). Rendering projects (splats) each Gaussian onto the image plane as a 2D Gaussian and blends them front-to-back. Because rendering is a differentiable rasterisation operation (not volumetric ray marching), it achieves real-time rates of 30-100 FPS at 1080p — far faster than NeRF-based methods.",
+      explanation: "3D Gaussian Splatting (3DGS) represents scenes as millions of 3D Gaussians, each with learned centre (x,y,z), covariance matrix (encodes shape and orientation), opacity, and spherical harmonic coefficients (view-dependent colour). Rendering projects (splats) each Gaussian onto the image plane as a 2D Gaussian and blends them front-to-back. Because rendering is a differentiable rasterisation operation (not volumetric ray marching), it achieves real-time rates of 30-100 FPS at 1080p - far faster than NeRF-based methods.",
       hints: [
-        "NeRF rendering: march rays through a volume, evaluating MLP at hundreds of points per ray — slow. 3DGS: splat each Gaussian onto screen and blend — fast.",
+        "NeRF rendering: march rays through a volume, evaluating MLP at hundreds of points per ray - slow. 3DGS: splat each Gaussian onto screen and blend - fast.",
         "3DGS is initialised from a sparse point cloud (from SfM), then learns Gaussian parameters via gradient descent to minimise photometric loss.",
       ],
     },
@@ -2763,10 +2763,10 @@ const extraCV: Record<string, Question[]> = {
       question: "In structure-from-motion (SfM), COLMAP recovers 3D scene structure and camera poses simultaneously from a set of unordered 2D images without any prior knowledge of camera positions.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "COLMAP (Schonberger and Frahm, 2016) is a feature-based SfM pipeline that (1) detects SIFT features in all images, (2) matches features across image pairs, (3) estimates essential/fundamental matrices between matched pairs, (4) incrementally reconstructs 3D points and camera poses through bundle adjustment. It requires no prior camera pose information — camera positions, orientations, and intrinsics are all estimated from image content alone. COLMAP is the standard preprocessing step for NeRF and 3DGS pipelines.",
+      explanation: "COLMAP (Schonberger and Frahm, 2016) is a feature-based SfM pipeline that (1) detects SIFT features in all images, (2) matches features across image pairs, (3) estimates essential/fundamental matrices between matched pairs, (4) incrementally reconstructs 3D points and camera poses through bundle adjustment. It requires no prior camera pose information - camera positions, orientations, and intrinsics are all estimated from image content alone. COLMAP is the standard preprocessing step for NeRF and 3DGS pipelines.",
       hints: [
         "SfM: given 2D images with no metadata, recover 3D structure of the scene AND camera positions simultaneously.",
-        "COLMAP output: a sparse 3D point cloud and estimated camera poses (intrinsics + extrinsics) for all input images — used as NeRF input.",
+        "COLMAP output: a sparse 3D point cloud and estimated camera poses (intrinsics + extrinsics) for all input images - used as NeRF input.",
       ],
     },
     {
@@ -2776,15 +2776,15 @@ const extraCV: Record<string, Question[]> = {
       question: "Dense Prediction Transformer (DPT, Ranftl et al., 2021) achieves strong monocular depth estimation by using a ViT backbone. What is the key advantage of DPT decoder over a standard convolutional decoder?",
       options: [
         "DPT decoder uses transposed convolutions that are faster than bilinear upsampling at matching resolutions",
-        "DPT assembles tokens from multiple ViT stages into image-like feature maps at different resolutions via learned projections, then progressively fuses and upsamples them — enabling the decoder to access both fine-grained local features and global context from early ViT layers",
+        "DPT assembles tokens from multiple ViT stages into image-like feature maps at different resolutions via learned projections, then progressively fuses and upsamples them - enabling the decoder to access both fine-grained local features and global context from early ViT layers",
         "DPT decoder applies cross-attention between the depth map and the input image, refining depth boundaries",
         "DPT decoder uses a recurrent LSTM to propagate depth estimates from the top-left corner to the bottom-right corner of the image",
       ],
       correctAnswer: 1,
       explanation: "DPT (Dense Prediction Transformer) treats ViT like a convolutional encoder: it extracts tokens from multiple transformer layers (e.g., layers 3, 6, 9, 12) and projects them back to spatial feature maps at different resolutions via learned readout operations. These multi-scale features are then fused progressively in a U-Net-style decoder to produce a dense depth map. Unlike CNNs (limited receptive field at early layers), all ViT tokens have global context from layer 1, enabling more accurate depth boundaries.",
       hints: [
-        "DPT taps into ViT at multiple layer depths — earlier layers for spatial detail, later layers for semantic context.",
-        "ViT tokens have global context at every layer (full self-attention) — unlike CNN early layers which only see local neighbourhoods.",
+        "DPT taps into ViT at multiple layer depths - earlier layers for spatial detail, later layers for semantic context.",
+        "ViT tokens have global context at every layer (full self-attention) - unlike CNN early layers which only see local neighbourhoods.",
       ],
     },
     {
@@ -2794,7 +2794,7 @@ const extraCV: Record<string, Question[]> = {
       question: "A point cloud captured by a LiDAR sensor is typically much sparser than a depth image captured by an RGB-D camera at the same distance, because LiDAR returns only one point per emitted laser beam rather than a dense pixel grid.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "A 64-channel spinning LiDAR generates approximately 1.3 million 3D points per second — but spread over a 360-degree field of view and 80m range, the resulting BEV occupancy is sparse. An RGB-D camera (e.g., Intel RealSense) produces a dense depth image aligned to the RGB sensor — typically 640x480 = 307K depth pixels per frame at close range (0.1-10m). LiDAR point clouds are inherently sparse and irregular; RGB-D depth maps are dense and structured.",
+      explanation: "A 64-channel spinning LiDAR generates approximately 1.3 million 3D points per second - but spread over a 360-degree field of view and 80m range, the resulting BEV occupancy is sparse. An RGB-D camera (e.g., Intel RealSense) produces a dense depth image aligned to the RGB sensor - typically 640x480 = 307K depth pixels per frame at close range (0.1-10m). LiDAR point clouds are inherently sparse and irregular; RGB-D depth maps are dense and structured.",
       hints: [
         "LiDAR: one 3D point per laser beam, emitted in all directions. Sparse but long-range. RGB-D: one depth value per pixel. Dense but short-range.",
         "Autonomous driving uses LiDAR (long range, sparse) plus cameras. Indoor robotics often uses RGB-D (dense, short-range).",
@@ -2807,7 +2807,7 @@ const extraCV: Record<string, Question[]> = {
       question: "In autonomous driving, camera-based BEV perception methods (BEVDet, BEVFormer) aim to replicate LiDAR-based BEV representations from camera images. What is the core technical challenge these methods must solve?",
       options: [
         "Aligning the temporal dimension between cameras with different exposure times and frame rates",
-        "Lifting 2D perspective-view camera features to 3D BEV space — transforming from image plane coordinates to top-down metric coordinates — without ground-truth depth, using learned depth prediction or geometry-based projections",
+        "Lifting 2D perspective-view camera features to 3D BEV space - transforming from image plane coordinates to top-down metric coordinates - without ground-truth depth, using learned depth prediction or geometry-based projections",
         "Handling the fisheye distortion from wide-angle automotive cameras, which requires special projection models",
         "Synchronising multiple cameras mounted at different heights and angles into a common ego-vehicle coordinate frame",
       ],
@@ -2815,7 +2815,7 @@ const extraCV: Record<string, Question[]> = {
       explanation: "Camera images are in perspective-view (2D image coordinates); BEV representation is in top-down metric space (x,y in metres). To lift camera features to BEV, methods must predict depth for each image feature (BEVDet: per-pixel depth prediction then voxel projection) or use cross-attention from BEV queries to image features with implicit geometry (BEVFormer: deformable attention from BEV grid queries to multi-camera image features). Without accurate depth, lifted features are smeared along rays rather than placed at correct 3D positions.",
       hints: [
         "Perspective projection collapses depth dimension: a camera pixel could correspond to any 3D point along a ray. BEV requires knowing where in 3D space each feature lies.",
-        "BEVFormer uses temporal attention over past BEV states to improve current-frame BEV estimation — aligning features over time in BEV space.",
+        "BEVFormer uses temporal attention over past BEV states to improve current-frame BEV estimation - aligning features over time in BEV space.",
       ],
     },
     {
@@ -2832,8 +2832,8 @@ const extraCV: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "CLIP is pretrained on massive web data where coarse descriptions predominate ('a photo of a bird'). Fine-grained distinctions (subtle colour patterns, beak shapes distinguishing 200 bird species) rarely appear in natural web captions. As a result, CLIP visual features are not sufficiently discriminative in the embedding subspace for fine-grained categories. Specialised models (BioCLIP trained on iNaturalist data) significantly outperform CLIP on such tasks, reflecting the distribution mismatch between CLIP pretraining and fine-grained evaluation benchmarks.",
       hints: [
-        "CUB-200 (200 bird species): CLIP achieves 65% top-1. Supervised models trained on CUB-200 achieve 90%+ — a large gap.",
-        "Web captions say 'a hummingbird' — not 'a Ruby-throated Hummingbird with iridescent red throat patch'. Fine-grained labels are absent.",
+        "CUB-200 (200 bird species): CLIP achieves 65% top-1. Supervised models trained on CUB-200 achieve 90%+ - a large gap.",
+        "Web captions say 'a hummingbird' - not 'a Ruby-throated Hummingbird with iridescent red throat patch'. Fine-grained labels are absent.",
       ],
     },
   ],

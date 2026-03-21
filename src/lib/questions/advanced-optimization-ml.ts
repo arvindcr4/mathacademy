@@ -24,7 +24,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\nabla L_B(\\theta) = \\frac{1}{|B|}\\sum_{i \\in B} \\nabla\\ell_i(\\theta)\\]\n\n" +
         "where \\(B\\) is a randomly sampled mini-batch of examples. This introduces gradient noise (variance \\(\\propto 1/\\sqrt{|B|}\\) ) that acts as implicit regularization, helping the model generalize better. Additionally, since only \\(|B| \\ll n\\) examples are needed per step, datasets that are too large to fit in memory can be processed efficiently.",
       hints: [
-        "Full-batch gradient descent computes the exact gradient using ALL n examples per step — what are the drawbacks of this?",
+        "Full-batch gradient descent computes the exact gradient using ALL n examples per step - what are the drawbacks of this?",
         'The word "stochastic" refers to the randomness from sampling a mini-batch at each step.',
       ],
     },
@@ -45,7 +45,7 @@ const questions: Record<string, Question[]> = {
         "In directions of persistent gradient (e.g., a steady downhill slope), the velocity accumulates, causing the optimizer to accelerate. In directions where gradients oscillate (change sign frequently), positive and negative contributions to \\(v_t\\) partially cancel, dampening oscillations.\n\n" +
         "This is analogous to a ball rolling down a hilly surface: it builds up speed in consistent directions while smoothing out erratic movements.",
       hints: [
-        "Think of momentum as a ball rolling downhill — it picks up speed in the direction of descent.",
+        "Think of momentum as a ball rolling downhill - it picks up speed in the direction of descent.",
         "When gradients oscillate back and forth, momentum causes them to cancel out; when they consistently point the same direction, momentum causes them to add up.",
       ],
     },
@@ -76,7 +76,7 @@ const questions: Record<string, Question[]> = {
         "\\end{align}\\]\n\n" +
         "The second term (\\( -\\eta \\beta v_t \\)) is a correction that dampens the momentum when the gradient is increasing.",
       hints: [
-        "Standard momentum evaluates the gradient at \\(\\theta_t\\); NAG evaluates it at \\(\\theta_t + \\beta v_t\\) — the position momentum will carry you to.",
+        "Standard momentum evaluates the gradient at \\(\\theta_t\\); NAG evaluates it at \\(\\theta_t + \\beta v_t\\) - the position momentum will carry you to.",
         "If you already know the momentum will move you forward, why not look ahead from that future position to compute the gradient?",
       ],
     },
@@ -108,7 +108,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{\\hat{v}_t} + \\epsilon} \\hat{m}_t\\]\n\n" +
         "This adapts the learning rate per parameter: \\(\\hat{m}_t\\) provides the direction (like momentum), while \\(\\sqrt{\\hat{v}_t}\\) inversely scales the step size (dividing out the gradient magnitude).",
       hints: [
-        "Adam = Adaptive Moment Estimation — what are the two moments it estimates?",
+        "Adam = Adaptive Moment Estimation - what are the two moments it estimates?",
         "Think of Adam as combining momentum (1st moment) with RMSProp (2nd moment).",
       ],
     },
@@ -129,7 +129,7 @@ const questions: Record<string, Question[]> = {
         "\\[\\theta_{t+1} = (1 - \\eta \\lambda) \\theta_t - \\frac{\\eta}{\\sqrt{v_t}} m_t\\]\n\n" +
         "This ensures the regularization strength \\(\\lambda\\) is independent of the adaptive learning rate, giving consistent regularization across all parameters.",
       hints: [
-        "In Adam with L2, the weight decay term gets divided by \\(\\sqrt{v_t}\\) — so parameters with small \\(v_t\\) get over-regularized, and those with large \\(v_t\\) get under-regularized.",
+        "In Adam with L2, the weight decay term gets divided by \\(\\sqrt{v_t}\\) - so parameters with small \\(v_t\\) get over-regularized, and those with large \\(v_t\\) get under-regularized.",
         "AdamW applies weight decay separately from the gradient update, so regularization strength is uniform across all parameters.",
       ],
     },
@@ -151,14 +151,14 @@ const questions: Record<string, Question[]> = {
         "\\[v_t = v_{t-1} + g_t^2 = \\sum_{i=1}^{t} g_i^2\\]\n\n" +
         "The parameter update is:\n" +
         "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t} + \\epsilon} g_t\\]\n\n" +
-        "The issue: \\(v_t\\) is a monotonically increasing sum — it only grows, never shrinks. As \\(v_t \\to \\infty\\), the effective learning rate \\(\\eta/\\sqrt{v_t} \\to 0\\), effectively stopping learning.\n\n" +
+        "The issue: \\(v_t\\) is a monotonically increasing sum - it only grows, never shrinks. As \\(v_t \\to \\infty\\), the effective learning rate \\(\\eta/\\sqrt{v_t} \\to 0\\), effectively stopping learning.\n\n" +
         "RMSProp fixes this by replacing the sum with an exponential moving average:\n" +
         "\\[v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\]\n\n" +
         "This is a rolling average that forgets old gradients: \\(v_t \\approx \\frac{1}{1-\\beta}\\) times the average squared gradient from the recent window, not the entire history. The effective learning rate remains bounded away from zero.\n\n" +
         "Adam similarly uses exponential moving averages of squared gradients (with additional bias correction).",
       hints: [
-        "AdaGrad\'s \\(v_t = \\sum_{i=1}^{t} g_i^2\\) is a sum that grows without bound — what happens to \\(\\eta/\\sqrt{v_t}\\) as \\(v_t \\to \\infty\\)?",
-        "RMSProp and Adam use \\(v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\) — an exponential moving average that forgets old gradients, keeping \\(v_t\\) bounded.",
+        "AdaGrad\'s \\(v_t = \\sum_{i=1}^{t} g_i^2\\) is a sum that grows without bound - what happens to \\(\\eta/\\sqrt{v_t}\\) as \\(v_t \\to \\infty\\)?",
+        "RMSProp and Adam use \\(v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\) - an exponential moving average that forgets old gradients, keeping \\(v_t\\) bounded.",
       ],
     },
   ],
@@ -187,7 +187,7 @@ const questions: Record<string, Question[]> = {
         "3. **Decoupled weight decay:** Lion uses AdamW-style decoupled weight decay for proper regularization.\n\n" +
         "The fixed step size from sign() is beneficial for training large models with large batch sizes, as it provides uniform updates across all parameters regardless of gradient magnitude.",
       hints: [
-        "The sign(\\cdot) operation maps any gradient magnitude to \\pm1, so every parameter moves the same distance per step — \\(\\eta\\) in each direction.",
+        "The sign(\\cdot) operation maps any gradient magnitude to \\pm1, so every parameter moves the same distance per step - \\(\\eta\\) in each direction.",
         "Adam needs two state vectors (\\(m\\) and \\(v\\)); Lion needs only one (\\(m\\)), halving the optimizer memory footprint.",
       ],
     },
@@ -201,7 +201,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Sophia periodically estimates the diagonal of the Hessian (using Hutchinson\'s estimator or Gauss-Newton) and clips the gradient divided by this curvature estimate, providing a second-order-informed adaptive scaling more efficient than full K-FAC.",
       hints: [
-        "Second-order methods use curvature (Hessian) information — what does the diagonal Hessian tell you?",
+        "Second-order methods use curvature (Hessian) information - what does the diagonal Hessian tell you?",
         "Sophia is more memory-efficient than full second-order methods because it uses only the diagonal.",
       ],
     },
@@ -219,9 +219,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Lion was discovered by searching over a symbolic space of optimizer update rules (combinations of standard operations like sign, clip, momentum) using evolutionary architecture search evaluated on proxy training tasks — an example of learned optimizers via program synthesis.",
+        "Lion was discovered by searching over a symbolic space of optimizer update rules (combinations of standard operations like sign, clip, momentum) using evolutionary architecture search evaluated on proxy training tasks - an example of learned optimizers via program synthesis.",
       hints: [
-        'The name "EvoLved Sign Momentum" hints at the discovery method — "Evo" for evolutionary search.',
+        'The name "EvoLved Sign Momentum" hints at the discovery method - "Evo" for evolutionary search.',
         "Think about how NAS for models inspired searching for optimizers using similar automated methods.",
       ],
     },
@@ -267,8 +267,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Basic cosine annealing (without restarts) follows a single cosine decay, but SGDR (Cosine Annealing with Warm Restarts) periodically resets the learning rate back to its maximum, allowing the optimizer to escape local minima and explore.",
       hints: [
-        'Loshchilov & Hutter proposed SGDR — what does the "R" for Restarts add to basic cosine annealing?',
-        "A single cosine decay is monotonically decreasing — restarts are not monotonic.",
+        'Loshchilov & Hutter proposed SGDR - what does the "R" for Restarts add to basic cosine annealing?',
+        "A single cosine decay is monotonically decreasing - restarts are not monotonic.",
       ],
     },
     {
@@ -295,8 +295,8 @@ const questions: Record<string, Question[]> = {
         "After warmup (\\(t \\geq T_{\\text{warmup}}\\)): \\(\\eta_t \\propto t^{-0.5}\\), decaying inverse square root.\n\n" +
         "The maximum learning rate occurs at \\(t = T_{\\text{warmup}}\\), giving \\(\\eta_{\\max} = d_{\\text{model}}^{-0.5} \\cdot T_{\\text{warmup}}^{0.5}\\).",
       hints: [
-        "At random initialization, the loss landscape is completely unexplored — why is a large learning rate risky when gradients are high-variance?",
-        "The Transformer schedule increases lr linearly during warmup, then decays as \\(t^{-0.5}\\) — the maximum occurs at the end of the warmup period.",
+        "At random initialization, the loss landscape is completely unexplored - why is a large learning rate risky when gradients are high-variance?",
+        "The Transformer schedule increases lr linearly during warmup, then decays as \\(t^{-0.5}\\) - the maximum occurs at the end of the warmup period.",
       ],
     },
   ],
@@ -316,10 +316,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The LR Range Test trains the model for a few iterations with an exponentially or linearly increasing learning rate, plots the training loss, and recommends a learning rate in the steep downward slope — just before the loss diverges.",
+        "The LR Range Test trains the model for a few iterations with an exponentially or linearly increasing learning rate, plots the training loss, and recommends a learning rate in the steep downward slope - just before the loss diverges.",
       hints: [
-        'The test is a short "probe" run, not a full training — what does it reveal about the loss landscape?',
-        "Look for the steepest drop in the loss curve — that region is where the learning rate is most effective.",
+        'The test is a short "probe" run, not a full training - what does it reveal about the loss landscape?',
+        "Look for the steepest drop in the loss curve - that region is where the learning rate is most effective.",
       ],
     },
     {
@@ -332,7 +332,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CLR periodically increases the learning rate (even during training), which can temporarily cause loss to increase but allows the optimizer to escape sharp minima and saddle points, often leading to better final performance than monotonic decay.",
       hints: [
-        "A fixed low learning rate converges to whatever minimum it finds — can it get out if that minimum is bad?",
+        "A fixed low learning rate converges to whatever minimum it finds - can it get out if that minimum is bad?",
         "Higher learning rates encourage exploration; lower learning rates encourage exploitation (convergence).",
       ],
     },
@@ -350,10 +350,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The 1-cycle policy linearly warms up the learning rate to its maximum over ~30% of training, then anneals it to near zero while simultaneously reversing the momentum schedule — the combination enables training in far fewer epochs (super-convergence).",
+        "The 1-cycle policy linearly warms up the learning rate to its maximum over ~30% of training, then anneals it to near zero while simultaneously reversing the momentum schedule - the combination enables training in far fewer epochs (super-convergence).",
       hints: [
         "Super-convergence involves one single cycle, not many small cycles like CLR.",
-        "Note that momentum is also scheduled inversely to the learning rate — high LR + low momentum stabilizes training.",
+        "Note that momentum is also scheduled inversely to the learning rate - high LR + low momentum stabilizes training.",
       ],
     },
   ],
@@ -388,8 +388,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "K-FAC approximates each layer\'s block of the Fisher matrix as a Kronecker product of two smaller matrices (input covariance \\times gradient covariance), reducing the cost of computing and inverting the full Fisher from cubic to manageable complexity.",
       hints: [
-        "The full Fisher for a large network is enormous — what does Kronecker factorization do to its size?",
-        "Kronecker product A ⊗ B can be inverted as A\\^{-1} ⊗ B\\^{-1} — how does that help?",
+        "The full Fisher for a large network is enormous - what does Kronecker factorization do to its size?",
+        "Kronecker product A ⊗ B can be inverted as A\\^{-1} ⊗ B\\^{-1} - how does that help?",
       ],
     },
     {
@@ -428,9 +428,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AllReduce collectively computes the element-wise sum of gradients across all workers, giving each worker the same global gradient — enabling fully synchronous data-parallel training without a central parameter server bottleneck.",
+        "AllReduce collectively computes the element-wise sum of gradients across all workers, giving each worker the same global gradient - enabling fully synchronous data-parallel training without a central parameter server bottleneck.",
       hints: [
-        "AllReduce is symmetric — every worker gets the same result.",
+        "AllReduce is symmetric - every worker gets the same result.",
         "Ring-AllReduce (used in Horovod) performs this efficiently in O(N) communication steps.",
       ],
     },
@@ -442,7 +442,7 @@ const questions: Record<string, Question[]> = {
         "ZeRO (Zero Redundancy Optimizer) Stage 3 partitions optimizer states, gradients, AND model parameters across all data-parallel ranks, maximally reducing per-GPU memory.",
       correctAnswer: "True",
       explanation:
-        "ZeRO Stage 3 (DeepSpeed) eliminates all redundancy by partitioning optimizer states, gradients, and parameters across ranks — each GPU holds only 1/N of the full model state, enabling training of models many times larger than a single GPU\'s memory.",
+        "ZeRO Stage 3 (DeepSpeed) eliminates all redundancy by partitioning optimizer states, gradients, and parameters across ranks - each GPU holds only 1/N of the full model state, enabling training of models many times larger than a single GPU\'s memory.",
       hints: [
         "ZeRO Stages 1, 2, 3 progressively partition more: states \\to states+gradients \\to states+gradients+params.",
         "Full model replication (DDP) uses N \\times full model memory; ZeRO-3 uses ~1 \\times full model memory across N GPUs.",
@@ -485,9 +485,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Gradient accumulation runs K forward-backward passes on small micro-batches, accumulates the gradients, then calls optimizer.step() once — simulating a batch size K times larger without requiring the memory of that full batch.",
+        "Gradient accumulation runs K forward-backward passes on small micro-batches, accumulates the gradients, then calls optimizer.step() once - simulating a batch size K times larger without requiring the memory of that full batch.",
       hints: [
-        "Why not just use a bigger batch directly? Memory is the constraint — what does accumulation enable?",
+        "Why not just use a bigger batch directly? Memory is the constraint - what does accumulation enable?",
         "Summing K gradient estimates is equivalent (statistically) to computing the gradient on K \\times micro-batch examples at once.",
       ],
     },
@@ -521,7 +521,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Performing AllReduce after every micro-batch wastes communication bandwidth; PyTorch DDP\'s no_sync() context manager defers gradient synchronization until the final accumulation step, communicating only once per effective batch.",
       hints: [
-        "AllReduce is expensive — if you accumulate K micro-batches, how many times do you actually need to sync?",
+        "AllReduce is expensive - if you accumulate K micro-batches, how many times do you actually need to sync?",
         "PyTorch\'s `no_sync()` context manager suppresses gradient communication on intermediate accumulation steps.",
       ],
     },
@@ -542,9 +542,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FP16 values use half the memory of FP32, allowing larger batch sizes or models, and modern GPUs/TPUs process FP16 operations significantly faster using tensor cores — typically 2–8\\times throughput improvement.",
+        "FP16 values use half the memory of FP32, allowing larger batch sizes or models, and modern GPUs/TPUs process FP16 operations significantly faster using tensor cores - typically 2-8\\times throughput improvement.",
       hints: [
-        "FP16 has 16 bits vs. FP32's 32 bits — what does that immediately mean for memory?",
+        "FP16 has 16 bits vs. FP32's 32 bits - what does that immediately mean for memory?",
         "Hardware like NVIDIA V100/A100 has specialized tensor cores optimized for FP16/BF16 computation.",
       ],
     },
@@ -558,7 +558,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "FP16 has a much smaller representable range than FP32; small gradient values underflow to zero. Loss scaling multiplies the loss by a scale factor S before backward, making gradients larger (by S), then unscales before the optimizer step to restore correct magnitudes.",
       hints: [
-        "FP16's smallest positive normal number is ~6\\times10\\^{-⁵ — what happens to gradients smaller than this?",
+        "FP16's smallest positive normal number is ~6\\times10\\^{-⁵ - what happens to gradients smaller than this?",
         "Loss scaling is reversed (divided by S) before the optimizer step so weights are updated correctly.",
       ],
     },
@@ -576,10 +576,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "BF16 uses 8 exponent bits (same as FP32) and only 7 mantissa bits, preserving FP32's dynamic range while using 16-bit storage — this eliminates overflow/underflow issues that require loss scaling in FP16 (which uses 5 exponent bits).",
+        "BF16 uses 8 exponent bits (same as FP32) and only 7 mantissa bits, preserving FP32's dynamic range while using 16-bit storage - this eliminates overflow/underflow issues that require loss scaling in FP16 (which uses 5 exponent bits).",
       hints: [
         "The key difference between BF16 and FP16 is how they split their bits between exponent and mantissa.",
-        "Dynamic range is determined by exponent bits; precision by mantissa bits — which is more important for stability?",
+        "Dynamic range is determined by exponent bits; precision by mantissa bits - which is more important for stability?",
       ],
     },
   ],
@@ -611,7 +611,7 @@ const questions: Record<string, Question[]> = {
         "This is faster (\\(O(1/t)\\) vs \\(O(1/\\sqrt{t})\\)) for the last iterate, thanks to the stronger curvature guarantee.",
       hints: [
         "Convergence rates measure how the suboptimality gap \\(f(x_t) - f^*\\) decreases with \\(T\\) iterations.",
-        "SGD's stochastic noise introduces variance that fundamentally limits how fast the gap can shrink — this shows up as the \\(O(1/T)\\) vs the \\(O(1/T^2)\\) possible with Nesterov acceleration on convex problems.",
+        "SGD's stochastic noise introduces variance that fundamentally limits how fast the gap can shrink - this shows up as the \\(O(1/T)\\) vs the \\(O(1/T^2)\\) possible with Nesterov acceleration on convex problems.",
       ],
     },
     {
@@ -634,7 +634,7 @@ const questions: Record<string, Question[]> = {
         "2. The gradient always points strongly toward the minimum.\n" +
         "3. The condition number \\(\\kappa = L/\\mu\\) determines convergence speed: smaller \\(\\kappa\\) means faster convergence.",
       hints: [
-        "Linear convergence means \\(\\log(f(x_t) - f^*)\\) decreases linearly with \\(t\\) — the error shrinks exponentially fast.",
+        "Linear convergence means \\(\\log(f(x_t) - f^*)\\) decreases linearly with \\(t\\) - the error shrinks exponentially fast.",
         "Strong convexity (\\(\\nabla^2 f \\succeq \\mu I\\)) gives a guaranteed minimum curvature \\(\\mu\\), ensuring the gradient always makes strong progress toward the minimum.",
       ],
     },
@@ -652,11 +652,11 @@ const questions: Record<string, Question[]> = {
         "**Lower bound (Carmon et al., 2017):** Any first-order algorithm requires at least \\(\\Omega(\\varepsilon^{-2})\\) gradient evaluations in the worst case.\n\n" +
         "**SGD matches this bound:** With step size \\(\\eta_t = O(1/\\sqrt{t})\\), SGD achieves:\n" +
         "\\[\\min_{i \\in [t]} \\mathbb{E}\\|\\nabla f(x_i)\\|^2 \\leq O\\left(\\frac{1}{\\sqrt{t}}\\right)\\]\n\n" +
-        "Setting this equal to \\(\\varepsilon^2\\) gives \\(t = O(1/\\varepsilon^2)\\) — matching the lower bound.\n\n" +
+        "Setting this equal to \\(\\varepsilon^2\\) gives \\(t = O(1/\\varepsilon^2)\\) - matching the lower bound.\n\n" +
         "**Key insight:** Non-convexity only guarantees convergence to stationary points, not global minima. The \\(\\Omega(\\varepsilon^{-2})\\) lower bound reflects the fundamental difficulty of finding stationary points in high-dimensional non-convex landscapes.",
       hints: [
         "Non-convex problems only guarantee convergence to stationary points (\\(\\|\\nabla f\\| \\leq \\varepsilon\\)), not global minima.",
-        "The lower bound \\(\\Omega(\\varepsilon^{-2})\\) is matched by SGD with appropriate step sizes — no first-order method can do better in the worst case.",
+        "The lower bound \\(\\Omega(\\varepsilon^{-2})\\) is matched by SGD with appropriate step sizes - no first-order method can do better in the worst case.",
       ],
     },
   ],
@@ -677,7 +677,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The loss landscape is the geometric surface defined by L(\\theta) over all possible parameter settings \\theta; its topology (flat vs. sharp regions, saddle points, minima) directly impacts optimization dynamics and generalization.",
       hints: [
-        "If you had only 2 parameters, the loss landscape would be a surface in 3D — what does it look like for millions of parameters?",
+        "If you had only 2 parameters, the loss landscape would be a surface in 3D - what does it look like for millions of parameters?",
         "Researchers visualize 2D slices of the loss landscape to study it.",
       ],
     },
@@ -689,7 +689,7 @@ const questions: Record<string, Question[]> = {
         "Models converging to flat minima in the loss landscape tend to generalize better than models converging to sharp minima.",
       correctAnswer: "True",
       explanation:
-        "Flat minima are regions where the loss changes slowly in all directions — a small perturbation in parameters causes little increase in loss; sharp minima are sensitive to such perturbations, correlating with worse generalization to shifted test distributions.",
+        "Flat minima are regions where the loss changes slowly in all directions - a small perturbation in parameters causes little increase in loss; sharp minima are sensitive to such perturbations, correlating with worse generalization to shifted test distributions.",
       hints: [
         "Think about what happens at a flat minimum when the test distribution shifts slightly from the training distribution.",
         "Hochreiter & Schmidhuber (1997) and subsequent work showed flat minima often generalize better.",
@@ -712,7 +712,7 @@ const questions: Record<string, Question[]> = {
         "Filter normalization rescales random perturbation directions to have the same norm as the corresponding weight filters, controlling for the varying scale of parameters across layers and producing comparisons of sharpness that are invariant to parameter rescaling.",
       hints: [
         "Without normalization, directions in layers with large weights dominate the plot scale.",
-        "Think about how batch norm reparameterizes weights — does the raw parameter scale mean what we think?",
+        "Think about how batch norm reparameterizes weights - does the raw parameter scale mean what we think?",
       ],
     },
   ],
@@ -733,17 +733,17 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SAM solves a minimax problem:\n" +
         "\\[\\min_{\\theta} \\; \\max_{\\|\\varepsilon\\|_p \\leq \\rho} L(\\theta + \\varepsilon)\\]\n\n" +
-        "**Step 1 — Inner maximization:** Find the perturbation \\(\\hat{\\varepsilon}\\) that maximally increases the loss within an \\(\\varepsilon\\)-ball:\n" +
+        "**Step 1 - Inner maximization:** Find the perturbation \\(\\hat{\\varepsilon}\\) that maximally increases the loss within an \\(\\varepsilon\\)-ball:\n" +
         "\\[\\hat{\\varepsilon} = \\arg\\max_{\\|\\varepsilon\\|_2 \\leq \\rho} L(\\theta + \\varepsilon)\\]\n\n" +
         "For \\(p = 2\\) (Euclidean norm), the solution is:\n" +
         "\\[\\hat{\\varepsilon} = \\rho \\cdot \\frac{\\nabla L(\\theta)}{\\|\\nabla L(\\theta)\\|_2}\\]\n\n" +
-        "**Step 2 — Outer minimization:** Take a gradient step on the loss at the perturbed point:\n" +
+        "**Step 2 - Outer minimization:** Take a gradient step on the loss at the perturbed point:\n" +
         "\\[\\theta_{\\text{new}} = \\theta - \\eta \\nabla L(\\theta + \\hat{\\varepsilon})\\]\n\n" +
         "**Intuition:** SAM seeks parameters where the loss is low even under the worst-case perturbation. A flat minimum has small gradient everywhere in the neighborhood, so \\(\\hat{\\varepsilon}\\) would cause little loss increase. A sharp minimum has large gradients, so \\(\\hat{\\varepsilon}\\) would cause large loss increase.\n\n" +
         "By minimizing the worst-case loss, SAM explicitly finds flatter regions that empirically generalize better.",
       hints: [
         "SAM has two steps: (1) find the perturbation \\(\\varepsilon\\) that maximizes the loss within the \\(\\varepsilon\\)-ball, (2) take a gradient step on the loss at \\(\\theta + \\varepsilon\\).",
-        "Minimizing \\(\\max_{\\|\\varepsilon\\| \\leq \\rho} L(\\theta + \\varepsilon)\\) encourages the loss to be low even at the worst nearby point — a flat minimum.",
+        "Minimizing \\(\\max_{\\|\\varepsilon\\| \\leq \\rho} L(\\theta + \\varepsilon)\\) encourages the loss to be low even at the worst nearby point - a flat minimum.",
       ],
     },
     {
@@ -754,10 +754,10 @@ const questions: Record<string, Question[]> = {
         "SAM requires two forward-backward passes per parameter update, doubling the computational cost compared to standard SGD.",
       correctAnswer: "True",
       explanation:
-        "SAM first performs a forward-backward pass to compute the gradient for the inner maximization (finding the perturbation \\epsilon̂), then a second forward-backward pass at the perturbed parameters to compute the update gradient — approximately 2\\times the compute of standard SGD.",
+        "SAM first performs a forward-backward pass to compute the gradient for the inner maximization (finding the perturbation \\epsilon̂), then a second forward-backward pass at the perturbed parameters to compute the update gradient - approximately 2\\times the compute of standard SGD.",
       hints: [
         "Count the operations: (1) gradient at \\theta to find \\epsilon̂, (2) gradient at \\theta+\\epsilon̂ for the update.",
-        "This is the main practical cost of SAM — researchers have proposed efficient approximations like m-SAM.",
+        "This is the main practical cost of SAM - researchers have proposed efficient approximations like m-SAM.",
       ],
     },
     {
@@ -798,7 +798,7 @@ const questions: Record<string, Question[]> = {
         "SWA maintains a running average of model weights collected at regular intervals (typically at the end of each learning rate cycle), landing in a wider, flatter region of the loss landscape than any single checkpoint and improving generalization.",
       hints: [
         "Averaging parameters from different points in training is different from averaging model predictions.",
-        'SWA connects to the "flat minima = better generalization" hypothesis — why might the average land flatter?',
+        'SWA connects to the "flat minima = better generalization" hypothesis - why might the average land flatter?',
       ],
     },
     {
@@ -811,7 +811,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "EMA weights are updated as \\theta_EMA \\leftarrow \\beta \\times \\theta_EMA + (1-\\beta) \\times \\theta with \\beta close to 1 (e.g., 0.9999), producing a smoothed version of the weights that is more stable and typically achieves better FID/IS scores at evaluation time than the raw training weights.",
       hints: [
-        "EMA with \\beta=0.9999 means the EMA weights change very slowly — what does that stability provide?",
+        "EMA with \\beta=0.9999 means the EMA weights change very slowly - what does that stability provide?",
         "Diffusion models like DDPM use EMA weights for sampling while training continues on the raw weights.",
       ],
     },
@@ -832,7 +832,7 @@ const questions: Record<string, Question[]> = {
         "Model soups showed that averaging weights from multiple models fine-tuned from the same pretrained checkpoint (with different hyperparameters) often outperforms any single model, because the models explore nearby regions in the same loss basin and their average sits in a flatter, better-generalizing region.",
       hints: [
         "Why does weight averaging work here but not for models trained from different initializations?",
-        "Models fine-tuned from the same pretrained base share a loss basin — their average stays within it.",
+        "Models fine-tuned from the same pretrained base share a loss basin - their average stays within it.",
       ],
     },
   ],
@@ -854,8 +854,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Gradient checkpointing stores only a subset of activations (checkpoints) during the forward pass and recomputes the rest on-the-fly during backpropagation, trading compute time (~33% overhead) for a significant reduction in activation memory.",
       hints: [
-        "Backprop needs the forward-pass activations to compute gradients — normally they are all stored.",
-        "Checkpointing trades memory for compute — what is the extra compute cost?",
+        "Backprop needs the forward-pass activations to compute gradients - normally they are all stored.",
+        "Checkpointing trades memory for compute - what is the extra compute cost?",
       ],
     },
     {
@@ -869,7 +869,7 @@ const questions: Record<string, Question[]> = {
         "Optimal checkpoint placement every √L layers reduces stored activations to O(√L) checkpoints \\times O(√L) recomputed per segment = O(√L) total memory, at the cost of one additional forward pass per segment during backpropagation.",
       hints: [
         "If you place checkpoints every k layers, you store L/k checkpoints but recompute k layers per segment.",
-        "Minimize max(L/k, k) over k — at the optimum, L/k = k, giving k = √L.",
+        "Minimize max(L/k, k) over k - at the optimum, L/k = k, giving k = √L.",
       ],
     },
     {
@@ -886,7 +886,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Activation offloading stores forward-pass activations in CPU RAM (or NVMe) rather than GPU VRAM, fetching them back to GPU when needed for gradient computation — trading PCIe bandwidth for GPU memory, useful when GPU VRAM is the bottleneck.",
+        "Activation offloading stores forward-pass activations in CPU RAM (or NVMe) rather than GPU VRAM, fetching them back to GPU when needed for gradient computation - trading PCIe bandwidth for GPU memory, useful when GPU VRAM is the bottleneck.",
       hints: [
         "Gradient checkpointing recomputes activations; offloading stores but moves them off-GPU.",
         "Think about the tradeoff: recompute has CPU+GPU compute cost, offload has PCIe bandwidth cost.",
@@ -909,9 +909,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The Lottery Ticket Hypothesis proposes that large random networks contain small sparse subnetworks with initial weights that, when trained alone (rewound to their original values), can match the full network\'s accuracy — these are the "winning tickets."',
+        'The Lottery Ticket Hypothesis proposes that large random networks contain small sparse subnetworks with initial weights that, when trained alone (rewound to their original values), can match the full network\'s accuracy - these are the "winning tickets."',
       hints: [
-        'The "lottery" refers to lucky initialization — the ticket must be combined with its original, not random, initial weights.',
+        'The "lottery" refers to lucky initialization - the ticket must be combined with its original, not random, initial weights.',
         "Key observation: the sparse subnetwork found by pruning + rewind trains as well as the full network.",
       ],
     },
@@ -925,7 +925,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Magnitude pruning is the simplest and most widely used pruning heuristic: weights with small absolute magnitude have little impact on the output, and setting them to zero produces a sparse network with minimal accuracy loss.",
       hints: [
-        "A weight of 0.001 contributes much less to the output than a weight of 5.0 — is that always a reliable pruning signal?",
+        "A weight of 0.001 contributes much less to the output than a weight of 5.0 - is that always a reliable pruning signal?",
         "Magnitude pruning is fast and practical, though theoretically suboptimal compared to gradient-based criteria.",
       ],
     },
@@ -945,8 +945,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "RigL (Rigged Lottery) maintains constant sparsity by periodically removing the smallest magnitude weights and growing new connections at positions with the largest gradient magnitudes, enabling end-to-end sparse training without a dense initialization.",
       hints: [
-        "Static sparse training is limited by the initial sparse structure — how does dynamic connection growth help?",
-        "Gradient magnitude indicates where new connections would be most useful — RigL uses this to grow the network.",
+        "Static sparse training is limited by the initial sparse structure - how does dynamic connection growth help?",
+        "Gradient magnitude indicates where new connections would be most useful - RigL uses this to grow the network.",
       ],
     },
   ],
@@ -965,9 +965,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MAML\'s outer loop updates the meta-parameters \\theta so that for any sampled task \\tau, taking K gradient steps from \\theta on \\tau's support set yields a model that performs well on \\tau's query set — optimizing for fast adaptation, not raw average performance.",
+        "MAML\'s outer loop updates the meta-parameters \\theta so that for any sampled task \\tau, taking K gradient steps from \\theta on \\tau's support set yields a model that performs well on \\tau's query set - optimizing for fast adaptation, not raw average performance.",
       hints: [
-        'The objective is "learn to learn" — what property of the initialization enables fast learning?',
+        'The objective is "learn to learn" - what property of the initialization enables fast learning?',
         "MAML\'s loss is evaluated after K inner-loop gradient steps, not at \\theta directly.",
       ],
     },
@@ -979,9 +979,9 @@ const questions: Record<string, Question[]> = {
         "Meta-SGD learns not just the initialization but also a per-parameter learning rate, enabling faster and more expressive adaptation than MAML.",
       correctAnswer: "True",
       explanation:
-        "Meta-SGD treats the per-parameter learning rate (and sign) as learnable meta-parameters alongside the initialization, allowing the meta-learner to determine how each parameter should adapt to new tasks — providing more expressive adaptation than MAML\'s scalar learning rate.",
+        "Meta-SGD treats the per-parameter learning rate (and sign) as learnable meta-parameters alongside the initialization, allowing the meta-learner to determine how each parameter should adapt to new tasks - providing more expressive adaptation than MAML\'s scalar learning rate.",
       hints: [
-        "MAML uses a fixed scalar learning rate for inner-loop adaptation — what does learning per-parameter rates add?",
+        "MAML uses a fixed scalar learning rate for inner-loop adaptation - what does learning per-parameter rates add?",
         "Different parameters may need different step sizes and directions for fast adaptation.",
       ],
     },
@@ -1001,7 +1001,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Exact MAML requires differentiating through the inner optimization loop (computing Hessian-vector products); FOMAML and Reptile omit these second-order terms, approximating with only first-order gradients and achieving similar performance at much lower computational cost.",
       hints: [
-        "The full MAML gradient requires computing \\partial\\^2L/\\partial\\theta\\^2 through the inner loop — how expensive is that?",
+        "The full MAML gradient requires computing \\partial\\^2L/\\partial\\theta\\^2 through the inner loop - how expensive is that?",
         "FOMAML stops the gradient at the inner loop boundary; Reptile has a slightly different but related approximation.",
       ],
     },
@@ -1024,7 +1024,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Bayesian optimization fits a surrogate model (typically a Gaussian Process or tree-based model) to the observed (hyperparameter, performance) pairs, then uses an acquisition function to select the next hyperparameter configuration that balances exploration and exploitation.",
       hints: [
-        "The surrogate model is cheap to evaluate, unlike the actual training run — how does that help?",
+        "The surrogate model is cheap to evaluate, unlike the actual training run - how does that help?",
         "Acquisition functions (EI, UCB) quantify how promising a new point is based on the surrogate\'s uncertainty.",
       ],
     },
@@ -1039,7 +1039,7 @@ const questions: Record<string, Question[]> = {
         "GPs define a distribution over functions and provide posterior mean and variance at any query point, allowing acquisition functions to precisely balance the expected improvement (mean) and exploration benefit (variance) when selecting the next configuration.",
       hints: [
         "The uncertainty estimate from a GP is what acquisition functions like EI and UCB depend on.",
-        'Without uncertainty, you cannot distinguish "probably bad" from "unknown" — why does that distinction matter?',
+        'Without uncertainty, you cannot distinguish "probably bad" from "unknown" - why does that distinction matter?',
       ],
     },
     {
@@ -1056,9 +1056,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "EI computes E[max(f(x) - f(x+), 0)] analytically under the GP posterior, where f(x+) is the current best observed value — it naturally balances exploitation (high mean) and exploration (high variance) without a manual tradeoff parameter.",
+        "EI computes E[max(f(x) - f(x+), 0)] analytically under the GP posterior, where f(x+) is the current best observed value - it naturally balances exploitation (high mean) and exploration (high variance) without a manual tradeoff parameter.",
       hints: [
-        "EI is zero if the posterior mean is below the current best — it is only positive where improvement is expected.",
+        "EI is zero if the posterior mean is below the current best - it is only positive where improvement is expected.",
         "The closed-form EI involves the normal CDF and PDF of the standardized improvement.",
       ],
     },
@@ -1078,9 +1078,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ES samples a population of parameter perturbations from a distribution (typically Gaussian), evaluates each perturbation\'s fitness, and updates the distribution mean in the direction of higher-fitness perturbations — effectively estimating a gradient without backpropagation.",
+        "ES samples a population of parameter perturbations from a distribution (typically Gaussian), evaluates each perturbation\'s fitness, and updates the distribution mean in the direction of higher-fitness perturbations - effectively estimating a gradient without backpropagation.",
       hints: [
-        "ES is gradient-free — it only needs a fitness evaluation, not a gradient computation.",
+        "ES is gradient-free - it only needs a fitness evaluation, not a gradient computation.",
         "Salimans et al. showed ES can train competitive RL policies using this perturbation-then-update loop.",
       ],
     },
@@ -1094,7 +1094,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CMA-ES maintains and adapts a full covariance matrix to model the correlations and scales of successful search directions, enabling it to efficiently handle ill-conditioned and non-separable optimization landscapes where diagonal strategies fail.",
       hints: [
-        "A diagonal covariance assumes parameters are independent — when is that wrong in neural network optimization?",
+        "A diagonal covariance assumes parameters are independent - when is that wrong in neural network optimization?",
         "Adapting the full covariance is expensive (O(n\\^2)) but allows ES to capture gradient-like curvature information.",
       ],
     },
@@ -1106,7 +1106,7 @@ const questions: Record<string, Question[]> = {
         "The key advantage of ES over policy gradient methods for reinforcement learning is:",
       options: [
         "ES achieves higher sample efficiency because it uses off-policy data",
-        "ES is embarrassingly parallelizable — each perturbation evaluation is independent and can run on a separate worker",
+        "ES is embarrassingly parallelizable - each perturbation evaluation is independent and can run on a separate worker",
         "ES has stronger convergence guarantees than REINFORCE for continuous action spaces",
         "ES does not require specifying a reward function, unlike policy gradient methods",
       ],
@@ -1114,7 +1114,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ES evaluates many independent perturbations simultaneously with no communication until aggregation, enabling near-linear scaling with workers; policy gradient methods require shared trajectory experience, making parallelization more complex.",
       hints: [
-        "Each ES perturbation is an independent rollout — do workers need to share information mid-rollout?",
+        "Each ES perturbation is an independent rollout - do workers need to share information mid-rollout?",
         "Salimans et al. trained on 1,000+ CPU cores with near-linear speedup using this parallelism.",
       ],
     },
@@ -1135,9 +1135,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Lagrangian L(\\theta, \\lambda) = f(\\theta) + \\lambda\\^Tg(\\theta) converts a constrained problem min f(\\theta) s.t. g(\\theta) \\leq 0 into finding a saddle point — minimizing over \\theta and maximizing over \\lambda \\geq 0 — which can be solved with standard gradient methods.",
+        "The Lagrangian L(\\theta, \\lambda) = f(\\theta) + \\lambda\\^Tg(\\theta) converts a constrained problem min f(\\theta) s.t. g(\\theta) \\leq 0 into finding a saddle point - minimizing over \\theta and maximizing over \\lambda \\geq 0 - which can be solved with standard gradient methods.",
       hints: [
-        "Lagrange multipliers \\lambda penalize constraint violations — what happens to \\lambda when a constraint is violated?",
+        "Lagrange multipliers \\lambda penalize constraint violations - what happens to \\lambda when a constraint is violated?",
         "The saddle point formulation naturally handles inequality constraints through the dual variables \\lambda.",
       ],
     },
@@ -1152,7 +1152,7 @@ const questions: Record<string, Question[]> = {
         "Projected gradient descent takes a standard gradient step (which may violate constraints) and then projects the result onto the constraint set (e.g., the L2 ball, the simplex), ensuring feasibility at each iteration while following the gradient direction.",
       hints: [
         "Projection finds the nearest feasible point to the infeasible gradient step.",
-        "Think about L2-ball constrained optimization — how does projection enforce the norm constraint?",
+        "Think about L2-ball constrained optimization - how does projection enforce the norm constraint?",
       ],
     },
     {
@@ -1194,7 +1194,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Pareto-optimal solutions are non-dominated: there is no feasible solution that is at least as good on all objectives and strictly better on at least one; the Pareto front is the set of all such non-dominated solutions, representing the optimal tradeoffs.",
       hints: [
-        "A solution is dominated if another exists that beats it on every objective — Pareto-optimal solutions are not dominated.",
+        "A solution is dominated if another exists that beats it on every objective - Pareto-optimal solutions are not dominated.",
         "Think of the accuracy-speed tradeoff: every point on the Pareto front represents an unimprovable accuracy-speed combination.",
       ],
     },
@@ -1209,7 +1209,7 @@ const questions: Record<string, Question[]> = {
         "Weighted sum scalarization can only find solutions on the convex hull of the Pareto front; non-convex Pareto fronts have solutions that are not achievable by any positive weight combination, requiring alternative methods like \\epsilon-constraint or evolutionary multi-objective algorithms.",
       hints: [
         "If the Pareto front is concave (non-convex), can a linear combination of objectives reach all its points?",
-        'Think about which Pareto solutions lie "inside" the convex hull — can they be found by weight adjustment?',
+        'Think about which Pareto solutions lie "inside" the convex hull - can they be found by weight adjustment?',
       ],
     },
     {
@@ -1226,7 +1226,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MGDA solves a quadratic program to find the minimum-norm element in the convex hull of task gradients — a direction that simultaneously descends (or is orthogonal to) all objectives — guaranteeing convergence to a Pareto-stationary point.",
+        "MGDA solves a quadratic program to find the minimum-norm element in the convex hull of task gradients - a direction that simultaneously descends (or is orthogonal to) all objectives - guaranteeing convergence to a Pareto-stationary point.",
       hints: [
         'If task gradients conflict (point in different directions), what is the "safest" combined update?',
         "The min-norm gradient in the convex hull is the gradient that makes the most consistent progress across all tasks.",
@@ -1249,9 +1249,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The L1 penalty\'s subgradient is \\pm\\lambda\\cdotsign(w) — constant magnitude regardless of weight size — so small and large weights face equal shrinkage pressure; this causes small weights to hit exactly zero (sparsity), unlike L2's proportional shrinkage.",
+        "The L1 penalty\'s subgradient is \\pm\\lambda\\cdotsign(w) - constant magnitude regardless of weight size - so small and large weights face equal shrinkage pressure; this causes small weights to hit exactly zero (sparsity), unlike L2's proportional shrinkage.",
       hints: [
-        "L2 gradient is proportional to weight magnitude (2\\lambdaw) — how does that differ from L1's \\pm\\lambda?",
+        "L2 gradient is proportional to weight magnitude (2\\lambdaw) - how does that differ from L1's \\pm\\lambda?",
         "Think geometrically: the L1 ball has corners at the axes, where sparse solutions lie.",
       ],
     },
@@ -1285,7 +1285,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Weight decay penalizes ||\\theta||\\_2\\^2, consistently shrinking all weights and biasing the optimizer toward simpler (lower-norm) solutions in the overparameterized regime where many parameter vectors fit the training data; this connects to generalization bounds via norm-based complexity measures.",
       hints: [
-        "In overparameterized networks, many solutions fit the training data — weight decay selects among them.",
+        "In overparameterized networks, many solutions fit the training data - weight decay selects among them.",
         "Smaller-norm solutions correspond to simpler functions under norm-based complexity measures like PAC-Bayes bounds.",
       ],
     },
@@ -1340,7 +1340,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ADMM splits the optimization into subproblems (one per machine/block) solvable independently, then synchronizes via dual variable updates — enabling consensus optimization over distributed data without sharing raw data, only local solutions.",
+        "ADMM splits the optimization into subproblems (one per machine/block) solvable independently, then synchronizes via dual variable updates - enabling consensus optimization over distributed data without sharing raw data, only local solutions.",
       hints: [
         'ADMM\'s "alternating" refers to alternating between primal (x, z) and dual (u) updates.',
         "Think about federated learning: each node solves a local problem; ADMM coordinates them via shared dual variables.",
@@ -1374,9 +1374,9 @@ const questions: Record<string, Question[]> = {
         "\\[\\mathbb{E}_{i_t}[\\tilde{g}_t] = \\mathbb{E}_{i_t}[\\nabla f_{i_t}(\\theta_t)] - \\mathbb{E}_{i_t}[\\nabla f_{i_t}(\\tilde{\\theta})] + \\tilde{\\mu} = \\nabla f(\\theta_t) - \\nabla f(\\tilde{\\theta}) + \\tilde{\\mu}\\]\n\n" +
         "At the snapshot \\((\\theta_t = \\tilde{\\theta})\\): \\(\\mathbb{E}[\\tilde{g}_t] = \\tilde{\\mu} = \\nabla f(\\tilde{\\theta})\\).\n\n" +
         "**Variance at optimum:** As \\(\\theta_t \\to \\tilde{\\theta} \\to \\theta^*\\), we have \\(\\tilde{g}_t \\to \\nabla f_{i_t}(\\theta^*) - \\nabla f_{i_t}(\\theta^*) + \\nabla f(\\theta^*) = 0\\). Variance goes to zero!\n\n" +
-        "This enables constant step sizes and linear convergence on strongly convex problems — matching full gradient descent speed with SGD per-step cost.",
+        "This enables constant step sizes and linear convergence on strongly convex problems - matching full gradient descent speed with SGD per-step cost.",
       hints: [
-        "The correction term \\(\\nabla f_{i_t}(\\tilde{\\theta})\\) is an unbiased estimator of the noise in \\(\\nabla f_{i_t}(\\theta_t)\\) — subtracting it removes the noise component.",
+        "The correction term \\(\\nabla f_{i_t}(\\tilde{\\theta})\\) is an unbiased estimator of the noise in \\(\\nabla f_{i_t}(\\theta_t)\\) - subtracting it removes the noise component.",
         "At the snapshot \\(\\tilde{\\theta}\\), the gradient estimator \\(\\tilde{g}_t = \\tilde{\\mu}\\) has zero variance, and variance decreases to zero as \\(\\theta_t \\to \\tilde{\\theta}\\).",
       ],
     },
@@ -1390,7 +1390,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SGD with a constant step size converges to a neighborhood of the solution (noise floor) on finite-sum problems; SVRG and SAGA use gradient correction terms that reduce variance to zero as the iterate converges, achieving exact convergence with constant step sizes on strongly convex problems.",
       hints: [
-        "SGD noise is irreducible with a fixed learning rate — you must decay it to converge exactly.",
+        "SGD noise is irreducible with a fixed learning rate - you must decay it to converge exactly.",
         "Variance reduction methods effectively turn the stochastic problem into one that converges like full gradient descent.",
       ],
     },
@@ -1407,10 +1407,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SAGA maintains a table of the most recently computed gradient for each training example (n gradient vectors total); each update uses the current stochastic gradient minus the stored old gradient for that example plus the average of all stored gradients — providing an unbiased low-variance correction without a full gradient pass.",
+        "SAGA maintains a table of the most recently computed gradient for each training example (n gradient vectors total); each update uses the current stochastic gradient minus the stored old gradient for that example plus the average of all stored gradients - providing an unbiased low-variance correction without a full gradient pass.",
       hints: [
         "SVRG takes a full gradient pass periodically; SAGA amortizes this by storing per-example gradient history.",
-        "SAGA\'s table has n entries (one per training example) — what is the memory cost vs. SVRG?",
+        "SAGA\'s table has n entries (one per training example) - what is the memory cost vs. SVRG?",
       ],
     },
   ],
@@ -1430,9 +1430,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "TPE models l(x) (density of configs with performance above threshold) and g(x) (below threshold), then selects the config that maximizes l(x)/g(x) — the Expected Improvement under the Parzen estimator models.",
+        "TPE models l(x) (density of configs with performance above threshold) and g(x) (below threshold), then selects the config that maximizes l(x)/g(x) - the Expected Improvement under the Parzen estimator models.",
       hints: [
-        'TPE splits configs into "good" and "bad" based on a performance threshold — then models each group.',
+        'TPE splits configs into "good" and "bad" based on a performance threshold - then models each group.',
         "The acquisition is: sample where good density is high AND bad density is low.",
       ],
     },
@@ -1444,7 +1444,7 @@ const questions: Record<string, Question[]> = {
         "Successive Halving (and Hyperband) improves over random search by early-stopping low-performing configurations to free budget for more promising ones.",
       correctAnswer: "True",
       explanation:
-        "Successive Halving allocates a small budget to many configurations, eliminates the bottom half, doubles the budget for survivors, and repeats — focusing compute on promising configurations without running all to completion, achieving better resource efficiency than random search.",
+        "Successive Halving allocates a small budget to many configurations, eliminates the bottom half, doubles the budget for survivors, and repeats - focusing compute on promising configurations without running all to completion, achieving better resource efficiency than random search.",
       hints: [
         "Random search is unbiased but allocates equal compute to both good and bad configs.",
         "Hyperband runs multiple Successive Halving brackets to handle uncertainty about the minimum useful budget.",
@@ -1464,10 +1464,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'PBT trains a population of models concurrently; periodically, the worst-performing workers "exploit" by copying weights from a better-performing worker and then "explore" by randomly perturbing hyperparameters — adapting both weights and hyperparameters jointly during training.',
+        'PBT trains a population of models concurrently; periodically, the worst-performing workers "exploit" by copying weights from a better-performing worker and then "explore" by randomly perturbing hyperparameters - adapting both weights and hyperparameters jointly during training.',
       hints: [
-        "PBT differs from hyperparameter search followed by training — it does both simultaneously.",
-        'The "exploit" step copies model weights, not just hyperparameters — what advantage does that provide?',
+        "PBT differs from hyperparameter search followed by training - it does both simultaneously.",
+        'The "exploit" step copies model weights, not just hyperparameters - what advantage does that provide?',
       ],
     },
   ],
@@ -1487,9 +1487,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DARTS replaces discrete operation choices with a weighted mixture of all candidate operations, with mixing weights (architecture parameters \\alpha) optimized by gradient descent on the validation loss — making the search differentiable and orders of magnitude faster than RL or evolutionary NAS.",
+        "DARTS replaces discrete operation choices with a weighted mixture of all candidate operations, with mixing weights (architecture parameters \\alpha) optimized by gradient descent on the validation loss - making the search differentiable and orders of magnitude faster than RL or evolutionary NAS.",
       hints: [
-        "Discrete choices are non-differentiable — how does making them continuous enable gradient-based search?",
+        "Discrete choices are non-differentiable - how does making them continuous enable gradient-based search?",
         "At the end of DARTS, architecture parameters are discretized by taking argmax over the mixing weights.",
       ],
     },
@@ -1503,8 +1503,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A one-shot supernet trains all candidate sub-architectures simultaneously with shared weights; any sub-architecture can be evaluated by sampling a path through the supernet without individual training, reducing evaluation cost from O(N \\times training_time) to O(training_time).",
       hints: [
-        "Without weight sharing, you must train each candidate from scratch — what is the cost for thousands of architectures?",
-        "The tradeoff: shared weights may not be optimal for any single sub-architecture — is the ranking still useful?",
+        "Without weight sharing, you must train each candidate from scratch - what is the cost for thousands of architectures?",
+        "The tradeoff: shared weights may not be optimal for any single sub-architecture - is the ranking still useful?",
       ],
     },
     {
@@ -1523,8 +1523,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Hardware-aware NAS explicitly measures (or predicts) on-device latency, energy, or memory and optimizes a joint accuracy-efficiency objective for target hardware (mobile, edge, server), finding architectures that are Pareto-optimal for the deployment context.",
       hints: [
-        "A model with fewer FLOPs is not always faster on real hardware — what does hardware-aware NAS measure instead?",
-        "Different devices (iPhone, Pixel, server GPU) have different optimal architectures — hardware-awareness captures this.",
+        "A model with fewer FLOPs is not always faster on real hardware - what does hardware-aware NAS measure instead?",
+        "Different devices (iPhone, Pixel, server GPU) have different optimal architectures - hardware-awareness captures this.",
       ],
     },
   ],
@@ -1544,10 +1544,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "REINFORCE multiplies the log-probability gradient of each taken action by the return G\\_t from that timestep, producing an unbiased estimator of the true policy gradient via the log-derivative trick — but with high variance due to full Monte Carlo returns.",
+        "REINFORCE multiplies the log-probability gradient of each taken action by the return G\\_t from that timestep, producing an unbiased estimator of the true policy gradient via the log-derivative trick - but with high variance due to full Monte Carlo returns.",
       hints: [
-        "The log-derivative trick converts E[\\nablaf(x)] into E[f(x)\\cdot\\nablalog p(x)] — how does that apply here?",
-        "REINFORCE uses complete episode returns, not bootstrapped estimates — what does that mean for variance?",
+        "The log-derivative trick converts E[\\nablaf(x)] into E[f(x)\\cdot\\nablalog p(x)] - how does that apply here?",
+        "REINFORCE uses complete episode returns, not bootstrapped estimates - what does that mean for variance?",
       ],
     },
     {
@@ -1560,7 +1560,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "PPO clips the probability ratio r(\\theta) = \\pi_\\theta(a|s)/\\pi_\\thetaold(a|s) within [1-\\epsilon, 1+\\epsilon] in the surrogate objective, preventing the new policy from deviating too far from the old one and ensuring stable on-policy training without trust region projections.",
       hints: [
-        "Large policy updates can cause performance collapse in RL — how does clipping prevent that?",
+        "Large policy updates can cause performance collapse in RL - how does clipping prevent that?",
         "PPO is a simpler alternative to TRPO that enforces a similar constraint through clipping rather than a constrained optimization.",
       ],
     },
@@ -1581,7 +1581,7 @@ const questions: Record<string, Question[]> = {
         "The advantage function measures how much better action a is relative to the average action in state s; using A instead of Q as the gradient weight removes the high-variance baseline V(s) from the return, substantially reducing gradient variance without introducing bias.",
       hints: [
         "Why subtract V(s)? Think about what V(s) represents and whether it carries useful gradient information.",
-        "The baseline subtraction trick: E[\\nablalog \\pi \\times V(s)] = 0 for any V(s) — it is unbiased to subtract it.",
+        "The baseline subtraction trick: E[\\nablalog \\pi \\times V(s)] = 0 for any V(s) - it is unbiased to subtract it.",
       ],
     },
   ],
@@ -1601,7 +1601,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At a saddle point, the gradient is zero (first-order condition) but the Hessian has mixed-sign eigenvalues — the point is a minimum in some directions and a maximum in others, making it a critical point that is not a local minimum or maximum.",
+        "At a saddle point, the gradient is zero (first-order condition) but the Hessian has mixed-sign eigenvalues - the point is a minimum in some directions and a maximum in others, making it a critical point that is not a local minimum or maximum.",
       hints: [
         "A Hessian with all positive eigenvalues = local minimum; all negative = local maximum; mixed = saddle.",
         "In high-dimensional neural networks, saddle points are far more common than local minima.",
@@ -1617,7 +1617,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Theoretical and empirical evidence suggests that in highly overparameterized networks, local minima are typically global (or near-global), while saddle points and flat regions are the primary obstacles to fast convergence.",
       hints: [
-        "Think about what overparameterization means for the number of global minima — are there many?",
+        "Think about what overparameterization means for the number of global minima - are there many?",
         "Goodfellow et al. and Dauphin et al. showed empirically that saddle points, not local minima, dominate optimization difficulties.",
       ],
     },
@@ -1657,7 +1657,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Zeroth-order (derivative-free) methods are used when gradient computation is impossible — for example, when the objective involves non-differentiable simulation, external APIs, or discrete operations — using only function evaluations to estimate update directions.",
+        "Zeroth-order (derivative-free) methods are used when gradient computation is impossible - for example, when the objective involves non-differentiable simulation, external APIs, or discrete operations - using only function evaluations to estimate update directions.",
       hints: [
         "When can\'t you compute gradients? Think about objectives involving external simulators or discrete actions.",
         "Examples: hyper-parameter tuning of non-differentiable pipelines, adversarial prompting of LLMs.",
@@ -1671,9 +1671,9 @@ const questions: Record<string, Question[]> = {
         "Finite difference gradient estimation approximates the gradient by evaluating the function at perturbed points: (f(x+\\deltae\\_i) - f(x)) / \\delta for each dimension i.",
       correctAnswer: "True",
       explanation:
-        "Finite differences estimate partial derivatives by evaluating f at x+\\deltae\\_i (one-sided) or (f(x+\\deltae\\_i) - f(x-\\deltae\\_i))/(2\\delta) (central differences) for each unit vector e\\_i, requiring d function evaluations for d-dimensional x — prohibitive for high-dimensional problems.",
+        "Finite differences estimate partial derivatives by evaluating f at x+\\deltae\\_i (one-sided) or (f(x+\\deltae\\_i) - f(x-\\deltae\\_i))/(2\\delta) (central differences) for each unit vector e\\_i, requiring d function evaluations for d-dimensional x - prohibitive for high-dimensional problems.",
       hints: [
-        "The approximation approaches the true gradient as \\delta\\to0, but numerical noise increases — what is the tradeoff?",
+        "The approximation approaches the true gradient as \\delta\\to0, but numerical noise increases - what is the tradeoff?",
         "For d=10⁶ parameters, how many function evaluations does finite differences require?",
       ],
     },
@@ -1722,7 +1722,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When training on a new task, SGD-based updates modify shared parameters to minimize the new task\'s loss, inadvertently increasing loss on old tasks whose training data is no longer available — this is catastrophic forgetting.",
+        "When training on a new task, SGD-based updates modify shared parameters to minimize the new task\'s loss, inadvertently increasing loss on old tasks whose training data is no longer available - this is catastrophic forgetting.",
       hints: [
         "Why does learning a new task hurt old task performance? Think about which parameters are modified.",
         "If old task data is not included in current training, what protects old task knowledge?",
@@ -1736,9 +1736,9 @@ const questions: Record<string, Question[]> = {
         "Elastic Weight Consolidation (EWC) prevents catastrophic forgetting by penalizing changes to parameters that were important for previously learned tasks.",
       correctAnswer: "True",
       explanation:
-        "EWC adds a quadratic penalty \\lambda\\Sigma\\_iF\\_i(\\theta\\_i - \\theta*\\_i)\\^2 to the loss, where F\\_i is the Fisher information (importance) of parameter i for old tasks and \\theta*\\_i is the old optimal value — preventing important old-task parameters from being overwritten.",
+        "EWC adds a quadratic penalty \\lambda\\Sigma\\_iF\\_i(\\theta\\_i - \\theta*\\_i)\\^2 to the loss, where F\\_i is the Fisher information (importance) of parameter i for old tasks and \\theta*\\_i is the old optimal value - preventing important old-task parameters from being overwritten.",
       hints: [
-        "EWC\'s penalty is weighted by Fisher information — what does high Fisher information mean for a parameter?",
+        "EWC\'s penalty is weighted by Fisher information - what does high Fisher information mean for a parameter?",
         "The Fisher information estimates how sensitive the old task\'s output is to each parameter.",
       ],
     },
@@ -1756,7 +1756,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GEM stores episodic memory (small example sets) from old tasks; if the current gradient would increase loss on any stored memory, it is projected onto the intersection of halfspaces defined by the constraint that old-task losses do not increase — ensuring forward transfer while preventing backward interference.",
+        "GEM stores episodic memory (small example sets) from old tasks; if the current gradient would increase loss on any stored memory, it is projected onto the intersection of halfspaces defined by the constraint that old-task losses do not increase - ensuring forward transfer while preventing backward interference.",
       hints: [
         "GEM\'s constraint: the update gradient must not increase loss on old-task memory examples.",
         "Projection finds the nearest gradient to the unconstrained one that satisfies all memory constraints.",
@@ -1779,10 +1779,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "muP (Yang et al.) defines per-parameter learning rate scaling rules derived from infinite-width limits that keep activations, gradients, and updates O(1) regardless of model width — enabling optimal hyperparameters found on a small model to be reused for billion-parameter models.",
+        "muP (Yang et al.) defines per-parameter learning rate scaling rules derived from infinite-width limits that keep activations, gradients, and updates O(1) regardless of model width - enabling optimal hyperparameters found on a small model to be reused for billion-parameter models.",
       hints: [
         "The key problem muP solves: tuning hyperparameters on a small proxy model, then using them for the large model.",
-        "Standard parametrization causes optimal learning rates to shift with model size — muP prevents this.",
+        "Standard parametrization causes optimal learning rates to shift with model size - muP prevents this.",
       ],
     },
     {
@@ -1795,8 +1795,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ZeRO-Offload offloads Adam optimizer states (32-bit master weights, momentum, variance) and gradients to CPU RAM, where CPU optimizer steps are performed; only FP16 model parameters and activations remain on GPU, enabling 10\\times larger model training on the same GPU.",
       hints: [
-        "Optimizer states are often 3\\times the model size in Adam — what does offloading them enable?",
-        "The CPU has much more RAM than GPU VRAM — ZeRO-Offload exploits this.",
+        "Optimizer states are often 3\\times the model size in Adam - what does offloading them enable?",
+        "The CPU has much more RAM than GPU VRAM - ZeRO-Offload exploits this.",
       ],
     },
     {
@@ -1816,7 +1816,7 @@ const questions: Record<string, Question[]> = {
         "GNS (McCandlish et al.) equals B_simple / B_noise where B_noise = \\Sigma_gradient_variance / ||gradient_mean||\\^2; when the batch size B < GNS, increasing B reduces gradient noise and is compute-efficient; when B > GNS, further increases give diminishing returns.",
       hints: [
         'GNS provides a principled answer to "how large should the batch size be?"',
-        "When batch size is much smaller than GNS, the gradient is noisy — increasing batch size helps; above GNS, you are paying for compute without proportional benefit.",
+        "When batch size is much smaller than GNS, the gradient is noisy - increasing batch size helps; above GNS, you are paying for compute without proportional benefit.",
       ],
     },
   ],
@@ -1824,54 +1824,54 @@ const questions: Record<string, Question[]> = {
 
 const moreOptQ: Record<string, Question[]> = {
   "lion-optimizer-v2": [
-    { id: "q-opt-kp31-1", type: "multiple-choice", difficulty: "medium", question: "The Lion optimizer (EvoLved Sign Momentum) updates parameters using only the sign of the gradient momentum. Its key advantage over Adam is:", options: ["Lion always converges faster than Adam on all tasks", "Lion uses constant step sizes (sign updates), reducing memory from 2\\times to 1\\times extra state over SGD while matching or exceeding Adam on LLM pre-training", "Lion has no hyperparameters", "Lion requires second-order gradient information"], correctAnswer: 1, explanation: "Lion discovered via program search updates w \\leftarrow w - lr\\cdotsign(\\beta\\_1\\cdotm + (1-\\beta\\_1)\\cdotg) and then m \\leftarrow \\beta\\_2\\cdotm + (1-\\beta\\_2)\\cdotg. It stores only one momentum buffer (vs Adam's two: m and v), halving optimizer memory, and its sign updates give uniform step sizes — beneficial for large batch LLM training.", hints: ["Adam stores both first moment m and second moment v — Lion drops v entirely.", "Sign updates mean Lion is more aggressive: all parameters move the same distance per step."] },
-    { id: "q-opt-kp31-2", type: "true-false", difficulty: "medium", question: "The sign of the gradient (used in Lion and sign-SGD) has bounded norm regardless of the gradient magnitude, making sign-based optimizers more robust to gradient scale variation.", correctAnswer: "True", explanation: "sign(g) \\in {-1,0,+1}^d has L\\infty norm = 1 always, regardless of gradient magnitude. This robustness to scale makes sign-based methods effective when gradients vary widely across layers (common in large transformers).", hints: ["Adam's v term normalizes gradient scale explicitly; Lion achieves similar effect via sign.", "Distributed training: sign(g) can be communicated with 1 bit per parameter — used in 1-bit Adam."] },
-    { id: "q-opt-kp31-3", type: "multiple-choice", difficulty: "hard", question: "Lion's update rule has a decoupled weight decay form similar to AdamW. Why is decoupled weight decay (not L2 regularization) important for adaptive optimizers?", options: ["Decoupled weight decay is identical to L2 in all cases", "In Adam/Lion, L2 regularization \\lambda‖w‖\\^2 adds \\lambdaw to the gradient, which gets scaled by the adaptive term — decoupled weight decay applies \\lambdaw directly to weights, maintaining the regularization strength independent of gradient magnitude", "Decoupled weight decay reduces memory usage", "L2 regularization causes gradient explosion in transformers"], correctAnswer: 1, explanation: "With Adam, adding L2 to the loss means the weight penalty gradient \\lambdaw gets adaptively scaled by 1/√v̂, so weights with small historical gradients (features rarely activated) are under-regularized. Decoupled weight decay (AdamW, LionW) applies \\lambda\\cdotw after the adaptive update, maintaining uniform regularization.", hints: ["Ilya Loshchilov's AdamW paper showed decoupled WD consistently outperforms L2 for transformers.", "The difference matters most for sparse/irregular features with near-zero historical gradients."] },
+    { id: "q-opt-kp31-1", type: "multiple-choice", difficulty: "medium", question: "The Lion optimizer (EvoLved Sign Momentum) updates parameters using only the sign of the gradient momentum. Its key advantage over Adam is:", options: ["Lion always converges faster than Adam on all tasks", "Lion uses constant step sizes (sign updates), reducing memory from 2\\times to 1\\times extra state over SGD while matching or exceeding Adam on LLM pre-training", "Lion has no hyperparameters", "Lion requires second-order gradient information"], correctAnswer: 1, explanation: "Lion discovered via program search updates w \\leftarrow w - lr\\cdotsign(\\beta\\_1\\cdotm + (1-\\beta\\_1)\\cdotg) and then m \\leftarrow \\beta\\_2\\cdotm + (1-\\beta\\_2)\\cdotg. It stores only one momentum buffer (vs Adam's two: m and v), halving optimizer memory, and its sign updates give uniform step sizes - beneficial for large batch LLM training.", hints: ["Adam stores both first moment m and second moment v - Lion drops v entirely.", "Sign updates mean Lion is more aggressive: all parameters move the same distance per step."] },
+    { id: "q-opt-kp31-2", type: "true-false", difficulty: "medium", question: "The sign of the gradient (used in Lion and sign-SGD) has bounded norm regardless of the gradient magnitude, making sign-based optimizers more robust to gradient scale variation.", correctAnswer: "True", explanation: "sign(g) \\in {-1,0,+1}^d has L\\infty norm = 1 always, regardless of gradient magnitude. This robustness to scale makes sign-based methods effective when gradients vary widely across layers (common in large transformers).", hints: ["Adam's v term normalizes gradient scale explicitly; Lion achieves similar effect via sign.", "Distributed training: sign(g) can be communicated with 1 bit per parameter - used in 1-bit Adam."] },
+    { id: "q-opt-kp31-3", type: "multiple-choice", difficulty: "hard", question: "Lion's update rule has a decoupled weight decay form similar to AdamW. Why is decoupled weight decay (not L2 regularization) important for adaptive optimizers?", options: ["Decoupled weight decay is identical to L2 in all cases", "In Adam/Lion, L2 regularization \\lambda‖w‖\\^2 adds \\lambdaw to the gradient, which gets scaled by the adaptive term - decoupled weight decay applies \\lambdaw directly to weights, maintaining the regularization strength independent of gradient magnitude", "Decoupled weight decay reduces memory usage", "L2 regularization causes gradient explosion in transformers"], correctAnswer: 1, explanation: "With Adam, adding L2 to the loss means the weight penalty gradient \\lambdaw gets adaptively scaled by 1/√v̂, so weights with small historical gradients (features rarely activated) are under-regularized. Decoupled weight decay (AdamW, LionW) applies \\lambda\\cdotw after the adaptive update, maintaining uniform regularization.", hints: ["Ilya Loshchilov's AdamW paper showed decoupled WD consistently outperforms L2 for transformers.", "The difference matters most for sparse/irregular features with near-zero historical gradients."] },
   ],
   "frank-wolfe": [
-    { id: "q-opt-kp32-1", type: "multiple-choice", difficulty: "hard", question: "The Frank-Wolfe (conditional gradient) algorithm minimizes f(x) over a convex set C by solving a linear minimization oracle (LMO) at each step. Its advantage over projected gradient descent is:", options: ["Frank-Wolfe always converges faster than projected gradient", "Frank-Wolfe avoids projections onto C (potentially expensive) by instead solving linear problems over C, and its iterates are sparse convex combinations of extreme points of C", "Frank-Wolfe requires no convexity assumptions", "Frank-Wolfe uses second-order information"], correctAnswer: 1, explanation: "For structured constraint sets (e.g., nuclear norm ball, simplex, flow polytopes), the LMO is much cheaper than projection. Frank-Wolfe produces solutions as convex combinations of at most t extreme points after t iterations — giving sparse structured solutions naturally (e.g., low-rank matrices for nuclear norm constraints).", hints: ["LMO: min_{s\\inC} ⟨\\nablaf(x), s⟩ — a linear program over C, which is cheap for many structured sets.", "On the simplex, the LMO is just finding the coordinate with the most negative gradient — O(n)."] },
+    { id: "q-opt-kp32-1", type: "multiple-choice", difficulty: "hard", question: "The Frank-Wolfe (conditional gradient) algorithm minimizes f(x) over a convex set C by solving a linear minimization oracle (LMO) at each step. Its advantage over projected gradient descent is:", options: ["Frank-Wolfe always converges faster than projected gradient", "Frank-Wolfe avoids projections onto C (potentially expensive) by instead solving linear problems over C, and its iterates are sparse convex combinations of extreme points of C", "Frank-Wolfe requires no convexity assumptions", "Frank-Wolfe uses second-order information"], correctAnswer: 1, explanation: "For structured constraint sets (e.g., nuclear norm ball, simplex, flow polytopes), the LMO is much cheaper than projection. Frank-Wolfe produces solutions as convex combinations of at most t extreme points after t iterations - giving sparse structured solutions naturally (e.g., low-rank matrices for nuclear norm constraints).", hints: ["LMO: min_{s\\inC} ⟨\\nablaf(x), s⟩ - a linear program over C, which is cheap for many structured sets.", "On the simplex, the LMO is just finding the coordinate with the most negative gradient - O(n)."] },
     { id: "q-opt-kp32-2", type: "true-false", difficulty: "medium", question: "Frank-Wolfe converges at rate O(1/t) for convex smooth objectives (same as gradient descent), but unlike gradient descent it does not require a projection step.", correctAnswer: "True", explanation: "Frank-Wolfe achieves O(1/t) convergence for L-smooth convex f, matching gradient descent's rate but using the cheaper LMO instead of projection. For strongly convex f with exact line search, variants achieve linear convergence. The projection-free property is the key computational advantage.", hints: ["Convergence gap at step t: f(x\\_t) - f* \\leq 2L\\cdotdiam(C)\\^2/t where diam(C) is the diameter of C.", "Variants like Away-Frank-Wolfe and Pairwise-FW achieve linear convergence for strongly convex f."] },
-    { id: "q-opt-kp32-3", type: "multiple-choice", difficulty: "hard", question: "In matrix completion (collaborative filtering), why is Frank-Wolfe with the nuclear norm ball constraint preferred over projected gradient descent?", options: ["Frank-Wolfe is faster for all matrix problems", "Projecting onto the nuclear norm ball requires full SVD (O(mn\\cdotmin(m,n))), while the Frank-Wolfe LMO requires only the top singular vector pair (O(mn) via power iteration)", "Frank-Wolfe guarantees exact recovery of the matrix", "Frank-Wolfe requires no regularization"], correctAnswer: 1, explanation: "The nuclear norm ball LMO min_{‖M‖_* \\leq \\tau} ⟨G,M⟩ is solved by the rank-1 matrix -\\tau\\cdotu\\_1v\\_1^T (top left/right singular vectors of G). This costs O(mn) via power iteration vs O(mn\\cdotmin(m,n)) for full SVD needed in projection — a massive speedup for large matrices.", hints: ["Projection onto ‖M‖_* \\leq \\tau requires computing all singular values and soft-thresholding them.", "Frank-Wolfe produces low-rank iterates (rank grows by 1 per step) — ideal for low-rank matrix recovery."] },
+    { id: "q-opt-kp32-3", type: "multiple-choice", difficulty: "hard", question: "In matrix completion (collaborative filtering), why is Frank-Wolfe with the nuclear norm ball constraint preferred over projected gradient descent?", options: ["Frank-Wolfe is faster for all matrix problems", "Projecting onto the nuclear norm ball requires full SVD (O(mn\\cdotmin(m,n))), while the Frank-Wolfe LMO requires only the top singular vector pair (O(mn) via power iteration)", "Frank-Wolfe guarantees exact recovery of the matrix", "Frank-Wolfe requires no regularization"], correctAnswer: 1, explanation: "The nuclear norm ball LMO min_{‖M‖_* \\leq \\tau} ⟨G,M⟩ is solved by the rank-1 matrix -\\tau\\cdotu\\_1v\\_1^T (top left/right singular vectors of G). This costs O(mn) via power iteration vs O(mn\\cdotmin(m,n)) for full SVD needed in projection - a massive speedup for large matrices.", hints: ["Projection onto ‖M‖_* \\leq \\tau requires computing all singular values and soft-thresholding them.", "Frank-Wolfe produces low-rank iterates (rank grows by 1 per step) - ideal for low-rank matrix recovery."] },
   ],
   "proximal-methods-v2": [
-    { id: "q-opt-kp33-1", type: "multiple-choice", difficulty: "medium", question: "The proximal operator of a function g is defined as prox_{\\lambdag}(v) = argmin_x {g(x) + (1/2\\lambda)‖x-v‖\\^2}. For g(x) = ‖x‖\\_1 (LASSO), the proximal operator is:", options: ["Hard thresholding: x = v\\cdot𝟙[|v| > \\lambda]", "Soft thresholding: x = sign(v)\\cdotmax(|v|-\\lambda, 0)", "Projection onto ℓ\\_1 ball", "No closed form exists"], correctAnswer: 1, explanation: "The proximal operator of the ℓ\\_1 norm is soft-thresholding: prox_{\\lambda‖\\cdot‖\\_1}(v)\\_i = sign(v\\_i)\\cdotmax(|v\\_i|-\\lambda, 0). It shrinks entries toward zero and sets small entries exactly to zero — the origin of LASSO's sparsity.", hints: ["Soft-thresholding shrinks all entries by \\lambda: entries with |v\\_i| \\leq \\lambda become exactly 0.", "Hard thresholding (for ℓ\\_0) zeros out small entries but keeps large ones unchanged — not the proximal op of ℓ\\_1."] },
-    { id: "q-opt-kp33-2", type: "true-false", difficulty: "medium", question: "The proximal gradient method (ISTA) for minimizing f(x) = h(x) + g(x) where h is smooth and g is convex (possibly non-smooth) converges at rate O(1/t), while FISTA (Fast ISTA with Nesterov acceleration) converges at O(1/t\\^2).", correctAnswer: "True", explanation: "ISTA: x\\_t₊\\_1 = prox_{\\lambdag}(x\\_t - \\lambda\\nablah(x\\_t)), converging at O(1/t). FISTA adds a momentum term y\\_t = x\\_t + (t-1)/(t+2)\\cdot(x\\_t - x\\_t₋\\_1), achieving O(1/t\\^2) — the optimal rate for first-order methods on convex problems. FISTA is the standard algorithm for LASSO and sparse recovery.", hints: ["FISTA was introduced by Beck and Teboulle (2009) — a landmark in optimization.", "The momentum coefficient (t-1)/(t+2) \\to 1 as t \\to \\infty, making the update increasingly aggressive."] },
-    { id: "q-opt-kp33-3", type: "multiple-choice", difficulty: "hard", question: "ADMM (Alternating Direction Method of Multipliers) decomposes the optimization into subproblems for each variable, alternating updates. Its key advantage for distributed ML is:", options: ["ADMM requires no hyperparameter tuning", "ADMM decomposes the objective across machines/devices, with each subproblem solved locally and coordination via shared dual variables — enabling distributed optimization with cheap communication", "ADMM always converges faster than gradient descent", "ADMM is only applicable to linear programs"], correctAnswer: 1, explanation: "ADMM minimizes f(x) + g(z) subject to Ax + Bz = c via alternating x-update (minimize augmented Lagrangian w.r.t. x), z-update (minimize w.r.t. z), and dual update. Each node can hold its own subproblem; consensus ADMM distributes ML training across machines with O(1) communication per round.", hints: ["ADMM's augmented Lagrangian: L_\\rho(x,z,\\lambda) = f(x) + g(z) + \\lambda^T(Ax+Bz-c) + \\rho/2‖Ax+Bz-c‖\\^2.", "Boyd et al.'s 2011 ADMM tutorial is one of the most cited papers in optimization."] },
+    { id: "q-opt-kp33-1", type: "multiple-choice", difficulty: "medium", question: "The proximal operator of a function g is defined as prox_{\\lambdag}(v) = argmin_x {g(x) + (1/2\\lambda)‖x-v‖\\^2}. For g(x) = ‖x‖\\_1 (LASSO), the proximal operator is:", options: ["Hard thresholding: x = v\\cdot𝟙[|v| > \\lambda]", "Soft thresholding: x = sign(v)\\cdotmax(|v|-\\lambda, 0)", "Projection onto ℓ\\_1 ball", "No closed form exists"], correctAnswer: 1, explanation: "The proximal operator of the ℓ\\_1 norm is soft-thresholding: prox_{\\lambda‖\\cdot‖\\_1}(v)\\_i = sign(v\\_i)\\cdotmax(|v\\_i|-\\lambda, 0). It shrinks entries toward zero and sets small entries exactly to zero - the origin of LASSO's sparsity.", hints: ["Soft-thresholding shrinks all entries by \\lambda: entries with |v\\_i| \\leq \\lambda become exactly 0.", "Hard thresholding (for ℓ\\_0) zeros out small entries but keeps large ones unchanged - not the proximal op of ℓ\\_1."] },
+    { id: "q-opt-kp33-2", type: "true-false", difficulty: "medium", question: "The proximal gradient method (ISTA) for minimizing f(x) = h(x) + g(x) where h is smooth and g is convex (possibly non-smooth) converges at rate O(1/t), while FISTA (Fast ISTA with Nesterov acceleration) converges at O(1/t\\^2).", correctAnswer: "True", explanation: "ISTA: x\\_t₊\\_1 = prox_{\\lambdag}(x\\_t - \\lambda\\nablah(x\\_t)), converging at O(1/t). FISTA adds a momentum term y\\_t = x\\_t + (t-1)/(t+2)\\cdot(x\\_t - x\\_t₋\\_1), achieving O(1/t\\^2) - the optimal rate for first-order methods on convex problems. FISTA is the standard algorithm for LASSO and sparse recovery.", hints: ["FISTA was introduced by Beck and Teboulle (2009) - a landmark in optimization.", "The momentum coefficient (t-1)/(t+2) \\to 1 as t \\to \\infty, making the update increasingly aggressive."] },
+    { id: "q-opt-kp33-3", type: "multiple-choice", difficulty: "hard", question: "ADMM (Alternating Direction Method of Multipliers) decomposes the optimization into subproblems for each variable, alternating updates. Its key advantage for distributed ML is:", options: ["ADMM requires no hyperparameter tuning", "ADMM decomposes the objective across machines/devices, with each subproblem solved locally and coordination via shared dual variables - enabling distributed optimization with cheap communication", "ADMM always converges faster than gradient descent", "ADMM is only applicable to linear programs"], correctAnswer: 1, explanation: "ADMM minimizes f(x) + g(z) subject to Ax + Bz = c via alternating x-update (minimize augmented Lagrangian w.r.t. x), z-update (minimize w.r.t. z), and dual update. Each node can hold its own subproblem; consensus ADMM distributes ML training across machines with O(1) communication per round.", hints: ["ADMM's augmented Lagrangian: L_\\rho(x,z,\\lambda) = f(x) + g(z) + \\lambda^T(Ax+Bz-c) + \\rho/2‖Ax+Bz-c‖\\^2.", "Boyd et al.'s 2011 ADMM tutorial is one of the most cited papers in optimization."] },
   ],
   "bilevel-optimization": [
-    { id: "q-opt-kp34-1", type: "multiple-choice", difficulty: "hard", question: "Bilevel optimization has the form min_\\theta f(\\theta, x*(\\theta)) where x*(\\theta) = argmin_x g(x,\\theta). In meta-learning (MAML), \\theta are meta-parameters and x*(\\theta) are task-adapted parameters. Computing the gradient \\partialf/\\partial\\theta requires:", options: ["Only the outer gradient \\partialf/\\partial\\theta", "The implicit function theorem to compute dx*/d\\theta = -(\\partial\\^2g/\\partialx\\^2)\\^{-1}\\cdot(\\partial\\^2g/\\partialx\\partial\\theta) — requiring second-order derivatives", "A single forward pass through the inner problem", "No gradient computation — bilevel problems use zero-order methods only"], correctAnswer: 1, explanation: "The hypergradient \\partialf/\\partial\\theta = \\partialf/\\partialx\\cdot(dx*/d\\theta) + \\partialf/\\partial\\theta, where dx*/d\\theta comes from the implicit function theorem (IFT). Computing the IFT requires solving a linear system with the inner Hessian \\partial\\^2g/\\partialx\\^2 — expensive but exact. Approximations (finite-step unrolling, Neumann series) are used in practice.", hints: ["MAML approximates bilevel optimization with T inner gradient steps and differentiates through them (unrolling).", "iMAML uses the IFT approach, avoiding unrolling and memory issues of long inner loops."] },
+    { id: "q-opt-kp34-1", type: "multiple-choice", difficulty: "hard", question: "Bilevel optimization has the form min_\\theta f(\\theta, x*(\\theta)) where x*(\\theta) = argmin_x g(x,\\theta). In meta-learning (MAML), \\theta are meta-parameters and x*(\\theta) are task-adapted parameters. Computing the gradient \\partialf/\\partial\\theta requires:", options: ["Only the outer gradient \\partialf/\\partial\\theta", "The implicit function theorem to compute dx*/d\\theta = -(\\partial\\^2g/\\partialx\\^2)\\^{-1}\\cdot(\\partial\\^2g/\\partialx\\partial\\theta) - requiring second-order derivatives", "A single forward pass through the inner problem", "No gradient computation - bilevel problems use zero-order methods only"], correctAnswer: 1, explanation: "The hypergradient \\partialf/\\partial\\theta = \\partialf/\\partialx\\cdot(dx*/d\\theta) + \\partialf/\\partial\\theta, where dx*/d\\theta comes from the implicit function theorem (IFT). Computing the IFT requires solving a linear system with the inner Hessian \\partial\\^2g/\\partialx\\^2 - expensive but exact. Approximations (finite-step unrolling, Neumann series) are used in practice.", hints: ["MAML approximates bilevel optimization with T inner gradient steps and differentiates through them (unrolling).", "iMAML uses the IFT approach, avoiding unrolling and memory issues of long inner loops."] },
     { id: "q-opt-kp34-2", type: "true-false", difficulty: "medium", question: "Hyperparameter optimization (HPO) via gradient descent on validation loss is an example of bilevel optimization where the outer problem optimizes hyperparameters and the inner problem trains the model.", correctAnswer: "True", explanation: "In gradient-based HPO (e.g., DARTS for NAS, BOHB), the outer objective is validation loss as a function of hyperparameters \\lambda, and the inner objective is training loss minimized over model weights w(\\lambda). The hypergradient \\partialL_val/\\partial\\lambda is computed via unrolling or IFT.", hints: ["DARTS (Differentiable Architecture Search) uses bilevel optimization to search neural architectures.", "The practical challenge: inner loop convergence is approximate, making the hypergradient biased."] },
-    { id: "q-opt-kp34-3", type: "multiple-choice", difficulty: "hard", question: "In the MAML (Model-Agnostic Meta-Learning) bilevel formulation, the first-order approximation FOMAML ignores second-order terms. Compared to full MAML, FOMAML:", options: ["Always performs worse than MAML due to the approximation", "Often performs comparably to MAML while being 2-5\\times cheaper, as the second-order terms often contribute little in practice", "Is equivalent to MAML for any problem", "Cannot be used for few-shot learning"], correctAnswer: 1, explanation: "FOMAML drops the Hessian terms, computing gradients of the final inner-loop parameter directly (as if stop_gradient were applied after inner steps). Empirically it matches full MAML on most benchmarks at significantly lower cost — suggesting the Hessian correction is small for typical meta-learning problems.", hints: ["Reptile (Nichol et al.) is another first-order meta-learning method that averages inner parameters.", "The Hessian-free approach: simply differentiate through the last inner gradient step only."] },
+    { id: "q-opt-kp34-3", type: "multiple-choice", difficulty: "hard", question: "In the MAML (Model-Agnostic Meta-Learning) bilevel formulation, the first-order approximation FOMAML ignores second-order terms. Compared to full MAML, FOMAML:", options: ["Always performs worse than MAML due to the approximation", "Often performs comparably to MAML while being 2-5\\times cheaper, as the second-order terms often contribute little in practice", "Is equivalent to MAML for any problem", "Cannot be used for few-shot learning"], correctAnswer: 1, explanation: "FOMAML drops the Hessian terms, computing gradients of the final inner-loop parameter directly (as if stop_gradient were applied after inner steps). Empirically it matches full MAML on most benchmarks at significantly lower cost - suggesting the Hessian correction is small for typical meta-learning problems.", hints: ["Reptile (Nichol et al.) is another first-order meta-learning method that averages inner parameters.", "The Hessian-free approach: simply differentiate through the last inner gradient step only."] },
   ],
   "stochastic-variance-reduction": [
-    { id: "q-opt-kp35-1", type: "multiple-choice", difficulty: "hard", question: "SVRG (Stochastic Variance Reduced Gradient) achieves linear convergence for strongly convex functions, unlike SGD which converges at O(1/t). SVRG's key innovation is:", options: ["Using a larger batch size than SGD", "Periodically computing the full gradient \\mũ at a snapshot w̃, then correcting stochastic updates as: \\nablaf\\_i(w) - \\nablaf\\_i(w̃) + \\mũ, reducing gradient variance to zero at optimum", "Adapting the learning rate based on gradient history", "Using momentum with a decaying coefficient"], correctAnswer: 1, explanation: "SVRG's variance-reduced gradient estimator has zero variance at the optimum (since \\nablaf\\_i(w*) - \\nablaf\\_i(w̃) + \\mũ \\to 0 as w \\to w* and w̃ \\to w*). This allows using a constant learning rate and achieves linear (geometric) convergence for strongly convex f — unlike SGD which needs decaying lr.", hints: ["SVRG requires one full gradient pass per epoch (for \\mũ) plus n corrected stochastic updates.", "SARAH and SPIDER are variance-reduction methods with even better complexity for non-convex optimization."] },
-    { id: "q-opt-kp35-2", type: "true-false", difficulty: "medium", question: "SAG (Stochastic Average Gradient) stores the most recent gradient for each training sample and updates using the average of stored gradients. This requires O(n\\cdotd) memory for n samples and d dimensions.", correctAnswer: "True", explanation: "SAG maintains a table of the last computed gradient for each training example — n vectors of dimension d. This O(nd) memory is the main drawback vs SVRG (which uses O(d)). SAGA (an unbiased variant) has the same memory cost but better theoretical properties.", hints: ["For n=10M samples and d=1000 dimensions: SAG needs 10\\^4 GB — impractical for large datasets.", "SVRG avoids this by using a periodic full gradient snapshot instead of per-sample storage."] },
-    { id: "q-opt-kp35-3", type: "multiple-choice", difficulty: "hard", question: "For non-convex objectives (like neural network training), variance reduction methods (SVRG, SARAH) provide which improvement over SGD?", options: ["They guarantee convergence to the global minimum", "They achieve O(n^{2/3}/\\epsilon) gradient complexity to reach an \\epsilon-stationary point, vs O(1/\\epsilon\\^2) for SGD — fewer gradient evaluations for the same stationarity guarantee", "They eliminate the need for momentum", "They converge at the same rate as SGD for non-convex problems"], correctAnswer: 1, explanation: "For non-convex optimization, SPIDER/SARAH achieve O(n^{1/2}/\\epsilon\\^2 + 1/\\epsilon^3) gradient complexity vs O(1/\\epsilon\\^4) for vanilla SGD. The improvement is significant for large n (many training examples). However, per-iteration overhead and full gradient computation costs often make Adam/SGD+momentum competitive in practice.", hints: ["Non-convex guarantees are for \\epsilon-stationary points (‖\\nablaf‖ \\leq \\epsilon), not global minima.", "SPIDER combines SVRG-style snapshots with a recursive estimator, achieving near-optimal complexity."] },
+    { id: "q-opt-kp35-1", type: "multiple-choice", difficulty: "hard", question: "SVRG (Stochastic Variance Reduced Gradient) achieves linear convergence for strongly convex functions, unlike SGD which converges at O(1/t). SVRG's key innovation is:", options: ["Using a larger batch size than SGD", "Periodically computing the full gradient \\mũ at a snapshot w̃, then correcting stochastic updates as: \\nablaf\\_i(w) - \\nablaf\\_i(w̃) + \\mũ, reducing gradient variance to zero at optimum", "Adapting the learning rate based on gradient history", "Using momentum with a decaying coefficient"], correctAnswer: 1, explanation: "SVRG's variance-reduced gradient estimator has zero variance at the optimum (since \\nablaf\\_i(w*) - \\nablaf\\_i(w̃) + \\mũ \\to 0 as w \\to w* and w̃ \\to w*). This allows using a constant learning rate and achieves linear (geometric) convergence for strongly convex f - unlike SGD which needs decaying lr.", hints: ["SVRG requires one full gradient pass per epoch (for \\mũ) plus n corrected stochastic updates.", "SARAH and SPIDER are variance-reduction methods with even better complexity for non-convex optimization."] },
+    { id: "q-opt-kp35-2", type: "true-false", difficulty: "medium", question: "SAG (Stochastic Average Gradient) stores the most recent gradient for each training sample and updates using the average of stored gradients. This requires O(n\\cdotd) memory for n samples and d dimensions.", correctAnswer: "True", explanation: "SAG maintains a table of the last computed gradient for each training example - n vectors of dimension d. This O(nd) memory is the main drawback vs SVRG (which uses O(d)). SAGA (an unbiased variant) has the same memory cost but better theoretical properties.", hints: ["For n=10M samples and d=1000 dimensions: SAG needs 10\\^4 GB - impractical for large datasets.", "SVRG avoids this by using a periodic full gradient snapshot instead of per-sample storage."] },
+    { id: "q-opt-kp35-3", type: "multiple-choice", difficulty: "hard", question: "For non-convex objectives (like neural network training), variance reduction methods (SVRG, SARAH) provide which improvement over SGD?", options: ["They guarantee convergence to the global minimum", "They achieve O(n^{2/3}/\\epsilon) gradient complexity to reach an \\epsilon-stationary point, vs O(1/\\epsilon\\^2) for SGD - fewer gradient evaluations for the same stationarity guarantee", "They eliminate the need for momentum", "They converge at the same rate as SGD for non-convex problems"], correctAnswer: 1, explanation: "For non-convex optimization, SPIDER/SARAH achieve O(n^{1/2}/\\epsilon\\^2 + 1/\\epsilon^3) gradient complexity vs O(1/\\epsilon\\^4) for vanilla SGD. The improvement is significant for large n (many training examples). However, per-iteration overhead and full gradient computation costs often make Adam/SGD+momentum competitive in practice.", hints: ["Non-convex guarantees are for \\epsilon-stationary points (‖\\nablaf‖ \\leq \\epsilon), not global minima.", "SPIDER combines SVRG-style snapshots with a recursive estimator, achieving near-optimal complexity."] },
   ],
   "zeroth-order-optimization": [
-    { id: "q-opt-kp36-1", type: "multiple-choice", difficulty: "hard", question: "Zeroth-order (derivative-free) optimization estimates gradients using only function evaluations. The two-point gradient estimator approximates \\nablaf(x) \\approx (d/2\\sigma)\\cdot[f(x+\\sigmau) - f(x-\\sigmau)]\\cdotu for random direction u. Its variance scales as:", options: ["O(d) independent of problem dimension", "O(d/\\sigma\\^2)\\cdotVar(f), meaning variance grows with dimension d and shrinks with smoothing radius \\sigma", "O(1/d) — variance decreases with dimension", "O(d\\^2) due to coordinate interactions"], correctAnswer: 1, explanation: "The two-point estimator's variance \\approx (d\\^2/\\sigma\\^2)\\cdot‖\\nablaf‖\\^2 — the d factor reflects the difficulty of gradient estimation in high dimensions. This is why zeroth-order methods require O(d/\\epsilon\\^2) function evaluations vs O(1/\\epsilon\\^2) for first-order methods — the 'dimension gap' of derivative-free optimization.", hints: ["Smoothed gradient estimator: \\nablaf_\\sigma(x) = E_u[(f(x+\\sigmau)-f(x))/\\sigma \\cdot u] for u~N(0,I).", "Evolution Strategies (ES) and CMA-ES use populations to estimate gradients — same core idea."] },
-    { id: "q-opt-kp36-2", type: "true-false", difficulty: "medium", question: "Bayesian Optimization uses a surrogate model (typically a Gaussian process) to model the objective function and an acquisition function (e.g., Expected Improvement) to select the next evaluation point — making it sample-efficient for expensive black-box optimization.", correctAnswer: "True", explanation: "Bayesian Optimization builds a GP surrogate of f(x) from observed (x\\_i, f(x\\_i)) pairs. The acquisition function (EI, UCB, Thompson sampling) trades off exploration/exploitation to select the next x. Effective for hyperparameter tuning with expensive evaluations (training neural networks).", hints: ["EI: E[max(f(x)-f*, 0)] — expected improvement over current best f*.", "BO scales poorly to >20 dimensions — high-dimensional BO is an active research area."] },
-    { id: "q-opt-kp36-3", type: "multiple-choice", difficulty: "hard", question: "Evolution Strategies (ES) as used in OpenAI's 2017 paper for RL optimization estimate the gradient as \\nabla_\\theta E[f(\\theta+\\sigma\\epsilon)] \\approx (1/n\\sigma)\\cdot\\Sigma\\_i f(\\theta+\\sigma\\epsilon\\_i)\\cdot\\epsilon\\_i. The practical advantage over policy gradient (REINFORCE) is:", options: ["ES is unbiased while REINFORCE is biased", "ES is trivially parallelizable (each \\epsilon perturbation is independent), requires no backpropagation, and only communicates scalar rewards — making it efficient at massive scale with many workers", "ES always achieves better sample efficiency than REINFORCE", "ES doesn't require defining a policy network"], correctAnswer: 1, explanation: "With n=1000 workers each evaluating one perturbation, ES achieves wallclock speedup of 1000\\times while communicating only n scalars (rewards) + shared random seeds. No gradient backpropagation needed — making it compatible with any black-box simulator. Policy gradient requires backprop through the policy network.", hints: ["OpenAI's ES paper used 1440 CPU cores and achieved near-linear speedup.", "Communication cost: each worker sends 1 scalar (reward) and uses a shared random seed to reconstruct \\epsilon\\_i."] },
+    { id: "q-opt-kp36-1", type: "multiple-choice", difficulty: "hard", question: "Zeroth-order (derivative-free) optimization estimates gradients using only function evaluations. The two-point gradient estimator approximates \\nablaf(x) \\approx (d/2\\sigma)\\cdot[f(x+\\sigmau) - f(x-\\sigmau)]\\cdotu for random direction u. Its variance scales as:", options: ["O(d) independent of problem dimension", "O(d/\\sigma\\^2)\\cdotVar(f), meaning variance grows with dimension d and shrinks with smoothing radius \\sigma", "O(1/d) - variance decreases with dimension", "O(d\\^2) due to coordinate interactions"], correctAnswer: 1, explanation: "The two-point estimator's variance \\approx (d\\^2/\\sigma\\^2)\\cdot‖\\nablaf‖\\^2 - the d factor reflects the difficulty of gradient estimation in high dimensions. This is why zeroth-order methods require O(d/\\epsilon\\^2) function evaluations vs O(1/\\epsilon\\^2) for first-order methods - the 'dimension gap' of derivative-free optimization.", hints: ["Smoothed gradient estimator: \\nablaf_\\sigma(x) = E_u[(f(x+\\sigmau)-f(x))/\\sigma \\cdot u] for u~N(0,I).", "Evolution Strategies (ES) and CMA-ES use populations to estimate gradients - same core idea."] },
+    { id: "q-opt-kp36-2", type: "true-false", difficulty: "medium", question: "Bayesian Optimization uses a surrogate model (typically a Gaussian process) to model the objective function and an acquisition function (e.g., Expected Improvement) to select the next evaluation point - making it sample-efficient for expensive black-box optimization.", correctAnswer: "True", explanation: "Bayesian Optimization builds a GP surrogate of f(x) from observed (x\\_i, f(x\\_i)) pairs. The acquisition function (EI, UCB, Thompson sampling) trades off exploration/exploitation to select the next x. Effective for hyperparameter tuning with expensive evaluations (training neural networks).", hints: ["EI: E[max(f(x)-f*, 0)] - expected improvement over current best f*.", "BO scales poorly to >20 dimensions - high-dimensional BO is an active research area."] },
+    { id: "q-opt-kp36-3", type: "multiple-choice", difficulty: "hard", question: "Evolution Strategies (ES) as used in OpenAI's 2017 paper for RL optimization estimate the gradient as \\nabla_\\theta E[f(\\theta+\\sigma\\epsilon)] \\approx (1/n\\sigma)\\cdot\\Sigma\\_i f(\\theta+\\sigma\\epsilon\\_i)\\cdot\\epsilon\\_i. The practical advantage over policy gradient (REINFORCE) is:", options: ["ES is unbiased while REINFORCE is biased", "ES is trivially parallelizable (each \\epsilon perturbation is independent), requires no backpropagation, and only communicates scalar rewards - making it efficient at massive scale with many workers", "ES always achieves better sample efficiency than REINFORCE", "ES doesn't require defining a policy network"], correctAnswer: 1, explanation: "With n=1000 workers each evaluating one perturbation, ES achieves wallclock speedup of 1000\\times while communicating only n scalars (rewards) + shared random seeds. No gradient backpropagation needed - making it compatible with any black-box simulator. Policy gradient requires backprop through the policy network.", hints: ["OpenAI's ES paper used 1440 CPU cores and achieved near-linear speedup.", "Communication cost: each worker sends 1 scalar (reward) and uses a shared random seed to reconstruct \\epsilon\\_i."] },
   ],
   "convergence-theory-v2": [
     { id: "q-opt-kp37-1", type: "multiple-choice", difficulty: "hard", question: "For gradient descent on an L-smooth convex function with step size \\eta = 1/L, the convergence rate is:", options: ["Linear (geometric): f(x\\_t) - f* \\leq (1-\\mu/L)^t\\cdot(f(x\\_0)-f*)", "Sublinear: f(x\\_t) - f* \\leq L‖x\\_0-x*‖\\^2/(2t)", "O(1/t\\^2) via Nesterov acceleration", "Logarithmic: f(x\\_t) - f* \\leq log(t)\\cdotC"], correctAnswer: 1, explanation: "For L-smooth convex f (not strongly convex), GD with \\eta=1/L achieves f(x\\_t) - f* \\leq L‖x\\_0-x*‖\\^2/(2t) = O(1/t). This is the standard convergence result. Strong convexity (\\mu > 0) gives linear convergence O((1-\\mu/L)^t). Nesterov acceleration gives O(1/t\\^2) for the convex case.", hints: ["The condition number κ = L/\\mu determines the linear convergence rate for strongly convex f.", "Nesterov's O(1/t\\^2) rate is optimal for first-order methods on smooth convex functions."] },
-    { id: "q-opt-kp37-2", type: "true-false", difficulty: "medium", question: "The Polyak-Łojasiewicz (PL) inequality — ½‖\\nablaf(x)‖\\^2 \\geq \\mu(f(x)-f*) — is weaker than strong convexity but still guarantees linear convergence of gradient descent without requiring the function to be convex.", correctAnswer: "True", explanation: "PL condition holds for some non-convex functions (including overparameterized linear models and some neural networks). GD converges linearly under PL even without convexity — explaining empirical fast convergence observed for overparameterized neural networks in practice.", hints: ["Strong convexity implies PL with the same constant \\mu, but PL does not imply convexity.", "Neural network loss on linear models and random features satisfies PL in the overparameterized regime."] },
-    { id: "q-opt-kp37-3", type: "multiple-choice", difficulty: "hard", question: "For stochastic gradient descent with learning rate \\eta\\_t = O(1/t) (decaying), the convergence rate for convex objectives is:", options: ["O(log t / t)", "O(1/√t)", "O(1/t)", "O(1/t\\^2)"], correctAnswer: 0, explanation: "SGD with \\eta_t = c/t achieves O(log t / t) convergence (or O(1/t) with careful analysis) for strongly convex problems — faster than the O(1/√t) achievable with constant learning rate. The decaying rate is necessary for convergence since constant-lr SGD oscillates around the optimum with variance proportional to lr\\^2\\cdot\\sigma\\^2.", hints: ["With constant lr \\eta: SGD converges to within O(\\eta\\cdot\\sigma\\^2/\\mu) of f*, not to f* itself.", "The optimal SGD rate for strongly convex f is O(1/t) — achieved by Polyak-Ruppert averaging."] },
+    { id: "q-opt-kp37-2", type: "true-false", difficulty: "medium", question: "The Polyak-Łojasiewicz (PL) inequality - ½‖\\nablaf(x)‖\\^2 \\geq \\mu(f(x)-f*) - is weaker than strong convexity but still guarantees linear convergence of gradient descent without requiring the function to be convex.", correctAnswer: "True", explanation: "PL condition holds for some non-convex functions (including overparameterized linear models and some neural networks). GD converges linearly under PL even without convexity - explaining empirical fast convergence observed for overparameterized neural networks in practice.", hints: ["Strong convexity implies PL with the same constant \\mu, but PL does not imply convexity.", "Neural network loss on linear models and random features satisfies PL in the overparameterized regime."] },
+    { id: "q-opt-kp37-3", type: "multiple-choice", difficulty: "hard", question: "For stochastic gradient descent with learning rate \\eta\\_t = O(1/t) (decaying), the convergence rate for convex objectives is:", options: ["O(log t / t)", "O(1/√t)", "O(1/t)", "O(1/t\\^2)"], correctAnswer: 0, explanation: "SGD with \\eta_t = c/t achieves O(log t / t) convergence (or O(1/t) with careful analysis) for strongly convex problems - faster than the O(1/√t) achievable with constant learning rate. The decaying rate is necessary for convergence since constant-lr SGD oscillates around the optimum with variance proportional to lr\\^2\\cdot\\sigma\\^2.", hints: ["With constant lr \\eta: SGD converges to within O(\\eta\\cdot\\sigma\\^2/\\mu) of f*, not to f* itself.", "The optimal SGD rate for strongly convex f is O(1/t) - achieved by Polyak-Ruppert averaging."] },
   ],
   "optimizer-hyperparameters": [
-    { id: "q-opt-kp38-1", type: "multiple-choice", difficulty: "medium", question: "The Adam optimizer has three main hyperparameters: learning rate \\alpha, \\beta\\_1 (first moment decay), and \\beta\\_2 (second moment decay). Typical defaults are \\alpha=0.001, \\beta\\_1=0.9, \\beta\\_2=0.999. The bias correction terms (1-\\beta\\_1^t) and (1-\\beta\\_2^t) are needed because:", options: ["They prevent gradient explosion", "Without bias correction, the moment estimates are biased toward zero in early iterations (since m\\_0=v\\_0=0), causing too-small effective step sizes at the start of training", "They enforce the learning rate schedule", "They normalize the gradient to unit norm"], correctAnswer: 1, explanation: "Adam initializes m\\_0=v\\_0=0. Early in training, m̂\\_t = m\\_t/(1-\\beta\\_1^t) and v̂\\_t = v\\_t/(1-\\beta\\_2^t) correct for the fact that m\\_t and v\\_t start near zero and need many steps to warm up. Without correction, steps would be tiny at t=1 (effectively lr\\cdot(1-\\beta\\_1) instead of lr), slowing early training.", hints: ["At t=1: 1-\\beta\\_1^1 = 0.1 and 1-\\beta\\_2^1 = 0.001 — without correction, the second moment estimate is 1000\\times too small.", "After enough steps (t≫1/(1-\\beta)), the correction factors approach 1 and become irrelevant."] },
-    { id: "q-opt-kp38-2", type: "true-false", difficulty: "medium", question: "Warm-up learning rate schedules (linearly increasing lr from 0 to peak over the first few thousand steps) are particularly important for Adam-based training of transformers because cold starts with large lr cause instability in the Adam second moment estimate.", correctAnswer: "True", explanation: "At initialization, Adam's second moment estimate v is small (near zero), making the effective step size \\alpha/√v̂ large and unstable. Warm-up gives v time to stabilize before large steps are taken. This was identified as crucial for training BERT and GPT models — the 'Adam warm-up trick'.", hints: ["Without warm-up, large initial steps can push parameters into bad regions that are hard to recover from.", "Warm-up duration is typically 4-10% of total training steps for LLMs."] },
-    { id: "q-opt-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The optimal learning rate for SGD scales as \\eta \\propto batch_size / n (linear scaling rule, Goyal et al.). When batch size is increased 8\\times, the recommended adjustment is:", options: ["Decrease lr by 8\\times", "Increase lr by 8\\times while keeping other hyperparameters fixed", "Keep lr the same and increase momentum", "Increase lr by √8 (square-root scaling)"], correctAnswer: 1, explanation: "The linear scaling rule: each SGD step with B examples approximates B/n of the gradient, so increasing B by k\\times makes each step k\\times more informative — equivalent to scaling lr by k\\times. This allows training with large batch sizes without accuracy loss, with a warm-up phase when scaling is very large (e.g., 8192 batch).", hints: ["Facebook's ResNet-in-1-hour paper validated the linear scaling rule empirically for ImageNet.", "For very large batch sizes (>32K), the linear rule breaks down and square-root scaling works better."] },
+    { id: "q-opt-kp38-1", type: "multiple-choice", difficulty: "medium", question: "The Adam optimizer has three main hyperparameters: learning rate \\alpha, \\beta\\_1 (first moment decay), and \\beta\\_2 (second moment decay). Typical defaults are \\alpha=0.001, \\beta\\_1=0.9, \\beta\\_2=0.999. The bias correction terms (1-\\beta\\_1^t) and (1-\\beta\\_2^t) are needed because:", options: ["They prevent gradient explosion", "Without bias correction, the moment estimates are biased toward zero in early iterations (since m\\_0=v\\_0=0), causing too-small effective step sizes at the start of training", "They enforce the learning rate schedule", "They normalize the gradient to unit norm"], correctAnswer: 1, explanation: "Adam initializes m\\_0=v\\_0=0. Early in training, m̂\\_t = m\\_t/(1-\\beta\\_1^t) and v̂\\_t = v\\_t/(1-\\beta\\_2^t) correct for the fact that m\\_t and v\\_t start near zero and need many steps to warm up. Without correction, steps would be tiny at t=1 (effectively lr\\cdot(1-\\beta\\_1) instead of lr), slowing early training.", hints: ["At t=1: 1-\\beta\\_1^1 = 0.1 and 1-\\beta\\_2^1 = 0.001 - without correction, the second moment estimate is 1000\\times too small.", "After enough steps (t≫1/(1-\\beta)), the correction factors approach 1 and become irrelevant."] },
+    { id: "q-opt-kp38-2", type: "true-false", difficulty: "medium", question: "Warm-up learning rate schedules (linearly increasing lr from 0 to peak over the first few thousand steps) are particularly important for Adam-based training of transformers because cold starts with large lr cause instability in the Adam second moment estimate.", correctAnswer: "True", explanation: "At initialization, Adam's second moment estimate v is small (near zero), making the effective step size \\alpha/√v̂ large and unstable. Warm-up gives v time to stabilize before large steps are taken. This was identified as crucial for training BERT and GPT models - the 'Adam warm-up trick'.", hints: ["Without warm-up, large initial steps can push parameters into bad regions that are hard to recover from.", "Warm-up duration is typically 4-10% of total training steps for LLMs."] },
+    { id: "q-opt-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The optimal learning rate for SGD scales as \\eta \\propto batch_size / n (linear scaling rule, Goyal et al.). When batch size is increased 8\\times, the recommended adjustment is:", options: ["Decrease lr by 8\\times", "Increase lr by 8\\times while keeping other hyperparameters fixed", "Keep lr the same and increase momentum", "Increase lr by √8 (square-root scaling)"], correctAnswer: 1, explanation: "The linear scaling rule: each SGD step with B examples approximates B/n of the gradient, so increasing B by k\\times makes each step k\\times more informative - equivalent to scaling lr by k\\times. This allows training with large batch sizes without accuracy loss, with a warm-up phase when scaling is very large (e.g., 8192 batch).", hints: ["Facebook's ResNet-in-1-hour paper validated the linear scaling rule empirically for ImageNet.", "For very large batch sizes (>32K), the linear rule breaks down and square-root scaling works better."] },
   ],
   "landscape-theory": [
-    { id: "q-opt-kp39-1", type: "multiple-choice", difficulty: "hard", question: "In overparameterized neural networks, the loss landscape often has many global minima. The concept of 'implicit regularization' of SGD refers to:", options: ["SGD explicitly adds a regularization term to the loss", "SGD with small batch sizes and learning rate implicitly biases the solution toward flat minima or minimum-norm solutions, even without explicit regularization", "SGD regularizes by randomly dropping neurons", "SGD finds saddle points rather than minima"], correctAnswer: 1, explanation: "In overparameterized settings, there are many global minima. SGD (especially with small batches and label noise) implicitly prefers flat minima (low trace of Hessian) or minimum L2 norm solutions. This implicit bias — not weight decay — may explain deep learning generalization.", hints: ["Flat minima generalize better: small perturbation of weights causes small loss increase.", "Cohen et al. showed SGD bias toward low-curvature solutions; Wilson et al. argued for SGD over Adam for generalization."] },
-    { id: "q-opt-kp39-2", type: "true-false", difficulty: "medium", question: "Saddle points (where the gradient is zero but the Hessian has both positive and negative eigenvalues) are the primary obstacle to convergence in neural network training, more problematic than local minima.", correctAnswer: "True", explanation: "For high-dimensional non-convex objectives, local minima with values above the global minimum are exponentially rare (Dauphin et al.). Instead, saddle points proliferate — the Hessian has O(d) saddle directions. Gradient descent with noise (SGD) and momentum efficiently escapes saddle points, explaining deep learning's empirical success.", hints: ["A saddle point in d dimensions has at least one negative curvature direction — GD can escape via perturbation.", "Strict saddle functions (all saddle points are strict, i.e., have at least one strongly negative curvature direction) are efficiently optimized by noisy GD."] },
-    { id: "q-opt-kp39-3", type: "multiple-choice", difficulty: "hard", question: "The Edge of Stability (EoS) phenomenon observed in neural network training refers to:", options: ["Networks becoming numerically unstable and diverging", "Training with large learning rates causes the sharpness (max Hessian eigenvalue) to rise to 2/\\eta and then remain there, with the loss still decreasing despite classical instability predictions", "Gradient clipping preventing progress near convergence", "The loss plateauing at a saddle point before decreasing"], correctAnswer: 1, explanation: "Cohen et al. (2021) observed that with large fixed lr \\eta, the sharpness \\lambda_max(\\nabla\\^2L) rises to ~2/\\eta (the classical instability threshold) and then stabilizes — 'progressive sharpening then edge of stability.' Training continues with oscillating but decreasing loss. This violates classical smooth optimization theory and suggests a self-regulatory mechanism.", hints: ["Classical analysis: GD stable iff \\eta < 2/L where L = Lipschitz constant of gradient (max eigenvalue of Hessian).", "EoS suggests training operates at the edge of instability, using mild oscillations to navigate the landscape."] },
+    { id: "q-opt-kp39-1", type: "multiple-choice", difficulty: "hard", question: "In overparameterized neural networks, the loss landscape often has many global minima. The concept of 'implicit regularization' of SGD refers to:", options: ["SGD explicitly adds a regularization term to the loss", "SGD with small batch sizes and learning rate implicitly biases the solution toward flat minima or minimum-norm solutions, even without explicit regularization", "SGD regularizes by randomly dropping neurons", "SGD finds saddle points rather than minima"], correctAnswer: 1, explanation: "In overparameterized settings, there are many global minima. SGD (especially with small batches and label noise) implicitly prefers flat minima (low trace of Hessian) or minimum L2 norm solutions. This implicit bias - not weight decay - may explain deep learning generalization.", hints: ["Flat minima generalize better: small perturbation of weights causes small loss increase.", "Cohen et al. showed SGD bias toward low-curvature solutions; Wilson et al. argued for SGD over Adam for generalization."] },
+    { id: "q-opt-kp39-2", type: "true-false", difficulty: "medium", question: "Saddle points (where the gradient is zero but the Hessian has both positive and negative eigenvalues) are the primary obstacle to convergence in neural network training, more problematic than local minima.", correctAnswer: "True", explanation: "For high-dimensional non-convex objectives, local minima with values above the global minimum are exponentially rare (Dauphin et al.). Instead, saddle points proliferate - the Hessian has O(d) saddle directions. Gradient descent with noise (SGD) and momentum efficiently escapes saddle points, explaining deep learning's empirical success.", hints: ["A saddle point in d dimensions has at least one negative curvature direction - GD can escape via perturbation.", "Strict saddle functions (all saddle points are strict, i.e., have at least one strongly negative curvature direction) are efficiently optimized by noisy GD."] },
+    { id: "q-opt-kp39-3", type: "multiple-choice", difficulty: "hard", question: "The Edge of Stability (EoS) phenomenon observed in neural network training refers to:", options: ["Networks becoming numerically unstable and diverging", "Training with large learning rates causes the sharpness (max Hessian eigenvalue) to rise to 2/\\eta and then remain there, with the loss still decreasing despite classical instability predictions", "Gradient clipping preventing progress near convergence", "The loss plateauing at a saddle point before decreasing"], correctAnswer: 1, explanation: "Cohen et al. (2021) observed that with large fixed lr \\eta, the sharpness \\lambda_max(\\nabla\\^2L) rises to ~2/\\eta (the classical instability threshold) and then stabilizes - 'progressive sharpening then edge of stability.' Training continues with oscillating but decreasing loss. This violates classical smooth optimization theory and suggests a self-regulatory mechanism.", hints: ["Classical analysis: GD stable iff \\eta < 2/L where L = Lipschitz constant of gradient (max eigenvalue of Hessian).", "EoS suggests training operates at the edge of instability, using mild oscillations to navigate the landscape."] },
   ],
   "landscape-theory-ii": [
-    { id: "q-opt-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Loss of Plasticity in continual learning refers to neural networks gradually losing the ability to learn new tasks as training progresses. One mechanism is:", options: ["Gradients becoming too large for new tasks", "Dead neurons and saturated activations accumulate over time, reducing the effective capacity of the network — addressed by periodic reinitialization or L2 regularization toward zero (regenerative regularization)", "The loss landscape becoming convex over time", "Learning rate schedules that decay to zero"], correctAnswer: 1, explanation: "As training proceeds, a fraction of ReLU neurons die (permanently output zero) or saturate, reducing the effective parameter count available for new learning. Kumar et al. showed periodic reinitialization of dead neurons (with careful weight regeneration) restores plasticity. Continual learning research increasingly focuses on this optimization-side failure.", hints: ["Dead ReLU neurons: the pre-activation is always negative, gradient never flows, weight never updates.", "L2 regularization toward 0 (not toward initial weights) acts like a weak reinitialization, restoring plasticity."] },
-    { id: "q-opt-kp40-2", type: "true-false", difficulty: "medium", question: "Gradient clipping by global norm (clip_by_global_norm) scales ALL gradients simultaneously so the global L2 norm equals the clip threshold, preserving the relative direction of the gradient vector across all parameters.", correctAnswer: "True", explanation: "Global norm clipping: if ‖g‖\\_2 > c, set g \\leftarrow g\\cdotc/‖g‖\\_2. All parameters are scaled by the same factor, so relative gradient directions are preserved. This differs from per-parameter clipping (which independently clips each weight's gradient, distorting the gradient direction).", hints: ["PyTorch: torch.nn.utils.clip_grad_norm_(parameters, max_norm) implements global norm clipping.", "Per-layer clipping clips each layer's gradient independently — used less commonly in LLM training."] },
-    { id: "q-opt-kp40-3", type: "multiple-choice", difficulty: "hard", question: "Muon optimizer (momentum + orthogonalization via Nesterov + Newton-Schulz) orthogonalizes the gradient update using the Newton-Schulz iteration. Its motivation from optimization theory is:", options: ["Orthogonal updates have zero gradient, preventing learning", "Orthogonalizing the weight gradient update is equivalent to steepest descent under the spectral norm (operator norm) metric rather than the Euclidean metric — giving updates that efficiently use the matrix's degrees of freedom", "Orthogonalization reduces memory usage by 50%", "Muon only applies to attention weight matrices"], correctAnswer: 1, explanation: "Muon whitens/orthogonalizes gradient matrices via Newton-Schulz: G_orth \\approx G(G\\^TG)^{-1/2}. This is steepest descent under the Frobenius inner product on the Stiefel manifold — theoretically justified as the natural gradient for matrix-valued parameters. It improves training stability for linear layers in transformers.", hints: ["Newton-Schulz iteration: X \\leftarrow 1.5X - 0.5XX\\^TX converges to the matrix sign/polar factor.", "Muon combines Nesterov momentum with gradient orthogonalization — practical and theoretically grounded."] },
+    { id: "q-opt-kp40-1", type: "multiple-choice", difficulty: "medium", question: "Loss of Plasticity in continual learning refers to neural networks gradually losing the ability to learn new tasks as training progresses. One mechanism is:", options: ["Gradients becoming too large for new tasks", "Dead neurons and saturated activations accumulate over time, reducing the effective capacity of the network - addressed by periodic reinitialization or L2 regularization toward zero (regenerative regularization)", "The loss landscape becoming convex over time", "Learning rate schedules that decay to zero"], correctAnswer: 1, explanation: "As training proceeds, a fraction of ReLU neurons die (permanently output zero) or saturate, reducing the effective parameter count available for new learning. Kumar et al. showed periodic reinitialization of dead neurons (with careful weight regeneration) restores plasticity. Continual learning research increasingly focuses on this optimization-side failure.", hints: ["Dead ReLU neurons: the pre-activation is always negative, gradient never flows, weight never updates.", "L2 regularization toward 0 (not toward initial weights) acts like a weak reinitialization, restoring plasticity."] },
+    { id: "q-opt-kp40-2", type: "true-false", difficulty: "medium", question: "Gradient clipping by global norm (clip_by_global_norm) scales ALL gradients simultaneously so the global L2 norm equals the clip threshold, preserving the relative direction of the gradient vector across all parameters.", correctAnswer: "True", explanation: "Global norm clipping: if ‖g‖\\_2 > c, set g \\leftarrow g\\cdotc/‖g‖\\_2. All parameters are scaled by the same factor, so relative gradient directions are preserved. This differs from per-parameter clipping (which independently clips each weight's gradient, distorting the gradient direction).", hints: ["PyTorch: torch.nn.utils.clip_grad_norm_(parameters, max_norm) implements global norm clipping.", "Per-layer clipping clips each layer's gradient independently - used less commonly in LLM training."] },
+    { id: "q-opt-kp40-3", type: "multiple-choice", difficulty: "hard", question: "Muon optimizer (momentum + orthogonalization via Nesterov + Newton-Schulz) orthogonalizes the gradient update using the Newton-Schulz iteration. Its motivation from optimization theory is:", options: ["Orthogonal updates have zero gradient, preventing learning", "Orthogonalizing the weight gradient update is equivalent to steepest descent under the spectral norm (operator norm) metric rather than the Euclidean metric - giving updates that efficiently use the matrix's degrees of freedom", "Orthogonalization reduces memory usage by 50%", "Muon only applies to attention weight matrices"], correctAnswer: 1, explanation: "Muon whitens/orthogonalizes gradient matrices via Newton-Schulz: G_orth \\approx G(G\\^TG)^{-1/2}. This is steepest descent under the Frobenius inner product on the Stiefel manifold - theoretically justified as the natural gradient for matrix-valued parameters. It improves training stability for linear layers in transformers.", hints: ["Newton-Schulz iteration: X \\leftarrow 1.5X - 0.5XX\\^TX converges to the matrix sign/polar factor.", "Muon combines Nesterov momentum with gradient orthogonalization - practical and theoretically grounded."] },
   ],
 };
 

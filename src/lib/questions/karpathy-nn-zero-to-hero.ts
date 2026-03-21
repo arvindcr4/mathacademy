@@ -161,7 +161,7 @@ registerQuestions({
         "Autograd engines dynamically build a Directed Acyclic Graph (DAG) during the forward pass, linking scalar values or tensors with the operations that produced them, enabling reverse-mode differentiation.",
       hints: [
         "Nodes store the value and its children; edges encode which operation created it.",
-        "DAG means no cycles — gradients can flow backwards without looping.",
+        "DAG means no cycles - gradients can flow backwards without looping.",
       ],
     },
     {
@@ -242,7 +242,7 @@ registerQuestions({
       correctAnswer:
         "Leaf nodes have no parent inputs (they are model parameters or inputs), while intermediate nodes are results of operations on other nodes.",
       explanation:
-        "Leaf nodes are the 'inputs' to the graph — model weights, biases, or input data. They have no `_children`. Gradients accumulate at leaves, and these are what the optimizer updates. Intermediate nodes are ephemeral computation results.",
+        "Leaf nodes are the 'inputs' to the graph - model weights, biases, or input data. They have no `_children`. Gradients accumulate at leaves, and these are what the optimizer updates. Intermediate nodes are ephemeral computation results.",
       hints: [
         "In PyTorch, leaf tensors are those created directly by the user (not as the result of an operation).",
         "Only leaf tensors retain their gradients by default after .backward().",
@@ -351,7 +351,7 @@ registerQuestions({
       explanation:
         "If the graph had a cycle, topological sort would not terminate (or would fail), and gradients would loop back and accumulate indefinitely. Acyclicity guarantees a well-defined order and finite gradient computation.",
       hints: [
-        "Try running DFS on a graph with a cycle — what happens?",
+        "Try running DFS on a graph with a cycle - what happens?",
         "Feedforward networks are acyclic by design; RNNs are unrolled to be acyclic.",
       ],
     },
@@ -477,7 +477,7 @@ registerQuestions({
       explanation:
         "Karpathy initialises each weight as `Value(random.uniform(-1, 1))` in the Neuron constructor. Random initialization breaks symmetry so neurons learn different features, while zero initialization would make all neurons identical.",
       hints: [
-        "Zero initialization is a common mistake — all neurons would have identical gradients and learn nothing different.",
+        "Zero initialization is a common mistake - all neurons would have identical gradients and learn nothing different.",
         "Symmetry breaking requires at least random initialization.",
       ],
     },
@@ -582,7 +582,7 @@ registerQuestions({
       explanation:
         "Micrograd operates on individual scalar values to build intuition for autograd. Every number in the computation is a Value object. Real frameworks like PyTorch operate on tensors for efficiency, but the conceptual machinery is identical.",
       hints: [
-        "Micrograd is pedagogical — it trades efficiency for clarity.",
+        "Micrograd is pedagogical - it trades efficiency for clarity.",
         "PyTorch's autograd works the same way but on entire tensors at once.",
       ],
     },
@@ -624,7 +624,7 @@ registerQuestions({
       correctAnswer:
         "Because we want to move in the direction that decreases the loss, which is opposite to the gradient direction.",
       explanation:
-        "The gradient points in the direction of steepest ascent (increase) of the loss. To minimize the loss, we move in the opposite direction — hence we subtract the gradient times the learning rate from the parameters.",
+        "The gradient points in the direction of steepest ascent (increase) of the loss. To minimize the loss, we move in the opposite direction - hence we subtract the gradient times the learning rate from the parameters.",
       hints: [
         "Gradient ascent adds the gradient; gradient descent subtracts it.",
         "We are minimizing the loss function, so we go opposite to the gradient.",
@@ -647,7 +647,7 @@ registerQuestions({
       explanation:
         "Full-batch GD computes the exact gradient but is very slow per update. SGD and minibatch SGD compute noisy but cheap gradient estimates, enabling many more update steps in the same time, which typically leads to faster practical convergence.",
       hints: [
-        "The 'S' in SGD stands for Stochastic — gradient is estimated from random subsets.",
+        "The 'S' in SGD stands for Stochastic - gradient is estimated from random subsets.",
         "More frequent but noisier updates often beat infrequent exact updates.",
       ],
     },
@@ -686,7 +686,7 @@ registerQuestions({
       correctAnswer:
         "Because MSE gives interpretable units (e.g., average squared error), making it easier to sanity-check whether gradients are flowing correctly.",
       explanation:
-        "When debugging, MSE is easy to reason about — a loss near zero means predictions are close to targets. Cross-entropy with softmax is more numerically complex. Starting simple helps isolate whether the backprop implementation is correct before adding complexity.",
+        "When debugging, MSE is easy to reason about - a loss near zero means predictions are close to targets. Cross-entropy with softmax is more numerically complex. Starting simple helps isolate whether the backprop implementation is correct before adding complexity.",
       hints: [
         "Karpathy emphasizes building intuition by starting simple.",
         "If MSE does not decrease, there is likely a bug in the forward or backward pass.",
@@ -772,7 +772,7 @@ registerQuestions({
       explanation:
         "Karpathy uses the period '.' (or sometimes a special token like '.') as both the start and end-of-sequence marker. The model learns to start generating after '.' and stop when it predicts '.' again.",
       hints: [
-        "This simplifies the model — one token serves dual duty as start and stop.",
+        "This simplifies the model - one token serves dual duty as start and stop.",
         "In the bigram matrix, the '.' row gives the probability of each character being the first character.",
       ],
     },
@@ -1046,7 +1046,7 @@ registerQuestions({
       explanation:
         "Multiplying many probabilities (values between 0 and 1) leads to numerical underflow. Taking the log transforms the product into a sum, and taking the negative turns the maximization problem into a standard loss minimization problem.",
       hints: [
-        "log(a * b) = log(a) + log(b) — products become sums under log.",
+        "log(a * b) = log(a) + log(b) - products become sums under log.",
         "Since log is monotonically increasing, maximizing log(prob) is equivalent to maximizing prob.",
       ],
     },
@@ -1079,7 +1079,7 @@ registerQuestions({
       ],
       correctAnswer: "NLL approaches infinity.",
       explanation:
-        "-log(x) as x approaches 0 goes to +infinity. This is why assigning zero probability to a correct token is catastrophic — the loss becomes infinite. This motivates smoothing and numerical safeguards.",
+        "-log(x) as x approaches 0 goes to +infinity. This is why assigning zero probability to a correct token is catastrophic - the loss becomes infinite. This motivates smoothing and numerical safeguards.",
       hints: [
         "Plot -log(x) for x in (0, 1] to see the behavior.",
         "This is the mathematical reason why we must avoid zero probabilities.",
@@ -1122,7 +1122,7 @@ registerQuestions({
       explanation:
         "H(p, q) = H(p) + KL(p || q). When p is a one-hot distribution, H(p) = 0 (no uncertainty), so H(p, q) = KL(p || q). Minimizing cross-entropy is equivalent to minimizing the KL divergence between the true and predicted distributions.",
       hints: [
-        "One-hot distributions have zero entropy — they are completely certain.",
+        "One-hot distributions have zero entropy - they are completely certain.",
         "This connection shows cross-entropy loss has a clean information-theoretic interpretation.",
       ],
     },
@@ -1154,7 +1154,7 @@ registerQuestions({
       question:
         "What does it mean for a language model to have a perplexity of 27 on a test set with a 27-character vocabulary?",
       options: [
-        "The model assigns probability 1 to every correct character — perfect performance.",
+        "The model assigns probability 1 to every correct character - perfect performance.",
         "The model is performing at chance level, equivalent to randomly guessing from all 27 characters equally.",
         "The model is overfit and predicts only the 27 most common characters.",
         "Perplexity of 27 means the model has 27% accuracy.",
@@ -1206,7 +1206,7 @@ registerQuestions({
       correctAnswer:
         "Makes the distribution more uniform (flatter), approaching equal probability for all next characters.",
       explanation:
-        "Adding a very large constant to all counts dominates the actual observed counts, making all cells roughly equal. After normalization, this approaches 1/27 for every character — a uniform distribution. The model 'forgets' the training data and becomes maximally uncertain.",
+        "Adding a very large constant to all counts dominates the actual observed counts, making all cells roughly equal. After normalization, this approaches 1/27 for every character - a uniform distribution. The model 'forgets' the training data and becomes maximally uncertain.",
       hints: [
         "Think of the limit: as smoothing -> infinity, observed counts become negligible.",
         "This is the bias-variance tradeoff: more smoothing = lower variance but higher bias.",
@@ -1229,7 +1229,7 @@ registerQuestions({
       explanation:
         "Smoothing reduces the probability assigned to common, frequently-seen bigrams (by boosting unseen ones), so the training NLL slightly worsens. But on the test set, the risk of encountering a zero-probability bigram is eliminated, preventing catastrophic infinite loss.",
       hints: [
-        "Smoothing is a regularization technique — it trades training fit for better generalization.",
+        "Smoothing is a regularization technique - it trades training fit for better generalization.",
         "Regularization almost always slightly hurts training loss while helping test loss.",
       ],
     },
@@ -1240,7 +1240,7 @@ registerQuestions({
       question:
         "How does L2 regularization on the neural network weights relate conceptually to Laplace smoothing on bigram counts?",
       options: [
-        "They are completely different — one applies to NNs and the other to counts only.",
+        "They are completely different - one applies to NNs and the other to counts only.",
         "Both pull the model toward a uniform/default distribution, penalizing extreme or overconfident predictions.",
         "L2 regularization is strictly stronger than Laplace smoothing.",
         "Laplace smoothing is only for count models; L2 regularization is only for continuous weights.",
@@ -1290,7 +1290,7 @@ registerQuestions({
       correctAnswer:
         "Penalizing large weight values to encourage weights to stay small and the model to stay close to uniform predictions.",
       explanation:
-        "The term `(W**2).mean()` is the mean squared magnitude of the weights. By including it in the total loss with a small coefficient, gradient descent is penalized for making weights large, which corresponds to making overconfident predictions — the neural analog of Laplace smoothing.",
+        "The term `(W**2).mean()` is the mean squared magnitude of the weights. By including it in the total loss with a small coefficient, gradient descent is penalized for making weights large, which corresponds to making overconfident predictions - the neural analog of Laplace smoothing.",
       hints: [
         "L2 regularization is also known as weight decay.",
         "Large logits -> overconfident softmax outputs; small logits -> uniform outputs.",
@@ -1333,7 +1333,7 @@ registerQuestions({
       ],
       correctAnswer: "As a one-hot encoded vector.",
       explanation:
-        "Categorical data like character IDs are generally represented as one-hot vectors—arrays of all zeros with a single '1' at the index corresponding to the category—so they can be multiplied by a weight matrix.",
+        "Categorical data like character IDs are generally represented as one-hot vectors-arrays of all zeros with a single '1' at the index corresponding to the category-so they can be multiplied by a weight matrix.",
       hints: [
         "One-hot: all zeros except a single 1 at the position corresponding to the category.",
         "In PyTorch: F.one_hot(tensor, num_classes=27).float()",
@@ -1382,12 +1382,12 @@ registerQuestions({
         "Why do we call it an 'embedding lookup' rather than 'one-hot matrix multiplication' in modern neural networks?",
       options: [
         "Because embedding lookup has a different mathematical result.",
-        "Because embedding lookup is computationally more efficient — it directly indexes a row rather than performing a full (mostly zero) matrix multiplication.",
+        "Because embedding lookup is computationally more efficient - it directly indexes a row rather than performing a full (mostly zero) matrix multiplication.",
         "Because one-hot encoding is patent-protected by early deep learning companies.",
         "Because embedding lookup does not require backpropagation.",
       ],
       correctAnswer:
-        "Because embedding lookup is computationally more efficient — it directly indexes a row rather than performing a full (mostly zero) matrix multiplication.",
+        "Because embedding lookup is computationally more efficient - it directly indexes a row rather than performing a full (mostly zero) matrix multiplication.",
       explanation:
         "Mathematically identical, but indexing into a matrix (e.g., `W[i]`) is O(embedding_dim) while doing the full matrix multiplication with a one-hot vector is O(vocab_size * embedding_dim). For large vocabularies, the speedup is enormous.",
       hints: [
@@ -1425,11 +1425,11 @@ registerQuestions({
       options: [
         "The ASCII code value of each character.",
         "The frequency of each character in the training data.",
-        "Learned similarity structure — characters that appear in similar contexts cluster together.",
+        "Learned similarity structure - characters that appear in similar contexts cluster together.",
         "The order of characters in the alphabet.",
       ],
       correctAnswer:
-        "Learned similarity structure — characters that appear in similar contexts cluster together.",
+        "Learned similarity structure - characters that appear in similar contexts cluster together.",
       explanation:
         "After training, plotting the 2D embeddings shows that vowels tend to cluster together (as do certain consonant groups) because they appear in similar contexts (e.g., 'a' and 'e' can both follow 'b'). The network learns distributional similarity without being told about phonetics.",
       hints: [
@@ -1454,7 +1454,7 @@ registerQuestions({
       explanation:
         "For a vocabulary of 50,000 tokens (like GPT-2), each one-hot vector would be 50,000 floats. A dataset of 1M tokens would require 200GB of memory just for the inputs. Embedding lookup stores only the embedding table (50000 x embed_dim) and accesses it by index, using a tiny fraction of the memory.",
       hints: [
-        "Large language models use vocabularies of 50K+ tokens — one-hot encoding is infeasible.",
+        "Large language models use vocabularies of 50K+ tokens - one-hot encoding is infeasible.",
         "nn.Embedding is the standard solution: it stores a lookup table and indexes into it.",
       ],
     },
@@ -1615,7 +1615,7 @@ registerQuestions({
       explanation:
         "For ReLU, negative inputs give 0 output and 0 gradient. For Tanh, inputs far from 0 saturate at 1 or -1, where the gradient is completely flat (0). In both cases, if a neuron always hits these flat regions, it receives no gradients to update its weights.",
       hints: [
-        "Plot the gradient of tanh — it is highest near 0 and approaches 0 for large |x|.",
+        "Plot the gradient of tanh - it is highest near 0 and approaches 0 for large |x|.",
         "Karpathy visualizes the fraction of dead neurons using histograms of pre-activations.",
       ],
     },
@@ -1681,7 +1681,7 @@ registerQuestions({
       correctAnswer:
         "To intercept and inspect intermediate activations and gradients as they flow through the network without changing the model code.",
       explanation:
-        "Hooks are callback functions you can attach to `nn.Module` objects. They allow you to observe, log, or even modify the tensors passing through the forward or backward passes—excellent for diagnosing vanishing gradients or dead neurons.",
+        "Hooks are callback functions you can attach to `nn.Module` objects. They allow you to observe, log, or even modify the tensors passing through the forward or backward passes-excellent for diagnosing vanishing gradients or dead neurons.",
       hints: [
         "register_forward_hook captures the output of a layer during forward pass.",
         "register_backward_hook captures gradients flowing back through a layer.",
@@ -1796,7 +1796,7 @@ registerQuestions({
       explanation:
         "By adding the input of a layer to its output (`x + layer(x)`), the gradient can pass directly through the addition operation during backpropagation. This ensures early layers receive strong gradient signals.",
       hints: [
-        "The gradient of x + f(x) with respect to x is 1 + df/dx — at minimum 1.",
+        "The gradient of x + f(x) with respect to x is 1 + df/dx - at minimum 1.",
         "Residual connections were introduced by He et al. in ResNet and adopted in Transformers.",
       ],
     },
@@ -1841,7 +1841,7 @@ registerQuestions({
       explanation:
         "If a GPU can only hold a batch of 4, you can run 8 forward/backward passes, summing the gradients each time, and then step the optimizer. Mathematically, this simulates a batch size of 32 (8 * 4).",
       hints: [
-        "Do NOT call optimizer.zero_grad() between micro-steps — only after the full accumulation.",
+        "Do NOT call optimizer.zero_grad() between micro-steps - only after the full accumulation.",
         "Divide the loss by the number of accumulation steps to keep the gradient scale correct.",
       ],
     },
@@ -2151,7 +2151,7 @@ registerQuestions({
       explanation:
         "With batch size 1, the batch mean equals the single sample value and variance is 0, making normalization undefined or degenerate. Even batch sizes of 2-4 produce highly noisy statistics. This is why Group Normalization or Layer Normalization are preferred when small batch sizes are necessary.",
       hints: [
-        "Variance of a single sample is 0 — you cannot normalize with that.",
+        "Variance of a single sample is 0 - you cannot normalize with that.",
         "LayerNorm and GroupNorm are batch-size-independent alternatives.",
       ],
     },
@@ -2165,12 +2165,12 @@ registerQuestions({
         "In the 'backprop ninja' lecture, Karpathy manually derives the gradient of cross-entropy loss combined with softmax. What is the elegant form of dL/d(logits) when the correct class is index y?",
       options: [
         "softmax(logits) everywhere.",
-        "softmax(logits) - 1 at index y; softmax(logits) everywhere else — equivalent to softmax(logits) minus the one-hot target.",
+        "softmax(logits) - 1 at index y; softmax(logits) everywhere else - equivalent to softmax(logits) minus the one-hot target.",
         "-log(softmax(logits)[y]).",
         "1/softmax(logits)[y] at index y; 0 everywhere else.",
       ],
       correctAnswer:
-        "softmax(logits) - 1 at index y; softmax(logits) everywhere else — equivalent to softmax(logits) minus the one-hot target.",
+        "softmax(logits) - 1 at index y; softmax(logits) everywhere else - equivalent to softmax(logits) minus the one-hot target.",
       explanation:
         "For cross-entropy loss L = -log(softmax(logits)[y]), the gradient with respect to logits[i] is softmax(logits)[i] for i != y, and softmax(logits)[y] - 1 for i = y. Compactly: dL/d(logits) = softmax(logits) - one_hot(y). This is one of the most important gradient formulas in deep learning.",
       hints: [
@@ -2252,7 +2252,7 @@ registerQuestions({
       correctAnswer:
         "To allow different heads to attend to different positions or relationship types simultaneously, enriching the representation compared to a single attention operation.",
       explanation:
-        "Each attention head computes attention over a lower-dimensional subspace (d_model / n_heads). Different heads can learn to attend to different linguistic relationships — syntax, semantics, coreference, etc. The outputs of all heads are concatenated and projected back to d_model.",
+        "Each attention head computes attention over a lower-dimensional subspace (d_model / n_heads). Different heads can learn to attend to different linguistic relationships - syntax, semantics, coreference, etc. The outputs of all heads are concatenated and projected back to d_model.",
       hints: [
         "Each head operates on a slice of the full embedding dimension.",
         "After computing, all heads are concatenated and projected: output = concat(head_1,...,head_h) @ W_O.",
@@ -2342,12 +2342,12 @@ registerQuestions({
         "In Karpathy's Micrograd, what is a 'leaf node' in the computational graph?",
       options: [
         "The final output node that holds the loss value.",
-        "A node with no children — a variable created directly (e.g., a weight or input), not as the result of an operation on other Values.",
+        "A node with no children - a variable created directly (e.g., a weight or input), not as the result of an operation on other Values.",
         "A node that has been visited during topological sort.",
         "Any node whose gradient is currently zero.",
       ],
       correctAnswer:
-        "A node with no children — a variable created directly (e.g., a weight or input), not as the result of an operation on other Values.",
+        "A node with no children - a variable created directly (e.g., a weight or input), not as the result of an operation on other Values.",
       explanation:
         "Leaf nodes are the inputs and parameters of the computational graph. They have no `_prev` predecessors because they were not produced by any operation. In PyTorch, `requires_grad=True` leaf tensors accumulate gradients; in Micrograd, leaf `Value` objects are those whose `_children` set is empty.",
       hints: [
@@ -2363,12 +2363,12 @@ registerQuestions({
         "In Micrograd's `backward()` method, why is topological sort used before executing the backward pass?",
       options: [
         "To sort nodes alphabetically for debugging purposes.",
-        "To ensure gradients are propagated from the output (loss) back to the inputs in the correct order — each node's backward is called only after all downstream nodes have propagated their gradients to it.",
+        "To ensure gradients are propagated from the output (loss) back to the inputs in the correct order - each node's backward is called only after all downstream nodes have propagated their gradients to it.",
         "To find the shortest path through the graph.",
         "To remove duplicate nodes that share the same value.",
       ],
       correctAnswer:
-        "To ensure gradients are propagated from the output (loss) back to the inputs in the correct order — each node's backward is called only after all downstream nodes have propagated their gradients to it.",
+        "To ensure gradients are propagated from the output (loss) back to the inputs in the correct order - each node's backward is called only after all downstream nodes have propagated their gradients to it.",
       explanation:
         "Topological sort orders nodes so that every node appears after all nodes that depend on it. Reversing this order gives the correct backward traversal: the loss node first, then its inputs, and so on. Without this ordering, a node might compute its gradient before the upstream gradient has been propagated to it.",
       hints: [
@@ -2506,7 +2506,7 @@ registerQuestions({
         "Early stopping monitors validation loss during training and stops when it has not improved for a set number of steps (patience). The model checkpoint from the best validation loss is retained. This is a simple and effective regularization technique that requires no modification to the model architecture.",
       hints: [
         "Early stopping: save the model at the validation loss minimum, stop when it plateaus.",
-        "It is 'free' regularization — no hyperparameters needed beyond patience.",
+        "It is 'free' regularization - no hyperparameters needed beyond patience.",
       ],
     },
   ],

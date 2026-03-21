@@ -78,7 +78,7 @@ const questions: Record<string, Question[]> = {
         "When D(G(z)) \\approx 0 (generator is weak), log(1−D(G(z))) saturates near log(1) \\approx 0 giving a near-zero gradient. −log D(G(z)) is large in the same regime, providing a strong gradient signal. The practical generator objective is therefore to minimise −log D(G(z)).",
       hints: [
         "Plot log(1−x) and −log(x) for x near 0 to see which has larger magnitude.",
-        "Early in training D(G(z)) is very small — the saturating form gives almost no gradient to train the generator.",
+        "Early in training D(G(z)) is very small - the saturating form gives almost no gradient to train the generator.",
       ],
     },
     {
@@ -98,7 +98,7 @@ const questions: Record<string, Question[]> = {
         "Mode collapse occurs when the generator finds a single output (or small set of outputs) that reliably fools the discriminator, ignoring the diversity of the true data distribution. The generator essentially maps many noise inputs to the same output.",
       hints: [
         'Think about what happens when the generator finds one "safe" output that always deceives the discriminator.',
-        '"Mode" refers to a peak in the probability distribution — collapse means only one or a few modes are covered.',
+        '"Mode" refers to a peak in the probability distribution - collapse means only one or a few modes are covered.',
       ],
     },
     {
@@ -110,9 +110,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Arjovsky & Bottou (2017) showed that when p_r and p_g are supported on disjoint manifolds (which is almost certain in high dimensions when p_g is parameterised by a low-dimensional noise), JS(p_r||p_g) = log 2 — a constant — producing zero gradient for the generator regardless of how far apart the distributions are.",
+        "Arjovsky & Bottou (2017) showed that when p_r and p_g are supported on disjoint manifolds (which is almost certain in high dimensions when p_g is parameterised by a low-dimensional noise), JS(p_r||p_g) = log 2 - a constant - producing zero gradient for the generator regardless of how far apart the distributions are.",
       hints: [
-        "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
+        "The penalty targets the gradient norm at interpolated points - not at real or fake points alone.",
         "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
@@ -196,7 +196,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "The discriminator in a cGAN must verify both realism and label consistency — a real image paired with the wrong label should also be classified as fake.",
+        "The discriminator in a cGAN must verify both realism and label consistency - a real image paired with the wrong label should also be classified as fake.",
       hints: [
         "If the discriminator ignored the label, could the generator simply output any real-looking image regardless of the condition?",
         "Conditioning the discriminator ensures the generator actually respects the label y.",
@@ -241,7 +241,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "By the Kantorovich-Rubinstein duality, W(p_r,p_g) = sup over all 1-Lipschitz functions f of E_{p_r}[f(x)] − E_{p_g}[f(x)]. WGAN trains a critic f_w to approximate this supremum, making the loss directly the Wasserstein distance.",
       hints: [
-        "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
+        "The penalty targets the gradient norm at interpolated points - not at real or fake points alone.",
         "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
@@ -261,7 +261,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Arjovsky et al. (2017) explicitly stated in the WGAN paper that "Weight clipping is a clearly terrible way to enforce a Lipschitz constraint." It can lead to either vanishing or exploding gradients depending on the clipping threshold, motivating WGAN-GP\'s gradient penalty improvement.',
       hints: [
-        "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
+        "The penalty targets the gradient norm at interpolated points - not at real or fake points alone.",
         "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
@@ -281,7 +281,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "WGAN-GP samples interpolated points x̂ = \\epsilon\\cdotx_real + (1−\\epsilon)\\cdotx_fake with \\epsilon~U[0,1] and adds \\lambda\\cdotE[(||\\nablaD(x̂)||\\_2 − 1)\\^2] to the critic loss, directly penalising deviation of gradient norms from 1 along the optimal transport path.",
       hints: [
-        "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
+        "The penalty targets the gradient norm at interpolated points - not at real or fake points alone.",
         "The factor (||\\nablaD||\\_2 − 1)\\^2 pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
@@ -304,7 +304,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ProGAN starts both networks at 4\\times4 resolution and smoothly fades in new layers that double the resolution, allowing stable training at resolutions up to 1024\\times1024.",
       hints: [
-        'The method is called "progressive" — think about growing the network incrementally.',
+        'The method is called "progressive" - think about growing the network incrementally.',
         "Training at low resolution first lets the model learn coarse structure before tackling fine details.",
       ],
     },
@@ -650,7 +650,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FID fits multivariate Gaussians to Inception-v3 features of real and generated sets, then computes the Fréchet (2-Wasserstein) distance between them — lower FID indicates higher quality and diversity.",
+        "FID fits multivariate Gaussians to Inception-v3 features of real and generated sets, then computes the Fréchet (2-Wasserstein) distance between them - lower FID indicates higher quality and diversity.",
       hints: [
         "FID uses a pre-trained classifier\'s feature space, not raw pixels.",
         "The metric captures both quality (close mean) and diversity (similar covariance).",
@@ -667,7 +667,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "If generated images are identical to real training images, the Inception feature distributions match perfectly, giving FID = 0; FID alone cannot detect overfitting or memorization.",
       hints: [
-        "FID measures distributional similarity — it does not check whether generated images are novel.",
+        "FID measures distributional similarity - it does not check whether generated images are novel.",
         "This is one reason why precision-recall metrics are used alongside FID.",
       ],
     },
@@ -711,7 +711,7 @@ const questions: Record<string, Question[]> = {
         'When D(G(z)) \\approx 0 (generator is easily detected), log(1−D(G(z))) saturates near log(1) \\approx 0 giving vanishing gradients; −log D(G(z)) is large there, providing stronger signal. This is the "non-saturating" generator heuristic from Goodfellow et al. 2014.',
       hints: [
         "Plot log(1−x) and −log(x) for x near 0 to see which has larger magnitude.",
-        "Early in training the generator produces terrible images — what gradient does each loss give?",
+        "Early in training the generator produces terrible images - what gradient does each loss give?",
       ],
     },
     {
@@ -898,7 +898,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SRGAN typically has lower PSNR than MSE-optimized methods like bicubic because it sacrifices pixel-exact accuracy to produce perceptually sharper textures; PSNR and perceptual quality are often in tension.",
       hints: [
-        "PSNR is a pixel-level metric — sharp but slightly wrong textures can lower PSNR.",
+        "PSNR is a pixel-level metric - sharp but slightly wrong textures can lower PSNR.",
         "Perceptual quality and PSNR are known to have an inverse trade-off in SR literature.",
       ],
     },
@@ -998,7 +998,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The original 3D-GAN (Wu et al., 2016) generates shapes as 64\\times64\\times64 binary voxel grids, enabling 3D convolutional discriminators that evaluate volumetric realism.",
       hints: [
-        "Voxels are 3D analogues of pixels — discrete cubic volume elements.",
+        "Voxels are 3D analogues of pixels - discrete cubic volume elements.",
         "The original 3D-GAN paper predates NeRF-based implicit representations.",
       ],
     },
@@ -1056,7 +1056,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Stage-I of StackGAN generates a coarse 64\\times64 image capturing the high-level semantics of the text; Stage-II takes this and the text to produce a refined 256\\times256 image with fine details.",
       hints: [
-        '"Stack" implies building one thing on top of another — coarse-to-fine generation.',
+        '"Stack" implies building one thing on top of another - coarse-to-fine generation.',
         "The first stage handles global layout; the second stage adds fine-grained textures.",
       ],
     },
@@ -1180,9 +1180,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "GAN-synthesized images must be rigorously validated for clinical use — they can contain hallucinated pathologies or miss real ones; regulatory frameworks require evidence of safety and efficacy before clinical deployment.",
+        "GAN-synthesized images must be rigorously validated for clinical use - they can contain hallucinated pathologies or miss real ones; regulatory frameworks require evidence of safety and efficacy before clinical deployment.",
       hints: [
-        "A GAN optimizes for realism, not diagnostic accuracy — it may generate convincing but incorrect pathology.",
+        "A GAN optimizes for realism, not diagnostic accuracy - it may generate convincing but incorrect pathology.",
         "Think about the consequences of a false negative in cancer screening.",
       ],
     },
@@ -1225,7 +1225,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GAN augmentation supplements real data with diverse synthetic examples, helping classifiers generalize better especially when labeled real data is scarce.",
       hints: [
-        "Data augmentation is a regularization technique — what problem does it solve?",
+        "Data augmentation is a regularization technique - what problem does it solve?",
         "More diverse training examples reduce the chance that a model overfits to the training set distribution.",
       ],
     },
@@ -1240,7 +1240,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "With limited data, the discriminator memorizes real samples and provides uninformative gradients to the generator; techniques like ADA (Adaptive Discriminator Augmentation) or DiffAugment are needed to stabilize training.",
       hints: [
-        "Overfitting affects discriminators too — it can memorize real images and detect fakes via memorization rather than learned features.",
+        "Overfitting affects discriminators too - it can memorize real images and detect fakes via memorization rather than learned features.",
         "ADA and DiffAugment apply stochastic augmentations to both real and fake images to mitigate this.",
       ],
     },
@@ -1353,7 +1353,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "DANN uses a gradient reversal layer to adversarially align feature distributions between source and target domains; it does not generate images — it operates purely in feature space.",
+        "DANN uses a gradient reversal layer to adversarially align feature distributions between source and target domains; it does not generate images - it operates purely in feature space.",
       hints: [
         "DANN adapts at the feature level, not the pixel level.",
         'The "adversarial" in DANN refers to a domain classifier, not a GAN image generator.',
@@ -1390,7 +1390,7 @@ const questions: Record<string, Question[]> = {
         "Federated GANs address which privacy concern in distributed GAN training?",
       options: [
         "The generator memorizing individual training examples",
-        "Raw private data never leaving local clients — only model updates (gradients or parameters) are shared",
+        "Raw private data never leaving local clients - only model updates (gradients or parameters) are shared",
         "The discriminator accessing test data from other clients",
         "Centralized storage of model weights on a public server",
       ],
@@ -1398,7 +1398,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In federated learning, clients train locally and share only model updates with a central aggregator, keeping sensitive data (e.g., medical records) on-device and never exposing raw samples.",
       hints: [
-        "Federated learning\'s key promise is that raw data stays local — only derived information is communicated.",
+        "Federated learning\'s key promise is that raw data stays local - only derived information is communicated.",
         "The privacy concern is about data exposure, not model exposure.",
       ],
     },
@@ -1413,7 +1413,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Gradient inversion attacks (e.g., Zhu et al.) can reconstruct private training images from shared gradients; differential privacy mechanisms must be added to provide formal privacy guarantees.",
       hints: [
-        "Gradients carry information about the data used to compute them — this can be exploited.",
+        "Gradients carry information about the data used to compute them - this can be exploited.",
         "Differential privacy adds calibrated noise to gradients to limit information leakage.",
       ],
     },
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "PPL computes the expected VGG perceptual distance between images generated by slightly perturbed latent codes; a smooth, disentangled space produces small, consistent perceptual changes per unit step.",
       hints: [
-        "A well-disentangled space should change images smoothly and predictably — no sudden jumps.",
+        "A well-disentangled space should change images smoothly and predictably - no sudden jumps.",
         "Low PPL indicates that equal steps in latent space produce equal-sized perceptual changes.",
       ],
     },
@@ -1634,7 +1634,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "At inference time, CLIP-guided methods optimize the latent code (or generator weights) by maximizing the cosine similarity between the CLIP image embedding of G(z) and the CLIP text embedding of the prompt.",
       hints: [
-        "No additional training is needed — CLIP provides a differentiable loss signal at test time.",
+        "No additional training is needed - CLIP provides a differentiable loss signal at test time.",
         "Gradients from CLIP flow back through the frozen generator to update z.",
       ],
     },
@@ -1684,16 +1684,16 @@ const questions: Record<string, Question[]> = {
         "In the GAN minimax game, a Nash equilibrium is reached when:",
       options: [
         "The generator loss reaches zero and the discriminator loss reaches one",
-        "Neither the generator nor the discriminator can unilaterally improve its objective by changing its strategy — p_g = p_r and D*(x) = 1/2",
+        "Neither the generator nor the discriminator can unilaterally improve its objective by changing its strategy - p_g = p_r and D*(x) = 1/2",
         "The discriminator achieves 100% accuracy on real images",
         "The generator and discriminator have equal parameter counts",
       ],
       correctAnswer: 1,
       explanation:
-        "At Nash equilibrium, the generator produces the true data distribution (p_g = p_r) so the discriminator cannot distinguish real from fake; it outputs 1/2 everywhere. Neither player benefits from a unilateral change — the game is in equilibrium.",
+        "At Nash equilibrium, the generator produces the true data distribution (p_g = p_r) so the discriminator cannot distinguish real from fake; it outputs 1/2 everywhere. Neither player benefits from a unilateral change - the game is in equilibrium.",
       hints: [
         "Nash equilibrium means no player can improve by changing strategy while the other holds fixed.",
-        "When p_g = p_r, the best discriminator can do is guess randomly — D*(x) = 1/2.",
+        "When p_g = p_r, the best discriminator can do is guess randomly - D*(x) = 1/2.",
       ],
     },
     {
@@ -1704,7 +1704,7 @@ const questions: Record<string, Question[]> = {
         "GAN training is guaranteed to converge to the Nash equilibrium when both networks use gradient descent with a sufficiently small learning rate.",
       correctAnswer: "False",
       explanation:
-        "Standard gradient descent on the minimax objective does not guarantee convergence to Nash equilibrium; the two-player game can exhibit oscillation, mode collapse, or divergence — convergence is an active research problem requiring careful tuning and stabilization techniques.",
+        "Standard gradient descent on the minimax objective does not guarantee convergence to Nash equilibrium; the two-player game can exhibit oscillation, mode collapse, or divergence - convergence is an active research problem requiring careful tuning and stabilization techniques.",
       hints: [
         "Gradient descent finds local optima for single objectives; the minimax game has fundamentally different dynamics.",
         "Oscillating loss curves in GAN training are a common symptom of convergence failure.",
@@ -1724,10 +1724,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "When p_r and p_g have disjoint supports (common in high dimensions), the optimal discriminator is perfect and D*(x) is 0 or 1 everywhere; JS(p_r||p_g) = log 2 — a constant — providing no gradient signal to train the generator. This motivates Wasserstein GAN.",
+        "When p_r and p_g have disjoint supports (common in high dimensions), the optimal discriminator is perfect and D*(x) is 0 or 1 everywhere; JS(p_r||p_g) = log 2 - a constant - providing no gradient signal to train the generator. This motivates Wasserstein GAN.",
       hints: [
         "If the discriminator perfectly separates real from fake, log(1 - D(G(z))) = log(0) and the gradient vanishes.",
-        "The Wasserstein distance does not saturate even for disjoint distributions — this is why WGAN was proposed.",
+        "The Wasserstein distance does not saturate even for disjoint distributions - this is why WGAN was proposed.",
       ],
     },
   ],
@@ -1749,7 +1749,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "AC-GAN augments the discriminator with an auxiliary classifier head that predicts the class label of each input; the combined loss (adversarial + classification) encourages the generator to produce class-consistent images and the discriminator to recognize classes.",
       hints: [
-        "The 'AC' stands for Auxiliary Classifier — the discriminator has an extra head.",
+        "The 'AC' stands for Auxiliary Classifier - the discriminator has an extra head.",
         "Adding classification loss provides richer gradient signal for class-conditional generation.",
       ],
     },
@@ -1763,7 +1763,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The projection discriminator computes D(x, y) = v^T phi(x) + psi(phi(x)), where v is the class embedding vector and phi(x) is the feature vector; this multiplicative interaction is theoretically motivated by the optimal conditional discriminator form.",
       hints: [
-        "Inner product (projection) conditioning is multiplicative — the class embedding gates the feature representation.",
+        "Inner product (projection) conditioning is multiplicative - the class embedding gates the feature representation.",
         "Concatenation of labels is simpler but projection is more principled for class-conditional discrimination.",
       ],
     },
@@ -1784,7 +1784,7 @@ const questions: Record<string, Question[]> = {
         "cBN replaces fixed (gamma, beta) batch norm parameters with class-conditional affine parameters predicted by a small network from the class embedding; this allows the normalization statistics to adapt to each class, controlling the style of synthesized images.",
       hints: [
         "Standard BN has fixed learned (gamma, beta); cBN makes these class-dependent.",
-        "This is the same mechanism used in AdaIN for style transfer — the scale and shift encode style (here: class).",
+        "This is the same mechanism used in AdaIN for style transfer - the scale and shift encode style (here: class).",
       ],
     },
   ],
@@ -1840,7 +1840,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Standard normalization destroys semantic information encoded in activations; SPADE conditions gamma and beta on the spatially-varying segmentation map, allowing the network to respect the semantic layout at every resolution of the generator.",
       hints: [
-        "Instance normalization normalizes channel statistics — this destroys spatial semantic information from the layout.",
+        "Instance normalization normalizes channel statistics - this destroys spatial semantic information from the layout.",
         "SPADE's spatially-varying scale and shift lets each semantic region have its own normalization.",
       ],
     },
@@ -1863,8 +1863,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DALL-E 1 first trains a discrete VAE (dVAE) to encode images into a grid of discrete tokens (8192-way codebook); then it trains a Transformer autoregressive model on text tokens followed by image tokens, enabling text-to-image generation by sampling image token sequences.",
       hints: [
-        "dVAE is the VQ-VAE-like component that converts images to discrete codes — a 'visual vocabulary'.",
-        "Stage 2 is a Transformer that predicts image tokens given text tokens — like language modeling over image codes.",
+        "dVAE is the VQ-VAE-like component that converts images to discrete codes - a 'visual vocabulary'.",
+        "Stage 2 is a Transformer that predicts image tokens given text tokens - like language modeling over image codes.",
       ],
     },
     {
@@ -1875,7 +1875,7 @@ const questions: Record<string, Question[]> = {
         "AttnGAN generates images from text descriptions by computing word-level attention to align specific words with specific spatial regions of the generated image at multiple resolutions.",
       correctAnswer: "True",
       explanation:
-        "AttnGAN uses a multi-stage generator where each stage applies word-level cross-attention, allowing the model to focus on specific words when generating corresponding image regions — e.g., 'red beak' guides the beak region specifically.",
+        "AttnGAN uses a multi-stage generator where each stage applies word-level cross-attention, allowing the model to focus on specific words when generating corresponding image regions - e.g., 'red beak' guides the beak region specifically.",
       hints: [
         "Word-level attention is finer-grained than using a single sentence vector for the entire image.",
         "The multi-stage architecture generates progressively higher-resolution images with increasingly refined word alignment.",
@@ -1920,7 +1920,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Unlike voxels or images, point clouds are unordered sets of 3D coordinates; discriminators must be permutation-invariant. PointNet-based discriminators process point sets using shared MLPs and symmetric aggregation functions (max pooling) to handle this unordered nature.",
       hints: [
-        "The order of points in a point cloud is arbitrary — the same shape can be represented with points in any order.",
+        "The order of points in a point cloud is arbitrary - the same shape can be represented with points in any order.",
         "Convolutional networks assume spatial regularity (grids), which point clouds don't have.",
       ],
     },
@@ -1934,7 +1934,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Implicit representations define shape as a continuous function f(x, y, z) -> occupancy or SDF; resolution is determined at query time rather than fixed by a grid, eliminating the O(n^3) memory bottleneck of voxels and enabling high-fidelity shape generation.",
       hints: [
-        "An implicit function can be evaluated at any 3D point at query time — there is no discretization.",
+        "An implicit function can be evaluated at any 3D point at query time - there is no discretization.",
         "Voxel resolution is fixed at training; implicit representations can be queried at any resolution.",
       ],
     },
@@ -1977,7 +1977,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DVD-GAN's spatial discriminator (D_S) evaluates individual frames for photorealism while the temporal discriminator (D_T) evaluates a sparse subset of frames jointly for motion consistency, disentangling spatial quality from temporal coherence during training.",
       hints: [
-        "Spatial quality and temporal consistency are different properties — DVD-GAN uses specialized discriminators for each.",
+        "Spatial quality and temporal consistency are different properties - DVD-GAN uses specialized discriminators for each.",
         "The temporal discriminator receives multiple frames simultaneously to assess inter-frame coherence.",
       ],
     },
@@ -1991,7 +1991,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Warp-based temporal consistency losses compute optical flow between adjacent frames and penalize the difference between the warped previous frame and the current frame, directly encouraging smooth, physically plausible motion in generated videos.",
       hints: [
-        "Optical flow estimates how pixels move between frames — inconsistency in flow means flickering or unnatural motion.",
+        "Optical flow estimates how pixels move between frames - inconsistency in flow means flickering or unnatural motion.",
         "This loss can be applied without a temporal discriminator as an additional regularizer.",
       ],
     },
@@ -2066,7 +2066,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Optimization-based inversion can minimize reconstruction error to near zero by using codes outside the learned W space, but such codes are 'out-of-distribution' and semantic editing directions (trained on W) do not transfer well — fidelity and editability are in tension.",
+        "Optimization-based inversion can minimize reconstruction error to near zero by using codes outside the learned W space, but such codes are 'out-of-distribution' and semantic editing directions (trained on W) do not transfer well - fidelity and editability are in tension.",
       hints: [
         "Low distortion means the reconstructed image closely matches the original.",
         "High editability means that applying a semantic direction (e.g., +age) produces the expected change.",
@@ -2089,7 +2089,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Likelihood-based objectives penalize probability zero on real data — the model must assign positive density everywhere. GANs optimize an adversarial objective that has no such guarantee; a generator can collapse to a few modes that fool the discriminator without covering all real data modes.",
+        "Likelihood-based objectives penalize probability zero on real data - the model must assign positive density everywhere. GANs optimize an adversarial objective that has no such guarantee; a generator can collapse to a few modes that fool the discriminator without covering all real data modes.",
       hints: [
         "Likelihood-based training requires the model to explain every training example with non-zero probability.",
         "Mode collapse in GANs occurs because the adversarial loss does not explicitly penalize ignoring modes.",
@@ -2103,7 +2103,7 @@ const questions: Record<string, Question[]> = {
         "GANs generally generate samples faster than diffusion models because GANs require only a single forward pass through the generator, while diffusion models require hundreds of sequential denoising steps.",
       correctAnswer: "True",
       explanation:
-        "GAN generation is a single forward pass through G(z) — milliseconds per sample. DDPM requires T=1000 sequential denoising steps; even with accelerated samplers (DDIM, DPM-Solver, ~10-50 steps), diffusion sampling remains significantly slower than a single GAN forward pass.",
+        "GAN generation is a single forward pass through G(z) - milliseconds per sample. DDPM requires T=1000 sequential denoising steps; even with accelerated samplers (DDIM, DPM-Solver, ~10-50 steps), diffusion sampling remains significantly slower than a single GAN forward pass.",
       hints: [
         "GAN generation: z -> G(z) is one step. DDPM: x_T -> x_{T-1} -> ... -> x_0 is T steps.",
         "This sampling speed advantage is a practical reason GANs are still preferred for real-time applications.",
@@ -2126,7 +2126,7 @@ const questions: Record<string, Question[]> = {
         "Standard DDPM assumes each reverse step is Gaussian; Denoising Diffusion GAN uses a conditional GAN to model the complex multimodal reverse distribution at each step, allowing much larger steps (fewer total steps) without sacrificing accuracy.",
       hints: [
         "The key insight: if each denoising step can be accurately modeled with a GAN, fewer steps are needed.",
-        "The bottleneck in DDPM is that each step must be Gaussian-small to stay accurate — a GAN removes this constraint.",
+        "The bottleneck in DDPM is that each step must be Gaussian-small to stay accurate - a GAN removes this constraint.",
       ],
     },
   ],
@@ -2148,7 +2148,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GAN augmentation for rare classes supplements (not replaces) real data; the goal is to reduce class imbalance and improve classifier performance on underrepresented classes, but generated samples must be validated to ensure they are realistic and correctly labeled.",
       hints: [
-        "Class imbalance causes classifiers to underperform on rare classes — augmentation directly addresses this.",
+        "Class imbalance causes classifiers to underperform on rare classes - augmentation directly addresses this.",
         "Supplementing real data with synthetic data is preferable to replacing it, since real data quality is verified.",
       ],
     },
@@ -2162,7 +2162,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "CTGAN uses mode-specific normalization (Variational Gaussian Mixture Model per column) to handle non-Gaussian continuous distributions and conditional generation to handle class imbalance in discrete columns, making it the standard approach for synthetic tabular data generation.",
       hints: [
-        "Tabular data has mixed types (numeric, categorical) and complex distributions — standard GANs assume continuous unimodal data.",
+        "Tabular data has mixed types (numeric, categorical) and complex distributions - standard GANs assume continuous unimodal data.",
         "CTGAN's mode normalization explicitly models multi-modal distributions that standard batch normalization would distort.",
       ],
     },
@@ -2182,7 +2182,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "3DMM fitting (using model-based computer vision) extracts pose and expression parameters from the driving video; the GAN synthesizes the face texture/appearance conditioned on these parameters. The 3D fitting is typically a classical optimization step, not a GAN component.",
       hints: [
-        "Face reenactment pipelines combine classical 3D face fitting with neural rendering — not everything is a GAN.",
+        "Face reenactment pipelines combine classical 3D face fitting with neural rendering - not everything is a GAN.",
         "The 3DMM provides the geometric scaffold; the GAN provides the photorealistic appearance.",
       ],
     },
@@ -2217,10 +2217,10 @@ const questions: Record<string, Question[]> = {
         "Inception Score (IS) measures both sample quality and diversity by evaluating the entropy of the marginal label distribution and the conditional label distribution over generated images.",
       correctAnswer: "True",
       explanation:
-        "IS = exp(E[KL(p(y|x) || p(y))]): high quality means p(y|x) is sharp (low entropy — one clear class); high diversity means p(y) is flat (high entropy — many classes generated). IS is high when each image looks like a clear object AND many different classes are generated.",
+        "IS = exp(E[KL(p(y|x) || p(y))]): high quality means p(y|x) is sharp (low entropy - one clear class); high diversity means p(y) is flat (high entropy - many classes generated). IS is high when each image looks like a clear object AND many different classes are generated.",
       hints: [
-        "For a sharp image, the classifier is confident about its class — p(y|x) has low entropy.",
-        "For diverse outputs, the marginal p(y) should be uniform — all classes generated equally.",
+        "For a sharp image, the classifier is confident about its class - p(y|x) has low entropy.",
+        "For diverse outputs, the marginal p(y) should be uniform - all classes generated equally.",
       ],
     },
     {
@@ -2231,7 +2231,7 @@ const questions: Record<string, Question[]> = {
         "The diversity-fidelity tradeoff in GAN generation, as measured by precision and recall, implies that:",
       options: [
         "High FID always means both low precision and low recall",
-        "A GAN can achieve high precision (sharp, realistic samples) at the cost of low recall (missing real data modes), and vice versa — these objectives are in tension and must be balanced",
+        "A GAN can achieve high precision (sharp, realistic samples) at the cost of low recall (missing real data modes), and vice versa - these objectives are in tension and must be balanced",
         "Truncation trick simultaneously improves both precision and recall for any truncation threshold",
         "Precision and recall can both be maximized by training with more discriminator steps per generator step",
       ],
@@ -2319,7 +2319,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "In a cGAN (Mirza and Osindero, 2014), the conditioning information y is concatenated or injected into both G(z, y) and D(x, y), allowing the generator to produce outputs matching the specified condition and the discriminator to evaluate whether the output is realistic for that condition.",
       hints: [
-        "The 'c' stands for conditional — both networks receive the condition as additional input.",
+        "The 'c' stands for conditional - both networks receive the condition as additional input.",
         "Without conditioning, the generator cannot control which class or attribute to produce.",
       ],
     },
@@ -2338,7 +2338,7 @@ const extra: Record<string, Question[]> = {
       explanation: "PatchGAN runs the discriminator as a fully convolutional network producing a grid of real/fake decisions (one per patch); averaging these gives the final loss. This penalizes high-frequency artifacts locally and allows the discriminator to be applied to any image resolution, since its receptive field is a fixed-size patch.",
       hints: [
         "A patch-level real/fake decision focuses on texture quality rather than global composition.",
-        "Fully convolutional discriminators can handle variable image sizes — no fixed-size fully connected layer needed.",
+        "Fully convolutional discriminators can handle variable image sizes - no fixed-size fully connected layer needed.",
       ],
     },
     {
@@ -2353,10 +2353,10 @@ const extra: Record<string, Question[]> = {
         "It prevents the discriminator from distinguishing translations from real target-domain images",
       ],
       correctAnswer: 1,
-      explanation: "Without paired supervision, a generator could map every input to a single output that fools the discriminator. Cycle consistency forces each generator to be approximately invertible — translating A to B then B to A should recover A — constraining the solution space to structure-preserving translations rather than arbitrary style mappings.",
+      explanation: "Without paired supervision, a generator could map every input to a single output that fools the discriminator. Cycle consistency forces each generator to be approximately invertible - translating A to B then B to A should recover A - constraining the solution space to structure-preserving translations rather than arbitrary style mappings.",
       hints: [
         "If there is no paired ground truth, how do you prevent the generator from ignoring the content?",
-        "Cycle consistency is analogous to requiring a translation model to be invertible — translate to French and back to English should give the original text.",
+        "Cycle consistency is analogous to requiring a translation model to be invertible - translate to French and back to English should give the original text.",
       ],
     },
     {
@@ -2368,7 +2368,7 @@ const extra: Record<string, Question[]> = {
       explanation: "CycleGAN requires a generator pair for each domain pair, scaling quadratically with the number of domains. StarGAN trains one generator G(x, c_target) that translates any input image to any target domain specified by the condition vector c_target, requiring only one model regardless of the number of domains.",
       hints: [
         "CycleGAN: with 5 domains you need many generator pairs. StarGAN: always just 1.",
-        "StarGAN injects the target domain as a condition — the same generator handles all domain pairs.",
+        "StarGAN injects the target domain as a condition - the same generator handles all domain pairs.",
       ],
     },
     {
@@ -2406,7 +2406,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The Z space is shaped by a fixed Gaussian prior that may not match the true distribution of visual factors; the mapping network learns a nonlinear transformation that untangles these factors into a W space where individual directions correspond more consistently to individual attributes (pose, age, etc.).",
       hints: [
-        "A fixed Gaussian prior does not know which factors of variation are independent — the mapping network learns this.",
+        "A fixed Gaussian prior does not know which factors of variation are independent - the mapping network learns this.",
         "Perceptual Path Length (PPL) is lower in W than in Z, confirming W is more disentangled.",
       ],
     },
@@ -2424,7 +2424,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "AdaIN normalizes each feature map to zero mean and unit variance, then applies affine parameters (gamma and beta) predicted by learned affine transforms of w. Changing w changes these scale and shift parameters, modulating the style (texture, color, shape details) at the corresponding scale of the generator.",
       hints: [
-        "AdaIN: normalize the feature map, then scale by gamma and shift by beta — both predicted from w.",
+        "AdaIN: normalize the feature map, then scale by gamma and shift by beta - both predicted from w.",
         "Different generator layers control different spatial scales of style: early layers for coarse features, late layers for fine texture.",
       ],
     },
@@ -2434,7 +2434,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Stochastic variation in StyleGAN (adding per-pixel Gaussian noise before each AdaIN layer) allows the model to produce fine-grained random details like individual hair strands that vary independently of the overall style.",
       correctAnswer: "True",
-      explanation: "The injected noise is learned to scale at each layer and controls high-frequency stochastic details (hair strand placement, skin pore patterns, freckles) that do not affect the overall identity or pose — keeping these details stochastic rather than deterministic prevents over-regularization of fine texture.",
+      explanation: "The injected noise is learned to scale at each layer and controls high-frequency stochastic details (hair strand placement, skin pore patterns, freckles) that do not affect the overall identity or pose - keeping these details stochastic rather than deterministic prevents over-regularization of fine texture.",
       hints: [
         "Stochastic details like exact hair strand positions should vary between samples even with the same w.",
         "Noise injection adds randomness at each layer; StyleGAN learns which scale of noise affects which spatial detail.",
@@ -2452,9 +2452,9 @@ const extra: Record<string, Question[]> = {
         "It reduces the perceptual path length without affecting sample quality",
       ],
       correctAnswer: 1,
-      explanation: "Pulling w toward the mean moves samples away from low-density regions (unusual faces) toward high-density regions (common, well-learned faces). This improves average image quality but reduces the variety of outputs — psi=0 gives the mean face with maximum quality; psi=1 gives full diversity.",
+      explanation: "Pulling w toward the mean moves samples away from low-density regions (unusual faces) toward high-density regions (common, well-learned faces). This improves average image quality but reduces the variety of outputs - psi=0 gives the mean face with maximum quality; psi=1 gives full diversity.",
       hints: [
-        "The mean latent code generates the 'average' face — the most likely, most polished result.",
+        "The mean latent code generates the 'average' face - the most likely, most polished result.",
         "Truncating pushes samples toward the mean: less diversity (all faces look more similar) but higher average quality.",
       ],
     },
@@ -2472,7 +2472,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "StyleGAN2 replaces AdaIN (which normalizes by feature statistics and can create blob artifacts) with weight demodulation (normalizing generator weights rather than feature activations). It also trains at full resolution with skip connections in the generator and residual connections in the discriminator, avoiding progressive growing's instabilities.",
       hints: [
-        "Water-droplet artifacts in StyleGAN1 were traced to AdaIN's feature normalization — StyleGAN2 fixes this with weight demodulation.",
+        "Water-droplet artifacts in StyleGAN1 were traced to AdaIN's feature normalization - StyleGAN2 fixes this with weight demodulation.",
         "Progressive growing adds training complexity; StyleGAN2 achieves quality without it using skip/residual connections.",
       ],
     },
@@ -2484,7 +2484,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "W+ has 18 times 512 degrees of freedom (one w per AdaIN layer in a 1024px generator), versus W's 512 degrees of freedom. This extra expressiveness allows W+ to reconstruct real images more faithfully, but at the cost of reduced editability since per-layer codes may be correlated in complex ways not aligned with semantic directions.",
       hints: [
-        "More degrees of freedom always improves reconstruction capability — W+ has far more than W.",
+        "More degrees of freedom always improves reconstruction capability - W+ has far more than W.",
         "The tradeoff: better reconstruction fidelity in W+ vs. more consistent semantic editing in W.",
       ],
     },
@@ -2505,7 +2505,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Spectral normalization divides each weight matrix W by its spectral norm (largest singular value), ensuring the operator norm equals 1. Since the Lipschitz constant of a linear layer is its spectral norm, this bounds the discriminator's Lipschitz constant to 1, stabilizing gradients without needing the gradient penalty used in WGAN-GP.",
       hints: [
-        "The spectral norm of a matrix is its largest singular value — spectral normalization divides weights by this value.",
+        "The spectral norm of a matrix is its largest singular value - spectral normalization divides weights by this value.",
         "A 1-Lipschitz function has bounded gradients, preventing exploding discriminator gradients.",
       ],
     },
@@ -2523,7 +2523,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The optimal WGAN critic has gradient norm 1 almost everywhere on the support of the data distribution. Interpolations between real and fake points sample a region between the two distributions where constraint violations are most likely; penalizing gradient norms there provides an efficient approximation to the full Lipschitz constraint.",
       hints: [
-        "The Lipschitz constraint must hold everywhere — but enforcing it everywhere is intractable.",
+        "The Lipschitz constraint must hold everywhere - but enforcing it everywhere is intractable.",
         "Interpolated points are a principled compromise: they sample the region between real and fake distributions.",
       ],
     },
@@ -2533,7 +2533,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Mode collapse in GANs refers to the phenomenon where the generator produces only a few distinct outputs regardless of the input noise, failing to capture the full diversity of the training distribution.",
       correctAnswer: "True",
-      explanation: "Mode collapse occurs when the generator finds a small set of outputs that reliably fool the discriminator; the discriminator then adapts to identify these, the generator shifts to a different small set, and the cycle repeats — never converging to generate the full data distribution.",
+      explanation: "Mode collapse occurs when the generator finds a small set of outputs that reliably fool the discriminator; the discriminator then adapts to identify these, the generator shifts to a different small set, and the cycle repeats - never converging to generate the full data distribution.",
       hints: [
         "If you generate 1000 faces and they all look nearly identical, the generator has mode-collapsed.",
         "The generator exploits the discriminator's current weakness rather than learning the full distribution.",
@@ -2551,10 +2551,10 @@ const extra: Record<string, Question[]> = {
         "Randomly dropping generated samples from the mini-batch during discriminator training",
       ],
       correctAnswer: 1,
-      explanation: "Mini-batch discrimination computes features across all samples in the batch and appends them to each sample's representation, allowing the discriminator to detect when many samples are identical or very similar — directly penalizing mode collapse at the batch level.",
+      explanation: "Mini-batch discrimination computes features across all samples in the batch and appends them to each sample's representation, allowing the discriminator to detect when many samples are identical or very similar - directly penalizing mode collapse at the batch level.",
       hints: [
         "If all generated samples in a batch are the same, a discriminator with cross-sample information can detect this.",
-        "Standard discriminators evaluate each sample independently — they cannot detect batch-level repetition.",
+        "Standard discriminators evaluate each sample independently - they cannot detect batch-level repetition.",
       ],
     },
     {
@@ -2569,9 +2569,9 @@ const extra: Record<string, Question[]> = {
         "Wasserstein distance penalizes mode collapse more strongly because it counts the number of missing modes",
       ],
       correctAnswer: 1,
-      explanation: "JS divergence equals log 2 when supports are disjoint (a constant, so zero gradient). The Wasserstein distance remains proportional to the true separation between distributions even for disjoint supports — providing meaningful gradient signal that tells the generator which direction to move even when the two distributions do not overlap.",
+      explanation: "JS divergence equals log 2 when supports are disjoint (a constant, so zero gradient). The Wasserstein distance remains proportional to the true separation between distributions even for disjoint supports - providing meaningful gradient signal that tells the generator which direction to move even when the two distributions do not overlap.",
       hints: [
-        "JS saturates at log 2 for disjoint distributions — a constant has zero gradient.",
+        "JS saturates at log 2 for disjoint distributions - a constant has zero gradient.",
         "Wasserstein measures how far the distributions are from each other even when they do not overlap.",
       ],
     },
@@ -2602,9 +2602,9 @@ const extra: Record<string, Question[]> = {
         "CFG produces higher FID scores than any comparable conditional GAN",
       ],
       correctAnswer: 1,
-      explanation: "CFG parameterizes a continuum between unconditional and conditional sampling via a guidance scale; higher guidance scale increases adherence to the text prompt (quality) at the cost of sample diversity — all from one model at inference time without retraining.",
+      explanation: "CFG parameterizes a continuum between unconditional and conditional sampling via a guidance scale; higher guidance scale increases adherence to the text prompt (quality) at the cost of sample diversity - all from one model at inference time without retraining.",
       hints: [
-        "CFG lets you dial quality vs. diversity at inference time — conditional GANs do not have this flexibility without retraining.",
+        "CFG lets you dial quality vs. diversity at inference time - conditional GANs do not have this flexibility without retraining.",
         "A guidance scale of 0 is unconditional; a guidance scale of 7.5 (a common value) is strongly conditioned on the prompt.",
       ],
     },
@@ -2616,7 +2616,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Models like DALL-E 3, Stable Diffusion, and Imagen have surpassed GAN FID benchmarks on many datasets; diffusion models' likelihood-based training avoids mode collapse and covers more data modes, yielding better diversity and often better FID at scale, particularly on diverse large-scale datasets.",
       hints: [
-        "FID measures both quality and diversity — diffusion models' better mode coverage helps FID.",
+        "FID measures both quality and diversity - diffusion models' better mode coverage helps FID.",
         "On FFHQ (faces), StyleGAN still competes well; but on diverse multi-category datasets, diffusion models tend to win.",
       ],
     },
@@ -2650,7 +2650,7 @@ const extra: Record<string, Question[]> = {
         "Running the denoising steps in parallel across multiple GPUs simultaneously",
       ],
       correctAnswer: 1,
-      explanation: "If images are 512x512 pixels, their VAE latent codes are 64x64x4 — a 64x reduction in spatial tokens. Denoising this smaller representation is far cheaper per step, making LDMs practical for high-resolution generation on consumer hardware while still producing high-quality outputs via the VAE decoder.",
+      explanation: "If images are 512x512 pixels, their VAE latent codes are 64x64x4 - a 64x reduction in spatial tokens. Denoising this smaller representation is far cheaper per step, making LDMs practical for high-resolution generation on consumer hardware while still producing high-quality outputs via the VAE decoder.",
       hints: [
         "Diffusion in pixel space at 512x512 processes 262,144 pixels per step. In latent space (64x64), it is 4,096 tokens.",
         "The VAE encodes images into compact representations; the diffusion model learns to denoise these latent codes, not pixels.",
@@ -2662,9 +2662,9 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Diffusion models are generally less suitable than GANs for direct latent space editing of real images because diffusion's inversion process requires running approximate reverse steps that accumulate errors.",
       correctAnswer: "True",
-      explanation: "GAN inversion maps a real image to a latent code directly optimizable in the generator's space. Diffusion inversion (e.g., DDIM inversion) requires running the forward process deterministically to map image to noise code, which is approximate and sensitive to the guidance scale — making precise semantic editing harder than with GANs.",
+      explanation: "GAN inversion maps a real image to a latent code directly optimizable in the generator's space. Diffusion inversion (e.g., DDIM inversion) requires running the forward process deterministically to map image to noise code, which is approximate and sensitive to the guidance scale - making precise semantic editing harder than with GANs.",
       hints: [
-        "GAN inversion finds a z such that G(z) approximates x — straightforward optimization in latent space.",
+        "GAN inversion finds a z such that G(z) approximates x - straightforward optimization in latent space.",
         "DDIM inversion reverses the deterministic DDIM sampler, but guidance changes during inversion vs. generation cause inconsistencies.",
       ],
     },
@@ -2674,16 +2674,16 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Score-based diffusion models are related to GANs through which theoretical connection?",
       options: [
-        "Both learn a density ratio p_r(x)/p_g(x) — the discriminator estimates this ratio directly, while the score network estimates the gradient of this log ratio",
+        "Both learn a density ratio p_r(x)/p_g(x) - the discriminator estimates this ratio directly, while the score network estimates the gradient of this log ratio",
         "The score function (gradient of log p with respect to x) is equivalent to the discriminator gradient at equilibrium, linking score-based generation to the GAN value function",
         "Diffusion model training is equivalent to adversarial training with an infinite number of discriminator update steps",
         "Score matching and the non-saturating GAN loss converge to the same global optimum under the same data distribution",
       ],
       correctAnswer: 1,
-      explanation: "At GAN equilibrium, the optimal discriminator D*(x) = p_r/(p_r+p_g); its gradient relates to the score functions of both distributions. Score matching directly estimates the gradient of log p(x) without a discriminator — both methods implicitly estimate distributional structure, revealing a deep mathematical connection between adversarial and likelihood-based generative modeling.",
+      explanation: "At GAN equilibrium, the optimal discriminator D*(x) = p_r/(p_r+p_g); its gradient relates to the score functions of both distributions. Score matching directly estimates the gradient of log p(x) without a discriminator - both methods implicitly estimate distributional structure, revealing a deep mathematical connection between adversarial and likelihood-based generative modeling.",
       hints: [
-        "The optimal discriminator encodes information about both distributions — its gradient is related to the ratio of their scores.",
-        "Score matching learns the gradient of the log data density — this is what a diffusion model's denoiser implicitly computes.",
+        "The optimal discriminator encodes information about both distributions - its gradient is related to the ratio of their scores.",
+        "Score matching learns the gradient of the log data density - this is what a diffusion model's denoiser implicitly computes.",
       ],
     },
   ],
@@ -2703,7 +2703,7 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The vector field of simultaneous gradient descent in a minimax game is not guaranteed to be conservative (curl-free); near Nash equilibria it can be purely rotational, causing orbiting behavior. This is distinct from single-objective optimization where gradient descent converges to local minima. Techniques like consensus optimization and extra-gradient methods address this.",
       hints: [
-        "In standard gradient descent, you follow the gradient downhill toward a minimum — the field is conservative.",
+        "In standard gradient descent, you follow the gradient downhill toward a minimum - the field is conservative.",
         "In a minimax game, the two objectives pull in different directions; the combined vector field can rotate rather than converge.",
       ],
     },
@@ -2713,7 +2713,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Progressive growing in ProGAN (Karras et al., 2018) trains the GAN by gradually adding new higher-resolution layers to both generator and discriminator, allowing stable training of high-resolution image generators.",
       correctAnswer: "True",
-      explanation: "ProGAN starts by training a 4x4 GAN, then smoothly fades in progressively higher-resolution layers (8x8, 16x16, ... 1024x1024). Each new layer is interpolated in over many training steps, allowing lower-resolution structure to be learned before high-frequency details are added — dramatically stabilizing high-resolution GAN training.",
+      explanation: "ProGAN starts by training a 4x4 GAN, then smoothly fades in progressively higher-resolution layers (8x8, 16x16, ... 1024x1024). Each new layer is interpolated in over many training steps, allowing lower-resolution structure to be learned before high-frequency details are added - dramatically stabilizing high-resolution GAN training.",
       hints: [
         "Training a 1024x1024 GAN from scratch is unstable; starting from 4x4 and growing is much more tractable.",
         "Progressive growing is like a curriculum: learn the coarse structure first, then add fine details.",
@@ -2734,7 +2734,7 @@ const extra: Record<string, Question[]> = {
       explanation: "A 1-Lipschitz function satisfies ||nabla f(x)|| <= 1 everywhere; the optimal WGAN critic achieves ||nabla f(x)|| = 1 almost everywhere on the data manifold (the constraint is active). Penalizing deviations from 1 therefore targets exactly the constraint that the optimal critic satisfies, rather than suppressing gradients entirely.",
       hints: [
         "The Lipschitz constraint is an upper bound on gradient magnitude, not a requirement for zero gradients.",
-        "The optimal critic saturates the constraint — its gradient norm equals exactly 1 on the data support.",
+        "The optimal critic saturates the constraint - its gradient norm equals exactly 1 on the data support.",
       ],
     },
     {
@@ -2761,7 +2761,7 @@ const extra: Record<string, Question[]> = {
       difficulty: "easy",
       question: "The FID (Frechet Inception Distance) metric for evaluating GANs uses feature representations from a pre-trained Inception network to compare the distribution of generated images to the distribution of real images.",
       correctAnswer: "True",
-      explanation: "FID extracts feature vectors from the penultimate layer of Inception-v3 for both real and generated images, then computes the Frechet distance (Wasserstein-2 distance assuming Gaussian distributions) between the two multivariate Gaussian fits — capturing both quality (mean) and diversity (covariance) in a single scalar.",
+      explanation: "FID extracts feature vectors from the penultimate layer of Inception-v3 for both real and generated images, then computes the Frechet distance (Wasserstein-2 distance assuming Gaussian distributions) between the two multivariate Gaussian fits - capturing both quality (mean) and diversity (covariance) in a single scalar.",
       hints: [
         "FID uses Inception network features because they capture semantic content better than raw pixels.",
         "The Frechet distance measures both the mean difference and the covariance difference between the two distributions.",
@@ -2781,8 +2781,8 @@ const extra: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Standard convolutions only aggregate information within a local receptive field; generating globally consistent structures (dog with four legs, symmetrical features) requires long-range dependencies. SAGAN's self-attention mechanism allows each spatial position to attend to all other positions in the feature map, enabling global consistency.",
       hints: [
-        "A dog's fur texture should be consistent across the whole body — local convolutions cannot enforce this globally.",
-        "Self-attention computes attention weights between all pairs of spatial positions — enabling truly global context.",
+        "A dog's fur texture should be consistent across the whole body - local convolutions cannot enforce this globally.",
+        "Self-attention computes attention weights between all pairs of spatial positions - enabling truly global context.",
       ],
     },
     {

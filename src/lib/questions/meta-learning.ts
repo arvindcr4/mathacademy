@@ -17,10 +17,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-learning aims to extract shared structure across tasks so that a learner can adapt quickly to a new task using only a handful of examples — solving the few-shot learning challenge.",
+        "Meta-learning aims to extract shared structure across tasks so that a learner can adapt quickly to a new task using only a handful of examples - solving the few-shot learning challenge.",
       hints: [
         'Think about what "learning to learn" implies: the meta-learner is learning how to learn new tasks.',
-        'The key word is "fast adaptation" — the meta-learner should need very little new data per task.',
+        'The key word is "fast adaptation" - the meta-learner should need very little new data per task.',
       ],
     },
     {
@@ -51,9 +51,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Episodic training structures each mini-batch as a mini few-shot problem: the support set provides the few-shot context, and the query set evaluates generalisation — directly mimicking the meta-test condition.",
+        "Episodic training structures each mini-batch as a mini few-shot problem: the support set provides the few-shot context, and the query set evaluates generalisation - directly mimicking the meta-test condition.",
       hints: [
-        "Episodic training is designed to match training conditions to test conditions — what does a meta-test episode look like?",
+        "Episodic training is designed to match training conditions to test conditions - what does a meta-test episode look like?",
         'Think about "support" as the few labelled examples and "query" as what the model must classify.',
       ],
     },
@@ -95,7 +95,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "MAML achieves approximately 48.70% \\pm 1.84% on 5-way 1-shot miniImageNet with a 4-layer convolutional backbone, establishing it as a strong optimization-based baseline. The 5-shot variant reaches ~63.1%.",
       hints: [
-        "MAML is an optimization-based method — it is strong but not the highest-performing method on this benchmark.",
+        "MAML is an optimization-based method - it is strong but not the highest-performing method on this benchmark.",
         "miniImageNet is 100 classes, 600 images each; the 5-way 1-shot task is the hardest standard setting.",
       ],
     },
@@ -107,13 +107,13 @@ const questions: Record<string, Question[]> = {
         'Omniglot is often called the "transpose" of MNIST. What does this mean in the few-shot learning context?',
       options: [
         "Omniglot images are transposed (rotated 90°) versions of MNIST images",
-        "Omniglot has many classes (1623) with few examples each (20), whereas MNIST has few classes (10) with many examples each — making Omniglot naturally suited for few-shot learning",
+        "Omniglot has many classes (1623) with few examples each (20), whereas MNIST has few classes (10) with many examples each - making Omniglot naturally suited for few-shot learning",
         "Omniglot uses the same alphabet as MNIST but in a different language",
         "Omniglot pixels are inverted relative to MNIST",
       ],
       correctAnswer: 1,
       explanation:
-        'Omniglot contains 1623 handwritten character classes from 50 alphabets, each with only 20 examples — a "transposed" regime of many classes/few examples per class, ideal for evaluating few-shot generalisation.',
+        'Omniglot contains 1623 handwritten character classes from 50 alphabets, each with only 20 examples - a "transposed" regime of many classes/few examples per class, ideal for evaluating few-shot generalisation.',
       hints: [
         'Think about MNIST: 10 classes, ~6000 examples each. What would the "transpose" of those ratios look like?',
         "Few-shot learning needs many classes to sample novel episodes from, with few examples per class.",
@@ -138,7 +138,7 @@ const questions: Record<string, Question[]> = {
         "Metric-based approaches learn an embedding function such that support and query examples from the same class are close in embedding space, enabling non-parametric nearest-neighbour classification at test time. The key insight (from Matching Networks, Prototypical Networks, Relation Networks) is that the embedding is trained episodically so distances are meaningful for novel classes.",
       hints: [
         'The "metric" in metric-based refers to a distance or similarity measure in embedding space.',
-        "Think about k-NN classification — metric-based meta-learning learns the embedding that makes k-NN work well.",
+        "Think about k-NN classification - metric-based meta-learning learns the embedding that makes k-NN work well.",
       ],
     },
     {
@@ -177,7 +177,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Siamese Networks use twin CNN branches with shared weights that map images to feature vectors. The L1 distance between embeddings is passed through a linear + sigmoid layer to predict the probability the two images are in the same class. Training uses binary cross-entropy: same-class pairs \\to 1, different-class pairs \\to 0. At test time, the test image is compared to all support examples and the class of the most similar support image is predicted.",
       hints: [
-        "A Siamese Network has two identical weight-sharing branches — what does it compare?",
+        "A Siamese Network has two identical weight-sharing branches - what does it compare?",
         'Think about the training signal: pairs of examples with a label indicating "same" or "different".',
       ],
     },
@@ -200,7 +200,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A class prototype is the mean of the embedding vectors of all support examples for that class: c_k = (1/|S_k|) \\Sigma f_\\phi(x_i). Classification is done by finding the nearest prototype to the query embedding using squared Euclidean distance, with the squared Euclidean distance specifically chosen for its connection to mixture-of-Gaussians models.",
       hints: [
-        "Think about the simplest way to summarise a set of points in a vector space — the mean (centroid).",
+        "Think about the simplest way to summarise a set of points in a vector space - the mean (centroid).",
         "Once you have a prototype per class, classification is a nearest-centroid problem.",
       ],
     },
@@ -212,9 +212,9 @@ const questions: Record<string, Question[]> = {
         "Prototypical Networks use softmax over negative squared Euclidean distances to the prototypes to produce class probabilities for a query.",
       correctAnswer: "True",
       explanation:
-        "The probability of a query x belonging to class k is p(y=k|x) = exp(−d(f_\\phi(x), c_k)) / \\Sigma_{k'} exp(−d(f_\\phi(x), c_{k'})), where d is squared Euclidean distance. Snell et al. showed that squared Euclidean (not cosine) distance is crucial — it corresponds to a Bregman divergence under a Gaussian assumption.",
+        "The probability of a query x belonging to class k is p(y=k|x) = exp(−d(f_\\phi(x), c_k)) / \\Sigma_{k'} exp(−d(f_\\phi(x), c_{k'})), where d is squared Euclidean distance. Snell et al. showed that squared Euclidean (not cosine) distance is crucial - it corresponds to a Bregman divergence under a Gaussian assumption.",
       hints: [
-        "Smaller distance \\to higher score \\to higher probability — the negative sign converts distance to similarity.",
+        "Smaller distance \\to higher score \\to higher probability - the negative sign converts distance to similarity.",
         "Softmax turns these scores into a proper probability distribution over classes.",
       ],
     },
@@ -227,14 +227,14 @@ const questions: Record<string, Question[]> = {
       options: [
         "Matching Networks with a full-context embedding function",
         "Relation Networks with a fixed L2 distance as the relation module",
-        "Linear classifiers on class attribute vectors — the prototype becomes the mean attribute vector, and nearest-centroid is equivalent to a linear classifier in the attribute space",
+        "Linear classifiers on class attribute vectors - the prototype becomes the mean attribute vector, and nearest-centroid is equivalent to a linear classifier in the attribute space",
         "Siamese Networks trained with contrastive loss on attribute pairs",
       ],
       correctAnswer: 2,
       explanation:
         "In the zero-shot extension, prototypes are constructed from semantic embeddings (attributes/word vectors) rather than visual examples. Snell et al. showed this is equivalent to a linear classifier in the semantic space: the nearest-prototype decision boundary is a linear hyperplane between class attribute means.",
       hints: [
-        "In zero-shot learning there are no labelled images for new classes — class attributes serve as prototypes.",
+        "In zero-shot learning there are no labelled images for new classes - class attributes serve as prototypes.",
         "A nearest-centroid classifier with Euclidean distance is equivalent to a linear classifier when the prototypes are the class means.",
       ],
     },
@@ -292,7 +292,7 @@ const questions: Record<string, Question[]> = {
         "Relation Networks compute a separate relation score for every (query, support) pair, resulting in O(N\\timesK\\timesQ) forward passes through the relation module, which becomes computationally expensive as N (number of classes) grows.",
       hints: [
         "Think about how many relation computations are needed for a 100-way 5-shot problem with 15 query examples per class.",
-        "Prototypical Networks compute N prototypes and then N distances per query — much cheaper.",
+        "Prototypical Networks compute N prototypes and then N distances per query - much cheaper.",
       ],
     },
   ],
@@ -315,7 +315,7 @@ const questions: Record<string, Question[]> = {
         "MAML uses a two-level optimization structure with two distinct learning rates: $\\alpha$ (inner loop, task-level) and $\\beta$ (outer loop, meta-level, optimized with Adam/SGD). The inner-loop update $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$ adapts parameters to task $T_i$ using the support-set loss $\\mathcal{L}_{T_i}$. The outer loop then evaluates how well the adapted parameters $\\theta'_i$ generalize to the query set and updates $\\theta$ accordingly.",
       hints: [
         "MAML has a two-level optimization structure: the inner loop adapts to each task, the outer loop improves the initialization based on post-adaptation query-set performance.",
-        "$\\alpha$ is the step size for task adaptation (typically 0.01–0.1); $\\beta$ is the step size for meta-optimization (typically 0.001–0.01).",
+        "$\\alpha$ is the step size for task adaptation (typically 0.01-0.1); $\\beta$ is the step size for meta-optimization (typically 0.001-0.01).",
         "The notation $\\nabla_\\theta$ denotes the gradient with respect to the meta-parameters $\\theta$.",
       ],
     },
@@ -327,11 +327,11 @@ const questions: Record<string, Question[]> = {
         "MAML's meta-gradient computation requires differentiating through the inner loop gradient steps, resulting in second-order gradients (gradients of gradients).",
       correctAnswer: "True",
       explanation:
-        "The meta-objective $\\mathcal{L}_\\text{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$ depends on adapted parameters $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$. Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n$$\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss — a matrix of second derivatives. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
+        "The meta-objective $\\mathcal{L}_\\text{meta}(\\theta) = \\sum_i \\mathcal{L}_{T_i}(f_{\\theta'_i})$ depends on adapted parameters $\\theta'_i = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}_{T_i}(\\theta)$. Differentiating the outer loss with respect to $\\theta$ requires the chain rule:\n$$\\frac{\\partial \\mathcal{L}_{T_i}(f_{\\theta'_i})}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}_{T_i}}{\\partial \\theta'_i} \\cdot \\frac{\\partial \\theta'_i}{\\partial \\theta} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe term $(I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i})$ is the Hessian $\\nabla^2_\\theta\\mathcal{L}$ of the task loss - a matrix of second derivatives. Computing Hessian-vector products $\\nabla^2_\\theta\\mathcal{L} \\cdot v$ without materializing the full Hessian is the key algorithmic challenge.",
       hints: [
         "Chain rule: $\\frac{\\partial \\mathcal{L}(\\theta')}{\\partial \\theta} = \\frac{\\partial \\mathcal{L}}{\\partial \\theta'} \\cdot \\frac{\\partial \\theta'}{\\partial \\theta}$.",
         "Since $\\theta' = \\theta - \\alpha\\nabla_\\theta\\mathcal{L}$, we have $\\frac{\\partial \\theta'}{\\partial \\theta} = I - \\alpha\\nabla^2_\\theta\\mathcal{L}$. The $\\nabla^2$ is the Hessian (second derivative).",
-        "Second-order derivatives are computationally expensive — this is precisely why first-order approximations like FOMAML were developed.",
+        "Second-order derivatives are computationally expensive - this is precisely why first-order approximations like FOMAML were developed.",
       ],
     },
     {
@@ -374,7 +374,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "FOMAML drops the second-order Hessian terms from the meta-gradient, approximating:\n$$\\nabla_\\theta^\\text{FOMAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\approx \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nas opposed to the full second-order expression:\n$$\\nabla_\\theta^\\text{MAML} = \\nabla_{\\theta'_i}\\mathcal{L}_{T_i} \\cdot (I - \\alpha\\nabla^2_\\theta\\mathcal{L}_{T_i}(\\theta)).$$\nThe FOMAML approximation ignores the $(I - \\alpha\\nabla^2_\\theta\\mathcal{L})$ factor. Empirically this retains most of MAML's performance while eliminating the expensive Hessian-vector product computation.",
       hints: [
-        "Second-order gradients are the expensive part of MAML — what happens if you simply drop them?",
+        "Second-order gradients are the expensive part of MAML - what happens if you simply drop them?",
         "Think about the trade-off: FOMAML is faster but the gradient estimate is less accurate.",
         "The chain rule gives \\partialL(\\theta')/\\partial\\theta = (\\partialL/\\partial\\theta') \\cdot (\\partial\\theta'/\\partial\\theta) = \\nabla_{\\theta'}L \\cdot (I − \\alpha\\nabla\\^2_\\thetaL). Dropping (I − \\alpha\\nabla\\^2_\\thetaL) is the FOMAML approximation.",
       ],
@@ -386,16 +386,16 @@ const questions: Record<string, Question[]> = {
       question:
         "Reptile (Nichol et al., 2018) updates the meta-parameters by the rule: \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta), where \\phi is the result of k SGD steps on a sampled task. What is the Reptile gradient when k=1?",
       options: [
-        "Identical to the standard SGD gradient on the task loss — no meta-learning occurs",
+        "Identical to the standard SGD gradient on the task loss - no meta-learning occurs",
         "The Reptile gradient equals the task loss gradient, same as FOMAML with k=1 inner steps",
         "The Reptile gradient is zero because \\phi − \\theta cancels with the learning rate",
         "The Reptile gradient averages gradients across all tasks seen so far",
       ],
       correctAnswer: 1,
       explanation:
-        "When k=1, \\phi = \\theta − \\alpha\\nablaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nablaL_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta − \\epsilon\\alpha\\nablaL_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta) = \\theta − \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss — the same as FOMAML with one inner step. For k > 1, \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta) − \\alpha\\nabla_\\thetaL_i(\\theta − \\alpha\\nabla_\\thetaL_i(\\theta)) − ... (k compositions), giving Reptile its distinct behaviour.",
+        "When k=1, \\phi = \\theta − \\alpha\\nablaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nablaL_i(\\theta), and the Reptile update is \\theta \\leftarrow \\theta − \\epsilon\\alpha\\nablaL_i(\\theta). This is identical to FOMAML with one inner step. Reptile's advantage emerges for k > 1, where it implicitly maximizes within-task gradient alignment.\n\nMathematically, when k=1: \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta), so \\phi − \\theta = −\\alpha\\nabla_\\thetaL_i(\\theta). The update \\theta \\leftarrow \\theta + \\epsilon(\\phi − \\theta) = \\theta − \\epsilon\\alpha\\nabla_\\thetaL_i(\\theta) is standard SGD on the task loss - the same as FOMAML with one inner step. For k > 1, \\phi = \\theta − \\alpha\\nabla_\\thetaL_i(\\theta) − \\alpha\\nabla_\\thetaL_i(\\theta − \\alpha\\nabla_\\thetaL_i(\\theta)) − ... (k compositions), giving Reptile its distinct behaviour.",
       hints: [
-        'Reptile\'s update is "move \\theta toward where the task gradient took you" — a form of interpolation.',
+        'Reptile\'s update is "move \\theta toward where the task gradient took you" - a form of interpolation.',
         "Think about what \\theta'_i - \\theta represents when k=1: just one gradient descent step.",
         "For k > 1, \\phi = \\theta after k composed SGD steps. Reptile moves \\theta toward this \\phi, averaging over tasks: \\theta \\leftarrow \\theta + \\epsilon(\\phī − \\theta) where \\phī is the average post-adaptation parameter.",
       ],
@@ -414,7 +414,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In practice, the Hessian-vector products (second-order terms) tend to be small relative to first-order gradient magnitudes, and stochastic gradient noise dominates the error introduced by the first-order approximation — making FOMAML nearly as good as full MAML at much lower cost.\n\nThe full MAML gradient is \\nabla_\\theta^MAML = \\nabla_{\\theta'}L \\cdot (I − \\alpha\\nabla\\^2_\\thetaL), while FOMAML uses \\nabla_\\theta^FOMAML \\approx \\nabla_\\thetaL. The approximation error from dropping (I − \\alpha\\nabla\\^2_\\thetaL) is small when: (1) \\alpha\\nabla\\^2_\\thetaL \\approx 0 (small curvature relative to the identity), and (2) the mini-batch gradient noise Var[\\nabla_\\thetaL] dominates the curvature term. Empirically both conditions hold in the low-shot regime where MAML operates.",
+        "In practice, the Hessian-vector products (second-order terms) tend to be small relative to first-order gradient magnitudes, and stochastic gradient noise dominates the error introduced by the first-order approximation - making FOMAML nearly as good as full MAML at much lower cost.\n\nThe full MAML gradient is \\nabla_\\theta^MAML = \\nabla_{\\theta'}L \\cdot (I − \\alpha\\nabla\\^2_\\thetaL), while FOMAML uses \\nabla_\\theta^FOMAML \\approx \\nabla_\\thetaL. The approximation error from dropping (I − \\alpha\\nabla\\^2_\\thetaL) is small when: (1) \\alpha\\nabla\\^2_\\thetaL \\approx 0 (small curvature relative to the identity), and (2) the mini-batch gradient noise Var[\\nabla_\\thetaL] dominates the curvature term. Empirically both conditions hold in the low-shot regime where MAML operates.",
       hints: [
         "If the Hessian terms are very small, dropping them introduces very little error.",
         "Think about what dominates the gradient signal in mini-batch SGD: the mini-batch noise or the curvature terms?",
@@ -438,10 +438,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD treats both the initialisation \\theta and the per-parameter learning rates \\alpha (stored as a vector of the same shape as \\theta) as meta-learnable parameters. The inner-loop update becomes:\n$$\\theta'_i = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nwhere ⊙ is elementwise multiplication. This allows the meta-learner to learn both what to update (\\theta) and by how much (\\alpha) — effectively learning a diagonal preconditioning matrix for each task. The meta-objective is:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\noptimized jointly over \\theta and \\alpha.",
+        "Meta-SGD treats both the initialisation \\theta and the per-parameter learning rates \\alpha (stored as a vector of the same shape as \\theta) as meta-learnable parameters. The inner-loop update becomes:\n$$\\theta'_i = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}(\\theta),$$\nwhere ⊙ is elementwise multiplication. This allows the meta-learner to learn both what to update (\\theta) and by how much (\\alpha) - effectively learning a diagonal preconditioning matrix for each task. The meta-objective is:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\noptimized jointly over \\theta and \\alpha.",
       hints: [
         "MAML learns \\theta\\_0 but uses a fixed scalar learning rate. What else about SGD could be learned?",
-        "Think about per-parameter adaptive learning rates — Meta-SGD learns these as part of the meta-training.",
+        "Think about per-parameter adaptive learning rates - Meta-SGD learns these as part of the meta-training.",
       ],
     },
     {
@@ -466,13 +466,13 @@ const questions: Record<string, Question[]> = {
         "Why might meta-learned per-parameter learning rates in Meta-SGD be more effective than a global learning rate in MAML for few-shot regression tasks?",
       options: [
         "Per-parameter rates allow the model to skip updating parameters that are already near-optimal for the task distribution",
-        "Different parameters may need vastly different update magnitudes for efficient task adaptation — some features are shared across tasks while others are task-specific",
+        "Different parameters may need vastly different update magnitudes for efficient task adaptation - some features are shared across tasks while others are task-specific",
         "Global learning rates cause gradient explosion when the inner loop runs for more than 5 steps",
         "Per-parameter rates reduce the number of inner-loop steps needed from 5 to 1",
       ],
       correctAnswer: 1,
       explanation:
-        "In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.\n\nConsider a ConvNet backbone + linear head: the backbone parameters encode general visual features useful across tasks (small \\alpha_j ensures these useful features aren't disrupted by task adaptation), while the head parameters are specific to each task's classification boundaries (large \\alpha_j allows rapid task-specific adjustment). A scalar \\alpha cannot simultaneously be small for the backbone and large for the head — per-parameter \\alpha_j resolves this tension. Empirically, Meta-SGD often outperforms MAML on regression tasks where different output dimensions require different adaptation speeds.",
+        "In few-shot settings, some parameters encode shared representations (low learning rate optimal) while others are task-specific heads (high learning rate optimal). Per-parameter rates let the meta-learner implicitly discover and exploit this structure.\n\nConsider a ConvNet backbone + linear head: the backbone parameters encode general visual features useful across tasks (small \\alpha_j ensures these useful features aren't disrupted by task adaptation), while the head parameters are specific to each task's classification boundaries (large \\alpha_j allows rapid task-specific adjustment). A scalar \\alpha cannot simultaneously be small for the backbone and large for the head - per-parameter \\alpha_j resolves this tension. Empirically, Meta-SGD often outperforms MAML on regression tasks where different output dimensions require different adaptation speeds.",
       hints: [
         "Think about which layers in a neural network are task-specific vs. generally useful across tasks.",
         "A backbone feature extractor might need small updates; a task-specific head might need large ones.",
@@ -498,7 +498,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ANIL freezes the feature extractor during inner-loop adaptation and only adapts the final head layer. Remarkably, this achieves near-identical performance to full MAML, suggesting the feature extractor does most of the task-relevant work.",
       hints: [
-        'If ANIL is "Almost No Inner Loop" (head only), BOIL is its complement — body only.',
+        'If ANIL is "Almost No Inner Loop" (head only), BOIL is its complement - body only.',
         "Think about what it means to adapt the features but keep the classifier fixed.",
       ],
     },
@@ -512,7 +512,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "BOIL updates the backbone (body) during the inner loop and freezes the classification head, investigating how much of MAML\'s success comes from adapting features vs. adapting the classifier, and finding that body updates can be beneficial in some settings.",
       hints: [
-        'If ANIL is "Almost No Inner Loop" (head only), BOIL is its complement — body only.',
+        'If ANIL is "Almost No Inner Loop" (head only), BOIL is its complement - body only.',
         "Think about what it means to adapt the features but keep the classifier fixed.",
       ],
     },
@@ -530,7 +530,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'If feature reuse is the main driver of MAML\'s performance, then investing in better pre-training (e.g., larger backbones, stronger SSL pre-training) rather than complex meta-learning algorithms may yield better few-shot results — a finding consistent with "baseline" papers in the field.',
+        'If feature reuse is the main driver of MAML\'s performance, then investing in better pre-training (e.g., larger backbones, stronger SSL pre-training) rather than complex meta-learning algorithms may yield better few-shot results - a finding consistent with "baseline" papers in the field.',
       hints: [
         "If the feature extractor barely changes during inner-loop adaptation, what matters most?",
         "Think about papers that show simple fine-tuning of a well-pretrained backbone beats complex meta-learning methods.",
@@ -555,7 +555,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "MANNs couple a neural network controller with an external memory matrix that supports differentiable read and write operations, enabling rapid binding of new information (support examples) for few-shot retrieval.",
       hints: [
-        'The memory is "external" — it is separate from the model\'s weights and can be updated per episode.',
+        'The memory is "external" - it is separate from the model\'s weights and can be updated per episode.',
         "Think about why a standard RNN\'s hidden state might not be sufficient to store many few-shot examples.",
       ],
     },
@@ -569,8 +569,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "NTM\'s read/write heads combine content-based addressing (attention over memory by key similarity) and location-based addressing (sequential shifts), allowing flexible, differentiable memory access trained end-to-end via backpropagation.",
       hints: [
-        "Content-based addressing finds memory locations similar to a query key — like a dictionary lookup.",
-        "Location-based addressing allows sequential access patterns — like reading a tape.",
+        "Content-based addressing finds memory locations similar to a query key - like a dictionary lookup.",
+        "Location-based addressing allows sequential access patterns - like reading a tape.",
       ],
     },
     {
@@ -587,9 +587,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LRUA overwrites the least recently used memory slot, keeping task-relevant memories intact (since they are read frequently) while replacing stale, unused memories — an inductive bias suited for episodic few-shot learning.",
+        "LRUA overwrites the least recently used memory slot, keeping task-relevant memories intact (since they are read frequently) while replacing stale, unused memories - an inductive bias suited for episodic few-shot learning.",
       hints: [
-        'Think about what "least recently used" means as a replacement policy — it discards what hasn\'t been needed recently.',
+        'Think about what "least recently used" means as a replacement policy - it discards what hasn\'t been needed recently.',
         "In a few-shot episode, which memory slots should be preserved: ones you\'ve consulted or ones you haven\'t?",
       ],
     },
@@ -611,7 +611,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A hypernetwork takes task context (e.g., support set embeddings) as input and outputs the weights of a separate target network, enabling rapid task-specific weight generation without gradient-based inner-loop adaptation.",
       hints: [
-        'The hypernetwork produces the weights for another network — it\'s a "network that makes networks".',
+        'The hypernetwork produces the weights for another network - it\'s a "network that makes networks".',
         "Think about how this differs from gradient-based adaptation: instead of updating weights, you generate them.",
       ],
     },
@@ -625,7 +625,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Chunking and factorisation techniques allow hypernetworks to generate weights layer-by-layer or in compressed factored form (e.g., low-rank factors), enabling their application to large target networks without outputting every weight simultaneously.",
       hints: [
-        "Think about how you would handle generating millions of weights — do you need all of them at once?",
+        "Think about how you would handle generating millions of weights - do you need all of them at once?",
         "Low-rank factorisation is a common trick: generate A and B such that W \\approx AB, rather than generating W directly.",
       ],
     },
@@ -643,10 +643,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At meta-test time, a hypernetwork generates task-specific weights in a single forward pass — O(1) in terms of gradient steps — whereas MAML requires multiple forward and backward passes through the target network on the support set.",
+        "At meta-test time, a hypernetwork generates task-specific weights in a single forward pass - O(1) in terms of gradient steps - whereas MAML requires multiple forward and backward passes through the target network on the support set.",
       hints: [
-        "MAML adapts through gradient steps — each step requires a forward and backward pass through the full network.",
-        "A hypernetwork just runs once and produces weights — how does that compare to multiple gradient steps?",
+        "MAML adapts through gradient steps - each step requires a forward and backward pass through the full network.",
+        "A hypernetwork just runs once and produces weights - how does that compare to multiple gradient steps?",
       ],
     },
   ],
@@ -668,7 +668,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Black-box approaches use a recurrent model (LSTM, Transformer) as the meta-learner: it processes the support set sequentially and maintains internal state that encodes the task, producing predictions for queries without explicit gradient steps.",
       hints: [
-        "Black-box refers to the fact that the adaptation mechanism is entirely learned and opaque — no explicit gradient steps.",
+        "Black-box refers to the fact that the adaptation mechanism is entirely learned and opaque - no explicit gradient steps.",
         "Think about an LSTM that reads (x\\_1,y\\_1), (x\\_2,y\\_2), ... and then predicts y for a new x.",
       ],
     },
@@ -682,7 +682,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "SNAIL interleaves causal temporal convolutional blocks (for efficient local aggregation) with attention blocks (for direct access to any previous position), allowing it to process variable-length support sets effectively for meta-learning.",
       hints: [
-        "Temporal convolutions capture local patterns; attention captures global dependencies — SNAIL uses both.",
+        "Temporal convolutions capture local patterns; attention captures global dependencies - SNAIL uses both.",
         "Think about why you want both: local patterns for nearby support examples, global attention for the most relevant ones.",
       ],
     },
@@ -700,9 +700,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "LSTM hidden states have fixed capacity; as the support set grows larger or the task becomes more complex, the recurrent state may not be sufficient to store all task-relevant information — a scalability bottleneck that gradient-based methods avoid by updating weights directly.",
+        "LSTM hidden states have fixed capacity; as the support set grows larger or the task becomes more complex, the recurrent state may not be sufficient to store all task-relevant information - a scalability bottleneck that gradient-based methods avoid by updating weights directly.",
       hints: [
-        'Think about an LSTM\'s hidden state as a fixed-size "working memory" — what happens as the task complexity grows?',
+        'Think about an LSTM\'s hidden state as a fixed-size "working memory" - what happens as the task complexity grows?',
         "MAML stores task information in the adapted weights, which scale with model capacity; the LSTM hidden state is fixed-size.",
       ],
     },
@@ -758,7 +758,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In safety-critical domains (medical diagnosis, autonomous driving), knowing when the model is uncertain is as important as its predictions. Bayesian meta-learners provide posterior predictive distributions, enabling reliable uncertainty quantification with few-shot data.",
       hints: [
-        'Standard MAML produces a point prediction — it cannot say "I\'m not sure". Bayesian methods can.',
+        'Standard MAML produces a point prediction - it cannot say "I\'m not sure". Bayesian methods can.',
         'Think about a few-shot medical diagnosis system: would you prefer a confident wrong answer or an honest "uncertain"?',
       ],
     },
@@ -790,13 +790,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Gradient-based meta-learning suffers from meta-overfitting when the number of meta-training tasks is small relative to the model complexity — analogous to standard overfitting when training examples are few.",
+        "Gradient-based meta-learning suffers from meta-overfitting when the number of meta-training tasks is small relative to the model complexity - analogous to standard overfitting when training examples are few.",
       correctAnswer: "True",
       explanation:
         "With too few meta-training tasks, the meta-learner overfits: the learned initialization adapts well to the specific training task distribution but fails on novel meta-test tasks. Regularization techniques (dropout in the inner loop, data augmentation, task augmentation) or limiting the number of inner-loop steps help prevent meta-overfitting.",
       hints: [
         "Meta-overfitting is analogous to regular overfitting: too few examples (tasks) relative to model capacity.",
-        'In meta-learning, "examples" are entire tasks — overfitting to 50 tasks with a large model is easy.',
+        'In meta-learning, "examples" are entire tasks - overfitting to 50 tasks with a large model is easy.',
       ],
     },
     {
@@ -806,9 +806,9 @@ const questions: Record<string, Question[]> = {
       question:
         "The exact MAML meta-gradient \\nabla_\\theta L_{T_i}(f_{\\theta'_i}) involves a Hessian term. Using the chain rule with \\theta'_i = \\theta − \\alpha\\nablaL_{T_i}(\\theta), the full expression is:",
       options: [
-        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} \\cdot (I − \\alpha\\nabla\\^2_\\theta L_{T_i}(\\theta)) — requiring a Hessian-vector product computation",
-        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta} L_{T_i}(f_\\theta) — the same as the pre-adaptation gradient (FOMAML approximation)",
-        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} / \\alpha — the gradient divided by the inner learning rate",
+        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} \\cdot (I − \\alpha\\nabla\\^2_\\theta L_{T_i}(\\theta)) - requiring a Hessian-vector product computation",
+        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta} L_{T_i}(f_\\theta) - the same as the pre-adaptation gradient (FOMAML approximation)",
+        "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = \\nabla_{\\theta'_i} L_{T_i} / \\alpha - the gradient divided by the inner learning rate",
         "\\nabla_\\theta L_{T_i}(f_{\\theta'_i}) = 0 when one inner step is used, requiring at least two steps for a non-zero gradient",
       ],
       correctAnswer: 0,
@@ -816,7 +816,7 @@ const questions: Record<string, Question[]> = {
         "By chain rule: \\partialL(f_{\\theta'_i})/\\partial\\theta = \\partialL/\\partial\\theta'_i \\cdot \\partial\\theta'_i/\\partial\\theta = \\nabla_{\\theta'_i}L \\cdot (I − \\alpha\\nabla\\^2L_{T_i}(\\theta)). The Hessian \\nabla\\^2L_{T_i}(\\theta) makes this second-order. FOMAML drops this term, using only \\nabla_{\\theta'_i}L (first order). The Hessian-vector product can be computed via reverse-mode autodiff without materializing the full Hessian.",
       hints: [
         "Use chain rule: dL(\\theta'(\\theta))/d\\theta = dL/d\\theta' \\cdot d\\theta'/d\\theta.",
-        "d\\theta'/d\\theta = d(\\theta − \\alpha\\nablaL)/d\\theta = I − \\alpha\\nabla\\^2L — this is the Hessian term.",
+        "d\\theta'/d\\theta = d(\\theta − \\alpha\\nablaL)/d\\theta = I − \\alpha\\nabla\\^2L - this is the Hessian term.",
       ],
     },
   ],
@@ -837,7 +837,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "p(T) is the distribution from which tasks (episodes) are sampled during meta-training. Designing or selecting this distribution is critical because the meta-learner generalises to tasks drawn from the same distribution at meta-test time.",
       hints: [
-        'Think of p(T) as the "training set" of the meta-learner — but its elements are tasks, not examples.',
+        'Think of p(T) as the "training set" of the meta-learner - but its elements are tasks, not examples.',
         "If p(T) is too narrow (few task types), the meta-learner will overfit to those tasks.",
       ],
     },
@@ -872,7 +872,7 @@ const questions: Record<string, Question[]> = {
         "Meta-train/test task distribution shift degrades meta-learner performance. If meta-test tasks differ structurally from meta-train tasks, the learned adaptation strategy may be ineffective or harmful.",
       hints: [
         "Think about training a meta-learner on medical image tasks and testing on satellite image tasks.",
-        "The meta-learner\'s inductive bias is shaped by the training task distribution — mismatch breaks generalisation.",
+        "The meta-learner\'s inductive bias is shaped by the training task distribution - mismatch breaks generalisation.",
       ],
     },
   ],
@@ -894,7 +894,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ZSL leverages semantic class descriptors (e.g., attribute vectors, word embeddings) shared between seen and unseen classes. By learning to map visual features to the same semantic space, the model can recognise unseen classes from their descriptions alone.",
       hints: [
-        "If you\'ve never seen a \"zebra\" but know it has black and white stripes and four legs, you can recognise one — that\'s ZSL.",
+        "If you\'ve never seen a \"zebra\" but know it has black and white stripes and four legs, you can recognise one - that\'s ZSL.",
         "The key is shared semantic representation between seen and unseen classes.",
       ],
     },
@@ -908,7 +908,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Standard ZSL tests only on unseen classes, while GZSL tests on both seen and unseen classes. Models tend to be biased toward seen classes (which they trained on), making GZSL a more challenging and realistic evaluation setting.",
       hints: [
-        "In standard ZSL, you know the test class is unseen. In GZSL, you don\'t know — it could be either.",
+        "In standard ZSL, you know the test class is unseen. In GZSL, you don\'t know - it could be either.",
         "Models trained on seen classes have a strong prior toward predicting seen class labels.",
       ],
     },
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'In high-dimensional spaces, a few "hub" points tend to appear as nearest neighbours of many other points due to concentration of measure. In ZSL, hub class prototypes attract many query embeddings, causing misclassification.',
       hints: [
-        'In high dimensions, distances become more uniform — some points become "hubs" that are close to many others.',
+        'In high dimensions, distances become more uniform - some points become "hubs" that are close to many others.',
         "Think about what happens to k-NN classification when a few prototypes are always among the k-nearest to most queries.",
       ],
     },
@@ -948,10 +948,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ICL allows a frozen LLM to perform new tasks by reading input-output examples in the prompt context and generalising the pattern to a new input — achieving few-shot adaptation without parameter updates.",
+        "ICL allows a frozen LLM to perform new tasks by reading input-output examples in the prompt context and generalising the pattern to a new input - achieving few-shot adaptation without parameter updates.",
       hints: [
         'In-context means the "learning" happens within the context window at inference time, not in the weights.',
-        "No gradient updates happen in ICL — the model\'s weights stay fixed.",
+        "No gradient updates happen in ICL - the model\'s weights stay fixed.",
       ],
     },
     {
@@ -962,7 +962,7 @@ const questions: Record<string, Question[]> = {
         "In-context learning can be interpreted as implicit Bayesian inference, where the LLM approximates a posterior over task functions given the in-context demonstrations.",
       correctAnswer: "True",
       explanation:
-        "Theoretical work (e.g., Xie et al. 2022) shows that ICL in LLMs trained on diverse tasks approximates Bayesian inference: the model infers the latent task from demonstrations and predicts accordingly — connecting ICL to meta-learning and Bayesian models.",
+        "Theoretical work (e.g., Xie et al. 2022) shows that ICL in LLMs trained on diverse tasks approximates Bayesian inference: the model infers the latent task from demonstrations and predicts accordingly - connecting ICL to meta-learning and Bayesian models.",
       hints: [
         'Think about how the model updates its "belief" about the task as it reads more demonstrations.',
         "Bayesian inference: prior (from pre-training) \\times likelihood (from demonstrations) \\approx posterior (LLM prediction).",
@@ -976,7 +976,7 @@ const questions: Record<string, Question[]> = {
         "Research on in-context learning has found that the labels in ICL demonstrations are often less important than previously assumed. What does this suggest?",
       options: [
         "LLMs ignore all information in the context and rely solely on pre-training",
-        "The format, distribution, and structure of input-output pairs matter more than the accuracy of the labels — the model is learning to locate the right task format, not the correct input-output mapping",
+        "The format, distribution, and structure of input-output pairs matter more than the accuracy of the labels - the model is learning to locate the right task format, not the correct input-output mapping",
         "Demonstrations with wrong labels always improve performance by acting as a form of regularisation",
         "LLMs cannot learn from labelled examples and only benefit from unlabelled input demonstrations",
       ],
@@ -1005,7 +1005,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Soft prompt tuning prepends learnable continuous vectors to the input sequence and optimises them via gradient descent on a task\'s training set, keeping the massive pre-trained model frozen — dramatically reducing the number of trainable parameters.",
+        "Soft prompt tuning prepends learnable continuous vectors to the input sequence and optimises them via gradient descent on a task\'s training set, keeping the massive pre-trained model frozen - dramatically reducing the number of trainable parameters.",
       hints: [
         'Think about what "soft" means: the prompt tokens are not discrete words but continuous floating-point vectors.',
         "Only the prompt vectors are updated; the LLM\'s billions of parameters stay frozen.",
@@ -1019,7 +1019,7 @@ const questions: Record<string, Question[]> = {
         "Meta-prompt tuning frameworks train a prompt initialisation across many tasks so that it can be rapidly adapted to new tasks with very few gradient steps, directly analogising MAML to the prompt space.",
       correctAnswer: "True",
       explanation:
-        "Works like MAML applied to prompts (e.g., ATTEMPT, MetaPrompt) learn a shared prompt initialisation across meta-training tasks, enabling few-step adaptation of the prompt vectors to new tasks — a direct application of the MAML meta-learning algorithm to the prompt parameter space.",
+        "Works like MAML applied to prompts (e.g., ATTEMPT, MetaPrompt) learn a shared prompt initialisation across meta-training tasks, enabling few-step adaptation of the prompt vectors to new tasks - a direct application of the MAML meta-learning algorithm to the prompt parameter space.",
       hints: [
         "MAML finds a good parameter initialisation; apply the same idea to prompt parameters instead of model weights.",
         "If prompt vectors are the only trainable parameters, MAML over them is extremely parameter-efficient.",
@@ -1039,9 +1039,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Prompt tuning can be seen as learning a task-specific input adaptation while leveraging the pre-trained model as a frozen general-purpose base — analogous to meta-learning an input conditioning mechanism that guides the model\'s behaviour without relearning from scratch.",
+        "Prompt tuning can be seen as learning a task-specific input adaptation while leveraging the pre-trained model as a frozen general-purpose base - analogous to meta-learning an input conditioning mechanism that guides the model\'s behaviour without relearning from scratch.",
       hints: [
-        "Meta-learning is about adapting a general base to specific tasks efficiently — what does prompt tuning adapt?",
+        "Meta-learning is about adapting a general base to specific tasks efficiently - what does prompt tuning adapt?",
         'The frozen LLM is the "meta-learner"; the soft prompt is the task-specific adaptation.',
       ],
     },
@@ -1064,7 +1064,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Benchmarks like miniImageNet test within-domain generalisation. Cross-domain meta-learning evaluates whether a meta-learner trained on one domain (e.g., natural photos) can adapt to novel domains (e.g., medical images, satellite photos) with few examples.",
       hints: [
-        "Think about training on animals and testing on skin lesions — that\'s a domain shift.",
+        "Think about training on animals and testing on skin lesions - that\'s a domain shift.",
         "Within-domain success doesn\'t guarantee cross-domain generalisation.",
       ],
     },
@@ -1079,7 +1079,7 @@ const questions: Record<string, Question[]> = {
         "Large-scale pre-training on diverse data produces feature representations that capture general visual concepts, making them more broadly transferable to target domains that differ from the training domain.",
       hints: [
         "Diversity of pre-training data correlates with breadth of learned representations.",
-        "Think about why ImageNet features transfer well to many vision tasks — they encode general visual structure.",
+        "Think about why ImageNet features transfer well to many vision tasks - they encode general visual structure.",
       ],
     },
     {
@@ -1121,7 +1121,7 @@ const questions: Record<string, Question[]> = {
         "Catastrophic forgetting occurs because SGD updates weights to minimise the current task\'s loss, overwriting the weight configurations that encoded previously learned task knowledge.",
       hints: [
         "Think about what happens to the weights for Task 1 when you train only on Task 2.",
-        'Gradient updates are not "task-aware" — they modify shared weights to fit the current task.',
+        'Gradient updates are not "task-aware" - they modify shared weights to fit the current task.',
       ],
     },
     {
@@ -1152,7 +1152,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "OML simulates a continual learning stream in the inner loop (sequential task exposure without replay) and evaluates retention of all tasks in the outer loop — directly meta-training the model to have low forgetting across sequential task exposure.",
+        "OML simulates a continual learning stream in the inner loop (sequential task exposure without replay) and evaluates retention of all tasks in the outer loop - directly meta-training the model to have low forgetting across sequential task exposure.",
       hints: [
         "OML\'s training procedure simulates the exact evaluation protocol of continual learning.",
         "The outer loop penalises forgetting by measuring performance on earlier tasks after sequential adaptation.",
@@ -1177,7 +1177,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Meta-RL agents are trained across a distribution of tasks (different reward functions, dynamics, or goals) so they can rapidly adapt to new tasks from the same distribution with minimal new interactions.",
       hints: [
-        'Think of meta-RL as "learning to learn to act" — the meta-learner learns how to adapt the policy quickly.',
+        'Think of meta-RL as "learning to learn to act" - the meta-learner learns how to adapt the policy quickly.',
         "A few episodes with a new reward function should be enough for a meta-RL agent to identify and optimise it.",
       ],
     },
@@ -1211,7 +1211,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In MAML-RL, the inner-loop gradient is estimated via policy gradient (REINFORCE), which has notoriously high variance. This requires many rollouts per task per inner step, making meta-training computationally demanding and data-hungry compared to supervised MAML.",
       hints: [
-        "Policy gradient uses sampled trajectories for gradient estimation — why are these estimates noisy?",
+        "Policy gradient uses sampled trajectories for gradient estimation - why are these estimates noisy?",
         "Compare to supervised MAML where the inner gradient is computed on fixed support examples with a deterministic loss.",
       ],
     },
@@ -1234,7 +1234,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Meta-learning can train a performance predictor or warm initialisation that uses knowledge from prior architecture evaluations to quickly estimate new architecture quality, dramatically reducing the number of full training runs needed.",
       hints: [
-        "NAS is expensive because evaluating each architecture requires training — meta-learning reduces this cost.",
+        "NAS is expensive because evaluating each architecture requires training - meta-learning reduces this cost.",
         "Think about learning a function that maps architecture descriptors to expected accuracy.",
       ],
     },
@@ -1249,7 +1249,7 @@ const questions: Record<string, Question[]> = {
         "Meta-learning across HPO tasks builds a prior over good hyperparameter configurations. For a new task, this prior warm-starts the search, finding good configurations faster than cold-start methods like random search or Bayesian optimisation from scratch.",
       hints: [
         "If a learning rate of 3e-4 works well for many similar tasks, it\'s a good starting point for a new similar task.",
-        "Warm-starting is the opposite of cold-starting — you begin from an informed prior, not ignorance.",
+        "Warm-starting is the opposite of cold-starting - you begin from an informed prior, not ignorance.",
       ],
     },
     {
@@ -1268,8 +1268,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "DARTS uses a continuous relaxation where each operation in the architecture is a weighted softmax mixture of candidate operations. Gradient descent jointly optimises the architecture mixing weights (via the validation loss) and model weights (via the training loss) in a bilevel optimisation.",
       hints: [
-        "Discrete search spaces are not differentiable — DARTS makes them continuous with a softmax mixture.",
-        "Think about gradient descent: it requires a continuous, differentiable objective — DARTS constructs one over the architecture.",
+        "Discrete search spaces are not differentiable - DARTS makes them continuous with a softmax mixture.",
+        "Think about gradient descent: it requires a continuous, differentiable objective - DARTS constructs one over the architecture.",
       ],
     },
   ],
@@ -1283,13 +1283,13 @@ const questions: Record<string, Question[]> = {
         "What is the key difference between multi-task learning (MTL) and meta-learning?",
       options: [
         "MTL uses larger datasets; meta-learning uses smaller datasets",
-        "MTL learns shared representations to perform well on a fixed set of training tasks; meta-learning aims to learn an adaptation mechanism that generalises to novel tasks at test time — MTL\'s tasks are fixed, meta-learning\'s meta-test tasks are novel",
+        "MTL learns shared representations to perform well on a fixed set of training tasks; meta-learning aims to learn an adaptation mechanism that generalises to novel tasks at test time - MTL\'s tasks are fixed, meta-learning\'s meta-test tasks are novel",
         "MTL trains separate models for each task; meta-learning trains one model for all tasks",
         "MTL requires labelled data for all tasks; meta-learning requires unlabelled data",
       ],
       correctAnswer: 1,
       explanation:
-        'MTL optimises E_T[L_T(h)] for a known fixed set of tasks, learning shared representations that benefit all tasks simultaneously. Meta-learning optimises the ability to adapt to new tasks from p(T) — the meta-test tasks are disjoint from meta-training tasks. MTL can be seen as the "outer loop only" of meta-learning.',
+        'MTL optimises E_T[L_T(h)] for a known fixed set of tasks, learning shared representations that benefit all tasks simultaneously. Meta-learning optimises the ability to adapt to new tasks from p(T) - the meta-test tasks are disjoint from meta-training tasks. MTL can be seen as the "outer loop only" of meta-learning.',
       hints: [
         "MTL\'s test condition is the same as its training condition (same fixed tasks); meta-learning\'s test condition (new tasks) is different.",
         "If a method works well on training tasks but fails on new tasks, it is doing MTL but not meta-learning.",
@@ -1318,7 +1318,7 @@ const questions: Record<string, Question[]> = {
         "In MAML applied to a multi-task setting with N tasks, the outer-loop gradient is: \\nabla_\\theta \\Sigma\\_i L_{T_i}(f_{\\theta'_i}). What challenge arises when the tasks are very diverse (e.g., mixing visual and language tasks)?",
       options: [
         "The sum of gradients always cancels out to zero when tasks are diverse",
-        'Different task loss gradients may point in conflicting directions in parameter space, making the meta-gradient a compromise that fails to find an initialization that adapts well to all tasks — the "gradient conflict" problem',
+        'Different task loss gradients may point in conflicting directions in parameter space, making the meta-gradient a compromise that fails to find an initialization that adapts well to all tasks - the "gradient conflict" problem',
         "Diverse tasks require different inner-loop step counts, which MAML cannot accommodate",
         "The second-order Hessian terms become infinite for cross-modal tasks",
       ],
@@ -1326,7 +1326,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "When task gradients are negatively correlated (point in opposite directions), naively averaging them produces a gradient that is suboptimal for all tasks. Methods like PCGrad (gradient surgery) or CAGrad project conflicting gradients to reduce interference, and multi-head architectures with task-specific components help prevent destructive interference in multi-task meta-learning.",
       hints: [
-        "Gradient conflicts occur when improving performance on one task harms another — a fundamental MTL challenge.",
+        "Gradient conflicts occur when improving performance on one task harms another - a fundamental MTL challenge.",
         "Methods like PCGrad detect conflicting gradients and project them to avoid interference.",
       ],
     },
@@ -1347,10 +1347,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-Dataset aggregates 10 diverse image datasets (ImageNet, Aircraft, CUB, Textures, QuickDraw, etc.) into a unified evaluation that tests few-shot generalisation across domains with variable-way variable-shot episodes — revealing that methods tuned on miniImageNet often fail badly on cross-domain episodes.",
+        "Meta-Dataset aggregates 10 diverse image datasets (ImageNet, Aircraft, CUB, Textures, QuickDraw, etc.) into a unified evaluation that tests few-shot generalisation across domains with variable-way variable-shot episodes - revealing that methods tuned on miniImageNet often fail badly on cross-domain episodes.",
       hints: [
         "Think about what makes a benchmark realistic: diversity of domains or depth within one domain.",
-        "Meta-Dataset\'s contribution is breadth — many different types of visual tasks in one evaluation.",
+        "Meta-Dataset\'s contribution is breadth - many different types of visual tasks in one evaluation.",
       ],
     },
     {
@@ -1362,7 +1362,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Meta-Dataset episodes randomly sample the number of ways (5–50) and the number of support examples per class (1–20) from each dataset, creating a more realistic and challenging evaluation that tests robustness to varying episode structure, not just performance at a fixed N-way K-shot setting.",
+        "Meta-Dataset episodes randomly sample the number of ways (5-50) and the number of support examples per class (1-20) from each dataset, creating a more realistic and challenging evaluation that tests robustness to varying episode structure, not just performance at a fixed N-way K-shot setting.",
       hints: [
         "Real-world few-shot problems don\'t come with a fixed N-way K-shot structure.",
         "Variable episodes test whether methods are robust to varying amounts of support information.",
@@ -1408,7 +1408,7 @@ const questions: Record<string, Question[]> = {
         "Baxter (2000) showed that the meta-generalisation error bound has two terms: (1) within-task generalisation (depends on m, examples per task) and (2) task-level generalisation (depends on n, number of tasks). More diverse tasks and more examples per task both tighten the bound. The hypothesis class complexity for task adaptation (H) also appears, analogous to VC dimension in standard learning theory.",
       hints: [
         'Think about what "meta-test performance" means and what controls how well meta-training predicts it.',
-        "The bound has terms for both task-level and sample-level generalisation — two separate quantities to control.",
+        "The bound has terms for both task-level and sample-level generalisation - two separate quantities to control.",
       ],
     },
     {
@@ -1416,13 +1416,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The PAC-Bayes framework has been applied to derive generalisation bounds for gradient-based meta-learning by treating the meta-initialisation as a prior p(\\theta) and the adapted parameters \\theta'_i as drawn from a posterior — bounding performance by KL(posterior || prior).",
+        "The PAC-Bayes framework has been applied to derive generalisation bounds for gradient-based meta-learning by treating the meta-initialisation as a prior p(\\theta) and the adapted parameters \\theta'_i as drawn from a posterior - bounding performance by KL(posterior || prior).",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
         "PAC-Bayes bounds for meta-learning (Amit & Meir 2018) treat the meta-initialisation as a prior p(\\theta) and the task-adapted distribution q(\\theta'|S_i) as a posterior. The bound is: E_T[L_T(\\theta')] \\leq E_T[L_S(\\theta')] + sqrt[(KL(q||p) + log(n/\\delta)) / (2n)], connecting meta-generalisation to the information-theoretic distance between initialization and adapted parameters.",
       hints: [
-        "PAC-Bayes: the generalisation gap is bounded by KL(posterior || prior) — how far you moved from the initialization.",
+        "PAC-Bayes: the generalisation gap is bounded by KL(posterior || prior) - how far you moved from the initialization.",
         "A tight initialization (small KL) means the meta-learned prior is close to optimal for each task.",
       ],
     },
@@ -1434,16 +1434,16 @@ const questions: Record<string, Question[]> = {
         'What does the "task complexity" parameter in meta-learning generalisation bounds capture, and what architectural choice does it motivate?',
       options: [
         "The computational cost of running the meta-learner\'s inner loop",
-        "The richness of the task-specific hypothesis class (how many parameters can be adapted in the inner loop) — larger adaptation expressivity leads to larger complexity term and potentially worse meta-generalisation, motivating adapter-based or head-only adaptation (like ANIL) over full-network adaptation",
+        "The richness of the task-specific hypothesis class (how many parameters can be adapted in the inner loop) - larger adaptation expressivity leads to larger complexity term and potentially worse meta-generalisation, motivating adapter-based or head-only adaptation (like ANIL) over full-network adaptation",
         "The number of gradient steps used in the inner loop",
         "The diversity of the meta-training task distribution",
       ],
       correctAnswer: 1,
       explanation:
-        "More expressive task-specific adaptation (e.g., adapting all parameters vs. only the head) increases hypothesis class complexity and can hurt meta-generalisation when n (number of tasks) is small. This explains why ANIL (head-only adaptation) or adapter-based methods can generalise better than full MAML when training tasks are few — their smaller task complexity leads to tighter generalisation bounds.",
+        "More expressive task-specific adaptation (e.g., adapting all parameters vs. only the head) increases hypothesis class complexity and can hurt meta-generalisation when n (number of tasks) is small. This explains why ANIL (head-only adaptation) or adapter-based methods can generalise better than full MAML when training tasks are few - their smaller task complexity leads to tighter generalisation bounds.",
       hints: [
         "More expressive adaptation = more complex hypothesis class = bound tightens only with more tasks.",
-        "ANIL adapts only the head — its task-specific hypothesis class complexity is much smaller than full MAML.",
+        "ANIL adapts only the head - its task-specific hypothesis class complexity is much smaller than full MAML.",
       ],
     },
   ],
@@ -1463,7 +1463,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vanilla MAML requires differentiating through inner-loop gradient steps, resulting in Hessian-vector products that are O(P\\^2) in memory/compute with model parameters P — the primary motivation for first-order approximations.",
+        "Vanilla MAML requires differentiating through inner-loop gradient steps, resulting in Hessian-vector products that are O(P\\^2) in memory/compute with model parameters P - the primary motivation for first-order approximations.",
       hints: [
         "First-order approximations like FOMAML exist specifically because second-order computation is the bottleneck.",
         "Hessian computation scales quadratically with parameter count.",
@@ -1491,7 +1491,7 @@ const questions: Record<string, Question[]> = {
         'Linear probing on frozen pre-trained features is often considered an "efficient meta-learning baseline." Why is this efficient in both computation and data?',
       options: [
         "Linear probes use fewer parameters than the pre-trained backbone, reducing inference cost",
-        "Fitting a linear classifier on frozen features requires only a small support set and a single matrix inversion or few gradient steps — much cheaper than full meta-learning while often competitive in accuracy",
+        "Fitting a linear classifier on frozen features requires only a small support set and a single matrix inversion or few gradient steps - much cheaper than full meta-learning while often competitive in accuracy",
         "Pre-trained features are already task-specific, eliminating the need for any adaptation",
         "Linear probes avoid the vanishing gradient problem that affects deep fine-tuning",
       ],
@@ -1513,16 +1513,16 @@ const questions: Record<string, Question[]> = {
       question: 'In what sense can GPT-3 be considered a "meta-learner"?',
       options: [
         "GPT-3 was explicitly trained with MAML on a distribution of NLP tasks",
-        "GPT-3's pre-training on diverse data enables it to adapt to new tasks via in-context learning without gradient updates — a form of meta-learning at inference time where the model uses the prompt context as a task description",
+        "GPT-3's pre-training on diverse data enables it to adapt to new tasks via in-context learning without gradient updates - a form of meta-learning at inference time where the model uses the prompt context as a task description",
         "GPT-3 stores all training examples in an external memory that it retrieves at inference time",
         "GPT-3 uses a recurrent architecture that maintains task state across queries",
       ],
       correctAnswer: 1,
       explanation:
-        'GPT-3 is a meta-learner in the sense that pre-training on diverse data implicitly trains an adaptation mechanism (in-context learning), allowing it to generalise to new tasks from a few prompt examples without any gradient updates — the hallmark of meta-learning. Brown et al. (2020) explicitly frame GPT-3\'s in-context learning as "few-shot meta-learning."',
+        'GPT-3 is a meta-learner in the sense that pre-training on diverse data implicitly trains an adaptation mechanism (in-context learning), allowing it to generalise to new tasks from a few prompt examples without any gradient updates - the hallmark of meta-learning. Brown et al. (2020) explicitly frame GPT-3\'s in-context learning as "few-shot meta-learning."',
       hints: [
         'Think about what "learning to learn" means for a language model: it learns how to use demonstrations to solve new tasks.',
-        "No gradient updates happen in GPT-3 ICL — all adaptation is through the attention mechanism using the context.",
+        "No gradient updates happen in GPT-3 ICL - all adaptation is through the attention mechanism using the context.",
       ],
     },
     {
@@ -1534,7 +1534,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "The diverse pre-training distribution shapes the model\'s inductive bias (prior) over tasks. When few-shot prompted, the model uses this prior to rapidly identify and solve the new task — a functional analogue to a Bayesian meta-learned prior. This connection was formalized by Xie et al. (2022) who showed ICL approximates Bayesian inference under a mixture-of-tasks data generating process.",
+        "The diverse pre-training distribution shapes the model\'s inductive bias (prior) over tasks. When few-shot prompted, the model uses this prior to rapidly identify and solve the new task - a functional analogue to a Bayesian meta-learned prior. This connection was formalized by Xie et al. (2022) who showed ICL approximates Bayesian inference under a mixture-of-tasks data generating process.",
       hints: [
         "Bayesian meta-learning: learn a prior p(\\theta) from many tasks, update to posterior given support set.",
         "Foundation model ICL: pre-training builds an implicit prior; demonstrations update the implicit posterior.",
@@ -1554,10 +1554,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        'FLAN instruction-tunes a frozen LLM on 1,800+ NLP tasks formatted as natural language instructions (e.g., "Translate to French: ..."; "Summarize: ..."). This can be seen as multi-task meta-learning: the model learns to follow task instructions and generalises zero-shot to unseen instruction-described tasks — significantly improving zero-shot performance over the base model.',
+        'FLAN instruction-tunes a frozen LLM on 1,800+ NLP tasks formatted as natural language instructions (e.g., "Translate to French: ..."; "Summarize: ..."). This can be seen as multi-task meta-learning: the model learns to follow task instructions and generalises zero-shot to unseen instruction-described tasks - significantly improving zero-shot performance over the base model.',
       hints: [
         "Instruction tuning = training on tasks described in natural language, hoping the pattern generalizes to new tasks.",
-        "FLAN evaluates on task clusters held out during training — a direct meta-generalisation test.",
+        "FLAN evaluates on task clusters held out during training - a direct meta-generalisation test.",
       ],
     },
   ],
@@ -1580,7 +1580,7 @@ const questions: Record<string, Question[]> = {
         "Physical robot trials are slow, expensive, and can damage hardware. Meta-learning aims to enable robots to adapt to new tasks (new objects, environments, dynamics) from only a handful of real-world trials, reducing data collection burden.",
       hints: [
         "Think about the cost of 10,000 robot arm manipulation trials vs. 10,000 ImageNet images.",
-        "Fast adaptation from few trials is the core meta-learning promise — why is it especially valuable for robots?",
+        "Fast adaptation from few trials is the core meta-learning promise - why is it especially valuable for robots?",
       ],
     },
     {
@@ -1593,7 +1593,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Randomising simulation parameters (dynamics, friction, sensor noise) during meta-training forces the meta-learner to develop robust adaptation strategies. This "meta-sim" approach reduces the number of real-world trials needed for sim-to-real adaptation.',
       hints: [
-        "Domain randomisation generates diverse simulated tasks — what does meta-learning do with that diversity?",
+        "Domain randomisation generates diverse simulated tasks - what does meta-learning do with that diversity?",
         "If the meta-learner can adapt across simulated environments, it may also adapt to the real environment quickly.",
       ],
     },
@@ -1611,7 +1611,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By meta-training across morphology variations, MAML finds an initialisation from which a few gradient steps (using a handful of rollouts in the new morphology) yield a well-adapted locomotion policy — enabling fast recovery from damage or hardware changes.",
+        "By meta-training across morphology variations, MAML finds an initialisation from which a few gradient steps (using a handful of rollouts in the new morphology) yield a well-adapted locomotion policy - enabling fast recovery from damage or hardware changes.",
       hints: [
         'Meta-training on varied morphologies teaches "how to adapt to a new morphology" in the initialisation.',
         "At test time, a few real rollouts with the damaged/changed morphology provide the gradient signal for adaptation.",
@@ -1628,7 +1628,7 @@ const questions: Record<string, Question[]> = {
         "Personalisation in ML can be cast as a meta-learning problem by treating each user as:",
       options: [
         "A separate dataset to train a dedicated model from scratch",
-        "A task: a few personal examples (support set) are used to rapidly adapt a shared meta-learned model to the individual user\'s preferences — the global model is the meta-learned initialisation, the user model is the adapted parameters",
+        "A task: a few personal examples (support set) are used to rapidly adapt a shared meta-learned model to the individual user\'s preferences - the global model is the meta-learned initialisation, the user model is the adapted parameters",
         "A data augmentation source for improving the global model",
         "A validation set for measuring global model generalisation",
       ],
@@ -1636,7 +1636,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Each user\'s interaction history forms a \"support set\" for adapting a global meta-learned model to that user\'s personal preferences. MAML-based personalization (per FedMeta, pFedMe) learns an initialisation from which a few gradient steps yield a personalized model, enabling personalization with very few user-specific examples.",
       hints: [
-        'MAML finds a good initialization for fast adaptation — the "task" here is each user\'s preference modeling.',
+        'MAML finds a good initialization for fast adaptation - the "task" here is each user\'s preference modeling.',
         "The global model encodes shared knowledge; the personalized model captures individual differences.",
       ],
     },
@@ -1662,7 +1662,7 @@ const questions: Record<string, Question[]> = {
         "Why might meta-learned per-parameter learning rates in Meta-SGD be more effective than a global learning rate in MAML for few-shot regression tasks?",
       options: [
         "Per-parameter rates allow the model to skip updating parameters that are already near-optimal for the task distribution",
-        "Different parameters may need vastly different update magnitudes for efficient task adaptation — some features are shared across tasks while others are task-specific",
+        "Different parameters may need vastly different update magnitudes for efficient task adaptation - some features are shared across tasks while others are task-specific",
         "Global learning rates cause gradient explosion when the inner loop runs for more than 5 steps",
         "Per-parameter rates reduce the number of inner-loop steps needed from 5 to 1",
       ],
@@ -1724,7 +1724,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Key MAML hyperparameters are: \\alpha (inner-loop step size, usually 0.01–0.1 for few-shot classification), the number of inner-loop gradient steps (1 in the original paper, more steps at test time), \\beta (outer-loop/meta learning rate, typically 0.001 with Adam), and the number of tasks per outer-loop batch. Finn et al. 2017 used these settings to achieve ~48.70% on 5-way 1-shot miniImageNet.",
+        "Key MAML hyperparameters are: \\alpha (inner-loop step size, usually 0.01-0.1 for few-shot classification), the number of inner-loop gradient steps (1 in the original paper, more steps at test time), \\beta (outer-loop/meta learning rate, typically 0.001 with Adam), and the number of tasks per outer-loop batch. Finn et al. 2017 used these settings to achieve ~48.70% on 5-way 1-shot miniImageNet.",
       hints: [
         "\\alpha and \\beta serve different purposes: \\alpha is fixed during training and controls inner-loop adaptation; \\beta is the meta-optimizer step size.",
         "More inner-loop steps generally improve test performance but are not used during meta-training (1 step is typical).",
@@ -1747,7 +1747,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Large text-to-image models generalize to novel concept combinations by conditioning on text prompts at inference time. The textual conditioning space is rich enough that combinations of concepts unseen during training can still produce coherent outputs — a form of compositional few-shot generalization.",
+        "Large text-to-image models generalize to novel concept combinations by conditioning on text prompts at inference time. The textual conditioning space is rich enough that combinations of concepts unseen during training can still produce coherent outputs - a form of compositional few-shot generalization.",
     },
     {
       id: "q-meta-kp31-2",
@@ -1848,7 +1848,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "While both learn similarity-based representations, they differ at inference time. Siamese networks compare a query to each support example independently using a learned distance. Matching Networks use attention over the full support set, producing a weighted combination of support labels — incorporating set-level context that Siamese networks ignore.",
+        "While both learn similarity-based representations, they differ at inference time. Siamese networks compare a query to each support example independently using a learned distance. Matching Networks use attention over the full support set, producing a weighted combination of support labels - incorporating set-level context that Siamese networks ignore.",
     },
     {
       id: "q-meta-kp33-3",
@@ -1937,7 +1937,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "MAML requires K gradient steps (inner loop) at test time, which has computational cost proportional to K. Hypernetwork approaches (e.g., CNAPs, VERSA) generate task-specific parameters in a single forward pass, making test-time adaptation significantly faster — at the cost of reduced expressivity compared to iterative optimization.",
+        "MAML requires K gradient steps (inner loop) at test time, which has computational cost proportional to K. Hypernetwork approaches (e.g., CNAPs, VERSA) generate task-specific parameters in a single forward pass, making test-time adaptation significantly faster - at the cost of reduced expressivity compared to iterative optimization.",
     },
     {
       id: "q-meta-kp35-3",
@@ -1998,7 +1998,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The feature reuse hypothesis (Raghu et al. 2020, ANIL paper) states that MAML\'s meta-learned initialization already contains reusable features. Evidence: tracking gradient magnitudes and representation changes during inner-loop adaptation shows that body layer representations change minimally while the head adapts significantly — supporting the view that the body is reusing meta-learned features.",
+        "The feature reuse hypothesis (Raghu et al. 2020, ANIL paper) states that MAML\'s meta-learned initialization already contains reusable features. Evidence: tracking gradient magnitudes and representation changes during inner-loop adaptation shows that body layer representations change minimally while the head adapts significantly - supporting the view that the body is reusing meta-learned features.",
     },
   ],
   "meta-sgd-reptile": [
@@ -2016,7 +2016,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Meta-SGD (Li et al. 2017) learns both the initial parameters \\theta AND per-parameter learning rate vectors \\alpha (same shape as \\theta). The inner-loop update becomes:\n$$\\theta' = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L},$$\nwhere ⊙ denotes elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter — effectively learning a preconditioning matrix $M = \\text{diag}(\\alpha)$ that scales the gradient differently per parameter. The meta-objective becomes:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\nwhich is optimized jointly over both the initialization \\theta and the per-parameter learning rates \\alpha.",
+        "Meta-SGD (Li et al. 2017) learns both the initial parameters \\theta AND per-parameter learning rate vectors \\alpha (same shape as \\theta). The inner-loop update becomes:\n$$\\theta' = \\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L},$$\nwhere ⊙ denotes elementwise multiplication. This allows the meta-learner to set task-adaptive learning rate magnitudes and signs for each parameter - effectively learning a preconditioning matrix $M = \\text{diag}(\\alpha)$ that scales the gradient differently per parameter. The meta-objective becomes:\n$$\\min_{\\theta, \\alpha} \\sum_i \\mathcal{L}_{T_i}^\\text{query}(f_{\\theta + \\alpha \\odot \\nabla_\\theta\\mathcal{L}_{T_i}^\\text{support}}),$$\nwhich is optimized jointly over both the initialization \\theta and the per-parameter learning rates \\alpha.",
       hints: [
         "MAML uses a scalar \\alpha for all parameters; Meta-SGD uses a vector \\alpha with the same shape as \\theta.",
         "Elementwise multiplication (⊙) applies a different scaling to each gradient component: \\theta'_j = \\theta_j + \\alpha_j \\cdot (\\nablaL)_j.",
@@ -2034,8 +2034,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Reptile (Nichol et al. 2018) updates the meta-parameters by moving them towards the final parameters obtained after K inner-loop SGD steps on each task:\n$$\\theta \\leftarrow \\theta + \\varepsilon(\\phi_i - \\theta), \\quad \\text{where } \\phi_i = \\text{SGD}^K(\\theta, \\mathcal{D}_i^\\text{support}).$$\nNichol et al. showed analytically that Reptile's update direction approximates the MAML gradient while ignoring the second-order terms, making it computationally cheaper and simpler to implement. The connection: the MAML gradient is $\\mathbb{E}_i[\\nabla_\\theta\\mathcal{L}_{T_i}(f_{\\theta'_i})]$, while Reptile's gradient is $\\mathbb{E}_i[\\theta'_i - \\theta]$. For $K=1$, these are equivalent; for $K > 1$, Reptile still approximates MAML's goal of finding an initialization close to all task optima.",
       hints: [
-        "The MAML gradient is $\\mathbb{E}_i[\\nabla_{\\theta}\\mathcal{L}_{T_i}(f_{\\theta'_i})] \\cdot (I - \\alpha\\nabla^2\\mathcal{L})$ — it requires second-order derivatives.",
-        "Reptile's gradient $\\mathbb{E}_i[\\theta'_i - \\theta]$ can be computed without any second-order derivatives — just the difference between adapted and original parameters.",
+        "The MAML gradient is $\\mathbb{E}_i[\\nabla_{\\theta}\\mathcal{L}_{T_i}(f_{\\theta'_i})] \\cdot (I - \\alpha\\nabla^2\\mathcal{L})$ - it requires second-order derivatives.",
+        "Reptile's gradient $\\mathbb{E}_i[\\theta'_i - \\theta]$ can be computed without any second-order derivatives - just the difference between adapted and original parameters.",
         "For K=1, $\\theta'_i = \\theta - \\alpha\\nabla\\mathcal{L}$, so $\\theta'_i - \\theta = -\\alpha\\nabla\\mathcal{L}$, equivalent to FOMAML.",
       ],
     },
@@ -2053,11 +2053,11 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Reptile moves the meta-parameters towards the task-specific optimal parameters \\phi_i obtained after inner-loop adaptation. Averaged over tasks, this moves \\theta towards the "average optimal solution" across tasks — a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.\n\nGeometrically, the Reptile update \\theta \\leftarrow \\theta + \\epsilon(\\phi_i − \\theta) interpolates between the current initialization \\theta and the task-adapted parameters \\phi_i. Averaged over N tasks: \\theta_new = \\theta + (\\epsilon/N)\\Sigma_i(\\phi_i − \\theta) = (1 − \\epsilon)\\theta + (\\epsilon/N)\\Sigma_i\\phi_i. This is a weighted average of \\theta and the task optima \\phi_i, pulling \\theta toward their centroid. MAML\'s theory shows that an initialization near all task manifolds enables few-shot adaptation because the distance to any task optimum is small from such a point.',
+        'Reptile moves the meta-parameters towards the task-specific optimal parameters \\phi_i obtained after inner-loop adaptation. Averaged over tasks, this moves \\theta towards the "average optimal solution" across tasks - a point from which all task optima are reachable with few gradient steps. MAML theory shows this is equivalent to finding an initialization close to all task manifolds.\n\nGeometrically, the Reptile update \\theta \\leftarrow \\theta + \\epsilon(\\phi_i − \\theta) interpolates between the current initialization \\theta and the task-adapted parameters \\phi_i. Averaged over N tasks: \\theta_new = \\theta + (\\epsilon/N)\\Sigma_i(\\phi_i − \\theta) = (1 − \\epsilon)\\theta + (\\epsilon/N)\\Sigma_i\\phi_i. This is a weighted average of \\theta and the task optima \\phi_i, pulling \\theta toward their centroid. MAML\'s theory shows that an initialization near all task manifolds enables few-shot adaptation because the distance to any task optimum is small from such a point.',
       hints: [
-        "The Reptile update is \\theta_new = (1 − \\epsilon)\\theta + \\epsilon \\cdot (1/N)\\Sigma_i\\phi_i — a convex combination of the current \\theta and the task-optimal parameters.",
+        "The Reptile update is \\theta_new = (1 − \\epsilon)\\theta + \\epsilon \\cdot (1/N)\\Sigma_i\\phi_i - a convex combination of the current \\theta and the task-optimal parameters.",
         "Think of \\phi_i as the \"task-specific solution\" after adaptation. Reptile averages these solutions and moves \\theta toward their centroid.",
-        "The goal is an initialization from which any task optimum is reachable in a few gradient steps — minimizing the maximum distance to any task manifold.",
+        "The goal is an initialization from which any task optimum is reachable in a few gradient steps - minimizing the maximum distance to any task manifold.",
       ],
     },
   ],
@@ -2103,7 +2103,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Task curriculum learning for meta-learning (e.g., Graves et al. style adapted to episodes) addresses the information content of training tasks. Initially training on easier tasks (more shots, fewer ways, intra-class similar examples) and gradually increasing difficulty stabilizes early training and improves final performance — analogous to curriculum learning in standard supervised learning.",
+        "Task curriculum learning for meta-learning (e.g., Graves et al. style adapted to episodes) addresses the information content of training tasks. Initially training on easier tasks (more shots, fewer ways, intra-class similar examples) and gradually increasing difficulty stabilizes early training and improves final performance - analogous to curriculum learning in standard supervised learning.",
     },
   ],
   "meta-learning-nlp": [
@@ -2141,10 +2141,10 @@ const questions: Record<string, Question[]> = {
       question:
         'What is the "meta-training data" used in few-shot NLP meta-learning, and why is its choice critical?',
       options: [
-        "The model is meta-trained on the same dataset as the target task, split into episodes — the split strategy is critical",
+        "The model is meta-trained on the same dataset as the target task, split into episodes - the split strategy is critical",
         "The model is meta-trained on diverse NLP datasets (e.g., sentiment, NLI, NER, QA tasks) structured as episodes; the diversity and similarity of meta-training tasks to meta-test tasks critically determines generalization",
         "Meta-training data is synthetically generated by paraphrasing the few-shot examples; quality of paraphrase generation is critical",
-        "The meta-training data is a fixed set of 100 balanced NLP tasks standardized across all papers — task selection does not matter as long as this standard is used",
+        "The meta-training data is a fixed set of 100 balanced NLP tasks standardized across all papers - task selection does not matter as long as this standard is used",
       ],
       correctAnswer: 1,
       explanation:
@@ -2193,7 +2193,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "POET (Wang et al. 2019) and related approaches co-evolve environments and agents. The outer-loop generates increasingly complex environments that are challenging but solvable for the current agent level. This creates a curriculum that drives open-ended skill acquisition — the meta-learning objective is implicit in the environment generation process rather than an explicit episode-based loss.",
+        "POET (Wang et al. 2019) and related approaches co-evolve environments and agents. The outer-loop generates increasingly complex environments that are challenging but solvable for the current agent level. This creates a curriculum that drives open-ended skill acquisition - the meta-learning objective is implicit in the environment generation process rather than an explicit episode-based loss.",
     },
   ],
 };
@@ -2212,7 +2212,7 @@ const extraMeta: Record<string, Question[]> = {
         "Averages gradients across tasks without any inner-loop adaptation",
       ],
       correctAnswer: 1,
-      explanation: "Full MAML computes d/d(theta) of the adapted parameters phi_i, which requires differentiating through the inner-loop update steps — producing second-order (Hessian) terms. FOMAML simply stops the gradient at the adapted parameters, treating them as constants for the purpose of computing the outer-loop gradient. This dramatically reduces memory and compute (no second-order backprop) at the cost of a biased meta-gradient estimate. Empirically the bias matters little, and FOMAML matches MAML in most benchmarks.",
+      explanation: "Full MAML computes d/d(theta) of the adapted parameters phi_i, which requires differentiating through the inner-loop update steps - producing second-order (Hessian) terms. FOMAML simply stops the gradient at the adapted parameters, treating them as constants for the purpose of computing the outer-loop gradient. This dramatically reduces memory and compute (no second-order backprop) at the cost of a biased meta-gradient estimate. Empirically the bias matters little, and FOMAML matches MAML in most benchmarks.",
       hints: [
         "Think about what terms appear when you differentiate phi_i = theta - alpha * grad_L_i(theta) with respect to theta.",
         "The Hessian appears because phi_i depends on theta twice: directly and through the gradient.",
@@ -2233,7 +2233,7 @@ const extraMeta: Record<string, Question[]> = {
       explanation: "Reptile is extremely simple: sample a task, run k steps of SGD to get adapted parameters phi, then update theta toward phi via theta <- theta + epsilon*(phi - theta). No second-order derivatives and no explicit train/test split within an episode are needed. Reptile can be shown to approximately maximize the inner product between task gradients, encouraging an initialization from which all tasks are reachable in few steps.",
       hints: [
         "Reptile's update is a simple interpolation: move the meta-parameters toward the task-adapted parameters.",
-        "Unlike MAML, Reptile does not require a query set — it uses the same data for inner and outer loop.",
+        "Unlike MAML, Reptile does not require a query set - it uses the same data for inner and outer loop.",
       ],
     },
     {
@@ -2312,10 +2312,10 @@ const extraMeta: Record<string, Question[]> = {
         "Applying a graph neural network over the support set to model inter-class relationships",
       ],
       correctAnswer: 0,
-      explanation: "Matching Networks use a Full Context Embeddings (FCE) mechanism: the query is encoded by an LSTM that attends over the support set embeddings (conditioning the query representation on the specific support examples), and the support embeddings themselves are encoded by a bidirectional LSTM over the support set. This context-awareness means the same image can be embedded differently depending on which other classes are in the support set — a crucial advantage over fixed embeddings.",
+      explanation: "Matching Networks use a Full Context Embeddings (FCE) mechanism: the query is encoded by an LSTM that attends over the support set embeddings (conditioning the query representation on the specific support examples), and the support embeddings themselves are encoded by a bidirectional LSTM over the support set. This context-awareness means the same image can be embedded differently depending on which other classes are in the support set - a crucial advantage over fixed embeddings.",
       hints: [
         "Standard nearest-neighbor uses fixed embeddings independent of the support set. What does Matching Networks do differently?",
-        "FCE stands for Full Context Embeddings — the full context is the entire support set.",
+        "FCE stands for Full Context Embeddings - the full context is the entire support set.",
       ],
     },
     {
@@ -2362,7 +2362,7 @@ const extraMeta: Record<string, Question[]> = {
         "Learning a mapping from support embeddings to class-conditional generative model parameters",
       ],
       correctAnswer: 0,
-      explanation: "Relation Networks concatenate the query embedding with each class prototype (or support example embedding) and feed the concatenated vector through a learned relation module — a small neural network that outputs a scalar relation score. This replaces the fixed cosine or Euclidean distance with a learned similarity function that can capture complex, non-metric relationships between query and support embeddings that fixed distances cannot express.",
+      explanation: "Relation Networks concatenate the query embedding with each class prototype (or support example embedding) and feed the concatenated vector through a learned relation module - a small neural network that outputs a scalar relation score. This replaces the fixed cosine or Euclidean distance with a learned similarity function that can capture complex, non-metric relationships between query and support embeddings that fixed distances cannot express.",
       hints: [
         "The key question: in Matching/Prototypical Networks, what is fixed versus learned compared to Relation Networks?",
         "The relation module takes [query_emb; support_emb] as input and outputs a scalar similarity score.",
@@ -2412,7 +2412,7 @@ const extraMeta: Record<string, Question[]> = {
         "A memory module that retrieves relevant past task parameters from an external key-value store",
       ],
       correctAnswer: 1,
-      explanation: "A hypernetwork h_phi takes a task embedding z (computed from the support set or a task descriptor) and generates the parameters W = h_phi(z) for a target network f_W. The hypernetwork is the meta-learner: it internalizes task structure so that a single forward pass through h_phi produces a task-specific parameter set, avoiding explicit gradient-based inner-loop optimization. This enables amortized inference — adaptation becomes a feed-forward computation.",
+      explanation: "A hypernetwork h_phi takes a task embedding z (computed from the support set or a task descriptor) and generates the parameters W = h_phi(z) for a target network f_W. The hypernetwork is the meta-learner: it internalizes task structure so that a single forward pass through h_phi produces a task-specific parameter set, avoiding explicit gradient-based inner-loop optimization. This enables amortized inference - adaptation becomes a feed-forward computation.",
       hints: [
         "The prefix hyper- means the network operates on another network's parameters.",
         "The hypernetwork is trained meta-learner; the target network is the task-specific learner whose weights are generated.",
@@ -2442,7 +2442,7 @@ const extraMeta: Record<string, Question[]> = {
         "The generated weights cannot be fine-tuned after generation because they are not stored in differentiable variables",
       ],
       correctAnswer: 1,
-      explanation: "If the target network has P parameters, the hypernetwork must output a P-dimensional vector for each task. For modern deep networks with millions of parameters, this means the hypernetwork's output layer alone has P neurons — making the hypernetwork itself massive. Common solutions include: (1) generating low-rank weight updates (delta_W = U*V^T) instead of full weights, (2) generating only task-specific adapter layers (a small fraction of total parameters), or (3) chunking the parameter space and generating it sequentially.",
+      explanation: "If the target network has P parameters, the hypernetwork must output a P-dimensional vector for each task. For modern deep networks with millions of parameters, this means the hypernetwork's output layer alone has P neurons - making the hypernetwork itself massive. Common solutions include: (1) generating low-rank weight updates (delta_W = U*V^T) instead of full weights, (2) generating only task-specific adapter layers (a small fraction of total parameters), or (3) chunking the parameter space and generating it sequentially.",
       hints: [
         "Think about the dimensionality mismatch: modern ResNets have ~25M parameters. The hypernetwork would need to output 25M values.",
         "This is why most practical hypernetwork approaches generate low-rank updates or adapters, not full weight tensors.",
@@ -2462,7 +2462,7 @@ const extraMeta: Record<string, Question[]> = {
         "Expectation-maximization alternating between task inference and parameter optimization",
       ],
       correctAnswer: 1,
-      explanation: "Von Oswald et al. (2023) show that a single linear self-attention layer performing ICL is mathematically equivalent to one step of gradient descent on an in-context regression loss: the attention output W_V * softmax(W_Q*x_q * (W_K*X_S)^T) * X_S matches the form of a gradient descent update. This gradient descent in the forward pass interpretation suggests that during pre-training, transformers learn to implement a fast learning algorithm in their weights — exactly the goal of meta-learning.",
+      explanation: "Von Oswald et al. (2023) show that a single linear self-attention layer performing ICL is mathematically equivalent to one step of gradient descent on an in-context regression loss: the attention output W_V * softmax(W_Q*x_q * (W_K*X_S)^T) * X_S matches the form of a gradient descent update. This gradient descent in the forward pass interpretation suggests that during pre-training, transformers learn to implement a fast learning algorithm in their weights - exactly the goal of meta-learning.",
       hints: [
         "The key insight: the attention mechanism can compute the same update that gradient descent would compute on the in-context examples.",
         "This requires the value, query, and key projections to align with the gradient descent update direction.",
@@ -2492,10 +2492,10 @@ const extraMeta: Record<string, Question[]> = {
       difficulty: "hard",
       question: "The theoretical analysis of ICL by Xie et al. (2021) shows that Bayesian inference over a latent concept variable produces the same predictions as ICL in large language models, when the pre-training distribution is a mixture of HMMs.",
       correctAnswer: "True",
-      explanation: "Xie et al. (2021) An Explanation of In-context Learning as Implicit Bayesian Inference proves that under a generative model where documents are generated by a mixture of hidden Markov models (one per latent concept), the optimal predictor for the next token given the in-context examples is exactly Bayesian inference over the latent concept. Since transformers trained on such data learn to approximate this optimal predictor, ICL emerges naturally as implicit Bayesian concept inference — a form of meta-learning that updates beliefs about the task from context.",
+      explanation: "Xie et al. (2021) An Explanation of In-context Learning as Implicit Bayesian Inference proves that under a generative model where documents are generated by a mixture of hidden Markov models (one per latent concept), the optimal predictor for the next token given the in-context examples is exactly Bayesian inference over the latent concept. Since transformers trained on such data learn to approximate this optimal predictor, ICL emerges naturally as implicit Bayesian concept inference - a form of meta-learning that updates beliefs about the task from context.",
       hints: [
         "Bayesian inference: p(concept | context) is proportional to p(context | concept) * p(concept).",
-        "The latent concept is analogous to the task identity in meta-learning — it determines the data distribution.",
+        "The latent concept is analogous to the task identity in meta-learning - it determines the data distribution.",
       ],
     },
   ],
@@ -2526,7 +2526,7 @@ const extraMeta: Record<string, Question[]> = {
       correctAnswer: "False",
       explanation: "FOMAML and Reptile use biased meta-gradient estimates because they drop higher-order terms. Even full MAML can have bias when using stochastic inner-loop updates (because E[phi(theta)] != phi(E[theta]) for nonlinear updates). The meta-gradient is also biased when the inner-loop optimizer does not converge to the true task optimum (truncated optimization bias). Only in the limit of infinite data, infinite inner steps, and exact gradients is the MAML meta-gradient unbiased.",
       hints: [
-        "FOMAML explicitly drops second-order terms — these are not zero, so the gradient estimate is biased.",
+        "FOMAML explicitly drops second-order terms - these are not zero, so the gradient estimate is biased.",
         "Bias in meta-learning can still be acceptable if variance reduction compensates in practice.",
       ],
     },
@@ -2539,7 +2539,7 @@ const extraMeta: Record<string, Question[]> = {
         "Converge to the same scalar value for all parameters as training progresses, recovering standard SGD",
         "Encode task-specific curvature information analogous to a preconditioner, allowing faster adaptation than isotropic SGD",
         "Must be positive to ensure inner-loop convergence, and Meta-SGD uses a softplus constraint on them",
-        "Replace the meta-initialization entirely — only the learning rates are meta-learned, not the starting parameters",
+        "Replace the meta-initialization entirely - only the learning rates are meta-learned, not the starting parameters",
       ],
       correctAnswer: 1,
       explanation: "Meta-SGD jointly meta-learns both the initialization theta and a per-parameter learning rate vector alpha (with the same shape as theta). The learned alpha acts as a diagonal preconditioner: parameters that are more informative for task adaptation get larger learning rates. This is analogous to diagonal preconditioning in natural gradient descent, where the Fisher information matrix (approximated diagonally) scales each parameter's update by its curvature. Both theta and alpha are updated by the outer-loop meta-optimizer.",
@@ -2556,16 +2556,16 @@ const extraMeta: Record<string, Question[]> = {
       difficulty: "hard",
       question: "The ANIL (Almost No Inner Loop) ablation (Raghu et al., 2020) discovered that in MAML, the inner-loop adaptation of the feature extractor layers is:",
       options: [
-        "Essential for performance — removing inner-loop updates to the body causes catastrophic accuracy degradation",
-        "Nearly dispensable — adapting only the final linear head in the inner loop achieves comparable accuracy to full MAML",
+        "Essential for performance - removing inner-loop updates to the body causes catastrophic accuracy degradation",
+        "Nearly dispensable - adapting only the final linear head in the inner loop achieves comparable accuracy to full MAML",
         "Responsible for 90% of the performance gain, while adapting the head contributes only marginally",
         "Necessary only for cross-domain generalization but not within-domain few-shot tasks",
       ],
       correctAnswer: 1,
-      explanation: "ANIL freezes the feature extractor (body) during inner-loop adaptation and only adapts the final linear classification head. Despite this drastic simplification, ANIL achieves accuracy within ~1% of full MAML on miniImageNet and tieredImageNet. This finding reveals that MAML primarily learns a general-purpose feature representation (in the outer loop) and that rapid adaptation of the linear head is sufficient — the inner-loop body updates in MAML are largely redundant. This challenges the narrative that MAML learns to rapidly adapt deep feature representations.",
+      explanation: "ANIL freezes the feature extractor (body) during inner-loop adaptation and only adapts the final linear classification head. Despite this drastic simplification, ANIL achieves accuracy within ~1% of full MAML on miniImageNet and tieredImageNet. This finding reveals that MAML primarily learns a general-purpose feature representation (in the outer loop) and that rapid adaptation of the linear head is sufficient - the inner-loop body updates in MAML are largely redundant. This challenges the narrative that MAML learns to rapidly adapt deep feature representations.",
       hints: [
         "ANIL = Almost No Inner Loop: only the head (last layer) is updated in the inner loop.",
-        "BOIL is the complementary ablation: adapt the body but not the head — it performs much worse than ANIL.",
+        "BOIL is the complementary ablation: adapt the body but not the head - it performs much worse than ANIL.",
       ],
     },
     {
@@ -2574,9 +2574,9 @@ const extraMeta: Record<string, Question[]> = {
       difficulty: "medium",
       question: "The BOIL (Body Only Inner Loop) variant of MAML, which adapts only the feature extractor body without adapting the classification head in the inner loop, achieves better few-shot performance than ANIL.",
       correctAnswer: "False",
-      explanation: "BOIL adapts the body but keeps the head fixed during inner-loop adaptation. It performs substantially worse than ANIL (which adapts only the head) and worse than full MAML. This asymmetry is striking: adapting the head alone (ANIL) nearly matches full MAML, while adapting the body alone (BOIL) is much worse. The implication is that what matters most for few-shot adaptation is reconfiguring the final classification layer to recognize new classes — the representations learned by the body are already sufficiently general.",
+      explanation: "BOIL adapts the body but keeps the head fixed during inner-loop adaptation. It performs substantially worse than ANIL (which adapts only the head) and worse than full MAML. This asymmetry is striking: adapting the head alone (ANIL) nearly matches full MAML, while adapting the body alone (BOIL) is much worse. The implication is that what matters most for few-shot adaptation is reconfiguring the final classification layer to recognize new classes - the representations learned by the body are already sufficiently general.",
       hints: [
-        "Intuitively, the head maps features to class probabilities — this is where class-specific information is concentrated.",
+        "Intuitively, the head maps features to class probabilities - this is where class-specific information is concentrated.",
         "ANIL body features are reused across tasks; only the head discriminates between the N-way classes in each episode.",
       ],
     },
@@ -2592,10 +2592,10 @@ const extraMeta: Record<string, Question[]> = {
         "MAML and non-meta-learned representations are essentially identical at all layers when controlling for dataset size",
       ],
       correctAnswer: 1,
-      explanation: "CKA analysis shows that MAML's lower-layer feature representations are very similar to those of a pre-trained network trained with standard supervised learning on the same episodes — suggesting these layers learn general low-level features regardless of the meta-learning objective. However, the upper layers (closer to the classification head) differ significantly in MAML, being more task-agnostic and reusable. This explains why ANIL works: the body already produces general features; only the upper/head layers need task-specific configuration.",
+      explanation: "CKA analysis shows that MAML's lower-layer feature representations are very similar to those of a pre-trained network trained with standard supervised learning on the same episodes - suggesting these layers learn general low-level features regardless of the meta-learning objective. However, the upper layers (closer to the classification head) differ significantly in MAML, being more task-agnostic and reusable. This explains why ANIL works: the body already produces general features; only the upper/head layers need task-specific configuration.",
       hints: [
         "CKA measures representational similarity between two networks' layer activations on the same inputs.",
-        "Low CKA at upper layers means the representation structures differ — MAML upper layers are more task-agnostic.",
+        "Low CKA at upper layers means the representation structures differ - MAML upper layers are more task-agnostic.",
       ],
     },
   ],
@@ -2624,7 +2624,7 @@ const extraMeta: Record<string, Question[]> = {
       difficulty: "easy",
       question: "For few-shot classification, episodic training with N-way K-shot episodes that match the test configuration consistently outperforms standard joint training (training on all classes simultaneously with cross-entropy) when the same backbone architecture is used.",
       correctAnswer: "False",
-      explanation: "This belief was widely held early in the meta-learning literature, but later work (Chen et al., 2019 A Closer Look at Few-Shot Classification) showed that a strong baseline of standard pre-training followed by few-shot linear evaluation often matches or outperforms episodic meta-learning methods. The key factors are: backbone size, data augmentation, and training duration. Episodic training is not a silver bullet — the representation quality from standard training can be equally good or better, especially with larger models.",
+      explanation: "This belief was widely held early in the meta-learning literature, but later work (Chen et al., 2019 A Closer Look at Few-Shot Classification) showed that a strong baseline of standard pre-training followed by few-shot linear evaluation often matches or outperforms episodic meta-learning methods. The key factors are: backbone size, data augmentation, and training duration. Episodic training is not a silver bullet - the representation quality from standard training can be equally good or better, especially with larger models.",
       hints: [
         "Chen et al. (2019) showed that simple pre-training + cosine similarity matching achieves competitive few-shot accuracy.",
         "The advantage of episodic training shrinks as the backbone grows larger and is pre-trained on more data.",
@@ -2676,7 +2676,7 @@ const extraMeta: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Cross-domain few-shot learning (CD-FSL) is significantly harder than within-domain evaluation because: (1) the visual statistics differ (color, texture, scale) between domains, (2) the feature extractor trained on one domain produces poorly calibrated embeddings in another, (3) the class structure may differ (fine-grained medical categories vs. coarse natural image categories). Performance drops of 20-40% accuracy are common when moving from miniImageNet to medical or satellite image benchmarks. Domain-adaptive meta-learning methods specifically address this gap.",
       hints: [
-        "The feature extractor backbone is trained on the source domain — its inductive biases may not transfer.",
+        "The feature extractor backbone is trained on the source domain - its inductive biases may not transfer.",
         "Cross-domain FSL benchmarks include: BSCD-FSL (4 target domains), Meta-Dataset (8+ domains).",
       ],
     },
@@ -2692,7 +2692,7 @@ const extraMeta: Record<string, Question[]> = {
         "The product T*K only, meaning that 100 tasks with 10 examples each is equivalent to 10 tasks with 100 examples each",
       ],
       correctAnswer: 1,
-      explanation: "The canonical meta-learning generalization bound (Baxter 2000, Maurer et al. 2016) decomposes into two terms: (1) a between-task term O(C/sqrt(T)) where C is the complexity of the hypothesis class for meta-parameters and T is the number of meta-training tasks — this controls how well the meta-learner generalizes to new tasks; (2) a within-task term O(C'/sqrt(K)) where K is the per-task support size — this controls how well the adapted model generalizes within each new task. Both are necessary for low meta-test error.",
+      explanation: "The canonical meta-learning generalization bound (Baxter 2000, Maurer et al. 2016) decomposes into two terms: (1) a between-task term O(C/sqrt(T)) where C is the complexity of the hypothesis class for meta-parameters and T is the number of meta-training tasks - this controls how well the meta-learner generalizes to new tasks; (2) a within-task term O(C'/sqrt(K)) where K is the per-task support size - this controls how well the adapted model generalizes within each new task. Both are necessary for low meta-test error.",
       hints: [
         "Two sources of uncertainty in meta-learning: which task am I facing (between-task) and what is the correct label for this example (within-task).",
         "The bound suggests collecting many diverse tasks is just as important as collecting many examples per task.",

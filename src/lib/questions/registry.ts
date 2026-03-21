@@ -2271,6 +2271,40 @@ const questionOverrides: Record<string, QuestionOverride> = {
     options: ["The current node", "Its left child", "Its right child", "The parent of the current node"],
     correctAnswer: 0,
   },
+  "q-gray-2": {
+    type: "multiple-choice",
+    question: "Using G(i) = i ^ (i >> 1), what is G(3)?",
+    options: ["00", "01", "10", "11"],
+    correctAnswer: 2,
+  },
+  "q-gray-5": {
+    type: "multiple-choice",
+    question: "Gray code 110 corresponds to which decimal index?",
+    options: ["3", "4", "5", "6"],
+    correctAnswer: 1,
+  },
+  "q-bit-rev-3": {
+    type: "multiple-choice",
+    question: "Which loop update reverses bits one at a time?",
+    options: [
+      "result = (result << 1) | (n & 1); n >>= 1",
+      "result = (result >> 1) | (n & 1); n <<= 1",
+      "result = result | (n >> 1); n >>= 1",
+      "result = (result << 1) ^ (n >> 1); n >>= 1",
+    ],
+    correctAnswer: 0,
+  },
+  "q-dc-exp-5": {
+    type: "multiple-choice",
+    question: "For odd b, which recurrence is correct in fast exponentiation?",
+    options: [
+      "(a^2)^(b/2)",
+      "a * (a^2)^(b/2)",
+      "a * (a^2)^((b-1)/2)",
+      "(a^(b-1))^2",
+    ],
+    correctAnswer: 2,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

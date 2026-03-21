@@ -20,7 +20,7 @@ registerQuestions({
         "ResNets utilize skip connections (or residual connections) that bypass some layers, providing an alternative path for the gradient to flow backwards. This solves the vanishing gradient problem, which plagues very deep plain networks.",
       hints: [
         "Think about what happens to gradients as they flow backward through many layers.",
-        "ResNet stands for Residual Network — the key is in the name.",
+        "ResNet stands for Residual Network - the key is in the name.",
       ],
     },
     {
@@ -75,7 +75,7 @@ registerQuestions({
         "The core idea of a residual block is: output = F(x) + x, where F(x) is the transformation learned by the block\'s layers, and x is the identity shortcut. The addition happens before the final ReLU activation.",
       hints: [
         "The residual connection passes the identity of x alongside the learned transformation.",
-        "Think about what \'residual\' means — the block learns the residual on top of the identity.",
+        "Think about what \'residual\' means - the block learns the residual on top of the identity.",
       ],
     },
     {
@@ -112,7 +112,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "fastai\'s `fine_tune(n)` performs one epoch of frozen body training first (training just the head), then unfreezes all layers and trains for `n` epochs using discriminative learning rates — lower rates for earlier layers, higher for the head.",
+        "fastai\'s `fine_tune(n)` performs one epoch of frozen body training first (training just the head), then unfreezes all layers and trains for `n` epochs using discriminative learning rates - lower rates for earlier layers, higher for the head.",
       hints: [
         "The body of a pre-trained model already has useful features; the head needs more training.",
         "`fine_tune` is a convenience wrapper around `fit_one_cycle` with freeze/unfreeze logic.",
@@ -137,7 +137,7 @@ registerQuestions({
       explanation:
         "In fastai, fine-tuning typically starts by freezing the pre-trained \'body\' (which already knows how to detect general features) and training only the randomly initialized \'head\' (customized for the specific task), before unfreezing and training the entire network with discriminative learning rates.",
       hints: [
-        "The pre-trained weights are valuable — you don\'t want to destroy them with a high learning rate early on.",
+        "The pre-trained weights are valuable - you don\'t want to destroy them with a high learning rate early on.",
         "Think about what \'freezing\' layers means: their weights are not updated during backprop.",
       ],
     },
@@ -290,7 +290,7 @@ registerQuestions({
       explanation:
         "Data augmentation is applied only to the training set. The validation set uses deterministic transforms (like resizing and normalization only) to give an honest, reproducible measure of model performance. Randomly modifying validation images would make evaluation inconsistent.",
       hints: [
-        "The validation set is used to measure how well your model generalizes — any randomness would make the metric noisy.",
+        "The validation set is used to measure how well your model generalizes - any randomness would make the metric noisy.",
         "In fastai\'s DataBlock API, `item_tfms` and `batch_tfms` with augmentation are designed for the training pipeline.",
       ],
     },
@@ -330,7 +330,7 @@ registerQuestions({
       explanation:
         "RandomErasing (also related to CutOut) randomly selects rectangular regions of training images and fills them with noise or zeros. This prevents the network from over-relying on specific discriminative regions, improving robustness and generalization.",
       hints: [
-        "Think about what happens if a model always identifies a bird by its beak — RandomErasing forces it to use other features too.",
+        "Think about what happens if a model always identifies a bird by its beak - RandomErasing forces it to use other features too.",
         "This is different from Mixup/CutMix which blend multiple images together.",
       ],
     },
@@ -411,7 +411,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "You should pick a learning rate where the loss is still clearly decreasing — roughly one order of magnitude before the minimum loss point. The minimum itself is often too high and causes instability; you want the steepest downward slope region.",
+        "You should pick a learning rate where the loss is still clearly decreasing - roughly one order of magnitude before the minimum loss point. The minimum itself is often too high and causes instability; you want the steepest downward slope region.",
       hints: [
         "Choosing the absolute minimum on the LR plot often leads to divergence in practice.",
         "Think of it as: where is loss falling fastest and most stably?",
@@ -448,7 +448,7 @@ registerQuestions({
       explanation:
         "Leslie Smith\'s 1-cycle policy increases the LR from a low start to a max value (warmup), then decreases back to a very small value (cosine annealing), while momentum does the inverse. This allows larger effective learning rates, speeding up convergence and often achieving better final accuracy.",
       hints: [
-        "This is also called \'superconvergence\' — it often converges faster than constant-LR training.",
+        "This is also called \'superconvergence\' - it often converges faster than constant-LR training.",
         "The momentum schedule is the inverse: it starts high, decreases as LR rises, then rises again.",
       ],
     },
@@ -490,7 +490,7 @@ registerQuestions({
       explanation:
         "The DataBlock API is a highly customizable pipeline system that defines the types of inputs/targets, how to get items, how to split data into train/validation sets, and what transformations to apply.",
       hints: [
-        "DataBlock is about building DataLoaders — the things that feed data into training.",
+        "DataBlock is about building DataLoaders - the things that feed data into training.",
         "Think of DataBlock as a recipe: it specifies all the steps to go from raw files to ready-to-train batches.",
       ],
     },
@@ -607,7 +607,7 @@ registerQuestions({
       explanation:
         "TTA creates multiple augmented copies of an input during inference. The model predicts on all copies, and the results are averaged (or maxed), leading to a more robust and accurate final prediction.",
       hints: [
-        "TTA is an inference-time technique — no additional training occurs.",
+        "TTA is an inference-time technique - no additional training occurs.",
         "Averaging predictions from multiple views reduces the effect of any single augmentation artifact.",
       ],
     },
@@ -674,7 +674,7 @@ registerQuestions({
         "What is the relationship between the number of TTA passes and the expected accuracy improvement?",
       options: [
         "More TTA passes always linearly improve accuracy.",
-        "Accuracy improvement from TTA shows diminishing returns — most gains come from the first few passes, and eventually adding more passes provides negligible improvement.",
+        "Accuracy improvement from TTA shows diminishing returns - most gains come from the first few passes, and eventually adding more passes provides negligible improvement.",
         "TTA with more than 10 passes decreases accuracy due to averaging noise.",
         "TTA passes must always be a power of 2 to work correctly.",
       ],
@@ -682,7 +682,7 @@ registerQuestions({
       explanation:
         "TTA shows diminishing returns: the first few augmented views provide the most variance reduction, but each additional view contributes less. Typically 4-8 TTA passes captures most of the benefit; going to 32 or 64 passes rarely improves results significantly enough to justify the compute cost.",
       hints: [
-        "Think about the law of diminishing returns — the 100th sample from a distribution tells you little more than the 10th.",
+        "Think about the law of diminishing returns - the 100th sample from a distribution tells you little more than the 10th.",
         "In practice, 4 TTA passes is commonly used as a good trade-off.",
       ],
     },
@@ -693,7 +693,7 @@ registerQuestions({
       question:
         "How does TTA relate to the concept of model ensembling?",
       options: [
-        "TTA is completely unrelated to ensembling — it only applies to single models.",
+        "TTA is completely unrelated to ensembling - it only applies to single models.",
         "TTA can be thought of as a single-model ensemble where the same model makes predictions on different augmented views of the same input, achieving some of ensembling\'s variance-reduction benefits.",
         "TTA requires training multiple models simultaneously.",
         "TTA and ensembling both require retraining the model multiple times.",
@@ -855,7 +855,7 @@ registerQuestions({
         "What specific technique did ULMFiT introduce to prevent catastrophic forgetting during NLP fine-tuning?",
       options: [
         "Dropout applied to all layers uniformly.",
-        "Gradual unfreezing — unfreezing one layer group at a time from the top down, combined with discriminative learning rates.",
+        "Gradual unfreezing - unfreezing one layer group at a time from the top down, combined with discriminative learning rates.",
         "Reinitializing all LSTM weights before the classifier fine-tuning phase.",
         "Applying label smoothing to the language model loss.",
       ],
@@ -884,7 +884,7 @@ registerQuestions({
         "ULMFiT uses a standard autoregressive language model: given the previous tokens, predict the next one. This self-supervised objective requires no labeled data and can use enormous text corpora (e.g., Wikipedia) to learn rich representations of language.",
       hints: [
         "This is the same task as GPT-style models: predict the next word.",
-        "BERT uses masked language modeling (predict missing words) — a different approach.",
+        "BERT uses masked language modeling (predict missing words) - a different approach.",
       ],
     },
     {
@@ -919,7 +919,7 @@ registerQuestions({
         "A model pre-trained on Wikipedia excels at encyclopedic text but may underperform on movie reviews or medical notes. Fine-tuning the LM on the target corpus (e.g., IMDB reviews) adapts the model to domain-specific vocabulary and style, providing better initialization for classifier fine-tuning.",
       hints: [
         "Wikipedia English and Twitter English are both English but have very different vocabularies and styles.",
-        "This step is self-supervised — no labels are needed, just the raw target-domain text.",
+        "This step is self-supervised - no labels are needed, just the raw target-domain text.",
       ],
     },
     {
@@ -960,7 +960,7 @@ registerQuestions({
       explanation:
         "LSTMs introduce a complex gating mechanism (forget, input, output gates) and a separate cell state, which allows gradients to flow more easily across long sequences, solving the vanishing gradient issue of vanilla RNNs.",
       hints: [
-        "LSTM stands for Long Short-Term Memory — the name hints at the core innovation.",
+        "LSTM stands for Long Short-Term Memory - the name hints at the core innovation.",
         "The forget gate allows the LSTM to selectively discard irrelevant information from the cell state.",
       ],
     },
@@ -980,7 +980,7 @@ registerQuestions({
       explanation:
         "The forget gate takes the previous hidden state and current input, passes them through a sigmoid, and outputs values between 0 and 1 for each cell state element. A value of 0 means \'completely forget\'; 1 means \'completely keep\'. This selective forgetting is what gives LSTMs their long-term memory capability.",
       hints: [
-        "Values from 0 to 1 act as a soft mask on the cell state — 0 forgets, 1 retains.",
+        "Values from 0 to 1 act as a soft mask on the cell state - 0 forgets, 1 retains.",
         "The forget gate is one of three gates (forget, input, output) in a standard LSTM.",
       ],
     },
@@ -1033,7 +1033,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A bidirectional RNN runs two separate RNNs: one processing the sequence left-to-right (forward), and one right-to-left (backward). At each time step, the hidden states from both are concatenated, giving the model context from both past and future tokens — very useful for tasks like named entity recognition.",
+        "A bidirectional RNN runs two separate RNNs: one processing the sequence left-to-right (forward), and one right-to-left (backward). At each time step, the hidden states from both are concatenated, giving the model context from both past and future tokens - very useful for tasks like named entity recognition.",
       hints: [
         "Useful for classification tasks where you know the full sequence (not generation tasks).",
         "Each position sees both the tokens before and after it.",
@@ -1046,10 +1046,10 @@ registerQuestions({
       question:
         "In fastai\'s AWD-LSTM architecture used for language modeling, what does the \'AWD\' stand for and what does it add?",
       options: [
-        "Average Weight Dropout — it applies dropout to the final softmax layer.",
-        "ASGD Weight-Dropped LSTM — it uses DropConnect (dropping weight connections in the recurrent matrix), embedding dropout, and other regularization techniques.",
-        "Adaptive Weight Decay — it uses L2 regularization on LSTM cell states.",
-        "Asynchronous Weight Distribution — it allows parallel weight updates.",
+        "Average Weight Dropout - it applies dropout to the final softmax layer.",
+        "ASGD Weight-Dropped LSTM - it uses DropConnect (dropping weight connections in the recurrent matrix), embedding dropout, and other regularization techniques.",
+        "Adaptive Weight Decay - it uses L2 regularization on LSTM cell states.",
+        "Asynchronous Weight Distribution - it allows parallel weight updates.",
       ],
       correctAnswer: 1,
       explanation:
@@ -1130,7 +1130,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "An individual deep decision tree has high variance — it memorizes training data. Random Forests reduce this variance by averaging many independently trained trees on random data/feature subsets. Each tree is biased toward its bootstrap sample, but averaging cancels these individual biases out.",
+        "An individual deep decision tree has high variance - it memorizes training data. Random Forests reduce this variance by averaging many independently trained trees on random data/feature subsets. Each tree is biased toward its bootstrap sample, but averaging cancels these individual biases out.",
       hints: [
         "This is the classic bias-variance trade-off: one deep tree has low bias but high variance.",
         "The ensemble average has similar bias but dramatically reduced variance.",
@@ -1152,7 +1152,7 @@ registerQuestions({
       explanation:
         "fastai\'s approach recommends starting with a Random Forest as a baseline for tabular data because it\'s fast, interpretable, and provides feature importances. These importances reveal which features matter, guiding feature engineering, selection of categorical vs. continuous variables, and validating that the neural network is learning reasonable patterns.",
       hints: [
-        "Random Forests are an excellent baseline for tabular data — they often match neural network performance with less effort.",
+        "Random Forests are an excellent baseline for tabular data - they often match neural network performance with less effort.",
         "Feature importances from a forest help you focus neural network feature engineering on what matters most.",
       ],
     },
@@ -1172,7 +1172,7 @@ registerQuestions({
       explanation:
         "Each tree in a Random Forest is trained on a bootstrap sample (roughly 63% of the data). The remaining ~37% (out-of-bag samples) weren\'t used to train that tree, so they can be used to evaluate it. Averaging OOB predictions across all trees gives a reliable validation error estimate without needing a separate validation set.",
       hints: [
-        "OOB error is essentially free — it uses data that was already not used for each tree\'s training.",
+        "OOB error is essentially free - it uses data that was already not used for each tree\'s training.",
         "OOB samples average to about 36.8% of total data (1 - 1/e \\approx 0.632 are in-bag).",
       ],
     },
@@ -1231,7 +1231,7 @@ registerQuestions({
       explanation:
         "Instead of using hard one-hot targets (e.g., [1.0, 0.0]), label smoothing changes them to softer probabilities (e.g., [0.9, 0.1]). This discourages the network from pushing logits to extreme values and improves generalization.",
       hints: [
-        "A model that is 99.99% confident is probably overfitting — label smoothing prevents this.",
+        "A model that is 99.99% confident is probably overfitting - label smoothing prevents this.",
         "Label smoothing adds a small epsilon to the non-target class probabilities.",
       ],
     },
@@ -1249,7 +1249,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In fastai, label smoothing is applied through the loss function. Instead of using the standard `CrossEntropyLoss`, you use `LabelSmoothingCrossEntropy` which internally blends the hard target with a uniform distribution during loss computation — no changes to the data pipeline are needed.",
+        "In fastai, label smoothing is applied through the loss function. Instead of using the standard `CrossEntropyLoss`, you use `LabelSmoothingCrossEntropy` which internally blends the hard target with a uniform distribution during loss computation - no changes to the data pipeline are needed.",
       hints: [
         "The smoothing happens at the loss function level, not in the data loading pipeline.",
         "You pass it as `loss_func=LabelSmoothingCrossEntropy()` to `vision_learner` or `Learner`.",
@@ -1298,7 +1298,7 @@ registerQuestions({
         "A Wikipedia pre-trained model knows general English, but fine-tuning it as an LM on your specific dataset (e.g., IMDB reviews or medical notes) helps it adapt to the domain-specific vocabulary and stylistic nuances.",
       hints: [
         "Wikipedia English differs greatly from Twitter slang or medical terminology.",
-        "This LM fine-tuning step is self-supervised — no labels needed, just raw text.",
+        "This LM fine-tuning step is self-supervised - no labels needed, just raw text.",
       ],
     },
   ],
@@ -1320,7 +1320,7 @@ registerQuestions({
       explanation:
         "To process sequences in parallel batches, fastai pads shorter sequences with a special token (like `xxpad`). It also uses techniques like sorting by length (SortishSampler) to group sequences of similar lengths, minimizing wasted computation on padding.",
       hints: [
-        "Batches require all sequences to be the same length — padding achieves this.",
+        "Batches require all sequences to be the same length - padding achieves this.",
         "Sorting by length reduces padding waste: similar-length sequences are batched together.",
       ],
     },
@@ -1760,7 +1760,7 @@ registerQuestions({
       explanation:
         "Language model fine-tuning uses next-token prediction as its objective. The targets are automatically derived from the input text itself (shifted by one position), so no human-provided labels are needed. This allows leveraging large amounts of unlabeled domain text.",
       hints: [
-        "The label for each token is simply the next token in the sequence — no annotation needed.",
+        "The label for each token is simply the next token in the sequence - no annotation needed.",
         "This is why it's called self-supervised: the data creates its own supervision signal.",
       ],
     },
@@ -1800,9 +1800,9 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Softmax creates a competition between classes (probabilities sum to 1), which is correct for single-label tasks but wrong for multi-label. Sigmoid squashes each logit independently to [0, 1], allowing multiple classes to simultaneously have probabilities near 1 — which is what we want when an image can be both 'dog' and 'outdoor'.",
+        "Softmax creates a competition between classes (probabilities sum to 1), which is correct for single-label tasks but wrong for multi-label. Sigmoid squashes each logit independently to [0, 1], allowing multiple classes to simultaneously have probabilities near 1 - which is what we want when an image can be both 'dog' and 'outdoor'.",
       hints: [
-        "An image can be both 'dog' and 'running' — softmax would force the model to choose one.",
+        "An image can be both 'dog' and 'running' - softmax would force the model to choose one.",
         "sigmoid(x) = 1/(1+e^-x) is applied elementwise; softmax normalizes across all elements.",
       ],
     },
@@ -1989,7 +1989,7 @@ registerQuestions({
         "Mixed precision training (AMP) uses FP16 for most computations (reducing memory bandwidth and exploiting Tensor Cores on modern GPUs) while keeping a FP32 master copy of weights for updates. A gradient scaler prevents underflow during FP16 backward passes. This typically provides 2-3x speedup with no accuracy loss.",
       hints: [
         "FP16 uses half the memory of FP32 and is faster on GPUs with Tensor Cores (NVIDIA Volta+).",
-        "The key challenge in FP16 training is that very small gradients can underflow to zero — the scaler prevents this.",
+        "The key challenge in FP16 training is that very small gradients can underflow to zero - the scaler prevents this.",
       ],
     },
     {
@@ -2147,7 +2147,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`learn.save('name')` saves a state dict of model weights (and optionally optimizer state) — useful for training checkpoints. `learn.export('model.pkl')` pickles the complete Learner including all preprocessing transforms and vocabulary, making it self-contained for inference without needing to recreate the DataLoaders.",
+        "`learn.save('name')` saves a state dict of model weights (and optionally optimizer state) - useful for training checkpoints. `learn.export('model.pkl')` pickles the complete Learner including all preprocessing transforms and vocabulary, making it self-contained for inference without needing to recreate the DataLoaders.",
       hints: [
         "For deployment, use `export()`; for resuming training, use `save()`.",
         "`load_learner('model.pkl')` can restore an exported learner in one line.",
@@ -2169,7 +2169,7 @@ registerQuestions({
       explanation:
         "ONNX is an open format for ML models that can be run by many runtimes (ONNX Runtime, TensorRT, CoreML, OpenVINO) without Python, PyTorch, or fastai. Unlike pickle export, ONNX is version-agnostic and works across languages and platforms. You export via `torch.onnx.export(learn.model, ...)` after getting the model from the learner.",
       hints: [
-        "ONNX Runtime can run models in C++, C#, Java, etc. — no Python needed.",
+        "ONNX Runtime can run models in C++, C#, Java, etc. - no Python needed.",
         "This is useful for edge deployment (mobile, embedded) or high-performance serving.",
       ],
     },
@@ -2185,7 +2185,7 @@ registerQuestions({
         "When you export a fastai Learner with `learn.export()` and reload it with `load_learner()`, the DataLoaders (including all item transforms and batch transforms like resizing and normalization) are embedded in the exported file. Calling `learn.predict(new_item)` automatically runs the complete preprocessing pipeline before inference.",
       hints: [
         "This is why `export()` is preferred over `save()` for deployment: preprocessing comes along.",
-        "You don't need to manually resize or normalize your input — the Learner handles it.",
+        "You don't need to manually resize or normalize your input - the Learner handles it.",
       ],
     },
   ],
@@ -2299,7 +2299,7 @@ registerQuestions({
       explanation:
         "Machine learning models learn from historical data. If that data contains biases, the model will likely learn and automate those biases, potentially causing harm when deployed in real-world systems.",
       hints: [
-        "Biased training data leads to biased models — garbage in, garbage out.",
+        "Biased training data leads to biased models - garbage in, garbage out.",
         "Fairness metrics (e.g., equal opportunity, demographic parity) help quantify and address bias.",
       ],
     },

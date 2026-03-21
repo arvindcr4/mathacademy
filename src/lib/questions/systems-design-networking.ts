@@ -20,7 +20,7 @@ const questions: Record<string, Question[]> = {
       question: "What is the key difference between Layer 4 and Layer 7 load balancing?",
       options: ["L4 supports HTTP only; L7 supports TCP/UDP only", "L4 routes based on TCP/UDP headers without inspecting payload; L7 inspects HTTP content and can route by URL path or headers", "L4 is slower because it requires full TLS termination", "L7 cannot perform health checks on backends"],
       correctAnswer: 1,
-      explanation: "Layer 4 load balancers operate at the transport layer (TCP/UDP). They route traffic based on IP and port without inspecting the payload, making them fast but unable to make content-aware decisions. Layer 7 load balancers operate at the application layer (HTTP/HTTPS). They can read headers, cookies, and URL paths to make intelligent routing decisions — for example, routing /api/* to one backend farm and /static/* to another. L7 is more powerful but more CPU-intensive because it must parse application-layer content.",
+      explanation: "Layer 4 load balancers operate at the transport layer (TCP/UDP). They route traffic based on IP and port without inspecting the payload, making them fast but unable to make content-aware decisions. Layer 7 load balancers operate at the application layer (HTTP/HTTPS). They can read headers, cookies, and URL paths to make intelligent routing decisions - for example, routing /api/* to one backend farm and /static/* to another. L7 is more powerful but more CPU-intensive because it must parse application-layer content.",
       hints: ["The OSI model layers define what information is visible to the load balancer.", "Content-based routing (URL path, cookie, header) requires reading the HTTP request."],
     },
     {
@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Active health checks involve the load balancer proactively sending periodic pings or HTTP requests to backend servers to determine their health.",
       correctAnswer: "True",
-      explanation: "True. Active health checks are initiated by the load balancer itself — it sends periodic requests (e.g., HTTP GET /health) to each backend on a configured interval and marks a server as unhealthy if it fails to respond or returns an error code. Passive health checks, by contrast, monitor actual production traffic: if real requests to a backend receive error responses above a threshold, the load balancer marks it unhealthy. Active checks detect failures faster but add background traffic overhead.",
+      explanation: "True. Active health checks are initiated by the load balancer itself - it sends periodic requests (e.g., HTTP GET /health) to each backend on a configured interval and marks a server as unhealthy if it fails to respond or returns an error code. Passive health checks, by contrast, monitor actual production traffic: if real requests to a backend receive error responses above a threshold, the load balancer marks it unhealthy. Active checks detect failures faster but add background traffic overhead.",
       hints: ["Consider who initiates the health check: the load balancer or the monitoring of real traffic.", "Active implies the load balancer takes action without waiting for a real user request."],
     },
     {
@@ -39,7 +39,7 @@ const questions: Record<string, Question[]> = {
       question: "Which global load balancing approach routes traffic by advertising the same IP address from multiple geographic locations using BGP, so routers automatically direct clients to the nearest PoP?",
       options: ["GeoDNS", "Anycast", "Weighted round-robin DNS", "Latency-based routing"],
       correctAnswer: 1,
-      explanation: "Anycast allows the same IP address to be announced from multiple Points of Presence (PoPs) using BGP. Internet routers automatically route packets toward the topologically nearest PoP advertising that IP, minimizing latency without any DNS tricks. GeoDNS achieves geographic routing at the DNS level by returning different A records based on the client's IP geolocation — effective but slower to failover because DNS TTLs must expire. Anycast failover is near-instant because BGP re-convergence withdraws the route from a failed PoP within seconds.",
+      explanation: "Anycast allows the same IP address to be announced from multiple Points of Presence (PoPs) using BGP. Internet routers automatically route packets toward the topologically nearest PoP advertising that IP, minimizing latency without any DNS tricks. GeoDNS achieves geographic routing at the DNS level by returning different A records based on the client's IP geolocation - effective but slower to failover because DNS TTLs must expire. Anycast failover is near-instant because BGP re-convergence withdraws the route from a failed PoP within seconds.",
       hints: ["BGP routing converges based on path metrics, naturally selecting the shortest path.", "The key is that a single IP is reachable from multiple physical locations simultaneously."],
     },
   ],
@@ -53,7 +53,7 @@ const questions: Record<string, Question[]> = {
       options: ["Pull caching", "Push caching", "Passive caching", "Stale-while-revalidate"],
       correctAnswer: 1,
       explanation: "Push caching (also called proactive caching) requires the origin to upload content to CDN edge nodes before user requests arrive. This is ideal when the asset set is known in advance (e.g., a new software release, a video library). Pull caching is lazy: the edge fetches content from origin on the first cache miss and caches it for subsequent requests. Pull works well for dynamic or unpredictable content but incurs an origin hit on every cold request. For known static assets, push eliminates all origin hits from the start.",
-      hints: ["Pull is reactive — it waits for a cache miss. Push is proactive — you load the cache before requests.", "If you know exactly which files will be requested, you can pre-populate the edge cache."],
+      hints: ["Pull is reactive - it waits for a cache miss. Push is proactive - you load the cache before requests.", "If you know exactly which files will be requested, you can pre-populate the edge cache."],
     },
     {
       id: "q-sdi-net-6",
@@ -70,10 +70,10 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question: "Why is URL versioning (e.g., /static/app.v123.js) considered the most reliable CDN cache invalidation strategy?",
-      options: ["Because CDNs poll origin servers for version updates automatically", "Because changing the URL creates a cache miss on all edges instantly — no purge API needed", "Because it relies on ETags to detect file changes", "Because Cache-Control max-age is ignored for versioned URLs"],
+      options: ["Because CDNs poll origin servers for version updates automatically", "Because changing the URL creates a cache miss on all edges instantly - no purge API needed", "Because it relies on ETags to detect file changes", "Because Cache-Control max-age is ignored for versioned URLs"],
       correctAnswer: 1,
-      explanation: "CDN caches are keyed by URL. When you deploy a new file version with a new URL (e.g., app.v124.js), the CDN has never seen that URL before — every edge node treats it as a fresh cache miss and fetches from origin. The old URL (app.v123.js) continues to be served from cache to any stale links. This gives instant, atomic invalidation of new deployments with zero propagation delay. Purge APIs (like CloudFront invalidations) send purge commands to all edge nodes but typically take 5-10 minutes to propagate and cost money per request. URL versioning is free and instant.",
-      hints: ["CDN caches use the full URL as the cache key.", "A new URL means the CDN has no cached copy — it must fetch fresh content."],
+      explanation: "CDN caches are keyed by URL. When you deploy a new file version with a new URL (e.g., app.v124.js), the CDN has never seen that URL before - every edge node treats it as a fresh cache miss and fetches from origin. The old URL (app.v123.js) continues to be served from cache to any stale links. This gives instant, atomic invalidation of new deployments with zero propagation delay. Purge APIs (like CloudFront invalidations) send purge commands to all edge nodes but typically take 5-10 minutes to propagate and cost money per request. URL versioning is free and instant.",
+      hints: ["CDN caches use the full URL as the cache key.", "A new URL means the CDN has no cached copy - it must fetch fresh content."],
     },
     {
       id: "q-sdi-net-8",
@@ -81,8 +81,8 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: "An origin shield is an intermediate CDN PoP placed between edge nodes and the origin server, designed to reduce the number of cache misses that reach the origin.",
       correctAnswer: "True",
-      explanation: "True. An origin shield (called 'regional edge cache' in CloudFront) is an additional caching layer sitting between the edge PoPs and the actual origin server. When multiple edge nodes around the world experience a cache miss for the same object, instead of all of them independently hitting the origin, they all request from the single origin shield PoP. If the shield has the object cached, it serves it to all requesting edges. Only if the shield also misses does the request reach origin. This dramatically reduces origin traffic — especially during cache invalidations or for infrequently accessed objects.",
-      hints: ["Think of it as a cache for the caches — a centralized intermediate layer.", "Without an origin shield, N edge PoPs each have their own cache warm-up period hitting origin."],
+      explanation: "True. An origin shield (called 'regional edge cache' in CloudFront) is an additional caching layer sitting between the edge PoPs and the actual origin server. When multiple edge nodes around the world experience a cache miss for the same object, instead of all of them independently hitting the origin, they all request from the single origin shield PoP. If the shield has the object cached, it serves it to all requesting edges. Only if the shield also misses does the request reach origin. This dramatically reduces origin traffic - especially during cache invalidations or for infrequently accessed objects.",
+      hints: ["Think of it as a cache for the caches - a centralized intermediate layer.", "Without an origin shield, N edge PoPs each have their own cache warm-up period hitting origin."],
     },
   ],
 
@@ -105,7 +105,7 @@ const questions: Record<string, Question[]> = {
       options: ["Header versioning (Accept: application/vnd.api.v1+json)", "Query parameter versioning (?version=1)", "URL path versioning (/v1/users)", "Subdomain versioning (v1.api.example.com)"],
       correctAnswer: 2,
       explanation: "URL path versioning (e.g., /v1/users, /v2/users) places the version directly in the URL path, making it immediately visible in browser address bars, logs, and documentation. CDNs and HTTP caches can cache versioned endpoints independently because the URL is part of the cache key. Header versioning is cleaner (URLs don't change) but headers are not cached by most CDNs by default and are less discoverable. Query parameter versioning is easy to implement but can be stripped by caches or proxies. URL versioning is the de facto standard for public APIs (Stripe, Twilio, GitHub all use it).",
-      hints: ["CDN cache keys are typically based on the URL path.", "Developer experience matters — where would you look first to find the version?"],
+      hints: ["CDN cache keys are typically based on the URL path.", "Developer experience matters - where would you look first to find the version?"],
     },
     {
       id: "q-sdi-net-11",
@@ -114,7 +114,7 @@ const questions: Record<string, Question[]> = {
       question: "Which of the following HTTP methods is NOT idempotent?",
       options: ["GET", "PUT", "DELETE", "POST"],
       correctAnswer: 3,
-      explanation: "POST is not idempotent: calling POST /orders twice creates two separate order resources. Idempotency means that making the same request multiple times produces the same result as making it once. GET is idempotent and safe (no side effects). PUT is idempotent: PUT /users/1 with the same body always results in the same state. DELETE is idempotent: deleting an already-deleted resource returns 404 but the resource state is unchanged (still deleted). PATCH is neither safe nor guaranteed to be idempotent — it depends on the patch semantics (increment vs set).",
+      explanation: "POST is not idempotent: calling POST /orders twice creates two separate order resources. Idempotency means that making the same request multiple times produces the same result as making it once. GET is idempotent and safe (no side effects). PUT is idempotent: PUT /users/1 with the same body always results in the same state. DELETE is idempotent: deleting an already-deleted resource returns 404 but the resource state is unchanged (still deleted). PATCH is neither safe nor guaranteed to be idempotent - it depends on the patch semantics (increment vs set).",
       hints: ["Idempotency means repeated identical requests have the same effect as a single request.", "Which method always creates a new resource, generating a new ID each time?"],
     },
     {
@@ -124,7 +124,7 @@ const questions: Record<string, Question[]> = {
       question: "Which pagination strategy performs best at scale for large datasets and prevents page drift when new items are inserted?",
       options: ["Offset + limit pagination", "Cursor-based pagination", "Page number pagination", "Seek method with random access"],
       correctAnswer: 1,
-      explanation: "Cursor-based pagination uses an opaque cursor (typically a base64-encoded representation of the last-seen record's ID or timestamp) to mark the position in the dataset. Each request returns a next_cursor that encodes where to continue. This approach is stable: inserting new records between pages does not cause items to shift into different offset positions (page drift). Offset+limit pagination suffers from page drift — if 10 items are inserted before page 2 is fetched, page 2 shifts and items from page 1 appear again. Cursor-based pagination also avoids expensive OFFSET scans on large tables; it uses an indexed WHERE id > cursor query instead.",
+      explanation: "Cursor-based pagination uses an opaque cursor (typically a base64-encoded representation of the last-seen record's ID or timestamp) to mark the position in the dataset. Each request returns a next_cursor that encodes where to continue. This approach is stable: inserting new records between pages does not cause items to shift into different offset positions (page drift). Offset+limit pagination suffers from page drift - if 10 items are inserted before page 2 is fetched, page 2 shifts and items from page 1 appear again. Cursor-based pagination also avoids expensive OFFSET scans on large tables; it uses an indexed WHERE id > cursor query instead.",
       hints: ["OFFSET scans in SQL must skip all preceding rows, growing slower as offset increases.", "A cursor encodes the last position seen, making the next page query use an indexed comparison."],
     },
   ],
@@ -137,7 +137,7 @@ const questions: Record<string, Question[]> = {
       question: "Which real-time communication technology supports true bidirectional communication over a single persistent TCP connection?",
       options: ["Server-Sent Events (SSE)", "HTTP long polling", "WebSocket", "HTTP/2 push"],
       correctAnswer: 2,
-      explanation: "WebSocket establishes a persistent TCP connection via an initial HTTP upgrade handshake. Once upgraded, both client and server can send frames to each other at any time without request-response framing overhead. SSE (Server-Sent Events) is unidirectional — only the server can push messages over a persistent HTTP connection; the client must use a separate request to send data. Long polling simulates push by holding open HTTP requests until data is available, then closing and reopening — high latency and overhead. HTTP/2 push proactively sends resources but is not suitable for general-purpose bidirectional messaging.",
+      explanation: "WebSocket establishes a persistent TCP connection via an initial HTTP upgrade handshake. Once upgraded, both client and server can send frames to each other at any time without request-response framing overhead. SSE (Server-Sent Events) is unidirectional - only the server can push messages over a persistent HTTP connection; the client must use a separate request to send data. Long polling simulates push by holding open HTTP requests until data is available, then closing and reopening - high latency and overhead. HTTP/2 push proactively sends resources but is not suitable for general-purpose bidirectional messaging.",
       hints: ["Bidirectional means both sides can initiate message sends independently.", "WebSocket reuses port 80/443 but upgrades from HTTP to the WS protocol."],
     },
     {
@@ -147,7 +147,7 @@ const questions: Record<string, Question[]> = {
       question: "In a horizontally scaled WebSocket system, a message sent by User A (connected to Server 1) needs to reach User B (connected to Server 2). What is the standard architecture to achieve this?",
       options: ["Sticky sessions so both users always connect to the same server", "A shared Redis Pub/Sub broker so Server 1 publishes the message and Server 2 forwards it to User B", "A database polling loop where Server 2 polls for new messages every 100ms", "HTTP/2 server push from Server 1 to Server 2"],
       correctAnswer: 1,
-      explanation: "WebSocket connections are stateful and server-affine: a user's socket is held open on one specific server. When User A (on Server 1) sends a message to User B (on Server 2), Server 1 cannot directly write to User B's socket. The standard solution is a pub/sub broker — typically Redis Pub/Sub or a message queue. Server 1 publishes the message to a channel. Server 2 is subscribed to that channel, receives the message, and forwards it through User B's open WebSocket. This decouples servers: any server can handle any user's message regardless of who is connected where. Sticky sessions alone don't solve cross-server delivery.",
+      explanation: "WebSocket connections are stateful and server-affine: a user's socket is held open on one specific server. When User A (on Server 1) sends a message to User B (on Server 2), Server 1 cannot directly write to User B's socket. The standard solution is a pub/sub broker - typically Redis Pub/Sub or a message queue. Server 1 publishes the message to a channel. Server 2 is subscribed to that channel, receives the message, and forwards it through User B's open WebSocket. This decouples servers: any server can handle any user's message regardless of who is connected where. Sticky sessions alone don't solve cross-server delivery.",
       hints: ["When connections are stateful, message delivery must cross server boundaries somehow.", "A pub/sub broker acts as the message bus between WebSocket servers."],
     },
     {
@@ -156,7 +156,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "HTTP/2 multiplexing is functionally equivalent to WebSocket for building real-time bidirectional applications because both allow the server to push data to the client at any time.",
       correctAnswer: "False",
-      explanation: "False. HTTP/2 multiplexes multiple request-response streams over one TCP connection, which dramatically reduces head-of-line blocking compared to HTTP/1.1. However, HTTP/2 is still fundamentally a request-response protocol — all communication is initiated by the client. Server push in HTTP/2 is limited to pushing resources proactively alongside a response (e.g., pushing CSS when the browser requests HTML), not for arbitrary server-to-client messaging. WebSocket is truly bidirectional: either side can send a frame independently at any time without waiting for a request. For real-time bidirectional messaging (chat, gaming, trading), WebSocket remains the correct choice.",
+      explanation: "False. HTTP/2 multiplexes multiple request-response streams over one TCP connection, which dramatically reduces head-of-line blocking compared to HTTP/1.1. However, HTTP/2 is still fundamentally a request-response protocol - all communication is initiated by the client. Server push in HTTP/2 is limited to pushing resources proactively alongside a response (e.g., pushing CSS when the browser requests HTML), not for arbitrary server-to-client messaging. WebSocket is truly bidirectional: either side can send a frame independently at any time without waiting for a request. For real-time bidirectional messaging (chat, gaming, trading), WebSocket remains the correct choice.",
       hints: ["HTTP/2 server push is for resource hints, not arbitrary messaging.", "True bidirectionality means the server can initiate a message without a preceding client request."],
     },
     {
@@ -164,9 +164,9 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question: "Approximately how many concurrent WebSocket connections can a single well-tuned server handle with asynchronous I/O (e.g., Node.js or Go)?",
-      options: ["1,000 – 5,000", "10,000 – 20,000", "50,000 – 100,000", "500,000 – 1,000,000"],
+      options: ["1,000 - 5,000", "10,000 - 20,000", "50,000 - 100,000", "500,000 - 1,000,000"],
       correctAnswer: 2,
-      explanation: "With asynchronous non-blocking I/O, a single server can maintain 50,000–100,000 concurrent WebSocket connections. Each idle WebSocket connection consumes very little CPU (just an open file descriptor and a small amount of RAM for buffers, typically 2–10 KB). The OS file descriptor limit (ulimit -n) must be increased from the default 1,024. At low message rates, memory becomes the first constraint; at high message rates, CPU becomes the bottleneck. Languages with efficient async runtimes (Go goroutines, Node.js libuv event loop, Erlang actors) enable this scale. Threads-per-connection models (Java/Python blocking I/O) fail at this scale due to thread memory overhead.",
+      explanation: "With asynchronous non-blocking I/O, a single server can maintain 50,000-100,000 concurrent WebSocket connections. Each idle WebSocket connection consumes very little CPU (just an open file descriptor and a small amount of RAM for buffers, typically 2-10 KB). The OS file descriptor limit (ulimit -n) must be increased from the default 1,024. At low message rates, memory becomes the first constraint; at high message rates, CPU becomes the bottleneck. Languages with efficient async runtimes (Go goroutines, Node.js libuv event loop, Erlang actors) enable this scale. Threads-per-connection models (Java/Python blocking I/O) fail at this scale due to thread memory overhead.",
       hints: ["Async I/O allows one thread to manage thousands of open connections via event callbacks.", "Each idle connection consumes an OS file descriptor and a small memory buffer, not a full thread."],
     },
   ],
@@ -185,16 +185,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation: "DNS resolution follows a hierarchical delegation chain. The client queries its configured recursive resolver (typically the ISP's or a public resolver like 8.8.8.8). If not cached, the resolver asks a root nameserver which TLD nameserver (.com) to contact. The resolver then asks the .com TLD nameserver which authoritative nameserver holds records for example.com. Finally, the resolver queries the authoritative nameserver for the A record of www.example.com. Results are cached at each layer according to the record's TTL, so future queries skip steps. In practice, most queries hit the recursive resolver cache and never reach root or TLD servers.",
-      hints: ["DNS is hierarchical: root  ->  TLD  ->  authoritative, each delegating to the next level.", "The recursive resolver does the heavy lifting — the client only ever talks to it."],
+      hints: ["DNS is hierarchical: root  ->  TLD  ->  authoritative, each delegating to the next level.", "The recursive resolver does the heavy lifting - the client only ever talks to it."],
     },
     {
       id: "q-sdi-net-18",
       type: "multiple-choice",
       difficulty: "medium",
       question: "You are designing a DNS-based failover system for a critical service. What TTL should you set for production DNS records to balance failover speed against resolver load?",
-      options: ["5 seconds", "60–300 seconds", "1 hour (3600 seconds)", "24 hours (86400 seconds)"],
+      options: ["5 seconds", "60-300 seconds", "1 hour (3600 seconds)", "24 hours (86400 seconds)"],
       correctAnswer: 1,
-      explanation: "A TTL of 60–300 seconds (1–5 minutes) is the practical sweet spot for production services with DNS-based failover. Low TTL (30s) enables fast failover but dramatically increases query volume to authoritative nameservers as resolvers re-query frequently — this can overload your nameserver and cause DDoS-like conditions. High TTL (1h–24h) minimizes nameserver load but means clients cache stale IP addresses for hours after a failover, causing prolonged outages. For services like APIs, 60–300s provides recovery within a few minutes while keeping nameserver traffic manageable. Netflix and major SaaS providers use TTLs in this range.",
+      explanation: "A TTL of 60-300 seconds (1-5 minutes) is the practical sweet spot for production services with DNS-based failover. Low TTL (30s) enables fast failover but dramatically increases query volume to authoritative nameservers as resolvers re-query frequently - this can overload your nameserver and cause DDoS-like conditions. High TTL (1h-24h) minimizes nameserver load but means clients cache stale IP addresses for hours after a failover, causing prolonged outages. For services like APIs, 60-300s provides recovery within a few minutes while keeping nameserver traffic manageable. Netflix and major SaaS providers use TTLs in this range.",
       hints: ["Low TTL means faster failover but more nameserver traffic.", "What is the maximum downtime you can tolerate if a server IP changes?"],
     },
     {
@@ -203,7 +203,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: "DNS round-robin with multiple A records reliably distributes traffic evenly across backends because clients always respect DNS TTLs and re-query after expiration.",
       correctAnswer: "False",
-      explanation: "False. DNS round-robin is unreliable for even load distribution for two reasons. First, many clients (browsers, JVM-based applications, mobile apps) cache DNS responses much longer than the TTL — they ignore TTL expiration and keep using the same IP for minutes or hours. Second, even when TTLs are respected, the client's local DNS cache sticks to one IP for the duration of the TTL; if many clients resolve at similar times, they all get the same IP rotation slot. The result is often uneven distribution skewed toward whichever IP was returned first to the largest batch of clients. DNS-based load balancing cannot detect backend health without active integration with a health-aware DNS provider (e.g., Route 53 health checks, NS1).",
+      explanation: "False. DNS round-robin is unreliable for even load distribution for two reasons. First, many clients (browsers, JVM-based applications, mobile apps) cache DNS responses much longer than the TTL - they ignore TTL expiration and keep using the same IP for minutes or hours. Second, even when TTLs are respected, the client's local DNS cache sticks to one IP for the duration of the TTL; if many clients resolve at similar times, they all get the same IP rotation slot. The result is often uneven distribution skewed toward whichever IP was returned first to the largest batch of clients. DNS-based load balancing cannot detect backend health without active integration with a health-aware DNS provider (e.g., Route 53 health checks, NS1).",
       hints: ["Client-side DNS caching is beyond the control of the TTL you set.", "The JVM, for example, caches DNS results indefinitely by default unless configured otherwise."],
     },
   ],
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
       question: "In MQTT, which QoS level guarantees that a message is delivered exactly once using a four-step handshake?",
       options: ["QoS 0 (at-most-once)", "QoS 1 (at-least-once)", "QoS 2 (exactly-once)", "QoS 3 (persistent)"],
       correctAnswer: 2,
-      explanation: "MQTT QoS 2 (exactly-once delivery) uses a four-step handshake: (1) PUBLISH from sender, (2) PUBREC (publish received) from receiver, (3) PUBREL (publish release) from sender, (4) PUBCOMP (publish complete) from receiver. This ensures the message is neither lost nor duplicated. QoS 0 (at-most-once / fire-and-forget) sends once with no acknowledgment — fast but messages can be lost. QoS 1 (at-least-once) requires a PUBACK acknowledgment — messages are retransmitted until acked, so duplicates are possible. QoS 2 is used for financial or safety-critical IoT data where duplicates are unacceptable, despite the overhead of four round trips.",
+      explanation: "MQTT QoS 2 (exactly-once delivery) uses a four-step handshake: (1) PUBLISH from sender, (2) PUBREC (publish received) from receiver, (3) PUBREL (publish release) from sender, (4) PUBCOMP (publish complete) from receiver. This ensures the message is neither lost nor duplicated. QoS 0 (at-most-once / fire-and-forget) sends once with no acknowledgment - fast but messages can be lost. QoS 1 (at-least-once) requires a PUBACK acknowledgment - messages are retransmitted until acked, so duplicates are possible. QoS 2 is used for financial or safety-critical IoT data where duplicates are unacceptable, despite the overhead of four round trips.",
       hints: ["Higher QoS levels trade off latency and overhead for delivery guarantees.", "Exactly-once requires the receiver to track message IDs to detect and discard duplicates."],
     },
     {
@@ -227,7 +227,7 @@ const questions: Record<string, Question[]> = {
       options: ["Direct exchange", "Topic exchange", "Fanout exchange", "Headers exchange"],
       correctAnswer: 2,
       explanation: "A fanout exchange broadcasts every message it receives to all queues bound to it, completely ignoring the routing key. This is ideal for publish-subscribe scenarios where all consumers need every message (e.g., broadcasting an order event to an inventory service, a notification service, and an analytics service simultaneously). A direct exchange routes to queues whose binding key exactly matches the message's routing key. A topic exchange routes based on wildcard pattern matching on the routing key (e.g., 'order.*' matches 'order.created' and 'order.cancelled'). A headers exchange routes based on message header attributes rather than the routing key.",
-      hints: ["Fanout ignores the routing key entirely — every bound queue receives every message.", "Think of fanout like a broadcast: one message, all subscribers."],
+      hints: ["Fanout ignores the routing key entirely - every bound queue receives every message.", "Think of fanout like a broadcast: one message, all subscribers."],
     },
     {
       id: "q-sdi-net-22",
@@ -264,7 +264,7 @@ const questions: Record<string, Question[]> = {
         "Allows the client to skip certificate verification"
       ],
       correctAnswer: 1,
-      explanation: "TLS 1.3 redesigned the handshake to complete in 1 round trip (1-RTT) compared to TLS 1.2's 2 round trips. In TLS 1.3, the client sends its key share (Diffie-Hellman public key) in the first ClientHello message. The server responds with its key share, certificate, and the first encrypted application data — all in one round trip. TLS 1.3 also removed weak cipher suites, mandates forward secrecy (ECDHE only), and supports 0-RTT session resumption for reconnecting clients (with replay attack caveats). The handshake sequence is: client hello  ->  server hello + certificate + key exchange  ->  encrypted communication begins.",
+      explanation: "TLS 1.3 redesigned the handshake to complete in 1 round trip (1-RTT) compared to TLS 1.2's 2 round trips. In TLS 1.3, the client sends its key share (Diffie-Hellman public key) in the first ClientHello message. The server responds with its key share, certificate, and the first encrypted application data - all in one round trip. TLS 1.3 also removed weak cipher suites, mandates forward secrecy (ECDHE only), and supports 0-RTT session resumption for reconnecting clients (with replay attack caveats). The handshake sequence is: client hello  ->  server hello + certificate + key exchange  ->  encrypted communication begins.",
       hints: ["Round trips add latency: each RTT is at least one network propagation delay.", "TLS 1.3 sends the key share immediately in the first message, enabling faster key derivation."],
     },
     {
@@ -274,7 +274,7 @@ const questions: Record<string, Question[]> = {
       question: "A JWT access token is issued with a 15-minute expiry. The user logs out and the token should be immediately invalidated before the 15-minute window ends. What mechanism achieves this?",
       options: ["Increase the token's expiry to 1 second", "Store the token in a server-side session database and delete it on logout", "Maintain a token blacklist (denylist) checked on every request", "Use RSA-signed tokens instead of HMAC"],
       correctAnswer: 2,
-      explanation: "JWTs are stateless by design — the server does not store issued tokens, so there is no built-in revocation mechanism. If a token is compromised or a user logs out, the token remains cryptographically valid until its exp claim expires. To revoke tokens before expiry, systems maintain a token blacklist (typically in Redis): on logout, the token's JTI (JWT ID) is added to the blacklist with a TTL equal to the remaining token lifetime. Every authenticated request checks the blacklist. This adds one Redis lookup per request but enables immediate revocation. Short expiry times (15 minutes) limit the blast radius without a blacklist. Server-side sessions solve this naturally but sacrifice the stateless scaling benefits of JWTs.",
+      explanation: "JWTs are stateless by design - the server does not store issued tokens, so there is no built-in revocation mechanism. If a token is compromised or a user logs out, the token remains cryptographically valid until its exp claim expires. To revoke tokens before expiry, systems maintain a token blacklist (typically in Redis): on logout, the token's JTI (JWT ID) is added to the blacklist with a TTL equal to the remaining token lifetime. Every authenticated request checks the blacklist. This adds one Redis lookup per request but enables immediate revocation. Short expiry times (15 minutes) limit the blast radius without a blacklist. Server-side sessions solve this naturally but sacrifice the stateless scaling benefits of JWTs.",
       hints: ["Stateless authentication has no server memory of issued tokens.", "Revocation requires some server-side state to track invalidated tokens."],
     },
     {
@@ -299,7 +299,7 @@ const questions: Record<string, Question[]> = {
       question: "Which CSRF prevention mechanism works by preventing the browser from including cookies in cross-origin requests at the browser level, without requiring server-side token generation?",
       options: ["CSRF token in hidden form field", "Double-submit cookie pattern", "SameSite=Strict cookie attribute", "Content-Security-Policy header"],
       correctAnswer: 2,
-      explanation: "The SameSite=Strict cookie attribute instructs the browser to never send the cookie in any cross-site request — whether triggered by a form, image tag, or script. This prevents CSRF attacks at the source: the forged request from the attacker's site arrives without the session cookie, so the server treats it as unauthenticated. SameSite=Lax (the modern browser default) blocks cookies on cross-site POST requests but allows them on top-level GET navigations. CSRF tokens require server-side generation and validation on every form. The double-submit cookie pattern sets a random value in both a cookie and a request parameter, validating they match. SameSite is the simplest defense requiring no server-side changes for modern browsers.",
+      explanation: "The SameSite=Strict cookie attribute instructs the browser to never send the cookie in any cross-site request - whether triggered by a form, image tag, or script. This prevents CSRF attacks at the source: the forged request from the attacker's site arrives without the session cookie, so the server treats it as unauthenticated. SameSite=Lax (the modern browser default) blocks cookies on cross-site POST requests but allows them on top-level GET navigations. CSRF tokens require server-side generation and validation on every form. The double-submit cookie pattern sets a random value in both a cookie and a request parameter, validating they match. SameSite is the simplest defense requiring no server-side changes for modern browsers.",
       hints: ["Browser-enforced defenses work regardless of server-side logic.", "SameSite controls when the browser attaches cookies to cross-origin requests."],
     },
   ],
@@ -317,7 +317,7 @@ const questions: Record<string, Question[]> = {
         "The API gateway, which always centralizes registry lookups"
       ],
       correctAnswer: 1,
-      explanation: "In client-side service discovery, the calling service (client) is responsible for querying the service registry (e.g., Consul, Eureka, etcd) to retrieve the list of available instances of the target service. The client then applies its own load balancing algorithm (round-robin, least connections, etc.) to select an instance and calls it directly. Netflix Ribbon + Eureka is the canonical example. In server-side discovery, the client sends a request to a load balancer or router, which queries the registry and forwards the request to an appropriate instance — the client has no awareness of the registry. Client-side is more complex but eliminates the router as a potential bottleneck.",
+      explanation: "In client-side service discovery, the calling service (client) is responsible for querying the service registry (e.g., Consul, Eureka, etcd) to retrieve the list of available instances of the target service. The client then applies its own load balancing algorithm (round-robin, least connections, etc.) to select an instance and calls it directly. Netflix Ribbon + Eureka is the canonical example. In server-side discovery, the client sends a request to a load balancer or router, which queries the registry and forwards the request to an appropriate instance - the client has no awareness of the registry. Client-side is more complex but eliminates the router as a potential bottleneck.",
       hints: ["Client-side means the caller does the work. Server-side means an intermediary does it.", "Netflix OSS (Ribbon + Eureka) is the classic client-side service discovery implementation."],
     },
     {
@@ -332,7 +332,7 @@ const questions: Record<string, Question[]> = {
         "The circuit breaker retries failed requests indefinitely until the downstream service responds"
       ],
       correctAnswer: 1,
-      explanation: "When a circuit breaker is Open (triggered by a failure threshold, e.g., >50% errors in 10 seconds), it short-circuits all subsequent calls to the failing downstream service — requests fail fast with an error or fallback response without ever hitting the unhealthy service. This prevents cascading failures: callers get quick responses instead of waiting for timeouts, and the failing service gets relief from traffic to recover. After a configured wait period (typically 30–60 seconds), the circuit transitions to Half-Open and allows one test request through. If that request succeeds, the circuit closes (normal operation resumes). If it fails, the circuit reopens. Netflix Hystrix and Resilience4j implement this pattern.",
+      explanation: "When a circuit breaker is Open (triggered by a failure threshold, e.g., >50% errors in 10 seconds), it short-circuits all subsequent calls to the failing downstream service - requests fail fast with an error or fallback response without ever hitting the unhealthy service. This prevents cascading failures: callers get quick responses instead of waiting for timeouts, and the failing service gets relief from traffic to recover. After a configured wait period (typically 30-60 seconds), the circuit transitions to Half-Open and allows one test request through. If that request succeeds, the circuit closes (normal operation resumes). If it fails, the circuit reopens. Netflix Hystrix and Resilience4j implement this pattern.",
       hints: ["Open circuit = fail fast, no calls reach the downstream service.", "Half-Open is a probe state: one request tests whether recovery has occurred."],
     },
     {
@@ -347,7 +347,7 @@ const questions: Record<string, Question[]> = {
         "It rate-limits inbound requests to a service to prevent overload"
       ],
       correctAnswer: 1,
-      explanation: "The bulkhead pattern prevents a slow or failing downstream service from exhausting shared resources (thread pool, connection pool) and degrading all other services. Without bulkheads, if Service A calls both Database B and Service C using a shared thread pool, and Database B becomes slow, its calls consume all threads — Service C calls also start queuing and failing even though Service C itself is healthy. With bulkheads, each external dependency gets its own isolated thread pool (or semaphore limit). If Database B threads are exhausted, only Database B calls are affected; Service C continues using its own pool without degradation. This is analogous to watertight compartments in a ship: flooding one compartment does not sink the whole ship.",
+      explanation: "The bulkhead pattern prevents a slow or failing downstream service from exhausting shared resources (thread pool, connection pool) and degrading all other services. Without bulkheads, if Service A calls both Database B and Service C using a shared thread pool, and Database B becomes slow, its calls consume all threads - Service C calls also start queuing and failing even though Service C itself is healthy. With bulkheads, each external dependency gets its own isolated thread pool (or semaphore limit). If Database B threads are exhausted, only Database B calls are affected; Service C continues using its own pool without degradation. This is analogous to watertight compartments in a ship: flooding one compartment does not sink the whole ship.",
       hints: ["Shared thread pools create hidden coupling between unrelated downstream dependencies.", "The goal is fault isolation: one slow dependency should not contaminate calls to other dependencies."],
     },
   ],

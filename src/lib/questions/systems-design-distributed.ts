@@ -18,7 +18,7 @@ const questions: Record<string, Question[]> = {
       explanation: "Raft requires a candidate to win a majority of votes (quorum) AND pass the log up-to-date check. A voter rejects a candidate whose log is less up-to-date (compared by last log term, then last log index). This guarantees the elected leader always has all committed entries, preserving safety. etcd and CockroachDB both use Raft.",
       hints: [
         "Think about what Raft's 'election safety' property guarantees about the winner's log.",
-        "Voters reject candidates with a stale log — what does 'more up-to-date' mean in terms of term and index?",
+        "Voters reject candidates with a stale log - what does 'more up-to-date' mean in terms of term and index?",
       ],
     },
     {
@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       explanation: "Both Paxos and Raft require 2f + 1 nodes to tolerate f crash (fail-stop) failures. A quorum of f + 1 nodes is needed to make progress, and with 2f + 1 nodes the quorum always intersects even if f nodes are down. The key difference is that Raft was designed for understandability with a strong-leader model, whereas Paxos is more flexible but notoriously hard to implement correctly.",
       hints: [
-        "A quorum must be reachable even when f nodes are down — what is the minimum cluster size that guarantees a majority?",
+        "A quorum must be reachable even when f nodes are down - what is the minimum cluster size that guarantees a majority?",
         "The formula ensures any two quorums overlap by at least one node.",
       ],
     },
@@ -41,10 +41,10 @@ const questions: Record<string, Question[]> = {
       question: "Practical Byzantine Fault Tolerance (PBFT) requires a minimum of how many total nodes to tolerate f Byzantine (arbitrarily faulty) nodes?",
       options: ["2f + 1", "3f + 1", "4f + 1", "f + 1"],
       correctAnswer: 1,
-      explanation: "PBFT requires 3f + 1 nodes to tolerate f Byzantine nodes. Unlike crash failures, a Byzantine node can send conflicting messages to different peers. The extra f nodes ensure that even when f nodes lie, the honest majority (2f + 1) can agree. The FLP impossibility result proves no deterministic algorithm can solve consensus in an asynchronous network even with a single crash failure — practical systems work around this with timeouts.",
+      explanation: "PBFT requires 3f + 1 nodes to tolerate f Byzantine nodes. Unlike crash failures, a Byzantine node can send conflicting messages to different peers. The extra f nodes ensure that even when f nodes lie, the honest majority (2f + 1) can agree. The FLP impossibility result proves no deterministic algorithm can solve consensus in an asynchronous network even with a single crash failure - practical systems work around this with timeouts.",
       hints: [
-        "Byzantine nodes can send different messages to different peers — you need enough honest nodes to form a majority even after removing all Byzantine nodes.",
-        "The FLP impossibility result applies to purely asynchronous networks — how do real systems bypass it?",
+        "Byzantine nodes can send different messages to different peers - you need enough honest nodes to form a majority even after removing all Byzantine nodes.",
+        "The FLP impossibility result applies to purely asynchronous networks - how do real systems bypass it?",
       ],
     },
     {
@@ -53,9 +53,9 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Two-Phase Commit (2PC) is a non-blocking protocol: if the coordinator crashes after sending 'prepare', participants can safely abort the transaction on their own.",
       correctAnswer: "False",
-      explanation: "2PC is a blocking protocol. After participants vote 'yes' in phase 1, they enter a locked state and cannot unilaterally commit or abort — they must wait for the coordinator's phase 2 decision. If the coordinator crashes after the prepare phase and before sending commit/abort, participants are blocked indefinitely (until the coordinator recovers or a timeout-based recovery protocol is used). This is a fundamental weakness of 2PC; three-phase commit (3PC) and Paxos-based commit protocols address it.",
+      explanation: "2PC is a blocking protocol. After participants vote 'yes' in phase 1, they enter a locked state and cannot unilaterally commit or abort - they must wait for the coordinator's phase 2 decision. If the coordinator crashes after the prepare phase and before sending commit/abort, participants are blocked indefinitely (until the coordinator recovers or a timeout-based recovery protocol is used). This is a fundamental weakness of 2PC; three-phase commit (3PC) and Paxos-based commit protocols address it.",
       hints: [
-        "After voting 'yes', a participant has given up its right to abort unilaterally — what happens if the coordinator disappears?",
+        "After voting 'yes', a participant has given up its right to abort unilaterally - what happens if the coordinator disappears?",
         "Think about whether participants have enough information to make a safe decision without hearing from the coordinator.",
       ],
     },
@@ -74,10 +74,10 @@ const questions: Record<string, Question[]> = {
         "Both (B) and (C) simultaneously",
       ],
       correctAnswer: 1,
-      explanation: "Lamport clocks guarantee one direction: if A happened-before B (A -> B), then clock(A) < clock(B). The converse is NOT guaranteed — clock(A) < clock(B) does not imply A happened-before B; the events could be concurrent. Two events with the same Lamport timestamp are concurrent. Lamport clocks capture causal ordering but cannot distinguish concurrency from causality, which is why vector clocks were invented.",
+      explanation: "Lamport clocks guarantee one direction: if A happened-before B (A -> B), then clock(A) < clock(B). The converse is NOT guaranteed - clock(A) < clock(B) does not imply A happened-before B; the events could be concurrent. Two events with the same Lamport timestamp are concurrent. Lamport clocks capture causal ordering but cannot distinguish concurrency from causality, which is why vector clocks were invented.",
       hints: [
         "Lamport's rule: on send, increment clock; on receive, max(local, received) + 1. Does this let you infer causality from timestamps alone?",
-        "Consider two independent nodes that never communicate — their timestamps can still be compared numerically, but what does that mean causally?",
+        "Consider two independent nodes that never communicate - their timestamps can still be compared numerically, but what does that mean causally?",
       ],
     },
     {
@@ -92,7 +92,7 @@ const questions: Record<string, Question[]> = {
         "A and B are identical events",
       ],
       correctAnswer: 2,
-      explanation: "Vector clock comparison: A < B iff every component of A is <= the corresponding component of B AND at least one is strictly less. Here VC(A)[0]=2 > VC(B)[0]=1 but VC(A)[1]=1 < VC(B)[1]=2. Neither dominates the other, so A and B are concurrent (happened independently without causal relationship). Vector clocks detect concurrency without false positives — a major advantage over Lamport clocks.",
+      explanation: "Vector clock comparison: A < B iff every component of A is <= the corresponding component of B AND at least one is strictly less. Here VC(A)[0]=2 > VC(B)[0]=1 but VC(A)[1]=1 < VC(B)[1]=2. Neither dominates the other, so A and B are concurrent (happened independently without causal relationship). Vector clocks detect concurrency without false positives - a major advantage over Lamport clocks.",
       hints: [
         "For A -> B (A happened-before B), every component of VC(A) must be <= VC(B), with at least one strictly less.",
         "Compare component by component: what happens when A wins on one dimension but B wins on another?",
@@ -112,7 +112,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Spanner's TrueTime API exposes a bounded clock uncertainty: each timestamp is an interval [earliest, latest] rather than a point. To guarantee external consistency, Spanner uses 'commit-wait': after a transaction commits, the server waits until the current time is provably after the commit timestamp (i.e., waits until TrueTime.now().earliest > commit_timestamp). This ensures no future transaction can be assigned a timestamp earlier than the committed one, achieving linearizability across regions.",
       hints: [
-        "TrueTime gives an interval [earliest, latest], not an exact time — what does Spanner do to ensure a committed timestamp is unambiguously in the past?",
+        "TrueTime gives an interval [earliest, latest], not an exact time - what does Spanner do to ensure a committed timestamp is unambiguously in the past?",
         "The key insight: if you wait long enough, the uncertainty window passes and the committed timestamp becomes globally 'safe'.",
       ],
     },
@@ -128,7 +128,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Linearizability (also called strong consistency or atomic consistency) requires each operation to appear instantaneous at some point between its start and end times, and all operations must respect real-time ordering. This means reads always see the latest committed write. ZooKeeper and etcd provide linearizable reads. It is strictly stronger than sequential consistency (which respects program order but not real-time) and much stronger than eventual consistency.",
       hints: [
-        "The key phrase is 'between its invocation and completion' — this is the real-time constraint that distinguishes linearizability from sequential consistency.",
+        "The key phrase is 'between its invocation and completion' - this is the real-time constraint that distinguishes linearizability from sequential consistency.",
         "Which distributed coordination services (used for leader election) are famous for providing this guarantee?",
       ],
     },
@@ -139,10 +139,10 @@ const questions: Record<string, Question[]> = {
       question: "CRDTs (Conflict-free Replicated Data Types) are most commonly used to guarantee which consistency model?",
       options: ["Linearizability", "Sequential consistency", "Eventual consistency", "Read-your-writes consistency"],
       correctAnswer: 2,
-      explanation: "CRDTs are data structures designed to guarantee eventual consistency: all replicas converge to the same value without requiring coordination or conflict resolution. CRDT operations are designed to be commutative, associative, and idempotent — properties that allow replicas to merge state in any order and still converge. Examples include G-counters, OR-Sets, and LWW-Registers. DynamoDB and Cassandra use similar approaches for their conflict resolution.",
+      explanation: "CRDTs are data structures designed to guarantee eventual consistency: all replicas converge to the same value without requiring coordination or conflict resolution. CRDT operations are designed to be commutative, associative, and idempotent - properties that allow replicas to merge state in any order and still converge. Examples include G-counters, OR-Sets, and LWW-Registers. DynamoDB and Cassandra use similar approaches for their conflict resolution.",
       hints: [
-        "CRDTs are specifically designed for systems where replicas can diverge temporarily — what property guarantees they eventually agree?",
-        "The 'conflict-free' in CRDT means merges always succeed without user-defined resolution — which consistency model does this support?",
+        "CRDTs are specifically designed for systems where replicas can diverge temporarily - what property guarantees they eventually agree?",
+        "The 'conflict-free' in CRDT means merges always succeed without user-defined resolution - which consistency model does this support?",
       ],
     },
     {
@@ -151,7 +151,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Read-your-writes consistency can be achieved by always routing a client's read requests to the same replica that received the client's writes.",
       correctAnswer: "True",
-      explanation: "Read-your-writes (also called read-your-own-writes) consistency guarantees that after a client writes a value, any subsequent read by that same client reflects that write. One implementation: sticky sessions — always route a client's reads to the master or the replica that received the write. Another approach: version-stamped reads — the client sends the write's version/timestamp with reads, and the replica waits until it has replicated up to that version. Both ensure the client sees its own writes.",
+      explanation: "Read-your-writes (also called read-your-own-writes) consistency guarantees that after a client writes a value, any subsequent read by that same client reflects that write. One implementation: sticky sessions - always route a client's reads to the master or the replica that received the write. Another approach: version-stamped reads - the client sends the write's version/timestamp with reads, and the replica waits until it has replicated up to that version. Both ensure the client sees its own writes.",
       hints: [
         "Think about what 'sticky sessions' or 'session tokens' accomplish in terms of read routing.",
         "If you always read from the node you wrote to, can your read ever miss your own write?",
@@ -166,8 +166,8 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 2,
       explanation: "Causal consistency ensures that if write W causally precedes read R (W -> R), then all nodes observe W before R. Concurrent operations (with no causal relationship) may be seen in different orders by different nodes. Causal consistency is weaker than linearizability and sequential consistency but stronger than eventual consistency. MongoDB sessions provide causal consistency by tracking a cluster time and operation time, ensuring reads see causally-prior writes.",
       hints: [
-        "Causal ordering is about preserving the happens-before relationship — not about absolute real-time ordering.",
-        "MongoDB sessions use a 'cluster time' token to enforce this — what does 'concurrent' mean in the vector-clock sense?",
+        "Causal ordering is about preserving the happens-before relationship - not about absolute real-time ordering.",
+        "MongoDB sessions use a 'cluster time' token to enforce this - what does 'concurrent' mean in the vector-clock sense?",
       ],
     },
   ],
@@ -180,7 +180,7 @@ const questions: Record<string, Question[]> = {
       question: "Which failure model is the most powerful (allows the most adversarial behavior) and requires the most nodes to tolerate?",
       options: ["Crash-stop (fail-stop)", "Crash-recovery", "Omission failures", "Byzantine failures"],
       correctAnswer: 3,
-      explanation: "Byzantine failures are the most general: a faulty node can behave arbitrarily — sending different messages to different peers, lying, delaying, or replaying. Crash-stop is the simplest: a node halts and never sends messages again. Crash-recovery allows a node to rejoin after crashing (requires persistent state). Omission failures (node drops some messages) sit between crash and Byzantine. Most distributed databases assume crash failures; blockchains must assume Byzantine failures.",
+      explanation: "Byzantine failures are the most general: a faulty node can behave arbitrarily - sending different messages to different peers, lying, delaying, or replaying. Crash-stop is the simplest: a node halts and never sends messages again. Crash-recovery allows a node to rejoin after crashing (requires persistent state). Omission failures (node drops some messages) sit between crash and Byzantine. Most distributed databases assume crash failures; blockchains must assume Byzantine failures.",
       hints: [
         "Rank these failure modes by how much the faulty node can do: halt silently, restart with old state, send anything to anyone.",
         "Which model do blockchains need to handle, given that nodes may be actively malicious?",
@@ -198,7 +198,7 @@ const questions: Record<string, Question[]> = {
         "Deploy more instances of the slow service",
       ],
       correctAnswer: 1,
-      explanation: "Cascading failure mechanism: a slow dependency causes upstream threads to block waiting for responses, exhausting the thread pool; the request queue fills; upstream services become slow too; this propagates up the call chain. The four-pattern defense: (1) Timeout — don't wait forever; (2) Circuit breaker — stop sending requests when error rate is high (open circuit); (3) Bulkhead — isolate thread pools per dependency so one failure can't exhaust all threads; (4) Backpressure — shed load before queues fill. Retries alone worsen cascades (retry storm).",
+      explanation: "Cascading failure mechanism: a slow dependency causes upstream threads to block waiting for responses, exhausting the thread pool; the request queue fills; upstream services become slow too; this propagates up the call chain. The four-pattern defense: (1) Timeout - don't wait forever; (2) Circuit breaker - stop sending requests when error rate is high (open circuit); (3) Bulkhead - isolate thread pools per dependency so one failure can't exhaust all threads; (4) Backpressure - shed load before queues fill. Retries alone worsen cascades (retry storm).",
       hints: [
         "Why does increasing thread pool size make cascading failures worse rather than better?",
         "Think about what each pattern prevents: circuit breaker stops the flow, bulkhead limits blast radius, timeout frees threads, backpressure controls inflow rate.",
@@ -216,10 +216,10 @@ const questions: Record<string, Question[]> = {
         "ABA problem; prevented by version numbers on all records",
       ],
       correctAnswer: 0,
-      explanation: "Split-brain occurs when a network partition causes multiple nodes to act as master simultaneously, leading to divergent writes and data inconsistency. Prevention: require a quorum (majority of nodes) to acknowledge a write before it is committed — only the partition with a quorum can make progress, ensuring at most one master. STONITH (Shoot The Other Node In The Head) is a fencing mechanism that forcibly shuts down a potentially split-brained node. Tools like Pacemaker use STONITH for high-availability clusters.",
+      explanation: "Split-brain occurs when a network partition causes multiple nodes to act as master simultaneously, leading to divergent writes and data inconsistency. Prevention: require a quorum (majority of nodes) to acknowledge a write before it is committed - only the partition with a quorum can make progress, ensuring at most one master. STONITH (Shoot The Other Node In The Head) is a fencing mechanism that forcibly shuts down a potentially split-brained node. Tools like Pacemaker use STONITH for high-availability clusters.",
       hints: [
         "If you require more than half the nodes to agree, can two separate partitions both form a quorum simultaneously?",
-        "STONITH stands for 'Shoot The Other Node In The Head' — what problem does physically killing a node solve?",
+        "STONITH stands for 'Shoot The Other Node In The Head' - what problem does physically killing a node solve?",
       ],
     },
     {
@@ -234,7 +234,7 @@ const questions: Record<string, Question[]> = {
         "Gray failures only affect throughput, not latency",
       ],
       correctAnswer: 1,
-      explanation: "Gray failures are partial failures where some requests succeed, some are slow, and some fail — unlike complete outages. Average latency hides this because a small percentage of very slow requests (say 1% at 10 seconds) is diluted by 99% of fast requests (say 10ms), keeping the mean low while p99 latency spikes to 10 seconds. Monitoring p99 and p999 latency percentiles catches gray failures that averages miss. Percentile latency is considered the gold standard for SLO measurement in services like Amazon and Google.",
+      explanation: "Gray failures are partial failures where some requests succeed, some are slow, and some fail - unlike complete outages. Average latency hides this because a small percentage of very slow requests (say 1% at 10 seconds) is diluted by 99% of fast requests (say 10ms), keeping the mean low while p99 latency spikes to 10 seconds. Monitoring p99 and p999 latency percentiles catches gray failures that averages miss. Percentile latency is considered the gold standard for SLO measurement in services like Amazon and Google.",
       hints: [
         "If 1% of requests take 10 seconds but 99% take 10ms, what is the mean? What is the p99?",
         "Amazon's famous finding: even a small percentage of slow responses causes significant customer-visible degradation.",
@@ -255,10 +255,10 @@ const questions: Record<string, Question[]> = {
         "SETNX is not atomic; Redlock uses Lua scripts to make it atomic",
       ],
       correctAnswer: 1,
-      explanation: "SETNX (SET if Not eXists) with an expiry (TTL) on a single Redis node has two problems: (1) if the Redis master crashes before replicating to the replica, the new master may hand out the same lock to another client; (2) if the lock holder crashes, other clients must wait for the TTL to expire. Redlock uses 5+ independent Redis nodes and requires acquiring the lock on a majority — even if one or two nodes fail, the lock remains valid and unique. ZooKeeper ephemeral nodes (which disappear when a client's session ends) are often considered a safer alternative for critical locks.",
+      explanation: "SETNX (SET if Not eXists) with an expiry (TTL) on a single Redis node has two problems: (1) if the Redis master crashes before replicating to the replica, the new master may hand out the same lock to another client; (2) if the lock holder crashes, other clients must wait for the TTL to expire. Redlock uses 5+ independent Redis nodes and requires acquiring the lock on a majority - even if one or two nodes fail, the lock remains valid and unique. ZooKeeper ephemeral nodes (which disappear when a client's session ends) are often considered a safer alternative for critical locks.",
       hints: [
         "What happens to a Redis lock if async replication to the replica hasn't completed when the master crashes and the replica is promoted?",
-        "Redlock's majority quorum is the same idea used in consensus protocols — why does majority ownership guarantee uniqueness?",
+        "Redlock's majority quorum is the same idea used in consensus protocols - why does majority ownership guarantee uniqueness?",
       ],
     },
     {
@@ -268,15 +268,15 @@ const questions: Record<string, Question[]> = {
       question: "In ZooKeeper-based leader election using ephemeral sequential nodes, why do non-leader candidates watch the node just before them (chain watching) rather than all watching the current leader node?",
       options: [
         "ZooKeeper does not support watching non-leader nodes",
-        "Chain watching prevents the herd effect — if all watch the leader node, all candidates wake up on leader failure and storm the ZooKeeper server simultaneously",
+        "Chain watching prevents the herd effect - if all watch the leader node, all candidates wake up on leader failure and storm the ZooKeeper server simultaneously",
         "Watching the previous node reduces ZooKeeper storage overhead",
         "Only sequential nodes can be watched; the leader node is a permanent node",
       ],
       correctAnswer: 1,
-      explanation: "In ZooKeeper leader election: each candidate creates an ephemeral sequential node (e.g., /election/n_000001, n_000002, ...). The node with the lowest sequence number is the leader. If all other candidates watch the leader node, when the leader fails all of them simultaneously try to become leader — this is the herd effect (thundering herd), overloading ZooKeeper. Chain watching: each candidate watches the node just before it. When the leader fails, only the second candidate is notified and becomes the new leader. No herd effect.",
+      explanation: "In ZooKeeper leader election: each candidate creates an ephemeral sequential node (e.g., /election/n_000001, n_000002, ...). The node with the lowest sequence number is the leader. If all other candidates watch the leader node, when the leader fails all of them simultaneously try to become leader - this is the herd effect (thundering herd), overloading ZooKeeper. Chain watching: each candidate watches the node just before it. When the leader fails, only the second candidate is notified and becomes the new leader. No herd effect.",
       hints: [
-        "Imagine 100 candidates all watching one node — when that node is deleted, what happens to all 100 simultaneously?",
-        "Chain watching means only the next-in-line is notified — how does this scale compared to everyone watching the leader?",
+        "Imagine 100 candidates all watching one node - when that node is deleted, what happens to all 100 simultaneously?",
+        "Chain watching means only the next-in-line is notified - how does this scale compared to everyone watching the leader?",
       ],
     },
     {
@@ -293,8 +293,8 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The Saga pattern breaks a distributed transaction into a sequence of local transactions, each publishing a domain event that triggers the next step. If step N fails, the saga executes compensating transactions for steps N-1, N-2, ... down to step 1 in reverse order. A compensating transaction semantically undoes the effect of the original (e.g., 'cancel order' compensates 'place order'). Sagas avoid 2PC's coordinator bottleneck and are widely used in microservices architectures. The trade-off: sagas are eventually consistent and compensating transactions must be idempotent.",
       hints: [
-        "Unlike 2PC which uses a single coordinator, Sagas decompose the problem — each step is a local transaction that can be individually undone.",
-        "Think about what 'compensating' means — it's not a rollback in the ACID sense, it's a new forward transaction that reverses the business effect.",
+        "Unlike 2PC which uses a single coordinator, Sagas decompose the problem - each step is a local transaction that can be individually undone.",
+        "Think about what 'compensating' means - it's not a rollback in the ACID sense, it's a new forward transaction that reverses the business effect.",
       ],
     },
     {
@@ -309,10 +309,10 @@ const questions: Record<string, Question[]> = {
         "As a centralized configuration server that pushes policies to services",
       ],
       correctAnswer: 1,
-      explanation: "A service mesh deploys a sidecar proxy (e.g., Envoy in Istio) alongside each service instance in the same pod/VM. The sidecar intercepts all inbound and outbound traffic and handles: retries (with backoff), circuit breaking, mutual TLS (mTLS) for service-to-service encryption and authentication, and telemetry (metrics, traces, logs). The control plane (Istio's istiod) pushes configuration to the sidecar proxies. The key benefit is separating networking concerns from application code — services don't need to implement these patterns themselves.",
+      explanation: "A service mesh deploys a sidecar proxy (e.g., Envoy in Istio) alongside each service instance in the same pod/VM. The sidecar intercepts all inbound and outbound traffic and handles: retries (with backoff), circuit breaking, mutual TLS (mTLS) for service-to-service encryption and authentication, and telemetry (metrics, traces, logs). The control plane (Istio's istiod) pushes configuration to the sidecar proxies. The key benefit is separating networking concerns from application code - services don't need to implement these patterns themselves.",
       hints: [
-        "A sidecar is co-located with the application — not a centralized gateway — so it sees all traffic to/from one service instance.",
-        "mTLS in the sidecar means the application doesn't need to implement TLS itself — the proxy handles it transparently.",
+        "A sidecar is co-located with the application - not a centralized gateway - so it sees all traffic to/from one service instance.",
+        "mTLS in the sidecar means the application doesn't need to implement TLS itself - the proxy handles it transparently.",
       ],
     },
   ],
@@ -333,7 +333,7 @@ const questions: Record<string, Question[]> = {
       explanation: "CQRS separates the command (write) side from the query (read) side. The write model is typically normalized, optimized for integrity and consistency (e.g., a relational DB), and enforces business rules. The read model is denormalized and optimized for specific query patterns (e.g., Elasticsearch for full-text search, Redis for leaderboards). Updates flow from write to read model asynchronously, making the read model eventually consistent. CQRS is frequently paired with event sourcing, where the write model emits events that update the read model.",
       hints: [
         "Think about why e-commerce sites use separate databases for inventory management vs. product search/display.",
-        "The read model is often updated by consuming events from the write side — what consistency guarantee does this provide?",
+        "The read model is often updated by consuming events from the write side - what consistency guarantee does this provide?",
       ],
     },
     {
@@ -348,10 +348,10 @@ const questions: Record<string, Question[]> = {
         "Event sourcing cannot be used with microservices architectures",
       ],
       correctAnswer: 1,
-      explanation: "Event sourcing stores the full history of state-changing events rather than the current state. To get current state, you replay events from the beginning (or from the latest snapshot). This has two main downsides: (1) read latency and resource cost if the event log is long (mitigated by periodic snapshots); (2) read models (projections) are updated asynchronously from events, so they are eventually consistent — reads may not reflect the latest events immediately. The upsides are a complete audit log, ability to time-travel, and natural event-driven architecture.",
+      explanation: "Event sourcing stores the full history of state-changing events rather than the current state. To get current state, you replay events from the beginning (or from the latest snapshot). This has two main downsides: (1) read latency and resource cost if the event log is long (mitigated by periodic snapshots); (2) read models (projections) are updated asynchronously from events, so they are eventually consistent - reads may not reflect the latest events immediately. The upsides are a complete audit log, ability to time-travel, and natural event-driven architecture.",
       hints: [
         "If you store 5 years of financial transactions as events, how do you efficiently query the current account balance?",
-        "Event sourcing naturally pairs with CQRS — why does the read model have an eventual consistency tradeoff?",
+        "Event sourcing naturally pairs with CQRS - why does the read model have an eventual consistency tradeoff?",
       ],
     },
     {
@@ -366,9 +366,9 @@ const questions: Record<string, Question[]> = {
         "TCP pauses the sender for a fixed backoff interval whenever a packet is dropped",
       ],
       correctAnswer: 1,
-      explanation: "TCP's flow control uses a sliding window: the receiver includes a 'window size' field in each ACK, advertising how many bytes of buffer space are available. The sender never has more unacknowledged bytes in flight than the receiver's advertised window. If the receiver's application is slow to consume data, the buffer fills, the window shrinks to zero, and the sender pauses — this is built-in backpressure. Application-level backpressure in reactive streams (RxJava, Project Reactor) applies the same principle with bounded queues and demand signals.",
+      explanation: "TCP's flow control uses a sliding window: the receiver includes a 'window size' field in each ACK, advertising how many bytes of buffer space are available. The sender never has more unacknowledged bytes in flight than the receiver's advertised window. If the receiver's application is slow to consume data, the buffer fills, the window shrinks to zero, and the sender pauses - this is built-in backpressure. Application-level backpressure in reactive streams (RxJava, Project Reactor) applies the same principle with bounded queues and demand signals.",
       hints: [
-        "The TCP receive window is dynamically adjusted — what happens when the receiver's buffer fills up completely?",
+        "The TCP receive window is dynamically adjusted - what happens when the receiver's buffer fills up completely?",
         "Reactive Streams' 'request(n)' demand signal is the application-level equivalent of TCP's window advertisement.",
       ],
     },
@@ -386,7 +386,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "The Strangler Fig pattern works by placing a proxy (or facade) in front of the monolith. New feature requests are routed to new microservices. Existing monolith features are incrementally migrated: once a feature is moved to a microservice, the proxy routes its traffic there instead of the monolith. Over time, the monolith shrinks as the microservices grow around it, until the monolith can be decommissioned. This enables zero-downtime, incremental migration without a risky big-bang cutover.",
       hints: [
-        "The key is incremental migration — you never have to stop traffic to switch from monolith to microservice for a given feature.",
+        "The key is incremental migration - you never have to stop traffic to switch from monolith to microservice for a given feature.",
         "What role does the proxy or API gateway play in managing which requests go to the old vs. new system?",
       ],
     },
@@ -431,9 +431,9 @@ const questions: Record<string, Question[]> = {
       question: "Which term describes the actual measured value (e.g., p99 latency = 180ms) as opposed to the target or contractual commitment?",
       options: ["SLO (Service Level Objective)", "SLA (Service Level Agreement)", "SLI (Service Level Indicator)", "Error budget"],
       correctAnswer: 2,
-      explanation: "SLI (Service Level Indicator) is the actual measured metric — the raw measurement, e.g., 'p99 latency over the past 5 minutes is 180ms' or 'availability is 99.95%'. SLO (Service Level Objective) is the internal target, e.g., 'p99 latency must be < 200ms'. SLA (Service Level Agreement) is the contractual commitment to customers with defined penalties for breach. The SLI is what you measure, the SLO is what you aim for, and the SLA is what you promise. Google's SRE book popularized this framework.",
+      explanation: "SLI (Service Level Indicator) is the actual measured metric - the raw measurement, e.g., 'p99 latency over the past 5 minutes is 180ms' or 'availability is 99.95%'. SLO (Service Level Objective) is the internal target, e.g., 'p99 latency must be < 200ms'. SLA (Service Level Agreement) is the contractual commitment to customers with defined penalties for breach. The SLI is what you measure, the SLO is what you aim for, and the SLA is what you promise. Google's SRE book popularized this framework.",
       hints: [
-        "SLI is the measurement, SLO is the goal, SLA is the contract — which one is a raw number from your monitoring system?",
+        "SLI is the measurement, SLO is the goal, SLA is the contract - which one is a raw number from your monitoring system?",
         "If your monitoring dashboard shows 'p99 = 180ms', is that an SLI, SLO, or SLA?",
       ],
     },
@@ -443,8 +443,8 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: "A service has an SLO of 99.9% availability (error budget = ~8.76 hours/year). If the current burn rate is 10x the sustainable rate, and there are 30 days left in the window, what action should the on-call engineer take?",
       options: [
-        "Wait — at 10x burn rate there is still time left in the error budget",
-        "Alert immediately — at 10x burn rate the remaining error budget will be exhausted in roughly 3 days, well before the window ends",
+        "Wait - at 10x burn rate there is still time left in the error budget",
+        "Alert immediately - at 10x burn rate the remaining error budget will be exhausted in roughly 3 days, well before the window ends",
         "Reduce the SLO target from 99.9% to 99% to increase the error budget",
         "Disable all alerting for 30 days to allow the system to recover naturally",
       ],
@@ -470,7 +470,7 @@ const questions: Record<string, Question[]> = {
         "Synchronous replication works only in single-region deployments",
       ],
       correctAnswer: 1,
-      explanation: "Synchronous replication waits for at least one replica to acknowledge the write before returning to the client — if the master crashes, the replica has all committed data, so no data is lost. The cost: write latency includes the round-trip to the replica (especially painful across regions). Asynchronous replication acknowledges the write immediately after writing to the master — lower latency, but if the master crashes before replicating, some committed writes are lost. Semi-synchronous (MySQL default) is a middle ground: one replica must ack, but others are async. The choice depends on durability requirements vs. latency SLOs.",
+      explanation: "Synchronous replication waits for at least one replica to acknowledge the write before returning to the client - if the master crashes, the replica has all committed data, so no data is lost. The cost: write latency includes the round-trip to the replica (especially painful across regions). Asynchronous replication acknowledges the write immediately after writing to the master - lower latency, but if the master crashes before replicating, some committed writes are lost. Semi-synchronous (MySQL default) is a middle ground: one replica must ack, but others are async. The choice depends on durability requirements vs. latency SLOs.",
       hints: [
         "In synchronous replication, what has to happen before the client gets a success response? How does this affect latency?",
         "In async replication, what happens to writes that were acknowledged by the master but not yet sent to replicas when the master crashes?",
@@ -488,10 +488,10 @@ const questions: Record<string, Question[]> = {
         "Single-region with in-memory replication only",
       ],
       correctAnswer: 1,
-      explanation: "Spanner uses active-active multi-region replication: any region can serve reads (via local Paxos leaders for strong reads) and any region can accept writes (routed to the Paxos leader for that shard). Paxos ensures cross-region consensus before a write is committed. Active-passive (also called primary-DR) is simpler — one region serves all traffic, the other is a warm standby for disaster recovery — but wastes capacity. Active-active maximizes utilization and availability but requires sophisticated synchronization, which is where Spanner's TrueTime and Paxos come in.",
+      explanation: "Spanner uses active-active multi-region replication: any region can serve reads (via local Paxos leaders for strong reads) and any region can accept writes (routed to the Paxos leader for that shard). Paxos ensures cross-region consensus before a write is committed. Active-passive (also called primary-DR) is simpler - one region serves all traffic, the other is a warm standby for disaster recovery - but wastes capacity. Active-active maximizes utilization and availability but requires sophisticated synchronization, which is where Spanner's TrueTime and Paxos come in.",
       hints: [
         "If any region can accept writes and all regions stay consistent, what replication topology is this? What consistency protocol does it require?",
-        "Active-passive wastes the standby region's capacity — what does Spanner do instead?",
+        "Active-passive wastes the standby region's capacity - what does Spanner do instead?",
       ],
     },
     {
@@ -508,7 +508,7 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Change Data Capture (CDC) reads the database's internal transaction log (MySQL binlog, PostgreSQL WAL) to capture every insert, update, and delete as a stream of events. Debezium publishes these events to Kafka topics. Consumers use this stream to: (1) keep Elasticsearch in sync with the DB for search; (2) invalidate or warm Redis caches on every DB change; (3) feed analytics pipelines (e.g., Snowflake via Kafka Connect). The key advantage over polling: CDC captures every change in order without missing intermediate states, and without adding load to the database with polling queries.",
       hints: [
-        "The database transaction log already contains a record of every change — CDC just makes that stream available externally without extra DB load.",
+        "The database transaction log already contains a record of every change - CDC just makes that stream available externally without extra DB load.",
         "Compare CDC to polling: if a row is updated 5 times between polls, how many changes does polling see vs. CDC?",
       ],
     },

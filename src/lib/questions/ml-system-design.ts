@@ -19,7 +19,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The business owner defines what success looks like in business terms (e.g., 'increase purchase conversion by 5%' or 'reduce fraud losses by $10M/year'). Without a clear business metric, ML teams risk optimizing proxy metrics that do not translate to business value. Product managers translate business goals into measurable objectives that ML engineers can then operationalize.",
       hints: [
-        "ML metrics (AUC, NDCG) are proxies — only the business owner knows which proxy best maps to business outcomes.",
+        "ML metrics (AUC, NDCG) are proxies - only the business owner knows which proxy best maps to business outcomes.",
         "Define success first, then work backward to the ML metric.",
       ],
     },
@@ -52,7 +52,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "99.9% availability = 0.1% downtime = 43.8 minutes/month. For ML systems, 'availability' must include silent failures: a data pipeline bug producing incorrect features causes the model to serve wrong predictions with no infrastructure failure — the system appears 'up' but is unavailable in the meaningful sense. ML availability SLOs must cover both infrastructure uptime and model output correctness.",
+        "99.9% availability = 0.1% downtime = 43.8 minutes/month. For ML systems, 'availability' must include silent failures: a data pipeline bug producing incorrect features causes the model to serve wrong predictions with no infrastructure failure - the system appears 'up' but is unavailable in the meaningful sense. ML availability SLOs must cover both infrastructure uptime and model output correctness.",
       hints: [
         "Convert 99.9% to a decimal fraction of downtime, then multiply by total minutes in 30 days.",
         "In ML systems, can a system appear technically 'up' while producing completely wrong outputs? What does this mean for availability SLOs?",
@@ -68,7 +68,7 @@ const questions: Record<string, Question[]> = {
         "It is computationally inefficient to compute the same metric twice.",
         "Offline metrics (e.g., AUC on historical data) measure model quality in isolation; online metrics (e.g., conversion rate) measure system-level business outcomes. A model can improve offline AUC while decreasing online conversion due to system interactions, latency changes, or distribution shift. Different metrics are required.",
         "The A/B test cannot measure model-specific metrics like AUC.",
-        "Using the same metric simplifies the evaluation process — this is actually a best practice.",
+        "Using the same metric simplifies the evaluation process - this is actually a best practice.",
       ],
       correctAnswer: 1,
       explanation:
@@ -94,7 +94,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "At 50K QPS, a 200 ms p99 SLO means the model must complete inference in <50 ms (leaving headroom for feature retrieval and I/O). This SLO eliminates large transformer models immediately. Specifying QPS, latency SLO, and recall floor as hard requirements prevents building a system that cannot serve at production scale.",
       hints: [
-        "50K QPS \\times 200 ms SLO implies a throughput requirement of 10,000 concurrent inflight requests — a concrete capacity constraint.",
+        "50K QPS \\times 200 ms SLO implies a throughput requirement of 10,000 concurrent inflight requests - a concrete capacity constraint.",
         "Latency and throughput requirements directly constrain model selection.",
       ],
     },
@@ -120,14 +120,14 @@ const questions: Record<string, Question[]> = {
       question:
         "You are sizing a real-time ML inference cluster. The model has p50 latency of 20 ms and p99 latency of 80 ms, serving 10,000 QPS. Approximately how many model replicas are needed if each replica handles 100 requests concurrently?",
       options: [
-        "1 replica — one server can handle all requests since p50 latency is only 20 ms.",
-        "100 replicas — 10,000 QPS \\div 100 concurrent requests per replica.",
-        "10 replicas — p99 latency of 80 ms means only 10 requests per second per replica.",
-        "1,000 replicas — one per QPS unit.",
+        "1 replica - one server can handle all requests since p50 latency is only 20 ms.",
+        "100 replicas - 10,000 QPS \\div 100 concurrent requests per replica.",
+        "10 replicas - p99 latency of 80 ms means only 10 requests per second per replica.",
+        "1,000 replicas - one per QPS unit.",
       ],
       correctAnswer: 1,
       explanation:
-        "Using Little\'s Law: throughput = concurrency \\div latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 \\div 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20–30% headroom.",
+        "Using Little\'s Law: throughput = concurrency \\div latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 \\div 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20-30% headroom.",
       hints: [
         "Capacity planning: how many requests can each replica process per second given its concurrency limit and latency?",
         "Use Little's Law to reason about the relationship between concurrency, latency, and throughput.",
@@ -143,10 +143,10 @@ const questions: Record<string, Question[]> = {
       question:
         "A travel company wants to predict 'will this user book a hotel in the next 7 days?' Which ML framing is most direct?",
       options: [
-        "Regression — predict the exact probability of booking.",
-        "Binary classification — predict a binary label (books / does not book), with probability output for downstream thresholding.",
-        "Clustering — group users by travel intent.",
-        "Multi-label classification — predict all possible travel destinations.",
+        "Regression - predict the exact probability of booking.",
+        "Binary classification - predict a binary label (books / does not book), with probability output for downstream thresholding.",
+        "Clustering - group users by travel intent.",
+        "Multi-label classification - predict all possible travel destinations.",
       ],
       correctAnswer: 1,
       explanation:
@@ -167,7 +167,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Multi-task learning often improves accuracy on each individual task by sharing representations across related tasks. For example, a model predicting both CTR and conversion rate shares a user interest representation, and gradients from each task regularize the other. The shared backbone reduces overall inference cost compared to running two separate models. The trade-off is increased training complexity.",
       hints: [
-        "Shared layers in multi-task learning act as a form of regularization — each task reduces the other\'s overfitting.",
+        "Shared layers in multi-task learning act as a form of regularization - each task reduces the other\'s overfitting.",
         "Two separate 100M-param models vs. one shared 120M-param model with two heads: the multi-task model is cheaper to serve.",
       ],
     },
@@ -178,16 +178,16 @@ const questions: Record<string, Question[]> = {
       question:
         "A food delivery platform wants to rank restaurants for a user. They have: (A) explicit ratings (1-5 stars), (B) implicit signals (clicks, orders, dwell time on menu), (C) contextual signals (time of day, weather, user location). What is the optimal problem framing?",
       options: [
-        "Regression on average star rating — predicts the 'best' restaurant objectively.",
-        "Pointwise learning-to-rank using only explicit ratings — they are the cleanest signal.",
-        "Listwise learning-to-rank combining all three signal types, using ratings as strong labels, implicit signals as weak labels, and context as features — optimizing directly for ranking quality (NDCG).",
-        "Collaborative filtering using only order history — explicit signals are too noisy.",
+        "Regression on average star rating - predicts the 'best' restaurant objectively.",
+        "Pointwise learning-to-rank using only explicit ratings - they are the cleanest signal.",
+        "Listwise learning-to-rank combining all three signal types, using ratings as strong labels, implicit signals as weak labels, and context as features - optimizing directly for ranking quality (NDCG).",
+        "Collaborative filtering using only order history - explicit signals are too noisy.",
       ],
       correctAnswer: 2,
       explanation:
         "Optimal framing combines all available signals: explicit ratings (high-quality, sparse) as strong training labels; implicit signals (abundant, noisy) as weak labels with appropriate loss weighting; context as features that personalize rankings. Listwise optimization (LambdaRank, LambdaLoss) directly optimizes NDCG rather than pointwise regression. This captures the full information in all three signal types.",
       hints: [
-        "Explicit ratings are rare but accurate; implicit signals are abundant but biased — combine both with different loss weights.",
+        "Explicit ratings are rare but accurate; implicit signals are abundant but biased - combine both with different loss weights.",
         "Listwise losses optimize the ranking metric directly; pointwise losses only approximate it.",
       ],
     },
@@ -199,7 +199,7 @@ const questions: Record<string, Question[]> = {
         "A ride-sharing company wants to predict surge pricing multipliers (1.0\\times, 1.5\\times, 2.0\\times, 2.5\\times, 3.0\\times). What is the most appropriate ML framing?",
       options: [
         "Binary classification: surge vs. no surge.",
-        "Multi-class classification with 5 ordered classes, or ordinal regression — since the classes have a meaningful order.",
+        "Multi-class classification with 5 ordered classes, or ordinal regression - since the classes have a meaningful order.",
         "Regression to a continuous multiplier value.",
         "Clustering riders and drivers into demand zones.",
       ],
@@ -207,8 +207,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The 5 surge multipliers are discrete but ordered (1.0 < 1.5 < 2.0 < 2.5 < 3.0). Multi-class classification ignores the ordering; ordinal regression exploits it. Regression to a continuous value is also valid if the downstream system can threshold to the 5 levels. The key is that the ordered nature of the output should inform model design.",
       hints: [
-        "Ordinal classes have a natural order — predicting 2.0 when the truth is 1.5 is a smaller error than predicting 3.0.",
-        "Standard cross-entropy loss treats all misclassifications equally — it ignores the ordering.",
+        "Ordinal classes have a natural order - predicting 2.0 when the truth is 1.5 is a smaller error than predicting 3.0.",
+        "Standard cross-entropy loss treats all misclassifications equally - it ignores the ordering.",
       ],
     },
     {
@@ -236,11 +236,11 @@ const questions: Record<string, Question[]> = {
         "Binary classification optimized for accuracy; 99.95% accuracy is sufficient.",
         "Binary classification with extreme class imbalance handling (focal loss or oversampling); evaluated by precision-recall AUC and precision@recall=80%, not accuracy.",
         "Regression predicting a continuous fraud probability; threshold selected post-hoc.",
-        "Multi-class: legitimate, suspicious, fraud — with three different downstream actions.",
+        "Multi-class: legitimate, suspicious, fraud - with three different downstream actions.",
       ],
       correctAnswer: 1,
       explanation:
-        'At 0.05% fraud rate, a model predicting "not fraud" always achieves 99.95% accuracy — useless. The relevant metrics are precision-recall AUC and operational precision@recall (e.g., at 80% recall, what fraction of flagged transactions are truly fraudulent?). Focal loss or oversampling addresses the extreme imbalance, and the 150 ms SLO constrains model complexity.',
+        'At 0.05% fraud rate, a model predicting "not fraud" always achieves 99.95% accuracy - useless. The relevant metrics are precision-recall AUC and operational precision@recall (e.g., at 80% recall, what fraction of flagged transactions are truly fraudulent?). Focal loss or oversampling addresses the extreme imbalance, and the 150 ms SLO constrains model complexity.',
       hints: [
         "At 0.05% fraud rate, a naive classifier predicting 'not fraud' always achieves what accuracy?",
         "Accuracy alone is meaningless for imbalanced data. Which metrics directly measure fraud-catching ability?",
@@ -263,10 +263,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Concept drift occurs when the joint distribution P(Y|X) changes over time — features that predicted default in 2010-2020 may no longer be predictive in 2023 due to macroeconomic changes, regulatory changes, or demographic shifts. COVID-19 dramatically changed income stability and spending patterns, obsoleting models trained on pre-pandemic data. Regular monitoring and retraining cadences are required to detect and correct concept drift.",
+        "Concept drift occurs when the joint distribution P(Y|X) changes over time - features that predicted default in 2010-2020 may no longer be predictive in 2023 due to macroeconomic changes, regulatory changes, or demographic shifts. COVID-19 dramatically changed income stability and spending patterns, obsoleting models trained on pre-pandemic data. Regular monitoring and retraining cadences are required to detect and correct concept drift.",
       hints: [
         "Concept drift: P(Y|X) changes. Data drift: P(X) changes. Both can degrade model performance.",
-        "A model that was accurate in 2020 but fails in 2023 is not overfitting — it is suffering from distribution shift.",
+        "A model that was accurate in 2020 but fails in 2023 is not overfitting - it is suffering from distribution shift.",
       ],
     },
     {
@@ -278,7 +278,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators — the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
+        "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators - the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
       hints: [
         "What kappa threshold distinguishes reliable ground truth from noisy labels? Below what value should annotation guidelines be revised?",
         "What fundamental limit exists on a model's ability to learn from human labels?",
@@ -291,10 +291,10 @@ const questions: Record<string, Question[]> = {
       question:
         "You are training a next-token prediction language model on web-crawled data. Which data quality problem is most likely to cause the model to generate harmful content?",
       options: [
-        "Duplicate documents in the training set — memorization of repeated content.",
+        "Duplicate documents in the training set - memorization of repeated content.",
         "Training data contamination: harmful, toxic, or personally identifiable information in the web crawl gets memorized and reproduced at inference time.",
-        "Imbalanced language distribution — rare languages are underrepresented.",
-        "Training data that is too recent — the model learns ephemeral information.",
+        "Imbalanced language distribution - rare languages are underrepresented.",
+        "Training data that is too recent - the model learns ephemeral information.",
       ],
       correctAnswer: 1,
       explanation:
@@ -311,17 +311,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A recommendation system logs every item shown to users and whether they clicked. Training a model on this logged data to predict clicks will suffer from which specific bias?",
       options: [
-        "Confirmation bias — users always click what they already know.",
-        "Exposure bias (position bias) — items shown at the top are clicked more regardless of quality, so the model learns position artifacts instead of true relevance.",
-        "Survivorship bias — only popular items are ever shown, so only they appear in logs.",
-        "Label noise bias — click signals are too noisy to learn from.",
+        "Confirmation bias - users always click what they already know.",
+        "Exposure bias (position bias) - items shown at the top are clicked more regardless of quality, so the model learns position artifacts instead of true relevance.",
+        "Survivorship bias - only popular items are ever shown, so only they appear in logs.",
+        "Label noise bias - click signals are too noisy to learn from.",
       ],
       correctAnswer: 1,
       explanation:
         'Position bias is the dominant issue in recommendation/search logs: items ranked higher receive disproportionately more clicks regardless of their true relevance (simply because they are seen). A model trained on raw logs learns to predict "was shown at position 1" rather than "is relevant." Inverse propensity scoring (IPS) or position-aware models are needed to debias.',
       hints: [
         "Why might an item at rank 1 receive more clicks than a more relevant item at rank 10, even when users are shown both?",
-        "When a user clicks an item, what two possible reasons explain the click — and which one does the model actually learn from?",
+        "When a user clicks an item, what two possible reasons explain the click - and which one does the model actually learn from?",
       ],
     },
     {
@@ -335,7 +335,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., \\epsilon-greedy or logging policies) is needed to collect unbiased training data.",
       hints: [
-        "What type of data does production logging capture — only what the current model chose to show, or everything that exists?",
+        "What type of data does production logging capture - only what the current model chose to show, or everything that exists?",
         "What bias does this create, and what mechanism is needed to collect unbiased signal about items the model would not have surfaced?",
       ],
     },
@@ -353,7 +353,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Uncertainty sampling for binary classification selects examples where the model\'s predicted probability is closest to 0.5 — the decision boundary. These are the examples where the model is most uncertain and where a label provides the most information gain. Labeling examples with high or low confidence (far from 0.5) teaches the model things it already knows.",
+        "Uncertainty sampling for binary classification selects examples where the model\'s predicted probability is closest to 0.5 - the decision boundary. These are the examples where the model is most uncertain and where a label provides the most information gain. Labeling examples with high or low confidence (far from 0.5) teaches the model things it already knows.",
       hints: [
         "The model is most uncertain when it assigns near-equal probability to both classes. Which predicted probability values represent maximum uncertainty?",
         "Labeling examples the model is already confident about adds little information. Where does a new label provide the most value?",
@@ -376,9 +376,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Point-in-time correct retrieval (also called 'as-of' queries) ensures that when creating a training example with label from time T, the feature values used are those that existed at time T — not future values. Without this, a feature like 'account_balance_at_transaction' might be retrieved using today\'s balance rather than the balance at the time of the labeled transaction, causing look-ahead bias (leakage).",
+        "Point-in-time correct retrieval (also called 'as-of' queries) ensures that when creating a training example with label from time T, the feature values used are those that existed at time T - not future values. Without this, a feature like 'account_balance_at_transaction' might be retrieved using today\'s balance rather than the balance at the time of the labeled transaction, causing look-ahead bias (leakage).",
       hints: [
-        "If a label is from Jan 15 but feature values from Feb 1 are used, the model sees the future — leakage.",
+        "If a label is from Jan 15 but feature values from Feb 1 are used, the model sees the future - leakage.",
         "Point-in-time correct = feature value at the exact moment the training label was generated.",
       ],
     },
@@ -394,7 +394,7 @@ const questions: Record<string, Question[]> = {
         "Flink supports exactly-once processing but it requires explicit configuration: checkpointing must be enabled (state.checkpoints.dir), the sink must support idempotent writes or transactions (e.g., Kafka transactional producer, JDBC with upsert semantics), and the source must support replay (Kafka with offset tracking). Default Flink pipelines provide at-least-once semantics. Exactly-once requires coordinating Flink checkpoints with sink transaction commits.",
       hints: [
         "At-least-once means a message might be processed twice on failure; exactly-once means state updates are idempotent.",
-        "Redis does not natively support transactions compatible with Flink checkpointing — upsert patterns simulate exactly-once.",
+        "Redis does not natively support transactions compatible with Flink checkpointing - upsert patterns simulate exactly-once.",
       ],
     },
     {
@@ -404,14 +404,14 @@ const questions: Record<string, Question[]> = {
       question:
         "A feature store serves embeddings for 500 million user profiles. Each embedding is 256 float32 values (1 KB). The p99 serving latency requirement is <5 ms. Which storage and retrieval architecture is most appropriate?",
       options: [
-        "PostgreSQL with a vector column — standard relational database handles this scale.",
+        "PostgreSQL with a vector column - standard relational database handles this scale.",
         "Sharded Redis cluster with user_id as the shard key: 500M \\times 1 KB = 500 GB partitioned across 50 nodes (10 GB/node), each node serving point lookups in <1 ms.",
-        "FAISS index for ANN search — vector databases are the right tool for embedding retrieval.",
-        "DynamoDB with embedding stored as a JSON attribute — managed NoSQL for scale.",
+        "FAISS index for ANN search - vector databases are the right tool for embedding retrieval.",
+        "DynamoDB with embedding stored as a JSON attribute - managed NoSQL for scale.",
       ],
       correctAnswer: 1,
       explanation:
-        "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M \\times 1 KB = 500 GB across a 50-node cluster is 10 GB/node — within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
+        "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M \\times 1 KB = 500 GB across a 50-node cluster is 10 GB/node - within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
       hints: [
         "Is this a similarity search problem (find nearest neighbors) or a key-based lookup (retrieve by user_id)?",
         "What is the total memory footprint, and how should it be partitioned to achieve sub-millisecond point lookups?",
@@ -426,7 +426,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "The offline store is used for training data generation and batch inference — not for real-time serving. The online store (Redis, DynamoDB, Cassandra) serves features at inference time because it supports low-latency point lookups (sub-millisecond). The offline store contains the full feature history for point-in-time correct training data generation, but querying it at inference time would introduce seconds of latency — incompatible with real-time serving SLOs.",
+        "The offline store is used for training data generation and batch inference - not for real-time serving. The online store (Redis, DynamoDB, Cassandra) serves features at inference time because it supports low-latency point lookups (sub-millisecond). The offline store contains the full feature history for point-in-time correct training data generation, but querying it at inference time would introduce seconds of latency - incompatible with real-time serving SLOs.",
       hints: [
         "Offline store: analytical queries for training. Online store: point lookups for serving.",
         "BigQuery query time: seconds to minutes. Redis GET: sub-millisecond. Only one is suitable for serving.",
@@ -439,14 +439,14 @@ const questions: Record<string, Question[]> = {
       question:
         'A feature store has an online store (Redis) and an offline store (BigQuery). A real-time fraud detection model needs the "user\'s total spend in the past 30 days" feature during a payment authorization call that must complete in <150 ms. Which store handles this request?',
       options: [
-        "The offline store (BigQuery) — it has the full 30-day history.",
-        "The online store (Redis) — pre-materialized 30-day spend values are served via sub-millisecond point lookups.",
+        "The offline store (BigQuery) - it has the full 30-day history.",
+        "The online store (Redis) - pre-materialized 30-day spend values are served via sub-millisecond point lookups.",
         "Both stores are queried and results are merged at inference time.",
         "The feature is computed on-the-fly by querying the transaction database during inference.",
       ],
       correctAnswer: 1,
       explanation:
-        "The online store (Redis) serves pre-materialized feature values with sub-millisecond latency. A BigQuery query scanning 30 days of data would take seconds — incompatible with a 150 ms total authorization timeout. A scheduled materialization job (e.g., hourly) pre-computes the 30-day spend and writes it to Redis so it is available for instant point lookup.",
+        "The online store (Redis) serves pre-materialized feature values with sub-millisecond latency. A BigQuery query scanning 30 days of data would take seconds - incompatible with a 150 ms total authorization timeout. A scheduled materialization job (e.g., hourly) pre-computes the 30-day spend and writes it to Redis so it is available for instant point lookup.",
       hints: [
         "BigQuery is optimized for analytical batch queries (minutes); Redis is optimized for point lookups (sub-ms).",
         "Materialization bridges the gap: compute offline, serve from the fast store.",
@@ -461,7 +461,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        'Train-serve skew is one of the most common production ML bugs. Example: during training, "user age in days" is computed as (current_date − birthdate) using a static training date; at serving, it is recomputed with today\'s date — always giving the correct age. But if the serving code uses a different formula (e.g., age in years vs. days), the model receives a wildly different feature value. Feature stores prevent this by enforcing one shared computation for both training and serving.',
+        'Train-serve skew is one of the most common production ML bugs. Example: during training, "user age in days" is computed as (current_date − birthdate) using a static training date; at serving, it is recomputed with today\'s date - always giving the correct age. But if the serving code uses a different formula (e.g., age in years vs. days), the model receives a wildly different feature value. Feature stores prevent this by enforcing one shared computation for both training and serving.',
       hints: [
         "A feature computed in PySpark for training and in SQL for serving may use different rounding or timezone assumptions.",
         "The model was trained on feature distribution X; serving it feature distribution Y causes silent degradation.",
@@ -483,7 +483,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Real-time window features require a dual-path architecture: (1) a streaming pipeline (Flink keyed sliding windows) computes rolling aggregations and writes to the online store (Redis) with low latency; (2) a batch pipeline writes historical window values to the offline store (BigQuery/Parquet) for training data generation. This ensures training-serving consistency and real-time freshness.",
       hints: [
-        "A 7-day ETL job means features are 7 days stale — unacceptable for real-time click signals.",
+        "A 7-day ETL job means features are 7 days stale - unacceptable for real-time click signals.",
         "Flink\'s keyed sliding windows are exactly designed for per-user rolling aggregations with sub-second latency.",
       ],
     },
@@ -498,7 +498,7 @@ const questions: Record<string, Question[]> = {
         "For a tabular dataset with 1 million rows and 200 engineered features predicting user churn, which model family typically achieves the best accuracy without extensive hyperparameter search?",
       options: [
         "Deep neural network with 10 layers.",
-        "Gradient boosted decision tree (e.g., XGBoost, LightGBM) — typically best on structured/tabular data.",
+        "Gradient boosted decision tree (e.g., XGBoost, LightGBM) - typically best on structured/tabular data.",
         "k-Nearest Neighbors with k=10.",
         "Linear regression with L2 regularization.",
       ],
@@ -519,7 +519,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Statistical significance only means the observed difference is unlikely to be due to chance — it says nothing about the magnitude or practical importance of the difference. With large sample sizes (common in ML A/B tests), even a 0.001% CTR improvement can be statistically significant. Practical significance requires also reporting the effect size (absolute and relative lift) and comparing it to the cost of deployment, maintenance, and infrastructure. Minimum detectable effect (MDE) should be pre-specified based on business value.",
+        "Statistical significance only means the observed difference is unlikely to be due to chance - it says nothing about the magnitude or practical importance of the difference. With large sample sizes (common in ML A/B tests), even a 0.001% CTR improvement can be statistically significant. Practical significance requires also reporting the effect size (absolute and relative lift) and comparing it to the cost of deployment, maintenance, and infrastructure. Minimum detectable effect (MDE) should be pre-specified based on business value.",
       hints: [
         "With very large sample sizes (e.g., 100M users), can a tiny effect size be statistically significant? Is that effect worth deploying?",
         "What two metrics must always be reported together to distinguish statistical significance from practical importance?",
@@ -539,7 +539,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-objective NAS requires finding the Pareto frontier — the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing \\lambda a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
+        "Multi-objective NAS requires finding the Pareto frontier - the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing \\lambda a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
       hints: [
         "In multi-objective optimization, what does the Pareto frontier represent, and what property does each point on it have?",
         "What real-world neural architecture search methods use multi-objective optimization over accuracy and latency?",
@@ -552,8 +552,8 @@ const questions: Record<string, Question[]> = {
       question:
         "You are comparing Model A (AUC-ROC 0.91, p99 latency 80 ms, 2 GB memory) vs. Model B (AUC-ROC 0.93, p99 latency 250 ms, 8 GB memory). Your SLA requires p99 < 100 ms. What is the correct decision?",
       options: [
-        "Deploy Model B — higher AUC always means better user experience.",
-        "Deploy Model A — it meets the latency SLA; pursue knowledge distillation or architecture pruning to close the 0.02 AUC gap.",
+        "Deploy Model B - higher AUC always means better user experience.",
+        "Deploy Model A - it meets the latency SLA; pursue knowledge distillation or architecture pruning to close the 0.02 AUC gap.",
         "Reject both models and retrain from scratch with a different algorithm.",
         "Negotiate the SLA to 300 ms to accommodate Model B.",
       ],
@@ -561,7 +561,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A p99 latency SLA is a hard constraint: a model that violates it cannot be deployed regardless of accuracy. Model A is the only viable option. Knowledge distillation (training a small student model to mimic Model B) or pruning Model B can often recover most of the 0.02 AUC gap while meeting the latency constraint. Never negotiate SLAs downward to accommodate a model.",
       hints: [
-        "SLAs are contractual commitments — violating them has business consequences.",
+        "SLAs are contractual commitments - violating them has business consequences.",
         "When a better model violates the latency constraint, what technique can transfer its knowledge to a smaller, faster model?",
       ],
     },
@@ -576,8 +576,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Offline metrics measure model quality on static historical data and cannot capture feedback loops, user behavior changes, novelty effects, or system-level interactions that only appear in live traffic. It is common for a model with better offline AUC to perform worse in an A/B test due to factors invisible in the training data. Online A/B testing is mandatory before full promotion.",
       hints: [
-        "A model trained on last month\'s data is evaluated on a test set from last month — but deployed into next month\'s world.",
-        "User behavior adapts to recommendations — a feedback loop that static offline evaluation cannot model.",
+        "A model trained on last month\'s data is evaluated on a test set from last month - but deployed into next month\'s world.",
+        "User behavior adapts to recommendations - a feedback loop that static offline evaluation cannot model.",
       ],
     },
     {
@@ -587,8 +587,8 @@ const questions: Record<string, Question[]> = {
       question:
         "A new LLM-based product description generator has ROUGE-L score 0.72 vs. 0.68 for the current template-based system, but A/B test shows no statistically significant difference in purchase conversion rate (p=0.34, 95% CI: −1.2% to +1.4%). What should you do?",
       options: [
-        "Deploy the LLM model — higher ROUGE-L proves it is better.",
-        "Do not deploy the LLM model — it shows no business lift and carries significant inference cost and operational complexity.",
+        "Deploy the LLM model - higher ROUGE-L proves it is better.",
+        "Do not deploy the LLM model - it shows no business lift and carries significant inference cost and operational complexity.",
         "Run the A/B test longer until significance is reached regardless of cost.",
         'Deploy to 10% of traffic permanently as a "shadow" to collect more data.',
       ],
@@ -596,8 +596,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ROUGE-L is a proxy metric for text quality, not business outcome. The A/B test (the ground truth) shows no statistically significant purchase conversion improvement. Deploying the LLM model would add substantial inference cost, latency, and operational complexity for zero measured business gain. The null result is the signal: the current system is adequate for this metric.",
       hints: [
-        "The A/B test CI includes zero — the LLM might be worse, better, or neutral. The null result is valid.",
-        "An LLM model may cost 100\\times more to serve — that cost requires a commensurate business gain to justify.",
+        "The A/B test CI includes zero - the LLM might be worse, better, or neutral. The null result is valid.",
+        "An LLM model may cost 100\\times more to serve - that cost requires a commensurate business gain to justify.",
       ],
     },
   ],
@@ -620,7 +620,7 @@ const questions: Record<string, Question[]> = {
         "Data parallelism: each GPU worker holds a full copy of the model and processes a different mini-batch; gradients are averaged across workers (AllReduce). Effective when the model fits in one GPU. Model parallelism: the model is split across GPUs (different layers or tensor shards on different devices); each GPU processes the full batch through its partition. Required when the model is too large to fit on one GPU (e.g., LLMs with billions of parameters).",
       hints: [
         "Data parallel: N GPUs each run the full 10B model on different data \\to N\\times throughput.",
-        "Model parallel: the 140 GB LLM is split across 4\\times 40 GB GPUs — each GPU holds a part of the model.",
+        "Model parallel: the 140 GB LLM is split across 4\\times 40 GB GPUs - each GPU holds a part of the model.",
       ],
     },
     {
@@ -648,7 +648,7 @@ const questions: Record<string, Question[]> = {
         "The model architecture is too simple to capture weekend patterns.",
         "The training data is temporally biased: the rolling window cutoff lands mid-week, and the most recent weekend data is always excluded from the most recent batches, causing the model to see proportionally less weekend data.",
         "Weekend traffic has higher latency, causing timeouts during inference.",
-        "The feature engineering is wrong — day-of-week features are being incorrectly computed.",
+        "The feature engineering is wrong - day-of-week features are being incorrectly computed.",
       ],
       correctAnswer: 1,
       explanation:
@@ -687,7 +687,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Full reproducibility requires all five: (1) data version — which dataset split; (2) code commit — exact training code; (3) hyperparameter config — all tunable parameters; (4) random seeds — Python, NumPy, PyTorch, CUDA; (5) environment — pinned library versions (Docker image or conda lock file). Any single missing element breaks reproducibility.",
+        "Full reproducibility requires all five: (1) data version - which dataset split; (2) code commit - exact training code; (3) hyperparameter config - all tunable parameters; (4) random seeds - Python, NumPy, PyTorch, CUDA; (5) environment - pinned library versions (Docker image or conda lock file). Any single missing element breaks reproducibility.",
       hints: [
         "What five components must be versioned together to fully reproduce a training run?",
         "Can the same code, seeds, and hyperparameters produce different results on different library versions?",
@@ -739,13 +739,13 @@ const questions: Record<string, Question[]> = {
         "What is the purpose of model shadow deployment (shadow mode) before a full production rollout?",
       options: [
         "To reduce serving costs by running the new model on only 10% of traffic.",
-        "To route all production traffic to both the old and new model simultaneously, log the new model\'s outputs for comparison, but only serve the old model\'s response to users — allowing validation without user impact.",
+        "To route all production traffic to both the old and new model simultaneously, log the new model\'s outputs for comparison, but only serve the old model\'s response to users - allowing validation without user impact.",
         "To test the model on synthetic traffic before any real users are exposed.",
         "To A/B test two models by splitting user traffic between them.",
       ],
       correctAnswer: 1,
       explanation:
-        "Shadow deployment mirrors all production traffic to the new model but discards its response — users always receive the old model\'s output. This validates that the new model produces correct outputs, meets latency SLOs under real traffic patterns, handles edge cases, and does not crash — all without any risk to users. Only after shadow validation passes is the model promoted to canary or A/B testing.",
+        "Shadow deployment mirrors all production traffic to the new model but discards its response - users always receive the old model\'s output. This validates that the new model produces correct outputs, meets latency SLOs under real traffic patterns, handles edge cases, and does not crash - all without any risk to users. Only after shadow validation passes is the model promoted to canary or A/B testing.",
       hints: [
         "In shadow deployment, both the old and new models receive production traffic. Which model's output is actually served to users?",
         "What is the primary advantage of shadow deployment over A/B testing in terms of user risk?",
@@ -780,7 +780,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The total sequential latency is 5+10+20+2=37 ms but p99 is 80 ms — indicating tail latency from I/O and queuing. Parallelizing independent steps (e.g., fetching user features and item features in parallel during feature fetch; starting feature pre-fetch during ANN retrieval) eliminates serial waits. This is the highest-leverage optimization: cutting 10 ms of serial I/O by parallelizing can halve end-to-end p99. Optimizing the already-fast 5 ms or 2 ms steps yields minimal gain.",
+        "The total sequential latency is 5+10+20+2=37 ms but p99 is 80 ms - indicating tail latency from I/O and queuing. Parallelizing independent steps (e.g., fetching user features and item features in parallel during feature fetch; starting feature pre-fetch during ANN retrieval) eliminates serial waits. This is the highest-leverage optimization: cutting 10 ms of serial I/O by parallelizing can halve end-to-end p99. Optimizing the already-fast 5 ms or 2 ms steps yields minimal gain.",
       hints: [
         "The total latency is 5+10+20+2 = 37 ms, but p99 is 80 ms. What does this gap suggest about where time is being lost?",
         "Which stages in the pipeline must wait for previous ones to finish, and which could run concurrently?",
@@ -822,8 +822,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Running a heavy recommendation model for 50M users at app-open time is infeasible at p99 < 200 ms. Pre-computing recommendations in a nightly batch job and caching in Redis enables sub-millisecond retrieval. The trade-off is recommendation staleness (up to 24 hours), which is acceptable for home feed content. Real-time signals (e.g., recent clicks) can be layered on top.",
       hints: [
-        "50M requests at app-open peak could be 1M+ QPS — serving a heavy model in real time at that scale requires enormous infrastructure.",
-        "Redis GET latency is ~0.1 ms; a recommendation model call is 10–100 ms — a 100–1000\\times difference.",
+        "50M requests at app-open peak could be 1M+ QPS - serving a heavy model in real time at that scale requires enormous infrastructure.",
+        "Redis GET latency is ~0.1 ms; a recommendation model call is 10-100 ms - a 100-1000\\times difference.",
       ],
     },
     {
@@ -835,7 +835,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Traditional static batching waits for all requests in a batch to finish before starting new ones — requests that finish early leave GPU capacity idle. vLLM\'s continuous batching schedules at the token generation step level: when a sequence completes (hits EOS or max_tokens), its slot is immediately filled by a waiting request. This dramatically improves GPU utilization and throughput for variable-length LLM outputs.",
+        "Traditional static batching waits for all requests in a batch to finish before starting new ones - requests that finish early leave GPU capacity idle. vLLM\'s continuous batching schedules at the token generation step level: when a sequence completes (hits EOS or max_tokens), its slot is immediately filled by a waiting request. This dramatically improves GPU utilization and throughput for variable-length LLM outputs.",
       hints: [
         "In static batching, what happens to GPU slots when one request finishes early but others in the batch are still generating?",
         "What key innovation does vLLM introduce to fill those idle GPU slots immediately?",
@@ -849,13 +849,13 @@ const questions: Record<string, Question[]> = {
         "You must serve a 70B-parameter LLM with p99 first-token latency < 500 ms for a customer-facing chat application at 1,000 QPS. Which combination of techniques is MOST effective?",
       options: [
         "Run on a single A100 80 GB GPU with FP32 precision.",
-        "Use tensor parallelism across 4–8 GPUs (e.g., 4\\timesA100), FP16 quantization, vLLM continuous batching, and KV cache with PagedAttention.",
+        "Use tensor parallelism across 4-8 GPUs (e.g., 4\\timesA100), FP16 quantization, vLLM continuous batching, and KV cache with PagedAttention.",
         "Run on CPU cluster with 128 cores and aggressive caching.",
         "Distill to a 7B model and serve on a single T4 GPU with no other optimizations.",
       ],
       correctAnswer: 1,
       explanation:
-        "A 70B model in FP16 requires ~140 GB VRAM — exceeding a single 80 GB GPU. Tensor parallelism across 4–8 A100s splits the model across devices. FP16 halves memory vs. FP32. vLLM\'s continuous batching maximizes GPU utilization; PagedAttention manages KV cache memory without fragmentation. Together these achieve the throughput and latency targets at 1,000 QPS.",
+        "A 70B model in FP16 requires ~140 GB VRAM - exceeding a single 80 GB GPU. Tensor parallelism across 4-8 A100s splits the model across devices. FP16 halves memory vs. FP32. vLLM\'s continuous batching maximizes GPU utilization; PagedAttention manages KV cache memory without fragmentation. Together these achieve the throughput and latency targets at 1,000 QPS.",
       hints: [
         "What is the VRAM requirement for a 70B parameter model in FP16? How does this compare to a single A100 80 GB?",
         "What technique manages KV cache memory to eliminate waste from pre-allocated but unused slots?",
@@ -906,16 +906,16 @@ const questions: Record<string, Question[]> = {
       question:
         "You are designing an embedding-based retrieval system for 1 billion items. User and item embeddings are 128-dimensional float32. Which ANN index structure and tradeoff is most appropriate for this scale?",
       options: [
-        "Flat (exhaustive) search index — guarantees exact nearest neighbors at any scale.",
+        "Flat (exhaustive) search index - guarantees exact nearest neighbors at any scale.",
         "HNSW (Hierarchical Navigable Small World) index with ef_construction=200 and ef=100 at query time: sub-linear query time O(log n), 95%+ recall@10, ~64 GB memory for 1B 128-dim vectors at compressed precision.",
-        "LSH (Locality-Sensitive Hashing) with 64 hash tables — low memory, fast queries.",
-        "Product quantization (PQ) without any graph index — minimal memory, acceptable recall.",
+        "LSH (Locality-Sensitive Hashing) with 64 hash tables - low memory, fast queries.",
+        "Product quantization (PQ) without any graph index - minimal memory, acceptable recall.",
       ],
       correctAnswer: 1,
       explanation:
         "At 1B items, HNSW provides the best recall-latency tradeoff: O(log n) query complexity, >95% recall@10 with appropriate ef settings. Memory: 1B \\times 128 \\times 4 bytes = 512 GB (FP32); with PQ compression or FP16 \\to 128-256 GB, achievable on a GPU cluster. Flat search at 1B items is infeasible (O(n) = 1B dot products per query). LSH has lower recall than HNSW. FAISS IVF+PQ is an alternative. HNSW is the industry standard (used in Spotify ANN, Weaviate, Qdrant).",
       hints: [
-        "1B \\times 128 \\times 4 bytes = 512 GB. FP16 halves this to 256 GB — across multiple nodes.",
+        "1B \\times 128 \\times 4 bytes = 512 GB. FP16 halves this to 256 GB - across multiple nodes.",
         "HNSW: query time O(log n) with 95%+ recall. Flat: O(n) with 100% recall. HNSW wins at 1B items.",
       ],
     },
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Online features that capture very recent user behavior (session-level signals within the last minutes) change too rapidly to be served from a batch-materialized store, which is typically updated hourly or daily. They require a streaming pipeline (Flink, Kafka Streams) that computes per-user aggregations in near-real-time and writes to the online store continuously. These session features are critical for recommendation quality — a user who just clicked on action movies should immediately get more action movie recommendations.",
+        "Online features that capture very recent user behavior (session-level signals within the last minutes) change too rapidly to be served from a batch-materialized store, which is typically updated hourly or daily. They require a streaming pipeline (Flink, Kafka Streams) that computes per-user aggregations in near-real-time and writes to the online store continuously. These session features are critical for recommendation quality - a user who just clicked on action movies should immediately get more action movie recommendations.",
       hints: [
         "How do the update frequencies of batch-materialized features differ from real-time session-level features?",
         "Which pipeline technology (streaming or batch) is needed to compute features that change within minutes?",
@@ -942,13 +942,13 @@ const questions: Record<string, Question[]> = {
         "A streaming service has 100 million items in its catalog. For real-time recommendations, a two-stage pipeline is used. Why can\'t the expensive ranking model be run over all 100M items?",
       options: [
         "The ranking model is not capable of scoring more than 1000 items.",
-        "Running a 100 ms ranking model over 100M items sequentially takes 10,000 seconds — far beyond any real-time SLO. The retrieval stage narrows candidates to ~hundreds in milliseconds.",
+        "Running a 100 ms ranking model over 100M items sequentially takes 10,000 seconds - far beyond any real-time SLO. The retrieval stage narrows candidates to ~hundreds in milliseconds.",
         "Copyright law prevents running models over unlicensed content at scale.",
         "Ranking all items simultaneously causes GPU memory overflow.",
       ],
       correctAnswer: 1,
       explanation:
-        "Serving latency is the hard constraint. A 100M-item catalog with even a 1 µs ranking model takes 100 seconds per query — unusable. The retrieval stage uses ANN search over user/item embeddings (FAISS, HNSW) to narrow 100M items to ~1,000 candidates in <10 ms. The heavy ranker then scores only those ~1,000 items, meeting latency SLOs.",
+        "Serving latency is the hard constraint. A 100M-item catalog with even a 1 µs ranking model takes 100 seconds per query - unusable. The retrieval stage uses ANN search over user/item embeddings (FAISS, HNSW) to narrow 100M items to ~1,000 candidates in <10 ms. The heavy ranker then scores only those ~1,000 items, meeting latency SLOs.",
       hints: [
         "What is the computational complexity of scoring all 100M items sequentially versus finding top-k via approximate nearest neighbors?",
         "The two-stage pipeline solves a fundamental trade-off between what two competing requirements?",
@@ -965,7 +965,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Matrix factorization learns item (and user) embeddings purely from the user-item interaction matrix (ratings, clicks, watch history). It requires no content features. Content-based filtering uses item features to recommend similar items. Hybrid systems combine both. Netflix\'s original recommendation system used collaborative filtering before it had rich content metadata.",
       hints: [
-        '"Collaborative" refers to leveraging the collective interactions of all users — no content required.',
+        '"Collaborative" refers to leveraging the collective interactions of all users - no content required.',
         "Item embeddings from MF capture latent factors (e.g., genre taste) purely from interaction patterns.",
       ],
     },
@@ -976,7 +976,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A recommendation system optimized purely for 7-day click-through rate (CTR) starts promoting increasingly sensational and polarizing content. The platform\'s 90-day user retention drops 15%. What design failure does this represent?",
       options: [
-        "Underfitting — the CTR model has insufficient capacity.",
+        "Underfitting - the CTR model has insufficient capacity.",
         "Reward hacking / metric misalignment: the system maximizes the proxy metric (7-day CTR) at the expense of the true objective (long-term user satisfaction and retention). CTR optimizes for clickability, not value.",
         "Data leakage from training labels into features.",
         "Cold start failure for new users who have no click history.",
@@ -986,7 +986,7 @@ const questions: Record<string, Question[]> = {
         "This is the classic recommendation alignment failure: CTR is a proxy for engagement, not satisfaction. Sensational content drives clicks (high proxy metric) while eroding trust and long-term retention (the true objective). YouTube, Facebook, and Twitter have all documented this failure. Mitigation requires optimizing multi-objective rewards that include long-term signals (e.g., subscription retention, explicit satisfaction surveys).",
       hints: [
         "What happens when a proxy metric is optimized directly, rather than the true underlying objective?",
-        "A user who clicks on sensational content and immediately feels worse — does that click represent value or a misleading signal?",
+        "A user who clicks on sensational content and immediately feels worse - does that click represent value or a misleading signal?",
       ],
     },
   ],
@@ -1006,7 +1006,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In-batch negatives reuse document encodings already computed for other training pairs in the same batch as negatives for each query. With batch size B, each (query, positive) pair gets B-1 negatives at no extra encoding cost. This makes contrastive training highly efficient. The limitation is that some in-batch negatives may be 'false negatives' (actually relevant documents) — a problem mitigated by hard negative mining from BM25 or a previous model checkpoint.",
+        "In-batch negatives reuse document encodings already computed for other training pairs in the same batch as negatives for each query. With batch size B, each (query, positive) pair gets B-1 negatives at no extra encoding cost. This makes contrastive training highly efficient. The limitation is that some in-batch negatives may be 'false negatives' (actually relevant documents) - a problem mitigated by hard negative mining from BM25 or a previous model checkpoint.",
       hints: [
         "Batch size 256: each query gets 255 in-batch negatives. Only 256 document encodings are needed, not 256\\times256.",
         "False negatives (relevant docs treated as negatives) in in-batch training reduce training signal quality.",
@@ -1024,7 +1024,7 @@ const questions: Record<string, Question[]> = {
         "Query expansion improves recall (finding more relevant documents) but typically hurts precision (adding noise from irrelevant expanded terms). For example, expanding 'apple' to include 'fruit, iPhone, company' may retrieve relevant iPhone documents but also fruit recipes and company filings. Controlled query expansion (using domain-specific dictionaries or model-generated expansions limited to high-confidence synonyms) is required to prevent precision degradation. Pseudo-relevance feedback can also introduce topic drift.",
       hints: [
         "Recall: did we find all relevant documents? Precision: of what we found, how much is relevant?",
-        "Query expansion: better recall, often worse precision — a fundamental information retrieval trade-off.",
+        "Query expansion: better recall, often worse precision - a fundamental information retrieval trade-off.",
       ],
     },
     {
@@ -1034,7 +1034,7 @@ const questions: Record<string, Question[]> = {
       question:
         "A product search system must handle queries in 50 languages, with the product catalog also in 50 languages. Cross-lingual retrieval (Spanish query \\to English product title) is required. Which architecture best solves this?",
       options: [
-        "Run BM25 separately for each language pair — 2500 separate indices.",
+        "Run BM25 separately for each language pair - 2500 separate indices.",
         "Train a multilingual bi-encoder (e.g., fine-tuned mE5 or LaBSE) that maps queries and documents from all 50 languages into a single shared embedding space, enabling cross-lingual dot product similarity.",
         "Machine-translate all queries to English before retrieval, then use an English-only bi-encoder.",
         "Use language detection followed by a separate monolingual model for each language.",
@@ -1043,7 +1043,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Multilingual bi-encoders (mE5, LaBSE, mDPR) encode queries and documents from any language into a single aligned embedding space where semantically equivalent text from different languages has high cosine similarity. This enables cross-lingual retrieval natively without machine translation. MT adds latency and translation errors; 50 separate monolingual models are maintenance-heavy and cannot handle cross-lingual queries.",
       hints: [
-        "LaBSE (Language-agnostic BERT Sentence Embeddings) was trained on 109 languages with translation pairs — encodings are cross-lingually aligned.",
+        "LaBSE (Language-agnostic BERT Sentence Embeddings) was trained on 109 languages with translation pairs - encodings are cross-lingually aligned.",
         "Cross-lingual embedding: Spanish \'manzana\' and English \'apple\' map to nearby vectors in the embedding space.",
       ],
     },
@@ -1079,7 +1079,7 @@ const questions: Record<string, Question[]> = {
         "NDCG (Normalized Discounted Cumulative Gain) sums relevance scores with position discounts: DCG@k = \\Sigma (rel_i / log_2(i+1)) for i=1..k. The log discount means rank 1 gets full credit, rank 2 gets half, rank 3 gets one-third, etc. Normalization by ideal DCG makes it comparable across queries. This captures that a highly relevant document at rank 5 is worse than at rank 1.",
       hints: [
         "A system returning all relevant documents at rank 10 would score high on accuracy but low on NDCG.",
-        'The "D" in NDCG stands for Discounted — positions further down contribute logarithmically less.',
+        'The "D" in NDCG stands for Discounted - positions further down contribute logarithmically less.',
       ],
     },
     {
@@ -1105,13 +1105,13 @@ const questions: Record<string, Question[]> = {
         "A two-tower (bi-encoder) retrieval model encodes queries and documents independently. A cross-encoder reranker receives (query, document) pairs. Why are cross-encoders used only for reranking a small candidate set rather than retrieval over the full corpus?",
       options: [
         "Cross-encoders cannot process text longer than 512 tokens.",
-        "Cross-encoders perform full attention between query and document tokens, requiring O(n \\times d) inference for n documents — infeasible at corpus scale. Bi-encoders pre-compute document embeddings offline, enabling ANN retrieval in O(log n).",
+        "Cross-encoders perform full attention between query and document tokens, requiring O(n \\times d) inference for n documents - infeasible at corpus scale. Bi-encoders pre-compute document embeddings offline, enabling ANN retrieval in O(log n).",
         "Cross-encoders are less accurate than bi-encoders for relevance scoring.",
         "Cross-encoders do not support GPU acceleration.",
       ],
       correctAnswer: 1,
       explanation:
-        "Cross-encoders process query and document together in a single forward pass, enabling deep interaction modeling for high accuracy. But this requires running the model for every (query, document) pair at query time — O(corpus_size) inference per query, infeasible for millions of documents. Bi-encoders pre-compute document embeddings offline; at query time only the query is encoded and ANN search finds top-k candidates in milliseconds.",
+        "Cross-encoders process query and document together in a single forward pass, enabling deep interaction modeling for high accuracy. But this requires running the model for every (query, document) pair at query time - O(corpus_size) inference per query, infeasible for millions of documents. Bi-encoders pre-compute document embeddings offline; at query time only the query is encoded and ANN search finds top-k candidates in milliseconds.",
       hints: [
         "If a cross-encoder scores each document independently, how many forward passes are needed per query at corpus scale?",
         "What is the standard two-stage pattern that combines the speed of bi-encoders with the accuracy of cross-encoders?",
@@ -1127,9 +1127,9 @@ const questions: Record<string, Question[]> = {
       question:
         "A fraud detection model must decide in real time whether to block a payment. The cost of a false negative (missed fraud) is $200 on average, and the cost of a false positive (blocking a legitimate transaction) is $10 in customer friction and support costs. How should the decision threshold be set?",
       options: [
-        "At probability 0.5 — the standard decision boundary.",
-        "Lower than 0.5 — since false negatives are 20\\times more costly than false positives, the model should flag more transactions (be more conservative) to catch more fraud even at the cost of more false positives.",
-        "Higher than 0.5 — precision is more important than recall in fraud detection.",
+        "At probability 0.5 - the standard decision boundary.",
+        "Lower than 0.5 - since false negatives are 20\\times more costly than false positives, the model should flag more transactions (be more conservative) to catch more fraud even at the cost of more false positives.",
+        "Higher than 0.5 - precision is more important than recall in fraud detection.",
         "The threshold should not be changed from the default; business costs do not affect model thresholds.",
       ],
       correctAnswer: 1,
@@ -1182,17 +1182,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A real-time fraud detection system must decide within the payment authorization window. What is the realistic end-to-end latency budget for the ML inference call itself?",
       options: [
-        "5–10 seconds — payment authorization is an asynchronous process.",
-        "<50 ms — the total authorization timeout is ~200 ms, leaving <50 ms for ML inference after feature retrieval and I/O overhead.",
-        "Exactly 1 second — regulatory standards require 1-second fraud decisions.",
+        "5-10 seconds - payment authorization is an asynchronous process.",
+        "<50 ms - the total authorization timeout is ~200 ms, leaving <50 ms for ML inference after feature retrieval and I/O overhead.",
+        "Exactly 1 second - regulatory standards require 1-second fraud decisions.",
         "Latency does not matter for fraud detection since it runs asynchronously.",
       ],
       correctAnswer: 1,
       explanation:
         "Payment authorization has a hard total timeout of ~200 ms (Visa/Mastercard standards). Subtracting network round-trip (~20 ms), feature store lookup (~5 ms), and response processing (~10 ms), the ML model inference must complete in <50 ms. This eliminates transformer-based models and favors gradient boosted trees (GBDT) or shallow neural networks with pre-materialized features.",
       hints: [
-        "The 200 ms total authorization budget is split across: network, feature retrieval, ML inference, response — each must be fast.",
-        "LightGBM/XGBoost inference typically runs in 1–5 ms — well within budget; a BERT model takes 50–200 ms.",
+        "The 200 ms total authorization budget is split across: network, feature retrieval, ML inference, response - each must be fast.",
+        "LightGBM/XGBoost inference typically runs in 1-5 ms - well within budget; a BERT model takes 50-200 ms.",
       ],
     },
     {
@@ -1218,13 +1218,13 @@ const questions: Record<string, Question[]> = {
         "A fraud detection model achieves 99.5% accuracy but a fraud recall of only 40%. The fraud rate in production is 0.5%. What is the false positive rate implied by these numbers, and what explains the apparent paradox?",
       options: [
         "False positive rate is ~0%; the model is highly accurate and the recall failure is due to class imbalance.",
-        'At 0.5% fraud rate, predicting "not fraud" 100% of the time achieves 99.5% accuracy; the model has collapsed to the majority class, catching 0% of fraud — "40% recall" implies some minimal fraud detection with very high false negative rate.',
+        'At 0.5% fraud rate, predicting "not fraud" 100% of the time achieves 99.5% accuracy; the model has collapsed to the majority class, catching 0% of fraud - "40% recall" implies some minimal fraud detection with very high false negative rate.',
         "The model is overfitting to training data; accuracy does not generalize to test data.",
         "False positive rate is 60%, equal to the false negative rate.",
       ],
       correctAnswer: 1,
       explanation:
-        'With 0.5% fraud rate, a trivial model predicting "not fraud" always achieves 99.5% accuracy. If the model catches 40% of actual fraud (recall=0.4) and the fraud rate is 0.5%, then: frauds caught = 0.4 \\times 0.5% = 0.2% of all transactions flagged as fraud; false positive rate is effectively near 0% but the useful metric — precision and recall at the fraud class — is what matters. This illustrates why accuracy is a misleading metric for imbalanced classification.',
+        'With 0.5% fraud rate, a trivial model predicting "not fraud" always achieves 99.5% accuracy. If the model catches 40% of actual fraud (recall=0.4) and the fraud rate is 0.5%, then: frauds caught = 0.4 \\times 0.5% = 0.2% of all transactions flagged as fraud; false positive rate is effectively near 0% but the useful metric - precision and recall at the fraud class - is what matters. This illustrates why accuracy is a misleading metric for imbalanced classification.',
       hints: [
         "0.5% fraud rate: if 10M transactions/day, 50K are fraud. 40% recall = 20K caught; 30K missed (false negatives).",
         "The correct metrics: recall (did we catch enough fraud?) and precision (how many flags are real fraud?).",
@@ -1247,9 +1247,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a second-price auction, the winner pays the runner-up\'s bid, not their own. If your true value is $5: bidding $5 means you win when you should (when others bid <$5) and pay the second-highest price. Bidding $7 wins you the same auctions (still beats the same set of competitors) and pays the same second price — no benefit. Bidding $3 might cause you to lose auctions where you would have been profitable. Hence, bidding true value is weakly dominant.",
+        "In a second-price auction, the winner pays the runner-up\'s bid, not their own. If your true value is $5: bidding $5 means you win when you should (when others bid <$5) and pay the second-highest price. Bidding $7 wins you the same auctions (still beats the same set of competitors) and pays the same second price - no benefit. Bidding $3 might cause you to lose auctions where you would have been profitable. Hence, bidding true value is weakly dominant.",
       hints: [
-        "In a second-price auction, what determines the winner's payment — their own bid or the second-highest bid?",
+        "In a second-price auction, what determines the winner's payment - their own bid or the second-highest bid?",
         "What is the strategic implication of knowing your payment is determined by others' bids rather than your own?",
       ],
     },
@@ -1284,7 +1284,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Platt scaling is the standard post-hoc calibration technique: fit a logistic regression f(x) = 1 / (1 + exp(-(a*s + b))) where s is the model score, using (score, observed_label) pairs from recent production data. This learns the correct mapping without retraining the full model. A uniform 0.5\\times multiplier (option C) only corrects the overall mean but not distributional shape. Platt scaling corrects both mean and shape. Temperature scaling is an alternative for neural classifiers.",
       hints: [
-        "What does it mean for a model to be 'calibrated' — do predicted probabilities match observed frequencies?",
+        "What does it mean for a model to be 'calibrated' - do predicted probabilities match observed frequencies?",
         "What post-hoc technique fits a simple model on top of existing scores to correct calibration without retraining?",
       ],
     },
@@ -1302,7 +1302,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Ad auctions rank by expected revenue = bid \\times pCTR, not by bid alone. Advertiser B: $2 \\times 0.08 = $0.16. Advertiser A: $5 \\times 0.02 = $0.10. B wins despite the lower bid because its higher pCTR more than compensates. This is why pCTR model quality directly impacts auction revenue — miscalibrated pCTR can misrank advertisers and cost the platform money.",
+        "Ad auctions rank by expected revenue = bid \\times pCTR, not by bid alone. Advertiser B: $2 \\times 0.08 = $0.16. Advertiser A: $5 \\times 0.02 = $0.10. B wins despite the lower bid because its higher pCTR more than compensates. This is why pCTR model quality directly impacts auction revenue - miscalibrated pCTR can misrank advertisers and cost the platform money.",
       hints: [
         "A high bid with low CTR may generate less revenue than a lower bid with high CTR.",
         "This is why both bid accuracy (advertiser) and pCTR accuracy (platform model) are critical.",
@@ -1328,18 +1328,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Position bias in ads — where ads shown at higher positions receive more clicks regardless of quality — causes pCTR models trained on observed clicks to be biased. Which technique corrects for this during training?",
+        "Position bias in ads - where ads shown at higher positions receive more clicks regardless of quality - causes pCTR models trained on observed clicks to be biased. Which technique corrects for this during training?",
       options: [
         "Remove all training examples from the first 3 feed positions.",
         "Use inverse propensity scoring (IPS): weight each training example by 1/P(shown at position p), where P(shown at p) is the propensity of that position in the logging policy.",
         "Add position as a feature during both training and serving to let the model learn the bias.",
-        "Only train on items that appear in positions 5–20 where position bias is minimal.",
+        "Only train on items that appear in positions 5-20 where position bias is minimal.",
       ],
       correctAnswer: 1,
       explanation:
         "IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.",
       hints: [
-        "What bias does the model learn from raw click data without debiasing — does it learn position or relevance?",
+        "What bias does the model learn from raw click data without debiasing - does it learn position or relevance?",
         "What causal inference technique weights training examples inversely by their propensity of being observed?",
       ],
     },
@@ -1360,7 +1360,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pure score-based ranking suffers from two problems: (1) topic concentration — if 10 friends post about the same event, the top 20 feed slots are all the same topic, reducing diversity; (2) recency vs. relevance trade-off — a highly relevant 2-day-old post competes with less relevant but newer posts. Production feed systems use diversity re-ranking (MMR, DPP) and recency decay to balance relevance, diversity, and freshness.",
+        "Pure score-based ranking suffers from two problems: (1) topic concentration - if 10 friends post about the same event, the top 20 feed slots are all the same topic, reducing diversity; (2) recency vs. relevance trade-off - a highly relevant 2-day-old post competes with less relevant but newer posts. Production feed systems use diversity re-ranking (MMR, DPP) and recency decay to balance relevance, diversity, and freshness.",
       hints: [
         "Diversity: user wants to see multiple topics, not 20 posts about one sports game.",
         "Recency decay: a 1-hour-old post of moderate relevance beats a 48-hour-old post of slightly higher relevance.",
@@ -1389,16 +1389,16 @@ const questions: Record<string, Question[]> = {
         "A feed ranking system uses a multi-objective reward: R = w1 \\times p_like + w2 \\times p_share + w3 \\times p_comment − w4 \\times p_hide. How should the weights be tuned and what is the risk of this approach?",
       options: [
         "Tune weights using gradient descent on a held-out validation set with a combined accuracy metric.",
-        "Tune weights via online A/B experiments that vary weight combinations, measuring long-term user retention and satisfaction — not just engagement. Risk: the learned weights may over-optimize short-term proxy signals and miss long-term user value.",
+        "Tune weights via online A/B experiments that vary weight combinations, measuring long-term user retention and satisfaction - not just engagement. Risk: the learned weights may over-optimize short-term proxy signals and miss long-term user value.",
         "Set weights based on revenue contribution: shares generate more viral reach so w2 should be highest.",
         "Use Bayesian optimization to minimize cross-entropy loss across all four objectives simultaneously.",
       ],
       correctAnswer: 1,
       explanation:
-        "Weight tuning for multi-objective feed ranking requires online experiments because the right objective is long-term user value — not any single offline metric. Different weight combinations should be A/B tested against long-term metrics (7-day/30-day retention, satisfaction surveys, session length trends). The risk of static weights is Goodhart\'s Law: the system will exploit whichever proxy signals have high weights, potentially gaming them at the expense of true user value.",
+        "Weight tuning for multi-objective feed ranking requires online experiments because the right objective is long-term user value - not any single offline metric. Different weight combinations should be A/B tested against long-term metrics (7-day/30-day retention, satisfaction surveys, session length trends). The risk of static weights is Goodhart\'s Law: the system will exploit whichever proxy signals have high weights, potentially gaming them at the expense of true user value.",
       hints: [
         "Offline tuning optimizes proxy metrics; online A/B tests measure actual user outcomes.",
-        "What happens when a proxy metric is given a very high weight — does the system optimize for the true objective or for the metric itself?",
+        "What happens when a proxy metric is given a very high weight - does the system optimize for the true objective or for the metric itself?",
       ],
     },
     {
@@ -1410,7 +1410,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "Comment with 3+ sentences (indicates deep engagement).",
         "Reshare to close friends only.",
-        "Rage click / angry reaction on inflammatory content — the user engaged but felt worse afterward.",
+        "Rage click / angry reaction on inflammatory content - the user engaged but felt worse afterward.",
         "30-second video view completion rate.",
       ],
       correctAnswer: 2,
@@ -1446,13 +1446,13 @@ const questions: Record<string, Question[]> = {
         "Remove all training examples from the first 3 feed positions.",
         "Use inverse propensity scoring (IPS) weighted by the probability of each item being shown at its logged position, or train a position-aware model that explicitly models the observation probability.",
         "Add position as a feature during both training and serving.",
-        "Only train on items that appear in positions 5–20 where position bias is minimal.",
+        "Only train on items that appear in positions 5-20 where position bias is minimal.",
       ],
       correctAnswer: 1,
       explanation:
         "IPS debiases training by weighting clicks inversely proportional to the propensity of being shown at that position. A click at position 1 (propensity 1.0) gets weight 1; a click at position 10 (propensity 0.3) gets weight 3.3, correcting for the fact that position-10 items are seen less often. Alternatively, a position-aware model learns a separate observation probability and factors it out during ranking inference.",
       hints: [
-        "What bias does the model learn from raw click data without debiasing — does it learn position or relevance?",
+        "What bias does the model learn from raw click data without debiasing - does it learn position or relevance?",
         "What causal inference technique weights training examples inversely by their propensity of being observed?",
       ],
     },
@@ -1491,7 +1491,7 @@ const questions: Record<string, Question[]> = {
         "A classifier outputs a probability score for each piece of content. By adjusting the threshold (e.g., from 0.5 to 0.3 for more aggressive removal), precision and recall trade off without retraining. Lowering the threshold increases recall (catches more harmful content) but decreases precision (more false positives). Raising it does the reverse. The optimal threshold depends on the platform\'s policy goals (e.g., protecting minors requires high recall; reducing creator friction requires high precision).",
       hints: [
         "What model parameter can be adjusted after training to independently control the precision-recall trade-off without retraining?",
-        "What determines the optimal threshold value — the model's training or the platform's policy goals?",
+        "What determines the optimal threshold value - the model's training or the platform's policy goals?",
       ],
     },
     {
@@ -1502,16 +1502,16 @@ const questions: Record<string, Question[]> = {
         "A content moderation classifier is fine-tuned and achieves 95% precision, 90% recall on a test set of English hate speech. When deployed globally, the recall drops to 70% for non-English content and the model flags 15% of innocuous content in certain languages as harmful. What are the two distinct failure modes and their fixes?",
       options: [
         "Underfitting on non-English languages (fix: larger model) and distribution shift (fix: more test data).",
-        "Cross-lingual transfer failure (recall drops because the English-trained model does not generalize to other languages — fix: multilingual fine-tuning with target-language examples) and cultural/linguistic false positive bias (the model flags culturally-specific idioms as harmful — fix: adversarial debiasing with native-language annotators).",
+        "Cross-lingual transfer failure (recall drops because the English-trained model does not generalize to other languages - fix: multilingual fine-tuning with target-language examples) and cultural/linguistic false positive bias (the model flags culturally-specific idioms as harmful - fix: adversarial debiasing with native-language annotators).",
         "The model is overfitting to English training data (fix: add L2 regularization) and has high false positive rate globally (fix: increase the classification threshold).",
         "Insufficient training data (fix: collect more English examples) and annotation errors (fix: re-annotate the test set).",
       ],
       correctAnswer: 1,
       explanation:
-        "Two distinct failures: (1) Low recall on non-English — the English-fine-tuned classifier does not generalize to other languages because of different linguistic patterns, idioms, and slang; fix: multilingual pre-trained model + few-shot fine-tuning with target-language hate speech examples. (2) False positive bias — the model confuses culturally-specific language, dialects, or code-switching with hate speech; fix: collect native-annotated examples from affected communities, apply targeted debiasing. These are separate problems requiring separate solutions.",
+        "Two distinct failures: (1) Low recall on non-English - the English-fine-tuned classifier does not generalize to other languages because of different linguistic patterns, idioms, and slang; fix: multilingual pre-trained model + few-shot fine-tuning with target-language hate speech examples. (2) False positive bias - the model confuses culturally-specific language, dialects, or code-switching with hate speech; fix: collect native-annotated examples from affected communities, apply targeted debiasing. These are separate problems requiring separate solutions.",
       hints: [
         "What are the two distinct problems: low recall on non-English content, and high false positives on culturally-specific language?",
-        "Why does an English-trained model fail to generalize to other languages — and what type of model and data can fix this?",
+        "Why does an English-trained model fail to generalize to other languages - and what type of model and data can fix this?",
       ],
     },
     {
@@ -1521,10 +1521,10 @@ const questions: Record<string, Question[]> = {
       question:
         "A content moderation classifier is deployed at 100,000 QPS on a platform with 0.1% harmful content rate. The classifier has 99% precision and 85% recall. Approximately how many false positives (safe content incorrectly removed) does the system generate per second?",
       options: [
-        "~0 — 99% precision means almost no false positives.",
-        "~1,000 per second — of ~99,900 safe posts/second, 1% are incorrectly flagged.",
-        "~15 per second — from the 15% recall miss rate.",
-        "~100 per second — the harmful content rate drives false positives.",
+        "~0 - 99% precision means almost no false positives.",
+        "~1,000 per second - of ~99,900 safe posts/second, 1% are incorrectly flagged.",
+        "~15 per second - from the 15% recall miss rate.",
+        "~100 per second - the harmful content rate drives false positives.",
       ],
       correctAnswer: 1,
       explanation:
@@ -1554,7 +1554,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A content moderation system serves 10 languages with abundant English data (5M labeled examples) but only 500–5,000 labeled examples for 8 other languages. What is the most effective approach?",
+        "A content moderation system serves 10 languages with abundant English data (5M labeled examples) but only 500-5,000 labeled examples for 8 other languages. What is the most effective approach?",
       options: [
         "Train separate monolingual classifiers for each of the 10 languages.",
         "Fine-tune a multilingual pretrained model (e.g., XLM-RoBERTa) on all available data, leveraging cross-lingual transfer from English to low-resource languages.",
@@ -1565,7 +1565,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "XLM-RoBERTa and similar multilingual models are pretrained on 100+ languages with shared subword representations. Fine-tuning on English data and even small amounts of target-language data enables effective cross-lingual transfer. Machine translation introduces errors and latency. Monolingual models require large per-language datasets. Multilingual fine-tuning achieves strong performance even for languages with only hundreds of labeled examples.",
       hints: [
-        "XLM-RRoBERTa was pretrained on 2.5 TB of multilingual data — its representations generalize across languages.",
+        "XLM-RRoBERTa was pretrained on 2.5 TB of multilingual data - its representations generalize across languages.",
         "Transfer from English to Spanish is much stronger than from scratch with 500 Spanish examples.",
       ],
     },
@@ -1601,7 +1601,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Gold standard test sets for entity resolution are typically constructed by sampling record pairs for human labeling — often with oversampling of potential matches to create a balanced evaluation set. Production data has a very different distribution: most pairs are non-matches (extreme class imbalance), and the specific entity types, data quality issues, and domain distribution may differ. Production monitoring must include sampling from live decisions and measuring precision/recall on production-representative pairs.",
+        "Gold standard test sets for entity resolution are typically constructed by sampling record pairs for human labeling - often with oversampling of potential matches to create a balanced evaluation set. Production data has a very different distribution: most pairs are non-matches (extreme class imbalance), and the specific entity types, data quality issues, and domain distribution may differ. Production monitoring must include sampling from live decisions and measuring precision/recall on production-representative pairs.",
       hints: [
         "If gold standard has 50% match rate but production has 0.01% match rate, test metrics are not representative.",
         "Always evaluate on production-representative samples, not just on the labeled development/test set.",
@@ -1621,7 +1621,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "50B pairs \\times 0.1 ms = 5M seconds — infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B \\times 0.1 ms = 500K seconds — still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
+        "50B pairs \\times 0.1 ms = 5M seconds - infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B \\times 0.1 ms = 500K seconds - still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
       hints: [
         "What is the total computation time if all 50B pairs are scored sequentially? Is this tractable?",
         "When matching records across 3+ databases, if A matches B and B matches C, what must be true about A and C?",
@@ -1641,10 +1641,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched — a recall loss. The trade-off is computational feasibility (O(n\\^2)\\tonear-linear) at the cost of some missed matches.",
+        "Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched - a recall loss. The trade-off is computational feasibility (O(n\\^2)\\tonear-linear) at the cost of some missed matches.",
       hints: [
         "What is the computational cost of comparing all n records against all n records? Is this tractable for large datasets?",
-        "The recall loss in blocking comes from what source — which pairs are never compared?",
+        "The recall loss in blocking comes from what source - which pairs are never compared?",
       ],
     },
     {
@@ -1669,7 +1669,7 @@ const questions: Record<string, Question[]> = {
       question:
         'Two customer records from different databases: {name: "Microsoft Corp", address: "1 Microsoft Way, Redmond WA"} and {name: "Microsoft Corporation", address: "One Microsoft Way, Redmond, WA 98052"}. Which similarity features should be used for matching?',
       options: [
-        "Exact string equality on both fields — only exact matches are reliable.",
+        "Exact string equality on both fields - only exact matches are reliable.",
         "Edit distance (Levenshtein) on name, address normalization + fuzzy matching, and blocking on zip code prefix to limit comparisons.",
         "TF-IDF cosine similarity on the full concatenated record string.",
         "Embedding similarity using a general-purpose sentence encoder.",
@@ -1699,10 +1699,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The dominant latency component in streaming inference is feature retrieval, not model scoring. A Redis online store delivers pre-computed features in <1 ms; a lightweight model (GBDT or shallow NN) scores in <5 ms. This leaves 40+ ms for network and orchestration. Spark Streaming micro-batches cannot meet 50 ms SLOs, and PostgreSQL query latency is 5–50 ms per query — too slow when multiple features are needed.",
+        "The dominant latency component in streaming inference is feature retrieval, not model scoring. A Redis online store delivers pre-computed features in <1 ms; a lightweight model (GBDT or shallow NN) scores in <5 ms. This leaves 40+ ms for network and orchestration. Spark Streaming micro-batches cannot meet 50 ms SLOs, and PostgreSQL query latency is 5-50 ms per query - too slow when multiple features are needed.",
       hints: [
         "Feature retrieval latency typically dominates inference latency in real-time ML systems.",
-        "Redis GET: ~0.1 ms. PostgreSQL point lookup: 5–20 ms. Choose accordingly.",
+        "Redis GET: ~0.1 ms. PostgreSQL point lookup: 5-20 ms. Choose accordingly.",
       ],
     },
     {
@@ -1717,7 +1717,7 @@ const questions: Record<string, Question[]> = {
         "Edge deployment uses post-training compression techniques (quantization, pruning, knowledge distillation) applied to a pre-trained server-side model. TensorFlow Lite, ONNX Runtime Mobile, and PyTorch Mobile convert trained models to edge-optimized formats without retraining. Quantization-aware training (QAT) is an optional fine-tuning step that starts from pre-trained weights, not random initialization.",
       hints: [
         "TFLite and CoreML take existing model weights and convert/optimize them for edge hardware.",
-        "Quantization-aware training fine-tunes an existing model — it is not a full re-train from scratch.",
+        "Quantization-aware training fine-tunes an existing model - it is not a full re-train from scratch.",
       ],
     },
     {
@@ -1727,10 +1727,10 @@ const questions: Record<string, Question[]> = {
       question:
         "A real-time recommendation system has a p99 latency SLA of 80 ms end-to-end. Profiling shows: ANN retrieval 15 ms, feature fetch (Redis) 12 ms, model inference 30 ms, response serialization 5 ms. Total p50 is 62 ms but p99 is 130 ms. What is the MOST likely cause and the correct mitigation?",
       options: [
-        "The model inference is too slow at p99 — replace the model with a smaller one.",
+        "The model inference is too slow at p99 - replace the model with a smaller one.",
         "Tail latency amplification: at p99, sequential steps compound slow tails (GC pause, Redis eviction, network jitter). Mitigation: hedged requests to the feature store, per-step timeouts with cached fallbacks, and request-level retries with backoff.",
         "The ANN retrieval step needs more replicas to reduce p99.",
-        "Response serialization at 5 ms is the bottleneck — switch from JSON to protobuf.",
+        "Response serialization at 5 ms is the bottleneck - switch from JSON to protobuf.",
       ],
       correctAnswer: 1,
       explanation:
@@ -1772,10 +1772,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Implicit signals are noisy and biased. Position bias means top-ranked items receive more clicks regardless of quality. Exposure bias means items never shown have zero clicks despite potential quality. Preprocessing steps — inverse propensity scoring (IPS) for position bias, exploration to counter exposure bias, and negative sampling strategies — are required before these signals become reliable training labels.",
+        "Implicit signals are noisy and biased. Position bias means top-ranked items receive more clicks regardless of quality. Exposure bias means items never shown have zero clicks despite potential quality. Preprocessing steps - inverse propensity scoring (IPS) for position bias, exploration to counter exposure bias, and negative sampling strategies - are required before these signals become reliable training labels.",
       hints: [
         "A click at rank 1 and a click at rank 10 are not equally strong signals of relevance.",
-        "Exposure bias: the model never sees signal for items it never recommends — creating a filter bubble.",
+        "Exposure bias: the model never sees signal for items it never recommends - creating a filter bubble.",
       ],
     },
     {
@@ -1785,16 +1785,16 @@ const questions: Record<string, Question[]> = {
       question:
         "A marketplace app collects 50 million user interactions per day as implicit feedback. Which data flywheel design problem is MOST critical to address?",
       options: [
-        "Storage cost — 50M events/day is too large to store.",
+        "Storage cost - 50M events/day is too large to store.",
         "Feedback loop bias: the current model controls which items users see, so training on its logs reinforces existing decisions. Items the model underranked have no signal, and any model biases are amplified in the next iteration.",
-        "Label noise — implicit signals have too much noise for supervised learning.",
-        "Latency — 50M events/day cannot be processed in real-time.",
+        "Label noise - implicit signals have too much noise for supervised learning.",
+        "Latency - 50M events/day cannot be processed in real-time.",
       ],
       correctAnswer: 1,
       explanation:
         "The feedback loop bias is the most critical problem: the model only generates training signal for items it chooses to show. Items suppressed by the current model never get clicks and are permanently disadvantaged in future training runs. Mitigations: exploration (\\epsilon-greedy or Thompson sampling to expose non-top-ranked items), off-policy correction (IPS weighting), and counterfactual evaluation techniques.",
       hints: [
-        "If the model always shows item A and never item B, item A gets clicks and item B gets zero — even if B is better.",
+        "If the model always shows item A and never item B, item A gets clicks and item B gets zero - even if B is better.",
         "The fix requires deliberate exploration: occasionally showing non-top-ranked items to collect unbiased signal.",
       ],
     },
@@ -1817,7 +1817,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "User embeddings are expensive to compute (requiring a pass over the user's interaction history) and change slowly. Production systems pre-compute embeddings in a batch job (hourly, daily) and materialize them to an online feature store (Redis). At serving time, the embedding is fetched with a sub-millisecond point lookup and passed directly to the model, separating the expensive embedding computation from the latency-sensitive serving path.",
       hints: [
-        "Recomputing a user embedding from scratch at request time would add hundreds of milliseconds — unacceptable for real-time serving.",
+        "Recomputing a user embedding from scratch at request time would add hundreds of milliseconds - unacceptable for real-time serving.",
         "Pre-compute slow-changing features; compute fast-changing features (session signals) in real-time.",
       ],
     },
@@ -1832,7 +1832,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Within a session, user intent is highly specific and transient. A user browsing running shoes in the current session has a strong immediate intent that may differ entirely from their long-term profile. Session-aware models (transformers over recent interaction sequences, e.g., BERT4Rec, SASRec) capture this short-term context and outperform long-term embedding models for next-item prediction within a session. Long-term embeddings are valuable for the first item shown at session start.",
       hints: [
-        "Session context captures current intent; long-term embeddings capture stable preferences — both are needed.",
+        "Session context captures current intent; long-term embeddings capture stable preferences - both are needed.",
         "SASRec and BERT4Rec use self-attention over item sequences to capture session dynamics.",
       ],
     },
@@ -1843,9 +1843,9 @@ const questions: Record<string, Question[]> = {
       question:
         "A new user signs up for a fintech app (zero history). The personalization system must immediately serve relevant financial product recommendations. Which cold-start strategy is MOST effective?",
       options: [
-        "Show globally most popular products — simple and requires no user data.",
+        "Show globally most popular products - simple and requires no user data.",
         "Use a multi-armed bandit (e.g., Thompson Sampling) initialized with population-level priors segmented by onboarding signals (age, income range, stated goals), updated with each new user interaction during the session.",
-        "Wait 30 days before personalizing — collect enough data first.",
+        "Wait 30 days before personalizing - collect enough data first.",
         "Use the most recently popular products in the user's geographic region.",
       ],
       correctAnswer: 1,
@@ -1853,7 +1853,7 @@ const questions: Record<string, Question[]> = {
         "Cold-start personalization requires balancing exploration (learning user preferences) with exploitation (recommending products likely to be relevant). Thompson Sampling initialized with population priors derived from similar users segmented by onboarding signals provides personalized starting recommendations and rapidly updates posterior beliefs as the user interacts, avoiding purely random exploration.",
       hints: [
         "Thompson Sampling: maintain a Beta distribution over each item's click probability; sample from it to select items; update on each interaction.",
-        "Onboarding signals (age, income, stated goal) allow segmenting the population prior — 25-year-old investor vs. 55-year-old retiree need different priors.",
+        "Onboarding signals (age, income, stated goal) allow segmenting the population prior - 25-year-old investor vs. 55-year-old retiree need different priors.",
       ],
     },
   ],
@@ -1873,7 +1873,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vision-language systems face two unique challenges: (1) modality gap — images and text live in different feature spaces that must be aligned (via contrastive training like CLIP); (2) compute asymmetry — image encoding is typically 5–10\\times more expensive than text encoding (ViT-L processes 224\\times224 images through 24 attention layers). The serving architecture often pre-encodes gallery images offline to avoid on-the-fly encoding at query time.",
+        "Vision-language systems face two unique challenges: (1) modality gap - images and text live in different feature spaces that must be aligned (via contrastive training like CLIP); (2) compute asymmetry - image encoding is typically 5-10\\times more expensive than text encoding (ViT-L processes 224\\times224 images through 24 attention layers). The serving architecture often pre-encodes gallery images offline to avoid on-the-fly encoding at query time.",
       hints: [
         "CLIP pre-encodes all gallery images offline; at query time only the query (text or image) is encoded in real time.",
         "Image encoder (ViT-L): ~50 ms. Text encoder (BERT-base): ~5 ms. The asymmetry drives architectural decisions.",
@@ -1888,9 +1888,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Late fusion and early fusion have different trade-offs. Late fusion (separate encoders per modality, then combine embeddings) is computationally efficient because gallery modalities can be pre-encoded offline. Early fusion can capture richer cross-modal interactions but requires joint encoding at query time — making it infeasible for retrieval over large galleries. Cross-encoders (early fusion) are reserved for reranking small candidate sets where quality trumps latency.",
+        "Late fusion and early fusion have different trade-offs. Late fusion (separate encoders per modality, then combine embeddings) is computationally efficient because gallery modalities can be pre-encoded offline. Early fusion can capture richer cross-modal interactions but requires joint encoding at query time - making it infeasible for retrieval over large galleries. Cross-encoders (early fusion) are reserved for reranking small candidate sets where quality trumps latency.",
       hints: [
-        "Late fusion: pre-encode gallery offline \\to ANN search at query time. Early fusion: cannot pre-encode — requires joint encoding at query time.",
+        "Late fusion: pre-encode gallery offline \\to ANN search at query time. Early fusion: cannot pre-encode - requires joint encoding at query time.",
         "For retrieval scale (millions of items), late fusion is the practical choice; early fusion wins on accuracy for reranking.",
       ],
     },
@@ -1904,14 +1904,14 @@ const questions: Record<string, Question[]> = {
         "At query time: encode the uploaded image + encode all 10M catalog images \\to compute all cosine similarities \\to return top-k.",
         "Offline: encode all 10M catalog images and index in an ANN index (FAISS/HNSW). At query time: encode the user's uploaded image \\to ANN search over pre-indexed catalog \\to return top-k. Re-rank with a cross-modal reranker if needed.",
         "Train a classifier with 10M output classes (one per item) and predict the closest item class.",
-        "Use perceptual hashing (pHash) to find visually identical items — no ML model required.",
+        "Use perceptual hashing (pHash) to find visually identical items - no ML model required.",
       ],
       correctAnswer: 1,
       explanation:
-        "The standard vision similarity search pipeline: (1) offline: encode all catalog images with a vision backbone (ViT, ResNet) and build an ANN index (FAISS IVF-PQ) — 10M \\times 512-dim embeddings in FP16 \\approx 10 GB; (2) online: encode the query image (50–100 ms for ViT-L), ANN search returns top-1000 in <10 ms. Computing all 10M similarities at query time would take seconds. A 10M-class classifier cannot generalize to new catalog items without retraining.",
+        "The standard vision similarity search pipeline: (1) offline: encode all catalog images with a vision backbone (ViT, ResNet) and build an ANN index (FAISS IVF-PQ) - 10M \\times 512-dim embeddings in FP16 \\approx 10 GB; (2) online: encode the query image (50-100 ms for ViT-L), ANN search returns top-1000 in <10 ms. Computing all 10M similarities at query time would take seconds. A 10M-class classifier cannot generalize to new catalog items without retraining.",
       hints: [
         "10M cosine similarities \\times ~1 µs each = 10 seconds. ANN search: O(log n) = milliseconds.",
-        "New catalog items only need to be encoded and added to the ANN index — no model retraining required.",
+        "New catalog items only need to be encoded and added to the ANN index - no model retraining required.",
       ],
     },
   ],
@@ -1924,17 +1924,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A ride-sharing app needs to find all available drivers within 2 km of a user's location in real time. Which spatial indexing technique is MOST appropriate for this point-radius query at scale?",
       options: [
-        "Linear scan of all driver GPS coordinates — O(n) but always correct.",
+        "Linear scan of all driver GPS coordinates - O(n) but always correct.",
         "Geohash-based spatial index: encode driver locations as geohash strings and query neighboring geohash cells that intersect the 2 km radius.",
-        "Inverted index on city name — group drivers by city for fast lookup.",
-        "B-tree index on latitude and longitude — standard database indexing handles spatial queries.",
+        "Inverted index on city name - group drivers by city for fast lookup.",
+        "B-tree index on latitude and longitude - standard database indexing handles spatial queries.",
       ],
       correctAnswer: 1,
       explanation:
         "Geohash encodes 2D (lat/lon) coordinates into a 1D string with hierarchical prefix properties: nearby locations share long common prefixes. A geohash of length 7 covers ~153m \\times 153m cells. To find drivers within 2 km, query the geohash cell of the user plus its 8 neighbors. Redis GEO commands (GEOSEARCH) implement this natively with sub-millisecond radius queries. B-tree indexes on lat/lon are inefficient for radius queries because lat and lon are indexed independently in 1D.",
       hints: [
         "Geohash length 6 \\approx 1.2 km \\times 0.6 km cells. Length 7 \\approx 153 m \\times 153 m. Choose based on query radius.",
-        "Redis GEOSEARCH command: geohash-based spatial index built into Redis — sub-millisecond radius queries.",
+        "Redis GEOSEARCH command: geohash-based spatial index built into Redis - sub-millisecond radius queries.",
       ],
     },
     {
@@ -1959,17 +1959,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A mapping application collects GPS traces from millions of users to improve road quality predictions. Which privacy-preserving mechanism protects individual location privacy while still enabling accurate aggregate ML training?",
       options: [
-        "Store all raw GPS traces — location data is not personally identifiable.",
+        "Store all raw GPS traces - location data is not personally identifiable.",
         "Apply local differential privacy (LDP) with calibrated noise added to GPS coordinates on-device before transmission, ensuring individual traces cannot be reverse-engineered while aggregate statistics remain accurate for training.",
         "Delete GPS data after 24 hours to limit exposure.",
-        "Anonymize GPS data by removing timestamps — location without time is not personally identifiable.",
+        "Anonymize GPS data by removing timestamps - location without time is not personally identifiable.",
       ],
       correctAnswer: 1,
       explanation:
-        "GPS traces are highly sensitive — research shows 4 spatiotemporal points uniquely identify 95% of individuals. Local differential privacy (LDP) adds calibrated noise to location reports on the device before transmission, providing mathematical privacy guarantees. The \\epsilon parameter controls the privacy-accuracy trade-off. Apple uses LDP for keyboard usage stats; Google uses it for Chrome histogram collection. Removing timestamps does not prevent re-identification from location patterns (home/work inference).",
+        "GPS traces are highly sensitive - research shows 4 spatiotemporal points uniquely identify 95% of individuals. Local differential privacy (LDP) adds calibrated noise to location reports on the device before transmission, providing mathematical privacy guarantees. The \\epsilon parameter controls the privacy-accuracy trade-off. Apple uses LDP for keyboard usage stats; Google uses it for Chrome histogram collection. Removing timestamps does not prevent re-identification from location patterns (home/work inference).",
       hints: [
         "LDP: noise is added on-device. Central DP: noise is added server-side after collection. LDP provides stronger user privacy guarantees.",
-        "With \\epsilon=1, LDP randomizes ~37% of reports — the aggregate over millions of users still converges accurately.",
+        "With \\epsilon=1, LDP randomizes ~37% of reports - the aggregate over millions of users still converges accurately.",
       ],
     },
   ],
@@ -1984,12 +1984,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "The model architecture is too small to capture seasonal patterns.",
         "Insufficient seasonality data: with only 3 Decembers in the training set, the model cannot reliably learn the holiday demand spike. Adding explicit seasonal features (month-of-year, days-until-holiday, is_holiday indicator) corrects this.",
-        "The evaluation metric is wrong — use RMSE instead of MAE.",
+        "The evaluation metric is wrong - use RMSE instead of MAE.",
         "The model is overfitting to the training years and cannot generalize.",
       ],
       correctAnswer: 1,
       explanation:
-        "With 3 years of data, the model has seen December only 3 times — insufficient to learn its statistical behavior robustly. Adding explicit seasonal features (Fourier terms for yearly seasonality, holiday indicators, days-before/after holidays) encodes domain knowledge directly and greatly improves generalization for rare seasonal patterns. Prophet, N-BEATS, and TFT all use explicit seasonality decomposition for this reason.",
+        "With 3 years of data, the model has seen December only 3 times - insufficient to learn its statistical behavior robustly. Adding explicit seasonal features (Fourier terms for yearly seasonality, holiday indicators, days-before/after holidays) encodes domain knowledge directly and greatly improves generalization for rare seasonal patterns. Prophet, N-BEATS, and TFT all use explicit seasonality decomposition for this reason.",
       hints: [
         "3 years \\to 3 Decembers \\to the model has 3 training samples for the most important retail month.",
         "Fourier features (sin/cos of day-of-year) provide smooth seasonality encoding that generalizes across years.",
@@ -2004,7 +2004,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Discarding all historical data risks losing important recurring patterns (e.g., seasonal trends). The correct approach uses a combination of: (1) recency weighting — exponentially decaying sample weights give more influence to recent data without discarding old data; (2) rolling window retraining — use the most recent N time steps as the primary training window; (3) concept drift detection algorithms (ADWIN, Page-Hinkley) to trigger model updates when drift is detected.",
+        "Discarding all historical data risks losing important recurring patterns (e.g., seasonal trends). The correct approach uses a combination of: (1) recency weighting - exponentially decaying sample weights give more influence to recent data without discarding old data; (2) rolling window retraining - use the most recent N time steps as the primary training window; (3) concept drift detection algorithms (ADWIN, Page-Hinkley) to trigger model updates when drift is detected.",
       hints: [
         "Exponential decay weights: recent data matters more but historical patterns (seasonality) still contribute.",
         "ADWIN (Adaptive Windowing) statistically detects when the data distribution has changed and triggers retraining.",
@@ -2024,7 +2024,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Recursive forecasting accumulates error: each 1-step prediction error compounds over 30 steps, leading to large errors at the 30-day horizon. Direct multi-output forecasting trains one model with multiple output heads predicting all horizons simultaneously from the current input — no error accumulation. Temporal Fusion Transformer (TFT) and N-HiTS are direct multi-horizon architectures widely used in production forecasting.",
+        "Recursive forecasting accumulates error: each 1-step prediction error compounds over 30 steps, leading to large errors at the 30-day horizon. Direct multi-output forecasting trains one model with multiple output heads predicting all horizons simultaneously from the current input - no error accumulation. Temporal Fusion Transformer (TFT) and N-HiTS are direct multi-horizon architectures widely used in production forecasting.",
       hints: [
         "Recursive forecasting error at step k grows approximately as k \\times \\sigma_1 for independent errors.",
         "Direct forecasting: all output heads are trained jointly from the same features, with no error accumulation across steps.",
@@ -2043,13 +2043,13 @@ const questions: Record<string, Question[]> = {
         "Increase the max_tokens parameter to ensure complete responses.",
         "Implement semantic caching: embed incoming user queries, search a vector database for semantically similar past queries, and return the cached LLM response if cosine similarity exceeds a threshold (e.g., 0.95).",
         "Use a larger model for all queries to reduce retries.",
-        "Log all queries but do not cache — caching LLM responses introduces staleness.",
+        "Log all queries but do not cache - caching LLM responses introduces staleness.",
       ],
       correctAnswer: 1,
       explanation:
-        "Semantic caching reduces LLM API calls by identifying near-duplicate queries and serving cached responses. For customer service chatbots, many queries are paraphrases of the same question ('How do I reset my password?' / 'I forgot my password'). By embedding queries and finding semantically similar ones (using FAISS or Pinecone), cached responses can serve 20–40% of queries without an API call. GPTCache implements this pattern.",
+        "Semantic caching reduces LLM API calls by identifying near-duplicate queries and serving cached responses. For customer service chatbots, many queries are paraphrases of the same question ('How do I reset my password?' / 'I forgot my password'). By embedding queries and finding semantically similar ones (using FAISS or Pinecone), cached responses can serve 20-40% of queries without an API call. GPTCache implements this pattern.",
       hints: [
-        "Customer service queries have high repetition — password reset, billing, and shipping inquiries dominate.",
+        "Customer service queries have high repetition - password reset, billing, and shipping inquiries dominate.",
         "Semantic cache hit rate depends on similarity threshold: too high = low hit rate; too low = wrong responses.",
       ],
     },
@@ -2062,9 +2062,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Prompt changes in production LLM systems are equivalent to code changes — they directly affect model behavior, output quality, and safety. A single word change in a system prompt can dramatically alter LLM outputs. Prompt versioning is required for: debugging regressions, A/B testing prompt variants, audit trails in regulated industries, and rollback when a prompt change causes issues. Tools like LangSmith and PromptLayer enable prompt versioning.",
+        "Prompt changes in production LLM systems are equivalent to code changes - they directly affect model behavior, output quality, and safety. A single word change in a system prompt can dramatically alter LLM outputs. Prompt versioning is required for: debugging regressions, A/B testing prompt variants, audit trails in regulated industries, and rollback when a prompt change causes issues. Tools like LangSmith and PromptLayer enable prompt versioning.",
       hints: [
-        "A prompt is the model's 'code' at inference time — changing it is as impactful as changing model weights.",
+        "A prompt is the model's 'code' at inference time - changing it is as impactful as changing model weights.",
         "Without prompt versioning, a customer complaint about bad LLM output cannot be reproduced or debugged.",
       ],
     },
@@ -2073,16 +2073,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "An LLM API serving system handles 10,000 concurrent requests with highly variable output lengths (10–2000 tokens). The system uses static batching. Which problem does static batching create, and what replaces it?",
+        "An LLM API serving system handles 10,000 concurrent requests with highly variable output lengths (10-2000 tokens). The system uses static batching. Which problem does static batching create, and what replaces it?",
       options: [
-        "GPU memory fragmentation — static batching wastes memory. Replace with unified memory.",
-        "GPU utilization collapse: when the longest sequence in a batch finishes last, all other GPU slots sit idle. Continuous batching (iteration-level scheduling, used in vLLM) adds new requests as sequences complete, eliminating idle time and improving throughput by 5–20\\times.",
-        "Network bandwidth saturation — static batching requires too many tokens to be transferred. Replace with token streaming.",
-        "Cache invalidation overhead — replace with request-level KV cache pinning.",
+        "GPU memory fragmentation - static batching wastes memory. Replace with unified memory.",
+        "GPU utilization collapse: when the longest sequence in a batch finishes last, all other GPU slots sit idle. Continuous batching (iteration-level scheduling, used in vLLM) adds new requests as sequences complete, eliminating idle time and improving throughput by 5-20\\times.",
+        "Network bandwidth saturation - static batching requires too many tokens to be transferred. Replace with token streaming.",
+        "Cache invalidation overhead - replace with request-level KV cache pinning.",
       ],
       correctAnswer: 1,
       explanation:
-        "In static batching, a batch of 32 requests must all finish before new requests start. If 31 requests finish in 100 tokens but 1 runs for 2000 tokens, 31 GPU slots are idle for 1900 tokens worth of generation time — approximately 95% GPU waste for those slots. Continuous batching (vLLM's key innovation) schedules at the token generation step: when any sequence reaches EOS or max_tokens, its slot is immediately replaced by a new waiting request.",
+        "In static batching, a batch of 32 requests must all finish before new requests start. If 31 requests finish in 100 tokens but 1 runs for 2000 tokens, 31 GPU slots are idle for 1900 tokens worth of generation time - approximately 95% GPU waste for those slots. Continuous batching (vLLM's key innovation) schedules at the token generation step: when any sequence reaches EOS or max_tokens, its slot is immediately replaced by a new waiting request.",
       hints: [
         "Idle GPU in static batching: slots that finished early wait for the slowest sequence in the batch.",
         "vLLM introduced PagedAttention + continuous batching in 2023, showing 23\\times throughput improvement over naive serving.",
@@ -2098,17 +2098,17 @@ const questions: Record<string, Question[]> = {
       question:
         "A hiring algorithm ranks job applicants and is found to recommend men at a 2\\times higher rate than equally qualified women. Which fairness criterion is violated and what is the simplest post-processing fix?",
       options: [
-        "Calibration is violated — apply Platt scaling to recalibrate scores.",
+        "Calibration is violated - apply Platt scaling to recalibrate scores.",
         "Demographic parity is violated (men and women are not recommended at equal rates). Post-processing fix: apply separate score thresholds per gender group, tuning each threshold to achieve equal positive prediction rates across groups.",
-        "Individual fairness is violated — rank candidates purely by individual qualifications.",
-        "Accuracy parity is violated — retrain the model on balanced data.",
+        "Individual fairness is violated - rank candidates purely by individual qualifications.",
+        "Accuracy parity is violated - retrain the model on balanced data.",
       ],
       correctAnswer: 1,
       explanation:
         "Demographic parity (statistical parity) requires equal positive prediction rates across demographic groups. The simplest post-processing fix is group-specific thresholds: if the model scores women lower on average due to historical bias in training data, lower the threshold for women to equalize recommendation rates. This does not require retraining. More sophisticated approaches include reweighting training examples or adversarial debiasing.",
       hints: [
         "Post-processing is the cheapest fairness fix: adjust thresholds after training without modifying the model.",
-        "Demographic parity does not require equal accuracy — it requires equal positive prediction rates.",
+        "Demographic parity does not require equal accuracy - it requires equal positive prediction rates.",
       ],
     },
     {
@@ -2120,9 +2120,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Chouldechova's impossibility theorem (2017) proves that when group base rates differ, it is mathematically impossible to simultaneously satisfy calibration, equal positive predictive value, and equal false positive rates. The fairness impossibility result means practitioners must choose which fairness criteria to prioritize based on the application domain — there is no single correct fairness definition that applies universally.",
+        "Chouldechova's impossibility theorem (2017) proves that when group base rates differ, it is mathematically impossible to simultaneously satisfy calibration, equal positive predictive value, and equal false positive rates. The fairness impossibility result means practitioners must choose which fairness criteria to prioritize based on the application domain - there is no single correct fairness definition that applies universally.",
       hints: [
-        "Chouldechova (2017) proved the fairness impossibility theorem — satisfying all fairness criteria simultaneously is impossible when base rates differ.",
+        "Chouldechova (2017) proved the fairness impossibility theorem - satisfying all fairness criteria simultaneously is impossible when base rates differ.",
         "Practitioners must choose which fairness criterion matters most for their specific application and stakeholders.",
       ],
     },
@@ -2135,12 +2135,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "Add race as an explicit feature so the model can learn group-specific patterns.",
         "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| \\leq \\epsilon), and monitor fairness metrics in production with automated alerts when constraints are violated.",
-        "Retrain the model separately for each racial group — separate models guarantee fairness.",
+        "Retrain the model separately for each racial group - separate models guarantee fairness.",
         "Apply a uniform score multiplier to all members of the disadvantaged group.",
       ],
       correctAnswer: 1,
       explanation:
-        "Equalized odds constraints can be enforced during training using Lagrangian relaxation (Agarwal et al., Reductions Approach to Fairness): the fairness constraint is added as a penalty term to the training loss. Fairlearn and IBM AIF360 implement this. In production, fairness metrics (TPR and FPR by group) must be monitored continuously — distribution shifts can violate constraints without model retraining. Using race as a feature is legally prohibited under ECOA in US credit scoring.",
+        "Equalized odds constraints can be enforced during training using Lagrangian relaxation (Agarwal et al., Reductions Approach to Fairness): the fairness constraint is added as a penalty term to the training loss. Fairlearn and IBM AIF360 implement this. In production, fairness metrics (TPR and FPR by group) must be monitored continuously - distribution shifts can violate constraints without model retraining. Using race as a feature is legally prohibited under ECOA in US credit scoring.",
       hints: [
         "Fairlearn (Microsoft) and AIF360 (IBM) implement constrained optimization for equalized odds.",
         "Production fairness monitoring: compute TPR and FPR by demographic group on a rolling window of recent decisions.",
@@ -2163,7 +2163,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Parameter server architecture: all workers send gradients to central PS nodes, which aggregate and broadcast updated parameters — the PS nodes become network bottlenecks as worker count grows. Ring-AllReduce: workers are arranged in a logical ring; each worker communicates with only its two neighbors in 2(N-1) steps, with near-optimal bandwidth utilization regardless of N. Ring-AllReduce (used by Horovod, PyTorch DDP) scales linearly and is the standard for data-parallel training.",
+        "Parameter server architecture: all workers send gradients to central PS nodes, which aggregate and broadcast updated parameters - the PS nodes become network bottlenecks as worker count grows. Ring-AllReduce: workers are arranged in a logical ring; each worker communicates with only its two neighbors in 2(N-1) steps, with near-optimal bandwidth utilization regardless of N. Ring-AllReduce (used by Horovod, PyTorch DDP) scales linearly and is the standard for data-parallel training.",
       hints: [
         "In a parameter server architecture, where do all workers send their gradients, and what becomes the bottleneck as the number of workers increases?",
         "In ring-AllReduce, how many neighbors does each worker communicate with, and how does this affect scalability?",
@@ -2174,7 +2174,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Gradient compression techniques (e.g., Top-K sparsification, 1-bit quantization of gradients) can reduce communication volume in distributed training by 10–100\\times with minimal impact on final model accuracy.",
+        "Gradient compression techniques (e.g., Top-K sparsification, 1-bit quantization of gradients) can reduce communication volume in distributed training by 10-100\\times with minimal impact on final model accuracy.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -2192,8 +2192,8 @@ const questions: Record<string, Question[]> = {
         "A distributed training job runs on 64 GPUs across 8 nodes. After 6 hours of training, one GPU fails. Which fault tolerance design ensures the job continues without restarting from the beginning?",
       options: [
         "Stop the job, replace the GPU, and restart training from epoch 0.",
-        "Implement periodic checkpointing (e.g., every 30 minutes) with elastic training (TorchElastic): on failure, the remaining 63 GPUs re-partition the data and model, load the latest checkpoint, and continue training — losing at most 30 minutes of work.",
-        "Use synchronous training — synchronous updates automatically handle GPU failures without checkpointing.",
+        "Implement periodic checkpointing (e.g., every 30 minutes) with elastic training (TorchElastic): on failure, the remaining 63 GPUs re-partition the data and model, load the latest checkpoint, and continue training - losing at most 30 minutes of work.",
+        "Use synchronous training - synchronous updates automatically handle GPU failures without checkpointing.",
         "Assign the failed GPU's work to the CPU on the same node as a fallback.",
       ],
       correctAnswer: 1,
@@ -2221,7 +2221,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Bayesian optimization is the most sample-efficient hyperparameter search strategy: it builds a probabilistic model (surrogate) of the objective function and uses acquisition functions (Expected Improvement, Upper Confidence Bound) to select the next trial that is most likely to improve upon the best known result. This converges to good hyperparameters in 50–100 trials vs. 1000+ for grid search. Optuna (TPE), Ray Tune (BOHB), and Weights & Biases Sweeps implement this.",
+        "Bayesian optimization is the most sample-efficient hyperparameter search strategy: it builds a probabilistic model (surrogate) of the objective function and uses acquisition functions (Expected Improvement, Upper Confidence Bound) to select the next trial that is most likely to improve upon the best known result. This converges to good hyperparameters in 50-100 trials vs. 1000+ for grid search. Optuna (TPE), Ray Tune (BOHB), and Weights & Biases Sweeps implement this.",
       hints: [
         "How does Bayesian optimization use previous trial results to select the next trial, compared to grid search which tries all combinations independently?",
         "Which search strategy is most sample-efficient: one that tries all combinations, one that samples randomly, or one that learns from previous results?",
@@ -2236,7 +2236,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/\\eta fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100\\times more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
+        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/\\eta fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10-100\\times more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
       hints: [
         "Successive Halving: start with N configs at 1 epoch each. Keep top N/3 \\to train to 3 epochs. Keep top N/9 \\to train to 9 epochs.",
         "Hyperband eliminates the choice of starting resources in Successive Halving by running multiple brackets simultaneously.",
@@ -2249,9 +2249,9 @@ const questions: Record<string, Question[]> = {
       question:
         "An ML experiment platform must manage 10,000 parallel hyperparameter trials across a shared GPU cluster. Which design ensures fair resource allocation and prevents any single experiment from monopolizing the cluster?",
       options: [
-        "First-come, first-served scheduling — simple and predictable.",
+        "First-come, first-served scheduling - simple and predictable.",
         "A multi-level priority scheduler: trials are grouped by experiment with per-experiment GPU quotas enforced by a resource manager (e.g., Kubernetes resource limits + fair-share scheduling via YARN or Slurm with preemption). High-priority experiments receive guaranteed quota; exploratory experiments receive best-effort scheduling.",
-        "Run all trials sequentially on a single large GPU node — avoids scheduling complexity.",
+        "Run all trials sequentially on a single large GPU node - avoids scheduling complexity.",
         "Allow researchers to manually reserve GPU blocks for their experiments.",
       ],
       correctAnswer: 1,
@@ -2274,17 +2274,17 @@ const sysdesign: Record<string, Question[]> = {
       question:
         "A public API must enforce 100 requests/second per user. Requests arrive in bursts. Which rate-limiting algorithm best handles bursts while strictly enforcing the average rate?",
       options: [
-        "Fixed window counter — increment a counter each second, reject when it hits 100. Simple and exact.",
-        "Token bucket — tokens accumulate at 100/sec up to a burst capacity (e.g., 200 tokens). Requests consume tokens; excess requests are dropped. Allows short bursts up to bucket size while enforcing the 100 req/s average.",
-        "Leaky bucket — requests enter a queue processed at 100/sec, excess requests are immediately dropped. Smooths output but does not allow any bursting.",
-        "Sliding window log — store timestamps of each request; reject if the count in the last 1 s window exceeds 100. Accurate but memory-intensive.",
+        "Fixed window counter - increment a counter each second, reject when it hits 100. Simple and exact.",
+        "Token bucket - tokens accumulate at 100/sec up to a burst capacity (e.g., 200 tokens). Requests consume tokens; excess requests are dropped. Allows short bursts up to bucket size while enforcing the 100 req/s average.",
+        "Leaky bucket - requests enter a queue processed at 100/sec, excess requests are immediately dropped. Smooths output but does not allow any bursting.",
+        "Sliding window log - store timestamps of each request; reject if the count in the last 1 s window exceeds 100. Accurate but memory-intensive.",
       ],
       correctAnswer: 1,
       explanation:
-        "Token bucket is the standard answer for burst-tolerant rate limiting. Tokens accumulate at the configured rate (100/s) up to a maximum bucket size. A burst of 200 requests can be served instantly if tokens are available, then the client is throttled until more tokens accrue. Leaky bucket enforces a strictly smooth output rate — it does not allow bursting. Fixed window allows up to 2x the rate at window boundaries. Sliding window log is accurate but requires O(requests) memory per user.",
+        "Token bucket is the standard answer for burst-tolerant rate limiting. Tokens accumulate at the configured rate (100/s) up to a maximum bucket size. A burst of 200 requests can be served instantly if tokens are available, then the client is throttled until more tokens accrue. Leaky bucket enforces a strictly smooth output rate - it does not allow bursting. Fixed window allows up to 2x the rate at window boundaries. Sliding window log is accurate but requires O(requests) memory per user.",
       hints: [
         "Burst allowance = bucket capacity. If bucket holds 200 tokens, a client can send 200 requests instantly after being idle for 2 seconds.",
-        "Leaky bucket fills a queue and processes it at a fixed rate — this is an output-rate limiter, not a burst-tolerant one.",
+        "Leaky bucket fills a queue and processes it at a fixed rate - this is an output-rate limiter, not a burst-tolerant one.",
       ],
     },
     {
@@ -2297,7 +2297,7 @@ const sysdesign: Record<string, Question[]> = {
       explanation:
         "Local rate limiters enforce per-node limits, not global limits. If a user sends requests to 5 nodes with a local limit of 100 req/s each, they can achieve 500 req/s globally. Accurate global rate limiting requires either (a) a centralized store (Redis with atomic INCR/EXPIRE) that all nodes consult, or (b) a consistent-hash load balancer that routes each user to exactly one node. Centralized Redis with Lua scripting is the most common production approach, accepting the latency trade-off of a network hop per request.",
       hints: [
-        "Sticky sessions (routing user X always to node Y) make local rate limiting accurate — but require consistent hashing or session affinity.",
+        "Sticky sessions (routing user X always to node Y) make local rate limiting accurate - but require consistent hashing or session affinity.",
         "Redis INCR + EXPIRE with a Lua script is atomic and safe for distributed rate limiting.",
       ],
     },
@@ -2310,14 +2310,14 @@ const sysdesign: Record<string, Question[]> = {
       question:
         "A social media feed system caches user timelines in Redis. When a celebrity with 10 million followers posts, all cached timelines become stale simultaneously. What pattern avoids the resulting thundering-herd cache miss storm?",
       options: [
-        "Increase Redis memory so all timelines fit — eliminates eviction and staleness.",
-        "Use write-around caching — on celebrity post, skip updating the cache entirely and let reads populate it lazily from the DB.",
+        "Increase Redis memory so all timelines fit - eliminates eviction and staleness.",
+        "Use write-around caching - on celebrity post, skip updating the cache entirely and let reads populate it lazily from the DB.",
         "Fanout-on-write with probabilistic early expiration: pre-compute and push the new post to followers' cached timelines, and use jittered TTLs plus a 'soft TTL' (background refresh before hard expiry) to prevent simultaneous expiry.",
         "Add a read-through cache layer with a 5-second lock: when cache misses, one thread fetches from DB while others wait behind a mutex.",
       ],
       correctAnswer: 2,
       explanation:
-        "The celebrity problem (hot key / thundering herd) has two sub-problems: (1) computing the fan-out (pushing to 10M followers) and (2) cache stampede when all timeline caches expire together. Fanout-on-write pre-computes and pushes the post to each follower's cached feed asynchronously (message queue), so reads are always cache hits. Jittered TTLs prevent synchronized expiry. Probabilistic early expiration (PER / XFetch algorithm) refreshes cache entries slightly before their TTL expires using a probabilistic formula, eliminating the stampede. Option D (mutex lock) serializes but does not scale — 10M users waiting on one lock.",
+        "The celebrity problem (hot key / thundering herd) has two sub-problems: (1) computing the fan-out (pushing to 10M followers) and (2) cache stampede when all timeline caches expire together. Fanout-on-write pre-computes and pushes the post to each follower's cached feed asynchronously (message queue), so reads are always cache hits. Jittered TTLs prevent synchronized expiry. Probabilistic early expiration (PER / XFetch algorithm) refreshes cache entries slightly before their TTL expires using a probabilistic formula, eliminating the stampede. Option D (mutex lock) serializes but does not scale - 10M users waiting on one lock.",
       hints: [
         "XFetch early expiration formula: refresh if current_time - fetch_time * beta * log(rand()) > expiry_time. With beta=1 and rand()~U(0,1), refreshes happen more often as TTL approaches.",
         "Twitter uses fanout-on-write for normal users but fanout-on-read for celebrities (hybrid approach), trading write throughput for read latency.",
@@ -2337,9 +2337,9 @@ const sysdesign: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Cache stampede (also called dog-pile or thundering herd) occurs when many concurrent requests miss the same key and all attempt to rebuild the cache simultaneously, overwhelming the database. The standard fix is a distributed lock: SET key:lock 1 NX EX 5 in Redis — only the first thread acquires it, fetches from DB, and populates the cache. Other threads either (a) wait and retry, or (b) serve stale data if a previous value exists (stale-while-revalidate). Alternatively, probabilistic early expiration proactively refreshes before the TTL expires, preventing the mass-miss scenario entirely.",
+        "Cache stampede (also called dog-pile or thundering herd) occurs when many concurrent requests miss the same key and all attempt to rebuild the cache simultaneously, overwhelming the database. The standard fix is a distributed lock: SET key:lock 1 NX EX 5 in Redis - only the first thread acquires it, fetches from DB, and populates the cache. Other threads either (a) wait and retry, or (b) serve stale data if a previous value exists (stale-while-revalidate). Alternatively, probabilistic early expiration proactively refreshes before the TTL expires, preventing the mass-miss scenario entirely.",
       hints: [
-        "Redis SET NX EX is atomic — SET if Not eXists with an EXpiry. This creates a distributed mutex with automatic lock release on timeout.",
+        "Redis SET NX EX is atomic - SET if Not eXists with an EXpiry. This creates a distributed mutex with automatic lock release on timeout.",
         "Stale-while-revalidate: return the old cached value immediately while asynchronously refreshing in the background.",
       ],
     },
@@ -2357,15 +2357,15 @@ const famous: Record<string, Question[]> = {
         "Design TinyURL: you need to generate a unique 7-character short code for each long URL, handling 100M URLs total and 10K write requests/second. Which ID generation + encoding approach is most appropriate?",
       options: [
         "Use MD5(long_url) and take the first 7 characters. Pros: deterministic (same URL always gets same code). Cons: MD5 collisions occur at ~100M entries; truncating to 7 chars makes collisions near-certain.",
-        "Auto-increment a 64-bit integer in the DB and encode it in base62 (a-z, A-Z, 0-9). A 7-char base62 string encodes up to 62^7 \\approx 3.5 trillion unique IDs, far more than 100M. Pros: no collisions, short codes, simple. Cons: single-point auto-increment bottleneck — mitigate with Twitter Snowflake-style distributed ID generation.",
+        "Auto-increment a 64-bit integer in the DB and encode it in base62 (a-z, A-Z, 0-9). A 7-char base62 string encodes up to 62^7 \\approx 3.5 trillion unique IDs, far more than 100M. Pros: no collisions, short codes, simple. Cons: single-point auto-increment bottleneck - mitigate with Twitter Snowflake-style distributed ID generation.",
         "Generate a random UUID (128-bit) for each URL. Store UUID\\tolong_url in DynamoDB. Short code = first 7 hex characters of UUID.",
         "Use a consistent hash of the long URL across 10 DB shards. The shard ID + row ID form the short code.",
       ],
       correctAnswer: 1,
       explanation:
-        "Base62 encoding of an auto-incremented integer is the canonical answer: 62^7 \\approx 3.5 trillion > 100M, guaranteed no collisions, and 7 characters is short enough. At 10K writes/s, a single auto-increment DB becomes a bottleneck — solutions include: (a) Twitter Snowflake (41-bit timestamp + 10-bit machine ID + 12-bit sequence = 64-bit globally unique monotone IDs with no coordination), or (b) a ticket server (dedicated sequence DB with batch pre-allocation). MD5 truncation has collisions. UUIDs are 32 hex chars, too long if not encoded, and random UUIDs are unordered (bad for B-tree DB performance).",
+        "Base62 encoding of an auto-incremented integer is the canonical answer: 62^7 \\approx 3.5 trillion > 100M, guaranteed no collisions, and 7 characters is short enough. At 10K writes/s, a single auto-increment DB becomes a bottleneck - solutions include: (a) Twitter Snowflake (41-bit timestamp + 10-bit machine ID + 12-bit sequence = 64-bit globally unique monotone IDs with no coordination), or (b) a ticket server (dedicated sequence DB with batch pre-allocation). MD5 truncation has collisions. UUIDs are 32 hex chars, too long if not encoded, and random UUIDs are unordered (bad for B-tree DB performance).",
       hints: [
-        "62^7 = 3,521,614,606,208 — always compute this to confirm the ID space is large enough.",
+        "62^7 = 3,521,614,606,208 - always compute this to confirm the ID space is large enough.",
         "Twitter Snowflake format: 1 unused | 41-bit ms timestamp | 10-bit machine | 12-bit sequence. Allows 4096 IDs/ms/machine with no coordination.",
       ],
     },
@@ -2379,15 +2379,15 @@ const famous: Record<string, Question[]> = {
         "A distributed cache has 4 nodes. Using simple modulo hashing (key % 4), you add a 5th node. Approximately what fraction of keys must be remapped? Using consistent hashing with 100 virtual nodes per server, approximately what fraction is remapped?",
       options: [
         "Modulo: ~80% remapped. Consistent hashing: ~20% remapped.",
-        "Modulo: ~80% remapped. Consistent hashing: ~20% remapped — same formula, the only difference is which keys move.",
+        "Modulo: ~80% remapped. Consistent hashing: ~20% remapped - same formula, the only difference is which keys move.",
         "Modulo: 80% remapped (4/5 of keys change their target node). Consistent hashing: ~1/5 = 20% remapped (only keys owned by the new node's range move).",
         "Modulo: 100% remapped (every key's hash % N changes). Consistent hashing: ~1/(N+1) \\approx 20% remapped.",
       ],
       correctAnswer: 3,
       explanation:
-        "With modulo hashing and N\\toN+1 nodes, almost every key maps to a different node (key % N \$\\neq\$ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
+        "With modulo hashing and N\\toN+1 nodes, almost every key maps to a different node (key % N \$\\neq\$ key % (N+1) for most keys), so effectively ~100% of keys must be remapped - catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
       hints: [
-        "Consistent hashing invariant: adding node X only remaps keys in X's arc on the ring — no other nodes are affected.",
+        "Consistent hashing invariant: adding node X only remaps keys in X's arc on the ring - no other nodes are affected.",
         "Virtual nodes: each physical server owns V points on the ring. Larger V \\to more uniform load distribution but higher coordination overhead.",
       ],
     },
@@ -2407,10 +2407,10 @@ const famous: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Kafka's key insight: the log is immutable and consumer groups track offsets independently. A slow consumer group simply has a lower offset than a fast group — they read from the same partitioned log at their own pace, with zero coordination between groups. The slow consumer can parallelize catch-up by adding consumer instances up to the number of partitions (each partition is assigned to exactly one consumer in a group). Retention (7 days of disk) ensures old segments are available. This offset-per-consumer-group design is why Kafka can serve 10+ consumer groups from the same topic with no interference — fundamentally different from traditional queues where consuming removes the message.",
+        "Kafka's key insight: the log is immutable and consumer groups track offsets independently. A slow consumer group simply has a lower offset than a fast group - they read from the same partitioned log at their own pace, with zero coordination between groups. The slow consumer can parallelize catch-up by adding consumer instances up to the number of partitions (each partition is assigned to exactly one consumer in a group). Retention (7 days of disk) ensures old segments are available. This offset-per-consumer-group design is why Kafka can serve 10+ consumer groups from the same topic with no interference - fundamentally different from traditional queues where consuming removes the message.",
       hints: [
         "Consumer group = independent cursor on the log. Adding consumers to a group parallelizes consumption (one consumer per partition max).",
-        "Retention: Kafka keeps all messages until retention.ms or retention.bytes is exceeded — consumers can re-read old messages, enabling replay and catch-up.",
+        "Retention: Kafka keeps all messages until retention.ms or retention.bytes is exceeded - consumers can re-read old messages, enabling replay and catch-up.",
       ],
     },
   ],
@@ -2422,14 +2422,14 @@ const famous: Record<string, Question[]> = {
       question:
         "Design WhatsApp: for real-time 1-to-1 messaging with 2 billion users, how should the server push new messages to a recipient's mobile device, and how should you handle offline recipients?",
       options: [
-        "Short polling: client polls every 1 second. Simple to implement; scales poorly — 2B devices \\times 1 req/s = 2B req/s server load even when no messages arrive.",
+        "Short polling: client polls every 1 second. Simple to implement; scales poorly - 2B devices \\times 1 req/s = 2B req/s server load even when no messages arrive.",
         "Long polling: client holds an HTTP connection open; server responds only when a message arrives (or on timeout). Better than polling but still wastes one HTTP connection per client and has high reconnect overhead on mobile.",
         "WebSocket (persistent bidirectional TCP connection) for online users, maintained by a stateful connection server (chat service). For offline users: store the message in a DB (e.g., Cassandra) keyed by recipient; on reconnect, the client fetches missed messages via REST. Mobile push (APNs/FCM) wakes offline apps.",
         "Server-sent events (SSE): server streams messages over HTTP/2 to the client. Bidirectional by using REST for client\\toserver. Simpler than WebSocket.",
       ],
       correctAnswer: 2,
       explanation:
-        "WhatsApp uses persistent WebSocket connections to a fleet of connection servers (Erlang/OTP for massive concurrency — 2M connections per server). Online message flow: sender \\to connection server \\to message router \\to recipient's connection server \\to recipient via WebSocket. For offline recipients: store message in Cassandra (optimized for write-heavy, keyed by recipient+timestamp); on reconnect, client syncs missed messages. Mobile push (APNs for iOS, FCM for Android) provides the initial wake-up signal. This architecture cleanly separates connection management from message storage, allowing each to scale independently.",
+        "WhatsApp uses persistent WebSocket connections to a fleet of connection servers (Erlang/OTP for massive concurrency - 2M connections per server). Online message flow: sender \\to connection server \\to message router \\to recipient's connection server \\to recipient via WebSocket. For offline recipients: store message in Cassandra (optimized for write-heavy, keyed by recipient+timestamp); on reconnect, client syncs missed messages. Mobile push (APNs for iOS, FCM for Android) provides the initial wake-up signal. This architecture cleanly separates connection management from message storage, allowing each to scale independently.",
       hints: [
         "Erlang/OTP: each WebSocket connection = one lightweight Erlang process. 2M processes per server is feasible due to Erlang's green threads and preemptive scheduler.",
         "Message storage key design: (recipient_id, timestamp) \\to allows efficient range scan for 'messages since last seen timestamp' on reconnect.",
@@ -2455,7 +2455,7 @@ const famous2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Google's typeahead uses a trie with pre-aggregated top-K lists at each node — this is the canonical answer. Each internal node stores the K highest-frequency completions beneath it, not just the children's prefixes. Traversal is O(length of prefix) = O(3) for 'sta', with O(1) list retrieval. The trie is built offline (MapReduce over query logs) and loaded into each serving machine's memory (~10GB compressed). LIKE queries on SQL are slow even with B-tree indexes (no range scan for suffix patterns). Redis caching only covers hot prefixes; trie handles all prefixes uniformly. Elasticsearch completion suggester is a production alternative (Spotify uses it) but has higher latency than in-memory trie.",
+        "Google's typeahead uses a trie with pre-aggregated top-K lists at each node - this is the canonical answer. Each internal node stores the K highest-frequency completions beneath it, not just the children's prefixes. Traversal is O(length of prefix) = O(3) for 'sta', with O(1) list retrieval. The trie is built offline (MapReduce over query logs) and loaded into each serving machine's memory (~10GB compressed). LIKE queries on SQL are slow even with B-tree indexes (no range scan for suffix patterns). Redis caching only covers hot prefixes; trie handles all prefixes uniformly. Elasticsearch completion suggester is a production alternative (Spotify uses it) but has higher latency than in-memory trie.",
       hints: [
         "Key trie optimization: store top-K completions at EVERY node, not just leaf nodes. Traversing 'sta' returns the pre-computed top-5 without scanning all children.",
         "Trie memory: 10B queries \\times average 30 chars = ~300GB raw; frequency aggregation collapses to ~50M unique prefixes \\times top-5 entries \\approx manageable with compression.",
@@ -2469,7 +2469,7 @@ const famous2: Record<string, Question[]> = {
         "For a typeahead system, displaying personalized completions (based on the individual user's past queries) requires the same trie data structure as global completions, just partitioned by user_id.",
       correctAnswer: "False",
       explanation:
-        "Personalized completions require a fundamentally different architecture. A global trie aggregates frequencies across all users — you cannot shard it by user_id while maintaining global top-K semantics. Personalization is typically done by a separate lightweight model: (1) fetch top-K global completions from the global trie; (2) re-rank using a per-user model that boosts completions matching the user's past query history, location, language, and session context. The re-ranking model (logistic regression or small neural net) runs in-memory with the user's profile vector. This two-stage approach (retrieve then personalize) keeps the global trie simple while enabling personalization.",
+        "Personalized completions require a fundamentally different architecture. A global trie aggregates frequencies across all users - you cannot shard it by user_id while maintaining global top-K semantics. Personalization is typically done by a separate lightweight model: (1) fetch top-K global completions from the global trie; (2) re-rank using a per-user model that boosts completions matching the user's past query history, location, language, and session context. The re-ranking model (logistic regression or small neural net) runs in-memory with the user's profile vector. This two-stage approach (retrieve then personalize) keeps the global trie simple while enabling personalization.",
       hints: [
         "Two-stage: global retrieval (trie) + per-user re-ranking (lightweight ML model). Same pattern used in recommendation systems.",
         "User query history is typically stored as a bloom filter or recency-weighted frequency vector, not a full trie.",
@@ -2485,13 +2485,13 @@ const famous2: Record<string, Question[]> = {
         "Design Netflix: a user in Mumbai clicks play on a 4K video. Describe the critical path from click to first frame playing, focusing on how Netflix avoids serving 4K video from its US origin servers.",
       options: [
         "Netflix's origin servers in US stream directly to the user. Adaptive bitrate (ABR) reduces the resolution to 720p for users far from the origin to compensate for latency.",
-        "Netflix uses its Open Connect CDN: ISPs host Netflix Open Connect Appliances (OCA) inside their own networks. The Mumbai ISP's OCA has pre-fetched popular titles overnight via proactive caching (Zipf distribution — top 20% of titles = 80% of plays). The player requests the video from the nearest OCA, serving from local storage with sub-millisecond network hops inside the ISP.",
+        "Netflix uses its Open Connect CDN: ISPs host Netflix Open Connect Appliances (OCA) inside their own networks. The Mumbai ISP's OCA has pre-fetched popular titles overnight via proactive caching (Zipf distribution - top 20% of titles = 80% of plays). The player requests the video from the nearest OCA, serving from local storage with sub-millisecond network hops inside the ISP.",
         "Netflix uses AWS CloudFront edge locations. The Mumbai CloudFront PoP caches video segments on-demand (cache-on-miss). The first viewer of an unpopular title fetches from S3 origin and populates the edge cache for subsequent viewers.",
         "Netflix streams via WebRTC peer-to-peer: users in the same city share video chunks with each other, reducing origin server load.",
       ],
       correctAnswer: 1,
       explanation:
-        "Netflix's Open Connect is the key differentiator: Netflix partners with ~1000 ISPs globally to place its own servers (OCAs) inside ISP data centers. OCAs proactively fill overnight with the most popular titles predicted for the next day (Zipf distribution means ~95% of plays hit cached content). This means 4K video plays entirely inside the local ISP's network — zero internet backbone traversal. The CDN cost is physical servers at ISPs, not per-GB bandwidth. For uncached long-tail content, OCAs fall back to Netflix's origin (AWS S3 + EC2). The player uses ABR (DASH or HLS): it fetches short 2-4 second segments and dynamically selects bitrate based on measured throughput, enabling smooth startup and quality adaptation.",
+        "Netflix's Open Connect is the key differentiator: Netflix partners with ~1000 ISPs globally to place its own servers (OCAs) inside ISP data centers. OCAs proactively fill overnight with the most popular titles predicted for the next day (Zipf distribution means ~95% of plays hit cached content). This means 4K video plays entirely inside the local ISP's network - zero internet backbone traversal. The CDN cost is physical servers at ISPs, not per-GB bandwidth. For uncached long-tail content, OCAs fall back to Netflix's origin (AWS S3 + EC2). The player uses ABR (DASH or HLS): it fetches short 2-4 second segments and dynamically selects bitrate based on measured throughput, enabling smooth startup and quality adaptation.",
       hints: [
         "Open Connect = Netflix's own CDN, not a third-party. Key advantage: ISP placement means video traffic never leaves the ISP's network.",
         "Proactive caching: OCAs pull popular content overnight during off-peak hours, using predicted demand models. Reactive caching would cause slow first-play for popular titles.",
@@ -2504,7 +2504,7 @@ const famous2: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Design Uber: 1M drivers send GPS location updates every 4 seconds. A rider requests a trip — the system must find all available drivers within 5km in <200ms. Which geospatial indexing approach does Uber use and why?",
+        "Design Uber: 1M drivers send GPS location updates every 4 seconds. A rider requests a trip - the system must find all available drivers within 5km in <200ms. Which geospatial indexing approach does Uber use and why?",
       options: [
         "MySQL with lat/lng columns and a query: SELECT * FROM drivers WHERE lat BETWEEN rider_lat-0.045 AND rider_lat+0.045 AND lng BETWEEN rider_lng-0.045 AND rider_lng+0.045. Add a composite B-tree index on (lat, lng).",
         "Google S2 geometry: divide Earth into a hierarchy of cells using the Hilbert space-filling curve. Each driver's location maps to an S2 cell ID at multiple precisions. Store driver locations in a key-value store keyed by S2 cell ID. Query: fetch all drivers in the target S2 cells covering the 5km radius. S2 cells at level 14 are ~600m across, so a 5km radius requires ~50 S2 cells. Cell IDs are 64-bit integers enabling fast integer-key lookups.",
@@ -2513,7 +2513,7 @@ const famous2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Uber uses Google S2 geometry (open-sourced). The Hilbert curve property is critical: nearby points on Earth map to nearby S2 cell IDs, enabling range queries with integer key comparisons. At level 14 (~600m cells), a 5km radius needs ~50 cells — fetch all drivers with cell IDs in those 50 cells from a distributed KV store (Uber uses Riak/DynamoDB). Driver location updates (1M \\times 15/min = 15M writes/min) write to the KV store keyed by cell ID. S2 advantages over geohash: (1) equal-area cells at each level; (2) exact coverage of arbitrary regions without edge artifacts; (3) hierarchical — same system handles city-level and street-level queries. QuadTree works but requires in-memory data structure management across server restarts.",
+        "Uber uses Google S2 geometry (open-sourced). The Hilbert curve property is critical: nearby points on Earth map to nearby S2 cell IDs, enabling range queries with integer key comparisons. At level 14 (~600m cells), a 5km radius needs ~50 cells - fetch all drivers with cell IDs in those 50 cells from a distributed KV store (Uber uses Riak/DynamoDB). Driver location updates (1M \\times 15/min = 15M writes/min) write to the KV store keyed by cell ID. S2 advantages over geohash: (1) equal-area cells at each level; (2) exact coverage of arbitrary regions without edge artifacts; (3) hierarchical - same system handles city-level and street-level queries. QuadTree works but requires in-memory data structure management across server restarts.",
       hints: [
         "Hilbert curve: maps 2D space to 1D while preserving locality. Adjacent points in 2D have close IDs in 1D, enabling range queries.",
         "Driver location update: S2 cell ID at multiple levels = cell ID at level 8 (city block), 12 (neighborhood), 14 (street). Store all three for multi-precision queries.",
@@ -2526,16 +2526,16 @@ const famous2: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Design a payment system like Stripe: a user clicks 'Pay $100' and your server calls the payment processor. The network times out — you don't know if the charge succeeded. How do you prevent double-charging while ensuring the payment eventually completes?",
+        "Design a payment system like Stripe: a user clicks 'Pay $100' and your server calls the payment processor. The network times out - you don't know if the charge succeeded. How do you prevent double-charging while ensuring the payment eventually completes?",
       options: [
         "Retry the API call immediately. If the payment processor returns 'already charged', catch that error and treat the payment as successful.",
         "Never retry. On timeout, mark the order as 'pending' and require the user to manually retry the payment from the UI.",
-        "Generate a client-generated idempotency key (UUID) per payment attempt before the API call. Send this key as a header (Idempotency-Key: <uuid>) on every attempt. The payment processor stores (idempotency_key, result) in its DB with a unique constraint. Retries with the same key return the cached result — guaranteed exactly-once processing regardless of retries or timeouts.",
+        "Generate a client-generated idempotency key (UUID) per payment attempt before the API call. Send this key as a header (Idempotency-Key: <uuid>) on every attempt. The payment processor stores (idempotency_key, result) in its DB with a unique constraint. Retries with the same key return the cached result - guaranteed exactly-once processing regardless of retries or timeouts.",
         "Use two-phase commit (2PC) between your DB and the payment processor's DB. Phase 1: prepare both sides. Phase 2: commit if both prepared successfully. On coordinator failure, the transaction rolls back.",
       ],
       correctAnswer: 2,
       explanation:
-        "Idempotency keys are the industry-standard solution (Stripe, PayPal, Braintree all implement this). The client generates a UUID before the first attempt and reuses it on all retries for the same logical payment. The payment processor stores (idempotency_key \\to result) with a UNIQUE constraint — duplicate requests return the stored result without re-executing. This is safe to implement with a Redis SET NX (set if not exists) or DB UNIQUE constraint. The key insight: the idempotency key is client-generated (not server-generated) so it survives network failures. 2PC is impractical with external payment processors (they don't expose distributed transaction APIs). Option A depends on the processor returning a specific error — not guaranteed across all processors.",
+        "Idempotency keys are the industry-standard solution (Stripe, PayPal, Braintree all implement this). The client generates a UUID before the first attempt and reuses it on all retries for the same logical payment. The payment processor stores (idempotency_key \\to result) with a UNIQUE constraint - duplicate requests return the stored result without re-executing. This is safe to implement with a Redis SET NX (set if not exists) or DB UNIQUE constraint. The key insight: the idempotency key is client-generated (not server-generated) so it survives network failures. 2PC is impractical with external payment processors (they don't expose distributed transaction APIs). Option A depends on the processor returning a specific error - not guaranteed across all processors.",
       hints: [
         "Idempotency key lifecycle: generate before first attempt, store with the order in your DB, send on every retry. Expire keys after 24-48 hours.",
         "Stripe's implementation: Idempotency-Key header + DB unique index on (customer_id, idempotency_key). Returns cached response for up to 24 hours.",
@@ -2551,13 +2551,13 @@ const famous2: Record<string, Question[]> = {
         "Design a distributed key-value store like DynamoDB/Cassandra: you need write-optimized storage handling 1M writes/second to a single node. Which storage engine design explains why LSM trees outperform B-trees for this workload?",
       options: [
         "B-tree: writes update nodes in-place on disk. Random writes cause disk seeks. At 1M writes/s, a spinning disk (150 seeks/s) saturates immediately. SSDs handle random writes faster but still suffer write amplification from B-tree node splits.",
-        "LSM tree (Log-Structured Merge-tree): writes go to an in-memory buffer (MemTable), then sequentially to disk as immutable SSTables. Sequential writes maximize disk throughput. Background compaction merges SSTables. Read performance trades off against write performance — reads may require checking multiple SSTables (mitigated by Bloom filters per SSTable).",
+        "LSM tree (Log-Structured Merge-tree): writes go to an in-memory buffer (MemTable), then sequentially to disk as immutable SSTables. Sequential writes maximize disk throughput. Background compaction merges SSTables. Read performance trades off against write performance - reads may require checking multiple SSTables (mitigated by Bloom filters per SSTable).",
         "Both B-tree and LSM tree have the same write throughput because SSD random write IOPS (100K+) exceeds the 1M writes/s requirement at the data-per-operation level.",
         "LSM tree buffers writes in memory until a crash, making it unsuitable for durability requirements without a write-ahead log (WAL). B-trees are more durable by default.",
       ],
       correctAnswer: 1,
       explanation:
-        "LSM trees optimize for write throughput by converting random writes into sequential disk writes. Write path: (1) append to WAL for durability; (2) write to in-memory MemTable (AVL tree or skip list); (3) when MemTable is full (~64MB), flush to a sorted SSTable on disk sequentially. Sequential writes achieve full disk bandwidth (GB/s vs MB/s for random). Compaction merges SSTables to reclaim space and maintain read performance. Bloom filters (one per SSTable, ~10 bits/key) answer 'does this key exist in this SSTable?' with O(1) and ~1% false positive rate — avoiding disk reads for missing keys. B-trees update in-place with random writes, causing write amplification from page splits and rebalancing. RocksDB (Facebook) is the canonical LSM implementation, used by DynamoDB, Cassandra, and many others.",
+        "LSM trees optimize for write throughput by converting random writes into sequential disk writes. Write path: (1) append to WAL for durability; (2) write to in-memory MemTable (AVL tree or skip list); (3) when MemTable is full (~64MB), flush to a sorted SSTable on disk sequentially. Sequential writes achieve full disk bandwidth (GB/s vs MB/s for random). Compaction merges SSTables to reclaim space and maintain read performance. Bloom filters (one per SSTable, ~10 bits/key) answer 'does this key exist in this SSTable?' with O(1) and ~1% false positive rate - avoiding disk reads for missing keys. B-trees update in-place with random writes, causing write amplification from page splits and rebalancing. RocksDB (Facebook) is the canonical LSM implementation, used by DynamoDB, Cassandra, and many others.",
       hints: [
         "LSM write path: WAL (durability) \\to MemTable (speed) \\to SSTable (persistence). WAL + MemTable = writes survive crash; WAL is sequential append.",
         "Bloom filter per SSTable: before reading SSTable for a key, check Bloom filter. If negative, skip SSTable entirely. Reduces read amplification from O(SSTables) to O(1) for missing keys.",
@@ -2572,14 +2572,14 @@ const famous2: Record<string, Question[]> = {
       question:
         "Design Twitter's home timeline: a user with 500 followers posts a tweet. Another user follows 2000 accounts and opens their feed. Twitter tried both fan-out-on-write and fan-out-on-read. Which approach does Twitter use in production and why?",
       options: [
-        "Pure fan-out-on-read (pull): when a user opens their feed, query all 2000 followed accounts for their recent tweets, merge and sort by time. Simple but slow at read time — 2000 DB queries per feed load.",
-        "Pure fan-out-on-write (push): when a user posts, write the tweet ID to each follower's timeline cache (Redis sorted set). Feed reads are O(1). Problem: a celebrity with 30M followers causes 30M Redis writes per tweet — write latency is unacceptable.",
-        "Hybrid: fan-out-on-write for normal users (\\leq ~10K followers) into each follower's Redis timeline cache. For celebrities (> threshold), use fan-out-on-read at render time — fetch celebrity tweets separately and merge with the pre-computed timeline. This limits write fan-out to manageable sizes while keeping reads fast for all users.",
+        "Pure fan-out-on-read (pull): when a user opens their feed, query all 2000 followed accounts for their recent tweets, merge and sort by time. Simple but slow at read time - 2000 DB queries per feed load.",
+        "Pure fan-out-on-write (push): when a user posts, write the tweet ID to each follower's timeline cache (Redis sorted set). Feed reads are O(1). Problem: a celebrity with 30M followers causes 30M Redis writes per tweet - write latency is unacceptable.",
+        "Hybrid: fan-out-on-write for normal users (\\leq ~10K followers) into each follower's Redis timeline cache. For celebrities (> threshold), use fan-out-on-read at render time - fetch celebrity tweets separately and merge with the pre-computed timeline. This limits write fan-out to manageable sizes while keeping reads fast for all users.",
         "Fan-out-on-write for all users, using Kafka to buffer the 30M writes asynchronously. The celebrity's 30M followers all eventually receive the tweet within 5 seconds.",
       ],
       correctAnswer: 2,
       explanation:
-        "Twitter's production system (documented in their engineering blog) uses the hybrid approach. Fan-out-on-write: posting a tweet triggers async writes of the tweet ID to each follower's timeline Redis sorted set (score = tweet timestamp). Read: fetch tweet IDs from Redis, hydrate from tweet cache. This gives O(1) reads. Problem: Katy Perry has 100M followers — fan-out would mean 100M Redis writes per tweet, causing multi-second write latency. Solution: detect high-follower accounts (celebrities), skip fan-out for them, and at read time merge the user's pre-computed timeline with a separate fetch of celebrity tweets. This bounds fan-out write latency while keeping read latency fast (one precomputed list + small number of celebrity queries).",
+        "Twitter's production system (documented in their engineering blog) uses the hybrid approach. Fan-out-on-write: posting a tweet triggers async writes of the tweet ID to each follower's timeline Redis sorted set (score = tweet timestamp). Read: fetch tweet IDs from Redis, hydrate from tweet cache. This gives O(1) reads. Problem: Katy Perry has 100M followers - fan-out would mean 100M Redis writes per tweet, causing multi-second write latency. Solution: detect high-follower accounts (celebrities), skip fan-out for them, and at read time merge the user's pre-computed timeline with a separate fetch of celebrity tweets. This bounds fan-out write latency while keeping read latency fast (one precomputed list + small number of celebrity queries).",
       hints: [
         "Fan-out-on-write complexity: O(followers) writes per tweet, O(1) reads. Fan-out-on-read: O(1) writes, O(following) reads. Hybrid balances both.",
         "Celebrity threshold: Twitter uses ~10K followers as the heuristic. Above this, the account is excluded from fan-out and handled at read time.",
@@ -2595,15 +2595,15 @@ const famous2: Record<string, Question[]> = {
         "Design a web crawler for Google Search: you need to crawl 10 billion pages in 30 days (~4000 pages/second). What are the three most critical systems design challenges and their solutions?",
       options: [
         "(1) Speed: use 1000 crawler threads. (2) Storage: store all HTML in a single MySQL DB. (3) Politeness: crawl each domain as fast as possible to finish quickly.",
-        "(1) URL deduplication: keep a distributed Bloom filter (or hashset) of seen URLs — prevents re-crawling. (2) Politeness: per-domain crawl delay (respect robots.txt + 1 req/s default) using per-domain priority queues. (3) URL frontier prioritization: prioritize high-PageRank, frequently-updated pages using a multi-level priority queue + back queue routing by domain.",
+        "(1) URL deduplication: keep a distributed Bloom filter (or hashset) of seen URLs - prevents re-crawling. (2) Politeness: per-domain crawl delay (respect robots.txt + 1 req/s default) using per-domain priority queues. (3) URL frontier prioritization: prioritize high-PageRank, frequently-updated pages using a multi-level priority queue + back queue routing by domain.",
         "(1) Download speed: fetch pages in parallel using async I/O (aiohttp). (2) Parser: extract links using regex, not HTML parsing libraries. (3) Storage: write raw HTML to HDFS for later processing.",
         "(1) Robots.txt: check robots.txt before crawling each page on every request. (2) DNS: resolve each domain's IP via public DNS on every request. (3) Deduplication: use exact URL string matching in a SQL database.",
       ],
       correctAnswer: 1,
       explanation:
-        "The three canonical challenges for web crawlers at Google scale: (1) Deduplication: 10B pages produce far more URLs (links create cycles and duplicates). A Bloom filter with 10B bits \\approx 1.2GB memory handles 10B URLs with ~1% false positive rate — far cheaper than a hash set. (2) Politeness: crawling too aggressively gets your IP blocked and violates robots.txt. Each domain gets its own queue processed at the allowed rate. (3) URL prioritization: not all pages are equal. PageRank estimate, update frequency (sitemaps), and content quality determine crawl priority. A two-level queue (front queue for priority, back queue by domain for politeness) is the standard architecture. DNS caching is also critical — 4000 req/s with uncached DNS means 4000 DNS lookups/s; cache TTL of 1 hour reduces this by 100-1000x.",
+        "The three canonical challenges for web crawlers at Google scale: (1) Deduplication: 10B pages produce far more URLs (links create cycles and duplicates). A Bloom filter with 10B bits \\approx 1.2GB memory handles 10B URLs with ~1% false positive rate - far cheaper than a hash set. (2) Politeness: crawling too aggressively gets your IP blocked and violates robots.txt. Each domain gets its own queue processed at the allowed rate. (3) URL prioritization: not all pages are equal. PageRank estimate, update frequency (sitemaps), and content quality determine crawl priority. A two-level queue (front queue for priority, back queue by domain for politeness) is the standard architecture. DNS caching is also critical - 4000 req/s with uncached DNS means 4000 DNS lookups/s; cache TTL of 1 hour reduces this by 100-1000x.",
       hints: [
-        "Bloom filter false positive tradeoff: at 10 bits/element, false positive rate \\approx 0.8%. A false positive means a new URL is incorrectly marked as seen and skipped — acceptable for a crawler.",
+        "Bloom filter false positive tradeoff: at 10 bits/element, false positive rate \\approx 0.8%. A false positive means a new URL is incorrectly marked as seen and skipped - acceptable for a crawler.",
         "robots.txt caching: fetch and cache robots.txt per domain (not per page). Re-fetch every 24 hours. Checking robots.txt on every request adds latency and violates the spirit of the standard.",
       ],
     },
@@ -2627,7 +2627,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation: "Two-tower models separate user and item encoders. At serving time item embeddings are precomputed once and indexed in a vector database (FAISS, ScaNN, Qdrant). For each query, only the user tower runs in real time, producing a query vector; ANN search retrieves top-k items in O(log N) time. If the model used feature interactions at each layer, item representations would depend on the query and could not be pre-indexed. The independence constraint enables scale at the cost of not modeling feature interactions during retrieval.",
       hints: [
-        "ANN trade-off: exact kNN is O(N) per query — infeasible for N=10B. HNSW and IVF-PQ achieve O(log N) or better with 95-99% recall.",
+        "ANN trade-off: exact kNN is O(N) per query - infeasible for N=10B. HNSW and IVF-PQ achieve O(log N) or better with 95-99% recall.",
         "Independence requirement: item tower output must not depend on query features. Any user-item feature interaction must be deferred to the ranking stage.",
       ],
     },
@@ -2637,10 +2637,10 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "hard",
       question: "A two-tower retrieval model trained with in-batch negatives has a systematic sampling bias. What is it and how is it corrected?",
       options: [
-        "In-batch negatives oversample popular items as negatives (popular items appear more in batches), making the model incorrectly learn popular items are negative — corrected by logQ correction: subtracting log(sampling_probability) from each negative's logit before softmax",
-        "In-batch negatives undersample rare items causing overfitting to popular items — corrected by stratified sampling equalizing item frequency in batches",
-        "In-batch negatives create false positives because some batch items might be positive for other users — corrected by masking known positives across the batch",
-        "In-batch negatives have too small a batch size to represent the full item distribution — corrected by using a memory bank of randomly sampled hard negatives",
+        "In-batch negatives oversample popular items as negatives (popular items appear more in batches), making the model incorrectly learn popular items are negative - corrected by logQ correction: subtracting log(sampling_probability) from each negative's logit before softmax",
+        "In-batch negatives undersample rare items causing overfitting to popular items - corrected by stratified sampling equalizing item frequency in batches",
+        "In-batch negatives create false positives because some batch items might be positive for other users - corrected by masking known positives across the batch",
+        "In-batch negatives have too small a batch size to represent the full item distribution - corrected by using a memory bank of randomly sampled hard negatives",
       ],
       correctAnswer: 0,
       explanation: "In-batch negative sampling has systematic popularity bias: items appear as negatives proportional to their frequency in training data. Popular items are seen as negative far more often than random, causing the model to underrank them. LogQ correction (YouTube DNN, Covington et al. 2016): subtract log(p_i) from the dot product score of negative item i before softmax, where p_i is its sampling probability. This deweights high-frequency negatives, letting the model learn true preference signal rather than a frequency artifact.",
@@ -2658,8 +2658,8 @@ const extraMsdQ3: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "The retrieval-ranking architecture exists to enable this split: retrieval (two-tower ANN) must score billions of items and can only use simple dot-product-compatible features; ranking scores only 100-1000 candidates and can use arbitrarily complex features including user-item cross-features, real-time context, and deep feature interactions (DCN, DeepFM, attention). The ranking model can be much larger and more expensive because its candidate set is tiny.",
       hints: [
-        "Retrieval: O(log N) per query, N=10B, must be fast — simple dot product, pre-indexed items.",
-        "Ranking: O(K) per query, K=500, can be slow — deep feature interaction models, cross-features, sequential attention.",
+        "Retrieval: O(log N) per query, N=10B, must be fast - simple dot product, pre-indexed items.",
+        "Ranking: O(K) per query, K=500, can be slow - deep feature interaction models, cross-features, sequential attention.",
       ],
     },
     {
@@ -2669,7 +2669,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       question: "Cold-start problem: a new item with zero interaction history must be recommended. Which approach best handles cold-start in a two-tower retrieval system?",
       options: [
         "Exclude new items from retrieval until they accumulate at least 100 interactions, ensuring embedding quality",
-        "Use the item content tower (trained on item metadata: title, description, category, price) to generate an embedding from content features alone, bypassing interaction history, and index this embedding directly in the ANN index — update with interaction-based embeddings as data accumulates",
+        "Use the item content tower (trained on item metadata: title, description, category, price) to generate an embedding from content features alone, bypassing interaction history, and index this embedding directly in the ANN index - update with interaction-based embeddings as data accumulates",
         "Assign new items the average embedding of all items in the same category as a cold-start embedding",
         "Use a popularity-based fallback recommending new items uniformly at random to a fraction of users until enough interactions are collected",
       ],
@@ -2688,7 +2688,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "hard",
       question: "A low-latency ML serving system must achieve p99 < 50ms for a ranking model requiring 500 features. Feature computation is the bottleneck. What architecture reduces latency most effectively?",
       options: [
-        "Cache all features in Redis with a 24-hour TTL — the model always reads from cache, missing features filled with zeros",
+        "Cache all features in Redis with a 24-hour TTL - the model always reads from cache, missing features filled with zeros",
         "Split features by staleness tolerance: precompute slow/expensive features into a low-latency feature store (Redis/Cassandra) updated hourly, and compute fresh/context features via streaming (Flink/Kafka) with sub-second latency. Retrieve precomputed features in parallel with inference, serving the union at query time",
         "Use synchronous feature computation: compute all 500 features sequentially on each request to ensure freshness",
         "Reduce the model to use only 50 features that can be computed within the latency budget, accepting the accuracy trade-off",
@@ -2709,13 +2709,13 @@ const extraMsdQ3: Record<string, Question[]> = {
         "Cache the final model output (ranked item list) per user with a 1-minute TTL",
         "Cache the user embedding (intermediate representation) with a TTL calibrated to the rate user preferences change (typically 1-60 minutes), invalidating on significant new events (purchase, session start), recomputing only on cache misses",
         "Cache the full feature vector for each user with a 24-hour TTL",
-        "Use no caching — always recompute fresh embeddings for every request to maximize recommendation quality",
+        "Use no caching - always recompute fresh embeddings for every request to maximize recommendation quality",
       ],
       correctAnswer: 1,
       explanation: "Caching intermediate representations (embeddings) is more flexible than caching model outputs: the same cached user embedding can be reused across different contexts (different item catalogs, A/B test variants, different ranking models). User embedding TTL should be calibrated to behavioral change rate. Event-driven invalidation (clear cache on purchase or session start) ensures major behavioral changes are reflected quickly. This reduces expensive user history loading by 80-95% during peak traffic while maintaining recommendation quality.",
       hints: [
         "Embedding cache hit rate: if users make 5 requests/session within 10 minutes, a 10-minute TTL achieves ~80% cache hit rate.",
-        "Invalidation events: purchase, session start, explicit negative feedback — these signal significant preference changes making cached embeddings stale.",
+        "Invalidation events: purchase, session start, explicit negative feedback - these signal significant preference changes making cached embeddings stale.",
       ],
     },
     {
@@ -2739,7 +2739,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "medium",
       question: "A data flywheel is a self-reinforcing feedback loop in ML products. Which correctly describes the mechanism and its key design requirement?",
       options: [
-        "More users -> more data -> better model -> more users. The key design requirement is that user interactions must generate labeled training data — through explicit feedback (ratings, likes) or implicit feedback (clicks, dwell time, purchases) treated as weak labels",
+        "More users -> more data -> better model -> more users. The key design requirement is that user interactions must generate labeled training data - through explicit feedback (ratings, likes) or implicit feedback (clicks, dwell time, purchases) treated as weak labels",
         "More data -> more compute -> better model -> more data. The key requirement is a large GPU cluster to process all collected data in real time",
         "Better model -> lower latency -> more users -> more data. The key requirement is a fast inference engine serving all users within SLO",
         "More users -> more A/B tests -> better experiments -> better model. The key requirement is a sophisticated experimentation platform",
@@ -2757,13 +2757,13 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "hard",
       question: "A content moderation system uses HITL review where the ML model flags items for human review and human decisions become training labels. What is the critical failure mode?",
       options: [
-        "Human reviewers are too slow — prevented by hiring more reviewers or setting shorter SLAs",
-        "Confirmation bias feedback loop: the model only sends uncertain items to humans, so human labels only cover the uncertain region. The model never learns from items it confidently auto-approves or auto-rejects — prevented by (a) sampling a random fraction of all traffic for human review regardless of confidence, and (b) tracking auto-decision accuracy via periodic audits",
-        "Human reviewers disagree with each other — prevented by enforcing strict annotation guidelines and removing disagreed labels",
+        "Human reviewers are too slow - prevented by hiring more reviewers or setting shorter SLAs",
+        "Confirmation bias feedback loop: the model only sends uncertain items to humans, so human labels only cover the uncertain region. The model never learns from items it confidently auto-approves or auto-rejects - prevented by (a) sampling a random fraction of all traffic for human review regardless of confidence, and (b) tracking auto-decision accuracy via periodic audits",
+        "Human reviewers disagree with each other - prevented by enforcing strict annotation guidelines and removing disagreed labels",
         "The model overtakes human accuracy after sufficient training, making human review wasteful",
       ],
       correctAnswer: 1,
-      explanation: "The confirmation bias loop in HITL: if humans only review model-uncertain items (typical for efficiency), training data is biased toward uncertain cases. Items the model confidently auto-approves — potentially including false negatives (harmful content the model is confidently missing) — never get human labels. Prevention: (1) Random sampling audit: send 1-5% of all auto-approved and auto-rejected items for human review regardless of confidence. (2) Periodic error analysis: compare model decisions to human decisions on sampled items to measure false negative rate. (3) Active learning prioritizes regions where errors are most harmful.",
+      explanation: "The confirmation bias loop in HITL: if humans only review model-uncertain items (typical for efficiency), training data is biased toward uncertain cases. Items the model confidently auto-approves - potentially including false negatives (harmful content the model is confidently missing) - never get human labels. Prevention: (1) Random sampling audit: send 1-5% of all auto-approved and auto-rejected items for human review regardless of confidence. (2) Periodic error analysis: compare model decisions to human decisions on sampled items to measure false negative rate. (3) Active learning prioritizes regions where errors are most harmful.",
       hints: [
         "False negative risk in content moderation: missing harmful content (auto-approved). The HITL loop is most blind to these when sampling only uncertain cases.",
         "Audit rate: 1-5% random audit provides statistical power to detect 5-10% error rates in auto-decisions with 95% confidence.",
@@ -2776,7 +2776,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       question: "Weak supervision (e.g., Snorkel's labeling functions) can generate training labels at scale without human annotation for every sample, making it effective for bootstrapping initial training datasets in data-scarce domains.",
       options: ["True", "False"],
       correctAnswer: "True",
-      explanation: "Weak supervision (Ratner et al. 2016, Snorkel) uses multiple weak, noisy label sources called labeling functions (LFs) — heuristics, patterns, external knowledge bases, pre-trained models. Snorkel's label model combines LF outputs using a generative model estimating LF accuracies and correlations, producing soft probabilistic labels that train a discriminative model. This enables generating millions of training labels without hand-labeling each sample, at the cost of some label noise. Used in FDA, Google, and Apple production ML pipelines for medical record classification, content moderation, and information extraction.",
+      explanation: "Weak supervision (Ratner et al. 2016, Snorkel) uses multiple weak, noisy label sources called labeling functions (LFs) - heuristics, patterns, external knowledge bases, pre-trained models. Snorkel's label model combines LF outputs using a generative model estimating LF accuracies and correlations, producing soft probabilistic labels that train a discriminative model. This enables generating millions of training labels without hand-labeling each sample, at the cost of some label noise. Used in FDA, Google, and Apple production ML pipelines for medical record classification, content moderation, and information extraction.",
       hints: [
         "LF examples: keyword rules (contains 'buy now' -> spam), external classifiers (sentiment model -> positive), distant supervision (entity in Wikipedia -> entity type).",
         "Weak supervision vs zero-shot: weak supervision uses domain-specific heuristics to generate training data; zero-shot uses a pre-trained model directly without domain-specific labels.",
@@ -2788,10 +2788,10 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "medium",
       question: "A search ranking data flywheel uses user clicks as implicit training labels. What is the biggest threat to training data quality and how should it be mitigated?",
       options: [
-        "Users click too rarely, creating too few training examples — mitigated by boosting CTR via UI changes",
-        "Position bias: users are more likely to click results at rank 1 than rank 5 regardless of relevance, causing the model trained on click data to reinforce already-highly-ranked results — mitigated by inverse propensity scoring (IPS) that deweights clicks on high-rank positions, or by randomized result injection to collect unbiased click data",
-        "Users click on irrelevant results by mistake — mitigated by requiring users to dwell on results for at least 30 seconds before counting as positive",
-        "Different users have different click behaviors — mitigated by personalizing training data by clustering users and training separate models per cluster",
+        "Users click too rarely, creating too few training examples - mitigated by boosting CTR via UI changes",
+        "Position bias: users are more likely to click results at rank 1 than rank 5 regardless of relevance, causing the model trained on click data to reinforce already-highly-ranked results - mitigated by inverse propensity scoring (IPS) that deweights clicks on high-rank positions, or by randomized result injection to collect unbiased click data",
+        "Users click on irrelevant results by mistake - mitigated by requiring users to dwell on results for at least 30 seconds before counting as positive",
+        "Different users have different click behaviors - mitigated by personalizing training data by clustering users and training separate models per cluster",
       ],
       correctAnswer: 1,
       explanation: "Position bias is the dominant threat to search click log quality: P(click | position=1) >> P(click | relevance) for most users. A model trained naively on click data learns 'show at rank 1 -> gets clicks -> is relevant', which is backwards. IPS corrects this: weight each click by 1/P(click | position), where propensity P(click | position) is estimated from randomized experiments (swap top-2 results, measure click rate changes). This deweights high-position clicks and upweights low-position clicks. Unbiased learning to rank (ULTR) frameworks formalize this correction.",
@@ -2827,7 +2827,7 @@ const extraMsdQ3: Record<string, Question[]> = {
       question: "Federated learning completely prevents the central server from learning anything about individual client data, even without secure aggregation or differential privacy.",
       options: ["True", "False"],
       correctAnswer: "False",
-      explanation: "Without secure aggregation or DP, the central server sees each client's gradient update, which can leak significant information about local data. Gradient inversion attacks (Zhu et al. 2019, Deep Leakage from Gradients) demonstrate that raw pixel-level training images can be reconstructed from gradients with high fidelity, especially for small batch sizes. The attack optimizes a dummy input to match the observed gradient, effectively inverting the gradient computation. FL alone provides much weaker privacy than commonly assumed — gradients are not private.",
+      explanation: "Without secure aggregation or DP, the central server sees each client's gradient update, which can leak significant information about local data. Gradient inversion attacks (Zhu et al. 2019, Deep Leakage from Gradients) demonstrate that raw pixel-level training images can be reconstructed from gradients with high fidelity, especially for small batch sizes. The attack optimizes a dummy input to match the observed gradient, effectively inverting the gradient computation. FL alone provides much weaker privacy than commonly assumed - gradients are not private.",
       hints: [
         "Gradient inversion attack: given gradient dL/dW, find input x* such that dL(f(x*), y)/dW = gradient. For batch size 1, this nearly perfectly recovers the training image.",
         "Attack mitigation: gradient compression (top-k sparsification), differential privacy, or secure aggregation all reduce gradient inversion risk.",
@@ -2839,16 +2839,16 @@ const extraMsdQ3: Record<string, Question[]> = {
       difficulty: "hard",
       question: "A federated learning system for mobile keyboard prediction must manage the global privacy budget across millions of daily training rounds. Which approach correctly handles budget tracking?",
       options: [
-        "Set a per-round epsilon budget and allow unlimited training rounds — privacy loss is bounded per round so total loss is acceptable",
+        "Set a per-round epsilon budget and allow unlimited training rounds - privacy loss is bounded per round so total loss is acceptable",
         "Apply the moments accountant (Abadi et al. 2016) or Renyi DP composition to track cumulative privacy budget across all training rounds. Stop training or increase noise when the total epsilon reaches the budget. Each additional round consumes additional budget, so number of rounds is inherently limited for a fixed noise level",
         "Reset the privacy budget to zero after each model release, since deployed models cannot be queried for training data",
-        "Use per-user privacy budgets — each user has their own epsilon and users who have spent their budget are excluded from future training rounds",
+        "Use per-user privacy budgets - each user has their own epsilon and users who have spent their budget are excluded from future training rounds",
       ],
       correctAnswer: 1,
       explanation: "Privacy budget composition is fundamental: training for T rounds with per-round epsilon_r does NOT give total epsilon = epsilon_r. The moments accountant tracks privacy loss distribution across rounds precisely using Renyi DP composition, which is tighter than naive composition (T * epsilon_r). For large T, total epsilon grows as O(sqrt(T)). Once the total epsilon budget is spent, training must stop or noise must increase. This creates a fundamental tension: more training = better model but worse privacy. Systems must define a privacy policy (e.g., epsilon <= 10 per year per dataset) and plan training schedules accordingly.",
       hints: [
         "Moments accountant vs naive composition: for T=1000 rounds at epsilon_r=0.1, naive gives epsilon_total=100, moments accountant gives ~3-5. Much tighter.",
-        "Privacy budget per model version: some teams treat each model release as a new privacy domain and restart budget tracking — actively debated in the DP community.",
+        "Privacy budget per model version: some teams treat each model release as a new privacy domain and restart budget tracking - actively debated in the DP community.",
       ],
     },
       ],

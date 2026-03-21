@@ -39,7 +39,7 @@ registerQuestions({
       explanation:
         "Gemini Flash is designed to be a lightweight, fast, and cost-effective model, optimizing inference speed while retaining strong multimodal capabilities.",
       hints: [
-        "\'Flash\' implies speed — think high-throughput, low-latency use cases.",
+        "\'Flash\' implies speed - think high-throughput, low-latency use cases.",
         "Cost-efficiency is the other key goal alongside speed.",
       ],
     },
@@ -61,7 +61,7 @@ registerQuestions({
       explanation:
         "Gemini Pro is the versatile, workhorse model of the Gemini family, offering a great balance of advanced reasoning, multimodal processing, and efficiency for most enterprise use cases.",
       hints: [
-        "\'Pro\' sits in the middle of the tier hierarchy — not the smallest or largest.",
+        "\'Pro\' sits in the middle of the tier hierarchy - not the smallest or largest.",
         "Think about the \'balanced\' use case: not on-device, not the most demanding tasks.",
       ],
     },
@@ -83,7 +83,7 @@ registerQuestions({
       explanation:
         "Gemini Ultra is the most capable model in the family, designed specifically for highly complex, compute-intensive tasks that require deep reasoning and state-of-the-art multimodal understanding.",
       hints: [
-        "\'Ultra\' implies maximum capability — the top of the tier hierarchy.",
+        "\'Ultra\' implies maximum capability - the top of the tier hierarchy.",
         "What kinds of tasks require compute and reasoning that Pro cannot handle?",
       ],
     },
@@ -122,7 +122,7 @@ registerQuestions({
       explanation:
         "System instructions allow developers to steer the behavior of the model, setting its persona, tone, and guidelines before it processes specific user prompts.",
       hints: [
-        "System instructions appear before the conversation starts — they set the stage.",
+        "System instructions appear before the conversation starts - they set the stage.",
         "Think of them as the developer\'s standing orders to the model.",
       ],
     },
@@ -142,7 +142,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Because Gemini is natively multimodal, interleaved prompting—where text, images, and other media are mixed together naturally—provides the most effective context for the model to reason about.",
+        "Because Gemini is natively multimodal, interleaved prompting-where text, images, and other media are mixed together naturally-provides the most effective context for the model to reason about.",
       hints: [
         "\'Interleaved\' means mixing modalities together in the same sequence.",
         "Think about how a textbook mixes diagrams and explanatory text on the same page.",
@@ -161,7 +161,7 @@ registerQuestions({
       explanation:
         "Few-shot prompting with Gemini is fully multimodal. You can provide examples that include both images and text to demonstrate the desired output format.",
       hints: [
-        "Few-shot means giving examples — can those examples include images?",
+        "Few-shot means giving examples - can those examples include images?",
         "Gemini\'s native multimodality extends to the example portion of the prompt.",
       ],
     },
@@ -227,7 +227,7 @@ registerQuestions({
       explanation:
         "The primary authentication method for the Google AI Studio Gemini API is an API key, which is passed in the SDK client initialization or via HTTP headers.",
       hints: [
-        "API keys are the simplest authentication method — no OAuth flow needed.",
+        "API keys are the simplest authentication method - no OAuth flow needed.",
         "You generate the key from Google AI Studio\'s key management interface.",
       ],
     },
@@ -348,7 +348,7 @@ registerQuestions({
       explanation:
         "Gemini processes video by sampling it as a sequence of image frames (e.g., 1 frame per second) and analyzing them in order, combined with the transcribed audio.",
       hints: [
-        "Video is essentially a sequence of image frames — how many per second?",
+        "Video is essentially a sequence of image frames - how many per second?",
         "Audio is processed alongside the visual frames for comprehensive understanding.",
       ],
     },
@@ -392,7 +392,7 @@ registerQuestions({
         "The File API allows developers to upload large files (up to 2GB per file) for temporary storage (usually 48 hours), returning a URI that can be used in `generateContent` requests without hitting payload size limits.",
       hints: [
         "The File API solves the problem of sending large files in HTTP request bodies.",
-        "Files are temporary — they expire after 48 hours.",
+        "Files are temporary - they expire after 48 hours.",
       ],
     },
   ],
@@ -409,7 +409,7 @@ registerQuestions({
         "Gemini has strong document understanding capabilities, including the ability to parse long PDFs, extract information, and reason over embedded tables and charts.",
       hints: [
         "Gemini treats PDF pages as images and can read both text and visual content.",
-        "Charts and tables are visual encodings of data — Gemini can decode them.",
+        "Charts and tables are visual encodings of data - Gemini can decode them.",
       ],
     },
   ],
@@ -429,7 +429,7 @@ registerQuestions({
       explanation:
         "Tools are defined by passing `FunctionDeclaration` objects (which use OpenAPI JSON schema syntax) to the model. The model uses these descriptions to determine if and how to call the function.",
       hints: [
-        "The object type name is \'FunctionDeclaration\' — it declares the function signature.",
+        "The object type name is \'FunctionDeclaration\' - it declares the function signature.",
         "OpenAPI JSON schema syntax is the same format used in REST API documentation.",
       ],
     },
@@ -451,7 +451,7 @@ registerQuestions({
       explanation:
         "Gemini does not execute custom functions. It only generates the function name and arguments. The developer must intercept this, run the code locally, and return the `functionResponse` back to the model.",
       hints: [
-        "Gemini is the orchestrator — it tells the developer what to run.",
+        "Gemini is the orchestrator - it tells the developer what to run.",
         "The result must be returned as a `functionResponse` in the next conversation turn.",
       ],
     },
@@ -530,12 +530,11 @@ registerQuestions({
         "Hardcoding a finite state machine.",
         "Training a new model from scratch for every task.",
       ],
-      correctAnswer:
-        "Think -> Act -> Observe (ReAct) loop utilizing tool calling.",
+      correctAnswer: 0,
       explanation:
         "Agentic workflows typically rely on the ReAct (Reasoning and Acting) paradigm, where the model iteratively thinks about the problem, calls tools (acts), observes the result, and decides the next step.",
       hints: [
-        "ReAct stands for Reasoning and Acting — a looping paradigm.",
+        "ReAct stands for Reasoning and Acting - a looping paradigm.",
         "The loop repeats until the model decides it has a final answer.",
       ],
     },
@@ -553,8 +552,7 @@ registerQuestions({
         "It can ingest massive entire document repositories directly in the prompt, sometimes reducing the need for complex vector chunking.",
         "It ignores any tokens past the first 100k.",
       ],
-      correctAnswer:
-        "It can ingest massive entire document repositories directly in the prompt, sometimes reducing the need for complex vector chunking.",
+      correctAnswer: 2,
       explanation:
         "Gemini 1.5 Pro features a massive 2-million token context window, which allows developers to often bypass complex traditional RAG (chunking/vector databases) and just place entire codebases or document libraries directly into the prompt.",
       hints: [
@@ -599,12 +597,11 @@ registerQuestions({
         "Calculating the BLEU score.",
         "Running unit tests.",
       ],
-      correctAnswer:
-        "Using a strong model (like Gemini 1.5 Pro) to score and evaluate the outputs of another model (or itself) against a rubric.",
+      correctAnswer: 1,
       explanation:
         "LLM-as-a-Judge involves using a highly capable foundation model to automatically evaluate the quality, relevance, or factual accuracy of text generated by an AI pipeline, scaling the evaluation process.",
       hints: [
-        "Human evaluation is expensive and slow — LLM-as-a-Judge automates it.",
+        "Human evaluation is expensive and slow - LLM-as-a-Judge automates it.",
         "A strong model grades another model\'s outputs against a predefined rubric.",
       ],
     },
@@ -796,7 +793,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "At approximately 1 frame per second, a 1-hour video generates around 3,600 frames. Each frame uses roughly 258 tokens, totaling about 928,800 tokens — fitting within the 1M token context window. This enables end-to-end reasoning over feature-length content.",
+        "At approximately 1 frame per second, a 1-hour video generates around 3,600 frames. Each frame uses roughly 258 tokens, totaling about 928,800 tokens - fitting within the 1M token context window. This enables end-to-end reasoning over feature-length content.",
       hints: [
         "Calculate: 3,600 seconds \\times 258 tokens/frame \\approx 928,800 tokens.",
         "1 frame per second is a common sampling rate for Gemini video processing.",
@@ -818,7 +815,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Gemini can directly process audio inputs to transcribe speech, identify different speakers, recognize sound events (like a dog barking or a door slamming), and understand tone — all without routing through a separate speech-to-text API.",
+        "Gemini can directly process audio inputs to transcribe speech, identify different speakers, recognize sound events (like a dog barking or a door slamming), and understand tone - all without routing through a separate speech-to-text API.",
       hints: [
         "Gemini is natively multimodal, so it handles audio directly.",
         "Think about tasks a human listener can do that go beyond just transcribing words.",
@@ -877,7 +874,7 @@ registerQuestions({
       explanation:
         "Gemini\'s document understanding capabilities span all content types within a PDF, including text paragraphs, data charts, tables, and scanned/embedded images, enabling comprehensive document QA.",
       hints: [
-        "Gemini is multimodal — it handles both text and visual content.",
+        "Gemini is multimodal - it handles both text and visual content.",
         "A PDF page is essentially an image to a vision model.",
       ],
     },
@@ -895,7 +892,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Gemini can parse invoices, contracts, and financial reports — extracting key fields (dates, amounts, parties) into structured formats like JSON. This automates document processing workflows that previously required manual data entry.",
+        "Gemini can parse invoices, contracts, and financial reports - extracting key fields (dates, amounts, parties) into structured formats like JSON. This automates document processing workflows that previously required manual data entry.",
       hints: [
         "Think about documents businesses process repeatedly with structured information.",
         "Extraction into structured formats like JSON is a key enterprise workflow.",
@@ -913,7 +910,7 @@ registerQuestions({
         "Gemini\'s visual reasoning extends to data visualizations. It can read axis labels, approximate values from bars or points, identify trends, and answer questions like \'Which quarter had the highest revenue?\' from a chart image.",
       hints: [
         "Gemini processes PDF pages as images and applies visual reasoning.",
-        "Charts are a visual encoding of data — can Gemini decode them?",
+        "Charts are a visual encoding of data - can Gemini decode them?",
       ],
     },
   ],
@@ -967,7 +964,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Google\'s structured output implementation uses constrained decoding (also known as grammar-constrained generation), which mathematically restricts the token sampling process to only produce tokens that could form valid JSON according to the schema — guaranteeing compliance.",
+        "Google\'s structured output implementation uses constrained decoding (also known as grammar-constrained generation), which mathematically restricts the token sampling process to only produce tokens that could form valid JSON according to the schema - guaranteeing compliance.",
       hints: [
         "\'Constrained decoding\' limits which tokens the model can sample at each step.",
         "This is stronger than just prompting the model to return JSON.",
@@ -991,7 +988,7 @@ registerQuestions({
       explanation:
         "Function calling allows Gemini to identify when a task requires external action (like looking up weather, querying a database, or calling an API) and express that intent as a structured function call with arguments for the developer to execute.",
       hints: [
-        "Gemini itself cannot run code — it only requests that the application does.",
+        "Gemini itself cannot run code - it only requests that the application does.",
         "Think of it as the model expressing \'I need you to call this function with these arguments\'.",
       ],
     },
@@ -1002,7 +999,7 @@ registerQuestions({
       question:
         "In the Gemini function calling flow, after the model returns a `FunctionCall` response, what must the developer do next?",
       options: [
-        "Nothing — Gemini automatically executes the function.",
+        "Nothing - Gemini automatically executes the function.",
         "Execute the function locally and send the result back to Gemini as a `FunctionResponse`.",
         "Retrain the model with the new function.",
         "Generate a new API key.",
@@ -1011,7 +1008,7 @@ registerQuestions({
       explanation:
         "The developer is responsible for executing the function on their side, then packaging the result as a `FunctionResponse` and sending it back to Gemini in the next conversation turn, allowing the model to incorporate the result into its final answer.",
       hints: [
-        "Gemini is stateless between turns — you must send back the function result.",
+        "Gemini is stateless between turns - you must send back the function result.",
         "The model cannot access external systems directly; it acts as the orchestrator.",
       ],
     },
@@ -1177,7 +1174,7 @@ registerQuestions({
       explanation:
         "AlphaCode 2 generates up to 1 million candidate solutions per problem and uses a separate scoring model to rank and select the most promising submissions. This large-scale sampling strategy is central to its state-of-the-art performance.",
       hints: [
-        "Diversity of samples is key — more samples increase the probability of a correct solution.",
+        "Diversity of samples is key - more samples increase the probability of a correct solution.",
         "A separate scoring model acts as a filter to select the best candidate.",
       ],
     },
@@ -1190,7 +1187,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Gemini is trained on large code datasets spanning Python, JavaScript, TypeScript, Go, C++, Java, and more. It can write new code, explain existing code, suggest fixes for bugs, and generate unit tests — all core use cases for an AI pair programmer.",
+        "Gemini is trained on large code datasets spanning Python, JavaScript, TypeScript, Go, C++, Java, and more. It can write new code, explain existing code, suggest fixes for bugs, and generate unit tests - all core use cases for an AI pair programmer.",
       hints: [
         "Think about what a pair programmer does: writes, explains, reviews, and debugs.",
         "Gemini was trained on code from GitHub and other sources alongside natural language.",
@@ -1212,7 +1209,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "MMMU tests multimodal models on college-level questions spanning subjects like medicine, engineering, economics, and science — where both text reasoning and image understanding (diagrams, charts, photos) are required.",
+        "MMMU tests multimodal models on college-level questions spanning subjects like medicine, engineering, economics, and science - where both text reasoning and image understanding (diagrams, charts, photos) are required.",
       hints: [
         "\'Multidisciplinary\' covers many academic subjects.",
         "\'Multimodal\' indicates the benchmark requires understanding both text and images.",
@@ -1398,10 +1395,10 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Gemini Ultra is specifically designed for tasks that require the highest level of reasoning, nuanced understanding, and accuracy — such as analyzing complex scientific problems. Lighter tasks are more cost-efficiently handled by Pro, Flash, or Nano.",
+        "Gemini Ultra is specifically designed for tasks that require the highest level of reasoning, nuanced understanding, and accuracy - such as analyzing complex scientific problems. Lighter tasks are more cost-efficiently handled by Pro, Flash, or Nano.",
       hints: [
         "Match the model capability to the complexity of the task.",
-        "Ultra is the most expensive tier — reserve it for tasks that genuinely need it.",
+        "Ultra is the most expensive tier - reserve it for tasks that genuinely need it.",
       ],
     },
     {
@@ -1429,7 +1426,7 @@ registerQuestions({
         "If you send Gemini an image of a geometry problem (a triangle with labeled angles) and ask it to find the missing angle, what type of reasoning does it apply?",
       options: [
         "Pure text reasoning without looking at the image.",
-        "Multimodal reasoning — interpreting the visual geometry and applying mathematical rules.",
+        "Multimodal reasoning - interpreting the visual geometry and applying mathematical rules.",
         "Audio processing.",
         "Code execution only.",
       ],
@@ -1455,7 +1452,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Analyzing a reaction pathway diagram requires recognizing visual symbols (arrows, molecules, labels), applying domain knowledge (chemistry), and then generating a coherent natural language explanation — a genuine cross-modal reasoning task.",
+        "Analyzing a reaction pathway diagram requires recognizing visual symbols (arrows, molecules, labels), applying domain knowledge (chemistry), and then generating a coherent natural language explanation - a genuine cross-modal reasoning task.",
       hints: [
         "Diagrams encode information visually; the model must decode that encoding.",
         "Chemistry knowledge is required to interpret what the visual symbols mean.",
@@ -1466,11 +1463,11 @@ registerQuestions({
       type: "true-false",
       difficulty: "hard",
       question:
-        "Gemini can solve multi-step math word problems presented as images (e.g., a photo of a handwritten problem) by performing OCR, parsing the problem, and then applying mathematical reasoning — all in a single pass.",
+        "Gemini can solve multi-step math word problems presented as images (e.g., a photo of a handwritten problem) by performing OCR, parsing the problem, and then applying mathematical reasoning - all in a single pass.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Gemini\'s natively integrated OCR and mathematical reasoning capabilities allow it to ingest a photo of a handwritten problem, extract the text, parse the mathematical structure, and solve it — without needing separate OCR and math solver pipelines.",
+        "Gemini\'s natively integrated OCR and mathematical reasoning capabilities allow it to ingest a photo of a handwritten problem, extract the text, parse the mathematical structure, and solve it - without needing separate OCR and math solver pipelines.",
       hints: [
         "Think about what steps a human would take when given a photo of a math problem.",
         "Gemini\'s end-to-end multimodal nature eliminates the need for separate pipeline steps.",
@@ -1571,7 +1568,7 @@ registerQuestions({
       explanation:
         "Long-context RAG excels when questions require synthesizing information from many parts of a corpus simultaneously (e.g., \'What are the common themes across all these reports?\'). Traditional vector RAG retrieves only the top-k chunks, which can miss globally distributed information.",
       hints: [
-        "Traditional RAG retrieves the most \'locally\' relevant chunks — what does it miss?",
+        "Traditional RAG retrieves the most \'locally\' relevant chunks - what does it miss?",
         "Think about questions that require synthesizing information from across an entire corpus.",
       ],
     },
@@ -1606,7 +1603,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A multimodal embedding maps different types of content — text, images, and audio — into the same high-dimensional vector space. This allows cross-modal similarity searches, such as finding images that match a text description or vice versa.",
+        "A multimodal embedding maps different types of content - text, images, and audio - into the same high-dimensional vector space. This allows cross-modal similarity searches, such as finding images that match a text description or vice versa.",
       hints: [
         "Think about how CLIP enables text-to-image search using embeddings.",
         "A \'shared semantic space\' means similar concepts map to nearby vectors regardless of modality.",
@@ -1626,7 +1623,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Google\'s `multimodalembedding@001` model (available on Vertex AI) generates embeddings for text and images in a shared semantic space, enabling cross-modal retrieval — for example, searching an image database using a text query.",
+        "Google\'s `multimodalembedding@001` model (available on Vertex AI) generates embeddings for text and images in a shared semantic space, enabling cross-modal retrieval - for example, searching an image database using a text query.",
       hints: [
         "The model name itself indicates its multimodal nature.",
         "This model is available on Vertex AI specifically.",
@@ -1641,7 +1638,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "By embedding both the text query and the candidate images into the same vector space using `multimodalembedding@001`, cosine similarity search (e.g., via Vertex AI Vector Search or Qdrant) can retrieve images semantically matching the text query — enabling text-to-image retrieval.",
+        "By embedding both the text query and the candidate images into the same vector space using `multimodalembedding@001`, cosine similarity search (e.g., via Vertex AI Vector Search or Qdrant) can retrieve images semantically matching the text query - enabling text-to-image retrieval.",
       hints: [
         "If text and image embeddings live in the same space, cosine similarity finds cross-modal matches.",
         "This is the core mechanism behind systems like Google Lens.",
@@ -1661,7 +1658,7 @@ registerQuestions({
         "The Gemini File API supports uploading files up to 2 GB each. Files are temporarily stored for 48 hours and can be used in `generateContent` requests via their uploaded URI.",
       hints: [
         "The limit is in gigabytes, not megabytes.",
-        "\'Temporarily\' is key — files expire after 48 hours.",
+        "\'Temporarily\' is key - files expire after 48 hours.",
       ],
     },
     {
@@ -1839,7 +1836,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Because Gemini 1.5 Pro\'s context window is large enough to hold several full-length documents simultaneously, a single prompt can reference multiple uploaded files. The model can then perform cross-document reasoning — comparing, contrasting, or synthesizing information — in one pass.",
+        "Because Gemini 1.5 Pro\'s context window is large enough to hold several full-length documents simultaneously, a single prompt can reference multiple uploaded files. The model can then perform cross-document reasoning - comparing, contrasting, or synthesizing information - in one pass.",
       hints: [
         "A 1M-token context can hold roughly 700,000 words, equivalent to several books.",
         "Multiple file references can be included sequentially in the `contents` array.",
@@ -2030,7 +2027,7 @@ registerQuestions({
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Context caching allows developers to cache a prefix — which can include the system instruction, large documents, or few-shot examples — so that it is processed once and reused. Cached tokens are billed at a lower rate and the prefix is not retransmitted, reducing both latency and cost on repeated calls.",
+        "Context caching allows developers to cache a prefix - which can include the system instruction, large documents, or few-shot examples - so that it is processed once and reused. Cached tokens are billed at a lower rate and the prefix is not retransmitted, reducing both latency and cost on repeated calls.",
       hints: [
         "Context caching is distinct from application-level caching.",
         "Cached prefixes are stored server-side and referenced by a cache ID.",
@@ -2129,7 +2126,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Task routing — using a cheap fast model for triage and a more capable model only for tasks that need it — is a best practice for cost optimization. Classification is a simpler task well-suited to Flash; deep legal reasoning benefits from Pro\'s stronger capabilities.",
+        "Task routing - using a cheap fast model for triage and a more capable model only for tasks that need it - is a best practice for cost optimization. Classification is a simpler task well-suited to Flash; deep legal reasoning benefits from Pro\'s stronger capabilities.",
       hints: [
         "Not every task needs the most powerful model.",
         "Task routing is a common production cost optimization pattern.",
@@ -2166,7 +2163,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Gemini does not execute functions itself — it only proposes the call. The developer\'s code runs the actual function (e.g., calling an external API or database), then appends the result as a `FunctionResponse` in the conversation history and calls the API again so the model can incorporate the result into its final response.",
+        "Gemini does not execute functions itself - it only proposes the call. The developer\'s code runs the actual function (e.g., calling an external API or database), then appends the result as a `FunctionResponse` in the conversation history and calls the API again so the model can incorporate the result into its final response.",
       hints: [
         "The model returns a structured call specification; your code does the actual work.",
         "The result goes back to the model as a `FunctionResponse` content part.",
@@ -2315,7 +2312,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Gemini\'s deep integration with Google Search (grounding), Google Workspace, and Vertex AI is a product-level differentiator. Claude uses Constitutional AI (CAI) for alignment — a distinct approach from Google\'s RLHF-based methods. Both support function calling and multimodal inputs.",
+        "Gemini\'s deep integration with Google Search (grounding), Google Workspace, and Vertex AI is a product-level differentiator. Claude uses Constitutional AI (CAI) for alignment - a distinct approach from Google\'s RLHF-based methods. Both support function calling and multimodal inputs.",
       hints: [
         "Think about ecosystem integration as a differentiator, not just model capabilities.",
         "Constitutional AI is Anthropic\'s distinctive alignment methodology.",

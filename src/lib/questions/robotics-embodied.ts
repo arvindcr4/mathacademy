@@ -53,7 +53,7 @@ const questions: Record<string, Question[]> = {
         "After loop closure detection adds a new edge to the pose graph, the back-end solves a nonlinear least-squares problem: minimize \\Sigma e\\_i\\^T \\Omega\\_i e\\_i over all poses, where e\\_i is the residual between the constraint and the current pose estimate and \\Omega\\_i is the information matrix. Gauss-Newton (or Levenberg-Marquardt) iteratively linearizes and solves this system; g2o and GTSAM implement these solvers efficiently on sparse systems.",
       hints: [
         "Loop closure turns an open-chain trajectory into a cycle, introducing a constraint that requires globally redistributing the accumulated error.",
-        "The optimization objective is a sum of squared Mahalanobis distances over all edges — a classic nonlinear least-squares form.",
+        "The optimization objective is a sum of squared Mahalanobis distances over all edges - a classic nonlinear least-squares form.",
       ],
     },
   ],
@@ -89,7 +89,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "VoxelNet divides the point cloud into equally-spaced 3D voxels, encodes points within each voxel using a Voxel Feature Encoding layer, and then applies 3D convolutional layers on the resulting dense feature volume.",
       hints: [
-        "Consider how images are organized in 2D grids — the analogy extends to 3D for point clouds.",
+        "Consider how images are organized in 2D grids - the analogy extends to 3D for point clouds.",
         "Think about what structured representation allows standard convolution to apply.",
       ],
     },
@@ -163,9 +163,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Self-supervised methods train a depth network and a pose network jointly: the depth network predicts per-pixel depth, the pose network estimates camera ego-motion, and the loss is the photometric error of pixels reprojected from one frame into another — requiring no ground-truth depth labels.",
+        "Self-supervised methods train a depth network and a pose network jointly: the depth network predicts per-pixel depth, the pose network estimates camera ego-motion, and the loss is the photometric error of pixels reprojected from one frame into another - requiring no ground-truth depth labels.",
       hints: [
-        'The key word is "self-supervised" — the supervision comes from the video frames themselves.',
+        'The key word is "self-supervised" - the supervision comes from the video frames themselves.',
         "Think about what you can check if you know depth and camera motion between two frames.",
       ],
     },
@@ -188,7 +188,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Domain randomization for sim-to-real transfer randomizes physical simulation parameters (masses, inertias, joint damping, friction, motor torque limits, contact parameters, sensor noise, latency) across episodes. The policy must learn to perform well across all randomized conditions, forcing it to develop a strategy robust enough to transfer to the real robot\'s unknown-but-fixed dynamics.",
       hints: [
-        "The key insight is that the real robot is just one instance in the distribution of randomized simulations — if the policy works for all, it works for the real one.",
+        "The key insight is that the real robot is just one instance in the distribution of randomized simulations - if the policy works for all, it works for the real one.",
         "OpenAI\'s Dactyl used domain randomization over 100+ physics parameters to successfully transfer a dexterous manipulation policy to a real Shadow Hand.",
       ],
     },
@@ -255,7 +255,7 @@ const questions: Record<string, Question[]> = {
         "Panoptic segmentation unifies semantic segmentation (stuff classes) and instance segmentation (thing classes) into a single output.",
       correctAnswer: "True",
       explanation:
-        "Panoptic segmentation assigns every pixel a semantic label and, for countable objects (things), a unique instance ID, while uncountable regions (stuff like floor or sky) receive only a category label — combining both tasks in one framework.",
+        "Panoptic segmentation assigns every pixel a semantic label and, for countable objects (things), a unique instance ID, while uncountable regions (stuff like floor or sky) receive only a category label - combining both tasks in one framework.",
       hints: [
         "Think about what is different between labeling a floor region and labeling individual chairs.",
         'Consider what "stuff" vs "things" means in the context of visual perception.',
@@ -299,7 +299,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "An antipodal grasp places two contact points on opposite sides such that the normal forces (with friction) oppose each other along a common line of action, guaranteeing force closure and stability under external perturbations.",
       hints: [
-        "Think about two contacts where each pushes toward the other — what geometric property does that imply?",
+        "Think about two contacts where each pushes toward the other - what geometric property does that imply?",
         "The friction cone must allow the contact normals to align with the grasp axis.",
       ],
     },
@@ -407,10 +407,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "During in-hand manipulation, fingers occlude the contact area from any external camera; tactile sensors (e.g., GelSight, DIGIT) embedded in the fingertips directly measure contact deformation, shear, and slip — enabling sub-millimeter feedback for closed-loop control that vision cannot provide through occlusion.",
+        "During in-hand manipulation, fingers occlude the contact area from any external camera; tactile sensors (e.g., GelSight, DIGIT) embedded in the fingertips directly measure contact deformation, shear, and slip - enabling sub-millimeter feedback for closed-loop control that vision cannot provide through occlusion.",
       hints: [
         "Think about what a camera can see when your hand is closed around an object being rotated.",
-        "Slip detection requires knowing the force distribution at the contact interface — tactile sensors provide this directly.",
+        "Slip detection requires knowing the force distribution at the contact interface - tactile sensors provide this directly.",
       ],
     },
   ],
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Tactile sensors (e.g., GelSight, DIGIT) measure forces, pressures, and deformations at the contact interface — information that is occluded from cameras and critical for detecting slip, estimating grip stability, and performing fine manipulation.",
+        "Tactile sensors (e.g., GelSight, DIGIT) measure forces, pressures, and deformations at the contact interface - information that is occluded from cameras and critical for detecting slip, estimating grip stability, and performing fine manipulation.",
       hints: [
         "Think about what a human fingertip senses that eyes alone cannot provide during grasping.",
         "The key is information at the contact surface, not about the global object geometry.",
@@ -546,7 +546,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Pure task planners ignore geometry; TAMP couples symbolic planning with motion planning so that each high-level action is checked for geometric feasibility (reachability, collision-free paths), preventing plans that are logically valid but physically impossible.",
       hints: [
-        'Imagine a plan that says "pick object A" but A is occluded and unreachable — task planning alone would not catch this.',
+        'Imagine a plan that says "pick object A" but A is occluded and unreachable - task planning alone would not catch this.',
         "TAMP bridges the gap between abstract symbolic decisions and continuous physical execution.",
       ],
     },
@@ -555,7 +555,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "PDDLStream is a TAMP framework that extends PDDL with streams — functions that lazily sample continuous values (e.g., grasp poses, IK solutions) conditioned on symbolic bindings.",
+        "PDDLStream is a TAMP framework that extends PDDL with streams - functions that lazily sample continuous values (e.g., grasp poses, IK solutions) conditioned on symbolic bindings.",
       correctAnswer: "True",
       explanation:
         "PDDLStream augments PDDL with certified streams that produce continuous parameter values (poses, trajectories) on demand; the planner interleaves symbolic search with stream evaluation, avoiding exhaustive pre-enumeration of continuous parameter spaces.",
@@ -570,7 +570,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question: 'In TAMP, what is the "skeleton" approach and why is it used?',
       options: [
-        "A skeleton is a sequence of symbolic operators (with free continuous parameters) that is first committed to at the task level, then refined by motion planners that fill in the continuous parameters — separating task search from motion optimization",
+        "A skeleton is a sequence of symbolic operators (with free continuous parameters) that is first committed to at the task level, then refined by motion planners that fill in the continuous parameters - separating task search from motion optimization",
         "A skeleton is a simplified geometric mesh used to approximate robot collision geometry during planning",
         "A skeleton is a graph of all possible motion trajectories precomputed offline for fast online lookup",
         "A skeleton is an abstract task hierarchy used only in hierarchical RL, not in classical TAMP",
@@ -601,7 +601,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Behavior cloning treats imitation learning as supervised regression or classification: the policy is trained to predict the expert\'s action given the current state, using standard supervised learning on a demonstration dataset. No reward signal or environment interaction is needed during training.",
       hints: [
-        "Think about the simplest way to copy expert behavior — just replicate their (state, action) pairs.",
+        "Think about the simplest way to copy expert behavior - just replicate their (state, action) pairs.",
         "No reward signal or environment interaction is needed during training.",
       ],
     },
@@ -613,10 +613,10 @@ const questions: Record<string, Question[]> = {
         "DAgger (Dataset Aggregation) addresses the compounding error problem of behavior cloning by iteratively collecting new demonstrations at states the learned policy actually visits.",
       correctAnswer: "True",
       explanation:
-        "DAgger\'s algorithm: (1) Train initial policy \\pi\\_1 on expert dataset D. (2) Roll out \\pi\\_i to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
+        "DAgger\'s algorithm: (1) Train initial policy \\pi\\_1 on expert dataset D. (2) Roll out \\pi\\_i to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2-5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
       hints: [
         "Behavior cloning suffers from distribution shift: the policy visits states not in the expert demo and has no guidance there.",
-        "DAgger iteratively labels the states the current policy visits with expert actions — the dataset grows to cover the policy\'s actual distribution.",
+        "DAgger iteratively labels the states the current policy visits with expert actions - the dataset grows to cover the policy\'s actual distribution.",
       ],
     },
     {
@@ -627,15 +627,15 @@ const questions: Record<string, Question[]> = {
         "DAgger requires querying the expert oracle at every training iteration. In practice, what is the main challenge of applying DAgger to physical robot learning?",
       options: [
         "Compounding errors cannot occur in physical robots because proprioception corrects drift automatically",
-        "Physical expert querying requires a human operator to provide correct actions at every state the robot visits, which is time-consuming and burdensome — making fully interactive DAgger impractical for long-horizon tasks",
+        "Physical expert querying requires a human operator to provide correct actions at every state the robot visits, which is time-consuming and burdensome - making fully interactive DAgger impractical for long-horizon tasks",
         "DAgger cannot be applied to continuous action spaces such as robot joint torques",
         "The aggregated dataset always overfits to early demonstrations, preventing the policy from improving",
       ],
       correctAnswer: 1,
       explanation:
-        "DAgger\'s theoretical guarantee relies on being able to query the expert at any visited state. For physical robots, this means a human must be present and responsive during every rollout to label states in real time — a significant operational burden. Variants like HG-DAgger (human-gated) and SafeDAgger address this by only requesting interventions when the policy is uncertain or unsafe.",
+        "DAgger\'s theoretical guarantee relies on being able to query the expert at any visited state. For physical robots, this means a human must be present and responsive during every rollout to label states in real time - a significant operational burden. Variants like HG-DAgger (human-gated) and SafeDAgger address this by only requesting interventions when the policy is uncertain or unsafe.",
       hints: [
-        "The expert oracle in the original DAgger paper is assumed to be always available — this is trivial in simulation but costly with physical robots and human experts.",
+        "The expert oracle in the original DAgger paper is assumed to be always available - this is trivial in simulation but costly with physical robots and human experts.",
         "HG-DAgger lets the human intervene only when they judge it necessary, reducing annotation burden while still providing corrective labels.",
       ],
     },
@@ -653,7 +653,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Behavior cloning learns a policy \\pi(a|s) from expert (s, a) pairs. At test time, any action error causes the robot to enter a slightly different state than the expert would; since this state is outside the training distribution, the policy may make a larger error, leading to an even more out-of-distribution state — errors compound quadratically with horizon length.",
+        "Behavior cloning learns a policy \\pi(a|s) from expert (s, a) pairs. At test time, any action error causes the robot to enter a slightly different state than the expert would; since this state is outside the training distribution, the policy may make a larger error, leading to an even more out-of-distribution state - errors compound quadratically with horizon length.",
       hints: [
         "Think about walking a path: one small deviation leads you away from the expert\'s path, and the policy has never seen where you are now.",
         "The problem grows with horizon length because each step\'s error compounds on top of all previous errors.",
@@ -678,7 +678,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "IRL takes expert trajectories as input and infers the underlying reward function that makes the expert\'s behavior optimal, enabling the robot to generalize to new situations governed by the same learned reward.",
       hints: [
-        "Think about what a human designer would need to specify to train a robot — the reward function.",
+        "Think about what a human designer would need to specify to train a robot - the reward function.",
         "IRL reverses the RL process: given behavior, find what objective would produce it.",
       ],
     },
@@ -712,7 +712,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GAIL adapts the GAN framework: a discriminator learns to tell expert and policy trajectories apart, and its output (occupancy measure matching loss) serves as a reward that drives the policy (generator) to produce trajectories indistinguishable from the expert.",
       hints: [
-        "Think about how GANs work — generator and discriminator competing — and apply that to imitation.",
+        "Think about how GANs work - generator and discriminator competing - and apply that to imitation.",
         "The discriminator score is the reward that pushes the policy to match expert state-action occupancy.",
       ],
     },
@@ -748,7 +748,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Diffusion Policy applies denoising diffusion probabilistic models to action generation: starting from Gaussian noise, a learned denoiser conditioned on robot observations iteratively refines the noisy action over T denoising steps to produce a coherent action sequence.",
       hints: [
-        "Think about how image diffusion models generate images from noise — the same process applies to actions.",
+        "Think about how image diffusion models generate images from noise - the same process applies to actions.",
         "The conditioning on observation is what makes the generated action appropriate for the current state.",
       ],
     },
@@ -780,9 +780,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "DDIM reformulates the reverse process as a deterministic ODE, enabling high-quality samples in 10–50 steps instead of the 1000 steps typical for DDPM, which is critical for robot policies that must act at 10–50 Hz.",
+        "DDIM reformulates the reverse process as a deterministic ODE, enabling high-quality samples in 10-50 steps instead of the 1000 steps typical for DDPM, which is critical for robot policies that must act at 10-50 Hz.",
       hints: [
-        "Real-time robot control has strict latency requirements — how many denoising steps can you afford?",
+        "Real-time robot control has strict latency requirements - how many denoising steps can you afford?",
         "DDIM trades stochasticity for speed by using a deterministic reverse process.",
       ],
     },
@@ -918,7 +918,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "RRT grows a tree rooted at the start configuration by repeatedly sampling random configurations and extending the nearest tree node toward the sample; this randomized strategy efficiently explores high-dimensional configuration spaces without pre-computing the full space.",
       hints: [
-        'Think about what "rapidly-exploring" means — the tree should spread out to cover unexplored space quickly.',
+        'Think about what "rapidly-exploring" means - the tree should spread out to cover unexplored space quickly.',
         "Random sampling is what makes RRT practical in high-dimensional spaces where grids are intractable.",
       ],
     },
@@ -965,8 +965,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "TrajOpt (Schulman et al.) represents collision avoidance constraints as penalties on the signed distance between robot links and obstacles, convexifies these penalties locally, and iteratively solves the convex approximation (sequential convex programming / SQCQP); this produces smooth, collision-free trajectories faster than pure sampling-based planners for high-DoF arms in cluttered environments.",
       hints: [
-        "Think about how optimization-based planners differ from sampling-based ones — they refine an entire trajectory rather than building a tree node by node.",
-        "Signed distance is the key quantity: positive means separated, negative means in collision — penalizing negative values drives the trajectory toward collision-free space.",
+        "Think about how optimization-based planners differ from sampling-based ones - they refine an entire trajectory rather than building a tree node by node.",
+        "Signed distance is the key quantity: positive means separated, negative means in collision - penalizing negative values drives the trajectory toward collision-free space.",
       ],
     },
   ],
@@ -1023,7 +1023,7 @@ const questions: Record<string, Question[]> = {
         "Purely neural planners are not provably complete or safe: they can hallucinate collision-free paths that actually pass through obstacles, and performance degrades on out-of-distribution environments; hybrid approaches that use neural networks to warm-start or bias traditional planners are therefore preferred for safety-critical applications.",
       hints: [
         "Think about the formal guarantees (completeness, safety) that traditional planners like RRT* provide.",
-        "Neural networks generalize from training data — what happens when the test environment is very different?",
+        "Neural networks generalize from training data - what happens when the test environment is very different?",
       ],
     },
   ],
@@ -1043,9 +1043,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Social navigation extends collision avoidance to account for human behavior norms: robots must predict where people will move, maintain appropriate personal space (proxemics), avoid disruptive paths through groups, and signal intent — all beyond standard geometric obstacle avoidance.",
+        "Social navigation extends collision avoidance to account for human behavior norms: robots must predict where people will move, maintain appropriate personal space (proxemics), avoid disruptive paths through groups, and signal intent - all beyond standard geometric obstacle avoidance.",
       hints: [
-        "Think about how humans navigate crowded spaces — they do more than just avoid physical collisions.",
+        "Think about how humans navigate crowded spaces - they do more than just avoid physical collisions.",
         "Social acceptability involves respecting personal space, social groups, and expected movement patterns.",
       ],
     },
@@ -1057,9 +1057,9 @@ const questions: Record<string, Question[]> = {
         "Social Force Model (SFM) represents pedestrian interaction as attractive forces toward goals and repulsive forces from obstacles and other pedestrians.",
       correctAnswer: "True",
       explanation:
-        "The Social Force Model by Helbing & Molnar models pedestrian dynamics using social forces: a motivational force toward the destination, repulsive forces that keep pedestrians away from walls and each other, and optional attractive forces for groups — together reproducing emergent crowd behavior.",
+        "The Social Force Model by Helbing & Molnar models pedestrian dynamics using social forces: a motivational force toward the destination, repulsive forces that keep pedestrians away from walls and each other, and optional attractive forces for groups - together reproducing emergent crowd behavior.",
       hints: [
-        "Think about the analogy to physical forces — attraction toward a goal, repulsion from obstacles.",
+        "Think about the analogy to physical forces - attraction toward a goal, repulsion from obstacles.",
         'The "social" aspect comes from the repulsion between pedestrians modeling personal space.',
       ],
     },
@@ -1080,7 +1080,7 @@ const questions: Record<string, Question[]> = {
         "SARL introduces a crowd-robot and human-human interaction module based on attention that computes weighted influence of each human on the robot\'s decision, allowing the policy to reason about the entire crowd context rather than considering each human independently as in CADRL.",
       hints: [
         "CADRL handles each human independently; think about what is lost by ignoring human-human interactions.",
-        "Attention mechanisms are well-suited to aggregating variable-size sets — like a crowd of any size.",
+        "Attention mechanisms are well-suited to aggregating variable-size sets - like a crowd of any size.",
       ],
     },
   ],
@@ -1102,7 +1102,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'VLN agents must follow natural language instructions (e.g., "go past the couch and turn left at the kitchen") using only egocentric visual observations, requiring grounding of language to visual scenes and navigation decisions.',
       hints: [
-        "Think about how a human would navigate using verbal directions — what senses would they use?",
+        "Think about how a human would navigate using verbal directions - what senses would they use?",
         "The challenge is connecting words in the instruction to what the robot actually sees.",
       ],
     },
@@ -1136,7 +1136,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "VLN models tend to memorize shortcuts in training environments (specific visual landmarks, common path patterns); in unseen environments, they encounter novel layouts and appearances, exposing overfitting and poor language-to-scene grounding generalization.",
       hints: [
-        "Think about the standard train/test split concern — how would a model that memorizes training rooms perform in a new building?",
+        "Think about the standard train/test split concern - how would a model that memorizes training rooms perform in a new building?",
         "Generalization requires robust language grounding, not just route memorization.",
       ],
     },
@@ -1171,9 +1171,9 @@ const questions: Record<string, Question[]> = {
         "Terrain traversability estimation for off-road robots can be performed by analyzing geometric properties of LiDAR point clouds (e.g., local surface normals, slope, roughness) without any learned semantic labels.",
       correctAnswer: "True",
       explanation:
-        "Geometry-based traversability analysis computes local surface properties — normal vectors, slope angles, step heights, and roughness metrics — directly from LiDAR point clouds to classify terrain as drivable or not, without requiring semantic scene understanding.",
+        "Geometry-based traversability analysis computes local surface properties - normal vectors, slope angles, step heights, and roughness metrics - directly from LiDAR point clouds to classify terrain as drivable or not, without requiring semantic scene understanding.",
       hints: [
-        "Think about what makes a slope dangerous to drive on — it\'s primarily about geometry (steepness, roughness).",
+        "Think about what makes a slope dangerous to drive on - it\'s primarily about geometry (steepness, roughness).",
         "LiDAR provides precise 3D geometry; semantic labels are an additional layer but not strictly required.",
       ],
     },
@@ -1191,9 +1191,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "BADGR uses self-supervised learning from the robot\'s own experience: it collects real-world data by driving around, labels future events (bumps, collisions, getting stuck) automatically from onboard sensors, and learns to predict these events from images — enabling navigation planning without human annotation.",
+        "BADGR uses self-supervised learning from the robot\'s own experience: it collects real-world data by driving around, labels future events (bumps, collisions, getting stuck) automatically from onboard sensors, and learns to predict these events from images - enabling navigation planning without human annotation.",
       hints: [
-        'The key word is "self-supervised" — the robot provides its own training signal from what happens to it.',
+        'The key word is "self-supervised" - the robot provides its own training signal from what happens to it.',
         "Think about what the robot can measure automatically during driving (IMU vibration, wheel slip) as labels.",
       ],
     },
@@ -1248,7 +1248,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "ADR monitors policy performance on a fixed reference environment; when performance stays above a high threshold, randomization bounds are expanded (harder); when performance drops below a low threshold, bounds are contracted (easier) — automatically curriculum-learning the randomization difficulty.",
+        "ADR monitors policy performance on a fixed reference environment; when performance stays above a high threshold, randomization bounds are expanded (harder); when performance drops below a low threshold, bounds are contracted (easier) - automatically curriculum-learning the randomization difficulty.",
       hints: [
         "Think about how you would gradually increase task difficulty based on whether the agent is succeeding.",
         "The fixed evaluation environment provides a stable signal to measure whether the agent is keeping up.",
@@ -1301,7 +1301,7 @@ const questions: Record<string, Question[]> = {
         'The "reality gap": simulators cannot perfectly model real-world contact mechanics, friction, deformation, and sensor noise, so policies trained in simulation encounter dynamics mismatches on real hardware',
         "Simulators cannot represent rigid body dynamics accurately for any object shape",
         "Simulators run too slowly to generate enough training data even with GPU acceleration",
-        "Sim-to-real transfer is a solved problem — modern simulators are physically accurate enough for all robot tasks",
+        "Sim-to-real transfer is a solved problem - modern simulators are physically accurate enough for all robot tasks",
       ],
       correctAnswer: 0,
       explanation:
@@ -1329,7 +1329,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Real-to-sim (as opposed to sim-to-real) refers to creating a high-fidelity simulation from real-world scans or images; the resulting "digital twin" can serve as a personalized training environment matching the robot\'s actual deployment setting.',
       hints: [
-        "Sim-to-real goes from simulation to the real world — real-to-sim is the reverse direction.",
+        "Sim-to-real goes from simulation to the real world - real-to-sim is the reverse direction.",
         "Think about using a 3D scan of a real room to build a simulator for training a robot in that specific room.",
       ],
     },
@@ -1361,10 +1361,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "NeRF and Gaussian Splatting are purely appearance models — they model color and density/opacity but contain no physical properties; to use them for robot training with physics (grasping, pushing), one must separately extract collision meshes, estimate masses and friction, and integrate with a physics engine.",
+        "NeRF and Gaussian Splatting are purely appearance models - they model color and density/opacity but contain no physical properties; to use them for robot training with physics (grasping, pushing), one must separately extract collision meshes, estimate masses and friction, and integrate with a physics engine.",
       hints: [
         "Think about what information a physics engine needs that a rendering model does not provide.",
-        "Visual realism and physical simulation are separate concerns — appearance models do not encode dynamics.",
+        "Visual realism and physical simulation are separate concerns - appearance models do not encode dynamics.",
       ],
     },
   ],
@@ -1383,7 +1383,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "System identification estimates the parameters of a mathematical model of the robot (dynamics model, actuator model) from experimental data — for example, swinging a robot arm and measuring joint torques and accelerations to fit inertial parameters.",
+        "System identification estimates the parameters of a mathematical model of the robot (dynamics model, actuator model) from experimental data - for example, swinging a robot arm and measuring joint torques and accelerations to fit inertial parameters.",
       hints: [
         "Think about how a control engineer determines the exact dynamics of a physical system.",
         'The "system" is the robot, and "identification" means estimating its model parameters from data.',
@@ -1397,9 +1397,9 @@ const questions: Record<string, Question[]> = {
         "Online adaptive control methods can adjust controller parameters in real-time as the robot\'s dynamics change (e.g., due to payload variation or wear), without requiring an offline re-identification procedure.",
       correctAnswer: "True",
       explanation:
-        "Adaptive controllers (e.g., MRAC — Model Reference Adaptive Control, or online Gaussian process-based methods) continuously update model or controller parameters based on real-time prediction errors, enabling the robot to compensate for changing dynamics without stopping for offline recalibration.",
+        "Adaptive controllers (e.g., MRAC - Model Reference Adaptive Control, or online Gaussian process-based methods) continuously update model or controller parameters based on real-time prediction errors, enabling the robot to compensate for changing dynamics without stopping for offline recalibration.",
       hints: [
-        "Think about a robot arm that picks up objects of different unknown weights — it must adapt its control online.",
+        "Think about a robot arm that picks up objects of different unknown weights - it must adapt its control online.",
         "Online adaptation is the key distinction from offline system identification.",
       ],
     },
@@ -1417,7 +1417,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "RMA first trains a base policy in simulation with access to privileged environmental extrinsics (friction, mass, terrain); then trains a lightweight adaptation module that estimates those extrinsics purely from recent proprioceptive history — enabling robust real-world deployment without privileged sensor access.",
+        "RMA first trains a base policy in simulation with access to privileged environmental extrinsics (friction, mass, terrain); then trains a lightweight adaptation module that estimates those extrinsics purely from recent proprioceptive history - enabling robust real-world deployment without privileged sensor access.",
       hints: [
         "Think about what information is available in simulation that is not available on a real robot at test time.",
         "The adaptation module bridges the gap by learning to infer hidden dynamics from proprioception alone.",
@@ -1454,7 +1454,7 @@ const questions: Record<string, Question[]> = {
         "Privileged learning in robot locomotion often provides the critic with exteroceptive information like ground contact forces and terrain height maps, which would be unavailable from a robot\'s onboard sensors at deployment.",
       correctAnswer: "True",
       explanation:
-        "In simulation, privileged information such as exact foot contact forces, terrain height fields, and object masses is directly accessible; providing this to the critic during RL training produces a better teacher signal, enabling the actor — trained on only proprioceptive observations — to learn more robust policies.",
+        "In simulation, privileged information such as exact foot contact forces, terrain height fields, and object masses is directly accessible; providing this to the critic during RL training produces a better teacher signal, enabling the actor - trained on only proprioceptive observations - to learn more robust policies.",
       hints: [
         "Think about how the human operator\'s arm movements are translated into robot commands.",
         "Leader-follower systems provide direct kinematic correspondence without complex motion mapping.",
@@ -1511,7 +1511,7 @@ const questions: Record<string, Question[]> = {
         "RT-2 demonstrates emergent capabilities in robot manipulation, such as reasoning about novel object categories and multi-step semantic reasoning, that were not present in the robot training data.",
       correctAnswer: "True",
       explanation:
-        'Because RT-2 leverages a pre-trained VLM\'s internet-scale knowledge, it exhibits emergent behaviors at test time — for example, identifying which object is "recyclable" or understanding "move the banana to the dinosaur" — tasks not explicitly present in the robot demonstration data.',
+        'Because RT-2 leverages a pre-trained VLM\'s internet-scale knowledge, it exhibits emergent behaviors at test time - for example, identifying which object is "recyclable" or understanding "move the banana to the dinosaur" - tasks not explicitly present in the robot demonstration data.',
       hints: [
         "Emergent means capabilities not directly trained for.",
         "Scaling laws that work for language might not straightforwardly apply across very different task modalities.",
@@ -1545,9 +1545,9 @@ const questions: Record<string, Question[]> = {
         "RT-1 (Robotic Transformer 1) represents robot actions as a discrete set of tokenized bins for each action dimension, allowing a standard transformer sequence model to output motor commands the same way it outputs text tokens.",
       correctAnswer: "True",
       explanation:
-        "RT-1 discretizes each action dimension (e.g., end-effector x, y, z, roll, pitch, yaw, gripper) into 256 uniform bins, turning continuous robot control into a token prediction problem that a causal transformer (based on EfficientNet + Transformer Decoder) can solve with a standard cross-entropy loss — the same formulation used in language modeling.",
+        "RT-1 discretizes each action dimension (e.g., end-effector x, y, z, roll, pitch, yaw, gripper) into 256 uniform bins, turning continuous robot control into a token prediction problem that a causal transformer (based on EfficientNet + Transformer Decoder) can solve with a standard cross-entropy loss - the same formulation used in language modeling.",
       hints: [
-        "Think about how language models predict the next word token — RT-1 applies the same idea to action dimensions.",
+        "Think about how language models predict the next word token - RT-1 applies the same idea to action dimensions.",
         "Discretizing a continuous action into bins is a common trick to turn regression into classification.",
       ],
     },
@@ -1585,7 +1585,7 @@ const questions: Record<string, Question[]> = {
         "Open X-Embodiment collects demonstrations from 22+ robot embodiments across multiple research labs; RT-X experiments show that co-training on this diverse mixture improves performance on held-out tasks compared to single-embodiment training, demonstrating positive transfer across robot platforms.",
       hints: [
         "Think about how training on more diverse data can improve generalization in other machine learning domains.",
-        "The key result is positive transfer — diversity helps, rather than the noise from dissimilar embodiments hurting.",
+        "The key result is positive transfer - diversity helps, rather than the noise from dissimilar embodiments hurting.",
       ],
     },
     {
@@ -1605,7 +1605,7 @@ const questions: Record<string, Question[]> = {
         "True embodiment-agnosticism requires outputting valid actions for robots with fundamentally different kinematic structures (7-DoF arm vs. humanoid vs. mobile base); this demands either a universal action vocabulary (e.g., Cartesian end-effector deltas) or explicit embodiment conditioning, because joint-space actions are incompatible across different robot designs.",
       hints: [
         "Think about what would need to be the same and what would need to differ for a single policy to control a 7-DoF arm and a humanoid hand.",
-        "The action space problem is more fundamental than the observation space problem — a policy that outputs 7 joint angles cannot directly control a 21-DoF hand.",
+        "The action space problem is more fundamental than the observation space problem - a policy that outputs 7 joint angles cannot directly control a 21-DoF hand.",
       ],
     },
   ],
@@ -1625,7 +1625,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Humanoids are underactuated — they cannot directly control their center of mass position — so maintaining balance while moving arms requires careful coordination of the entire body; this couples manipulation and locomotion, vastly increasing the complexity of planning and control.",
+        "Humanoids are underactuated - they cannot directly control their center of mass position - so maintaining balance while moving arms requires careful coordination of the entire body; this couples manipulation and locomotion, vastly increasing the complexity of planning and control.",
       hints: [
         "Think about what happens when a humanoid reaches far to one side without adjusting its stance.",
         "Underactuation means the robot cannot independently control all degrees of freedom.",
@@ -1641,7 +1641,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Recent RL-trained humanoid controllers (e.g., from Carnegie Mellon, ETH, and robot companies) have surpassed traditional ZMP-based control in agility and robustness by learning complex whole-body dynamics directly from simulation, enabling running, jumping, and recovery from pushes.",
       hints: [
-        "ZMP controllers rely on simplified linear inverted pendulum models — deep RL can learn richer dynamics.",
+        "ZMP controllers rely on simplified linear inverted pendulum models - deep RL can learn richer dynamics.",
         "Think about the success of deep RL for quadruped locomotion and whether similar results are possible for humanoids.",
       ],
     },
@@ -1652,7 +1652,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In humanoid robot learning, what is the key challenge of transferring mobile manipulation policies (walk + manipulate simultaneously) from simulation to the real world?",
       options: [
-        "Locomotion and manipulation are tightly coupled — errors in base motion propagate to the arm, and the sim-to-real gap in contact dynamics is the primary bottleneck for policy transfer",
+        "Locomotion and manipulation are tightly coupled - errors in base motion propagate to the arm, and the sim-to-real gap in contact dynamics is the primary bottleneck for policy transfer",
         "Real humanoid robots cannot carry their own compute, requiring all inference to run on external servers with high latency",
         "Mobile manipulation tasks are always one-shot and cannot benefit from the iterative RL training loops used for locomotion",
         "Humanoid robots cannot mount cameras at sufficient resolution for manipulation tasks during walking",
@@ -1681,8 +1681,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "ZMP, introduced by Vukobratović, is the ground-plane point where the combined gravitational and inertial wrench acts with zero moment; a biped is dynamically stable if and only if the ZMP lies within the convex hull of its support contacts (the support polygon). Classical humanoid controllers (e.g., Honda ASIMO) pre-plan footstep sequences that keep ZMP inside this polygon using a linear inverted pendulum model.",
       hints: [
-        "Think about balancing a broom on your palm — stability depends on where the net force acts relative to your support base.",
-        "The support polygon is the convex hull of all ground contact points — one or two feet depending on the gait phase.",
+        "Think about balancing a broom on your palm - stability depends on where the net force acts relative to your support base.",
+        "The support polygon is the convex hull of all ground contact points - one or two feet depending on the gait phase.",
       ],
     },
   ],
@@ -1704,7 +1704,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In an antipodal grasp, the two contact normals point toward each other (antiparallel); with sufficient friction at each contact, the resulting wrench closure condition guarantees that the gripper can resist any arbitrary external force and torque, making it the canonical stable grasp for parallel-jaw grippers.",
       hints: [
-        "Antipodal means opposite — think about the geometry of squeezing an object from two sides.",
+        "Antipodal means opposite - think about the geometry of squeezing an object from two sides.",
         "The stability condition is that contact forces (including friction) can balance any external wrench on the object.",
       ],
     },
@@ -1716,9 +1716,9 @@ const questions: Record<string, Question[]> = {
         "Grasp quality metrics such as the epsilon (\\epsilon) metric measure the radius of the largest wrench ball inscribed in the grasp wrench space, capturing how well a grasp can resist arbitrary external perturbations.",
       correctAnswer: "True",
       explanation:
-        "The \\epsilon-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space — a larger \\epsilon means the grasp resists stronger perturbations from any direction.",
+        "The \\epsilon-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space - a larger \\epsilon means the grasp resists stronger perturbations from any direction.",
       hints: [
-        "A grasp with \\epsilon > 0 achieves force closure — it can resist wrenches in all directions.",
+        "A grasp with \\epsilon > 0 achieves force closure - it can resist wrenches in all directions.",
         "The \\epsilon-metric is conservative: it measures the minimum over all wrench directions, capturing the worst-case direction.",
       ],
     },
@@ -1738,7 +1738,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Planar grasp methods assume a top-down approach, limiting them to table-top scenarios where objects are accessible from above; 6-DOF grasp planning predicts full pose (3D position + 3D orientation) of the gripper, enabling grasps from the side, below, or inside bins where top-down is blocked by walls or other objects.",
       hints: [
-        "Think about grasping a bottle lying on its side in a bin — a top-down approach would hit the bin wall.",
+        "Think about grasping a bottle lying on its side in a bin - a top-down approach would hit the bin wall.",
         "6-DOF refers to the full gripper pose in SE(3): 3 translation + 3 rotation degrees of freedom.",
       ],
     },
@@ -1761,7 +1761,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "6-DOF pose estimation recovers the SE(3) rigid body transformation: 3 translational DOFs (x, y, z position) and 3 rotational DOFs (roll, pitch, yaw) that align the known 3D object model with the observed image or point cloud.",
       hints: [
-        "SE(3) is the special Euclidean group in 3D — it describes rigid body motion with 3 translation and 3 rotation parameters.",
+        "SE(3) is the special Euclidean group in 3D - it describes rigid body motion with 3 translation and 3 rotation parameters.",
         "Knowing the 6-DOF pose allows a robot to compute the exact gripper pose needed to grasp or manipulate the object.",
       ],
     },
@@ -1776,7 +1776,7 @@ const questions: Record<string, Question[]> = {
         "Semantic segmentation labels each pixel with a category but cannot distinguish between individual instances of the same class; instance segmentation outputs separate masks for each object instance, which is essential for manipulation planning when a scene contains multiple apples, cups, or other identical objects.",
       hints: [
         "Semantic segmentation: all apples get label 'apple'. Instance segmentation: apple #1, apple #2, apple #3 each get separate masks.",
-        "A robot needs to know which specific object to grasp — semantic labels alone do not disambiguate instances.",
+        "A robot needs to know which specific object to grasp - semantic labels alone do not disambiguate instances.",
       ],
     },
     {
@@ -1795,7 +1795,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Depth completion networks (e.g., CSPN, PENet, GuideNet) fuse sparse LiDAR points and RGB guidance in a CNN to propagate depth to unobserved pixels; ground truth comes from accumulating multiple LiDAR scans or using stereo cameras as pseudolabels.",
       hints: [
-        "Sparse LiDAR gives accurate but sparse depth; RGB gives dense but ambiguous geometry — combining them is the key.",
+        "Sparse LiDAR gives accurate but sparse depth; RGB gives dense but ambiguous geometry - combining them is the key.",
         "Accumulated LiDAR scans from multiple frames can create dense pseudo-ground-truth for training.",
       ],
     },
@@ -1819,7 +1819,7 @@ const questions: Record<string, Question[]> = {
         "The support polygon is the convex hull of ground contact points (foot positions); static stability requires the center of mass (CoM) projection to lie strictly inside this polygon. If the CoM projection exits the support polygon, the robot tips over. Multi-legged robots with more feet have larger support polygons and are more statically stable.",
       hints: [
         "A tripod is always statically stable because the CoM projection is always inside the triangle formed by three feet.",
-        "A biped has a very small support polygon (the foot area) during single-support — this is why biped balance is challenging.",
+        "A biped has a very small support polygon (the foot area) during single-support - this is why biped balance is challenging.",
       ],
     },
     {
@@ -1832,7 +1832,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Legged MPC (e.g., as used in MIT Cheetah, ANYmal) solves a constrained optimization problem at 100-500 Hz over a receding horizon: it computes optimal contact forces, stance/swing schedules, and base trajectories that satisfy friction cone and motion constraints, allowing real-time adaptation to uneven terrain and external disturbances.",
       hints: [
-        "MPC continuously re-plans over a short future window — this is what enables reactive adaptation, unlike pre-planned ZMP gaits.",
+        "MPC continuously re-plans over a short future window - this is what enables reactive adaptation, unlike pre-planned ZMP gaits.",
         "The key constraints in legged MPC are the friction cone (contact forces must lie inside the cone) and the robot's centroidal dynamics.",
       ],
     },
@@ -1852,7 +1852,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "LiDAR and depth cameras (e.g., Intel RealSense, Ouster) build real-time elevation maps that capture terrain geometry ahead of the robot; systems like ANYmal use these elevation maps for footstep planning and stair/obstacle avoidance, while proprioception provides complementary contact state estimation.",
       hints: [
-        "Proprioception tells you what the feet feel under them now — exteroception (LiDAR/depth) tells you what's coming ahead.",
+        "Proprioception tells you what the feet feel under them now - exteroception (LiDAR/depth) tells you what's coming ahead.",
         "Elevation maps discretize the terrain into a 2.5D grid of heights, enabling fast lookup for footstep feasibility.",
       ],
     },
@@ -1875,7 +1875,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Market-based allocation (e.g., MURDOCH, TraderBots) uses decentralized bidding: each robot computes its local cost/utility for each task and broadcasts bids; the task is assigned to the lowest-cost bidder. This avoids combinatorial explosion of centralized planning and scales to large robot teams.",
       hints: [
-        "Think about how an auction distributes the decision-making — the auctioneer only needs to compare bids, not plan globally.",
+        "Think about how an auction distributes the decision-making - the auctioneer only needs to compare bids, not plan globally.",
         "Decentralization is the key to scalability: robots compute their own bids locally without central coordination.",
       ],
     },
@@ -1889,7 +1889,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Swarm robotics draws from biological swarms (ants, bees, birds): each robot follows simple local rules (attraction/repulsion to neighbors, pheromone-like communication) and the collective behavior emerges globally. No robot has global state knowledge, making the system robust to individual failures and highly scalable.",
       hints: [
-        "Think about how a flock of birds maintains formation without a leader — each bird only responds to its neighbors.",
+        "Think about how a flock of birds maintains formation without a leader - each bird only responds to its neighbors.",
         "Emergence means the collective behavior is not explicitly programmed but arises from local interactions.",
       ],
     },
@@ -1910,7 +1910,7 @@ const questions: Record<string, Question[]> = {
         "Consensus converges to the same value for all robots if and only if the communication graph is connected (and for directed graphs, has a spanning tree); disconnected subgraphs maintain separate consensus values with no information exchange between components.",
       hints: [
         "Connectivity is the minimal condition for information to propagate throughout the entire network.",
-        "A disconnected graph has isolated components that cannot share information — consensus within each component converges to different values.",
+        "A disconnected graph has isolated components that cannot share information - consensus within each component converges to different values.",
       ],
     },
   ],
@@ -1930,10 +1930,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Video prediction models (e.g., SV2P, RSSM in Dreamer) act as visual world models: given the current image and an action, they predict the next image; by rolling out these predictions, a planner can search over action sequences to find one that leads to the goal configuration — enabling model-based visual planning without environment interaction at test time.",
+        "Video prediction models (e.g., SV2P, RSSM in Dreamer) act as visual world models: given the current image and an action, they predict the next image; by rolling out these predictions, a planner can search over action sequences to find one that leads to the goal configuration - enabling model-based visual planning without environment interaction at test time.",
       hints: [
         "Think about how a world model enables planning: you simulate outcomes of actions before committing to them.",
-        "The goal image serves as the target — the planner selects actions whose predicted video ends at the goal.",
+        "The goal image serves as the target - the planner selects actions whose predicted video ends at the goal.",
       ],
     },
     {
@@ -1946,7 +1946,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Keypoint representations (e.g., Transporter Networks, Keypoint3D) detect task-relevant landmarks from images using heatmap networks, producing a low-dimensional geometric state that is more robust to visual appearance changes (lighting, color) than raw pixel features and more interpretable for spatial reasoning.",
       hints: [
-        "Think about what information is actually needed for manipulation — the positions of the gripper and object are key, not every pixel.",
+        "Think about what information is actually needed for manipulation - the positions of the gripper and object are key, not every pixel.",
         "Keypoints provide geometric state (2D or 3D positions) that is invariant to irrelevant visual changes like lighting.",
       ],
     },
@@ -1989,7 +1989,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "F/T safety limits monitor wrist or joint forces and torques in real-time; when measured forces exceed safety thresholds (e.g., due to unexpected collisions or contact), the controller triggers a protective stop or switches to compliance mode, preventing damage to the robot, workpiece, or human collaborators.",
       hints: [
-        "Think about what happens when a robot arm unexpectedly hits a person — force limits enable it to detect and respond to unexpected contact.",
+        "Think about what happens when a robot arm unexpectedly hits a person - force limits enable it to detect and respond to unexpected contact.",
         "ISO/TS 15066 defines force and pressure limits for collaborative robots (cobots) operating near humans.",
       ],
     },
@@ -2004,7 +2004,7 @@ const questions: Record<string, Question[]> = {
         "CBFs define a safety set C = {x : h(x) >= 0} and impose the condition on the control input that ensures the system remains in C for all time if it starts in C; this provides formal safety guarantees while being compatible with performance-optimizing controllers (e.g., QP-based CBF-CLF controllers).",
       hints: [
         "Forward invariance means: if you start inside the safe set, the CBF constraint keeps you inside forever.",
-        "CBFs are added as QP constraints on top of a nominal controller — they minimally modify the desired control to maintain safety.",
+        "CBFs are added as QP constraints on top of a nominal controller - they minimally modify the desired control to maintain safety.",
       ],
     },
     {
@@ -2023,7 +2023,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Stochastic CBFs (or chance-constraint CBFs) explicitly model uncertainty in obstacle state estimates and enforce probabilistic safety constraints (e.g., P(h(x) >= 0) >= 1-delta), providing formal probabilistic safety guarantees even when obstacle motion is uncertain; ORCA provides geometric guarantees only for cooperative, deterministic agents.",
       hints: [
-        "When obstacle positions are uncertain (due to prediction errors), deterministic CBFs may violate constraints — stochastic CBFs handle this rigorously.",
+        "When obstacle positions are uncertain (due to prediction errors), deterministic CBFs may violate constraints - stochastic CBFs handle this rigorously.",
         "The probability threshold trades off safety conservatism against performance.",
       ],
     },
@@ -2044,10 +2044,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Semantic maps associate objects and regions with category labels, enabling the robot to interpret natural language navigation goals ('go to the couch'), perform object search, and reason about task affordances (e.g., 'sit on the chair') — capabilities impossible with purely metric maps that only represent geometry.",
+        "Semantic maps associate objects and regions with category labels, enabling the robot to interpret natural language navigation goals ('go to the couch'), perform object search, and reason about task affordances (e.g., 'sit on the chair') - capabilities impossible with purely metric maps that only represent geometry.",
       hints: [
         "A geometric map says 'there is a surface at this location'; a semantic map says 'there is a couch at this location'.",
-        "Language grounding becomes possible when map elements have semantic labels — the robot can interpret 'go to the table'.",
+        "Language grounding becomes possible when map elements have semantic labels - the robot can interpret 'go to the table'.",
       ],
     },
     {
@@ -2060,7 +2060,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Topological maps abstract the environment into a graph where nodes represent distinctive places (rooms, intersections) and edges represent navigable paths between them; graph search (e.g., Dijkstra's) provides efficient long-horizon path planning, while local metric planners handle navigation between adjacent nodes.",
       hints: [
-        "Think about how a city map can be represented as a graph of intersections and roads — the topological map is this abstraction for robot environments.",
+        "Think about how a city map can be represented as a graph of intersections and roads - the topological map is this abstraction for robot environments.",
         "Topological maps scale to large buildings where dense metric maps would require enormous memory.",
       ],
     },
@@ -2078,7 +2078,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Tight coupling jointly optimizes LiDAR and IMU measurements in a single factor graph (e.g., using GTSAM or iSAM2); during LiDAR degeneracy (featureless tunnels, open fields), the IMU pre-integration constrains the motion estimate, preventing drift — a capability that loose coupling (which treats the two subsystems independently) cannot provide.",
+        "Tight coupling jointly optimizes LiDAR and IMU measurements in a single factor graph (e.g., using GTSAM or iSAM2); during LiDAR degeneracy (featureless tunnels, open fields), the IMU pre-integration constrains the motion estimate, preventing drift - a capability that loose coupling (which treats the two subsystems independently) cannot provide.",
       hints: [
         "Loose coupling chains two independent estimators; tight coupling merges all measurements into one optimization.",
         "IMU pre-integration provides high-rate motion priors that compensate when LiDAR feature extraction fails.",
@@ -2103,7 +2103,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Shared autonomy (e.g., HIRL, LfD+autonomy systems) infers the human's high-level goal from their input and blends robot autonomy to assist: the robot handles fine motor control while the human provides intent, reducing cognitive load, correcting for noisy inputs, and enabling complex manipulation through limited-bandwidth interfaces.",
       hints: [
-        "Think about how a driver-assistance system helps a human driver park — the human steers generally, the system fine-tunes.",
+        "Think about how a driver-assistance system helps a human driver park - the human steers generally, the system fine-tunes.",
         "Shared autonomy is especially valuable when the human's input device has fewer DOFs than the robot has DOFs.",
       ],
     },
@@ -2118,7 +2118,7 @@ const questions: Record<string, Question[]> = {
         "Bayesian intent prediction maintains a distribution over possible human goals; as human motion is observed, the posterior is updated using a likelihood model (e.g., assuming humans take approximately optimal paths toward their goal); the robot uses this distribution to pre-position itself or pre-grasp objects in anticipation.",
       hints: [
         "Early in a motion, many goals are plausible; as the human's hand moves closer to one object, the posterior concentrates on that goal.",
-        "Proactive assistance requires predicting the goal before the human reaches it — Bayesian updating provides a principled way to do this.",
+        "Proactive assistance requires predicting the goal before the human reaches it - Bayesian updating provides a principled way to do this.",
       ],
     },
     {
@@ -2135,10 +2135,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The symbol grounding problem (Harnad 1990) asks how symbols acquire meaning for a physical system; in robotics, words like 'grab the heavy red mug' require grounding 'heavy', 'red', and 'mug' to perceptual properties and 'grab' to a motor skill — connections that must be learned through sensorimotor experience and cannot be captured by language statistics alone.",
+        "The symbol grounding problem (Harnad 1990) asks how symbols acquire meaning for a physical system; in robotics, words like 'grab the heavy red mug' require grounding 'heavy', 'red', and 'mug' to perceptual properties and 'grab' to a motor skill - connections that must be learned through sensorimotor experience and cannot be captured by language statistics alone.",
       hints: [
         "A robot that knows only word co-occurrence statistics does not know what 'red' looks like or what 'grab' feels like.",
-        "Grounding connects abstract symbols to sensory inputs and motor outputs — bridging language and physical experience.",
+        "Grounding connects abstract symbols to sensory inputs and motor outputs - bridging language and physical experience.",
       ],
     },
   ],
@@ -2161,7 +2161,7 @@ const questions: Record<string, Question[]> = {
         "Rigid objects have a 6-DOF state; deformable objects (cloth, rope, dough) have effectively infinite-dimensional configuration spaces. Their dynamics are governed by complex material properties (elasticity, plasticity, friction) that are history-dependent and difficult to model, making both planning and control far more challenging.",
       hints: [
         "Think about how many numbers you need to describe the state of every point on a cloth sheet vs. a rigid cup.",
-        "The history dependence of deformable objects means the current configuration depends on how it got there — unlike rigid bodies.",
+        "The history dependence of deformable objects means the current configuration depends on how it got there - unlike rigid bodies.",
       ],
     },
     {
@@ -2172,10 +2172,10 @@ const questions: Record<string, Question[]> = {
         "Fluid handling in robotics (e.g., pouring liquid from a container) requires modeling free-surface fluid dynamics, making it one of the most challenging manipulation tasks due to the coupling between container tilt, pour rate, and fluid shape.",
       correctAnswer: "True",
       explanation:
-        "Pouring tasks require understanding fluid dynamics (surface tension, viscosity, turbulence), predicting pour trajectories as a function of container orientation and velocity, and perceiving the fluid level and pour accuracy — all of which are challenging to model precisely and sensitive to small variations in motion parameters.",
+        "Pouring tasks require understanding fluid dynamics (surface tension, viscosity, turbulence), predicting pour trajectories as a function of container orientation and velocity, and perceiving the fluid level and pour accuracy - all of which are challenging to model precisely and sensitive to small variations in motion parameters.",
       hints: [
         "Unlike rigid or even deformable solid objects, fluids have no persistent shape and require fluid dynamics models.",
-        "Pouring accuracy depends on the exact tilt angle, speed, and distance from the target — all coupled through fluid dynamics.",
+        "Pouring accuracy depends on the exact tilt angle, speed, and distance from the target - all coupled through fluid dynamics.",
       ],
     },
     {
@@ -2194,7 +2194,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Cloth material properties vary dramatically (a silk scarf vs. denim jeans behave very differently), and simulators struggle to accurately model the full range; domain randomization over material properties helps but may not cover the real distribution, and the high-dimensional cloth state makes visual observation-based policies especially sensitive to appearance sim-to-real gaps.",
       hints: [
-        "Think about how differently a thin silk cloth and a thick towel behave when folded — material properties matter enormously.",
+        "Think about how differently a thin silk cloth and a thick towel behave when folded - material properties matter enormously.",
         "Even with domain randomization, the space of possible cloth materials is large and hard to sample from efficiently.",
       ],
     },
@@ -2217,7 +2217,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In SEAs, the force at the output equals spring stiffness times spring deflection (measured by encoders), providing accurate, stable force sensing without expensive load cells; the spring also absorbs impact shocks and provides passive compliance during unintended contacts, making SEAs popular for collaborative robots (e.g., Baxter, PR2).",
       hints: [
-        "Hooke's law: F = k * \\Deltax — measuring spring deflection gives a direct force measurement.",
+        "Hooke's law: F = k * \\Deltax - measuring spring deflection gives a direct force measurement.",
         "Passive compliance from the spring means the robot naturally yields to unexpected forces, improving safety.",
       ],
     },
@@ -2229,9 +2229,9 @@ const questions: Record<string, Question[]> = {
         "Vision-based tactile sensors (e.g., GelSight, DIGIT) estimate contact geometry and shear forces by imaging the deformation of a gel-covered surface using an internal camera and lighting.",
       correctAnswer: "True",
       explanation:
-        "Vision-based tactile sensors coat a transparent elastomer gel with a reflective or colored layer; when an object contacts the gel surface, it deforms — an internal camera images this deformation, and photometric stereo or neural network processing recovers contact geometry (surface normals), contact area, and shear force direction from the image sequence.",
+        "Vision-based tactile sensors coat a transparent elastomer gel with a reflective or colored layer; when an object contacts the gel surface, it deforms - an internal camera images this deformation, and photometric stereo or neural network processing recovers contact geometry (surface normals), contact area, and shear force direction from the image sequence.",
       hints: [
-        "The gel deformation encodes contact geometry optically — the camera converts touch into vision.",
+        "The gel deformation encodes contact geometry optically - the camera converts touch into vision.",
         "GelSight-style sensors provide high spatial resolution tactile information by using the imaging system as a 'tactile retina'.",
       ],
     },
@@ -2251,8 +2251,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "High gear ratios reflect motor inertia (by gear ratio squared) to the output, making the joint stiff and masking ground reaction forces; QDD's low gear ratio (1:6 to 1:9) preserves back-drivability so ground impact forces are directly felt by the motor, enabling proprioceptive force control and impact-tolerant leg design essential for dynamic legged locomotion.",
       hints: [
-        "Reflected inertia scales as gear ratio squared — a 100:1 gearbox makes the joint feel 10,000x heavier to external forces.",
-        "Back-drivability means the output shaft can drive the motor backward — essential for sensing contact forces through the actuator.",
+        "Reflected inertia scales as gear ratio squared - a 100:1 gearbox makes the joint feel 10,000x heavier to external forces.",
+        "Back-drivability means the output shaft can drive the motor backward - essential for sensing contact forces through the actuator.",
       ],
     },
   ],
@@ -2274,7 +2274,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "DAgger (Ross et al., 2011) runs the current policy, labels visited states with expert actions, and aggregates these into the training dataset. By training on states actually visited by the learned policy, DAgger eliminates the train-test distribution mismatch that causes BC to fail exponentially with horizon length.",
       hints: [
-        "Covariate shift means the policy trains on expert states but tests on its own (possibly different) states — compounding errors over time.",
+        "Covariate shift means the policy trains on expert states but tests on its own (possibly different) states - compounding errors over time.",
         "DAgger requires an expert that can be queried online during training, unlike pure offline BC.",
       ],
     },
@@ -2284,9 +2284,9 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Behavior cloning trained on N expert demonstrations achieves policy error that grows quadratically with the task horizon T under covariate shift, making it impractical for long-horizon tasks.",
       correctAnswer: "True",
-      explanation: "Ross & Bagnell (2010) proved that BC error accumulates as O(T^2 * epsilon) where epsilon is the per-step mistake rate — quadratic in the horizon. Even small per-step errors compound dramatically over long horizons, which is why a robot learning to cook from demonstrations may fail catastrophically mid-task.",
+      explanation: "Ross & Bagnell (2010) proved that BC error accumulates as O(T^2 * epsilon) where epsilon is the per-step mistake rate - quadratic in the horizon. Even small per-step errors compound dramatically over long horizons, which is why a robot learning to cook from demonstrations may fail catastrophically mid-task.",
       hints: [
-        "Each small mistake changes the state distribution, causing subsequent mistakes — the error compounds across T steps.",
+        "Each small mistake changes the state distribution, causing subsequent mistakes - the error compounds across T steps.",
         "DAgger reduces this to O(T * epsilon) by training on the mixture distribution of expert and policy states.",
       ],
     },
@@ -2305,7 +2305,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       explanation: "MaxEnt IRL (Ziebart et al., 2008) finds the maximum-entropy distribution over trajectories whose expected feature counts match the expert's. This yields a Boltzmann-style policy pi(tau) proportional to exp(r_theta(tau)), where the partition function is computed via dynamic programming on the MDP. The learned reward generalizes better than feature matching alone because it avoids overconfident reward assignments.",
       hints: [
         "Entropy maximization is the principle of being maximally uncertain about unobserved trajectories while remaining consistent with observed feature expectations.",
-        "The partition function Z(theta) = sum_tau exp(r_theta(tau)) must be tractable — requiring a finite MDP or approximations for continuous state spaces.",
+        "The partition function Z(theta) = sum_tau exp(r_theta(tau)) must be tractable - requiring a finite MDP or approximations for continuous state spaces.",
       ],
     },
     {
@@ -2322,7 +2322,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "GAIL shows that IRL followed by RL is equivalent to occupancy measure matching. It trains a discriminator D(s,a) to distinguish expert from policy (s,a) pairs, using -log D(s,a) as a reward signal for PPO/TRPO. The generator (policy) minimizes the JS divergence between occupancy measures. This is more sample-efficient than the IRL-then-RL pipeline and does not require explicit reward function recovery.",
       hints: [
-        "Occupancy measure rho_pi(s,a) = sum_t gamma^t P(s_t=s, a_t=a | pi) — it captures the long-run visitation frequency, not just the policy.",
+        "Occupancy measure rho_pi(s,a) = sum_t gamma^t P(s_t=s, a_t=a | pi) - it captures the long-run visitation frequency, not just the policy.",
         "The GAN formulation means the discriminator's output directly provides a shaped reward that guides policy improvement.",
       ],
     },
@@ -2340,7 +2340,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "VAIL (Peng et al., 2019) applies the information bottleneck principle: I(Z; X) <= I_c, constraining the mutual information between the discriminator's latent code Z and its input X. This prevents the discriminator from overfitting to specific expert trajectory features, leading to smoother reward landscapes and better generalization of the learned policy to new situations.",
       hints: [
-        "Information bottleneck: compress the input to only what is needed to distinguish expert from policy — discard irrelevant details.",
+        "Information bottleneck: compress the input to only what is needed to distinguish expert from policy - discard irrelevant details.",
         "A discriminator that memorizes exact expert trajectories gives a degenerate reward signal; the bottleneck forces it to learn more general features.",
       ],
     },
@@ -2350,9 +2350,9 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "DAgger requires access to an expert that can be queried at arbitrary states during training, which limits its applicability when the expert is a human demonstrator who finds it burdensome to provide dense online corrections.",
       correctAnswer: "True",
-      explanation: "DAgger's theoretical guarantees rely on labeling every visited state with the optimal expert action. With human experts, this is costly and unnatural — humans typically demonstrate full trajectories, not per-state corrections. Extensions like SafeDAgger, HG-DAgger, and EnsembleDAgger reduce the query burden by selectively querying only uncertain states, but the fundamental limitation of needing an interactive expert remains.",
+      explanation: "DAgger's theoretical guarantees rely on labeling every visited state with the optimal expert action. With human experts, this is costly and unnatural - humans typically demonstrate full trajectories, not per-state corrections. Extensions like SafeDAgger, HG-DAgger, and EnsembleDAgger reduce the query burden by selectively querying only uncertain states, but the fundamental limitation of needing an interactive expert remains.",
       hints: [
-        "In robotics, the expert might be a human teleoperating the robot — querying them on every visited state is impractical.",
+        "In robotics, the expert might be a human teleoperating the robot - querying them on every visited state is impractical.",
         "Offline imitation methods like BC++ or IQ-Learn try to remove the online expert requirement entirely.",
       ],
     },
@@ -2372,7 +2372,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "RT-2 tokenizes robot actions (end-effector poses, gripper commands) into 256-bin discrete tokens appended to the language model's existing vocabulary. The VLM then predicts action tokens autoregressively alongside language, enabling seamless transfer of internet-scale visual-language knowledge to robot control without architectural changes.",
       hints: [
-        "The key insight: if actions are just tokens, a language model can predict them — no special output head needed.",
+        "The key insight: if actions are just tokens, a language model can predict them - no special output head needed.",
         "Discretizing continuous actions into bins is a common trick; the choice of 256 bins balances precision and vocabulary size.",
       ],
     },
@@ -2388,7 +2388,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "By using a separate object detection model to verify that required objects are present before executing each skill",
       ],
       correctAnswer: 1,
-      explanation: "SayCan scores each candidate skill as p(skill|instruction) * p(success|skill, state), where the first term comes from the LLM's next-token distribution and the second from a learned value function (can this skill succeed from the current robot state?). This grounds language semantics in physical affordances — the robot will not attempt skills it cannot execute in the current context.",
+      explanation: "SayCan scores each candidate skill as p(skill|instruction) * p(success|skill, state), where the first term comes from the LLM's next-token distribution and the second from a learned value function (can this skill succeed from the current robot state?). This grounds language semantics in physical affordances - the robot will not attempt skills it cannot execute in the current context.",
       hints: [
         "The LLM knows what makes semantic sense; the value function knows what is physically achievable given the current scene.",
         "The product of these two scores selects skills that are both linguistically appropriate and robotically feasible.",
@@ -2406,7 +2406,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "PaLM-E fine-tunes only the final transformer layer on robot data, preserving all pre-trained weights",
       ],
       correctAnswer: 1,
-      explanation: "PaLM-E inserts multimodal tokens — continuous neural representations of images, robot states, or NeRF scene descriptors — directly into the PaLM token stream. Unlike CLIP-conditioned models that use a fixed visual prefix, PaLM-E can interleave text and sensory tokens arbitrarily, enabling complex reasoning like: given image1 of the table and image2 of the goal, what should the robot do?",
+      explanation: "PaLM-E inserts multimodal tokens - continuous neural representations of images, robot states, or NeRF scene descriptors - directly into the PaLM token stream. Unlike CLIP-conditioned models that use a fixed visual prefix, PaLM-E can interleave text and sensory tokens arbitrarily, enabling complex reasoning like: given image1 of the table and image2 of the goal, what should the robot do?",
       hints: [
         "Multimodal tokens are projected by neural encoders (ViT, NeRF encoder) into the LLM's embedding space and treated like word tokens.",
         "The model can attend to image tokens and text tokens simultaneously, enabling grounded question answering and planning.",
@@ -2420,7 +2420,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "RT-1 applies an EfficientNet backbone to extract image features, then uses TokenLearner to compress spatial image tokens from 81 to 8, dramatically reducing attention computation. The resulting compact representations are processed by a transformer decoder to predict discretized robot actions. This compression enables 3 Hz inference necessary for closed-loop robot control.",
       hints: [
-        "TokenLearner learns to select or combine spatial tokens using attention — keeping only the most task-relevant visual features.",
+        "TokenLearner learns to select or combine spatial tokens using attention - keeping only the most task-relevant visual features.",
         "Without compression, the quadratic attention cost over 81 spatial tokens per frame would be too slow for real-time control.",
       ],
     },
@@ -2431,14 +2431,14 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       question: "Open X-Embodiment (2023) collected robot demonstrations across many different robot platforms and tasks into a single dataset. What is the primary motivation for training on such a diverse multi-robot dataset?",
       options: [
         "To reduce data collection cost by sharing demonstrations across labs",
-        "To learn transferable representations and policies that generalize across robot morphologies, tasks, and environments — enabling few-shot adaptation to new robots",
+        "To learn transferable representations and policies that generalize across robot morphologies, tasks, and environments - enabling few-shot adaptation to new robots",
         "To benchmark different robot hardware designs under identical conditions",
         "To create a standardized evaluation suite for comparing robot learning algorithms",
       ],
       correctAnswer: 1,
       explanation: "Open X-Embodiment trains RT-X models on 22 robot embodiments across 527 skills, demonstrating that policies trained on diverse data outperform single-robot specialists through positive transfer. The key insight is that diverse data improves generalization, analogous to how internet-scale text training improves LLMs.",
       hints: [
-        "Cross-embodiment training is analogous to multi-task learning — diversity in training data improves generalization.",
+        "Cross-embodiment training is analogous to multi-task learning - diversity in training data improves generalization.",
         "A robot arm and a mobile manipulator doing the pick-and-place task share underlying visual and semantic concepts.",
       ],
     },
@@ -2456,10 +2456,10 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "The robot fingers are in contact with the convex hull of the object",
       ],
       correctAnswer: 0,
-      explanation: "A grasp achieves force-closure if the contact forces (within friction cones) can produce any desired wrench on the object — meaning the grasp can resist arbitrary external forces and torques. This requires that the convex hull of the contact wrenches (the grasp wrench space) contains the origin, computed via the Grasp Matrix G where GF = w.",
+      explanation: "A grasp achieves force-closure if the contact forces (within friction cones) can produce any desired wrench on the object - meaning the grasp can resist arbitrary external forces and torques. This requires that the convex hull of the contact wrenches (the grasp wrench space) contains the origin, computed via the Grasp Matrix G where GF = w.",
       hints: [
         "Force-closure is stronger than form-closure: form-closure restrains the object geometrically even with frictionless contacts; force-closure requires friction.",
-        "The grasp wrench space is the set of all wrenches achievable by the contact forces — force-closure means this set spans all 6 DOF.",
+        "The grasp wrench space is the set of all wrenches achievable by the contact forces - force-closure means this set spans all 6 DOF.",
       ],
     },
     {
@@ -2476,7 +2476,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "GraspNet-1Billion (Fang et al., 2020) anchors grasp candidates at each point in the scene point cloud, predicting approach directions sampled on a sphere and widths from a scoring network. Grasps are parameterized as (R in SO(3), t in R^3, w in R) and ranked by a learned quality score, enabling dense grasp candidate generation from a single forward pass.",
       hints: [
-        "6-DOF grasps require full SE(3) pose — not just the (x,y) top-down position used in planar grasp planners.",
+        "6-DOF grasps require full SE(3) pose - not just the (x,y) top-down position used in planar grasp planners.",
         "Anchoring at surface points ensures candidates are physically reachable; SO(3) approach directions cover all possible gripper orientations.",
       ],
     },
@@ -2488,7 +2488,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "RRT* (Karaman & Frazzoli, 2011) adds two key operations to RRT: choose_parent selects the lowest-cost parent for each new node within a rewiring radius, and rewire updates existing nodes if routing through the new node reduces their cost. With these modifications, RRT* is almost-surely asymptotically optimal, unlike standard RRT which is neither complete for continuous problems nor optimal.",
       hints: [
-        "RRT is probabilistically complete but not optimal — it finds a path, not the best path.",
+        "RRT is probabilistically complete but not optimal - it finds a path, not the best path.",
         "The rewiring radius shrinks at the right rate r_n = gamma*(log n / n)^(1/d) to maintain optimality while keeping the algorithm efficient.",
       ],
     },
@@ -2519,7 +2519,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       question: "Domain randomization for sim-to-real transfer randomizes simulation parameters during training. Which set of parameters is most critical to randomize for contact-rich manipulation tasks?",
       options: [
         "Camera intrinsics (focal length, distortion) and lighting color temperature",
-        "Friction coefficients, object mass/inertia, joint damping, and contact restitution — the physical parameters governing force transmission during contact",
+        "Friction coefficients, object mass/inertia, joint damping, and contact restitution - the physical parameters governing force transmission during contact",
         "Neural network learning rate and batch size",
         "Robot workspace bounds and initial joint configuration",
       ],
@@ -2527,7 +2527,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       explanation: "Contact-rich tasks are highly sensitive to friction and elasticity parameters that simulators approximate poorly. Randomizing friction coefficients (mu in [0.3, 1.5]), object masses, joint damping, and contact restitution forces the policy to be robust to the sim-real gap in contact physics. Visual domain randomization (textures, lighting) is additionally important for vision-based tasks.",
       hints: [
         "A policy trained with fixed mu=0.7 may fail on the real robot where actual friction varies across surfaces.",
-        "Contact restitution (bounciness) is especially hard to model accurately — randomizing it prevents over-reliance on precise contact physics.",
+        "Contact restitution (bounciness) is especially hard to model accurately - randomizing it prevents over-reliance on precise contact physics.",
       ],
     },
     {
@@ -2538,7 +2538,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "GelSight sensors use a soft elastomer with embedded markers and a camera to image contact deformations, recovering contact geometry and force distribution at sub-millimeter resolution. Simulating the non-linear elastomer deformation and optical response is computationally expensive and imprecise, making sim-to-real transfer for tactile-based policies challenging and an active research area.",
       hints: [
-        "GelSight essentially creates a touch camera — the elastomer deforms under contact, and the camera images the deformation field.",
+        "GelSight essentially creates a touch camera - the elastomer deforms under contact, and the camera images the deformation field.",
         "Force estimation from GelSight uses finite-element models of the elastomer or learned mappings from images to contact forces.",
       ],
     },
@@ -2554,7 +2554,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "Differences in the color of the simulated versus real robot skin",
       ],
       correctAnswer: 1,
-      explanation: "Tendon-driven hands like the Shadow Hand route cables through complex paths with pulleys and antagonistic pairs. Simulation must model tendon routing geometry, compliance, and coupling between joints — errors in these models cause commanded torques to produce different joint motions in simulation vs reality. Policies trained with incorrect tendon models produce wrong finger forces on the real hand, a major source of morphology mismatch.",
+      explanation: "Tendon-driven hands like the Shadow Hand route cables through complex paths with pulleys and antagonistic pairs. Simulation must model tendon routing geometry, compliance, and coupling between joints - errors in these models cause commanded torques to produce different joint motions in simulation vs reality. Policies trained with incorrect tendon models produce wrong finger forces on the real hand, a major source of morphology mismatch.",
       hints: [
         "Unlike direct-drive joints, tendon-driven joints have complex force-displacement coupling that is hard to model precisely.",
         "System identification of tendon compliance and routing can partially reduce this gap but is time-consuming.",
@@ -2572,10 +2572,10 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "Cloud TPU pods running TensorFlow Estimator-based simulation graphs",
       ],
       correctAnswer: 1,
-      explanation: "Isaac Gym implements physics simulation as GPU tensor operations (rigid body dynamics, contact detection, constraint solving), running thousands of environments simultaneously without CPU-GPU memory transfers. Policy networks also run on GPU, creating an end-to-end GPU pipeline. This enables collecting millions of environment steps per second — orders of magnitude faster than CPU-based simulators like MuJoCo, enabling training dexterous manipulation policies in hours.",
+      explanation: "Isaac Gym implements physics simulation as GPU tensor operations (rigid body dynamics, contact detection, constraint solving), running thousands of environments simultaneously without CPU-GPU memory transfers. Policy networks also run on GPU, creating an end-to-end GPU pipeline. This enables collecting millions of environment steps per second - orders of magnitude faster than CPU-based simulators like MuJoCo, enabling training dexterous manipulation policies in hours.",
       hints: [
         "The bottleneck in traditional RL is CPU-GPU transfer: simulation runs on CPU, policy runs on GPU, requiring constant data copying.",
-        "Isaac Gym eliminates this by running everything on GPU — contact forces, joint states, and policy outputs all live in GPU memory.",
+        "Isaac Gym eliminates this by running everything on GPU - contact forces, joint states, and policy outputs all live in GPU memory.",
       ],
     },
     {
@@ -2586,7 +2586,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "ADR (OpenAI, 2019, used for dexterous in-hand manipulation) starts with a narrow parameter range and expands it when the policy achieves sufficient performance on both the easy (minimal randomization) and hard (maximal randomization) ends of the current range. This curriculum approach avoids starting with parameter distributions so wide that the task is unsolvable, while eventually achieving robustness to a very large range of physical variations.",
       hints: [
-        "Starting with maximal domain randomization can make the task too hard to learn from scratch — ADR provides a curriculum.",
+        "Starting with maximal domain randomization can make the task too hard to learn from scratch - ADR provides a curriculum.",
         "ADR monitors performance at the boundaries of the current range to decide whether to expand each parameter's distribution.",
       ],
     },
@@ -2606,7 +2606,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Contact introduces discrete mode switches (contact-on/contact-off, stick/slip) that create a hybrid dynamical system. The set of active contacts defines a contact mode, and the optimal trajectory may require a specific sequence of modes. Enumerating all mode sequences is combinatorial, and gradient-based optimizers get stuck in local optima corresponding to wrong contact mode sequences. Methods like complementarity-based trajectory optimization or learning-based planners address this.",
       hints: [
-        "In free-space, the dynamics are smooth and differentiable — one local minimum for trajectory optimization. With contacts, each mode sequence creates a separate optimization problem.",
+        "In free-space, the dynamics are smooth and differentiable - one local minimum for trajectory optimization. With contacts, each mode sequence creates a separate optimization problem.",
         "Peg-in-hole assembly requires precise orchestration of sliding, tilting, and pushing contacts in a specific order.",
       ],
     },
@@ -2618,8 +2618,8 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Impedance control (Hogan, 1985) regulates the relationship between end-effector force and displacement as F = K(x_d - x) + B(dx_d/dt - dx/dt), where K and B are virtual stiffness and damping. Unlike position control (which fights unexpected contacts), impedance control allows compliant yielding to contact forces, essential for assembly, polishing, and any task where precise force modulation is needed to prevent damage.",
       hints: [
-        "A position-controlled robot hitting an unexpected obstacle will keep pushing — potentially damaging the object or itself.",
-        "Impedance control's virtual spring gives way proportionally to contact force — the robot yields softly on contact.",
+        "A position-controlled robot hitting an unexpected obstacle will keep pushing - potentially damaging the object or itself.",
+        "Impedance control's virtual spring gives way proportionally to contact force - the robot yields softly on contact.",
       ],
     },
     {
@@ -2634,7 +2634,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "TAMP is used exclusively for multi-robot coordination while single-robot tasks use motion planning",
       ],
       correctAnswer: 1,
-      explanation: "TAMP (e.g., PDDLStream, TMP) interleaves symbolic task planning (pick, place, open) with geometric feasibility checking (IK solutions, collision-free trajectories, stable grasps). A task plan is only valid if all its continuous actions are geometrically feasible — e.g., pick object A requires a reachable, collision-free grasp. This tight coupling between discrete and continuous planning is TAMP's defining feature.",
+      explanation: "TAMP (e.g., PDDLStream, TMP) interleaves symbolic task planning (pick, place, open) with geometric feasibility checking (IK solutions, collision-free trajectories, stable grasps). A task plan is only valid if all its continuous actions are geometrically feasible - e.g., pick object A requires a reachable, collision-free grasp. This tight coupling between discrete and continuous planning is TAMP's defining feature.",
       hints: [
         "A pure task planner might propose pick object from shelf without checking if the robot arm can actually reach it given other objects.",
         "TAMP feedback loops: if motion planning fails to find a grasp for a chosen pick action, task planning backtracks and tries a different action sequence.",
@@ -2657,7 +2657,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       explanation: "ACT predicts a chunk of k=100 future actions at each inference step, executing them open-loop before re-planning. This reduces the effective decision frequency by k times, lowering the horizon T for error accumulation. ACT also uses a CVAE to model the multi-modality of human demonstrations, with the encoder processing demonstration action sequences to condition the policy.",
       hints: [
         "Autoregressive action prediction at every timestep compounds error T times; predicting k actions and executing them reduces this to T/k compounding steps.",
-        "The CVAE latent variable captures which strategy the human used — this is essential for multi-modal demonstrations where multiple behaviors are all valid.",
+        "The CVAE latent variable captures which strategy the human used - this is essential for multi-modal demonstrations where multiple behaviors are all valid.",
       ],
     },
     {
@@ -2686,8 +2686,8 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "R3M is trained on Ego4D human video with a time-contrastive objective (states further in time should be more different) plus an alignment objective between video frames and language descriptions. Despite never seeing a robot, R3M's representations encode task-relevant visual features (object state, contact, progress) that transfer effectively to manipulation, outperforming ImageNet-pretrained ViT/ResNet features that encode texture and category information less relevant to manipulation.",
       hints: [
-        "Ego4D contains egocentric human manipulation video — visually similar to robot manipulation but without robot data.",
-        "Time-contrastive learning: frame at t=0 should be closer to frame at t=1 than to frame at t=50 — this captures task progress in the representation.",
+        "Ego4D contains egocentric human manipulation video - visually similar to robot manipulation but without robot data.",
+        "Time-contrastive learning: frame at t=0 should be closer to frame at t=1 than to frame at t=50 - this captures task progress in the representation.",
       ],
     },
     {
@@ -2702,9 +2702,9 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "Privileged information refers to proprioceptive data (joint angles, velocities) shared between robots in a multi-robot team",
       ],
       correctAnswer: 0,
-      explanation: "Privileged learning (Chen et al., 2020; Lee et al., 2020 for legged robots) trains a critic with access to full simulator state (contact forces, exact object poses, terrain geometry) for accurate value estimation, while the actor uses only realistic sensor inputs (IMU, joint encoders, cameras). After training, the actor alone is deployed — it never needs the privileged information. This dramatically improves learning efficiency without violating the sim-to-real constraint.",
+      explanation: "Privileged learning (Chen et al., 2020; Lee et al., 2020 for legged robots) trains a critic with access to full simulator state (contact forces, exact object poses, terrain geometry) for accurate value estimation, while the actor uses only realistic sensor inputs (IMU, joint encoders, cameras). After training, the actor alone is deployed - it never needs the privileged information. This dramatically improves learning efficiency without violating the sim-to-real constraint.",
       hints: [
-        "The critic is only used during training — it can see anything the simulator provides without affecting deployability.",
+        "The critic is only used during training - it can see anything the simulator provides without affecting deployability.",
         "Distillation is sometimes used: first train a teacher (with full state) then distill into a student (with only sensor observations).",
       ],
     },
@@ -2720,7 +2720,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "A transformer over the history of observations that predicts future rewards via supervised learning on experience replay",
       ],
       correctAnswer: 1,
-      explanation: "Dreamer's RSSM: h_t = GRU(h_{t-1}, z_{t-1}, a_{t-1}) (deterministic), z_t ~ p(z|h_t) (stochastic). The model learns an encoder q(z|h,o), transition p(z|h), reward p(r|h,z), and decoder p(o|h,z). Policy optimization happens entirely in latent space: imagine k-step rollouts from the current state, compute value via learned critic, and backpropagate through imagined trajectories — avoiding expensive real environment rollouts.",
+      explanation: "Dreamer's RSSM: h_t = GRU(h_{t-1}, z_{t-1}, a_{t-1}) (deterministic), z_t ~ p(z|h_t) (stochastic). The model learns an encoder q(z|h,o), transition p(z|h), reward p(r|h,z), and decoder p(o|h,z). Policy optimization happens entirely in latent space: imagine k-step rollouts from the current state, compute value via learned critic, and backpropagate through imagined trajectories - avoiding expensive real environment rollouts.",
       hints: [
         "The GRU component gives Dreamer temporal memory without requiring full sequence re-processing; the stochastic component captures environment randomness.",
         "Latent-space imagination: instead of querying the real env 1000 times, generate 1000 imagined trajectories from the world model in latent space.",
@@ -2734,7 +2734,7 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
       correctAnswer: "True",
       explanation: "Eureka (Ma et al., 2023) prompts GPT-4 with the environment code and task description, generating Python reward functions that are executed in IsaacGym. Training statistics (mean reward, success rate, component magnitudes) are fed back to GPT-4 as context, which then revises the reward function. After multiple iterations, Eureka matches or exceeds human-engineered rewards on 83% of tasks across 29 RL environments, including dexterous pen spinning.",
       hints: [
-        "The key innovation: LLM generates code, RL trains on it, the resulting statistics become context for the next LLM prompt — a closed feedback loop.",
+        "The key innovation: LLM generates code, RL trains on it, the resulting statistics become context for the next LLM prompt - a closed feedback loop.",
         "Reward shaping via LLM is promising because writing a good reward function requires domain knowledge that LLMs have absorbed from robotics literature.",
       ],
     },
@@ -2750,10 +2750,10 @@ const extraRoboticsQuestions: Record<string, Question[]> = {
         "ADR fine-tuned simulation parameters on real robot data; proprioception alone was sufficient for reliable in-hand manipulation",
       ],
       correctAnswer: 1,
-      explanation: "OpenAI's Rubik's cube work used ADR to automatically expand randomization ranges (friction, gravity direction, joint limits, sensor delays, object size) based on policy success at distribution boundaries. The real robot required PhaseSpace motion capture for object pose and 3D-printed fingertip tactile sensors to detect slip — pure vision-based control was insufficiently reliable for the precise contact management required during cube face rotations.",
+      explanation: "OpenAI's Rubik's cube work used ADR to automatically expand randomization ranges (friction, gravity direction, joint limits, sensor delays, object size) based on policy success at distribution boundaries. The real robot required PhaseSpace motion capture for object pose and 3D-printed fingertip tactile sensors to detect slip - pure vision-based control was insufficiently reliable for the precise contact management required during cube face rotations.",
       hints: [
-        "ADR is a curriculum: easy randomization first, expand ranges as the policy improves — ultimately training with very wide parameter distributions.",
-        "Tactile slip detection provides a fast feedback loop (under 5 ms) needed to reposition fingers before the cube drops — cameras at 30 Hz are too slow.",
+        "ADR is a curriculum: easy randomization first, expand ranges as the policy improves - ultimately training with very wide parameter distributions.",
+        "Tactile slip detection provides a fast feedback loop (under 5 ms) needed to reposition fingers before the cube drops - cameras at 30 Hz are too slow.",
       ],
     },
   ],
