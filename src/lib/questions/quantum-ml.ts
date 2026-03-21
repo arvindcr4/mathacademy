@@ -71,7 +71,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In a quantum circuit, gates must be applied in a strictly sequential order and cannot be parallelized across independent qubits.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Gates acting on disjoint sets of qubits commute and can be applied in parallel, which is exploited for circuit depth reduction and hardware efficiency. Circuit depth counts the longest sequential chain of non-commuting gates, not the total number of gates.",
       hints: [
@@ -127,7 +127,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Quantum entanglement allows two parties to communicate information faster than the speed of light.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Entanglement produces correlated measurement outcomes but no information is transmitted; the no-communication theorem proves that entanglement alone cannot be used for superluminal signaling.",
       hints: [
@@ -179,7 +179,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Shor\'s algorithm can factor large integers exponentially faster than the best known classical algorithms.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Shor\'s algorithm runs in polynomial time O((log N)³) using quantum phase estimation and the quantum Fourier transform, versus sub-exponential but super-polynomial classical factoring algorithms.",
       hints: [
@@ -235,7 +235,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Decoherence in NISQ devices causes qubits to lose their quantum properties by interacting with the environment.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Decoherence is the process by which quantum superposition is lost due to uncontrolled environmental interactions, collapsing qubits toward classical mixed states and limiting circuit depth.",
       hints: [
@@ -292,7 +292,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In VQE, the quantum computer is used to prepare a parameterized state and measure expectation values, while a classical optimizer updates the parameters.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "VQE is a hybrid algorithm: the quantum device handles state preparation and Hamiltonian measurement, while a classical optimizer (e.g., COBYLA, BFGS) minimizes the energy over circuit parameters.",
       hints: [
@@ -349,7 +349,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "At p = 1 layer, QAOA is guaranteed to find the optimal solution to any combinatorial optimization problem.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "QAOA with p = 1 provides only a constant-factor approximation; approaching the optimal solution generally requires p → ∞ layers, and even then optimality is not guaranteed for NP-hard problems.",
       hints: [
@@ -405,7 +405,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Hardware-efficient ansatze are designed to minimize the number of gates that are native to the quantum hardware, regardless of the problem structure.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Hardware-efficient ansatze prioritize using the native gate set and connectivity of a specific quantum device to reduce noise, even if the circuit structure has no direct relationship to the problem being solved.",
       hints: [
@@ -457,7 +457,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The parameter-shift rule gives the exact gradient (not an approximation) of the expectation value with respect to a gate parameter.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Because parameterized gates have the form exp(−iθP/2) where P is a Pauli operator, the expectation value is a sinusoidal function of θ, and the parameter-shift rule computes its exact derivative analytically.",
       hints: [
@@ -504,7 +504,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Barren plateaus can be partially avoided by using problem-inspired or shallow local ansatze instead of deep global random circuits.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Local cost functions and shallow, structured ansatze avoid the full Haar-random regime, resulting in at most polynomially vanishing gradients rather than exponentially vanishing ones.",
       hints: [
@@ -561,7 +561,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The ZZFeatureMap in PennyLane/Qiskit encodes classical data using both single-qubit and two-qubit interactions to create entanglement between feature dimensions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The ZZFeatureMap applies Hadamard gates followed by ZZ-interaction unitaries exp(i(π − x_i)(π − x_j)ZZ) between pairs of qubits, creating non-linear and entangled encodings of the input features.",
       hints: [
@@ -617,7 +617,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Computing the full N×N quantum kernel matrix for N training points requires O(N²) quantum circuit evaluations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Since each kernel entry K(x_i, x_j) requires one quantum circuit evaluation and there are N(N−1)/2 unique pairs, the total cost is O(N²) circuit runs, which can be a bottleneck for large datasets.",
       hints: [
@@ -674,7 +674,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Angle encoding maps each classical feature to the rotation angle of a single-qubit gate, requiring one qubit per feature.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "In angle encoding, a feature xᵢ is encoded as the angle of an Rx(xᵢ) or Ry(xᵢ) rotation gate applied to qubit i, giving a linear qubit count but losing the exponential compression of amplitude encoding.",
       hints: [
@@ -726,7 +726,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A provable quantum advantage in ML has been conclusively demonstrated for real-world large-scale datasets as of 2024.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "As of 2024, all provable quantum ML advantages are confined to constructed or synthetic problem instances; no unambiguous quantum advantage has been demonstrated on practically relevant large-scale ML tasks.",
       hints: [
@@ -783,7 +783,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Dequantization results disprove the utility of all quantum algorithms.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Dequantization only applies to specific algorithms that relied on QRAM-style data access; algorithms like Shor\'s (factoring) and Grover\'s (search) remain without classical polynomial-time equivalents.",
       hints: [
@@ -840,7 +840,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum neural networks are unitary transformations and therefore cannot introduce non-linearity the same way classical activation functions do.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "All quantum gates are unitary (linear) transformations; non-linearity in QNNs must come from measurement and re-encoding steps, unlike classical networks where activation functions like ReLU directly introduce non-linearity.",
       hints: [
@@ -897,7 +897,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "QCNNs have been shown to be free from barren plateaus due to their hierarchical local structure.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Pesah et al. (2021) proved that QCNNs with local cost functions and hierarchical pooling avoid barren plateaus, with gradients that vanish at most polynomially (not exponentially) with system size.",
       hints: [
@@ -954,7 +954,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum RNNs can perfectly memorize arbitrarily long sequences due to the unitary nature of quantum evolution, which prevents information loss.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "While unitarity is reversible (no information is destroyed), the memory register has a finite Hilbert space dimension; with finite qubits, the QRNN can only represent limited context, and practical noise causes decoherence-induced forgetting.",
       hints: [
@@ -1011,7 +1011,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum transfer learning allows quantum circuits to benefit from the vast amount of pre-training done on classical hardware without retraining from scratch.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "By freezing the classical backbone and only training the quantum head, quantum transfer learning leverages classical pre-training (ImageNet, etc.) while requiring only a small quantum circuit to be optimized.",
       hints: [
@@ -1068,7 +1068,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Hybrid architectures are motivated in part by the limited qubit counts and coherence times of current NISQ devices, which cannot run fully quantum algorithms.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Hybrid architectures offload the parts of a computation that require long coherence times or many qubits to classical hardware, making algorithms feasible on current NISQ devices with limited qubits and short decoherence times.",
       hints: [
@@ -1124,7 +1124,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum GANs (qGANs) are fundamentally different from classical GANs because they use quantum circuits instead of classical neural networks.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Quantum GANs (qGANs) use classical discriminators while the generator is quantum, or they use quantum circuits for both but with different purposes. The key is that the discriminator is not quantum.",
       hints: [
@@ -1181,7 +1181,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum Boltzmann Machines sample from a thermal (Gibbs) distribution defined by a quantum Hamiltonian.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The QBM\'s generative model is the quantum Gibbs state ρ ∝ exp(−βH), where β is inverse temperature; learning adjusts the Hamiltonian parameters so that marginals of ρ match the training data distribution.",
       hints: [
@@ -1238,7 +1238,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum sampling (e.g., boson sampling) has been proposed as a near-term demonstration of quantum computational advantage over classical computers.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Boson sampling and random circuit sampling (Google\'s 2019 Sycamore experiment) are designed specifically to be hard for classical computers to simulate, offering a route to demonstrate quantum computational advantage without requiring error correction.",
       hints: [
@@ -1295,7 +1295,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A quantum autoencoder can compress quantum states that have no efficient classical description.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Unlike classical autoencoders that process classically-describable data, quantum autoencoders can compress highly entangled quantum states that would require exponentially many classical parameters to specify, making them useful for quantum data compression.",
       hints: [
@@ -1352,7 +1352,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum-inspired diffusion models require actual quantum hardware to run.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Quantum-inspired models are classical algorithms that borrow mathematical structures from quantum mechanics (e.g., density matrices, interference); they run on classical computers and do not require quantum hardware.",
       hints: [
@@ -1409,7 +1409,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In PennyLane, a QNode wraps a quantum function and makes it differentiable with respect to its parameters using the parameter-shift rule by default.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "A PennyLane QNode decorates a Python function defining a quantum circuit and attaches a differentiation method (default: parameter-shift) so that gradients can be computed and integrated with classical optimizers.",
       hints: [
@@ -1466,7 +1466,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Qiskit Machine Learning\'s QSVC class implements a quantum kernel SVM that is compatible with scikit-learn\'s SVC interface.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "QSVC wraps a quantum kernel (computed via quantum circuits) into scikit-learn\'s SVC, allowing it to be used with scikit-learn pipelines, cross-validation, and grid search just like any classical SVM.",
       hints: [
@@ -1523,7 +1523,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Jordan-Wigner transformation is used to map fermionic operators (electron creation/annihilation) to qubit operators (Pauli matrices).",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The Jordan-Wigner transformation maps fermionic creation/annihilation operators to strings of Pauli operators, enabling molecular Hamiltonians expressed in second quantization to be implemented on qubit-based quantum computers.",
       hints: [
@@ -1580,7 +1580,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "The Traveling Salesman Problem (TSP) and portfolio optimization can both be formulated as Quadratic Unconstrained Binary Optimization (QUBO) problems for quantum solvers.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Many combinatorial optimization problems, including TSP, max-cut, portfolio optimization, and vehicle routing, can be reformulated as QUBO problems, which are directly solvable by quantum annealers (D-Wave) or approximated by QAOA.",
       hints: [
@@ -1632,7 +1632,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Quantum error mitigation techniques eliminate quantum errors completely, equivalent to full quantum error correction.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Error mitigation reduces the bias in expectation value estimates but increases the statistical variance (sampling overhead); it does not eliminate errors or protect quantum information during computation, unlike full quantum error correction.",
       hints: [
