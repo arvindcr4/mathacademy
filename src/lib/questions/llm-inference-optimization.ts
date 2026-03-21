@@ -84,7 +84,7 @@ const questions: Record<string, Question[]> = {
         "Decode dominates because it must run 1000 times (once per output token) while prefill runs once for 50 tokens. Even though each decode step is fast (~10-50ms), 1000 sequential steps add up to 10-50 seconds. Prefill for 50 tokens might only take 100-500ms total.",
       hints: [
         "Decode runs once per output token",
-        "1000 tokens × 30ms/token = 30 seconds",
+        "1000 tokens \$\\times\$ 30ms/token = 30 seconds",
       ],
     },
   ],
@@ -106,7 +106,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The KV cache stores the key (K) and value (V) tensors computed during attention for all previous tokens. Without it, generating each new token would require recomputing attention over all previous tokens, making generation O(n²) instead of O(n). The trade-off is memory: KV cache grows linearly with sequence length and number of layers.",
       hints: [
-        "Attention computes Q × K^T × V",
+        "Attention computes Q \$\\times\$ K^T \$\\times\$ V",
         "For each new token, we only need new Q, but all previous K and V",
       ],
     },
@@ -124,10 +124,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "KV cache size = 2 (K+V) × layers × hidden_dim × seq_len × bytes_per_element × batch. For this example: 2 × 80 × 8192 × 4096 × 2 bytes = 10.7 GB. Note: with grouped-query attention (GQA), the K cache can be smaller since multiple query heads share one KV head.",
+        "KV cache size = 2 (K+V) \$\\times\$ layers \$\\times\$ hidden_dim \$\\times\$ seq_len \$\\times\$ bytes_per_element \$\\times\$ batch. For this example: 2 \$\\times\$ 80 \$\\times\$ 8192 \$\\times\$ 4096 \$\\times\$ 2 bytes = 10.7 GB. Note: with grouped-query attention (GQA), the K cache can be smaller since multiple query heads share one KV head.",
       hints: [
-        "Formula: 2 × layers × hidden_dim × seq_len × 2 bytes",
-        "80 × 8192 × 4096 × 4 bytes ≈ 10 GB",
+        "Formula: 2 \$\\times\$ layers \$\\times\$ hidden_dim \$\\times\$ seq_len \$\\times\$ 2 bytes",
+        "80 \$\\times\$ 8192 \$\\times\$ 4096 \$\\times\$ 4 bytes \$\\approx\$ 10 GB",
       ],
     },
   ],
@@ -184,13 +184,13 @@ const questions: Record<string, Question[]> = {
         "Why is standard attention complexity O(n²) in sequence length, and how does this affect long-context inference?",
       options: [
         "Because the model has n² parameters",
-        "Because each token's attention requires computing similarity with all previous tokens, creating a n×n attention matrix",
+        "Because each token's attention requires computing similarity with all previous tokens, creating a n\$\\times\$n attention matrix",
         "Because memory grows quadratically",
         "Because the optimizer requires n² steps",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard attention computes Q×K^T, creating an n×n matrix where n is sequence length. For each new token, attention compares against all previous tokens. This means: (1) compute scales as O(n²), (2) memory for attention scores scales as O(n²), and (3) KV cache scales as O(n). Flash Attention helps by never materializing the full n×n matrix.",
+        "Standard attention computes Q\$\\times\$K^T, creating an n\$\\times\$n matrix where n is sequence length. For each new token, attention compares against all previous tokens. This means: (1) compute scales as O(n²), (2) memory for attention scores scales as O(n²), and (3) KV cache scales as O(n). Flash Attention helps by never materializing the full n\$\\times\$n matrix.",
       hints: [
         "Attention matrix shape: (seq_len, seq_len)",
         "Each new token attends to all previous tokens",
@@ -326,7 +326,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Prefix caching shines when multiple requests share common prefixes. Examples: system prompts ("You are a helpful assistant"), RAG with the same retrieved documents, or few-shot examples. Instead of recomputing KV cache for the shared prefix, it's cached and reused, reducing prefill time by the prefix length.",
+        "Prefix caching shines when multiple requests share common prefixes. Examples: system prompts like 'You are a helpful assistant', RAG with the same retrieved documents, or few-shot examples. Instead of recomputing KV cache for the shared prefix, it's cached and reused, reducing prefill time by the prefix length.",
       hints: [
         "Think RAG: same documents, different questions",
         "System prompts are identical across requests",
@@ -344,7 +344,7 @@ const questions: Record<string, Question[]> = {
         "What is Post-Training Quantization (PTQ)?",
       options: [
         "Training a model with lower precision from the start",
-        "Reducing model precision (e.g., FP16 → INT8) after training without retraining",
+        "Reducing model precision (e.g., FP16 -> INT8) after training without retraining",
         "Compressing the model using pruning",
         "Distilling the model to a smaller size",
       ],
@@ -396,7 +396,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "INT4 quantization typically shows 1-3% quality degradation on benchmarks while reducing memory by 4x (FP16 → INT4). With advanced methods like AWQ or GPTQ, the quality loss can be minimal. However, INT4 may struggle with tasks requiring high numerical precision (math, reasoning) where the quantization noise affects accuracy.",
+        "INT4 quantization typically shows 1-3% quality degradation on benchmarks while reducing memory by 4x (FP16 -> INT4). With advanced methods like AWQ or GPTQ, the quality loss can be minimal. However, INT4 may struggle with tasks requiring high numerical precision (math, reasoning) where the quantization noise affects accuracy.",
       hints: [
         "4 bits vs 16 bits = 4x smaller",
         "Quality cost is usually acceptable with good methods",
@@ -489,7 +489,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "With 70% acceptance and speculation length 4, on average ~2.4 tokens are accepted per speculation round (70%^1 + 70%^2 + 70%^3 + 70%^4 ≈ 2.4). If draft overhead is 20% of main model time, speedup ≈ 2.4/(1+0.2) ≈ 2x. Real speedups of 1.5-2.5x are common with well-tuned draft models.",
+        "With 70% acceptance and speculation length 4, on average ~2.4 tokens are accepted per speculation round (70%^1 + 70%^2 + 70%^3 + 70%^4 \$\\approx\$ 2.4). If draft overhead is 20% of main model time, speedup \$\\approx\$ 2.4/(1+0.2) \$\\approx\$ 2x. Real speedups of 1.5-2.5x are common with well-tuned draft models.",
       hints: [
         "Need to account for draft model overhead",
         "Higher acceptance = more tokens accepted per round",
@@ -652,7 +652,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Semantic caching stores query-response pairs with their embeddings. New queries are compared against cached queries using embedding similarity. If a similar query (e.g., "What is Python?" vs "Tell me about Python") is found, the cached response is returned without model inference. This can reduce latency and cost for FAQ-style queries.",
+        "Semantic caching stores query-response pairs with their embeddings. New queries are compared against cached queries using embedding similarity. If a similar query (e.g., 'What is Python?' vs 'Tell me about Python') is found, the cached response is returned without model inference. This can reduce latency and cost for FAQ-style queries.",
       hints: [
         "Exact match cache misses similar questions",
         "Embedding similarity finds semantically close queries",
@@ -675,7 +675,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Model routing directs requests intelligently: simple queries to smaller/cheaper models, complex queries to larger models. Fallback handles failures by retrying with alternative models. This optimizes cost (don't use GPT-4 for "hello") while maintaining quality and availability when primary models fail.",
+        "Model routing directs requests intelligently: simple queries to smaller/cheaper models, complex queries to larger models. Fallback handles failures by retrying with alternative models. This optimizes cost (don't use GPT-4 for 'hello') while maintaining quality and availability when primary models fail.",
       hints: [
         "Not all queries need GPT-4",
         "Have backup plans for failures",

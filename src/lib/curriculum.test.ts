@@ -378,9 +378,6 @@ describe('Curriculum Data Integrity', () => {
 
 describe('Curriculum Lookup Functions', () => {
   it('should be able to find course by slug', () => {
-    const slugs = courses.map(c => c.slug)
-    const uniqueSlugs = new Set(slugs)
-
     // Test that we can look up courses by slug
     for (const course of courses) {
       const found = courses.find(c => c.slug === course.slug)

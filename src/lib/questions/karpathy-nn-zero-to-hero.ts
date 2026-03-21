@@ -441,7 +441,7 @@ registerQuestions({
         "Batch Normalization.",
         "A softmax operation.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** A neuron computes w*x + b (dot product of weights and inputs plus bias).\n\n**Step 2:** This pre-activation value is passed through a non-linear activation function (e.g., Tanh).\n\n**Step 3:** This non-linearity allows the network to learn complex, non-linear representations that a single linear transformation could not capture.",
       hints: [
@@ -561,7 +561,7 @@ registerQuestions({
         "Because scalar Values are faster than tensors on modern GPUs.",
         "Because the output must always be between -1 and 1.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Micrograd operates on individual scalar values to build intuition for autograd.\n\n**Step 2:** Every number in the computation is a Value object that builds up a computational graph.\n\n**Step 3:** Real frameworks like PyTorch operate on tensors for efficiency, but the autograd machinery is conceptually identical.",
       hints: [
@@ -867,7 +867,7 @@ registerQuestions({
         "By dividing the total vocabulary size by the bigram count.",
         "By taking the log of the count.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** In a pure counting bigram model, P(w2|w1) = count(w1, w2) / count(w1).\n\n**Step 2:** This normalizes raw frequencies of bigrams by the frequency of the context character.\n\n**Step 3:** The result is a proper probability distribution over next characters.",
       hints: [
@@ -1009,7 +1009,7 @@ registerQuestions({
         "Because NLL acts as a regularization term.",
         "Because maximizing probability directly ignores the ground truth labels.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Multiplying many probabilities (between 0 and 1) leads to numerical underflow.\n\n**Step 2:** Taking the log transforms the product into a sum: log(a * b) = log(a) + log(b).\n\n**Step 3:** Taking the negative turns maximization into minimization: NLL = -log(probabilities).",
       hints: [
@@ -1266,7 +1266,7 @@ registerQuestions({
         "It removes all zero-count bigrams from consideration.",
         "It applies a Gaussian prior to the model weights.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Adding pseudocounts corresponds to a Dirichlet prior in Bayesian statistics.\n\n**Step 2:** A uniform Dirichlet prior represents the belief that all transitions are equally likely.\n\n**Step 3:** The observed data updates this prior to produce the posterior distribution.",
       hints: [
@@ -1579,7 +1579,7 @@ registerQuestions({
         "By applying a random mask to the inputs.",
         "By normalizing the gradients, not the activations.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "BatchNorm computes the mean and variance of the batch and normalizes the activations. It then applies a learned scale and shift (`gamma` and `beta`), ensuring activations stay in a stable range, which dramatically smooths gradient flow.",
       hints: [
@@ -1623,7 +1623,7 @@ registerQuestions({
         "To plot graphs directly in the terminal.",
         "To bypass the autograd engine and speed up inference.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Hooks are callback functions you can attach to `nn.Module` objects. They allow you to observe, log, or even modify the tensors passing through the forward or backward passes-excellent for diagnosing vanishing gradients or dead neurons.",
       hints: [
@@ -1667,7 +1667,7 @@ registerQuestions({
         "To emphasize the diagonal elements.",
         "To make the attention matrix symmetric.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "In autoregressive training, the model predicts the *next* token. If the attention mask didn't block future tokens, the model would simply 'cheat' by looking at the answer during training.",
       hints: [
@@ -1821,7 +1821,7 @@ registerQuestions({
         "It fuses the loss calculation with the optimizer.",
         "It merges all the weights into one giant vector.",
       ],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Standard optimizers execute many small operations (multiply, add, square root) sequentially, reading/writing to High Bandwidth Memory (HBM) each time. Fused kernels do it all in fast SRAM in one go, removing memory bottlenecks.",
       hints: [
@@ -1962,7 +1962,7 @@ registerQuestions({
       question:
         "In Karpathy's MLP model, the embedding lookup for an entire batch of context windows can be performed with a single integer tensor index into the embedding matrix, and the result is then flattened before being passed to the hidden layer.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Given a batch of integer indices of shape (B, T) where B is batch size and T is context length, `C[X]` (where C is the embedding matrix) performs integer indexing to retrieve embeddings of shape (B, T, d). These are then `.view(B, T*d)` flattened to (B, T*d) before the linear layer, combining all context embeddings into a single vector per example.",
       hints: [
@@ -2019,7 +2019,7 @@ registerQuestions({
       question:
         "In the original WaveNet architecture, causal convolutions ensure each output sample is conditioned only on previous time steps and not on future time steps.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Causality is essential for autoregressive generation: each output can only depend on previous inputs, never future ones. Causal convolutions ensure this by zero-padding on the left (past side) only. Without causality, the model would cheat during training by peeking at future samples.",
       hints: [
@@ -2076,7 +2076,7 @@ registerQuestions({
       question:
         "Using very small batch sizes (e.g., batch size 1) with batch normalization can cause training instability because the per-batch mean and variance estimates are highly noisy with a single sample.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "With batch size 1, the batch mean equals the single sample value and variance is 0, making normalization undefined or degenerate. Even batch sizes of 2-4 produce highly noisy statistics. This is why Group Normalization or Layer Normalization are preferred when small batch sizes are necessary.",
       hints: [
@@ -2134,7 +2134,7 @@ registerQuestions({
       question:
         "In Karpathy's manual backprop exercises, implementing the backward pass for the log-sum-exp operation (used in cross-entropy) requires computing the softmax probabilities as an intermediate step.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The gradient of the log-sum-exp with respect to each logit is the softmax probability of that logit. So computing the backward pass for cross-entropy naturally requires materializing the softmax probabilities, even if they were not explicitly computed in a numerically stable forward pass.",
       hints: [
@@ -2191,7 +2191,7 @@ registerQuestions({
       question:
         "In GPT-style models, positional embeddings are added element-wise (not concatenated) to the token embeddings before the first transformer block.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "GPT uses learned positional embeddings of shape (T, d_model) that are element-wise added to the token embeddings. Addition rather than concatenation keeps the embedding dimension fixed. The model learns to encode position information into the same space as token semantics.",
       hints: [
@@ -2248,7 +2248,7 @@ registerQuestions({
       question:
         "In Karpathy's tokenization lecture, he demonstrates that BPE tokenizers can behave unexpectedly with non-English text, arithmetic, and whitespace because merges are learned predominantly from English web text, biasing the token boundaries.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "BPE merges are learned from the training corpus. GPT-2's tokenizer was trained on English-heavy WebText, so non-English characters and numerals fragment into many more tokens than equivalent English text. This 'tokenization bias' causes LLMs to perform worse on arithmetic and non-English languages per-token compared to English text.",
       hints: [
@@ -2305,7 +2305,7 @@ registerQuestions({
       question:
         "In Micrograd, calling `loss.backward()` computes gradients by iterating over all nodes in reverse topological order and calling each node's stored `_backward` closure, which accumulates gradients into its inputs using `+=`.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Each `Value` object stores a `_backward` closure at the time the operation is performed. This closure, when called, computes the local gradient contribution and accumulates it into the `grad` attribute of the input nodes using `+=` (to handle multi-use nodes). `loss.backward()` triggers these closures in reverse topological order.",
       hints: [
@@ -2362,7 +2362,7 @@ registerQuestions({
       question:
         "Initializing all weights in a neural network to exactly zero prevents the symmetry-breaking required for learning, because all neurons in a layer compute identical gradients and update identically.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "If all weights are zero, all neurons in a layer produce the same activation (zero) and receive the same gradient, so they remain identical after each update. This symmetry is never broken, effectively collapsing the layer to a single neuron. Random initialization breaks symmetry, allowing different neurons to specialize.",
       hints: [
@@ -2419,7 +2419,7 @@ registerQuestions({
       question:
         "Early stopping is a regularization technique where training is halted when the validation loss stops improving, preventing the model from overfitting by not allowing it to memorize training-set noise.",
       options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Early stopping monitors validation loss during training and stops when it has not improved for a set number of steps (patience). The model checkpoint from the best validation loss is retained. This is a simple and effective regularization technique that requires no modification to the model architecture.",
       hints: [
