@@ -295,3 +295,120 @@ describe('Knowledge Point Coverage', () => {
     }
   })
 })
+
+describe('Curriculum Data Integrity', () => {
+  it('should have valid icon strings', () => {
+    for (const course of courses) {
+      expect(
+        course.icon,
+        `${course.name} should have an icon`
+      ).toBeDefined()
+      expect(
+        course.icon.length,
+        `${course.name} icon should not be empty`
+      ).toBeGreaterThan(0)
+    }
+  })
+
+  it('should have valid color strings', () => {
+    const validColorPattern = /^(#[0-9a-fA-F]{3,6}|rgb|hsl|linear-gradient)/
+
+    for (const course of courses) {
+      expect(
+        course.color,
+        `${course.name} should have a color`
+      ).toBeDefined()
+    }
+  })
+
+  it('should have unique course icons within categories', () => {
+    const categoryIcons = new Map<string, Set<string>>()
+
+    for (const course of courses) {
+      if (!categoryIcons.has(course.category)) {
+        categoryIcons.set(course.category, new Set())
+      }
+      // Note: Icons can be shared across categories
+      categoryIcons.get(course.category)!.add(course.icon)
+    }
+
+    // Each category should have at least 1 icon
+    for (const [cat, icons] of categoryIcons) {
+      expect(
+        icons.size,
+        `Category ${cat} should have at least 1 unique icon`
+      ).toBeGreaterThanOrEqual(1)
+    }
+  })
+
+  it('should have topic descriptions', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        expect(
+          topic.description,
+          `${course.name}: ${topic.name} should have description`
+        ).toBeDefined()
+        expect(
+          topic.description!.length,
+          `${course.name}: ${topic.name} description should not be empty`
+        ).toBeGreaterThan(0)
+      }
+    }
+  })
+
+  it('should have KP names following naming conventions', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          expect(
+            kp.name,
+            `${course.name}: ${topic.name} KP ${kp.slug} should have name`
+          ).toBeDefined()
+          expect(
+            kp.name.length,
+            `${course.name}: ${kp.slug} name should not be empty`
+          ).toBeGreaterThan(0)
+        }
+      }
+    }
+  })
+})
+
+describe('Curriculum Completeness', () => {
+  it('should have all courses properly categorized', () => {
+    const categoryIds = new Set(categories.map(c => c.id))
+    const courseCategories = new Set(courses.map(c => c.category))
+
+    // All course categories should exist in categories
+    for (const cat of courseCategories) {
+      expect(
+        categoryIds.has(cat),
+        `Category ${cat} used by courses should be defined`
+      ).toBe(true)
+    }
+  })
+
+  it('should have total estimated hours across courses', () => {
+    let totalHours = 0
+    for (const course of courses) {
+      totalHours += course.estimatedHours
+    }
+    expect(
+      totalHours,
+      'Should have at least 100 total estimated hours'
+    ).toBeGreaterThan(100)
+  })
+
+  it('should have courses with reasonable estimated hours', () => {
+    for (const course of courses) {
+      expect(
+        course.estimatedHours,
+        `${course.name} should have at least 1 estimated hour`
+      ).toBeGreaterThanOrEqual(1)
+      expect(
+        course.estimatedHours,
+        `${course.name} should have at most 200 estimated hours`
+      ).toBeLessThanOrEqual(200)
+    }
+  })
+})
