@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // ML SAFETY, INTERPRETABILITY & ROBUSTNESS
+  {
+    id: 'ml-safety-interpretability',
+    slug: 'ml-safety-interpretability',
+    name: 'ML Safety, Interpretability & Robustness',
+    description: 'Explainable AI, adversarial robustness, fairness, and building trustworthy ML systems.',
+    topics: [
+      {
+        id: 'interpretability-methods',
+        name: 'Interpretability & Explainability Methods',
+        description: 'SHAP, LIME, saliency maps, and mechanistic interpretability.',
+        knowledgePoints: [
+          { id: 'msaf-kp-1', slug: 'shap-values', name: 'SHAP Values & Shapley-Based Explanations' },
+          { id: 'msaf-kp-2', slug: 'lime-explainability', name: 'LIME & Local Surrogate Models' },
+          { id: 'msaf-kp-3', slug: 'saliency-maps', name: 'Gradient-Based Saliency Maps' },
+          { id: 'msaf-kp-4', slug: 'mechanistic-interp', name: 'Mechanistic Interpretability & Circuit Analysis' },
+          { id: 'msaf-kp-5', slug: 'tcav-concepts', name: 'TCAV & Concept Activation Vectors' },
+        ]
+      },
+      {
+        id: 'adversarial-robustness',
+        name: 'Adversarial Attacks & Robustness',
+        description: 'Adversarial examples, certified defenses, and robust training.',
+        knowledgePoints: [
+          { id: 'msaf-kp-6', slug: 'adversarial-fgsm', name: 'FGSM, PGD & C&W Adversarial Attacks' },
+          { id: 'msaf-kp-7', slug: 'adversarial-training', name: 'Adversarial Training & Robust Optimization' },
+          { id: 'msaf-kp-8', slug: 'certified-robustness', name: 'Certified Robustness & Randomized Smoothing' },
+          { id: 'msaf-kp-9', slug: 'black-box-attacks', name: 'Transferability & Black-Box Attacks' },
+          { id: 'msaf-kp-10', slug: 'prompt-injection-safety', name: 'Prompt Injection & LLM Red-Teaming' },
+        ]
+      },
+      {
+        id: 'fairness-bias',
+        name: 'Fairness, Bias & Ethical ML',
+        description: 'Fairness metrics, bias detection, and mitigation strategies.',
+        knowledgePoints: [
+          { id: 'msaf-kp-11', slug: 'fairness-metrics-ml', name: 'Demographic Parity & Equalized Odds' },
+          { id: 'msaf-kp-12', slug: 'bias-sources-ml', name: 'Sources of Bias in Data & Models' },
+          { id: 'msaf-kp-13', slug: 'bias-mitigation-ml', name: 'Bias Mitigation (Pre/In/Post-Processing)' },
+          { id: 'msaf-kp-14', slug: 'model-cards-ml', name: 'Model Cards & Algorithmic Auditing' },
+          { id: 'msaf-kp-15', slug: 'responsible-ai-frameworks', name: 'Responsible AI Frameworks & Governance' },
+        ]
+      },
+      {
+        id: 'distribution-shift',
+        name: 'Distribution Shift & OOD Detection',
+        description: 'Detecting covariate shift, concept drift, and out-of-distribution inputs.',
+        knowledgePoints: [
+          { id: 'msaf-kp-16', slug: 'covariate-shift-ml', name: 'Covariate Shift & Domain Adaptation' },
+          { id: 'msaf-kp-17', slug: 'concept-drift-ml', name: 'Concept Drift Detection & Monitoring' },
+          { id: 'msaf-kp-18', slug: 'ood-detection-methods', name: 'OOD Detection (Energy Score, Mahalanobis)' },
+          { id: 'msaf-kp-19', slug: 'spurious-correlations', name: 'Spurious Correlations & Shortcut Learning' },
+          { id: 'msaf-kp-20', slug: 'dataset-shift-eval', name: 'Evaluation Under Distribution Shift' },
+        ]
+      },
+      {
+        id: 'calibration-uncertainty',
+        name: 'Calibration & Predictive Uncertainty',
+        description: 'Probability calibration, reliability diagrams, and conformal prediction.',
+        knowledgePoints: [
+          { id: 'msaf-kp-21', slug: 'ece-calibration', name: 'ECE & Reliability Diagrams' },
+          { id: 'msaf-kp-22', slug: 'temperature-scaling-cal', name: 'Temperature Scaling & Post-Hoc Calibration' },
+          { id: 'msaf-kp-23', slug: 'conformal-coverage', name: 'Conformal Prediction & Coverage Guarantees' },
+          { id: 'msaf-kp-24', slug: 'selective-pred', name: 'Selective Prediction & Abstention' },
+          { id: 'msaf-kp-25', slug: 'epistemic-aleatoric', name: 'Epistemic vs Aleatoric Uncertainty' },
+        ]
+      },
+      {
+        id: 'ai-safety-long-term',
+        name: 'AI Safety & Long-Term Alignment',
+        description: 'Mesa-optimization, scalable oversight, and reward hacking.',
+        knowledgePoints: [
+          { id: 'msaf-kp-26', slug: 'mesa-optimization', name: 'Mesa-Optimization & Inner Alignment' },
+          { id: 'msaf-kp-27', slug: 'scalable-oversight', name: 'Scalable Oversight & Debate' },
+          { id: 'msaf-kp-28', slug: 'reward-hacking-spec', name: 'Reward Hacking & Specification Gaming' },
+          { id: 'msaf-kp-29', slug: 'interp-for-safety', name: 'Interpretability for Safety Research' },
+          { id: 'msaf-kp-30', slug: 'ai-governance-policy', name: 'AI Governance, Policy & Risk Frameworks' },
+        ]
+      },
+    ]
+  },
+
   // TIME SERIES ANALYSIS & FORECASTING
   {
     id: 'time-series-forecasting',
