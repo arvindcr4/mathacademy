@@ -268,7 +268,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The backdoor adjustment formula P(Y|do(X)) = Σ_Z P(Y|X,Z)P(Z) is valid when Z is any set of observed variables that satisfies the backdoor criterion relative to (X,Y).",
+        "The backdoor adjustment formula P(Y|do(X)) = \\Sigma_Z P(Y|X,Z)P(Z) is valid when Z is any set of observed variables that satisfies the backdoor criterion relative to (X,Y).",
       correctAnswer: "True",
       explanation:
         "The backdoor criterion requires that Z: (1) blocks all backdoor paths from X to Y (paths with an arrow into X), and (2) contains no descendant of X. When Z satisfies these conditions, the backdoor adjustment formula identifies the interventional distribution P(Y|do(X)) from observational data, effectively removing confounding by conditioning on Z.",
@@ -474,7 +474,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The doubly robust estimator (Augmented IPW) combines IPW and outcome regression: τ̂_DR = (1/n)Σ[ T_i(Y_i - μ̂_1(X_i))/ê(X_i) - (1-T_i)(Y_i - μ̂_0(X_i))/(1-ê(X_i)) + μ̂_1(X_i) - μ̂_0(X_i) ]. It is consistent if either the propensity score model ê or the outcome model μ̂ is correctly specified — hence 'doubly robust'. This provides important protection against model misspecification.",
+        "The doubly robust estimator (Augmented IPW) combines IPW and outcome regression: \\taû_DR = (1/n)\\Sigma[ T_i(Y_i - \\mû_1(X_i))/ê(X_i) - (1-T_i)(Y_i - \\mû_0(X_i))/(1-ê(X_i)) + \\mû_1(X_i) - \\mû_0(X_i) ]. It is consistent if either the propensity score model ê or the outcome model \\mû is correctly specified — hence 'doubly robust'. This provides important protection against model misspecification.",
       hints: [
         "The DR estimator provides two 'chances' to get the right answer: one from the propensity model, one from the outcome model.",
         "With flexible machine learning estimators for both components, you can achieve semiparametric efficiency.",
@@ -517,7 +517,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "2SLS: Stage 1 — regress T on Z (and any controls) to get T̂ = Ẑ·γ̂. Stage 2 — regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
+        "2SLS: Stage 1 — regress T on Z (and any controls) to get T̂ = Ẑ·\\gammâ. Stage 2 — regress Y on T̂ (and any controls). The stage-1 regression 'purges' T of the variation correlated with unmeasured confounders, keeping only the exogenous variation induced by Z. The stage-2 coefficient on T̂ is the IV estimator of the causal effect of T on Y.",
       hints: [
         "T̂ captures only the part of T variation that comes from the instrument Z — which is exogenous by assumption.",
         "The IV estimate is consistent but generally less efficient (higher variance) than OLS when there is no confounding.",
@@ -708,7 +708,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The BIC score is score-equivalent (assigns the same score to Markov-equivalent DAGs) and locally consistent (prefers the correct CPDAG asymptotically). Crucially, for Gaussian linear models the BIC decomposes as a sum of local scores over variables: BIC(G) = Σ_i BIC(X_i | PA_i(G)). This decomposability allows GES to update the score incrementally when adding/removing an edge, making local search efficient.",
+        "The BIC score is score-equivalent (assigns the same score to Markov-equivalent DAGs) and locally consistent (prefers the correct CPDAG asymptotically). Crucially, for Gaussian linear models the BIC decomposes as a sum of local scores over variables: BIC(G) = \\Sigma_i BIC(X_i | PA_i(G)). This decomposability allows GES to update the score incrementally when adding/removing an edge, making local search efficient.",
       hints: [
         "Score decomposability is key: when you add one edge, only the score of the child node changes.",
         "Score equivalence ensures GES doesn't arbitrarily prefer one DAG over another in the same equivalence class.",
@@ -893,7 +893,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Conditional Average Treatment Effect (CATE) τ(x) = E[Y(1) - Y(0) | X=x] measures:",
+        "The Conditional Average Treatment Effect (CATE) \\tau(x) = E[Y(1) - Y(0) | X=x] measures:",
       options: [
         "The average treatment effect over the entire population",
         "The expected treatment effect for units with covariate profile X=x",
@@ -902,9 +902,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The CATE τ(x) captures treatment effect heterogeneity: it estimates the average causal effect of treatment for a specific subpopulation characterized by covariates X=x. Integrating τ(x) over the distribution of X gives the ATE. The CATE is the key estimand for personalized decision-making — choosing treatment for each individual based on their characteristics.",
+        "The CATE \\tau(x) captures treatment effect heterogeneity: it estimates the average causal effect of treatment for a specific subpopulation characterized by covariates X=x. Integrating \\tau(x) over the distribution of X gives the ATE. The CATE is the key estimand for personalized decision-making — choosing treatment for each individual based on their characteristics.",
       hints: [
-        "The ATE = E[τ(X)] — averaging the CATE over the population distribution of X.",
+        "The ATE = E[\\tau(X)] — averaging the CATE over the population distribution of X.",
         "CATE is what personalized medicine aims to estimate: will this drug work for this patient?",
       ],
     },
@@ -916,16 +916,16 @@ const questions: Record<string, Question[]> = {
         "A key challenge in evaluating CATE estimators is that individual treatment effects Y_i(1) - Y_i(0) are never observed. The standard evaluation approach uses:",
       options: [
         "Comparing CATE estimates across different estimators using their training loss",
-        "Held-out RCT data where the difference in outcomes between matched treated/control pairs approximates the true CATE; or using the pseudo-outcome (e.g., τ̃_i from doubly-robust scores) as a proxy target",
+        "Held-out RCT data where the difference in outcomes between matched treated/control pairs approximates the true CATE; or using the pseudo-outcome (e.g., \\taũ_i from doubly-robust scores) as a proxy target",
         "Comparing the estimated CATEs to clinician expert opinions",
         "Using cross-validation on the observational dataset with treatment as the label",
       ],
       correctAnswer: 1,
       explanation:
-        "Since individual counterfactuals are never observed, CATE evaluation uses: (1) RCT validation — in held-out experimental data, the empirical mean within groups stratified by estimated τ̂(x); (2) Doubly-robust pseudo-outcomes τ̃_i as approximate individual treatment effects, enabling regression-style evaluation (R-loss); (3) Decision-value metrics like AUTOC or QINI curves that evaluate the policy implied by the CATE.",
+        "Since individual counterfactuals are never observed, CATE evaluation uses: (1) RCT validation — in held-out experimental data, the empirical mean within groups stratified by estimated \\taû(x); (2) Doubly-robust pseudo-outcomes \\taũ_i as approximate individual treatment effects, enabling regression-style evaluation (R-loss); (3) Decision-value metrics like AUTOC or QINI curves that evaluate the policy implied by the CATE.",
       hints: [
-        "You cannot directly check if τ̂(x_i) is close to Y_i(1)-Y_i(0) because Y_i(1)-Y_i(0) is unobserved.",
-        "R-loss (Robinson decomposition) is a popular approach: τ̂ minimizes E[(Ỹ_i - τ̂(X_i)·T̃_i)²] where tildes denote residuals.",
+        "You cannot directly check if \\taû(x_i) is close to Y_i(1)-Y_i(0) because Y_i(1)-Y_i(0) is unobserved.",
+        "R-loss (Robinson decomposition) is a popular approach: \\taû minimizes E[(Ỹ_i - \\taû(X_i)·T̃_i)²] where tildes denote residuals.",
       ],
     },
     {
@@ -935,14 +935,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Robinson decomposition (partial linear model) used in the R-learner for CATE estimation expresses the outcome as:",
       options: [
-        "Y = α + βT + ε, with β estimated by OLS",
-        "Y - m(X) = τ(X)·(T - e(X)) + ε, where m(X) = E[Y|X] and e(X) = E[T|X] are nuisance functions",
-        "Y = τ(X) + g(X) + ε, where g(X) is a flexible main effect and τ(X) is the interaction term",
+        "Y = \\alpha + \\betaT + \\epsilon, with \\beta estimated by OLS",
+        "Y - m(X) = \\tau(X)·(T - e(X)) + \\epsilon, where m(X) = E[Y|X] and e(X) = E[T|X] are nuisance functions",
+        "Y = \\tau(X) + g(X) + \\epsilon, where g(X) is a flexible main effect and \\tau(X) is the interaction term",
         "Y(T) = f(X,T) with f estimated by a random forest treating T as a feature",
       ],
       correctAnswer: 1,
       explanation:
-        "The Robinson (1988) partial linear decomposition: Y - m(X) = τ(X)·(T - e(X)) + ε. After partialling out the main effects m(X)=E[Y|X] and e(X)=E[T|X] (nuisance functions estimated in a first stage), the residual equation becomes a weighted regression that identifies τ(X). The R-learner minimizes the empirical R-loss: Σ[(Ỹ_i - τ̂(X_i)·T̃_i)²], enabling use of any flexible ML model for τ̂.",
+        "The Robinson (1988) partial linear decomposition: Y - m(X) = \\tau(X)·(T - e(X)) + \\epsilon. After partialling out the main effects m(X)=E[Y|X] and e(X)=E[T|X] (nuisance functions estimated in a first stage), the residual equation becomes a weighted regression that identifies \\tau(X). The R-learner minimizes the empirical R-loss: \\Sigma[(Ỹ_i - \\taû(X_i)·T̃_i)²], enabling use of any flexible ML model for \\taû.",
       hints: [
         "The 'R' in R-learner refers to Robinson's decomposition.",
         "The nuisance functions m and e can be estimated with cross-fitting (sample-splitting) to avoid overfitting bias.",
@@ -956,7 +956,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The T-learner for CATE estimation trains two separate outcome models μ̂_0(x) and μ̂_1(x) and then estimates τ̂(x) = μ̂_1(x) - μ̂_0(x). What is its main weakness?",
+        "The T-learner for CATE estimation trains two separate outcome models \\mû_0(x) and \\mû_1(x) and then estimates \\taû(x) = \\mû_1(x) - \\mû_0(x). What is its main weakness?",
       options: [
         "It requires knowing the propensity score e(X) to compute the CATE",
         "When treated and control groups have very different covariate distributions (low overlap), each model is extrapolating to regions with few observations of the corresponding treatment, leading to high variance",
@@ -965,7 +965,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The T-learner trains μ̂_1 only on treated data and μ̂_0 only on control data. When overlap is poor, μ̂_1 must extrapolate to covariate regions covered mostly by controls (and vice versa), introducing high variance and potential bias. The S-learner (single model with T as a feature) can borrow strength across groups but may underfit the treatment effect. X-learner and R-learner are more robust under poor overlap.",
+        "The T-learner trains \\mû_1 only on treated data and \\mû_0 only on control data. When overlap is poor, \\mû_1 must extrapolate to covariate regions covered mostly by controls (and vice versa), introducing high variance and potential bias. The S-learner (single model with T as a feature) can borrow strength across groups but may underfit the treatment effect. X-learner and R-learner are more robust under poor overlap.",
       hints: [
         "Poor overlap means e(X) ≈ 0 or ≈ 1 for large portions of the covariate space.",
         "Extrapolation with complex models (e.g., random forests) can have large variance outside the training distribution of each group.",
@@ -985,10 +985,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The X-learner (Künzel et al., 2019) is designed for highly imbalanced treatment assignment. Step 1: fit outcome models μ̂_0, μ̂_1 (like T-learner). Step 2: compute imputed treatment effects D̃_i^1 = Y_i - μ̂_0(X_i) for treated units and D̃_i^0 = μ̂_1(X_i) - Y_i for controls. Step 3: fit separate CATE models τ̂_1 and τ̂_0 on D̃^1 and D̃^0 respectively. Step 4: combine via propensity weighting: τ̂(x) = e(x)τ̂_0(x) + (1-e(x))τ̂_1(x). The propensity weighting upweights τ̂_1 when e(x) is large (many treated).",
+        "The X-learner (Künzel et al., 2019) is designed for highly imbalanced treatment assignment. Step 1: fit outcome models \\mû_0, \\mû_1 (like T-learner). Step 2: compute imputed treatment effects D̃_i^1 = Y_i - \\mû_0(X_i) for treated units and D̃_i^0 = \\mû_1(X_i) - Y_i for controls. Step 3: fit separate CATE models \\taû_1 and \\taû_0 on D̃^1 and D̃^0 respectively. Step 4: combine via propensity weighting: \\taû(x) = e(x)\\taû_0(x) + (1-e(x))\\taû_1(x). The propensity weighting upweights \\taû_1 when e(x) is large (many treated).",
       hints: [
-        "With 1000 treated and 10 controls, τ̂_1 (from imputed effects for treated) is more reliable and should be upweighted.",
-        "The propensity score e(X) acts as a natural weighting — regions with many treated units weight τ̂_1 more.",
+        "With 1000 treated and 10 controls, \\taû_1 (from imputed effects for treated) is more reliable and should be upweighted.",
+        "The propensity score e(X) acts as a natural weighting — regions with many treated units weight \\taû_1 more.",
       ],
     },
     {
@@ -1042,7 +1042,7 @@ const questions: Record<string, Question[]> = {
         "Causal forests provide asymptotically valid confidence intervals for the CATE at any query point x, not just for the ATE.",
       correctAnswer: "True",
       explanation:
-        "Wager & Athey (2018) proved that causal forest estimates τ̂(x) are asymptotically normal with a computable variance, enabling pointwise confidence intervals for the CATE. This is a significant advantage over many other CATE methods (e.g., T-learner with neural networks) which produce point estimates without valid uncertainty quantification. The key requirement is the honesty property of the tree construction.",
+        "Wager & Athey (2018) proved that causal forest estimates \\taû(x) are asymptotically normal with a computable variance, enabling pointwise confidence intervals for the CATE. This is a significant advantage over many other CATE methods (e.g., T-learner with neural networks) which produce point estimates without valid uncertainty quantification. The key requirement is the honesty property of the tree construction.",
       hints: [
         "Honest trees use non-overlapping subsamples for splitting and estimation, avoiding overfitting that would invalidate standard errors.",
         "Valid confidence intervals for CATE are important for personalized decision-making with statistical guarantees.",
@@ -1062,9 +1062,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GRF frames any estimation problem via a local moment condition: find θ(x) such that E[ψ_{θ,ν}(O_i) | X_i=x] = 0, where ψ is a score function and ν are nuisance parameters. The forest provides adaptive weights α_i(x) — the fraction of trees where observation i and query point x land in the same leaf — which define a weighted local estimating equation Σ_i α_i(x)·ψ_{θ,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
+        "GRF frames any estimation problem via a local moment condition: find \\theta(x) such that E[\\psi_{\\theta,ν}(O_i) | X_i=x] = 0, where \\psi is a score function and ν are nuisance parameters. The forest provides adaptive weights \\alpha_i(x) — the fraction of trees where observation i and query point x land in the same leaf — which define a weighted local estimating equation \\Sigma_i \\alpha_i(x)·\\psi_{\\theta,ν}(O_i) = 0. This unifies quantile regression forests, instrumental forest, and causal forests under one framework.",
       hints: [
-        "The forest weights α_i(x) measure 'local similarity' to x — a data-adaptive kernel.",
+        "The forest weights \\alpha_i(x) measure 'local similarity' to x — a data-adaptive kernel.",
         "The moment condition framework allows GRF to estimate any semiparametric estimand, not just the CATE.",
       ],
     },
@@ -1085,7 +1085,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "If the same sample is used to estimate nuisance functions (e.g., propensity score ê and outcome model m̂) and the treatment effect θ, overfitting in the nuisance estimates can create bias in θ̂ that is O(n^{-1/2}), as large as the signal. Cross-fitting (K-fold: estimate nuisance on K-1 folds, apply to held-out fold) ensures that nuisance estimates are independent of the observations used for θ estimation, so overfitting bias is O(n^{-1}) and asymptotic normality of θ̂ is preserved.",
+        "If the same sample is used to estimate nuisance functions (e.g., propensity score ê and outcome model m̂) and the treatment effect \\theta, overfitting in the nuisance estimates can create bias in \\thetâ that is O(n^{-1/2}), as large as the signal. Cross-fitting (K-fold: estimate nuisance on K-1 folds, apply to held-out fold) ensures that nuisance estimates are independent of the observations used for \\theta estimation, so overfitting bias is O(n^{-1}) and asymptotic normality of \\thetâ is preserved.",
       hints: [
         "This is analogous to why you evaluate a model on held-out test data — in-sample evaluation is biased.",
         "Cross-fitting allows flexible ML nuisance models (random forests, neural nets) while maintaining valid inference.",
@@ -1110,16 +1110,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In the partially linear DML model Y = θ_0·D + g_0(X) + ε, the DML estimator for θ_0 is based on the moment condition:",
+        "In the partially linear DML model Y = \\theta_0·D + g_0(X) + \\epsilon, the DML estimator for \\theta_0 is based on the moment condition:",
       options: [
-        "E[ε · D] = 0 (standard OLS moment condition)",
-        "E[(Y - θ_0·D - ĝ(X)) · V̂] = 0 where V̂ = D - ê(X) is the residualized treatment",
-        "E[Y | D, X] = θ_0·D + g_0(X) (conditional expectation equation)",
-        "minθ ||Y - θ·D - g(X)||² subject to ||g||_∞ ≤ C",
+        "E[\\epsilon · D] = 0 (standard OLS moment condition)",
+        "E[(Y - \\theta_0·D - ĝ(X)) · V̂] = 0 where V̂ = D - ê(X) is the residualized treatment",
+        "E[Y | D, X] = \\theta_0·D + g_0(X) (conditional expectation equation)",
+        "min\\theta ||Y - \\theta·D - g(X)||² subject to ||g||_∞ ≤ C",
       ],
       correctAnswer: 1,
       explanation:
-        "DML solves the Neyman-orthogonal score equation: E[(Y - θ_0·D - g_0(X))·(D - l_0(X))] = 0, where l_0(X) = E[D|X] and g_0(X) = E[Y-θ_0·D|X]. Using estimates ĝ and l̂: θ̂ = {Σ V̂_i(Y_i - ĝ(X_i))} / {Σ V̂_i·D_i}, where V̂_i = D_i - l̂(X_i). This is equivalent to: regress (Y-ĝ(X)) on V̂ = (D-l̂(X)) without intercept. The orthogonality of V̂ to the nuisance g(X) eliminates the first-order bias from nuisance estimation errors.",
+        "DML solves the Neyman-orthogonal score equation: E[(Y - \\theta_0·D - g_0(X))·(D - l_0(X))] = 0, where l_0(X) = E[D|X] and g_0(X) = E[Y-\\theta_0·D|X]. Using estimates ĝ and l̂: \\thetâ = {\\Sigma V̂_i(Y_i - ĝ(X_i))} / {\\Sigma V̂_i·D_i}, where V̂_i = D_i - l̂(X_i). This is equivalent to: regress (Y-ĝ(X)) on V̂ = (D-l̂(X)) without intercept. The orthogonality of V̂ to the nuisance g(X) eliminates the first-order bias from nuisance estimation errors.",
       hints: [
         "V̂ = D - ê(X) is the residual treatment after removing the effect of X — analogous to an instrumental variable.",
         "This is the Frisch-Waugh-Lovell theorem applied to the partially linear model with ML nuisance estimation.",
@@ -1162,7 +1162,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a fuzzy RDD: lim_{x↓c} E[T|X=x] \$\\neq\$ lim_{x↑c} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is τ_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X≥c) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
+        "In a fuzzy RDD: lim_{x↓c} E[T|X=x] \$\\neq\$ lim_{x↑c} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is \\tau_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X≥c) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
       hints: [
         "The threshold 1(X≥c) is a valid instrument: it shifts treatment probability discontinuously but (under continuity) does not directly shift outcomes.",
         "Fuzzy RDD = local IV; sharp RDD = reduced form = IV estimate when compliance is perfect.",
@@ -1216,12 +1216,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "β-VAE achieves causal disentanglement by increasing the weight on the KL divergence term, which is sufficient to learn causally meaningful latent factors from observational data alone.",
+        "\\beta-VAE achieves causal disentanglement by increasing the weight on the KL divergence term, which is sufficient to learn causally meaningful latent factors from observational data alone.",
       correctAnswer: "False",
       explanation:
-        "Locatello et al. (2019) proved that disentanglement (even in the statistical sense) is provably impossible without inductive biases or additional supervision from observational data alone — any entangled representation can be reparameterized to appear disentangled. β-VAE's KL regularization encourages statistical independence of latents but provides no causal guarantees without additional constraints (supervision, interventional data, or inductive biases encoding causal structure).",
+        "Locatello et al. (2019) proved that disentanglement (even in the statistical sense) is provably impossible without inductive biases or additional supervision from observational data alone — any entangled representation can be reparameterized to appear disentangled. \\beta-VAE's KL regularization encourages statistical independence of latents but provides no causal guarantees without additional constraints (supervision, interventional data, or inductive biases encoding causal structure).",
       hints: [
-        "Locatello et al.'s impossibility result applies to all unsupervised methods, not just β-VAE.",
+        "Locatello et al.'s impossibility result applies to all unsupervised methods, not just \\beta-VAE.",
         "Supervised or weakly supervised signals (e.g., labels for generative factors, data from multiple environments) are needed to break the identifiability impasse.",
       ],
     },
@@ -1232,7 +1232,7 @@ const questions: Record<string, Question[]> = {
       question:
         "iVAE (Identifiable VAE, Khemakhem et al. 2020) achieves identifiable disentanglement by:",
       options: [
-        "Using a larger β coefficient on the KL term than standard β-VAE",
+        "Using a larger \\beta coefficient on the KL term than standard \\beta-VAE",
         "Conditioning the prior on observed auxiliary variables (e.g., class labels or domain indicators), which breaks the identifiability impossibility through a conditional non-linear ICA framework",
         "Training with adversarial examples to encourage robust representations",
         "Using a sparse prior (e.g., Laplacian) instead of a Gaussian prior on latents",
@@ -1310,19 +1310,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Invariant Risk Minimization (IRM, Arjovsky et al. 2019) seeks to learn a feature representation Φ such that:",
+        "Invariant Risk Minimization (IRM, Arjovsky et al. 2019) seeks to learn a feature representation \\Phi such that:",
       options: [
         "The total risk across all training environments is minimized",
-        "There exists a single linear classifier w on top of Φ that is simultaneously optimal across all training environments — the causal features that are invariant across environments",
-        "The feature distribution P(Φ(X)) is the same across all environments",
-        "The representation Φ maximizes the mutual information between features and labels",
+        "There exists a single linear classifier w on top of \\Phi that is simultaneously optimal across all training environments — the causal features that are invariant across environments",
+        "The feature distribution P(\\Phi(X)) is the same across all environments",
+        "The representation \\Phi maximizes the mutual information between features and labels",
       ],
       correctAnswer: 1,
       explanation:
-        "IRM optimizes: min_Φ Σ_e R^e(w·Φ) s.t. w ∈ argmin_{w'} R^e(w'·Φ) for all e. The constraint requires that the same classifier w is optimal across all environments. Intuitively, features that are causally related to the outcome (not spuriously correlated due to confounders) will have a consistent relationship with Y across environments, while spurious correlates will not. IRM finds a representation where this causal invariance holds.",
+        "IRM optimizes: min_\\Phi \\Sigma_e R^e(w·\\Phi) s.t. w ∈ argmin_{w'} R^e(w'·\\Phi) for all e. The constraint requires that the same classifier w is optimal across all environments. Intuitively, features that are causally related to the outcome (not spuriously correlated due to confounders) will have a consistent relationship with Y across environments, while spurious correlates will not. IRM finds a representation where this causal invariance holds.",
       hints: [
         "Spurious correlations change across environments (e.g., grass correlates with cows in train data but not in unusual test images).",
-        "Causal features have invariant conditional distributions P(Y|Φ(X)) across environments.",
+        "Causal features have invariant conditional distributions P(Y|\\Phi(X)) across environments.",
       ],
     },
     {
@@ -1346,14 +1346,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The practical IRMv1 objective adds a penalty term to ERM. Which formulation is correct?",
       options: [
-        "min_Φ,w Σ_e R^e(w·Φ) + λ·||∇_w R^e(w·Φ)||² summed over environments",
-        "min_Φ,w Σ_e R^e(w·Φ) + λ·||w - w_e||² where w_e is the environment-specific optimal classifier",
-        "min_Φ,w Σ_e R^e(w·Φ) subject to ||Φ(X)||² ≤ C",
-        "min_Φ,w Σ_e R^e(w·Φ) + λ·KL(P^e(Φ(X))||P^{e'}(Φ(X)))",
+        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·||\\nabla_w R^e(w·\\Phi)||² summed over environments",
+        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·||w - w_e||² where w_e is the environment-specific optimal classifier",
+        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) subject to ||\\Phi(X)||² ≤ C",
+        "min_\\Phi,w \\Sigma_e R^e(w·\\Phi) + \\lambda·KL(P^e(\\Phi(X))||P^{e'}(\\Phi(X)))",
       ],
       correctAnswer: 0,
       explanation:
-        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{Φ,w} Σ_e [R^e(w·Φ) + λ·||∇_{w|w=1} R^e(w·Φ)||²]. The penalty term ||∇_w R^e(w·Φ)||² measures how much the gradient of the loss w.r.t. the classifier w deviates from zero — if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
+        "IRMv1 relaxes the bi-level IRM constraint using a gradient norm penalty: min_{\\Phi,w} \\Sigma_e [R^e(w·\\Phi) + \\lambda·||\\nabla_{w|w=1} R^e(w·\\Phi)||²]. The penalty term ||\\nabla_w R^e(w·\\Phi)||² measures how much the gradient of the loss w.r.t. the classifier w deviates from zero — if w is already optimal for environment e, this gradient is zero. The penalty encourages w to be simultaneously optimal across all environments, approximating the original IRM constraint.",
       hints: [
         "If w is optimal for an environment, the gradient of the loss w.r.t. w should be zero.",
         "IRMv1 is a differentiable approximation that can be optimized with gradient descent, unlike the original bi-level problem.",
@@ -1493,7 +1493,7 @@ const questions: Record<string, Question[]> = {
         "Uplift modeling estimates the individual-level causal effect of a treatment (e.g., email, discount, ad) to identify 'persuadables' — users whose behavior is genuinely changed by the treatment. The four segments are: (1) Sure Things — convert with or without treatment; (2) Persuadables — convert only with treatment; (3) Do Not Disturbs/Sleeping Dogs — convert only without treatment; (4) Lost Causes — never convert. Targeting sure things and lost causes wastes resources or is harmful; persuadables are the valuable segment.",
       hints: [
         "Sending a discount to a 'sure thing' wastes marketing budget; they would have bought anyway.",
-        "The CATE τ(x) > 0 identifies persuadables; τ(x) < 0 identifies 'sleeping dogs'.",
+        "The CATE \\tau(x) > 0 identifies persuadables; \\tau(x) < 0 identifies 'sleeping dogs'.",
       ],
     },
     {
@@ -1530,7 +1530,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A 'response model' trained on P(Y=1|T=1,X) will score sure things highly (high probability under treatment) without accounting for E[Y(0)|X]. The CATE τ(x) = E[Y(1)|X=x] - E[Y(0)|X=x] explicitly subtracts the baseline conversion rate, so sure things (with high Y(0)) get low CATE despite high Y(1). Persuadables with low Y(0) and high Y(1) — the true targets — get high CATE scores. This is why CATE estimation (not response modeling) is the correct approach for uplift.",
+        "A 'response model' trained on P(Y=1|T=1,X) will score sure things highly (high probability under treatment) without accounting for E[Y(0)|X]. The CATE \\tau(x) = E[Y(1)|X=x] - E[Y(0)|X=x] explicitly subtracts the baseline conversion rate, so sure things (with high Y(0)) get low CATE despite high Y(1). Persuadables with low Y(0) and high Y(1) — the true targets — get high CATE scores. This is why CATE estimation (not response modeling) is the correct approach for uplift.",
       hints: [
         "Response model shortcut: E[Y=1|T=1,X] is high for sure things because they always convert, but their incremental value is zero.",
         "The incremental value of treatment = Y(1) - Y(0), not Y(1) alone.",
@@ -1544,19 +1544,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Optimal policy learning in causal inference seeks to find a treatment assignment rule π: X → T that maximizes expected outcome. The optimal policy is:",
+        "Optimal policy learning in causal inference seeks to find a treatment assignment rule \\pi: X → T that maximizes expected outcome. The optimal policy is:",
       options: [
-        "Always treating everyone (π(x) = 1 for all x)",
-        "π*(x) = argmax_t E[Y(t)|X=x] — treating unit x with the treatment that maximizes their conditional expected potential outcome",
-        "π*(x) = 1(e(x) > 0.5) where e(x) is the propensity score",
+        "Always treating everyone (\\pi(x) = 1 for all x)",
+        "\\pi*(x) = argmax_t E[Y(t)|X=x] — treating unit x with the treatment that maximizes their conditional expected potential outcome",
+        "\\pi*(x) = 1(e(x) > 0.5) where e(x) is the propensity score",
         "The policy that achieves the highest lift on the validation set",
       ],
       correctAnswer: 1,
       explanation:
-        "The optimal individualized treatment rule (ITR) is π*(x) = argmax_t E[Y(t)|X=x] = 1(τ(x) > 0) for binary treatment where τ(x) is the CATE. If the CATE is positive for individual x, treating is better; if negative, not treating is better. The expected value of π* is E[Y(π*(X))] = E[max(E[Y(0)|X], E[Y(1)|X])], which exceeds the ATE-based decision (treat all or treat none) when there is treatment effect heterogeneity.",
+        "The optimal individualized treatment rule (ITR) is \\pi*(x) = argmax_t E[Y(t)|X=x] = 1(\\tau(x) > 0) for binary treatment where \\tau(x) is the CATE. If the CATE is positive for individual x, treating is better; if negative, not treating is better. The expected value of \\pi* is E[Y(\\pi*(X))] = E[max(E[Y(0)|X], E[Y(1)|X])], which exceeds the ATE-based decision (treat all or treat none) when there is treatment effect heterogeneity.",
       hints: [
         "The value of an ITR over a fixed policy (treat all vs. treat none) is the 'value of personalization'.",
-        "The optimal policy can be estimated from CATE estimates: treat x iff τ̂(x) > cost of treatment.",
+        "The optimal policy can be estimated from CATE estimates: treat x iff \\taû(x) > cost of treatment.",
       ],
     },
     {
@@ -1564,19 +1564,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Policy evaluation using off-policy data (observational data, not from the target policy) uses Inverse Propensity Score (IPS) weighting. The IPS estimator of policy value V(π) is:",
+        "Policy evaluation using off-policy data (observational data, not from the target policy) uses Inverse Propensity Score (IPS) weighting. The IPS estimator of policy value V(\\pi) is:",
       options: [
-        "(1/n)Σ Y_i · 1(T_i = π(X_i))",
-        "(1/n)Σ Y_i · 1(T_i = π(X_i)) / P(T_i | X_i)",
-        "(1/n)Σ [μ̂_1(X_i) - μ̂_0(X_i)] · π(X_i)",
-        "(1/n)Σ T_i · Y_i / e(X_i)",
+        "(1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i))",
+        "(1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i)) / P(T_i | X_i)",
+        "(1/n)\\Sigma [\\mû_1(X_i) - \\mû_0(X_i)] · \\pi(X_i)",
+        "(1/n)\\Sigma T_i · Y_i / e(X_i)",
       ],
       correctAnswer: 1,
       explanation:
-        "The IPS estimator for policy value is: V̂(π) = (1/n)Σ Y_i · 1(T_i = π(X_i)) / P(T_i | X_i). When the observed action matches the policy π(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias — units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
+        "The IPS estimator for policy value is: V̂(\\pi) = (1/n)\\Sigma Y_i · 1(T_i = \\pi(X_i)) / P(T_i | X_i). When the observed action matches the policy \\pi(X_i), we include the outcome Y_i but divide by the probability of observing that action in the behavior policy (propensity score). This reweighting corrects for the selection bias — units with low propensity to follow the target policy are upweighted if they happen to do so. Doubly-robust policy evaluation (DM + IPW) is more variance-efficient.",
       hints: [
-        "IPS reweights observed outcomes to simulate what would happen under the target policy π.",
-        "When the target policy π matches the behavior policy (how data was collected), IPS reduces to the sample mean.",
+        "IPS reweights observed outcomes to simulate what would happen under the target policy \\pi.",
+        "When the target policy \\pi matches the behavior policy (how data was collected), IPS reduces to the sample mean.",
       ],
     },
     {
@@ -1587,16 +1587,16 @@ const questions: Record<string, Question[]> = {
         "Athey & Wager (2021) showed that the problem of learning an optimal treatment policy from observational data can be reduced to a weighted classification problem. The key insight is:",
       options: [
         "The optimal policy can be found by running logistic regression on the observed outcomes",
-        "Minimizing the policy regret E[Y(π*)] - E[Y(π)] is equivalent to a weighted binary classification with pseudo-outcomes as targets, where the weights account for CATE uncertainty; doubly-robust pseudo-outcomes enable efficient policy optimization",
-        "The optimal policy is always the threshold policy π(x) = 1(x_1 > c) for some feature x_1 and cutoff c",
+        "Minimizing the policy regret E[Y(\\pi*)] - E[Y(\\pi)] is equivalent to a weighted binary classification with pseudo-outcomes as targets, where the weights account for CATE uncertainty; doubly-robust pseudo-outcomes enable efficient policy optimization",
+        "The optimal policy is always the threshold policy \\pi(x) = 1(x_1 > c) for some feature x_1 and cutoff c",
         "Policy optimization reduces to maximum likelihood estimation of the propensity score under the target policy",
       ],
       correctAnswer: 1,
       explanation:
-        "Athey & Wager showed: maximizing E[Y(π(X))] - E[Y(0)] ≈ E[τ(X)·π(X)] = E[τ̃_i·π(X_i)] where τ̃_i are doubly-robust pseudo-outcomes for τ(X_i). This is a weighted classification problem: find π that maximizes Σ τ̃_i·1(π(X_i)=1), equivalent to classifying X_i into treatment when τ̃_i > 0. The doubly-robust pseudo-outcomes τ̃ are used as 'soft labels', and the problem is solvable with any weighted classification algorithm (SVM, trees, etc.).",
+        "Athey & Wager showed: maximizing E[Y(\\pi(X))] - E[Y(0)] ≈ E[\\tau(X)·\\pi(X)] = E[\\taũ_i·\\pi(X_i)] where \\taũ_i are doubly-robust pseudo-outcomes for \\tau(X_i). This is a weighted classification problem: find \\pi that maximizes \\Sigma \\taũ_i·1(\\pi(X_i)=1), equivalent to classifying X_i into treatment when \\taũ_i > 0. The doubly-robust pseudo-outcomes \\taũ are used as 'soft labels', and the problem is solvable with any weighted classification algorithm (SVM, trees, etc.).",
       hints: [
         "The reduction to classification is powerful: any classification algorithm becomes a policy learning algorithm.",
-        "The pseudo-outcome τ̃_i approximates the individual treatment effect — positive means treatment is better for unit i.",
+        "The pseudo-outcome \\taũ_i approximates the individual treatment effect — positive means treatment is better for unit i.",
       ],
     },
   ],

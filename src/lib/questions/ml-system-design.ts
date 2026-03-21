@@ -333,7 +333,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., ε-greedy or logging policies) is needed to collect unbiased training data.",
+        "Production logs reflect the current model\'s decisions, creating a feedback loop bias: the model only shows items it already thinks are relevant, so the data never covers items it would have incorrectly penalized. This creates a self-reinforcing loop that amplifies existing model biases. Random exploration (e.g., \\epsilon-greedy or logging policies) is needed to collect unbiased training data.",
       hints: [
         "What type of data does production logging capture — only what the current model chose to show, or everything that exists?",
         "What bias does this create, and what mechanism is needed to collect unbiased signal about items the model would not have surfaced?",
@@ -534,12 +534,12 @@ const questions: Record<string, Question[]> = {
       options: [
         "Optimize accuracy first, then apply post-training quantization to meet latency.",
         "Use a Pareto-optimal search: identify the set of architectures where no architecture dominates another in both accuracy and latency, then select the Pareto-optimal architecture matching your latency budget.",
-        "Use a weighted sum: loss = accuracy + λ × latency. Tune λ on the validation set.",
+        "Use a weighted sum: loss = accuracy + \\lambda × latency. Tune \\lambda on the validation set.",
         "Maximize accuracy subject to a hard latency constraint using constrained optimization.",
       ],
       correctAnswer: 1,
       explanation:
-        "Multi-objective NAS requires finding the Pareto frontier — the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing λ a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
+        "Multi-objective NAS requires finding the Pareto frontier — the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing \\lambda a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
       hints: [
         "In multi-objective optimization, what does the Pareto frontier represent, and what property does each point on it have?",
         "What real-world neural architecture search methods use multi-objective optimization over accuracy and latency?",
@@ -930,8 +930,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Online features that capture very recent user behavior (session-level signals within the last minutes) change too rapidly to be served from a batch-materialized store, which is typically updated hourly or daily. They require a streaming pipeline (Flink, Kafka Streams) that computes per-user aggregations in near-real-time and writes to the online store continuously. These session features are critical for recommendation quality — a user who just clicked on action movies should immediately get more action movie recommendations.",
       hints: [
-        "Batch feature: pre-computed, static, e.g., \'user\'s favorite genre over past 30 days\'.",
-        "Streaming feature: computed in real time, e.g., \'items clicked in current session\'.",
+        "How do the update frequencies of batch-materialized features differ from real-time session-level features?",
+        "Which pipeline technology (streaming or batch) is needed to compute features that change within minutes?",
       ],
     },
     {
@@ -1076,7 +1076,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "NDCG (Normalized Discounted Cumulative Gain) sums relevance scores with position discounts: DCG@k = Σ (rel_i / log_2(i+1)) for i=1..k. The log discount means rank 1 gets full credit, rank 2 gets half, rank 3 gets one-third, etc. Normalization by ideal DCG makes it comparable across queries. This captures that a highly relevant document at rank 5 is worse than at rank 1.",
+        "NDCG (Normalized Discounted Cumulative Gain) sums relevance scores with position discounts: DCG@k = \\Sigma (rel_i / log_2(i+1)) for i=1..k. The log discount means rank 1 gets full credit, rank 2 gets half, rank 3 gets one-third, etc. Normalization by ideal DCG makes it comparable across queries. This captures that a highly relevant document at rank 5 is worse than at rank 1.",
       hints: [
         "A system returning all relevant documents at rank 10 would score high on accuracy but low on NDCG.",
         'The "D" in NDCG stands for Discounted — positions further down contribute logarithmically less.',
@@ -1087,11 +1087,11 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = α × BM25 + (1−α) × cosine_similarity. This combination typically outperforms either alone.",
+        "In a hybrid search system, BM25 scores and dense embedding similarity scores can be combined via linear interpolation: final_score = \\alpha × BM25 + (1−\\alpha) × cosine_similarity. This combination typically outperforms either alone.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "BM25 excels at exact keyword matching (high precision for rare terms); dense bi-encoders excel at semantic matching (capturing paraphrases and synonyms). Their failure modes differ: BM25 misses semantic matches, dense models miss rare/specific terms. Linear interpolation (with α tuned on a validation set) combines their strengths, a technique called hybrid retrieval. Reciprocal Rank Fusion (RRF) is an alternative that does not require score normalization.",
+        "BM25 excels at exact keyword matching (high precision for rare terms); dense bi-encoders excel at semantic matching (capturing paraphrases and synonyms). Their failure modes differ: BM25 misses semantic matches, dense models miss rare/specific terms. Linear interpolation (with \\alpha tuned on a validation set) combines their strengths, a technique called hybrid retrieval. Reciprocal Rank Fusion (RRF) is an alternative that does not require score normalization.",
       hints: [
         'Query "myocardial infarction": BM25 finds exact matches; dense model also finds "heart attack" documents.',
         'Query "Apple Inc. Q3 earnings": BM25 is reliable for specific terms; dense models may hallucinate semantic similarity.',
@@ -1136,8 +1136,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The optimal decision threshold is cost-sensitive: with FN cost = $200 and FP cost = $10, the cost ratio is 20:1. The Bayes optimal threshold is P(fraud) > FP_cost / (FP_cost + FN_cost) = 10 / (10 + 200) ≈ 0.048. This means flag any transaction with >4.8% fraud probability. This threshold explicitly encodes the business cost trade-off into the decision rule. Standard 0.5 threshold ignores the asymmetric cost structure.",
       hints: [
-        "Optimal threshold = FP_cost / (FP_cost + FN_cost) = 10 / 210 ≈ 0.048.",
-        "Asymmetric costs shift the threshold: the more costly the false negative, the lower the threshold.",
+        "What is the Bayes optimal decision threshold in terms of the cost ratio between false negatives and false positives?",
+        "When false negatives are 20× more costly than false positives, should the threshold be above or below 0.5?",
       ],
     },
     {
@@ -1151,8 +1151,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Graph-based fraud detection excels at detecting coordinated fraud rings where multiple accounts collaborate (e.g., synthetic identity fraud networks, mule account networks). For isolated individual fraud (e.g., a single stolen card used for unauthorized purchases), tabular GBDTs with velocity features (transaction count in 1h, spending pattern deviation) are typically more effective and faster to serve. The best production systems combine both: tabular features for fast first-pass scoring and GNNs for network-level signals.",
       hints: [
-        "GNNs: powerful for detecting connected fraud rings. GBDTs: powerful for individual transaction anomaly detection.",
-        "Production fraud systems typically use both: tabular model for <50 ms decision, GNN for post-authorization review.",
+        "What type of fraud pattern does GNN-based detection excel at, and what type does tabular GBDT-based detection excel at?",
+        "What architecture do production fraud systems typically use to combine the strengths of both approaches?",
       ],
     },
     {
@@ -1249,8 +1249,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In a second-price auction, the winner pays the runner-up\'s bid, not their own. If your true value is $5: bidding $5 means you win when you should (when others bid <$5) and pay the second-highest price. Bidding $7 wins you the same auctions (still beats the same set of competitors) and pays the same second price — no benefit. Bidding $3 might cause you to lose auctions where you would have been profitable. Hence, bidding true value is weakly dominant.",
       hints: [
-        "Second-price: winner pays runner-up\'s bid. First-price: winner pays own bid.",
-        "Bidding above true value: same wins, same price — no gain. Bidding below: same price if you win, but risk losing.",
+        "In a second-price auction, what determines the winner's payment — their own bid or the second-highest bid?",
+        "What is the strategic implication of knowing your payment is determined by others' bids rather than your own?",
       ],
     },
     {
@@ -1264,8 +1264,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "GSP is not truthful in general: bidders can benefit by bidding strategically (not at their true value), because the payment structure in GSP does not satisfy incentive compatibility for all positions. VCG is provably truthful (bidding true value is a dominant strategy) but computationally expensive and rarely used in practice. Google\'s original AdWords used GSP, not VCG. The distinction matters for mechanism design in ads systems.",
       hints: [
-        "Truthful mechanism: bidding true value is always optimal, regardless of others\' bids.",
-        "GSP is simpler and commonly used; VCG is truthful but computationally complex for multiple slots.",
+        "In a truthful mechanism, what is the dominant strategy for each bidder?",
+        "What key property does VCG satisfy that GSP does not, despite both being multi-slot auctions?",
       ],
     },
     {
@@ -1792,7 +1792,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The feedback loop bias is the most critical problem: the model only generates training signal for items it chooses to show. Items suppressed by the current model never get clicks and are permanently disadvantaged in future training runs. Mitigations: exploration (ε-greedy or Thompson sampling to expose non-top-ranked items), off-policy correction (IPS weighting), and counterfactual evaluation techniques.",
+        "The feedback loop bias is the most critical problem: the model only generates training signal for items it chooses to show. Items suppressed by the current model never get clicks and are permanently disadvantaged in future training runs. Mitigations: exploration (\\epsilon-greedy or Thompson sampling to expose non-top-ranked items), off-policy correction (IPS weighting), and counterfactual evaluation techniques.",
       hints: [
         "If the model always shows item A and never item B, item A gets clicks and item B gets zero — even if B is better.",
         "The fix requires deliberate exploration: occasionally showing non-top-ranked items to collect unbiased signal.",
@@ -1966,10 +1966,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GPS traces are highly sensitive — research shows 4 spatiotemporal points uniquely identify 95% of individuals. Local differential privacy (LDP) adds calibrated noise to location reports on the device before transmission, providing mathematical privacy guarantees. The ε parameter controls the privacy-accuracy trade-off. Apple uses LDP for keyboard usage stats; Google uses it for Chrome histogram collection. Removing timestamps does not prevent re-identification from location patterns (home/work inference).",
+        "GPS traces are highly sensitive — research shows 4 spatiotemporal points uniquely identify 95% of individuals. Local differential privacy (LDP) adds calibrated noise to location reports on the device before transmission, providing mathematical privacy guarantees. The \\epsilon parameter controls the privacy-accuracy trade-off. Apple uses LDP for keyboard usage stats; Google uses it for Chrome histogram collection. Removing timestamps does not prevent re-identification from location patterns (home/work inference).",
       hints: [
         "LDP: noise is added on-device. Central DP: noise is added server-side after collection. LDP provides stronger user privacy guarantees.",
-        "With ε=1, LDP randomizes ~37% of reports — the aggregate over millions of users still converges accurately.",
+        "With \\epsilon=1, LDP randomizes ~37% of reports — the aggregate over millions of users still converges accurately.",
       ],
     },
   ],
@@ -2026,7 +2026,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Recursive forecasting accumulates error: each 1-step prediction error compounds over 30 steps, leading to large errors at the 30-day horizon. Direct multi-output forecasting trains one model with multiple output heads predicting all horizons simultaneously from the current input — no error accumulation. Temporal Fusion Transformer (TFT) and N-HiTS are direct multi-horizon architectures widely used in production forecasting.",
       hints: [
-        "Recursive forecasting error at step k grows approximately as k × σ_1 for independent errors.",
+        "Recursive forecasting error at step k grows approximately as k × \\sigma_1 for independent errors.",
         "Direct forecasting: all output heads are trained jointly from the same features, with no error accumulation across steps.",
       ],
     },
@@ -2134,7 +2134,7 @@ const questions: Record<string, Question[]> = {
         "A credit scoring model is required by regulation to achieve equalized odds (equal TPR and FPR) across racial groups while maintaining overall AUC above 0.80. How is this constraint enforced in a production ML system?",
       options: [
         "Add race as an explicit feature so the model can learn group-specific patterns.",
-        "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| ≤ ε), and monitor fairness metrics in production with automated alerts when constraints are violated.",
+        "Apply constrained optimization during training: add fairness constraints as Lagrange multipliers to the loss function (e.g., |TPR_group_A − TPR_group_B| ≤ \\epsilon), and monitor fairness metrics in production with automated alerts when constraints are violated.",
         "Retrain the model separately for each racial group — separate models guarantee fairness.",
         "Apply a uniform score multiplier to all members of the disadvantaged group.",
       ],
@@ -2236,7 +2236,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/η fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100× more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
+        "Successive Halving allocates a small resource budget (e.g., 10 epochs) to all N configurations, keeps the top 1/\\eta fraction, doubles resources, and repeats until one configuration remains. Hyperband runs multiple Successive Halving brackets with different initial resource allocations to balance exploration vs. exploitation. This adaptive resource allocation allows exploring 10–100× more configurations than full training within the same compute budget. Ray Tune and Optuna implement Hyperband natively.",
       hints: [
         "Successive Halving: start with N configs at 1 epoch each. Keep top N/3 → train to 3 epochs. Keep top N/9 → train to 9 epochs.",
         "Hyperband eliminates the choice of starting resources in Successive Halving by running multiple brackets simultaneously.",
@@ -2610,5 +2610,355 @@ const famous2: Record<string, Question[]> = {
   ],
 };
 Object.assign(questions, famous2);
+
+const extraMsdQ3: Record<string, Question[]> = {
+  "two-tower-recsys": [
+    {
+      id: "q-msd-tt-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In a two-tower recommendation model, what do the two towers represent and why is their dot-product scoring structure important for large-scale serving?",
+      options: [
+        "One tower encodes user history; the other encodes item metadata. Dot-product scoring allows precomputing and indexing item embeddings offline so retrieval reduces to ANN search, enabling sub-millisecond lookup across billions of items",
+        "One tower encodes user demographics; the other encodes item content. Dot-product scoring ensures interpretability because each dimension corresponds to a latent preference",
+        "Both towers encode the same user-item interaction from different temporal perspectives, and dot-product scoring forces temporal consistency",
+        "One tower is a content-based filter; the other is a collaborative filter. Dot-product scoring combines both signals multiplicatively",
+      ],
+      correctAnswer: 0,
+      explanation: "Two-tower models separate user and item encoders. At serving time item embeddings are precomputed once and indexed in a vector database (FAISS, ScaNN, Qdrant). For each query, only the user tower runs in real time, producing a query vector; ANN search retrieves top-k items in O(log N) time. If the model used feature interactions at each layer, item representations would depend on the query and could not be pre-indexed. The independence constraint enables scale at the cost of not modeling feature interactions during retrieval.",
+      hints: [
+        "ANN trade-off: exact kNN is O(N) per query — infeasible for N=10B. HNSW and IVF-PQ achieve O(log N) or better with 95-99% recall.",
+        "Independence requirement: item tower output must not depend on query features. Any user-item feature interaction must be deferred to the ranking stage.",
+      ],
+    },
+    {
+      id: "q-msd-tt-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A two-tower retrieval model trained with in-batch negatives has a systematic sampling bias. What is it and how is it corrected?",
+      options: [
+        "In-batch negatives oversample popular items as negatives (popular items appear more in batches), making the model incorrectly learn popular items are negative — corrected by logQ correction: subtracting log(sampling_probability) from each negative's logit before softmax",
+        "In-batch negatives undersample rare items causing overfitting to popular items — corrected by stratified sampling equalizing item frequency in batches",
+        "In-batch negatives create false positives because some batch items might be positive for other users — corrected by masking known positives across the batch",
+        "In-batch negatives have too small a batch size to represent the full item distribution — corrected by using a memory bank of randomly sampled hard negatives",
+      ],
+      correctAnswer: 0,
+      explanation: "In-batch negative sampling has systematic popularity bias: items appear as negatives proportional to their frequency in training data. Popular items are seen as negative far more often than random, causing the model to underrank them. LogQ correction (YouTube DNN, Covington et al. 2016): subtract log(p_i) from the dot product score of negative item i before softmax, where p_i is its sampling probability. This deweights high-frequency negatives, letting the model learn true preference signal rather than a frequency artifact.",
+      hints: [
+        "LogQ formula: adjusted_score_i = dot(u, v_i) - log(p_i). Items sampled more often get their score penalized to offset overrepresentation.",
+        "Without logQ correction, models dramatically underrank popular items for niche users who genuinely want them.",
+      ],
+    },
+    {
+      id: "q-msd-tt-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In a recommendation system with separate retrieval and ranking stages, the ranking model can safely use cross-features between user and item because it only scores a small candidate set rather than billions.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "The retrieval-ranking architecture exists to enable this split: retrieval (two-tower ANN) must score billions of items and can only use simple dot-product-compatible features; ranking scores only 100-1000 candidates and can use arbitrarily complex features including user-item cross-features, real-time context, and deep feature interactions (DCN, DeepFM, attention). The ranking model can be much larger and more expensive because its candidate set is tiny.",
+      hints: [
+        "Retrieval: O(log N) per query, N=10B, must be fast — simple dot product, pre-indexed items.",
+        "Ranking: O(K) per query, K=500, can be slow — deep feature interaction models, cross-features, sequential attention.",
+      ],
+    },
+    {
+      id: "q-msd-tt-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Cold-start problem: a new item with zero interaction history must be recommended. Which approach best handles cold-start in a two-tower retrieval system?",
+      options: [
+        "Exclude new items from retrieval until they accumulate at least 100 interactions, ensuring embedding quality",
+        "Use the item content tower (trained on item metadata: title, description, category, price) to generate an embedding from content features alone, bypassing interaction history, and index this embedding directly in the ANN index — update with interaction-based embeddings as data accumulates",
+        "Assign new items the average embedding of all items in the same category as a cold-start embedding",
+        "Use a popularity-based fallback recommending new items uniformly at random to a fraction of users until enough interactions are collected",
+      ],
+      correctAnswer: 1,
+      explanation: "Content-based cold-start for two-tower retrieval: the item tower is designed to encode item metadata (text, images, categories, price). For new items, the content tower generates a meaningful embedding from metadata alone, even without interaction history. This embedding can be immediately indexed in the ANN store. As interactions accumulate, the embedding is updated to incorporate collaborative signals. This enables immediate recommendation of new items while gracefully transitioning to collaborative embeddings. Pure collaborative filtering cannot handle cold-start because it requires interaction data.",
+      hints: [
+        "Item content features for cold-start: text embeddings of title/description (BERT), image embeddings (ViT), categorical features, price range.",
+        "Warm-up schedule: at t=0, use 100% content embedding. At t>100 interactions, blend content and collaborative embeddings. At t>1000, use 100% collaborative.",
+      ],
+    },
+  ],
+  "realtime-ml-serving": [
+    {
+      id: "q-msd-rt-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A low-latency ML serving system must achieve p99 < 50ms for a ranking model requiring 500 features. Feature computation is the bottleneck. What architecture reduces latency most effectively?",
+      options: [
+        "Cache all features in Redis with a 24-hour TTL — the model always reads from cache, missing features filled with zeros",
+        "Split features by staleness tolerance: precompute slow/expensive features into a low-latency feature store (Redis/Cassandra) updated hourly, and compute fresh/context features via streaming (Flink/Kafka) with sub-second latency. Retrieve precomputed features in parallel with inference, serving the union at query time",
+        "Use synchronous feature computation: compute all 500 features sequentially on each request to ensure freshness",
+        "Reduce the model to use only 50 features that can be computed within the latency budget, accepting the accuracy trade-off",
+      ],
+      correctAnswer: 1,
+      explanation: "Tiered feature computation is the standard architecture: (1) Batch features: computed offline, stored in a feature store (Redis, Cassandra, Feast). Retrieval in 1-5ms. (2) Streaming features: computed on Flink from event streams, stored in Redis with sub-minute latency. (3) Online features: computed at request time from context. Retrieval in <1ms. Parallel retrieval of all tiers minimizes latency: total latency = max(tier latencies), not sum. This achieves fresh features for important signals within the p99 budget.",
+      hints: [
+        "Key insight: not all features need the same freshness. User long-term preferences change slowly (batch OK), session context changes fast (online required).",
+        "Parallel feature retrieval: issue all feature store reads simultaneously (async/concurrent), not sequentially.",
+      ],
+    },
+    {
+      id: "q-msd-rt-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A recommendation model uses a user embedding expensive to compute (requires loading 90 days of user history). Which caching strategy is most appropriate?",
+      options: [
+        "Cache the final model output (ranked item list) per user with a 1-minute TTL",
+        "Cache the user embedding (intermediate representation) with a TTL calibrated to the rate user preferences change (typically 1-60 minutes), invalidating on significant new events (purchase, session start), recomputing only on cache misses",
+        "Cache the full feature vector for each user with a 24-hour TTL",
+        "Use no caching — always recompute fresh embeddings for every request to maximize recommendation quality",
+      ],
+      correctAnswer: 1,
+      explanation: "Caching intermediate representations (embeddings) is more flexible than caching model outputs: the same cached user embedding can be reused across different contexts (different item catalogs, A/B test variants, different ranking models). User embedding TTL should be calibrated to behavioral change rate. Event-driven invalidation (clear cache on purchase or session start) ensures major behavioral changes are reflected quickly. This reduces expensive user history loading by 80-95% during peak traffic while maintaining recommendation quality.",
+      hints: [
+        "Embedding cache hit rate: if users make 5 requests/session within 10 minutes, a 10-minute TTL achieves ~80% cache hit rate.",
+        "Invalidation events: purchase, session start, explicit negative feedback — these signal significant preference changes making cached embeddings stale.",
+      ],
+    },
+    {
+      id: "q-msd-rt-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Streaming feature computation using Apache Flink can achieve the same per-event latency as computing features directly in the serving layer at request time.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation: "Streaming frameworks like Flink introduce additional latency: events must be published to Kafka, consumed by the Flink job, aggregated, and written to a feature store, then read back at serving time. This typically adds 100ms-5s of end-to-end latency beyond direct computation. The trade-off is scalability: streaming frameworks can aggregate across millions of events (user's 30-min click history) that would be impossible to recompute from scratch on each request. Direct request-time computation is only feasible for simple features derivable from the request context alone.",
+      hints: [
+        "Streaming latency: Kafka publish (~5ms) + Flink window processing (~100ms-1s) + Redis write (~5ms) + Redis read (~1ms). Total: 100ms-1s additional vs request-time computation.",
+        "Streaming advantage: amortizes expensive aggregation computations across the stream rather than per-request.",
+      ],
+    },
+    {
+      id: "q-msd-rt-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "An ML serving system must maintain p99 latency < 100ms under 10x traffic spikes. Which combination of techniques best ensures SLO compliance?",
+      options: [
+        "Auto-scaling the serving fleet with a 5-minute scale-up time, ensuring eventual capacity for sustained traffic increases",
+        "Adaptive degradation under load: (1) pre-deploy a distilled smaller model as fallback; (2) request hedging — duplicate slow requests to a second server after 70ms; (3) load shedding — drop lowest-priority traffic above 80% CPU; (4) predictive scaling before anticipated spikes",
+        "Horizontal scaling with a 5-minute SLA for new instances — accept latency violations during scale-up as unavoidable",
+        "Synchronous batch inference: accumulate 100 requests, run batch, return results — this improves GPU utilization",
+      ],
+      correctAnswer: 1,
+      explanation: "Handling traffic spikes for p99 latency requires layered techniques: (1) Distilled fallback: when CPU > threshold, route to a 3x faster distilled model — p99 preserved, small accuracy cost. (2) Request hedging: if response not received within 70ms, issue identical request to a second server; first response wins. Reduces tail latency 20-30% at 2% extra load. (3) Load shedding: drop low-priority traffic (anonymous users, background refreshes) during extreme load. (4) Predictive scaling: scale up 10 min before predicted spikes. Auto-scaling alone (5-min scale-up) cannot handle sudden spikes. Synchronous batching increases individual request latency.",
+      hints: [
+        "Request hedging math: if p(>70ms on one server) = 5%, p(both >70ms) = 0.25%. Hedging converts 5% tail to 0.25% tail at 2% extra load.",
+        "Load shedding tiers: tier 1 (logged-in, real-time) never shed. Tier 2 (batch inference, A/B logging) shed first. Tier 3 (analytics) shed aggressively.",
+      ],
+    },
+  ],
+  "data-flywheel-advanced": [
+    {
+      id: "q-msd-df-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A data flywheel is a self-reinforcing feedback loop in ML products. Which correctly describes the mechanism and its key design requirement?",
+      options: [
+        "More users -> more data -> better model -> more users. The key design requirement is that user interactions must generate labeled training data — through explicit feedback (ratings, likes) or implicit feedback (clicks, dwell time, purchases) treated as weak labels",
+        "More data -> more compute -> better model -> more data. The key requirement is a large GPU cluster to process all collected data in real time",
+        "Better model -> lower latency -> more users -> more data. The key requirement is a fast inference engine serving all users within SLO",
+        "More users -> more A/B tests -> better experiments -> better model. The key requirement is a sophisticated experimentation platform",
+      ],
+      correctAnswer: 0,
+      explanation: "The data flywheel core loop: (1) model generates recommendations, (2) users interact (click, purchase, skip), (3) interactions are logged as implicit or explicit labels, (4) labeled data retrains and improves the model, (5) better model improves user experience, (6) more users join and interact more. The critical design requirement is a closed logging-to-training pipeline that converts user interactions into model-ready training examples automatically. Without this, the flywheel breaks. Key design: logging infrastructure, label assignment pipeline, training pipeline ingesting new labels, and evaluation to prevent position bias and feedback loops from corrupting labels.",
+      hints: [
+        "Flywheel risk: feedback loops can corrupt the flywheel. If the model only shows popular items, it only collects data on popular items, reinforcing popularity bias.",
+        "Implicit label quality: clicks are noisy positives. Purchases are stronger signals. Dwell time is a proxy for engagement. Multiple signals should be combined.",
+      ],
+    },
+    {
+      id: "q-msd-df-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A content moderation system uses HITL review where the ML model flags items for human review and human decisions become training labels. What is the critical failure mode?",
+      options: [
+        "Human reviewers are too slow — prevented by hiring more reviewers or setting shorter SLAs",
+        "Confirmation bias feedback loop: the model only sends uncertain items to humans, so human labels only cover the uncertain region. The model never learns from items it confidently auto-approves or auto-rejects — prevented by (a) sampling a random fraction of all traffic for human review regardless of confidence, and (b) tracking auto-decision accuracy via periodic audits",
+        "Human reviewers disagree with each other — prevented by enforcing strict annotation guidelines and removing disagreed labels",
+        "The model overtakes human accuracy after sufficient training, making human review wasteful",
+      ],
+      correctAnswer: 1,
+      explanation: "The confirmation bias loop in HITL: if humans only review model-uncertain items (typical for efficiency), training data is biased toward uncertain cases. Items the model confidently auto-approves — potentially including false negatives (harmful content the model is confidently missing) — never get human labels. Prevention: (1) Random sampling audit: send 1-5% of all auto-approved and auto-rejected items for human review regardless of confidence. (2) Periodic error analysis: compare model decisions to human decisions on sampled items to measure false negative rate. (3) Active learning prioritizes regions where errors are most harmful.",
+      hints: [
+        "False negative risk in content moderation: missing harmful content (auto-approved). The HITL loop is most blind to these when sampling only uncertain cases.",
+        "Audit rate: 1-5% random audit provides statistical power to detect 5-10% error rates in auto-decisions with 95% confidence.",
+      ],
+    },
+    {
+      id: "q-msd-df-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Weak supervision (e.g., Snorkel's labeling functions) can generate training labels at scale without human annotation for every sample, making it effective for bootstrapping initial training datasets in data-scarce domains.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "Weak supervision (Ratner et al. 2016, Snorkel) uses multiple weak, noisy label sources called labeling functions (LFs) — heuristics, patterns, external knowledge bases, pre-trained models. Snorkel's label model combines LF outputs using a generative model estimating LF accuracies and correlations, producing soft probabilistic labels that train a discriminative model. This enables generating millions of training labels without hand-labeling each sample, at the cost of some label noise. Used in FDA, Google, and Apple production ML pipelines for medical record classification, content moderation, and information extraction.",
+      hints: [
+        "LF examples: keyword rules (contains 'buy now' -> spam), external classifiers (sentiment model -> positive), distant supervision (entity in Wikipedia -> entity type).",
+        "Weak supervision vs zero-shot: weak supervision uses domain-specific heuristics to generate training data; zero-shot uses a pre-trained model directly without domain-specific labels.",
+      ],
+    },
+    {
+      id: "q-msd-df-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A search ranking data flywheel uses user clicks as implicit training labels. What is the biggest threat to training data quality and how should it be mitigated?",
+      options: [
+        "Users click too rarely, creating too few training examples — mitigated by boosting CTR via UI changes",
+        "Position bias: users are more likely to click results at rank 1 than rank 5 regardless of relevance, causing the model trained on click data to reinforce already-highly-ranked results — mitigated by inverse propensity scoring (IPS) that deweights clicks on high-rank positions, or by randomized result injection to collect unbiased click data",
+        "Users click on irrelevant results by mistake — mitigated by requiring users to dwell on results for at least 30 seconds before counting as positive",
+        "Different users have different click behaviors — mitigated by personalizing training data by clustering users and training separate models per cluster",
+      ],
+      correctAnswer: 1,
+      explanation: "Position bias is the dominant threat to search click log quality: P(click | position=1) >> P(click | relevance) for most users. A model trained naively on click data learns 'show at rank 1 -> gets clicks -> is relevant', which is backwards. IPS corrects this: weight each click by 1/P(click | position), where propensity P(click | position) is estimated from randomized experiments (swap top-2 results, measure click rate changes). This deweights high-position clicks and upweights low-position clicks. Unbiased learning to rank (ULTR) frameworks formalize this correction.",
+      hints: [
+        "IPS estimation: run A/B experiment where some queries show results in random order. Estimate P(click | position) from this randomized data. Apply to biased log.",
+        "Propensity clipping: IPS weights can be very large for low-position clicks. Clip weights at a maximum to prevent high-variance gradient updates.",
+      ],
+    },
+    {
+      id: "q-msd-df-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Active learning with a budget of 1000 labels/day. Which strategy is most sample-efficient for improving model performance?",
+      options: [
+        "Random sampling: send 1000 randomly selected unlabeled samples to annotators each day",
+        "Pure uncertainty sampling: send the 1000 samples where the model has lowest confidence (highest entropy predictions)",
+        "A hybrid strategy: core-set selection (maximally representative of unlabeled distribution via greedy k-center in embedding space), combined with uncertainty filtering (prefer samples near decision boundary), and diversity constraint (geographic, temporal, class diversity) — this balances informativeness and representativeness",
+        "Hardest negative mining: select the 1000 samples the model is most confidently wrong about based on a proxy label",
+      ],
+      correctAnswer: 2,
+      explanation: "Pure uncertainty sampling suffers from redundancy: the 1000 most uncertain samples are often clustered near a few decision boundary regions, providing redundant labels. Core-set selection (Sener & Savarese 2018) ensures selected samples cover the full data distribution by minimizing the maximum distance from any unlabeled sample to its nearest labeled sample. The hybrid approach balances: informativeness (uncertain = near decision boundary), representativeness (core-set coverage), and diversity constraints (prevent temporal/geographic clustering). This hybrid is used in production active learning pipelines at Google and Waymo.",
+      hints: [
+        "Redundancy in uncertainty sampling: if the model is uncertain about blurry cats, sampling 1000 blurry cats gives 1000 similar labels with diminishing returns after ~50.",
+        "Greedy k-center: select x* = argmax_{x unlabeled} min_{x' labeled} d(x, x'). Iteratively selects the point furthest from all currently labeled points.",
+      ],
+    },
+  ],
+  "privacy-ml-systems": [
+    {
+      id: "q-msd-pp-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Federated learning trains models across many devices without centralizing raw data. What is the most significant accuracy-vs-privacy trade-off when adding DP-SGD to FL?",
+      options: [
+        "DP-SGD requires more communication rounds, increasing bandwidth costs but not affecting model accuracy",
+        "DP-SGD clips per-sample gradients and adds Gaussian noise. Small epsilon (strong privacy) requires large noise causing large accuracy drop; large epsilon (weak privacy) allows small noise. Non-IID data distributions in FL amplify accuracy loss because DP noise obscures the weak gradient signal in minority groups",
+        "DP-SGD only affects the final model weights so accuracy is unaffected during training but the final model is noisier",
+        "DP-SGD requires encrypted gradient aggregation which is computationally too slow for production FL systems",
+      ],
+      correctAnswer: 1,
+      explanation: "DP-SGD (Abadi et al. 2016) clips per-sample gradient to L2 norm C, adds Gaussian noise N(0, sigma^2 C^2 I). In FL, effective batch size is small (local device updates), so noise is relatively large. Privacy budget epsilon is consumed per round; training many rounds requires smaller per-round epsilon, requiring more noise. Non-IID data: minority-class devices have low-magnitude gradients that DP noise can overwhelm, degrading fairness for rare classes. Typical: epsilon=10 causes 1-2% accuracy drop on CIFAR-10; epsilon=1 causes 5-10% drop.",
+      hints: [
+        "Privacy budget accounting: total epsilon grows as O(sqrt(T)) for T rounds by the moments accountant. More rounds = worse privacy for fixed noise level.",
+        "Non-IID + DP: a device with a rare class has gradient signals ~1/1000 of average. DP noise can overwhelm this, making the rare class invisible to the model.",
+      ],
+    },
+    {
+      id: "q-msd-pp-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Federated learning completely prevents the central server from learning anything about individual client data, even without secure aggregation or differential privacy.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation: "Without secure aggregation or DP, the central server sees each client's gradient update, which can leak significant information about local data. Gradient inversion attacks (Zhu et al. 2019, Deep Leakage from Gradients) demonstrate that raw pixel-level training images can be reconstructed from gradients with high fidelity, especially for small batch sizes. The attack optimizes a dummy input to match the observed gradient, effectively inverting the gradient computation. FL alone provides much weaker privacy than commonly assumed — gradients are not private.",
+      hints: [
+        "Gradient inversion attack: given gradient dL/dW, find input x* such that dL(f(x*), y)/dW = gradient. For batch size 1, this nearly perfectly recovers the training image.",
+        "Attack mitigation: gradient compression (top-k sparsification), differential privacy, or secure aggregation all reduce gradient inversion risk.",
+      ],
+    },
+    {
+      id: "q-msd-pp-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A federated learning system for mobile keyboard prediction must manage the global privacy budget across millions of daily training rounds. Which approach correctly handles budget tracking?",
+      options: [
+        "Set a per-round epsilon budget and allow unlimited training rounds — privacy loss is bounded per round so total loss is acceptable",
+        "Apply the moments accountant (Abadi et al. 2016) or Renyi DP composition to track cumulative privacy budget across all training rounds. Stop training or increase noise when the total epsilon reaches the budget. Each additional round consumes additional budget, so number of rounds is inherently limited for a fixed noise level",
+        "Reset the privacy budget to zero after each model release, since deployed models cannot be queried for training data",
+        "Use per-user privacy budgets — each user has their own epsilon and users who have spent their budget are excluded from future training rounds",
+      ],
+      correctAnswer: 1,
+      explanation: "Privacy budget composition is fundamental: training for T rounds with per-round epsilon_r does NOT give total epsilon = epsilon_r. The moments accountant tracks privacy loss distribution across rounds precisely using Renyi DP composition, which is tighter than naive composition (T * epsilon_r). For large T, total epsilon grows as O(sqrt(T)). Once the total epsilon budget is spent, training must stop or noise must increase. This creates a fundamental tension: more training = better model but worse privacy. Systems must define a privacy policy (e.g., epsilon <= 10 per year per dataset) and plan training schedules accordingly.",
+      hints: [
+        "Moments accountant vs naive composition: for T=1000 rounds at epsilon_r=0.1, naive gives epsilon_total=100, moments accountant gives ~3-5. Much tighter.",
+        "Privacy budget per model version: some teams treat each model release as a new privacy domain and restart budget tracking — actively debated in the DP community.",
+      ],
+    },
+    {
+      id: "q-msd-pp-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A company trains a model on sensitive medical records using differential privacy with epsilon=1. Which factor most significantly determines how much accuracy the model loses due to DP noise?",
+      options: [
+        "The number of model parameters — larger models lose more accuracy because more parameters receive noise",
+        "The model architecture type — convolutional networks are more robust to DP noise than transformers",
+        "The clipping threshold C relative to the true gradient norm — if C is much smaller than the gradient norm, important gradients are heavily clipped before noise is added; if C is too large, noise variance (sigma^2 C^2) becomes large. Optimal C balances clipping bias and noise variance",
+        "The learning rate — higher learning rates amplify DP noise and cause divergence",
+      ],
+      correctAnswer: 2,
+      explanation: "The clipping threshold C in DP-SGD is the most impactful accuracy hyperparameter: (1) If C << true gradient norm: gradients are always clipped, losing magnitude information. (2) If C >> true gradient norm: gradients are unclipped but noise variance sigma^2 C^2 is large, swamping the gradient signal. Optimal C is set near the median of per-sample gradient norms (auto-clip methods). Larger batch sizes reduce the noise-to-signal ratio. Public pretrained models (DP fine-tuning of BERT/ViT) dramatically reduce accuracy loss because the model starts near the optimum and requires less noisy training.",
+      hints: [
+        "Auto-clipping: AdaClip and DP-Adam variants estimate optimal C adaptively by monitoring gradient norm percentiles during training.",
+        "PATE framework: train multiple teacher models on partitioned data (no DP), aggregate teacher votes with DP noise, use noisy votes to label public data, train student on public data. Much better accuracy-privacy trade-off than DP-SGD.",
+      ],
+    },
+  ],
+  "embedding-retrieval-design": [
+    {
+      id: "q-msd-emb-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A recommendation system's item embedding space should have which geometric property to enable efficient and meaningful retrieval?",
+      options: [
+        "Maximum dimensionality — more dimensions encode more item attributes and always improve retrieval quality",
+        "Isotropic distribution with well-separated clusters for semantically different items: embeddings uniformly distributed across the hypersphere (avoiding collapse where embeddings cluster near the origin), with angular distance reflecting semantic dissimilarity and enabling cosine similarity search to align with human-perceived relevance",
+        "Sparse representation where each dimension corresponds to a human-interpretable item attribute, enabling item filtering by dimension value",
+        "Binary embeddings — items as binary vectors enabling Hamming distance search, which is 100x faster than cosine similarity for ANN retrieval",
+      ],
+      correctAnswer: 1,
+      explanation: "Well-designed embedding spaces for retrieval should: (1) be isotropically distributed (uniform on the hypersphere) to use full representational capacity — collapsed embeddings waste capacity and make ANN retrieval unreliable; (2) cluster semantically similar items close together in angular distance; (3) have sufficient but not excessive dimensionality, typically 64-512 dimensions with diminishing returns beyond ~256 dims. Methods to achieve isotropy: temperature scaling in contrastive loss, whitening post-processing, ArcFace-style angular margin losses. Representation collapse is a key failure mode in contrastive learning that must be monitored in production.",
+      hints: [
+        "Collapse detection: monitor the average cosine similarity between randomly sampled item pairs. Near-zero = isotropic (good). Near-one = collapsed (bad).",
+        "Dimensionality selection: measure retrieval recall@k as you increase dimensionality. Pick the elbow point where gains plateau. Common: 64-128 dims for catalog search.",
+      ],
+    },
+    {
+      id: "q-msd-emb-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "In a recommendation system, increasing the embedding dimension of the item tower always improves retrieval recall because higher-dimensional embeddings can represent more item attributes.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation: "Embedding dimensionality follows a diminishing returns curve: increasing dimension improves recall up to a point, then plateaus or decreases due to (1) overfitting — with many dimensions and limited training data, the model fits noise; (2) ANN index quality degradation — high-dimensional HNSW and IVF-PQ indices lose recall and become slower (curse of dimensionality for ANN); (3) training instability with high-dimensional softmax over millions of items. Typical sweet spots: 64-128 dims for catalog search (<1M items), 128-256 for large-scale retrieval (>100M items). Above 512 dims rarely provides measurable improvement in production.",
+      hints: [
+        "ANN quality vs dimension: FAISS IVF-PQ quantization error increases with dimension; HNSW graph connectivity degrades. Both negatively affect retrieval recall at very high dimensions.",
+        "Empirical sweet spot: YouTube uses 256 dims. Pinterest uses 128 dims. Both found diminishing returns beyond their chosen dimension.",
+      ],
+    },
+    {
+      id: "q-msd-emb-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "An e-commerce platform must update its ANN index of 500 million item embeddings as new items are added and attributes change. Which update strategy minimizes both index staleness and rebuild cost?",
+      options: [
+        "Full index rebuild every hour — ensures all embeddings are fresh but requires 500M embedding lookups and 1 hour of indexing time per rebuild",
+        "Maintain a small delta index of recently changed items alongside the main ANN index. At query time, search both indexes and merge results. Periodically merge the delta into the main index during low-traffic windows. New items go into the delta first (available within seconds) while the main index is rebuilt weekly in the background",
+        "Use a hash-based lookup table instead of ANN — hash item IDs to embedding vectors, enabling O(1) lookup with zero rebuild overhead",
+        "Keep the original embeddings frozen and add a re-ranking layer that adjusts scores based on real-time item attributes without updating the ANN index",
+      ],
+      correctAnswer: 1,
+      explanation: "Tiered ANN indexing (main + delta) is the standard production architecture for large-scale retrieval with frequent updates: (1) Main index: 500M items, built weekly or daily during low-traffic. HNSW or IVF-PQ provides fast ANN search. (2) Delta index: thousands of new/changed items since last main rebuild, maintained in a small exact-search structure. Query time: search both and merge by score. New items appear in the delta within seconds. (3) Periodic merge: merge delta into main when delta grows large (degrading brute-force query performance). This pattern is used in Pinecone, Qdrant, and Elasticsearch vector search implementations.",
+      hints: [
+        "Delta index merge trigger: when delta size exceeds 1% of main index size, brute-force delta search becomes expensive. Trigger merge at this threshold.",
+        "Query merge: run ANN search on main (top-k1), run brute-force on delta (top-k2), merge and re-rank by score, return final top-k.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extraMsdQ3);
 
 registerQuestions(questions);

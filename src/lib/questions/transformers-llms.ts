@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h × d_k = d_model) and then projected by a weight matrix W^O ∈ ℝ^{d_model × d_model} to produce the final output.",
+        "In multi-head attention, outputs from all h heads are concatenated (producing a vector of dimension h × d_k = d_model) and then projected by a weight matrix W^O ∈ \\mathbb{R}^{d_model × d_model} to produce the final output.",
       correctAnswer: "True",
       explanation:
         "D2l.ai \\S 11.5 defines the multi-head attention output as:\n\\[\n\\text{MultiHead}(\\mathbf{Q}, \\mathbf{K}, \\mathbf{V}) = \\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)\\,\\mathbf{W}^\\text{O},\n\\]\nwhere each $\\text{head}_i = \\text{Attention}\\!\\left(\\mathbf{Q}\\mathbf{W}_i^\\mathbf{Q}, \\mathbf{K}\\mathbf{W}_i^\\mathbf{K}, \\mathbf{V}\\mathbf{W}_i^\\mathbf{V}\\right)$. The concatenation $\\text{Concat}(\\text{head}_1, \\ldots, \\text{head}_h)$ produces a vector of length $h \\times d_v = h \\times (d_\\text{model}/h) = d_\\text{model}$. The weight matrix $\\mathbf{W}^\\text{O} \\in \\mathbb{R}^{d_\\text{model} \\times d_\\text{model}}$ then linearly combines the head outputs into a single $d_\\text{model}$-dimensional vector. Without $\\mathbf{W}^\\text{O}$, no information would flow between heads after concatenation, leaving each head's representation isolated.",
@@ -189,7 +189,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The FFN has two weight matrices: W_1 ∈ ℝ^{512×2048} (1,048,576 params) and W_2 ∈ ℝ^{2048×512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) — totaling ≈ 2.1M parameters. The 4× expansion (2048 = 4 × 512) is standard across the original architecture.",
+        "The FFN has two weight matrices: W_1 ∈ \\mathbb{R}^{512×2048} (1,048,576 params) and W_2 ∈ \\mathbb{R}^{2048×512} (1,048,576 params), plus biases b_1 (2048) and b_2 (512) — totaling ≈ 2.1M parameters. The 4× expansion (2048 = 4 × 512) is standard across the original architecture.",
       hints: [
         "Two weight matrices: d_model × d_ff and d_ff × d_model, where d_ff = 4 × d_model.",
         "The FFN typically has roughly twice the parameters of the multi-head attention sublayer.",
@@ -220,7 +220,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,β) = Swish_β(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression — unlike ReLU\'s hard zero cutoff.",
+        "SwiGLU activation (used in LLaMA, PaLM) improves over ReLU in the FFN because its gating mechanism SwiGLU(x,W,V,b,c,\\beta) = Swish_\\beta(xW+b) ⊗ (xV+c) allows smooth, data-dependent feature suppression — unlike ReLU\'s hard zero cutoff.",
       correctAnswer: "True",
       explanation:
         "SwiGLU (Shazeer, 2020) defines:\n\\[\n\\text{SwiGLU}(\\mathbf{x}, \\mathbf{W}, \\mathbf{V}, \\mathbf{b}, \\mathbf{c}, \\beta) = \\text{Swish}_\\beta(\\mathbf{x}\\mathbf{W} + \\mathbf{b}) \\otimes (\\mathbf{x}\\mathbf{V} + \\mathbf{c}),\n\\]\nwhere $\\otimes$ is element-wise multiplication and $\\text{Swish}_\\beta(z) = \\sigma(\\beta z)$ is a smooth activation with a learnable gating parameter $\\beta$.\n\nComparing to ReLU: ReLU$(\\mathbf{x}) = \\max(0, \\mathbf{x}\\mathbf{W} + \\mathbf{b})$, which applies a hard zero to all negative pre-activations. SwiGLU replaces this hard threshold with a learned sigmoid gate $(\\mathbf{x}\\mathbf{V} + \\mathbf{c})$ that scales each feature dimension by a value in $(0, 1)$. Since $\\sigma(z)$ is smooth and data-dependent, the gate value adapts per-input, providing soft, differentiable feature suppression rather than ReLU's all-or-nothing cutoff. This smoother gradient flow in the negative region consistently improves language model perplexity in experiments (LLaMA, PaLM).",
@@ -271,11 +271,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The original transformer\'s learning rate warmup addresses Adam\'s \"cold start\" problem. In Adam, the effective learning rate is α × m_t / (√v_t + ε). Why is the effective LR dangerously large in the first ~100 steps without warmup?",
+        "The original transformer\'s learning rate warmup addresses Adam\'s \"cold start\" problem. In Adam, the effective learning rate is \\alpha × m_t / (√v_t + \\epsilon). Why is the effective LR dangerously large in the first ~100 steps without warmup?",
       options: [
         "The momentum term m_t is too large because gradients are large at initialization",
-        "The variance estimate v_t is near zero at initialization (no history), making 1/√v_t very large — amplifying the gradient signal regardless of α",
-        "The bias correction 1/(1-β^t) overcorrects and produces negative learning rates",
+        "The variance estimate v_t is near zero at initialization (no history), making 1/√v_t very large — amplifying the gradient signal regardless of \\alpha",
+        "The bias correction 1/(1-\\beta^t) overcorrects and produces negative learning rates",
         "Adam computes incorrect gradients in the first few steps due to numerical precision",
       ],
       correctAnswer: 1,
@@ -351,7 +351,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Kaplan et al. (2020) found that language model loss L follows a power law with model parameters N: L(N) ∝ N^{-α_N}. If a model achieves L = 3.0 at N = 1B parameters, and the exponent α_N = 0.076, approximately what loss does a 10B model achieve?",
+        "Kaplan et al. (2020) found that language model loss L follows a power law with model parameters N: L(N) \\propto N^{-\\alpha_N}. If a model achieves L = 3.0 at N = 1B parameters, and the exponent \\alpha_N = 0.076, approximately what loss does a 10B model achieve?",
       options: [
         "L ≈ 2.83 (10× parameters reduces loss by about 0.17)",
         "L ≈ 0.3 (linear scaling with 10× the parameters)",
@@ -565,7 +565,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RoPE uses wavelengths ranging from 2π (highest frequency) to 2π×10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles — interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle — extrapolation is needed to generate meaningful positions beyond T.",
+        "RoPE uses wavelengths ranging from 2\\pi (highest frequency) to 2\\pi×10000 (lowest). At training length T, high-frequency dimensions have completed T/wavelength >> 1 cycles — interpolating within known periodic patterns is safe. Low-frequency dimensions may have completed < 1 cycle — extrapolation is needed to generate meaningful positions beyond T.",
       hints: [
         "High-frequency = short wavelength = many complete cycles within training length → safe interpolation.",
         "Low-frequency = long wavelength = fraction of a cycle within training length → must extrapolate.",
@@ -864,7 +864,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "LoRA (Hu et al., 2021) adds ΔW = BA where B ∈ ℝ^{d×r} and A ∈ ℝ^{r×k}. For a weight matrix W ∈ ℝ^{4096×4096} with rank r = 16, how many trainable parameters does the LoRA adapter add, vs. the full weight matrix?",
+        "LoRA (Hu et al., 2021) adds \\DeltaW = BA where B ∈ \\mathbb{R}^{d×r} and A ∈ \\mathbb{R}^{r×k}. For a weight matrix W ∈ \\mathbb{R}^{4096×4096} with rank r = 16, how many trainable parameters does the LoRA adapter add, vs. the full weight matrix?",
       options: [
         "LoRA adds 4096 × 16 + 16 × 4096 = 131,072 params vs. 4096 × 4096 = 16,777,216 — about 0.78% of the full matrix",
         "LoRA adds 4096 × 4096 = 16,777,216 params (same as full fine-tuning)",
@@ -955,12 +955,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DPO (Direct Preference Optimization, Rafailov et al., 2023) replaces the RLHF pipeline by optimizing the loss: L_DPO = -log σ(β log(π_θ(y_w|x)/π_ref(y_w|x)) - β log(π_θ(y_l|x)/π_ref(y_l|x))). What does increasing β do to model behavior?",
+        "DPO (Direct Preference Optimization, Rafailov et al., 2023) replaces the RLHF pipeline by optimizing the loss: L_DPO = -log \\sigma(\\beta log(\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)) - \\beta log(\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x))). What does increasing \\beta do to model behavior?",
       options: [
-        "Increasing β makes the model more likely to generate responses similar to y_w (preferred responses)",
-        "Increasing β increases the KL penalty, keeping the fine-tuned model closer to the reference model and reducing its deviation from the original pretraining distribution",
-        "Increasing β reduces the training loss but does not change model outputs",
-        "Increasing β speeds up convergence by scaling the gradient signal",
+        "Increasing \\beta makes the model more likely to generate responses similar to y_w (preferred responses)",
+        "Increasing \\beta increases the KL penalty, keeping the fine-tuned model closer to the reference model and reducing its deviation from the original pretraining distribution",
+        "Increasing \\beta reduces the training loss but does not change model outputs",
+        "Increasing \\beta speeds up convergence by scaling the gradient signal",
       ],
       correctAnswer: 1,
       explanation:
@@ -1172,7 +1172,7 @@ const questions: Record<string, Question[]> = {
         "RAG (Lewis et al., 2020) showed that jointly training the retriever and generator using non-differentiable retrieval (via marginalization over discrete retrieved documents) is possible through MIPS (Maximum Inner Product Search) and gradient approximation.",
       correctAnswer: "True",
       explanation:
-        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = Σ_z p_η(z|x) × p_θ(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
+        "RAG jointly trains BERT-based dense retriever and BART-based generator by marginalizing over top-k retrieved documents: p(y|x) = \\Sigma_z p_\\eta(z|x) × p_\\theta(y|x,z). Gradients flow to both retriever (via document probabilities) and generator (via generation loss), though retrieval requires MIPS which is non-differentiable — approximated via in-batch updates.",
       hints: [
         "Marginalization: sum over top-k retrieved documents weighted by their retrieval probability.",
         "The retriever is updated to retrieve documents that help the generator — not just documents with keyword overlap.",
@@ -1411,12 +1411,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DPO\'s loss is L_DPO = -E[(log σ(β × (log π_θ(y_w|x) - log π_ref(y_w|x)) - β × (log π_θ(y_l|x) - log π_ref(y_l|x))))]. What happens mathematically when π_θ = π_ref (the fine-tuned model equals the reference)?",
+        "DPO\'s loss is L_DPO = -E[(log \\sigma(\\beta × (log \\pi_\\theta(y_w|x) - log \\pi_ref(y_w|x)) - \\beta × (log \\pi_\\theta(y_l|x) - log \\pi_ref(y_l|x))))]. What happens mathematically when \\pi_\\theta = \\pi_ref (the fine-tuned model equals the reference)?",
       options: [
         "The loss is maximized — the model must diverge from the reference to minimize DPO loss",
-        "All log-ratios are 0, making the argument of σ equal to 0, so σ(0) = 0.5 and loss = -log(0.5) ≈ 0.693 — a non-zero loss indicating the model hasn\'t learned preferences yet",
-        "The loss is undefined since log(π_θ/π_ref) = log(1) = 0 is an edge case",
-        "The gradient of the DPO loss at π_θ = π_ref is 0 — it is always a fixed point",
+        "All log-ratios are 0, making the argument of \\sigma equal to 0, so \\sigma(0) = 0.5 and loss = -log(0.5) ≈ 0.693 — a non-zero loss indicating the model hasn\'t learned preferences yet",
+        "The loss is undefined since log(\\pi_\\theta/\\pi_ref) = log(1) = 0 is an edge case",
+        "The gradient of the DPO loss at \\pi_\\theta = \\pi_ref is 0 — it is always a fixed point",
       ],
       correctAnswer: 1,
       explanation:

@@ -1078,10 +1078,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "F_n ≈ φ^n / sqrt(5) where φ = (1 + sqrt(5)) / 2 is Binet formula.",
+        "F_n ≈ \\phi^n / sqrt(5) where \\phi = (1 + sqrt(5)) / 2 is Binet formula.",
       correctAnswer: "True",
       explanation:
-        "Binet\'s formula expresses Fibonacci numbers using the golden ratio φ.",
+        "Binet\'s formula expresses Fibonacci numbers using the golden ratio \\phi.",
     },
     {
       id: "q-nt-fib-3",

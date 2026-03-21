@@ -17,7 +17,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In tensor notation, rank (order) equals the number of indices needed. A vector x ∈ ℝⁿ is addressed by a single index xᵢ — making it rank-1. Scalars are rank-0, matrices rank-2.",
+        "In tensor notation, rank (order) equals the number of indices needed. A vector x ∈ \\mathbb{R}ⁿ is addressed by a single index xᵢ — making it rank-1. Scalars are rank-0, matrices rank-2.",
       hints: [
         "Count the number of indices needed: scalar needs 0, vector needs 1, matrix needs 2.",
         'Rank here means "number of axes", not the matrix rank (dimension of column space).',
@@ -28,7 +28,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Given u = [1, 2, 3] and v = [4, 0, −1], compute the dot product u · v. The formula is u · v = Σᵢ uᵢvᵢ.",
+        "Given u = [1, 2, 3] and v = [4, 0, −1], compute the dot product u · v. The formula is u · v = \\Sigmaᵢ uᵢvᵢ.",
       options: ["1", "2", "3", "5"],
       correctAnswer: 0,
       explanation:
@@ -81,14 +81,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A linear map T: ℝⁿ → ℝᵐ is represented as multiplication by a matrix A. What is the shape of A?",
+        "A linear map T: \\mathbb{R}ⁿ → \\mathbb{R}ᵐ is represented as multiplication by a matrix A. What is the shape of A?",
       options: ["n × m", "m × n", "n × n", "m × m"],
       correctAnswer: 1,
       explanation:
-        "For Ax to be defined when x ∈ ℝⁿ, A must have n columns. Since Ax ∈ ℝᵐ, A must have m rows. So A has shape m × n.",
+        "For Ax to be defined when x ∈ \\mathbb{R}ⁿ, A must have n columns. Since Ax ∈ \\mathbb{R}ᵐ, A must have m rows. So A has shape m × n.",
       hints: [
-        "x ∈ ℝⁿ means x is a column vector with n entries → A needs n columns.",
-        "The output Ax ∈ ℝᵐ → A needs m rows. Shape: m × n.",
+        "x ∈ \\mathbb{R}ⁿ means x is a column vector with n entries → A needs n columns.",
+        "The output Ax ∈ \\mathbb{R}ᵐ → A needs m rows. Shape: m × n.",
       ],
     },
     {
@@ -113,19 +113,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "For matrix A = [[2, 1], [1, 2]], find the eigenvalues by solving det(A − λI) = 0.",
+        "For matrix A = [[2, 1], [1, 2]], find the eigenvalues by solving det(A − \\lambdaI) = 0.",
       options: [
-        "λ = 1 and λ = 3",
-        "λ = 2 and λ = 2",
-        "λ = 0 and λ = 4",
-        "λ = −1 and λ = 3",
+        "\\lambda = 1 and \\lambda = 3",
+        "\\lambda = 2 and \\lambda = 2",
+        "\\lambda = 0 and \\lambda = 4",
+        "\\lambda = −1 and \\lambda = 3",
       ],
       correctAnswer: 0,
       explanation:
-        "det(A − λI) = det([[2−λ, 1],[1, 2−λ]]) = (2−λ)² − 1 = λ² − 4λ + 3 = (λ−1)(λ−3) = 0. So λ₁ = 1, λ₂ = 3.",
+        "det(A − \\lambdaI) = det([[2−\\lambda, 1],[1, 2−\\lambda]]) = (2−\\lambda)² − 1 = \\lambda² − 4\\lambda + 3 = (\\lambda−1)(\\lambda−3) = 0. So \\lambda₁ = 1, \\lambda₂ = 3.",
       hints: [
-        "Form A − λI = [[2−λ, 1],[1, 2−λ]] and compute its determinant: (2−λ)² − 1·1.",
-        "Expand: (2−λ)² − 1 = 4 − 4λ + λ² − 1 = λ² − 4λ + 3. Factor as (λ−1)(λ−3).",
+        "Form A − \\lambdaI = [[2−\\lambda, 1],[1, 2−\\lambda]] and compute its determinant: (2−\\lambda)² − 1·1.",
+        "Expand: (2−\\lambda)² − 1 = 4 − 4\\lambda + \\lambda² − 1 = \\lambda² − 4\\lambda + 3. Factor as (\\lambda−1)(\\lambda−3).",
       ],
     },
     {
@@ -133,7 +133,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Spectral Theorem states that for a real symmetric matrix A, there exists an orthogonal matrix Q such that A = QΛQᵀ where Λ is diagonal. What are the diagonal entries of Λ?",
+        "The Spectral Theorem states that for a real symmetric matrix A, there exists an orthogonal matrix Q such that A = Q\\LambdaQᵀ where \\Lambda is diagonal. What are the diagonal entries of \\Lambda?",
       options: [
         "The singular values of A",
         "The eigenvalues of A, which are all real",
@@ -142,9 +142,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Spectral Theorem guarantees that every real symmetric matrix has real eigenvalues and orthonormal eigenvectors. Λ = diag(λ₁, …, λₙ) contains the real eigenvalues, and the columns of Q are the corresponding orthonormal eigenvectors.",
+        "The Spectral Theorem guarantees that every real symmetric matrix has real eigenvalues and orthonormal eigenvectors. \\Lambda = diag(\\lambda₁, …, \\lambdaₙ) contains the real eigenvalues, and the columns of Q are the corresponding orthonormal eigenvectors.",
       hints: [
-        "For A = [[2,1],[1,2]], Λ = diag(1,3) and Q has columns [1/√2, 1/√2]ᵀ and [1/√2, −1/√2]ᵀ.",
+        "For A = [[2,1],[1,2]], \\Lambda = diag(1,3) and Q has columns [1/√2, 1/√2]ᵀ and [1/√2, −1/√2]ᵀ.",
         "Symmetry A = Aᵀ forces all eigenvalues to be real and eigenvectors for distinct eigenvalues to be orthogonal.",
       ],
     },
@@ -156,9 +156,9 @@ const questions: Record<string, Question[]> = {
         "Every n × n square matrix can be diagonalized over the real numbers.",
       correctAnswer: "False",
       explanation:
-        "Diagonalization requires n linearly independent eigenvectors. The matrix A = [[1,1],[0,1]] has characteristic polynomial (1−λ)² = 0, so λ = 1 with algebraic multiplicity 2, but only one independent eigenvector [1,0]ᵀ. It cannot be diagonalized over ℝ.",
+        "Diagonalization requires n linearly independent eigenvectors. The matrix A = [[1,1],[0,1]] has characteristic polynomial (1−\\lambda)² = 0, so \\lambda = 1 with algebraic multiplicity 2, but only one independent eigenvector [1,0]ᵀ. It cannot be diagonalized over \\mathbb{R}.",
       hints: [
-        "Check A = [[1,1],[0,1]]: det(A−λI) = (1−λ)². Solving gives λ = 1 only. Then A−I = [[0,1],[0,0]] has null space spanned by [1,0]ᵀ — only one eigenvector.",
+        "Check A = [[1,1],[0,1]]: det(A−\\lambdaI) = (1−\\lambda)². Solving gives \\lambda = 1 only. Then A−I = [[0,1],[0,0]] has null space spanned by [1,0]ᵀ — only one eigenvector.",
         "A matrix is diagonalizable iff algebraic multiplicity = geometric multiplicity for each eigenvalue.",
       ],
     },
@@ -170,18 +170,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In the SVD A = UΣVᵀ of an m × n matrix A (m ≥ n), which statement correctly describes U, Σ, V?",
+        "In the SVD A = U\\SigmaVᵀ of an m × n matrix A (m ≥ n), which statement correctly describes U, \\Sigma, V?",
       options: [
-        "U is n × n orthogonal, Σ is m × n diagonal, V is m × m orthogonal",
-        "U is m × m orthogonal (left singular vectors), Σ is m × n diagonal (singular values on diagonal), V is n × n orthogonal (right singular vectors)",
-        "U contains eigenvalues, Σ contains eigenvectors",
+        "U is n × n orthogonal, \\Sigma is m × n diagonal, V is m × m orthogonal",
+        "U is m × m orthogonal (left singular vectors), \\Sigma is m × n diagonal (singular values on diagonal), V is n × n orthogonal (right singular vectors)",
+        "U contains eigenvalues, \\Sigma contains eigenvectors",
         "U = V for symmetric matrices",
       ],
       correctAnswer: 1,
       explanation:
-        "SVD: A = UΣVᵀ where U ∈ ℝᵐˣᵐ is orthogonal with left singular vectors as columns, Σ ∈ ℝᵐˣⁿ has singular values σ₁ ≥ σ₂ ≥ … ≥ 0 on its diagonal, and V ∈ ℝⁿˣⁿ is orthogonal with right singular vectors as columns.",
+        "SVD: A = U\\SigmaVᵀ where U ∈ \\mathbb{R}ᵐˣᵐ is orthogonal with left singular vectors as columns, \\Sigma ∈ \\mathbb{R}ᵐˣⁿ has singular values \\sigma₁ ≥ \\sigma₂ ≥ … ≥ 0 on its diagonal, and V ∈ \\mathbb{R}ⁿˣⁿ is orthogonal with right singular vectors as columns.",
       hints: [
-        "The singular values σᵢ = √(eigenvalues of AᵀA) appear in decreasing order on the diagonal of Σ.",
+        "The singular values \\sigmaᵢ = √(eigenvalues of AᵀA) appear in decreasing order on the diagonal of \\Sigma.",
         "Left singular vectors (cols of U) are eigenvectors of AAᵀ; right singular vectors (cols of V) are eigenvectors of AᵀA.",
       ],
     },
@@ -190,14 +190,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The matrix A = [[3,0],[0,2],[0,0]] has SVD with singular values σ₁ = 3, σ₂ = 2. Its best rank-1 approximation A₁ has Frobenius-norm error ‖A − A₁‖_F equal to:",
+        "The matrix A = [[3,0],[0,2],[0,0]] has SVD with singular values \\sigma₁ = 3, \\sigma₂ = 2. Its best rank-1 approximation A₁ has Frobenius-norm error ‖A − A₁‖_F equal to:",
       options: ["3", "2", "√13", "1"],
       correctAnswer: 1,
       explanation:
-        "By the Eckart–Young theorem, the rank-1 truncated SVD minimizes the Frobenius norm error. The error is ‖A − A₁‖_F = √(σ₂² + σ₃² + …) = √(2²) = 2, since σ₃ = 0 here.",
+        "By the Eckart–Young theorem, the rank-1 truncated SVD minimizes the Frobenius norm error. The error is ‖A − A₁‖_F = √(\\sigma₂² + \\sigma₃² + …) = √(2²) = 2, since \\sigma₃ = 0 here.",
       hints: [
-        "‖A‖_F² = Σᵢ σᵢ² = 3² + 2² = 9 + 4 = 13. Keeping rank-1 uses σ₁=3, discarding σ₂=2.",
-        "Error² = σ₂² = 4, so error = 2.",
+        "‖A‖_F² = \\Sigmaᵢ \\sigmaᵢ² = 3² + 2² = 9 + 4 = 13. Keeping rank-1 uses \\sigma₁=3, discarding \\sigma₂=2.",
+        "Error² = \\sigma₂² = 4, so error = 2.",
       ],
     },
     {
@@ -208,7 +208,7 @@ const questions: Record<string, Question[]> = {
         "The singular values of any matrix A are always non-negative real numbers.",
       correctAnswer: "True",
       explanation:
-        "Singular values σᵢ = √(λᵢ(AᵀA)). Since AᵀA is positive semi-definite, all its eigenvalues λᵢ ≥ 0, so σᵢ = √λᵢ ≥ 0. This holds even for complex matrices (using A*A).",
+        "Singular values \\sigmaᵢ = √(\\lambdaᵢ(AᵀA)). Since AᵀA is positive semi-definite, all its eigenvalues \\lambdaᵢ ≥ 0, so \\sigmaᵢ = √\\lambdaᵢ ≥ 0. This holds even for complex matrices (using A*A).",
       hints: [
         "AᵀA is PSD because xᵀ(AᵀA)x = ‖Ax‖² ≥ 0 for all x.",
         "Non-negative eigenvalues of AᵀA → non-negative square roots → non-negative singular values.",
@@ -222,18 +222,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Given centered data matrix X̃ ∈ ℝⁿˣᵈ, PCA finds directions of maximum variance by computing eigenvectors of which matrix?",
+        "Given centered data matrix X̃ ∈ \\mathbb{R}ⁿˣᵈ, PCA finds directions of maximum variance by computing eigenvectors of which matrix?",
       options: [
         "X̃ directly (n × d)",
-        "The sample covariance matrix C = X̃ᵀX̃/(n−1) ∈ ℝᵈˣᵈ",
-        "The Gram matrix X̃X̃ᵀ ∈ ℝⁿˣⁿ",
+        "The sample covariance matrix C = X̃ᵀX̃/(n−1) ∈ \\mathbb{R}ᵈˣᵈ",
+        "The Gram matrix X̃X̃ᵀ ∈ \\mathbb{R}ⁿˣⁿ",
         "The Hessian of the reconstruction loss",
       ],
       correctAnswer: 1,
       explanation:
-        "PCA maximizes variance of projected data. For unit vector w, variance of X̃w is wᵀCw where C = X̃ᵀX̃/(n−1). Maximizing this subject to ‖w‖=1 by Lagrange multipliers gives Cw = λw — an eigenvector problem.",
+        "PCA maximizes variance of projected data. For unit vector w, variance of X̃w is wᵀCw where C = X̃ᵀX̃/(n−1). Maximizing this subject to ‖w‖=1 by Lagrange multipliers gives Cw = \\lambdaw — an eigenvector problem.",
       hints: [
-        "Projection of X̃ onto unit vector w: the projected coordinates are X̃w ∈ ℝⁿ.",
+        "Projection of X̃ onto unit vector w: the projected coordinates are X̃w ∈ \\mathbb{R}ⁿ.",
         "Variance of X̃w = (1/(n−1))‖X̃w‖² = wᵀ(X̃ᵀX̃/(n−1))w = wᵀCw. Maximize over ‖w‖=1.",
       ],
     },
@@ -242,14 +242,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "If the covariance matrix C has eigenvalues λ₁ = 5, λ₂ = 3, λ₃ = 2, what fraction of total variance is explained by the first two principal components?",
+        "If the covariance matrix C has eigenvalues \\lambda₁ = 5, \\lambda₂ = 3, \\lambda₃ = 2, what fraction of total variance is explained by the first two principal components?",
       options: ["5/10 = 50%", "8/10 = 80%", "5/8 = 62.5%", "3/10 = 30%"],
       correctAnswer: 1,
       explanation:
-        "Total variance = trace(C) = sum of eigenvalues = 5 + 3 + 2 = 10. The first two PCs capture variance λ₁ + λ₂ = 5 + 3 = 8. Fraction = 8/10 = 80%.",
+        "Total variance = trace(C) = sum of eigenvalues = 5 + 3 + 2 = 10. The first two PCs capture variance \\lambda₁ + \\lambda₂ = 5 + 3 = 8. Fraction = 8/10 = 80%.",
       hints: [
         "Each eigenvalue equals the variance captured by its corresponding principal component.",
-        "Total variance = Σλᵢ = 10. Two-PC variance = 5+3 = 8. Ratio = 8/10.",
+        "Total variance = \\Sigma\\lambdaᵢ = 10. Two-PC variance = 5+3 = 8. Ratio = 8/10.",
       ],
     },
     {
@@ -336,19 +336,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "If X ~ N(μ, σ²) and Y = aX + b (a, b constants), what is the distribution of Y?",
+        "If X ~ N(\\mu, \\sigma²) and Y = aX + b (a, b constants), what is the distribution of Y?",
       options: [
-        "Y ~ N(aμ, σ²) — mean shifts but variance unchanged",
-        "Y ~ N(aμ + b, a²σ²) — mean and variance both transform",
-        "Y ~ N(μ + b, σ²) — only mean shifts by b",
+        "Y ~ N(a\\mu, \\sigma²) — mean shifts but variance unchanged",
+        "Y ~ N(a\\mu + b, a²\\sigma²) — mean and variance both transform",
+        "Y ~ N(\\mu + b, \\sigma²) — only mean shifts by b",
         "Y is no longer Gaussian if a \$\\neq\$ 1",
       ],
       correctAnswer: 1,
       explanation:
-        "Linear transformations of Gaussians are Gaussian. E[Y] = E[aX+b] = aμ+b. Var(Y) = Var(aX+b) = a²Var(X) = a²σ². So Y ~ N(aμ+b, a²σ²). This closure under linear operations is a key property exploited in Kalman filters and GP inference.",
+        "Linear transformations of Gaussians are Gaussian. E[Y] = E[aX+b] = a\\mu+b. Var(Y) = Var(aX+b) = a²Var(X) = a²\\sigma². So Y ~ N(a\\mu+b, a²\\sigma²). This closure under linear operations is a key property exploited in Kalman filters and GP inference.",
       hints: [
-        "E[aX+b] = a·E[X]+b = aμ+b.",
-        "Var(aX+b) = a²·Var(X) = a²σ² (adding constant b shifts mean, not variance).",
+        "E[aX+b] = a·E[X]+b = a\\mu+b.",
+        "Var(aX+b) = a²·Var(X) = a²\\sigma² (adding constant b shifts mean, not variance).",
       ],
     },
     {
@@ -356,12 +356,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "The Poisson distribution can be derived as the limit of Binomial(n,p) as n → ∞, p → 0, with np = λ fixed.",
+        "The Poisson distribution can be derived as the limit of Binomial(n,p) as n → ∞, p → 0, with np = \\lambda fixed.",
       correctAnswer: "True",
       explanation:
-        "As n→∞, p→0 with np=λ: C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ → e⁻λλᵏ/k!. This is the Poisson PMF. Practically: the Poisson models rare-event counts (λ small) over many trials (n large).",
+        "As n→∞, p→0 with np=\\lambda: C(n,k)·pᵏ·(1−p)ⁿ⁻ᵏ → e⁻\\lambda\\lambdaᵏ/k!. This is the Poisson PMF. Practically: the Poisson models rare-event counts (\\lambda small) over many trials (n large).",
       hints: [
-        "C(n,k)·pᵏ ≈ nᵏpᵏ/k! = λᵏ/k! for large n. And (1−p)ⁿ ≈ (1−λ/n)ⁿ → e⁻λ.",
+        "C(n,k)·pᵏ ≈ nᵏpᵏ/k! = \\lambdaᵏ/k! for large n. And (1−p)ⁿ ≈ (1−\\lambda/n)ⁿ → e⁻\\lambda.",
         "This justifies using Poisson for rare events: website clicks per second, radioactive decays per minute.",
       ],
     },
@@ -373,18 +373,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Bayes' theorem is: P(H | E) = P(E | H) · P(H) / P(E). In ML terms with θ as model parameters and D as data, the posterior P(θ|D) equals:",
+        "Bayes' theorem is: P(H | E) = P(E | H) · P(H) / P(E). In ML terms with \\theta as model parameters and D as data, the posterior P(\\theta|D) equals:",
       options: [
-        "P(θ) / P(D|θ)",
-        "P(D|θ) · P(θ) / P(D)",
-        "P(D) · P(θ)",
-        "P(θ|D) · P(D)",
+        "P(\\theta) / P(D|\\theta)",
+        "P(D|\\theta) · P(\\theta) / P(D)",
+        "P(D) · P(\\theta)",
+        "P(\\theta|D) · P(D)",
       ],
       correctAnswer: 1,
       explanation:
-        "Posterior ∝ Likelihood × Prior: P(θ|D) = P(D|θ)·P(θ)/P(D). The denominator P(D) = ∫P(D|θ)P(θ)dθ is the marginal likelihood (evidence), which normalizes the posterior to integrate to 1.",
+        "Posterior \\propto Likelihood × Prior: P(\\theta|D) = P(D|\\theta)·P(\\theta)/P(D). The denominator P(D) = ∫P(D|\\theta)P(\\theta)d\\theta is the marginal likelihood (evidence), which normalizes the posterior to integrate to 1.",
       hints: [
-        "Map H → θ (hypothesis/parameters) and E → D (evidence/data).",
+        "Map H → \\theta (hypothesis/parameters) and E → D (evidence/data).",
         "P(D) is the normalizing constant ensuring the posterior is a valid probability distribution.",
       ],
     },
@@ -402,10 +402,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "With Binomial likelihood P(7H,3T|p) = C(10,7)p⁷(1−p)³ and uniform prior P(p)=1, posterior ∝ p⁷(1−p)³ which is a Beta(8,4) distribution. The posterior mean is 8/(8+4) = 2/3 ≈ 0.667.",
+        "With Binomial likelihood P(7H,3T|p) = C(10,7)p⁷(1−p)³ and uniform prior P(p)=1, posterior \\propto p⁷(1−p)³ which is a Beta(8,4) distribution. The posterior mean is 8/(8+4) = 2/3 ≈ 0.667.",
       hints: [
-        "Posterior ∝ likelihood × prior = p⁷(1−p)³ × 1 = p⁷(1−p)³.",
-        "This matches Beta(α,β) with α = 7+1 = 8, β = 3+1 = 4. Uniform prior = Beta(1,1).",
+        "Posterior \\propto likelihood × prior = p⁷(1−p)³ × 1 = p⁷(1−p)³.",
+        "This matches Beta(\\alpha,\\beta) with \\alpha = 7+1 = 8, \\beta = 3+1 = 4. Uniform prior = Beta(1,1).",
       ],
     },
     {
@@ -475,19 +475,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "You observe n i.i.d. samples x₁,…,xₙ from N(μ, σ²) with σ² known. The MLE for μ is:",
+        "You observe n i.i.d. samples x₁,…,xₙ from N(\\mu, \\sigma²) with \\sigma² known. The MLE for \\mu is:",
       options: [
         "The sample median",
-        "x̄ = (1/n)Σxᵢ (the sample mean)",
-        "(1/n)Σxᵢ² (the second moment)",
+        "x̄ = (1/n)\\Sigmaxᵢ (the sample mean)",
+        "(1/n)\\Sigmaxᵢ² (the second moment)",
         "max(x₁,…,xₙ)",
       ],
       correctAnswer: 1,
       explanation:
-        "Log-likelihood: ℓ(μ) = −n/(2σ²)·Σ(xᵢ−μ)². Taking dℓ/dμ = (1/σ²)Σ(xᵢ−μ) = 0 gives μ̂_MLE = (1/n)Σxᵢ = x̄. The MLE for a Gaussian mean is the sample mean.",
+        "Log-likelihood: ℓ(\\mu) = −n/(2\\sigma²)·\\Sigma(xᵢ−\\mu)². Taking dℓ/d\\mu = (1/\\sigma²)\\Sigma(xᵢ−\\mu) = 0 gives \\mû_MLE = (1/n)\\Sigmaxᵢ = x̄. The MLE for a Gaussian mean is the sample mean.",
       hints: [
-        "Maximize log-likelihood ℓ(μ) = const − (1/2σ²)Σ(xᵢ−μ)².",
-        "Differentiate with respect to μ: dℓ/dμ = (1/σ²)Σ(xᵢ−μ) = 0 ⟹ μ̂ = x̄.",
+        "Maximize log-likelihood ℓ(\\mu) = const − (1/2\\sigma²)\\Sigma(xᵢ−\\mu)².",
+        "Differentiate with respect to \\mu: dℓ/d\\mu = (1/\\sigma²)\\Sigma(xᵢ−\\mu) = 0 ⟹ \\mû = x̄.",
       ],
     },
     {
@@ -495,19 +495,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "MAP estimation with a Gaussian prior N(0, τ²) on weights w is equivalent to which regularized objective?",
+        "MAP estimation with a Gaussian prior N(0, \\tau²) on weights w is equivalent to which regularized objective?",
       options: [
-        "Minimize Σ(yᵢ − wᵀxᵢ)² + (σ²/τ²)‖w‖₁  (L1 regularization)",
-        "Minimize Σ(yᵢ − wᵀxᵢ)² + (σ²/τ²)‖w‖²  (L2/ridge regularization)",
-        "Minimize Σ(yᵢ − wᵀxᵢ)² with no regularization",
-        "Minimize ‖w‖² subject to Σ(yᵢ − wᵀxᵢ)² ≤ ε",
+        "Minimize \\Sigma(yᵢ − wᵀxᵢ)² + (\\sigma²/\\tau²)‖w‖₁  (L1 regularization)",
+        "Minimize \\Sigma(yᵢ − wᵀxᵢ)² + (\\sigma²/\\tau²)‖w‖²  (L2/ridge regularization)",
+        "Minimize \\Sigma(yᵢ − wᵀxᵢ)² with no regularization",
+        "Minimize ‖w‖² subject to \\Sigma(yᵢ − wᵀxᵢ)² ≤ \\epsilon",
       ],
       correctAnswer: 1,
       explanation:
-        "MAP: arg max_w [log P(data|w) + log P(w)]. With Gaussian likelihood and prior N(0,τ²): log P(w) = −‖w‖²/(2τ²) + const. This adds an L2 penalty: minimize Σ(yᵢ−wᵀxᵢ)²/(2σ²) + ‖w‖²/(2τ²), equivalently minimize MSE + λ‖w‖² with λ = σ²/τ².",
+        "MAP: arg max_w [log P(data|w) + log P(w)]. With Gaussian likelihood and prior N(0,\\tau²): log P(w) = −‖w‖²/(2\\tau²) + const. This adds an L2 penalty: minimize \\Sigma(yᵢ−wᵀxᵢ)²/(2\\sigma²) + ‖w‖²/(2\\tau²), equivalently minimize MSE + \\lambda‖w‖² with \\lambda = \\sigma²/\\tau².",
       hints: [
-        "log P(w) = −w²/(2τ²) for Gaussian prior. A Laplace prior gives L1.",
-        "The ratio σ²/τ² controls regularization strength: small τ² (strong prior toward 0) ↔ large λ.",
+        "log P(w) = −w²/(2\\tau²) for Gaussian prior. A Laplace prior gives L1.",
+        "The ratio \\sigma²/\\tau² controls regularization strength: small \\tau² (strong prior toward 0) ↔ large \\lambda.",
       ],
     },
     {
@@ -515,12 +515,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "The MLE for the variance of a normal distribution, σ̂² = (1/n)Σ(xᵢ−x̄)², is an unbiased estimator.",
+        "The MLE for the variance of a normal distribution, \\sigmâ² = (1/n)\\Sigma(xᵢ−x̄)², is an unbiased estimator.",
       correctAnswer: "False",
       explanation:
-        "E[σ̂²_MLE] = (n−1)/n · σ². The MLE divides by n but the unbiased estimator divides by (n−1) (Bessel\'s correction). For n=10: E[σ̂²_MLE] = 0.9σ² — it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
+        "E[\\sigmâ²_MLE] = (n−1)/n · \\sigma². The MLE divides by n but the unbiased estimator divides by (n−1) (Bessel\'s correction). For n=10: E[\\sigmâ²_MLE] = 0.9\\sigma² — it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
       hints: [
-        "E[(1/n)Σ(xᵢ−x̄)²] = (n−1)σ²/n \$\\neq\$ σ². Use s² = (1/(n−1))Σ(xᵢ−x̄)² for unbiasedness.",
+        "E[(1/n)\\Sigma(xᵢ−x̄)²] = (n−1)\\sigma²/n \$\\neq\$ \\sigma². Use s² = (1/(n−1))\\Sigma(xᵢ−x̄)² for unbiasedness.",
         "Dividing by n−1 rather than n corrects for the one degree of freedom lost to estimating the mean.",
       ],
     },
@@ -767,7 +767,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Lagrange multiplier λ has the interpretation as the rate of change of the optimal objective value with respect to the constraint level c in g(x) = c.",
+        "The Lagrange multiplier \\lambda has the interpretation as the rate of change of the optimal objective value with respect to the constraint level c in g(x) = c.",
       correctAnswer: "True",
       explanation:
         "This is the **envelope theorem** interpretation of Lagrange multipliers — one of the most economically meaningful aspects.\n\nConsider optimizing $f(x)$ subject to $g(x) = c$. Let $F^*(c)$ be the optimal value. Then:\n\\[\n\\frac{dF^*}{dc}(c) = \\lambda^*,\n\\]\nwhere $\\lambda^*$ is the optimal Lagrange multiplier.\n\nIn our $xy$ example with constraint $x + y = 4$:\n- At the optimum we found $\\lambda = 2$ (since $y = \\lambda = 2$ and $x = \\lambda = 2$)\n- If the constraint changes to $x + y = 4 + \\epsilon$:\n\\[\nF^*(4 + \\epsilon) \\approx F^*(4) + \\lambda \\cdot \\epsilon = 4 + 2\\epsilon.\n\\]\n\nFor $\\epsilon = 1$: new optimum $\\approx 6$ (AM-GM gives $((4+1)/2)^2 = 6.25$).\n\n$\\lambda$ is called the \"shadow price\" because it tells you the marginal value of relaxing the constraint.",
@@ -781,12 +781,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In the dual formulation of SVMs, KKT complementary slackness αᵢ(yᵢ(wᵀxᵢ+b)−1) = 0 implies:",
+        "In the dual formulation of SVMs, KKT complementary slackness \\alphaᵢ(yᵢ(wᵀxᵢ+b)−1) = 0 implies:",
       options: [
-        "All αᵢ are equal at the optimum",
-        "αᵢ > 0 only for points on the margin boundary yᵢ(wᵀxᵢ+b) = 1 (support vectors); all others have αᵢ = 0",
-        "αᵢ = yᵢ for all training points",
-        "Points inside the margin have the largest αᵢ",
+        "All \\alphaᵢ are equal at the optimum",
+        "\\alphaᵢ > 0 only for points on the margin boundary yᵢ(wᵀxᵢ+b) = 1 (support vectors); all others have \\alphaᵢ = 0",
+        "\\alphaᵢ = yᵢ for all training points",
+        "Points inside the margin have the largest \\alphaᵢ",
       ],
       correctAnswer: 1,
       explanation:
@@ -804,7 +804,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = −Σ p(x) log₂ p(x).",
+        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = −\\Sigma p(x) log₂ p(x).",
       options: ["0 bits", "0.5 bits", "1 bit", "2 bits"],
       correctAnswer: 2,
       explanation:
@@ -819,7 +819,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "KL divergence D_KL(P ‖ Q) = Σ P(x) log(P(x)/Q(x)) satisfies which property?",
+        "KL divergence D_KL(P ‖ Q) = \\Sigma P(x) log(P(x)/Q(x)) satisfies which property?",
       options: [
         "D_KL(P‖Q) = D_KL(Q‖P) always (symmetric)",
         "D_KL(P‖Q) ≥ 0 with equality iff P = Q (non-negative)",
@@ -871,14 +871,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "X has mean μ=10 and standard deviation σ=2. Chebyshev\'s inequality bounds P(|X−10| ≥ 6) by:",
+        "X has mean \\mu=10 and standard deviation \\sigma=2. Chebyshev\'s inequality bounds P(|X−10| ≥ 6) by:",
       options: ["1/9", "1/4", "2/3", "1/3"],
       correctAnswer: 0,
       explanation:
-        "Chebyshev: P(|X−μ| ≥ kσ) ≤ 1/k². Here |X−10| ≥ 6 = 3·σ, so k=3. P(|X−10|≥6) ≤ 1/9. This bound holds for any distribution with finite variance, using both mean and variance.",
+        "Chebyshev: P(|X−\\mu| ≥ k\\sigma) ≤ 1/k². Here |X−10| ≥ 6 = 3·\\sigma, so k=3. P(|X−10|≥6) ≤ 1/9. This bound holds for any distribution with finite variance, using both mean and variance.",
       hints: [
-        "6 = k·σ = k·2. So k = 3.",
-        "Chebyshev: P(|X−μ| ≥ kσ) ≤ 1/k² = 1/9.",
+        "6 = k·\\sigma = k·2. So k = 3.",
+        "Chebyshev: P(|X−\\mu| ≥ k\\sigma) ≤ 1/k² = 1/9.",
       ],
     },
     {
@@ -889,9 +889,9 @@ const questions: Record<string, Question[]> = {
         "Hoeffding\'s inequality gives an exponential tail bound for bounded random variables, making it much tighter than Chebyshev\'s 1/k² bound for large deviations.",
       correctAnswer: "True",
       explanation:
-        "For bounded i.i.d. Xᵢ ∈ [0,1] with mean μ, Hoeffding gives P(|X̄−μ| ≥ t) ≤ 2exp(−2nt²). Chebyshev gives 1/(nt/σ)². For n=100, t=0.1: Hoeffding ≤ 2e⁻² ≈ 0.27 while Chebyshev gives σ²/(n·t²) — much looser. The exponential decay enables PAC learning sample complexity bounds.",
+        "For bounded i.i.d. Xᵢ ∈ [0,1] with mean \\mu, Hoeffding gives P(|X̄−\\mu| ≥ t) ≤ 2exp(−2nt²). Chebyshev gives 1/(nt/\\sigma)². For n=100, t=0.1: Hoeffding ≤ 2e⁻² ≈ 0.27 while Chebyshev gives \\sigma²/(n·t²) — much looser. The exponential decay enables PAC learning sample complexity bounds.",
       hints: [
-        "Compare 2exp(−2nt²) vs. σ²/(nt²) for large n or large t: exponential decays much faster.",
+        "Compare 2exp(−2nt²) vs. \\sigma²/(nt²) for large n or large t: exponential decays much faster.",
         "Hoeffding requires boundedness [a,b]; Chebyshev only requires finite variance but gives weaker bounds.",
       ],
     },
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
         "Statistical significance depends heavily on sample size. With n = 1,000,000, a 0.001% change in click rate might give p < 0.001 but have zero business impact. Effect size (e.g., Cohen\'s d) measures practical significance. Always report both p-values and effect sizes.",
       hints: [
         'p-value shrinks with larger n even for trivial effects. A massive n can make any effect "significant".',
-        "Cohen\'s d = (μ₁−μ₂)/σ measures effect magnitude independently of sample size.",
+        "Cohen\'s d = (\\mu₁−\\mu₂)/\\sigma measures effect magnitude independently of sample size.",
       ],
     },
     {
@@ -936,19 +936,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Power of a statistical test is defined as P(reject H₀ | H₀ is false) = 1 − β. If power = 0.8 and α = 0.05, which statement is true?",
+        "Power of a statistical test is defined as P(reject H₀ | H₀ is false) = 1 − \\beta. If power = 0.8 and \\alpha = 0.05, which statement is true?",
       options: [
         "80% chance of a false positive, 5% chance of a true positive",
         "80% chance of detecting a real effect (true positive), 5% chance of falsely rejecting H₀ (false positive)",
         "The test has 80% accuracy overall",
-        "α + power = 0.85 is the total error rate",
+        "\\alpha + power = 0.85 is the total error rate",
       ],
       correctAnswer: 1,
       explanation:
-        "Power = P(reject H₀ | H₀ false) = 1 − β = 0.8: 80% chance of correctly detecting a real effect. α = 0.05 = P(reject H₀ | H₀ true): 5% false positive rate. β = 0.2 = P(fail to reject | H₀ false): 20% false negative rate (Type II error).",
+        "Power = P(reject H₀ | H₀ false) = 1 − \\beta = 0.8: 80% chance of correctly detecting a real effect. \\alpha = 0.05 = P(reject H₀ | H₀ true): 5% false positive rate. \\beta = 0.2 = P(fail to reject | H₀ false): 20% false negative rate (Type II error).",
       hints: [
-        "Type I error (α): falsely reject H₀ when it is true. Type II error (β): fail to reject H₀ when it is false.",
-        "Power = 1 − β. Higher power means more sensitive test. Power increases with larger n and larger effect size.",
+        "Type I error (\\alpha): falsely reject H₀ when it is true. Type II error (\\beta): fail to reject H₀ when it is false.",
+        "Power = 1 − \\beta. Higher power means more sensitive test. Power increases with larger n and larger effect size.",
       ],
     },
   ],
@@ -962,13 +962,13 @@ const questions: Record<string, Question[]> = {
         "The bias-variance decomposition of expected squared error for a predictor f̂ at a point x is:",
       options: [
         "E[(f̂(x)−y)²] = Bias²(f̂) + Variance(f̂)",
-        "E[(f̂(x)−y)²] = Bias²(f̂) + Variance(f̂) + σ²_noise",
+        "E[(f̂(x)−y)²] = Bias²(f̂) + Variance(f̂) + \\sigma²_noise",
         "E[(f̂(x)−y)²] = Bias(f̂) + √Variance(f̂)",
         "E[(f̂(x)−y)²] = Bias²(f̂) · Variance(f̂)",
       ],
       correctAnswer: 1,
       explanation:
-        "MSE = E[(f̂−y)²] = [E[f̂]−f]² + E[(f̂−E[f̂])²] + σ² = Bias² + Variance + Noise. The irreducible noise σ² comes from y = f(x) + ε where ε ~ N(0,σ²) and cannot be eliminated by any model.",
+        "MSE = E[(f̂−y)²] = [E[f̂]−f]² + E[(f̂−E[f̂])²] + \\sigma² = Bias² + Variance + Noise. The irreducible noise \\sigma² comes from y = f(x) + \\epsilon where \\epsilon ~ N(0,\\sigma²) and cannot be eliminated by any model.",
       hints: [
         "Bias = E[f̂(x)] − f(x): systematic error of the predictor.",
         "Variance = E[(f̂(x) − E[f̂(x)])²]: how much the predictor changes across training sets.",
@@ -993,7 +993,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Adding L2 regularization (ridge) to a linear regression model with λ → ∞ causes the bias and variance to:",
+        "Adding L2 regularization (ridge) to a linear regression model with \\lambda → ∞ causes the bias and variance to:",
       options: [
         "Both decrease",
         "Bias increases (toward zero prediction), variance decreases (toward zero)",
@@ -1002,9 +1002,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Ridge shrinks ŵ = (XᵀX+λI)⁻¹Xᵀy toward 0. As λ→∞, ŵ→0 regardless of data → prediction always near 0 → high bias. But ŵ becomes less sensitive to training data → lower variance. This is the classic bias-variance tradeoff modulated by regularization strength.",
+        "Ridge shrinks ŵ = (XᵀX+\\lambdaI)⁻¹Xᵀy toward 0. As \\lambda→∞, ŵ→0 regardless of data → prediction always near 0 → high bias. But ŵ becomes less sensitive to training data → lower variance. This is the classic bias-variance tradeoff modulated by regularization strength.",
       hints: [
-        "As λ→∞: ŵ→0 (extreme shrinkage). Prediction f̂(x) = wᵀx → 0. If true f(x) \$\\neq\$ 0, bias is large.",
+        "As \\lambda→∞: ŵ→0 (extreme shrinkage). Prediction f̂(x) = wᵀx → 0. If true f(x) \$\\neq\$ 0, bias is large.",
         "But f̂(x)≈0 for all training sets → variance ≈ 0.",
       ],
     },
@@ -1016,11 +1016,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The VC dimension of linear classifiers (hyperplanes through the origin) in ℝ² is:",
+        "The VC dimension of linear classifiers (hyperplanes through the origin) in \\mathbb{R}² is:",
       options: ["1", "2", "3", "4"],
       correctAnswer: 1,
       explanation:
-        "Hyperplanes through the origin in ℝ² (lines through origin with sign(wᵀx)) can shatter any 2 points but not any 3 points (they cannot separate XOR-like labelings). With bias term: lines in ℝ² have VC dim = d+1 = 3. Without bias: VC dim = d = 2.",
+        "Hyperplanes through the origin in \\mathbb{R}² (lines through origin with sign(wᵀx)) can shatter any 2 points but not any 3 points (they cannot separate XOR-like labelings). With bias term: lines in \\mathbb{R}² have VC dim = d+1 = 3. Without bias: VC dim = d = 2.",
       hints: [
         "Shattering 2 points: any of 4 labelings achievable with a line through origin? Yes (2 points, line can rotate).",
         "For 3 general points, the XOR labeling (alternating labels) cannot be achieved by a line through origin.",
@@ -1036,8 +1036,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The Fundamental Theorem of Statistical Learning: a binary hypothesis class H is (agnostic) PAC learnable if and only if its VC dimension is finite. With infinite VC dimension, H can shatter arbitrarily large sets, so no finite sample size guarantees generalization for all distributions.",
       hints: [
-        "PAC learning requires: for any ε, δ, with m ≥ m(ε,δ) samples, error ≤ ε+opt with probability 1−δ.",
-        "Infinite VC dim → no such finite m(ε,δ) exists — the class is too expressive to generalize from finite data.",
+        "PAC learning requires: for any \\epsilon, \\delta, with m ≥ m(\\epsilon,\\delta) samples, error ≤ \\epsilon+opt with probability 1−\\delta.",
+        "Infinite VC dim → no such finite m(\\epsilon,\\delta) exists — the class is too expressive to generalize from finite data.",
       ],
     },
     {
@@ -1045,13 +1045,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The VC dimension of the class of halfspaces (linear classifiers with bias) in ℝᵈ is:",
+        "The VC dimension of the class of halfspaces (linear classifiers with bias) in \\mathbb{R}ᵈ is:",
       options: ["d", "d + 1", "2d", "d²"],
       correctAnswer: 1,
       explanation:
-        "Linear classifiers sign(wᵀx + b) in ℝᵈ have VC dimension d+1. They can shatter any d+1 points in general position (no d+1 points in a hyperplane) but cannot shatter any d+2 points. In ℝ²: VC dim = 3 (any 3 non-collinear points can be shattered, but no 4 points can).",
+        "Linear classifiers sign(wᵀx + b) in \\mathbb{R}ᵈ have VC dimension d+1. They can shatter any d+1 points in general position (no d+1 points in a hyperplane) but cannot shatter any d+2 points. In \\mathbb{R}²: VC dim = 3 (any 3 non-collinear points can be shattered, but no 4 points can).",
       hints: [
-        "In ℝ²: 3 non-collinear points — all 8 labelings achievable by some line. But any 4 points include an XOR-type labeling no line achieves.",
+        "In \\mathbb{R}²: 3 non-collinear points — all 8 labelings achievable by some line. But any 4 points include an XOR-type labeling no line achieves.",
         "The +1 comes from the bias term b. Homogeneous classifiers (no bias) have VC dim = d.",
       ],
     },
@@ -1063,19 +1063,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The polynomial kernel k(x,z) = (xᵀz + 1)² for x,z ∈ ℝ² implicitly computes the inner product ⟨φ(x), φ(z)⟩ in which feature space?",
+        "The polynomial kernel k(x,z) = (xᵀz + 1)² for x,z ∈ \\mathbb{R}² implicitly computes the inner product ⟨\\phi(x), \\phi(z)⟩ in which feature space?",
       options: [
-        "ℝ² (same as input space)",
-        "ℝ⁶ (monomials up to degree 2: 1, x₁, x₂, x₁², x₁x₂, x₂²)",
+        "\\mathbb{R}² (same as input space)",
+        "\\mathbb{R}⁶ (monomials up to degree 2: 1, x₁, x₂, x₁², x₁x₂, x₂²)",
         "An infinite-dimensional Hilbert space",
-        "ℝ⁴ (all degree-2 monomials only)",
+        "\\mathbb{R}⁴ (all degree-2 monomials only)",
       ],
       correctAnswer: 1,
       explanation:
-        "Expand (xᵀz+1)² = (x₁z₁+x₂z₂+1)². This equals ⟨φ(x),φ(z)⟩ where φ(x) = [1, √2·x₁, √2·x₂, x₁², √2·x₁x₂, x₂²]ᵀ ∈ ℝ⁶. The kernel computes this 6-dimensional inner product without explicitly constructing φ.",
+        "Expand (xᵀz+1)² = (x₁z₁+x₂z₂+1)². This equals ⟨\\phi(x),\\phi(z)⟩ where \\phi(x) = [1, √2·x₁, √2·x₂, x₁², √2·x₁x₂, x₂²]ᵀ ∈ \\mathbb{R}⁶. The kernel computes this 6-dimensional inner product without explicitly constructing \\phi.",
       hints: [
         "(a+b+c)² = a² + b² + c² + 2ab + 2ac + 2bc. With a=x₁z₁, b=x₂z₂, c=1: identifies the feature map.",
-        "The kernel trick: k(x,z) = ⟨φ(x),φ(z)⟩ without materializing φ — especially useful for large/infinite feature spaces.",
+        "The kernel trick: k(x,z) = ⟨\\phi(x),\\phi(z)⟩ without materializing \\phi — especially useful for large/infinite feature spaces.",
       ],
     },
     {
@@ -1086,7 +1086,7 @@ const questions: Record<string, Question[]> = {
         "A function k(x,z) is a valid Mercer kernel iff the kernel (Gram) matrix K with Kᵢⱼ = k(xᵢ,xⱼ) is positive semi-definite for any finite input set.",
       correctAnswer: "True",
       explanation:
-        "Mercer\'s theorem: k is a valid kernel (i.e., ∃ feature map φ such that k(x,z) = ⟨φ(x),φ(z)⟩) iff for all finite sets {x₁,…,xₙ} and all vectors c: Σᵢⱼ cᵢcⱼk(xᵢ,xⱼ) ≥ 0, i.e., the Gram matrix is PSD.",
+        "Mercer\'s theorem: k is a valid kernel (i.e., ∃ feature map \\phi such that k(x,z) = ⟨\\phi(x),\\phi(z)⟩) iff for all finite sets {x₁,…,xₙ} and all vectors c: \\Sigmaᵢⱼ cᵢcⱼk(xᵢ,xⱼ) ≥ 0, i.e., the Gram matrix is PSD.",
       hints: [
         "PSD Gram matrix iff all eigenvalues ≥ 0. This is the kernel validity condition.",
         "To verify a new kernel: construct a random Gram matrix K for sample points, check if PSD (all eigenvalues ≥ 0).",
@@ -1097,18 +1097,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The RBF (Gaussian) kernel k(x,z) = exp(−‖x−z‖²/(2σ²)) corresponds to a feature map φ: ℝⁿ → ?",
+        "The RBF (Gaussian) kernel k(x,z) = exp(−‖x−z‖²/(2\\sigma²)) corresponds to a feature map \\phi: \\mathbb{R}ⁿ → ?",
       options: [
-        "ℝⁿ (same dimension)",
-        "ℝⁿ² (polynomial of degree 2)",
+        "\\mathbb{R}ⁿ (same dimension)",
+        "\\mathbb{R}ⁿ² (polynomial of degree 2)",
         "An infinite-dimensional Hilbert space (Taylor series has infinitely many terms)",
-        "ℝ² regardless of input dimension",
+        "\\mathbb{R}² regardless of input dimension",
       ],
       correctAnswer: 2,
       explanation:
-        "The Taylor expansion of exp(−‖x−z‖²/(2σ²)) = exp(−‖x‖²/2σ²)·exp(xᵀz/σ²)·exp(−‖z‖²/2σ²) involves all orders of monomials xᵢ₁xᵢ₂…xᵢₖ, giving infinitely many features. The RKHS of the RBF kernel is infinite-dimensional — SVM with RBF kernel implicitly operates in ∞-dim space.",
+        "The Taylor expansion of exp(−‖x−z‖²/(2\\sigma²)) = exp(−‖x‖²/2\\sigma²)·exp(xᵀz/\\sigma²)·exp(−‖z‖²/2\\sigma²) involves all orders of monomials xᵢ₁xᵢ₂…xᵢₖ, giving infinitely many features. The RKHS of the RBF kernel is infinite-dimensional — SVM with RBF kernel implicitly operates in ∞-dim space.",
       hints: [
-        "exp(xᵀz/σ²) = Σₖ (xᵀz)ᵏ/(σ²ᵏk!): this series has infinitely many terms → infinite-dimensional feature space.",
+        "exp(xᵀz/\\sigma²) = \\Sigmaₖ (xᵀz)ᵏ/(\\sigma²ᵏk!): this series has infinitely many terms → infinite-dimensional feature space.",
         "The kernel trick is especially powerful here: comparing in ∞-dim space costs only O(n) (one kernel evaluation).",
       ],
     },
@@ -1129,7 +1129,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The DFT X[k] = Σₙ x[n]·e^(−2πikn/N) for k=0,1,…,N−1 represents N frequencies at k/N cycles per sample. k=0 is the DC (mean) component; k=N/2 is the Nyquist frequency (highest representable). These N complex coefficients contain all information about the length-N signal.",
+        "The DFT X[k] = \\Sigmaₙ x[n]·e^(−2\\piikn/N) for k=0,1,…,N−1 represents N frequencies at k/N cycles per sample. k=0 is the DC (mean) component; k=N/2 is the Nyquist frequency (highest representable). These N complex coefficients contain all information about the length-N signal.",
       hints: [
         "k=0: DC component (average). k=1: one full cycle over the entire signal length N.",
         "The DFT is a change of basis from time domain (standard basis eₙ) to frequency domain (complex exponential basis).",
@@ -1157,16 +1157,16 @@ const questions: Record<string, Question[]> = {
         "Random Fourier Features (Rahimi & Recht 2007) approximate a shift-invariant kernel k(x−z) by:",
       options: [
         "Computing the exact DFT of the kernel",
-        "Drawing random frequencies ω ~ p(ω) (the spectral density) and using z(x) = cos(ωᵀx + b) to approximate k(x,z) ≈ z(x)ᵀz(z)",
+        "Drawing random frequencies \\omega ~ p(\\omega) (the spectral density) and using z(x) = cos(\\omegaᵀx + b) to approximate k(x,z) ≈ z(x)ᵀz(z)",
         "Using the FFT to compute the kernel matrix in O(N log N)",
         "Replacing the kernel with a polynomial approximation",
       ],
       correctAnswer: 1,
       explanation:
-        "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x−z) = ∫p(ω)e^(iω^T(x−z))dω for some spectral density p(ω). Sampling ω₁,…,ωD ~ p(ω) and bⱼ ~ Uniform(0,2π), the feature map z(x) = √(2/D)[cos(ω₁ᵀx+b₁),…,cos(ωDᵀx+bD)] satisfies E[z(x)ᵀz(z)] = k(x,z).",
+        "By Bochner\'s theorem, any continuous positive-definite shift-invariant kernel k(x−z) = ∫p(\\omega)e^(i\\omega^T(x−z))d\\omega for some spectral density p(\\omega). Sampling \\omega₁,…,\\omegaD ~ p(\\omega) and bⱼ ~ Uniform(0,2\\pi), the feature map z(x) = √(2/D)[cos(\\omega₁ᵀx+b₁),…,cos(\\omegaDᵀx+bD)] satisfies E[z(x)ᵀz(z)] = k(x,z).",
       hints: [
         "RFF reduces kernel machines from O(n²) kernel matrix to O(nD) feature matrix, enabling scalability.",
-        "Bochner\'s theorem: PD shift-invariant kernel ↔ Fourier transform of a non-negative measure (spectral density p(ω)).",
+        "Bochner\'s theorem: PD shift-invariant kernel ↔ Fourier transform of a non-negative measure (spectral density p(\\omega)).",
       ],
     },
   ],
@@ -1177,18 +1177,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A σ-algebra F over Ω must satisfy three axioms. Which set is NOT necessarily in F?",
+        "A \\sigma-algebra F over \\Omega must satisfy three axioms. Which set is NOT necessarily in F?",
       options: [
-        "Ω itself",
+        "\\Omega itself",
         "The complement Aᶜ of any A ∈ F",
         "The union A₁ ∪ A₂ ∪ … of any countable collection {Aᵢ} ∈ F",
         "Every subset of every A ∈ F",
       ],
       correctAnswer: 3,
       explanation:
-        "σ-algebra axioms: (1) Ω ∈ F, (2) A ∈ F → Aᶜ ∈ F, (3) {Aᵢ} ⊂ F → ∪Aᵢ ∈ F. Subsets of A ∈ F need NOT be in F. For example, the σ-algebra {∅, Ω} contains Ω but not its subsets {ω} for individual outcomes ω.",
+        "\\sigma-algebra axioms: (1) \\Omega ∈ F, (2) A ∈ F → Aᶜ ∈ F, (3) {Aᵢ} ⊂ F → ∪Aᵢ ∈ F. Subsets of A ∈ F need NOT be in F. For example, the \\sigma-algebra {∅, \\Omega} contains \\Omega but not its subsets {\\omega} for individual outcomes \\omega.",
       hints: [
-        "The three axioms are: Ω ∈ F, closed under complement, closed under countable union.",
+        "The three axioms are: \\Omega ∈ F, closed under complement, closed under countable union.",
         "Sub-sets of F-members are not required to be in F — that would make every subset an event.",
       ],
     },
@@ -1200,7 +1200,7 @@ const questions: Record<string, Question[]> = {
         "The Lebesgue integral generalizes the Riemann integral: every Riemann-integrable function is Lebesgue-integrable with the same value.",
       correctAnswer: "True",
       explanation:
-        "The Lebesgue integral partitions the range (not the domain) and handles a far wider class of functions — including pointwise limits of measurable functions. Every bounded Riemann-integrable function is Lebesgue-integrable with equal value. Lebesgue handles Σ xᵢ over countable sets and the dominated convergence theorem, both essential for probability theory.",
+        "The Lebesgue integral partitions the range (not the domain) and handles a far wider class of functions — including pointwise limits of measurable functions. Every bounded Riemann-integrable function is Lebesgue-integrable with equal value. Lebesgue handles \\Sigma xᵢ over countable sets and the dominated convergence theorem, both essential for probability theory.",
       hints: [
         "Riemann integrates by partitioning the x-axis (domain). Lebesgue partitions the y-axis (range).",
         "The dominated convergence theorem (lim integral = integral of lim) requires Lebesgue integration.",
@@ -1211,18 +1211,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In the measure-theoretic formulation, a random variable X on probability space (Ω, F, P) is formally:",
+        "In the measure-theoretic formulation, a random variable X on probability space (\\Omega, F, P) is formally:",
       options: [
         "A fixed real number representing a typical outcome",
-        "A measurable function X: Ω → ℝ such that {ω: X(ω) ≤ x} ∈ F for all x ∈ ℝ",
+        "A measurable function X: \\Omega → \\mathbb{R} such that {\\omega: X(\\omega) ≤ x} ∈ F for all x ∈ \\mathbb{R}",
         "The expected value E[X]",
-        "An element of the sample space Ω",
+        "An element of the sample space \\Omega",
       ],
       correctAnswer: 1,
       explanation:
-        "A random variable is a measurable function: X: (Ω,F) → (ℝ, B(ℝ)). Measurability means preimages of Borel sets are events in F, ensuring P(X ≤ x) is well-defined. This formalism is needed to rigorously define continuous distributions, conditional expectations, and stochastic processes.",
+        "A random variable is a measurable function: X: (\\Omega,F) → (\\mathbb{R}, B(\\mathbb{R})). Measurability means preimages of Borel sets are events in F, ensuring P(X ≤ x) is well-defined. This formalism is needed to rigorously define continuous distributions, conditional expectations, and stochastic processes.",
       hints: [
-        "Measurability: {ω: X(ω) ≤ x} must be in F so we can compute P(X ≤ x) = P({ω: X(ω) ≤ x}).",
+        "Measurability: {\\omega: X(\\omega) ≤ x} must be in F so we can compute P(X ≤ x) = P({\\omega: X(\\omega) ≤ x}).",
         "Without measurability, some sets might have no assigned probability — making P(X ≤ x) undefined.",
       ],
     },
@@ -1243,10 +1243,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For any vector f: fᵀLf = (1/2)Σᵢⱼ Aᵢⱼ(fᵢ−fⱼ)² ≥ 0, so L is PSD. The constant vector 1 satisfies L·1 = 0 (since rows sum to zero), so 0 is always an eigenvalue. For a graph with k connected components, there are exactly k zero eigenvalues.",
+        "For any vector f: fᵀLf = (1/2)\\Sigmaᵢⱼ Aᵢⱼ(fᵢ−fⱼ)² ≥ 0, so L is PSD. The constant vector 1 satisfies L·1 = 0 (since rows sum to zero), so 0 is always an eigenvalue. For a graph with k connected components, there are exactly k zero eigenvalues.",
       hints: [
-        "fᵀLf = Σᵢⱼ Aᵢⱼ(fᵢ−fⱼ)²/2 ≥ 0 since all terms are non-negative squares.",
-        "L·1 = D·1 − A·1 = (degrees) − (row sums of A) = 0. So λ=0 is always an eigenvalue with eigenvector 1.",
+        "fᵀLf = \\Sigmaᵢⱼ Aᵢⱼ(fᵢ−fⱼ)²/2 ≥ 0 since all terms are non-negative squares.",
+        "L·1 = D·1 − A·1 = (degrees) − (row sums of A) = 0. So \\lambda=0 is always an eigenvalue with eigenvector 1.",
       ],
     },
     {
@@ -1254,13 +1254,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Fiedler value (second smallest eigenvalue λ₂ of the graph Laplacian) measures graph connectivity — larger λ₂ means the graph is harder to disconnect.",
+        "The Fiedler value (second smallest eigenvalue \\lambda₂ of the graph Laplacian) measures graph connectivity — larger \\lambda₂ means the graph is harder to disconnect.",
       correctAnswer: "True",
       explanation:
-        "The algebraic connectivity λ₂ = 0 iff the graph is disconnected. For a connected graph, λ₂ > 0 and quantifies how well-connected the graph is. The Cheeger inequality relates λ₂ to the edge expansion (min-cut ratio), justifying its use in spectral clustering.",
+        "The algebraic connectivity \\lambda₂ = 0 iff the graph is disconnected. For a connected graph, \\lambda₂ > 0 and quantifies how well-connected the graph is. The Cheeger inequality relates \\lambda₂ to the edge expansion (min-cut ratio), justifying its use in spectral clustering.",
       hints: [
-        "If the graph splits into two components by removing few edges, λ₂ is small — the graph is nearly disconnected.",
-        "Spectral bisection: assign nodes to clusters based on sign of Fiedler vector (eigenvector for λ₂).",
+        "If the graph splits into two components by removing few edges, \\lambda₂ is small — the graph is nearly disconnected.",
+        "Spectral bisection: assign nodes to clusters based on sign of Fiedler vector (eigenvector for \\lambda₂).",
       ],
     },
     {
@@ -1268,7 +1268,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In spectral GNNs, a graph convolution is defined as g_θ * f = Uĝ(Λ)Uᵀf where U contains Laplacian eigenvectors. The main computational bottleneck of this approach is:",
+        "In spectral GNNs, a graph convolution is defined as g_\\theta * f = Uĝ(\\Lambda)Uᵀf where U contains Laplacian eigenvectors. The main computational bottleneck of this approach is:",
       options: [
         "Computing the sigmoid activation function",
         "The full eigendecomposition of L (O(n³) for n nodes) — addressed by polynomial approximations like ChebNet",
@@ -1280,7 +1280,7 @@ const questions: Record<string, Question[]> = {
         "Full spectral GNNs require computing U (Laplacian eigenvectors) — O(n³) eigendecomposition. ChebNet (Defferrard 2016) approximates spectral filters as degree-K Chebyshev polynomials of L, avoiding eigendecomposition. GCN (Kipf 2017) uses K=1 first-order approximation: Ã = D̃^{-1/2}ÃD̃^{-1/2} where Ã = A + I.",
       hints: [
         "n³ eigendecomposition is prohibitive for large graphs (millions of nodes in social networks).",
-        "Chebyshev polynomial approximation: g_θ(Λ) ≈ Σₖ θₖTₖ(Λ). Only requires matrix-vector products with L — O(|E|) per step.",
+        "Chebyshev polynomial approximation: g_\\theta(\\Lambda) ≈ \\Sigmaₖ \\thetaₖTₖ(\\Lambda). Only requires matrix-vector products with L — O(|E|) per step.",
       ],
     },
   ],
@@ -1291,14 +1291,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "IEEE 754 double-precision (float64) uses 52 mantissa bits, 11 exponent bits, and 1 sign bit. The machine epsilon (smallest ε with 1+ε \$\\neq\$ 1 in float64) is approximately:",
+        "IEEE 754 double-precision (float64) uses 52 mantissa bits, 11 exponent bits, and 1 sign bit. The machine epsilon (smallest \\epsilon with 1+\\epsilon \$\\neq\$ 1 in float64) is approximately:",
       options: ["2⁻²³ ≈ 1.2×10⁻⁷", "2⁻⁵² ≈ 2.2×10⁻¹⁶", "2⁻¹⁰²³", "10⁻³²"],
       correctAnswer: 1,
       explanation:
-        "Machine epsilon for float64 is 2⁻⁵² ≈ 2.2×10⁻¹⁶, giving ~15 decimal digits of precision. For float32 (23 mantissa bits): ε ≈ 2⁻²³ ≈ 1.2×10⁻⁷ (~7 digits). This is why ML training typically uses float32 (speed) while scientific computing uses float64 (precision).",
+        "Machine epsilon for float64 is 2⁻⁵² ≈ 2.2×10⁻¹⁶, giving ~15 decimal digits of precision. For float32 (23 mantissa bits): \\epsilon ≈ 2⁻²³ ≈ 1.2×10⁻⁷ (~7 digits). This is why ML training typically uses float32 (speed) while scientific computing uses float64 (precision).",
       hints: [
         "The mantissa has p = 52 bits → relative precision is 2⁻⁵² ≈ 2.2×10⁻¹⁶.",
-        "float32: p=23 bits → ε ≈ 2⁻²³ ≈ 1.2×10⁻⁷. float64: p=52 → ε ≈ 2.2×10⁻¹⁶.",
+        "float32: p=23 bits → \\epsilon ≈ 2⁻²³ ≈ 1.2×10⁻⁷. float64: p=52 → \\epsilon ≈ 2.2×10⁻¹⁶.",
       ],
     },
     {
@@ -1320,13 +1320,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The condition number κ(A) = σ_max/σ_min bounds the relative error amplification for Ax = b. If κ(A) = 10⁶ and b has relative error 10⁻¹², what is the relative error bound on x?",
+        "The condition number κ(A) = \\sigma_max/\\sigma_min bounds the relative error amplification for Ax = b. If κ(A) = 10⁶ and b has relative error 10⁻¹², what is the relative error bound on x?",
       options: ["10⁻¹²", "10⁻⁶", "10⁶", "10¹²"],
       correctAnswer: 1,
       explanation:
-        "‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖ = 10⁶ × 10⁻¹² = 10⁻⁶. With float64 precision (ε ≈ 10⁻¹⁶), if κ(A) = 10⁶, we lose 6 decimal digits of accuracy in the solution — from 16 to about 10 significant digits.",
+        "‖\\deltax‖/‖x‖ ≤ κ(A)·‖\\deltab‖/‖b‖ = 10⁶ × 10⁻¹² = 10⁻⁶. With float64 precision (\\epsilon ≈ 10⁻¹⁶), if κ(A) = 10⁶, we lose 6 decimal digits of accuracy in the solution — from 16 to about 10 significant digits.",
       hints: [
-        "Relative error bound: ‖δx‖/‖x‖ ≤ κ(A) · ‖δb‖/‖b‖.",
+        "Relative error bound: ‖\\deltax‖/‖x‖ ≤ κ(A) · ‖\\deltab‖/‖b‖.",
         "κ = 10⁶ means the matrix amplifies errors by up to 10⁶. Starting from 10⁻¹² error in b: x error ≤ 10⁶·10⁻¹² = 10⁻⁶.",
       ],
     },
@@ -1338,14 +1338,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A Monte Carlo estimate of π draws n random points uniformly in [0,1]² and counts those inside the unit quarter-circle. If k = 785 of n = 1000 points fall inside, the estimate π̂ is:",
+        "A Monte Carlo estimate of \\pi draws n random points uniformly in [0,1]² and counts those inside the unit quarter-circle. If k = 785 of n = 1000 points fall inside, the estimate \\pî is:",
       options: ["3.14", "3.00", "3.93", "2.47"],
       correctAnswer: 0,
       explanation:
-        "P(inside quarter-circle) = π/4. So π̂ = 4·k/n = 4·785/1000 = 3.14. Standard error: √(π(4−π)/(4n)) ≈ √(3.14·0.86/4000) ≈ 0.026. The error scales as O(1/√n) — independent of dimension.",
+        "P(inside quarter-circle) = \\pi/4. So \\pî = 4·k/n = 4·785/1000 = 3.14. Standard error: √(\\pi(4−\\pi)/(4n)) ≈ √(3.14·0.86/4000) ≈ 0.026. The error scales as O(1/√n) — independent of dimension.",
       hints: [
-        "Area of quarter-circle radius 1 = π/4. Area of unit square = 1. Fraction inside = π/4.",
-        "Estimate: π̂ = 4×(fraction inside) = 4×0.785 = 3.14.",
+        "Area of quarter-circle radius 1 = \\pi/4. Area of unit square = 1. Fraction inside = \\pi/4.",
+        "Estimate: \\pî = 4×(fraction inside) = 4×0.785 = 3.14.",
       ],
     },
     {
@@ -1362,7 +1362,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "E_p[f(X)] = ∫f(x)p(x)dx = ∫f(x)[p(x)/q(x)]q(x)dx = E_q[f(X)·w(X)] where w(x) = p(x)/q(x). Estimate: (1/n)Σᵢ f(xᵢ)w(xᵢ) for xᵢ ~ q. Choose q ∝ |f|·p to minimize variance.",
+        "E_p[f(X)] = ∫f(x)p(x)dx = ∫f(x)[p(x)/q(x)]q(x)dx = E_q[f(X)·w(X)] where w(x) = p(x)/q(x). Estimate: (1/n)\\Sigmaᵢ f(xᵢ)w(xᵢ) for xᵢ ~ q. Choose q \\propto |f|·p to minimize variance.",
       hints: [
         "Key identity: E_p[f] = E_q[f·(p/q)]. The weight p/q corrects for sampling under q instead of p.",
         "Large weights (p(x) >> q(x)) mean x is sampled too rarely under q — those points are upweighted.",
@@ -1376,10 +1376,10 @@ const questions: Record<string, Question[]> = {
         "MCMC methods (Metropolis-Hastings, HMC) can sample from distributions known only up to a normalizing constant.",
       correctAnswer: "True",
       explanation:
-        "The Metropolis-Hastings acceptance ratio is α = min(1, [p̃(x')q(x|x')] / [p̃(x)q(x'|x)]) where p̃ ∝ p. The normalizing constant cancels in the ratio p̃(x')/p̃(x) = p(x')/p(x). This is essential for Bayesian inference where the posterior p(θ|D) ∝ p(D|θ)p(θ) is known only up to P(D).",
+        "The Metropolis-Hastings acceptance ratio is \\alpha = min(1, [p̃(x')q(x|x')] / [p̃(x)q(x'|x)]) where p̃ \\propto p. The normalizing constant cancels in the ratio p̃(x')/p̃(x) = p(x')/p(x). This is essential for Bayesian inference where the posterior p(\\theta|D) \\propto p(D|\\theta)p(\\theta) is known only up to P(D).",
       hints: [
         "Acceptance ratio: p(x')/p(x) = p̃(x')/p̃(x). Normalization constant cancels.",
-        "In Bayesian inference: posterior ∝ likelihood × prior. The normalizing constant P(D) = ∫p(D|θ)p(θ)dθ is often intractable but cancels in MCMC.",
+        "In Bayesian inference: posterior \\propto likelihood × prior. The normalizing constant P(D) = ∫p(D|\\theta)p(\\theta)d\\theta is often intractable but cancels in MCMC.",
       ],
     },
   ],
@@ -1402,7 +1402,7 @@ const questions: Record<string, Question[]> = {
         "VI turns posterior inference into optimization: find q*(z) = argmin_{q∈Q} D_KL(q‖p(z|x)), where Q is a tractable family (e.g., mean-field). Since p(z|x) is intractable, this is equivalently done by maximizing the ELBO = E_q[log p(x,z)] − E_q[log q(z)].",
       hints: [
         "Maximizing ELBO = minimizing KL(q‖p): log p(x) = ELBO + KL(q‖p) ≥ ELBO.",
-        "Mean-field Q: q(z) = Πᵢ qᵢ(zᵢ) — each latent variable independent. Tractable but approximate.",
+        "Mean-field Q: q(z) = \\Piᵢ qᵢ(zᵢ) — each latent variable independent. Tractable but approximate.",
       ],
     },
     {
@@ -1430,10 +1430,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "The mean-field variational assumption q(z) = Πᵢ qᵢ(zᵢ) ignores posterior correlations between latent variables.",
+        "The mean-field variational assumption q(z) = \\Piᵢ qᵢ(zᵢ) ignores posterior correlations between latent variables.",
       correctAnswer: "True",
       explanation:
-        "Mean-field VI assumes complete independence among latent variables. The optimal qᵢ*(zᵢ) ∝ exp(E_{q_{-i}}[log p(x,z)]). This factorization ignores posterior correlations, potentially making the approximation poor when latent variables are strongly correlated (e.g., in linear regression with correlated features).",
+        "Mean-field VI assumes complete independence among latent variables. The optimal qᵢ*(zᵢ) \\propto exp(E_{q_{-i}}[log p(x,z)]). This factorization ignores posterior correlations, potentially making the approximation poor when latent variables are strongly correlated (e.g., in linear regression with correlated features).",
       hints: [
         "Mean-field: q(z₁,z₂,…) = q₁(z₁)q₂(z₂)…. Correlations between z variables are ignored.",
         "Normalizing flows or full-covariance Gaussians can capture correlations but at higher computational cost.",
@@ -1459,7 +1459,7 @@ const questions: Record<string, Question[]> = {
         "By the GP definition, any finite collection of function values is jointly Gaussian. For zero-mean GP: [f(x₁),f(x₂)] ~ N(0, K) where K is the 2×2 kernel (Gram) matrix. k(x₁,x₂) encodes correlation — nearby inputs (small ‖x₁−x₂‖ for RBF kernel) are highly correlated.",
       hints: [
         "GP is a distribution over functions: any finite evaluation is a multivariate Gaussian.",
-        "K_{ij} = k(xᵢ,xⱼ). For RBF kernel: k(x,x') = σ²exp(−‖x−x'‖²/2ℓ²). K is always PSD.",
+        "K_{ij} = k(xᵢ,xⱼ). For RBF kernel: k(x,x') = \\sigma²exp(−‖x−x'‖²/2ℓ²). K is always PSD.",
       ],
     },
     {
@@ -1470,7 +1470,7 @@ const questions: Record<string, Question[]> = {
         "GP regression produces both a predictive mean (point prediction) and a predictive variance (uncertainty estimate) at each test point.",
       correctAnswer: "True",
       explanation:
-        "GP posterior at test point x*: μ* = k(x*,X)[K(X,X)+σ²I]⁻¹y and σ*² = k(x*,x*) − k(x*,X)[K(X,X)+σ²I]⁻¹k(X,x*). The variance σ*² is zero at training points and grows far from data — automatic uncertainty quantification without approximation.",
+        "GP posterior at test point x*: \\mu* = k(x*,X)[K(X,X)+\\sigma²I]⁻¹y and \\sigma*² = k(x*,x*) − k(x*,X)[K(X,X)+\\sigma²I]⁻¹k(X,x*). The variance \\sigma*² is zero at training points and grows far from data — automatic uncertainty quantification without approximation.",
       hints: [
         "GP posterior mean is the prediction; posterior variance measures uncertainty.",
         "This exact uncertainty is why GPs are preferred for Bayesian optimization (acquisition functions need uncertainty).",
@@ -1490,7 +1490,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Exact GP requires Cholesky factorization of K ∈ ℝⁿˣⁿ: O(n³) time and O(n²) memory. For n=10,000 this is feasible; for n=1,000,000 it is not (10¹⁸ FLOPs). Sparse/inducing-point GPs reduce this to O(nm²) with m≪n inducing points.",
+        "Exact GP requires Cholesky factorization of K ∈ \\mathbb{R}ⁿˣⁿ: O(n³) time and O(n²) memory. For n=10,000 this is feasible; for n=1,000,000 it is not (10¹⁸ FLOPs). Sparse/inducing-point GPs reduce this to O(nm²) with m≪n inducing points.",
       hints: [
         "Cholesky of n×n matrix: O(n³/3) operations. Storing K: O(n²) memory.",
         "n=10K: ~3×10¹¹ FLOPs ≈ seconds. n=100K: ~3×10¹⁵ FLOPs ≈ years. Hence sparse GPs for large n.",
@@ -1504,7 +1504,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A Neural ODE (Chen et al. 2018) parameterizes the hidden state dynamics as dh/dt = f_θ(h(t), t). The connection to ResNets is:",
+        "A Neural ODE (Chen et al. 2018) parameterizes the hidden state dynamics as dh/dt = f_\\theta(h(t), t). The connection to ResNets is:",
       options: [
         "Neural ODEs have more parameters than ResNets",
         "A ResNet block h_{l+1} = h_l + f(h_l) is a forward Euler discretization of the ODE with step size 1",
@@ -1513,9 +1513,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Euler discretization of dh/dt = f(h) with step Δt=1: h(t+1) = h(t) + f(h(t)). This is exactly a ResNet block with skip connection. Neural ODEs are the continuous limit: infinite layers with infinitesimal Euler steps, solved by an adaptive ODE solver.",
+        "Euler discretization of dh/dt = f(h) with step \\Deltat=1: h(t+1) = h(t) + f(h(t)). This is exactly a ResNet block with skip connection. Neural ODEs are the continuous limit: infinite layers with infinitesimal Euler steps, solved by an adaptive ODE solver.",
       hints: [
-        "Forward Euler: h_{t+Δt} = h_t + Δt·f(h_t). With Δt=1: h_{t+1} = h_t + f(h_t) = ResNet.",
+        "Forward Euler: h_{t+\\Deltat} = h_t + \\Deltat·f(h_t). With \\Deltat=1: h_{t+1} = h_t + f(h_t) = ResNet.",
         "Neural ODE uses Runge-Kutta or Dormand-Prince adaptive solvers — not just Euler steps.",
       ],
     },
@@ -1524,7 +1524,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "An SDE dX = μ(X,t)dt + σ(X,t)dW (where W is a Wiener process) has solutions that are Markov processes.",
+        "An SDE dX = \\mu(X,t)dt + \\sigma(X,t)dW (where W is a Wiener process) has solutions that are Markov processes.",
       correctAnswer: "True",
       explanation:
         "Solutions to SDEs driven by Brownian motion are Markov processes: given X(t), the future {X(s):s>t} is independent of the past {X(s):s<t}. This follows because Wiener increments dW are independent of the past. This Markov property is fundamental to diffusion models, enabling the forward/reverse process formulation.",
@@ -1538,18 +1538,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Score-based generative models (DDPM/Score Matching) learn the score function ∇_x log p_t(x). This is used to reverse a forward noising SDE. The reverse SDE (Anderson 1982) involves:",
+        "Score-based generative models (DDPM/Score Matching) learn the score function \\nabla_x log p_t(x). This is used to reverse a forward noising SDE. The reverse SDE (Anderson 1982) involves:",
       options: [
         "The gradient of the log-prior only",
-        "The score ∇_x log p_t(x) of the marginal distribution at each noise level t",
+        "The score \\nabla_x log p_t(x) of the marginal distribution at each noise level t",
         "The Hessian of the log-likelihood",
         "The score of the data distribution p₀ only",
       ],
       correctAnswer: 1,
       explanation:
-        "The time-reversal of dX=f dt+g dW (forward SDE) is dX=[f−g²∇ₓ log pₜ(X)]dt + g dW̃ (reverse SDE, from t=T to 0). Learning ∇ₓ log pₜ(x) (score) for all t via score matching enables exact reversal, generating samples from pₜ₌₀ (data distribution) from noise pₜ₌T ≈ N(0,I).",
+        "The time-reversal of dX=f dt+g dW (forward SDE) is dX=[f−g²\\nablaₓ log pₜ(X)]dt + g dW̃ (reverse SDE, from t=T to 0). Learning \\nablaₓ log pₜ(x) (score) for all t via score matching enables exact reversal, generating samples from pₜ₌₀ (data distribution) from noise pₜ₌T ≈ N(0,I).",
       hints: [
-        "Forward: data → noise. Reverse: noise → data. The score ∇ₓ log pₜ(x) guides denoising.",
+        "Forward: data → noise. Reverse: noise → data. The score \\nablaₓ log pₜ(x) guides denoising.",
         "DDPM discretizes the reverse SDE. Song et al. (2021) unified DDPM and score matching in this SDE framework.",
       ],
     },
@@ -1561,7 +1561,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        'Persistent homology tracks topological features (connected components, loops, voids) as a scale parameter ε varies. A "birth-death" pair (b, d) with large persistence |d−b| indicates:',
+        'Persistent homology tracks topological features (connected components, loops, voids) as a scale parameter \\epsilon varies. A "birth-death" pair (b, d) with large persistence |d−b| indicates:',
       options: [
         "A numerical artifact due to noise",
         "A robust topological feature present across a wide range of scales",
@@ -1572,7 +1572,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In a persistence diagram, points near the diagonal (d−b ≈ 0) represent short-lived features likely due to noise. Points far from the diagonal (large d−b) represent robust topological features (genuine holes/loops/voids). This scale-invariant signal/noise separation is persistent homology\'s key property.",
       hints: [
-        "Born at ε=b, dies at ε=d. Persistence = d−b. Small persistence: noise. Large persistence: signal.",
+        "Born at \\epsilon=b, dies at \\epsilon=d. Persistence = d−b. Small persistence: noise. Large persistence: signal.",
         "Example: a circular data manifold has one persistent 1-cycle (loop) with large d−b, plus many short-lived loops from noise.",
       ],
     },
@@ -1584,10 +1584,10 @@ const questions: Record<string, Question[]> = {
         "The Euler characteristic χ = V − E + F (vertices − edges + faces) is a topological invariant, unchanged by continuous deformations of a shape.",
       correctAnswer: "True",
       explanation:
-        "For a sphere: χ = 2. For a torus: χ = 0. For a pretzel (2 holes): χ = −2. The Euler characteristic depends only on topology, not geometry. Equivalent formula: χ = Σ (−1)ᵏβₖ where βₖ are Betti numbers (number of k-dimensional holes).",
+        "For a sphere: χ = 2. For a torus: χ = 0. For a pretzel (2 holes): χ = −2. The Euler characteristic depends only on topology, not geometry. Equivalent formula: χ = \\Sigma (−1)ᵏ\\betaₖ where \\betaₖ are Betti numbers (number of k-dimensional holes).",
       hints: [
         "Coffee mug and donut are topologically equivalent (both have one hole) — same χ = 0.",
-        "β₀ = connected components, β₁ = loops, β₂ = enclosed voids. χ = β₀ − β₁ + β₂.",
+        "\\beta₀ = connected components, \\beta₁ = loops, \\beta₂ = enclosed voids. χ = \\beta₀ − \\beta₁ + \\beta₂.",
       ],
     },
     {
@@ -1604,7 +1604,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mapper: (1) filter function f: X→ℝ (e.g., first PCA component), (2) cover f(X) with overlapping intervals, (3) cluster data within each interval\'s preimage, (4) add edge between clusters sharing ≥1 point. Result: a graph capturing the topological skeleton of the data — useful for finding flares, loops, and branching structure.",
+        "Mapper: (1) filter function f: X→\\mathbb{R} (e.g., first PCA component), (2) cover f(X) with overlapping intervals, (3) cluster data within each interval\'s preimage, (4) add edge between clusters sharing ≥1 point. Result: a graph capturing the topological skeleton of the data — useful for finding flares, loops, and branching structure.",
       hints: [
         "The overlapping bins ensure connectivity is preserved — exclusive bins would miss connections.",
         "Mapper has revealed clinical subgroups in breast cancer data where standard clustering methods failed.",
@@ -1621,14 +1621,14 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'easy',
       question: 'The KL divergence KL(P || Q) between distributions P and Q is defined as:',
       options: [
-        'Σ_x P(x) log(Q(x)/P(x))',
-        'Σ_x P(x) log(P(x)/Q(x))',
-        'Σ_x |P(x) − Q(x)|',
-        '√(Σ_x (P(x) − Q(x))²)',
+        '\\Sigma_x P(x) log(Q(x)/P(x))',
+        '\\Sigma_x P(x) log(P(x)/Q(x))',
+        '\\Sigma_x |P(x) − Q(x)|',
+        '√(\\Sigma_x (P(x) − Q(x))²)',
       ],
       correctAnswer: 1,
       explanation:
-        'KL(P||Q) = Σ_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL ≥ 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
+        'KL(P||Q) = \\Sigma_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL ≥ 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
       hints: [
         'KL is always non-negative by Jensen\'s inequality: log is concave so E[log x] ≤ log E[x].',
         'KL(P||Q) \$\\neq\$ KL(Q||P) — it is asymmetric and not a true distance metric.',
@@ -1698,7 +1698,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Mean-field variational inference assumes the variational posterior factorizes as q(z) = ∏_i q_i(z_i), making the approximation independent across latent dimensions.',
       correctAnswer: 'True',
       explanation:
-        'Mean-field VI (from statistical physics) assumes full independence: q(z₁,...,z_k) = q₁(z₁)·...·q_k(z_k). This enables efficient coordinate ascent (CAVI): each factor q_i(z_i) ∝ exp(E_{q_{-i}}[log p(x,z)]) has a closed form for exponential family models. The trade-off: cannot capture posterior correlations between latent dimensions.',
+        'Mean-field VI (from statistical physics) assumes full independence: q(z₁,...,z_k) = q₁(z₁)·...·q_k(z_k). This enables efficient coordinate ascent (CAVI): each factor q_i(z_i) \\propto exp(E_{q_{-i}}[log p(x,z)]) has a closed form for exponential family models. The trade-off: cannot capture posterior correlations between latent dimensions.',
       hints: [
         'Mean field = fully factorized = no correlation structure between latent variables.',
         'CAVI = Coordinate Ascent Variational Inference: update each q_i while holding others fixed.',
@@ -1712,16 +1712,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'The reparameterization trick in VAEs enables gradient-based ELBO optimization by:',
       options: [
         'Replacing the KL term with a Monte Carlo estimator that is always differentiable',
-        'Writing z = μ + σ·ε where ε ~ N(0,I), making z a deterministic function of (μ,σ) so gradients flow through the sampling operation',
+        'Writing z = \\mu + \\sigma·\\epsilon where \\epsilon ~ N(0,I), making z a deterministic function of (\\mu,\\sigma) so gradients flow through the sampling operation',
         'Computing the exact gradient of the log-likelihood using the score function identity',
         'Approximating the discrete latent space with a continuous relaxation',
       ],
       correctAnswer: 1,
       explanation:
-        'Sampling z ~ N(μ, σ²) is not differentiable w.r.t. μ, σ. Reparameterizing: ε ~ N(0,1), z = μ + σε makes z a deterministic function of (μ,σ) and the noise ε. Then ∂z/∂μ = 1, ∂z/∂σ = ε, enabling backpropagation through the sampling operation. This gives low-variance gradient estimates.',
+        'Sampling z ~ N(\\mu, \\sigma²) is not differentiable w.r.t. \\mu, \\sigma. Reparameterizing: \\epsilon ~ N(0,1), z = \\mu + \\sigma\\epsilon makes z a deterministic function of (\\mu,\\sigma) and the noise \\epsilon. Then ∂z/∂\\mu = 1, ∂z/∂\\sigma = \\epsilon, enabling backpropagation through the sampling operation. This gives low-variance gradient estimates.',
       hints: [
-        'The problem: ∂/∂θ E_{z~p_θ}[f(z)] = ? Cannot backprop through a sampling node.',
-        'Reparameterization moves θ outside the expectation: E_{ε~N(0,I)}[f(g_θ(ε))].',
+        'The problem: ∂/∂\\theta E_{z~p_\\theta}[f(z)] = ? Cannot backprop through a sampling node.',
+        'Reparameterization moves \\theta outside the expectation: E_{\\epsilon~N(0,I)}[f(g_\\theta(\\epsilon))].',
       ],
     },
   ],
@@ -1731,7 +1731,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       id: 'q-mfml-kp33-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'The Jacobian matrix J of a vector function f: ℝⁿ → ℝᵐ has shape:',
+      question: 'The Jacobian matrix J of a vector function f: \\mathbb{R}ⁿ → \\mathbb{R}ᵐ has shape:',
       options: [
         'n × n (a square matrix of partial derivatives)',
         'm × n, where J_ij = ∂f_i/∂x_j',
@@ -1740,9 +1740,9 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The Jacobian J ∈ ℝ^{m×n} has J_ij = ∂f_i(x)/∂x_j. Each row i contains the gradient of the i-th output component f_i w.r.t. all inputs. For f: ℝⁿ → ℝ (scalar output), the Jacobian is the gradient ∇f ∈ ℝ^{1×n}.',
+        'The Jacobian J ∈ \\mathbb{R}^{m×n} has J_ij = ∂f_i(x)/∂x_j. Each row i contains the gradient of the i-th output component f_i w.r.t. all inputs. For f: \\mathbb{R}ⁿ → \\mathbb{R} (scalar output), the Jacobian is the gradient \\nablaf ∈ \\mathbb{R}^{1×n}.',
       hints: [
-        'For f: ℝⁿ → ℝᵐ, Jacobian has m rows (outputs) and n columns (inputs).',
+        'For f: \\mathbb{R}ⁿ → \\mathbb{R}ᵐ, Jacobian has m rows (outputs) and n columns (inputs).',
         'The Jacobian generalizes the scalar derivative to vector functions.',
       ],
     },
@@ -1751,7 +1751,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'The Hessian matrix H of a scalar function f: ℝⁿ → ℝ is the matrix of second partial derivatives H_ij = ∂²f/∂x_i∂x_j, and is always symmetric for twice continuously differentiable functions.',
+        'The Hessian matrix H of a scalar function f: \\mathbb{R}ⁿ → \\mathbb{R} is the matrix of second partial derivatives H_ij = ∂²f/∂x_i∂x_j, and is always symmetric for twice continuously differentiable functions.',
       correctAnswer: 'True',
       explanation:
         'Schwarz\'s theorem (symmetry of second derivatives): if f is twice continuously differentiable (C²), then ∂²f/∂x_i∂x_j = ∂²f/∂x_j∂x_i, so H = Hᵀ. The Hessian characterizes the local curvature of f; its eigenvalues determine whether a critical point is a minimum (all +), maximum (all −), or saddle point (mixed).',
@@ -1787,16 +1787,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       id: 'q-mfml-kp34-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'A function f: ℝⁿ → ℝ is convex if for all x, y and λ ∈ [0,1]:',
+      question: 'A function f: \\mathbb{R}ⁿ → \\mathbb{R} is convex if for all x, y and \\lambda ∈ [0,1]:',
       options: [
-        'f(λx + (1−λ)y) ≥ λf(x) + (1−λ)f(y)',
-        'f(λx + (1−λ)y) ≤ λf(x) + (1−λ)f(y)',
+        'f(\\lambdax + (1−\\lambda)y) ≥ \\lambdaf(x) + (1−\\lambda)f(y)',
+        'f(\\lambdax + (1−\\lambda)y) ≤ \\lambdaf(x) + (1−\\lambda)f(y)',
         'f(x) ≤ f(y) whenever ‖x‖ ≤ ‖y‖',
-        '∇f(x) = 0 has a unique solution',
+        '\\nablaf(x) = 0 has a unique solution',
       ],
       correctAnswer: 1,
       explanation:
-        'Convexity: the function value at any convex combination of points lies below the chord connecting those points. Equivalent conditions: (1) Hessian is positive semidefinite everywhere, (2) f(y) ≥ f(x) + ∇f(x)ᵀ(y−x) (first-order characterization). Convexity guarantees any local minimum is a global minimum.',
+        'Convexity: the function value at any convex combination of points lies below the chord connecting those points. Equivalent conditions: (1) Hessian is positive semidefinite everywhere, (2) f(y) ≥ f(x) + \\nablaf(x)ᵀ(y−x) (first-order characterization). Convexity guarantees any local minimum is a global minimum.',
       hints: [
         'The chord between (x, f(x)) and (y, f(y)) lies above the function graph for convex f.',
         'Key property: for convex f, any local minimum is a global minimum.',
@@ -1807,7 +1807,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'A saddle point is a critical point (∇f = 0) where the Hessian has both positive and negative eigenvalues, indicating it is a minimum in some directions and a maximum in others.',
+        'A saddle point is a critical point (\\nablaf = 0) where the Hessian has both positive and negative eigenvalues, indicating it is a minimum in some directions and a maximum in others.',
       correctAnswer: 'True',
       explanation:
         'Saddle points are ubiquitous in high-dimensional neural network loss landscapes. The Hessian at a saddle point is indefinite (some eigenvalues > 0, some < 0). Gradient descent may slow near saddle points (gradient ≈ 0) but noise and curvature asymmetry typically allow escape. True local minima (all positive Hessian eigenvalues) are exponentially rare in high dimensions.',
@@ -1843,18 +1843,18 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       id: 'q-mfml-kp35-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'A σ-algebra (sigma-algebra) F on sample space Ω is a collection of subsets satisfying:',
+      question: 'A \\sigma-algebra (sigma-algebra) F on sample space \\Omega is a collection of subsets satisfying:',
       options: [
-        'F contains only finite subsets of Ω',
-        'F contains Ω, is closed under complementation, and closed under countable unions',
+        'F contains only finite subsets of \\Omega',
+        'F contains \\Omega, is closed under complementation, and closed under countable unions',
         'F contains all subsets with probability > 0.5',
-        'F is the power set of Ω restricted to measurable events',
+        'F is the power set of \\Omega restricted to measurable events',
       ],
       correctAnswer: 1,
       explanation:
-        'A σ-algebra F satisfies: (1) Ω ∈ F, (2) A ∈ F ⟹ Aᶜ ∈ F (closed under complement), (3) A₁, A₂,... ∈ F ⟹ ∪ᵢAᵢ ∈ F (closed under countable union). The triple (Ω, F, P) is a probability space where F specifies which events can be assigned probability.',
+        'A \\sigma-algebra F satisfies: (1) \\Omega ∈ F, (2) A ∈ F ⟹ Aᶜ ∈ F (closed under complement), (3) A₁, A₂,... ∈ F ⟹ ∪ᵢAᵢ ∈ F (closed under countable union). The triple (\\Omega, F, P) is a probability space where F specifies which events can be assigned probability.',
       hints: [
-        'σ-algebra defines "measurable" events — events we can assign probabilities to.',
+        '\\sigma-algebra defines "measurable" events — events we can assign probabilities to.',
         'Closure under countable union allows handling continuous distributions.',
       ],
     },
@@ -1899,19 +1899,19 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       id: 'q-mfml-kp36-1',
       type: 'multiple-choice',
       difficulty: 'easy',
-      question: 'Bayes\' theorem for parameter inference updates beliefs about θ given data x as:',
+      question: 'Bayes\' theorem for parameter inference updates beliefs about \\theta given data x as:',
       options: [
-        'P(θ|x) = P(x)P(θ) / P(x|θ)',
-        'P(θ|x) = P(x|θ)P(θ) / P(x)',
-        'P(θ|x) = P(x|θ) / P(θ)',
-        'P(θ|x) = P(θ)P(x|θ) · P(x)',
+        'P(\\theta|x) = P(x)P(\\theta) / P(x|\\theta)',
+        'P(\\theta|x) = P(x|\\theta)P(\\theta) / P(x)',
+        'P(\\theta|x) = P(x|\\theta) / P(\\theta)',
+        'P(\\theta|x) = P(\\theta)P(x|\\theta) · P(x)',
       ],
       correctAnswer: 1,
       explanation:
-        'Bayes\' theorem: P(θ|x) ∝ P(x|θ) · P(θ). The posterior P(θ|x) combines the likelihood P(x|θ) (how well θ explains data x) with the prior P(θ) (our belief before seeing data). P(x) = ∫P(x|θ)P(θ)dθ is the normalizing constant (model evidence).',
+        'Bayes\' theorem: P(\\theta|x) \\propto P(x|\\theta) · P(\\theta). The posterior P(\\theta|x) combines the likelihood P(x|\\theta) (how well \\theta explains data x) with the prior P(\\theta) (our belief before seeing data). P(x) = ∫P(x|\\theta)P(\\theta)d\\theta is the normalizing constant (model evidence).',
       hints: [
-        'Posterior ∝ Likelihood × Prior. The normalizer P(x) is often intractable.',
-        'MAP: θ* = argmax P(θ|x). MLE: θ* = argmax P(x|θ) (no prior).',
+        'Posterior \\propto Likelihood × Prior. The normalizer P(x) is often intractable.',
+        'MAP: \\theta* = argmax P(\\theta|x). MLE: \\theta* = argmax P(x|\\theta) (no prior).',
       ],
     },
     {
@@ -1919,12 +1919,12 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'A conjugate prior is a prior distribution P(θ) such that the posterior P(θ|x) belongs to the same parametric family as the prior, enabling closed-form Bayesian updates.',
+        'A conjugate prior is a prior distribution P(\\theta) such that the posterior P(\\theta|x) belongs to the same parametric family as the prior, enabling closed-form Bayesian updates.',
       correctAnswer: 'True',
       explanation:
         'Conjugate priors give analytical posteriors: Beta prior + Bernoulli likelihood → Beta posterior; Gaussian prior + Gaussian likelihood → Gaussian posterior; Dirichlet prior + Categorical likelihood → Dirichlet posterior. Conjugacy enables efficient sequential Bayesian updating without numerical integration.',
       hints: [
-        'Beta-Binomial conjugacy: Beta(α,β) prior + n successes out of m trials → Beta(α+successes, β+failures).',
+        'Beta-Binomial conjugacy: Beta(\\alpha,\\beta) prior + n successes out of m trials → Beta(\\alpha+successes, \\beta+failures).',
         'Conjugate priors are convenient but not always a good model of prior beliefs.',
       ],
     },
@@ -1937,12 +1937,12 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       options: [
         'Laplace prior → L2 (Ridge) regularization; Gaussian prior → L1 (LASSO)',
         'Gaussian prior → L2 (Ridge) regularization; Laplace prior → L1 (LASSO)',
-        'Both Gaussian and Laplace priors lead to L2 regularization with different λ values',
+        'Both Gaussian and Laplace priors lead to L2 regularization with different \\lambda values',
         'Gaussian prior → dropout regularization; Laplace prior → L2 regularization',
       ],
       correctAnswer: 1,
       explanation:
-        'MAP: θ_MAP = argmax [log P(x|θ) + log P(θ)]. Gaussian prior N(0,σ²I): log P(θ) = −‖θ‖²/(2σ²) ∝ −λ‖θ‖² = L2 regularization (Ridge). Laplace prior ∝ exp(−λ‖θ‖₁): log P(θ) ∝ −λ‖θ‖₁ = L1 regularization (LASSO). L1 promotes sparsity because the Laplace prior has sharper peak at zero.',
+        'MAP: \\theta_MAP = argmax [log P(x|\\theta) + log P(\\theta)]. Gaussian prior N(0,\\sigma²I): log P(\\theta) = −‖\\theta‖²/(2\\sigma²) \\propto −\\lambda‖\\theta‖² = L2 regularization (Ridge). Laplace prior \\propto exp(−\\lambda‖\\theta‖₁): log P(\\theta) \\propto −\\lambda‖\\theta‖₁ = L1 regularization (LASSO). L1 promotes sparsity because the Laplace prior has sharper peak at zero.',
       hints: [
         'Gaussian is quadratic → L2 penalty. Laplace has exponential tails → L1 penalty.',
         'Laplace prior → L1 → sparse solutions (many parameters go to exactly zero).',
@@ -1964,7 +1964,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'A GP f ~ GP(μ, k) defines a distribution over functions: for any finite set of inputs {x₁,...,xₙ}, the outputs [f(x₁),...,f(xₙ)] ~ N(μ, K) where K_ij = k(xᵢ, xⱼ). The kernel k specifies the covariance structure — smoothness, periodicity, etc. GPs provide non-parametric Bayesian regression with calibrated uncertainty.',
+        'A GP f ~ GP(\\mu, k) defines a distribution over functions: for any finite set of inputs {x₁,...,xₙ}, the outputs [f(x₁),...,f(xₙ)] ~ N(\\mu, K) where K_ij = k(xᵢ, xⱼ). The kernel k specifies the covariance structure — smoothness, periodicity, etc. GPs provide non-parametric Bayesian regression with calibrated uncertainty.',
       hints: [
         'GP = distribution over functions, not a distribution over parameters.',
         'Any finite marginal of a GP is multivariate Gaussian — that\'s the definition.',
@@ -1978,7 +1978,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'In GP regression, the posterior predictive mean at a new point x* is a weighted sum of training outputs y, where the weights depend on the kernel function k(x*, xᵢ) evaluated between x* and training points.',
       correctAnswer: 'True',
       explanation:
-        'GP posterior: μ*(x*) = k(x*, X)[K(X,X) + σ²I]⁻¹y = Σᵢ αᵢ k(x*, xᵢ) where α = [K+σ²I]⁻¹y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance σ²*(x*) = k(x*,x*) − k(x*,X)[K+σ²I]⁻¹k(X,x*) quantifies uncertainty.',
+        'GP posterior: \\mu*(x*) = k(x*, X)[K(X,X) + \\sigma²I]⁻¹y = \\Sigmaᵢ \\alphaᵢ k(x*, xᵢ) where \\alpha = [K+\\sigma²I]⁻¹y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance \\sigma²*(x*) = k(x*,x*) − k(x*,X)[K+\\sigma²I]⁻¹k(X,x*) quantifies uncertainty.',
       hints: [
         'Kernel k(x*,xᵢ) measures similarity between x* and training point xᵢ.',
         'Far from training data: k(x*,xᵢ) ≈ 0, posterior variance ≈ prior variance.',
@@ -1991,13 +1991,13 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'GP hyperparameter optimization (e.g., kernel length scale ℓ) is typically performed by maximizing:',
       options: [
         'The posterior predictive accuracy on a held-out validation set using cross-validation',
-        'The log marginal likelihood log P(y|X, θ_hyp) = −½ yᵀ(K+σ²I)⁻¹y − ½ log|K+σ²I| − n/2 log(2π)',
+        'The log marginal likelihood log P(y|X, \\theta_hyp) = −½ yᵀ(K+\\sigma²I)⁻¹y − ½ log|K+\\sigma²I| − n/2 log(2\\pi)',
         'The ELBO of a variational approximation to the GP posterior',
         'The squared error between predicted and actual outputs on the training set',
       ],
       correctAnswer: 1,
       explanation:
-        'The log marginal likelihood (type-II MLE / evidence) balances data fit (−½ yᵀ(K+σ²I)⁻¹y) against model complexity (−½ log|K+σ²I|). Gradient-based optimization w.r.t. hyperparameters (ℓ, σ_f, σ_n) yields an automatic Occam\'s razor — it penalizes overly complex kernels that overfit.',
+        'The log marginal likelihood (type-II MLE / evidence) balances data fit (−½ yᵀ(K+\\sigma²I)⁻¹y) against model complexity (−½ log|K+\\sigma²I|). Gradient-based optimization w.r.t. hyperparameters (ℓ, \\sigma_f, \\sigma_n) yields an automatic Occam\'s razor — it penalizes overly complex kernels that overfit.',
       hints: [
         'Log marginal likelihood = log P(y|X, hyp): integrated over all function values (GP prior).',
         'Complexity penalty −½ log|K| prevents overfitting by penalizing high model complexity.',
@@ -2013,7 +2013,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       question: 'Importance sampling estimates E_P[f(x)] when sampling from P is difficult by:',
       options: [
         'Sampling x ~ P directly and computing the sample mean of f(x)',
-        'Sampling x ~ Q and computing the weighted mean (1/N) Σᵢ f(xᵢ) w(xᵢ) where w(xᵢ) = P(xᵢ)/Q(xᵢ)',
+        'Sampling x ~ Q and computing the weighted mean (1/N) \\Sigmaᵢ f(xᵢ) w(xᵢ) where w(xᵢ) = P(xᵢ)/Q(xᵢ)',
         'Using rejection sampling to accept only samples that satisfy f(x) > 0',
         'Computing the expectation analytically using moment-generating functions',
       ],
@@ -2033,10 +2033,10 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'Markov Chain Monte Carlo (MCMC) methods like Metropolis-Hastings generate samples from a target distribution P(x) by constructing a Markov chain whose stationary distribution equals P(x), without needing to evaluate the normalizing constant of P.',
       correctAnswer: 'True',
       explanation:
-        'MH accepts/rejects proposed moves using the acceptance ratio α = min(1, P(x\')Q(x|x\')/P(x)Q(x\'|x)). Since P appears as a ratio, the normalizing constant cancels — only the unnormalized P̃(x) ∝ P(x) is needed. Under detailed balance, the chain\'s stationary distribution is P(x). This makes MCMC invaluable for Bayesian inference where P(θ|x) ∝ P(x|θ)P(θ) is known up to normalizer.',
+        'MH accepts/rejects proposed moves using the acceptance ratio \\alpha = min(1, P(x\')Q(x|x\')/P(x)Q(x\'|x)). Since P appears as a ratio, the normalizing constant cancels — only the unnormalized P̃(x) \\propto P(x) is needed. Under detailed balance, the chain\'s stationary distribution is P(x). This makes MCMC invaluable for Bayesian inference where P(\\theta|x) \\propto P(x|\\theta)P(\\theta) is known up to normalizer.',
       hints: [
-        'Detailed balance: π(x)T(x\'|x) = π(x\')T(x|x\'). Ensures P is the stationary distribution.',
-        'The normalizing constant P(x) = ∫P(x|θ)P(θ)dθ is often intractable — MCMC avoids it.',
+        'Detailed balance: \\pi(x)T(x\'|x) = \\pi(x\')T(x|x\'). Ensures P is the stationary distribution.',
+        'The normalizing constant P(x) = ∫P(x|\\theta)P(\\theta)d\\theta is often intractable — MCMC avoids it.',
       ],
     },
     {
@@ -2044,18 +2044,18 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'Control variates reduce the variance of a Monte Carlo estimator ê = (1/N)Σ f(xᵢ) by:',
+        'Control variates reduce the variance of a Monte Carlo estimator ê = (1/N)\\Sigma f(xᵢ) by:',
       options: [
         'Increasing N (sample size) to reduce variance at rate 1/√N',
-        'Subtracting a correlated function c·g(x) with known mean E[g] = μ_g, giving ê_CV = (1/N)Σ [f(xᵢ) − c(g(xᵢ) − μ_g)]',
+        'Subtracting a correlated function c·g(x) with known mean E[g] = \\mu_g, giving ê_CV = (1/N)\\Sigma [f(xᵢ) − c(g(xᵢ) − \\mu_g)]',
         'Importance-weighting samples to match a lower-variance proposal distribution',
         'Truncating extreme outliers that inflate the variance of f(x)',
       ],
       correctAnswer: 1,
       explanation:
-        'Control variate estimator: ê_CV = (1/N)Σ[f(x_i) − c(g(x_i) − μ_g)] is unbiased (since E[g − μ_g] = 0). Optimal c* = Cov(f,g)/Var(g) minimizes Var(ê_CV) = Var(f)(1 − ρ²_{fg}). When |ρ_{fg}| ≈ 1, variance reduction is dramatic. The REINFORCE baseline in RL is a control variate for the policy gradient estimator.',
+        'Control variate estimator: ê_CV = (1/N)\\Sigma[f(x_i) − c(g(x_i) − \\mu_g)] is unbiased (since E[g − \\mu_g] = 0). Optimal c* = Cov(f,g)/Var(g) minimizes Var(ê_CV) = Var(f)(1 − \\rho²_{fg}). When |\\rho_{fg}| ≈ 1, variance reduction is dramatic. The REINFORCE baseline in RL is a control variate for the policy gradient estimator.',
       hints: [
-        'Subtracting zero-mean term c(g − μ_g) doesn\'t change the mean but can reduce variance.',
+        'Subtracting zero-mean term c(g − \\mu_g) doesn\'t change the mean but can reduce variance.',
         'Optimal coefficient c* = Cov(f,g)/Var(g). Higher correlation → larger variance reduction.',
       ],
     },
@@ -2075,7 +2075,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'The combinatorial graph Laplacian L = D − A where D_ii = Σ_j A_ij (degree of node i). L is symmetric, positive semidefinite, with smallest eigenvalue 0 (eigenvector 1). The number of zero eigenvalues equals the number of connected components. L captures graph connectivity and is fundamental to spectral graph theory.',
+        'The combinatorial graph Laplacian L = D − A where D_ii = \\Sigma_j A_ij (degree of node i). L is symmetric, positive semidefinite, with smallest eigenvalue 0 (eigenvector 1). The number of zero eigenvalues equals the number of connected components. L captures graph connectivity and is fundamental to spectral graph theory.',
       hints: [
         'D is diagonal with node degrees; A is the adjacency matrix.',
         'Normalized Laplacian: L_norm = D^{-1/2}(D−A)D^{-1/2} = I − D^{-1/2}AD^{-1/2}.',
@@ -2089,7 +2089,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'PageRank computes a stationary distribution of a random walk on the web graph, where at each step the surfer either follows a random outgoing link with probability d, or teleports to a random page with probability (1−d).',
       correctAnswer: 'True',
       explanation:
-        'PageRank vector π satisfies π = d·Aᵀπ + (1−d)·1/n. The damping factor d ≈ 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1−d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
+        'PageRank vector \\pi satisfies \\pi = d·Aᵀ\\pi + (1−d)·1/n. The damping factor d ≈ 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1−d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
       hints: [
         'Random surfer model: follow link with prob d, teleport with prob 1−d.',
         'Without teleportation, dangling nodes (no outlinks) accumulate all rank — it leaks.',
@@ -2131,7 +2131,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Markov\'s inequality: P(X ≥ t) ≤ E[X]/t. It requires only finite mean. Proof: E[X] ≥ E[X·1(X≥t)] ≥ t·P(X≥t). Chebyshev\'s inequality (requires finite variance) is Markov applied to (X−E[X])²: P(|X−μ|≥t) ≤ σ²/t².',
+        'Markov\'s inequality: P(X ≥ t) ≤ E[X]/t. It requires only finite mean. Proof: E[X] ≥ E[X·1(X≥t)] ≥ t·P(X≥t). Chebyshev\'s inequality (requires finite variance) is Markov applied to (X−E[X])²: P(|X−\\mu|≥t) ≤ \\sigma²/t².',
       hints: [
         'Markov requires only E[X] < ∞ and X ≥ 0 — extremely weak assumption.',
         'Chebyshev\'s = apply Markov to (X − E[X])² with threshold t² — gives tighter bound.',
@@ -2142,10 +2142,10 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'Hoeffding\'s inequality states that for independent bounded random variables Xᵢ ∈ [aᵢ, bᵢ] with S_n = Σ Xᵢ, the tail bound P(S_n − E[S_n] ≥ t) ≤ exp(−2t²/Σ(bᵢ−aᵢ)²) decays exponentially in t.',
+        'Hoeffding\'s inequality states that for independent bounded random variables Xᵢ ∈ [aᵢ, bᵢ] with S_n = \\Sigma Xᵢ, the tail bound P(S_n − E[S_n] ≥ t) ≤ exp(−2t²/\\Sigma(bᵢ−aᵢ)²) decays exponentially in t.',
       correctAnswer: 'True',
       explanation:
-        'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables — much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n − μ ≥ ε) ≤ exp(−2nε²). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
+        'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables — much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n − \\mu ≥ \\epsilon) ≤ exp(−2n\\epsilon²). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
       hints: [
         'Exponential decay vs. Chebyshev\'s 1/t² polynomial decay — Hoeffding is exponentially tighter.',
         'Hoeffding requires bounded variables; Gaussian concentration requires sub-Gaussian variables.',
@@ -2156,16 +2156,16 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'multiple-choice',
       difficulty: 'hard',
       question:
-        'The union bound (Boole\'s inequality) P(∪ᵢ Aᵢ) ≤ Σᵢ P(Aᵢ) is used in ML theory to:',
+        'The union bound (Boole\'s inequality) P(∪ᵢ Aᵢ) ≤ \\Sigmaᵢ P(Aᵢ) is used in ML theory to:',
       options: [
         'Prove that the sample mean concentrates around the true mean for Gaussian data',
-        'Convert per-hypothesis Hoeffding bounds into a uniform convergence guarantee over a finite hypothesis class: P(∃h∈H: |err_S(h) − err(h)| ≥ ε) ≤ |H|·exp(−2nε²)',
+        'Convert per-hypothesis Hoeffding bounds into a uniform convergence guarantee over a finite hypothesis class: P(∃h∈H: |err_S(h) − err(h)| ≥ \\epsilon) ≤ |H|·exp(−2n\\epsilon²)',
         'Derive the Vapnik-Chervonenkis dimension of a hypothesis class from its size',
         'Bound the mutual information between inputs and predictions',
       ],
       correctAnswer: 1,
       explanation:
-        'The union bound converts per-hypothesis Hoeffding bounds into a uniform convergence guarantee: P(∃h∈H: |err_S(h) − err(h)| ≥ ε) ≤ Σ_{h∈H} P(|err_S(h) − err(h)| ≥ ε) ≤ |H|·exp(−2nε²). Setting this ≤ δ and solving for ε: with probability ≥ 1−δ, all hypotheses satisfy |training error − true error| ≤ √((log|H| + log(1/δ))/(2n)).',
+        'The union bound converts per-hypothesis Hoeffding bounds into a uniform convergence guarantee: P(∃h∈H: |err_S(h) − err(h)| ≥ \\epsilon) ≤ \\Sigma_{h∈H} P(|err_S(h) − err(h)| ≥ \\epsilon) ≤ |H|·exp(−2n\\epsilon²). Setting this ≤ \\delta and solving for \\epsilon: with probability ≥ 1−\\delta, all hypotheses satisfy |training error − true error| ≤ √((log|H| + log(1/\\delta))/(2n)).',
       hints: [
         'Union bound: probability of any bad event ≤ sum of individual bad event probabilities.',
         'The log|H| factor in the generalization bound is the hypothesis class complexity penalty.',
@@ -2190,9 +2190,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "H(X) = n bits",
       ],
       correctAnswer: 1,
-      explanation: "For a uniform distribution over n outcomes: H(X) = −Σᵢ (1/n) log₂(1/n) = log₂(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log₂6≈2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
+      explanation: "For a uniform distribution over n outcomes: H(X) = −\\Sigmaᵢ (1/n) log₂(1/n) = log₂(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log₂6≈2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
       hints: [
-        "Each outcome has probability 1/n. Plug into H = −Σ p log p.",
+        "Each outcome has probability 1/n. Plug into H = −\\Sigma p log p.",
         "Entropy is maximized by the uniform distribution — all outcomes equally surprising.",
       ],
     },
@@ -2205,7 +2205,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       correctAnswer: 1,
       explanation: "H = −(0.5 log₂0.5 + 0.25 log₂0.25 + 0.125 log₂0.125 + 0.125 log₂0.125) = 0.5×1 + 0.25×2 + 0.125×3 + 0.125×3 = 0.5 + 0.5 + 0.375 + 0.375 = 1.75. Wait: the Huffman code assigns lengths 1, 2, 3, 3, so average length = 1.75 bits, which equals entropy H = 1.75 bits — achieving the theoretical optimum.",
       hints: [
-        "H = −Σ pᵢ log₂pᵢ. For each symbol: −0.5×log₂0.5 = 0.5, −0.25×log₂0.25 = 0.5, each −0.125×log₂0.125 = 0.375.",
+        "H = −\\Sigma pᵢ log₂pᵢ. For each symbol: −0.5×log₂0.5 = 0.5, −0.25×log₂0.25 = 0.5, each −0.125×log₂0.125 = 0.375.",
         "Sum: 0.5 + 0.5 + 0.375 + 0.375 = 1.75 bits.",
       ],
     },
@@ -2213,12 +2213,12 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp41-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Shannon's channel capacity theorem (Shannon 1948) states that a noisy channel with bandwidth B Hz and SNR γ = S/N has maximum error-free throughput:",
+      question: "Shannon's channel capacity theorem (Shannon 1948) states that a noisy channel with bandwidth B Hz and SNR \\gamma = S/N has maximum error-free throughput:",
       options: [
-        "C = B log₂(1 + γ) bits/second",
-        "C = B · γ bits/second",
-        "C = B / γ bits/second",
-        "C = γ log₂(1 + B) bits/second",
+        "C = B log₂(1 + \\gamma) bits/second",
+        "C = B · \\gamma bits/second",
+        "C = B / \\gamma bits/second",
+        "C = \\gamma log₂(1 + B) bits/second",
       ],
       correctAnswer: 0,
       explanation: "The Shannon-Hartley theorem: C = B log₂(1 + S/N). Example: B=1 MHz, SNR=63: C = 10⁶ × log₂(64) = 6 Mbps. Below capacity, there exist codes achieving arbitrarily low error rate (Shannon's noisy channel coding theorem). This sets the ultimate limit for wireless communications regardless of modulation scheme.",
@@ -2261,9 +2261,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp41-6",
       type: "true-false",
       difficulty: "easy",
-      question: "Cross-entropy H(P, Q) = −Σ P(x) log Q(x) is always greater than or equal to the entropy H(P) = −Σ P(x) log P(x), with equality iff P = Q.",
+      question: "Cross-entropy H(P, Q) = −\\Sigma P(x) log Q(x) is always greater than or equal to the entropy H(P) = −\\Sigma P(x) log P(x), with equality iff P = Q.",
       correctAnswer: "True",
-      explanation: "H(P, Q) − H(P) = KL(P||Q) ≥ 0 (Gibbs' inequality). Equivalently: −Σ P log Q ≥ −Σ P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
+      explanation: "H(P, Q) − H(P) = KL(P||Q) ≥ 0 (Gibbs' inequality). Equivalently: −\\Sigma P log Q ≥ −\\Sigma P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
       hints: [
         "H(P,Q) = H(P) + KL(P||Q). Since KL ≥ 0, cross-entropy ≥ entropy.",
         "In ML training, minimising cross-entropy H(P_data, P_model) = H(P_data) + KL(P_data||P_model), so minimising cross-entropy = minimising KL.",
@@ -2276,18 +2276,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp42-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Gradient descent with constant learning rate η on a strongly convex function with Lipschitz gradient (L-smooth, μ-strongly convex) converges at rate:",
+      question: "Gradient descent with constant learning rate \\eta on a strongly convex function with Lipschitz gradient (L-smooth, \\mu-strongly convex) converges at rate:",
       options: [
         "O(1/t) — sublinear convergence",
-        "O((1 − μ/L)^t) — linear (geometric) convergence",
+        "O((1 − \\mu/L)^t) — linear (geometric) convergence",
         "O(1/t²) — accelerated sublinear convergence",
         "O(exp(−t²)) — super-linear convergence",
       ],
       correctAnswer: 1,
-      explanation: "For L-smooth μ-strongly convex f, gradient descent with η=1/L achieves f(xₜ)−f* ≤ (1 − μ/L)^t (f(x₀)−f*). The condition number κ = L/μ ≥ 1 controls convergence: small κ → fast. Nesterov acceleration (momentum) improves this to O((1−√(μ/L))^t), the optimal first-order rate.",
+      explanation: "For L-smooth \\mu-strongly convex f, gradient descent with \\eta=1/L achieves f(xₜ)−f* ≤ (1 − \\mu/L)^t (f(x₀)−f*). The condition number κ = L/\\mu ≥ 1 controls convergence: small κ → fast. Nesterov acceleration (momentum) improves this to O((1−√(\\mu/L))^t), the optimal first-order rate.",
       hints: [
-        "The ratio μ/L ∈ (0,1] is the progress per step. Small κ=L/μ means function is well-conditioned.",
-        "Momentum (Nesterov): replaces factor (1−μ/L) with (1−√(μ/L)) — exploits the geometric mean structure.",
+        "The ratio \\mu/L ∈ (0,1] is the progress per step. Small κ=L/\\mu means function is well-conditioned.",
+        "Momentum (Nesterov): replaces factor (1−\\mu/L) with (1−√(\\mu/L)) — exploits the geometric mean structure.",
       ],
     },
     {
@@ -2297,14 +2297,14 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       question: "LU decomposition with partial pivoting decomposes a matrix A as PA = LU where P is a permutation matrix. The condition number κ(A) affects numerical stability because:",
       options: [
         "Partial pivoting directly reduces κ(A) to 1 for any matrix",
-        "The relative error in the solution x to Ax=b is bounded by ‖δx‖/‖x‖ ≤ κ(A)·‖δb‖/‖b‖, so large κ amplifies rounding errors from finite precision arithmetic",
+        "The relative error in the solution x to Ax=b is bounded by ‖\\deltax‖/‖x‖ ≤ κ(A)·‖\\deltab‖/‖b‖, so large κ amplifies rounding errors from finite precision arithmetic",
         "LU without pivoting always produces a smaller condition number than LU with pivoting",
         "The condition number only affects the speed of convergence, not the accuracy of the solution",
       ],
       correctAnswer: 1,
-      explanation: "The fundamental condition number bound: ‖δx‖/‖x‖ ≤ κ(A)·(‖δA‖/‖A‖ + ‖δb‖/‖b‖). Partial pivoting (swapping rows to put the largest pivot on the diagonal) controls the growth factor of LU and improves numerical stability, but cannot change κ(A). An ill-conditioned matrix (κ >> 1) will give poor solutions regardless of the algorithm used.",
+      explanation: "The fundamental condition number bound: ‖\\deltax‖/‖x‖ ≤ κ(A)·(‖\\deltaA‖/‖A‖ + ‖\\deltab‖/‖b‖). Partial pivoting (swapping rows to put the largest pivot on the diagonal) controls the growth factor of LU and improves numerical stability, but cannot change κ(A). An ill-conditioned matrix (κ >> 1) will give poor solutions regardless of the algorithm used.",
       hints: [
-        "κ(A) = σ_max/σ_min. Large κ: tiny changes in b cause huge changes in x.",
+        "κ(A) = \\sigma_max/\\sigma_min. Large κ: tiny changes in b cause huge changes in x.",
         "float64 precision ≈ 10⁻¹⁶. If κ(A) = 10¹², you lose 12 digits of accuracy → solution has only ~4 significant digits.",
       ],
     },
@@ -2324,17 +2324,17 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp42-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The Singular Value Decomposition A = UΣVᵀ provides the best rank-k approximation Aₖ = UₖΣₖVₖᵀ in the sense that:",
+      question: "The Singular Value Decomposition A = U\\SigmaVᵀ provides the best rank-k approximation Aₖ = Uₖ\\SigmaₖVₖᵀ in the sense that:",
       options: [
         "Aₖ has the smallest Frobenius norm among all rank-k matrices",
-        "‖A − Aₖ‖₂ = σₖ₊₁ is minimal — no other rank-k matrix approximates A better in spectral or Frobenius norm (Eckart-Young theorem)",
+        "‖A − Aₖ‖₂ = \\sigmaₖ₊₁ is minimal — no other rank-k matrix approximates A better in spectral or Frobenius norm (Eckart-Young theorem)",
         "Aₖ minimizes the number of non-zero entries (sparsity)",
         "Aₖ is the rank-k matrix closest to A in the L∞ norm",
       ],
       correctAnswer: 1,
-      explanation: "Eckart-Young-Mirsky theorem: among all rank-k matrices B, the SVD truncation Aₖ = UₖΣₖVₖᵀ minimizes both ‖A−B‖₂ = σₖ₊₁ (spectral norm) and ‖A−B‖_F = √(σₖ₊₁² + ⋯ + σᵣ²) (Frobenius norm). This makes SVD the theoretically optimal dimensionality reduction for linear methods, underlying PCA, LSA, and collaborative filtering.",
+      explanation: "Eckart-Young-Mirsky theorem: among all rank-k matrices B, the SVD truncation Aₖ = Uₖ\\SigmaₖVₖᵀ minimizes both ‖A−B‖₂ = \\sigmaₖ₊₁ (spectral norm) and ‖A−B‖_F = √(\\sigmaₖ₊₁² + ⋯ + \\sigmaᵣ²) (Frobenius norm). This makes SVD the theoretically optimal dimensionality reduction for linear methods, underlying PCA, LSA, and collaborative filtering.",
       hints: [
-        "Truncate after k singular values: the approximation error in spectral norm = σₖ₊₁, the (k+1)-th singular value.",
+        "Truncate after k singular values: the approximation error in spectral norm = \\sigmaₖ₊₁, the (k+1)-th singular value.",
         "PCA is SVD on the centered data matrix: the k principal components are the top-k right singular vectors Vₖ.",
       ],
     },
@@ -2344,7 +2344,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "Newton's method for finding the root of f(x)=0 has quadratic convergence near the root: the error at step t+1 satisfies |eₜ₊₁| ≈ C|eₜ|², meaning the number of correct decimal digits doubles each iteration.",
       correctAnswer: "True",
-      explanation: "Newton's method: xₜ₊₁ = xₜ − f(xₜ)/f'(xₜ). Taylor expansion around root x*: eₜ₊₁ ≈ f''(x*)/(2f'(x*)) · eₜ². This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 → 2 → 4 → 8 → 16 significant digits per iteration. Applied to f(θ) = ∇L(θ): Newton step = −H⁻¹∇L is the full Newton method for optimization.",
+      explanation: "Newton's method: xₜ₊₁ = xₜ − f(xₜ)/f'(xₜ). Taylor expansion around root x*: eₜ₊₁ ≈ f''(x*)/(2f'(x*)) · eₜ². This quadratic convergence (once in the basin of attraction) gives extremely fast local convergence: 1 → 2 → 4 → 8 → 16 significant digits per iteration. Applied to f(\\theta) = \\nablaL(\\theta): Newton step = −H⁻¹\\nablaL is the full Newton method for optimization.",
       hints: [
         "Quadratic convergence: error ~ C × (previous error)². Starting at 10⁻¹: next step 10⁻², then 10⁻⁴, then 10⁻⁸.",
         "Newton requires computing and inverting the Hessian H: O(n²) storage, O(n³) per step — expensive in high dimensions.",
@@ -2364,7 +2364,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       correctAnswer: 1,
       explanation: "CG generates mutually A-conjugate search directions (dᵢᵀAdⱼ = 0 for i\$\\neq\$j), ensuring each new step makes progress in a previously unexplored direction. For an n×n SPD system: CG terminates in ≤ n steps exactly. Convergence rate: ‖eₜ‖_A ≤ 2((√κ−1)/(√κ+1))^t ‖e₀‖_A — dependent on √κ rather than κ for gradient descent.",
       hints: [
-        "CG termination in n steps: n search directions span ℝⁿ — x* is found exactly.",
+        "CG termination in n steps: n search directions span \\mathbb{R}ⁿ — x* is found exactly.",
         "Condition number dependence: GD converges as (1−2/(κ+1))^t; CG as ((√κ−1)/(√κ+1))^t — CG is faster by factor √κ.",
       ],
     },
@@ -2383,37 +2383,37 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "Reversible: detailed balance holds with any initial distribution",
       ],
       correctAnswer: 1,
-      explanation: "Ergodic Markov chain = irreducible (every state reachable from every other state) + aperiodic (no cyclic patterns). Ergodicity guarantees: (1) unique stationary distribution π exists, (2) Pᵗ → 1πᵀ (convergence from any initial state), (3) time averages equal ensemble averages (ergodic theorem). MCMC methods rely on ergodicity for valid sampling.",
+      explanation: "Ergodic Markov chain = irreducible (every state reachable from every other state) + aperiodic (no cyclic patterns). Ergodicity guarantees: (1) unique stationary distribution \\pi exists, (2) Pᵗ → 1\\piᵀ (convergence from any initial state), (3) time averages equal ensemble averages (ergodic theorem). MCMC methods rely on ergodicity for valid sampling.",
       hints: [
         "Irreducible: can go from any state to any other. Aperiodic: not stuck in a cycle of fixed length.",
-        "Ergodicity = unique stationary distribution π such that πP = π, and Pᵗ converges to it.",
+        "Ergodicity = unique stationary distribution \\pi such that \\piP = \\pi, and Pᵗ converges to it.",
       ],
     },
     {
       id: "q-mfml-kp43-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "In Metropolis-Hastings MCMC, the acceptance probability for moving from state x to proposed state x' with proposal Q(x'|x) is α = min(1, π(x')Q(x|x')/π(x)Q(x'|x)). If Q is symmetric (Q(x'|x) = Q(x|x')), this simplifies to:",
+      question: "In Metropolis-Hastings MCMC, the acceptance probability for moving from state x to proposed state x' with proposal Q(x'|x) is \\alpha = min(1, \\pi(x')Q(x|x')/\\pi(x)Q(x'|x)). If Q is symmetric (Q(x'|x) = Q(x|x')), this simplifies to:",
       options: [
-        "α = min(1, π(x)/π(x'))",
-        "α = min(1, π(x')/π(x))",
-        "α = π(x')/(π(x') + π(x))",
-        "α = 1 always (all proposals accepted)",
+        "\\alpha = min(1, \\pi(x)/\\pi(x'))",
+        "\\alpha = min(1, \\pi(x')/\\pi(x))",
+        "\\alpha = \\pi(x')/(\\pi(x') + \\pi(x))",
+        "\\alpha = 1 always (all proposals accepted)",
       ],
       correctAnswer: 1,
-      explanation: "For symmetric Q: α = min(1, π(x')Q(x|x')/(π(x)Q(x'|x))) = min(1, π(x')/π(x)). This is the original Metropolis algorithm (1953). If the proposed state has higher density (π(x') > π(x)): always accept. If lower: accept with probability π(x')/π(x). This implements detailed balance: π(x)T(x'|x) = π(x')T(x|x').",
+      explanation: "For symmetric Q: \\alpha = min(1, \\pi(x')Q(x|x')/(\\pi(x)Q(x'|x))) = min(1, \\pi(x')/\\pi(x)). This is the original Metropolis algorithm (1953). If the proposed state has higher density (\\pi(x') > \\pi(x)): always accept. If lower: accept with probability \\pi(x')/\\pi(x). This implements detailed balance: \\pi(x)T(x'|x) = \\pi(x')T(x|x').",
       hints: [
-        "Symmetric Q cancels: MH ratio reduces to just the target density ratio π(x')/π(x).",
-        "Always move uphill (higher π); sometimes move downhill — prevents getting trapped at local modes.",
+        "Symmetric Q cancels: MH ratio reduces to just the target density ratio \\pi(x')/\\pi(x).",
+        "Always move uphill (higher \\pi); sometimes move downhill — prevents getting trapped at local modes.",
       ],
     },
     {
       id: "q-mfml-kp43-3",
       type: "true-false",
       difficulty: "hard",
-      question: "Hamiltonian Monte Carlo (HMC) uses gradient information ∇log π(x) to propose distant moves that are accepted with high probability, making it more efficient than random-walk Metropolis for smooth high-dimensional targets.",
+      question: "Hamiltonian Monte Carlo (HMC) uses gradient information \\nablalog \\pi(x) to propose distant moves that are accepted with high probability, making it more efficient than random-walk Metropolis for smooth high-dimensional targets.",
       correctAnswer: "True",
-      explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = −log π(x) + ½pᵀM⁻¹p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
+      explanation: "HMC augments the state with auxiliary momentum p ~ N(0, M), then simulates Hamiltonian dynamics (conservative motion on the energy surface H(x,p) = −log \\pi(x) + ½pᵀM⁻¹p) using leapfrog integration. The dynamics propose distant moves in the right direction guided by the gradient. Acceptance rate is near 1 (energy is conserved exactly in continuous time; leapfrog has small discretization error). HMC reduces random-walk behaviour from O(n) to O(n^{1/4}) steps per effective sample in n dimensions.",
       hints: [
         "Random-walk MH explores by diffusion (O(n) steps to traverse the target). HMC uses gradient to slide along level sets — much more efficient.",
         "The leapfrog integrator preserves volume in phase space (symplectic), enabling high acceptance rates without detailed computation of the Jacobian.",
@@ -2431,9 +2431,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "Independent of K because MH has geometric convergence guarantees",
       ],
       correctAnswer: 1,
-      explanation: "Multimodal targets are the Achilles heel of local MCMC methods. If modes are separated by a low-density region, proposals that cross the barrier are rejected with probability 1 − π(x')/π(x) ≈ 1. The chain explores within one mode for an exponentially long time before crossing. Solutions: parallel tempering (run chains at multiple temperatures), transdimensional MCMC, or normalizing flows as proposals.",
+      explanation: "Multimodal targets are the Achilles heel of local MCMC methods. If modes are separated by a low-density region, proposals that cross the barrier are rejected with probability 1 − \\pi(x')/\\pi(x) ≈ 1. The chain explores within one mode for an exponentially long time before crossing. Solutions: parallel tempering (run chains at multiple temperatures), transdimensional MCMC, or normalizing flows as proposals.",
       hints: [
-        "Energy barrier = region where π(x) ≈ 0 between modes. Crossing it requires a proposal with very low acceptance.",
+        "Energy barrier = region where \\pi(x) ≈ 0 between modes. Crossing it requires a proposal with very low acceptance.",
         "Parallel tempering: high-temperature chains mix faster and occasionally swap states with the cold chain, enabling cross-mode jumps.",
       ],
     },
@@ -2441,7 +2441,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp43-5",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "A Markov chain has stationary distribution π. The detailed balance condition (reversibility) π(x)T(x'|x) = π(x')T(x|x') implies:",
+      question: "A Markov chain has stationary distribution \\pi. The detailed balance condition (reversibility) \\pi(x)T(x'|x) = \\pi(x')T(x|x') implies:",
       options: [
         "The chain visits states in order of decreasing probability",
         "The chain is time-reversible: the forward and backward processes are statistically indistinguishable",
@@ -2449,9 +2449,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "All transition probabilities are equal",
       ],
       correctAnswer: 1,
-      explanation: "Detailed balance (also called reversibility or microreversibility) means the probability flux from x to x' equals that from x' to x: π(x)T(x'|x) = π(x')T(x|x'). Summing over x': Σ_x π(x)T(x'|x) = π(x')·Σ_x T(x|x') = π(x'). So detailed balance implies stationarity. Metropolis-Hastings is designed to satisfy detailed balance by construction.",
+      explanation: "Detailed balance (also called reversibility or microreversibility) means the probability flux from x to x' equals that from x' to x: \\pi(x)T(x'|x) = \\pi(x')T(x|x'). Summing over x': \\Sigma_x \\pi(x)T(x'|x) = \\pi(x')·\\Sigma_x T(x|x') = \\pi(x'). So detailed balance implies stationarity. Metropolis-Hastings is designed to satisfy detailed balance by construction.",
       hints: [
-        "Detailed balance = equal flux in both directions. Sum over x to verify π satisfies πP = π.",
+        "Detailed balance = equal flux in both directions. Sum over x to verify \\pi satisfies \\piP = \\pi.",
         "Not all MCMC methods satisfy detailed balance. Non-reversible chains can mix faster but are harder to construct.",
       ],
     },
@@ -2461,10 +2461,10 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "Gibbs sampling is a special case of Metropolis-Hastings where each coordinate is updated from its full conditional distribution P(xᵢ|x_{−i}), and all proposed updates are accepted with probability 1.",
       correctAnswer: "True",
-      explanation: "In Gibbs sampling, the proposal for coordinate i is Q(xᵢ'|x) = P(xᵢ'|x_{−i}). The MH acceptance ratio: π(x')Q(x|x')/π(x)Q(x'|x) = P(x')/P(xᵢ|x_{−i}) × P(xᵢ'|x_{−i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) — otherwise MH with a different proposal is needed.",
+      explanation: "In Gibbs sampling, the proposal for coordinate i is Q(xᵢ'|x) = P(xᵢ'|x_{−i}). The MH acceptance ratio: \\pi(x')Q(x|x')/\\pi(x)Q(x'|x) = P(x')/P(xᵢ|x_{−i}) × P(xᵢ'|x_{−i})/P(x) = 1. So Gibbs sampling always accepts. This requires that full conditionals are available in closed form (e.g., exponential family conjugate models) — otherwise MH with a different proposal is needed.",
       hints: [
         "Gibbs = MH with acceptance rate 1. The proposal already places probability according to the target's full conditional.",
-        "Gibbs works for models with conjugate priors where P(θᵢ|θ_{−i}, data) has a known form (Beta, Gaussian, etc.).",
+        "Gibbs works for models with conjugate priors where P(\\thetaᵢ|\\theta_{−i}, data) has a known form (Beta, Gaussian, etc.).",
       ],
     },
   ],
@@ -2474,18 +2474,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp44-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "For the constrained optimization problem min f(x) s.t. g(x) ≤ 0, h(x) = 0, the Lagrangian is L(x, λ, ν) = f(x) + λᵀg(x) + νᵀh(x). The KKT conditions for optimality include the complementary slackness condition:",
+      question: "For the constrained optimization problem min f(x) s.t. g(x) ≤ 0, h(x) = 0, the Lagrangian is L(x, \\lambda, ν) = f(x) + \\lambdaᵀg(x) + νᵀh(x). The KKT conditions for optimality include the complementary slackness condition:",
       options: [
-        "λᵢ ≥ 0 for all inequality constraints",
-        "λᵢ · gᵢ(x*) = 0 for each i: either the multiplier is zero or the constraint is active",
+        "\\lambdaᵢ ≥ 0 for all inequality constraints",
+        "\\lambdaᵢ · gᵢ(x*) = 0 for each i: either the multiplier is zero or the constraint is active",
         "νᵢ = 0 for all equality constraints",
-        "∇f(x*) = 0 (unconstrained stationarity)",
+        "\\nablaf(x*) = 0 (unconstrained stationarity)",
       ],
       correctAnswer: 1,
-      explanation: "KKT conditions: (1) Stationarity: ∇f + Σλᵢ∇gᵢ + Σνⱼ∇hⱼ = 0. (2) Primal feasibility: gᵢ(x*)≤0, hⱼ(x*)=0. (3) Dual feasibility: λᵢ≥0. (4) Complementary slackness: λᵢ·gᵢ(x*)=0. The CS condition means: if constraint i is inactive (gᵢ<0), its multiplier λᵢ must be 0 (it doesn't constrain the optimum). If λᵢ>0, the constraint must be active (gᵢ=0).",
+      explanation: "KKT conditions: (1) Stationarity: \\nablaf + \\Sigma\\lambdaᵢ\\nablagᵢ + \\Sigmaνⱼ\\nablahⱼ = 0. (2) Primal feasibility: gᵢ(x*)≤0, hⱼ(x*)=0. (3) Dual feasibility: \\lambdaᵢ≥0. (4) Complementary slackness: \\lambdaᵢ·gᵢ(x*)=0. The CS condition means: if constraint i is inactive (gᵢ<0), its multiplier \\lambdaᵢ must be 0 (it doesn't constrain the optimum). If \\lambdaᵢ>0, the constraint must be active (gᵢ=0).",
       hints: [
-        "Complementary slackness: λᵢ=0 or gᵢ(x*)=0 — at least one of them must be zero.",
-        "Active constraints (gᵢ=0) can have λᵢ>0; inactive constraints (gᵢ<0) must have λᵢ=0.",
+        "Complementary slackness: \\lambdaᵢ=0 or gᵢ(x*)=0 — at least one of them must be zero.",
+        "Active constraints (gᵢ=0) can have \\lambdaᵢ>0; inactive constraints (gᵢ<0) must have \\lambdaᵢ=0.",
       ],
     },
     {
@@ -2494,7 +2494,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "Strong duality holds for convex optimization problems satisfying Slater's condition (existence of a strictly feasible point), meaning the primal and dual optimal values are equal: p* = d*.",
       correctAnswer: "True",
-      explanation: "Slater's condition: ∃x with gᵢ(x)<0 for all i. For convex f, gᵢ: Slater's condition guarantees strong duality (p*=d*). The duality gap p*−d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max Σαᵢ − ½Σᵢⱼαᵢαⱼyᵢyⱼxᵢᵀxⱼ s.t. αᵢ≥0, Σαᵢyᵢ=0 — enabling the kernel trick.",
+      explanation: "Slater's condition: ∃x with gᵢ(x)<0 for all i. For convex f, gᵢ: Slater's condition guarantees strong duality (p*=d*). The duality gap p*−d* measures the quality of the dual lower bound. For the SVM: strong duality gives the dual formulation max \\Sigma\\alphaᵢ − ½\\Sigmaᵢⱼ\\alphaᵢ\\alphaⱼyᵢyⱼxᵢᵀxⱼ s.t. \\alphaᵢ≥0, \\Sigma\\alphaᵢyᵢ=0 — enabling the kernel trick.",
       hints: [
         "Slater's condition: there is a point that strictly satisfies all inequality constraints — not just on the boundary.",
         "Without Slater's condition, the duality gap p*−d* ≥ 0 but may be positive even for convex problems.",
@@ -2504,35 +2504,35 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp44-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The dual of the primal SVM (min ½‖w‖² s.t. yᵢ(wᵀxᵢ+b) ≥ 1) has the dual variables αᵢ ≥ 0 satisfying complementary slackness: αᵢ(yᵢ(wᵀxᵢ+b)−1) = 0. This means:",
+      question: "The dual of the primal SVM (min ½‖w‖² s.t. yᵢ(wᵀxᵢ+b) ≥ 1) has the dual variables \\alphaᵢ ≥ 0 satisfying complementary slackness: \\alphaᵢ(yᵢ(wᵀxᵢ+b)−1) = 0. This means:",
       options: [
-        "All αᵢ > 0 (all training points contribute to the decision boundary)",
-        "Only the support vectors (points with yᵢ(wᵀxᵢ+b) = 1) have αᵢ > 0; all other points have αᵢ = 0",
-        "αᵢ = yᵢ for all points by the dual constraint",
-        "αᵢ = 0 iff the point is correctly classified",
+        "All \\alphaᵢ > 0 (all training points contribute to the decision boundary)",
+        "Only the support vectors (points with yᵢ(wᵀxᵢ+b) = 1) have \\alphaᵢ > 0; all other points have \\alphaᵢ = 0",
+        "\\alphaᵢ = yᵢ for all points by the dual constraint",
+        "\\alphaᵢ = 0 iff the point is correctly classified",
       ],
       correctAnswer: 1,
-      explanation: "By complementary slackness: either αᵢ=0 or yᵢ(wᵀxᵢ+b)=1. For points strictly inside the margin (yᵢ(wᵀxᵢ+b)>1): their constraint is inactive → αᵢ=0. They do not contribute to w = Σαᵢyᵢxᵢ. Only support vectors (on the margin boundary) have αᵢ>0. This is why SVM is memory-efficient: the solution depends only on the support vectors.",
+      explanation: "By complementary slackness: either \\alphaᵢ=0 or yᵢ(wᵀxᵢ+b)=1. For points strictly inside the margin (yᵢ(wᵀxᵢ+b)>1): their constraint is inactive → \\alphaᵢ=0. They do not contribute to w = \\Sigma\\alphaᵢyᵢxᵢ. Only support vectors (on the margin boundary) have \\alphaᵢ>0. This is why SVM is memory-efficient: the solution depends only on the support vectors.",
       hints: [
-        "αᵢ>0 requires the constraint to be active: yᵢ(wᵀxᵢ+b) = 1 exactly — on the margin boundary.",
-        "w = Σᵢ αᵢyᵢxᵢ: only support vectors (αᵢ>0) contribute. Far-from-margin points have αᵢ=0 and are irrelevant.",
+        "\\alphaᵢ>0 requires the constraint to be active: yᵢ(wᵀxᵢ+b) = 1 exactly — on the margin boundary.",
+        "w = \\Sigmaᵢ \\alphaᵢyᵢxᵢ: only support vectors (\\alphaᵢ>0) contribute. Far-from-margin points have \\alphaᵢ=0 and are irrelevant.",
       ],
     },
     {
       id: "q-mfml-kp44-4",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The proximal operator of a function g with step size η is defined as prox_{ηg}(v) = argmin_x (g(x) + ‖x−v‖²/(2η)). For g(x) = λ‖x‖₁ (LASSO), the proximal operator is:",
+      question: "The proximal operator of a function g with step size \\eta is defined as prox_{\\etag}(v) = argmin_x (g(x) + ‖x−v‖²/(2\\eta)). For g(x) = \\lambda‖x‖₁ (LASSO), the proximal operator is:",
       options: [
-        "prox(v) = v/(1 + 2ηλ) (ridge shrinkage)",
-        "prox(v) = sign(v)·max(|v| − ηλ, 0) (soft-thresholding)",
-        "prox(v) = v if |v| > ηλ, else 0 (hard-thresholding)",
-        "prox(v) = v − ηλ·sign(v) (gradient step of L1)",
+        "prox(v) = v/(1 + 2\\eta\\lambda) (ridge shrinkage)",
+        "prox(v) = sign(v)·max(|v| − \\eta\\lambda, 0) (soft-thresholding)",
+        "prox(v) = v if |v| > \\eta\\lambda, else 0 (hard-thresholding)",
+        "prox(v) = v − \\eta\\lambda·sign(v) (gradient step of L1)",
       ],
       correctAnswer: 1,
-      explanation: "The proximal operator of ηλ‖·‖₁ is the soft-thresholding operator: S_{ηλ}(v) = sign(v)·max(|v|−ηλ, 0). It shrinks each coordinate toward zero by ηλ, setting small coordinates exactly to zero (sparsity). This arises in ISTA/FISTA for solving LASSO: xₜ₊₁ = prox_{ηλ‖·‖₁}(xₜ − η∇f(xₜ)).",
+      explanation: "The proximal operator of \\eta\\lambda‖·‖₁ is the soft-thresholding operator: S_{\\eta\\lambda}(v) = sign(v)·max(|v|−\\eta\\lambda, 0). It shrinks each coordinate toward zero by \\eta\\lambda, setting small coordinates exactly to zero (sparsity). This arises in ISTA/FISTA for solving LASSO: xₜ₊₁ = prox_{\\eta\\lambda‖·‖₁}(xₜ − \\eta\\nablaf(xₜ)).",
       hints: [
-        "Soft-thresholding: values in [−ηλ, ηλ] map to 0; values outside shrink by ηλ toward 0.",
+        "Soft-thresholding: values in [−\\eta\\lambda, \\eta\\lambda] map to 0; values outside shrink by \\eta\\lambda toward 0.",
         "ISTA (Iterative Shrinkage Thresholding Algorithm) = gradient step on smooth part f + proximal step on L1.",
       ],
     },
@@ -2542,7 +2542,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "easy",
       question: "A function f is convex if and only if its epigraph epi(f) = {(x,t): f(x) ≤ t} is a convex set.",
       correctAnswer: "True",
-      explanation: "The epigraph definition is equivalent to the standard definition f(λx+(1−λ)y) ≤ λf(x)+(1−λ)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x₁,t₁) and (x₂,t₂) in epi(f): f(x₁)≤t₁, f(x₂)≤t₂, and by convexity of epi(f): f(λx₁+(1−λ)x₂) ≤ λt₁+(1−λ)t₂.",
+      explanation: "The epigraph definition is equivalent to the standard definition f(\\lambdax+(1−\\lambda)y) ≤ \\lambdaf(x)+(1−\\lambda)f(y). The epigraph is the set of points on or above the graph of f. If epi(f) is convex, then for any two points (x₁,t₁) and (x₂,t₂) in epi(f): f(x₁)≤t₁, f(x₂)≤t₂, and by convexity of epi(f): f(\\lambdax₁+(1−\\lambda)x₂) ≤ \\lambdat₁+(1−\\lambda)t₂.",
       hints: [
         "epi(f) = region above the graph. Convex epigraph = the 'bowl' above a convex function.",
         "This definition extends naturally to functions on infinite-dimensional spaces and allows f(x)=+∞ (convex indicator functions).",
@@ -2552,18 +2552,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp44-6",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Mirror descent generalizes gradient descent by replacing the Euclidean proximity measure with a Bregman divergence D_φ(x, y) = φ(x) − φ(y) − ∇φ(y)ᵀ(x−y). For online learning with the simplex constraint and φ(x) = Σ xᵢ log xᵢ (negative entropy), mirror descent becomes:",
+      question: "Mirror descent generalizes gradient descent by replacing the Euclidean proximity measure with a Bregman divergence D_\\phi(x, y) = \\phi(x) − \\phi(y) − \\nabla\\phi(y)ᵀ(x−y). For online learning with the simplex constraint and \\phi(x) = \\Sigma xᵢ log xᵢ (negative entropy), mirror descent becomes:",
       options: [
         "Gradient descent with L1 projection onto the simplex",
-        "The multiplicative weights (Hedge) algorithm: xₜ₊₁ ∝ xₜ · exp(−η∇fₜ(xₜ))",
+        "The multiplicative weights (Hedge) algorithm: xₜ₊₁ \\propto xₜ · exp(−\\eta\\nablafₜ(xₜ))",
         "Projected gradient descent with Euclidean projection onto the simplex",
         "Stochastic gradient descent with batch normalization",
       ],
       correctAnswer: 1,
-      explanation: "With mirror map φ(x)=Σxᵢlogxᵢ (KL-divergence-based Bregman), the mirror descent update is: xₜ₊₁ ∝ xₜᵢ exp(−ηgₜᵢ) where gₜ=∇fₜ(xₜ). This is the multiplicative weights / Hedge algorithm, achieving regret O(√(T log K)) for K experts — optimal for the simplex. Compared to projected gradient descent, mirror descent adapts the geometry to the constraint set.",
+      explanation: "With mirror map \\phi(x)=\\Sigmaxᵢlogxᵢ (KL-divergence-based Bregman), the mirror descent update is: xₜ₊₁ \\propto xₜᵢ exp(−\\etagₜᵢ) where gₜ=\\nablafₜ(xₜ). This is the multiplicative weights / Hedge algorithm, achieving regret O(√(T log K)) for K experts — optimal for the simplex. Compared to projected gradient descent, mirror descent adapts the geometry to the constraint set.",
       hints: [
-        "Mirror map φ = negative entropy → Bregman divergence = KL(x||y). The update maintains the simplex constraint naturally.",
-        "Multiplicative weights: multiply each weight by exp(−η × gradient). Exponentials automatically keep weights non-negative.",
+        "Mirror map \\phi = negative entropy → Bregman divergence = KL(x||y). The update maintains the simplex constraint naturally.",
+        "Multiplicative weights: multiply each weight by exp(−\\eta × gradient). Exponentials automatically keep weights non-negative.",
       ],
     },
   ],
@@ -2573,18 +2573,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp45-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "The Beta distribution Beta(α,β) is a conjugate prior for the Bernoulli likelihood. After observing k successes in n trials, the posterior is:",
+      question: "The Beta distribution Beta(\\alpha,\\beta) is a conjugate prior for the Bernoulli likelihood. After observing k successes in n trials, the posterior is:",
       options: [
-        "Beta(α+n, β+k)",
-        "Beta(α+k, β+n−k)",
-        "Normal(α/(α+β), αβ/(α+β)²(α+β+1))",
-        "Dirichlet(α+k, β+n−k)",
+        "Beta(\\alpha+n, \\beta+k)",
+        "Beta(\\alpha+k, \\beta+n−k)",
+        "Normal(\\alpha/(\\alpha+\\beta), \\alpha\\beta/(\\alpha+\\beta)²(\\alpha+\\beta+1))",
+        "Dirichlet(\\alpha+k, \\beta+n−k)",
       ],
       correctAnswer: 1,
-      explanation: "Likelihood: P(k|θ) ∝ θᵏ(1−θ)^{n−k}. Prior: Beta(α,β) ∝ θ^{α−1}(1−θ)^{β−1}. Posterior: θ^{α+k−1}(1−θ)^{β+n−k−1} = Beta(α+k, β+n−k). The counts simply add to the prior pseudocounts. Prior mean E[θ] = α/(α+β); posterior mean = (α+k)/(α+β+n). With large n, posterior approaches MLE k/n.",
+      explanation: "Likelihood: P(k|\\theta) \\propto \\thetaᵏ(1−\\theta)^{n−k}. Prior: Beta(\\alpha,\\beta) \\propto \\theta^{\\alpha−1}(1−\\theta)^{\\beta−1}. Posterior: \\theta^{\\alpha+k−1}(1−\\theta)^{\\beta+n−k−1} = Beta(\\alpha+k, \\beta+n−k). The counts simply add to the prior pseudocounts. Prior mean E[\\theta] = \\alpha/(\\alpha+\\beta); posterior mean = (\\alpha+k)/(\\alpha+\\beta+n). With large n, posterior approaches MLE k/n.",
       hints: [
-        "Beta conjugate update: just add observed successes to α and failures to β.",
-        "Effective prior sample size = α+β. Large α+β → posterior less affected by data (strong prior).",
+        "Beta conjugate update: just add observed successes to \\alpha and failures to \\beta.",
+        "Effective prior sample size = \\alpha+\\beta. Large \\alpha+\\beta → posterior less affected by data (strong prior).",
       ],
     },
     {
@@ -2593,9 +2593,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "medium",
       question: "The moment generating function (MGF) M_X(t) = E[e^{tX}] of a random variable X uniquely determines its distribution (when it exists in a neighborhood of t=0), and the k-th moment E[Xᵏ] can be recovered as M_X^{(k)}(0) (the k-th derivative at t=0).",
       correctAnswer: "True",
-      explanation: "MGF uniqueness theorem: if M_X(t) exists for |t|<δ, it uniquely determines the distribution of X. Derivatives: M_X'(0) = E[X], M_X''(0) = E[X²], M_X^{(k)}(0) = E[Xᵏ]. Example: X ~ N(μ,σ²): M_X(t) = exp(μt + σ²t²/2). MGFs are useful for proving CLT and computing moments without integration.",
+      explanation: "MGF uniqueness theorem: if M_X(t) exists for |t|<\\delta, it uniquely determines the distribution of X. Derivatives: M_X'(0) = E[X], M_X''(0) = E[X²], M_X^{(k)}(0) = E[Xᵏ]. Example: X ~ N(\\mu,\\sigma²): M_X(t) = exp(\\mut + \\sigma²t²/2). MGFs are useful for proving CLT and computing moments without integration.",
       hints: [
-        "Taylor expand M_X(t) = Σₖ (E[Xᵏ]/k!) tᵏ — coefficients are moments divided by k!.",
+        "Taylor expand M_X(t) = \\Sigmaₖ (E[Xᵏ]/k!) tᵏ — coefficients are moments divided by k!.",
         "MGF of sum of independents = product of MGFs: M_{X+Y}(t) = M_X(t)·M_Y(t).",
       ],
     },
@@ -2603,18 +2603,18 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp45-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The Dirichlet distribution Dir(α₁,...,αₖ) is a conjugate prior for the Categorical/Multinomial likelihood. Its mean and mode are:",
+      question: "The Dirichlet distribution Dir(\\alpha₁,...,\\alphaₖ) is a conjugate prior for the Categorical/Multinomial likelihood. Its mean and mode are:",
       options: [
-        "Mean = αᵢ/Σαⱼ; Mode = (αᵢ−1)/(Σαⱼ−K) for αᵢ > 1",
-        "Mean = Σαⱼ/K; Mode = K/Σαⱼ",
-        "Mean = αᵢ; Mode = αᵢ/max(αⱼ)",
-        "Mean = 1/K (uniform regardless of α); Mode = argmax αᵢ",
+        "Mean = \\alphaᵢ/\\Sigma\\alphaⱼ; Mode = (\\alphaᵢ−1)/(\\Sigma\\alphaⱼ−K) for \\alphaᵢ > 1",
+        "Mean = \\Sigma\\alphaⱼ/K; Mode = K/\\Sigma\\alphaⱼ",
+        "Mean = \\alphaᵢ; Mode = \\alphaᵢ/max(\\alphaⱼ)",
+        "Mean = 1/K (uniform regardless of \\alpha); Mode = argmax \\alphaᵢ",
       ],
       correctAnswer: 0,
-      explanation: "Dir(α): Mean_i = αᵢ/Σαⱼ (normalized counts). Mode_i = (αᵢ−1)/(Σαⱼ−K) for αᵢ>1 (valid when all αᵢ>1). With prior Dir(α₁,...,αK) and observed counts (n₁,...,nK): posterior is Dir(α₁+n₁,...,αK+nK). LDA uses Dir(α) prior on topic mixtures and Dir(β) prior on word distributions.",
+      explanation: "Dir(\\alpha): Mean_i = \\alphaᵢ/\\Sigma\\alphaⱼ (normalized counts). Mode_i = (\\alphaᵢ−1)/(\\Sigma\\alphaⱼ−K) for \\alphaᵢ>1 (valid when all \\alphaᵢ>1). With prior Dir(\\alpha₁,...,\\alphaK) and observed counts (n₁,...,nK): posterior is Dir(\\alpha₁+n₁,...,\\alphaK+nK). LDA uses Dir(\\alpha) prior on topic mixtures and Dir(\\beta) prior on word distributions.",
       hints: [
-        "Dirichlet mean: normalize the α parameters. Posterior: simply add observed counts to α.",
-        "αᵢ < 1: sparse mode (pushes probability mass to corners of simplex). αᵢ > 1: smooth distribution.",
+        "Dirichlet mean: normalize the \\alpha parameters. Posterior: simply add observed counts to \\alpha.",
+        "\\alphaᵢ < 1: sparse mode (pushes probability mass to corners of simplex). \\alphaᵢ > 1: smooth distribution.",
       ],
     },
     {
@@ -2652,10 +2652,10 @@ const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
         "The top-k columns of X with the largest variance",
       ],
       correctAnswer: 1,
-      explanation: "PCA via SVD: X = UΣVᵀ. The principal directions are columns of V (right singular vectors). The top-k right singular vectors v₁,...,vₖ ∈ ℝᵈ are the directions of maximum variance. They are also the eigenvectors of the covariance matrix C = XᵀX/n with eigenvalues σᵢ²/n. The projected data is Z = XVₖ ∈ ℝⁿˣᵏ (the top-k left singular vectors scaled by singular values).",
+      explanation: "PCA via SVD: X = U\\SigmaVᵀ. The principal directions are columns of V (right singular vectors). The top-k right singular vectors v₁,...,vₖ ∈ \\mathbb{R}ᵈ are the directions of maximum variance. They are also the eigenvectors of the covariance matrix C = XᵀX/n with eigenvalues \\sigmaᵢ²/n. The projected data is Z = XVₖ ∈ \\mathbb{R}ⁿˣᵏ (the top-k left singular vectors scaled by singular values).",
       hints: [
-        "PCA = SVD on centred data. Principal directions = right singular vectors V. Scores = XV = UΣ.",
-        "Eigenvalues of XᵀX/n = σᵢ²/n. Variance explained by component i = σᵢ²/Σσⱼ².",
+        "PCA = SVD on centred data. Principal directions = right singular vectors V. Scores = XV = U\\Sigma.",
+        "Eigenvalues of XᵀX/n = \\sigmaᵢ²/n. Variance explained by component i = \\sigmaᵢ²/\\Sigma\\sigmaⱼ².",
       ],
     },
     {
@@ -2664,7 +2664,7 @@ const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
       difficulty: "hard",
       question: "In a Gaussian mixture model (GMM) fit with the EM algorithm, the E-step computes the posterior probability that each data point belongs to each component, and the M-step updates the component parameters (means, covariances, weights) to maximize the expected complete-data log-likelihood.",
       correctAnswer: "True",
-      explanation: "EM for GMM: E-step: rᵢₖ = P(zᵢ=k|xᵢ, θ) = πₖN(xᵢ|μₖ,Σₖ)/Σⱼπⱼ N(xᵢ|μⱼ,Σⱼ) (soft cluster assignments). M-step: πₖ = (1/n)Σᵢrᵢₖ, μₖ = Σᵢrᵢₖxᵢ/Σᵢrᵢₖ, Σₖ = Σᵢrᵢₖ(xᵢ−μₖ)(xᵢ−μₖ)ᵀ/Σᵢrᵢₖ. EM monotonically increases the marginal log-likelihood log p(X|θ) and converges to a local maximum.",
+      explanation: "EM for GMM: E-step: rᵢₖ = P(zᵢ=k|xᵢ, \\theta) = \\piₖN(xᵢ|\\muₖ,\\Sigmaₖ)/\\Sigmaⱼ\\piⱼ N(xᵢ|\\muⱼ,\\Sigmaⱼ) (soft cluster assignments). M-step: \\piₖ = (1/n)\\Sigmaᵢrᵢₖ, \\muₖ = \\Sigmaᵢrᵢₖxᵢ/\\Sigmaᵢrᵢₖ, \\Sigmaₖ = \\Sigmaᵢrᵢₖ(xᵢ−\\muₖ)(xᵢ−\\muₖ)ᵀ/\\Sigmaᵢrᵢₖ. EM monotonically increases the marginal log-likelihood log p(X|\\theta) and converges to a local maximum.",
       hints: [
         "E-step: soft assignment rᵢₖ = responsibility of component k for point i. M-step: update parameters using weighted statistics.",
         "EM does not guarantee global optimum — multiple random restarts are used to find a good local maximum.",

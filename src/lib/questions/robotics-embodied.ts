@@ -50,7 +50,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "After loop closure detection adds a new edge to the pose graph, the back-end solves a nonlinear least-squares problem: minimize Σ eᵢᵀ Ωᵢ eᵢ over all poses, where eᵢ is the residual between the constraint and the current pose estimate and Ωᵢ is the information matrix. Gauss-Newton (or Levenberg-Marquardt) iteratively linearizes and solves this system; g2o and GTSAM implement these solvers efficiently on sparse systems.",
+        "After loop closure detection adds a new edge to the pose graph, the back-end solves a nonlinear least-squares problem: minimize \\Sigma eᵢᵀ \\Omegaᵢ eᵢ over all poses, where eᵢ is the residual between the constraint and the current pose estimate and \\Omegaᵢ is the information matrix. Gauss-Newton (or Levenberg-Marquardt) iteratively linearizes and solves this system; g2o and GTSAM implement these solvers efficiently on sparse systems.",
       hints: [
         "Loop closure turns an open-chain trajectory into a cycle, introducing a constraint that requires globally redistributing the accumulated error.",
         "The optimization objective is a sum of squared Mahalanobis distances over all edges — a classic nonlinear least-squares form.",
@@ -321,7 +321,7 @@ const questions: Record<string, Question[]> = {
       id: "q-rob-kp6-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: 'In grasp quality metrics, the "epsilon" quality (ε) measures:',
+      question: 'In grasp quality metrics, the "epsilon" quality (\\epsilon) measures:',
       options: [
         "The radius of the largest ball that fits inside the grasp wrench space, indicating robustness to external wrenches",
         "The minimum distance between gripper fingers and the object surface",
@@ -613,7 +613,7 @@ const questions: Record<string, Question[]> = {
         "DAgger (Dataset Aggregation) addresses the compounding error problem of behavior cloning by iteratively collecting new demonstrations at states the learned policy actually visits.",
       correctAnswer: "True",
       explanation:
-        "DAgger\'s algorithm: (1) Train initial policy π₁ on expert dataset D. (2) Roll out πᵢ to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
+        "DAgger\'s algorithm: (1) Train initial policy \\pi₁ on expert dataset D. (2) Roll out \\piᵢ to collect states visited by the current policy. (3) Query the expert oracle for correct actions at those visited states. (4) Aggregate new labeled data into D. (5) Retrain policy on the full aggregated dataset D. Repeat steps 2–5. By training on states the policy actually visits, DAgger closes the distribution shift gap that causes compounding errors in standard behavior cloning.",
       hints: [
         "Behavior cloning suffers from distribution shift: the policy visits states not in the expert demo and has no guidance there.",
         "DAgger iteratively labels the states the current policy visits with expert actions — the dataset grows to cover the policy\'s actual distribution.",
@@ -653,7 +653,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Behavior cloning learns a policy π(a|s) from expert (s, a) pairs. At test time, any action error causes the robot to enter a slightly different state than the expert would; since this state is outside the training distribution, the policy may make a larger error, leading to an even more out-of-distribution state — errors compound quadratically with horizon length.",
+        "Behavior cloning learns a policy \\pi(a|s) from expert (s, a) pairs. At test time, any action error causes the robot to enter a slightly different state than the expert would; since this state is outside the training distribution, the policy may make a larger error, leading to an even more out-of-distribution state — errors compound quadratically with horizon length.",
       hints: [
         "Think about walking a path: one small deviation leads you away from the expert\'s path, and the policy has never seen where you are now.",
         "The problem grows with horizon length because each step\'s error compounds on top of all previous errors.",
@@ -1713,13 +1713,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Grasp quality metrics such as the epsilon (ε) metric measure the radius of the largest wrench ball inscribed in the grasp wrench space, capturing how well a grasp can resist arbitrary external perturbations.",
+        "Grasp quality metrics such as the epsilon (\\epsilon) metric measure the radius of the largest wrench ball inscribed in the grasp wrench space, capturing how well a grasp can resist arbitrary external perturbations.",
       correctAnswer: "True",
       explanation:
-        "The ε-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space — a larger ε means the grasp resists stronger perturbations from any direction.",
+        "The \\epsilon-metric (from Ferrari & Canny) measures the worst-case grasp stability: it is the radius of the largest 6D ball centered at the origin that fits inside the convex hull of unit friction cone extremes in wrench space — a larger \\epsilon means the grasp resists stronger perturbations from any direction.",
       hints: [
-        "A grasp with ε > 0 achieves force closure — it can resist wrenches in all directions.",
-        "The ε-metric is conservative: it measures the minimum over all wrench directions, capturing the worst-case direction.",
+        "A grasp with \\epsilon > 0 achieves force closure — it can resist wrenches in all directions.",
+        "The \\epsilon-metric is conservative: it measures the minimum over all wrench directions, capturing the worst-case direction.",
       ],
     },
     {
@@ -2217,7 +2217,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "In SEAs, the force at the output equals spring stiffness times spring deflection (measured by encoders), providing accurate, stable force sensing without expensive load cells; the spring also absorbs impact shocks and provides passive compliance during unintended contacts, making SEAs popular for collaborative robots (e.g., Baxter, PR2).",
       hints: [
-        "Hooke's law: F = k * Δx — measuring spring deflection gives a direct force measurement.",
+        "Hooke's law: F = k * \\Deltax — measuring spring deflection gives a direct force measurement.",
         "Passive compliance from the spring means the robot naturally yields to unexpected forces, improving safety.",
       ],
     },

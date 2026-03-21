@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
         "GloVe trains on individual context-window co-occurrences like Word2Vec, processing one (word, context) pair at a time.",
       correctAnswer: "False",
       explanation:
-        'GloVe (Global Vectors, Pennington et al. 2014) builds a global word–word co-occurrence matrix X over the entire corpus first, then factorises it using a weighted least-squares objective: minimise Σ f(X_ij)(w_i·w̃_j + b_i + b̃_j − log X_ij)². The word "Global" in the name signals that it uses corpus-wide aggregate statistics rather than local window samples. This global view makes GloVe more data-efficient than Skip-Gram\'s stochastic sampling.',
+        'GloVe (Global Vectors, Pennington et al. 2014) builds a global word–word co-occurrence matrix X over the entire corpus first, then factorises it using a weighted least-squares objective: minimise \\Sigma f(X_ij)(w_i·w̃_j + b_i + b̃_j − log X_ij)². The word "Global" in the name signals that it uses corpus-wide aggregate statistics rather than local window samples. This global view makes GloVe more data-efficient than Skip-Gram\'s stochastic sampling.',
       hints: [
         'The name GloVe contains the word "Global" — what does that suggest about its use of the corpus?',
         "Word2Vec samples individual (word, context) training pairs. GloVe first builds a big count matrix and trains on those counts directly.",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "By the chain rule and the Markov (bigram) approximation, P(sentence) ≈ Π P(wi|context). Here: 0.25 × 0.33 × 0.0065 × 0.52 × 0.68 ≈ 0.000019. (The exact numbers from Jurafsky & Martin Fig 3.2 give ~0.000019–0.000031 depending on rounding.) The key insight is that sentence probability is a product of conditional bigram probabilities, and the product of many small fractions rapidly becomes very small — hence the use of log space in practice.",
+        "By the chain rule and the Markov (bigram) approximation, P(sentence) ≈ \\Pi P(wi|context). Here: 0.25 × 0.33 × 0.0065 × 0.52 × 0.68 ≈ 0.000019. (The exact numbers from Jurafsky & Martin Fig 3.2 give ~0.000019–0.000031 depending on rounding.) The key insight is that sentence probability is a product of conditional bigram probabilities, and the product of many small fractions rapidly becomes very small — hence the use of log space in practice.",
       hints: [
         "The chain rule: P(w1...wn) = P(w1)P(w2|w1)...P(wn|w_{n-1}) for a bigram model.",
         "Multiply: 0.25 × 0.33 × 0.0065 × 0.52 × 0.68. Note that even a very probable 5-word sentence has probability < 0.001.",
@@ -168,7 +168,7 @@ const questions: Record<string, Question[]> = {
         "In n-gram language modelling, storing and combining probabilities in log space (log-probabilities) is standard practice because multiplying many probabilities together causes numerical underflow.",
       correctAnswer: "True",
       explanation:
-        "Probabilities are ≤ 1, so multiplying N of them produces a number that shrinks exponentially. For a 100-word sentence with average per-word probability 0.01, the sentence probability is 0.01^100 = 10^-200, far below the smallest float64 value (~10^-308 near the limit). Working in log space converts products to sums: log P(w1...wN) = Σ log P(wi|context), which stays in a manageable numeric range. The exp is taken only at the end if raw probabilities are needed.",
+        "Probabilities are ≤ 1, so multiplying N of them produces a number that shrinks exponentially. For a 100-word sentence with average per-word probability 0.01, the sentence probability is 0.01^100 = 10^-200, far below the smallest float64 value (~10^-308 near the limit). Working in log space converts products to sums: log P(w1...wN) = \\Sigma log P(wi|context), which stays in a manageable numeric range. The exp is taken only at the end if raw probabilities are needed.",
       hints: [
         "float64 underflows below ~10^-308. A 100-word sentence with P≈0.001 per word has sentence probability 0.001^100 = 10^-300.",
         "log(a × b) = log(a) + log(b). Addition never underflows the way multiplication does.",
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'An autoregressive LM factorises P(w_1...w_n) = Π P(w_t | w_1...w_{t-1}) using the chain rule. In GPT, this is implemented with a causal (lower-triangular) attention mask that zeroes out all attention weights from position t to positions t+1, t+2, ..., n — preventing the model from "seeing the future." At generation time, the model samples one token, appends it to the context, and repeats.',
+        'An autoregressive LM factorises P(w_1...w_n) = \\Pi P(w_t | w_1...w_{t-1}) using the chain rule. In GPT, this is implemented with a causal (lower-triangular) attention mask that zeroes out all attention weights from position t to positions t+1, t+2, ..., n — preventing the model from "seeing the future." At generation time, the model samples one token, appends it to the context, and repeats.',
       hints: [
         "Chain rule: P(A,B,C) = P(A)P(B|A)P(C|A,B). Autoregressive = applying this one step at a time.",
         "The causal mask is the architectural mechanism. Draw an attention matrix for 4 tokens — which entries are zeroed?",
@@ -943,16 +943,16 @@ const questions: Record<string, Question[]> = {
         "LDA (Latent Dirichlet Allocation, Blei et al. 2003) is a generative model. In the generative story, how is each word in a document produced?",
       options: [
         "Each word is sampled from the document\'s most probable topic",
-        "A topic z is sampled from the document\'s topic distribution θ_d, then a word is sampled from that topic\'s word distribution φ_z",
+        "A topic z is sampled from the document\'s topic distribution \\theta_d, then a word is sampled from that topic\'s word distribution \\phi_z",
         "Words are sorted by TF-IDF and assigned to topics in order of frequency",
         "Each document is first clustered into one topic, then all words are sampled from that single topic\'s distribution",
       ],
       correctAnswer: 1,
       explanation:
-        "LDA\'s generative process: (1) Draw θ_d ~ Dirichlet(α) — the document\'s topic mixture. (2) For each word position: draw topic z ~ Categorical(θ_d), then draw word w ~ Categorical(φ_z). This means different words in the same document can be generated from different topics, naturally modelling a news article that is 60% politics, 40% economics. Inference (Gibbs sampling or variational EM) inverts this generative model to recover θ_d and φ_z from observed words.",
+        "LDA\'s generative process: (1) Draw \\theta_d ~ Dirichlet(\\alpha) — the document\'s topic mixture. (2) For each word position: draw topic z ~ Categorical(\\theta_d), then draw word w ~ Categorical(\\phi_z). This means different words in the same document can be generated from different topics, naturally modelling a news article that is 60% politics, 40% economics. Inference (Gibbs sampling or variational EM) inverts this generative model to recover \\theta_d and \\phi_z from observed words.",
       hints: [
         'Each word independently samples a topic from the document\'s mixture, then the word is drawn from that topic. A 50% politics document samples "election" from the politics topic and "GDP" from the economics topic.',
-        "The Dirichlet prior on θ_d encourages sparse mixtures — most documents are dominated by 1–3 topics out of K.",
+        "The Dirichlet prior on \\theta_d encourages sparse mixtures — most documents are dominated by 1–3 topics out of K.",
       ],
     },
     {
@@ -1079,16 +1079,16 @@ const questions: Record<string, Question[]> = {
         'XLM-R improves over mBERT by training on 2.5 TB of CommonCrawl data versus mBERT\'s Wikipedia. What is the "curse of multilinguality" and how does XLM-R address it?',
       options: [
         "The curse of multilinguality refers to overfitting to high-resource languages; XLM-R uses language-specific dropout to equalise gradients",
-        "Adding more languages to a fixed-capacity model dilutes per-language capacity; XLM-R mitigates this by using a larger model (XLM-R Large: 560M params) and α-sampled data that upweights low-resource languages",
+        "Adding more languages to a fixed-capacity model dilutes per-language capacity; XLM-R mitigates this by using a larger model (XLM-R Large: 560M params) and \\alpha-sampled data that upweights low-resource languages",
         "The curse refers to the difficulty of learning word order across different language families; XLM-R uses relative positional encodings",
         "The curse is that multilingual models cannot distinguish code-switched text; XLM-R adds language identity tokens to each sentence",
       ],
       correctAnswer: 1,
       explanation:
-        "The curse of multilinguality (Conneau et al., 2020): with a fixed model size, adding more languages reduces capacity per language, hurting high-resource language performance. XLM-R addresses this with: (1) a larger model (125M or 560M parameters), (2) α-sampling that exponentially upweights low-resource languages (sampling probability ∝ count^α, α < 1), and (3) much more data. Despite the curse, XLM-R outperforms per-language BERT models for most low-resource languages because the multilingual representations generalise better.",
+        "The curse of multilinguality (Conneau et al., 2020): with a fixed model size, adding more languages reduces capacity per language, hurting high-resource language performance. XLM-R addresses this with: (1) a larger model (125M or 560M parameters), (2) \\alpha-sampling that exponentially upweights low-resource languages (sampling probability \\propto count^\\alpha, \\alpha < 1), and (3) much more data. Despite the curse, XLM-R outperforms per-language BERT models for most low-resource languages because the multilingual representations generalise better.",
       hints: [
         "Imagine sharing 125M parameters among 100 languages vs. 1 language. Each language gets ~1/100 the capacity. How does a bigger model help?",
-        "α-sampling: low-resource languages have few documents but get upsampled. This balances the distribution so the model does not just optimise for English.",
+        "\\alpha-sampling: low-resource languages have few documents but get upsampled. This balances the distribution so the model does not just optimise for English.",
       ],
     },
     {
@@ -1717,7 +1717,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RLHF requires three stages: (1) train reward model on preference data, (2) use RM scores as rewards in PPO, (3) update LLM. PPO is complex (requires value network, advantage estimation, clipping) and computationally expensive. DPO (Rafailov et al., 2023) derives a closed-form loss that directly maximises the log-ratio of preferred to rejected responses relative to the reference model — no RM, no RL. The loss is: L_DPO = -log σ(β·log[π(y_w|x)/π_ref(y_w|x)] - β·log[π(y_l|x)/π_ref(y_l|x)]). Empirically, DPO matches or exceeds RLHF quality.",
+        "RLHF requires three stages: (1) train reward model on preference data, (2) use RM scores as rewards in PPO, (3) update LLM. PPO is complex (requires value network, advantage estimation, clipping) and computationally expensive. DPO (Rafailov et al., 2023) derives a closed-form loss that directly maximises the log-ratio of preferred to rejected responses relative to the reference model — no RM, no RL. The loss is: L_DPO = -log \\sigma(\\beta·log[\\pi(y_w|x)/\\pi_ref(y_w|x)] - \\beta·log[\\pi(y_l|x)/\\pi_ref(y_l|x)]). Empirically, DPO matches or exceeds RLHF quality.",
       hints: [
         "RLHF pipeline: data → reward model → RL fine-tuning (3 steps). DPO: data → one fine-tuning step. What is eliminated?",
         "DPO\'s key insight: the optimal RLHF policy can be expressed analytically, so we can directly optimise toward it without the RL detour.",
@@ -1929,7 +1929,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard BERT fine-tuning (Devlin et al., 2019) adds a single linear layer W∈ℝ^{d×C} on top of the [CLS] token representation (the aggregate sequence representation) and fine-tunes all parameters end-to-end with cross-entropy loss. The [CLS] token accumulates a global sentence representation through the self-attention layers. Typical hyper-parameters: 2–5 epochs, learning rate 2e-5 to 5e-5, batch size 16–32.",
+        "Standard BERT fine-tuning (Devlin et al., 2019) adds a single linear layer W∈\\mathbb{R}^{d×C} on top of the [CLS] token representation (the aggregate sequence representation) and fine-tunes all parameters end-to-end with cross-entropy loss. The [CLS] token accumulates a global sentence representation through the self-attention layers. Typical hyper-parameters: 2–5 epochs, learning rate 2e-5 to 5e-5, batch size 16–32.",
       hints: [
         "BERT's [CLS] token was designed to aggregate sequence-level information — it is the natural hook for classification.",
         "Fine-tuning end-to-end updates the pre-trained weights slightly to adapt the representation to the target task.",

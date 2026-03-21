@@ -101,7 +101,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In a deep network using sigmoid activations, gradients are multiplied through each layer during backpropagation. If sigmoid\'s derivative satisfies σ'(x) ≤ 0.25 for all x, and a network has 10 sigmoid layers, then the gradient magnitude at the earliest layer is at most:",
+        "In a deep network using sigmoid activations, gradients are multiplied through each layer during backpropagation. If sigmoid\'s derivative satisfies \\sigma'(x) ≤ 0.25 for all x, and a network has 10 sigmoid layers, then the gradient magnitude at the earliest layer is at most:",
       options: [
         "$0.25 \\times 10 = 2.5$",
         "$0.25^{10} \\approx 9.5 \\times 10^{-7}$, shrinking exponentially with depth",
@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "During backpropagation, the gradient signal is multiplied through each layer:\n\n\\[\n\\left\\| \\frac{\\partial L}{\\partial h^{(\\ell)}} \\right\\| \\leq \\left\\| \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\right\\| \\cdot \\left\\| \\frac{\\partial L}{\\partial h^{(\\ell+1)}} \\right\\|.\n\\]\n\nWith σ'(x) = σ(x)(1 − σ(x)) and σ'(x) ≤ 0.25 for all x, each layer multiplies the gradient by at most 0.25. After 10 layers:\n\n\\[\n0.25^{10} \\approx 9.5 \\times 10^{-7}.\n\\]\n\nEarly layers receive a gradient signal roughly 10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs and 0 otherwise, avoiding this multiplicative shrinkage entirely.",
+        "During backpropagation, the gradient signal is multiplied through each layer:\n\n\\[\n\\left\\| \\frac{\\partial L}{\\partial h^{(\\ell)}} \\right\\| \\leq \\left\\| \\frac{\\partial h^{(\\ell+1)}}{\\partial h^{(\\ell)}} \\right\\| \\cdot \\left\\| \\frac{\\partial L}{\\partial h^{(\\ell+1)}} \\right\\|.\n\\]\n\nWith \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) and \\sigma'(x) ≤ 0.25 for all x, each layer multiplies the gradient by at most 0.25. After 10 layers:\n\n\\[\n0.25^{10} \\approx 9.5 \\times 10^{-7}.\n\\]\n\nEarly layers receive a gradient signal roughly 10⁻⁶ times smaller than the final layer — effectively zero. ReLU\'s derivative is exactly 1 for positive inputs and 0 otherwise, avoiding this multiplicative shrinkage entirely.",
       hints: [
         "Each layer applies a multiplicative factor of at most 0.25 to the gradient. After 10 layers: 0.25¹⁰ ≈ 10⁻⁶ — the gradient is essentially zero.",
         "ReLU\'s gradient is either 0 or 1 for active neurons — no multiplicative shrinkage, so gradients flow unchanged through the network.",
@@ -144,7 +144,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "GELU (Gaussian Error Linear Unit), defined as x·Φ(x) where Φ is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
+        "GELU (Gaussian Error Linear Unit), defined as x·\\Phi(x) where \\Phi is the standard Gaussian CDF, has become the standard activation in transformer architectures like BERT and GPT because it smoothly approximates ReLU while allowing small negative outputs.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
@@ -159,18 +159,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Sigmoid\'s derivative is given by σ'(x) = σ(x)(1 − σ(x)). At x = 5, σ(5) ≈ 0.993. What is the gradient σ'(5), and why does this cause problems in deep networks?",
+        "Sigmoid\'s derivative is given by \\sigma'(x) = \\sigma(x)(1 − \\sigma(x)). At x = 5, \\sigma(5) ≈ 0.993. What is the gradient \\sigma'(5), and why does this cause problems in deep networks?",
       options: [
-        "σ'(5) ≈ 0.007; after 10 saturated sigmoid layers the gradient is ≈ 7×10⁻²⁰ — essentially zero at early layers, causing vanishing gradients",
-        "σ'(5) ≈ 0.5; this is the maximum possible sigmoid gradient and causes exploding gradients",
-        "σ'(5) ≈ 0.993; this large gradient causes exploding gradients in deep networks",
-        "σ'(5) = 1; sigmoid has unit gradient for all positive values",
+        "\\sigma'(5) ≈ 0.007; after 10 saturated sigmoid layers the gradient is ≈ 7×10⁻²⁰ — essentially zero at early layers, causing vanishing gradients",
+        "\\sigma'(5) ≈ 0.5; this is the maximum possible sigmoid gradient and causes exploding gradients",
+        "\\sigma'(5) ≈ 0.993; this large gradient causes exploding gradients in deep networks",
+        "\\sigma'(5) = 1; sigmoid has unit gradient for all positive values",
       ],
       correctAnswer: 0,
       explanation:
-        "At x = 5, the sigmoid output is σ(5) ≈ 0.993 (saturated near 1). The gradient is:\n\n\\[\n\\sigma'(5) = \\sigma(5)\\,(1 - \\sigma(5)) \\approx 0.993 \\times 0.007 \\approx 0.007.\n\\]\n\nThis is already very small — the neuron is in saturation. During backpropagation, the gradient signal is multiplied through each layer. After 10 saturated sigmoid layers:\n\n\\[\n\\bigl\\| \\frac{\\partial L}{\\partial h^{(1)}} \\bigr\\| \\leq (0.007)^{10} \\approx 2.8 \\times 10^{-21}.\n\\]\n\nThe gradient vanishes exponentially with depth. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x = 0) and is already small for |x| > 2. In deep networks, early layers receive effectively zero gradient — they cannot learn.",
+        "At x = 5, the sigmoid output is \\sigma(5) ≈ 0.993 (saturated near 1). The gradient is:\n\n\\[\n\\sigma'(5) = \\sigma(5)\\,(1 - \\sigma(5)) \\approx 0.993 \\times 0.007 \\approx 0.007.\n\\]\n\nThis is already very small — the neuron is in saturation. During backpropagation, the gradient signal is multiplied through each layer. After 10 saturated sigmoid layers:\n\n\\[\n\\bigl\\| \\frac{\\partial L}{\\partial h^{(1)}} \\bigr\\| \\leq (0.007)^{10} \\approx 2.8 \\times 10^{-21}.\n\\]\n\nThe gradient vanishes exponentially with depth. As d2l.ai §5.4.1.1 explains, sigmoid\'s derivative peaks at 0.25 (at x = 0) and is already small for |x| > 2. In deep networks, early layers receive effectively zero gradient — they cannot learn.",
       hints: [
-        "σ'(x) = σ(x)(1 − σ(x)) is maximum (0.25) only at x = 0. For |x| > 2, σ'(x) < 0.1. At x = 5, σ'(5) ≈ 0.007 — the neuron is saturated.",
+        "\\sigma'(x) = \\sigma(x)(1 − \\sigma(x)) is maximum (0.25) only at x = 0. For |x| > 2, \\sigma'(x) < 0.1. At x = 5, \\sigma'(5) ≈ 0.007 — the neuron is saturated.",
         "Even at the theoretical peak (0.25 per layer), after 10 layers: 0.25¹⁰ ≈ 10⁻⁶. With saturated sigmoid (0.007 per layer), it drops to ~10⁻²¹ — effectively zero.",
       ],
     },
@@ -202,14 +202,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Xavier initialization (Glorot & Bengio, 2010) sets weight variance to σ² = 2/(n_in + n_out). This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
+        "Xavier initialization (Glorot & Bengio, 2010) sets weight variance to \\sigma² = 2/(n_in + n_out). This formula is derived by requiring that the variance of layer outputs and gradients stays constant through forward and backward passes simultaneously.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "As derived in d2l.ai §5.4.2.2: forward propagation requires n_in·σ²=1 and backpropagation requires n_out·σ²=1. Since both cannot hold simultaneously, Xavier takes the compromise σ² = 2/(n_in + n_out). This keeps signal variance stable in both directions, preventing vanishing/exploding activations.",
+        "As derived in d2l.ai §5.4.2.2: forward propagation requires n_in·\\sigma²=1 and backpropagation requires n_out·\\sigma²=1. Since both cannot hold simultaneously, Xavier takes the compromise \\sigma² = 2/(n_in + n_out). This keeps signal variance stable in both directions, preventing vanishing/exploding activations.",
       hints: [
-        "The derivation: Var[output] = n_in × σ² × Var[input]. Setting this to Var[input] requires n_in·σ²=1.",
-        "Xavier is the compromise: σ = √(2/(n_in + n_out)), balancing both the forward and backward variance conditions.",
+        "The derivation: Var[output] = n_in × \\sigma² × Var[input]. Setting this to Var[input] requires n_in·\\sigma²=1.",
+        "Xavier is the compromise: \\sigma = √(2/(n_in + n_out)), balancing both the forward and backward variance conditions.",
       ],
     },
     {
@@ -226,7 +226,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ReLU kills roughly 50% of activations (all negative values become 0), halving the effective variance at each layer. He initialization compensates: instead of σ²=1/n_in (which would give halved variance after ReLU), it uses σ²=2/n_in, maintaining correct activation variance through layers with ReLU.",
+        "ReLU kills roughly 50% of activations (all negative values become 0), halving the effective variance at each layer. He initialization compensates: instead of \\sigma²=1/n_in (which would give halved variance after ReLU), it uses \\sigma²=2/n_in, maintaining correct activation variance through layers with ReLU.",
       hints: [
         "Xavier assumes activation functions preserve variance symmetrically. ReLU does not — it zeros half the values.",
         "The factor 2 exactly compensates for the 50% activation death: 2 × (1/2) = 1, maintaining unit variance.",
@@ -240,18 +240,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Batch Normalization normalizes activations by computing the mini-batch mean μ and variance σ², then applying: \\(\\hat{x} = (x - \\mu) / \\sqrt{\\sigma^2 + \\varepsilon}.\\) What do the learnable parameters γ and β do?",
+        "Batch Normalization normalizes activations by computing the mini-batch mean \\mu and variance \\sigma², then applying: \\(\\hat{x} = (x - \\mu) / \\sqrt{\\sigma^2 + \\varepsilon}.\\) What do the learnable parameters \\gamma and \\beta do?",
       options: [
-        "γ scales the learning rate; β controls the dropout rate",
-        "γ (scale) and β (shift) allow the network to undo the normalization if needed, preserving representational power",
-        "γ and β normalize the weights rather than the activations",
-        "γ sets the batch size; β sets the momentum for running statistics",
+        "\\gamma scales the learning rate; \\beta controls the dropout rate",
+        "\\gamma (scale) and \\beta (shift) allow the network to undo the normalization if needed, preserving representational power",
+        "\\gamma and \\beta normalize the weights rather than the activations",
+        "\\gamma sets the batch size; \\beta sets the momentum for running statistics",
       ],
       correctAnswer: 1,
       explanation:
-        "After normalizing to zero mean and unit variance, the learnable parameters γ and β allow the layer to output any mean and scale:\n\n\\[\ny = \\gamma \\cdot \\hat{x} + \\beta.\n\\]\n\nWithout γ and β, the normalized output is constrained to have mean 0 and variance 1. This can harm the network: for example, sigmoid near zero is approximately linear, so normalization would make the sigmoid layer nearly linear, losing its non-linearity. γ and β restore full representational flexibility — if the identity transformation is optimal, the network can learn γ = σ and β = μ to undo the normalization.",
+        "After normalizing to zero mean and unit variance, the learnable parameters \\gamma and \\beta allow the layer to output any mean and scale:\n\n\\[\ny = \\gamma \\cdot \\hat{x} + \\beta.\n\\]\n\nWithout \\gamma and \\beta, the normalized output is constrained to have mean 0 and variance 1. This can harm the network: for example, sigmoid near zero is approximately linear, so normalization would make the sigmoid layer nearly linear, losing its non-linearity. \\gamma and \\beta restore full representational flexibility — if the identity transformation is optimal, the network can learn \\gamma = \\sigma and \\beta = \\mu to undo the normalization.",
       hints: [
-        "If γ = 1 and β = 0, BN passes through the normalized activation unchanged. If γ = σ and β = μ, it completely undoes the normalization.",
+        "If \\gamma = 1 and \\beta = 0, BN passes through the normalized activation unchanged. If \\gamma = \\sigma and \\beta = \\mu, it completely undoes the normalization.",
         "The learnable parameters ensure BN can represent the identity transformation — the network can learn to bypass normalization if doing so is beneficial.",
       ],
     },
@@ -358,17 +358,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Adam maintains two moment estimates per parameter: m_t (first moment, mean of gradients) and v_t (second moment, uncentered variance of gradients). What is the effective learning rate for a parameter whose gradient is consistently g = 0.01?",
       options: [
-        "Exactly the base learning rate α, since the gradient is constant",
-        "α · m̂_t / √v̂_t ≈ α (the ratio normalizes the learning rate to a consistent magnitude regardless of gradient scale)",
-        "α × 0.01 (scaled down by gradient magnitude)",
-        "α / 0.01 (scaled up when gradient is small)",
+        "Exactly the base learning rate \\alpha, since the gradient is constant",
+        "\\alpha · m̂_t / √v̂_t ≈ \\alpha (the ratio normalizes the learning rate to a consistent magnitude regardless of gradient scale)",
+        "\\alpha × 0.01 (scaled down by gradient magnitude)",
+        "\\alpha / 0.01 (scaled up when gradient is small)",
       ],
       correctAnswer: 1,
       explanation:
-        "Adam\'s update rule is:\n\n\\[\n\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t} + \\varepsilon},\n\\]\n\nwhere \\(\\hat{m}_t\\) and \\(\\hat{v}_t\\) are bias-corrected first and second moment estimates. For a constant gradient g: \\(\\hat{m}_t = g\\) and \\(\\hat{v}_t = g^2\\) (after bias correction). The effective step size is:\n\n\\[\n\\alpha \\cdot \\frac{g}{\\sqrt{g^2}} = \\alpha \\cdot \\frac{g}{|g|} = \\alpha \\cdot \\operatorname{sgn}(g).\n\\]\n\nThe gradient magnitude cancels in the ratio \\(\\hat{m}_t / \\sqrt{\\hat{v}_t}\\). Adam\'s step size is approximately ±α in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
+        "Adam\'s update rule is:\n\n\\[\n\\theta_{t+1} = \\theta_t - \\alpha \\cdot \\frac{\\hat{m}_t}{\\sqrt{\\hat{v}_t} + \\varepsilon},\n\\]\n\nwhere \\(\\hat{m}_t\\) and \\(\\hat{v}_t\\) are bias-corrected first and second moment estimates. For a constant gradient g: \\(\\hat{m}_t = g\\) and \\(\\hat{v}_t = g^2\\) (after bias correction). The effective step size is:\n\n\\[\n\\alpha \\cdot \\frac{g}{\\sqrt{g^2}} = \\alpha \\cdot \\frac{g}{|g|} = \\alpha \\cdot \\operatorname{sgn}(g).\n\\]\n\nThe gradient magnitude cancels in the ratio \\(\\hat{m}_t / \\sqrt{\\hat{v}_t}\\). Adam\'s step size is approximately ±\\alpha in the gradient direction, providing a consistent effective learning rate regardless of gradient scale.",
       hints: [
-        "Adam\'s update: θ ← θ − α · m̂_t / √(v̂_t + ε). With constant gradient g: m̂_t = g, v̂_t = g².",
-        "The step is α · g/√(g²) = α · g/|g| = α · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
+        "Adam\'s update: \\theta ← \\theta − \\alpha · m̂_t / √(v̂_t + \\epsilon). With constant gradient g: m̂_t = g, v̂_t = g².",
+        "The step is \\alpha · g/√(g²) = \\alpha · g/|g| = \\alpha · sign(g). The gradient magnitude g cancels in the ratio m̂_t/√v̂_t.",
       ],
     },
     {
@@ -376,14 +376,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "AdamW fixes a flaw in Adam by applying weight decay directly to the weights (θ ← θ − η·λ·θ) rather than folding L2 regularization into the gradient, because Adam\'s adaptive scaling reduces the effective weight decay disproportionately.",
+        "AdamW fixes a flaw in Adam by applying weight decay directly to the weights (\\theta ← \\theta − \\eta·\\lambda·\\theta) rather than folding L2 regularization into the gradient, because Adam\'s adaptive scaling reduces the effective weight decay disproportionately.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "In vanilla Adam with L2 regularization, the L2 gradient (λ·θ) is added to the gradient and then adaptively scaled by 1/√v_t. For parameters with large gradients, this scale is small — effectively reducing weight decay. AdamW decouples weight decay: θ ← θ − α·m̂/√v̂ − η·λ·θ, applying full weight decay regardless of gradient scale.",
+        "In vanilla Adam with L2 regularization, the L2 gradient (\\lambda·\\theta) is added to the gradient and then adaptively scaled by 1/√v_t. For parameters with large gradients, this scale is small — effectively reducing weight decay. AdamW decouples weight decay: \\theta ← \\theta − \\alpha·m̂/√v̂ − \\eta·\\lambda·\\theta, applying full weight decay regardless of gradient scale.",
       hints: [
-        "Adam with L2 loss: the regularization gradient λθ is divided by √v — effective decay = λ/√v, which varies by parameter.",
-        "AdamW: the decay step −η·λ·θ is applied directly to weights, unaffected by Adam\'s variance scaling.",
+        "Adam with L2 loss: the regularization gradient \\lambda\\theta is divided by √v — effective decay = \\lambda/√v, which varies by parameter.",
+        "AdamW: the decay step −\\eta·\\lambda·\\theta is applied directly to weights, unaffected by Adam\'s variance scaling.",
       ],
     },
     {
@@ -391,19 +391,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "d2l.ai §12.6 shows that SGD with momentum updates: v_t = β·v_{t-1} + g_t, then θ ← θ − α·v_t. For β = 0.9, how many effective past gradient steps does momentum approximately integrate?",
+        "d2l.ai §12.6 shows that SGD with momentum updates: v_t = \\beta·v_{t-1} + g_t, then \\theta ← \\theta − \\alpha·v_t. For \\beta = 0.9, how many effective past gradient steps does momentum approximately integrate?",
       options: [
         "0.9 steps (just less than 1)",
-        "≈ 10 steps (from the geometric series sum 1/(1 − β) = 1/(1 − 0.9) = 10)",
+        "≈ 10 steps (from the geometric series sum 1/(1 − \\beta) = 1/(1 − 0.9) = 10)",
         "90 steps (100 × 0.9)",
         "1 step — momentum just smooths the current gradient",
       ],
       correctAnswer: 1,
       explanation:
-        "The momentum velocity v_t = β·v_{t-1} + g_t unrolls by substitution into a geometric series:\n\n\\[\nv_t = g_t + \\beta \\cdot g_{t-1} + \\beta^2 \\cdot g_{t-2} + \\cdots + \\beta^{t-1} \\cdot g_1.\n\\]\n\nEach past gradient g_{t-k} contributes β^k to the current velocity, with weight decaying exponentially at rate β^k. The effective window is the sum of the decay weights:\n\n\\[\n\\sum_{k=0}^{\\infty} \\beta^k = \\frac{1}{1-\\beta}.\n\\]\n\nWith β = 0.9: effective window ≈ 1/(1 − 0.9) = 10 steps. A gradient from 10 steps ago carries weight β¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago carries β²⁰ ≈ 0.12.",
+        "The momentum velocity v_t = \\beta·v_{t-1} + g_t unrolls by substitution into a geometric series:\n\n\\[\nv_t = g_t + \\beta \\cdot g_{t-1} + \\beta^2 \\cdot g_{t-2} + \\cdots + \\beta^{t-1} \\cdot g_1.\n\\]\n\nEach past gradient g_{t-k} contributes \\beta^k to the current velocity, with weight decaying exponentially at rate \\beta^k. The effective window is the sum of the decay weights:\n\n\\[\n\\sum_{k=0}^{\\infty} \\beta^k = \\frac{1}{1-\\beta}.\n\\]\n\nWith \\beta = 0.9: effective window ≈ 1/(1 − 0.9) = 10 steps. A gradient from 10 steps ago carries weight \\beta¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago carries \\beta²⁰ ≈ 0.12.",
       hints: [
-        "Geometric series: 1 + β + β² + ... = 1/(1−β). For β = 0.9: 1/(1 − 0.9) = 10. So momentum integrates ~10 past gradients.",
-        "A gradient from 10 steps ago is weighted by β¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago: β²⁰ ≈ 0.12.",
+        "Geometric series: 1 + \\beta + \\beta² + ... = 1/(1−\\beta). For \\beta = 0.9: 1/(1 − 0.9) = 10. So momentum integrates ~10 past gradients.",
+        "A gradient from 10 steps ago is weighted by \\beta¹⁰ ≈ 0.35 — still meaningful. A gradient from 20 steps ago: \\beta²⁰ ≈ 0.12.",
       ],
     },
   ],
@@ -461,7 +461,7 @@ const questions: Record<string, Question[]> = {
         "At step = warmup_steps: both terms equal warmup_steps^{−0.5}, so lr = d_model^{−0.5} × warmup_steps^{−0.5} (the peak). For step > warmup_steps: the step^{−0.5} term is smaller, so lr = d_model^{−0.5} × step^{−0.5} — inverse square root decay. The d_model^{−0.5} scaling means larger models (larger d_model) use smaller learning rates.",
       hints: [
         "The formula has two phases: linear increase (step × warmup^{−1.5}) and inverse-sqrt decrease (step^{−0.5}), meeting at the peak.",
-        "After warmup, lr ∝ 1/√step — cutting LR in half requires 4× more steps.",
+        "After warmup, lr \\propto 1/√step — cutting LR in half requires 4× more steps.",
       ],
     },
   ],
@@ -496,9 +496,9 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^γ log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^γ reduces loss for well-classified examples (p_t → 1) while leaving loss unchanged for misclassified examples (p_t → 0). With γ=2: an easy example with p_t=0.9 contributes (1−0.9)² = 0.01× the original loss — 100× reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
+        "Focal loss (Lin et al., 2017) modifies cross-entropy: FL(p_t) = −(1 − p_t)^\\gamma log(p_t), where p_t is the model\'s predicted probability for the true class. The modulating factor (1 − p_t)^\\gamma reduces loss for well-classified examples (p_t → 1) while leaving loss unchanged for misclassified examples (p_t → 0). With \\gamma=2: an easy example with p_t=0.9 contributes (1−0.9)² = 0.01× the original loss — 100× reduction. This lets rare hard examples (e.g., small objects in detection) dominate the gradient.",
       hints: [
-        "Focal loss: FL(p_t) = −(1−p_t)^γ log(p_t). For p_t=0.9, γ=2: weight = (0.1)² = 0.01. For p_t=0.1: weight = (0.9)² ≈ 0.81 — barely affected.",
+        "Focal loss: FL(p_t) = −(1−p_t)^\\gamma log(p_t). For p_t=0.9, \\gamma=2: weight = (0.1)² = 0.01. For p_t=0.1: weight = (0.9)² ≈ 0.81 — barely affected.",
         "In object detection, 99% of anchors may be easy negatives (background). Without focal loss, their gradient overwhelms rare foreground objects.",
       ],
     },
@@ -516,10 +516,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are pulled close together and negative pairs (different samples) are pushed far apart. The objective is:\n\n\\[\nL = -\\log\\frac{\\exp(\\text{sim}(z_i, z_j)/\\tau)}{\\sum_{k=1}^{2N} \\mathbb{1}_{[k \\neq i]} \\exp(\\text{sim}(z_i, z_k)/\\tau)},\n\\]\n\nwhere sim(·,·) is cosine similarity, τ is a temperature hyperparameter, and the sum is over all negative pairs in the batch. This is the NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR — learning rich representations without any explicit class labels.",
+        "Contrastive learning optimizes an embedding space where positive pairs (augmented views of the same sample) are pulled close together and negative pairs (different samples) are pushed far apart. The objective is:\n\n\\[\nL = -\\log\\frac{\\exp(\\text{sim}(z_i, z_j)/\\tau)}{\\sum_{k=1}^{2N} \\mathbb{1}_{[k \\neq i]} \\exp(\\text{sim}(z_i, z_k)/\\tau)},\n\\]\n\nwhere sim(·,·) is cosine similarity, \\tau is a temperature hyperparameter, and the sum is over all negative pairs in the batch. This is the NT-Xent (Normalized Temperature-scaled Cross Entropy) loss used in SimCLR — learning rich representations without any explicit class labels.",
       hints: [
         "Contrastive = contrasting similar vs. different things. The loss directly reflects this: pull positive pairs together, push negative pairs apart.",
-        "SimCLR uses two augmented views of the same image as a positive pair and all other images in the batch as negatives, normalized by temperature τ.",
+        "SimCLR uses two augmented views of the same image as a positive pair and all other images in the batch as negatives, normalized by temperature \\tau.",
       ],
     },
   ],
@@ -596,7 +596,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The UAT guarantees that a single hidden layer MLP with enough neurons and a non-linear activation (e.g., sigmoid, ReLU) can approximate any continuous function on a compact set to any desired precision ε > 0. The key resource is width — more neurons allow finer approximation. d2l.ai §5.1 notes this as the theoretical justification for MLP expressivity.",
+        "The UAT guarantees that a single hidden layer MLP with enough neurons and a non-linear activation (e.g., sigmoid, ReLU) can approximate any continuous function on a compact set to any desired precision \\epsilon > 0. The key resource is width — more neurons allow finer approximation. d2l.ai §5.1 notes this as the theoretical justification for MLP expressivity.",
       hints: [
         "Width (number of neurons) is the key resource — more neurons allow finer approximation.",
         "The theorem says such a network exists, not that gradient descent will find it — existence and learnability are separate.",
@@ -747,10 +747,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In BPTT, the gradient flows backward through unrolled timesteps: ∂L/∂h_1 = (∂L/∂h_T) · ∏_{t=2}^{T} (∂h_t/∂h_{t-1}). With h_t = σ(W_h·h_{t-1} + W_x·x_t), the Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(σ'(W_h·h_{t-1})). The product of 99 such matrices — ∏_{t=2}^{T} W_h^T — is the culprit. If the largest eigenvalue λ_max of W_h satisfies λ_max < 1, gradients vanish as λ_max^{99}. If λ_max > 1, gradients explode. This is why RNNs without gating struggle with long sequences.",
+        "In BPTT, the gradient flows backward through unrolled timesteps: ∂L/∂h_1 = (∂L/∂h_T) · ∏_{t=2}^{T} (∂h_t/∂h_{t-1}). With h_t = \\sigma(W_h·h_{t-1} + W_x·x_t), the Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(\\sigma'(W_h·h_{t-1})). The product of 99 such matrices — ∏_{t=2}^{T} W_h^T — is the culprit. If the largest eigenvalue \\lambda_max of W_h satisfies \\lambda_max < 1, gradients vanish as \\lambda_max^{99}. If \\lambda_max > 1, gradients explode. This is why RNNs without gating struggle with long sequences.",
       hints: [
-        "The Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(σ'(·)). Each step multiplies the gradient by W_h^T. After 99 steps: ‖∂h_T/∂h_1‖ ≤ ‖W_h‖^{99}.",
-        "If λ_max(W_h) = 0.5, then λ_max^{99} ≈ 10^{-30} — the gradient is effectively zero. LSTM\'s additive cell state bypasses this multiplication.",
+        "The Jacobian ∂h_t/∂h_{t-1} = W_h^T · diag(\\sigma'(·)). Each step multiplies the gradient by W_h^T. After 99 steps: ‖∂h_T/∂h_1‖ ≤ ‖W_h‖^{99}.",
+        "If \\lambda_max(W_h) = 0.5, then \\lambda_max^{99} ≈ 10^{-30} — the gradient is effectively zero. LSTM\'s additive cell state bypasses this multiplication.",
       ],
     },
   ],
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "For random unit-variance vectors \\(\\mathbf{q}, \\mathbf{k} \\in \\mathbb{R}^{d_k}\\), each dimension i has \\(\\mathbb{E}[q_i] = \\mathbb{E}[k_i] = 0\\) and \\(\\operatorname{Var}(q_i) = \\operatorname{Var}(k_i) = 1\\). Assuming independence across dimensions:\n\n\\[\n\\operatorname{Var}(\\mathbf{q} \\cdot \\mathbf{k}) = \\operatorname{Var}\\left(\\sum_{i=1}^{d_k} q_i k_i\\right) = \\sum_{i=1}^{d_k} \\operatorname{Var}(q_i k_i) = \\sum_{i=1}^{d_k} 1 \\cdot 1 = d_k.\n\\]\n\nSo the dot product variance grows linearly with \\(d_k\\). Dividing by \\(\\sqrt{d_k}\\) restores unit variance:\n\n\\[\n\\operatorname{Var}\\left(\\frac{\\mathbf{q} \\cdot \\mathbf{k}}{\\sqrt{d_k}}\\right) = \\frac{d_k}{d_k} = 1,\n\\]\n\nensuring softmax operates in a regime with meaningful gradients.",
       hints: [
-        "Dot product: q · k = Σ_i q_i k_i. Var(q · k) = Σ_i Var(q_i k_i) = Σ_i (Var(q_i) · Var(k_i)) = d_k × 1 = d_k.",
+        "Dot product: q · k = \\Sigma_i q_i k_i. Var(q · k) = \\Sigma_i Var(q_i k_i) = \\Sigma_i (Var(q_i) · Var(k_i)) = d_k × 1 = d_k.",
         "Without scaling: std(q · k) = √64 = 8. softmax(exp(8) ≈ 2981, exp(−8) ≈ 0.0003) saturates to one-hot with near-zero gradients.",
       ],
     },
@@ -912,7 +912,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "MixUp data augmentation (Zhang et al., 2018) trains on convex combinations: x̃ = λ·xᵢ + (1−λ)·xⱼ, ỹ = λ·yᵢ + (1−λ)·yⱼ. Its main theoretical justification (Vicinal Risk Minimization) is:",
+        "MixUp data augmentation (Zhang et al., 2018) trains on convex combinations: x̃ = \\lambda·xᵢ + (1−\\lambda)·xⱼ, ỹ = \\lambda·yᵢ + (1−\\lambda)·yⱼ. Its main theoretical justification (Vicinal Risk Minimization) is:",
       options: [
         "It prevents the model from memorizing specific training examples by adding label noise.",
         "It encourages the model to behave linearly between training examples, improving calibration and reducing overconfident extrapolation between data points.",
@@ -921,9 +921,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MixUp applies Vicinal Risk Minimization: instead of training only on discrete samples, it creates a vicinity around each training point by mixing two samples. The model is trained on (x̃, ỹ) where x̃ = λ·x_i + (1−λ)·x_j and ỹ = λ·y_i + (1−λ)·y_j, with λ ~ Beta(α, α). This forces the model to satisfy the linear assumption f(λ·x_i + (1−λ)·x_j) ≈ λ·f(x_i) + (1−λ)·f(x_j) — the model behaves linearly between training examples. The result is smoother decision boundaries and better-calibrated probability estimates, reducing overconfident predictions.",
+        "MixUp applies Vicinal Risk Minimization: instead of training only on discrete samples, it creates a vicinity around each training point by mixing two samples. The model is trained on (x̃, ỹ) where x̃ = \\lambda·x_i + (1−\\lambda)·x_j and ỹ = \\lambda·y_i + (1−\\lambda)·y_j, with \\lambda ~ Beta(\\alpha, \\alpha). This forces the model to satisfy the linear assumption f(\\lambda·x_i + (1−\\lambda)·x_j) ≈ \\lambda·f(x_i) + (1−\\lambda)·f(x_j) — the model behaves linearly between training examples. The result is smoother decision boundaries and better-calibrated probability estimates, reducing overconfident predictions.",
       hints: [
-        "MixUp loss: L_MixUp = λ·L(y_i, f(x_i)) + (1−λ)·L(y_j, f(x_j)). The model is directly trained to satisfy f(λ·x_i + (1−λ)·x_j) ≈ λ·f(x_i) + (1−λ)·f(x_j).",
+        "MixUp loss: L_MixUp = \\lambda·L(y_i, f(x_i)) + (1−\\lambda)·L(y_j, f(x_j)). The model is directly trained to satisfy f(\\lambda·x_i + (1−\\lambda)·x_j) ≈ \\lambda·f(x_i) + (1−\\lambda)·f(x_j).",
         "Standard ERM trains on exact labels (hard targets). MixUp trains on soft targets from a mixture distribution — this regularizes the function to be linear between data points.",
       ],
     },
@@ -1304,7 +1304,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DARTS (Liu et al., 2019) represents the architecture as a softmax-weighted mixture of candidate operations (e.g., 3×3 conv, 5×5 conv, skip, pooling). Architecture weights α and operation weights W are trained jointly via gradient descent — the final discrete architecture is derived by selecting the highest-weight operation at each position.",
+        "DARTS (Liu et al., 2019) represents the architecture as a softmax-weighted mixture of candidate operations (e.g., 3×3 conv, 5×5 conv, skip, pooling). Architecture weights \\alpha and operation weights W are trained jointly via gradient descent — the final discrete architecture is derived by selecting the highest-weight operation at each position.",
       hints: [
         "Discrete choices (which operation?) can\'t be optimized by gradients. DARTS makes them continuous via softmax.",
         'The "architecture weights" are trainable via gradient descent, not enumeration — making NAS orders of magnitude faster.',
@@ -1417,7 +1417,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "EWC (Kirkpatrick et al., 2017) adds L = L_new + λ Σᵢ Fᵢ(θᵢ − θ*ᵢ)² where Fᵢ is the Fisher information diagonal (measuring parameter importance for old tasks) and θ*ᵢ are old task weights. High-Fisher weights are strongly anchored; low-Fisher weights can change freely for new tasks.",
+        "EWC (Kirkpatrick et al., 2017) adds L = L_new + \\lambda \\Sigmaᵢ Fᵢ(\\thetaᵢ − \\theta*ᵢ)² where Fᵢ is the Fisher information diagonal (measuring parameter importance for old tasks) and \\theta*ᵢ are old task weights. High-Fisher weights are strongly anchored; low-Fisher weights can change freely for new tasks.",
       hints: [
         "Fisher information identifies which weights mattered most for the previous task (high Fisher = important).",
         "The penalty anchors important weights near their old task values, allowing unimportant weights to adapt freely to new tasks.",
@@ -1589,7 +1589,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Per-layer gradient norm plots reveal gradient health throughout the network. Vanishing: norms near zero in early layers (those layers not learning). Exploding: norms in the thousands (updates destabilize training). Tools like TensorBoard, Weights & Biases, or a simple hook logging ||∇W||₂ per layer can identify these issues.",
+        "Per-layer gradient norm plots reveal gradient health throughout the network. Vanishing: norms near zero in early layers (those layers not learning). Exploding: norms in the thousands (updates destabilize training). Tools like TensorBoard, Weights & Biases, or a simple hook logging ||\\nablaW||₂ per layer can identify these issues.",
       hints: [
         "Vanishing: gradient norms near zero for early layers. Exploding: gradient norms in the thousands for any layer.",
         "Logging per-layer gradient norms at each step is a key debugging practice for deep network training.",
@@ -1623,7 +1623,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "SiLU (Sigmoid Linear Unit / Swish) is defined as SiLU(x) = x · σ(x). Compared to ReLU, which property does SiLU possess that makes it beneficial for deep networks?",
+        "SiLU (Sigmoid Linear Unit / Swish) is defined as SiLU(x) = x · \\sigma(x). Compared to ReLU, which property does SiLU possess that makes it beneficial for deep networks?",
       options: [
         "SiLU is computationally cheaper than ReLU because it avoids the max operation",
         "SiLU is smooth and non-monotonic — it has a small negative region near x ≈ −1.28, allowing the network to learn to suppress near-zero activations rather than hard-zeroing them, improving gradient flow and empirical performance in deep architectures",
@@ -1632,9 +1632,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SiLU(x) = x·σ(x) is smooth (infinitely differentiable), self-gated, and non-monotonic with a global minimum near x ≈ −1.28. Unlike ReLU's hard zero for x < 0, SiLU allows small negative values to pass, providing a richer gradient signal. Empirically, SiLU outperforms ReLU in EfficientNet, MobileNetV3, and large language model FFN layers. Its derivative SiLU'(x) = σ(x) + x·σ(x)·(1−σ(x)) is nonzero for all x.",
+        "SiLU(x) = x·\\sigma(x) is smooth (infinitely differentiable), self-gated, and non-monotonic with a global minimum near x ≈ −1.28. Unlike ReLU's hard zero for x < 0, SiLU allows small negative values to pass, providing a richer gradient signal. Empirically, SiLU outperforms ReLU in EfficientNet, MobileNetV3, and large language model FFN layers. Its derivative SiLU'(x) = \\sigma(x) + x·\\sigma(x)·(1−\\sigma(x)) is nonzero for all x.",
       hints: [
-        "Self-gating: the activation gates itself (x · σ(x)) rather than using a separate learned gate.",
+        "Self-gating: the activation gates itself (x · \\sigma(x)) rather than using a separate learned gate.",
         "SiLU is the activation function used in EfficientNet and many modern vision transformers.",
       ],
     },
@@ -1643,16 +1643,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "GELU (Gaussian Error Linear Unit) is defined as GELU(x) = x · Φ(x), where Φ is the standard normal CDF. What is the intuition behind this formulation, and why is it preferred in transformer architectures like BERT and GPT?",
+        "GELU (Gaussian Error Linear Unit) is defined as GELU(x) = x · \\Phi(x), where \\Phi is the standard normal CDF. What is the intuition behind this formulation, and why is it preferred in transformer architectures like BERT and GPT?",
       options: [
-        "GELU approximates ReLU but is computationally faster due to lookup table approximation of Φ(x)",
+        "GELU approximates ReLU but is computationally faster due to lookup table approximation of \\Phi(x)",
         "GELU stochastically gates inputs: each input x is multiplied by the probability that x is greater than a standard normal random draw — smoothly blending identity (x passes through) and zero-gating based on the input's magnitude, which regularizes and improves calibration in attention-based models",
         "GELU is preferred because it is the only activation function with a closed-form derivative",
         "GELU eliminates the need for layer normalization in transformer blocks",
       ],
       correctAnswer: 1,
       explanation:
-        "GELU(x) = x·Φ(x) can be interpreted as: scale x by the probability that a standard normal random variable Z is less than x. For large positive x, Φ(x) ≈ 1 (full pass-through); for large negative x, Φ(x) ≈ 0 (suppressed). This smooth stochastic gating outperforms ReLU in BERT, GPT-2/3, ViT, and most modern transformers. Approximation: GELU(x) ≈ 0.5x·(1 + tanh(√(2/π)·(x + 0.044715·x³))) is commonly used in practice.",
+        "GELU(x) = x·\\Phi(x) can be interpreted as: scale x by the probability that a standard normal random variable Z is less than x. For large positive x, \\Phi(x) ≈ 1 (full pass-through); for large negative x, \\Phi(x) ≈ 0 (suppressed). This smooth stochastic gating outperforms ReLU in BERT, GPT-2/3, ViT, and most modern transformers. Approximation: GELU(x) ≈ 0.5x·(1 + tanh(√(2/\\pi)·(x + 0.044715·x³))) is commonly used in practice.",
       hints: [
         "GELU is the default activation in BERT, GPT-2, GPT-3, and ViT — it has essentially replaced ReLU in transformer architectures.",
         "The approximation using tanh avoids computing the true Gaussian CDF and is accurate to within 0.001% on the typical input range.",

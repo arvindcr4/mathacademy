@@ -156,7 +156,7 @@ const questions: Record<string, Question[]> = {
         "Detecting data drift in a deployed ML model requires having access to the ground-truth labels for the new incoming data in real time.",
       correctAnswer: "False",
       explanation:
-        "Data drift detection operates on the input feature distribution P(X), which does not require labels. Methods include: (1) Univariate tests: Kolmogorov-Smirnov (KS) test per feature comparing training vs. serving distributions. (2) Multivariate: Maximum Mean Discrepancy (MMD) between training and serving feature embeddings. (3) Population Stability Index (PSI): PSI = Σ (p_i − q_i) × ln(p_i/q_i) per feature bin. These all work on unlabeled serving data. Label drift (concept drift) requires labels, but input drift does not. In practice, labels are often unavailable in real time (e.g., it takes 30 days to observe whether a loan was repaid). Input drift detection is used as a proxy: if input distribution shifts, model performance likely also shifts.",
+        "Data drift detection operates on the input feature distribution P(X), which does not require labels. Methods include: (1) Univariate tests: Kolmogorov-Smirnov (KS) test per feature comparing training vs. serving distributions. (2) Multivariate: Maximum Mean Discrepancy (MMD) between training and serving feature embeddings. (3) Population Stability Index (PSI): PSI = \\Sigma (p_i − q_i) × ln(p_i/q_i) per feature bin. These all work on unlabeled serving data. Label drift (concept drift) requires labels, but input drift does not. In practice, labels are often unavailable in real time (e.g., it takes 30 days to observe whether a loan was repaid). Input drift detection is used as a proxy: if input distribution shifts, model performance likely also shifts.",
       hints: [
         "Population Stability Index (PSI) > 0.2 conventionally signals significant drift requiring model retraining.",
         "Input drift \$\\neq\$ concept drift. Input drift: P(X) changes. Concept drift: P(Y|X) changes. Both can degrade model performance but require different detection methods.",
@@ -199,10 +199,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Under symmetric label noise at rate ε = 0.15: each label is independently flipped with probability 0.15. The true risk R(f) = E[L(f(x), y)] and the noisy risk R̃(f) = E[L(f(x), ỹ)] are related by: R̃(f) = (1 − 2ε)R(f) + ε for 0-1 loss (Natarajan et al. 2013). For logistic regression, minimizing the noisy cross-entropy finds a different minimizer than the noise-free objective: the optimal weights shift to accommodate 15% contradictory training signals. For a well-separated binary problem with test error ε_clean, the noisy model will have test error ε_noisy ≈ ε_clean + C·ε for some constant C. The boundary shifts, but does not collapse — the model still learns, just less accurately.",
+        "Under symmetric label noise at rate \\epsilon = 0.15: each label is independently flipped with probability 0.15. The true risk R(f) = E[L(f(x), y)] and the noisy risk R̃(f) = E[L(f(x), ỹ)] are related by: R̃(f) = (1 − 2\\epsilon)R(f) + \\epsilon for 0-1 loss (Natarajan et al. 2013). For logistic regression, minimizing the noisy cross-entropy finds a different minimizer than the noise-free objective: the optimal weights shift to accommodate 15% contradictory training signals. For a well-separated binary problem with test error \\epsilon_clean, the noisy model will have test error \\epsilon_noisy ≈ \\epsilon_clean + C·\\epsilon for some constant C. The boundary shifts, but does not collapse — the model still learns, just less accurately.",
       hints: [
-        "Natarajan et al. (2013) proved that learning with noisy labels is equivalent to learning with a modified loss function weighted by (1 − 2ε), guaranteeing learning is still possible for ε < 0.5.",
-        "At ε = 0.5 (completely random labels), no information remains and the model cannot learn better than chance.",
+        "Natarajan et al. (2013) proved that learning with noisy labels is equivalent to learning with a modified loss function weighted by (1 − 2\\epsilon), guaranteeing learning is still possible for \\epsilon < 0.5.",
+        "At \\epsilon = 0.5 (completely random labels), no information remains and the model cannot learn better than chance.",
       ],
     },
     {
@@ -233,7 +233,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Confident Learning algorithm (Northcutt et al. 2021): (1) Train a classifier via K-fold cross-validation to get out-of-sample predicted probabilities p̂ij. Matrix shape: n × C. (2) For each class j, compute the threshold t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, the average self-confidence. (3) Build the C×C "confident joint" matrix: C̃[j,k] = |{x : ỹᵢ = j AND p̂_ik ≥ t_k AND k \$\\neq\$ j}|. Entry C̃[j,k] counts examples labeled as j that the model confidently predicts as k \$\\neq\$ j — likely mislabeled. Normalizing C̃ gives Q[ỹ, y*], the estimated joint noise distribution. Examples in off-diagonal entries of C̃ are the likely label errors.',
+        'Confident Learning algorithm (Northcutt et al. 2021): (1) Train a classifier via K-fold cross-validation to get out-of-sample predicted probabilities p̂ij. Matrix shape: n × C. (2) For each class j, compute the threshold t_j = (1/|ỹ=j|) \\Sigma_{ỹ=j} p̂ij, the average self-confidence. (3) Build the C×C "confident joint" matrix: C̃[j,k] = |{x : ỹᵢ = j AND p̂_ik ≥ t_k AND k \$\\neq\$ j}|. Entry C̃[j,k] counts examples labeled as j that the model confidently predicts as k \$\\neq\$ j — likely mislabeled. Normalizing C̃ gives Q[ỹ, y*], the estimated joint noise distribution. Examples in off-diagonal entries of C̃ are the likely label errors.',
       hints: [
         "Out-of-sample predictions are essential: if the model is evaluated on its own training data, it will be overconfident on memorized examples, and the thresholds will be inflated.",
         "K-fold cross-validation produces out-of-sample predictions for every training example without a separate held-out set: each fold\'s validation predictions are used.",
@@ -267,10 +267,10 @@ const questions: Record<string, Question[]> = {
         "Label smoothing — replacing one-hot labels with soft targets such as [0.9, 0.05, 0.05] instead of [1, 0, 0] — serves as implicit regularization against the harmful effects of noisy or overconfident labels in the training set.",
       correctAnswer: "True",
       explanation:
-        "Label smoothing (Szegedy et al. 2016): replace hard label yᵢ with ỹᵢ = (1 − ε)yᵢ + ε/C, where ε is the smoothing factor and C is the number of classes. Effect: prevents the model from assigning probability 1 to any class, since the target is never 1. For noisy labels: if 10% of labels are wrong (true label = dog, given label = cat), label smoothing with ε = 0.1 reduces the overconfident gradient signal from wrong labels, functioning as an implicit prior that no label is perfectly reliable. Calibration: models trained with label smoothing are better calibrated (predicted probabilities better reflect true confidence). Limitation: label smoothing is a blanket regularizer and cannot identify WHICH labels are wrong — unlike Confident Learning which identifies specific erroneous examples.",
+        "Label smoothing (Szegedy et al. 2016): replace hard label yᵢ with ỹᵢ = (1 − \\epsilon)yᵢ + \\epsilon/C, where \\epsilon is the smoothing factor and C is the number of classes. Effect: prevents the model from assigning probability 1 to any class, since the target is never 1. For noisy labels: if 10% of labels are wrong (true label = dog, given label = cat), label smoothing with \\epsilon = 0.1 reduces the overconfident gradient signal from wrong labels, functioning as an implicit prior that no label is perfectly reliable. Calibration: models trained with label smoothing are better calibrated (predicted probabilities better reflect true confidence). Limitation: label smoothing is a blanket regularizer and cannot identify WHICH labels are wrong — unlike Confident Learning which identifies specific erroneous examples.",
       hints: [
         "Label smoothing is equivalent to adding KL-divergence regularization from the model\'s output to the uniform distribution, penalizing overconfident predictions.",
-        "Label smoothing ε = 0.1 is a common default. Too large (ε = 0.5) destroys the signal; too small (ε = 0.01) provides minimal benefit.",
+        "Label smoothing \\epsilon = 0.1 is a common default. Too large (\\epsilon = 0.5) destroys the signal; too small (\\epsilon = 0.01) provides minimal benefit.",
       ],
     },
     {
@@ -301,18 +301,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "MixUp (Zhang et al. 2018) creates a new training example by: x̃ = λxᵢ + (1−λ)xⱼ, ỹ = λyᵢ + (1−λ)yⱼ, where λ ~ Beta(α, α). With α = 0.2 and a draw λ = 0.8, if xᵢ is a cat image (yᵢ = [1,0]) and xⱼ is a dog image (yⱼ = [0,1]), the synthetic training target is:",
+        "MixUp (Zhang et al. 2018) creates a new training example by: x̃ = \\lambdaxᵢ + (1−\\lambda)xⱼ, ỹ = \\lambdayᵢ + (1−\\lambda)yⱼ, where \\lambda ~ Beta(\\alpha, \\alpha). With \\alpha = 0.2 and a draw \\lambda = 0.8, if xᵢ is a cat image (yᵢ = [1,0]) and xⱼ is a dog image (yⱼ = [0,1]), the synthetic training target is:",
       options: [
-        "ỹ = [1, 0] (hard label: 80% λ rounds to cat)",
+        "ỹ = [1, 0] (hard label: 80% \\lambda rounds to cat)",
         "ỹ = [0.8, 0.2] (soft label: 80% cat, 20% dog)",
         "ỹ = [0.5, 0.5] (MixUp always produces 50/50 labels)",
-        "ỹ is sampled from a Bernoulli distribution with p = λ",
+        "ỹ is sampled from a Bernoulli distribution with p = \\lambda",
       ],
       correctAnswer: 1,
       explanation:
-        'ỹ = λyᵢ + (1−λ)yⱼ = 0.8[1,0] + 0.2[0,1] = [0.8, 0.2]. The model must predict a soft distribution, not a hard class label. This is intentional: MixUp with λ = 0.8 means "this image looks 80% like a cat and 20% like a dog." The synthetic image x̃ = 0.8·cat + 0.2·dog is a linear pixel blend that literally looks like a semi-transparent overlay. MixUp regularizes by requiring linear interpolation of outputs: f(λxᵢ + (1−λ)xⱼ) ≈ λf(xᵢ) + (1−λ)f(xⱼ). This encourages linear behavior between training examples, reducing overconfident predictions in interpolated regions and improving calibration.',
+        'ỹ = \\lambdayᵢ + (1−\\lambda)yⱼ = 0.8[1,0] + 0.2[0,1] = [0.8, 0.2]. The model must predict a soft distribution, not a hard class label. This is intentional: MixUp with \\lambda = 0.8 means "this image looks 80% like a cat and 20% like a dog." The synthetic image x̃ = 0.8·cat + 0.2·dog is a linear pixel blend that literally looks like a semi-transparent overlay. MixUp regularizes by requiring linear interpolation of outputs: f(\\lambdaxᵢ + (1−\\lambda)xⱼ) ≈ \\lambdaf(xᵢ) + (1−\\lambda)f(xⱼ). This encourages linear behavior between training examples, reducing overconfident predictions in interpolated regions and improving calibration.',
       hints: [
-        "With α = 0.2, Beta(0.2, 0.2) concentrates probability near 0 and 1 — most draws of λ are close to 0 or 1 (weak mixing). Larger α (e.g., 1.0) produces more balanced mixing.",
+        "With \\alpha = 0.2, Beta(0.2, 0.2) concentrates probability near 0 and 1 — most draws of \\lambda are close to 0 or 1 (weak mixing). Larger \\alpha (e.g., 1.0) produces more balanced mixing.",
         "MixUp also works in feature space (Manifold MixUp): mix intermediate layer activations rather than raw inputs, generating more semantically meaningful mixtures.",
       ],
     },
@@ -344,7 +344,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CutMix mixing ratio λ = 1 − (bounding box area / total image area). With 30% box area: λ = 1 − 0.30 = 0.70. Mixed label: ỹ = λyᵢ + (1−λ)yⱼ = 0.70yᵢ + 0.30yⱼ. The bounding box coordinates (r_x, r_y, r_w, r_h) are sampled from a Beta distribution: λ ~ Beta(1, 1) = Uniform(0, 1), then r_w = W√(1−λ), r_h = H√(1−λ). CutMix advantage over MixUp: each pixel belongs to exactly one original image (no ghosting/blending artifacts), preserving local texture and semantic coherence. Disadvantage vs. MixUp: the bounding box may cut through a salient object (e.g., the dog\'s head is cut out), creating semantically incoherent training examples.",
+        "CutMix mixing ratio \\lambda = 1 − (bounding box area / total image area). With 30% box area: \\lambda = 1 − 0.30 = 0.70. Mixed label: ỹ = \\lambdayᵢ + (1−\\lambda)yⱼ = 0.70yᵢ + 0.30yⱼ. The bounding box coordinates (r_x, r_y, r_w, r_h) are sampled from a Beta distribution: \\lambda ~ Beta(1, 1) = Uniform(0, 1), then r_w = W√(1−\\lambda), r_h = H√(1−\\lambda). CutMix advantage over MixUp: each pixel belongs to exactly one original image (no ghosting/blending artifacts), preserving local texture and semantic coherence. Disadvantage vs. MixUp: the bounding box may cut through a salient object (e.g., the dog\'s head is cut out), creating semantically incoherent training examples.",
       hints: [
         'The label proportionality to area is natural: 30% of the image shows class B features, so 30% of the "vote" for the label comes from class B.',
         "CutMix can be seen as a form of data augmentation that creates training examples which better match the real-world test condition of partial occlusion.",
@@ -389,7 +389,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "AugMax (Wang et al. 2021) trains models for adversarial robustness by solving a minimax problem: min_θ max_{δ ∈ Δ} E[L(f_θ(x + δ), y)], where Δ is the set of augmentation transformations. How does AugMax differ from standard adversarial training (PGD)?",
+        "AugMax (Wang et al. 2021) trains models for adversarial robustness by solving a minimax problem: min_\\theta max_{\\delta ∈ \\Delta} E[L(f_\\theta(x + \\delta), y)], where \\Delta is the set of augmentation transformations. How does AugMax differ from standard adversarial training (PGD)?",
       options: [
         "AugMax uses random augmentations, while PGD uses gradient-based perturbations — making AugMax cheaper but less effective",
         "AugMax maximizes over a rich set of semantic augmentations (color, geometry, style) rather than L∞-norm-bounded pixel perturbations, finding adversarial augmentations that are more natural and diverse than PGD perturbations while training a model robust to this broader threat model",
@@ -398,7 +398,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard adversarial training (Madry et al. 2017 PGD): max over Δ = {δ : ‖δ‖∞ ≤ ε} — pixel-level perturbations within an L∞ ball. These adversarial examples are imperceptible but unnatural (no real camera produces L∞-bounded noise). AugMax (Wang et al. 2021): max over Δ = semantic augmentation space including brightness, contrast, saturation, hue shifts, geometric transformations, and Fourier-based corruptions. The inner maximization finds the most damaging natural augmentation for each training example. The outer minimization trains a model robust to this diverse set of natural corruptions. Key difference: AugMax adversarial examples look like naturally corrupted images (overexposed, rotated, foggy) rather than imperceptible noise, making the resulting model robust to real-world distribution shifts that PGD robustness does not address.",
+        "Standard adversarial training (Madry et al. 2017 PGD): max over \\Delta = {\\delta : ‖\\delta‖∞ ≤ \\epsilon} — pixel-level perturbations within an L∞ ball. These adversarial examples are imperceptible but unnatural (no real camera produces L∞-bounded noise). AugMax (Wang et al. 2021): max over \\Delta = semantic augmentation space including brightness, contrast, saturation, hue shifts, geometric transformations, and Fourier-based corruptions. The inner maximization finds the most damaging natural augmentation for each training example. The outer minimization trains a model robust to this diverse set of natural corruptions. Key difference: AugMax adversarial examples look like naturally corrupted images (overexposed, rotated, foggy) rather than imperceptible noise, making the resulting model robust to real-world distribution shifts that PGD robustness does not address.",
       hints: [
         "PGD robustness and natural corruption robustness are nearly orthogonal: a model robust to L∞ perturbations may still fail catastrophically on natural corruptions like fog or blur (Laugros et al. 2019).",
         "The minimax problem in AugMax is solved approximately: the inner max uses a few gradient steps over augmentation parameters; the outer min uses standard SGD on model parameters.",
@@ -483,13 +483,13 @@ const questions: Record<string, Question[]> = {
         "SMOTE (Synthetic Minority Over-sampling Technique, Chawla et al. 2002) addresses class imbalance by generating synthetic minority-class examples. Given a minority-class example xᵢ and its k nearest minority-class neighbor xⱼ, SMOTE creates:",
       options: [
         "xᵢ repeated k times to increase the minority class count",
-        "x_new = xᵢ + λ × (xⱼ − xᵢ), where λ ~ Uniform(0, 1) — a random interpolation along the line segment between xᵢ and xⱼ",
+        "x_new = xᵢ + \\lambda × (xⱼ − xᵢ), where \\lambda ~ Uniform(0, 1) — a random interpolation along the line segment between xᵢ and xⱼ",
         "x_new = xᵢ + Gaussian noise with standard deviation equal to ‖xⱼ − xᵢ‖₂",
         "x_new = (xᵢ + xⱼ) / 2 — the midpoint between the two minority examples",
       ],
       correctAnswer: 1,
       explanation:
-        "SMOTE interpolation: for each minority example xᵢ, select a random neighbor xⱼ from its k nearest minority neighbors. Generate: x_new = xᵢ + λ(xⱼ − xᵢ) where λ ~ Uniform(0, 1). This creates new points on the line segment between xᵢ and xⱼ — in the interior of the minority class manifold. SMOTE assumption: the minority class is locally convex (points between two minority examples are also minority class members). Advantage over simple duplication: SMOTE generates genuinely new samples that expand the minority class boundary, helping the classifier learn a smoother boundary. Limitations: (1) SMOTE ignores the majority class — may create synthetic minority points in majority-class regions (borderline SMOTE addresses this). (2) Assumes local linearity — fails for complex manifolds.",
+        "SMOTE interpolation: for each minority example xᵢ, select a random neighbor xⱼ from its k nearest minority neighbors. Generate: x_new = xᵢ + \\lambda(xⱼ − xᵢ) where \\lambda ~ Uniform(0, 1). This creates new points on the line segment between xᵢ and xⱼ — in the interior of the minority class manifold. SMOTE assumption: the minority class is locally convex (points between two minority examples are also minority class members). Advantage over simple duplication: SMOTE generates genuinely new samples that expand the minority class boundary, helping the classifier learn a smoother boundary. Limitations: (1) SMOTE ignores the majority class — may create synthetic minority points in majority-class regions (borderline SMOTE addresses this). (2) Assumes local linearity — fails for complex manifolds.",
       hints: [
         "SMOTE with k=5 nearest neighbors: randomly pick one of the 5 nearest minority neighbors and interpolate. Each minority example generates one or more synthetic examples until the target ratio is reached.",
         "Borderline-SMOTE: only generate synthetic examples near the decision boundary (minority examples whose k nearest overall neighbors are majority-class), avoiding generating points deep in safe regions.",
@@ -500,7 +500,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Differential privacy for synthetic data generation (e.g., DP-CTGAN) adds calibrated Gaussian or Laplace noise to gradients during GAN training with privacy budget (ε, δ). A smaller ε value means:",
+        "Differential privacy for synthetic data generation (e.g., DP-CTGAN) adds calibrated Gaussian or Laplace noise to gradients during GAN training with privacy budget (\\epsilon, \\delta). A smaller \\epsilon value means:",
       options: [
         "The synthetic data is more similar to the real data, providing better utility",
         "Stronger privacy protection: any individual training example has less influence on the generator\'s output distribution, making it harder to infer whether a specific person\'s data was in the training set — at the cost of utility degradation",
@@ -509,10 +509,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DP (Differential Privacy) guarantee: an algorithm A is (ε, δ)-DP if for any two datasets D and D\' differing in one example: P[A(D) ∈ S] ≤ e^ε × P[A(D\') ∈ S] + δ. ε controls the privacy budget: small ε (ε ≤ 1) provides strong privacy — the output distribution changes by at most factor e^ε when any single training example is added or removed. Large ε (ε = 10) provides weak privacy but high utility. For synthetic data: DP-GAN training adds Gaussian noise to discriminator gradients during training (DP-SGD, Abadi et al. 2016). Consequence: the generator cannot memorize individual training examples, ensuring the synthetic data reveals minimal information about any specific real person. Privacy-utility tradeoff: ε = 1 typically degrades synthetic data quality significantly vs. ε = 10. In healthcare synthetic data (HIPAA contexts), ε ≤ 8 is often required.",
+        "DP (Differential Privacy) guarantee: an algorithm A is (\\epsilon, \\delta)-DP if for any two datasets D and D\' differing in one example: P[A(D) ∈ S] ≤ e^\\epsilon × P[A(D\') ∈ S] + \\delta. \\epsilon controls the privacy budget: small \\epsilon (\\epsilon ≤ 1) provides strong privacy — the output distribution changes by at most factor e^\\epsilon when any single training example is added or removed. Large \\epsilon (\\epsilon = 10) provides weak privacy but high utility. For synthetic data: DP-GAN training adds Gaussian noise to discriminator gradients during training (DP-SGD, Abadi et al. 2016). Consequence: the generator cannot memorize individual training examples, ensuring the synthetic data reveals minimal information about any specific real person. Privacy-utility tradeoff: \\epsilon = 1 typically degrades synthetic data quality significantly vs. \\epsilon = 10. In healthcare synthetic data (HIPAA contexts), \\epsilon ≤ 8 is often required.",
       hints: [
-        "Privacy budget ε is cumulative: each training epoch consumes some ε. Total ε grows with training steps — DP training must stop before the privacy budget is exhausted.",
-        "The moments accountant method (Abadi et al. 2016) provides tighter privacy accounting than naive composition, allowing more training steps for the same total ε.",
+        "Privacy budget \\epsilon is cumulative: each training epoch consumes some \\epsilon. Total \\epsilon grows with training steps — DP training must stop before the privacy budget is exhausted.",
+        "The moments accountant method (Abadi et al. 2016) provides tighter privacy accounting than naive composition, allowing more training steps for the same total \\epsilon.",
       ],
     },
   ],
@@ -546,7 +546,7 @@ const questions: Record<string, Question[]> = {
         "Uncertainty sampling selects examples where the model is most confident in its prediction, as these are likely near the decision boundary and most informative.",
       correctAnswer: "False",
       explanation:
-        "Uncertainty sampling selects examples where the model is LEAST confident — highest uncertainty. For binary classification: least confidence = predicted probability closest to 0.5. For multi-class: maximum entropy H(p) = −Σₖ p_k log p_k (highest entropy = most uncertain). For the margin method: smallest difference between the top two class probabilities. The intuition: examples near the decision boundary (where the model is uncertain) are most informative for defining the boundary more precisely. Examples where the model is highly confident (p = 0.99) are already well-classified — labeling them adds little information about where the boundary lies. Uncertainty sampling is the most common active learning strategy, though it can fail for outliers (uncertain but uninformative due to being far from the data manifold).",
+        "Uncertainty sampling selects examples where the model is LEAST confident — highest uncertainty. For binary classification: least confidence = predicted probability closest to 0.5. For multi-class: maximum entropy H(p) = −\\Sigmaₖ p_k log p_k (highest entropy = most uncertain). For the margin method: smallest difference between the top two class probabilities. The intuition: examples near the decision boundary (where the model is uncertain) are most informative for defining the boundary more precisely. Examples where the model is highly confident (p = 0.99) are already well-classified — labeling them adds little information about where the boundary lies. Uncertainty sampling is the most common active learning strategy, though it can fail for outliers (uncertain but uninformative due to being far from the data manifold).",
       hints: [
         "High confidence (p = 0.99 for one class) → model already knows → not informative. Low confidence (p ≈ 0.5) → model is uncertain → labeling helps define the boundary.",
         "Counterexample where uncertainty sampling fails: an example far outside the training distribution (true outlier) may have high uncertainty but carries no useful information about the decision boundary.",
@@ -557,7 +557,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Core-set selection (Sener & Savarese 2018) formulates active learning as the k-center problem: select k unlabeled points to minimize max_{x ∈ U} min_{s ∈ S} ‖φ(x) − φ(s)‖₂, where φ(x) is the model\'s embedding. This objective ensures:",
+        "Core-set selection (Sener & Savarese 2018) formulates active learning as the k-center problem: select k unlabeled points to minimize max_{x ∈ U} min_{s ∈ S} ‖\\phi(x) − \\phi(s)‖₂, where \\phi(x) is the model\'s embedding. This objective ensures:",
       options: [
         "The selected points have maximum uncertainty as measured by the model\'s softmax entropy",
         "The labeled set S geometrically covers the unlabeled pool: no unlabeled point is far from its nearest labeled neighbor in embedding space, making S representative of the full data manifold",
@@ -566,9 +566,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'k-center objective: find S ⊆ U of size k that minimizes the maximum distance from any unlabeled point to its nearest element in S. This is equivalent to placing k "centers" to minimize the worst-case coverage gap. After solving: every unlabeled point x has a labeled neighbor s ∈ S with ‖φ(x) − φ(s)‖₂ ≤ δ* (the optimal radius). This geometric coverage ensures: any model behavior learned from S will approximately generalize to all x ∈ U (because every unlabeled point is near a labeled point in representation space). The k-center problem is NP-hard; Sener & Savarese use a greedy 2-approximation: iteratively add the unlabeled point farthest from the current S. This is fundamentally different from uncertainty sampling (which ignores coverage) and BALD (which considers expected information gain).',
+        'k-center objective: find S ⊆ U of size k that minimizes the maximum distance from any unlabeled point to its nearest element in S. This is equivalent to placing k "centers" to minimize the worst-case coverage gap. After solving: every unlabeled point x has a labeled neighbor s ∈ S with ‖\\phi(x) − \\phi(s)‖₂ ≤ \\delta* (the optimal radius). This geometric coverage ensures: any model behavior learned from S will approximately generalize to all x ∈ U (because every unlabeled point is near a labeled point in representation space). The k-center problem is NP-hard; Sener & Savarese use a greedy 2-approximation: iteratively add the unlabeled point farthest from the current S. This is fundamentally different from uncertainty sampling (which ignores coverage) and BALD (which considers expected information gain).',
       hints: [
-        "Greedy k-center: start with S = {} or a random seed. Repeat: find x* = argmax_{x ∈ U} min_{s ∈ S} ‖φ(x) − φ(s)‖₂ (the point farthest from all current labeled points), add x* to S.",
+        "Greedy k-center: start with S = {} or a random seed. Repeat: find x* = argmax_{x ∈ U} min_{s ∈ S} ‖\\phi(x) − \\phi(s)‖₂ (the point farthest from all current labeled points), add x* to S.",
         "Core-set vs. uncertainty sampling: uncertainty sampling finds uncertain points but may cluster near one boundary region; core-set ensures global coverage of the feature space.",
       ],
     },
@@ -591,7 +591,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "BALD (Bayesian Active Learning by Disagreement, Houlsby et al. 2011) selects unlabeled examples that maximize the mutual information I(y; θ | x, D) between the predicted label y and the model parameters θ given the current dataset D. Intuitively, BALD selects examples:",
+        "BALD (Bayesian Active Learning by Disagreement, Houlsby et al. 2011) selects unlabeled examples that maximize the mutual information I(y; \\theta | x, D) between the predicted label y and the model parameters \\theta given the current dataset D. Intuitively, BALD selects examples:",
       options: [
         "Where the model has the highest predictive entropy H(y | x, D), regardless of model parameter uncertainty",
         "Where the model\'s ensemble members disagree most on the prediction: high predictive entropy but low expected entropy under individual ensemble members — indicating the model would benefit most from knowing the true label",
@@ -600,10 +600,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "BALD maximizes I(y; θ | x, D) = H(y | x, D) − E_{θ~p(θ|D)}[H(y | x, θ)]. The first term H(y | x, D) is the predictive entropy (high = uncertain prediction). The second term E[H(y | x, θ)] is the expected entropy under individual models (high = each model is uncertain). BALD = predictive entropy − expected model entropy. High BALD: predictive entropy is high (ensemble is uncertain) but each individual model has low entropy (each model is confident but disagrees with other models). This is the classic disagreement scenario: 5 ensemble members each predict confidently but predict different classes. Low BALD: predictive entropy is high but each individual model is also uncertain — the model is just inherently uncertain about this point, not informatively uncertain. This filters out true outliers from uncertain examples.",
+        "BALD maximizes I(y; \\theta | x, D) = H(y | x, D) − E_{\\theta~p(\\theta|D)}[H(y | x, \\theta)]. The first term H(y | x, D) is the predictive entropy (high = uncertain prediction). The second term E[H(y | x, \\theta)] is the expected entropy under individual models (high = each model is uncertain). BALD = predictive entropy − expected model entropy. High BALD: predictive entropy is high (ensemble is uncertain) but each individual model has low entropy (each model is confident but disagrees with other models). This is the classic disagreement scenario: 5 ensemble members each predict confidently but predict different classes. Low BALD: predictive entropy is high but each individual model is also uncertain — the model is just inherently uncertain about this point, not informatively uncertain. This filters out true outliers from uncertain examples.",
       hints: [
         "BALD distinguishes epistemic uncertainty (model parameter uncertainty, reducible by more data) from aleatoric uncertainty (label noise, irreducible). BALD selects epistemically uncertain examples.",
-        "Practical BALD approximation: use MC Dropout or deep ensembles to estimate the expectation E_{θ}[H(y|x,θ)] by running inference multiple times with different dropout masks.",
+        "Practical BALD approximation: use MC Dropout or deep ensembles to estimate the expectation E_{\\theta}[H(y|x,\\theta)] by running inference multiple times with different dropout masks.",
       ],
     },
     {
@@ -657,9 +657,9 @@ const questions: Record<string, Question[]> = {
         "Self-paced learning dynamically adapts the training curriculum by selecting examples based on the model\'s current loss — presenting easy (low-loss) examples early and gradually including harder (high-loss) ones — rather than a fixed pre-defined difficulty ordering.",
       correctAnswer: "True",
       explanation:
-        'Self-paced learning (SPL, Kumar et al. 2010) formulates curriculum as a joint optimization: min_{w, v} Σᵢ vᵢ L(xᵢ, yᵢ; w) − λ Σᵢ vᵢ, subject to vᵢ ∈ {0, 1}. Variable vᵢ = 1 means "train on example i", vᵢ = 0 means "skip." Optimal v: vᵢ = 1 if L(xᵢ, yᵢ; w) ≤ λ (select easy examples); vᵢ = 0 otherwise. As λ increases over training (annealing schedule), more examples are included. Key difference from curriculum learning: (1) difficulty is determined by the CURRENT model\'s loss, which changes as the model trains; (2) different models at the same epoch may have different "easy" examples. This adaptivity means the curriculum responds to the model\'s learning progress, not a fixed external ordering.',
+        'Self-paced learning (SPL, Kumar et al. 2010) formulates curriculum as a joint optimization: min_{w, v} \\Sigmaᵢ vᵢ L(xᵢ, yᵢ; w) − \\lambda \\Sigmaᵢ vᵢ, subject to vᵢ ∈ {0, 1}. Variable vᵢ = 1 means "train on example i", vᵢ = 0 means "skip." Optimal v: vᵢ = 1 if L(xᵢ, yᵢ; w) ≤ \\lambda (select easy examples); vᵢ = 0 otherwise. As \\lambda increases over training (annealing schedule), more examples are included. Key difference from curriculum learning: (1) difficulty is determined by the CURRENT model\'s loss, which changes as the model trains; (2) different models at the same epoch may have different "easy" examples. This adaptivity means the curriculum responds to the model\'s learning progress, not a fixed external ordering.',
       hints: [
-        "SPL easy examples (vᵢ = 1 if L ≤ λ): the model controls which examples it trains on, based on its current competence.",
+        "SPL easy examples (vᵢ = 1 if L ≤ \\lambda): the model controls which examples it trains on, based on its current competence.",
         "Curriculum learning (Bengio): difficulty fixed before training. Self-paced (Kumar): difficulty determined by current model loss. Self-paced curriculum (Zhou): combines both.",
       ],
     },
@@ -702,18 +702,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Focal Loss (Lin et al. 2017) is used in object detection to address class imbalance between background and foreground anchors. The loss is: FL(p_t) = −(1 − p_t)^γ log(p_t). With γ = 2, how does this affect easy vs. hard examples compared to standard cross-entropy?",
+        "Focal Loss (Lin et al. 2017) is used in object detection to address class imbalance between background and foreground anchors. The loss is: FL(p_t) = −(1 − p_t)^\\gamma log(p_t). With \\gamma = 2, how does this affect easy vs. hard examples compared to standard cross-entropy?",
       options: [
         "Focal loss increases the gradient for easy examples (high p_t) and decreases it for hard examples (low p_t)",
-        "Focal loss down-weights easy, well-classified examples (high p_t → (1−p_t)^γ ≈ 0) and up-weights hard, misclassified examples (low p_t → (1−p_t)^γ ≈ 1), creating an automatic curriculum that focuses on hard examples",
+        "Focal loss down-weights easy, well-classified examples (high p_t → (1−p_t)^\\gamma ≈ 0) and up-weights hard, misclassified examples (low p_t → (1−p_t)^\\gamma ≈ 1), creating an automatic curriculum that focuses on hard examples",
         "Focal loss is equivalent to cross-entropy with a class-weighted loss, scaling each class by its inverse frequency",
         "Focal loss applies only to the bounding box regression component, not the classification loss",
       ],
       correctAnswer: 1,
       explanation:
-        "Focal loss modulating factor (1 − p_t)^γ: For γ = 2 and an easy example with p_t = 0.95: (1 − 0.95)² = 0.0025 → loss is down-weighted by 400×. For a hard example with p_t = 0.3: (1 − 0.3)² = 0.49 → loss is down-weighted by only 2×. Effect: training is automatically focused on hard examples — exactly the cases where the model is wrong (low p_t). This is equivalent to a dynamic curriculum where the current model\'s confidence determines which examples receive learning signal. Context: in one-stage detectors like FCOS or RetinaNet, there are ~100K anchors per image but only ~10–100 foreground anchors. Without focal loss, the overwhelming background gradient (all easy negatives) drowns out the foreground gradient.",
+        "Focal loss modulating factor (1 − p_t)^\\gamma: For \\gamma = 2 and an easy example with p_t = 0.95: (1 − 0.95)² = 0.0025 → loss is down-weighted by 400×. For a hard example with p_t = 0.3: (1 − 0.3)² = 0.49 → loss is down-weighted by only 2×. Effect: training is automatically focused on hard examples — exactly the cases where the model is wrong (low p_t). This is equivalent to a dynamic curriculum where the current model\'s confidence determines which examples receive learning signal. Context: in one-stage detectors like FCOS or RetinaNet, there are ~100K anchors per image but only ~10–100 foreground anchors. Without focal loss, the overwhelming background gradient (all easy negatives) drowns out the foreground gradient.",
       hints: [
-        "γ = 0: focal loss = standard cross-entropy. γ = 2: easy examples contribute ~100× less gradient than hard examples. γ = 5: even more aggressive focus on hard examples.",
+        "\\gamma = 0: focal loss = standard cross-entropy. \\gamma = 2: easy examples contribute ~100× less gradient than hard examples. \\gamma = 5: even more aggressive focus on hard examples.",
         "Focal loss does not require predefined difficulty ordering — difficulty is determined dynamically by p_t at each training step, making it more adaptive than fixed curriculum schedules.",
       ],
     },
@@ -725,16 +725,16 @@ const questions: Record<string, Question[]> = {
         "Dynamic Data Weighting (DDW) assigns per-example weights wᵢ(t) that change during training based on the model\'s current loss Lᵢ(t). How does DDW differ from both curriculum learning and Focal Loss?",
       options: [
         "DDW uses a fixed external difficulty oracle; curriculum learning and Focal Loss use model-based difficulty",
-        "DDW learns the per-example weight function wᵢ(t) from a small clean validation set using meta-learning (bi-level optimization), while curriculum learning uses fixed difficulty and Focal Loss uses a fixed (1−p_t)^γ formula — DDW is the most adaptive because it optimizes weights to minimize validation loss rather than following a heuristic schedule",
+        "DDW learns the per-example weight function wᵢ(t) from a small clean validation set using meta-learning (bi-level optimization), while curriculum learning uses fixed difficulty and Focal Loss uses a fixed (1−p_t)^\\gamma formula — DDW is the most adaptive because it optimizes weights to minimize validation loss rather than following a heuristic schedule",
         "DDW applies only to the data collection phase, not model training",
         "DDW is equivalent to importance weighting for domain adaptation and has no connection to curriculum learning",
       ],
       correctAnswer: 1,
       explanation:
-        "DDW (Shu et al. 2019, Meta-Weight-Net) meta-learns a weight function v(Lᵢ) → wᵢ using a small, clean validation set: outer loop: update v to minimize validation loss when the model is trained with current weights. Inner loop: update model parameters using weighted training loss Σᵢ v(Lᵢ)·Lᵢ. The learned weight function v can assign: high weight to hard examples (like Focal Loss), low weight to noisy examples (like curriculum learning\'s early-phase filtering), or any combination. This is more flexible than fixed γ in Focal Loss or fixed difficulty ordering in curriculum learning. Key insight: the clean validation set acts as a signal for what good training examples look like — examples whose gradient alignment with the validation set is high get higher weights.",
+        "DDW (Shu et al. 2019, Meta-Weight-Net) meta-learns a weight function v(Lᵢ) → wᵢ using a small, clean validation set: outer loop: update v to minimize validation loss when the model is trained with current weights. Inner loop: update model parameters using weighted training loss \\Sigmaᵢ v(Lᵢ)·Lᵢ. The learned weight function v can assign: high weight to hard examples (like Focal Loss), low weight to noisy examples (like curriculum learning\'s early-phase filtering), or any combination. This is more flexible than fixed \\gamma in Focal Loss or fixed difficulty ordering in curriculum learning. Key insight: the clean validation set acts as a signal for what good training examples look like — examples whose gradient alignment with the validation set is high get higher weights.",
       hints: [
         "DDW vs. curriculum learning: curriculum uses a fixed difficulty measure and schedule. DDW dynamically learns which examples to weight up based on validation performance feedback.",
-        "DDW vs. Focal Loss: Focal Loss uses a fixed (1−p_t)^γ formula. DDW learns the weight function from data — it could learn to up-weight hard examples, down-weight noisy ones, or both.",
+        "DDW vs. Focal Loss: Focal Loss uses a fixed (1−p_t)^\\gamma formula. DDW learns the weight function from data — it could learn to up-weight hard examples, down-weight noisy ones, or both.",
       ],
     },
   ],
@@ -865,7 +865,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CleanLab input requirements: (1) p̂_ij ∈ [0, 1]: the predicted probability that sample i belongs to class j, from K-fold cross-validation (so each sample\'s prediction is out-of-sample). Matrix shape: n × C. (2) ỹᵢ ∈ {1, …, C}: the given (noisy) label for each sample. From these two inputs, Confident Learning: (a) computes per-class thresholds t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, (b) builds the confident joint C̃[j,k] counting samples with ỹ=j and p̂_ik ≥ t_k and k \$\\neq\$ j, (c) normalizes to get the joint noise distribution, (d) identifies likely errors as off-diagonal samples. No additional models, no human annotation, no noise rate specification needed — the algorithm infers everything from the model\'s own predictions.",
+        "CleanLab input requirements: (1) p̂_ij ∈ [0, 1]: the predicted probability that sample i belongs to class j, from K-fold cross-validation (so each sample\'s prediction is out-of-sample). Matrix shape: n × C. (2) ỹᵢ ∈ {1, …, C}: the given (noisy) label for each sample. From these two inputs, Confident Learning: (a) computes per-class thresholds t_j = (1/|ỹ=j|) \\Sigma_{ỹ=j} p̂ij, (b) builds the confident joint C̃[j,k] counting samples with ỹ=j and p̂_ik ≥ t_k and k \$\\neq\$ j, (c) normalizes to get the joint noise distribution, (d) identifies likely errors as off-diagonal samples. No additional models, no human annotation, no noise rate specification needed — the algorithm infers everything from the model\'s own predictions.",
       hints: [
         "Out-of-sample predictions are essential: if you use in-sample predictions (the model evaluated on its own training data), it will be overconfident on memorized examples, and the thresholds will be inflated.",
         "K-fold cross-validation produces out-of-sample predictions for every training example without a separate held-out set: each fold\'s validation predictions are used.",
@@ -899,7 +899,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Confident Learning flagging criterion: sample i (with ỹᵢ = j) is a likely label error if there exists a class k \$\\neq\$ j such that p̂ᵢₖ ≥ tₖ, where tₖ = (1/|{i: ỹᵢ = k}|) Σ_{i: ỹᵢ = k} p̂ᵢₖ is the average predicted probability for class k among examples WITH given label k. Interpretation: tₖ is how confident the model typically is when it correctly identifies class k. If an example labeled "cat" has p̂(dog) ≥ t_dog, the model is "as confident" that it is a dog as it typically is for correctly-labeled dogs — strong evidence of mislabeling. The class-specific threshold (not a fixed 0.5) is crucial: for a rare class with generally low confidence (t_dog = 0.3), the bar is lower; for a common clear class (t_cat = 0.9), the bar is higher.',
+        'Confident Learning flagging criterion: sample i (with ỹᵢ = j) is a likely label error if there exists a class k \$\\neq\$ j such that p̂ᵢₖ ≥ tₖ, where tₖ = (1/|{i: ỹᵢ = k}|) \\Sigma_{i: ỹᵢ = k} p̂ᵢₖ is the average predicted probability for class k among examples WITH given label k. Interpretation: tₖ is how confident the model typically is when it correctly identifies class k. If an example labeled "cat" has p̂(dog) ≥ t_dog, the model is "as confident" that it is a dog as it typically is for correctly-labeled dogs — strong evidence of mislabeling. The class-specific threshold (not a fixed 0.5) is crucial: for a rare class with generally low confidence (t_dog = 0.3), the bar is lower; for a common clear class (t_cat = 0.9), the bar is higher.',
       hints: [
         "The threshold t_k is adaptive: for a class where the model is generally uncertain, even moderate p̂_ik can flag an error. For a class where the model is very confident, only very high p̂_ik flags an error.",
         "Option A (p̂(cat) < 0.5) is too simple: a cat example with p̂ = [0.4, 0.35, 0.25] has p̂(cat) < 0.5 but the model is not confident about any alternative class — not a clear label error.",
@@ -933,7 +933,7 @@ const questions: Record<string, Question[]> = {
         "CleanLab\'s Confident Learning can be extended to multi-label classification (where each example can belong to multiple classes simultaneously) without modification, because it only requires a probability vector per example.",
       correctAnswer: "False",
       explanation:
-        "Multi-label classification breaks the Confident Learning assumption that class probabilities sum to 1 (simplex constraint). In multi-label: each class has an independent binary probability p̂_k ∈ [0, 1], and Σ_k p̂_k can exceed 1 — this is not a valid probability distribution over mutually exclusive classes. Confident Learning\'s confident joint construction assumes: a single true label per example, which determines which off-diagonal entry to place the example in. For multi-label data: CleanLab has a separate multi-label extension that treats each class independently (computing per-class label quality scores as binary classification problems) and combines them. The multi-label extension identifies: (1) examples with an incorrect extra label (false positive label), (2) examples missing a true label (false negative label). This is a more complex problem because a single example can have multiple simultaneous label errors.",
+        "Multi-label classification breaks the Confident Learning assumption that class probabilities sum to 1 (simplex constraint). In multi-label: each class has an independent binary probability p̂_k ∈ [0, 1], and \\Sigma_k p̂_k can exceed 1 — this is not a valid probability distribution over mutually exclusive classes. Confident Learning\'s confident joint construction assumes: a single true label per example, which determines which off-diagonal entry to place the example in. For multi-label data: CleanLab has a separate multi-label extension that treats each class independently (computing per-class label quality scores as binary classification problems) and combines them. The multi-label extension identifies: (1) examples with an incorrect extra label (false positive label), (2) examples missing a true label (false negative label). This is a more complex problem because a single example can have multiple simultaneous label errors.",
       hints: [
         "Multi-label Confident Learning: reduce to C independent binary problems, one per class. For each class k, treat examples as positive (label k present) or negative (label k absent) and apply binary Confident Learning.",
         "The joint distribution matrix in binary Confident Learning is 2×2: C̃[given=0, true=1] (false negatives) and C̃[given=1, true=0] (false positives) are the two off-diagonal error types.",
@@ -967,18 +967,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Dataset distillation (Wang et al. 2018) aims to synthesize a tiny dataset S* ⊂ ℝ^{|S*| × d} such that a model trained on S* achieves performance close to one trained on the full real dataset of n >> |S*| examples. The optimization is:",
+        "Dataset distillation (Wang et al. 2018) aims to synthesize a tiny dataset S* ⊂ \\mathbb{R}^{|S*| × d} such that a model trained on S* achieves performance close to one trained on the full real dataset of n >> |S*| examples. The optimization is:",
       options: [
         "Select the |S*| most informative examples from the real dataset using core-set selection",
-        "min_{S*} E_{θ₀}[L(θ*(S*), D_test)] where θ*(S*) = argmin_θ L(θ, S*), optimizing the synthetic data via bilevel optimization so a model trained on it performs well on real test data",
+        "min_{S*} E_{\\theta₀}[L(\\theta*(S*), D_test)] where \\theta*(S*) = argmin_\\theta L(\\theta, S*), optimizing the synthetic data via bilevel optimization so a model trained on it performs well on real test data",
         "Compress the real dataset using PCA and represent it as a low-dimensional projection",
         "Fine-tune a pre-trained model on the test set, then distill its knowledge into a small synthetic training set",
       ],
       correctAnswer: 1,
       explanation:
-        "Dataset distillation bilevel optimization: outer problem: min_{S*} ℓ(θ*(S*)) where ℓ is performance on real test/validation data. Inner problem: θ*(S*) = argmin_θ Σ_{(x,y) ∈ S*} L(f_θ(x), y) — train a model to convergence on synthetic data S*. S* is a set of learned (not selected) image-label pairs, optimized end-to-end via gradient backpropagation through the inner optimization loop. Wang et al. achieved: 10 synthetic images per class (10 classes = 100 total images) trained a model to ~94% of the performance of training on 60,000 MNIST images. Applications: privacy (share S* instead of real data), faster neural architecture search (evaluate architectures on S* instead of full data), continual learning.",
+        "Dataset distillation bilevel optimization: outer problem: min_{S*} ℓ(\\theta*(S*)) where ℓ is performance on real test/validation data. Inner problem: \\theta*(S*) = argmin_\\theta \\Sigma_{(x,y) ∈ S*} L(f_\\theta(x), y) — train a model to convergence on synthetic data S*. S* is a set of learned (not selected) image-label pairs, optimized end-to-end via gradient backpropagation through the inner optimization loop. Wang et al. achieved: 10 synthetic images per class (10 classes = 100 total images) trained a model to ~94% of the performance of training on 60,000 MNIST images. Applications: privacy (share S* instead of real data), faster neural architecture search (evaluate architectures on S* instead of full data), continual learning.",
       hints: [
-        "Bilevel: the outer gradient ∂ℓ/∂S* flows through the inner optimization step θ*(S*) — requires unrolling or implicit differentiation of the inner training loop.",
+        "Bilevel: the outer gradient ∂ℓ/∂S* flows through the inner optimization step \\theta*(S*) — requires unrolling or implicit differentiation of the inner training loop.",
         "Dataset distillation \$\\neq\$ coreset selection: coresets SELECT from real data. Distillation GENERATES new (often imperceptible to humans) data images that encode learning signals.",
       ],
     },
@@ -990,7 +990,7 @@ const questions: Record<string, Question[]> = {
         "Coreset selection identifies a weighted subset C ⊆ D (real training examples) such that training on C approximates training on the full dataset D, making it computationally more efficient than full-data training.",
       correctAnswer: "True",
       explanation:
-        "Coreset selection finds C ⊆ D (with weights wᵢ ≥ 0) such that: for all model parameters θ, |ℓ(θ, D) − ℓ_w(θ, C)| ≤ ε for some small ε. Methods include: gradient matching (select examples whose weighted gradient ≈ full gradient), geometry-based (k-center, k-means clustering), loss-based (select high-loss examples), and Shapley-value-based (select high-value examples). Unlike dataset distillation, coreset examples are real training points (interpretable). The goal: |C| << n while maintaining near-D performance. Practical applications: distillation of large datasets for continual learning (store a coreset of past tasks), efficient hyperparameter search, and privacy-preserving data summarization.",
+        "Coreset selection finds C ⊆ D (with weights wᵢ ≥ 0) such that: for all model parameters \\theta, |ℓ(\\theta, D) − ℓ_w(\\theta, C)| ≤ \\epsilon for some small \\epsilon. Methods include: gradient matching (select examples whose weighted gradient ≈ full gradient), geometry-based (k-center, k-means clustering), loss-based (select high-loss examples), and Shapley-value-based (select high-value examples). Unlike dataset distillation, coreset examples are real training points (interpretable). The goal: |C| << n while maintaining near-D performance. Practical applications: distillation of large datasets for continual learning (store a coreset of past tasks), efficient hyperparameter search, and privacy-preserving data summarization.",
       hints: [
         "Coreset selection selects real data; dataset distillation creates synthetic data. Both reduce training data size but via fundamentally different approaches.",
         "The quality of a coreset depends on the model class: a coreset good for linear models may be poor for neural networks (because gradient geometry differs).",
@@ -1010,9 +1010,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Distribution Matching (DM): minimize MMD(P_{feat}(S*), P_{feat}(D)) where features are extracted at various network layers from randomly initialized models. The synthetic S* matches the real data\'s distributional statistics at the feature level. This is model-agnostic in the sense that it optimizes over random initializations rather than a specific trained network. Gradient Matching (DC, Zhao et al. 2020): minimize ‖∇_θ L(θ, S*) − ∇_θ L(θ, D)‖₂, aligning the gradient direction produced by synthetic and real data for a specific network parameter θ. DC directly ensures that gradient descent on S* moves in the same direction as on D — more faithful to actual training dynamics. Tradeoff: DC requires backpropagating through the gradient computation (expensive) but produces tighter alignment for the specific architecture; DM is cheaper but may not perfectly replicate training dynamics.",
+        "Distribution Matching (DM): minimize MMD(P_{feat}(S*), P_{feat}(D)) where features are extracted at various network layers from randomly initialized models. The synthetic S* matches the real data\'s distributional statistics at the feature level. This is model-agnostic in the sense that it optimizes over random initializations rather than a specific trained network. Gradient Matching (DC, Zhao et al. 2020): minimize ‖\\nabla_\\theta L(\\theta, S*) − \\nabla_\\theta L(\\theta, D)‖₂, aligning the gradient direction produced by synthetic and real data for a specific network parameter \\theta. DC directly ensures that gradient descent on S* moves in the same direction as on D — more faithful to actual training dynamics. Tradeoff: DC requires backpropagating through the gradient computation (expensive) but produces tighter alignment for the specific architecture; DM is cheaper but may not perfectly replicate training dynamics.",
       hints: [
-        "MMD measures distributional distance between two sets of samples without requiring explicit density estimates: MMD(P, Q) = ‖E_P[φ(x)] − E_Q[φ(x)]‖ using a kernel φ.",
+        "MMD measures distributional distance between two sets of samples without requiring explicit density estimates: MMD(P, Q) = ‖E_P[\\phi(x)] − E_Q[\\phi(x)]‖ using a kernel \\phi.",
         "DC (gradient matching) directly ensures that training on S* produces similar weight updates to training on D — this is why DC-distilled datasets work well for the target architecture but may not transfer to different architectures.",
       ],
     },
@@ -1064,7 +1064,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DC (gradient matching, Zhao et al. 2020) matches: ‖∇_θ L(S*) − ∇_θ L(D)‖ at a single parameter θ. Problem: matching at one θ does not guarantee matching at subsequent θ values as training progresses — the model trained on S* may diverge from the model trained on D after multiple steps. Trajectory Matching (Cazenavette et al. 2022): pre-compute expert trajectories θ₀*, θ₁*, …, θ_T* by training on the full real data D. Then optimize S* so that a few gradient steps on S* from θ_t approximates the expert trajectory step from θ_t to θ_{t+M}: ‖θ_{t+M}^{S*} − θ_{t+M}^{expert}‖ is minimized over many sampled (t, M) pairs. This long-range matching ensures the distilled dataset supports sustained gradient-based learning, not just one-shot gradient alignment. Results: trajectory matching achieves significantly better distilled dataset quality vs. DC at the same images-per-class budget.",
+        "DC (gradient matching, Zhao et al. 2020) matches: ‖\\nabla_\\theta L(S*) − \\nabla_\\theta L(D)‖ at a single parameter \\theta. Problem: matching at one \\theta does not guarantee matching at subsequent \\theta values as training progresses — the model trained on S* may diverge from the model trained on D after multiple steps. Trajectory Matching (Cazenavette et al. 2022): pre-compute expert trajectories \\theta₀*, \\theta₁*, …, \\theta_T* by training on the full real data D. Then optimize S* so that a few gradient steps on S* from \\theta_t approximates the expert trajectory step from \\theta_t to \\theta_{t+M}: ‖\\theta_{t+M}^{S*} − \\theta_{t+M}^{expert}‖ is minimized over many sampled (t, M) pairs. This long-range matching ensures the distilled dataset supports sustained gradient-based learning, not just one-shot gradient alignment. Results: trajectory matching achieves significantly better distilled dataset quality vs. DC at the same images-per-class budget.",
       hints: [
         "Expert trajectories are pre-computed once (expensive) and reused across the distillation optimization — the inner loop of trajectory matching is cheap (just a few gradient steps on S*).",
         "The number of steps M to match in each trajectory segment is a hyperparameter: small M ≈ DC (local matching), large M captures global training dynamics but makes the optimization harder.",
@@ -1078,7 +1078,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Data Shapley assigns value φᵢ to training example i as: φᵢ = Σ_{S ⊆ D\\{i}} [C(|S|,n-1)]⁻¹ [V(S ∪ {i}) − V(S)] / n, where V(S) = model performance trained on subset S. What does this formula compute?",
+        "Data Shapley assigns value \\phiᵢ to training example i as: \\phiᵢ = \\Sigma_{S ⊆ D\\{i}} [C(|S|,n-1)]⁻¹ [V(S ∪ {i}) − V(S)] / n, where V(S) = model performance trained on subset S. What does this formula compute?",
       options: [
         "The marginal contribution of example i to model performance, measured only when i is added to the full dataset",
         "The average marginal contribution of example i to model performance, averaged uniformly over all possible subsets S of other training examples",
@@ -1087,10 +1087,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Data Shapley (Ghorbani & Zou 2019) applies cooperative game theory: the "game" is training a model on a subset of data, and the "value function" V(S) is validation performance. The Shapley value φᵢ averages the marginal contribution of adding example i (V(S ∪ {i}) − V(S)) over all possible orderings of the other n-1 examples. This is the unique value satisfying: (1) Efficiency: Σᵢ φᵢ = V(D) − V(∅). (2) Symmetry: if examples contribute equally, they receive equal value. (3) Null player: examples that contribute nothing get φᵢ = 0. (4) Additivity. These axioms make Shapley values the unique "fair" allocation. High φᵢ: example improves model when added to any subset. Low/negative φᵢ: example hurts performance (likely mislabeled or out-of-distribution).',
+        'Data Shapley (Ghorbani & Zou 2019) applies cooperative game theory: the "game" is training a model on a subset of data, and the "value function" V(S) is validation performance. The Shapley value \\phiᵢ averages the marginal contribution of adding example i (V(S ∪ {i}) − V(S)) over all possible orderings of the other n-1 examples. This is the unique value satisfying: (1) Efficiency: \\Sigmaᵢ \\phiᵢ = V(D) − V(∅). (2) Symmetry: if examples contribute equally, they receive equal value. (3) Null player: examples that contribute nothing get \\phiᵢ = 0. (4) Additivity. These axioms make Shapley values the unique "fair" allocation. High \\phiᵢ: example improves model when added to any subset. Low/negative \\phiᵢ: example hurts performance (likely mislabeled or out-of-distribution).',
       hints: [
-        "Data Shapley identifies the most (and least) valuable training examples. Negative φᵢ indicates harmful training examples — candidates for inspection and possibly removal.",
-        "Practical use: rank examples by φᵢ, remove bottom-k, retrain. Often achieves better performance than training on the full dataset (removing harmful examples).",
+        "Data Shapley identifies the most (and least) valuable training examples. Negative \\phiᵢ indicates harmful training examples — candidates for inspection and possibly removal.",
+        "Practical use: rank examples by \\phiᵢ, remove bottom-k, retrain. Often achieves better performance than training on the full dataset (removing harmful examples).",
       ],
     },
     {
@@ -1101,7 +1101,7 @@ const questions: Record<string, Question[]> = {
         "Exact Data Shapley computation is intractable for large datasets because it requires evaluating V(S) for all 2ⁿ subsets of training data, making it exponential in n.",
       correctAnswer: "True",
       explanation:
-        "For n training examples: exact Shapley requires evaluating 2ⁿ subsets. For n = 100: 2¹⁰⁰ ≈ 10³⁰ model trainings — clearly infeasible. Practical approximations: (1) Monte Carlo Shapley: sample random permutations, compute marginal contributions along each permutation. Convergence is slow: O(n²/ε²) evaluations for ε-accurate values. (2) KNN-Shapley (Jia et al. 2019): for k-nearest-neighbor classifiers, Shapley values have a closed form computable in O(n log n) — exact and efficient. (3) AME (Average Marginal Effect): compute marginal contributions for small random subsets instead of all 2ⁿ. (4) DVRL: learn a value estimator network instead of computing Shapley values directly.",
+        "For n training examples: exact Shapley requires evaluating 2ⁿ subsets. For n = 100: 2¹⁰⁰ ≈ 10³⁰ model trainings — clearly infeasible. Practical approximations: (1) Monte Carlo Shapley: sample random permutations, compute marginal contributions along each permutation. Convergence is slow: O(n²/\\epsilon²) evaluations for \\epsilon-accurate values. (2) KNN-Shapley (Jia et al. 2019): for k-nearest-neighbor classifiers, Shapley values have a closed form computable in O(n log n) — exact and efficient. (3) AME (Average Marginal Effect): compute marginal contributions for small random subsets instead of all 2ⁿ. (4) DVRL: learn a value estimator network instead of computing Shapley values directly.",
       hints: [
         "For n=20: 2²⁰ = 1,048,576 subsets. Each requires training a model. For n=10,000: 2^10,000 — astronomically infeasible.",
         "KNN-Shapley is the only exact polynomial-time algorithm, but limited to KNN models. For tree/NN models, approximation is unavoidable.",
@@ -1121,7 +1121,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DVRL bilevel structure: outer loop (DVE training): the DVE network outputs selection probabilities s(xᵢ, yᵢ) for each training example. A binary mask is sampled: bᵢ ~ Bernoulli(s(xᵢ, yᵢ)). The predictor (any ML model) is trained on {(xᵢ, yᵢ) : bᵢ = 1}. The predictor\'s validation performance R = V(validation; predictor trained on selected subset) is the reward. DVE weights are updated via REINFORCE: ∇_DVE J ≈ Σᵢ (R − baseline) ∇_{DVE} log P(bᵢ | s(xᵢ, yᵢ)). The DVE learns to assign high selection probability to examples that improve the predictor\'s validation performance when selected. DVRL is model-agnostic: the predictor can be any ML model (XGBoost, neural net, etc.).",
+        "DVRL bilevel structure: outer loop (DVE training): the DVE network outputs selection probabilities s(xᵢ, yᵢ) for each training example. A binary mask is sampled: bᵢ ~ Bernoulli(s(xᵢ, yᵢ)). The predictor (any ML model) is trained on {(xᵢ, yᵢ) : bᵢ = 1}. The predictor\'s validation performance R = V(validation; predictor trained on selected subset) is the reward. DVE weights are updated via REINFORCE: \\nabla_DVE J ≈ \\Sigmaᵢ (R − baseline) \\nabla_{DVE} log P(bᵢ | s(xᵢ, yᵢ)). The DVE learns to assign high selection probability to examples that improve the predictor\'s validation performance when selected. DVRL is model-agnostic: the predictor can be any ML model (XGBoost, neural net, etc.).",
       hints: [
         "The bilevel structure: DVE selects data → predictor trains on selected data → validation performance rewards DVE.",
         "DVRL is more flexible than Data Shapley (works with any predictor, not just the specific architecture) but provides approximate values and requires more computation (training both DVE and predictor).",
@@ -1132,13 +1132,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "A training example with a negative Data Shapley value (φᵢ < 0) always indicates a mislabeled example that should be removed from the training set.",
+        "A training example with a negative Data Shapley value (\\phiᵢ < 0) always indicates a mislabeled example that should be removed from the training set.",
       correctAnswer: "False",
       explanation:
-        "Negative Data Shapley value φᵢ < 0 means: adding example i to any random subset S of training data tends to decrease validation performance (on average). This is a necessary but not sufficient condition for mislabeling. Causes of negative Shapley values: (1) Mislabeled examples: the most common cause — the example provides contradictory gradient signals. (2) Out-of-distribution examples: in-distribution for the training set but not for the validation set (different collection conditions). (3) Examples from underrepresented subgroups that happen to hurt validation set performance (if validation set doesn\'t represent that subgroup either). (4) Extreme outliers that generalize poorly. Correct action: inspect negative-Shapley examples manually, prioritizing the most negative. Some may be legitimate training examples whose removal would reduce model robustness, even if they hurt the specific validation metric used for Shapley computation.",
+        "Negative Data Shapley value \\phiᵢ < 0 means: adding example i to any random subset S of training data tends to decrease validation performance (on average). This is a necessary but not sufficient condition for mislabeling. Causes of negative Shapley values: (1) Mislabeled examples: the most common cause — the example provides contradictory gradient signals. (2) Out-of-distribution examples: in-distribution for the training set but not for the validation set (different collection conditions). (3) Examples from underrepresented subgroups that happen to hurt validation set performance (if validation set doesn\'t represent that subgroup either). (4) Extreme outliers that generalize poorly. Correct action: inspect negative-Shapley examples manually, prioritizing the most negative. Some may be legitimate training examples whose removal would reduce model robustness, even if they hurt the specific validation metric used for Shapley computation.",
       hints: [
         "Data Shapley is a metric relative to the validation set. If the validation set has distribution mismatch with deployment, Shapley values may incorrectly flag useful examples.",
-        "Negative φᵢ: strong signal to inspect. Zero φᵢ: example doesn\'t help or hurt (redundant with other examples). Positive φᵢ: example actively improves model.",
+        "Negative \\phiᵢ: strong signal to inspect. Zero \\phiᵢ: example doesn\'t help or hurt (redundant with other examples). Positive \\phiᵢ: example actively improves model.",
       ],
     },
     {
@@ -1146,7 +1146,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Beta Shapley (Kwon & Zou 2022) generalizes Data Shapley by using a Beta(α, β) distribution over coalition sizes instead of the uniform distribution used by standard Shapley. Setting α=1, β=1 reduces to standard Shapley. Setting α=1, β→∞ focuses on marginal contributions to:",
+        "Beta Shapley (Kwon & Zou 2022) generalizes Data Shapley by using a Beta(\\alpha, \\beta) distribution over coalition sizes instead of the uniform distribution used by standard Shapley. Setting \\alpha=1, \\beta=1 reduces to standard Shapley. Setting \\alpha=1, \\beta→∞ focuses on marginal contributions to:",
       options: [
         "Empty coalitions (single-example marginal contributions only)",
         "Full coalitions — the marginal contribution of each example when added to the full training dataset, focusing on which examples are necessary vs. redundant given all other data",
@@ -1155,7 +1155,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Beta Shapley weight function: w(|S|) ∝ Beta(|S|+α; n−|S|+β). With α=1, β→∞: w(|S|) concentrates all weight on |S| = n−1 (the largest coalition). This means: φᵢ^Beta ≈ V(D) − V(D \\ {i}) — the reduction in performance when example i is removed from the FULL training set. This is the Leave-One-Out (LOO) value, a classic influence function metric. With α→∞, β=1: w(|S|) concentrates on |S| = 0 — the marginal value of example i when added to the empty set (single example training). Standard Shapley (α=β=1) gives equal weight to all coalition sizes — providing the fairest allocation axiomatically. Beta Shapley allows practitioners to interpolate between LOO influence (α=1, β large) and empty-set contribution (α large, β=1) based on which questions are most relevant.",
+        "Beta Shapley weight function: w(|S|) \\propto Beta(|S|+\\alpha; n−|S|+\\beta). With \\alpha=1, \\beta→∞: w(|S|) concentrates all weight on |S| = n−1 (the largest coalition). This means: \\phiᵢ^Beta ≈ V(D) − V(D \\ {i}) — the reduction in performance when example i is removed from the FULL training set. This is the Leave-One-Out (LOO) value, a classic influence function metric. With \\alpha→∞, \\beta=1: w(|S|) concentrates on |S| = 0 — the marginal value of example i when added to the empty set (single example training). Standard Shapley (\\alpha=\\beta=1) gives equal weight to all coalition sizes — providing the fairest allocation axiomatically. Beta Shapley allows practitioners to interpolate between LOO influence (\\alpha=1, \\beta large) and empty-set contribution (\\alpha large, \\beta=1) based on which questions are most relevant.",
       hints: [
         "LOO (Leave-One-Out) is a special case of Beta Shapley and is computationally cheaper: n model retrain runs vs. exponentially many for exact Shapley.",
         "When to use LOO vs. Shapley: LOO measures redundancy in a large dataset (which examples are not needed given all others). Shapley measures fair value attribution accounting for all possible training set sizes.",
@@ -1169,13 +1169,13 @@ const questions: Record<string, Question[]> = {
         "A data marketplace wants to fairly compensate data contributors (each contributing a subset of training examples) for their contribution to a shared ML model. Data Shapley is the principled solution because it satisfies four axioms. Which axiom prevents a situation where two contributors with identical datasets receive different payments?",
       options: [
         "Efficiency: total payment equals the total model value gained from all data",
-        "Symmetry: if contributors i and j have identical marginal contributions V(S ∪ {i}) = V(S ∪ {j}) for every coalition S, then φᵢ = φⱼ — they receive equal payment",
+        "Symmetry: if contributors i and j have identical marginal contributions V(S ∪ {i}) = V(S ∪ {j}) for every coalition S, then \\phiᵢ = \\phiⱼ — they receive equal payment",
         "Null player: contributors whose data adds no value receive zero payment",
         "Additivity: payments for two separate tasks sum correctly",
       ],
       correctAnswer: 1,
       explanation:
-        "The four Shapley axioms applied to data valuation: (1) Efficiency: Σᵢ φᵢ = V(D) − V(∅) — the total Shapley payments exactly account for the full value created by combining all data. (2) Symmetry: if two contributors have identical marginal contributions to every possible coalition, they receive equal payment. This prevents arbitrary discrimination between equivalent data sources. (3) Null player: if contributor i\'s data never improves any coalition (V(S ∪ {i}) = V(S) for all S), then φᵢ = 0. (4) Additivity (linearity): if a task decomposes into two independent subtasks, Shapley values sum correctly. Symmetry is specifically the axiom addressing the question: two contributors with identical data (same content and quality) would have identical marginal contributions to every coalition, and by symmetry, must receive equal payment — the unique Shapley allocation guarantees this.",
+        "The four Shapley axioms applied to data valuation: (1) Efficiency: \\Sigmaᵢ \\phiᵢ = V(D) − V(∅) — the total Shapley payments exactly account for the full value created by combining all data. (2) Symmetry: if two contributors have identical marginal contributions to every possible coalition, they receive equal payment. This prevents arbitrary discrimination between equivalent data sources. (3) Null player: if contributor i\'s data never improves any coalition (V(S ∪ {i}) = V(S) for all S), then \\phiᵢ = 0. (4) Additivity (linearity): if a task decomposes into two independent subtasks, Shapley values sum correctly. Symmetry is specifically the axiom addressing the question: two contributors with identical data (same content and quality) would have identical marginal contributions to every coalition, and by symmetry, must receive equal payment — the unique Shapley allocation guarantees this.",
       hints: [
         "The Shapley value is the UNIQUE allocation satisfying all four axioms simultaneously (Shapley 1953 theorem). No other allocation is simultaneously efficient, symmetric, null-player, and additive.",
         "Data marketplace application: contributors submit their data to a data pool. The model trains on the pool and achieves value V(D). Shapley values allocate the value V(D) − V(∅) fairly among contributors.",
@@ -1198,7 +1198,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Pseudo-label quality is directly tied to model confidence calibration. At threshold θ = 0.5: many pseudo-labels are included but many are wrong (model is only 50% confident) — the wrong pseudo-labels add label noise that can hurt more than help. At θ = 0.99: only very confident predictions are pseudo-labeled, likely correct, but so few examples pass that the semi-supervised benefit is negligible. Empirically, optimal θ ∈ [0.8, 0.95] for image classification. FixMatch uses θ = 0.95 on weakly augmented views. The fundamental risk of pseudo-labeling: if the initial model has systematic errors (e.g., is biased toward one class), high-confidence wrong pseudo-labels will amplify that error in the retrained model — a "confirmation bias" loop.',
+        'Pseudo-label quality is directly tied to model confidence calibration. At threshold \\theta = 0.5: many pseudo-labels are included but many are wrong (model is only 50% confident) — the wrong pseudo-labels add label noise that can hurt more than help. At \\theta = 0.99: only very confident predictions are pseudo-labeled, likely correct, but so few examples pass that the semi-supervised benefit is negligible. Empirically, optimal \\theta ∈ [0.8, 0.95] for image classification. FixMatch uses \\theta = 0.95 on weakly augmented views. The fundamental risk of pseudo-labeling: if the initial model has systematic errors (e.g., is biased toward one class), high-confidence wrong pseudo-labels will amplify that error in the retrained model — a "confirmation bias" loop.',
       hints: [
         "High threshold → high precision pseudo-labels but low recall (few pseudo-labeled examples). Low threshold → more pseudo-labeled data but higher noise rate.",
         "Self-training (one form of pseudo-labeling) can overfit to initial model errors if confidence thresholding is not carefully managed.",
@@ -1212,7 +1212,7 @@ const questions: Record<string, Question[]> = {
         "Consistency regularization assumes that a good classifier\'s predictions should be invariant to small semantics-preserving perturbations of unlabeled inputs, providing a learning signal without requiring true labels.",
       correctAnswer: "True",
       explanation:
-        "Consistency regularization (Sajjadi et al. 2016, Laine & Aila 2017): for unlabeled example u, apply two stochastic augmentations u₁ = aug₁(u) and u₂ = aug₂(u). The model should satisfy: f(u₁) ≈ f(u₂). Loss: L_con = d(f(u₁), f(u₂)) where d is a divergence (MSE, KL divergence). This loss requires NO labels — only unlabeled examples. It enforces that the decision boundary lies in low-density regions (Manifold Hypothesis): if u is on a high-density manifold region, then u₁ and u₂ (small perturbations of u) are likely on the same class manifold, so consistent predictions are correct. Methods using consistency: Π-model, Mean Teacher (EMA-smoothed predictions), UDA (diverse augmentations), FixMatch.",
+        "Consistency regularization (Sajjadi et al. 2016, Laine & Aila 2017): for unlabeled example u, apply two stochastic augmentations u₁ = aug₁(u) and u₂ = aug₂(u). The model should satisfy: f(u₁) ≈ f(u₂). Loss: L_con = d(f(u₁), f(u₂)) where d is a divergence (MSE, KL divergence). This loss requires NO labels — only unlabeled examples. It enforces that the decision boundary lies in low-density regions (Manifold Hypothesis): if u is on a high-density manifold region, then u₁ and u₂ (small perturbations of u) are likely on the same class manifold, so consistent predictions are correct. Methods using consistency: \\Pi-model, Mean Teacher (EMA-smoothed predictions), UDA (diverse augmentations), FixMatch.",
       hints: [
         "The underlying assumption: semantics-preserving augmentations (flip, crop, color jitter) do not change the true label → if they should not change the label, the model should not change its prediction.",
         "Consistency alone does not prevent the model from assigning all examples to one class (trivially consistent). Need entropy minimization or pseudo-labeling to ensure meaningful predictions.",
@@ -1223,16 +1223,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "FixMatch (Sohn et al. 2020) combines pseudo-labeling and consistency regularization. Given an unlabeled image u, it applies a weak augmentation α(u) and a strong augmentation A(u). The training loss for the unlabeled example is:",
+        "FixMatch (Sohn et al. 2020) combines pseudo-labeling and consistency regularization. Given an unlabeled image u, it applies a weak augmentation \\alpha(u) and a strong augmentation A(u). The training loss for the unlabeled example is:",
       options: [
-        "Cross-entropy between f(α(u)) and f(A(u)) regardless of confidence — enforce consistency for all unlabeled examples",
-        "If max_k p̂_k(α(u)) ≥ τ (threshold): cross-entropy loss targeting argmax p̂(α(u)) applied to f(A(u)); else: no loss for this example",
-        "MSE between f(α(u)) and f(A(u)) weighted by the confidence max_k p̂_k(α(u))",
+        "Cross-entropy between f(\\alpha(u)) and f(A(u)) regardless of confidence — enforce consistency for all unlabeled examples",
+        "If max_k p̂_k(\\alpha(u)) ≥ \\tau (threshold): cross-entropy loss targeting argmax p̂(\\alpha(u)) applied to f(A(u)); else: no loss for this example",
+        "MSE between f(\\alpha(u)) and f(A(u)) weighted by the confidence max_k p̂_k(\\alpha(u))",
         "Cross-entropy between f(A(u)) and the uniform distribution [1/C, …, 1/C] to prevent overconfidence",
       ],
       correctAnswer: 1,
       explanation:
-        "FixMatch unlabeled loss: for each unlabeled image u: (1) Compute pseudo-label: q̂ = argmax_k p̂(y=k | α(u)) where α = weak augmentation (horizontal flip + small crop). (2) Confidence check: if max_k p̂_k(α(u)) ≥ τ (typically τ = 0.95): include this example in the unlabeled loss. (3) Loss: H(q̂, p(y | A(u))) = cross-entropy between pseudo-label q̂ and model prediction on STRONGLY augmented version A(u). A = strong augmentation (RandAugment). The key insight: generate the pseudo-label from a STABLE (weakly augmented) view → the label is reliable. Train the model to match this label on a HARD (strongly augmented) view → this forces the model to learn invariance. If confidence < τ: this example contributes 0 loss — only confident pseudo-labels train the model.",
+        "FixMatch unlabeled loss: for each unlabeled image u: (1) Compute pseudo-label: q̂ = argmax_k p̂(y=k | \\alpha(u)) where \\alpha = weak augmentation (horizontal flip + small crop). (2) Confidence check: if max_k p̂_k(\\alpha(u)) ≥ \\tau (typically \\tau = 0.95): include this example in the unlabeled loss. (3) Loss: H(q̂, p(y | A(u))) = cross-entropy between pseudo-label q̂ and model prediction on STRONGLY augmented version A(u). A = strong augmentation (RandAugment). The key insight: generate the pseudo-label from a STABLE (weakly augmented) view → the label is reliable. Train the model to match this label on a HARD (strongly augmented) view → this forces the model to learn invariance. If confidence < \\tau: this example contributes 0 loss — only confident pseudo-labels train the model.",
       hints: [
         "Weak augment → stable prediction → generate pseudo-label. Strong augment → challenging input → enforce label consistency. The asymmetry is the key innovation.",
         "FixMatch vs. MeanTeacher: MeanTeacher uses an exponential moving average (EMA) of model weights to generate more stable pseudo-labels. FixMatch uses the same model but with weak augmentation for stability.",
@@ -1252,10 +1252,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Label Propagation (Zhu & Ghahramani 2002): construct a graph G = (V, E) where V = all examples (labeled L and unlabeled U) and edge weight w_ij ∝ exp(−‖xᵢ − xⱼ‖²/σ²). Transition matrix T_ij = w_ij / Σₖ w_ik. Update rule: F_U ← T_UU F_U + T_UL F_L, where F_L is fixed at the observed labels and F_U is the unlabeled label matrix being propagated. Iterate until convergence. Intuition: labels flow from labeled to unlabeled nodes through high-similarity edges — unlabeled nodes near a labeled cluster adopt that cluster\'s label. Convergence is guaranteed under mild conditions. Key assumption: connected regions of high-density feature space share the same label (cluster assumption). This is the same assumption underlying all semi-supervised methods.",
+        "Label Propagation (Zhu & Ghahramani 2002): construct a graph G = (V, E) where V = all examples (labeled L and unlabeled U) and edge weight w_ij \\propto exp(−‖xᵢ − xⱼ‖²/\\sigma²). Transition matrix T_ij = w_ij / \\Sigmaₖ w_ik. Update rule: F_U ← T_UU F_U + T_UL F_L, where F_L is fixed at the observed labels and F_U is the unlabeled label matrix being propagated. Iterate until convergence. Intuition: labels flow from labeled to unlabeled nodes through high-similarity edges — unlabeled nodes near a labeled cluster adopt that cluster\'s label. Convergence is guaranteed under mild conditions. Key assumption: connected regions of high-density feature space share the same label (cluster assumption). This is the same assumption underlying all semi-supervised methods.",
       hints: [
         "Label propagation has a closed-form solution: F_U* = (I − T_UU)⁻¹ T_UL F_L. For small datasets, this matrix inverse can be computed directly; for large datasets, iterative update is used.",
-        "Graph construction is the key design choice: k-NN graph (connect each node to its k nearest neighbors) is common. Edge weights that are too broad (large σ) propagate labels across class boundaries.",
+        "Graph construction is the key design choice: k-NN graph (connect each node to its k nearest neighbors) is common. Edge weights that are too broad (large \\sigma) propagate labels across class boundaries.",
       ],
     },
     {
@@ -1266,7 +1266,7 @@ const questions: Record<string, Question[]> = {
         "MixMatch (Berthelot et al. 2019) unifies pseudo-labeling and consistency regularization by generating soft pseudo-labels for unlabeled examples using an average of predictions over multiple augmented views, then applying MixUp to both labeled and pseudo-labeled examples.",
       correctAnswer: "True",
       explanation:
-        "MixMatch combines three ideas: (1) Pseudo-labeling with sharpening: for unlabeled example u, generate K augmented views, average the model predictions q̄ = (1/K) Σₖ p(y | aug_k(u)), then sharpen the distribution: q_sharp = q̄^(1/T) / Σⱼ q̄ⱼ^(1/T) (T < 1 reduces entropy). (2) Consistency regularization: predict consistently across all K augmented views. (3) MixUp: apply MixUp to the combined set of labeled examples (with one-hot labels) and pseudo-labeled examples (with sharpened soft labels). The sharpening step encourages the model to make confident predictions on unlabeled data (low-entropy soft labels), acting as entropy minimization. The full MixMatch training loss: L = L_supervised(labeled) + λ_U × L_unsupervised(pseudo-labeled MixUp). MixMatch outperformed prior semi-supervised methods with 250 CIFAR-10 labels by a large margin.",
+        "MixMatch combines three ideas: (1) Pseudo-labeling with sharpening: for unlabeled example u, generate K augmented views, average the model predictions q̄ = (1/K) \\Sigmaₖ p(y | aug_k(u)), then sharpen the distribution: q_sharp = q̄^(1/T) / \\Sigmaⱼ q̄ⱼ^(1/T) (T < 1 reduces entropy). (2) Consistency regularization: predict consistently across all K augmented views. (3) MixUp: apply MixUp to the combined set of labeled examples (with one-hot labels) and pseudo-labeled examples (with sharpened soft labels). The sharpening step encourages the model to make confident predictions on unlabeled data (low-entropy soft labels), acting as entropy minimization. The full MixMatch training loss: L = L_supervised(labeled) + \\lambda_U × L_unsupervised(pseudo-labeled MixUp). MixMatch outperformed prior semi-supervised methods with 250 CIFAR-10 labels by a large margin.",
       hints: [
         "Sharpening with T < 1: q_sharp_k = q̄_k^(1/T). As T → 0, sharpening becomes argmax (hard pseudo-label). T = 0.5 is a typical value for moderate sharpening.",
         "MixMatch improvement: using K=2 augmented views for averaging gives more stable pseudo-labels than a single augmented view. K > 2 gives diminishing returns.",
@@ -1286,7 +1286,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The cluster assumption connection to FixMatch: FixMatch\'s confidence threshold τ = 0.95 selects examples where the model predicts very confidently — these examples are far from the current decision boundary in probability space. By assigning pseudo-labels to high-confidence examples and training on strongly augmented versions of them, FixMatch places gradient pressure to maintain confident predictions across the region around each selected example. The strongly augmented view tests the model\'s robustness in a neighborhood of the example: if the model must predict the same class for x and its strong augmentation A(x), the decision boundary cannot pass through the local neighborhood of x. Since confident predictions are associated with high-density class regions (far from boundaries), this implicitly enforces that the boundary stays in low-density regions. The connection: high confidence ↔ away from boundary ↔ low-density region ↔ cluster assumption satisfied.",
+        "The cluster assumption connection to FixMatch: FixMatch\'s confidence threshold \\tau = 0.95 selects examples where the model predicts very confidently — these examples are far from the current decision boundary in probability space. By assigning pseudo-labels to high-confidence examples and training on strongly augmented versions of them, FixMatch places gradient pressure to maintain confident predictions across the region around each selected example. The strongly augmented view tests the model\'s robustness in a neighborhood of the example: if the model must predict the same class for x and its strong augmentation A(x), the decision boundary cannot pass through the local neighborhood of x. Since confident predictions are associated with high-density class regions (far from boundaries), this implicitly enforces that the boundary stays in low-density regions. The connection: high confidence ↔ away from boundary ↔ low-density region ↔ cluster assumption satisfied.",
       hints: [
         "The cluster assumption is equivalent to the low-density separation assumption: good classifiers place their decision boundaries in regions where P(x) is low, not in the interior of high-density clusters.",
         "Entropy minimization (Grandvalet & Bengio 2005) directly minimizes H(p(y|x)) for unlabeled x — equivalent to pushing predictions toward the simplex vertices, enforcing the cluster assumption without a threshold.",
@@ -1323,7 +1323,7 @@ const questions: Record<string, Question[]> = {
         "SimCLR (Chen et al. 2020) defines positive pairs using data augmentation — two augmented views of the same image — and negative pairs as augmented views from DIFFERENT images in the same mini-batch, with no class labels required.",
       correctAnswer: "True",
       explanation:
-        'SimCLR contrastive learning: for each image x in batch of size N: create two augmented views: x_i = t(x) and x_j = t\'(x) using stochastic augmentations t, t\' drawn from the augmentation distribution T. The 2N augmented views form N positive pairs and 2N(N-1) negative pairs. Loss (NT-Xent): ℓ(i, j) = −log exp(sim(zᵢ, zⱼ)/τ) / Σ_{k\$\\neq\$i} exp(sim(zᵢ, zₖ)/τ), where sim = cosine similarity and τ is temperature. No class labels are used: the "label" is simply "these two views came from the same image." The model learns representations where same-image augmentations are similar (nearby in embedding space) and different-image augmentations are dissimilar (far apart).',
+        'SimCLR contrastive learning: for each image x in batch of size N: create two augmented views: x_i = t(x) and x_j = t\'(x) using stochastic augmentations t, t\' drawn from the augmentation distribution T. The 2N augmented views form N positive pairs and 2N(N-1) negative pairs. Loss (NT-Xent): ℓ(i, j) = −log exp(sim(zᵢ, zⱼ)/\\tau) / \\Sigma_{k\$\\neq\$i} exp(sim(zᵢ, zₖ)/\\tau), where sim = cosine similarity and \\tau is temperature. No class labels are used: the "label" is simply "these two views came from the same image." The model learns representations where same-image augmentations are similar (nearby in embedding space) and different-image augmentations are dissimilar (far apart).',
       hints: [
         "SimCLR requires large batch sizes (N ≥ 4096) because negatives come from the same batch — more negatives → harder contrastive task → better representations.",
         "Key augmentations: random cropping (most important), color jitter, grayscale. These define what the model should be invariant to.",
@@ -1357,9 +1357,9 @@ const questions: Record<string, Question[]> = {
         "DINO (Self-DIstillation with NO labels, Caron et al. 2021) trains a student network to match the output of a teacher network (an exponential moving average of the student), using only self-supervised objectives — no human labels required.",
       correctAnswer: "True",
       explanation:
-        "DINO framework: student network f_s (trainable) and teacher network f_t (EMA of student: θ_t ← m·θ_t + (1-m)·θ_s). Both networks see different augmented views of the same image. Training objective: student output distribution (sharpened) should match teacher output distribution — but the teacher is not explicitly trained (it emerges from the EMA). DINO uses a centering operation on teacher outputs to prevent collapse (all outputs going to one mode). The result: DINO-pretrained ViT features exhibit explicit semantic segmentation properties — attention maps highlight meaningful object boundaries without any segmentation supervision. This demonstrates that rich semantic structure emerges purely from the self-distillation objective applied to unlabeled image data.",
+        "DINO framework: student network f_s (trainable) and teacher network f_t (EMA of student: \\theta_t ← m·\\theta_t + (1-m)·\\theta_s). Both networks see different augmented views of the same image. Training objective: student output distribution (sharpened) should match teacher output distribution — but the teacher is not explicitly trained (it emerges from the EMA). DINO uses a centering operation on teacher outputs to prevent collapse (all outputs going to one mode). The result: DINO-pretrained ViT features exhibit explicit semantic segmentation properties — attention maps highlight meaningful object boundaries without any segmentation supervision. This demonstrates that rich semantic structure emerges purely from the self-distillation objective applied to unlabeled image data.",
       hints: [
-        "EMA teacher: θ_t = m·θ_t + (1−m)·θ_s with m = 0.996. The teacher changes slowly, providing stable targets for the student. If teacher = student (m=0), training collapses.",
+        "EMA teacher: \\theta_t = m·\\theta_t + (1−m)·\\theta_s with m = 0.996. The teacher changes slowly, providing stable targets for the student. If teacher = student (m=0), training collapses.",
         "DINO without centering collapses: all examples get assigned to one cluster. Centering subtracts the running mean from teacher outputs, preventing dominant mode collapse.",
       ],
     },
@@ -1377,10 +1377,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins loss: L = Σᵢ (1 − Cᵢᵢ)² + λ Σᵢ Σⱼ\$\\neq\$ᵢ Cᵢⱼ², where C is the cross-correlation matrix between normalized embeddings of the two views, computed over a batch: Cᵢⱼ = Σ_b z^A_{b,i} z^B_{b,j} / (‖z^A_{:,i}‖₂ ‖z^B_{:,j}‖₂). The two terms: (1) invariance term: diagonal entries should equal 1 — the same feature should be perfectly correlated across the two views (feature i of view A ↔ feature i of view B). (2) redundancy reduction: off-diagonal entries should equal 0 — different features should be uncorrelated. This is inspired by neuroscience principle that efficient coding should use statistically independent features. Advantage over contrastive methods: does not require negative samples (no large batch size requirement). Advantage over BYOL/DINO: does not require asymmetric architectures (EMA teacher).",
+        "Barlow Twins loss: L = \\Sigmaᵢ (1 − Cᵢᵢ)² + \\lambda \\Sigmaᵢ \\Sigmaⱼ\$\\neq\$ᵢ Cᵢⱼ², where C is the cross-correlation matrix between normalized embeddings of the two views, computed over a batch: Cᵢⱼ = \\Sigma_b z^A_{b,i} z^B_{b,j} / (‖z^A_{:,i}‖₂ ‖z^B_{:,j}‖₂). The two terms: (1) invariance term: diagonal entries should equal 1 — the same feature should be perfectly correlated across the two views (feature i of view A ↔ feature i of view B). (2) redundancy reduction: off-diagonal entries should equal 0 — different features should be uncorrelated. This is inspired by neuroscience principle that efficient coding should use statistically independent features. Advantage over contrastive methods: does not require negative samples (no large batch size requirement). Advantage over BYOL/DINO: does not require asymmetric architectures (EMA teacher).",
       hints: [
         "The cross-correlation matrix C is computed over the batch dimension. Each row/column represents one feature dimension of the embedding. Identity matrix C = I means: each feature is perfectly invariant across views and uncorrelated with all other features.",
-        "λ controls the tradeoff: small λ emphasizes invariance over redundancy reduction; large λ emphasizes decorrelation. λ = 0.0051 was found optimal in the original paper.",
+        "\\lambda controls the tradeoff: small \\lambda emphasizes invariance over redundancy reduction; large \\lambda emphasizes decorrelation. \\lambda = 0.0051 was found optimal in the original paper.",
       ],
     },
     {
@@ -1397,7 +1397,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Linear evaluation logic: if a linear classifier (a single weight matrix W: d → C) achieves high accuracy on frozen representations f_θ(x), then the representations must already be linearly separable by class — i.e., the representation space already separates classes well without task-specific adaptation. This tests what the SSL pre-training learned intrinsically. Fine-tuning allows the encoder to change, adapting to the downstream task — making it impossible to attribute performance to the pre-training alone. Analogy: linear evaluation tests whether the representation is a good measuring tape. Fine-tuning tests whether the full system (tape + adapter) works, which conflates SSL quality with fine-tuning efficiency. Benchmark comparison: DINO ViT-S achieves 77% linear evaluation on ImageNet vs. ~83% with full fine-tuning — the ~6% gap represents what fine-tuning adds beyond the pre-trained representation.",
+        "Linear evaluation logic: if a linear classifier (a single weight matrix W: d → C) achieves high accuracy on frozen representations f_\\theta(x), then the representations must already be linearly separable by class — i.e., the representation space already separates classes well without task-specific adaptation. This tests what the SSL pre-training learned intrinsically. Fine-tuning allows the encoder to change, adapting to the downstream task — making it impossible to attribute performance to the pre-training alone. Analogy: linear evaluation tests whether the representation is a good measuring tape. Fine-tuning tests whether the full system (tape + adapter) works, which conflates SSL quality with fine-tuning efficiency. Benchmark comparison: DINO ViT-S achieves 77% linear evaluation on ImageNet vs. ~83% with full fine-tuning — the ~6% gap represents what fine-tuning adds beyond the pre-trained representation.",
       hints: [
         "The linear evaluation accuracy directly measures whether the SSL features lie on a linearly separable manifold in R^d. High linear evaluation accuracy = the representations are already class-structured.",
         "k-NN evaluation is an even stricter probe: classify by majority vote of k nearest neighbors in the embedding space. No training at all — pure representation quality measurement.",
@@ -1420,7 +1420,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In 5-way 1-shot: 5 classes, 1 support example per class = 5 total labeled examples at test time. Standard fine-tuning (retrain the classifier head on 5 examples) would overfit catastrophically. The solution: meta-learning. During meta-training, the model is trained on many few-shot episodes from seen classes, learning to: (1) extract features that are discriminative in the few-shot regime, (2) rapidly adapt from few examples. At meta-test time, the model uses these learned strategies on novel classes. Prototypical Networks: compute class prototype as mean embedding of 1 support example per class, classify query by nearest prototype. MAML: learn an initialization θ₀ such that 1 gradient step on the 5 support examples produces a good θ.",
+        "In 5-way 1-shot: 5 classes, 1 support example per class = 5 total labeled examples at test time. Standard fine-tuning (retrain the classifier head on 5 examples) would overfit catastrophically. The solution: meta-learning. During meta-training, the model is trained on many few-shot episodes from seen classes, learning to: (1) extract features that are discriminative in the few-shot regime, (2) rapidly adapt from few examples. At meta-test time, the model uses these learned strategies on novel classes. Prototypical Networks: compute class prototype as mean embedding of 1 support example per class, classify query by nearest prototype. MAML: learn an initialization \\theta₀ such that 1 gradient step on the 5 support examples produces a good \\theta.",
       hints: [
         "1-shot is much harder than 5-shot: 1 example per class means the prototype is just a single point, with no variance information. 5-shot gives a better class prototype.",
         "N-way K-shot episode: always novel classes at test time. The model must generalize across classes, not just within a known class distribution.",
@@ -1434,10 +1434,10 @@ const questions: Record<string, Question[]> = {
         "Prototypical Networks classify a query example by computing its Euclidean distance to each class prototype (the mean embedding of K support examples), predicting the class with the nearest prototype.",
       correctAnswer: "True",
       explanation:
-        "Prototypical Networks (Snell et al. 2017): for each class k in the episode, prototype cₖ = (1/K) Σᵢ f_θ(xᵢᵏ), the mean of the K support example embeddings in the learned embedding space. For a query example xq: P(y=k | xq) = softmax(−‖f_θ(xq) − cₖ‖₂²). The predicted class is argmin_k ‖f_θ(xq) − cₖ‖₂². The model is trained episodically on the full multi-class training set using the same procedure: for each training episode, sample N classes, K support per class, Q queries per class, compute cross-entropy loss over the distance-based predictions. The embedding function f_θ is learned to place same-class examples near their prototype and different-class examples far away.",
+        "Prototypical Networks (Snell et al. 2017): for each class k in the episode, prototype cₖ = (1/K) \\Sigmaᵢ f_\\theta(xᵢᵏ), the mean of the K support example embeddings in the learned embedding space. For a query example xq: P(y=k | xq) = softmax(−‖f_\\theta(xq) − cₖ‖₂²). The predicted class is argmin_k ‖f_\\theta(xq) − cₖ‖₂². The model is trained episodically on the full multi-class training set using the same procedure: for each training episode, sample N classes, K support per class, Q queries per class, compute cross-entropy loss over the distance-based predictions. The embedding function f_\\theta is learned to place same-class examples near their prototype and different-class examples far away.",
       hints: [
         "Euclidean distance in embedding space is the key choice. Cosine similarity also works and is sometimes better for text.",
-        "1-shot case: the prototype cₖ = f_θ(xᵢᵏ) is just the single support example embedding itself — the nearest-neighbor classifier in embedding space.",
+        "1-shot case: the prototype cₖ = f_\\theta(xᵢᵏ) is just the single support example embedding itself — the nearest-neighbor classifier in embedding space.",
       ],
     },
     {
@@ -1445,19 +1445,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "MAML (Finn et al. 2017) learns an initial parameter vector θ such that a few gradient steps on a new task\'s support set achieve good performance. The meta-gradient that updates θ is:",
+        "MAML (Finn et al. 2017) learns an initial parameter vector \\theta such that a few gradient steps on a new task\'s support set achieve good performance. The meta-gradient that updates \\theta is:",
       options: [
-        "The gradient of training loss with respect to θ, averaged over all meta-training tasks",
-        "The gradient of query-set loss after the inner-loop adaptation steps, backpropagated THROUGH the inner-loop gradient steps to θ: ∇_θ Σ_τ L_τ(θ − α∇_θ L_τ(θ))",
-        "The gradient of a meta-regularization term that prevents θ from moving too far from the pre-trained checkpoint",
-        "The gradient of the cosine similarity between task-adapted parameters and the initial θ",
+        "The gradient of training loss with respect to \\theta, averaged over all meta-training tasks",
+        "The gradient of query-set loss after the inner-loop adaptation steps, backpropagated THROUGH the inner-loop gradient steps to \\theta: \\nabla_\\theta \\Sigma_\\tau L_\\tau(\\theta − \\alpha\\nabla_\\theta L_\\tau(\\theta))",
+        "The gradient of a meta-regularization term that prevents \\theta from moving too far from the pre-trained checkpoint",
+        "The gradient of the cosine similarity between task-adapted parameters and the initial \\theta",
       ],
       correctAnswer: 1,
       explanation:
-        "MAML meta-gradient: for each task τ: inner loop update: θ'_τ = θ − α∇_θ L_τ^{support}(θ) (1 or K gradient steps on support set). Query loss: L_τ^{query}(θ'_τ). Meta-objective: min_θ Σ_τ L_τ^{query}(θ'_τ) = Σ_τ L_τ^{query}(θ − α∇_θ L_τ^{support}(θ)). The meta-gradient ∇_θ L_τ^{query}(θ'_τ) requires backpropagating THROUGH the inner gradient computation: ∂L_τ^{query}/∂θ = ∂L_τ^{query}/∂θ'_τ · (I − α ∂²L_τ^{support}/∂θ²). The second-order term (Hessian) makes MAML expensive. First-order approximation (FOMAML, Reptile) ignores the Hessian for efficiency.",
+        "MAML meta-gradient: for each task \\tau: inner loop update: \\theta'_\\tau = \\theta − \\alpha\\nabla_\\theta L_\\tau^{support}(\\theta) (1 or K gradient steps on support set). Query loss: L_\\tau^{query}(\\theta'_\\tau). Meta-objective: min_\\theta \\Sigma_\\tau L_\\tau^{query}(\\theta'_\\tau) = \\Sigma_\\tau L_\\tau^{query}(\\theta − \\alpha\\nabla_\\theta L_\\tau^{support}(\\theta)). The meta-gradient \\nabla_\\theta L_\\tau^{query}(\\theta'_\\tau) requires backpropagating THROUGH the inner gradient computation: ∂L_\\tau^{query}/∂\\theta = ∂L_\\tau^{query}/∂\\theta'_\\tau · (I − \\alpha ∂²L_\\tau^{support}/∂\\theta²). The second-order term (Hessian) makes MAML expensive. First-order approximation (FOMAML, Reptile) ignores the Hessian for efficiency.",
       hints: [
-        "The key insight: θ is optimized for fast adaptation, not for directly minimizing task loss. ∇_θ flows through the inner-loop update.",
-        "Second-order MAML requires computing the Hessian of the inner loss — O(p²) memory for p parameters. FOMAML approximates this as 0, treating θ'_τ as if it doesn\'t depend on θ.",
+        "The key insight: \\theta is optimized for fast adaptation, not for directly minimizing task loss. \\nabla_\\theta flows through the inner-loop update.",
+        "Second-order MAML requires computing the Hessian of the inner loss — O(p²) memory for p parameters. FOMAML approximates this as 0, treating \\theta'_\\tau as if it doesn\'t depend on \\theta.",
       ],
     },
     {
@@ -1488,7 +1488,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Matching Networks: given query x and support set S = {(x₁,y₁),...,(xₖ,yₖ)}, classify as: ŷ = Σᵢ a(x, xᵢ)·yᵢ, where a(x, xᵢ) = softmax(cosine_sim(f(x), g(xᵢ))). The attention considers every individual support example. Prototypical Networks: compute class prototype cₖ = (1/K) Σᵢ f(xᵢᵏ) and classify by nearest prototype. In 1-shot (K=1): Matching Networks = Prototypical Networks (only one support example per class, so the prototype IS the example). In K-shot (K > 1): Matching Networks keep all K support examples separate and attend to each individually, while Prototypical Networks average them into one prototype. Matching Networks are more flexible (can differentially weight support examples) but compute similarity to N×K individual examples rather than N prototypes — slower at inference.",
+        "Matching Networks: given query x and support set S = {(x₁,y₁),...,(xₖ,yₖ)}, classify as: ŷ = \\Sigmaᵢ a(x, xᵢ)·yᵢ, where a(x, xᵢ) = softmax(cosine_sim(f(x), g(xᵢ))). The attention considers every individual support example. Prototypical Networks: compute class prototype cₖ = (1/K) \\Sigmaᵢ f(xᵢᵏ) and classify by nearest prototype. In 1-shot (K=1): Matching Networks = Prototypical Networks (only one support example per class, so the prototype IS the example). In K-shot (K > 1): Matching Networks keep all K support examples separate and attend to each individually, while Prototypical Networks average them into one prototype. Matching Networks are more flexible (can differentially weight support examples) but compute similarity to N×K individual examples rather than N prototypes — slower at inference.",
       hints: [
         "The 1-shot equivalence: with K=1 per class, the Prototypical Network prototype is just the single support embedding. Matching Networks attend to that same single embedding. Both reduce to nearest-neighbor in embedding space.",
         "Full context embedding: Matching Networks optionally use bidirectional LSTMs to embed support examples in the context of the full support set — allowing examples to influence each other\'s embeddings.",
@@ -1619,7 +1619,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MinHash property: for a uniformly random hash function h and two sets A, B: P[min_{s ∈ A} h(s) = min_{s ∈ B} h(s)] = |A ∩ B| / |A ∪ B| = Jaccard(A, B). Proof sketch: the minimum hash value is the hash of the element of A ∪ B with the smallest hash value. That element belongs to A ∩ B (both sets agree) with probability |A ∩ B| / |A ∪ B|. Practical MinHash: use k independent hash functions h₁, …, hₖ and compute signature sig(A)ᵢ = min_{s ∈ A} hᵢ(s). Estimate: Jaccard(A, B) ≈ (1/k) Σᵢ 𝟙[sig(A)ᵢ = sig(B)ᵢ]. For k = 200 hash functions, the standard error of the estimate is ~1/√200 ≈ 7%. LSH bands: group the k MinHash values into b bands of r values each; documents with an identical band are candidate near-duplicates for exact comparison.",
+        "MinHash property: for a uniformly random hash function h and two sets A, B: P[min_{s ∈ A} h(s) = min_{s ∈ B} h(s)] = |A ∩ B| / |A ∪ B| = Jaccard(A, B). Proof sketch: the minimum hash value is the hash of the element of A ∪ B with the smallest hash value. That element belongs to A ∩ B (both sets agree) with probability |A ∩ B| / |A ∪ B|. Practical MinHash: use k independent hash functions h₁, …, hₖ and compute signature sig(A)ᵢ = min_{s ∈ A} hᵢ(s). Estimate: Jaccard(A, B) ≈ (1/k) \\Sigmaᵢ 𝟙[sig(A)ᵢ = sig(B)ᵢ]. For k = 200 hash functions, the standard error of the estimate is ~1/√200 ≈ 7%. LSH bands: group the k MinHash values into b bands of r values each; documents with an identical band are candidate near-duplicates for exact comparison.",
       hints: [
         "MinHash is a dimensionality reduction: represent a document with thousands of shingles as a k-dimensional signature (k = 200). Near-duplicate detection becomes a comparison of 200-element vectors instead of thousands of shingles.",
         "The bandwidth b and band size r tradeoff: more bands (larger b) → higher recall (find more near-duplicates) but more false positives. Larger band size r → higher precision but lower recall.",

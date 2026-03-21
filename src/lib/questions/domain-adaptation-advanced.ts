@@ -76,7 +76,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "By Bayes' rule, P(source=1|x)/P(source=0|x) = P(x|source)/P(x|target) = P_S(x)/P_T(x). The ratio P_T(x)/P_S(x) = P(source=0|x)/P(source=1|x) = (1 − P(source=1|x)) / P(source=1|x). This allows training a binary domain classifier and reading off the density ratio from its output.",
       hints: [
-        "Bayes' rule: P(source|x) ∝ P(x|source)·P(source). The ratio P(x|source)/P(x|target) = P_S(x)/P_T(x).",
+        "Bayes' rule: P(source|x) \\propto P(x|source)·P(source). The ratio P(x|source)/P(x|target) = P_S(x)/P_T(x).",
         "You want P_T/P_S, so invert the domain classifier odds ratio.",
       ],
     },
@@ -89,7 +89,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "KMM solves: min_w ||μ_T − Σ_i w_i φ(x_i^S)||²_{RKHS} subject to w_i ≥ 0 and |Σ_i w_i/n_S − 1| ≤ ε. Expanding the squared RKHS norm gives a quadratic objective in w with kernel matrix K_SS and cross-kernel k_ST, yielding a QP that can be solved without explicit density estimation.",
+        "KMM solves: min_w ||\\mu_T − \\Sigma_i w_i \\phi(x_i^S)||²_{RKHS} subject to w_i ≥ 0 and |\\Sigma_i w_i/n_S − 1| ≤ \\epsilon. Expanding the squared RKHS norm gives a quadratic objective in w with kernel matrix K_SS and cross-kernel k_ST, yielding a QP that can be solved without explicit density estimation.",
       hints: [
         "KMM avoids the intermediate step of density estimation by working directly in feature space.",
         "The QP constraint ensures the weights are non-negative and approximately sum to the sample count.",
@@ -100,7 +100,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A key practical failure mode of importance weighting under large distribution shift is variance explosion. Concretely, if w(x) has heavy tails, the weighted empirical risk Σ_i w(x_i) L(h(x_i), y_i) / n:",
+        "A key practical failure mode of importance weighting under large distribution shift is variance explosion. Concretely, if w(x) has heavy tails, the weighted empirical risk \\Sigma_i w(x_i) L(h(x_i), y_i) / n:",
       options: [
         "Converges faster than standard ERM due to the corrective reweighting",
         "May have infinite variance even with a finite-variance loss, since weights can be unbounded — causing the estimator to be dominated by a few extreme samples",
@@ -109,7 +109,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Importance sampling variance is proportional to E_{P_S}[w(x)²·L²] / n. When P_S(x) ≪ P_T(x) for some regions, w(x)=P_T(x)/P_S(x) → ∞, giving enormous variance. Practical fixes include weight clipping (cap at some M), self-normalized importance sampling (Σ w_i L_i / Σ w_i), and KLIEP\'s built-in normalization constraint.",
+        "Importance sampling variance is proportional to E_{P_S}[w(x)²·L²] / n. When P_S(x) ≪ P_T(x) for some regions, w(x)=P_T(x)/P_S(x) → ∞, giving enormous variance. Practical fixes include weight clipping (cap at some M), self-normalized importance sampling (\\Sigma w_i L_i / \\Sigma w_i), and KLIEP\'s built-in normalization constraint.",
       hints: [
         "Importance sampling estimators are unbiased but can have very high variance.",
         "Techniques like weight truncation or self-normalized importance sampling mitigate this at the cost of some bias.",
@@ -128,7 +128,7 @@ const questions: Record<string, Question[]> = {
         "$$\\text{MMD}^2(P,Q) = \\|\\mathbb{E}_{x\\sim P}[\\phi(x)] - \\mathbb{E}_{y\\sim Q}[\\phi(y)]\\|^2_{\\mathcal{H}} = \\mathbb{E}_{x,x'\\sim P}[k(x,x')] - 2\\mathbb{E}_{x\\sim P,y\\sim Q}[k(x,y)] + \\mathbb{E}_{y,y'\\sim Q}[k(y,y')]$$",
         "MMD²(P,Q) = KL(P||Q) estimated via kernel density estimation",
         "MMD²(P,Q) = max_{f: ||f||≤1} |E_P[f(x)] − E_Q[f(x)]| (Wasserstein-1 dual)",
-        "MMD²(P,Q) = ||Cov_P(φ(x)) − Cov_Q(φ(x))||²_F where φ is a fixed feature map",
+        "MMD²(P,Q) = ||Cov_P(\\phi(x)) − Cov_Q(\\phi(x))||²_F where \\phi is a fixed feature map",
       ],
       correctAnswer: 0,
       explanation:
@@ -147,7 +147,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DAN uses a mixture of kernels (MK-MMD: k = Σ_u β_u k_u) in multiple task-specific layers simultaneously to align distributions at multiple levels of abstraction. The multi-kernel approach makes the MMD test more powerful by selecting the best kernel combination.",
+        "DAN uses a mixture of kernels (MK-MMD: k = \\Sigma_u \\beta_u k_u) in multiple task-specific layers simultaneously to align distributions at multiple levels of abstraction. The multi-kernel approach makes the MMD test more powerful by selecting the best kernel combination.",
       hints: [
         "Feature distributions at different layers capture different levels of abstraction.",
         "Aligning representations at multiple layers provides a stronger alignment signal.",
@@ -160,16 +160,16 @@ const questions: Record<string, Question[]> = {
       question:
         "The unbiased U-statistic estimator of MMD²(P,Q) from samples {x_1,...,x_m}∼P and {y_1,...,y_n}∼Q is:",
       options: [
-        "Only cross-domain terms: (2/mn) Σ_{i,j} k(x_i, y_j)",
-        "MMD̂² = [1/(m(m−1)) Σ_{i\$\\neq\$j} k(x_i,x_j)] − [2/(mn) Σ_{i,j} k(x_i,y_j)] + [1/(n(n−1)) Σ_{i\$\\neq\$j} k(y_i,y_j)]",
-        "Only within-domain terms averaged: [1/m² Σ_{i,j} k(x_i,x_j) + 1/n² Σ_{i,j} k(y_i,y_j)] / 2",
+        "Only cross-domain terms: (2/mn) \\Sigma_{i,j} k(x_i, y_j)",
+        "MMD̂² = [1/(m(m−1)) \\Sigma_{i\$\\neq\$j} k(x_i,x_j)] − [2/(mn) \\Sigma_{i,j} k(x_i,y_j)] + [1/(n(n−1)) \\Sigma_{i\$\\neq\$j} k(y_i,y_j)]",
+        "Only within-domain terms averaged: [1/m² \\Sigma_{i,j} k(x_i,x_j) + 1/n² \\Sigma_{i,j} k(y_i,y_j)] / 2",
         "The log of the ratio of within-class to between-class kernel values",
       ],
       correctAnswer: 1,
       explanation:
         "The U-statistic excludes diagonal terms (i=j) to ensure unbiasedness: MMD̂² uses sums over i\$\\neq\$j pairs for within-source and within-target terms. Excluding diagonals ensures E[MMD̂²] = MMD² without a positive bias from k(x_i, x_i) = k(y_j, y_j) = 1 (for normalized kernels).",
       hints: [
-        "Expand ||μ_S − μ_T||² in the RKHS to see all three term types.",
+        "Expand ||\\mu_S − \\mu_T||² in the RKHS to see all three term types.",
         "The U-statistic is unbiased because it excludes self-comparisons k(x_i, x_i).",
       ],
     },
@@ -183,14 +183,14 @@ const questions: Record<string, Question[]> = {
       question:
         "In DANN (Domain-Adversarial Neural Networks, Ganin et al., 2016), the gradient reversal layer (GRL) multiplies gradients by ___ during backpropagation, and acts as ___ during the forward pass.",
       options: [
-        "Multiplies by −λ during backprop; acts as the identity function during forward pass",
-        "Multiplies by +λ during backprop; acts as a zero function during forward pass",
+        "Multiplies by −\\lambda during backprop; acts as the identity function during forward pass",
+        "Multiplies by +\\lambda during backprop; acts as a zero function during forward pass",
         "Multiplies by 0 during backprop; acts as a scaling function during forward pass",
-        "Multiplies by −1/λ during backprop; acts as ReLU during forward pass",
+        "Multiplies by −1/\\lambda during backprop; acts as ReLU during forward pass",
       ],
       correctAnswer: 0,
       explanation:
-        "The GRL is defined as: forward pass R(x) = x (identity); backward pass ∂R/∂x = −λI. The hyperparameter λ is often annealed during training: λ = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it — both objectives satisfied in a single network.",
+        "The GRL is defined as: forward pass R(x) = x (identity); backward pass ∂R/∂x = −\\lambdaI. The hyperparameter \\lambda is often annealed during training: \\lambda = 2/(1+exp(−10p)) − 1 where p goes from 0 to 1 over training. This makes the feature extractor maximize domain confusion (adversarial to domain classifier) while the domain classifier minimizes it — both objectives satisfied in a single network.",
       hints: [
         "The GRL is a zero-cost trick in the forward pass — it only affects backpropagation.",
         "Reversing gradients makes the feature extractor compete against the domain classifier — adversarial alignment.",
@@ -205,7 +205,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − λ·L_d(G_d(G_f(x)), d)].",
+        "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − \\lambda·L_d(G_d(G_f(x)), d)].",
       hints: [
         "These two objectives can conflict — the feature extractor must find a balance.",
         "The gradient reversal layer implements the adversarial part without requiring alternating optimization.",
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DANN\'s theoretical justification draws on Ben-David et al.'s bound: ε_T(h) ≤ ε_S(h) + d_{H△H}(S,T)/2 + λ*. What does the H△H-divergence d_{H△H}(S,T) measure, and why does minimizing it justify DANN?",
+        "DANN\'s theoretical justification draws on Ben-David et al.'s bound: \\epsilon_T(h) ≤ \\epsilon_S(h) + d_{H△H}(S,T)/2 + \\lambda*. What does the H△H-divergence d_{H△H}(S,T) measure, and why does minimizing it justify DANN?",
       options: [
         "It measures the KL divergence between source and target feature distributions; DANN minimizes it via MMD",
         "It measures the discrepancy between source and target distributions in terms of the hypothesis class H — specifically the maximum difference in error between the best hypothesis on source and target; DANN minimizes it by making features indistinguishable to a domain classifier in H",
@@ -227,7 +227,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The H△H-divergence measures how well a classifier in hypothesis class H can distinguish source from target samples. If H contains the domain classifier, d_{H△H}(S,T) is related to domain classification accuracy. DANN minimizes this by training the feature extractor adversarially against the domain classifier — directly minimizing the theoretical upper bound on target error.",
       hints: [
-        "The bound has three terms: source error, domain divergence, and the irreducible error λ*.",
+        "The bound has three terms: source error, domain divergence, and the irreducible error \\lambda*.",
         "DANN minimizes the H-divergence term by making features indistinguishable across domains.",
       ],
     },
@@ -242,8 +242,8 @@ const questions: Record<string, Question[]> = {
         "CORAL (CORrelation ALignment, Sun & Saenko, 2016) aligns source and target domains by minimizing the CORAL loss, which is defined as:",
       options: [
         "L_CORAL = (1/4d²) ||C_S − C_T||²_F, where C_S and C_T are the feature covariance matrices and d is the feature dimension",
-        "L_CORAL = (1/d) ||μ_S − μ_T||² where μ are the feature means",
-        "L_CORAL = KL(N(μ_S, C_S) || N(μ_T, C_T)) between Gaussian approximations of the feature distributions",
+        "L_CORAL = (1/d) ||\\mu_S − \\mu_T||² where \\mu are the feature means",
+        "L_CORAL = KL(N(\\mu_S, C_S) || N(\\mu_T, C_T)) between Gaussian approximations of the feature distributions",
         "L_CORAL = Tr(C_S^{−1} C_T) − log det(C_S^{−1} C_T) − d (the Riemannian distance between SPD matrices)",
       ],
       correctAnswer: 0,
@@ -251,7 +251,7 @@ const questions: Record<string, Question[]> = {
         "CORAL minimizes L_CORAL = (1/4d²)||C_S − C_T||²_F where C_S = (1/(n−1))(X_S^T X_S − (1/n)(1^T X_S)^T(1^T X_S)) and similarly for C_T. The 4d² normalization accounts for the matrix size. Unlike MMD, CORAL has a closed-form solution: whiten source features (C_S^{−1/2}) and color with target (C_T^{1/2}), requiring only two eigendecompositions.",
       hints: [
         "First-order alignment = mean matching; second-order alignment = covariance matching.",
-        "The Frobenius norm measures element-wise differences between matrices: ||A||²_F = Σ_{i,j} A_{ij}².",
+        "The Frobenius norm measures element-wise differences between matrices: ||A||²_F = \\Sigma_{i,j} A_{ij}².",
       ],
     },
     {
@@ -340,7 +340,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pixel-level mixup creates intermediate images λx_s + (1−λ)x_t; varying λ from 1 to 0 defines a continuum from source to target, providing smooth intermediate supervision for progressive adaptation.",
+        "Pixel-level mixup creates intermediate images \\lambdax_s + (1−\\lambda)x_t; varying \\lambda from 1 to 0 defines a continuum from source to target, providing smooth intermediate supervision for progressive adaptation.",
       hints: [
         "Mixup is a simple interpolation in input space between two examples.",
         "By varying the mixing coefficient, you can smoothly transition from one domain to the other.",
@@ -565,13 +565,13 @@ const questions: Record<string, Question[]> = {
         "TENT (Wang et al., 2021) performs test-time entropy minimization by updating only which parameters of the network?",
       options: [
         "All parameters including convolutional filters",
-        "Only the affine parameters (scale γ and shift β) of batch normalization layers",
+        "Only the affine parameters (scale \\gamma and shift \\beta) of batch normalization layers",
         "Only the final classification layer weights",
         "Only the parameters of a separately trained adapter network",
       ],
       correctAnswer: 1,
       explanation:
-        "TENT updates only the BatchNorm affine parameters (γ, β) by minimizing entropy of the output distribution on test batches, which is computationally cheap and avoids catastrophic forgetting of other parameters.",
+        "TENT updates only the BatchNorm affine parameters (\\gamma, \\beta) by minimizing entropy of the output distribution on test batches, which is computationally cheap and avoids catastrophic forgetting of other parameters.",
       hints: [
         "BatchNorm affine parameters control the output statistics per channel and are lightweight to update.",
         "Updating only these parameters limits the risk of over-adapting to a few test samples.",
@@ -1492,7 +1492,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "BBSE uses the source model\'s confusion matrix C (where C_{ij} = P(ŷ=i|y=j)) to solve Cw = μ̂_t for the target label weights w, where μ̂_t is the empirical prediction distribution on unlabeled target data.",
+        "BBSE uses the source model\'s confusion matrix C (where C_{ij} = P(ŷ=i|y=j)) to solve Cw = \\mû_t for the target label weights w, where \\mû_t is the empirical prediction distribution on unlabeled target data.",
       hints: [
         "The confusion matrix links predicted class frequencies to true class frequencies.",
         "Given the model predictions on target data and the confusion matrix, linear algebra recovers the target label distribution.",
@@ -1782,9 +1782,9 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = Σ_i F_i (θ_i - θ_0_i)² where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
+        "EATA (Efficient Anti-Forgetting Test-Time Adaptation): (1) Sample filtering: only adapt on examples where prediction entropy H < threshold — skipping high-uncertainty examples. (2) Fisher regularization: L_reg = \\Sigma_i F_i (\\theta_i - \\theta_0_i)² where F_i is the Fisher information for parameter i from source training. This penalizes changes to parameters important for the source task, preventing catastrophic forgetting while allowing adaptation.",
       hints: [
-        "Fisher information as parameter importance: F_i = E[(∂ log p(y|x)/∂θ_i)²] — high Fisher importance means the parameter strongly affects source task predictions.",
+        "Fisher information as parameter importance: F_i = E[(∂ log p(y|x)/∂\\theta_i)²] — high Fisher importance means the parameter strongly affects source task predictions.",
         "Threshold filtering: examples with H(p) < H_threshold are reliable and provide good gradient signal. Uncertain examples have noisy pseudo-labels that can hurt performance.",
       ],
     },
@@ -1839,7 +1839,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MoE for domain adaptation: the gating network g(x) = softmax(Wx) learns domain assignments from input features. Multiple expert feature extractors {E_1,...,E_K} specialize on different domain aspects. The combined representation f(x) = Σ_k g_k(x) E_k(x) adapts to each example\'s domain content. Advantages: (1) Handles multi-domain inputs where examples may come from hybrid distributions. (2) Learns implicit domain structure without requiring domain labels. (3) Can generalize to novel domains via novel gating combinations.",
+        "MoE for domain adaptation: the gating network g(x) = softmax(Wx) learns domain assignments from input features. Multiple expert feature extractors {E_1,...,E_K} specialize on different domain aspects. The combined representation f(x) = \\Sigma_k g_k(x) E_k(x) adapts to each example\'s domain content. Advantages: (1) Handles multi-domain inputs where examples may come from hybrid distributions. (2) Learns implicit domain structure without requiring domain labels. (3) Can generalize to novel domains via novel gating combinations.",
       hints: [
         "Domain adaptation with MoE: experts implicitly learn domain-specific feature transformations while the gating network learns to detect domain membership from input statistics.",
         "Sparse MoE (top-K gating): only K experts activated per example — reduces compute while maintaining adaptability. Load balancing loss ensures no expert is ignored.",
@@ -1856,16 +1856,16 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "The Ben-David et al. (2010) theory bound for domain adaptation states that target error is bounded by:",
       options: [
         "Target error ≤ source error only",
-        "Target error ≤ source error + H-divergence between source and target distributions + λ*, where λ* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously",
+        "Target error ≤ source error + H-divergence between source and target distributions + \\lambda*, where \\lambda* is the combined error of the ideal joint hypothesis for both domains — motivating minimizing both source error and domain divergence simultaneously",
         "Target error ≤ source error × (1 + H-divergence)",
         "Target error ≤ H-divergence only, independent of source error",
       ],
       correctAnswer: 1,
       explanation:
-        "Ben-David et al. (2010) bound: ε_T(h) ≤ ε_S(h) + d_{H△H}(S,T) + λ* where: ε_T(h) = target error; ε_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); λ* = min_{h∈H}[ε_S(h)+ε_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The λ* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
+        "Ben-David et al. (2010) bound: \\epsilon_T(h) ≤ \\epsilon_S(h) + d_{H△H}(S,T) + \\lambda* where: \\epsilon_T(h) = target error; \\epsilon_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); \\lambda* = min_{h∈H}[\\epsilon_S(h)+\\epsilon_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The \\lambda* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
       hints: [
         "H-divergence: d_{H△H}(S,T) ≈ 2(1 - 2·min_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence ≈ 0.",
-        "λ* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — λ* is non-zero.",
+        "\\lambda* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — \\lambda* is non-zero.",
       ],
     },
     {
@@ -1953,7 +1953,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CoOp (Zhou et al., 2022): learn K context tokens [v₁,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(·) takes image features and outputs a per-instance shift Δv_i = h(f(x)). Prompt = [v₁+Δv₁,...,vK+ΔvK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
+        "CoOp (Zhou et al., 2022): learn K context tokens [v₁,...,vK] shared across all classes — these static tokens improve performance on base classes but reduce generalization to novel classes. CoCoOp (Zhou et al., 2022): a lightweight meta-net h(·) takes image features and outputs a per-instance shift \\Deltav_i = h(f(x)). Prompt = [v₁+\\Deltav₁,...,vK+\\DeltavK, class_name]. This image-conditioned prompt improves base-to-novel generalization by making the context responsive to specific visual content.",
       hints: [
         'Base-to-novel generalization: train on 16-shot of "base" classes, evaluate on completely "novel" classes not seen during prompt training. CoOp hurts novel class accuracy; CoCoOp maintains it.',
         "Meta-net architecture: a single linear layer mapping CLIP image features (512-dim for ViT-B/16) → per-token bias (K×512). Very lightweight, ~0.01% of CLIP parameters.",
@@ -2010,7 +2010,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Information maximization = entropy minimization + marginal entropy maximization: L_IM = -H(y|x) + H(y) = Σ_x Σ_y p(y|x) log p(y|x) - H(mean_x p(y|x)). The first term minimizes conditional entropy (confident predictions). The second term maximizes marginal entropy (diverse predictions). Without the diversity term: the model predicts class 1 for all examples (H(y|x)=0 but only one class used). This objective is used in IM, SHOT, and many SFDA methods.",
+        "Information maximization = entropy minimization + marginal entropy maximization: L_IM = -H(y|x) + H(y) = \\Sigma_x \\Sigma_y p(y|x) log p(y|x) - H(mean_x p(y|x)). The first term minimizes conditional entropy (confident predictions). The second term maximizes marginal entropy (diverse predictions). Without the diversity term: the model predicts class 1 for all examples (H(y|x)=0 but only one class used). This objective is used in IM, SHOT, and many SFDA methods.",
       hints: [
         "IM objective equivalence: maximizing I(y;x) = H(y) - H(y|x) — mutual information between predictions and inputs. Maximizes both prediction confidence (low H(y|x)) and diversity (high H(y)).",
         "Batch size effect: diversity term H(mean_x p(y|x)) requires a sufficiently large batch to accurately estimate the marginal distribution.",
@@ -2040,7 +2040,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "CDA unique challenge: adapter the model to domain D_t without forgetting adaptation to D_1...D_{t-1}. Methods: (1) EWC regularization: penalize changes to parameters important for past domains via Fisher information. (2) Experience replay: small buffer of past domain examples interleaved with new domain training. (3) Adapter-based: domain-specific adapter modules that grow with new domains — backbone frozen, zero forgetting by construction. Key metric: backward transfer (BWT) = performance on past domains after new domain learning. Negative BWT indicates catastrophic forgetting.",
       hints: [
         "Adapter modules (Houlsby 2019): small bottleneck layers inserted into Transformer blocks. Only adapter parameters updated — all other parameters frozen. Near-zero forgetting at cost of O(r·d) parameters per domain.",
-        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty λΣ F_i(θ_i - θ^*_i)² prevents moving important parameters. Requires storing F per domain — memory cost O(d·T) for T domains.",
+        "EWC in CDA: Fisher diagonal F_i estimates parameter importance for domain t. Penalty \\lambda\\Sigma F_i(\\theta_i - \\theta^*_i)² prevents moving important parameters. Requires storing F per domain — memory cost O(d·T) for T domains.",
       ],
     },
     {
@@ -2093,10 +2093,10 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MSDA methods: MDAN (per-source adversarial discriminators + mixture weights), DCTN (k-way adversarial alignment), LtC-MSDA (moment matching across all source-target pairs). MSDA bound: ε_T(h) ≤ Σ_k α_k[ε_{S_k}(h) + d_{H△H}(S_k, T)] + λ*. Sources closer to target receive higher weight. Domain-specific BN: separate BN statistics per source during training, shared at inference.",
+        "MSDA methods: MDAN (per-source adversarial discriminators + mixture weights), DCTN (k-way adversarial alignment), LtC-MSDA (moment matching across all source-target pairs). MSDA bound: \\epsilon_T(h) ≤ \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda*. Sources closer to target receive higher weight. Domain-specific BN: separate BN statistics per source during training, shared at inference.",
       hints: [
         "Source pooling failure: conflicting feature statistics between sources create domain-confounded representations that transfer poorly.",
-        "MDAN: K binary discriminators (source k vs target) + task classifier jointly optimized. Source weights α_k learned end-to-end.",
+        "MDAN: K binary discriminators (source k vs target) + task classifier jointly optimized. Source weights \\alpha_k learned end-to-end.",
       ],
     },
     {
@@ -2118,19 +2118,19 @@ const moreAdaptQ2: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The MSDA generalization bound motivates learning source mixture weights α_k by:",
+        "The MSDA generalization bound motivates learning source mixture weights \\alpha_k by:",
       options: [
         "Maximizing total source data size",
-        "Minimizing Σ_k α_k[ε_{S_k}(h) + d_{H△H}(S_k, T)] — weighting sources by their error + divergence to the target, so closer, more accurate sources receive more weight",
+        "Minimizing \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] — weighting sources by their error + divergence to the target, so closer, more accurate sources receive more weight",
         "Using equal weights for all sources",
         "Weighting by source dataset size only",
       ],
       correctAnswer: 1,
       explanation:
-        "The MSDA bound Σ_k α_k[ε_{S_k}(h) + d_{H△H}(S_k, T)] + λ* suggests optimal α_k minimizes weighted sum of source error and source-target H-divergence. In practice: learn α_k as attention weights over source domain discriminator outputs. Sources with low divergence to target and low source error receive the most weight.",
+        "The MSDA bound \\Sigma_k \\alpha_k[\\epsilon_{S_k}(h) + d_{H△H}(S_k, T)] + \\lambda* suggests optimal \\alpha_k minimizes weighted sum of source error and source-target H-divergence. In practice: learn \\alpha_k as attention weights over source domain discriminator outputs. Sources with low divergence to target and low source error receive the most weight.",
       hints: [
-        "H-divergence estimation: domain classifier accuracy ε_d gives d_{H△H} ≈ 2(1-2ε_d). Low domain classifier accuracy = high divergence = similar source and target.",
-        "λ* term: if no hypothesis performs well on all sources + target, bound is vacuous — negative transfer regime.",
+        "H-divergence estimation: domain classifier accuracy \\epsilon_d gives d_{H△H} ≈ 2(1-2\\epsilon_d). Low domain classifier accuracy = high divergence = similar source and target.",
+        "\\lambda* term: if no hypothesis performs well on all sources + target, bound is vacuous — negative transfer regime.",
       ],
     },
   ],
@@ -2176,7 +2176,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "IRM (Invariant Risk Minimization) forces learning features where:",
       options: [
         "Average risk across all environments is minimized",
-        "The optimal linear classifier w is the same across all environments — the IRM penalty ||∇_{w|w=1} R^e(w∘Φ)||² forces Φ such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
+        "The optimal linear classifier w is the same across all environments — the IRM penalty ||\\nabla_{w|w=1} R^e(w∘\\Phi)||² forces \\Phi such that w=1 is simultaneously near-optimal for all environments, discarding environment-specific spurious correlations",
         "Data augmentation alone learns domain-invariant features",
         "Adversarial training is more stable than gradient penalties",
       ],
@@ -2185,7 +2185,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
         "IRM motivation: ERM exploits spurious correlations that differ across environments (cows on grass in training, not test). IRM forces invariant features via the gradient penalty. Causal connection: IRM recovers causal feature set under strong assumptions. Limitations: requires diverse environments; with too few environments, degenerates to ERM. REx alternative: minimize variance of risks across environments — simpler with similar effect.",
       hints: [
         "IRM failure modes: with only 2 mildly diverse environments, IRM may overfit to those specific environments rather than learning truly invariant features.",
-        "Practical IRM: λ controls penalty strength. Start with small λ and increase — monitor if penalty conflicts with accuracy.",
+        "Practical IRM: \\lambda controls penalty strength. Start with small \\lambda and increase — monitor if penalty conflicts with accuracy.",
       ],
     },
   ],
@@ -2237,9 +2237,9 @@ const moreAdaptQ2: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Group DRO objective: min_θ max_{g∈G} E_{(x,y)~P_g}[L(θ;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G — if the test shift is outside G, guarantees may not hold.",
+        "Group DRO objective: min_\\theta max_{g∈G} E_{(x,y)~P_g}[L(\\theta;x,y)]. Gradient update: always use the group with highest current loss. Convergence: O(1/√T) rate requiring per-group loss tracking. The guarantee holds under any subpopulation shift within the specified group structure G — if the test shift is outside G, guarantees may not hold.",
       hints: [
-        "Softmax group weighting: α_g ∝ exp(R^g/τ) — smooth approximation of the max operator. Temperature τ controls concentration on worst group.",
+        "Softmax group weighting: \\alpha_g \\propto exp(R^g/\\tau) — smooth approximation of the max operator. Temperature \\tau controls concentration on worst group.",
         "Group size and variance: small groups have high-variance empirical risk estimates. Use EMA of per-group losses for stability.",
       ],
     },

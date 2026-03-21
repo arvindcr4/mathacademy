@@ -8,18 +8,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + λ_r·L_r + λ_b·L_b. L_r is the physics residual loss defined as ___.",
+        "The total PINN loss for a PDE of the form N[u](x,t) = 0 with boundary condition B[u] = g is L = L_data + \\lambda_r·L_r + \\lambda_b·L_b. L_r is the physics residual loss defined as ___.",
       options: [
-        "(1/N_r) Σ |u_θ(x_i,t_i) − u_measured(x_i,t_i)|²",
-        "(1/N_r) Σ |N[u_θ](x_i,t_i)|² summed over collocation points",
+        "(1/N_r) \\Sigma |u_\\theta(x_i,t_i) − u_measured(x_i,t_i)|²",
+        "(1/N_r) \\Sigma |N[u_\\theta](x_i,t_i)|² summed over collocation points",
         "KL divergence between the predicted and true solution distributions",
-        "(1/N_b) Σ |∂u_θ/∂x − ∂u/∂x|² at boundary points",
+        "(1/N_b) \\Sigma |∂u_\\theta/∂x − ∂u/∂x|² at boundary points",
       ],
       correctAnswer: 1,
       explanation:
-        "The physics residual loss L_r = (1/N_r) Σ_{i=1}^{N_r} |N[u_θ](x_i,t_i)|² evaluates how much the neural network u_θ violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_θ.",
+        "The physics residual loss L_r = (1/N_r) \\Sigma_{i=1}^{N_r} |N[u_\\theta](x_i,t_i)|² evaluates how much the neural network u_\\theta violates the governing PDE at collocation points sampled inside the domain. Automatic differentiation computes the required spatial and temporal derivatives of u_\\theta.",
       hints: [
-        "N[u] is the PDE operator (e.g., ∂u/∂t − ν∂²u/∂x² for the heat equation). The residual is how far N[u_θ] is from zero.",
+        "N[u] is the PDE operator (e.g., ∂u/∂t − ν∂²u/∂x² for the heat equation). The residual is how far N[u_\\theta] is from zero.",
         "Collocation points are interior domain points where no labels are needed — only the PDE equation must be satisfied.",
       ],
     },
@@ -34,7 +34,7 @@ const questions: Record<string, Question[]> = {
         "In the inverse setting, unknown PDE parameters (e.g., diffusivity ν in ∂u/∂t = ν∂²u/∂x²) are treated as additional trainable variables. The same PINN loss L_r + L_data is minimised jointly over network weights and unknown parameters, with observed data pinning the solution.",
       hints: [
         "Forward: given ν, find u. Inverse: given some measurements of u, find ν. Both fit naturally into the same loss function.",
-        "Unknown parameters appear inside N[u_θ; ν] — they are simply extra learnable scalars in the optimisation.",
+        "Unknown parameters appear inside N[u_\\theta; ν] — they are simply extra learnable scalars in the optimisation.",
       ],
     },
     {
@@ -44,14 +44,14 @@ const questions: Record<string, Question[]> = {
       question:
         "A well-known training difficulty with PINNs for stiff or multi-scale PDEs is gradient imbalance. Which weighting strategy is theoretically motivated by the Neural Tangent Kernel (NTK) analysis of PINNs?",
       options: [
-        "Fixed equal weights λ_r = λ_b = 1 throughout training",
+        "Fixed equal weights \\lambda_r = \\lambda_b = 1 throughout training",
         "Adaptive weights that balance the NTK eigenvalues of each loss component, so learning speeds are equalised across boundary, residual, and data terms",
         "Randomly sampled weights from a uniform distribution each iteration",
         "Decaying weights that reduce all loss coefficients by 0.99 every epoch",
       ],
       correctAnswer: 1,
       explanation:
-        "Wang et al. (2021) showed via NTK analysis that gradient imbalance arises when different PINN loss terms have vastly different NTK eigenvalue magnitudes. Their adaptive weighting scheme sets λ_k ∝ max(NTK eigenvalues) / mean(NTK eigenvalues of loss k), equalising effective learning rates across loss terms.",
+        "Wang et al. (2021) showed via NTK analysis that gradient imbalance arises when different PINN loss terms have vastly different NTK eigenvalue magnitudes. Their adaptive weighting scheme sets \\lambda_k \\propto max(NTK eigenvalues) / mean(NTK eigenvalues of loss k), equalising effective learning rates across loss terms.",
       hints: [
         "The NTK governs the convergence speed of each loss term. When one term dominates, others converge much more slowly.",
         "Adaptive weighting dynamically rescales each loss term so they all converge at similar rates.",
@@ -65,16 +65,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Neural ODEs define hidden state dynamics as dh/dt = f_θ(h(t), t). The hidden state at time t₁ is obtained by ___.",
+        "Neural ODEs define hidden state dynamics as dh/dt = f_\\theta(h(t), t). The hidden state at time t₁ is obtained by ___.",
       options: [
-        "h(t₁) = h(t₀) + f_θ(h(t₀), t₀) · (t₁ − t₀)  [Euler step]",
-        "h(t₁) = ODESolve(f_θ, h(t₀), t₀, t₁)  [numerical ODE integration]",
+        "h(t₁) = h(t₀) + f_\\theta(h(t₀), t₀) · (t₁ − t₀)  [Euler step]",
+        "h(t₁) = ODESolve(f_\\theta, h(t₀), t₀, t₁)  [numerical ODE integration]",
         "h(t₁) = sigmoid(W·h(t₀) + b)",
-        "h(t₁) = h(t₀) * exp(f_θ(t₁))",
+        "h(t₁) = h(t₀) * exp(f_\\theta(t₁))",
       ],
       correctAnswer: 1,
       explanation:
-        "The exact definition is h(t₁) = h(t₀) + ∫_{t₀}^{t₁} f_θ(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
+        "The exact definition is h(t₁) = h(t₀) + ∫_{t₀}^{t₁} f_\\theta(h(t),t) dt, computed by a black-box ODE solver. This is equivalent to a ResNet with Euler steps in the limit of infinitely many layers, but Neural ODEs use adaptive step-size solvers for better accuracy.",
       hints: [
         "A ResNet layer computes h_{n+1} = h_n + f(h_n) — this is exactly one Euler step of the ODE dh/dt = f(h).",
         "Neural ODEs make this continuous: instead of discrete layers, the ODE solver integrates over a time interval.",
@@ -87,16 +87,16 @@ const questions: Record<string, Question[]> = {
       question:
         "The adjoint sensitivity method for Neural ODEs computes gradients by solving a reverse-time ODE for the adjoint a(t) = dL/dh(t). The adjoint satisfies ___.",
       options: [
-        "da/dt = a(t)ᵀ · ∂f_θ/∂h(t)  [forward ODE for a]",
-        "da/dt = −a(t)ᵀ · ∂f_θ/∂h(t)  [backward ODE, run in reverse time]",
+        "da/dt = a(t)ᵀ · ∂f_\\theta/∂h(t)  [forward ODE for a]",
+        "da/dt = −a(t)ᵀ · ∂f_\\theta/∂h(t)  [backward ODE, run in reverse time]",
         "da/dt = −∂L/∂h(t)  [gradient of loss]",
-        "da/dt = f_θ(h(t), t)  [same as state ODE]",
+        "da/dt = f_\\theta(h(t), t)  [same as state ODE]",
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)ᵀ (∂f_θ/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. θ are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_θ/∂θ) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint a(t) = dL/dh(t) satisfies da/dt = −a(t)ᵀ (∂f_\\theta/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. \\theta are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_\\theta/∂\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
-        "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_θ.",
+        "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them — O(1) memory vs O(N) for BPTT.",
       ],
     },
@@ -130,14 +130,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Fourier Neural Operator (FNO) layer applies a linear transform in Fourier space. Given input v, the FNO layer computes ___.",
       options: [
-        "σ(W·v + b)  [standard linear layer with activation]",
-        "σ(F⁻¹(R · F(v)) + W·v)  [Fourier-space global conv + local linear, then activation]",
-        "σ(Conv2D(v, kernel))  [standard spatial convolution]",
-        "σ(Attention(v, v, v))  [self-attention layer]",
+        "\\sigma(W·v + b)  [standard linear layer with activation]",
+        "\\sigma(F⁻¹(R · F(v)) + W·v)  [Fourier-space global conv + local linear, then activation]",
+        "\\sigma(Conv2D(v, kernel))  [standard spatial convolution]",
+        "\\sigma(Attention(v, v, v))  [self-attention layer]",
       ],
       correctAnswer: 1,
       explanation:
-        "Each FNO layer computes σ(F⁻¹(R·Fₖ(v)) + W·v), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and σ is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
+        "Each FNO layer computes \\sigma(F⁻¹(R·Fₖ(v)) + W·v), where F is the Fourier transform, R is a learnable complex weight tensor in Fourier space (truncated to the k lowest modes), W is a local linear transform, and \\sigma is an activation. The Fourier multiplication is equivalent to a global convolution in physical space.",
       hints: [
         "FNO truncates to k Fourier modes (the low-frequency part), which captures global structure while being resolution-independent.",
         "The local W·v term handles the high-frequency, local part of the transform that the truncated Fourier modes miss.",
@@ -171,10 +171,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DeepONet\'s branch net encodes the input function u at sensor points {u(x₁),...,u(xₘ)} → [b₁,...,bₚ]; its trunk net encodes the output query location y → [t₁,...,tₚ]; the operator output is G(u)(y) ≈ Σᵢ bᵢ·tᵢ + bias. This is grounded in the universal approximation theorem for operators.",
+        "DeepONet\'s branch net encodes the input function u at sensor points {u(x₁),...,u(xₘ)} → [b₁,...,bₚ]; its trunk net encodes the output query location y → [t₁,...,tₚ]; the operator output is G(u)(y) ≈ \\Sigmaᵢ bᵢ·tᵢ + bias. This is grounded in the universal approximation theorem for operators.",
       hints: [
         "Branch: what does the input function look like? Trunk: where do we want the output? They are combined by a dot product.",
-        "The inner product Σ bᵢtᵢ acts like a learned basis expansion of the output function.",
+        "The inner product \\Sigma bᵢtᵢ acts like a learned basis expansion of the output function.",
       ],
     },
   ],
@@ -683,7 +683,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Cosmological likelihoods for complex statistics (e.g., higher-order statistics, galaxy morphologies) are analytically intractable; SBI methods (SNPE, SNLE, SNRE) train neural estimators on simulation pairs (θ, x) to approximate the posterior directly.",
+        "Cosmological likelihoods for complex statistics (e.g., higher-order statistics, galaxy morphologies) are analytically intractable; SBI methods (SNPE, SNLE, SNRE) train neural estimators on simulation pairs (\\theta, x) to approximate the posterior directly.",
       hints: [
         "Traditional Bayesian inference requires evaluating the likelihood — what if you cannot write it down?",
         "Forward simulations are feasible (you can simulate the universe given cosmological parameters), even if the inverse probability is not analytically tractable.",
@@ -739,9 +739,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The adjoint ODE satisfies da/dt = −a(t)ᵀ (∂f_θ/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. θ are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_θ/∂θ) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
+        "The adjoint ODE satisfies da/dt = −a(t)ᵀ (∂f_\\theta/∂h), integrated backwards from t₁ to t₀ starting from a(t₁) = dL/dh(t₁). Gradients w.r.t. \\theta are then ∫_{t₀}^{t₁} a(t)ᵀ (∂f_\\theta/∂\\theta) dt, also computed in the same reverse pass. This gives O(1) memory cost.",
       hints: [
-        "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_θ.",
+        "The adjoint ODE runs backward in time — the sign is negative. Compare to the state ODE dh/dt = +f_\\theta.",
         "The key benefit is that intermediate states are recomputed during the backward pass, avoiding storing them — O(1) memory vs O(N) for BPTT.",
       ],
     },
@@ -1362,7 +1362,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Cosmological likelihoods for complex statistics (e.g., higher-order statistics, galaxy morphologies) are analytically intractable; SBI methods (SNPE, SNLE, SNRE) train neural estimators on simulation pairs (θ, x) to approximate the posterior directly.",
+        "Cosmological likelihoods for complex statistics (e.g., higher-order statistics, galaxy morphologies) are analytically intractable; SBI methods (SNPE, SNLE, SNRE) train neural estimators on simulation pairs (\\theta, x) to approximate the posterior directly.",
       hints: [
         "Traditional Bayesian inference requires evaluating the likelihood — what if you cannot write it down?",
         "Forward simulations are feasible (you can simulate the universe given cosmological parameters), even if the inverse probability is not analytically tractable.",
@@ -1786,9 +1786,9 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp32-2',
       type: 'true-false',
       difficulty: 'easy',
-      question: 'Conformal prediction provides distribution-free coverage guarantees: given a calibration set, it constructs prediction intervals that contain the true value with at least (1−α) probability, regardless of the underlying data distribution.',
+      question: 'Conformal prediction provides distribution-free coverage guarantees: given a calibration set, it constructs prediction intervals that contain the true value with at least (1−\\alpha) probability, regardless of the underlying data distribution.',
       correctAnswer: 'True',
-      explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) ≤ q̂_{1−α}} achieves marginal coverage ≥ 1−α without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
+      explanation: 'Conformal prediction is distribution-free: under exchangeability, the prediction interval {ŷ : score(x, ŷ) ≤ q̂_{1−\\alpha}} achieves marginal coverage ≥ 1−\\alpha without assumptions on the model or data distribution. It is widely used in scientific ML to provide rigorous uncertainty bounds for surrogate models.',
       hints: [
         'Conformal methods use a held-out calibration set to set the score threshold.',
         'Coverage is marginal (over random calibration sets), not conditional on x.',
@@ -1971,14 +1971,14 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       question: 'In data-driven turbulence closure for RANS (Reynolds-Averaged Navier-Stokes), the ML model is trained to predict ___.',
       options: [
         'The raw velocity field at each timestep, replacing the full Navier-Stokes solve',
-        'The Reynolds stress tensor τ_ij = −ρ⟨u\'_i u\'_j⟩, which encodes the effect of unresolved turbulent fluctuations on the mean flow',
+        'The Reynolds stress tensor \\tau_ij = −\\rho⟨u\'_i u\'_j⟩, which encodes the effect of unresolved turbulent fluctuations on the mean flow',
         'The turbulent kinetic energy spectrum in wavenumber space',
-        'The Kolmogorov microscale η as a function of Reynolds number',
+        'The Kolmogorov microscale \\eta as a function of Reynolds number',
       ],
       correctAnswer: 1,
-      explanation: 'RANS equations are unclosed: the Reynolds stress tensor τ_ij appears but is unknown. Traditional closures (k-ε, k-ω) use linear eddy viscosity assumptions. Data-driven approaches (e.g., Ling et al., Schmelzer et al.) train ML models to map mean-flow features (strain rate, vorticity, pressure gradient) → τ_ij from high-fidelity DNS data.',
+      explanation: 'RANS equations are unclosed: the Reynolds stress tensor \\tau_ij appears but is unknown. Traditional closures (k-\\epsilon, k-\\omega) use linear eddy viscosity assumptions. Data-driven approaches (e.g., Ling et al., Schmelzer et al.) train ML models to map mean-flow features (strain rate, vorticity, pressure gradient) → \\tau_ij from high-fidelity DNS data.',
       hints: [
-        'RANS averaging introduces τ_ij as the "closure problem"—it must be modelled.',
+        'RANS averaging introduces \\tau_ij as the "closure problem"—it must be modelled.',
         'DNS resolves all scales but is too expensive for engineering Re; RANS is cheap but needs a closure.',
       ],
     },
@@ -2000,13 +2000,13 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'hard',
       question: 'A major challenge for deploying ML turbulence models in RANS solvers is a-posteriori instability. What does this mean and how is it addressed?',
       options: [
-        'The ML model is trained in an a-priori setting (given mean-flow features, predict τ_ij) but when deployed inside the RANS solver (a-posteriori), errors accumulate and may cause solver divergence; addressed by differentiable RANS solvers enabling end-to-end training',
+        'The ML model is trained in an a-priori setting (given mean-flow features, predict \\tau_ij) but when deployed inside the RANS solver (a-posteriori), errors accumulate and may cause solver divergence; addressed by differentiable RANS solvers enabling end-to-end training',
         'The ML model is unstable during training because of vanishing gradients in deep networks; addressed by residual connections',
         'The RANS solver diverges because the ML model predicts negative turbulent kinetic energy; addressed by adding a ReLU output activation',
         'The ML model is too slow for real-time inference; addressed by model distillation',
       ],
       correctAnswer: 0,
-      explanation: 'A-priori testing: ML predicts τ_ij from ground-truth DNS mean-flow features—high accuracy. A-posteriori testing: deploy ML inside RANS; mean-flow now comes from the RANS solver itself, which differs from DNS. Small ML errors alter the mean-flow, which further misleads ML predictions, leading to instability. Solutions: differentiable RANS solvers (JAX-Fluids, etc.) that backpropagate through the full simulation loop during training.',
+      explanation: 'A-priori testing: ML predicts \\tau_ij from ground-truth DNS mean-flow features—high accuracy. A-posteriori testing: deploy ML inside RANS; mean-flow now comes from the RANS solver itself, which differs from DNS. Small ML errors alter the mean-flow, which further misleads ML predictions, leading to instability. Solutions: differentiable RANS solvers (JAX-Fluids, etc.) that backpropagate through the full simulation loop during training.',
       hints: [
         'A-priori: perfect input features. A-posteriori: noisy/drifted features from the solver itself—compound errors.',
         'Differentiable solvers make the full simulation a computational graph, enabling end-to-end gradient training.',
@@ -2018,7 +2018,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       id: 'q-sciml-kp37-1',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: 'Neural ODEs parameterise the derivative of a hidden state as dh/dt = f_θ(h(t), t). A key memory-efficient training technique unique to Neural ODEs is ___.',
+      question: 'Neural ODEs parameterise the derivative of a hidden state as dh/dt = f_\\theta(h(t), t). A key memory-efficient training technique unique to Neural ODEs is ___.',
       options: [
         'Gradient checkpointing, storing only every k-th layer activation',
         'The adjoint method, which computes gradients by solving a reverse-time ODE without storing forward states',
@@ -2026,7 +2026,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Truncated backpropagation through time (TBPTT), which cuts gradients after a fixed number of steps',
       ],
       correctAnswer: 1,
-      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. θ and h(t₀) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T ∂f/∂h. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
+      explanation: 'Chen et al. (2018) showed that gradients of the ODE loss w.r.t. \\theta and h(t₀) can be computed by integrating the adjoint ODE backward in time: da/dt = −a^T ∂f/∂h. This requires O(1) memory (no forward activation storage) at the cost of an extra ODE solve, making Neural ODEs memory-efficient for very deep (long-time) integration.',
       hints: [
         'Standard backprop through a discrete ODE solver stores all intermediate states—memory is O(N_steps).',
         'Adjoint method: store only the final state, then recompute states backward as needed during the reverse ODE solve.',
@@ -2056,7 +2056,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Neural ODEs only support autonomous (time-independent) dynamics, but chaotic systems are time-dependent',
       ],
       correctAnswer: 1,
-      explanation: 'In chaotic systems, the largest Lyapunov exponent λ₁ > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(λ₁T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
+      explanation: 'In chaotic systems, the largest Lyapunov exponent \\lambda₁ > 0 causes nearby trajectories to diverge exponentially. During adjoint backward integration, the gradient grows as e^(\\lambda₁T), causing numerical instability and gradient explosion for long trajectories. Solutions: (1) short-time MSE on local trajectory segments; (2) ergodic/SRB measure loss that matches long-time statistics rather than point-wise trajectories; (3) Ensemble Kalman Inversion.',
       hints: [
         'Lyapunov exponent: the rate at which infinitesimally separated trajectories diverge. Positive → chaos.',
         'If you cannot match the trajectory exactly (butterfly effect), can you match its statistics instead?',
@@ -2071,15 +2071,15 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       question: 'A Variational Quantum Eigensolver (VQE) is a hybrid quantum-classical algorithm. The quantum circuit\'s role is to ___.',
       options: [
         'Classically diagonalise the Hamiltonian matrix and return the ground state energy',
-        'Prepare a parameterised trial state |ψ(θ)⟩ and estimate ⟨ψ(θ)|H|ψ(θ)⟩ via measurement; classical optimisation then updates θ to minimise this energy expectation',
+        'Prepare a parameterised trial state |\\psi(\\theta)⟩ and estimate ⟨\\psi(\\theta)|H|\\psi(\\theta)⟩ via measurement; classical optimisation then updates \\theta to minimise this energy expectation',
         'Run Shor\'s algorithm to factorise the molecular Hamiltonian into independent subsystems',
         'Replace the classical ML backward pass by computing parameter-shift rule gradients on quantum hardware',
       ],
       correctAnswer: 1,
-      explanation: 'VQE: a parameterised quantum circuit (ansatz) prepares |ψ(θ)⟩ on a quantum processor; repeated measurements estimate ⟨H⟩ via Pauli decomposition. A classical optimiser (gradient-free or using parameter-shift rule gradients) minimises ⟨H⟩(θ). Convergence → ground state energy. VQE leverages quantum state preparation while keeping optimisation classical, suiting near-term noisy devices.',
+      explanation: 'VQE: a parameterised quantum circuit (ansatz) prepares |\\psi(\\theta)⟩ on a quantum processor; repeated measurements estimate ⟨H⟩ via Pauli decomposition. A classical optimiser (gradient-free or using parameter-shift rule gradients) minimises ⟨H⟩(\\theta). Convergence → ground state energy. VQE leverages quantum state preparation while keeping optimisation classical, suiting near-term noisy devices.',
       hints: [
-        'The variational principle: ⟨ψ|H|ψ⟩ ≥ E_0 for any |ψ⟩. Minimising it finds the ground state.',
-        'Parameter-shift rule: ∂⟨H⟩/∂θ_k = [⟨H⟩(θ_k + π/2) − ⟨H⟩(θ_k − π/2)] / 2 — enables gradient estimation from two circuit evaluations.',
+        'The variational principle: ⟨\\psi|H|\\psi⟩ ≥ E_0 for any |\\psi⟩. Minimising it finds the ground state.',
+        'Parameter-shift rule: ∂⟨H⟩/∂\\theta_k = [⟨H⟩(\\theta_k + \\pi/2) − ⟨H⟩(\\theta_k − \\pi/2)] / 2 — enables gradient estimation from two circuit evaluations.',
       ],
     },
     {
@@ -2088,7 +2088,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Quantum kernel methods encode classical data into quantum states and use the inner product between quantum states as a kernel for classical SVM, potentially offering an exponential feature space without explicitly computing it.',
       correctAnswer: 'True',
-      explanation: 'Quantum kernel: K(x_i, x_j) = |⟨φ(x_i)|φ(x_j)⟩|², where |φ(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
+      explanation: 'Quantum kernel: K(x_i, x_j) = |⟨\\phi(x_i)|\\phi(x_j)⟩|², where |\\phi(x)⟩ is a quantum feature map prepared by a circuit. The Hilbert space of n qubits has dimension 2^n, giving an exponentially large implicit feature space. Classical SVMs then optimise over this kernel. Whether this gives practical advantage over classical kernels is an active research question.',
       hints: [
         'Classical kernel trick: implicitly compute in high-dimensional space without materialising feature vectors.',
         'Quantum feature map: the quantum circuit maps x to a superposition in 2^n-dimensional Hilbert space.',
@@ -2106,7 +2106,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The inability of variational circuits to represent non-unitary (dissipative) quantum dynamics',
       ],
       correctAnswer: 1,
-      explanation: 'McClean et al. (2018) proved that for random parameterised circuits, Var[∂⟨H⟩/∂θ_k] decreases exponentially in the number of qubits n: the gradient landscape is exponentially flat ("barren plateau"), making gradient-based optimisation infeasible for large systems. Mitigations include: local cost functions, structured ansätze (hardware-efficient, chemically-motivated UCCSD), layerwise training.',
+      explanation: 'McClean et al. (2018) proved that for random parameterised circuits, Var[∂⟨H⟩/∂\\theta_k] decreases exponentially in the number of qubits n: the gradient landscape is exponentially flat ("barren plateau"), making gradient-based optimisation infeasible for large systems. Mitigations include: local cost functions, structured ansätze (hardware-efficient, chemically-motivated UCCSD), layerwise training.',
       hints: [
         'Deep random circuits approach the Haar random unitary—gradients of any observable vanish exponentially.',
         'Local cost (acting on a few qubits) avoids barren plateaus; global cost (all qubits) suffers from them.',
@@ -2126,7 +2126,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'Replacing the ODE solver with a neural network that directly maps initial conditions to solutions',
       ],
       correctAnswer: 1,
-      explanation: 'UDEs (Rackauckas et al., 2020): if the ODE is ẋ = f(x, t; p) where part of f is known physics and part is unknown, only the unknown part is replaced by a neural network: ẋ = f_known(x, t) + NN_θ(x, t). The known physics provides strong inductive bias, reducing data requirements and improving generalisation. Training uses adjoint sensitivity through the ODE solve.',
+      explanation: 'UDEs (Rackauckas et al., 2020): if the ODE is ẋ = f(x, t; p) where part of f is known physics and part is unknown, only the unknown part is replaced by a neural network: ẋ = f_known(x, t) + NN_\\theta(x, t). The known physics provides strong inductive bias, reducing data requirements and improving generalisation. Training uses adjoint sensitivity through the ODE solve.',
       hints: [
         'If you know most of a physical model but not one specific term, you can replace just that term with a neural network.',
         'The neural network learns the missing physics from data, while the rest of the model remains interpretable.',
@@ -2138,7 +2138,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
       difficulty: 'easy',
       question: 'Hamiltonian Neural Networks (HNNs) learn the Hamiltonian function H(q, p) from trajectory data and use Hamilton\'s equations (q̇ = ∂H/∂p, ṗ = −∂H/∂q) to evolve dynamics, automatically conserving total energy by construction.',
       correctAnswer: 'True',
-      explanation: 'HNNs (Greydanus et al., 2019) parameterise H_θ(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout—unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
+      explanation: 'HNNs (Greydanus et al., 2019) parameterise H_\\theta(q, p) with a neural network and derive dynamics via Hamilton\'s equations using autograd. Since Hamilton\'s equations conserve H exactly (dH/dt = 0 by construction), HNNs perfectly conserve energy throughout rollout—unlike standard Neural ODEs which can drift. This makes them effective for long-horizon physical simulation.',
       hints: [
         'Hamilton\'s equations preserve H as a constant of motion—this is a mathematical identity, not a learned property.',
         'Lagrangian NNs do the same for Lagrangian mechanics, conserving energy via Euler-Lagrange equations.',
@@ -2206,7 +2206,7 @@ const additionalScimlQuestions: Record<string, Question[]> = {
         'The Jacobian of the rendering function with respect to the NeRF density field',
       ],
       correctAnswer: 1,
-      explanation: 'SDS gradient: ∇_θ L_SDS = E_{t,ε}[w(t)(ε_φ(x_t; y, t) − ε) · ∂x/∂θ], where ε_φ is the diffusion model\'s predicted noise and ε is the actual noise added. The term (ε_φ − ε) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering ∂x/∂θ, updates the 3D representation without needing a 3D dataset.',
+      explanation: 'SDS gradient: \\nabla_\\theta L_SDS = E_{t,\\epsilon}[w(t)(\\epsilon_\\phi(x_t; y, t) − \\epsilon) · ∂x/∂\\theta], where \\epsilon_\\phi is the diffusion model\'s predicted noise and \\epsilon is the actual noise added. The term (\\epsilon_\\phi − \\epsilon) is a "denoising direction" pointing toward samples consistent with text y. This gradient, backpropagated through rendering ∂x/∂\\theta, updates the 3D representation without needing a 3D dataset.',
       hints: [
         'SDS: "if this rendered view doesn\'t look like it was sampled from the diffusion model, update the 3D scene to make it more likely."',
         'No 3D GT needed—the 2D diffusion model provides the supervisory signal via its score function.',
@@ -2471,7 +2471,7 @@ const extraScimlQuestions: Record<string, Question[]> = {
         "By using quaternion representations for all intermediate features, which naturally transform correctly under rotation",
       ],
       correctAnswer: 0,
-      explanation: "SE(3)-Transformers compute attention weights from rotation-invariant quantities (distances, dot products of type-0 features) and aggregate equivariant feature vectors (type-l spherical harmonics). The key: attention weights α_ij are invariant (scalars), while values V_j are type-l equivariant features. The update h_i = sum_j α_ij * V_j inherits the equivariance of V_j. Basis functions from irreducible representations of SO(3) parameterize the equivariant kernels.",
+      explanation: "SE(3)-Transformers compute attention weights from rotation-invariant quantities (distances, dot products of type-0 features) and aggregate equivariant feature vectors (type-l spherical harmonics). The key: attention weights \\alpha_ij are invariant (scalars), while values V_j are type-l equivariant features. The update h_i = sum_j \\alpha_ij * V_j inherits the equivariance of V_j. Basis functions from irreducible representations of SO(3) parameterize the equivariant kernels.",
       hints: [
         "Self-attention becomes equivariant when keys/queries compute invariant scores and values carry equivariant representations.",
         "Spherical harmonics Y_l^m are the irreducible representations of SO(3) — they transform in a known, well-defined way under rotation.",

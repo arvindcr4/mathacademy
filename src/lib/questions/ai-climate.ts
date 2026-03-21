@@ -1381,10 +1381,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Wildfire risk depends on the fire triangle (fuel, heat, oxygen); ML models integrate fuel type and moisture (from satellite vegetation indices and weather), topography (slope, aspect channeling wind), meteorological conditions, and lightning/human ignition patterns.",
+        "Wildfire risk depends on the fire triangle (fuel, heat, oxygen). ML models integrate:\n\n" +
+        "\\[- \\text{Fuel: type, moisture content, loading (kg/m}^2\\text{)}\\]" +
+        "\\[- \\text{Weather: temperature, humidity, wind speed/direction}\\]" +
+        "\\[- \\text{Topography: slope, aspect (affects wind, drainage)}\\]" +
+        "\\[- \\text{Ignition sources: lightning, human activity}\\]\n\n" +
+        "The Rothermel model for fire spread rate:\n\n" +
+        "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q}\\]\n\n" +
+        "where \\(I_{\\text{R}}\\) is the reaction intensity, \\(\\rho_b\\) is fuel bulk density. Wind and slope modify the spread rate exponentially.",
       hints: [
         "Fire requires fuel, heat, and oxygen — think about which environmental variables control each leg of this triangle.",
-        "Wind drives fire spread rate and direction; fuel moisture controls ignition probability — both are key predictors.",
+        "Wind drives fire spread rate and direction; fuel moisture controls ignition probability. Both are key predictors in the Rothermel model.",
       ],
     },
     {
@@ -1395,10 +1402,14 @@ const questions: Record<string, Question[]> = {
         "Active fire detection from satellites uses thermal infrared anomaly detection to identify burning pixels in near real-time.",
       correctAnswer: "True",
       explanation:
-        "MODIS and VIIRS satellites detect active fires as thermal anomalies (pixels with anomalously high 4 µm mid-infrared brightness temperature) relative to their surroundings; ML refinements reduce false positives from sun glint and hot industrial surfaces.",
+        "MODIS and VIIRS satellites detect active fires as thermal anomalies. The 4 µm mid-infrared brightness temperature of a fire pixel is much higher than background:\n\n" +
+        "\\[T_{\\text{fire}} \\approx 300-500\\text{ K} \\quad \\text{vs.} \\quad T_{\\text{background}} \\approx 250-310\\text{ K}\\]\n\n" +
+        "The fire detection algorithm identifies pixels where:\n\n" +
+        "\\[T_{4\\mu\\text{m}} > T_{\\text{background}} + \\Delta T_{\\text{threshold}}\\]\n\n" +
+        "ML refinements reduce false positives from sun glint, hot desert surfaces, and industrial facilities. NASA's FIRMS provides near-real-time active fire data.",
       hints: [
-        "Active fires are much hotter than surrounding land — this thermal contrast is detectable from space in the mid-infrared.",
-        "NASA\'s FIRMS (Fire Information for Resource Management System) provides near-real-time active fire data from these satellites.",
+        "Active fires are much hotter than surrounding land. What physical property makes them detectable from space in the mid-infrared?",
+        "NASA's FIRMS (Fire Information for Resource Management System) provides near-real-time active fire data. Which satellite instruments does it use?",
       ],
     },
     {
@@ -1409,16 +1420,21 @@ const questions: Record<string, Question[]> = {
         "Physics-informed ML fire spread models improve over purely data-driven approaches by:",
       options: [
         "Removing the need for any input data",
-        "Embedding Rothermel\'s fire spread equations as constraints or loss terms, ensuring physically consistent predictions",
+        "Embedding Rothermel's fire spread equations as constraints or loss terms, ensuring physically consistent predictions",
         "Using reinforcement learning to fight virtual fires",
         "Only using historical fire perimeters without weather data",
       ],
       correctAnswer: 1,
       explanation:
-        "Physics-informed approaches embed Rothermel\'s semi-empirical fire spread model (relating rate of spread to fuel properties, wind, and slope) into the neural network training via physics-based loss terms, ensuring predictions respect known fire behavior even in data-sparse conditions.",
+        "The Rothermel model encodes the physics of fire spread:\n\n" +
+        "\\[R = \\frac{I_{\\text{R}}}{\\rho_b \\epsilon \\delta Q} \\cdot \\phi_w \\cdot \\phi_s\\]\n\n" +
+        "where \\(\\phi_w\\) and \\(\\phi_s\\) are wind and slope factors. Purely data-driven models may violate these physical constraints (e.g., predict fire spreading faster uphill than downhill).\n\n" +
+        "Physics-informed neural networks (PINNs) embed these as loss terms:\n\n" +
+        "\\[\\mathcal{L}_{\\text{total}} = \\mathcal{L}_{\\text{data}} + \\lambda \\mathcal{L}_{\\text{physics}}\\]\n\n" +
+        "where \\(\\mathcal{L}_{\\text{physics}}\\) penalizes violations of the Rothermel equations. This regularizes the model especially in data-sparse regions.",
       hints: [
-        "Purely data-driven models may violate physical laws about how fire spreads uphill vs. downhill or with/against the wind.",
-        "Physics constraints regularize the model, especially important when training data covers only a fraction of possible conditions.",
+        "Purely data-driven models may learn spurious correlations. Can a model trained only on historical fire perimeters learn that fire spreads faster uphill than downhill?",
+        "Physics constraints serve as regularization. Why is this particularly important when training data covers only a fraction of possible fire conditions?",
       ],
     },
   ],

@@ -381,15 +381,15 @@ const questions: Record<string, Question[]> = {
         "AlphaFold2 achieved a median GDT_TS score of approximately 92 on CASP14 free-modelling targets. What does GDT_TS measure?",
       options: [
         "The percentage of residues within 2 Å of the true structure, averaged over all residue pairs",
-        "The global distance test score — the average percentage of Cα atoms within 1, 2, 4, and 8 Å cutoffs of the reference structure",
+        "The global distance test score — the average percentage of C\\alpha atoms within 1, 2, 4, and 8 Å cutoffs of the reference structure",
         "The TM-score, which measures template-free structural similarity independent of protein length",
         "The RMSD of all heavy atoms between predicted and experimental structures",
       ],
       correctAnswer: 1,
       explanation:
-        "GDT_TS (Global Distance Test Total Score) averages the percentage of Cα atoms within 1, 2, 4, and 8 Å of the reference structure: GDT_TS = (P1 + P2 + P4 + P8) / 4. A score of 92 means AlphaFold2 predictions were competitive with experimental accuracy for the majority of CASP14 targets, a historic milestone in structural biology.",
+        "GDT_TS (Global Distance Test Total Score) averages the percentage of C\\alpha atoms within 1, 2, 4, and 8 Å of the reference structure: GDT_TS = (P1 + P2 + P4 + P8) / 4. A score of 92 means AlphaFold2 predictions were competitive with experimental accuracy for the majority of CASP14 targets, a historic milestone in structural biology.",
       hints: [
-        "GDT_TS uses four distance cutoffs (1, 2, 4, 8 Å) and averages the fraction of Cα atoms within each — near 100 is perfect.",
+        "GDT_TS uses four distance cutoffs (1, 2, 4, 8 Å) and averages the fraction of C\\alpha atoms within each — near 100 is perfect.",
         "Prior state-of-the-art methods scored in the 40–60 range on free-modelling targets at CASP13; AlphaFold2's 92 was transformative.",
       ],
     },
@@ -1009,7 +1009,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Mobility data (from Google, Apple, SafeGraph) served as a proxy for contact rate changes — reduction in mobility correlated with reduced transmission rate β in SIR-type models, helping quantify intervention effectiveness.",
+        "Mobility data (from Google, Apple, SafeGraph) served as a proxy for contact rate changes — reduction in mobility correlated with reduced transmission rate \\beta in SIR-type models, helping quantify intervention effectiveness.",
       hints: [
         "Mobility data tells you how much people moved around — more movement implies more potential contacts.",
         "In epidemic models, the transmission rate depends on how frequently susceptible and infectious people come into contact.",

@@ -745,7 +745,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "DINO uses EMA teacher + student: the student tries to match the teacher\'s output on different augmented views. Two mechanisms prevent collapse: (1) centering subtracts a running mean g_c from teacher logits, preventing any single dimension from dominating; (2) sharpening uses low temperature τ_t≈0.04 in teacher softmax to produce peaked distributions that carry more signal.",
+        "DINO uses EMA teacher + student: the student tries to match the teacher\'s output on different augmented views. Two mechanisms prevent collapse: (1) centering subtracts a running mean g_c from teacher logits, preventing any single dimension from dominating; (2) sharpening uses low temperature \\tau_t≈0.04 in teacher softmax to produce peaked distributions that carry more signal.",
       hints: [
         "Collapse = all embeddings identical. Centering prevents one mode from dominating; sharpening prevents uniform outputs.",
         "The EMA teacher is more stable than the student — it provides consistent targets.",
@@ -1533,7 +1533,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Standard 3×3 conv FLOPs ∝ 3×3×C×C = 9C². Depthwise separable: depthwise 3×3 per channel = 3×3×C = 9C, pointwise 1×1 = 1×C×C = C². Total = 9C + C² = C(9 + C). Ratio = C(9+C)/(9C²) = (9+C)/(9C) ≈ 1/9 for large C. MobileNet uses this to achieve ~8–9× fewer FLOPs than a standard conv, enabling mobile deployment.",
+        "Standard 3×3 conv FLOPs \\propto 3×3×C×C = 9C². Depthwise separable: depthwise 3×3 per channel = 3×3×C = 9C, pointwise 1×1 = 1×C×C = C². Total = 9C + C² = C(9 + C). Ratio = C(9+C)/(9C²) = (9+C)/(9C) ≈ 1/9 for large C. MobileNet uses this to achieve ~8–9× fewer FLOPs than a standard conv, enabling mobile deployment.",
       hints: [
         "Standard: F×F×C_in×C_out. Depthwise: F×F×C (one filter per channel). Pointwise: 1×1×C×C.",
         "For 3×3 filter and C channels: ratio = (9C + C²) / (9C²) = (9+C)/(9C) → 1/9 as C→∞.",
@@ -1631,7 +1631,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "COCO mAP = (1/10) × Σ AP@IoU_threshold for thresholds 0.50, 0.55, …, 0.95. A model that localises objects loosely will achieve high AP@0.5 (50% overlap suffices) but low AP@0.75 and near-zero AP@0.90–0.95 (tight overlap required). The average over all 10 thresholds rewards precise box localisation, encouraging detectors to produce tighter boxes rather than just the correct class.",
+        "COCO mAP = (1/10) × \\Sigma AP@IoU_threshold for thresholds 0.50, 0.55, …, 0.95. A model that localises objects loosely will achieve high AP@0.5 (50% overlap suffices) but low AP@0.75 and near-zero AP@0.90–0.95 (tight overlap required). The average over all 10 thresholds rewards precise box localisation, encouraging detectors to produce tighter boxes rather than just the correct class.",
       hints: [
         "Higher IoU thresholds demand that the predicted box nearly perfectly overlaps the ground truth — loose boxes fail these stricter thresholds.",
         "mAP[.50:.95] is the unweighted mean of 10 AP values — if most values above IoU=0.6 are near zero, the mean will be much lower than AP@0.5.",

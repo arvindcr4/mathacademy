@@ -1581,6 +1581,269 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-rlhf-kp34-2": {
+    type: "multiple-choice",
+    question: "In PPO-RLHF, the critic is usually initialized from which model?",
+    options: [
+      "The reward model, because it already produces a scalar quality estimate",
+      "The frozen reference policy, because it anchors the KL term",
+      "The actor policy, because PPO requires actor and critic to start identical",
+      "A fresh network, because value targets must be learned from scratch",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rlhf-kp38-3": {
+    type: "multiple-choice",
+    question: "Which preference pair is most informative when collecting online RLHF data?",
+    options: [
+      "One strong answer and one obviously bad answer",
+      "Two close answers where the judge is genuinely uncertain which is better",
+      "The two longest answers, since length exposes more behavior",
+      "Pairs from prompts the model already handles confidently",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp40-3": {
+    type: "multiple-choice",
+    question: "As policy KL from the SFT model grows, what usually happens to gold reward?",
+    options: [
+      "It keeps rising as KL grows",
+      "It peaks at an intermediate KL, then declines",
+      "It stays roughly flat once the reward model is fixed",
+      "It falls immediately from the first policy update",
+    ],
+    correctAnswer: 1,
+  },
+  "q-rlhf-kp59-4": {
+    type: "multiple-choice",
+    question:
+      "What is the main difference between RLHF and Constitutional AI in how harmlessness is specified?",
+    options: [
+      "RLHF learns it from preference data; Constitutional AI states it as explicit principles",
+      "RLHF uses explicit rules; Constitutional AI learns it only from pairwise labels",
+      "Both rely on the same learned reward model, just with different prompt wording",
+      "Constitutional AI removes human input from the objective entirely",
+    ],
+    correctAnswer: 0,
+  },
+  "q-mls-kp6-3": {
+    question:
+      "In DeepSpeed ZeRO Stage 3, what is sharded across GPUs to reduce memory per GPU?",
+    options: [
+      "Only the optimizer states",
+      "Optimizer states and gradients, but not parameters",
+      "Optimizer states, gradients, and model parameters",
+      "Only the model parameters",
+    ],
+    correctAnswer: 2,
+  },
+  "q-mls-kp8-3": {
+    question: "How does vLLM's PagedAttention primarily improve LLM inference throughput?",
+    options: [
+      "Quantizing the KV cache to INT4",
+      "Managing the KV cache in non-contiguous memory pages to eliminate fragmentation and enable better batching",
+      "Using a speculative decoding draft model for all requests",
+      "Distributing attention heads across multiple GPUs",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mls-kp35-1": {
+    question:
+      "An ML system grows from 1 million to 1 billion users. What becomes the main scaling challenge?",
+    options: [
+      "The model architecture must be completely redesigned.",
+      "The system must handle not just increased request volume but also increased data heterogeneity, longer tail distributions in user behavior, stricter latency SLAs at scale, and the compounding effects of model feedback loops on user behavior.",
+      "More users always improve model quality due to more training data.",
+      "Scaling from 1M to 1B users only requires adding more servers.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-mls-kp40-1": {
+    question: "Which situation best describes a silent ML failure in production?",
+    options: [
+      "A model that generates predictions with no sound output.",
+      "A model that continues to serve predictions and appears healthy by system metrics (uptime, latency, error rate) but is actually producing subtly wrong predictions due to data drift, feature bugs, or model degradation - undetected until business impact materializes.",
+      "A failure that occurs only during low-traffic periods.",
+      "A model crash that is not logged to the monitoring system.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp2-1": {
+    question:
+      "Portfolio A has annualized excess return 12% and volatility 20%; Portfolio B has excess return 6% and volatility 8%. Which portfolio has the higher Sharpe ratio?",
+    options: [
+      "Portfolio A, because it has the higher excess return",
+      "Portfolio B, because 0.06/0.08 = 0.75 exceeds 0.12/0.20 = 0.60",
+      "Both portfolios have the same Sharpe ratio",
+      "Sharpe ratios cannot be compared unless the portfolios have the same volatility",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp10-3": {
+    question: "Which description best matches top-of-book order flow imbalance (OFI)?",
+    options: [
+      "The ratio of total ask volume to total bid volume across the full depth of the book",
+      "The net change in displayed demand at the best bid minus displayed supply at the best ask over the interval",
+      "The number of buyer-initiated trades minus seller-initiated trades over the interval",
+      "The bid-ask spread divided by the mid-price",
+    ],
+    correctAnswer: 1,
+  },
+  "q-fin-kp21-3": {
+    question: "For a category/bin j in a credit scorecard, the Weight of Evidence (WoE) is computed as:",
+    options: [
+      "log((% of events in bin j) / (% of non-events in bin j))",
+      "log(P(event | bin j) / P(non-event | bin j))",
+      "(% of events in bin j - % of non-events in bin j) * 100",
+      "The Gini coefficient of that variable computed within bin j",
+    ],
+    correctAnswer: 0,
+  },
+  "q-fin-kp27-3": {
+    question: "Why is the SVI parameterization popular for fitting implied-volatility smiles?",
+    options: [
+      "It is the exact closed-form smile implied by the Heston model for any parameter set",
+      "It is automatically arbitrage-free across strikes and maturities without extra constraints",
+      "It uses a parsimonious five-parameter form that fits market smiles well and can be calibrated quickly, though no-arbitrage constraints still have to be imposed separately",
+      "Its parameters are determined directly by spot, rates, and dividends, so calibration is unnecessary",
+    ],
+    correctAnswer: 2,
+  },
+  "q-rob-kp21-3": {
+    question: "How does ADR decide when to widen or narrow the randomization range?",
+    options: [
+      "The performance of the policy on a fixed evaluation environment: if performance exceeds a threshold, randomization is widened; if it drops below a lower threshold, it is narrowed",
+      "The gradient magnitude of the policy loss with respect to randomization parameters",
+      "The KL divergence between the simulation and real-world state distributions measured with domain adaptation",
+      "A human operator manually expanding the randomization range after each training run",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp31-3": {
+    question: "What is the main advantage of 6-DOF grasp prediction over top-down planar grasping?",
+    options: [
+      "6-DOF methods can generate grasps from any approach direction, enabling grasping of objects in bins, shelves, or occluded environments where a top-down approach is geometrically infeasible",
+      "6-DOF methods require fewer training examples because the 6D grasp space is smaller than the 2D planar space",
+      "Top-down grasps are inherently unstable; 6-DOF grasps are always more stable by definition",
+      "6-DOF methods only work with RGB-D cameras while planar methods work with any sensor",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp37-3": {
+    question: "What is the main benefit of tight coupling over loose coupling in LiDAR-IMU odometry?",
+    options: [
+      "Tight coupling jointly optimizes LiDAR point-to-plane residuals and IMU pre-integration residuals in a single factor graph, providing motion estimates even during LiDAR degeneracy (e.g., in featureless corridors)",
+      "Tight coupling eliminates the need for IMU entirely by using LiDAR Doppler velocity",
+      "Tight coupling processes LiDAR and IMU data sequentially, with each correcting the other independently",
+      "Tight coupling is only applicable to 2D LiDAR and cannot be used with 3D spinning LiDARs",
+    ],
+    correctAnswer: 0,
+  },
+  "q-rob-kp40-3": {
+    question:
+      "What is the main benefit of the low gear ratios used in QDD actuators for legged locomotion?",
+    options: [
+      "High gear ratios increase output torque but also amplify motor friction and reflected inertia, making the joint stiff and unable to feel or respond to ground contact forces; QDD's low gear ratio preserves back-drivability and impact transparency for compliant, reactive leg control",
+      "Low gear ratios increase maximum joint velocity, enabling faster leg swing during running",
+      "QDD eliminates the need for joint encoders by using current sensing for position control",
+      "Low gear ratios reduce motor heat dissipation, allowing continuous high-torque operation",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp1-2": {
+    type: "multiple-choice",
+    question:
+      "Why are ML weather models like PanGu-Weather much cheaper to run at inference time than traditional NWP models?",
+    options: [
+      "They predict only a small subset of atmospheric variables",
+      "They use a learned forward pass instead of numerically solving atmospheric equations at each time step",
+      "They reuse yesterday's forecast without new computation",
+      "They run only on CPUs while NWP requires GPUs",
+    ],
+    correctAnswer: 1,
+  },
+  "q-clim-kp6-2": {
+    type: "multiple-choice",
+    question: "What forecast horizon are sky-camera CNN models best suited for in solar forecasting?",
+    options: [
+      "Several days ahead",
+      "Several hours ahead",
+      "Very short-term nowcasts over roughly 0-30 minutes",
+      "Seasonal outlooks",
+    ],
+    correctAnswer: 2,
+  },
+  "q-clim-kp11-2": {
+    type: "multiple-choice",
+    question:
+      "What have ML models been used to detect in satellite hyperspectral imagery from industrial facilities?",
+    options: [
+      "Individual methane plumes",
+      "Only cloud shadows and haze layers",
+      "Underground pipelines hidden below the surface",
+      "Real-time electricity demand at each facility",
+    ],
+    correctAnswer: 0,
+  },
+  "q-clim-kp35-2": {
+    type: "multiple-choice",
+    question: "What quantity do ML models often estimate to monitor ocean acidification globally?",
+    options: [
+      "Seafloor carbonate burial rates from ship tracks",
+      "Surface ocean pCO2 from variables such as temperature, chlorophyll, and salinity",
+      "Deep-ocean pH directly from radar backscatter",
+      "Only dissolved oxygen from visible imagery",
+    ],
+    correctAnswer: 1,
+  },
+  "q-cv3d-kp18-3": {
+    type: "multiple-choice",
+    question:
+      "Why do point-transformer models usually restrict self-attention to local kNN or radius neighborhoods instead of all points?",
+    options: [
+      "It reduces attention cost from quadratic to near-linear in the number of points while preserving local geometric structure.",
+      "Global self-attention cannot model unordered point sets.",
+      "Local attention makes positional encodings unnecessary.",
+      "Using all points would force the model to output a fixed number of points.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp20-3": {
+    type: "multiple-choice",
+    question:
+      "What is the main trade-off between voxel-based sparse-convolution segmenters and point-based segmenters for large 3D scenes?",
+    options: [
+      "Voxel methods scale efficiently by operating on occupied grid cells, but quantization loses some fine geometric detail; point-based methods preserve exact coordinates but are usually more expensive.",
+      "Voxel methods avoid any spatial quantization, while point-based methods require a fixed voxel grid.",
+      "Point-based methods are always more accurate and faster because they never downsample.",
+      "Sparse convolutions only work for indoor scans, while point-based models only work for outdoor LiDAR.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp29-3": {
+    type: "multiple-choice",
+    question:
+      "Why can a driving world model look strong on one-step prediction yet fail on long rollouts?",
+    options: [
+      "Small autoregressive errors compound over time, pushing the model off-distribution and degrading future predictions.",
+      "World models can condition on actions only for the first predicted frame.",
+      "Long rollouts remove uncertainty, so prediction quality becomes irrelevant.",
+      "Camera intrinsics usually change from frame to frame during rollout.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-cv3d-kp30-3": {
+    type: "multiple-choice",
+    question:
+      "Why are open-loop metrics on logged data not enough to evaluate an end-to-end driving policy?",
+    options: [
+      "Because they do not test how the policy's own actions change future states; small imitation errors can compound badly in closed loop.",
+      "Because open-loop evaluation cannot be used for waypoint prediction models.",
+      "Because logged data contains no lane markings or traffic lights.",
+      "Because only reinforcement learning policies can be evaluated offline.",
+    ],
+    correctAnswer: 0,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

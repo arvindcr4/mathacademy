@@ -264,7 +264,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        'Unit and integration tests verify code correctness but do not catch model quality regressions. A bug that changes data preprocessing can produce syntactically correct but semantically wrong output that passes all code tests while degrading AUC by 10%. ML pipelines require model evaluation gates: "new model AUC ≥ current production model AUC − δ" (e.g., δ=0.005) before promotion.',
+        'Unit and integration tests verify code correctness but do not catch model quality regressions. A bug that changes data preprocessing can produce syntactically correct but semantically wrong output that passes all code tests while degrading AUC by 10%. ML pipelines require model evaluation gates: "new model AUC ≥ current production model AUC − \\delta" (e.g., \\delta=0.005) before promotion.',
       hints: [
         "A typo in a feature normalization formula produces valid Python that passes unit tests but wrong model behavior.",
         "Model quality gates are the ML-specific check that code tests cannot replace.",
@@ -597,7 +597,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "PSI standard thresholds: PSI < 0.1 indicates negligible distribution shift (no action needed); PSI 0.1–0.25 indicates moderate shift (investigate root cause, monitor closely, consider retraining); PSI > 0.25 indicates significant shift (model performance is likely degraded, trigger retraining or rollback to a previous model). PSI is computed as Σ (P_i − Q_i) × ln(P_i / Q_i) across bins.",
+        "PSI standard thresholds: PSI < 0.1 indicates negligible distribution shift (no action needed); PSI 0.1–0.25 indicates moderate shift (investigate root cause, monitor closely, consider retraining); PSI > 0.25 indicates significant shift (model performance is likely degraded, trigger retraining or rollback to a previous model). PSI is computed as \\Sigma (P_i − Q_i) × ln(P_i / Q_i) across bins.",
       hints: [
         "PSI = 0 means perfectly identical distributions. PSI = ∞ means completely disjoint distributions.",
         "PSI > 0.25 on a key feature (e.g., age, transaction amount) should trigger an alert to the on-call ML engineer.",

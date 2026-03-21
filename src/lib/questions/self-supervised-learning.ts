@@ -142,16 +142,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the InfoNCE loss L = −log[exp(sim(z_i,z_j)/τ) / Σ_{k\$\\neq\$i} exp(sim(z_i,z_k)/τ)], what is the role of the temperature parameter τ, and what value does SimCLR use?",
+        "In the InfoNCE loss L = −log[exp(sim(z_i,z_j)/\\tau) / \\Sigma_{k\$\\neq\$i} exp(sim(z_i,z_k)/\\tau)], what is the role of the temperature parameter \\tau, and what value does SimCLR use?",
       options: [
-        "τ controls learning rate; SimCLR uses τ = 1.0",
-        "τ sharpens or smooths the similarity distribution: low τ (e.g., 0.07 in SimCLR) focuses more on hard negatives; high τ treats all negatives more uniformly",
-        "τ determines how many negative samples are included in the denominator",
-        "τ is fixed at τ = 0.5 for all contrastive methods and has no tunable effect",
+        "\\tau controls learning rate; SimCLR uses \\tau = 1.0",
+        "\\tau sharpens or smooths the similarity distribution: low \\tau (e.g., 0.07 in SimCLR) focuses more on hard negatives; high \\tau treats all negatives more uniformly",
+        "\\tau determines how many negative samples are included in the denominator",
+        "\\tau is fixed at \\tau = 0.5 for all contrastive methods and has no tunable effect",
       ],
       correctAnswer: 1,
       explanation:
-        "Temperature τ scales the logits before the softmax: low τ makes the loss peaky (large gradient from hard negatives near the anchor), while high τ smooths the distribution. SimCLR uses τ=0.07 (found optimal via grid search); MoCo uses τ=0.07–0.2. τ is one of the most critical hyperparameters in contrastive SSL.",
+        "Temperature \\tau scales the logits before the softmax: low \\tau makes the loss peaky (large gradient from hard negatives near the anchor), while high \\tau smooths the distribution. SimCLR uses \\tau=0.07 (found optimal via grid search); MoCo uses \\tau=0.07–0.2. \\tau is one of the most critical hyperparameters in contrastive SSL.",
       hints: [
         "Softmax with low temperature → peaky distribution; high temperature → uniform distribution.",
         "Hard negatives are close to the query in embedding space — low temperature amplifies their gradient signal.",
@@ -194,7 +194,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/τ) / Σ_{k\$\\neq\$i}^{2N} exp(sim(z_i,z_k)/τ)], evaluated symmetrically.",
+        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/\\tau) / \\Sigma_{k\$\\neq\$i}^{2N} exp(sim(z_i,z_k)/\\tau)], evaluated symmetrically.",
       hints: [
         "NT-Xent is the full name — Normalized (cosine similarity) Temperature-scaled Cross Entropy.",
         "Each image produces 2 views; so N images → 2N views → 2(N−1) negatives per anchor.",
@@ -251,7 +251,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder θ_k is updated by EMA: θ_k ← 0.999·θ_k + 0.001·θ_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.",
+        "MoCo uses a FIFO queue of 65,536 encoded keys as negatives. The key encoder \\theta_k is updated by EMA: \\theta_k ← 0.999·\\theta_k + 0.001·\\theta_q. High momentum (0.999) ensures keys from different mini-batches are encoded by nearly the same network, maintaining representation consistency across the queue. This decouples negative count (65k) from batch size.",
       hints: [
         "The queue stores 65,536 negatives — far more than any feasible batch size.",
         "Momentum 0.999 means the momentum encoder slowly tracks the query encoder without gradients.",
@@ -265,7 +265,7 @@ const questions: Record<string, Question[]> = {
         "In MoCo, the momentum encoder\'s parameters are updated by backpropagating gradients through the key encoding path.",
       correctAnswer: "False",
       explanation:
-        "The momentum encoder\'s parameters are NOT updated by gradient backpropagation — the queue is not differentiable. They are updated by EMA: θ_k ← m·θ_k + (1−m)·θ_q (m=0.999). Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible.",
+        "The momentum encoder\'s parameters are NOT updated by gradient backpropagation — the queue is not differentiable. They are updated by EMA: \\theta_k ← m·\\theta_k + (1−m)·\\theta_q (m=0.999). Backpropagating through the queue would require storing gradients for all 65k encoded keys, which is infeasible.",
       hints: [
         "Gradient-updating the momentum encoder would make it inconsistent with the older keys in the queue.",
         "EMA update: the momentum encoder slowly tracks the query encoder without gradients.",
@@ -299,16 +299,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "BYOL (Bootstrap Your Own Latent, Grill et al., 2020) uses an asymmetric architecture to avoid collapse without negative pairs. The target network parameters ξ are updated by:",
+        "BYOL (Bootstrap Your Own Latent, Grill et al., 2020) uses an asymmetric architecture to avoid collapse without negative pairs. The target network parameters \\xi are updated by:",
       options: [
         "Gradient descent on the BYOL loss, same as the online network",
-        "Exponential moving average (EMA) of the online network parameters: ξ ← τ·ξ + (1−τ)·θ, with τ = 0.996 increasing to 1 during training",
+        "Exponential moving average (EMA) of the online network parameters: \\xi ← \\tau·\\xi + (1−\\tau)·\\theta, with \\tau = 0.996 increasing to 1 during training",
         "Random re-initialization at the start of each training epoch",
         "Averaging the online network parameters across all GPU workers in data-parallel training",
       ],
       correctAnswer: 1,
       explanation:
-        "BYOL\'s target network is a momentum copy: ξ ← τ·ξ + (1−τ)·θ where τ starts at 0.996 and increases toward 1 using a cosine schedule. No gradients flow through the target network. The online network additionally has a predictor q_θ that the target lacks — this asymmetry combined with slow-moving EMA target prevents collapse.",
+        "BYOL\'s target network is a momentum copy: \\xi ← \\tau·\\xi + (1−\\tau)·\\theta where \\tau starts at 0.996 and increases toward 1 using a cosine schedule. No gradients flow through the target network. The online network additionally has a predictor q_\\theta that the target lacks — this asymmetry combined with slow-moving EMA target prevents collapse.",
       hints: [
         "Most contrastive methods need negatives to prevent collapse (all embeddings becoming identical).",
         "BYOL uses asymmetry (predictor on online branch only) + EMA target — not explicit negatives.",
@@ -365,7 +365,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Without stopgrad, minimizing −cosine_sim(p_1, z_2) can be trivially solved by collapsing both p_1 and z_2 to the same constant. stopgrad breaks the gradient symmetry: when computing ∂L/∂θ, z_2 is treated as constant (no gradient), so the network cannot exploit the shortcut. Chen & He analyze this as an EM-like alternating optimization.",
+        "Without stopgrad, minimizing −cosine_sim(p_1, z_2) can be trivially solved by collapsing both p_1 and z_2 to the same constant. stopgrad breaks the gradient symmetry: when computing ∂L/∂\\theta, z_2 is treated as constant (no gradient), so the network cannot exploit the shortcut. Chen & He analyze this as an EM-like alternating optimization.",
       hints: [
         "The stop-gradient is the key difference from BYOL — what happens to backpropagation when you stop gradients?",
         "If gradients can\'t flow through the target branch, the loss can\'t trivially collapse both branches together.",
@@ -393,7 +393,7 @@ const questions: Record<string, Question[]> = {
         "Chen & He (SimSiam) show that stopgrad makes SimSiam behave like Expectation-Maximization. What are the E-step and M-step analogues?",
       options: [
         "E-step: compute positive pair embeddings; M-step: compute negative pair embeddings",
-        "E-step: fix z (stopgrad branch, treat as cluster centers) and optimize p (predictor branch) — analogous to the E-step assigning data to clusters; M-step: update θ to improve the predictor — analogous to the M-step updating variables",
+        "E-step: fix z (stopgrad branch, treat as cluster centers) and optimize p (predictor branch) — analogous to the E-step assigning data to clusters; M-step: update \\theta to improve the predictor — analogous to the M-step updating variables",
         "E-step: compute contrastive loss; M-step: update the momentum encoder",
         "E-step: select hard negatives; M-step: update the projection head using those negatives",
       ],
@@ -527,16 +527,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "DINO (Self-DIstillation with NO labels, Caron et al., 2021) trains a student to match the output of a teacher network. The teacher parameters ξ are updated by:",
+        "DINO (Self-DIstillation with NO labels, Caron et al., 2021) trains a student to match the output of a teacher network. The teacher parameters \\xi are updated by:",
       options: [
         "Backpropagating the cross-entropy loss between student and teacher softmax outputs",
-        "Exponential moving average of the student parameters: ξ ← λξ + (1−λ)θ, with no gradient flowing through the teacher — the student minimizes H(P_t(x), P_s(x')), where x and x' are different crops",
+        "Exponential moving average of the student parameters: \\xi ← \\lambda\\xi + (1−\\lambda)\\theta, with no gradient flowing through the teacher — the student minimizes H(P_t(x), P_s(x')), where x and x' are different crops",
         "Random re-initialization every 100 epochs to prevent teacher collapse",
         "Training the teacher on a separate labeled dataset and distilling to the student",
       ],
       correctAnswer: 1,
       explanation:
-        "DINO\'s teacher is a momentum copy: ξ ← λξ + (1−λ)θ (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_ξ(x) − c)/τ_t), using the teacher\'s output with centering vector c and teacher temperature τ_t < τ_s. Different global/local crops create the view pair — a form of knowledge distillation requiring no labels.",
+        "DINO\'s teacher is a momentum copy: \\xi ← \\lambda\\xi + (1−\\lambda)\\theta (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_\\xi(x) − c)/\\tau_t), using the teacher\'s output with centering vector c and teacher temperature \\tau_t < \\tau_s. Different global/local crops create the view pair — a form of knowledge distillation requiring no labels.",
       hints: [
         '"Self" distillation: the teacher comes from the student itself via exponential moving average.',
         "No labels: the training signal is the teacher\'s output distribution, not a human-assigned class.",
@@ -563,7 +563,7 @@ const questions: Record<string, Question[]> = {
       question:
         'DINO uses two mechanisms to prevent collapse: "centering" and "sharpening." What do these operations do to the teacher\'s output, and why are both needed?',
       options: [
-        "Centering subtracts the batch mean from teacher outputs (prevents one dimension from dominating); sharpening uses a low temperature τ_t for the teacher softmax (prevents uniform collapse). Both are needed because centering alone leads to a uniform distribution, and sharpening alone leads to a single-class collapse",
+        "Centering subtracts the batch mean from teacher outputs (prevents one dimension from dominating); sharpening uses a low temperature \\tau_t for the teacher softmax (prevents uniform collapse). Both are needed because centering alone leads to a uniform distribution, and sharpening alone leads to a single-class collapse",
         "Centering normalizes embeddings to unit sphere; sharpening applies L1 regularization to the output",
         "Centering computes the running mean of gradients for stability; sharpening amplifies the top-k logits by 10×",
         "Centering removes the bias term from the teacher projection head; sharpening applies ReLU to teacher outputs",
@@ -2089,7 +2089,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + λ × sum_{i\$\\neq\$j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
+        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + \\lambda × sum_{i\$\\neq\$j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
       hints: [
         "Identity cross-correlation matrix = each feature dimension is invariant to augmentation AND uncorrelated with other dimensions.",
         "No negative pairs needed — the off-diagonal penalty prevents collapse by decorrelating dimensions.",

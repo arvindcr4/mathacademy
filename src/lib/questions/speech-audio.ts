@@ -265,7 +265,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Shallow fusion adds λ·log P_LM(w) to the acoustic log-score at each step during decoding (no retraining required); deep fusion (and cold/warm fusion variants) incorporates LM hidden states into the end-to-end model during training for tighter integration.",
+        "Shallow fusion adds \\lambda·log P_LM(w) to the acoustic log-score at each step during decoding (no retraining required); deep fusion (and cold/warm fusion variants) incorporates LM hidden states into the end-to-end model during training for tighter integration.",
       hints: [
         'Shallow fusion is "plug-in"—no model retraining needed, just score interpolation at decode time.',
         "Deep fusion requires modifying and retraining the acoustic model to accept LM representations as additional input.",
@@ -1688,10 +1688,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CFG jointly trains a conditional and unconditional denoiser; at inference, the predicted noise is interpolated as: ε_guided = ε_uncond + γ·(ε_cond − ε_uncond), where γ > 1 amplifies the direction from unconditional to conditional, producing outputs that more strongly adhere to the conditioning at the cost of diversity.",
+        "CFG jointly trains a conditional and unconditional denoiser; at inference, the predicted noise is interpolated as: \\epsilon_guided = \\epsilon_uncond + \\gamma·(\\epsilon_cond − \\epsilon_uncond), where \\gamma > 1 amplifies the direction from unconditional to conditional, producing outputs that more strongly adhere to the conditioning at the cost of diversity.",
       hints: [
         "Compare the output with and without conditioning—CFG amplifies the difference to increase conditioning adherence.",
-        "The guidance scale γ controls the trade-off between sample diversity and conditioning fidelity.",
+        "The guidance scale \\gamma controls the trade-off between sample diversity and conditioning fidelity.",
       ],
     },
   ],
@@ -1900,7 +1900,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
         'Using a pre-trained speech LLM and prompting it with the enrollment audio clips',
       ],
       correctAnswer: 1,
-      explanation: 'Prototypical networks (Snell et al.) are effective for few-shot KWS: compute a prototype c_k = (1/|S_k|) Σ f_θ(x) for each class (keyword / silence / other), then classify by arg min_k d(f_θ(query), c_k). The embedding f_θ is meta-trained on many known keywords to generalise to new ones with few samples. This avoids overfitting to 5 enrollment examples.',
+      explanation: 'Prototypical networks (Snell et al.) are effective for few-shot KWS: compute a prototype c_k = (1/|S_k|) \\Sigma f_\\theta(x) for each class (keyword / silence / other), then classify by arg min_k d(f_\\theta(query), c_k). The embedding f_\\theta is meta-trained on many known keywords to generalise to new ones with few samples. This avoids overfitting to 5 enrollment examples.',
       hints: [
         'Few-shot: 5 enrollment samples cannot train a fresh model—you need a pre-learned embedding space.',
         'Prototype = average embedding of support set samples — the new keyword is represented by its centroid.',
@@ -2232,10 +2232,10 @@ const additionalAudioQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Classifier-free guidance (CFG) is commonly used in audio diffusion models to improve prompt adherence: during inference, the model\'s score is extrapolated between the unconditional and conditional predictions, with a guidance scale > 1 amplifying the effect of the condition.',
       correctAnswer: 'True',
-      explanation: 'CFG for audio: ε_guided = ε_uncond + γ·(ε_cond − ε_uncond), where γ is the guidance scale. At γ=1, standard conditional generation. At γ>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with γ typically 3-7 for audio generation.',
+      explanation: 'CFG for audio: \\epsilon_guided = \\epsilon_uncond + \\gamma·(\\epsilon_cond − \\epsilon_uncond), where \\gamma is the guidance scale. At \\gamma=1, standard conditional generation. At \\gamma>1, the conditional direction is amplified, increasing prompt adherence at the cost of diversity/naturalness. AudioLDM, MusicGen, and Stable Audio all use CFG with \\gamma typically 3-7 for audio generation.',
       hints: [
         'CFG training: randomly drop the condition (replace with null/empty) during training so the model learns both conditional and unconditional score.',
-        'Higher γ: more like the text prompt; lower γ: more diverse but less adherent. Trade-off similar to temperature in LLMs.',
+        'Higher \\gamma: more like the text prompt; lower \\gamma: more diverse but less adherent. Trade-off similar to temperature in LLMs.',
       ],
     },
     {
@@ -2250,7 +2250,7 @@ const additionalAudioQuestions: Record<string, Question[]> = {
         'Using a separate encoder to extract a style embedding from the surrounding context and conditioning a TTS model on that style',
       ],
       correctAnswer: 1,
-      explanation: 'Audio inpainting via RePaint-style latent diffusion: at diffusion step t, known regions z_known are corrupted to noise level t (z_t_known = sqrt(ᾱ_t)·z_known + sqrt(1−ᾱ_t)·ε) and substituted back into the noisy latent; the model freely denoises the masked region. Repeated resampling (back-and-forth diffusion steps in the RePaint schedule) ensures the generated content blends naturally with the boundary. MusicGen and AudioLDM both support variants of this.',
+      explanation: 'Audio inpainting via RePaint-style latent diffusion: at diffusion step t, known regions z_known are corrupted to noise level t (z_t_known = sqrt(ᾱ_t)·z_known + sqrt(1−ᾱ_t)·\\epsilon) and substituted back into the noisy latent; the model freely denoises the masked region. Repeated resampling (back-and-forth diffusion steps in the RePaint schedule) ensures the generated content blends naturally with the boundary. MusicGen and AudioLDM both support variants of this.',
       hints: [
         'RePaint: at each denoising step, stitch together "what we know" (corrupted to this noise level) and "what we\'re generating" (freely denoised) — then denoise together.',
         'The key insight: corrupt the known region to the same noise level as the generated region so they can be combined consistently.',

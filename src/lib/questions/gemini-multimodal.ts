@@ -118,8 +118,7 @@ registerQuestions({
         "To directly modify the model weights.",
         "To provide the user’s immediate question.",
       ],
-      correctAnswer:
-        "To define the overall persona, tone, and behavioral rules the model should follow throughout a conversation.",
+      correctAnswer: 1,
       explanation:
         "System instructions allow developers to steer the behavior of the model, setting its persona, tone, and guidelines before it processes specific user prompts.",
       hints: [
@@ -141,8 +140,7 @@ registerQuestions({
         "Using exclusively system instructions without user prompts.",
         "Converting all images to base64 strings but ignoring text.",
       ],
-      correctAnswer:
-        "Interleaving text, images, and video in the prompt sequentially to provide rich context.",
+      correctAnswer: 1,
       explanation:
         "Because Gemini is natively multimodal, interleaved prompting—where text, images, and other media are mixed together naturally—provides the most effective context for the model to reason about.",
       hints: [

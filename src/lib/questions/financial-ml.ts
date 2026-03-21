@@ -67,7 +67,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "The Sharpe ratio of a portfolio is defined as (E[Rₚ] − Rƒ) / σₚ. If Portfolio A has an annualised excess return of 12% and annualised volatility of 20%, and Portfolio B has excess return 6% and volatility 8%, which has the higher Sharpe ratio?",
+        "The Sharpe ratio of a portfolio is defined as (E[Rₚ] − Rƒ) / \\sigmaₚ. If Portfolio A has an annualised excess return of 12% and annualised volatility of 20%, and Portfolio B has excess return 6% and volatility 8%, which has the higher Sharpe ratio?",
       options: [
         "Portfolio A (Sharpe = 0.60) outperforms B (Sharpe = 0.75) — incorrect, A is higher",
         "Portfolio B, with Sharpe ratio 0.75, outperforms Portfolio A\'s Sharpe ratio of 0.60",
@@ -96,7 +96,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fama and French augmented CAPM with SMB (Small Minus Big, the size premium — long small-caps, short large-caps) and HML (High Minus Low book-to-market, the value premium — long high B/M stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone. The model is: E[Rᵢ] − Rƒ = αᵢ + βMKT·(Rm−Rƒ) + βSMB·SMB + βHML·HML.",
+        "Fama and French augmented CAPM with SMB (Small Minus Big, the size premium — long small-caps, short large-caps) and HML (High Minus Low book-to-market, the value premium — long high B/M stocks, short low B/M growth stocks) to capture empirical return patterns unexplained by the market factor alone. The model is: E[Rᵢ] − Rƒ = \\alphaᵢ + \\betaMKT·(Rm−Rƒ) + \\betaSMB·SMB + \\betaHML·HML.",
       hints: [
         "One factor captures a systematic return difference between small and large companies by market cap.",
         "The other factor relates to how cheaply a company\'s assets are priced relative to their book value (book-to-market ratio).",
@@ -134,7 +134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        'Alpha represents the idiosyncratic return a strategy earns beyond compensation for bearing systematic risk factors, often called "abnormal return" or manager skill. In the CAPM framework, α = E[Rₚ] − Rƒ − β·(E[Rm]−Rƒ); in multi-factor models, it is the intercept of the factor regression.',
+        'Alpha represents the idiosyncratic return a strategy earns beyond compensation for bearing systematic risk factors, often called "abnormal return" or manager skill. In the CAPM framework, \\alpha = E[Rₚ] − Rƒ − \\beta·(E[Rm]−Rƒ); in multi-factor models, it is the intercept of the factor regression.',
       hints: [
         "Think about what is left over once you account for exposure to known risk premia (market, size, value, momentum).",
         "It is the intercept in a factor model regression of portfolio excess returns — the return unexplained by factors.",
@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IR = (E[Rₚ] − E[Rb]) / σ(Rₚ − Rb), where Rₚ is portfolio return, Rb is benchmark return, and σ(Rₚ − Rb) is the tracking error (annualised standard deviation of active returns). Grinold\'s Fundamental Law of Active Management states IR ≈ IC × √BR, where IC is the Information Coefficient (skill per bet) and BR is the breadth (number of independent bets per year).",
+        "IR = (E[Rₚ] − E[Rb]) / \\sigma(Rₚ − Rb), where Rₚ is portfolio return, Rb is benchmark return, and \\sigma(Rₚ − Rb) is the tracking error (annualised standard deviation of active returns). Grinold\'s Fundamental Law of Active Management states IR ≈ IC × √BR, where IC is the Information Coefficient (skill per bet) and BR is the breadth (number of independent bets per year).",
       hints: [
         "The IR is analogous to the Sharpe ratio but measured relative to a benchmark rather than the risk-free rate.",
         "The denominator is tracking error — the volatility of active returns (portfolio minus benchmark), not total portfolio volatility.",
@@ -381,7 +381,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Kyle lambda (λ) in Kyle\'s model measures the price impact per unit of order flow, with a higher lambda indicating a more liquid market.",
+        "The Kyle lambda (\\lambda) in Kyle\'s model measures the price impact per unit of order flow, with a higher lambda indicating a more liquid market.",
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
@@ -604,7 +604,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "VaR(α) is the loss level exceeded with probability (1−α): for 99% VaR, losses exceed $1M with 1% probability (roughly 2.5 trading days per year). Crucially, VaR says nothing about the magnitude of losses beyond this threshold — a portfolio could lose $1M on 99% days or $100M on the same 1% of days and both have the same VaR. This is the key limitation CVaR/Expected Shortfall addresses.",
+        "VaR(\\alpha) is the loss level exceeded with probability (1−\\alpha): for 99% VaR, losses exceed $1M with 1% probability (roughly 2.5 trading days per year). Crucially, VaR says nothing about the magnitude of losses beyond this threshold — a portfolio could lose $1M on 99% days or $100M on the same 1% of days and both have the same VaR. This is the key limitation CVaR/Expected Shortfall addresses.",
       hints: [
         "VaR is a quantile of the P&L distribution, not a bound on the maximum loss.",
         "At 99% confidence, 1% of days should see losses exceeding VaR — roughly 2.5 days per year for daily VaR.",
@@ -615,11 +615,11 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "CVaR at confidence level α (e.g., 99%) equals the expected loss conditional on the loss exceeding VaR(α), making it a more informative tail risk measure than VaR alone.",
+        "CVaR at confidence level \\alpha (e.g., 99%) equals the expected loss conditional on the loss exceeding VaR(\\alpha), making it a more informative tail risk measure than VaR alone.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "CVaR(α) = E[L | L > VaR(α)] — the average of all losses exceeding the 99th percentile. Unlike VaR, CVaR captures the shape and severity of the tail beyond the threshold. CVaR is also a coherent risk measure (satisfies monotonicity, sub-additivity, translation invariance, and positive homogeneity), making it suitable for portfolio optimization via linear programming.",
+        "CVaR(\\alpha) = E[L | L > VaR(\\alpha)] — the average of all losses exceeding the 99th percentile. Unlike VaR, CVaR captures the shape and severity of the tail beyond the threshold. CVaR is also a coherent risk measure (satisfies monotonicity, sub-additivity, translation invariance, and positive homogeneity), making it suitable for portfolio optimization via linear programming.",
       hints: [
         "If VaR(99%) = $1M, CVaR(99%) is the average loss on the worst 1% of days — it could be $5M if the tail is fat.",
         "CVaR\'s sub-additivity means CVaR(A+B) ≤ CVaR(A) + CVaR(B), ensuring diversification is always rewarded.",
@@ -632,17 +632,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The Black-Scholes option pricing model rests on several key assumptions. Which of the following is NOT an assumption of the standard Black-Scholes model?",
       options: [
-        "The underlying asset price follows geometric Brownian motion with constant volatility σ",
+        "The underlying asset price follows geometric Brownian motion with constant volatility \\sigma",
         "There are no transaction costs and continuous trading is possible",
         "The risk-free interest rate r is constant over the option\'s life",
         "The underlying asset\'s returns follow a Student-t distribution with fat tails to capture volatility clustering",
       ],
       correctAnswer: 3,
       explanation:
-        "Black-Scholes assumes: (1) GBM with constant σ (log-normal returns, no volatility smile/skew); (2) no transaction costs, frictionless markets; (3) constant risk-free rate; (4) no dividends (standard form); (5) European-style exercise; (6) no arbitrage. Student-t distributed returns with fat tails explicitly violate the constant-σ GBM assumption. Real markets exhibit volatility smiles/skews, fat tails, and mean-reversion — extensions like Heston\'s stochastic volatility model address these.",
+        "Black-Scholes assumes: (1) GBM with constant \\sigma (log-normal returns, no volatility smile/skew); (2) no transaction costs, frictionless markets; (3) constant risk-free rate; (4) no dividends (standard form); (5) European-style exercise; (6) no arbitrage. Student-t distributed returns with fat tails explicitly violate the constant-\\sigma GBM assumption. Real markets exhibit volatility smiles/skews, fat tails, and mean-reversion — extensions like Heston\'s stochastic volatility model address these.",
       hints: [
-        "Black-Scholes derives its closed-form from the GBM assumption: dS = μS dt + σS dW, with σ constant.",
-        "If returns had fat tails (Student-t) or volatility clustered (GARCH), you could not derive the Black-Scholes PDE in closed form with constant σ.",
+        "Black-Scholes derives its closed-form from the GBM assumption: dS = \\muS dt + \\sigmaS dW, with \\sigma constant.",
+        "If returns had fat tails (Student-t) or volatility clustered (GARCH), you could not derive the Black-Scholes PDE in closed form with constant \\sigma.",
       ],
     },
   ],
@@ -692,7 +692,7 @@ const questions: Record<string, Question[]> = {
         "According to Random Matrix Theory (RMT), eigenvalues of a large sample covariance matrix from i.i.d. noise follow which distribution?",
       options: [
         "The chi-squared distribution with p degrees of freedom",
-        "The Marchenko-Pastur distribution, bounded between λ_min and λ_max",
+        "The Marchenko-Pastur distribution, bounded between \\lambda_min and \\lambda_max",
         "A standard normal distribution centred at 1",
         "A power-law distribution with infinite variance",
       ],
@@ -1485,7 +1485,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Black-Scholes assumes the underlying follows geometric Brownian motion with constant drift (μ) and volatility (σ), log-normally distributed returns, continuous trading, and no dividends or transaction costs.",
+        "Black-Scholes assumes the underlying follows geometric Brownian motion with constant drift (\\mu) and volatility (\\sigma), log-normally distributed returns, continuous trading, and no dividends or transaction costs.",
       hints: [
         "The model derives a closed-form option price under specific distributional assumptions.",
         'The key parameter that markets "back out" from observed prices is the model\'s volatility assumption.',
@@ -1496,14 +1496,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Implied volatility is the value of σ that, when plugged into the Black-Scholes formula, equates the model price to the observed market price of an option.",
+        "Implied volatility is the value of \\sigma that, when plugged into the Black-Scholes formula, equates the model price to the observed market price of an option.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Since Black-Scholes is monotone in σ, given the observed market price one can numerically invert the formula (e.g., via Newton-Raphson) to recover the unique implied volatility that matches the market price.",
+        "Since Black-Scholes is monotone in \\sigma, given the observed market price one can numerically invert the formula (e.g., via Newton-Raphson) to recover the unique implied volatility that matches the market price.",
       hints: [
         'Implied volatility is "backed out" from market prices, not estimated from historical returns.',
-        "The Black-Scholes formula is a bijection in σ for fixed other inputs.",
+        "The Black-Scholes formula is a bijection in \\sigma for fixed other inputs.",
       ],
     },
     {

@@ -22,11 +22,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Pauli-Z gate acting on a general qubit α|0⟩ + β|1⟩ produces ___.",
-      options: ["β|0⟩ + α|1⟩", "α|0⟩ − β|1⟩", "−α|0⟩ + β|1⟩", "α|0⟩ + β|1⟩"],
+        "The Pauli-Z gate acting on a general qubit \\alpha|0⟩ + \\beta|1⟩ produces ___.",
+      options: ["\\beta|0⟩ + \\alpha|1⟩", "\\alpha|0⟩ − \\beta|1⟩", "−\\alpha|0⟩ + \\beta|1⟩", "\\alpha|0⟩ + \\beta|1⟩"],
       correctAnswer: 1,
       explanation:
-        "The Pauli-Z matrix is Z = [[1,0],[0,−1]]. Acting on α|0⟩ + β|1⟩ = [α,β]ᵀ gives Z[α,β]ᵀ = [α,−β]ᵀ = α|0⟩ − β|1⟩. Z is a π rotation around the Z-axis, flipping the phase of the |1⟩ component.",
+        "The Pauli-Z matrix is Z = [[1,0],[0,−1]]. Acting on \\alpha|0⟩ + \\beta|1⟩ = [\\alpha,\\beta]ᵀ gives Z[\\alpha,\\beta]ᵀ = [\\alpha,−\\beta]ᵀ = \\alpha|0⟩ − \\beta|1⟩. Z is a \\pi rotation around the Z-axis, flipping the phase of the |1⟩ component.",
       hints: [
         "The Z matrix leaves |0⟩ unchanged but multiplies |1⟩ by −1.",
         "Z = diag(1, −1), so it simply negates the amplitude of |1⟩.",
@@ -41,7 +41,7 @@ const questions: Record<string, Question[]> = {
       options: ["Identity I", "Pauli-X", "Pauli-Z", "Hadamard H"],
       correctAnswer: 2,
       explanation:
-        "S² = [[1,0],[0,i]]² = [[1,0],[0,i²]] = [[1,0],[0,−1]] = Z. Applying the S gate twice is equivalent to a π/2 phase shift applied twice, giving a π phase shift — the Pauli-Z gate.",
+        "S² = [[1,0],[0,i]]² = [[1,0],[0,i²]] = [[1,0],[0,−1]] = Z. Applying the S gate twice is equivalent to a \\pi/2 phase shift applied twice, giving a \\pi phase shift — the Pauli-Z gate.",
       hints: [
         "S = diag(1, i). Squaring a diagonal matrix just squares the diagonal entries: S² = diag(1², i²) = diag(1, −1).",
         "Compare S² = diag(1,−1) with the Pauli-Z matrix diag(1,−1). They are the same.",
@@ -59,7 +59,7 @@ const questions: Record<string, Question[]> = {
       options: ["|00⟩", "(|00⟩ + |11⟩) / √2", "(|01⟩ + |10⟩) / √2", "|11⟩"],
       correctAnswer: 1,
       explanation:
-        "After H: qubit 1 is (|0⟩+|1⟩)/√2, system is (|0⟩+|1⟩)/√2 ⊗ |0⟩ = (|00⟩+|10⟩)/√2. CNOT flips qubit 2 when qubit 1 is |1⟩: |00⟩→|00⟩, |10⟩→|11⟩. Result: (|00⟩+|11⟩)/√2, the Φ⁺ Bell state.",
+        "After H: qubit 1 is (|0⟩+|1⟩)/√2, system is (|0⟩+|1⟩)/√2 ⊗ |0⟩ = (|00⟩+|10⟩)/√2. CNOT flips qubit 2 when qubit 1 is |1⟩: |00⟩→|00⟩, |10⟩→|11⟩. Result: (|00⟩+|11⟩)/√2, the \\Phi⁺ Bell state.",
       hints: [
         "Expand |+⟩|0⟩ = (|0⟩+|1⟩)/√2 ⊗ |0⟩ = (|00⟩+|10⟩)/√2, then apply CNOT to each term.",
         "CNOT: |00⟩→|00⟩, |01⟩→|01⟩, |10⟩→|11⟩, |11⟩→|10⟩.",
@@ -115,7 +115,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Bell states are maximally entangled two-qubit states; (|00⟩ + |11⟩)/√2, known as Φ⁺, is one of the four Bell states and cannot be written as a product of two single-qubit states.",
+        "Bell states are maximally entangled two-qubit states; (|00⟩ + |11⟩)/√2, known as \\Phi⁺, is one of the four Bell states and cannot be written as a product of two single-qubit states.",
       hints: [
         "A Bell state involves two qubits that are entangled — it cannot be factored into individual qubit states.",
         "Superposition of a single qubit is not entanglement; look for a two-qubit state with correlated outcomes.",
@@ -280,7 +280,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "VQE approximates the ground state energy of a Hamiltonian by minimizing the expectation value ⟨ψ(θ)|H|ψ(θ)⟩ over parameterized circuit parameters θ, leveraging the variational principle.",
+        "VQE approximates the ground state energy of a Hamiltonian by minimizing the expectation value ⟨\\psi(\\theta)|H|\\psi(\\theta)⟩ over parameterized circuit parameters \\theta, leveraging the variational principle.",
       hints: [
         "The variational principle guarantees that any trial state gives an energy above or equal to the true ground state.",
         "VQE is motivated by quantum chemistry where the ground state energy determines molecular stability.",
@@ -305,7 +305,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Which mathematical principle guarantees that the VQE expectation value ⟨ψ(θ)|H|ψ(θ)⟩ is always an upper bound on the ground state energy?",
+        "Which mathematical principle guarantees that the VQE expectation value ⟨\\psi(\\theta)|H|\\psi(\\theta)⟩ is always an upper bound on the ground state energy?",
       options: [
         "Cauchy-Schwarz inequality",
         "Variational principle (Rayleigh-Ritz method)",
@@ -314,7 +314,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The variational principle states that for any normalized state |ψ⟩, ⟨ψ|H|ψ⟩ ≥ E₀, where E₀ is the true ground state energy, providing the theoretical foundation for VQE.",
+        "The variational principle states that for any normalized state |\\psi⟩, ⟨\\psi|H|\\psi⟩ ≥ E₀, where E₀ is the true ground state energy, providing the theoretical foundation for VQE.",
       hints: [
         "This principle appears in quantum mechanics courses as a method for approximating ground state energies.",
         "The ground state minimizes the energy — any other state must have energy at least as large.",
@@ -337,7 +337,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "QAOA alternates p rounds of the cost Hamiltonian Hc (encoding the optimization objective) and the mixer Hamiltonian Hm (typically uniform X rotations), with 2p variational angles (γ, β).",
+        "QAOA alternates p rounds of the cost Hamiltonian Hc (encoding the optimization objective) and the mixer Hamiltonian Hm (typically uniform X rotations), with 2p variational angles (\\gamma, \\beta).",
       hints: [
         "One operator encodes what we want to optimize; the other explores the solution space.",
         "The two operators serve analogous roles to the problem energy and kinetic energy in quantum annealing.",
@@ -445,7 +445,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "2", "4", "O(n)"],
       correctAnswer: 1,
       explanation:
-        "The parameter-shift rule evaluates the circuit at θ + π/2 and θ − π/2, requiring exactly 2 evaluations per parameter to compute an exact analytic gradient without finite-difference approximation.",
+        "The parameter-shift rule evaluates the circuit at \\theta + \\pi/2 and \\theta − \\pi/2, requiring exactly 2 evaluations per parameter to compute an exact analytic gradient without finite-difference approximation.",
       hints: [
         "Unlike finite differences (which also use 2 evaluations but give approximate gradients), this rule gives exact results.",
         "The two shifted evaluations are symmetric around the original parameter value.",
@@ -459,7 +459,7 @@ const questions: Record<string, Question[]> = {
         "The parameter-shift rule gives the exact gradient (not an approximation) of the expectation value with respect to a gate parameter.",
       correctAnswer: "True",
       explanation:
-        "Because parameterized gates have the form exp(−iθP/2) where P is a Pauli operator, the expectation value is a sinusoidal function of θ, and the parameter-shift rule computes its exact derivative analytically.",
+        "Because parameterized gates have the form exp(−i\\thetaP/2) where P is a Pauli operator, the expectation value is a sinusoidal function of \\theta, and the parameter-shift rule computes its exact derivative analytically.",
       hints: [
         "Finite differences approximate derivatives; the parameter-shift rule exploits the specific mathematical structure of quantum gates.",
         "The expectation value of any Pauli gate rotation is a sine/cosine function, whose derivative can be computed exactly.",
@@ -470,13 +470,13 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "For a gate of the form U(θ) = exp(−iθG) where G has eigenvalues ±r, the parameter-shift rule uses a shift of s = π/(4r). For a standard Pauli rotation where r = 1/2, what is the shift?",
-      options: ["π/8", "π/4", "π/2", "π"],
+        "For a gate of the form U(\\theta) = exp(−i\\thetaG) where G has eigenvalues ±r, the parameter-shift rule uses a shift of s = \\pi/(4r). For a standard Pauli rotation where r = 1/2, what is the shift?",
+      options: ["\\pi/8", "\\pi/4", "\\pi/2", "\\pi"],
       correctAnswer: 2,
       explanation:
-        "With r = 1/2 for standard Pauli rotations, the shift is s = π/(4 × 1/2) = π/2, giving the classic ∂f/∂θ = [f(θ + π/2) − f(θ − π/2)] / 2 formula.",
+        "With r = 1/2 for standard Pauli rotations, the shift is s = \\pi/(4 × 1/2) = \\pi/2, giving the classic ∂f/∂\\theta = [f(\\theta + \\pi/2) − f(\\theta − \\pi/2)] / 2 formula.",
       hints: [
-        "Substitute r = 1/2 into s = π/(4r) directly.",
+        "Substitute r = 1/2 into s = \\pi/(4r) directly.",
         "This is the standard shift used in PennyLane and most QML frameworks for single-qubit rotation gates.",
       ],
     },
@@ -519,7 +519,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Which initialization strategy has been shown to help avoid barren plateaus in deep quantum circuits?",
       options: [
-        "Uniform random initialization in [0, 2π]",
+        "Uniform random initialization in [0, 2\\pi]",
         "Identity block initialization (initializing blocks to near-identity)",
         "Xavier/Glorot initialization from classical neural networks",
         "Zero initialization of all parameters",
@@ -540,16 +540,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "A quantum feature map φ(x) encodes classical data x into a quantum state |φ(x)⟩. What defines the corresponding quantum kernel?",
+        "A quantum feature map \\phi(x) encodes classical data x into a quantum state |\\phi(x)⟩. What defines the corresponding quantum kernel?",
       options: [
-        "The trace of the density matrix ρ(x)",
-        "The inner product |⟨φ(x)|φ(x′)⟩|²",
+        "The trace of the density matrix \\rho(x)",
+        "The inner product |⟨\\phi(x)|\\phi(x′)⟩|²",
         "The number of gates in the encoding circuit",
-        "The entanglement entropy of |φ(x)⟩",
+        "The entanglement entropy of |\\phi(x)⟩",
       ],
       correctAnswer: 1,
       explanation:
-        "The quantum kernel between two data points x and x′ is defined as K(x, x′) = |⟨φ(x)|φ(x′)⟩|², computed by running the feature map circuit and its inverse and measuring the zero-state probability.",
+        "The quantum kernel between two data points x and x′ is defined as K(x, x′) = |⟨\\phi(x)|\\phi(x′)⟩|², computed by running the feature map circuit and its inverse and measuring the zero-state probability.",
       hints: [
         "In kernel methods, the kernel function measures similarity between feature representations.",
         'The quantum kernel can be estimated by a "swap test" or by running the overlap circuit and measuring the |0⟩ probability.',
@@ -563,7 +563,7 @@ const questions: Record<string, Question[]> = {
         "The ZZFeatureMap in PennyLane/Qiskit encodes classical data using both single-qubit and two-qubit interactions to create entanglement between feature dimensions.",
       correctAnswer: "True",
       explanation:
-        "The ZZFeatureMap applies Hadamard gates followed by ZZ-interaction unitaries exp(i(π − x_i)(π − x_j)ZZ) between pairs of qubits, creating non-linear and entangled encodings of the input features.",
+        "The ZZFeatureMap applies Hadamard gates followed by ZZ-interaction unitaries exp(i(\\pi − x_i)(\\pi − x_j)ZZ) between pairs of qubits, creating non-linear and entangled encodings of the input features.",
       hints: [
         'The "ZZ" in the name hints at two-qubit Pauli-ZZ interactions between feature pairs.',
         "Entanglement between qubits allows the feature map to capture correlations between different input dimensions.",
@@ -1090,7 +1090,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "The parameter-shift rule computes exact analytical gradients by evaluating the circuit at θ ± π/2, and is compatible with shot-based (sampling) quantum hardware, making it the standard gradient method in hybrid QML frameworks like PennyLane.",
+        "The parameter-shift rule computes exact analytical gradients by evaluating the circuit at \\theta ± \\pi/2, and is compatible with shot-based (sampling) quantum hardware, making it the standard gradient method in hybrid QML frameworks like PennyLane.",
       hints: [
         "Classical autograd works on classical computations; you need a rule specifically designed for quantum circuit outputs.",
         "The parameter-shift rule was designed to work directly with hardware measurements, not just simulations.",
@@ -1183,7 +1183,7 @@ const questions: Record<string, Question[]> = {
         "Quantum Boltzmann Machines sample from a thermal (Gibbs) distribution defined by a quantum Hamiltonian.",
       correctAnswer: "True",
       explanation:
-        "The QBM\'s generative model is the quantum Gibbs state ρ ∝ exp(−βH), where β is inverse temperature; learning adjusts the Hamiltonian parameters so that marginals of ρ match the training data distribution.",
+        "The QBM\'s generative model is the quantum Gibbs state \\rho \\propto exp(−\\betaH), where \\beta is inverse temperature; learning adjusts the Hamiltonian parameters so that marginals of \\rho match the training data distribution.",
       hints: [
         "Classical RBMs use Gibbs/Boltzmann distributions; QBMs extend this to quantum Hamiltonians.",
         "The quantum Gibbs state is the density matrix that minimizes free energy for a given quantum Hamiltonian and temperature.",
@@ -1203,7 +1203,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Computing the quantum Gibbs state exp(−βH)/Z and its gradient requires quantum phase estimation or quantum simulation of thermalization, both of which are resource-intensive on NISQ hardware and remain an open engineering challenge.",
+        "Computing the quantum Gibbs state exp(−\\betaH)/Z and its gradient requires quantum phase estimation or quantum simulation of thermalization, both of which are resource-intensive on NISQ hardware and remain an open engineering challenge.",
       hints: [
         "Preparing a thermal state is much harder than preparing a pure state — it requires simulating a system at finite temperature.",
         "Unlike VQE which prepares a variational pure state, preparing the Gibbs density matrix requires access to a thermal bath or expensive simulation.",
@@ -1220,13 +1220,13 @@ const questions: Record<string, Question[]> = {
         "Born Machines are generative models that produce samples by measuring a parameterized quantum state. What probability distribution do they sample from?",
       options: [
         "Uniform distribution over bit strings",
-        "The Born rule distribution |⟨x|ψ(θ)⟩|² for each bit string x",
+        "The Born rule distribution |⟨x|\\psi(\\theta)⟩|² for each bit string x",
         "A classical Boltzmann distribution",
         "A Gaussian distribution over qubit angles",
       ],
       correctAnswer: 1,
       explanation:
-        "Born Machines learn a parameterized quantum state |ψ(θ)⟩ such that the Born rule probabilities p(x) = |⟨x|ψ(θ)⟩|² match the target data distribution, using the quantum circuit as an implicit generative model.",
+        "Born Machines learn a parameterized quantum state |\\psi(\\theta)⟩ such that the Born rule probabilities p(x) = |⟨x|\\psi(\\theta)⟩|² match the target data distribution, using the quantum circuit as an implicit generative model.",
       hints: [
         "Measuring a quantum state in the computational basis gives each outcome with probability determined by the Born rule.",
         "The generative model is the quantum circuit itself; data generation is a single computational-basis measurement.",
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The quantum autoencoder is trained to maximize state fidelity F = |⟨ψ_in|ψ_out⟩|², equivalently minimizing 1−F; this is estimated using the SWAP test or by measuring the trash qubits in the |0⟩ state.",
+        "The quantum autoencoder is trained to maximize state fidelity F = |⟨\\psi_in|\\psi_out⟩|², equivalently minimizing 1−F; this is estimated using the SWAP test or by measuring the trash qubits in the |0⟩ state.",
       hints: [
         "Fidelity measures how close two quantum states are — perfect compression gives fidelity 1 between input and reconstructed output.",
         "Minimizing 1−F is equivalent to maximizing the overlap between input and output, which is the standard reconstruction objective.",
@@ -1488,7 +1488,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Estimator primitive computes ⟨ψ|O|ψ⟩ for a given observable O and circuit output state |ψ⟩, using either exact simulation or hardware shots with error mitigation; this is the building block for QNN forward passes.",
+        "The Estimator primitive computes ⟨\\psi|O|\\psi⟩ for a given observable O and circuit output state |\\psi⟩, using either exact simulation or hardware shots with error mitigation; this is the building block for QNN forward passes.",
       hints: [
         "Estimator vs Sampler: one gives expectation values of observables, the other gives measurement outcome probabilities.",
         "Expectation values are real numbers that can be used directly as QNN outputs for regression or classification.",
@@ -1597,7 +1597,7 @@ const questions: Record<string, Question[]> = {
       options: ["n", "n log n", "n(n−1)/2", "2ⁿ"],
       correctAnswer: 2,
       explanation:
-        "An Ising Hamiltonian H = −Σ_ij J_ij s_i s_j − Σ_i h_i s_i has at most n(n−1)/2 distinct two-body couplings (one for each pair of spins), which determines the hardware connectivity requirements for quantum annealers.",
+        "An Ising Hamiltonian H = −\\Sigma_ij J_ij s_i s_j − \\Sigma_i h_i s_i has at most n(n−1)/2 distinct two-body couplings (one for each pair of spins), which determines the hardware connectivity requirements for quantum annealers.",
       hints: [
         "Count the number of pairs from n spins: this is a combination problem.",
         "Dense QUBO problems require all-to-all connectivity, which is hard to achieve physically on current quantum annealers.",
@@ -1620,7 +1620,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "HHL runs in O(κ² s² polylog(N)/ε) time for an N×N s-sparse matrix with condition number κ, compared to classical O(Ns κ) solvers, but requires QRAM access to b, the solution is a quantum state (not directly readable), and dequantization results show these assumptions often allow efficient classical algorithms too.",
+        "HHL runs in O(κ² s² polylog(N)/\\epsilon) time for an N×N s-sparse matrix with condition number κ, compared to classical O(Ns κ) solvers, but requires QRAM access to b, the solution is a quantum state (not directly readable), and dequantization results show these assumptions often allow efficient classical algorithms too.",
       hints: [
         "The caveats of HHL — sparse input, QRAM, and quantum state output — are what limit its practical advantage.",
         "Condition number κ measures how numerically stable the linear system is; small κ is a strong assumption.",
@@ -1634,7 +1634,7 @@ const questions: Record<string, Question[]> = {
         "Quantum phase estimation (QPE) can determine the eigenvalues of a unitary operator U to n bits of precision using n ancilla qubits and controlled-U operations.",
       correctAnswer: "True",
       explanation:
-        "QPE applies the quantum Fourier transform to extract the phase φ in U|ψ⟩ = e^{2πiφ}|ψ⟩ with n-bit precision, requiring n ancilla qubits and 2^n applications of controlled-U; it is a core subroutine in Shor's algorithm, HHL, and quantum chemistry.",
+        "QPE applies the quantum Fourier transform to extract the phase \\phi in U|\\psi⟩ = e^{2\\pii\\phi}|\\psi⟩ with n-bit precision, requiring n ancilla qubits and 2^n applications of controlled-U; it is a core subroutine in Shor's algorithm, HHL, and quantum chemistry.",
       hints: [
         "QPE works by encoding the phase into the ancilla register and using the inverse QFT to decode it.",
         "The precision in bits is determined by the number of ancilla qubits used.",
@@ -1905,7 +1905,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Angle embedding encodes each feature x_i as a rotation angle θ_i in a single-qubit gate R(x_i), needing n qubits for n features; amplitude embedding encodes N = 2^n features as amplitudes of an n-qubit state, achieving exponential compression but requiring exponentially deep state preparation circuits.",
+        "Angle embedding encodes each feature x_i as a rotation angle \\theta_i in a single-qubit gate R(x_i), needing n qubits for n features; amplitude embedding encodes N = 2^n features as amplitudes of an n-qubit state, achieving exponential compression but requiring exponentially deep state preparation circuits.",
       hints: [
         "Angle embedding is qubit-efficient in preparation depth but qubit-inefficient in qubit count.",
         "Amplitude embedding is qubit-efficient (logarithmic in data size) but circuit-depth inefficient (exponential preparation).",
@@ -1956,7 +1956,7 @@ const questions: Record<string, Question[]> = {
         "The Variational Quantum Eigensolver (VQE) estimates the ground state energy of a molecular Hamiltonian. How does VQE guarantee an upper bound on the true ground state energy?",
       options: [
         "By using quantum error correction on all gates",
-        "Via the variational principle: ⟨ψ(θ)|H|ψ(θ)⟩ ≥ E_ground for any state |ψ(θ)⟩",
+        "Via the variational principle: ⟨\\psi(\\theta)|H|\\psi(\\theta)⟩ ≥ E_ground for any state |\\psi(\\theta)⟩",
         "By computing the exact eigenspectrum using quantum phase estimation",
         "By averaging over many random ansatz circuits",
       ],
@@ -1965,7 +1965,7 @@ const questions: Record<string, Question[]> = {
         "The variational principle guarantees that the expectation value of H in any trial state is an upper bound on the ground state energy; VQE minimizes this expectation value over the parameterized ansatz, approaching the true ground state energy from above.",
       hints: [
         "The variational principle is the quantum mechanical analogue of the fact that any trial wavefunction overestimates the ground state energy.",
-        "VQE optimizes θ to minimize ⟨H⟩ — each evaluation gives an upper bound, and minimization drives it toward the exact ground state.",
+        "VQE optimizes \\theta to minimize ⟨H⟩ — each evaluation gives an upper bound, and minimization drives it toward the exact ground state.",
       ],
     },
     {
@@ -1987,7 +1987,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The second-quantized molecular Hamiltonian H = Σ_pq h_pq a†_p a_q + (1/2) Σ_pqrs h_pqrs a†_p a†_q a_r a_s must be mapped to qubit operators for quantum simulation. Compared to the Bravyi-Kitaev (BK) transformation, what advantage does the Jordan-Wigner (JW) transformation have?",
+        "The second-quantized molecular Hamiltonian H = \\Sigma_pq h_pq a†_p a_q + (1/2) \\Sigma_pqrs h_pqrs a†_p a†_q a_r a_s must be mapped to qubit operators for quantum simulation. Compared to the Bravyi-Kitaev (BK) transformation, what advantage does the Jordan-Wigner (JW) transformation have?",
       options: [
         "JW produces Pauli strings of constant length O(1), independent of system size",
         "JW has a more transparent locality structure: orbital j maps to qubit j with simple Pauli-Z strings for anti-commutation, making it easier to interpret",
@@ -2047,7 +2047,7 @@ const questions: Record<string, Question[]> = {
         "Error-aware circuit compilation for NISQ devices includes which of the following noise-adaptive strategies?",
       options: [
         "Routing two-qubit gates to pairs of qubits with the highest two-qubit gate error rates",
-        "Dynamical decoupling: inserting sequences of π-pulses during idle periods to suppress dephasing errors",
+        "Dynamical decoupling: inserting sequences of \\pi-pulses during idle periods to suppress dephasing errors",
         "Increasing circuit depth to allow more gate operations",
         "Disabling cross-resonance gates in favor of less accurate software-simulated gates",
       ],
@@ -2104,13 +2104,13 @@ const questions: Record<string, Question[]> = {
         "Probabilistic Error Cancellation (PEC) mitigates noise by decomposing the ideal (noiseless) circuit into a quasi-probability sum over noisy circuits. What is the main cost of PEC?",
       options: [
         "Requires knowledge of all future gate operations",
-        "Exponential sampling overhead (1/γ²)ⁿ where γ is the noise parameter and n is circuit depth",
+        "Exponential sampling overhead (1/\\gamma²)ⁿ where \\gamma is the noise parameter and n is circuit depth",
         "Cannot be used with multi-qubit gates",
         "Requires perfect state preparation",
       ],
       correctAnswer: 1,
       explanation:
-        "PEC has sampling overhead that scales exponentially with circuit depth: the number of samples needed grows as (1/γ²)ⁿ, where γ is related to the gate error rate, making it practical only for shallow circuits on near-term hardware.",
+        "PEC has sampling overhead that scales exponentially with circuit depth: the number of samples needed grows as (1/\\gamma²)ⁿ, where \\gamma is related to the gate error rate, making it practical only for shallow circuits on near-term hardware.",
       hints: [
         "Each noisy gate in PEC introduces a factor of overhead — these multiply across the circuit depth.",
         "The exponential overhead is the fundamental reason error mitigation cannot scale to arbitrary depths without error correction.",
@@ -2241,15 +2241,15 @@ const extraQmlQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "A quantum kernel K(x, x') is defined as the inner product of two quantum feature map states. Formally, K(x, x') equals:",
       options: [
-        "|⟨φ(x)|φ(x')⟩|",
-        "|⟨φ(x)|φ(x')⟩|²",
-        "⟨φ(x)|Z⊗n|φ(x')⟩",
-        "Tr[ρ(x) ρ(x')]",
+        "|⟨\\phi(x)|\\phi(x')⟩|",
+        "|⟨\\phi(x)|\\phi(x')⟩|²",
+        "⟨\\phi(x)|Z⊗n|\\phi(x')⟩",
+        "Tr[\\rho(x) \\rho(x')]",
       ],
       correctAnswer: 1,
-      explanation: "The quantum kernel is K(x, x') = |⟨φ(x)|φ(x')⟩|², the squared modulus of the overlap between two quantum feature states. This equals the probability of measuring the all-zero bitstring after applying U†(x') U(x) to |0⟩, which can be estimated by running this circuit and sampling. The squared modulus ensures K is real-valued and positive semi-definite.",
+      explanation: "The quantum kernel is K(x, x') = |⟨\\phi(x)|\\phi(x')⟩|², the squared modulus of the overlap between two quantum feature states. This equals the probability of measuring the all-zero bitstring after applying U†(x') U(x) to |0⟩, which can be estimated by running this circuit and sampling. The squared modulus ensures K is real-valued and positive semi-definite.",
       hints: [
-        "The Born rule: the probability of measuring |0...0⟩ after circuit U†(x')U(x)|0...0⟩ equals |⟨0...0|U†(x')U(x)|0...0⟩|² = |⟨φ(x')|φ(x)⟩|².",
+        "The Born rule: the probability of measuring |0...0⟩ after circuit U†(x')U(x)|0...0⟩ equals |⟨0...0|U†(x')U(x)|0...0⟩|² = |⟨\\phi(x')|\\phi(x)⟩|².",
         "Quantum kernels inherit the mathematical properties of classical kernels (symmetry, positive semi-definiteness) from the inner product structure of Hilbert space.",
       ],
     },
@@ -2316,7 +2316,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
         "Trainable parameters converging to the same value due to parameter sharing",
       ],
       correctAnswer: 1,
-      explanation: "Barren plateaus (McClean et al., 2018): for random quantum circuits with 2-design expressibility, the gradient variance of global cost functions scales as Var[∂C/∂θ] = O(2^{-n}), where n is the qubit count. On an n=50 qubit device, the gradient is ~10^{-15}, indistinguishable from numerical noise. The loss landscape becomes an exponentially flat 'plateau', and gradient-based optimisation cannot escape it.",
+      explanation: "Barren plateaus (McClean et al., 2018): for random quantum circuits with 2-design expressibility, the gradient variance of global cost functions scales as Var[∂C/∂\\theta] = O(2^{-n}), where n is the qubit count. On an n=50 qubit device, the gradient is ~10^{-15}, indistinguishable from numerical noise. The loss landscape becomes an exponentially flat 'plateau', and gradient-based optimisation cannot escape it.",
       hints: [
         "2-design circuits mix the state space so thoroughly that the gradient signal averages to zero from all directions.",
         "The exponential suppression means that doubling qubit count squares the gradient variance: on 100 qubits, gradients are ~10^{-30}.",
@@ -2347,7 +2347,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
         "CNOT gates do not have differentiable parameters, so entangling layers block gradient flow",
       ],
       correctAnswer: 1,
-      explanation: "If the circuit forms a unitary 2-design (or close to it), the output state is nearly Haar-random over the Hilbert space. For any observable O, Tr[O ρ] ≈ Tr[O]/2^n for a Haar-random state. Since this is independent of circuit parameters, ∂Tr[O ρ]/∂θ ≈ 0 everywhere. High entanglement is a proxy for 2-design coverage, which causes this collapse.",
+      explanation: "If the circuit forms a unitary 2-design (or close to it), the output state is nearly Haar-random over the Hilbert space. For any observable O, Tr[O \\rho] ≈ Tr[O]/2^n for a Haar-random state. Since this is independent of circuit parameters, ∂Tr[O \\rho]/∂\\theta ≈ 0 everywhere. High entanglement is a proxy for 2-design coverage, which causes this collapse.",
       hints: [
         "Haar-random states are maximally mixed when traced over any subsystem — no parameter affects the reduced density matrix.",
         "The connection: expressibility (ability to represent any unitary) and entanglement are correlated — more expressible circuits are more barren.",
@@ -2385,7 +2385,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
         "Running the circuit at a higher temperature by reducing cryogenic cooling",
       ],
       correctAnswer: 1,
-      explanation: "Gate folding inserts U†U pairs after each gate U: the sequence U → U(U†U) is logically equivalent to U (since U†U = I) but executes 3 gates worth of noise. By folding each gate k times (using 2k+1 gates total), the noise level scales as approximately (2k+1)λ, where λ is the base noise per gate. Multiple noise levels are obtained by varying k.",
+      explanation: "Gate folding inserts U†U pairs after each gate U: the sequence U → U(U†U) is logically equivalent to U (since U†U = I) but executes 3 gates worth of noise. By folding each gate k times (using 2k+1 gates total), the noise level scales as approximately (2k+1)\\lambda, where \\lambda is the base noise per gate. Multiple noise levels are obtained by varying k.",
       hints: [
         "U†U = I: each folded pair adds noise without changing the mathematical operation.",
         "Fold factor 1: original circuit. Fold factor 3: 3x noise (U U† U). Fold factor 5: 5x noise (U U† U U† U).",
@@ -2408,18 +2408,18 @@ const extraQmlQuestions: Record<string, Question[]> = {
       id: "q-qml-ex3-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Probabilistic Error Cancellation (PEC) represents the ideal noiseless gate as a quasi-probability decomposition over noisy operations. What is the 'one-norm' γ of this decomposition and why does it matter?",
+      question: "Probabilistic Error Cancellation (PEC) represents the ideal noiseless gate as a quasi-probability decomposition over noisy operations. What is the 'one-norm' \\gamma of this decomposition and why does it matter?",
       options: [
-        "γ = 1 always, since probabilities sum to 1",
-        "γ > 1 is the sum of absolute values of the quasi-probability coefficients; the sampling overhead of PEC scales as γ^{2n} for n gates, making it exponentially costly for deep circuits",
-        "γ is the average gate fidelity of the noisy hardware, bounded between 0 and 1",
-        "γ measures the entanglement entropy introduced by the noise channel",
+        "\\gamma = 1 always, since probabilities sum to 1",
+        "\\gamma > 1 is the sum of absolute values of the quasi-probability coefficients; the sampling overhead of PEC scales as \\gamma^{2n} for n gates, making it exponentially costly for deep circuits",
+        "\\gamma is the average gate fidelity of the noisy hardware, bounded between 0 and 1",
+        "\\gamma measures the entanglement entropy introduced by the noise channel",
       ],
       correctAnswer: 1,
-      explanation: "In PEC, the ideal gate U is written as Σ_i c_i M_i where c_i are real (possibly negative) coefficients and M_i are implementable noisy operations. The one-norm γ = Σ_i |c_i| > 1 because some coefficients are negative. To implement PEC, one samples M_i with probability |c_i|/γ and multiplies the result by sign(c_i)·γ — the variance overhead per gate is γ², and for n independent gates it is γ^{2n}.",
+      explanation: "In PEC, the ideal gate U is written as \\Sigma_i c_i M_i where c_i are real (possibly negative) coefficients and M_i are implementable noisy operations. The one-norm \\gamma = \\Sigma_i |c_i| > 1 because some coefficients are negative. To implement PEC, one samples M_i with probability |c_i|/\\gamma and multiplies the result by sign(c_i)·\\gamma — the variance overhead per gate is \\gamma², and for n independent gates it is \\gamma^{2n}.",
       hints: [
-        "γ > 1 because the quasi-probability distribution has negative weights — no valid probability distribution can represent the ideal noiseless gate exactly.",
-        "For a depolarizing channel with error rate p, γ ≈ 1 + 4p/3 per gate; for 100 gates at p=0.01, overhead = (1.013)^{200} ≈ 14x.",
+        "\\gamma > 1 because the quasi-probability distribution has negative weights — no valid probability distribution can represent the ideal noiseless gate exactly.",
+        "For a depolarizing channel with error rate p, \\gamma ≈ 1 + 4p/3 per gate; for 100 gates at p=0.01, overhead = (1.013)^{200} ≈ 14x.",
       ],
     },
   ],
@@ -2467,7 +2467,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
         "CDR has zero sampling overhead because the classical regression model exactly cancels all errors",
       ],
       correctAnswer: 1,
-      explanation: "CDR (Czarnik et al., 2021): replace non-Clifford gates (T gates, R_z(θ) for non-Clifford θ) with nearby Clifford gates to create efficiently simulable circuits. The simulator provides ground-truth noiseless values, while the quantum hardware provides noisy values for the same circuits. A regression model (linear or neural) is trained on these pairs, then applied to correct the target circuit. CDR adapts to actual hardware noise without extrapolation assumptions.",
+      explanation: "CDR (Czarnik et al., 2021): replace non-Clifford gates (T gates, R_z(\\theta) for non-Clifford \\theta) with nearby Clifford gates to create efficiently simulable circuits. The simulator provides ground-truth noiseless values, while the quantum hardware provides noisy values for the same circuits. A regression model (linear or neural) is trained on these pairs, then applied to correct the target circuit. CDR adapts to actual hardware noise without extrapolation assumptions.",
       hints: [
         "Clifford circuits are classically simulable in polynomial time (Gottesman-Knill theorem), providing free noiseless reference values.",
         "The key insight: near-Clifford circuits have similar noise characteristics to the target circuit but can be simulated exactly — perfect training data for the regression model.",
@@ -2510,17 +2510,17 @@ const extraQmlQuestions: Record<string, Question[]> = {
       id: "q-qml-ex5-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "For a variational quantum algorithm targeting an n-qubit problem, the number of shots required to estimate a single expectation value to precision ε scales as:",
+      question: "For a variational quantum algorithm targeting an n-qubit problem, the number of shots required to estimate a single expectation value to precision \\epsilon scales as:",
       options: [
-        "O(n/ε)",
-        "O(1/ε²)",
-        "O(n²/ε⁴)",
-        "O(2^n/ε)",
+        "O(n/\\epsilon)",
+        "O(1/\\epsilon²)",
+        "O(n²/\\epsilon⁴)",
+        "O(2^n/\\epsilon)",
       ],
       correctAnswer: 1,
-      explanation: "By the central limit theorem, estimating an expectation value with variance σ² to precision ε requires O(σ²/ε²) shots. For bounded observables (||O|| ≤ 1), σ² ≤ 1, so the shot count is O(1/ε²). This is independent of n but polynomial in 1/ε — achieving chemical precision ε = 10^{-3} requires ~10^6 shots per expectation value, which is a significant practical bottleneck on quantum hardware.",
+      explanation: "By the central limit theorem, estimating an expectation value with variance \\sigma² to precision \\epsilon requires O(\\sigma²/\\epsilon²) shots. For bounded observables (||O|| ≤ 1), \\sigma² ≤ 1, so the shot count is O(1/\\epsilon²). This is independent of n but polynomial in 1/\\epsilon — achieving chemical precision \\epsilon = 10^{-3} requires ~10^6 shots per expectation value, which is a significant practical bottleneck on quantum hardware.",
       hints: [
-        "Each shot gives a single ±1 outcome; averaging N shots gives standard error σ/√N. Setting σ/√N = ε gives N = σ²/ε².",
+        "Each shot gives a single ±1 outcome; averaging N shots gives standard error \\sigma/√N. Setting \\sigma/√N = \\epsilon gives N = \\sigma²/\\epsilon².",
         "For gradient estimation via parameter shift, 2 expectation value evaluations are needed per parameter — multiplied by the shot count.",
       ],
     },

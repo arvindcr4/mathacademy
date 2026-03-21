@@ -113,7 +113,7 @@ const questions: Record<string, Question[]> = {
         "Arjovsky & Bottou (2017) showed that when p_r and p_g are supported on disjoint manifolds (which is almost certain in high dimensions when p_g is parameterised by a low-dimensional noise), JS(p_r||p_g) = log 2 — a constant — producing zero gradient for the generator regardless of how far apart the distributions are.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||∇D||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
   ],
@@ -154,14 +154,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In DCGAN, the discriminator uses Leaky ReLU with α = 0.2. For a negative pre-activation x = −3, the Leaky ReLU output is ___.",
+        "In DCGAN, the discriminator uses Leaky ReLU with \\alpha = 0.2. For a negative pre-activation x = −3, the Leaky ReLU output is ___.",
       options: ["0", "−0.6", "3", "−3"],
       correctAnswer: 1,
       explanation:
-        "Leaky ReLU(x) = x if x > 0, else α·x. For x = −3 and α = 0.2: output = 0.2 × (−3) = −0.6. This non-zero output for negative inputs prevents dead neurons and allows gradient flow through the discriminator even for negative activations.",
+        "Leaky ReLU(x) = x if x > 0, else \\alpha·x. For x = −3 and \\alpha = 0.2: output = 0.2 × (−3) = −0.6. This non-zero output for negative inputs prevents dead neurons and allows gradient flow through the discriminator even for negative activations.",
       hints: [
-        "Standard ReLU would output 0 for x = −3. Leaky ReLU multiplies by the small slope α instead.",
-        "α = 0.2 means negative activations leak through at 20% of their magnitude.",
+        "Standard ReLU would output 0 for x = −3. Leaky ReLU multiplies by the small slope \\alpha instead.",
+        "\\alpha = 0.2 means negative activations leak through at 20% of their magnitude.",
       ],
     },
   ],
@@ -233,7 +233,7 @@ const questions: Record<string, Question[]> = {
         "The Wasserstein-1 (Earth Mover\'s) distance W(p_r, p_g) is defined via the Kantorovich-Rubinstein dual as W(p_r, p_g) = ___.",
       options: [
         "sup_{||f||_L ≤ 1} E_{x~p_r}[f(x)] − E_{x~p_g}[f(x)]",
-        "inf_{γ ∈ Π(p_r,p_g)} E_{(x,y)~γ}[||x−y||]",
+        "inf_{\\gamma ∈ \\Pi(p_r,p_g)} E_{(x,y)~\\gamma}[||x−y||]",
         "KL(p_r || p_g) + KL(p_g || p_r)",
         "E_{x~p_r}[log p_r(x)/p_g(x)]",
       ],
@@ -242,7 +242,7 @@ const questions: Record<string, Question[]> = {
         "By the Kantorovich-Rubinstein duality, W(p_r,p_g) = sup over all 1-Lipschitz functions f of E_{p_r}[f(x)] − E_{p_g}[f(x)]. WGAN trains a critic f_w to approximate this supremum, making the loss directly the Wasserstein distance.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||∇D||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
     {
@@ -262,7 +262,7 @@ const questions: Record<string, Question[]> = {
         'Arjovsky et al. (2017) explicitly stated in the WGAN paper that "Weight clipping is a clearly terrible way to enforce a Lipschitz constraint." It can lead to either vanishing or exploding gradients depending on the clipping threshold, motivating WGAN-GP\'s gradient penalty improvement.',
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||∇D||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
     {
@@ -272,17 +272,17 @@ const questions: Record<string, Question[]> = {
       question:
         "WGAN-GP (Gulrajani et al. 2017) replaces weight clipping with a gradient penalty. The penalty term is ___.",
       options: [
-        "λ · E_{x̂}[(||∇D(x̂)||₂ − 1)²] where x̂ is sampled along lines between real and fake data",
-        "λ · E_{x}[||∇D(x)||₂²] at real data points only",
-        "λ · ||W||_F² on all critic weights (Frobenius norm penalty)",
-        "λ · E_{z}[||∇_z D(G(z))||₂²]",
+        "\\lambda · E_{x̂}[(||\\nablaD(x̂)||₂ − 1)²] where x̂ is sampled along lines between real and fake data",
+        "\\lambda · E_{x}[||\\nablaD(x)||₂²] at real data points only",
+        "\\lambda · ||W||_F² on all critic weights (Frobenius norm penalty)",
+        "\\lambda · E_{z}[||\\nabla_z D(G(z))||₂²]",
       ],
       correctAnswer: 0,
       explanation:
-        "WGAN-GP samples interpolated points x̂ = ε·x_real + (1−ε)·x_fake with ε~U[0,1] and adds λ·E[(||∇D(x̂)||₂ − 1)²] to the critic loss, directly penalising deviation of gradient norms from 1 along the optimal transport path.",
+        "WGAN-GP samples interpolated points x̂ = \\epsilon·x_real + (1−\\epsilon)·x_fake with \\epsilon~U[0,1] and adds \\lambda·E[(||\\nablaD(x̂)||₂ − 1)²] to the critic loss, directly penalising deviation of gradient norms from 1 along the optimal transport path.",
       hints: [
         "The penalty targets the gradient norm at interpolated points — not at real or fake points alone.",
-        "The factor (||∇D||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
+        "The factor (||\\nablaD||₂ − 1)² pushes the norm toward 1, enforcing the 1-Lipschitz condition softly.",
       ],
     },
   ],
@@ -317,10 +317,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        "ProGAN uses a smooth fade-in: new layers are blended in via a linearly increasing α weight, preventing training instability that would result from sudden architectural changes.",
+        "ProGAN uses a smooth fade-in: new layers are blended in via a linearly increasing \\alpha weight, preventing training instability that would result from sudden architectural changes.",
       hints: [
         "Abrupt changes would create a discontinuity in the network that could destabilize training.",
-        "Think of α as a mixing coefficient that starts at 0 and gradually increases to 1.",
+        "Think of \\alpha as a mixing coefficient that starts at 0 and gradually increases to 1.",
       ],
     },
     {
@@ -375,10 +375,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "AdaIN normalizes feature maps to zero mean and unit variance, then re-scales and re-shifts them using style parameters (γ, β) derived from w, effectively injecting style at each resolution.",
+        "AdaIN normalizes feature maps to zero mean and unit variance, then re-scales and re-shifts them using style parameters (\\gamma, \\beta) derived from w, effectively injecting style at each resolution.",
       hints: [
         'Instance Normalization removes the mean and variance; "Adaptive" means those statistics are replaced with learned values.',
-        "The style parameters γ and β are affine-transformed from w.",
+        "The style parameters \\gamma and \\beta are affine-transformed from w.",
       ],
     },
     {
@@ -389,16 +389,16 @@ const questions: Record<string, Question[]> = {
         'StyleGAN\'s "truncation trick" trades diversity for quality by:',
       options: [
         "Clipping pixel values in generated images to a valid range",
-        "Interpolating w toward the mean of W with a truncation factor ψ < 1",
+        "Interpolating w toward the mean of W with a truncation factor \\psi < 1",
         "Discarding generated samples whose discriminator score falls below a threshold",
         "Reducing the number of style layers during inference",
       ],
       correctAnswer: 1,
       explanation:
-        "Truncating w = w̄ + ψ(w − w̄) pulls samples toward the center of the W space, which corresponds to more average, higher-fidelity faces at the cost of less variety.",
+        "Truncating w = w̄ + \\psi(w − w̄) pulls samples toward the center of the W space, which corresponds to more average, higher-fidelity faces at the cost of less variety.",
       hints: [
         "Points near the mean of a distribution tend to be more typical (higher likelihood) samples.",
-        "ψ = 1 means no truncation; ψ → 0 collapses everything to the mean style.",
+        "\\psi = 1 means no truncation; \\psi → 0 collapses everything to the mean style.",
       ],
     },
   ],
@@ -549,7 +549,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "False",
       explanation:
-        'BigGAN uses "class-conditional BatchNorm" to inject class information at every residual block via affine parameters (γ, β) derived from the class embedding, not just at the input.',
+        'BigGAN uses "class-conditional BatchNorm" to inject class information at every residual block via affine parameters (\\gamma, \\beta) derived from the class embedding, not just at the input.',
       hints: [
         "Injecting conditioning only at the input limits its influence on deeper feature maps.",
         "Residual block conditioning lets the class label guide synthesis at every scale.",
@@ -766,7 +766,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Spectral normalization divides W by σ(W) (its spectral norm = largest singular value), making each layer Lipschitz-1 and ensuring stable discriminator gradients.",
+        "Spectral normalization divides W by \\sigma(W) (its spectral norm = largest singular value), making each layer Lipschitz-1 and ensuring stable discriminator gradients.",
       hints: [
         "The spectral norm of a matrix is the operator norm induced by the L2 vector norm.",
         "Lipschitz continuity of the discriminator is the key constraint needed for stable GAN training.",
@@ -781,7 +781,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "WGAN-GP samples x̂ = εx + (1−ε)G(z) with ε ~ Uniform(0,1) and penalizes (||∇D(x̂)||₂ − 1)², enforcing the Lipschitz constraint along the path between real and fake data.",
+        "WGAN-GP samples x̂ = \\epsilonx + (1−\\epsilon)G(z) with \\epsilon ~ Uniform(0,1) and penalizes (||\\nablaD(x̂)||₂ − 1)², enforcing the Lipschitz constraint along the path between real and fake data.",
       hints: [
         "The theoretical motivation is that the Wasserstein gradient constraint only needs to hold on the optimal transport path.",
         "Sampling between real and fake ensures the penalty is applied where the discriminator is most active.",
@@ -800,7 +800,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "R1 regularization adds (γ/2)||∇D(x)||² evaluated only at real data points, shown theoretically and empirically to stabilize training without requiring interpolated samples.",
+        "R1 regularization adds (\\gamma/2)||\\nablaD(x)||² evaluated only at real data points, shown theoretically and empirically to stabilize training without requiring interpolated samples.",
       hints: [
         "R1 and R2 penalties differ only in whether they are applied at real or fake samples.",
         "Penalizing gradients at real data prevents the discriminator from becoming arbitrarily sharp near real samples.",
@@ -1480,19 +1480,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "BEGAN (Boundary Equilibrium GAN) introduces an equilibrium mechanism controlled by hyperparameter γ. What does γ control?",
+        "BEGAN (Boundary Equilibrium GAN) introduces an equilibrium mechanism controlled by hyperparameter \\gamma. What does \\gamma control?",
       options: [
         "The learning rate ratio between generator and discriminator",
-        "The balance between image diversity and visual quality (γ = E[L(G(z))] / E[L(x)])",
+        "The balance between image diversity and visual quality (\\gamma = E[L(G(z))] / E[L(x)])",
         "The weight of the gradient penalty term",
         "The number of discriminator updates per generator update",
       ],
       correctAnswer: 1,
       explanation:
-        "BEGAN\'s γ is a diversity ratio: high γ encourages diverse outputs at some quality cost; low γ produces sharper images with less variety. The training dynamically adjusts to maintain this ratio.",
+        "BEGAN\'s \\gamma is a diversity ratio: high \\gamma encourages diverse outputs at some quality cost; low \\gamma produces sharper images with less variety. The training dynamically adjusts to maintain this ratio.",
       hints: [
-        "γ = 1 means the discriminator puts equal effort into reconstructing real and fake images.",
-        "Lowering γ makes the discriminator focus more on real images, improving quality at the cost of diversity.",
+        "\\gamma = 1 means the discriminator puts equal effort into reconstructing real and fake images.",
+        "Lowering \\gamma makes the discriminator focus more on real images, improving quality at the cost of diversity.",
       ],
     },
   ],
@@ -1503,19 +1503,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DDPM (Ho et al. 2020) trains a noise prediction network ε_θ. The simplified training objective (after dropping the weighting term) is ___.",
+        "DDPM (Ho et al. 2020) trains a noise prediction network \\epsilon_\\theta. The simplified training objective (after dropping the weighting term) is ___.",
       options: [
-        "E[||x₀ − x_θ(x_t, t)||²]  [predict the original image]",
-        "E[||ε − ε_θ(√ᾱ_t·x₀ + √(1−ᾱ_t)·ε, t)||²]  [predict the added noise]",
-        "E[KL(q(x_{t-1}|x_t,x₀) || p_θ(x_{t-1}|x_t))]  [KL between forward and reverse]",
-        "E[log p_θ(x₀)]  [maximum likelihood]",
+        "E[||x₀ − x_\\theta(x_t, t)||²]  [predict the original image]",
+        "E[||\\epsilon − \\epsilon_\\theta(√ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon, t)||²]  [predict the added noise]",
+        "E[KL(q(x_{t-1}|x_t,x₀) || p_\\theta(x_{t-1}|x_t))]  [KL between forward and reverse]",
+        "E[log p_\\theta(x₀)]  [maximum likelihood]",
       ],
       correctAnswer: 1,
       explanation:
-        "Ho et al. (2020) showed empirically that the simplified objective L_simple = E_{t,x₀,ε}[||ε − ε_θ(x_t, t)||²] works better than the full ELBO. Here x_t = √ᾱ_t·x₀ + √(1−ᾱ_t)·ε via the reparameterisation (ᾱ_t = Π_{s=1}^t (1−β_s)), and ε ~ N(0,I).",
+        "Ho et al. (2020) showed empirically that the simplified objective L_simple = E_{t,x₀,\\epsilon}[||\\epsilon − \\epsilon_\\theta(x_t, t)||²] works better than the full ELBO. Here x_t = √ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon via the reparameterisation (ᾱ_t = \\Pi_{s=1}^t (1−\\beta_s)), and \\epsilon ~ N(0,I).",
       hints: [
-        "The key insight is to reparameterise: given x₀ and t, x_t can be sampled in closed form as √ᾱ_t·x₀ + √(1−ᾱ_t)·ε.",
-        "Training the network to predict the noise ε (rather than the mean of the reverse process) empirically gives better sample quality.",
+        "The key insight is to reparameterise: given x₀ and t, x_t can be sampled in closed form as √ᾱ_t·x₀ + √(1−ᾱ_t)·\\epsilon.",
+        "Training the network to predict the noise \\epsilon (rather than the mean of the reverse process) empirically gives better sample quality.",
       ],
     },
     {
@@ -1523,19 +1523,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "DDPM uses a variance schedule {β_t}. Ho et al. (2020) used a linear schedule from β₁ = 10⁻⁴ to β_T = 0.02 with T = 1000. A key property of this schedule is that ___.",
+        "DDPM uses a variance schedule {\\beta_t}. Ho et al. (2020) used a linear schedule from \\beta₁ = 10⁻⁴ to \\beta_T = 0.02 with T = 1000. A key property of this schedule is that ___.",
       options: [
         "x_T is perfectly Gaussian N(0,I) at any finite T",
-        "x_T ≈ N(0,I) because ᾱ_T = Π(1−β_t) ≈ 0 for large T with the linear schedule",
-        "β_t must be learned; fixed schedules are theoretically suboptimal",
+        "x_T ≈ N(0,I) because ᾱ_T = \\Pi(1−\\beta_t) ≈ 0 for large T with the linear schedule",
+        "\\beta_t must be learned; fixed schedules are theoretically suboptimal",
         "The schedule guarantees mode collapse does not occur",
       ],
       correctAnswer: 1,
       explanation:
-        "With T=1000 and β_t linearly increasing, ᾱ_T = Π_{t=1}^T (1−β_t) → 0, so x_T ≈ √ᾱ_T·x₀ + √(1−ᾱ_T)·ε ≈ ε ~ N(0,I). The forward process completely destroys the signal by T, which is what allows us to learn the reverse process from pure Gaussian noise.",
+        "With T=1000 and \\beta_t linearly increasing, ᾱ_T = \\Pi_{t=1}^T (1−\\beta_t) → 0, so x_T ≈ √ᾱ_T·x₀ + √(1−ᾱ_T)·\\epsilon ≈ \\epsilon ~ N(0,I). The forward process completely destroys the signal by T, which is what allows us to learn the reverse process from pure Gaussian noise.",
       hints: [
-        "ᾱ_t is the cumulative product of (1−β_s) for s=1 to t. As t→T, this product approaches 0.",
-        "When ᾱ_T ≈ 0, x_T ≈ √1·ε = ε ~ N(0,I), making the terminal distribution approximately standard Gaussian.",
+        "ᾱ_t is the cumulative product of (1−\\beta_s) for s=1 to t. As t→T, this product approaches 0.",
+        "When ᾱ_T ≈ 0, x_T ≈ √1·\\epsilon = \\epsilon ~ N(0,I), making the terminal distribution approximately standard Gaussian.",
       ],
     },
     {
@@ -1543,7 +1543,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "DDIM (Song et al. 2020) accelerates sampling from DDPMs by using a non-Markovian reverse process. Setting η = 0 in DDIM makes the sampling ___.",
+        "DDIM (Song et al. 2020) accelerates sampling from DDPMs by using a non-Markovian reverse process. Setting \\eta = 0 in DDIM makes the sampling ___.",
       options: [
         "Equivalent to the original DDPM stochastic sampling",
         "Fully deterministic: the same latent x_T always produces the same image x₀",
@@ -1552,9 +1552,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In DDIM, the reverse step is x_{t-1} = √ᾱ_{t-1}·x̂₀ + √(1−ᾱ_{t-1}−σ_t²)·ε_θ(x_t,t) + σ_t·ε. When η=0, σ_t=0 for all t, eliminating all stochastic noise and making sampling deterministic. This means x_T uniquely determines x₀, enabling semantic interpolation in latent space.",
+        "In DDIM, the reverse step is x_{t-1} = √ᾱ_{t-1}·x̂₀ + √(1−ᾱ_{t-1}−\\sigma_t²)·\\epsilon_\\theta(x_t,t) + \\sigma_t·\\epsilon. When \\eta=0, \\sigma_t=0 for all t, eliminating all stochastic noise and making sampling deterministic. This means x_T uniquely determines x₀, enabling semantic interpolation in latent space.",
       hints: [
-        "η controls the amount of stochastic noise injected at each reverse step. η=0 means σ_t=0 everywhere.",
+        "\\eta controls the amount of stochastic noise injected at each reverse step. \\eta=0 means \\sigma_t=0 everywhere.",
         "Deterministic mapping means you can interpolate between two x_T noise codes and smoothly interpolate the generated images.",
       ],
     },
@@ -1661,15 +1661,15 @@ const questions: Record<string, Question[]> = {
         "StyleCLIP\'s \"Global Direction\" method finds a text-driven latent direction in StyleGAN\'s W+ space by:",
       options: [
         "Training a separate encoder on CLIP-labeled StyleGAN images",
-        "Computing the CLIP text-image direction (Δt) and mapping it to the W+ space via a learned mapper network or sensitivity-weighted projection",
+        "Computing the CLIP text-image direction (\\Deltat) and mapping it to the W+ space via a learned mapper network or sensitivity-weighted projection",
         "Fine-tuning all StyleGAN generator weights using CLIP loss",
         "Solving a constrained optimization over the W+ space using CLIP as the objective function directly",
       ],
       correctAnswer: 1,
       explanation:
-        "StyleCLIP\'s global direction Δw is computed by projecting the CLIP space direction Δt into W+ space, weighted by channel-wise sensitivity of CLIP features, enabling efficient single-direction attribute editing.",
+        "StyleCLIP\'s global direction \\Deltaw is computed by projecting the CLIP space direction \\Deltat into W+ space, weighted by channel-wise sensitivity of CLIP features, enabling efficient single-direction attribute editing.",
       hints: [
-        'A "global" direction applies the same Δw offset to any starting latent code.',
+        'A "global" direction applies the same \\Deltaw offset to any starting latent code.',
         "The projection uses the Jacobian of CLIP features with respect to StyleGAN style codes.",
       ],
     },

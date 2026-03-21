@@ -16,7 +16,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Monodepth2 uses a combined loss: L = α·(1−SSIM(Iₜ, Î))/2 + (1−α)·||Iₜ−Î||₁ where α=0.85, and Î is the reconstructed target image obtained by warping Iₛ using predicted depth D and relative pose T. Warping: p_warped = K·T_{t→s}·(D(p)·K⁻¹·p). This differentiable projection allows gradients to flow to both D and T.",
+        "Monodepth2 uses a combined loss: L = \\alpha·(1−SSIM(Iₜ, Î))/2 + (1−\\alpha)·||Iₜ−Î||₁ where \\alpha=0.85, and Î is the reconstructed target image obtained by warping Iₛ using predicted depth D and relative pose T. Warping: p_warped = K·T_{t→s}·(D(p)·K⁻¹·p). This differentiable projection allows gradients to flow to both D and T.",
       hints: [
         "If you know depth and camera motion, you can predict what a source frame pixel maps to in the target — that is the warp.",
         "Minimising the colour difference between Iₜ and the warped Iₛ forces the predicted depth to explain the observed motion.",
@@ -50,7 +50,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Auto-masking condition: μ(pe(Iₜ, Iₛ) < pe(Iₜ, Iₛ→ₜ)) — mask pixel p if the photometric error to the raw source Iₛ is less than to the warped source Iₛ→ₜ. This identifies stationary pixels (camera-static or static objects with no relative motion) where the warp doesn\'t improve reconstruction — applying gradients here would incorrectly push depth to infinity. Masked pixels are excluded from the loss.",
+        "Auto-masking condition: \\mu(pe(Iₜ, Iₛ) < pe(Iₜ, Iₛ→ₜ)) — mask pixel p if the photometric error to the raw source Iₛ is less than to the warped source Iₛ→ₜ. This identifies stationary pixels (camera-static or static objects with no relative motion) where the warp doesn\'t improve reconstruction — applying gradients here would incorrectly push depth to infinity. Masked pixels are excluded from the loss.",
       hints: [
         "If the source frame already matches the target without any warping, the depth prediction is providing no useful reprojection signal.",
         "Stationary objects in a moving sequence appear to not move — their reprojection is trivially good without depth.",
@@ -107,7 +107,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "DispNet concatenates left and right features → 2C×D cost volume; the 3D encoder must learn what constitutes a match. GwcNet splits C features into G groups, computes dot products within each group at each disparity: g_wc(d)=Σ_{g=1}^{G} φ_g(x_l)·φ_g(x_r−d). This C/G×D volume explicitly encodes matching similarity (high inner product = good match) rather than raw feature values, improving both accuracy and memory efficiency vs. concatenation.",
+        "DispNet concatenates left and right features → 2C×D cost volume; the 3D encoder must learn what constitutes a match. GwcNet splits C features into G groups, computes dot products within each group at each disparity: g_wc(d)=\\Sigma_{g=1}^{G} \\phi_g(x_l)·\\phi_g(x_r−d). This C/G×D volume explicitly encodes matching similarity (high inner product = good match) rather than raw feature values, improving both accuracy and memory efficiency vs. concatenation.",
       hints: [
         "Dot product directly measures feature agreement — does concatenation encode this or leave it to the network to discover?",
         "C channels split into G groups → each group produces 1 scalar per disparity → total C/G scalars per disparity.",
@@ -293,17 +293,17 @@ const questions: Record<string, Question[]> = {
       question:
         "NeRF\'s volume rendering integral computes pixel colour C(r) along ray r(t) = o + td. Which expression correctly states the discrete approximation used in practice?",
       options: [
-        "C(r) = Σᵢ Tᵢ (1 − exp(−σᵢδᵢ)) cᵢ, where Tᵢ = exp(−Σⱼ<ᵢ σⱼδⱼ) is accumulated transmittance and δᵢ is the distance between adjacent samples",
-        "C(r) = Σᵢ σᵢ cᵢ / Σᵢ σᵢ, a weighted average of sample colours by density",
-        "C(r) = cₙ where n = argmax σᵢ, the colour of the densest sample along the ray",
-        "C(r) = Σᵢ exp(−σᵢ) cᵢ, where higher density means lower contribution",
+        "C(r) = \\Sigmaᵢ Tᵢ (1 − exp(−\\sigmaᵢ\\deltaᵢ)) cᵢ, where Tᵢ = exp(−\\Sigmaⱼ<ᵢ \\sigmaⱼ\\deltaⱼ) is accumulated transmittance and \\deltaᵢ is the distance between adjacent samples",
+        "C(r) = \\Sigmaᵢ \\sigmaᵢ cᵢ / \\Sigmaᵢ \\sigmaᵢ, a weighted average of sample colours by density",
+        "C(r) = cₙ where n = argmax \\sigmaᵢ, the colour of the densest sample along the ray",
+        "C(r) = \\Sigmaᵢ exp(−\\sigmaᵢ) cᵢ, where higher density means lower contribution",
       ],
       correctAnswer: 0,
       explanation:
-        "The NeRF volume rendering equation is C(r) = ∫ T(t)σ(r(t))c(r(t),d)dt where T(t) = exp(−∫₀ᵗ σ(r(s))ds). The discrete form: C(r) = Σᵢ Tᵢ αᵢ cᵢ, with αᵢ = 1−exp(−σᵢδᵢ) (opacity at sample i) and Tᵢ = Πⱼ<ᵢ(1−αⱼ) (transmittance reaching sample i). This is the standard Porter-Duff alpha compositing formula applied along the ray.",
+        "The NeRF volume rendering equation is C(r) = ∫ T(t)\\sigma(r(t))c(r(t),d)dt where T(t) = exp(−∫₀ᵗ \\sigma(r(s))ds). The discrete form: C(r) = \\Sigmaᵢ Tᵢ \\alphaᵢ cᵢ, with \\alphaᵢ = 1−exp(−\\sigmaᵢ\\deltaᵢ) (opacity at sample i) and Tᵢ = \\Piⱼ<ᵢ(1−\\alphaⱼ) (transmittance reaching sample i). This is the standard Porter-Duff alpha compositing formula applied along the ray.",
       hints: [
         "Tᵢ represents the fraction of light that passes through all samples before i without being absorbed.",
-        "αᵢ = 1−exp(−σᵢδᵢ) is the probability of the ray hitting a particle in interval δᵢ — the discrete opacity.",
+        "\\alphaᵢ = 1−exp(−\\sigmaᵢ\\deltaᵢ) is the probability of the ray hitting a particle in interval \\deltaᵢ — the discrete opacity.",
       ],
     },
     {
@@ -311,7 +311,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "NeRF\'s positional encoding γ(p) maps coordinate p to [sin(2⁰πp), cos(2⁰πp), sin(2¹πp), cos(2¹πp), …, sin(2^(L-1)πp), cos(2^(L-1)πp)]. If L=10, what is the output dimensionality of γ applied to a single scalar input?",
+        "NeRF\'s positional encoding \\gamma(p) maps coordinate p to [sin(2⁰\\pip), cos(2⁰\\pip), sin(2¹\\pip), cos(2¹\\pip), …, sin(2^(L-1)\\pip), cos(2^(L-1)\\pip)]. If L=10, what is the output dimensionality of \\gamma applied to a single scalar input?",
       options: [
         "10 (one value per frequency level)",
         "20 (sin and cos at each of L=10 levels)",
@@ -320,10 +320,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For a single scalar, γ produces 2L values (sin and cos at each of L frequency levels). With L=10: 2×10=20 values. For a 3D point (x,y,z), NeRF applies γ independently to each coordinate and concatenates, giving 3×2L = 60 values. The full input to the MLP also appends the original coordinates: 3 + 60 = 63. For viewing direction (2D spherical), L=4 gives 2×2×4 = 16 + 2 = 18 values.",
+        "For a single scalar, \\gamma produces 2L values (sin and cos at each of L frequency levels). With L=10: 2×10=20 values. For a 3D point (x,y,z), NeRF applies \\gamma independently to each coordinate and concatenates, giving 3×2L = 60 values. The full input to the MLP also appends the original coordinates: 3 + 60 = 63. For viewing direction (2D spherical), L=4 gives 2×2×4 = 16 + 2 = 18 values.",
       hints: [
         "Two components (sin and cos) per frequency level × L levels = 2L values per scalar input.",
-        "A 3D point uses γ on each of x, y, z: 3 × (2×10) = 60, plus the raw input = 63.",
+        "A 3D point uses \\gamma on each of x, y, z: 3 × (2×10) = 60, plus the raw input = 63.",
       ],
     },
     {
@@ -333,16 +333,16 @@ const questions: Record<string, Question[]> = {
       question:
         'NeRF uses a hierarchical sampling strategy with "coarse" and "fine" networks. After evaluating the coarse network at Nc=64 uniform samples to get density estimates, how does the fine network decide where to place its Nf=128 additional samples?',
       options: [
-        "The coarse density estimates define a piecewise constant PDF along the ray; inverse CDF sampling (importance sampling) draws Nf samples proportional to the expected colour contribution Tᵢαᵢ — concentrating samples near surfaces",
+        "The coarse density estimates define a piecewise constant PDF along the ray; inverse CDF sampling (importance sampling) draws Nf samples proportional to the expected colour contribution Tᵢ\\alphaᵢ — concentrating samples near surfaces",
         "The fine network samples uniformly between the two coarse samples with the highest density",
         "The fine network uses the coarse network\'s output as a learned proposal and samples by gradient ascent on density",
         "The fine network always samples at the midpoints between adjacent coarse samples, doubling spatial resolution",
       ],
       correctAnswer: 0,
       explanation:
-        "After the coarse pass, NeRF normalises the per-sample weights wᵢ = Tᵢαᵢ to form a probability distribution along the ray. Inverse-transform sampling draws Nf additional samples from this distribution (concentrated where wᵢ is high, i.e., near surfaces). The final fine render evaluates the fine MLP at all Nc+Nf samples. This concentrates computation near actual scene surfaces rather than in empty space.",
+        "After the coarse pass, NeRF normalises the per-sample weights wᵢ = Tᵢ\\alphaᵢ to form a probability distribution along the ray. Inverse-transform sampling draws Nf additional samples from this distribution (concentrated where wᵢ is high, i.e., near surfaces). The final fine render evaluates the fine MLP at all Nc+Nf samples. This concentrates computation near actual scene surfaces rather than in empty space.",
       hints: [
-        "The coarse weights wᵢ = Tᵢαᵢ represent each sample\'s contribution to the rendered colour — high weight = likely near a surface.",
+        "The coarse weights wᵢ = Tᵢ\\alphaᵢ represent each sample\'s contribution to the rendered colour — high weight = likely near a surface.",
         "Inverse CDF sampling: sort uniform samples [0,1] through the CDF of the weight distribution to get denser samples near peaks.",
       ],
     },
@@ -411,18 +411,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "3D Gaussian Splatting represents the scene as a set of 3D Gaussians. Each Gaussian\'s 3D covariance Σ is parameterised as Σ = RSS^T R^T. Why is this decomposition used instead of directly optimising Σ?",
+        "3D Gaussian Splatting represents the scene as a set of 3D Gaussians. Each Gaussian\'s 3D covariance \\Sigma is parameterised as \\Sigma = RSS^T R^T. Why is this decomposition used instead of directly optimising \\Sigma?",
       options: [
-        "Because Σ = RSS^T R^T (R = rotation matrix from quaternion q, S = diagonal scaling matrix) ensures Σ stays symmetric and positive semi-definite throughout optimisation — direct gradient updates on Σ entries can produce invalid non-PSD matrices",
+        "Because \\Sigma = RSS^T R^T (R = rotation matrix from quaternion q, S = diagonal scaling matrix) ensures \\Sigma stays symmetric and positive semi-definite throughout optimisation — direct gradient updates on \\Sigma entries can produce invalid non-PSD matrices",
         "Because this decomposition reduces the number of parameters from 9 to 6 by eliminating redundant off-diagonal entries",
         "Because R and S can be optimised with different learning rates, making training more stable",
         "Because storing R and S separately enables faster GPU matrix multiplication during rendering",
       ],
       correctAnswer: 0,
       explanation:
-        "A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on Σ's 9 entries can violate PSD during training. Decomposing Σ = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.",
+        "A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma's 9 entries can violate PSD during training. Decomposing \\Sigma = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.",
       hints: [
-        "A covariance matrix Σ = A^T A is always PSD. What structure guarantees this while remaining differentiable?",
+        "A covariance matrix \\Sigma = A^T A is always PSD. What structure guarantees this while remaining differentiable?",
         "Quaternion → rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.",
       ],
     },
@@ -431,12 +431,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = Σᵢ cᵢ αᵢ Πⱼ<ᵢ (1 − αⱼ), where αᵢ = oᵢ · exp(−½(x−μ₂ᴅ)^T Σ₂ᴅ⁻¹ (x−μ₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.",
+        "3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigmaᵢ cᵢ \\alphaᵢ \\Piⱼ<ᵢ (1 − \\alphaⱼ), where \\alphaᵢ = oᵢ · exp(−½(x−\\mu₂ᴅ)^T \\Sigma₂ᴅ⁻¹ (x−\\mu₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.",
       correctAnswer: "True",
       explanation:
-        "After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = Σᵢ cᵢαᵢΠⱼ<ᵢ(1−αⱼ). Here αᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.",
+        "After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigmaᵢ cᵢ\\alphaᵢ\\Piⱼ<ᵢ(1−\\alphaⱼ). Here \\alphaᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.",
       hints: [
-        "Compare to NeRF\'s C(r) = Σᵢ Tᵢαᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.",
+        "Compare to NeRF\'s C(r) = \\Sigmaᵢ Tᵢ\\alphaᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.",
         "Front-to-back ordering is achieved by sorting Gaussians by depth before rasterisation.",
       ],
     },
@@ -447,14 +447,14 @@ const questions: Record<string, Question[]> = {
       question:
         "What is the adaptive density control strategy in 3D Gaussian Splatting, and why is it necessary?",
       options: [
-        "Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold τ_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity αᵢ below threshold ε_α are pruned — adapting the number and placement of Gaussians to scene complexity",
+        "Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alphaᵢ below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity",
         "The number of Gaussians is fixed at initialisation and only their parameters (position, covariance, opacity, colour) are optimised throughout training",
         "Gaussians are densified by adding new ones at positions with high photometric loss, and merged when two Gaussians overlap (IoU > 0.9) to prevent redundancy",
         "A fixed densification schedule adds Gaussians every N iterations at random scene positions regardless of reconstruction quality",
       ],
       correctAnswer: 0,
       explanation:
-        "Adaptive density control monitors the L1 norm of positional gradients ∇μ accumulated over training. When ||∇μ|| > τ_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity αᵢ < ε_α are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.",
+        "Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alphaᵢ < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.",
       hints: [
         "High positional gradient magnitude signals that the Gaussian is being pulled in conflicting directions — it needs to split to resolve ambiguity.",
         "Under-reconstruction (high loss region with small Gaussians) → clone; over-reconstruction (one Gaussian covers too much) → split.",
@@ -470,16 +470,16 @@ const questions: Record<string, Question[]> = {
       question:
         "Dynamic NeRF methods extend static NeRF to handle time-varying scenes. What fundamental change is needed to the input of the NeRF MLP?",
       options: [
-        "Adding a time coordinate t to the MLP input: f(x, y, z, t, θ, φ) → (r, g, b, σ), so the radiance field is conditioned on time and can represent different scene states at different frames",
+        "Adding a time coordinate t to the MLP input: f(x, y, z, t, \\theta, \\phi) → (r, g, b, \\sigma), so the radiance field is conditioned on time and can represent different scene states at different frames",
         "Running a separate static NeRF for each video frame independently, then interpolating between frame-specific NeRFs at novel times",
         "Replacing the viewing direction with a temporal direction vector that encodes motion blur",
         'Adding a binary "moving/static" flag per 3D point predicted by a separate motion segmentation network',
       ],
       correctAnswer: 0,
       explanation:
-        "The simplest dynamic NeRF extension conditions the network on time t: f(γ(x), γ(t), d) → (c, σ). More structured approaches like D-NeRF factor this as a canonical field + deformation: f_canonical(γ(x + Δx(x,t))) where Δx is a learned deformation. Others (HexPlane, K-Planes) use 4D feature grids factored across space-time planes for efficiency.",
+        "The simplest dynamic NeRF extension conditions the network on time t: f(\\gamma(x), \\gamma(t), d) → (c, \\sigma). More structured approaches like D-NeRF factor this as a canonical field + deformation: f_canonical(\\gamma(x + \\Deltax(x,t))) where \\Deltax is a learned deformation. Others (HexPlane, K-Planes) use 4D feature grids factored across space-time planes for efficiency.",
       hints: [
-        "Static NeRF: f(x,y,z,θ,φ). Adding t makes it time-aware: f(x,y,z,t,θ,φ).",
+        "Static NeRF: f(x,y,z,\\theta,\\phi). Adding t makes it time-aware: f(x,y,z,t,\\theta,\\phi).",
         "The scene changes over time — the MLP must receive time as a conditioning signal.",
       ],
     },
@@ -488,10 +488,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "D-NeRF models dynamic scenes by learning a deformation field Δx = MLP_deform(γ(x), γ(t)) that maps query points from world space at time t back to a canonical space, then evaluating a canonical NeRF at x + Δx.",
+        "D-NeRF models dynamic scenes by learning a deformation field \\Deltax = MLP_deform(\\gamma(x), \\gamma(t)) that maps query points from world space at time t back to a canonical space, then evaluating a canonical NeRF at x + \\Deltax.",
       correctAnswer: "True",
       explanation:
-        "D-NeRF uses two MLPs: (1) deformation MLP: (γ(x), γ(t)) → Δx, predicting the displacement to map position x at time t to canonical space; (2) canonical NeRF: γ(x + Δx) → (c, σ). Volume rendering composites colours and densities from the canonical field. This canonical-space approach is compact but requires the topology to remain fixed across time (no appearance/disappearance of scene parts).",
+        "D-NeRF uses two MLPs: (1) deformation MLP: (\\gamma(x), \\gamma(t)) → \\Deltax, predicting the displacement to map position x at time t to canonical space; (2) canonical NeRF: \\gamma(x + \\Deltax) → (c, \\sigma). Volume rendering composites colours and densities from the canonical field. This canonical-space approach is compact but requires the topology to remain fixed across time (no appearance/disappearance of scene parts).",
       hints: [
         'Canonical space is a fixed reference pose — all time steps are "undeformed" to it before colour/density lookup.',
         "The deformation field handles motion; the canonical NeRF handles appearance — a two-network factorisation.",
@@ -618,14 +618,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Bundle adjustment minimizes which objective function over all camera poses {Rᵢ, tᵢ} and 3D point positions {Xⱼ}?",
       options: [
-        "Σᵢⱼ ||xᵢⱼ − π(Rᵢ, tᵢ, Kᵢ, Xⱼ)||² summed over all observed feature point correspondences (i=image, j=point), where π is the projection function mapping 3D points to 2D image coordinates",
-        "Σᵢⱼ ||Xⱼ − Rᵢᵀ(Kᵢ⁻¹xᵢⱼ · dᵢⱼ − tᵢ)||², the 3D position error between triangulated and estimated points",
-        "Σᵢⱼ (1 − cos(angle(Rᵢ Xⱼ + tᵢ, xᵢⱼ))), the angular error between observed and predicted ray directions",
-        "Σᵢ ||log(RᵢRᵢ₋₁ᵀ)||² + Σⱼ ||Xⱼ − X̄||², regularising camera rotation smoothness and point dispersion",
+        "\\Sigmaᵢⱼ ||xᵢⱼ − \\pi(Rᵢ, tᵢ, Kᵢ, Xⱼ)||² summed over all observed feature point correspondences (i=image, j=point), where \\pi is the projection function mapping 3D points to 2D image coordinates",
+        "\\Sigmaᵢⱼ ||Xⱼ − Rᵢᵀ(Kᵢ⁻¹xᵢⱼ · dᵢⱼ − tᵢ)||², the 3D position error between triangulated and estimated points",
+        "\\Sigmaᵢⱼ (1 − cos(angle(Rᵢ Xⱼ + tᵢ, xᵢⱼ))), the angular error between observed and predicted ray directions",
+        "\\Sigmaᵢ ||log(RᵢRᵢ₋₁ᵀ)||² + \\Sigmaⱼ ||Xⱼ − X̄||², regularising camera rotation smoothness and point dispersion",
       ],
       correctAnswer: 0,
       explanation:
-        "Bundle adjustment (Triggs et al. 2000) minimises total reprojection error: Σᵢⱼ ρ(||xᵢⱼ − π(Rᵢ, tᵢ, Kᵢ, Xⱼ)||²) where ρ is a robust kernel (e.g., Huber or Cauchy) to suppress outlier correspondences. π is the full projection: π(R,t,K,X) = K·(RX+t) followed by perspective division. Solved with Levenberg-Marquardt on the sparse Jacobian (sparsity comes from each observation involving only one camera and one point).",
+        "Bundle adjustment (Triggs et al. 2000) minimises total reprojection error: \\Sigmaᵢⱼ \\rho(||xᵢⱼ − \\pi(Rᵢ, tᵢ, Kᵢ, Xⱼ)||²) where \\rho is a robust kernel (e.g., Huber or Cauchy) to suppress outlier correspondences. \\pi is the full projection: \\pi(R,t,K,X) = K·(RX+t) followed by perspective division. Solved with Levenberg-Marquardt on the sparse Jacobian (sparsity comes from each observation involving only one camera and one point).",
       hints: [
         "Reprojection error = distance in pixels between where we observed a feature and where the 3D point projects through the camera.",
         "The Jacobian of reprojection error w.r.t. all poses and points is sparse — each residual only involves one camera and one point.",
@@ -945,7 +945,7 @@ const questions: Record<string, Question[]> = {
         "VoxelNet first applies a Voxel Feature Encoding (VFE) layer that processes the variable number of points within each voxel using a shared MLP and element-wise max pooling, producing a fixed-length feature vector per voxel that is then processed by 3D convolutions.",
       correctAnswer: "True",
       explanation:
-        "VoxelNet VFE: (1) for each non-empty voxel, compute point-level features: for each point in the voxel, concatenate [x, y, z, r, Δx, Δy, Δz] where Δ are offsets from the voxel centroid; (2) shared MLP transforms each point to a 128-dim feature; (3) element-wise max pooling over all points in the voxel → 128-dim voxel feature. These fixed-size voxel features are scattered into a sparse 3D tensor for subsequent 3D CNN processing and final BEV detection.",
+        "VoxelNet VFE: (1) for each non-empty voxel, compute point-level features: for each point in the voxel, concatenate [x, y, z, r, \\Deltax, \\Deltay, \\Deltaz] where \\Delta are offsets from the voxel centroid; (2) shared MLP transforms each point to a 128-dim feature; (3) element-wise max pooling over all points in the voxel → 128-dim voxel feature. These fixed-size voxel features are scattered into a sparse 3D tensor for subsequent 3D CNN processing and final BEV detection.",
       hints: [
         "VFE is PointNet-style: shared MLP per point (order-invariant) + max pooling (permutation-invariant) within the voxel.",
         "The output is one fixed-length vector per non-empty voxel, regardless of how many points it contains.",
@@ -1002,7 +1002,7 @@ const questions: Record<string, Question[]> = {
         "Point Transformer (Zhao et al., 2021) uses a subtracted position encoding in its attention mechanism, computing attention weights based on the relative positions between points rather than absolute global positions.",
       correctAnswer: "True",
       explanation:
-        "Point Transformer computes attention weights using subtracted (relative) positional encodings γ(pᵢ - pⱼ), ensuring that attention is invariant to global translation of the point cloud — a desirable inductive bias for 3D shape understanding where relative geometry matters more than absolute position.",
+        "Point Transformer computes attention weights using subtracted (relative) positional encodings \\gamma(pᵢ - pⱼ), ensuring that attention is invariant to global translation of the point cloud — a desirable inductive bias for 3D shape understanding where relative geometry matters more than absolute position.",
       hints: [
         "Think about why the absolute position of a chair in a room matters less than the relative position of its legs to its seat.",
         "Relative positional encoding makes the attention focus on local geometric relationships.",
@@ -1059,10 +1059,10 @@ const questions: Record<string, Question[]> = {
         "CenterPoint detects 3D objects by predicting Gaussian-rendered heatmaps of object centre locations in BEV space and then regressing object size, orientation, and velocity at each detected peak — making it naturally rotation-invariant without needing rotated anchors.",
       correctAnswer: "True",
       explanation:
-        "CenterPoint renders each GT object\'s BEV centre as a Gaussian splat on a heatmap (σ proportional to object size), then trains a centre heatmap head with focal loss. At inference, local peaks above a confidence threshold are extracted; separate regression heads at those peaks predict log(width), log(length), height, sin(yaw), cos(yaw) and (dx, dy) velocity. No rotation-aligned anchors needed — arbitrary yaw is handled by the sin/cos regression.",
+        "CenterPoint renders each GT object\'s BEV centre as a Gaussian splat on a heatmap (\\sigma proportional to object size), then trains a centre heatmap head with focal loss. At inference, local peaks above a confidence threshold are extracted; separate regression heads at those peaks predict log(width), log(length), height, sin(yaw), cos(yaw) and (dx, dy) velocity. No rotation-aligned anchors needed — arbitrary yaw is handled by the sin/cos regression.",
       hints: [
         "Heatmap-based detection (like CornerNet, CenterNet) encodes object location as a 2D probability map rather than discrete anchors.",
-        "sin(yaw) and cos(yaw) regression naturally handles the 2π periodicity of rotation without binning.",
+        "sin(yaw) and cos(yaw) regression naturally handles the 2\\pi periodicity of rotation without binning.",
       ],
     },
     {
@@ -1079,7 +1079,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        'PV-RCNN second stage: (1) sample a regular 6×6×6 grid of points inside each 3D proposal box; (2) RoI-grid pooling aggregates features from nearby "keypoints" (downsampled raw-point features saved from the backbone) using set abstraction at each grid point; (3) an MLP over all grid-point features predicts refined (dx, dy, dz, dw, dl, dh, dθ) and class confidence. This fine-grained geometric feature aggregation inside proposals recovers localisation accuracy that coarse voxel features miss.',
+        'PV-RCNN second stage: (1) sample a regular 6×6×6 grid of points inside each 3D proposal box; (2) RoI-grid pooling aggregates features from nearby "keypoints" (downsampled raw-point features saved from the backbone) using set abstraction at each grid point; (3) an MLP over all grid-point features predicts refined (dx, dy, dz, dw, dl, dh, d\\theta) and class confidence. This fine-grained geometric feature aggregation inside proposals recovers localisation accuracy that coarse voxel features miss.',
       hints: [
         "The first stage (voxel backbone + BEV head) gives coarse proposals; the second stage refines them using fine-grained point features.",
         "RoI-grid pooling is the 3D equivalent of RoIAlign in Mask R-CNN — extracting fine features from within a proposed region.",
@@ -1270,7 +1270,7 @@ const questions: Record<string, Question[]> = {
         'They concatenate the body pose as an additional input to the MLP alongside (x,y,z) coordinates',
       ],
       correctAnswer: 1,
-      explanation: 'Neural avatar NeRFs (NeuralBody, ARAH, HumanNeRF): define a canonical NeRF in rest pose; a deformation field D(x, θ) maps query point x under pose θ back to canonical coordinates where the NeRF is queried. The deformation is typically LBS (linear blend skinning) from SMPL or a learned SE(3) flow. This allows the canonical NeRF to learn appearance and the deformation field to learn pose-dependent geometry, generalising to novel poses.',
+      explanation: 'Neural avatar NeRFs (NeuralBody, ARAH, HumanNeRF): define a canonical NeRF in rest pose; a deformation field D(x, \\theta) maps query point x under pose \\theta back to canonical coordinates where the NeRF is queried. The deformation is typically LBS (linear blend skinning) from SMPL or a learned SE(3) flow. This allows the canonical NeRF to learn appearance and the deformation field to learn pose-dependent geometry, generalising to novel poses.',
       hints: [
         'Canonical NeRF: learned in rest/T-pose. Deformation: warp current-pose query points to canonical space before querying.',
         'SMPL provides a kinematic skeleton and LBS weights — plugging SMPL pose parameters into LBS gives the deformation field.',
@@ -1779,18 +1779,18 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       id: 'q-cv3d-kp34-3',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'The SMPL body model represents human bodies as a parametric function of pose θ (joint angles) and shape β (PCA body shape coefficients). What enables SMPL to generalise to arbitrary body shapes and poses?',
+      question: 'The SMPL body model represents human bodies as a parametric function of pose \\theta (joint angles) and shape \\beta (PCA body shape coefficients). What enables SMPL to generalise to arbitrary body shapes and poses?',
       options: [
-        'SMPL uses a lookup table mapping each (θ, β) to a stored mesh — enabling exact representation but limited to trained configurations',
+        'SMPL uses a lookup table mapping each (\\theta, \\beta) to a stored mesh — enabling exact representation but limited to trained configurations',
         'SMPL uses linear blend skinning (LBS) with learned pose-dependent corrective blend shapes: the template mesh is deformed by bone rotations (LBS), and pose-dependent blend shapes correct the LBS artifacts (candy wrapper effect) using learned linear functions of joint rotations',
-        'SMPL uses a neural network to directly regress vertex positions from (θ, β) without any mesh template',
+        'SMPL uses a neural network to directly regress vertex positions from (\\theta, \\beta) without any mesh template',
         'SMPL encodes body shape as a 3D voxel grid and pose as a sequence of transformations applied to the voxels',
       ],
       correctAnswer: 1,
-      explanation: 'SMPL (Loper et al., 2015): template mesh → shape blend shapes (B_S(β) = Σ_n β_n S_n) → pose blend shapes (B_P(θ) = Σ_k (R_k − R*_k) P_k) → LBS (rotate each vertex by its bone\'s weighted transformation). The pose blend shapes B_P correct LBS artifacts (e.g., collapsing at bent elbows). Result: a differentiable function mapping 72+10 parameters to a 6890-vertex mesh, enabling gradient-based fitting and neural network integration.',
+      explanation: 'SMPL (Loper et al., 2015): template mesh → shape blend shapes (B_S(\\beta) = \\Sigma_n \\beta_n S_n) → pose blend shapes (B_P(\\theta) = \\Sigma_k (R_k − R*_k) P_k) → LBS (rotate each vertex by its bone\'s weighted transformation). The pose blend shapes B_P correct LBS artifacts (e.g., collapsing at bent elbows). Result: a differentiable function mapping 72+10 parameters to a 6890-vertex mesh, enabling gradient-based fitting and neural network integration.',
       hints: [
         'LBS artifact: linear blending of rotations produces the "candy wrapper" effect (collapsing at large joint angles). Pose blend shapes fix this.',
-        'SMPL is differentiable: gradients flow from vertex positions back through LBS and blend shapes to θ and β.',
+        'SMPL is differentiable: gradients flow from vertex positions back through LBS and blend shapes to \\theta and \\beta.',
       ],
     },
   ],
@@ -1819,7 +1819,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'easy',
       question: '3D scene flow is a generalisation of 2D optical flow to 3D space, where each point in a point cloud receives a 3D motion vector (dx, dy, dz) rather than a 2D pixel displacement (du, dv).',
       correctAnswer: 'True',
-      explanation: '2D optical flow: for each pixel (u,v) in image I_t, predict displacement (Δu, Δv) to its location in I_{t+1}. 3D scene flow: for each 3D point p_i in frame t, predict 3D motion vector (Δx, Δy, Δz) to its location in frame t+1. 3D scene flow enables understanding of 3D motion in world coordinates, not just projected motion — critical for autonomous driving (understanding which 3D points are moving and where).',
+      explanation: '2D optical flow: for each pixel (u,v) in image I_t, predict displacement (\\Deltau, \\Deltav) to its location in I_{t+1}. 3D scene flow: for each 3D point p_i in frame t, predict 3D motion vector (\\Deltax, \\Deltay, \\Deltaz) to its location in frame t+1. 3D scene flow enables understanding of 3D motion in world coordinates, not just projected motion — critical for autonomous driving (understanding which 3D points are moving and where).',
       hints: [
         '2D optical flow: ambiguous for depth (a point moving in depth produces no image motion if it stays on the same ray).',
         '3D scene flow: explicit 3D displacement — no depth ambiguity since both frames are in 3D.',
@@ -1869,7 +1869,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'Monocular depth estimation is an ill-posed problem (scale ambiguous), while stereo depth estimation provides metric (absolute) depth because the known stereo baseline converts disparity to physical distance.',
       correctAnswer: 'True',
-      explanation: 'Stereo: depth Z = f·B/d where B (baseline = distance between cameras) and f (focal length) are known from calibration. Disparity d is measured in pixels. Result: metric depth in metres. Monocular: a scene scaled by λ produces the same image for any λ — depth is only recoverable up to scale. Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
+      explanation: 'Stereo: depth Z = f·B/d where B (baseline = distance between cameras) and f (focal length) are known from calibration. Disparity d is measured in pixels. Result: metric depth in metres. Monocular: a scene scaled by \\lambda produces the same image for any \\lambda — depth is only recoverable up to scale. Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
       hints: [
         'Stereo baseline B: cameras are 6cm apart → B = 0.06m. This physical constant converts relative disparity to absolute depth.',
         'Monocular scale ambiguity: a small close object and a large far object can look identical in a single image.',
@@ -1919,7 +1919,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'One3D and Zero123 demonstrate zero-shot novel view synthesis: given a single image, they generate the object from arbitrary viewpoints by fine-tuning a diffusion model to be conditioned on camera pose.',
       correctAnswer: 'True',
-      explanation: 'Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) → target view pairs. At inference: given a single input image and a target (Δazimuth, Δelevation, Δdistance), generate the novel view. The model learns the mapping from image appearance + camera geometry to novel view appearance — enabling arbitrary view synthesis from a single image without 3D reconstruction.',
+      explanation: 'Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) → target view pairs. At inference: given a single input image and a target (\\Deltaazimuth, \\Deltaelevation, \\Deltadistance), generate the novel view. The model learns the mapping from image appearance + camera geometry to novel view appearance — enabling arbitrary view synthesis from a single image without 3D reconstruction.',
       hints: [
         'Training data: synthetic 3D objects rendered from multiple poses → (source view, relative pose) → target view pairs.',
         'At test time: feed a real-world photo + desired camera pose → the model imagines the novel view.',
@@ -2072,7 +2072,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       explanation: 'Object-compositional NeRF (uORF, ObjectNeRF): each object has its own NeRF. During rendering, a ray samples densities from all object NeRFs; compositing uses the alpha-compositing formula over objects along the ray. Spatial bounding boxes restrict each object NeRF to its region. This enables scene editing: move an object by translating its bounding box, swap objects by replacing one NeRF with another — without retraining the full scene.',
       hints: [
         'Object NeRF: trained on crops/masks of each object. Scene rendering: composite all objects via alpha-compositing.',
-        'Compositing formula: T_final = Π_i (1 − σ_i·Δ_i) — transmittance through all objects ordered front-to-back.',
+        'Compositing formula: T_final = \\Pi_i (1 − \\sigma_i·\\Delta_i) — transmittance through all objects ordered front-to-back.',
       ],
     },
     {
@@ -2087,7 +2087,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
         'Using GPU-optimised matrix multiplication to make MLP forward passes 10x faster',
       ],
       correctAnswer: 1,
-      explanation: 'Plenoxels: stores density and spherical harmonic colour coefficients at each voxel; lookup = trilinear interpolation (fast). TensoRF: decomposes the radiance field as a sum of low-rank vector-matrix outer products, enabling fast vectorised lookups. Both avoid costly MLP evaluations (which require many multiply-accumulate ops per sample). Early ray termination: once T(t) < ε (ray is almost fully opaque), stop sampling — saves 50-90% of samples on typical scenes.',
+      explanation: 'Plenoxels: stores density and spherical harmonic colour coefficients at each voxel; lookup = trilinear interpolation (fast). TensoRF: decomposes the radiance field as a sum of low-rank vector-matrix outer products, enabling fast vectorised lookups. Both avoid costly MLP evaluations (which require many multiply-accumulate ops per sample). Early ray termination: once T(t) < \\epsilon (ray is almost fully opaque), stop sampling — saves 50-90% of samples on typical scenes.',
       hints: [
         'MLP eval: input (x,y,z) → 8 layers of 256-dim activations → one density + colour. Voxel lookup: input (x,y,z) → trilinear interpolation → one scalar. The latter is 100x faster.',
         'Early termination: a point behind an opaque object contributes near-zero to the final pixel — stop sampling there.',
@@ -2099,17 +2099,17 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       id: 'q-cv3d-kp41-1',
       type: 'multiple-choice',
       difficulty: 'medium',
-      question: '3D Gaussian Splatting (3DGS) represents scenes as a collection of 3D Gaussians. Each Gaussian\'s 3D covariance Σ is parameterised as Σ = RSS^T R^T. Why is this decomposition used instead of directly optimising Σ?',
+      question: '3D Gaussian Splatting (3DGS) represents scenes as a collection of 3D Gaussians. Each Gaussian\'s 3D covariance \\Sigma is parameterised as \\Sigma = RSS^T R^T. Why is this decomposition used instead of directly optimising \\Sigma?',
       options: [
-        'Because Σ = RSS^T R^T (R = rotation matrix from quaternion q, S = diagonal scaling matrix) ensures Σ stays symmetric and positive semi-definite throughout optimisation — direct gradient updates on Σ entries can produce invalid non-PSD matrices',
+        'Because \\Sigma = RSS^T R^T (R = rotation matrix from quaternion q, S = diagonal scaling matrix) ensures \\Sigma stays symmetric and positive semi-definite throughout optimisation — direct gradient updates on \\Sigma entries can produce invalid non-PSD matrices',
         'Because this decomposition reduces the number of parameters from 9 to 6 by eliminating redundant off-diagonal entries',
         'Because R and S can be optimised with different learning rates, making training more stable',
         'Because storing R and S separately enables faster GPU matrix multiplication during rendering',
       ],
       correctAnswer: 0,
-      explanation: 'A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on Σ\'s 9 entries can violate PSD during training. Decomposing Σ = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.',
+      explanation: 'A valid 3D covariance matrix must be symmetric positive semi-definite (PSD). Direct gradient updates on \\Sigma\'s 9 entries can violate PSD during training. Decomposing \\Sigma = R·S·S^T·R^T where R is a rotation (stored as quaternion q, 4 params) and S is a diagonal scale matrix (3 params) guarantees PSD by construction: any matrix of the form RSS^T R^T is PSD.',
       hints: [
-        'A covariance matrix Σ = A^T A is always PSD. What structure guarantees this while remaining differentiable?',
+        'A covariance matrix \\Sigma = A^T A is always PSD. What structure guarantees this while remaining differentiable?',
         'Quaternion → rotation matrix keeps R orthogonal; scaling S along axes keeps ellipsoid axes aligned.',
       ],
     },
@@ -2117,11 +2117,11 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       id: 'q-cv3d-kp41-2',
       type: 'true-false',
       difficulty: 'medium',
-      question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = Σᵢ cᵢ αᵢ Πⱼ<ᵢ (1 − αⱼ), where αᵢ = oᵢ · exp(−½(x−μ₂ᴅ)^T Σ₂ᴅ⁻¹ (x−μ₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
+      question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigmaᵢ cᵢ \\alphaᵢ \\Piⱼ<ᵢ (1 − \\alphaⱼ), where \\alphaᵢ = oᵢ · exp(−½(x−\\mu₂ᴅ)^T \\Sigma₂ᴅ⁻¹ (x−\\mu₂ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
       correctAnswer: 'True',
-      explanation: 'After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = Σᵢ cᵢαᵢΠⱼ<ᵢ(1−αⱼ). Here αᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.',
+      explanation: 'After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigmaᵢ cᵢ\\alphaᵢ\\Piⱼ<ᵢ(1−\\alphaⱼ). Here \\alphaᵢ = oᵢ·G₂ᴅ(x) is the product of learned opacity oᵢ and the 2D Gaussian value at pixel x. This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting — enabling the fast tile-based GPU rasterizer.',
       hints: [
-        'Compare to NeRF\'s C(r) = Σᵢ Tᵢαᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
+        'Compare to NeRF\'s C(r) = \\Sigmaᵢ Tᵢ\\alphaᵢcᵢ: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
         'Front-to-back ordering is achieved by sorting Gaussians by depth before rasterisation.',
       ],
     },
@@ -2131,13 +2131,13 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'hard',
       question: 'What is the adaptive density control strategy in 3D Gaussian Splatting, and why is it necessary?',
       options: [
-        'Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold τ_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity αᵢ below threshold ε_α are pruned — adapting the number and placement of Gaussians to scene complexity',
+        'Gaussians are periodically split (when too large — positional gradient magnitude exceeds threshold \\tau_pos) or cloned (when too small — in under-reconstructed regions), and those with opacity \\alphaᵢ below threshold \\epsilon_\\alpha are pruned — adapting the number and placement of Gaussians to scene complexity',
         'The number of Gaussians is fixed at initialisation and only their parameters (position, covariance, opacity, colour) are optimised throughout training',
         'Gaussians are densified by adding new ones at positions with high photometric loss, and merged when two Gaussians overlap (IoU > 0.9) to prevent redundancy',
         'A fixed densification schedule adds Gaussians every N iterations at random scene positions regardless of reconstruction quality',
       ],
       correctAnswer: 0,
-      explanation: 'Adaptive density control monitors the L1 norm of positional gradients ∇μ accumulated over training. When ||∇μ|| > τ_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity αᵢ < ε_α are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.',
+      explanation: 'Adaptive density control monitors the L1 norm of positional gradients \\nabla\\mu accumulated over training. When ||\\nabla\\mu|| > \\tau_pos: if the Gaussian is large (large scale S), split it into two smaller ones; if small, clone it to cover under-reconstructed regions. Periodically, Gaussians with opacity \\alphaᵢ < \\epsilon_\\alpha are pruned. Gaussians that grow too large (exceeding world-space or screen-space size thresholds) are also split. This adapts the Gaussian count from typically ~100K (SfM initialisation) to millions.',
       hints: [
         'High positional gradient magnitude signals that the Gaussian is being pulled in conflicting directions — it needs to split to resolve ambiguity.',
         'Under-reconstruction (high loss region with small Gaussians) → clone; over-reconstruction (one Gaussian covers too much) → split.',
@@ -2152,12 +2152,12 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       question: 'Occupancy networks (Mescheder et al., 2019) represent 3D shapes as ___.',
       options: [
         'A set of oriented surface points (normal + position) generated by a conditional GAN',
-        'A continuous function f_θ(p, z) → [0,1] that predicts the probability of any 3D point p being inside the shape given latent code z, enabling mesh extraction at arbitrary resolution via Marching Cubes on the decision boundary f = 0.5',
+        'A continuous function f_\\theta(p, z) → [0,1] that predicts the probability of any 3D point p being inside the shape given latent code z, enabling mesh extraction at arbitrary resolution via Marching Cubes on the decision boundary f = 0.5',
         'A signed distance function stored in a fixed-resolution voxel grid',
         'A triangle mesh with a fixed number of vertices generated autoregressively',
       ],
       correctAnswer: 1,
-      explanation: 'Occupancy networks: encode the input (e.g., image, point cloud) into latent z via an encoder; for any query point p in 3D, predict f_θ(p, z) = P(p is occupied). The surface is at f = 0.5. Marching Cubes extracts the mesh from this implicit function at any query resolution. This is resolution-free (unlike voxels) and differentiable (unlike explicit meshes with fixed topology).',
+      explanation: 'Occupancy networks: encode the input (e.g., image, point cloud) into latent z via an encoder; for any query point p in 3D, predict f_\\theta(p, z) = P(p is occupied). The surface is at f = 0.5. Marching Cubes extracts the mesh from this implicit function at any query resolution. This is resolution-free (unlike voxels) and differentiable (unlike explicit meshes with fixed topology).',
       hints: [
         'Implicit representation: the surface is defined implicitly as the decision boundary of a classifier, not as an explicit set of points.',
         'Resolution-free: you can query the occupancy function at 16³ voxels for speed or 512³ for high-quality mesh extraction.',
@@ -2206,23 +2206,23 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'hard',
       question: 'The NeRF volume rendering equation computes the expected color C(r) of a ray r(t) = o + td. Which expression is correct?',
       options: [
-        'C(r) = ∫ T(t) · σ(r(t)) · c(r(t), d) dt, where T(t) = exp(−∫₀ᵗ σ(r(s)) ds) is the accumulated transmittance from ray origin to t',
-        'C(r) = ∫ σ(r(t)) · c(r(t), d) dt, where σ is the volume density and c is the emitted color at each point',
-        'C(r) = ∑ᵢ αᵢ · cᵢ where αᵢ = 1 − exp(−σᵢ·δᵢ) and the transmittance Tᵢ = ∏ⱼ<ᵢ (1 − αⱼ) is omitted',
-        'C(r) = softmax(σ(r(t₁)), …, σ(r(tₙ))) · c, using softmax to normalize opacity weights',
+        'C(r) = ∫ T(t) · \\sigma(r(t)) · c(r(t), d) dt, where T(t) = exp(−∫₀ᵗ \\sigma(r(s)) ds) is the accumulated transmittance from ray origin to t',
+        'C(r) = ∫ \\sigma(r(t)) · c(r(t), d) dt, where \\sigma is the volume density and c is the emitted color at each point',
+        'C(r) = ∑ᵢ \\alphaᵢ · cᵢ where \\alphaᵢ = 1 − exp(−\\sigmaᵢ·\\deltaᵢ) and the transmittance Tᵢ = ∏ⱼ<ᵢ (1 − \\alphaⱼ) is omitted',
+        'C(r) = softmax(\\sigma(r(t₁)), …, \\sigma(r(tₙ))) · c, using softmax to normalize opacity weights',
       ],
       correctAnswer: 0,
-      explanation: 'NeRF (Mildenhall et al. 2020) models the scene as a continuous volumetric radiance field. The rendering integral is C(r) = ∫_{t_n}^{t_f} T(t)·σ(r(t))·c(r(t),d) dt where T(t) = exp(−∫_{t_n}^t σ(r(s))ds) is the accumulated transmittance — the probability that the ray travels from t_n to t without hitting any particle. In discretised form: Cˆ(r) = ∑ᵢ Tᵢ·(1−exp(−σᵢδᵢ))·cᵢ where Tᵢ = exp(−∑ⱼ<ᵢ σⱼδⱼ). This is the standard alpha-compositing formula from classical volume rendering.',
+      explanation: 'NeRF (Mildenhall et al. 2020) models the scene as a continuous volumetric radiance field. The rendering integral is C(r) = ∫_{t_n}^{t_f} T(t)·\\sigma(r(t))·c(r(t),d) dt where T(t) = exp(−∫_{t_n}^t \\sigma(r(s))ds) is the accumulated transmittance — the probability that the ray travels from t_n to t without hitting any particle. In discretised form: Cˆ(r) = ∑ᵢ Tᵢ·(1−exp(−\\sigmaᵢ\\deltaᵢ))·cᵢ where Tᵢ = exp(−∑ⱼ<ᵢ \\sigmaⱼ\\deltaⱼ). This is the standard alpha-compositing formula from classical volume rendering.',
       hints: [
         'Transmittance T(t): the fraction of light that reaches point t unobstructed — multiply all previous absorption terms.',
-        'The discrete alpha values αᵢ = 1 − exp(−σᵢδᵢ) convert density × interval into opacity; Tᵢ = ∏ⱼ<ᵢ(1 − αⱼ) is accumulated transmittance.',
+        'The discrete alpha values \\alphaᵢ = 1 − exp(−\\sigmaᵢ\\deltaᵢ) convert density × interval into opacity; Tᵢ = ∏ⱼ<ᵢ(1 − \\alphaⱼ) is accumulated transmittance.',
       ],
     },
     {
       id: 'q-cv3d-kp43-2',
       type: 'multiple-choice',
       difficulty: 'hard',
-      question: 'NeRF uses positional encoding γ(p) = (sin(2⁰πp), cos(2⁰πp), …, sin(2^{L−1}πp), cos(2^{L−1}πp)) for input coordinates. Why is this encoding necessary?',
+      question: 'NeRF uses positional encoding \\gamma(p) = (sin(2⁰\\pip), cos(2⁰\\pip), …, sin(2^{L−1}\\pip), cos(2^{L−1}\\pip)) for input coordinates. Why is this encoding necessary?',
       options: [
         'Positional encoding normalises the input coordinates to the range [−1, 1] for numerical stability during training',
         'MLPs are biased toward learning low-frequency functions (spectral bias); positional encoding maps inputs into a higher-frequency Fourier feature space, enabling the MLP to represent sharp edges, fine textures, and high-frequency geometry',
@@ -2230,10 +2230,10 @@ const moreVision3dQuestions: Record<string, Question[]> = {
         'Positional encoding is required to break the symmetry between x, y, and z coordinates in the MLP',
       ],
       correctAnswer: 1,
-      explanation: 'MLPs with ReLU activations exhibit spectral bias (Rahaman et al. 2019): they learn low-frequency components of a function much faster than high-frequency ones. Without encoding, a NeRF MLP learns a blurry radiance field. The Fourier feature mapping γ(p) with L=10 for positions and L=4 for view directions lifts inputs to a 2L-dimensional sinusoidal basis, allowing the MLP to represent high-frequency signals efficiently. This was independently theorised as the Neural Tangent Kernel perspective in "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains" (Tancik et al. 2020).',
+      explanation: 'MLPs with ReLU activations exhibit spectral bias (Rahaman et al. 2019): they learn low-frequency components of a function much faster than high-frequency ones. Without encoding, a NeRF MLP learns a blurry radiance field. The Fourier feature mapping \\gamma(p) with L=10 for positions and L=4 for view directions lifts inputs to a 2L-dimensional sinusoidal basis, allowing the MLP to represent high-frequency signals efficiently. This was independently theorised as the Neural Tangent Kernel perspective in "Fourier Features Let Networks Learn High Frequency Functions in Low Dimensional Domains" (Tancik et al. 2020).',
       hints: [
         'Spectral bias: without encoding, the MLP converges to a blurry average of the scene — losing fine details.',
-        'L=10 for (x,y,z) gives 60 encoding dimensions; L=4 for viewing direction (θ,φ) gives 24 dimensions.',
+        'L=10 for (x,y,z) gives 60 encoding dimensions; L=4 for viewing direction (\\theta,\\phi) gives 24 dimensions.',
       ],
     },
     {
@@ -2262,7 +2262,7 @@ const moreVision3dQuestions: Record<string, Question[]> = {
         '3DGS uses pre-computed light fields that cache all possible view directions, trading memory for speed',
       ],
       correctAnswer: 1,
-      explanation: '3DGS (Kerbl et al. 2023) initialises Gaussians from SfM point clouds, each defined by position μ, covariance Σ (represented as rotation R and scale S: Σ=RSS^T R^T), opacity α, and view-dependent colour (spherical harmonics coefficients). Rendering projects 3D Gaussians to 2D screen-space ellipses via Σ′ = JWΣ(JW)^T and sorts them by depth for alpha compositing. The tile-based rasteriser processes 16×16 pixel tiles in parallel on the GPU. No MLP query is needed at render time — each Gaussian is an explicit, parameterised primitive evaluated analytically.',
+      explanation: '3DGS (Kerbl et al. 2023) initialises Gaussians from SfM point clouds, each defined by position \\mu, covariance \\Sigma (represented as rotation R and scale S: \\Sigma=RSS^T R^T), opacity \\alpha, and view-dependent colour (spherical harmonics coefficients). Rendering projects 3D Gaussians to 2D screen-space ellipses via \\Sigma′ = JW\\Sigma(JW)^T and sorts them by depth for alpha compositing. The tile-based rasteriser processes 16×16 pixel tiles in parallel on the GPU. No MLP query is needed at render time — each Gaussian is an explicit, parameterised primitive evaluated analytically.',
       hints: [
         'Alpha compositing of sorted Gaussians in screen space is a classical graphics operation, easily GPU-parallelised.',
         'Spherical harmonics for colour: degree-3 SH gives view-dependent colour with 48 coefficients per Gaussian.',
@@ -2274,10 +2274,10 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: '3D Gaussian Splatting optimises scene parameters (Gaussian positions, covariances, opacities, and spherical harmonic colour coefficients) using standard backpropagation through a differentiable rasteriser with a photometric loss against training images.',
       correctAnswer: 'True',
-      explanation: "3DGS trains all Gaussian parameters end-to-end via gradient descent. The differentiable tile rasteriser (CUDA implementation) allows gradients to flow back from pixel-level L1 + SSIM photometric loss to each Gaussian's μ, Σ, α, and SH coefficients. Adaptive density control (splitting, cloning, pruning) is applied every 100 iterations based on positional gradient magnitudes. After training (~30 minutes on a V100), the explicit Gaussian scene can be rendered at real-time rates.",
+      explanation: "3DGS trains all Gaussian parameters end-to-end via gradient descent. The differentiable tile rasteriser (CUDA implementation) allows gradients to flow back from pixel-level L1 + SSIM photometric loss to each Gaussian's \\mu, \\Sigma, \\alpha, and SH coefficients. Adaptive density control (splitting, cloning, pruning) is applied every 100 iterations based on positional gradient magnitudes. After training (~30 minutes on a V100), the explicit Gaussian scene can be rendered at real-time rates.",
       hints: [
         'The CUDA rasteriser is custom-written with backward passes for each Gaussian parameter — not using standard autograd.',
-        'Loss = λ·L1(render, gt) + (1−λ)·(1−SSIM(render, gt)) with λ=0.8.',
+        'Loss = \\lambda·L1(render, gt) + (1−\\lambda)·(1−SSIM(render, gt)) with \\lambda=0.8.',
       ],
     },
     {
@@ -2292,9 +2292,9 @@ const moreVision3dQuestions: Record<string, Question[]> = {
         'Max pooling selects the geometrically most distant point from the centroid, providing a compact shape descriptor',
       ],
       correctAnswer: 1,
-      explanation: "Point clouds have no canonical ordering — the same shape can be represented as any permutation of its points. PointNet's key insight: applying a symmetric function (one whose output is invariant to input permutation) solves this. Max pooling is a symmetric function: max(f(p₁), f(p₂), …) = max(f(p_{π(1)}), f(p_{π(2)}), …) for any permutation π. The network architecture: T-Net (input transform) → shared MLP → T-Net (feature transform) → shared MLP → max pool → global feature → classification/segmentation head.",
+      explanation: "Point clouds have no canonical ordering — the same shape can be represented as any permutation of its points. PointNet's key insight: applying a symmetric function (one whose output is invariant to input permutation) solves this. Max pooling is a symmetric function: max(f(p₁), f(p₂), …) = max(f(p_{\\pi(1)}), f(p_{\\pi(2)}), …) for any permutation \\pi. The network architecture: T-Net (input transform) → shared MLP → T-Net (feature transform) → shared MLP → max pool → global feature → classification/segmentation head.",
       hints: [
-        'Symmetry requirement: any function g(p₁, …, pₙ) = g(p_{π(1)}, …, p_{π(n)}) for all π is a valid aggregation for unordered sets.',
+        'Symmetry requirement: any function g(p₁, …, pₙ) = g(p_{\\pi(1)}, …, p_{\\pi(n)}) for all \\pi is a valid aggregation for unordered sets.',
         "Max pooling is also a 'critical point set' selector: the global feature is determined by a sparse subset of points that achieve the maximum response — PointNet's theoretical robustness guarantee.",
       ],
     },

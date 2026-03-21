@@ -158,14 +158,14 @@ const questions: Record<string, Question[]> = {
       question:
         "Given the optimal value function V*, the optimal policy is recovered via a one-step lookahead. Which expression correctly gives \\pi*(s)?",
       options: [
-        "\\pi*(s) = argmax_a [R(s,a) + γ·V*(s)]",
-        "\\pi*(s) = argmax_a Σ_{s'} P(s'|s,a) [R(s,a,s') + γ·V*(s')]",
+        "\\pi*(s) = argmax_a [R(s,a) + \\gamma·V*(s)]",
+        "\\pi*(s) = argmax_a \\Sigma_{s'} P(s'|s,a) [R(s,a,s') + \\gamma·V*(s')]",
         "\\pi*(s) = argmax_a V*(s) for all actions a",
         "\\pi*(s) = argmin_a Q*(s,a)",
       ],
       correctAnswer: 1,
       explanation:
-        "From Sutton & Barto §3.6 (Bellman optimality equations): \\pi*(s) = argmax_a Σ_{s',r} p(s',r|s,a)[r + γV*(s')]. This is a one-step lookahead: for each action a, compute the expected immediate reward plus the discounted value of the resulting state, summed over all possible next states s'. The action achieving the maximum is greedy-optimal.",
+        "From Sutton & Barto §3.6 (Bellman optimality equations): \\pi*(s) = argmax_a \\Sigma_{s',r} p(s',r|s,a)[r + \\gammaV*(s')]. This is a one-step lookahead: for each action a, compute the expected immediate reward plus the discounted value of the resulting state, summed over all possible next states s'. The action achieving the maximum is greedy-optimal.",
       hints: [
         "The Bellman optimality equation involves an expectation over next states $s'$ weighted by $P(s' \mid s, a)$. Which option includes this?",
         "Note: V*(s) alone doesn\'t depend on a, so argmax_a V*(s) is meaningless. The argmax must be over the expected next-state value.",
@@ -179,7 +179,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "An agent follows policy \\pi in an MDP with γ = 0.9. Starting from state s, it receives rewards 10, 0, 5 over the next three steps then reaches a terminal state. What is V^\\pi(s) (the exact discounted return for this trajectory)?",
+        "An agent follows policy \\pi in an MDP with \\gamma = 0.9. Starting from state s, it receives rewards 10, 0, 5 over the next three steps then reaches a terminal state. What is V^\\pi(s) (the exact discounted return for this trajectory)?",
       options: [
         "15",
         "10 + 0.9*(0) + 0.81*(5) = 14.05",
@@ -190,7 +190,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "V^\\pi(s) = E_\\pi[G_t | S_t = s] where G_t = $\\sum_{k=0}^{\\infty} \\gamma^k R_{t+k+1}$. For this trajectory: G = 10 + 0.9*0 + $0.9^2$*5 = 10 + 0 + 0.81*5 = 10 + 4.05 = 14.05. S&B (3.3) define V^\\pi(s) as the expected return of G_t when starting in s and following \\pi.",
       hints: [
-        "G_t = R_{t+1} + γR_{t+2} + $γ^2$R_{t+3} + ... Apply γ = 0.9 to each reward, weighted by time step.",
+        "G_t = R_{t+1} + \\gammaR_{t+2} + $\\gamma^2$R_{t+3} + ... Apply \\gamma = 0.9 to each reward, weighted by time step.",
         'S&B §3.3: "The value of a state s under a policy \\pi, denoted V^\\pi(s), is the expected return when starting in s and following \\pi thereafter."',
       ],
     },
@@ -214,14 +214,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Bellman expectation equation for V^\\pi(s) (Sutton & Barto §3.5) is:",
       options: [
-        "V^\\pi(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV^\\pi(s')]",
-        "V^\\pi(s) = \sum_a \\pi(a|s) Σ_{s'} P(s'|s,a)[R(s,a,s') + γV^\\pi(s')]",
+        "V^\\pi(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV^\\pi(s')]",
+        "V^\\pi(s) = \sum_a \\pi(a|s) \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV^\\pi(s')]",
         "V^\\pi(s) = \sum_a \\pi(a|s) R(s,a)",
-        "V^\\pi(s) = R(s) + γ max_{s'} V^\\pi(s')",
+        "V^\\pi(s) = R(s) + \\gamma max_{s'} V^\\pi(s')",
       ],
       correctAnswer: 1,
       explanation:
-        "Sutton & Barto §3.5 derive: V^\\pi(s) = \sum_a \\pi(a|s) Σ_{s',r} p(s',r|s,a)[r + γV^\\pi(s')]. The outer sum averages over actions chosen by \\pi; the inner sum averages over next states weighted by the transition model. The key insight (S&B call it the \"fundamental property\") is that V^\\pi satisfies this self-consistency equation for all s simultaneously.",
+        "Sutton & Barto §3.5 derive: V^\\pi(s) = \sum_a \\pi(a|s) \\Sigma_{s',r} p(s',r|s,a)[r + \\gammaV^\\pi(s')]. The outer sum averages over actions chosen by \\pi; the inner sum averages over next states weighted by the transition model. The key insight (S&B call it the \"fundamental property\") is that V^\\pi satisfies this self-consistency equation for all s simultaneously.",
       hints: [
         "For a stochastic policy, you first average over actions (weighted by $\pi$), then average over next states (weighted by $P$). Two levels of expectation.",
         "The max over actions appears in the Bellman optimality equation ($V^*$), not the expectation equation ($V^\pi$). For $V^\pi$, you use the policy $\pi$'s distribution, not a greedy max.",
@@ -235,11 +235,11 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "In state s an agent commits to action a (which may not be selected by \\pi), then follows \\pi for all future steps. With γ = 0.9, if the immediate reward is r = 5 and the next state has V^\\pi(s') = 20, what is Q^\\pi(s, a) (ignoring further uncertainty for this calculation)?",
+        "In state s an agent commits to action a (which may not be selected by \\pi), then follows \\pi for all future steps. With \\gamma = 0.9, if the immediate reward is r = 5 and the next state has V^\\pi(s') = 20, what is Q^\\pi(s, a) (ignoring further uncertainty for this calculation)?",
       options: ["25", "5 + 0.9·20 = 23", "5 · 20 = 100", "0.9·5 + 20 = 24.5"],
       correctAnswer: 1,
       explanation:
-        "Q^\\pi(s,a) = E_\\pi[G_t | S_t=s, A_t=a] = E[R_{t+1} + γV^\\pi(S_{t+1}) | S_t=s, A_t=a]. For this single-step calculation: Q^\\pi(s,a) = 5 + 0.9·20 = 23. Sutton & Barto §3.5 define Q^\\pi(s,a) as the expected return starting from s, taking a, then following \\pi.",
+        "Q^\\pi(s,a) = E_\\pi[G_t | S_t=s, A_t=a] = E[R_{t+1} + \\gammaV^\\pi(S_{t+1}) | S_t=s, A_t=a]. For this single-step calculation: Q^\\pi(s,a) = 5 + 0.9·20 = 23. Sutton & Barto §3.5 define Q^\\pi(s,a) as the expected return starting from s, taking a, then following \\pi.",
       hints: [
         "The Bellman equation for $Q^\pi$ decomposes as: $Q^\pi(s, a) = R + \gamma \cdot V^\pi(s')$. The value $V^\pi(s')$ already encodes all future returns under $\pi$.",
         "$Q^\pi$ differs from $V^\pi$ only in the first step: $Q^\pi$ fixes the first action to $a$, whereas $V^\pi$ averages over actions chosen by $\pi$.",
@@ -323,7 +323,7 @@ const questions: Record<string, Question[]> = {
         "In REINFORCE, replacing the raw return G_t with the advantage estimate A^\\pi(s,a) = G_t − b(s) reduces gradient variance without introducing bias because:",
       options: [
         "The baseline b(s) is always equal to zero, so no information is lost",
-        "E_\\pi[∇_θ log \\pi_θ(a|s) · b(s)] = 0 for any state-dependent baseline b(s), leaving the gradient expectation unchanged",
+        "E_pi[nabla_theta log pi_theta(a|s) * b(s)] = 0 for any state-dependent baseline b(s), leaving the gradient expectation unchanged",
         "The advantage function always has smaller magnitude than G_t",
         "b(s) = V^\\pi(s) is the unique variance-minimizing baseline, proven by the policy gradient theorem",
       ],
@@ -346,16 +346,16 @@ const questions: Record<string, Question[]> = {
         'Sutton & Barto (§3.5) call the Bellman equation the "fundamental property of value functions." It states that V^\\pi(s) equals:',
       options: [
         "The maximum over actions of immediate reward plus discounted next-state value",
-        "The expected immediate reward plus γ times the expected value of the next state under \\pi",
+        "The expected immediate reward plus \\gamma times the expected value of the next state under \\pi",
         "The sum of all future undiscounted rewards",
         "The value of the best action available in state s",
       ],
       correctAnswer: 1,
       explanation:
-        "S&B §3.5: V^\\pi(s) = E_\\pi[R_{t+1} + γV^\\pi(S_{t+1}) | S_t = s]. This decomposes value into two parts: the immediate reward E[R_{t+1}|s] plus γ times the expected value of the next state. The key insight is the decomposition G_t = R_{t+1} + γG_{t+1}, and then taking expectations on both sides.",
+        "S&B §3.5: V^\\pi(s) = E_\\pi[R_{t+1} + \\gammaV^\\pi(S_{t+1}) | S_t = s]. This decomposes value into two parts: the immediate reward E[R_{t+1}|s] plus \\gamma times the expected value of the next state. The key insight is the decomposition G_t = R_{t+1} + \\gammaG_{t+1}, and then taking expectations on both sides.",
       hints: [
-        "Start from G_t = R_{t+1} + γG_{t+1} (the telescoping decomposition of discounted return).",
-        "Take E_\\pi[·|S_t=s] of both sides: V^\\pi(s) = E_\\pi[R_{t+1}|s] + γE_\\pi[G_{t+1}|s] = E_\\pi[R_{t+1} + γV^\\pi(S_{t+1})|s].",
+        "Start from G_t = R_{t+1} + \\gammaG_{t+1} (the telescoping decomposition of discounted return).",
+        "Take E_\\pi[·|S_t=s] of both sides: V^\\pi(s) = E_\\pi[R_{t+1}|s] + \\gammaE_\\pi[G_{t+1}|s] = E_\\pi[R_{t+1} + \\gammaV^\\pi(S_{t+1})|s].",
       ],
     },
     {
@@ -366,7 +366,7 @@ const questions: Record<string, Question[]> = {
         "The Bellman optimality equation for V*(s) uses an expectation over actions (like V^\\pi), replacing \\pi(a|s) with the optimal policy distribution.",
       correctAnswer: "False",
       explanation:
-        "The Bellman optimality equation uses a max over actions, NOT an expectation: V*(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV*(s')]. Sutton & Barto §3.6 emphasize that the max replaces the weighted average because the optimal agent always picks the best action — it does not hedge over suboptimal actions.",
+        "The Bellman optimality equation uses a max over actions, NOT an expectation: V*(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV*(s')]. Sutton & Barto §3.6 emphasize that the max replaces the weighted average because the optimal agent always picks the best action — it does not hedge over suboptimal actions.",
       hints: [
         "Compare: V^\\pi uses \sum_a \\pi(a|s)[...] — a weighted average. V* uses max_a[...] — the best case.",
         'S&B §3.6: "Bellman optimality equations are special because...the maximum over actions replaces the sum weighted by \\pi."',
@@ -377,14 +377,14 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Consider a 2-state MDP: from s₁, taking action a gives reward 1 and transitions to s₂ with probability 1; from s₂, any action gives reward 0 and returns to s₁. With γ=0.5 and a deterministic policy always choosing a, what does V^\\pi(s₁) equal (using the Bellman equation)?",
+        "Consider a 2-state MDP: from s₁, taking action a gives reward 1 and transitions to s₂ with probability 1; from s₂, any action gives reward 0 and returns to s₁. With \\gamma=0.5 and a deterministic policy always choosing a, what does V^\\pi(s₁) equal (using the Bellman equation)?",
       options: ["1", "1 + 0.5·V^\\pi(s₂)", "2/3", "1/(1−0.5) = 2"],
       correctAnswer: 2,
       explanation:
-        "Apply the Bellman equations simultaneously. V^\\pi(s₁) = 1 + 0.5·V^\\pi(s₂) and V^\\pi(s₂) = 0 + 0.5·V^\\pi(s₁). Substituting: V^\\pi(s₁) = 1 + 0.5·(0.5·V^\\pi(s₁)) = 1 + 0.25·V^\\pi(s₁). Solving: 0.75·V^\\pi(s₁) = 1, so V^\\pi(s₁) = 4/3 ≈ 1.33... Wait — let\'s recheck: with rewards alternating 1,0,1,0,… and γ=0.5: G = 1 + 0.5·0 + 0.25·1 + 0.125·0 + … = 1/(1−0.25) = 4/3. But the answer listed as 2/3 would come from misapplying. The self-consistent solution V^\\pi(s₁) = 4/3 is correct per Bellman. (The listed correct answer 2/3 corresponds to starting at s₂: V^\\pi(s₂) = 0 + 0.5·(4/3) = 2/3.)",
+        "Apply the Bellman equations simultaneously. V^\\pi(s₁) = 1 + 0.5·V^\\pi(s₂) and V^\\pi(s₂) = 0 + 0.5·V^\\pi(s₁). Substituting: V^\\pi(s₁) = 1 + 0.5·(0.5·V^\\pi(s₁)) = 1 + 0.25·V^\\pi(s₁). Solving: 0.75·V^\\pi(s₁) = 1, so V^\\pi(s₁) = 4/3 ≈ 1.33... Wait — let\'s recheck: with rewards alternating 1,0,1,0,… and \\gamma=0.5: G = 1 + 0.5·0 + 0.25·1 + 0.125·0 + … = 1/(1−0.25) = 4/3. But the answer listed as 2/3 would come from misapplying. The self-consistent solution V^\\pi(s₁) = 4/3 is correct per Bellman. (The listed correct answer 2/3 corresponds to starting at s₂: V^\\pi(s₂) = 0 + 0.5·(4/3) = 2/3.)",
       hints: [
         "Write out both Bellman equations simultaneously: one for $V^\pi(s_1)$ and one for $V^\pi(s_2)$, then solve the $2 \times 2$ linear system.",
-        "The rewards alternate: 1, 0, 1, 0, … discounted as 1·γ⁰ + 0·γ¹ + 1·γ² + 0·γ³ + … = 1/(1−γ²) for γ=0.5.",
+        "The rewards alternate: 1, 0, 1, 0, … discounted as 1·\\gamma⁰ + 0·\\gamma¹ + 1·\\gamma² + 0·\\gamma³ + … = 1/(1−\\gamma²) for \\gamma=0.5.",
       ],
     },
   ],
@@ -395,18 +395,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Bellman operator T^\\pi is a γ-contraction in the sup-norm. This means that for any two value functions V and U:",
+        "The Bellman operator T^\\pi is a \\gamma-contraction in the sup-norm. This means that for any two value functions V and U:",
       options: [
-        "‖T^\\pi V − T^\\pi U‖_∞ ≤ γ‖V − U‖_∞",
-        "‖T^\\pi V − V*‖_∞ ≤ γ for all V",
+        "‖T^\\pi V − T^\\pi U‖_∞ ≤ \\gamma‖V − U‖_∞",
+        "‖T^\\pi V − V*‖_∞ ≤ \\gamma for all V",
         "T^\\pi always produces a value function with smaller L2-norm than V",
         "Applying T^\\pi reduces the number of states in the MDP",
       ],
       correctAnswer: 0,
       explanation:
-        "A contraction with factor γ < 1 means each application of T^\\pi brings any two value functions closer together by a factor of γ in the sup-norm: ‖T^\\pi V − T^\\pi U‖_∞ ≤ γ‖V − U‖_∞. By the Banach fixed-point theorem, repeated application converges to the unique fixed point V^\\pi. The discount factor γ < 1 is the mathematical engine of this contraction.",
+        "A contraction with factor \\gamma < 1 means each application of T^\\pi brings any two value functions closer together by a factor of \\gamma in the sup-norm: ‖T^\\pi V − T^\\pi U‖_∞ ≤ \\gamma‖V − U‖_∞. By the Banach fixed-point theorem, repeated application converges to the unique fixed point V^\\pi. The discount factor \\gamma < 1 is the mathematical engine of this contraction.",
       hints: [
-        "A contraction shrinks distances in function space. The factor γ < 1 ensures distances shrink by at least γ each iteration.",
+        "A contraction shrinks distances in function space. The factor $\gamma < 1$ ensures distances shrink by at least $\gamma$ each iteration.",
         "Sutton & Barto discuss convergence of policy evaluation (§4.1): it relies exactly on this contraction property.",
       ],
     },
@@ -418,9 +418,9 @@ const questions: Record<string, Question[]> = {
         "The Banach fixed-point theorem guarantees that the Bellman operator T^\\pi has a unique fixed point, and that unique fixed point is exactly V^\\pi.",
       correctAnswer: "True",
       explanation:
-        "The Banach fixed-point theorem states: any contraction mapping on a complete metric space has a unique fixed point, and iterating the mapping from any starting point converges to that fixed point. Since T^\\pi is a γ-contraction (γ < 1) on the complete metric space of bounded functions with sup-norm, there is a unique V such that T^\\pi V = V. By definition of the Bellman equation, that unique fixed point is V^\\pi.",
+        "The Banach fixed-point theorem states: any contraction mapping on a complete metric space has a unique fixed point, and iterating the mapping from any starting point converges to that fixed point. Since T^\\pi is a \\gamma-contraction (\\gamma < 1) on the complete metric space of bounded functions with sup-norm, there is a unique V such that T^\\pi V = V. By definition of the Bellman equation, that unique fixed point is V^\\pi.",
       hints: [
-        "A fixed point of T^\\pi satisfies T^\\pi V = V, which is exactly the Bellman expectation equation V^\\pi(s) = E_\\pi[R + γV^\\pi(S')|s].",
+        "A fixed point of T^\\pi satisfies T^\\pi V = V, which is exactly the Bellman expectation equation V^\\pi(s) = E_\\pi[R + \\gammaV^\\pi(S')|s].",
         "Uniqueness matters: policy evaluation converges to the same V^\\pi regardless of initialization V_0.",
       ],
     },
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "With γ = 0.9, starting from an arbitrary V₀, after k = 10 iterations of policy evaluation, the sup-norm error ‖V_k − V^\\pi‖_∞ is bounded by:",
+        "With \\gamma = 0.9, starting from an arbitrary V₀, after k = 10 iterations of policy evaluation, the sup-norm error ‖V_k − V^\\pi‖_∞ is bounded by:",
       options: [
         "0.9^10 · ‖V₀ − V^\\pi‖_∞ ≈ 0.349 · ‖V₀ − V^\\pi‖_∞",
         "0.1 · k · ‖V₀ − V^\\pi‖_∞ = 1.0 · ‖V₀ − V^\\pi‖_∞",
@@ -438,10 +438,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Each application of T^\\pi multiplies the error by at most γ. After k applications: ‖V_k − V^\\pi‖_∞ ≤ γ^k · ‖V₀ − V^\\pi‖_∞. With γ = 0.9 and k = 10: 0.9^10 ≈ 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with γ = 0.9, the error is at most 0.9^100 ≈ 2.66 × 10⁻⁵⁵ the initial error.",
+        "Each application of T^\\pi multiplies the error by at most \\gamma. After k applications: ‖V_k − V^\\pi‖_∞ ≤ \\gamma^k · ‖V₀ − V^\\pi‖_∞. With \\gamma = 0.9 and k = 10: 0.9^10 ≈ 0.349. This geometric decay is why policy evaluation converges reliably: after 100 iterations with \\gamma = 0.9, the error is at most 0.9^100 ≈ 2.66 × 10⁻⁵⁵ the initial error.",
       hints: [
-        "The contraction factor γ is applied once per iteration. After k iterations it has been applied k times: γ × γ × … × γ = γ^k.",
-        "With γ = 0.9: 0.9^10 ≈ 0.35, 0.9^20 ≈ 0.12, 0.9^100 ≈ 2.7×10⁻⁵. The convergence is geometric, not linear.",
+        "The contraction factor \\gamma is applied once per iteration. After k iterations it has been applied k times: \\gamma × \\gamma × … × \\gamma = \\gamma^k.",
+        "With $\gamma = 0.9$: $0.9^{10} \approx 0.35$, $0.9^{20} \approx 0.12$, $0.9^{100} \approx 2.7 \times 10^{-5}$. The convergence is geometric, not linear.",
       ],
     },
   ],
@@ -460,7 +460,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Policy evaluation solves the system of linear equations defined by the Bellman expectation equation: V^\\pi(s) = \sum_a \\pi(a|s) Σ_{s'} P(s'|s,a)[R(s,a,s') + γV^\\pi(s')] for all s. This tells you how good policy \\pi is — not how to improve it. Sutton & Barto §4.1 call this the \"prediction problem.\"",
+        "Policy evaluation solves the system of linear equations defined by the Bellman expectation equation: V^\\pi(s) = \sum_a \\pi(a|s) \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV^\\pi(s')] for all s. This tells you how good policy \\pi is — not how to improve it. Sutton & Barto §4.1 call this the \"prediction problem.\"",
       hints: [
         'S&B §4.1: "The problem of computing the state-value function V^\\pi for an arbitrary policy \\pi is called the prediction problem, or policy evaluation."',
         '"Evaluation" means assessment — you are measuring the quality of an existing policy, not searching for a better one.',
@@ -471,13 +471,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Iterative policy evaluation with γ = 1 always converges to V^\\pi, as long as the MDP is finite and every state is reachable.",
+        "Iterative policy evaluation with \\gamma = 1 always converges to V^\\pi, as long as the MDP is finite and every state is reachable.",
       correctAnswer: "False",
       explanation:
-        "The convergence proof for iterative policy evaluation requires γ < 1 OR that the policy guarantees eventual termination (episodic tasks). With γ = 1 in a continuing (non-terminating) task, the Bellman operator is not a contraction — the sup-norm of V can grow without bound, and the algorithm may diverge or fail to converge.",
+        "The convergence proof for iterative policy evaluation requires \\gamma < 1 OR that the policy guarantees eventual termination (episodic tasks). With \\gamma = 1 in a continuing (non-terminating) task, the Bellman operator is not a contraction — the sup-norm of V can grow without bound, and the algorithm may diverge or fail to converge.",
       hints: [
-        "The contraction argument uses γ < 1 explicitly: ‖T^\\pi V − T^\\pi U‖_∞ ≤ γ‖V − U‖_∞. At γ = 1, the right side equals ‖V − U‖_∞ — no contraction.",
-        "Consider a policy that cycles between two states with reward +1 each step and γ = 1: the return is infinite and V^\\pi is not well-defined.",
+        "The contraction argument uses \\gamma < 1 explicitly: ‖T^\\pi V − T^\\pi U‖_∞ ≤ \\gamma‖V − U‖_∞. At \\gamma = 1, the right side equals ‖V − U‖_∞ — no contraction.",
+        "Consider a policy that cycles between two states with reward +1 each step and \\gamma = 1: the return is infinite and V^\\pi is not well-defined.",
       ],
     },
     {
@@ -496,7 +496,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Synchronous updates compute V_{k+1}(s) = T^\\pi V_k for all s using old values V_k, requiring two arrays. Asynchronous (in-place) updates immediately overwrite V(s) and subsequent updates in the same sweep use these fresh values — typically propagating information faster and requiring only one array. Sutton & Barto §4.5 discuss this: in-place often converges faster because "the new values are used immediately instead of at the next sweep."',
       hints: [
-        "In synchronous: you read from V_k and write to V_{k+1}. In asynchronous: you read from and write to the same V — so updates within the same sweep see partially-updated values.",
+        "In synchronous: you read from $V_k$ and write to $V_{k+1}$. In asynchronous: you read from and write to the same $V$ — so updates within the same sweep see partially-updated values.",
         'S&B §4.5: asynchronous DP "can often convergence faster than the synchronous versions because they do not have to wait for the entire sweep."',
       ],
     },
@@ -511,7 +511,7 @@ const questions: Record<string, Question[]> = {
         "The policy improvement step (Sutton & Barto §4.2) constructs a new policy \\pi' by:",
       options: [
         "Adding Gaussian noise to the current policy\'s action probabilities",
-        "Acting greedily with respect to V^\\pi: \\pi'(s) = argmax_a Q^\\pi(s,a) = argmax_a Σ_{s'} P(s'|s,a)[R + γV^\\pi(s')]",
+        "Acting greedily with respect to V^\\pi: \\pi'(s) = argmax_a Q^\\pi(s,a) = argmax_a \\Sigma_{s'} P(s'|s,a)[R + \\gammaV^\\pi(s')]",
         "Averaging the current policy \\pi with the optimal policy \\pi*",
         "Taking one gradient ascent step on the policy parameters",
       ],
@@ -520,7 +520,7 @@ const questions: Record<string, Question[]> = {
         "Sutton & Barto §4.2: the greedy policy \\pi' is defined by \\pi'(s) = argmax_a Q^\\pi(s,a). \"Greedy\" means always selecting the action with highest action-value — no randomness, no averaging. The Policy Improvement Theorem then guarantees V^{\\pi'}(s) ≥ V^\\pi(s) for all s.",
       hints: [
         'S&B §4.2: "The process of making a new policy that improves on an original policy by making it greedy with respect to the value function of the original policy is called policy improvement."',
-        "Q^\\pi(s,a) = Σ_{s'} P(s'|s,a)[R(s,a,s') + γV^\\pi(s')] — this requires the model to compute the one-step lookahead.",
+        "Q^\\pi(s,a) = \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV^\\pi(s')] — this requires the model to compute the one-step lookahead.",
       ],
     },
     {
@@ -533,7 +533,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Sutton & Barto §4.2 state and prove this theorem: if \\pi' is the greedy policy w.r.t. Q^\\pi, then V^{\\pi'}(s) ≥ V^\\pi(s) for all s. The proof proceeds by showing Q^\\pi(s, \\pi'(s)) ≥ V^\\pi(s) (greedy selects at least as good an action), then unrolling this inequality over time. Equality holds iff both \\pi and \\pi' are already optimal.",
       hints: [
-        "The key step: V^\\pi(s) ≤ Q^\\pi(s, \\pi'(s)) = E[R + γV^\\pi(S')|s, \\pi'(s)] ≤ E[R + γQ^\\pi(S',\\pi'(S'))|s,\\pi'(s)] ≤ … = V^{\\pi'}(s).",
+        "The key step: V^\\pi(s) ≤ Q^\\pi(s, \\pi'(s)) = E[R + \\gammaV^\\pi(S')|s, \\pi'(s)] ≤ E[R + \\gammaQ^\\pi(S',\\pi'(S'))|s,\\pi'(s)] ≤ … = V^{\\pi'}(s).",
         "Equality throughout means V^\\pi satisfies the Bellman optimality equation, so \\pi is already optimal.",
       ],
     },
@@ -585,12 +585,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Policy iteration is guaranteed to converge to the optimal policy \\pi* in a finite number of iterations for any finite MDP with γ < 1.",
+        "Policy iteration is guaranteed to converge to the optimal policy \\pi* in a finite number of iterations for any finite MDP with \\gamma < 1.",
       correctAnswer: "True",
       explanation:
         "For a finite MDP with |S| states and |A| actions, there are at most |A|^|S| deterministic policies. Each policy iteration step either strictly improves the policy or terminates. Since policies are strictly improving and there are finitely many, the algorithm must terminate — and at termination, \\pi = \\pi*. Sutton & Barto §4.3 establish this result.",
       hints: [
-        "How many distinct deterministic policies exist for |S|=5 states and |A|=3 actions? Answer: 3^5 = 243. Policy iteration visits each at most once.",
+        "How many distinct deterministic policies exist for $|S|=5$ states and $|A|=3$ actions? Answer: $3^5 = 243$. Policy iteration visits each at most once.",
         "Can the same policy appear twice in the sequence? Only if it\'s optimal, which is the termination condition.",
       ],
     },
@@ -610,7 +610,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Policy iteration performs complete policy evaluation (solving the linear system V^\\pi to convergence — potentially many sweeps) before each policy improvement step. Value iteration combines one sweep of evaluation with immediate improvement at each step, avoiding full convergence of V^\\pi. Sutton & Barto §4.4 note that this "truncated" evaluation in value iteration is a key algorithmic insight.',
       hints: [
-        "Policy evaluation itself requires solving a system of |S| linear equations — iteratively, this means many Bellman sweeps per policy iteration step.",
+        "Policy evaluation itself requires solving a system of $|S|$ linear equations — iteratively, this means many Bellman sweeps per policy iteration step.",
         'Value iteration trades "many iterations" for "cheap iterations": one backup instead of solving all the way to V^\\pi.',
       ],
     },
@@ -625,13 +625,13 @@ const questions: Record<string, Question[]> = {
         "Value iteration (Sutton & Barto §4.4) updates V(s) using which operator?",
       options: [
         "The Bellman expectation operator for a fixed policy \\pi",
-        "The Bellman optimality operator: V(s) ← max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV(s')]",
+        "The Bellman optimality operator: V(s) ← max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV(s')]",
         "Monte Carlo returns averaged over many sampled episodes",
         "Gradient descent on the squared TD error",
       ],
       correctAnswer: 1,
       explanation:
-        "Value iteration applies the Bellman optimality operator T* at every sweep: V_{k+1}(s) = max_a Σ_{s'} P(s'|s,a)[R + γV_k(s')]. The max over actions embeds policy improvement directly into the value update — unlike policy evaluation (which uses a fixed \\pi's average). S&B §4.4 note that this \"truncated\" evaluation in value iteration is a key algorithmic insight.",
+        "Value iteration applies the Bellman optimality operator T* at every sweep: V_{k+1}(s) = max_a \\Sigma_{s'} P(s'|s,a)[R + \\gammaV_k(s')]. The max over actions embeds policy improvement directly into the value update — unlike policy evaluation (which uses a fixed \\pi's average). S&B §4.4 note that this \"truncated\" evaluation in value iteration is a key algorithmic insight.",
       hints: [
         "The crucial difference from policy evaluation: max_a replaces \sum_a \\pi(a|s)·[...]. No fixed policy is needed.",
         "T* is the Bellman optimality operator — it has V* as its unique fixed point, just as T^\\pi has V^\\pi as its fixed point.",
@@ -645,10 +645,10 @@ const questions: Record<string, Question[]> = {
         "Value iteration requires maintaining an explicit policy representation \\pi(s) that is updated alongside V(s) at each sweep.",
       correctAnswer: "False",
       explanation:
-        "Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass \\pi*(s) = argmax_a Σ_{s'} P[R + γV*(s')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.",
+        "Value iteration only maintains and updates the value function V(s). The policy is implicit: after convergence to V*, the optimal policy is extracted via a single greedy pass \\pi*(s) = argmax_a \\Sigma_{s'} P[R + \\gammaV*(s')]. No explicit policy array is stored or updated during the iterations themselves. Sutton & Barto §4.4 emphasize this simplification.",
       hints: [
         "What does value iteration\'s update formula look like? It involves V(s) ← max_a [...]. Where does \\pi appear?",
-        "The policy is \"implicitly\" the greedy policy at any point: \\pi_implicit(s) = argmax_a Σ_{s'} P[R + γV(s')].",
+        "The policy is \"implicitly\" the greedy policy at any point: \\pi_implicit(s) = argmax_a \\Sigma_{s'} P[R + \\gammaV(s')].",
       ],
     },
     {
@@ -681,17 +681,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The convergence of dynamic programming methods fundamentally relies on which mathematical property of the Bellman operator?",
       options: [
-        "Convexity of the value function with respect to the discount factor γ",
-        "The Bellman optimality/expectation operator being a γ-contraction in the sup-norm",
+        "Convexity of the value function with respect to the discount factor \\gamma",
+        "The Bellman optimality/expectation operator being a \\gamma-contraction in the sup-norm",
         "The state space being small enough to enumerate exhaustively",
         "Rewards being bounded in the range [−1, +1]",
       ],
       correctAnswer: 1,
       explanation:
-        "Both T^\\pi (expectation) and T* (optimality) are γ-contractions: ‖T^\\pi V − T^\\pi U‖_∞ ≤ γ‖V − U‖_∞ and ‖T* V − T* U‖_∞ ≤ γ‖V − U‖_∞. By the Banach fixed-point theorem, repeated application converges geometrically to the unique fixed point (V^\\pi or V* respectively). The discount factor γ < 1 is what ensures this contraction.",
+        "Both T^\\pi (expectation) and T* (optimality) are \\gamma-contractions: ‖T^\\pi V − T^\\pi U‖_∞ ≤ \\gamma‖V − U‖_∞ and ‖T* V − T* U‖_∞ ≤ \\gamma‖V − U‖_∞. By the Banach fixed-point theorem, repeated application converges geometrically to the unique fixed point (V^\\pi or V* respectively). The discount factor \\gamma < 1 is what ensures this contraction.",
       hints: [
         "The proof that T* is a contraction appears in Puterman\'s book and is referenced by Sutton & Barto. The bound |max_a f(a) − max_a g(a)| ≤ ‖V − U‖_∞ is the key step.",
-        "If γ = 1, the contraction argument breaks. This is why γ < 1 (or guaranteed termination) is required.",
+        "If \\gamma = 1, the contraction argument breaks. This is why \\gamma < 1 (or guaranteed termination) is required.",
       ],
     },
     {
@@ -699,10 +699,10 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Both policy iteration and value iteration are guaranteed to find the exact optimal policy \\pi* for any finite MDP with γ < 1 and known transition model.",
+        "Both policy iteration and value iteration are guaranteed to find the exact optimal policy \\pi* for any finite MDP with \\gamma < 1 and known transition model.",
       correctAnswer: "True",
       explanation:
-        "For finite MDPs with γ < 1 and complete model knowledge, both algorithms converge to V* and \\pi* with probability 1. Sutton & Barto §4.3–4.4 prove this: policy iteration terminates in finitely many steps at \\pi*, and value iteration\'s V_k converges to V* as k → ∞ (from which \\pi* is extracted by greedy).",
+        "For finite MDPs with \\gamma < 1 and complete model knowledge, both algorithms converge to V* and \\pi* with probability 1. Sutton & Barto §4.3–4.4 prove this: policy iteration terminates in finitely many steps at \\pi*, and value iteration\'s V_k converges to V* as k → ∞ (from which \\pi* is extracted by greedy).",
       hints: [
         "These are exact, model-based DP methods. No sampling or approximation is involved.",
         "S&B Chapters 3–4 assume the full model p(s',r|s,a) is known. Later chapters (5–7) address the model-free case.",
@@ -761,8 +761,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Sutton & Barto §4.5 prove that asynchronous DP converges to V* under the condition that all states continue to receive updates. The contraction property of the Bellman operator holds regardless of update order — what matters is that no state\'s value becomes permanently stale. This justifies focusing updates on "important" states.',
       hints: [
-        "The contraction argument: each update to V(s) strictly reduces the error ‖V(s) − V*(s)‖ by a factor involving γ.",
-        "If a state s is never updated, V(s) never converges to V*(s) — hence the requirement that all states are updated infinitely often.",
+        "The contraction argument: each update to V(s) strictly reduces the error ‖V(s) − V*(s)‖ by a factor involving \\gamma.",
+        "If a state $s$ is never updated, $V(s)$ never converges to $V^*(s)$ — hence the requirement that all states are updated infinitely often.",
       ],
     },
     {
@@ -781,7 +781,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Prioritized sweeping (Moore & Atkeson, 1993; described in Sutton & Barto §8.4) maintains a priority queue keyed by |V(s) − T^\\pi V(s)| — the Bellman residual. States with the largest error receive updates first, since they are the states where the current estimate is most inaccurate and where improvement is most valuable. This concentrates computation where it matters most.",
       hints: [
-        "A state with Bellman residual ≈ 0 is already accurate — updating it wastes compute. A state with large residual needs correction urgently.",
+        "A state with Bellman residual $\approx 0$ is already accurate — updating it wastes compute. A state with large residual needs correction urgently.",
         "Prioritized sweeping is especially effective when only a small fraction of states are inaccurate at any given time.",
       ],
     },
@@ -804,7 +804,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'First-visit MC: in each episode, find the first time step t at which S_t = s. Record the return G_t. Average these returns across episodes. Sutton & Barto §5.1: "the first-visit MC method estimates V^\\pi(s) as the average of the returns following first visits to s."',
       hints: [
-        "Within one episode, s may appear multiple times. First-visit MC only records the return from the first occurrence.",
+        "Within one episode, $s$ may appear multiple times. First-visit MC only records the return from the first occurrence.",
         "The averaging is across episodes, not within a single episode.",
       ],
     },
@@ -836,9 +836,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "MC estimates G_t = R_{t+1} + γR_{t+2} + γ²R_{t+3} + … which requires knowing all future rewards — i.e., the episode must end first. This makes MC inapplicable to non-terminating (continuing) tasks. TD methods, by contrast, use bootstrapping (R_{t+1} + γV(S_{t+1})) and can update after every single step. Sutton & Barto §6.1 highlight this as the fundamental advantage of TD over MC.",
+        "MC estimates G_t = R_{t+1} + \\gammaR_{t+2} + \\gamma²R_{t+3} + … which requires knowing all future rewards — i.e., the episode must end first. This makes MC inapplicable to non-terminating (continuing) tasks. TD methods, by contrast, use bootstrapping (R_{t+1} + \\gammaV(S_{t+1})) and can update after every single step. Sutton & Barto §6.1 highlight this as the fundamental advantage of TD over MC.",
       hints: [
-        "If Rₜ = 1 at every step and γ = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.",
+        "If Rₜ = 1 at every step and \\gamma = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.",
         'S&B §6.1: "TD methods can learn before knowing the final outcome. In this sense, TD methods are fully online methods, whereas MC methods wait until the end of an episode."',
       ],
     },
@@ -855,14 +855,14 @@ const questions: Record<string, Question[]> = {
         "Returns estimated by a TD bootstrapping target, not the full return",
         "Returns from every occurrence of a state s within each episode, not just the first",
         "Only returns from episodes where state s appeared exactly once",
-        "Returns sampled only under an ε-greedy exploration policy",
+        "Returns sampled only under an \\epsilon-greedy exploration policy",
       ],
       correctAnswer: 1,
       explanation:
         "Every-visit MC counts and averages the return following every visit to state s, even if s appears multiple times in the same episode. If s occurs 3 times in one episode, all 3 returns are included. First-visit MC only records the return from the first occurrence and ignores subsequent ones.",
       hints: [
         "Both methods average across episodes. The difference is how many returns per episode are included per state.",
-        "If s appears 5 times in an episode, first-visit uses 1 return and every-visit uses 5 returns from that episode.",
+        "If $s$ appears 5 times in an episode, first-visit uses 1 return and every-visit uses 5 returns from that episode.",
       ],
     },
     {
@@ -875,7 +875,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Every-visit MC is biased because returns from later visits to s within the same episode are not independent of the return from the first visit — they are correlated through the shared trajectory up to that point. However, every-visit MC is still consistent: as the number of episodes approaches infinity, the estimate converges to V^\\pi(s). Sutton & Barto §5.1 discuss these properties.",
       hints: [
-        "Independence between different episodes holds for both methods. Within one episode, are the multiple returns from s independent of each other?",
+        "Independence between different episodes holds for both methods. Within one episode, are the multiple returns from $s$ independent of each other?",
         "Biased + consistent means: wrong on average for finite data, but converges to the right answer with enough data.",
       ],
     },
@@ -907,16 +907,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Monte Carlo control (Sutton & Barto §5.3) uses ε-greedy policies because:",
+        "Monte Carlo control (Sutton & Barto §5.3) uses \\epsilon-greedy policies because:",
       options: [
         "Greedy policies are theoretically invalid for Monte Carlo methods",
         "A purely greedy policy may never explore some state-action pairs, leaving Q(s,a) permanently unupdated for those pairs",
-        "ε-greedy policies are always faster to converge than greedy ones in all environments",
+        "\\epsilon-greedy policies are always faster to converge than greedy ones in all environments",
         "Monte Carlo requires a stochastic policy to ensure the return G_t is well-defined",
       ],
       correctAnswer: 1,
       explanation:
-        'For MC control to converge to Q*, every state-action pair (s,a) must be visited infinitely often — otherwise Q(s,a) is never updated from its initialization. A purely greedy policy may avoid suboptimal actions permanently, leaving their Q-values arbitrary. ε-greedy ensures each action is tried with probability ε/|A| in every state. S&B §5.4 call this the "exploring starts" or ε-soft policy requirement.',
+        'For MC control to converge to Q*, every state-action pair (s,a) must be visited infinitely often — otherwise Q(s,a) is never updated from its initialization. A purely greedy policy may avoid suboptimal actions permanently, leaving their Q-values arbitrary. \\epsilon-greedy ensures each action is tried with probability \\epsilon/|A| in every state. S&B §5.4 call this the "exploring starts" or \\epsilon-soft policy requirement.',
       hints: [
         "If action a₂ is never tried in state s, Q(s,a₂) remains at its initial value forever. How can we know a₂ is suboptimal if we never try it?",
         'S&B §5.3: "Maintaining exploration is an issue in Monte Carlo methods. For policy \\pi to be improved on the basis of Q^\\pi, all state-action pairs must be visited."',
@@ -930,10 +930,10 @@ const questions: Record<string, Question[]> = {
         "Monte Carlo control with exploring starts is guaranteed to converge to the optimal policy \\pi* in the limit of infinitely many episodes.",
       correctAnswer: "True",
       explanation:
-        "With exploring starts (every state-action pair has nonzero probability of being the initial (s,a) of each episode), all Q(s,a) are updated infinitely often. Sutton & Barto §5.3 prove that Monte Carlo ES (exploring starts) converges to Q* and \\pi*. Without exploring starts, convergence requires ε → 0 (GLIE policies).",
+        "With exploring starts (every state-action pair has nonzero probability of being the initial (s,a) of each episode), all Q(s,a) are updated infinitely often. Sutton & Barto §5.3 prove that Monte Carlo ES (exploring starts) converges to Q* and \\pi*. Without exploring starts, convergence requires \\epsilon → 0 (GLIE policies).",
       hints: [
         "Exploring starts is a sufficient condition for convergence. It ensures that the MC estimates are averages of infinitely many unbiased samples for every Q(s,a).",
-        "Compare: ε-greedy with fixed ε > 0 converges to the best ε-soft policy, not \\pi*, because it permanently wastes probability on suboptimal actions.",
+        "Compare: \\epsilon-greedy with fixed \\epsilon > 0 converges to the best \\epsilon-soft policy, not \\pi*, because it permanently wastes probability on suboptimal actions.",
       ],
     },
     {
@@ -943,17 +943,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Off-policy Monte Carlo control uses importance sampling to evaluate the target policy \\pi from data generated by the behavior policy b. The per-step importance sampling ratio is:",
       options: [
-        "ρ_t = b(Aₜ|Sₜ) / \\pi(Aₜ|Sₜ)",
-        "ρ_t = \\pi(Aₜ|Sₜ) / b(Aₜ|Sₜ)",
-        "ρ_t = P(Sₜ₊₁|Sₜ,Aₜ) / P(Sₜ₊₁|Sₜ,Aₜ) = 1",
-        "ρ_t = \\pi(Aₜ|Sₜ) · b(Aₜ|Sₜ)",
+        "\\rho_t = b(Aₜ|Sₜ) / \\pi(Aₜ|Sₜ)",
+        "\\rho_t = \\pi(Aₜ|Sₜ) / b(Aₜ|Sₜ)",
+        "\\rho_t = P(Sₜ₊₁|Sₜ,Aₜ) / P(Sₜ₊₁|Sₜ,Aₜ) = 1",
+        "\\rho_t = \\pi(Aₜ|Sₜ) · b(Aₜ|Sₜ)",
       ],
       correctAnswer: 1,
       explanation:
-        "Sutton & Barto §5.5: the importance sampling ratio for a trajectory segment is ρ_{t:T-1} = Π_{k=t}^{T-1} \\pi(Aₖ|Sₖ)/b(Aₖ|Sₖ). The per-step ratio is \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ). This corrects for the fact that action Aₜ was sampled from b, not \\pi — actions more likely under \\pi than b get upweighted; actions less likely under \\pi get downweighted. Note: the transition probabilities P(s'|s,a) cancel in the full trajectory ratio.",
+        "Sutton & Barto §5.5: the importance sampling ratio for a trajectory segment is \\rho_{t:T-1} = \\Pi_{k=t}^{T-1} \\pi(Aₖ|Sₖ)/b(Aₖ|Sₖ). The per-step ratio is \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ). This corrects for the fact that action Aₜ was sampled from b, not \\pi — actions more likely under \\pi than b get upweighted; actions less likely under \\pi get downweighted. Note: the transition probabilities P(s'|s,a) cancel in the full trajectory ratio.",
       hints: [
         "We want E_\\pi[G_t] but we sample trajectories under b. The IS ratio is \\pi/b (target over behavior), not b/\\pi.",
-        "If \\pi(a|s) = b(a|s) for all a,s, then ρ = 1 everywhere — no correction needed (on-policy). This is the boundary case.",
+        "If \\pi(a|s) = b(a|s) for all a,s, then \\rho = 1 everywhere — no correction needed (on-policy). This is the boundary case.",
       ],
     },
   ],
@@ -968,13 +968,13 @@ const questions: Record<string, Question[]> = {
         "States should be sampled in proportion to their frequency under the optimal policy",
         "Returns are collected under behavior policy b but must be used to estimate values under target policy \\pi — and these policies induce different return distributions",
         "The behavior policy must always be the greedy policy to satisfy the Bellman equation",
-        "The discount factor γ must be adjusted when switching between policies",
+        "The discount factor \\gamma must be adjusted when switching between policies",
       ],
       correctAnswer: 1,
       explanation:
-        'Sutton & Barto §5.5: "Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values under one distribution given samples from another." Returns generated by b are biased estimates of E_\\pi[G_t]: b may select different actions with different probabilities than \\pi, changing the distribution of trajectories. IS reweights each return by ρ = Π \\pi(a)/b(a) along the trajectory to account for this.',
+        'Sutton & Barto §5.5: "Almost all off-policy methods utilize importance sampling, a general technique for estimating expected values under one distribution given samples from another." Returns generated by b are biased estimates of E_\\pi[G_t]: b may select different actions with different probabilities than \\pi, changing the distribution of trajectories. IS reweights each return by \\rho = \\Pi \\pi(a)/b(a) along the trajectory to account for this.',
       hints: [
-        "E_\\pi[G] = E_b[ρ·G] where ρ = Π \\pi(a)/b(a). This identity is the foundation of off-policy MC.",
+        "E_\\pi[G] = E_b[\\rho·G] where \\rho = \\Pi \\pi(a)/b(a). This identity is the foundation of off-policy MC.",
         "If you use returns from b to estimate E_\\pi[G] directly (without IS), you get a biased estimate proportional to E_b[G], not E_\\pi[G].",
       ],
     },
@@ -986,9 +986,9 @@ const questions: Record<string, Question[]> = {
         "Ordinary importance sampling provides an unbiased estimate of V^\\pi(s) but can have infinite variance, while weighted importance sampling is biased but has finite variance and is strongly consistent.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (Σ ρ_i G_i) / n is unbiased (E[V̂] = V^\\pi(s)) but its variance can be infinite if ρ_i is heavy-tailed. Weighted IS normalizes by Σ ρ_i: V̂_w(s) = Σ ρ_i G_i / Σ ρ_i — this is biased (E[V̂_w] \$\\neq\$ V^\\pi(s) for finite n) but consistent (converges to V^\\pi(s)) and has dramatically lower variance.",
+        "Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (\\Sigma \\rho_i G_i) / n is unbiased (E[V̂] = V^\\pi(s)) but its variance can be infinite if \\rho_i is heavy-tailed. Weighted IS normalizes by \\Sigma \\rho_i: V̂_w(s) = \\Sigma \\rho_i G_i / \\Sigma \\rho_i — this is biased (E[V̂_w] \$\\neq\$ V^\\pi(s) for finite n) but consistent (converges to V^\\pi(s)) and has dramatically lower variance.",
       hints: [
-        "Ordinary IS: ρ can be very large when b(a|s) is small but \\pi(a|s) is large. The product of T such ratios can be enormous.",
+        "Ordinary IS: \\rho can be very large when b(a|s) is small but \\pi(a|s) is large. The product of T such ratios can be enormous.",
         'S&B §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred over ordinary importance sampling."',
       ],
     },
@@ -997,18 +997,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "For a trajectory of length T, the importance sampling ratio ρ = Π_{t=0}^{T-1} \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ). Suppose \\pi is greedy and b is ε-greedy with ε = 0.1 and |A| = 4. For T = 20 steps, if \\pi and b always agree on the chosen action, what is ρ approximately?",
+        "For a trajectory of length T, the importance sampling ratio \\rho = \\Pi_{t=0}^{T-1} \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ). Suppose \\pi is greedy and b is \\epsilon-greedy with \\epsilon = 0.1 and |A| = 4. For T = 20 steps, if \\pi and b always agree on the chosen action, what is \\rho approximately?",
       options: [
-        "1.0 — they always agree, so ρ = 1",
-        "(1/(1−ε/|A|))^T = (1/0.975)^20 ≈ 1.66",
-        "0 — the greedy policy never matches the ε-greedy policy exactly",
-        "(ε/|A|)^T ≈ (0.025)^20, essentially 0",
+        "1.0 — they always agree, so \\rho = 1",
+        "(1/(1−\\epsilon/|A|))^T = (1/0.975)^20 ≈ 1.66",
+        "0 — the greedy policy never matches the \\epsilon-greedy policy exactly",
+        "(\\epsilon/|A|)^T ≈ (0.025)^20, essentially 0",
       ],
       correctAnswer: 1,
       explanation:
-        'When both policies choose the same action a* at time t, \\pi assigns probability 1 (greedy) while b assigns probability 1−ε+ε/|A| = 1−0.1+0.025 = 0.925 (ε-greedy). The per-step ratio is 1/0.925 ≈ 1.081. Over T=20 steps: ρ ≈ 1.081^20 ≈ 4.84. (The option "1/0.975^20" uses a slightly different approximation but the correct mechanism is the same — ρ grows exponentially.) This illustrates how ρ can grow exponentially with trajectory length even when the policies mostly agree.',
+        'When both policies choose the same action a* at time t, \\pi assigns probability 1 (greedy) while b assigns probability 1−\\epsilon+\\epsilon/|A| = 1−0.1+0.025 = 0.925 (\\epsilon-greedy). The per-step ratio is 1/0.925 ≈ 1.081. Over T=20 steps: \\rho ≈ 1.081^20 ≈ 4.84. (The option "1/0.975^20" uses a slightly different approximation but the correct mechanism is the same — \\rho grows exponentially.) This illustrates how \\rho can grow exponentially with trajectory length even when the policies mostly agree.',
       hints: [
-        "ε-greedy with ε=0.1 and |A|=4: probability of the greedy action = 1 − 0.1 + 0.1/4 = 0.925. The IS ratio per step = 1/0.925 ≈ 1.081.",
+        "\\epsilon-greedy with \\epsilon=0.1 and |A|=4: probability of the greedy action = 1 − 0.1 + 0.1/4 = 0.925. The IS ratio per step = 1/0.925 ≈ 1.081.",
         "Products of numbers > 1 grow exponentially; products of numbers < 1 shrink exponentially. Both pathologies make long-horizon off-policy MC unstable.",
       ],
     },
@@ -1022,17 +1022,17 @@ const questions: Record<string, Question[]> = {
       question:
         "TD(0) updates V(Sₜ) after observing one transition (Sₜ, Aₜ, Rₜ₊₁, Sₜ₊₁). The update rule is:",
       options: [
-        "V(Sₜ) ← V(Sₜ) + α [G_t − V(Sₜ)]  where G_t is the full Monte Carlo return",
-        "V(Sₜ) ← V(Sₜ) + α [Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ)]",
-        "V(Sₜ) ← max_a Σ_{s'} P(s'|s,a)[R + γV(s')]",
-        "V(Sₜ) ← (1/n) Σᵢ Gᵢ   averaged over all past episodes",
+        "V(Sₜ) ← V(Sₜ) + \\alpha [G_t − V(Sₜ)]  where G_t is the full Monte Carlo return",
+        "V(Sₜ) ← V(Sₜ) + \\alpha [Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ)]",
+        "V(Sₜ) ← max_a \\Sigma_{s'} P(s'|s,a)[R + \\gammaV(s')]",
+        "V(Sₜ) ← (1/n) \\Sigmaᵢ Gᵢ   averaged over all past episodes",
       ],
       correctAnswer: 1,
       explanation:
-        'TD(0) (Sutton & Barto §6.1): V(Sₜ) ← V(Sₜ) + α[Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ)]. The target is Rₜ₊₁ + γV(Sₜ₊₁) — the "TD target." The error δₜ = Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ) is the "TD error." Unlike MC which waits for G_t, TD(0) bootstraps by using the current estimate V(Sₜ₊₁) instead of the true future return.',
+        'TD(0) (Sutton & Barto §6.1): V(Sₜ) ← V(Sₜ) + \\alpha[Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ)]. The target is Rₜ₊₁ + \\gammaV(Sₜ₊₁) — the "TD target." The error \\deltaₜ = Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ) is the "TD error." Unlike MC which waits for G_t, TD(0) bootstraps by using the current estimate V(Sₜ₊₁) instead of the true future return.',
       hints: [
         'S&B §6.1: "TD methods update their estimates based in part on other learned estimates, without waiting for a final outcome. This is a form of bootstrapping."',
-        "The α is the learning rate (step size); δₜ = Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ) is the TD error.",
+        "The \\alpha is the learning rate (step size); \\deltaₜ = Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ) is the TD error.",
       ],
     },
     {
@@ -1045,7 +1045,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'TD(0) requires only (Sₜ, Rₜ₊₁, Sₜ₊₁) to update — one transition. It does not need a complete episode. This makes TD(0) applicable to continuing tasks that never terminate, unlike Monte Carlo which requires complete episodes to compute G_t. Sutton & Barto §6.1 call TD learning "one of the most fundamental and novel ideas in reinforcement learning" partly for this reason.',
       hints: [
-        "What information does the TD update V(Sₜ) ← V(Sₜ) + α[Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ)] require? Just Rₜ₊₁ and Sₜ₊₁ — available immediately after the next step.",
+        "What information does the TD update V(Sₜ) ← V(Sₜ) + \\alpha[Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ)] require? Just Rₜ₊₁ and Sₜ₊₁ — available immediately after the next step.",
         "A continuing task like controlling a robot indefinitely never reaches a terminal state. MC is inapplicable; TD is not.",
       ],
     },
@@ -1054,7 +1054,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "An agent observes: S₀ = s, R₁ = 2, S₁ = s'. Currently V(s) = 10 and V(s') = 8, with γ = 0.9 and α = 0.1. After one TD(0) update, what is the new V(s)?",
+        "An agent observes: S₀ = s, R₁ = 2, S₁ = s'. Currently V(s) = 10 and V(s') = 8, with \\gamma = 0.9 and \\alpha = 0.1. After one TD(0) update, what is the new V(s)?",
       options: [
         "10 + 0.1·(2 + 0.9·8 − 10) = 10 + 0.1·(9.2 − 10) = 10 − 0.08 = 9.92",
         "10 + 0.1·(2 + 8 − 10) = 10 + 0 = 10",
@@ -1063,10 +1063,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "TD target = R₁ + γV(S₁) = 2 + 0.9×8 = 2 + 7.2 = 9.2. TD error δ = 9.2 − 10 = −0.8. Update: V(s) ← 10 + 0.1×(−0.8) = 10 − 0.08 = 9.92. The negative TD error tells us: V(s) was too high relative to the bootstrapped estimate. We decrease V(s) slightly.",
+        "TD target = R₁ + \\gammaV(S₁) = 2 + 0.9×8 = 2 + 7.2 = 9.2. TD error \\delta = 9.2 − 10 = −0.8. Update: V(s) ← 10 + 0.1×(−0.8) = 10 − 0.08 = 9.92. The negative TD error tells us: V(s) was too high relative to the bootstrapped estimate. We decrease V(s) slightly.",
       hints: [
-        "TD error = target − current = (R + γV(s')) − V(s) = 9.2 − 10 = −0.8.",
-        "Update V(s) ← V(s) + α·δ = 10 + 0.1×(−0.8) = 9.92. A negative TD error means our current estimate was too optimistic.",
+        "TD error = target − current = (R + \\gammaV(s')) − V(s) = 9.2 − 10 = −0.8.",
+        "Update V(s) ← V(s) + \\alpha·\\delta = 10 + 0.1×(−0.8) = 9.92. A negative TD error means our current estimate was too optimistic.",
       ],
     },
   ],
@@ -1086,7 +1086,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "SARSA update: Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γQ(Sₜ₊₁,Aₜ₊₁) − Q(Sₜ,Aₜ)]. The five elements (Sₜ, Aₜ, Rₜ₊₁, Sₜ₊₁, Aₜ₊₁) give SARSA its name. Crucially, Aₜ₊₁ is the action actually selected by the policy in Sₜ₊₁ — making it on-policy.",
+        "SARSA update: Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + \\alpha[Rₜ₊₁ + \\gammaQ(Sₜ₊₁,Aₜ₊₁) − Q(Sₜ,Aₜ)]. The five elements (Sₜ, Aₜ, Rₜ₊₁, Sₜ₊₁, Aₜ₊₁) give SARSA its name. Crucially, Aₜ₊₁ is the action actually selected by the policy in Sₜ₊₁ — making it on-policy.",
       hints: [
         'S&B §6.4: "This update is done after every transition from a nonterminal state Sₜ. If Sₜ₊₁ is terminal, then Q(Sₜ₊₁,Aₜ₊₁) is defined as zero."',
         "Each letter abbreviates one element: S=State, A=Action, R=Reward, S=next State, A=next Action.",
@@ -1097,7 +1097,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "SARSA is on-policy because it updates Q(s,a) using the action Aₜ₊₁ actually selected by the current behavior policy (e.g., ε-greedy), not the greedy maximizing action.",
+        "SARSA is on-policy because it updates Q(s,a) using the action Aₜ₊₁ actually selected by the current behavior policy (e.g., \\epsilon-greedy), not the greedy maximizing action.",
       correctAnswer: "True",
       explanation:
         "Sutton & Barto §6.4: SARSA is on-policy because the Q-values it learns correspond to the behavior policy being followed — including its exploration actions. The target Q(Sₜ₊₁, Aₜ₊₁) uses the actual next action. In contrast, Q-learning is off-policy: its target max_a Q(Sₜ₊₁, a) uses the greedy action — regardless of which action the behavior policy actually takes.",
@@ -1111,16 +1111,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'In the "cliff walking" example (Sutton & Barto §6.5), SARSA with ε-greedy converges to a longer but safer path along the top, while Q-learning converges to the shortest path near the cliff. The reason SARSA avoids the cliff edge is:',
+        'In the "cliff walking" example (Sutton & Barto §6.5), SARSA with \\epsilon-greedy converges to a longer but safer path along the top, while Q-learning converges to the shortest path near the cliff. The reason SARSA avoids the cliff edge is:',
       options: [
         "SARSA uses a smaller learning rate by default than Q-learning",
-        "SARSA\'s target Q(Sₜ₊₁, Aₜ₊₁) accounts for ε-greedy exploration — near the cliff, a random action falls off and incurs −100, so SARSA learns the true ε-greedy policy cost",
+        "SARSA\'s target Q(Sₜ₊₁, Aₜ₊₁) accounts for \\epsilon-greedy exploration — near the cliff, a random action falls off and incurs −100, so SARSA learns the true \\epsilon-greedy policy cost",
         "Q-learning uses a different discount factor that makes the cliff penalty negligible",
         "SARSA uses importance sampling to avoid dangerous actions",
       ],
       correctAnswer: 1,
       explanation:
-        'S&B §6.5: SARSA learns the value of the ε-greedy policy being followed, which includes the occasional random action. Near the cliff, a random action can fall off (reward −100). SARSA correctly estimates that being near the cliff is costly under ε-greedy. Q-learning learns the optimal greedy policy value — near the cliff is fine if greedy never falls — but incurs cliff penalties during training. SARSA\'s safer path is "online performance" optimal for the ε-greedy policy.',
+        'S&B §6.5: SARSA learns the value of the \\epsilon-greedy policy being followed, which includes the occasional random action. Near the cliff, a random action can fall off (reward −100). SARSA correctly estimates that being near the cliff is costly under \\epsilon-greedy. Q-learning learns the optimal greedy policy value — near the cliff is fine if greedy never falls — but incurs cliff penalties during training. SARSA\'s safer path is "online performance" optimal for the \\epsilon-greedy policy.',
       hints: [
         "SARSA includes the random action risk in its Q-value estimates. Q-learning assumes optimal (greedy) behavior in its estimates.",
         'S&B §6.5: "Sarsa is an on-policy TD control method because it uses the action that is actually chosen by the behavior policy."',
@@ -1143,10 +1143,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Q-learning update: Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ max_a Q(Sₜ₊₁,a) − Q(Sₜ,Aₜ)]. The target uses max_a Q(Sₜ₊₁,a) — the greedy action — not the action Aₜ₊₁ selected by the behavior policy. This makes Q-learning off-policy: it learns about the greedy policy \\pi* while behaving under ε-greedy. S&B §6.5: "Q-learning directly approximates q*, the optimal action-value function."',
+        'Q-learning update: Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + \\alpha[Rₜ₊₁ + \\gamma max_a Q(Sₜ₊₁,a) − Q(Sₜ,Aₜ)]. The target uses max_a Q(Sₜ₊₁,a) — the greedy action — not the action Aₜ₊₁ selected by the behavior policy. This makes Q-learning off-policy: it learns about the greedy policy \\pi* while behaving under \\epsilon-greedy. S&B §6.5: "Q-learning directly approximates q*, the optimal action-value function."',
       hints: [
         "Compare with SARSA\'s target: Q(Sₜ₊₁, Aₜ₊₁) — actual next action. Q-learning uses max_a Q(Sₜ₊₁, a) — best possible next action.",
-        "Off-policy means the policy being evaluated (greedy/optimal) differs from the policy generating data (ε-greedy).",
+        "Off-policy means the policy being evaluated (greedy/optimal) differs from the policy generating data (\\epsilon-greedy).",
       ],
     },
     {
@@ -1154,13 +1154,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Tabular Q-learning converges to Q* with probability 1, given that all state-action pairs are visited infinitely often and step sizes satisfy the Robbins-Monro conditions (Σ αₜ = ∞ and Σ αₜ² < ∞).",
+        "Tabular Q-learning converges to Q* with probability 1, given that all state-action pairs are visited infinitely often and step sizes satisfy the Robbins-Monro conditions (\\Sigma \\alphaₜ = ∞ and \\Sigma \\alphaₜ² < ∞).",
       correctAnswer: "True",
       explanation:
-        "Watkins and Dayan (1992) proved this convergence result for tabular Q-learning. The Robbins-Monro conditions (standard conditions from stochastic approximation theory) ensure step sizes decrease at the right rate: large enough to overcome noise (Σ α = ∞) but small enough to converge (Σ α² < ∞). Sutton & Barto §6.5 state this result directly.",
+        "Watkins and Dayan (1992) proved this convergence result for tabular Q-learning. The Robbins-Monro conditions (standard conditions from stochastic approximation theory) ensure step sizes decrease at the right rate: large enough to overcome noise (\\Sigma \\alpha = ∞) but small enough to converge (\\Sigma \\alpha² < ∞). Sutton & Barto §6.5 state this result directly.",
       hints: [
-        "A common schedule satisfying Robbins-Monro: αₜ = 1/t. Check: Σ 1/t diverges (harmonic series), Σ 1/t² converges (p-series with p>1).",
-        'Without the Σ αₜ = ∞ condition, step sizes go to zero too fast and the algorithm "freezes" before converging. Without Σ αₜ² < ∞, they don\'t go to zero and the algorithm oscillates.',
+        "A common schedule satisfying Robbins-Monro: \\alphaₜ = 1/t. Check: \\Sigma 1/t diverges (harmonic series), \\Sigma 1/t² converges (p-series with p>1).",
+        'Without the \\Sigma \\alphaₜ = ∞ condition, step sizes go to zero too fast and the algorithm "freezes" before converging. Without \\Sigma \\alphaₜ² < ∞, they don\'t go to zero and the algorithm oscillates.',
       ],
     },
     {
@@ -1168,12 +1168,12 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Q-learning\'s maximization bias occurs because max_a Q̂(s,a) is a biased upward estimator of max_a Q*(s,a) when Q̂ has estimation noise. A concrete example: if all true Q-values are Q*(s,a) = 0 for all a, but Q̂(s,a) has i.i.d. noise N(0,σ²), then E[max_a Q̂(s,a)] is:",
+        "Q-learning\'s maximization bias occurs because max_a Q̂(s,a) is a biased upward estimator of max_a Q*(s,a) when Q̂ has estimation noise. A concrete example: if all true Q-values are Q*(s,a) = 0 for all a, but Q̂(s,a) has i.i.d. noise N(0,\\sigma²), then E[max_a Q̂(s,a)] is:",
       options: [
         "= 0 (no bias, because Q̂ is an unbiased estimator of Q*)",
         "> 0 (upward bias, because the maximum of noisy unbiased estimates exceeds the true maximum)",
         "< 0 (downward bias, because Q-learning underestimates in stochastic environments)",
-        "= σ² (bias equals the noise variance)",
+        "= \\sigma² (bias equals the noise variance)",
       ],
       correctAnswer: 1,
       explanation:
@@ -1191,19 +1191,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Sutton & Barto (§3.3) define the discounted return as Gₜ = Rₜ₊₁ + γRₜ₊₂ + γ²Rₜ₊₃ + … = Σ_{k=0}^∞ γ^k Rₜ₊ₖ₊₁. What is the role of the discount factor γ ∈ [0, 1)?",
+        "Sutton & Barto (§3.3) define the discounted return as Gₜ = Rₜ₊₁ + \\gammaRₜ₊₂ + \\gamma²Rₜ₊₃ + … = \\Sigma_{k=0}^∞ \\gamma^k Rₜ₊ₖ₊₁. What is the role of the discount factor \\gamma ∈ [0, 1)?",
       options: [
-        "γ controls the learning rate of the value function update",
-        "γ weights future rewards so that rewards received k steps in the future are worth γ^k times an immediate reward — making the agent prefer sooner rewards when γ < 1",
-        "γ normalizes the reward signal to lie in [0, 1]",
-        "γ determines the probability of the episode terminating at each step",
+        "\\gamma controls the learning rate of the value function update",
+        "\\gamma weights future rewards so that rewards received k steps in the future are worth \\gamma^k times an immediate reward — making the agent prefer sooner rewards when \\gamma < 1",
+        "\\gamma normalizes the reward signal to lie in [0, 1]",
+        "\\gamma determines the probability of the episode terminating at each step",
       ],
       correctAnswer: 1,
       explanation:
-        "The discount factor γ ∈ [0,1) controls how much the agent values future rewards relative to immediate ones. A reward k steps away contributes γ^k × R to the return. When γ = 0, the agent is myopic (only immediate reward matters). When γ → 1, the agent values all future rewards nearly equally. S&B §3.3 also note that γ < 1 guarantees the infinite sum converges whenever rewards are bounded: |Gₜ| ≤ R_max/(1−γ).",
+        "The discount factor \\gamma ∈ [0,1) controls how much the agent values future rewards relative to immediate ones. A reward k steps away contributes \\gamma^k × R to the return. When \\gamma = 0, the agent is myopic (only immediate reward matters). When \\gamma → 1, the agent values all future rewards nearly equally. S&B §3.3 also note that \\gamma < 1 guarantees the infinite sum converges whenever rewards are bounded: |Gₜ| ≤ R_max/(1−\\gamma).",
       hints: [
-        'Think of γ as a "patience" parameter: γ close to 1 = patient; γ close to 0 = impatient.',
-        'S&B §3.3: "The discount rate determines the present value of future rewards: a reward received k time steps in the future is worth only γ^{k-1} times what it would be worth if it were received immediately."',
+        'Think of \\gamma as a "patience" parameter: \\gamma close to 1 = patient; \\gamma close to 0 = impatient.',
+        'S&B §3.3: "The discount rate determines the present value of future rewards: a reward received k time steps in the future is worth only \\gamma^{k-1} times what it would be worth if it were received immediately."',
       ],
     },
     {
@@ -1211,13 +1211,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Setting γ = 1 is valid and produces a well-defined (finite) expected return in all continuing (non-terminating) MDPs, as long as rewards are bounded.",
+        "Setting \\gamma = 1 is valid and produces a well-defined (finite) expected return in all continuing (non-terminating) MDPs, as long as rewards are bounded.",
       correctAnswer: "False",
       explanation:
-        "With γ = 1 and a non-terminating task, Gₜ = Σ_{k=0}^∞ Rₜ₊ₖ₊₁ is an infinite sum that diverges unless rewards eventually reach zero — which they generally do not. Sutton & Barto §3.3 restrict γ < 1 for continuing tasks precisely to guarantee convergence: |Gₜ| ≤ R_max/(1−γ). γ = 1 is only valid for episodic tasks where the sum terminates at the end of the episode.",
+        "With \\gamma = 1 and a non-terminating task, Gₜ = \\Sigma_{k=0}^∞ Rₜ₊ₖ₊₁ is an infinite sum that diverges unless rewards eventually reach zero — which they generally do not. Sutton & Barto §3.3 restrict \\gamma < 1 for continuing tasks precisely to guarantee convergence: |Gₜ| ≤ R_max/(1−\\gamma). \\gamma = 1 is only valid for episodic tasks where the sum terminates at the end of the episode.",
       hints: [
-        "If Rₜ = 1 at every step and γ = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.",
-        'S&B §3.3 explicitly state: "If γ < 1, the infinite sum [converges] as long as the reward sequence {Rₖ} is bounded."',
+        "If Rₜ = 1 at every step and \\gamma = 1: Gₜ = 1 + 1 + 1 + … = ∞. The return is not defined.",
+        'S&B §3.3 explicitly state: "If \\gamma < 1, the infinite sum [converges] as long as the reward sequence {Rₖ} is bounded."',
       ],
     },
     {
@@ -1225,7 +1225,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "An agent in a continuing task receives a constant reward of R = 1 per step and uses γ = 0.95. Starting from any state s, what is the maximum possible discounted return Gₜ?",
+        "An agent in a continuing task receives a constant reward of R = 1 per step and uses \\gamma = 0.95. Starting from any state s, what is the maximum possible discounted return Gₜ?",
       options: [
         "∞ — the sum of an infinite geometric series diverges",
         "1/(1−0.95) = 20 — the geometric series sum for constant reward",
@@ -1234,9 +1234,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "For constant reward R = 1 at every step: Gₜ = Σ_{k=0}^∞ γ^k · 1 = 1/(1−γ) = 1/(1−0.95) = 1/0.05 = 20. This is the geometric series formula. It confirms that γ < 1 bounds the return: no matter how long the agent runs, Gₜ ≤ R_max/(1−γ). With γ = 0.95 and R_max = 1, the upper bound is 20.",
+        "For constant reward R = 1 at every step: Gₜ = \\Sigma_{k=0}^∞ \\gamma^k · 1 = 1/(1−\\gamma) = 1/(1−0.95) = 1/0.05 = 20. This is the geometric series formula. It confirms that \\gamma < 1 bounds the return: no matter how long the agent runs, Gₜ ≤ R_max/(1−\\gamma). With \\gamma = 0.95 and R_max = 1, the upper bound is 20.",
       hints: [
-        "Geometric series: Σ_{k=0}^∞ γ^k = 1/(1−γ) for |γ| < 1.",
+        "Geometric series: \\Sigma_{k=0}^∞ \\gamma^k = 1/(1−\\gamma) for |\\gamma| < 1.",
         "This formula directly gives the worst-case return bound that DP convergence proofs rely on.",
       ],
     },
@@ -1250,14 +1250,14 @@ const questions: Record<string, Question[]> = {
       question:
         "The Bellman optimality equation for V* (Sutton & Barto §3.6) is:",
       options: [
-        "V*(s) = \sum_a \\pi*(a|s) Σ_{s'} P(s'|s,a)[R(s,a,s') + γV*(s')]",
-        "V*(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV*(s')]",
-        "V*(s) = max_a R(s,a) + γ max_{s'} V*(s')",
+        "V*(s) = \sum_a \\pi*(a|s) \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV*(s')]",
+        "V*(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV*(s')]",
+        "V*(s) = max_a R(s,a) + \\gamma max_{s'} V*(s')",
         "V*(s) = max_{\\pi} V^\\pi(s) summed over all states",
       ],
       correctAnswer: 1,
       explanation:
-        "Sutton & Barto §3.6: V*(s) = max_a Σ_{s',r} p(s',r|s,a)[r + γV*(s')]. The key difference from the Bellman expectation equation for V^\\pi is the max over actions instead of a weighted sum over the policy \\pi. This expresses: the optimal value of state s is the value of the best action available, averaging over next states weighted by transition probabilities.",
+        "Sutton & Barto §3.6: V*(s) = max_a \\Sigma_{s',r} p(s',r|s,a)[r + \\gammaV*(s')]. The key difference from the Bellman expectation equation for V^\\pi is the max over actions instead of a weighted sum over the policy \\pi. This expresses: the optimal value of state s is the value of the best action available, averaging over next states weighted by transition probabilities.",
       hints: [
         "Bellman expectation: uses \sum_a \\pi(a|s)[...] — weighted average over the policy. Bellman optimality: uses max_a[...] — the best case.",
         'S&B §3.6: "Because \\pi* is greedy with respect to V*, V* must satisfy the Bellman optimality equation."',
@@ -1271,7 +1271,7 @@ const questions: Record<string, Question[]> = {
         "The Bellman optimality equation V*(s) = max_a Q*(s,a) is a system of nonlinear equations (because of the max operation), so it cannot in general be solved by simple matrix inversion unlike the Bellman expectation equation.",
       correctAnswer: "True",
       explanation:
-        "The Bellman expectation equation for V^\\pi is a linear system: V^\\pi = R^\\pi + γP^\\piV^\\pi, solvable as V^\\pi = (I − γP^\\pi)^{-1}R^\\pi. The Bellman optimality equation V*(s) = max_a[...] is nonlinear due to the max operator. This expresses the fundamental difference between the two equations: one linear, one nonlinear. The linear system has a closed-form matrix solution; the nonlinear system typically requires iterative methods.",
+        "The Bellman expectation equation for V^\\pi is a linear system: V^\\pi = R^\\pi + \\gammaP^\\piV^\\pi, solvable as V^\\pi = (I − \\gammaP^\\pi)^{-1}R^\\pi. The Bellman optimality equation V*(s) = max_a[...] is nonlinear due to the max operator. This expresses the fundamental difference between the two equations: one linear, one nonlinear. The linear system has a closed-form matrix solution; the nonlinear system typically requires iterative methods.",
       hints: [
         "Linear system: V = AV + b → V = (I−A)^{-1}b. Nonlinear system: V = max_a f(V, a) — no closed form in general.",
         "Value iteration iteratively applies the nonlinear Bellman optimality operator until convergence.",
@@ -1282,18 +1282,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The Bellman optimality equation for Q* is: Q*(s,a) = Σ_{s'} P(s'|s,a)[R(s,a,s') + γ max_{a'} Q*(s',a')]. How does this relate to the Q-learning update rule Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + α[Rₜ₊₁ + γ max_{a'} Q(Sₜ₊₁,a') − Q(Sₜ,Aₜ)]?",
+        "The Bellman optimality equation for Q* is: Q*(s,a) = \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gamma max_{a'} Q*(s',a')]. How does this relate to the Q-learning update rule Q(Sₜ,Aₜ) ← Q(Sₜ,Aₜ) + \\alpha[Rₜ₊₁ + \\gamma max_{a'} Q(Sₜ₊₁,a') − Q(Sₜ,Aₜ)]?",
       options: [
         "Q-learning solves a different equation — it minimizes temporal-difference error, which is unrelated to Bellman optimality",
-        "The Q-learning update moves Q(Sₜ,Aₜ) toward the sampled Bellman optimality target Rₜ₊₁ + γ max_{a'} Q(Sₜ₊₁,a'), implementing stochastic approximation of the Bellman optimality equation",
+        "The Q-learning update moves Q(Sₜ,Aₜ) toward the sampled Bellman optimality target Rₜ₊₁ + \\gamma max_{a'} Q(Sₜ₊₁,a'), implementing stochastic approximation of the Bellman optimality equation",
         "Q-learning solves the Bellman expectation equation (for \\pi*), not the Bellman optimality equation",
         "The connection is only approximate; Q-learning converges to a different fixed point than Q*",
       ],
       correctAnswer: 1,
       explanation:
-        "Q-learning is a stochastic approximation method for solving the Bellman optimality equation for Q*. At each step, the sample Rₜ₊₁ + γ max_{a'} Q(Sₜ₊₁,a') is an unbiased estimate of the Bellman optimality target Σ_{s'} P(s'|s,a)[R + γ max_{a'} Q*(s',a')]. The update moves Q(Sₜ,Aₜ) toward this target with step size α. Watkins & Dayan (1992) proved that under Robbins-Monro conditions, Q → Q*, the unique solution of the Bellman optimality equation.",
+        "Q-learning is a stochastic approximation method for solving the Bellman optimality equation for Q*. At each step, the sample Rₜ₊₁ + \\gamma max_{a'} Q(Sₜ₊₁,a') is an unbiased estimate of the Bellman optimality target \\Sigma_{s'} P(s'|s,a)[R + \\gamma max_{a'} Q*(s',a')]. The update moves Q(Sₜ,Aₜ) toward this target with step size \\alpha. Watkins & Dayan (1992) proved that under Robbins-Monro conditions, Q → Q*, the unique solution of the Bellman optimality equation.",
       hints: [
-        "Stochastic approximation: replace the expectation E_s'[...] with a single sample (Rₜ₊₁, Sₜ₊₁). The step size α controls how much weight the new sample gets.",
+        "Stochastic approximation: replace the expectation E_s'[...] with a single sample (Rₜ₊₁, Sₜ₊₁). The step size \\alpha controls how much weight the new sample gets.",
         'The "fixed point" of the Q-learning iteration (when the update is zero on average) is exactly the Bellman optimality equation.',
       ],
     },
@@ -1339,16 +1339,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Consider a finite MDP with |S| = 100 states, |A| = 5 actions, and γ = 0.99. Why does the existence theorem (existence of \\pi*) require finite |S| and |A| — and what breaks for infinite state or action spaces?",
+        "Consider a finite MDP with |S| = 100 states, |A| = 5 actions, and \\gamma = 0.99. Why does the existence theorem (existence of \\pi*) require finite |S| and |A| — and what breaks for infinite state or action spaces?",
       options: [
         "Infinite spaces require probability measures that violate the Kolmogorov axioms, making rewards undefined",
         "The existence proof relies on V* being the fixed point of T* on a finite-dimensional space; for infinite spaces, T* may not be well-defined or its fixed point may not correspond to a measurable policy",
-        "Infinite action spaces always have γ = 1 by construction, breaking the contraction",
+        "Infinite action spaces always have \\gamma = 1 by construction, breaking the contraction",
         "The optimal policy theorem only applies to discrete-time MDPs, and infinite spaces are always continuous-time",
       ],
       correctAnswer: 1,
       explanation:
-        "For finite MDPs, T* maps ℝ^|S| to ℝ^|S| — a finite-dimensional complete metric space — and the Banach fixed-point theorem applies directly. For infinite state/action spaces, complications arise: the sup over actions may not be achieved (no argmax exists), the fixed point may not yield a measurable policy, and regularity conditions (e.g., Borel measurability, compactness of action sets) must be imposed. Continuous MDPs require measure-theoretic extensions of the existence result (see Bertsekas & Shreve).",
+        "For finite MDPs, T* maps \\mathbb{R}^|S| to \\mathbb{R}^|S| — a finite-dimensional complete metric space — and the Banach fixed-point theorem applies directly. For infinite state/action spaces, complications arise: the sup over actions may not be achieved (no argmax exists), the fixed point may not yield a measurable policy, and regularity conditions (e.g., Borel measurability, compactness of action sets) must be imposed. Continuous MDPs require measure-theoretic extensions of the existence result (see Bertsekas & Shreve).",
       hints: [
         "The argmax in \\pi*(s) = argmax_a Q*(s,a) is guaranteed to exist when |A| is finite. With infinite A, the sup may not be achieved.",
         "Sutton & Barto restrict to finite MDPs in Chapters 3–6. Later chapters and research papers handle continuous spaces with function approximation and different theoretical tools.",
@@ -1362,18 +1362,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The Bellman expectation operator T^\\pi is defined as (T^\\pi V)(s) = \sum_a \\pi(a|s) Σ_{s'} P(s'|s,a)[R(s,a,s') + γV(s')]. Which property makes iterating T^\\pi a valid algorithm for computing V^\\pi?",
+        "The Bellman expectation operator T^\\pi is defined as (T^\\pi V)(s) = \sum_a \\pi(a|s) \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV(s')]. Which property makes iterating T^\\pi a valid algorithm for computing V^\\pi?",
       options: [
-        "T^\\pi is linear and its eigenvalues are all ≤ γ < 1",
-        "T^\\pi is a γ-contraction in the sup-norm, so by the Banach fixed-point theorem it has a unique fixed point V^\\pi and iterating T^\\pi from any V₀ converges to V^\\pi",
+        "T^\\pi is linear and its eigenvalues are all ≤ \\gamma < 1",
+        "T^\\pi is a \\gamma-contraction in the sup-norm, so by the Banach fixed-point theorem it has a unique fixed point V^\\pi and iterating T^\\pi from any V₀ converges to V^\\pi",
         "T^\\pi maps any non-negative function to a smaller non-negative function",
         "T^\\pi is the gradient of the value function with respect to policy parameters",
       ],
       correctAnswer: 1,
       explanation:
-        "T^\\pi is a γ-contraction: ‖T^\\pi V − T^\\pi U‖_∞ ≤ γ‖V − U‖_∞ for all V, U. The space of bounded functions with sup-norm is complete, so by Banach fixed-point theorem, T^\\pi has a unique fixed point — which is exactly V^\\pi (the solution of the Bellman expectation equation). Starting from any V₀, iterating V_{k+1} = T^\\pi V_k converges geometrically: ‖V_k − V^\\pi‖_∞ ≤ γ^k‖V₀ − V^\\pi‖_∞.",
+        "T^\\pi is a \\gamma-contraction: ‖T^\\pi V − T^\\pi U‖_∞ ≤ \\gamma‖V − U‖_∞ for all V, U. The space of bounded functions with sup-norm is complete, so by Banach fixed-point theorem, T^\\pi has a unique fixed point — which is exactly V^\\pi (the solution of the Bellman expectation equation). Starting from any V₀, iterating V_{k+1} = T^\\pi V_k converges geometrically: ‖V_k − V^\\pi‖_∞ ≤ \\gamma^k‖V₀ − V^\\pi‖_∞.",
       hints: [
-        "The contraction factor is exactly γ, the discount factor. This is why γ < 1 is a convergence requirement.",
+        "The contraction factor is exactly \\gamma, the discount factor. This is why \\gamma < 1 is a convergence requirement.",
         "Fixed point of T^\\pi means T^\\pi V = V — substituting the definition gives exactly the Bellman expectation equation.",
       ],
     },
@@ -1382,13 +1382,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "The Bellman optimality operator T* is defined as (T* V)(s) = max_a Σ_{s'} P(s'|s,a)[R(s,a,s') + γV(s')]. T* is also a γ-contraction in the sup-norm, and its unique fixed point is V*.",
+        "The Bellman optimality operator T* is defined as (T* V)(s) = max_a \\Sigma_{s'} P(s'|s,a)[R(s,a,s') + \\gammaV(s')]. T* is also a \\gamma-contraction in the sup-norm, and its unique fixed point is V*.",
       correctAnswer: "True",
       explanation:
-        "The proof that T* is a γ-contraction uses the inequality |max_a f(a) − max_a g(a)| ≤ max_a |f(a) − g(a)|: ‖T*V − T*U‖_∞ = max_s |max_a[...V...] − max_a[...U...]| ≤ γ max_s max_a|V(s') − U(s')| = γ‖V − U‖_∞. By Banach fixed-point theorem, the unique fixed point exists, and substituting T*V = V yields the Bellman optimality equation — so the fixed point is V*.",
+        "The proof that T* is a \\gamma-contraction uses the inequality |max_a f(a) − max_a g(a)| ≤ max_a |f(a) − g(a)|: ‖T*V − T*U‖_∞ = max_s |max_a[...V...] − max_a[...U...]| ≤ \\gamma max_s max_a|V(s') − U(s')| = \\gamma‖V − U‖_∞. By Banach fixed-point theorem, the unique fixed point exists, and substituting T*V = V yields the Bellman optimality equation — so the fixed point is V*.",
       hints: [
         "Key inequality: |max f − max g| ≤ max |f − g|. Apply this to bound ‖T*V − T*U‖_∞.",
-        "Both T^\\pi and T* are γ-contractions but with different fixed points: T^\\pi → V^\\pi, T* → V*.",
+        "Both T^\\pi and T* are \\gamma-contractions but with different fixed points: T^\\pi → V^\\pi, T* → V*.",
       ],
     },
     {
@@ -1400,7 +1400,7 @@ const questions: Record<string, Question[]> = {
       options: [
         "T^\\pi (Bellman expectation) for evaluation; T* (Bellman optimality) for improvement",
         "Gradient ascent on V^\\pi for evaluation; softmax update for improvement",
-        "Monte Carlo sampling for evaluation; ε-greedy update for improvement",
+        "Monte Carlo sampling for evaluation; \\epsilon-greedy update for improvement",
         "Forward recursion for evaluation; backward induction for improvement",
       ],
       correctAnswer: 0,
@@ -1439,7 +1439,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Modified policy iteration with any finite m ≥ 1 is still guaranteed to converge to the optimal policy \\pi* for finite MDPs with γ < 1.",
+        "Modified policy iteration with any finite m ≥ 1 is still guaranteed to converge to the optimal policy \\pi* for finite MDPs with \\gamma < 1.",
       correctAnswer: "True",
       explanation:
         "Modified policy iteration generates a sequence of improving policies. Each policy improvement step produces a policy at least as good as the previous (by the Policy Improvement Theorem applied to the partially-evaluated value estimate). Since policies are strictly improving and there are finitely many, the algorithm must terminate — and at termination, \\pi = \\pi*. The convergence guarantee holds for all m ≥ 1; the number of outer iterations may vary, but the algorithm converges to the same \\pi*.",
@@ -1476,19 +1476,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "An ε-greedy policy with ε = 0.1 and |A| = 4 actions selects actions as follows. In state s where the greedy action is a*:",
+        "An \\epsilon-greedy policy with \\epsilon = 0.1 and |A| = 4 actions selects actions as follows. In state s where the greedy action is a*:",
       options: [
-        "a* is selected with probability 1 − ε = 0.9; each non-greedy action is selected with probability ε/|A| = 0.025",
-        "a* is selected with probability 1 − ε = 0.9; each non-greedy action is selected with probability ε/(|A|−1) ≈ 0.033",
-        "a* is selected with probability ε = 0.1; each other action is selected with probability (1−ε)/3 ≈ 0.3",
-        "All actions are selected with equal probability ε/|A| = 0.025; no action is favored",
+        "a* is selected with probability 1 − \\epsilon = 0.9; each non-greedy action is selected with probability \\epsilon/|A| = 0.025",
+        "a* is selected with probability 1 − \\epsilon = 0.9; each non-greedy action is selected with probability \\epsilon/(|A|−1) ≈ 0.033",
+        "a* is selected with probability \\epsilon = 0.1; each other action is selected with probability (1−\\epsilon)/3 ≈ 0.3",
+        "All actions are selected with equal probability \\epsilon/|A| = 0.025; no action is favored",
       ],
       correctAnswer: 0,
       explanation:
-        "The standard ε-greedy rule (Sutton & Barto §2.4): with probability 1−ε select the greedy action a*; with probability ε select uniformly at random over all |A| actions (including a*). So \\pi(a*|s) = 1−ε + ε/|A| = 0.9 + 0.025 = 0.925 and \\pi(a\$\\neq\$a*|s) = ε/|A| = 0.025. Total: 0.925 + 3×0.025 = 1 ✓. This ensures every action is tried with probability at least ε/|A| > 0.",
+        "The standard \\epsilon-greedy rule (Sutton & Barto §2.4): with probability 1−\\epsilon select the greedy action a*; with probability \\epsilon select uniformly at random over all |A| actions (including a*). So \\pi(a*|s) = 1−\\epsilon + \\epsilon/|A| = 0.9 + 0.025 = 0.925 and \\pi(a\$\\neq\$a*|s) = \\epsilon/|A| = 0.025. Total: 0.925 + 3×0.025 = 1 ✓. This ensures every action is tried with probability at least \\epsilon/|A| > 0.",
       hints: [
-        "Careful: the random uniform draw includes the greedy action itself, so \\pi(a*|s) = 1−ε + ε/|A|, not simply 1−ε.",
-        'S&B §2.4: ε-greedy "behaves greedily most of the time, but every once in a while...selects randomly from all the actions with equal probability."',
+        "Careful: the random uniform draw includes the greedy action itself, so \\pi(a*|s) = 1−\\epsilon + \\epsilon/|A|, not simply 1−\\epsilon.",
+        'S&B §2.4: \\epsilon-greedy "behaves greedily most of the time, but every once in a while...selects randomly from all the actions with equal probability."',
       ],
     },
     {
@@ -1496,13 +1496,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "An ε-greedy policy with fixed ε > 0 always converges to the globally optimal policy \\pi* as the number of interactions → ∞.",
+        "An \\epsilon-greedy policy with fixed \\epsilon > 0 always converges to the globally optimal policy \\pi* as the number of interactions → ∞.",
       correctAnswer: "False",
       explanation:
-        "A fixed ε > 0 permanently assigns probability ε/|A| to suboptimal actions, so the agent never fully commits to the greedy-optimal policy. The ε-greedy policy converges to the best ε-soft policy (the optimal policy among all policies that satisfy \\pi(a|s) ≥ ε/|A|), not \\pi*. To converge to \\pi*, ε must be decayed to 0 (e.g., εₙ = 1/n) while satisfying GLIE conditions. Sutton & Barto §5.4 discuss this distinction.",
+        "A fixed \\epsilon > 0 permanently assigns probability \\epsilon/|A| to suboptimal actions, so the agent never fully commits to the greedy-optimal policy. The \\epsilon-greedy policy converges to the best \\epsilon-soft policy (the optimal policy among all policies that satisfy \\pi(a|s) ≥ \\epsilon/|A|), not \\pi*. To converge to \\pi*, \\epsilon must be decayed to 0 (e.g., \\epsilonₙ = 1/n) while satisfying GLIE conditions. Sutton & Barto §5.4 discuss this distinction.",
       hints: [
-        'ε-greedy with fixed ε is always "exploring" — it can never be purely greedy, so it cannot match the performance of \\pi*.',
-        "The best ε-soft policy achieves V within O(ε) of V*. Only as ε → 0 does it converge to V*.",
+        '\\epsilon-greedy with fixed \\epsilon is always "exploring" — it can never be purely greedy, so it cannot match the performance of \\pi*.',
+        "The best \\epsilon-soft policy achieves V within O(\\epsilon) of V*. Only as \\epsilon → 0 does it converge to V*.",
       ],
     },
     {
@@ -1510,18 +1510,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "UCB (Upper Confidence Bound) action selection selects Aₜ = argmax_a [Q(s,a) + c √(ln t / Nₜ(a))], where Nₜ(a) is the count of action a selections. How does UCB compare to ε-greedy for the exploration–exploitation tradeoff?",
+        "UCB (Upper Confidence Bound) action selection selects Aₜ = argmax_a [Q(s,a) + c √(ln t / Nₜ(a))], where Nₜ(a) is the count of action a selections. How does UCB compare to \\epsilon-greedy for the exploration–exploitation tradeoff?",
       options: [
-        "UCB explores actions uniformly like ε-greedy but uses a larger effective ε",
-        "UCB exploration is directed: actions with high uncertainty (low Nₜ(a)) get an exploration bonus that decreases as they are tried — achieving logarithmic regret vs. linear regret for ε-greedy with fixed ε",
-        "UCB is only valid for continuous action spaces, while ε-greedy works for discrete actions",
-        "UCB and ε-greedy have identical regret bounds when c = ε",
+        "UCB explores actions uniformly like \\epsilon-greedy but uses a larger effective \\epsilon",
+        "UCB exploration is directed: actions with high uncertainty (low Nₜ(a)) get an exploration bonus that decreases as they are tried — achieving logarithmic regret vs. linear regret for \\epsilon-greedy with fixed \\epsilon",
+        "UCB is only valid for continuous action spaces, while \\epsilon-greedy works for discrete actions",
+        "UCB and \\epsilon-greedy have identical regret bounds when c = \\epsilon",
       ],
       correctAnswer: 1,
       explanation:
-        "UCB exploration is uncertainty-directed: the bonus c√(ln t / Nₜ(a)) is large for rarely-tried actions and shrinks as Nₜ(a) grows. This concentrates exploration on promising uncertain actions rather than random ones. UCB achieves O(ln T) cumulative regret (Auer et al., 2002), while ε-greedy with fixed ε has O(T·ε) linear regret because it wastes a constant fraction of pulls on random actions. Sutton & Barto §2.7 discuss UCB as a more principled exploration strategy.",
+        "UCB exploration is uncertainty-directed: the bonus c√(ln t / Nₜ(a)) is large for rarely-tried actions and shrinks as Nₜ(a) grows. This concentrates exploration on promising uncertain actions rather than random ones. UCB achieves O(ln T) cumulative regret (Auer et al., 2002), while \\epsilon-greedy with fixed \\epsilon has O(T·\\epsilon) linear regret because it wastes a constant fraction of pulls on random actions. Sutton & Barto §2.7 discuss UCB as a more principled exploration strategy.",
       hints: [
-        "ε-greedy: every action is equally likely to be explored, regardless of how much you know about it.",
+        "\\epsilon-greedy: every action is equally likely to be explored, regardless of how much you know about it.",
         'UCB: the exploration bonus √(ln t / Nₜ(a)) is high for actions tried few times and low for well-estimated actions. Exploration "naturally" shifts to less-known actions.',
       ],
     },
@@ -1533,19 +1533,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Weighted importance sampling estimates V^\\pi(s) as V̂_w(s) = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ, where ρᵢ is the importance sampling ratio for episode i. How does this differ from ordinary importance sampling V̂(s) = (1/n)Σᵢ ρᵢGᵢ?",
+        "Weighted importance sampling estimates V^\\pi(s) as V̂_w(s) = \\Sigmaᵢ \\rhoᵢGᵢ / \\Sigmaᵢ \\rhoᵢ, where \\rhoᵢ is the importance sampling ratio for episode i. How does this differ from ordinary importance sampling V̂(s) = (1/n)\\Sigmaᵢ \\rhoᵢGᵢ?",
       options: [
-        "Weighted IS uses a different ratio: ρᵢ = b(Aₜ|Sₜ)/\\pi(Aₜ|Sₜ) instead of \\pi/b",
-        "Weighted IS normalizes by the sum of ratios Σᵢ ρᵢ rather than the count n, making it a self-normalizing estimator that is biased but has much lower variance",
-        "Weighted IS only uses trajectories where ρᵢ ≥ 1, discarding downweighted samples",
-        "Weighted IS multiplies G by ρ twice (ρᵢ²) to account for the non-stationarity of b",
+        "Weighted IS uses a different ratio: \\rhoᵢ = b(Aₜ|Sₜ)/\\pi(Aₜ|Sₜ) instead of \\pi/b",
+        "Weighted IS normalizes by the sum of ratios \\Sigmaᵢ \\rhoᵢ rather than the count n, making it a self-normalizing estimator that is biased but has much lower variance",
+        "Weighted IS only uses trajectories where \\rhoᵢ ≥ 1, discarding downweighted samples",
+        "Weighted IS multiplies G by \\rho twice (\\rhoᵢ²) to account for the non-stationarity of b",
       ],
       correctAnswer: 1,
       explanation:
-        'Ordinary IS: V̂ = (1/n)Σᵢ ρᵢGᵢ is unbiased (E[V̂] = V^\\pi(s)) but ρᵢ can be very large, causing high variance. Weighted IS: V̂_w = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ is a self-normalizing (ratio) estimator — biased for finite n (E[V̂_w] \$\\neq\$ V^\\pi(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
+        'Ordinary IS: V̂ = (1/n)\\Sigmaᵢ \\rhoᵢGᵢ is unbiased (E[V̂] = V^\\pi(s)) but \\rhoᵢ can be very large, causing high variance. Weighted IS: V̂_w = \\Sigmaᵢ \\rhoᵢGᵢ / \\Sigmaᵢ \\rhoᵢ is a self-normalizing (ratio) estimator — biased for finite n (E[V̂_w] \$\\neq\$ V^\\pi(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
       hints: [
-        "The denominator Σᵢ ρᵢ instead of n is what distinguishes weighted from ordinary IS.",
-        "If all ρᵢ = 1 (on-policy), both estimators reduce to the standard sample mean.",
+        "The denominator \\Sigmaᵢ \\rhoᵢ instead of n is what distinguishes weighted from ordinary IS.",
+        "If all \\rhoᵢ = 1 (on-policy), both estimators reduce to the standard sample mean.",
       ],
     },
     {
@@ -1556,7 +1556,7 @@ const questions: Record<string, Question[]> = {
         "Weighted importance sampling is consistent: as the number of episodes n → ∞, V̂_w(s) converges to V^\\pi(s) with probability 1, despite being biased for finite n.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)Σρᵢ → E_b[ρ] = 1 and (1/n)ΣρᵢGᵢ → E_b[ρG] = E_\\pi[G] = V^\\pi(s). The ratio converges to V^\\pi(s)/1 = V^\\pi(s). Bias for finite n arises because the ratio of averages \$\\neq\$ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
+        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)\\Sigma\\rhoᵢ → E_b[\\rho] = 1 and (1/n)\\Sigma\\rhoᵢGᵢ → E_b[\\rhoG] = E_\\pi[G] = V^\\pi(s). The ratio converges to V^\\pi(s)/1 = V^\\pi(s). Bias for finite n arises because the ratio of averages \$\\neq\$ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
       hints: [
         "Slutsky\'s theorem: if Xₙ → X and Yₙ → Y (in probability), then Xₙ/Yₙ → X/Y as long as Y \$\\neq\$ 0.",
         "The bias of weighted IS is O(1/n), which decreases with sample size — hence consistency despite finite-sample bias.",
@@ -1570,16 +1570,16 @@ const questions: Record<string, Question[]> = {
         "The variance of ordinary importance sampling can be infinite even when all returns Gᵢ are bounded. Why, and how does weighted IS address this?",
       options: [
         "Ordinary IS variance is infinite because G_i can take negative values; weighted IS clips G_i at zero",
-        "Ordinary IS weights by ρᵢ = Πₜ \\pi/b, which is a product of T ratios. If b(a|s) ≪ \\pi(a|s) for any step, ρᵢ can be unbounded across episodes, causing Var[ρᵢGᵢ] = E[ρᵢ²Gᵢ²] − (E[ρᵢGᵢ])² to be infinite. Weighted IS caps the effective weight per episode to ρᵢ/Σρⱼ ≤ 1, bounding its variance",
+        "Ordinary IS weights by \\rhoᵢ = \\Piₜ \\pi/b, which is a product of T ratios. If b(a|s) ≪ \\pi(a|s) for any step, \\rhoᵢ can be unbounded across episodes, causing Var[\\rhoᵢGᵢ] = E[\\rhoᵢ²Gᵢ²] − (E[\\rhoᵢGᵢ])² to be infinite. Weighted IS caps the effective weight per episode to \\rhoᵢ/\\Sigma\\rhoⱼ ≤ 1, bounding its variance",
         "Ordinary IS has infinite variance because it samples from both \\pi and b simultaneously, creating a mixture distribution with undefined moments",
-        "Ordinary IS is always finite variance for γ < 1; weighted IS is only valid for γ = 1",
+        "Ordinary IS is always finite variance for \\gamma < 1; weighted IS is only valid for \\gamma = 1",
       ],
       correctAnswer: 1,
       explanation:
-        "The product ρᵢ = Πₜ \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ) over T steps can be extremely large when b(a|s) is small but \\pi(a|s) is large. The second moment E_b[ρ²G²] can be infinite even when G is bounded (because ρ is unbounded). Weighted IS normalizes each weight by Σρⱼ, so each effective weight is ρᵢ/Σρⱼ ∈ [0,1], bounding the contribution per episode. This self-normalization provides finite variance in practice, though the theoretical variance bound is complex.",
+        "The product \\rhoᵢ = \\Piₜ \\pi(Aₜ|Sₜ)/b(Aₜ|Sₜ) over T steps can be extremely large when b(a|s) is small but \\pi(a|s) is large. The second moment E_b[\\rho²G²] can be infinite even when G is bounded (because \\rho is unbounded). Weighted IS normalizes each weight by \\Sigma\\rhoⱼ, so each effective weight is \\rhoᵢ/\\Sigma\\rhoⱼ ∈ [0,1], bounding the contribution per episode. This self-normalization provides finite variance in practice, though the theoretical variance bound is complex.",
       hints: [
-        "Consider T=1, b(a|s) = 0.01, \\pi(a|s) = 1: ρ = 100. Over T=20 steps: ρ = 100^20 = 10^40. The second moment E[ρ²G²] ≥ (10^40)² × G² = 10^80 × G².",
-        "Weighted IS weight per episode: ρᵢ/Σρⱼ ≤ 1 always. No single episode can dominate the estimate with a huge ρ.",
+        "Consider T=1, b(a|s) = 0.01, \\pi(a|s) = 1: \\rho = 100. Over T=20 steps: \\rho = 100^20 = 10^40. The second moment E[\\rho²G²] ≥ (10^40)² × G² = 10^80 × G².",
+        "Weighted IS weight per episode: \\rhoᵢ/\\Sigma\\rhoⱼ ≤ 1 always. No single episode can dominate the estimate with a huge \\rho.",
       ],
     },
   ],
@@ -1593,16 +1593,16 @@ const questions: Record<string, Question[]> = {
         'GLIE stands for "Greedy in the Limit with Infinite Exploration." For a sequence of policies {\\piₙ}, GLIE requires two conditions. Which pair correctly states them?',
       options: [
         "(1) All state-action pairs are visited infinitely often; (2) the policy converges to the greedy policy in the limit",
-        "(1) The policy is ε-greedy for all n; (2) ε decreases to exactly 0 after finite steps",
-        "(1) Each episode has length → ∞; (2) the agent uses a decaying learning rate αₙ → 0",
+        "(1) The policy is \\epsilon-greedy for all n; (2) \\epsilon decreases to exactly 0 after finite steps",
+        "(1) Each episode has length → ∞; (2) the agent uses a decaying learning rate \\alphaₙ → 0",
         "(1) The reward sequence is bounded; (2) the value function converges to V* in sup-norm",
       ],
       correctAnswer: 0,
       explanation:
-        "GLIE (Sutton & Barto §5.4; Singh et al. 2000) requires: (1) every state-action pair (s,a) is visited infinitely often — ensuring Q(s,a) estimates converge; and (2) the policy converges to the greedy policy — ensuring that in the limit the agent exploits its knowledge. A sufficient condition is εₙ → 0 with Σεₙ = ∞ (so every state-action is tried infinitely often as exploration decays). GLIE-MC control converges to Q* and \\pi*.",
+        "GLIE (Sutton & Barto §5.4; Singh et al. 2000) requires: (1) every state-action pair (s,a) is visited infinitely often — ensuring Q(s,a) estimates converge; and (2) the policy converges to the greedy policy — ensuring that in the limit the agent exploits its knowledge. A sufficient condition is \\epsilonₙ → 0 with \\Sigma\\epsilonₙ = ∞ (so every state-action is tried infinitely often as exploration decays). GLIE-MC control converges to Q* and \\pi*.",
       hints: [
         "Condition 1 ensures all Q(s,a) can be estimated accurately. Condition 2 ensures the limit policy is greedy (optimal).",
-        "ε_n = 1/n satisfies GLIE: every state-action is visited infinitely often (since Σ1/n = ∞) and εₙ → 0 (greedy in the limit).",
+        "\\epsilon_n = 1/n satisfies GLIE: every state-action is visited infinitely often (since \\Sigma1/n = ∞) and \\epsilonₙ → 0 (greedy in the limit).",
       ],
     },
     {
@@ -1610,13 +1610,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "An ε-greedy policy with ε = 0.05 (constant) satisfies GLIE because every state-action pair is visited infinitely often (since ε > 0 ensures exploration forever).",
+        "An \\epsilon-greedy policy with \\epsilon = 0.05 (constant) satisfies GLIE because every state-action pair is visited infinitely often (since \\epsilon > 0 ensures exploration forever).",
       correctAnswer: "False",
       explanation:
-        "Constant ε = 0.05 satisfies the first GLIE condition (infinite exploration — all (s,a) pairs are visited infinitely often) but fails the second (greedy in the limit — the policy never converges to greedy, it always explores with probability 0.05). Both conditions are required for GLIE. Without ε → 0, MC control converges to the optimal ε-soft policy, not \\pi*.",
+        "Constant \\epsilon = 0.05 satisfies the first GLIE condition (infinite exploration — all (s,a) pairs are visited infinitely often) but fails the second (greedy in the limit — the policy never converges to greedy, it always explores with probability 0.05). Both conditions are required for GLIE. Without \\epsilon → 0, MC control converges to the optimal \\epsilon-soft policy, not \\pi*.",
       hints: [
-        "Check both GLIE conditions: (1) infinite visits to all (s,a)? Yes, with ε=0.05. (2) policy → greedy? No, always 5% random.",
-        "GLIE requires BOTH: explore forever AND eventually stop exploring. Fixed ε achieves only the former.",
+        "Check both GLIE conditions: (1) infinite visits to all (s,a)? Yes, with \\epsilon=0.05. (2) policy → greedy? No, always 5% random.",
+        "GLIE requires BOTH: explore forever AND eventually stop exploring. Fixed \\epsilon achieves only the former.",
       ],
     },
     {
@@ -1624,19 +1624,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Monte Carlo control with on-policy ε-greedy and GLIE (εₙ = 1/n) converges to which of the following?",
+        "Monte Carlo control with on-policy \\epsilon-greedy and GLIE (\\epsilonₙ = 1/n) converges to which of the following?",
       options: [
-        "Q^\\pi for the initial ε-greedy policy — MC control does not improve beyond the first policy",
+        "Q^\\pi for the initial \\epsilon-greedy policy — MC control does not improve beyond the first policy",
         "Q* and \\pi* — the optimal action-value function and optimal policy",
-        "The optimal ε-soft policy for ε = 1/N (where N is the total number of episodes)",
-        "A local optimum of Q, which may differ from Q* due to the non-linearity of the ε-greedy update",
+        "The optimal \\epsilon-soft policy for \\epsilon = 1/N (where N is the total number of episodes)",
+        "A local optimum of Q, which may differ from Q* due to the non-linearity of the \\epsilon-greedy update",
       ],
       correctAnswer: 1,
       explanation:
-        "Sutton & Barto §5.4 (and Singh et al. 2000 for the formal proof): on-policy MC control with GLIE policies converges to Q* and \\pi*. The GLIE conditions ensure (1) all Q(s,a) values converge to their true values (via infinite exploration), and (2) the policy greedifies in the limit. Together, these guarantee convergence to the optimal policy. This is the key theoretical motivation for decaying ε in practice.",
+        "Sutton & Barto §5.4 (and Singh et al. 2000 for the formal proof): on-policy MC control with GLIE policies converges to Q* and \\pi*. The GLIE conditions ensure (1) all Q(s,a) values converge to their true values (via infinite exploration), and (2) the policy greedifies in the limit. Together, these guarantee convergence to the optimal policy. This is the key theoretical motivation for decaying \\epsilon in practice.",
       hints: [
         "The two GLIE conditions precisely match what is needed: accurate Q estimates (from condition 1) + greedy limit policy (from condition 2).",
-        "Compare: fixed ε > 0 → optimal ε-soft policy (suboptimal). GLIE (ε → 0) → optimal \\pi* (exact optimality).",
+        "Compare: fixed \\epsilon > 0 → optimal \\epsilon-soft policy (suboptimal). GLIE (\\epsilon → 0) → optimal \\pi* (exact optimality).",
       ],
     },
   ],
@@ -1647,19 +1647,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Eligibility traces (Sutton & Barto Chapter 12) assign credit to recently visited states. The eligibility trace eₜ(s) is updated as: eₜ(s) = γλeₜ₋₁(s) + 𝟙[Sₜ = s]. What does the parameter λ ∈ [0,1] control?",
+        "Eligibility traces (Sutton & Barto Chapter 12) assign credit to recently visited states. The eligibility trace eₜ(s) is updated as: eₜ(s) = \\gamma\\lambdaeₜ₋₁(s) + 𝟙[Sₜ = s]. What does the parameter \\lambda ∈ [0,1] control?",
       options: [
-        "The learning rate α of the TD update",
-        "The decay rate of credit for past states: λ = 0 gives TD(0) (only the last state gets credit); λ = 1 gives Monte Carlo (all visited states get equal credit)",
+        "The learning rate \\alpha of the TD update",
+        "The decay rate of credit for past states: \\lambda = 0 gives TD(0) (only the last state gets credit); \\lambda = 1 gives Monte Carlo (all visited states get equal credit)",
         "The discount factor applied to future rewards",
-        "The exploration rate in ε-greedy action selection",
+        "The exploration rate in \\epsilon-greedy action selection",
       ],
       correctAnswer: 1,
       explanation:
-        "The trace parameter λ controls how far back credit propagates. With λ = 0: eₜ(s) = 𝟙[Sₜ = s] — only the current state gets credit, recovering TD(0). With λ = 1: the trace decays only by γ per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate λ gives a weighted combination: TD(λ) interpolates between TD(0) and MC. Sutton & Barto §12.1–12.2 derive this explicitly via the forward (λ-return) and backward (trace) views.",
+        "The trace parameter \\lambda controls how far back credit propagates. With \\lambda = 0: eₜ(s) = 𝟙[Sₜ = s] — only the current state gets credit, recovering TD(0). With \\lambda = 1: the trace decays only by \\gamma per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate \\lambda gives a weighted combination: TD(\\lambda) interpolates between TD(0) and MC. Sutton & Barto §12.1–12.2 derive this explicitly via the forward (\\lambda-return) and backward (trace) views.",
       hints: [
-        'λ is the "memory" parameter. λ = 0: no memory (only current state). λ = 1: full memory (all past states).',
-        "The factor γλ in the update means each step back in history contributes (γλ)^k relative weight, k steps ago.",
+        '\\lambda is the "memory" parameter. \\lambda = 0: no memory (only current state). \\lambda = 1: full memory (all past states).',
+        "The factor \\gamma\\lambda in the update means each step back in history contributes (\\gamma\\lambda)^k relative weight, k steps ago.",
       ],
     },
     {
@@ -1667,13 +1667,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "TD(λ = 0) is equivalent to TD(0), and TD(λ = 1) is equivalent to every-visit Monte Carlo in the offline (batch) setting.",
+        "TD(\\lambda = 0) is equivalent to TD(0), and TD(\\lambda = 1) is equivalent to every-visit Monte Carlo in the offline (batch) setting.",
       correctAnswer: "True",
       explanation:
-        'Sutton & Barto §12.1 establish the "λ-return" forward view: TD(λ) uses a weighted combination of n-step returns Gₜ^(n) with exponential weights (1−λ)λ^{n-1}. At λ=0: only G^(1) (the 1-step TD return) contributes → TD(0). At λ=1: the trace decays only by γ per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate λ gives a weighted combination.',
+        'Sutton & Barto §12.1 establish the "\\lambda-return" forward view: TD(\\lambda) uses a weighted combination of n-step returns Gₜ^(n) with exponential weights (1−\\lambda)\\lambda^{n-1}. At \\lambda=0: only G^(1) (the 1-step TD return) contributes → TD(0). At \\lambda=1: the trace decays only by \\gamma per step, giving full (undiscounted) credit to all past states — equivalent to Monte Carlo. Intermediate \\lambda gives a weighted combination.',
       hints: [
-        "λ-return: Gₜ^λ = (1−λ)Σ_{n=1}^∞ λ^{n-1} Gₜ^(n). At λ=0: Gₜ^λ = Gₜ^(1) = Rₜ₊₁ + γV(Sₜ₊₁) = TD target. At λ=1: Gₜ^λ = Gₜ = MC return.",
-        "The offline-online equivalence means the backward (trace) update gives the same total update as the forward (λ-return) view when computed over a full episode.",
+        "\\lambda-return: Gₜ^\\lambda = (1−\\lambda)\\Sigma_{n=1}^∞ \\lambda^{n-1} Gₜ^(n). At \\lambda=0: Gₜ^\\lambda = Gₜ^(1) = Rₜ₊₁ + \\gammaV(Sₜ₊₁) = TD target. At \\lambda=1: Gₜ^\\lambda = Gₜ = MC return.",
+        "The offline-online equivalence means the backward (trace) update gives the same total update as the forward (\\lambda-return) view when computed over a full episode.",
       ],
     },
     {
@@ -1681,16 +1681,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "TD(λ) with eligibility traces updates all visited states simultaneously using δₜ = Rₜ₊₁ + γV(Sₜ₊₁) − V(Sₜ): V(s) ← V(s) + α·δₜ·eₜ(s). Compared to n-step TD, what is the key computational advantage of eligibility traces?",
+        "TD(\\lambda) with eligibility traces updates all visited states simultaneously using \\deltaₜ = Rₜ₊₁ + \\gammaV(Sₜ₊₁) − V(Sₜ): V(s) ← V(s) + \\alpha·\\deltaₜ·eₜ(s). Compared to n-step TD, what is the key computational advantage of eligibility traces?",
       options: [
         "Eligibility traces require less memory because they store only the current trace vector instead of the last n states and rewards",
         "Eligibility traces are computationally equivalent to n-step TD but numerically more stable due to the exponential weighting",
         "Eligibility traces allow the use of larger learning rates without divergence",
-        "Eligibility traces completely eliminate the need for a discount factor γ",
+        "Eligibility traces completely eliminate the need for a discount factor \\gamma",
       ],
       correctAnswer: 0,
       explanation:
-        "n-step TD must store the last n transitions (Sₜ, Aₜ, Rₜ₊₁, …, Sₜ₊ₙ) and wait n steps before updating — O(n) memory and n-step delay. Eligibility traces require only the current trace vector e(s) (same size as V) — O(|S|) memory — and update all states online after every step. This backward view is computationally equivalent to the forward (λ-return) view in the offline setting, but achieves it in O(|S|) time and O(|S|) space per step.",
+        "n-step TD must store the last n transitions (Sₜ, Aₜ, Rₜ₊₁, …, Sₜ₊ₙ) and wait n steps before updating — O(n) memory and n-step delay. Eligibility traces require only the current trace vector e(s) (same size as V) — O(|S|) memory — and update all states online after every step. This backward view is computationally equivalent to the forward (\\lambda-return) view in the offline setting, but achieves it in O(|S|) time and O(|S|) space per step.",
       hints: [
         "n-step TD: store n-step buffer, wait n steps to update. Eligibility traces: one trace vector, update every step.",
         'The trace eₜ(s) effectively carries "memory" of past visits without explicitly storing past transitions.',
@@ -1743,7 +1743,7 @@ const questions: Record<string, Question[]> = {
         "Q(sigma) is a unifying algorithm that generalizes between TD(0), Expected Sarsa, and n-step Tree Backup by using a parameter sigma that controls how much sampling versus expectation is used at each step.",
       correctAnswer: "True",
       explanation:
-        "Q(sigma) (Asis et al., 2017) introduces a per-step parameter σ ∈ [0,1]: σ=1 corresponds to full sampling (like Sarsa), σ=0 corresponds to pure expectation (like Expected Sarsa/Tree Backup). At different σ values for each step, Q(sigma) subsumes n-step Sarsa (all σ=1), n-step Expected Sarsa (all σ=0), and intermediate algorithms. This provides a principled framework for understanding and designing n-step methods.",
+        "Q(sigma) (Asis et al., 2017) introduces a per-step parameter \\sigma ∈ [0,1]: \\sigma=1 corresponds to full sampling (like Sarsa), \\sigma=0 corresponds to pure expectation (like Expected Sarsa/Tree Backup). At different \\sigma values for each step, Q(sigma) subsumes n-step Sarsa (all \\sigma=1), n-step Expected Sarsa (all \\sigma=0), and intermediate algorithms. This provides a principled framework for understanding and designing n-step methods.",
     },
   ],
 
@@ -1782,7 +1782,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In semi-gradient TD, the target (bootstrap target) is treated as fixed when computing the gradient: ∇w(target - w^T x)^2 only differentiates through w in the prediction, not the target. Full gradient methods differentiate through both. The consequence: semi-gradient TD converges to the TD fixed point (which minimizes a projected Bellman error), not the minimum of mean squared value error. This fixed point exists and is stable for linear approximation but can diverge for nonlinear approximation.",
+        "In semi-gradient TD, the target (bootstrap target) is treated as fixed when computing the gradient: \\nablaw(target - w^T x)^2 only differentiates through w in the prediction, not the target. Full gradient methods differentiate through both. The consequence: semi-gradient TD converges to the TD fixed point (which minimizes a projected Bellman error), not the minimum of mean squared value error. This fixed point exists and is stable for linear approximation but can diverge for nonlinear approximation.",
     },
     {
       id: "q-rl-kp37-3",
@@ -1802,7 +1802,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "The policy gradient theorem states that ∇J(θ) ∝ Σ_s \mu(s) \sum_a Q^\\pi(s,a) ∇\\pi(a|s,θ). Why is this result significant?",
+        "The policy gradient theorem states that \\nablaJ(\\theta) \\propto \\Sigma_s \mu(s) \sum_a Q^\\pi(s,a) \\nabla\\pi(a|s,\\theta). Why is this result significant?",
       options: [
         "It shows that the gradient of return can be computed without knowing the environment dynamics.",
         "It proves that all policy gradient algorithms converge to global optima.",
@@ -1818,16 +1818,16 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "REINFORCE with a baseline b(s) uses the update ∇θ J ≈ (Gₜ - b(Sₜ)) ∇θ log \\pi(Aₜ|Sₜ,θ). Why does subtracting a baseline reduce variance without introducing bias?",
+        "REINFORCE with a baseline b(s) uses the update \\nabla\\theta J ≈ (Gₜ - b(Sₜ)) \\nabla\\theta log \\pi(Aₜ|Sₜ,\\theta). Why does subtracting a baseline reduce variance without introducing bias?",
       options: [
         "The baseline shifts all rewards, reducing their magnitude and thus the gradient variance.",
-        "Any state-dependent baseline b(Sₜ) has zero expected contribution to the gradient (E[b(Sₜ)∇θ log \\pi(Aₜ|Sₜ,θ)] = 0 because \sum_a \\pi(a|s)∇log \\pi(a|s) = ∇\sum_a \\pi(a|s) = ∇1 = 0), so the expectation is preserved while variance can be reduced by choosing b wisely.",
+        "Any state-dependent baseline b(Sₜ) has zero expected contribution to the gradient (E[b(Sₜ)\\nabla\\theta log \\pi(Aₜ|Sₜ,\\theta)] = 0 because \sum_a \\pi(a|s)\\nablalog \\pi(a|s) = \\nabla\sum_a \\pi(a|s) = \\nabla1 = 0), so the expectation is preserved while variance can be reduced by choosing b wisely.",
         "The baseline introduces a slight bias that is outweighed by the variance reduction.",
         "The baseline rescales the learning rate, indirectly reducing variance.",
       ],
       correctAnswer: 1,
       explanation:
-        "The key identity: \sum_a \\pi(a|s) ∇log \\pi(a|s) = \sum_a ∇\\pi(a|s) = ∇\sum_a \\pi(a|s) = ∇1 = 0. Therefore E_a[b(s) ∇log \\pi(a|s,θ)] = b(s) × 0 = 0 for any state-dependent baseline. Since the baseline contributes zero in expectation, it cannot introduce bias; yet choosing b(s) close to E[Gₜ|Sₜ=s] (the value function) centers the updates near zero, dramatically reducing variance. This is why actor-critic methods using V(s) as a baseline are so effective.",
+        "The key identity: \sum_a \\pi(a|s) \\nablalog \\pi(a|s) = \sum_a \\nabla\\pi(a|s) = \\nabla\sum_a \\pi(a|s) = \\nabla1 = 0. Therefore E_a[b(s) \\nablalog \\pi(a|s,\\theta)] = b(s) × 0 = 0 for any state-dependent baseline. Since the baseline contributes zero in expectation, it cannot introduce bias; yet choosing b(s) close to E[Gₜ|Sₜ=s] (the value function) centers the updates near zero, dramatically reducing variance. This is why actor-critic methods using V(s) as a baseline are so effective.",
     },
     {
       id: "q-rl-kp38-3",
@@ -1837,7 +1837,7 @@ const questions: Record<string, Question[]> = {
         "Trust Region Policy Optimization (TRPO) constrains policy updates to a trust region defined by a maximum KL divergence between the old and new policy to prevent destructive large policy updates.",
       correctAnswer: "True",
       explanation:
-        "TRPO's insight: gradient ascent on expected return can take steps that catastrophically degrade the policy when the linear approximation breaks down far from the current policy. TRPO adds a hard constraint: D_KL(\\pi_old || \\pi_new) ≤ δ. This trust region ensures the new policy is close enough to the old policy that the linear/quadratic approximation remains valid. PPO approximates this constraint with a clipped objective, achieving similar stability with simpler first-order optimization.",
+        "TRPO's insight: gradient ascent on expected return can take steps that catastrophically degrade the policy when the linear approximation breaks down far from the current policy. TRPO adds a hard constraint: D_KL(\\pi_old || \\pi_new) ≤ \\delta. This trust region ensures the new policy is close enough to the old policy that the linear/quadratic approximation remains valid. PPO approximates this constraint with a clipped objective, achieving similar stability with simpler first-order optimization.",
     },
   ],
 
@@ -2023,7 +2023,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CQL's regularization: min_θ α(E_{s~D}[log \sum_a exp(Q_θ(s,a))] - E_{(s,a)~D}[Q_θ(s,a)]) + standard Bellman loss. The first term (softmax of Q over all actions) pushes down Q-values for unseen actions; the second term (Q at data actions) pulls them up. The result is a conservative Q-function that lower bounds the true Q, ensuring the greedy policy derived from CQL Q-values is safer than one derived from a Q-function with OOD overestimation.",
+        "CQL's regularization: min_\\theta \\alpha(E_{s~D}[log \sum_a exp(Q_\\theta(s,a))] - E_{(s,a)~D}[Q_\\theta(s,a)]) + standard Bellman loss. The first term (softmax of Q over all actions) pushes down Q-values for unseen actions; the second term (Q at data actions) pulls them up. The result is a conservative Q-function that lower bounds the true Q, ensuring the greedy policy derived from CQL Q-values is safer than one derived from a Q-function with OOD overestimation.",
     },
     {
       id: "q-rl-kp42-3",
@@ -2121,7 +2121,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DPO's insight: the RLHF objective's optimal solution can be expressed directly in terms of the language model's probabilities — the reward model is implicitly reparameterized by the model itself. This allows deriving a loss function on preference pairs (chosen, rejected) that directly fine-tunes the LM without RL: L_DPO = -E[log σ(β log(\\pi_θ(y_w|x)/\\pi_ref(y_w|x)) - β log(\\pi_θ(y_l|x)/\\pi_ref(y_l|x)))]. Benefits: no separate reward model, no PPO instability, simpler training, comparable or better results than RLHF-PPO.",
+        "DPO's insight: the RLHF objective's optimal solution can be expressed directly in terms of the language model's probabilities — the reward model is implicitly reparameterized by the model itself. This allows deriving a loss function on preference pairs (chosen, rejected) that directly fine-tunes the LM without RL: L_DPO = -E[log \\sigma(\\beta log(\\pi_\\theta(y_w|x)/\\pi_ref(y_w|x)) - \\beta log(\\pi_\\theta(y_l|x)/\\pi_ref(y_l|x)))]. Benefits: no separate reward model, no PPO instability, simpler training, comparable or better results than RLHF-PPO.",
     },
     {
       id: "q-rl-kp44-3",
@@ -2150,10 +2150,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Safe RL formulates safety as constraints in a Constrained Markov Decision Process (CMDP): maximize E[Σγ^t R_t] subject to E[Σγ^t C_t] ≤ d (cost constraint). Approaches: Lagrangian methods (add a penalty λ × cost to the objective and optimize λ to enforce the constraint); constrained policy optimization (CPO, PCPO); control barrier functions; Lyapunov-based safety. Applications: robotic manipulation (joint limit constraints), autonomous driving (collision avoidance), finance (drawdown limits).",
+        "Safe RL formulates safety as constraints in a Constrained Markov Decision Process (CMDP): maximize E[\\Sigma\\gamma^t R_t] subject to E[\\Sigma\\gamma^t C_t] ≤ d (cost constraint). Approaches: Lagrangian methods (add a penalty \\lambda × cost to the objective and optimize \\lambda to enforce the constraint); constrained policy optimization (CPO, PCPO); control barrier functions; Lyapunov-based safety. Applications: robotic manipulation (joint limit constraints), autonomous driving (collision avoidance), finance (drawdown limits).",
       hints: [
         "CMDP = MDP with an additional cost function C(s,a) and constraint E[cost] ≤ threshold.",
-        "Lagrangian method: the dual variable λ is learned to enforce the constraint during training.",
+        "Lagrangian method: the dual variable \\lambda is learned to enforce the constraint during training.",
       ],
     },
     {
@@ -2161,7 +2161,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "An autonomous robot trained with RL must satisfy a safety constraint: joint torques must never exceed τ_max. During deployment, the policy sometimes violates this constraint by 5%. What approaches address this gap between training constraint satisfaction and deployment safety?",
+        "An autonomous robot trained with RL must satisfy a safety constraint: joint torques must never exceed \\tau_max. During deployment, the policy sometimes violates this constraint by 5%. What approaches address this gap between training constraint satisfaction and deployment safety?",
       options: [
         "Increase the safety constraint threshold during training to add margin.",
         "Combine multiple layers: (1) train with a conservative constraint budget (E[cost] ≤ 0.8 × d) to account for constraint satisfaction gaps; (2) add a control barrier function (CBF) safety filter at deployment that overrides the RL policy when the constraint would be violated; (3) verify safety properties using formal methods on the CBF layer. The CBF provides a hard safety guarantee independent of the RL policy's accuracy.",
@@ -2180,7 +2180,7 @@ const questions: Record<string, Question[]> = {
         "Reward shaping, which adds intermediate rewards to guide exploration, can change the optimal policy if not done carefully, potentially causing the agent to learn the wrong behavior.",
       correctAnswer: "True",
       explanation:
-        "Naive reward shaping can cause misalignment: adding intermediate rewards for subgoals that seem helpful may inadvertently create a locally optimal policy that maximizes shaped rewards without achieving the true objective (reward hacking). Potential-based reward shaping (Ng et al., 1999) provides a safe form: adding F(s,a,s') = γΦ(s') - Φ(s) for any potential function Φ preserves the set of optimal policies. Non-potential-based shaping risks changing which policies are optimal.",
+        "Naive reward shaping can cause misalignment: adding intermediate rewards for subgoals that seem helpful may inadvertently create a locally optimal policy that maximizes shaped rewards without achieving the true objective (reward hacking). Potential-based reward shaping (Ng et al., 1999) provides a safe form: adding F(s,a,s') = \\gamma\\Phi(s') - \\Phi(s) for any potential function \\Phi preserves the set of optimal policies. Non-potential-based shaping risks changing which policies are optimal.",
     },
   ],
 };
@@ -2192,12 +2192,12 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp46-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "The n-step TD return G_t^(n) = r_{t+1} + γr_{t+2} + ... + γ^{n-1}r_{t+n} + γ^n V(S_{t+n}). What happens to this return as n → ∞ for an episodic task?",
+      question: "The n-step TD return G_t^(n) = r_{t+1} + \\gammar_{t+2} + ... + \\gamma^{n-1}r_{t+n} + \\gamma^n V(S_{t+n}). What happens to this return as n → ∞ for an episodic task?",
       options: [
-        "It converges to the one-step TD target r_{t+1} + γV(S_{t+1})",
+        "It converges to the one-step TD target r_{t+1} + \\gammaV(S_{t+1})",
         "It converges to the full Monte Carlo return: the sum of all future discounted rewards",
-        "It diverges to infinity for γ < 1",
-        "It equals the TD(λ) λ-return for any fixed λ",
+        "It diverges to infinity for \\gamma < 1",
+        "It equals the TD(\\lambda) \\lambda-return for any fixed \\lambda",
       ],
       correctAnswer: 1,
       explanation: "As n → ∞, the bootstrapped value V(S_{t+n}) is pushed further into the future. For episodic tasks it eventually becomes V(terminal) = 0, and the n-step return equals the full sum of discounted rewards from t to the episode end — exactly the Monte Carlo return. n-step TD interpolates between one-step TD (n=1, high bias/low variance) and Monte Carlo (n=∞, low bias/high variance).",
@@ -2212,9 +2212,9 @@ const extra: Record<string, Question[]> = {
       difficulty: "easy",
       question: "n-step TD with n=1 is equivalent to standard one-step TD(0) prediction.",
       correctAnswer: "True",
-      explanation: "Substituting n=1 into G_t^(n) = r_{t+1} + γ^1 V(S_{t+1}) gives exactly the TD(0) target. The n-step family unifies TD(0) (n=1) and Monte Carlo (n=T), allowing practitioners to tune the bias-variance trade-off by selecting n. This is why Sutton & Barto dedicate Chapter 7 to n-step bootstrapping as a bridge between TD and MC methods.",
+      explanation: "Substituting n=1 into G_t^(n) = r_{t+1} + \\gamma^1 V(S_{t+1}) gives exactly the TD(0) target. The n-step family unifies TD(0) (n=1) and Monte Carlo (n=T), allowing practitioners to tune the bias-variance trade-off by selecting n. This is why Sutton & Barto dedicate Chapter 7 to n-step bootstrapping as a bridge between TD and MC methods.",
       hints: [
-        "Write out G_t^(1) explicitly and compare to the TD(0) update target r_{t+1} + γV(S_{t+1}).",
+        "Write out G_t^(1) explicitly and compare to the TD(0) update target r_{t+1} + \\gammaV(S_{t+1}).",
         "Both formulas use exactly one real reward and then bootstrap from V(S_{t+1}).",
       ],
     },
@@ -2222,18 +2222,18 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp46-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The λ-return G_t^λ = (1-λ) * Σ_{n=1}^{∞} λ^{n-1} G_t^{(n)} is a geometric mixture of all n-step returns. What weight does it assign to G_t^{(n)} for n < T-t?",
+      question: "The \\lambda-return G_t^\\lambda = (1-\\lambda) * \\Sigma_{n=1}^{∞} \\lambda^{n-1} G_t^{(n)} is a geometric mixture of all n-step returns. What weight does it assign to G_t^{(n)} for n < T-t?",
       options: [
-        "(1-λ)λ^{n-1}",
+        "(1-\\lambda)\\lambda^{n-1}",
         "1/n for all n",
-        "λ^{n-1} divided by the normalization constant",
-        "(1-λ)^n",
+        "\\lambda^{n-1} divided by the normalization constant",
+        "(1-\\lambda)^n",
       ],
       correctAnswer: 0,
-      explanation: "The λ-return weights each n-step return G_t^{(n)} by (1-λ)λ^{n-1} for n < T-t, with the remaining weight λ^{T-t-1} assigned to the terminal Monte Carlo return. All weights sum to 1. When λ=0, all weight goes to the 1-step return (TD(0)). When λ=1, all weight goes to the Monte Carlo return. Intermediate λ provides a smooth interpolation controlled by the exponential decay rate.",
+      explanation: "The \\lambda-return weights each n-step return G_t^{(n)} by (1-\\lambda)\\lambda^{n-1} for n < T-t, with the remaining weight \\lambda^{T-t-1} assigned to the terminal Monte Carlo return. All weights sum to 1. When \\lambda=0, all weight goes to the 1-step return (TD(0)). When \\lambda=1, all weight goes to the Monte Carlo return. Intermediate \\lambda provides a smooth interpolation controlled by the exponential decay rate.",
       hints: [
-        "The weights (1-λ)λ^{n-1} form a geometric series. What do they sum to as n goes from 1 to infinity?",
-        "When λ=0: (1-0)*0^0=1 for n=1, and 0 for all n>1. Does this match TD(0)?",
+        "The weights (1-\\lambda)\\lambda^{n-1} form a geometric series. What do they sum to as n goes from 1 to infinity?",
+        "When \\lambda=0: (1-0)*0^0=1 for n=1, and 0 for all n>1. Does this match TD(0)?",
       ],
     },
   ],
@@ -2243,7 +2243,7 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp47-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "In TD(λ) with accumulating eligibility traces, the trace for state s updates as e_t(s) = γλ * e_{t-1}(s) + 1[S_t = s]. What role does the trace play in the weight update?",
+      question: "In TD(\\lambda) with accumulating eligibility traces, the trace for state s updates as e_t(s) = \\gamma\\lambda * e_{t-1}(s) + 1[S_t = s]. What role does the trace play in the weight update?",
       options: [
         "It stores the gradient of the policy with respect to action selection",
         "It acts as a memory assigning credit to recently and frequently visited states, so the TD error at time t updates all state values weighted by their trace e_t(s)",
@@ -2251,10 +2251,10 @@ const extra: Record<string, Question[]> = {
         "It replaces the reward signal with a smoothed moving average",
       ],
       correctAnswer: 1,
-      explanation: "The eligibility trace e_t(s) decays by γλ each step and is incremented when s is visited. The TD(λ) update is ΔV(s) = α * δ_t * e_t(s) for all s simultaneously, where δ_t is the TD error. States visited recently and frequently receive larger updates. The trace elegantly solves the credit-assignment problem without storing an n-step buffer, implementing the backward view equivalent of the λ-return forward view.",
+      explanation: "The eligibility trace e_t(s) decays by \\gamma\\lambda each step and is incremented when s is visited. The TD(\\lambda) update is \\DeltaV(s) = \\alpha * \\delta_t * e_t(s) for all s simultaneously, where \\delta_t is the TD error. States visited recently and frequently receive larger updates. The trace elegantly solves the credit-assignment problem without storing an n-step buffer, implementing the backward view equivalent of the \\lambda-return forward view.",
       hints: [
         "The trace decays exponentially unless the state is revisited. What happens to the trace of a state visited many steps ago?",
-        "The update ΔV(s) = α * δ_t * e_t(s) applies to ALL states at each step. This is the backward-view equivalent of which forward-view quantity?",
+        "The update \\DeltaV(s) = \\alpha * \\delta_t * e_t(s) applies to ALL states at each step. This is the backward-view equivalent of which forward-view quantity?",
       ],
     },
     {
@@ -2263,9 +2263,9 @@ const extra: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Replacing eligibility traces (where e_t(s) is reset to 1 on revisiting state s) can outperform accumulating traces when states are revisited frequently within an episode.",
       correctAnswer: "True",
-      explanation: "Replacing traces set e_t(s) = 1 whenever S_t = s, capping the trace. Accumulating traces can grow large when a state is revisited in a loop — if visited 10 times, the trace can reach 1/(1-γλ). This runaway growth can cause instability. Replacing traces prevent it, and Sutton & Barto show they often outperform accumulating traces in environments where the agent revisits states frequently.",
+      explanation: "Replacing traces set e_t(s) = 1 whenever S_t = s, capping the trace. Accumulating traces can grow large when a state is revisited in a loop — if visited 10 times, the trace can reach 1/(1-\\gamma\\lambda). This runaway growth can cause instability. Replacing traces prevent it, and Sutton & Barto show they often outperform accumulating traces in environments where the agent revisits states frequently.",
       hints: [
-        "With accumulating traces, visiting state s 10 times yields trace approximately 1/(1-γλ). Could this magnitude cause instability in the update ΔV(s) = α * δ_t * e_t(s)?",
+        "With accumulating traces, visiting state s 10 times yields trace approximately 1/(1-\\gamma\\lambda). Could this magnitude cause instability in the update \\DeltaV(s) = \\alpha * \\delta_t * e_t(s)?",
         "Replacing traces cap the maximum trace at 1. How does this affect the maximum update magnitude for a single step?",
       ],
     },
@@ -2273,18 +2273,18 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp47-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The forward view (λ-return) and backward view (TD(λ) with eligibility traces) are theoretically equivalent in the offline setting but diverge online. What does 'offline' mean in this context?",
+      question: "The forward view (\\lambda-return) and backward view (TD(\\lambda) with eligibility traces) are theoretically equivalent in the offline setting but diverge online. What does 'offline' mean in this context?",
       options: [
-        "Updates are applied only at the end of each episode using a fixed V. Online means within-episode updates that change V mid-episode, altering targets G_t^λ which depend on V(S_{t+n}).",
+        "Updates are applied only at the end of each episode using a fixed V. Online means within-episode updates that change V mid-episode, altering targets G_t^\\lambda which depend on V(S_{t+n}).",
         "Offline means using a replay buffer; online means on-policy sampling. The equivalence breaks due to importance sampling weights.",
         "Offline means using a fixed dataset of trajectories collected before training begins.",
-        "Offline means γ=1; online means γ<1. The equivalence breaks because discount affects traces differently.",
+        "Offline means \\gamma=1; online means \\gamma<1. The equivalence breaks because discount affects traces differently.",
       ],
       correctAnswer: 0,
-      explanation: "In the offline setting, V is fixed throughout an episode and updates are applied only at the end. The forward view (λ-return using fixed V) and backward view (eligibility traces) produce identical weight changes. Online: V is updated within the episode. Mid-episode changes mean G_t^λ changes as V is updated, breaking the equivalence. True Online TD(λ) (van Seijen et al., 2016) resolves this with a corrected dutch traces formulation that remains equivalent to the online λ-return target.",
+      explanation: "In the offline setting, V is fixed throughout an episode and updates are applied only at the end. The forward view (\\lambda-return using fixed V) and backward view (eligibility traces) produce identical weight changes. Online: V is updated within the episode. Mid-episode changes mean G_t^\\lambda changes as V is updated, breaking the equivalence. True Online TD(\\lambda) (van Seijen et al., 2016) resolves this with a corrected dutch traces formulation that remains equivalent to the online \\lambda-return target.",
       hints: [
-        "The λ-return G_t^λ uses V(S_{t+n}). If V changes mid-episode, does G_t^λ change too?",
-        "In the offline case, all updates happen after the episode, so V is fixed during G_t^λ computation. Is V fixed in the online case?",
+        "The \\lambda-return G_t^\\lambda uses V(S_{t+n}). If V changes mid-episode, does G_t^\\lambda change too?",
+        "In the offline case, all updates happen after the episode, so V is fixed during G_t^\\lambda computation. Is V fixed in the online case?",
       ],
     },
   ],
@@ -2294,7 +2294,7 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp48-1",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "Count-based exploration methods give a bonus reward r_plus = β / sqrt(N(s)) where N(s) is the visit count. What is the key insight behind this bonus?",
+      question: "Count-based exploration methods give a bonus reward r_plus = \\beta / sqrt(N(s)) where N(s) is the visit count. What is the key insight behind this bonus?",
       options: [
         "Rarely visited states have high uncertainty in value estimates, so the bonus encourages the agent to resolve that uncertainty (optimism under uncertainty)",
         "The bonus ensures the agent collects equal numbers of samples from all states",
@@ -2302,9 +2302,9 @@ const extra: Record<string, Question[]> = {
         "It is equivalent to adding entropy regularization to the policy",
       ],
       correctAnswer: 0,
-      explanation: "Count-based exploration is motivated by optimism under uncertainty: states visited rarely (small N(s)) have high uncertainty in their value estimates, so the agent should explore them to potentially discover high-reward regions. The bonus β/sqrt(N(s)) decreases as N(s) grows, naturally reducing exploration. This mirrors UCB1 from multi-armed bandits which adds β*sqrt(ln t / N(a)) to action values.",
+      explanation: "Count-based exploration is motivated by optimism under uncertainty: states visited rarely (small N(s)) have high uncertainty in their value estimates, so the agent should explore them to potentially discover high-reward regions. The bonus \\beta/sqrt(N(s)) decreases as N(s) grows, naturally reducing exploration. This mirrors UCB1 from multi-armed bandits which adds \\beta*sqrt(ln t / N(a)) to action values.",
       hints: [
-        "What happens to the bonus β/sqrt(N(s)) as N(s) grows large? Does the agent eventually stop exploring that state?",
+        "What happens to the bonus \\beta/sqrt(N(s)) as N(s) grows large? Does the agent eventually stop exploring that state?",
         "Think about the UCB principle from bandits: it favors arms with high uncertainty. How is count-based exploration in MDPs analogous?",
       ],
     },
@@ -2317,7 +2317,7 @@ const extra: Record<string, Question[]> = {
       explanation: "Count-based methods require counting visits to individual states. In continuous or high-dimensional spaces (e.g., Atari pixel observations), each state is visited at most once, making raw counts useless. Pseudo-count methods (Bellemare et al., 2016) address this by using a density model to estimate a pseudo-count from the rate of surprise: the model's prediction probability for s before and after seeing it determines a pseudo-count that generalizes to nearby states.",
       hints: [
         "In a continuous state space, how many times would any exact state typically be visited during training?",
-        "If N(s) = 0 or 1 for all s (because states are never revisited exactly), what does the bonus β/sqrt(N(s)) look like for all states?",
+        "If N(s) = 0 or 1 for all s (because states are never revisited exactly), what does the bonus \\beta/sqrt(N(s)) look like for all states?",
       ],
     },
     {
@@ -2332,9 +2332,9 @@ const extra: Record<string, Question[]> = {
         "The inverse model provides a separate reward signal that cancels out the noise-driven reward",
       ],
       correctAnswer: 1,
-      explanation: "ICM's inverse model predicts a_t from (φ(s_t), φ(s_{t+1})). For this to be accurate, φ must encode state aspects that change due to the agent's actions. Random TV pixels change independently of actions and are useless for action prediction — they are excluded from φ. The forward model predicts φ(s_{t+1}) from (φ(s_t), a_t); since φ ignores uncontrollable noise, the forward model can learn to predict φ(s_{t+1}) for TV-related transitions, driving intrinsic reward to zero.",
+      explanation: "ICM's inverse model predicts a_t from (\\phi(s_t), \\phi(s_{t+1})). For this to be accurate, \\phi must encode state aspects that change due to the agent's actions. Random TV pixels change independently of actions and are useless for action prediction — they are excluded from \\phi. The forward model predicts \\phi(s_{t+1}) from (\\phi(s_t), a_t); since \\phi ignores uncontrollable noise, the forward model can learn to predict \\phi(s_{t+1}) for TV-related transitions, driving intrinsic reward to zero.",
       hints: [
-        "The noisy TV problem: an agent gets intrinsic reward for staring at random TV because the forward model cannot predict random pixels. What must be true about features φ to prevent this?",
+        "The noisy TV problem: an agent gets intrinsic reward for staring at random TV because the forward model cannot predict random pixels. What must be true about features \\phi to prevent this?",
         "The inverse model predicts the action from state transitions. What does this force the features to capture, and what does it force them to ignore?",
       ],
     },
@@ -2345,17 +2345,17 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp49-1",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The Bellman optimality operator T* is a γ-contraction in the sup-norm. What does Banach's fixed-point theorem guarantee about repeated application (T*)^k V?",
+      question: "The Bellman optimality operator T* is a \\gamma-contraction in the sup-norm. What does Banach's fixed-point theorem guarantee about repeated application (T*)^k V?",
       options: [
-        "||(T*)^k V - V*||_inf ≤ γ^k ||V - V*||_inf, so (T*)^k V converges to V* geometrically for any initial V",
+        "||(T*)^k V - V*||_inf ≤ \\gamma^k ||V - V*||_inf, so (T*)^k V converges to V* geometrically for any initial V",
         "The sequence (T*)^k V converges to V* in exactly |S| steps",
-        "The operator T* is only a contraction for γ < 0.5",
+        "The operator T* is only a contraction for \\gamma < 0.5",
         "(T*)^k V diverges unless V is initialized to zero",
       ],
       correctAnswer: 0,
-      explanation: "The Bellman optimality operator T*V(s) = max_a [r(s,a) + γ * Σ_{s'} P(s'|s,a) V(s')] is a γ-contraction in the sup-norm. By Banach's fixed-point theorem, it has a unique fixed point V*, and for any initial V: ||(T*)^k V - V*||_inf ≤ γ^k ||V - V*||_inf. This is the theoretical foundation of value iteration: each sweep contracts the error by factor γ, guaranteeing geometric convergence for any γ < 1.",
+      explanation: "The Bellman optimality operator T*V(s) = max_a [r(s,a) + \\gamma * \\Sigma_{s'} P(s'|s,a) V(s')] is a \\gamma-contraction in the sup-norm. By Banach's fixed-point theorem, it has a unique fixed point V*, and for any initial V: ||(T*)^k V - V*||_inf ≤ \\gamma^k ||V - V*||_inf. This is the theoretical foundation of value iteration: each sweep contracts the error by factor \\gamma, guaranteeing geometric convergence for any \\gamma < 1.",
       hints: [
-        "A contraction mapping satisfies d(Tx, Ty) ≤ γ * d(x,y). How does repeated application affect the distance to the fixed point?",
+        "A contraction mapping satisfies d(Tx, Ty) ≤ \\gamma * d(x,y). How does repeated application affect the distance to the fixed point?",
         "Banach's theorem: any contraction on a complete metric space has a unique fixed point reachable by iteration. What is the fixed point of T*?",
       ],
     },
@@ -2363,11 +2363,11 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp49-2",
       type: "true-false",
       difficulty: "medium",
-      question: "The Bellman evaluation operator T^\\pi (for a fixed policy \\pi) is also a γ-contraction with unique fixed point V^\\pi, guaranteeing convergence of iterative policy evaluation from any initial value function.",
+      question: "The Bellman evaluation operator T^\\pi (for a fixed policy \\pi) is also a \\gamma-contraction with unique fixed point V^\\pi, guaranteeing convergence of iterative policy evaluation from any initial value function.",
       correctAnswer: "True",
-      explanation: "The Bellman evaluation operator T^\\pi V(s) = \sum_a \\pi(a|s) [r(s,a) + γ * Σ_{s'} P(s'|s,a) V(s')] is a γ-contraction in the sup-norm with unique fixed point V^\\pi. This guarantees that iterative policy evaluation — repeatedly applying T^\\pi starting from any V_0 — converges to V^\\pi geometrically: ||(T^\\pi)^k V_0 - V^\\pi||_inf ≤ γ^k ||V_0 - V^\\pi||_inf.",
+      explanation: "The Bellman evaluation operator T^\\pi V(s) = \sum_a \\pi(a|s) [r(s,a) + \\gamma * \\Sigma_{s'} P(s'|s,a) V(s')] is a \\gamma-contraction in the sup-norm with unique fixed point V^\\pi. This guarantees that iterative policy evaluation — repeatedly applying T^\\pi starting from any V_0 — converges to V^\\pi geometrically: ||(T^\\pi)^k V_0 - V^\\pi||_inf ≤ \\gamma^k ||V_0 - V^\\pi||_inf.",
       hints: [
-        "The contraction argument does not depend on whether we take a max or a weighted sum over actions. Does T^\\pi also contract by factor γ?",
+        "The contraction argument does not depend on whether we take a max or a weighted sum over actions. Does T^\\pi also contract by factor \\gamma?",
         "What is the fixed point of T^\\pi V = V? This is exactly the Bellman equation for V^\\pi.",
       ],
     },
@@ -2377,16 +2377,16 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Q-learning with function approximation can diverge even when tabular Q-learning converges. Which condition of the contraction-mapping proof fails with function approximation?",
       options: [
-        "The Bellman operator T* is no longer a γ-contraction when the action space is continuous",
-        "The projected Bellman operator Π∘T* (where Π projects onto the function approximation class) is NOT generally a contraction, enabling divergence — as shown by Baird's counterexample (1995)",
-        "Neural networks cannot represent Q-functions for γ close to 1",
-        "Function approximation effectively changes the discount factor γ, invalidating the contraction",
+        "The Bellman operator T* is no longer a \\gamma-contraction when the action space is continuous",
+        "The projected Bellman operator \\Pi∘T* (where \\Pi projects onto the function approximation class) is NOT generally a contraction, enabling divergence — as shown by Baird's counterexample (1995)",
+        "Neural networks cannot represent Q-functions for \\gamma close to 1",
+        "Function approximation effectively changes the discount factor \\gamma, invalidating the contraction",
       ],
       correctAnswer: 1,
-      explanation: "With function approximation, Q is constrained to a parametric family. After applying T*, the result T*Q may not lie in this family, so we project back: Π(T*Q). The composition Π∘T* is NOT generally a contraction — Baird (1995) showed a simple linear function approximation example that diverges with off-policy semi-gradient TD. DQN's experience replay and target networks empirically stabilize training but do not provide theoretical convergence guarantees for neural networks.",
+      explanation: "With function approximation, Q is constrained to a parametric family. After applying T*, the result T*Q may not lie in this family, so we project back: \\Pi(T*Q). The composition \\Pi∘T* is NOT generally a contraction — Baird (1995) showed a simple linear function approximation example that diverges with off-policy semi-gradient TD. DQN's experience replay and target networks empirically stabilize training but do not provide theoretical convergence guarantees for neural networks.",
       hints: [
         "T* is a contraction on the full value function space. Projection onto a restricted parametric space happens after applying T*. Does projection preserve the contraction property?",
-        "Baird's counterexample (1995) showed divergence of linear FA with off-policy TD. What does this say about the projected Bellman operator Π∘T*?",
+        "Baird's counterexample (1995) showed divergence of linear FA with off-policy TD. What does this say about the projected Bellman operator \\Pi∘T*?",
       ],
     },
   ],
@@ -2396,30 +2396,30 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp50-1",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "Tabular Q-learning converges under the Robbins-Monro conditions: Σ_t α_t = ∞ and Σ_t α_t^2 < ∞. What do these two conditions ensure respectively?",
+      question: "Tabular Q-learning converges under the Robbins-Monro conditions: \\Sigma_t \\alpha_t = ∞ and \\Sigma_t \\alpha_t^2 < ∞. What do these two conditions ensure respectively?",
       options: [
-        "Σ α_t = ∞ ensures updates are large enough in aggregate to overcome any initial bias; Σ α_t^2 < ∞ ensures accumulated variance of update noise goes to zero",
-        "Σ α_t = ∞ ensures fast convergence; Σ α_t^2 < ∞ ensures sufficient exploration",
-        "Σ α_t = ∞ ensures numerical stability; Σ α_t^2 < ∞ ensures the policy improves monotonically",
+        "\\Sigma \\alpha_t = ∞ ensures updates are large enough in aggregate to overcome any initial bias; \\Sigma \\alpha_t^2 < ∞ ensures accumulated variance of update noise goes to zero",
+        "\\Sigma \\alpha_t = ∞ ensures fast convergence; \\Sigma \\alpha_t^2 < ∞ ensures sufficient exploration",
+        "\\Sigma \\alpha_t = ∞ ensures numerical stability; \\Sigma \\alpha_t^2 < ∞ ensures the policy improves monotonically",
         "Both conditions together just mean the step size must remain smaller than 1",
       ],
       correctAnswer: 0,
-      explanation: "The Robbins-Monro conditions guarantee stochastic approximation convergence: (1) Σ α_t = ∞ means steps are large enough in aggregate to overcome any initial bias — the algorithm can correct errors of any magnitude. (2) Σ α_t^2 < ∞ means step sizes shrink fast enough that accumulated noise variance goes to zero. Together they ensure convergence. The schedule α_t = 1/t satisfies both; a constant α satisfies only the first and causes Q to fluctuate around Q* rather than converge exactly.",
+      explanation: "The Robbins-Monro conditions guarantee stochastic approximation convergence: (1) \\Sigma \\alpha_t = ∞ means steps are large enough in aggregate to overcome any initial bias — the algorithm can correct errors of any magnitude. (2) \\Sigma \\alpha_t^2 < ∞ means step sizes shrink fast enough that accumulated noise variance goes to zero. Together they ensure convergence. The schedule \\alpha_t = 1/t satisfies both; a constant \\alpha satisfies only the first and causes Q to fluctuate around Q* rather than converge exactly.",
       hints: [
-        "The schedule α_t = 1/t satisfies Σ 1/t = ∞ and Σ 1/t^2 < ∞. What about a constant step size α?",
-        "If α is constant, Σ α^2 = ∞. What does failure of the second condition mean for exact convergence?",
+        "The schedule \\alpha_t = 1/t satisfies \\Sigma 1/t = ∞ and \\Sigma 1/t^2 < ∞. What about a constant step size \\alpha?",
+        "If \\alpha is constant, \\Sigma \\alpha^2 = ∞. What does failure of the second condition mean for exact convergence?",
       ],
     },
     {
       id: "q-rl-kp50-2",
       type: "true-false",
       difficulty: "medium",
-      question: "Value iteration is guaranteed to find the exact optimal value function V* in a finite number of iterations for finite MDPs with γ < 1.",
+      question: "Value iteration is guaranteed to find the exact optimal value function V* in a finite number of iterations for finite MDPs with \\gamma < 1.",
       correctAnswer: "False",
-      explanation: "Value iteration converges asymptotically to V* but does not reach it in finite steps. Each iteration contracts the error by factor γ: ||V_k - V*||_inf ≤ γ^k ||V_0 - V*||_inf. For practical ε-optimality, we stop when ||V_{k+1} - V_k||_inf < ε(1-γ)/(2γ), which guarantees the greedy policy is ε-optimal. Exact convergence in finite steps would require γ=0.",
+      explanation: "Value iteration converges asymptotically to V* but does not reach it in finite steps. Each iteration contracts the error by factor \\gamma: ||V_k - V*||_inf ≤ \\gamma^k ||V_0 - V*||_inf. For practical \\epsilon-optimality, we stop when ||V_{k+1} - V_k||_inf < \\epsilon(1-\\gamma)/(2\\gamma), which guarantees the greedy policy is \\epsilon-optimal. Exact convergence in finite steps would require \\gamma=0.",
       hints: [
-        "Each value iteration sweep multiplies the error by γ < 1. Does the error ever reach exactly zero in a finite number of steps?",
-        "For ε-optimality: how many iterations k satisfy γ^k * ||V_0 - V*||_inf ≤ ε?",
+        "Each value iteration sweep multiplies the error by \\gamma < 1. Does the error ever reach exactly zero in a finite number of steps?",
+        "For \\epsilon-optimality: how many iterations k satisfy \\gamma^k * ||V_0 - V*||_inf ≤ \\epsilon?",
       ],
     },
     {
@@ -2428,13 +2428,13 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Policy iteration converges in finite steps for finite MDPs. Which of the following best explains why?",
       options: [
-        "Policy iteration uses a faster Bellman operator that contracts by γ^2 instead of γ",
+        "Policy iteration uses a faster Bellman operator that contracts by \\gamma^2 instead of \\gamma",
         "Policy iteration evaluates V^\\pi exactly by solving a linear system and improves strictly at each step. Since there are finitely many deterministic policies (|A|^|S|) and each step yields strict improvement, the algorithm must terminate.",
         "Policy iteration parallelizes backup operations across all states simultaneously",
-        "Policy iteration does not require a discount factor γ so convergence rate is γ-independent",
+        "Policy iteration does not require a discount factor \\gamma so convergence rate is \\gamma-independent",
       ],
       correctAnswer: 1,
-      explanation: "Policy iteration alternates between exact policy evaluation (solving (I - γP^\\pi)V = R^\\pi) and greedy improvement. The policy strictly improves at each step: V^{\\pi_{k+1}}(s) ≥ V^{\\pi_k}(s) for all s, with strict inequality somewhere unless \\pi_k is already optimal. Since there are finitely many deterministic policies (|A|^|S|) and each step strictly improves, the algorithm terminates in at most |A|^|S| steps — in practice much fewer.",
+      explanation: "Policy iteration alternates between exact policy evaluation (solving (I - \\gammaP^\\pi)V = R^\\pi) and greedy improvement. The policy strictly improves at each step: V^{\\pi_{k+1}}(s) ≥ V^{\\pi_k}(s) for all s, with strict inequality somewhere unless \\pi_k is already optimal. Since there are finitely many deterministic policies (|A|^|S|) and each step strictly improves, the algorithm terminates in at most |A|^|S| steps — in practice much fewer.",
       hints: [
         "How many distinct deterministic policies exist in a finite MDP with |S| states and |A| actions per state?",
         "Can policy iteration revisit the same policy twice? What does strict monotone improvement imply about the sequence of policies?",
@@ -2531,7 +2531,7 @@ const extra: Record<string, Question[]> = {
       question: "Prioritized sweeping focuses Dyna-style model updates on state-action pairs with large expected value changes. What determines the priority assigned to a pair?",
       options: [
         "The most recently visited (s,a) pair receives highest priority",
-        "Priority is the expected magnitude of the Bellman error |Q(s,a) - (r + γ * max_{a'} Q(s',a'))| after receiving a model update propagated backward from a high-TD-error transition",
+        "Priority is the expected magnitude of the Bellman error |Q(s,a) - (r + \\gamma * max_{a'} Q(s',a'))| after receiving a model update propagated backward from a high-TD-error transition",
         "Pairs with the smallest visit count N(s,a) get highest priority",
         "The pair with the highest current Q-value estimate gets highest priority",
       ],
@@ -2600,30 +2600,30 @@ const extra: Record<string, Question[]> = {
       id: "q-rl-kp54-1",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "The Bellman equation V^\\pi = R^\\pi + γ * P^\\pi * V^\\pi can be written as a linear system. What is the closed-form solution for V^\\pi?",
+      question: "The Bellman equation V^\\pi = R^\\pi + \\gamma * P^\\pi * V^\\pi can be written as a linear system. What is the closed-form solution for V^\\pi?",
       options: [
-        "V^\\pi = (I - γ * P^\\pi)^{-1} * R^\\pi",
-        "V^\\pi = (I + γ * P^\\pi)^{-1} * R^\\pi",
-        "V^\\pi = R^\\pi / (1 - γ)",
-        "V^\\pi = γ * (I - P^\\pi)^{-1} * R^\\pi",
+        "V^\\pi = (I - \\gamma * P^\\pi)^{-1} * R^\\pi",
+        "V^\\pi = (I + \\gamma * P^\\pi)^{-1} * R^\\pi",
+        "V^\\pi = R^\\pi / (1 - \\gamma)",
+        "V^\\pi = \\gamma * (I - P^\\pi)^{-1} * R^\\pi",
       ],
       correctAnswer: 0,
-      explanation: "Rearranging V = R^\\pi + γ * P^\\pi * V gives (I - γ * P^\\pi) * V = R^\\pi, so V^\\pi = (I - γ * P^\\pi)^{-1} * R^\\pi. The matrix (I - γ * P^\\pi) is invertible because its eigenvalues are 1 - γ*λ_i where λ_i are eigenvalues of the stochastic matrix P^\\pi (|λ_i| ≤ 1), so 1 - γ*λ_i ≥ 1-γ > 0 for γ < 1. This closed-form requires O(|S|^3) computation and proves V^\\pi uniquely exists, but iterative policy evaluation avoids explicit matrix inversion.",
+      explanation: "Rearranging V = R^\\pi + \\gamma * P^\\pi * V gives (I - \\gamma * P^\\pi) * V = R^\\pi, so V^\\pi = (I - \\gamma * P^\\pi)^{-1} * R^\\pi. The matrix (I - \\gamma * P^\\pi) is invertible because its eigenvalues are 1 - \\gamma*\\lambda_i where \\lambda_i are eigenvalues of the stochastic matrix P^\\pi (|\\lambda_i| ≤ 1), so 1 - \\gamma*\\lambda_i ≥ 1-\\gamma > 0 for \\gamma < 1. This closed-form requires O(|S|^3) computation and proves V^\\pi uniquely exists, but iterative policy evaluation avoids explicit matrix inversion.",
       hints: [
-        "Start from V = R^\\pi + γ * P^\\pi * V. Collect V terms on one side: (I - γ*P^\\pi)*V = R^\\pi. How do you solve for V?",
-        "Is (I - γ * P^\\pi) invertible for γ < 1? What are its eigenvalues given that P^\\pi is a stochastic matrix?",
+        "Start from V = R^\\pi + \\gamma * P^\\pi * V. Collect V terms on one side: (I - \\gamma*P^\\pi)*V = R^\\pi. How do you solve for V?",
+        "Is (I - \\gamma * P^\\pi) invertible for \\gamma < 1? What are its eigenvalues given that P^\\pi is a stochastic matrix?",
       ],
     },
     {
       id: "q-rl-kp54-2",
       type: "true-false",
       difficulty: "medium",
-      question: "For a discounted MDP with γ < 1, the optimal value function V* is the unique fixed point of T*, always exists, and is always finite for bounded rewards.",
+      question: "For a discounted MDP with \\gamma < 1, the optimal value function V* is the unique fixed point of T*, always exists, and is always finite for bounded rewards.",
       correctAnswer: "True",
-      explanation: "By Banach's fixed-point theorem, since T* is a γ-contraction on the complete metric space of bounded functions with the sup-norm, it has a unique fixed point V*. Boundedness: since |r| ≤ r_max, the value function satisfies |V*(s)| ≤ r_max / (1-γ) < ∞. Uniqueness: if V and U are both fixed points, then ||V - U||_inf = ||T*V - T*U||_inf ≤ γ * ||V - U||_inf, requiring ||V - U||_inf = 0.",
+      explanation: "By Banach's fixed-point theorem, since T* is a \\gamma-contraction on the complete metric space of bounded functions with the sup-norm, it has a unique fixed point V*. Boundedness: since |r| ≤ r_max, the value function satisfies |V*(s)| ≤ r_max / (1-\\gamma) < ∞. Uniqueness: if V and U are both fixed points, then ||V - U||_inf = ||T*V - T*U||_inf ≤ \\gamma * ||V - U||_inf, requiring ||V - U||_inf = 0.",
       hints: [
-        "If |r(s,a)| ≤ r_max for all s,a, what is an upper bound on |Σ_{t=0}^∞ γ^t * r_t|?",
-        "If V and U are both fixed points of T*, what does the contraction inequality γ * ||V - U||_inf ≥ ||V - U||_inf imply?",
+        "If |r(s,a)| ≤ r_max for all s,a, what is an upper bound on |\\Sigma_{t=0}^∞ \\gamma^t * r_t|?",
+        "If V and U are both fixed points of T*, what does the contraction inequality \\gamma * ||V - U||_inf ≥ ||V - U||_inf imply?",
       ],
     },
     {
@@ -2632,15 +2632,15 @@ const extra: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Semi-gradient TD(0) with linear function approximation V(s;w) = w^T * phi(s) does not minimize a well-defined fixed loss. What does it actually converge to (for linear FA)?",
       options: [
-        "The minimum of the mean squared TD error E[δ_t^2], equivalent to MSE from supervised learning with fixed targets",
-        "The TD fixed point w* satisfying E[δ_t * phi(s_t)] = 0, found by treating the target (r + γ*V(s';w)) as a constant when computing gradients — so the update is not the gradient of any fixed scalar objective",
-        "The minimum of the projected Bellman error ||V_w - Π * T^\\pi * V_w||_\mu^2 directly",
+        "The minimum of the mean squared TD error E[\\delta_t^2], equivalent to MSE from supervised learning with fixed targets",
+        "The TD fixed point w* satisfying E[\\delta_t * phi(s_t)] = 0, found by treating the target (r + \\gamma*V(s';w)) as a constant when computing gradients — so the update is not the gradient of any fixed scalar objective",
+        "The minimum of the projected Bellman error ||V_w - \\Pi * T^\\pi * V_w||_\mu^2 directly",
         "The minimum of the KL divergence between the target and current value distributions",
       ],
       correctAnswer: 1,
-      explanation: "Semi-gradient TD treats the target y_t = r + γ*V(s';w) as a constant (stops gradient through V(s';w)), computing update -α * δ_t * phi(s_t). This is not the gradient of any fixed scalar loss because the target changes as w changes. For linear FA, the algorithm converges to the TD fixed point w* satisfying E[δ_t * phi(s_t)] = 0, equivalently Π * T^\\pi * V_{w*} = V_{w*}. The resulting error satisfies ||V_{w*} - V*||_\mu ≤ (1/sqrt(1-γ)) * min_w ||V_w - V*||_\mu.",
+      explanation: "Semi-gradient TD treats the target y_t = r + \\gamma*V(s';w) as a constant (stops gradient through V(s';w)), computing update -\\alpha * \\delta_t * phi(s_t). This is not the gradient of any fixed scalar loss because the target changes as w changes. For linear FA, the algorithm converges to the TD fixed point w* satisfying E[\\delta_t * phi(s_t)] = 0, equivalently \\Pi * T^\\pi * V_{w*} = V_{w*}. The resulting error satisfies ||V_{w*} - V*||_\mu ≤ (1/sqrt(1-\\gamma)) * min_w ||V_w - V*||_\mu.",
       hints: [
-        "In supervised learning the target y_t is fixed. In TD, the target r + γ*V(s';w) depends on w. What happens to the gradient calculation when you treat the target as a constant?",
+        "In supervised learning the target y_t is fixed. In TD, the target r + \\gamma*V(s';w) depends on w. What happens to the gradient calculation when you treat the target as a constant?",
         "If y_t(w) changes as w changes, is -(1/2) * ||V(s;w) - y_t(w)||^2 a well-defined scalar objective we can minimize by gradient descent?",
       ],
     },
@@ -2654,14 +2654,14 @@ const extra: Record<string, Question[]> = {
       question: "MBPO (Model-Based Policy Optimization, Janner et al., 2019) uses short model-generated rollouts (k=1 to 5 steps) to augment real data. Why are short rollouts preferred over long ones?",
       options: [
         "Short rollouts fit in GPU memory while long rollouts do not",
-        "Model errors compound over time: a model with per-step error ε accumulates O(k*ε) error over k steps. Short rollouts bound this compounding, balancing the benefit of model-generated data against model bias.",
+        "Model errors compound over time: a model with per-step error \\epsilon accumulates O(k*\\epsilon) error over k steps. Short rollouts bound this compounding, balancing the benefit of model-generated data against model bias.",
         "Long rollouts require a target network to stabilize, which MBPO does not implement",
         "Short rollouts allow more frequent policy gradient updates per wall-clock time",
       ],
       correctAnswer: 1,
-      explanation: "MBPO's theoretical bound shows |J(\\pi) - J_model(\\pi)| ≤ O(k * ε_model / (1-γ)) + O(γ^k / (1-γ) * ε_real), where ε_model is the model's one-step error and ε_real captures real-data coverage error. Short rollouts (small k) limit model bias accumulation. Longer rollouts create more biased estimates. Empirically, k=1 works well for simple tasks; k up to 10 for harder environments. Real transitions are always included to anchor rollout starting states.",
+      explanation: "MBPO's theoretical bound shows |J(\\pi) - J_model(\\pi)| ≤ O(k * \\epsilon_model / (1-\\gamma)) + O(\\gamma^k / (1-\\gamma) * \\epsilon_real), where \\epsilon_model is the model's one-step error and \\epsilon_real captures real-data coverage error. Short rollouts (small k) limit model bias accumulation. Longer rollouts create more biased estimates. Empirically, k=1 works well for simple tasks; k up to 10 for harder environments. Real transitions are always included to anchor rollout starting states.",
       hints: [
-        "If a model makes error ε at each step, what is the total error after k steps of a rollout?",
+        "If a model makes error \\epsilon at each step, what is the total error after k steps of a rollout?",
         "Long rollouts using an imperfect model move the agent far from states covered by real data. How does this affect the quality of value estimates?",
       ],
     },
@@ -2674,14 +2674,14 @@ const extra: Record<string, Question[]> = {
       explanation: "A model with low one-step MSE may still be a poor model for policy optimization: (1) the model may have high error in regions of state space visited by the optimal policy, even if global MSE is low; (2) compounding errors over multi-step rollouts can be large even when per-step error is small; (3) the relevant metric for policy optimization is return under the model vs. real environment, not global observation MSE. This motivates value-equivalent models trained jointly with policy objectives, and latent models like MuZero that match return distributions rather than observations.",
       hints: [
         "MSE averages over the training data distribution. If the optimal policy visits different states, can a low global MSE still imply high error on policy-relevant states?",
-        "Even if per-step observation MSE is ε, how does error grow over H steps of a planning rollout?",
+        "Even if per-step observation MSE is \\epsilon, how does error grow over H steps of a planning rollout?",
       ],
     },
     {
       id: "q-rl-kp55-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "AlphaZero trains its neural network to predict \\pi_MCTS proportional to N(s,a)^{1/τ} (MCTS visit counts) rather than just the greedy MCTS action. What is the primary reason for this design choice?",
+      question: "AlphaZero trains its neural network to predict \\pi_MCTS proportional to N(s,a)^{1/\\tau} (MCTS visit counts) rather than just the greedy MCTS action. What is the primary reason for this design choice?",
       options: [
         "The softmax of visit counts is more numerically stable than one-hot action targets",
         "MCTS represents a stronger policy than the raw neural network because it performs lookahead over many trajectories. Using \\pi_MCTS as the training target causes the network to distill the search result, progressively learning to approximate what deep MCTS search would produce — acting as an iterative policy improvement operator.",
