@@ -12155,4 +12155,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "rag-systems",
+    slug: "rag-systems",
+    name: "RAG Systems & Long Context Engineering",
+    description:
+      "Build retrieval-augmented generation systems with vector databases, chunking strategies, and long-context handling for production AI applications.",
+    category: "ai",
+    icon: "🔍",
+    color: "#10B981",
+    topicCount: 6,
+    estimatedHours: 12,
+    topics: [
+      {
+        id: "rag-fundamentals",
+        slug: "rag-fundamentals",
+        name: "RAG Fundamentals",
+        description:
+          "Core concepts of retrieval-augmented generation and when to use it.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-1",
+            slug: "rag-vs-finetuning",
+            name: "RAG vs Fine-Tuning Trade-offs",
+          },
+          {
+            id: "rag-kp-2",
+            slug: "rag-architecture",
+            name: "RAG Architecture Components",
+          },
+          {
+            id: "rag-kp-3",
+            slug: "when-to-use-rag",
+            name: "When to Use RAG",
+          },
+          {
+            id: "rag-kp-4",
+            slug: "rag-limitations",
+            name: "RAG Limitations & Failure Modes",
+          },
+          {
+            id: "rag-kp-5",
+            slug: "naive-rag",
+            name: "Naive RAG Implementation",
+          },
+        ],
+      },
+      {
+        id: "chunking-strategies",
+        slug: "chunking-strategies",
+        name: "Document Chunking Strategies",
+        description:
+          "How to split documents into retrievable chunks effectively.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-6",
+            slug: "fixed-size-chunking",
+            name: "Fixed-Size Chunking",
+          },
+          {
+            id: "rag-kp-7",
+            slug: "semantic-chunking",
+            name: "Semantic Chunking",
+          },
+          {
+            id: "rag-kp-8",
+            slug: "recursive-chunking",
+            name: "Recursive Character Chunking",
+          },
+          {
+            id: "rag-kp-9",
+            slug: "chunk-size-tradeoffs",
+            name: "Chunk Size & Overlap Trade-offs",
+          },
+          {
+            id: "rag-kp-10",
+            slug: "document-structure-chunking",
+            name: "Structure-Aware Chunking",
+          },
+        ],
+      },
+      {
+        id: "vector-databases",
+        slug: "vector-databases",
+        name: "Vector Databases & Embeddings",
+        description:
+          "Storing and retrieving embeddings efficiently at scale.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-11",
+            slug: "embedding-models",
+            name: "Embedding Models for RAG",
+          },
+          {
+            id: "rag-kp-12",
+            slug: "vector-similarity",
+            name: "Vector Similarity Metrics",
+          },
+          {
+            id: "rag-kp-13",
+            slug: "ann-indexes",
+            name: "Approximate Nearest Neighbor (ANN) Indexes",
+          },
+          {
+            id: "rag-kp-14",
+            slug: "pinecone-weaviate",
+            name: "Pinecone, Weaviate, Milvus",
+          },
+          {
+            id: "rag-kp-15",
+            slug: "pgvector",
+            name: "PostgreSQL pgvector",
+          },
+        ],
+      },
+      {
+        id: "retrieval-optimization",
+        slug: "retrieval-optimization",
+        name: "Retrieval & Re-ranking",
+        description:
+          "Improving retrieval quality with hybrid search and re-ranking.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-16",
+            slug: "hybrid-search",
+            name: "Hybrid Search (BM25 + Vector)",
+          },
+          {
+            id: "rag-kp-17",
+            slug: "reranking-models",
+            name: "Cross-Encoder Re-ranking",
+          },
+          {
+            id: "rag-kp-18",
+            slug: "query-expansion",
+            name: "Query Expansion & Rewriting",
+          },
+          {
+            id: "rag-kp-19",
+            slug: "multi-query",
+            name: "Multi-Query Retrieval",
+          },
+          {
+            id: "rag-kp-20",
+            slug: "hyde",
+            name: "HyDE (Hypothetical Document Embeddings)",
+          },
+        ],
+      },
+      {
+        id: "long-context",
+        slug: "long-context",
+        name: "Long Context Handling",
+        description:
+          "Managing documents that exceed context window limits.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-21",
+            slug: "context-window-limits",
+            name: "Context Window Constraints",
+          },
+          {
+            id: "rag-kp-22",
+            slug: "context-compression",
+            name: "Context Compression & Summarization",
+          },
+          {
+            id: "rag-kp-23",
+            slug: "sliding-window",
+            name: "Sliding Window & Rolling Context",
+          },
+          {
+            id: "rag-kp-24",
+            slug: "hierarchical-context",
+            name: "Hierarchical Context Management",
+          },
+          {
+            id: "rag-kp-25",
+            slug: "long-context-models",
+            name: "Long-Context Models (128K+)",
+          },
+        ],
+      },
+      {
+        id: "rag-evaluation",
+        slug: "rag-evaluation",
+        name: "RAG Evaluation & Optimization",
+        description:
+          "Measuring and improving RAG system performance.",
+        knowledgePoints: [
+          {
+            id: "rag-kp-26",
+            slug: "rag-metrics",
+            name: "RAG Evaluation Metrics",
+          },
+          {
+            id: "rag-kp-27",
+            slug: "ragas-framework",
+            name: "RAGAS Framework",
+          },
+          {
+            id: "rag-kp-28",
+            slug: "retrieval-eval",
+            name: "Retrieval Quality Evaluation",
+          },
+          {
+            id: "rag-kp-29",
+            slug: "generation-eval",
+            name: "Generation Quality Evaluation",
+          },
+          {
+            id: "rag-kp-30",
+            slug: "rag-optimization",
+            name: "End-to-End RAG Optimization",
+          },
+        ],
+      },
+    ],
+  },
 ];
