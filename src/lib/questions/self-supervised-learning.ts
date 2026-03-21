@@ -1760,8 +1760,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DINO\'s teacher network is trained using backpropagation, with gradients flowing from the cross-entropy loss between student and teacher outputs.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "The DINO teacher is updated via Exponential Moving Average (EMA) of the student weights - no gradients flow to the teacher. Only the student is updated via backpropagation. This momentum teacher provides more stable targets than a network that updates every step, analogous to the momentum encoder in MoCo.",
       hints: [
@@ -1817,8 +1816,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "CLIP performs comparably to supervised ResNet-50 on ImageNet zero-shot classification without seeing any ImageNet training images.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         'Radford et al. (2021) showed that zero-shot CLIP (ViT-L/14@336px) achieves ~76% top-1 accuracy on ImageNet, matching the original ResNet-50 trained with full supervision. This is remarkable: no ImageNet labels, no fine-tuning - just the text "a photo of a [class]." Larger CLIP models exceed this, and CLIP is generally much more robust than supervised models to distribution shift.',
       hints: [
@@ -1874,8 +1872,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "MAE\'s pre-training objective of reconstructing raw pixel values for masked patches is suboptimal compared to reconstructing higher-level features (like CLIP embeddings), and pixel reconstruction has been shown to produce worse downstream representations than feature reconstruction targets.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "MAE (He et al.) showed that pixel reconstruction with 75% masking produces excellent representations, outperforming earlier methods with semantic targets on many benchmarks. While some methods (BEiT, data2vec) use semantic targets, pixel reconstruction with high masking ratio forces the model to learn semantic structure through the constraint of predicting masked regions from context - the target granularity matters less than the task difficulty. MAE is simpler and highly competitive.",
       hints: [
@@ -1931,8 +1928,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ImageBind requires paired training data for every combination of its 6 modalities (e.g., audio-text pairs, audio-depth pairs, thermal-IMU pairs) to learn its joint embedding space.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "ImageBind only needs image-paired data for each modality: (image, audio), (image, text), (image, depth), (image, thermal), (image, IMU). The 15 pairwise combinations among 6 modalities are not needed. Alignment between non-image modalities is emergent - it happens because all modalities share the image-aligned embedding space. This is the key data efficiency advantage.",
       hints: [

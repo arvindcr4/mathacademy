@@ -1328,7 +1328,6 @@ const questionOverrides: Record<string, QuestionOverride> = {
     type: "true-false",
     question:
       "If the first relevant result for a query is at rank 3, additional relevant results at ranks 5 and 7 do not change that query's reciprocal rank.",
-    options: ["True", "False"],
     correctAnswer: "true",
   },
   "q-eval-kp22-2": {
@@ -1846,28 +1845,24 @@ const questionOverrides: Record<string, QuestionOverride> = {
     type: "true-false",
     question:
       "GAN training is guaranteed to converge to a Nash equilibrium when both networks use gradient descent with a sufficiently small learning rate.",
-    options: ["True", "False"],
     correctAnswer: "false",
   },
   "q-gan-kp32-2": {
     type: "true-false",
     question:
       "In a projection discriminator, the class label is incorporated by taking an inner product between the final feature vector and a class embedding rather than by concatenating the label.",
-    options: ["True", "False"],
     correctAnswer: "true",
   },
   "q-gan-kp33-2": {
     type: "true-false",
     question:
       "CycleGAN's identity loss penalizes the generator when it changes an input that is already in the target domain, helping preserve color and style.",
-    options: ["True", "False"],
     correctAnswer: "true",
   },
   "q-gan-kp34-2": {
     type: "true-false",
     question:
       "AttnGAN generates images from text by using word-level attention at multiple resolutions to align specific words with specific spatial regions of the image.",
-    options: ["True", "False"],
     correctAnswer: "true",
   },
   "q-prod-ex4-2": {
@@ -1995,7 +1990,6 @@ const questionOverrides: Record<string, QuestionOverride> = {
     type: "true-false",
     question:
       "With a single inner-loop gradient step, Reptile and FOMAML reduce to the same plain task-gradient update.",
-    options: ["True", "False"],
     correctAnswer: "true",
   },
   "q-msd-kp1-6": {

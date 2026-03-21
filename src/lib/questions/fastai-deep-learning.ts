@@ -68,8 +68,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In a ResNet skip connection, the input to a block is added element-wise to the output of that block before the activation function.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** The core idea of a residual block is: output = F(x) + x, where F(x) is the transformation learned by the block's layers, and x is the identity shortcut.",
       hints: [
@@ -165,8 +164,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In fastai, calling `learn.unfreeze()` before training allows gradients to flow through all layers of the model, including the pre-trained backbone.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** `learn.unfreeze()` sets `requires_grad=True` for all parameters in the model, enabling the pre-trained backbone's weights to be updated during subsequent training steps.",
       hints: [
@@ -282,8 +280,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Data augmentation should be applied to both the training set and the validation set in fastai.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "**Step 1:** Data augmentation is applied only to the training set.\n\n**Step 2:** The validation set uses deterministic transforms (like resizing and normalization only) to give an honest, reproducible measure of model performance.\n\n**Step 3:** Randomly modifying validation images would make evaluation inconsistent.",
       hints: [
@@ -419,8 +416,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "The Learning Rate Finder resets the model weights after running, so it does not interfere with the actual training process.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** fastai's `lr_find()` saves the model state before running the finder and restores it afterward.",
       hints: [
@@ -535,8 +531,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In fastai's DataBlock API, `blocks=(ImageBlock, CategoryBlock)` indicates that the inputs are images and the targets (labels) are categories.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** The `blocks` parameter defines the types of input and output. `(ImageBlock, CategoryBlock)` means: inputs are images, targets are single categories.",
       hints: [
@@ -631,8 +626,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Test-Time Augmentation requires additional GPU memory during inference compared to standard single-pass prediction.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** TTA runs multiple forward passes (e.g., 4-8) for each input, which requires proportionally more memory and compute time.",
       hints: [
@@ -748,8 +742,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "When using Mixup, the standard Cross-Entropy loss function works without modification because the mixed labels are just interpolated probabilities.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Cross-Entropy loss naturally handles soft/mixed labels.",
       hints: [
@@ -885,8 +878,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "ULMFiT was one of the first papers to demonstrate that NLP could benefit from pre-training + fine-tuning transfer learning, similar to how computer vision uses ImageNet pre-training.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** ULMFiT (Howard & Ruder, 2018) was a seminal paper that proved NLP transfer learning was viable at scale.",
       hints: [
@@ -981,8 +973,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In a standard RNN, the same set of weights is used at every time step, making it fundamentally different from a feedforward network where each layer has its own weights.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Weight sharing across time steps is a defining characteristic of RNNs.",
       hints: [
@@ -1117,8 +1108,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "A single fully-grown decision tree tends to overfit training data, but a Random Forest of many such trees tends to generalize better.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** An individual deep decision tree has high variance - it memorizes training data.\n\n**Step 2:** Random Forests reduce this variance by averaging many independently trained trees on random data/feature subsets.\n\n**Step 3:** Each tree is biased toward its bootstrap sample, but averaging cancels these individual biases out.",
       hints: [
@@ -1193,8 +1183,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Progressive resizing can act as a form of regularization because switching to larger images mid-training introduces a distribution shift that prevents the model from overfitting to the smaller image features.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** When training switches from smaller to larger images, the model effectively sees the data from a new perspective (more detail, different aspect ratios after resizing).",
       hints: [
@@ -1613,8 +1602,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In fastai's `TabularLearner`, categorical variables are passed through learnable embedding layers, while continuous variables are concatenated directly as floats after normalization.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** fastai's tabular neural network architecture embeds each categorical variable through its own `Embedding` layer (converting integer codes to dense vectors) and concatenates those embeddings with the normalized continuous variables before passing everything through fully connected layers.",
       hints: [
@@ -1732,8 +1720,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In fastai's ULMFiT workflow, language model fine-tuning on the target corpus is a self-supervised step that requires no labeled data.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Language model fine-tuning uses next-token prediction as its objective.\n\n**Step 2:** The targets are automatically derived from the input text itself (shifted by one position), so no human-provided labels are needed.\n\n**Step 3:** This allows leveraging large amounts of unlabeled domain text.",
       hints: [
@@ -2037,8 +2024,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "In fastai's multi-GPU training with `DistributedDataParallel`, the effective batch size increases proportionally with the number of GPUs, which typically requires scaling the learning rate accordingly.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** With DDP, each GPU processes its own mini-batch and the total batch size is `per_gpu_batch \\times num_gpus`.",
       hints: [
@@ -2157,8 +2143,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "When serving a fastai model in production using `learn.predict()`, the preprocessing transforms defined in the original DataLoaders are automatically applied to new inputs.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** When you export a fastai Learner with `learn.export()` and reload it with `load_learner()`, the DataLoaders (including all item transforms and batch transforms like resizing and normalization) are embedded in the exported file.",
       hints: [
@@ -2344,8 +2329,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Hugging Face Spaces allows you to host Gradio or Streamlit apps for free, making it a popular choice for deploying fastai model demos.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Hugging Face Spaces provides free hosting for Gradio and Streamlit web applications, making it the standard platform for sharing interactive ML demos.",
       hints: [

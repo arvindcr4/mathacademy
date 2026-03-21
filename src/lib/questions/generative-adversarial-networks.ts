@@ -107,8 +107,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "When the supports of p_r and p_g lie on disjoint low-dimensional manifolds in high-dimensional space, the JS divergence between them is always log 2, giving zero gradient to the generator. Step 1: When p_r and p_g have disjoint supports, the optimal discriminator is perfect: D*(x) = 1 for real, 0 for fake. Step 2: With D* = 0 or 1 everywhere, the generator loss log(1-D(G(z))) = log(1) = 0, giving zero gradient. Step 3: JS divergence saturates at log 2 regardless of how far apart the distributions are, providing zero gradient to the generator.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Arjovsky & Bottou (2017) showed that when p_r and p_g are supported on disjoint manifolds (which is almost certain in high dimensions when p_g is parameterised by a low-dimensional noise), JS(p_r||p_g) = log 2 - a constant - producing zero gradient for the generator regardless of how far apart the distributions are.",
       hints: [
@@ -140,8 +139,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "DCGAN uses Batch Normalization in both the generator and the discriminator output layer. Step 1: Batch normalization after the output layer would normalize features before final classification. Step 2: DCGAN applies batch normalization to input and hidden layers but omits it after the final output layer. Step 3: Batch normalization is not used in the discriminator output layer.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "DCGAN applies Batch Normalization in most layers but explicitly omits it from the generator output layer (which uses Tanh to produce pixel values) and the discriminator input layer (to preserve raw signal statistics).",
       hints: [
@@ -193,8 +191,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In a cGAN, the discriminator only needs to determine whether a sample is real or fake, not whether it matches the conditioning label. Step 1: In cGAN, the discriminator evaluates whether (x, y) pairs are consistent — real image with correct label. Step 2: This means the discriminator checks both real/fake AND class correctness. Step 3: The discriminator does more than just real/fake — it validates the conditioning.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "The discriminator in a cGAN must verify both realism and label consistency - a real image paired with the wrong label should also be classified as fake.",
       hints: [
@@ -314,8 +311,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In ProGAN, new layers are added abruptly (all at once) without any transition period. Step 1: Abruptly adding new layers would cause sudden shock to network dynamics. Step 2: ProGAN adds layers smoothly using fade-in over several steps. Step 3: New layers are NOT added abruptly but with a transition period.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "ProGAN uses a smooth fade-in: new layers are blended in via a linearly increasing \\alpha weight, preventing training instability that would result from sudden architectural changes.",
       hints: [
@@ -372,8 +368,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "StyleGAN\'s AdaIN (Adaptive Instance Normalization) layers inject style information by modulating per-channel mean and variance of feature maps. Step 1: AdaIN modulates mean and variance of each sample's feature maps independently. Step 2: It does NOT normalize across the batch — batch normalization does that. Step 3: AdaIN does not inject style via batch normalization.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "AdaIN normalizes feature maps to zero mean and unit variance, then re-scales and re-shifts them using style parameters (\\gamma, \\beta) derived from w, effectively injecting style at each resolution.",
       hints: [
@@ -430,8 +425,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "CycleGAN requires paired images (e.g., a photo of a horse paired with its zebra counterpart) for training. Step 1: CycleGAN is specifically designed for unpaired image-to-image translation. Step 2: It uses cycle consistency and adversarial losses without requiring paired examples. Step 3: CycleGAN does NOT require paired images.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "CycleGAN is specifically designed for unpaired translation; it only requires two separate collections of images from each domain, not matched pairs.",
       hints: [
@@ -488,8 +482,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The Pix2Pix discriminator is a PatchGAN that classifies individual image patches as real or fake rather than the whole image. Step 1: PatchGAN classifies each NxN patch as real or fake rather than the whole image. Step 2: It is fully convolutional and focuses on per-region texture quality. Step 3: PatchGAN evaluates real/fake at patch level, not whole-image level.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "PatchGAN classifies N\\timesN patches independently, encouraging local texture realism while being more parameter-efficient than a full-image discriminator.",
       hints: [
@@ -546,8 +539,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "BigGAN concatenates the class embedding directly to the noise vector z at the generator\'s input, with no further injection into intermediate layers. Step 1: In BigGAN, the class embedding is concatenated with noise z at the generator input. Step 2: This provides class conditioning to the generator. Step 3: BigGAN concatenates class embedding with noise z.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         'BigGAN uses "class-conditional BatchNorm" to inject class information at every residual block via affine parameters (\\gamma, \\beta) derived from the class embedding, not just at the input.',
       hints: [
@@ -604,8 +596,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "VAE-GAN models have both an encoder and a decoder/generator network. Step 1: VAE-GAN combines VAE and GAN components. Step 2: It has VAE encoder-decoder plus GAN discriminator. Step 3: VAE-GAN models do have both encoder and decoder/generator.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "VAE-GAN combines the VAE encoder (which maps images to a latent distribution) with a GAN generator (decoder), enabling both reconstruction of existing images and synthesis from sampled latents.",
       hints: [
@@ -662,8 +653,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "A GAN that memorizes the training set would achieve a perfect (zero) FID score. Step 1: FID measures distributional distance between real and generated features, not exact image matching. Step 2: Even perfect memorization would produce some distributional difference. Step 3: Memorization would NOT produce a perfect (zero) FID score.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "If generated images are identical to real training images, the Inception feature distributions match perfectly, giving FID = 0; FID alone cannot detect overfitting or memorization.",
       hints: [
@@ -720,8 +710,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The hinge loss for GANs requires the discriminator to output a probability in (0, 1) via a sigmoid activation. Step 1: Hinge loss uses max(0, 1 - D(x)) for real and max(0, 1 + D(G(z))) for fake. Step 2: This does not require sigmoid output — any real-valued score works. Step 3: Hinge loss does NOT require sigmoid output in [0,1].",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Hinge loss treats the discriminator as an unconstrained critic (no sigmoid), using max(0, 1−D(x)) for real samples and max(0, 1+D(G(z))) for fake samples, encouraging real scores above +1 and fake scores below −1.",
       hints: [
@@ -778,8 +767,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Gradient penalty (WGAN-GP) is applied to interpolated points between real and generated samples, not to the real or fake samples alone. Step 1: WGAN-GP replaces weight clipping with a gradient penalty enforcing gradient norm equals 1. Step 2: The penalty is lambda times the squared deviation of gradient norm from 1 at interpolated points. Step 3: The penalty term is lambda times the squared deviation of gradient norm from 1.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "WGAN-GP samples x̂ = \\epsilonx + (1−\\epsilon)G(z) with \\epsilon ~ Uniform(0,1) and penalizes (||\\nablaD(x̂)||\\_2 − 1)\\^2, enforcing the Lipschitz constraint along the path between real and fake data.",
       hints: [
@@ -835,8 +823,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "InfoGAN requires explicit supervision (labels) to learn disentangled representations. Step 1: InfoGAN maximizes mutual information I(c; G(z,c)) without any labeled data. Step 2: This is self-supervised — c is part of the model, not provided by labels. Step 3: InfoGAN does NOT require explicit supervision or labels.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "InfoGAN is fully unsupervised; it learns disentangled representations purely by maximizing mutual information between latent codes and generated outputs, without any label annotations.",
       hints: [
@@ -893,8 +880,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "SRGAN-generated images always achieve higher PSNR than bicubic upsampling. Step 1: PSNR measures pixel-level MSE. GANs optimize perceptual quality, not pixel-level accuracy. Step 2: SRGAN may have lower PSNR despite better visual quality. Step 3: SRGAN does NOT always achieve higher PSNR than bicubic.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "SRGAN typically has lower PSNR than MSE-optimized methods like bicubic because it sacrifices pixel-exact accuracy to produce perceptually sharper textures; PSNR and perceptual quality are often in tension.",
       hints: [
@@ -951,8 +937,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "MoCoGAN (Motion and Content GAN) uses separate latent codes for content and motion to enable temporally consistent video generation. Step 1: MoCoGAN decomposes latent space into content code (static) and motion code (temporal). Step 2: Content code controls identity/scene, motion code controls dynamics. Step 3: MoCoGAN uses separate latent codes for content and motion.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "MoCoGAN disentangles content (appearance, fixed per video) from motion (varying per frame) using separate latent spaces, allowing independent control over what appears and how it moves.",
       hints: [
@@ -1008,8 +993,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Voxel-based 3D GANs scale efficiently to very high resolutions (e.g., 512\\^3) because memory grows linearly with resolution. Step 1: Voxel grids discretize 3D space. Memory grows as resolution cubed. Step 2: At high resolution, memory usage is prohibitive. Step 3: Voxel-based 3D GANs do NOT scale efficiently to high resolutions. Step 1: Voxel grids discretize 3D space. Memory grows as resolution cubed. Step 2: At high resolution, memory usage is prohibitive. Step 3: Voxel-based 3D GANs do NOT scale efficiently to high resolutions.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Voxel memory grows cubically (O(n\\^3)) with resolution; a 512\\^3 grid requires 512\\times more memory than a 128\\^3 grid, making high-resolution voxel generation impractical without specialized representations.",
       hints: [
@@ -1066,8 +1050,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "AttnGAN uses attention mechanisms to align specific words in the text description with specific spatial regions of the generated image. Step 1: AttnGAN applies word-level cross-attention at each generation stage. Step 2: Attention weights align specific words to specific spatial regions of the feature map. Step 3: AttnGAN does use word-level attention to align words to image regions.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "AttnGAN computes word-level attention over the text embeddings to guide each spatial location of the generator, enabling fine-grained correspondence between text words and image regions.",
       hints: [
@@ -1119,8 +1102,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Deepfake detection methods that rely on detecting GAN-specific spectral artifacts remain fully robust against all modern deepfake generators. Step 1: GAN-generated images have spectral artifacts from upsampling layers. Step 2: These can be detected but attackers can adapt to hide them. Step 3: Spectral artifact detection is NOT fully robust.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Spectral artifact-based detectors can be defeated by post-processing (resizing, compression) or newer GAN architectures that do not exhibit the same artifacts, making this an ongoing arms race.",
       hints: [
@@ -1177,8 +1159,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GAN-synthesized medical images can be used in clinical diagnosis without any validation against real patient outcomes. Step 1: GAN-synthesized medical images must be validated for anatomical accuracy and diagnostic validity. Step 2: Clinical use without validation could lead to incorrect diagnosis and patient harm. Step 3: GAN-synthesized images cannot be used clinically without thorough validation.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "GAN-synthesized images must be rigorously validated for clinical use - they can contain hallucinated pathologies or miss real ones; regulatory frameworks require evidence of safety and efficacy before clinical deployment.",
       hints: [
@@ -1235,8 +1216,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Training a GAN on a small dataset (e.g., fewer than 1000 images) without any regularization typically results in the discriminator overfitting to the training set. Step 1: GANs require substantial data to learn the full distribution. Step 2: With very limited data, GANs memorize and fail to generalize. Step 3: Training a GAN on small data without regularization typically fails.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "With limited data, the discriminator memorizes real samples and provides uninformative gradients to the generator; techniques like ADA (Adaptive Discriminator Augmentation) or DiffAugment are needed to stabilize training.",
       hints: [
@@ -1292,8 +1272,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "GANomaly speeds up anomaly detection compared to AnoGAN by using an encoder to directly predict the latent code without iterative optimization. Step 1: AnoGAN requires iterative optimization per test image — slow. Step 2: GANomaly replaces this with an encoder that predicts z in one forward pass. Step 3: GANomaly's encoder speeds up inference via single forward pass. Step 1: AnoGAN requires iterative optimization per test image — slow. Step 2: GANomaly replaces this with an encoder that predicts z in one forward pass. Step 3: GANomaly's encoder speeds up inference via single forward pass.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "GANomaly adds an encoder network to invert the generator in a single forward pass, eliminating the expensive per-sample optimization loop that makes AnoGAN slow at test time.",
       hints: [
@@ -1350,8 +1329,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DANN (Domain-Adversarial Neural Networks) uses a GAN to generate target-domain images for training. Step 1: DANN uses gradient reversal layer and domain discriminator, not image generation. Step 2: It learns domain-invariant features through adversarial training. Step 3: DANN does NOT use GAN to generate target-domain images.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "DANN uses a gradient reversal layer to adversarially align feature distributions between source and target domains; it does not generate images - it operates purely in feature space.",
       hints: [
@@ -1408,8 +1386,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Sharing gradient updates in federated GAN training is completely safe from privacy attacks. Step 1: Gradient updates can be inverted to reconstruct training data. Step 2: This has been demonstrated in membership inference attacks. Step 3: Sharing gradient updates is NOT completely safe from privacy attacks.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Gradient inversion attacks (e.g., Zhu et al.) can reconstruct private training images from shared gradients; differential privacy mechanisms must be added to provide formal privacy guarantees.",
       hints: [
@@ -1466,8 +1443,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "EBGAN uses an autoencoder as the discriminator, where reconstruction error acts as the energy. Step 1: EBGAN uses an autoencoder as discriminator where reconstruction error is the energy. Step 2: Real images have low reconstruction error (low energy), fake have high error. Step 3: EBGAN uses autoencoder-based discriminator with reconstruction error as energy.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The EBGAN discriminator is an autoencoder; it assigns low energy (low reconstruction loss) to real images and high energy to generated images, and the generator is trained to produce low-energy samples.",
       hints: [
@@ -1586,8 +1562,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "InterFaceGAN achieves controllable face attribute editing by finding linear decision boundaries in the StyleGAN latent space. Step 1: InterFaceGAN finds linear directions in StyleGAN W space corresponding to attributes. Step 2: These are discovered by training linear classifiers on inverted latent codes. Step 3: InterFaceGAN finds linear boundaries in latent space for attribute editing. Step 1: InterFaceGAN finds linear directions in StyleGAN W space corresponding to attributes. Step 2: These are discovered by training linear classifiers on inverted latent codes. Step 3: InterFaceGAN finds linear boundaries in latent space for attribute editing.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "InterFaceGAN trains binary SVMs on attribute labels in StyleGAN\'s W space, discovering that attributes like age, smile, and pose correspond to linear hyperplanes in the latent space.",
       hints: [
@@ -1644,8 +1619,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "CLIP-guided GAN generation (e.g., BigSleep, DALL-E-like approaches) requires retraining the GAN for each new text prompt. Step 1: Training a GAN from scratch for each new text prompt would be computationally prohibitive and extremely slow. Step 2: CLIP-guided methods use the GAN as a frozen generator and optimize only the latent code z using CLIP similarity as the loss signal. Step 3: Therefore, CLIP guidance requires no retraining of the GAN weights for new prompts.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "CLIP guidance uses the pre-trained GAN as a frozen generator and optimizes only the latent code z using CLIP similarity as the loss, requiring no retraining of the GAN for new prompts.",
       hints: [
@@ -2271,8 +2245,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Optimization-based GAN inversion (iteratively minimizing ||G(z) − x||) always achieves a more faithful reconstruction than encoder-based inversion. Step 1: Optimization-based inversion minimizes reconstruction error with full degrees of freedom. Step 2: This can overfit z to the specific image, placing it outside the editable manifold. Step 3: Optimization can achieve lower reconstruction but at the cost of editability. Step 1: Optimization-based inversion minimizes reconstruction error with full degrees of freedom. Step 2: This can overfit z to the specific image, placing it outside the editable manifold. Step 3: Optimization can achieve lower reconstruction but at the cost of editability.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Optimization-based inversion can minimize reconstruction error to near zero by over-fitting z to the specific image, whereas encoder-based inversion sacrifices reconstruction fidelity for speed and editability.",
       hints: [

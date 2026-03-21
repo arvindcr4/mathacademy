@@ -26,8 +26,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "A stateless service - one that stores no in-process session state - is a prerequisite for safe horizontal scaling.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Horizontal scaling routes requests across many identical instances. If session state lives in-process on one instance, a user whose next request lands on a different instance will lose their session. Stateless services store all session data externally (e.g., Redis) so any instance can serve any request. This is why statelessness is a foundational prerequisite, not merely a nice-to-have, for horizontal scaling.\n\n**Step 1:** Understand the routing problem. A load balancer distributes requests across N identical instances using round-robin or least-connections.\n\n**Step 2:** Identify the statefulness problem. If instance 1 stores user A's cart in its local memory, and the next request from user A is routed to instance 2, instance 2 has no record of that cart — causing a broken user experience.\n\n**Step 3:** Apply the stateless principle. All persistent state is moved to an external store (Redis, a database, or a signed JWT) that every instance can access. Instances themselves hold no user-specific state in memory.",
       hints: [
         "If user A's cart is in memory on server 1, what happens when the load balancer sends their next request to server 2?",
@@ -113,8 +112,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The optimal number of concurrent worker threads for a CPU-bound task is equal to the number of CPU cores, while for an I/O-bound task it can be significantly higher than the number of cores.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "CPU-bound tasks keep the CPU fully utilized during execution. Adding more threads than cores causes context-switching overhead with no throughput gain — the bottleneck is compute. I/O-bound tasks (DB queries, HTTP calls, disk reads) spend most time waiting; during waits the CPU is idle. More threads than cores allows overlapping waits, increasing throughput. A common heuristic for I/O-bound workers:\n\n\\[\n\\text{thread count} = \\text{cores} \\cdot \\left(1 + \\frac{\\text{wait\_time}}{\\text{compute\_time}}\\right)\n\\]\n\nThread pools like those in Node.js (async/await), Java (virtual threads), or Python (asyncio) exploit this distinction.\n\n**Step 1:** CPU-bound tasks. N cores can run N threads simultaneously with maximum efficiency. Adding a (N+1)th thread forces context switching, reducing effective throughput.\n\n**Step 2:** I/O-bound tasks. While thread 1 waits for a database response (milliseconds of wall-clock time), threads 2 through 100 can be doing useful work or waiting. More threads than cores pays off here.\n\n**Step 3:** Apply the heuristic. If wait_time is 4ms and compute_time is 1ms, the multiplier is (1 + 4) = 5 — so on an 8-core machine, 40 threads maximizes throughput.",
       hints: [
         "For CPU-bound: N cores doing N computations simultaneously is optimal. N+1 threads means one waits, creating overhead.",
@@ -164,8 +162,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In event sourcing, the current state of an entity is derived by replaying all events that have occurred to that entity since the beginning of time, not by storing the entity's current field values directly.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Event sourcing stores the append-only log of state-changing events (e.g., OrderPlaced, ItemAdded, OrderShipped) as the source of truth. Current state is a projection computed by replaying events. This enables full audit history, temporal queries ('what was the state at time T?'), and easy event-driven integration. The downside is replay cost for entities with long histories, which snapshots mitigate.\n\n**Step 1:** Think of a bank account. Instead of storing the current balance (which is derived data), you store every debit and credit transaction. The balance at any moment is the sum of all transactions up to that point.\n\n**Step 2:** Understand the replay mechanism. To find the current state, start from an empty account and apply every event in sequence. The final balance is the answer.\n\n**Step 3:** Accept the trade-off. Replaying 100,000 events on every read is expensive. Snapshots (periodic materialized state) solve this by giving you a starting point close to the present.",
       hints: [
         "Think of a bank account: instead of storing the current balance, store every debit and credit transaction - the balance is the sum.",
@@ -269,8 +266,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "The N+1 query problem occurs when an application executes one query to fetch N parent records and then issues N additional queries to fetch related child records, causing N+1 total database round-trips instead of 1 or 2.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "The N+1 problem is a common ORM anti-pattern. For example: fetch 100 blog posts (1 query), then for each post fetch its author (100 queries) = 101 total queries. The fix is eager loading: use a JOIN or an IN (...) query to fetch all related records in a single additional query. ORMs like Hibernate, ActiveRecord, and Sequelize all support eager loading (includes/preload/joinedload) to solve this. At scale, N+1 can turn a fast endpoint into a slow one - 100 ms + 100 * 5 ms = 600 ms.\n\n**Step 1:** Identify the pattern. A loop in application code that issues a database call inside each iteration is the classic smell. Count the queries: more than 5-10 for a single API call warrants investigation.\n\n**Step 2:** Apply eager loading. Instead of N+1 queries, use a JOIN to fetch parent and children in 2 queries total, or an IN (...) clause to batch-fetch all children in one call.\n\n**Step 3:** Measure the impact. EXPLAIN or query logging reveals the query count per request. Reducing 101 queries to 2 cuts endpoint latency dramatically.",
       hints: [
         "If you see a loop in code that calls a database method inside each iteration, that's the N+1 pattern.",
@@ -394,8 +390,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "An idempotent job is one that can be safely executed multiple times with the same input and will produce the same result each time, making it safe to retry on failure.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Idempotency is a critical property for jobs in distributed systems because networks fail, workers crash, and at-least-once delivery means jobs can be executed more than once. An idempotent job handles this gracefully: sending the same email twice is not idempotent (user receives duplicates), but charging a payment with a unique idempotency key is idempotent (second charge attempt returns the first result without re-charging). Design jobs to be idempotent by using idempotency keys, checking-then-acting patterns, and database upserts.",
       hints: [
         "The mathematical analog: f(f(x)) = f(x). Applying the function twice gives the same result as applying it once.",

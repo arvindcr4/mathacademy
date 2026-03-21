@@ -95,8 +95,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Unlike early multimodal models that stitched together separate text and vision models, Gemini was trained natively on interleaved multimodal data from the beginning.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini is natively multimodal, meaning it was trained from scratch on text, images, audio, and video simultaneously, allowing it to seamlessly understand and reason across different modalities without relying on intermediary models.",
       hints: [
@@ -156,8 +155,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Few-shot prompting with Gemini only works for text and cannot include multimodal examples.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Few-shot prompting with Gemini is fully multimodal. You can provide examples that include both images and text to demonstrate the desired output format.",
       hints: [
@@ -256,8 +254,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "The Gemini API supports streaming, allowing applications to display the generated text to the user as it is being produced.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Yes, the `generateContentStream` method returns chunks of the response as soon as they are generated, which is crucial for reducing perceived latency in chat applications.",
       hints: [
@@ -403,8 +400,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Gemini can process large PDF documents and answer questions based directly on the text and charts contained within the document.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini has strong document understanding capabilities, including the ability to parse long PDFs, extract information, and reason over embedded tables and charts.",
       hints: [
@@ -463,8 +459,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Gemini models support parallel function calling, allowing the model to return multiple function calls in a single response.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini can recognize when multiple independent function calls are needed (e.g., getting the weather for three different cities) and return them simultaneously, saving round-trip latency.",
       hints: [
@@ -674,8 +669,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini 1.5 Pro\'s long context capability means that traditional RAG (Retrieval-Augmented Generation) with vector databases is always unnecessary when using it.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "While the large context window reduces the need for RAG in many cases, RAG still offers advantages: vector search can be faster and cheaper for very large corpora, and it helps focus the model on the most relevant chunks when the full corpus exceeds even the 2M token limit.",
       hints: [
@@ -691,8 +685,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Gemini\'s native multimodal architecture means it was trained on text, images, audio, and video simultaneously from the start, rather than patching a separate vision module onto a text model.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Unlike GPT-4V\'s original late-fusion approach (connecting a vision encoder to a language model), Gemini was designed and trained as a natively multimodal system, allowing tighter integration across modalities.",
       hints: [
@@ -788,8 +781,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini 1.5 Pro can process a video of up to approximately one hour in length within its 1-million-token context window, given standard frame sampling rates.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "At approximately 1 frame per second, a 1-hour video generates around 3,600 frames. Each frame uses roughly 258 tokens, totaling about 928,800 tokens - fitting within the 1M token context window. This enables end-to-end reasoning over feature-length content.",
       hints: [
@@ -845,8 +837,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini\'s native audio processing allows it to distinguish between multiple speakers in a conversation and attribute statements to specific individuals.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini supports speaker diarization as part of its native audio understanding. It can identify that different speakers are present and attribute dialogue segments to each speaker, going beyond simple transcription.",
       hints: [
@@ -902,8 +893,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini can interpret data visualizations such as bar charts and scatter plots in a PDF and answer quantitative questions about the data they represent.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini\'s visual reasoning extends to data visualizations. It can read axis labels, approximate values from bars or points, identify trends, and answer questions like \'Which quarter had the highest revenue?\' from a chart image.",
       hints: [
@@ -959,8 +949,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini\'s structured output feature uses constrained decoding to guarantee schema compliance, meaning it will never produce JSON that violates the provided schema.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Google\'s structured output implementation uses constrained decoding (also known as grammar-constrained generation), which mathematically restricts the token sampling process to only produce tokens that could form valid JSON according to the schema - guaranteeing compliance.",
       hints: [
@@ -1016,8 +1005,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "When using the `ANY` function calling mode in Gemini, the model is forced to always return at least one function call rather than a plain text response.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The function calling mode `ANY` (as opposed to `AUTO` or `NONE`) forces the model to always invoke one of the provided tools. This is useful when you want to guarantee structured data extraction rather than allowing the model to respond in free text.",
       hints: [
@@ -1073,8 +1061,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "When using streaming with Gemini, safety ratings and finish reasons are only available after the stream has fully completed, not in intermediate chunks.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Intermediate chunks from `generateContentStream()` contain partial text but may not yet have final safety ratings or a definitive finish reason. These are typically only present in the final chunk or the aggregated response, as safety evaluation often requires the complete context.",
       hints: [
@@ -1125,8 +1112,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini Nano uses a technique called \'distillation\' from larger Gemini models to achieve competitive capability while fitting within mobile memory and compute budgets.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini Nano is distilled from larger Gemini models, meaning its training uses the larger model\'s outputs as soft labels (knowledge distillation). This transfers capabilities into a much smaller model that fits in mobile DRAM and runs efficiently on mobile NPUs.",
       hints: [
@@ -1182,8 +1168,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini models can generate, explain, and debug code across multiple programming languages, making them useful as an AI pair programmer.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini is trained on large code datasets spanning Python, JavaScript, TypeScript, Go, C++, Java, and more. It can write new code, explain existing code, suggest fixes for bugs, and generate unit tests - all core use cases for an AI pair programmer.",
       hints: [
@@ -1239,8 +1224,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini Ultra was the first model to achieve human-expert level performance on the MMLU (Massive Multitask Language Understanding) benchmark, scoring above 90%.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini Ultra scored 90.0% on MMLU using a \'chain-of-thought\' prompting approach, becoming the first model to exceed human-expert performance (89.8%) on this comprehensive text reasoning benchmark across 57 subjects.",
       hints: [
@@ -1291,8 +1275,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini natively supports interleaved image generation within a conversation, meaning it can generate images as part of a multi-turn dialogue where prior context influences the generated image.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini 2.0 and later models support native image output, allowing the model to generate images inline within conversational responses. Earlier integrations used Imagen as a separate call, but native image generation enables context-aware image creation driven by the full conversation history.",
       hints: [
@@ -1348,8 +1331,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini\'s training on interleaved multimodal data includes web pages, scientific papers with figures, and video-subtitle pairs, enabling it to learn cross-modal associations at scale.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Google has described Gemini\'s training data as including a diverse mix of multimodal data sources: web documents with embedded images, scientific literature with figures, subtitled video content, and more. This variety of cross-modal co-occurrence at scale is what enables robust multimodal understanding.",
       hints: [
@@ -1405,8 +1387,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini Flash was specifically optimized using techniques like distillation from larger Gemini models to achieve a much lower cost-per-token while retaining strong multimodal capabilities.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini Flash is a distilled, efficiency-optimized model derived from larger Gemini models. It achieves significantly lower latency and cost per million tokens compared to Gemini Pro, while retaining competitive performance on many multimodal tasks.",
       hints: [
@@ -1462,8 +1443,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini can solve multi-step math word problems presented as images (e.g., a photo of a handwritten problem) by performing OCR, parsing the problem, and then applying mathematical reasoning - all in a single pass.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini\'s natively integrated OCR and mathematical reasoning capabilities allow it to ingest a photo of a handwritten problem, extract the text, parse the mathematical structure, and solve it - without needing separate OCR and math solver pipelines.",
       hints: [
@@ -1519,8 +1499,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini\'s safety evaluation applies to both the input prompt and the generated output, meaning a prompt can be blocked before any content is generated if it violates safety policies.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini\'s safety system evaluates the incoming prompt (input) as well as the generated response (output). If the prompt itself is classified as highly harmful, the API can block the request entirely and return a `PROHIBITED_CONTENT` block reason without generating any output.",
       hints: [
@@ -1576,8 +1555,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini\'s context caching feature allows a large shared context (e.g., a 500-page PDF) to be processed once and reused across many subsequent requests, reducing both latency and token cost.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Context caching processes the large context document once, caches the key-value (KV) attention states server-side, and allows them to be reused across subsequent API calls. This avoids re-processing the same tokens on every request, cutting costs by only billing cached tokens at a lower rate.",
       hints: [
@@ -1633,8 +1611,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Multimodal embeddings from Gemini\'s ecosystem can be used to build an image retrieval system where a user types a text query and retrieves semantically matching images from a database.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "By embedding both the text query and the candidate images into the same vector space using `multimodalembedding@001`, cosine similarity search (e.g., via Vertex AI Vector Search or Qdrant) can retrieve images semantically matching the text query - enabling text-to-image retrieval.",
       hints: [
@@ -1680,8 +1657,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "The Gemini API enforces per-minute rate limits (RPM and TPM) that are separate from daily quota limits, and exceeding either triggers a 429 error.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The Gemini API has both per-minute rate limits (Requests Per Minute and Tokens Per Minute) and daily quota limits. Exceeding either category results in HTTP 429 (Too Many Requests) errors. Developers should implement exponential backoff retry logic to handle these gracefully.",
       hints: [
@@ -1737,8 +1713,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini 2.0 introduced native image output as a first-class capability, meaning the model can generate both text and images interleaved in a single response without routing to a separate image generation API call.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini 2.0 expanded the model\'s output modalities to include native image generation. This allows a single API call to return a response containing both natural language text and generated images inline, enabling richer multimodal outputs without a separate Imagen API round-trip.",
       hints: [
@@ -1774,8 +1749,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Enabling Google Search grounding in the Gemini API guarantees that every factual statement in the model's response is verified against a real-time web source and is therefore always accurate.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Grounding significantly reduces hallucinations by tethering answers to retrieved documents, but it does not guarantee perfect accuracy. The model can still misinterpret retrieved content, and the retrieved documents themselves may be wrong or outdated.",
       hints: [
@@ -1831,8 +1805,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Gemini 1.5 Pro can ingest and reason across multiple separate documents within a single API request by including all document file references together in one prompt.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Because Gemini 1.5 Pro\'s context window is large enough to hold several full-length documents simultaneously, a single prompt can reference multiple uploaded files. The model can then perform cross-document reasoning - comparing, contrasting, or synthesizing information - in one pass.",
       hints: [
@@ -1888,8 +1861,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "When Gemini's structured output (JSON mode) is enabled with a schema, the model's decoding process is constrained so it cannot produce output that violates the schema's field types and required fields.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Constrained decoding (grammar-guided generation) works at the token level: at each step only tokens that remain valid given the schema are considered. This makes schema violations structurally impossible, unlike prompting the model to 'output JSON' without enforcement.",
       hints: [
@@ -1965,8 +1937,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini's multimodal embedding model can produce a shared embedding space where text and image representations are directly comparable by cosine similarity, enabling cross-modal retrieval such as finding images from a text query.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Google\'s multimodal embedding model (available via Vertex AI) projects text and images into a shared vector space. Because the embeddings are aligned, cosine similarity between a text embedding and an image embedding is meaningful, enabling text-to-image and image-to-text retrieval without a separate alignment step.",
       hints: [
@@ -2022,8 +1993,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "When using context caching in the Gemini API, a system instruction can be included in the cached prefix, so it does not need to be retransmitted on every API call and does not count against per-call token costs once cached.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Context caching allows developers to cache a prefix - which can include the system instruction, large documents, or few-shot examples - so that it is processed once and reused. Cached tokens are billed at a lower rate and the prefix is not retransmitted, reducing both latency and cost on repeated calls.",
       hints: [
@@ -2079,8 +2049,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "When a Gemini API response is blocked by a safety filter, the `finish_reason` field in the response candidate is set to `SAFETY` rather than `STOP`.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The Gemini API signals safety blocks via `finish_reason: SAFETY` in the candidate object. Developers should always check `finish_reason` before accessing the response text; attempting to read `text` from a SAFETY-blocked candidate raises an error in the official SDKs.",
       hints: [
@@ -2136,8 +2105,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "Gemini 1.5 Flash supports the same maximum context window length as Gemini 1.5 Pro (up to 1 million input tokens).",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Both Gemini 1.5 Flash and Gemini 1.5 Pro share the same 1-million-token context window. Flash achieves its speed and cost advantages through architectural efficiency (smaller model, optimized serving), not by reducing the context length. This allows Flash to be used for long-document tasks at lower cost.",
       hints: [
@@ -2193,8 +2161,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In Gemini's function calling API, the `parameters` field of a function declaration must be described using JSON Schema syntax to define the argument types and descriptions.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Gemini function declarations use JSON Schema to describe parameters. Each parameter has a `type` (string, number, boolean, array, object), a `description`, and optionally `enum` values or `required` lists. This schema is how the model learns to construct valid function call arguments.",
       hints: [
@@ -2250,8 +2217,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "After fine-tuning a Gemini model on Vertex AI, evaluation can be performed by comparing the tuned model's outputs on a held-out evaluation dataset against the base model.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Vertex AI provides an evaluation framework that computes metrics such as exact match, BLEU, or ROUGE on a held-out evaluation split. This allows developers to quantify whether fine-tuning improved task-specific performance before deploying the tuned model to production.",
       hints: [
@@ -2287,8 +2253,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "On MMLU (Massive Multitask Language Understanding), Gemini Ultra was the first publicly reported model to surpass human expert-level performance (~89.8%) at the time of its announcement in December 2023.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Google reported that Gemini Ultra achieved 90.0% on MMLU using a 5-shot chain-of-thought prompting strategy, making it the first model to surpass the human expert threshold of ~89.8% on that benchmark at the time of the Gemini 1.0 announcement in December 2023.",
       hints: [

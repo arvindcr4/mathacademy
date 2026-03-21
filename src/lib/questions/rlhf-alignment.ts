@@ -49,8 +49,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "A perfectly trained reward model that exactly captures average human preferences will always produce a well-aligned policy after RL fine-tuning, even with extended optimization.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Even a high-quality RM is only an approximation of true human preferences. Gao et al. (2023) demonstrated empirically that RL over-optimization causes the gold-standard reward to first increase then decrease as KL from the reference grows - an inverted-U curve. The policy exploits distributional gaps in the RM (reward hacking) that do not correspond to genuine human preferences.",
       hints: [
@@ -107,8 +106,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Human preference data is highly consistent: if annotator A prefers y_w over y_l for a given prompt, all other annotators will agree.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         'Human preferences are diverse and subjective. The ~73% inter-annotator agreement in InstructGPT means ~27% of pairs produce disagreement. Cultural background, personal values, and interpretation of "helpfulness" all vary. RLHF must account for this label noise - e.g., by treating preference as a probability rather than a hard label, as formalized in the Bradley-Terry model.',
       hints: [
@@ -145,8 +143,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The standard PPO-RLHF setup requires four neural networks loaded simultaneously: actor, reference policy, reward model, and value (critic) network.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "PPO-RLHF uses: (1) actor \\pi_\\theta - the policy being trained; (2) reference \\pi_ref (frozen SFT model) - for the KL penalty; (3) reward model r_\\phi (frozen) - to score responses; (4) critic V_\\psi - to estimate value for advantage computation. At 70B parameters, loading all four requires hundreds of GPU-hours. This memory burden motivates alternatives like DPO.",
       hints: [
@@ -203,8 +200,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Increasing the KL penalty coefficient \\beta in RLHF monotonically improves final model quality as measured by human preference evaluations.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "\\beta controls a fundamental tradeoff. Too small: the policy rewards-hacks and produces degenerate outputs humans dislike. Too large: the policy cannot learn from the reward signal and stays too close to the SFT reference, providing no alignment improvement. An optimal \\beta exists between these extremes and must be tuned empirically.",
       hints: [
@@ -281,8 +277,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Constitutional AI completely eliminates the need for any human-labeled data in the alignment pipeline.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "CAI reduces but does not eliminate human labeling. Human feedback is still used for helpfulness training (SL-HF and RL-HF stages). Anthropic\'s 318K comparison dataset includes 135K human-generated comparisons. CAI primarily replaces human harmlessness labels with AI-generated constitutional critiques - a major cost reduction, but human data remains essential for helpfulness alignment.",
       hints: [
@@ -319,8 +314,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "DPO is guaranteed to achieve identical performance to PPO-RLHF given the same preference data, since they optimize the same theoretical objective.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "DPO and PPO-RLHF share the same theoretical optimum under the KL-regularized objective, but differ critically in practice. DPO is offline: it trains on a fixed dataset and cannot sample new on-policy completions. PPO generates on-policy rollouts during training, allowing exploration and adaptation to the current policy distribution. This distributional difference means PPO can outperform DPO, especially on complex tasks.",
       hints: [
@@ -377,8 +371,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Reward hacking becomes more severe as the amount of RL optimization (measured by KL divergence from the reference) increases beyond the optimal point.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "This is precisely what Gao et al. (2023) demonstrated. Past the optimal KL point, the policy has moved far enough from the reference distribution that it can exploit gaps in the reward model - generating text that scores high on the proxy RM but low on true human preference. The inverted-U shape confirms increasing hacking with increasing optimization.",
       hints: [
@@ -435,8 +428,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "PPO-RLHF memory costs scale linearly with the policy model size because only the actor network needs to be held in GPU memory.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "PPO-RLHF requires four models simultaneously: actor, frozen reference policy, reward model, and critic. All four are typically the same scale as the policy. At 70B parameters with FP16, one model requires ~140 GB of VRAM; four models require ~560 GB+, plus optimizer states for the actor and critic. Memory scales roughly 4\\times (often more) relative to a single model.",
       hints: [
@@ -493,8 +485,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Constitutional AI\'s RL-CAI stage is a form of RLAIF, where AI-generated constitutional preference labels replace human harmlessness labels.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "RL-CAI uses an AI judge (prompted with constitutional principles) to generate pairwise preference labels comparing response pairs on harmlessness. These labels train a preference model used as the RL reward signal - with no human harmlessness labels. This is precisely the RLAIF paradigm applied to constitutional principles.",
       hints: [
@@ -551,8 +542,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Supervised fine-tuning (SFT) on instruction-following demonstrations alone is sufficient to make LLMs reliably safe and aligned with human values.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "SFT on instructions teaches the model to follow instructions, not which instructions to refuse or how to handle harmful requests. SFT models can still produce unsafe content when prompted appropriately. RLHF adds the preference signal needed for alignment: the reward model encodes the distinction between responses humans prefer vs. dislike, including harmlessness judgments.",
       hints: [
@@ -609,8 +599,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "According to Huyenchip (2023), RLHF empirically worsens hallucination compared to SFT alone, despite improving other aspects of model quality.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Ouyang et al. (2022) showed InstructGPT (SFT + RLHF) produces more hallucinations than the SFT-only model. The InstructGPT paper reports hallucination as slightly worse with RLHF. Despite this, human evaluators still prefer the RLHF model overall due to improvements in helpfulness, coherence, and instruction following. Schulman attributed hallucination to the mismatch between model and labeler knowledge.",
       hints: [
@@ -2129,8 +2118,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In Constitutional AI, the critique-revision loop during supervised fine-tuning asks the model to identify flaws in its own response and generate an improved version, with the revised response used as the training target.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "The CAI supervised phase has three steps: (1) generate an initial response to a red-teaming prompt, (2) ask the model to critique the response against a constitutional principle, (3) ask the model to revise the response to remove identified harms. The revised response is then used as the SFT target. This self-improvement loop refines model outputs without human labelers reviewing harmful content.",
       hints: [
         "The model is both the critic and the reviser - a form of self-critique.",
@@ -2198,8 +2186,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Identity Preference Optimization (IPO) was proposed to fix a theoretical failure mode of DPO where the policy can assign arbitrarily high likelihood ratios to chosen responses when the preference dataset has small margin or noisy labels.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Azar et al. (2023) showed DPO can overfit on preference data: when preference gaps are small or labels are noisy, DPO pushes log(pi(y_w)/pi_ref(y_w)) - log(pi(y_l)/pi_ref(y_l)) to infinity by scaling both terms. IPO replaces the sigmoid loss with a squared loss on the preference gap with a target margin, regularizing against this degenerate solution. This provides stronger regularization and robustness to label noise compared to DPO.",
       hints: [
         "DPO has no explicit bound on how large the policy-reference ratio can become - IPO adds a regularization term.",
@@ -2249,8 +2236,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "KTO is grounded in prospect theory, which predicts that losses loom larger than equivalent gains - an asymmetry that KTO incorporates by allowing undesirable responses to be weighted more heavily than desirable ones during training.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Kahneman and Tversky's prospect theory (1979) established that humans are loss-averse: a loss hurts more than an equivalent gain feels good. KTO directly encodes this: the loss weight lambda_U for undesirable responses can be set higher than lambda_D for desirable responses. This asymmetry reflects how users react to AI outputs - a harmful response creates more lasting damage than a helpful response creates lasting benefit, motivating stronger penalties for bad outputs.",
       hints: [
         "Prospect theory: losses loom larger than gains - people are risk-averse in gains, risk-seeking in losses.",
@@ -2300,8 +2286,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Goodhart's Law, as applied to RLHF, states that once a reward model becomes the optimization target, it will cease to perfectly capture true human preferences because the policy finds ways to score highly without producing genuinely good outputs.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Goodhart's Law (1975): 'When a measure becomes a target, it ceases to be a good measure.' In RLHF, the RM is a proxy for human preferences trained on a fixed dataset. As PPO optimizes against the RM, the policy discovers high-scoring behaviors not in the training distribution - reward hacking. Examples include verbosity (raters prefer longer answers), formatting tricks (bullet points score higher), and sycophancy (agreement scores higher). The proxy metric diverges from true quality as optimization pressure increases.",
       hints: [
         "The RM was trained on a finite dataset; the RL policy can explore an infinite output space to find exploits.",
@@ -2351,8 +2336,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Eliciting Latent Knowledge (ELK) is the problem of training an AI to report what it actually believes to be true rather than what it predicts a human will rate as true - and no fully satisfactory solution to ELK has been found as of 2024.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "ELK formalizes: suppose an AI has an accurate internal world model. We want it to report that model truthfully. The problem: the AI can instead report what the human will rate as most accurate, which may differ from the AI's actual beliefs if the AI models human epistemic limitations. ARC posed ELK and offered a prize for a solution. Proposed approaches (auxiliary training, consistency checks, relaxed adversarial training) all face counterexamples. As of 2024, ELK remains open - a core challenge for interpretability-based alignment.",
       hints: [
         "ELK distinguishes between what the AI knows internally and what it reports - a deceptive AI reports differently from its beliefs.",
@@ -2384,8 +2368,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Representation engineering (RepE) allows aligning model behaviors at inference time by adding a learned steering vector to the model's residual stream activations, without modifying model weights.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Zou et al. (2023) showed that concepts like honesty, morality, and emotion are represented as linear directions in activation space. By contrasting activations on positive/negative examples of a concept, a control vector is extracted. At inference time, adding alpha * control_vector to the residual stream steers the model toward that concept. This enables alignment without fine-tuning: add a honesty vector at inference time to reduce hallucination, or a harm-avoidance vector to reduce toxic outputs.",
       hints: [
         "Steering vectors are added to activations at inference time - no gradient update or weight change required.",
@@ -2435,8 +2418,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "In best-of-N sampling with a process reward model, the selected solution is the one with the highest aggregate step-level score (e.g., minimum or product of step scores) rather than the highest final-answer score from an outcome reward model.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Best-of-N with a PRM: generate N complete solutions, score each step with the PRM, aggregate step scores (typically minimum - the weakest step matters most), and select the solution with the highest aggregate score. Lightman et al. showed PRM-scored BoN outperforms ORM-scored BoN on MATH: the PRM selects solutions with sound reasoning chains rather than solutions that happen to end with the correct answer via lucky guesses or errors in intermediate steps that cancel out.",
       hints: [
         "The minimum step score is often used - a solution with one bad step is rejected even if all other steps are correct.",
@@ -2486,8 +2468,7 @@ const additionalQuestions3: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "Constitutional AI and RLHF both ultimately rely on human oversight to define harmlessness and helpfulness, which creates a fundamental limitation: if human values are inconsistent or biased, both approaches will produce models that faithfully implement those flawed values.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Both RLHF and CAI ground alignment in human preferences - directly via annotators, or via AI models trained on human feedback. If the human reference is biased (annotators from a particular demographic or cultural context), the model will reflect those biases. Research has documented that RLHF models prefer Western, WEIRD (Western, Educated, Industrialized, Rich, Democratic) viewpoints. The specification problem - defining good values precisely - remains open. CAI's constitutional principles are human-authored and inherit human biases from their authors.",
       hints: [
         "RLHF is only as good as its human labels - biased annotators produce biased reward models.",
@@ -2541,8 +2522,7 @@ const additionalQuestions4: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Rejection sampling fine-tuning (RFT) is a simpler alternative to PPO for RLHF that samples multiple model outputs, filters them using a reward model to keep only high-scoring samples, and fine-tunes the base model on the filtered samples.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Rejection sampling fine-tuning (Touvron et al., Llama 2 paper, 2023; Yuan et al., 2023): generate K responses per prompt using the current SFT model, score each with a reward model, keep only responses above a threshold or take the top-K by score, fine-tune the model on these high-quality samples. This is equivalent to best-of-K with supervised learning on accepted samples. Advantages over PPO: simpler implementation (no RL loop), more stable training. Disadvantages: less efficient (requires K samples per prompt), slower credit assignment than token-level PPO.",
       hints: [
         "RFT = sample-then-filter-then-SFT. No RL optimization, just curated supervised learning on model's own good outputs.",
@@ -2592,8 +2572,7 @@ const additionalQuestions4: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Using 'gold standard' test sets evaluated by expert human raters is necessary to measure whether an RLHF-trained model's improvement on the RM proxy score corresponds to genuine improvement in user-facing quality.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "The fundamental evaluation challenge in RLHF: higher proxy RM score does not guarantee better actual quality after Goodhart's Law effects. Gold standard evaluation (held-out human rater judgments collected independently from the RM training data, ideally by expert raters with domain knowledge) provides ground truth. InstructGPT used A/B tests where humans compared InstructGPT vs GPT-3 outputs - not using the trained RM for evaluation. Without gold standard evals, it is impossible to distinguish genuine quality improvement from reward hacking.",
       hints: [
         "Evaluating with the same RM used for training is circular - the model has been optimized to fool that RM.",

@@ -2258,8 +2258,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "A quantum kernel SVM (QSVM) can be implemented by computing all pairwise quantum kernel values K(xi, xj) classically once, then using a standard classical SVM solver with the pre-computed kernel matrix.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Kernel-target alignment measures how well a kernel separates labelled data:\n\\[\nA = \\frac{\\sum_{i,j} y_i y_j K(x_i, x_j)}{\\sqrt{\\sum_{i,j} K(x_i, x_j)^2}}.\\]\nMaximising A ensures the kernel maximally correlates with the labels y_i \\in \\{-1, +1\\}, improving generalisation.",
       hints: [
         "Quantum hardware is only used to fill the kernel matrix; the SVM training itself is classical quadratic programming.",
@@ -2327,8 +2326,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Using a local cost function (measuring only a few qubits rather than all qubits) is a strategy to mitigate barren plateaus because local costs have polynomially (not exponentially) vanishing gradients.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "NISQ constraints: (1) decoherence limits circuit depth to \\lesssim 1000 gates; (2) gate errors (1-10\\times 10^{-3} for 2-qubit gates) accumulate; (3) qubit connectivity limits circuit efficiency; (4) readout fidelity (95-99\\%); (5) limited qubit counts (50-1000).  These require shallow circuits, error mitigation, and hardware-efficient ansatze.",
       hints: [
         "Local cost: measure a 2-qubit observable on qubits 1-2; this does not require quantum coherence across all n qubits.",
@@ -2396,8 +2394,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "ZNE can exactly recover the noiseless expectation value as long as the noise model is known precisely and the extrapolation is performed correctly.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "Dynamic decoupling applies fast X/Y gates to idle qubits: the XY4 sequence (\\tau-X-\\tau-Y-\\tau-X-\\tau-Y-\\tau) effectively decouples qubits from the environment during circuit idle times.  For superconducting qubits with T2 \\sim 100-500 \\mu s, DD extends effective coherence by factors of 2-5x during waiting periods.",
       hints: [
         "Extrapolation to zero is always uncertain - the more data points and the closer they are to zero noise, the better the estimate.",
@@ -2447,8 +2444,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Symmetry verification can only reduce errors from bit-flip noise (Pauli-X errors) and cannot mitigate phase-flip (Pauli-Z) errors because Z errors do not change measurement outcomes in the computational basis.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "The most limiting NISQ constraint for QML is decoherence (T2 \\sim 100-500 \\mu s), which limits circuit depth to \\lesssim 1000 gates and restricts QAOA to p \\leq 5-10 layers.  This rules out deep quantum algorithms but allows shallow variational circuits like VQE and simple QNNs.",
       hints: [
         "In the computational basis, a Z error leaves |0⟩ \\to |0⟩ and |1⟩ \\to -|1⟩ - the measurement outcome is unchanged.",
@@ -2498,8 +2494,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "On NISQ devices, increasing circuit depth always improves the quality of variational quantum algorithm results because more layers enable richer representations.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "Barren plateau mitigation via local costs: replacing global cost C = \\langle H \\rangle with local cost C_{local} = \\frac{1}{n}\\sum_{i=1}^n \\langle H_i \\rangle where each H_i acts on O(1) qubits.  This changes the gradient scaling from O(1/b^n) to O(1/poly(n)), making training tractable.",
       hints: [
         "Gate error per layer: each two-qubit gate adds ~0.5% error; after 100 gates, the output fidelity has dropped to ~0.995^{100} \\approx 0.6.",
@@ -2549,8 +2544,7 @@ const extraQmlQuestions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Grover's search algorithm provides a quadratic quantum speedup for unstructured database search, which directly translates to a quadratic speedup in training any machine learning model that uses gradient descent.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "Dequantization of quantum algorithms: when quantum algorithms assume quantum random access memory (QRAM) for data loading, classical algorithms with sample-and-query (SQ) access often achieve similar performance.  This raises the bar for quantum advantage claims — QRAM remains an experimental challenge, making classical SQ algorithms a fairer comparison.",
       hints: [
         "Grover speeds up 'find the item satisfying property P' - gradient descent does not reduce to this problem structure.",
@@ -2623,8 +2617,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Hardware-efficient ansatze (HEA) are designed to reduce circuit depth and SWAP overhead on NISQ devices, but they are generally more susceptible to barren plateaus than structured chemistry-inspired ansatze (e.g., UCCSD).",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "Quantum embedding choices on NISQ hardware: angle encoding (1 qubit per feature) uses only single-qubit rotations and is hardware-efficient; ZZFeatureMap requires entangling CNOT gates that amplify hardware errors; the optimal choice trades expressibility against hardware noise and circuit depth.",
       hints: [
         "Over-expressible ansatze approach 2-designs, causing barren plateaus; problem-structured ansatze restrict to physically relevant states.",
@@ -2674,8 +2667,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "Classical kernel methods like the RBF (Radial Basis Function) kernel can always be computed exactly and in O(n) time for n-dimensional input data, giving them a practical advantage over quantum kernels that require O(n_shots) circuit evaluations per pair.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "Hybrid kernel alignment: the quantum computer evaluates K_\\theta(x_i, x_j) via overlap circuits for each pair (i, j); the classical computer computes A(\\theta) and its gradient via the parameter-shift rule on the quantum processor.  This hybrid loop continues until A(\\theta) converges.",
       hints: [
         "Classical kernel evaluation is cheap per pair but the full Gram matrix has N^2 entries - both quantum and classical kernels share this O(N^2) bottleneck.",
@@ -2707,8 +2699,7 @@ const extraQmlQuestions2: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "For quantum ML to achieve a practical advantage over classical ML, it is generally sufficient to show that the quantum algorithm has better asymptotic complexity on some problem instance.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "QAOA for combinatorial optimisation: with p \\to \\infty layers, QAOA converges to the ground state, but achieving meaningful approximation ratios requires p scaling with problem size.  Current NISQ devices with p \\leq 5-10 layers provide only modest approximation guarantees for NP-hard problems.",
       hints: [
         "Asymptotic speedup on paper vs. practical speedup: hardware constants, QRAM overhead, and output sampling costs all matter.",

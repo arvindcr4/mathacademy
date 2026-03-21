@@ -67,6 +67,7 @@ import "./systems-design-healthcare";
 import "./systems-design-video";
 import "./rl-finetuning-platforms";
 import "./llm-inference-optimization";
+import "./rag-systems";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

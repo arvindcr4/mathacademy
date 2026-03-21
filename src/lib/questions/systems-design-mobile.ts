@@ -62,8 +62,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "APNs (Apple Push Notification service) guarantees at-least-once delivery of push notifications, meaning every notification sent by the backend is guaranteed to be received by the device.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "**Step 1:** APNs does NOT guarantee delivery. Apple's documentation explicitly states that push notifications are best-effort.\n\n**Step 2:** If the device is offline, APNs stores only the most recent notification per app (the previous one is discarded). If the device remains offline beyond a storage period, the notification is dropped entirely.\n\n**Step 3:** Apps requiring guaranteed delivery must implement an inbox/pull model where the client fetches missed notifications on reconnect, supplementing push with a persistent message store.",
       hints: [
         "What does APNs do when a device is offline for an extended period with multiple incoming notifications?",
@@ -149,8 +148,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In an offline-first mobile app, last-write-wins (LWW) conflict resolution based on device wall-clock timestamps is reliable because mobile devices have accurate clocks synchronized via NTP.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation: "**Step 1:** LWW based on wall-clock timestamps is unreliable for mobile devices. Mobile clocks can be skewed by several seconds or even minutes due to clock drift, NTP sync delays, manual time changes by users, or timezone misconfigurations.\n\n**Step 2:** A device with a clock set 5 minutes ahead would always 'win' conflicts, silently discarding edits from other devices.\n\n**Step 3:** The correct approach is to use server-assigned logical timestamps or Lamport clocks on sync, use hybrid logical clocks (HLC), or avoid LWW entirely by using CRDTs. If LWW is used, the server should assign the authoritative timestamp at the time of sync.",
       hints: [
         "What can cause a mobile device's clock to be incorrect by several minutes?",

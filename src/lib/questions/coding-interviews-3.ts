@@ -1998,8 +1998,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "In JavaScript (and most languages using two's complement), $\\sim 5$ evaluates to $-6$.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The bitwise NOT operator $\\sim$ computes the **one's complement** (invert all bits).\n\nFor a 32-bit integer:\n\[\n\\begin{align}\n5 &\\text{ (in binary)} = 0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0000\\;0101\\\[5pt]\n\\sim 5 &\\text{ (invert all bits)} = 1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1111\\;1010\\\\\n     &\\text{ (two's complement)} = -6\n\\end{align}$$\n\n**Identity**: $\\sim x = -(x + 1)$",
       hints: [
@@ -2041,8 +2040,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "XOR can be used to swap two numbers without a temporary variable.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "XOR swap works using three XOR operations:\n\n\n\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
       hints: [
@@ -2113,8 +2111,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The XOR trick only works when the duplicate appears exactly twice.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "XOR cancels in **pairs**: $a \\oplus a = 0$.\n\nIf an element appears $k$ times, it cancels completely only when $k$ is even:\n- $k = 2$: $a \\oplus a = 0$ ✓\n- $k = 4$: $a \\oplus a \\oplus a \\oplus a = (a \\oplus a) \\oplus (a \\oplus a) = 0 \\oplus 0 = 0$ ✓\n- $k = 3$: $a \\oplus a \\oplus a = a$ ✗ (does not cancel)\n\nSo the XOR trick requires elements to appear an **even number of times** to cancel out.",
       hints: [
@@ -2212,8 +2209,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question: "0 is a power of 2.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "**False**. Zero is NOT a power of 2.\n\nPowers of 2 are: $2^0 = 1, 2^1 = 2, 2^2 = 4, 2^3 = 8, \\ldots$\n\nNote that $n > 0$ is a required condition for the $n \\; \\& \\; (n-1) = 0$ check.",
       hints: [
@@ -2309,8 +2305,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "The expression $n \\& (-n)$ isolates the lowest set bit.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "In two's complement representation, $-n = \\sim(n) + 1$.\n\nFor $n = 12 = 1100_2$:\n\[\n\\begin{align}\n\\sim n &= 0011_2\\\\\n-n &= \\sim n + 1 = 0100_2\\\\\nn \\; \\& \\; (-n) &= 1100_2 \\; \\& \\; 0100_2 = 0100_2\n\\end{align}$$\n\nThe result $0100_2$ isolates bit 2, the lowest set bit of $12$.",
       hints: [
@@ -2366,8 +2361,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For reversing last 8 bits of a 32-bit int, use: (n >> 8) | (n << 8).",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Swapping bytes is just shifting in opposite directions and ORing, no loop needed.",
     },
@@ -2432,8 +2426,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "Gray code conversion formula: G(i) = i ^ (i >> 1).",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "This formula generates Gray code from binary index i.",
     },
     {
@@ -2500,8 +2493,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "All 0s bitmask represents the empty subset.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation: "No bits set = no elements selected = empty subset.",
     },
     {
@@ -2562,8 +2554,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "XOR swap fails if a and b point to the same memory location.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "If &a == &b, then a ^ a = 0, losing both values. Check or use temp var.",
     },
@@ -2635,8 +2626,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "XOR method: missing = XOR of (0 to n) XOR XOR of array elements.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Each index appears twice except one (the missing), cancels out leaving missing.",
     },
@@ -2710,8 +2700,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For 32-bit, can check palindrome by comparing bits at positions i and 31-i.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Two-pointer from both ends. If any mismatch, not palindrome.",
     },

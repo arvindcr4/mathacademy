@@ -74,8 +74,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Inorder traversal of a BST can be used to verify whether the tree satisfies the BST property.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "A valid BST produces a strictly increasing inorder sequence. During traversal, track the previously visited node value (prev). At each step:\n\n\\\[\n\\text{if } current.\\text{val} \\leq prev: \\text{invalid BST}\n\\\]\n\nCounterexample: root=10, right.left=3. Each node passes the local check (left<root<right) but inorder gives [..., 3, 10, ...] where 3 < 10 - a violation.",
       hints: [
@@ -142,8 +141,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Given both inorder and preorder traversal arrays of a binary tree with distinct node values, the original tree can be uniquely reconstructed.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Preorder's first element is always the root. Finding this root's index in inorder splits the tree:\n\n\\\[\n\\underbrace{\\text{inorder}[0..i-1]}_{\\text{left subtree}} \\; \\underbrace{\\text{root } r}_{\\text{root}} \\; \\underbrace{\\text{inorder}[i+1..]}_{\\text{right subtree}}\n\\\]\n\nRecurse on each subarray. The partition sizes match the preorder segments (LeetCode 105).\n\n\\\[\n\\text{preorder}[0] = r, \\quad \\text{preorder}[1..i] = \\text{left preorder}, \\quad \\text{preorder}[i+1..] = \\text{right preorder}\n\\\]",
       hints: [
@@ -175,8 +173,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Level order traversal produces nodes in the same order as the LeetCode tree array representation.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "LeetCode array format: index 0 is the root, children of index i are at 2i+1 (left) and 2i+2 (right). This encodes the tree level by level, left to right - exactly BFS order:\n\n\\\[\n[1, 2, 3, 4, 5] \\implies\n\\begin{array}{c}\n1\\\\\n2 \\quad 3\\\\\n4 \\quad 5\n\\end{array}\n\\\]",
       hints: [
@@ -287,8 +284,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Level-order traversal grouped by level can be implemented recursively without an explicit queue.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "A depth-parameterized DFS achieves the same grouping:\n\n\\\[\n\\text{dfs}(node, depth):\; \\text{if } node:\\; \\text{append}(node.\\text{val}, result[depth]);\; \\text{dfs}(node.\\text{left}, depth+1);\; \\text{dfs}(node.\\text{right}, depth+1)\n\\\]\n\nPre-order DFS visits left before right, but grouping by depth gives the same level array as BFS (different internal order within levels is acceptable).",
       hints: [
@@ -364,8 +360,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "For BST validation, null nodes are considered valid BSTs.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Base case: null is a valid BST (vacuously satisfies all properties):\n\n\\\[\n\\forall x \\in \\emptyset: x < node.\\text{val} \\quad \\text{(true)}\n\\\]\n\nEvery recursive BST algorithm returns true for null nodes. This is the terminating condition that stops the recursion.",
       hints: [
@@ -459,8 +454,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Iterative BST validation using an explicit stack (simulating inorder traversal) uses O(h) space in the worst case.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The iterative inorder stack holds at most h nodes (the leftmost path from current node):\n\n\\\[\n\\text{Stack holds nodes on the path: } root \\to node.\\text{left} \\to node.\\text{left}.\\text{left} \\to \\dots\n\\\]\n\n- Balanced BST: O(log n)\n- Skewed tree: O(n)\n\nThis is O(h) in all cases, and O(h) = O(n) for skewed trees.",
       hints: [
@@ -515,8 +509,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question: "If p is an ancestor of q, then LCA(p, q) = p.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "By definition, a node is a descendant of itself. If p is on the path from root to q:\n\n\\\[\n\\text{root} \\to \\dots \\to p \\to \\dots \\to q\n\\\]\n\nThen p is a common ancestor of p and q, and there is no deeper common ancestor (since p is above q). Hence LCA(p, q) = p.",
       hints: [
@@ -644,8 +637,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The iterative two-pointer LCA algorithm (both start at p and q, advance to parent, switch to other start when reaching null) works correctly without computing heights explicitly.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Two pointers pa and pb start at p and q. Each step:\n- Advance pa to parent(pa), or\n- Advance pb to parent(pb), or\n- If at null, switch to the other starting node\n\nThey meet at the LCA after traversing equal total distance (p\\toroot + q\\toroot). Analogous to the linked list cycle detection / intersection trick:\n\n\\\[\n\\text{Total distance} = dist(p, LCA) + dist(LCA, root) + dist(q, LCA) = dist(p, root) + dist(q, root)\n\\\]\n\nBoth pointers travel the same total distance, so they meet at the LCA.",
       hints: [
@@ -701,8 +693,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Inserting n elements in sorted order (1, 2, 3, ...) into an empty BST produces a balanced tree.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Sorted insertion into a standard BST produces a completely skewed (degenerate) chain:\n\n\\\[\n\\text{Insert } 1 \\to \\text{tree}=1\\quad\n\\text{Insert } 2 \\to \\text{tree}=1 \\rightarrow 2\\quad\n\\text{Insert } 3 \\to \\text{tree}=1 \\rightarrow 2 \\rightarrow 3\\quad\n\\dots\n\\\]\n\nEach new element becomes the right child of the previous leaf. Height = n − 1 = O(n). A balanced BST requires explicit rebalancing mechanisms such as AVL rotations or Red-Black tree rules.",
       hints: [
@@ -790,8 +781,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "A balanced BST (AVL or Red-Black) guarantees O(log n) worst-case insertion.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "AVL and Red-Black trees maintain balance through rotations after each insertion. Height is kept O(log n), guaranteeing O(log n) for insert, delete, and search.",
       hints: [
@@ -855,8 +845,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Inserting a word of length L into a Trie takes O(L) time regardless of how many words are already stored.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Each of L characters creates or traverses one node. Existing words share prefixes but do not slow insertion - we always visit exactly L nodes.",
       hints: [
@@ -938,8 +927,7 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question: "A Trie can sort n strings of max length L in O(n * L) time.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Insert all strings O(n * L), then DFS pre-order collecting words at isEnd nodes. Children are ordered alphabetically (children[0]='a', ...), so DFS yields lexicographic order.",
       hints: [
@@ -993,8 +981,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In Word Search II, the same cell can be used multiple times within a single word path.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Each cell is used at most once per word path. Mark board[r][c] = '#' before recursing, restore after backtracking.",
       hints: [
@@ -1098,8 +1085,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "Storing complete word strings in Trie leaf nodes (instead of reconstructing during DFS) is a valid optimization.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Storing the word string in the Trie node allows O(1) retrieval when found. Without it, you reconstruct the path character by character during DFS backtracking (O(L) per match).",
       hints: [
@@ -1197,8 +1183,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In the binary tree maximum path sum problem (LeetCode 124), the path must pass through the root of the tree.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "The path can start and end at any nodes in the tree - it does not need to pass through the root:\n\n\\\[\n\\text{answer} = \\max_{\\text{all paths}} \\sum_{v \\in path} v.\\text{val}\n\\\]\n\nA path is any sequence of nodes where each adjacent pair shares an edge. The optimal path could be entirely within a subtree.",
       hints: [
@@ -1256,8 +1241,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Given only the inorder traversal of a binary tree with distinct values, the original tree can be uniquely reconstructed.",
-      options: ["True", "False"],
-      correctAnswer: 1,
+      correctAnswer: "false",
       explanation:
         "Inorder traversal alone is insufficient to determine a unique tree. Many different tree shapes yield the same inorder sequence:\n\n\\\[\n\\text{Inorder: } [1, 2, 3] \\text{ could be: root=2 (balanced) or root=1 (right-skewed) or root=3 (left-skewed)}\n\\\]\n\nUniqueness requires inorder paired with EITHER preorder or postorder (not two copies of the same traversal type).",
       hints: [
@@ -1419,8 +1403,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The O(log^2 n) algorithm for counting nodes in a complete binary tree uses binary search on the last level to determine how many nodes are present there.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "An alternative O(log^2 n) approach uses binary search on the last level:\n\n\\\[\n\\text{Height } h = \\text{leftmost path length}\n\\\]\n\\\[\n\\text{Binary search } k \\in [0, 2^h - 1]:\\; \\text{does node at position } k \\text{ exist?}\n\\\]\n\nChecking node existence at position k: follow O(log n) bits of k as a path from root. Binary search makes O(log n) such checks \\to O(log^2 n) total. The recursive height-comparison method arrives at the same complexity through a different route.",
       hints: [
@@ -1478,8 +1461,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "A reverse postorder approach (process right, then left, then root) can flatten a binary tree in-place in O(n) time and O(h) space using a single pointer.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Processing in reverse preorder (right \\to left \\to root) allows linking nodes using a trailing pointer:\n\n\\\[\n\\text{flatten}(node):\\;\n\\\]\n\\\[\n\\text{if null \\to return;}\n\\\]\n\\\[\n\\text{flatten}(node.\\text{right});\\ \\text{flatten}(node.\\text{left});\n\\\]\n\\\[\nnode.\\text{right} = prev;\\; node.\\text{left} = null;\\; prev = node\n\\\]\n\nProcessing in reverse preorder means when we set node.right = prev, prev is already the correct next node. O(n) time, O(h) stack space.",
       hints: [
@@ -1497,8 +1479,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Path Sum I (LeetCode 112) requires the path to run from root to a leaf node.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "Path Sum I specifically checks root-to-leaf paths:\n\n\\\[\n\\text{leaf: both } node.\\text{left} = null \\text{ AND } node.\\text{right} = null\n\\\]\n\\\[\n\\text{hasPathSum}(node, target) = node.\\text{val} == target \\text{ (at leaf)}\n\\\]\n\nPath Sum II (LeetCode 113) finds all such root-to-leaf paths. Path Sum III (LeetCode 437) allows paths between any two nodes (not necessarily root-to-leaf).",
       hints: [
@@ -1596,8 +1577,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "The diameter of a binary tree can be found in a single O(n) DFS pass without computing heights separately.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "The single DFS pass computes height and updates the diameter simultaneously:\n\n\\\[\n\\text{dfs}(node):\n\\\]\n\\\[\n\\text{if null \\to return } -1 \\quad (\\text{height of null = -1 so leaf height = 0})\n\\\]\n\\\[\nL = \\text{dfs}(node.\\text{left}) + 1;\\; R = \\text{dfs}(node.\\text{right}) + 1\n\\\]\n\\\[\n\\text{global\\_max} = \\max(\\text{global\\_max},\\; L + R);\\ \\text{return } \\max(L, R)\n\\\]\n\nNo separate height pass needed. The diameter and height computations are interleaved in one O(n) traversal with O(h) stack space.",
       hints: [

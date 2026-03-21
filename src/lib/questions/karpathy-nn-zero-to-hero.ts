@@ -1961,8 +1961,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "In Karpathy's MLP model, the embedding lookup for an entire batch of context windows can be performed with a single integer tensor index into the embedding matrix, and the result is then flattened before being passed to the hidden layer.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Integer indexing C[X] retrieves embeddings of shape (B, T, d) from the embedding table.\\n\\n**Step 2:** `.view(B, T*d)` reshapes this to (B, T*d), concatenating all T character embeddings into one flat vector per example.\\n\\n**Step 3:** This flattened vector is then passed to the first linear layer as the MLP input.",
       hints: [
@@ -2018,8 +2017,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In the original WaveNet architecture, causal convolutions ensure each output sample is conditioned only on previous time steps and not on future time steps.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Autoregressive models predict the next token from only previous tokens, never future ones.\\n\\n**Step 2:** Causal convolutions enforce this by zero-padding on the left side, ensuring each output depends only on past inputs.\\n\\n**Step 3:** Without causal masking, the model could look at future tokens during training, defeating the learning objective.",
       hints: [
@@ -2075,8 +2073,7 @@ registerQuestions({
       difficulty: "medium",
       question:
         "Using very small batch sizes (e.g., batch size 1) with batch normalization can cause training instability because the per-batch mean and variance estimates are highly noisy with a single sample.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** BatchNorm requires enough samples to compute meaningful mean and variance statistics.\\n\\n**Step 2:** With batch size 1, variance = 0, so normalization divides by zero or produces degenerate distributions.\\n\\n**Step 3:** GroupNorm and LayerNorm are batch-size-independent, making them suitable alternatives for small-batch or single-sample inference.",
       hints: [
@@ -2133,8 +2130,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In Karpathy's manual backprop exercises, implementing the backward pass for the log-sum-exp operation (used in cross-entropy) requires computing the softmax probabilities as an intermediate step.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** The log-sum-exp function is log(sum_i exp(x_i)). Its gradient is exp(x_i) / sum_j exp(x_j) = softmax(x)_i.\\n\\n**Step 2:** This means the backward pass for cross-entropy requires softmax probabilities as an intermediate.\\n\\n**Step 3:** PyTorch's F.cross_entropy can compute this gradient efficiently without explicitly materializing softmax in the forward pass.",
       hints: [
@@ -2190,8 +2186,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In GPT-style models, positional embeddings are added element-wise (not concatenated) to the token embeddings before the first transformer block.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Positional embeddings of shape (T, d_model) are learned concurrently with token embeddings.\\n\\n**Step 2:** They are added element-wise: x = tok_emb + pos_emb, preserving the (B, T, d_model) shape.\\n\\n**Step 3:** Addition (not concatenation) keeps the embedding dimension fixed, allowing the model to jointly encode token identity and position.",
       hints: [
@@ -2247,8 +2242,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "In Karpathy's tokenization lecture, he demonstrates that BPE tokenizers can behave unexpectedly with non-English text, arithmetic, and whitespace because merges are learned predominantly from English web text, biasing the token boundaries.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** BPE merge rules are learned from the training corpus statistics, reflecting the data distribution.\\n\\n**Step 2:** GPT-2's WebText training is English-heavy, biasing merges toward English subwords.\\n\\n**Step 3:** This causes non-English text and arithmetic to fragment into many tokens, degrading per-token performance on these tasks.",
       hints: [
@@ -2304,8 +2298,7 @@ registerQuestions({
       difficulty: "hard",
       question:
         "In Micrograd, calling `loss.backward()` computes gradients by iterating over all nodes in reverse topological order and calling each node's stored `_backward` closure, which accumulates gradients into its inputs using `+=`.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Each operation captures a `_backward` closure that computes the local gradient with respect to its inputs.\\n\\n**Step 2:** `loss.backward()` iterates nodes in reverse topological order, calling each `_backward` closure.\\n\\n**Step 3:** Gradients are accumulated with `+=` to handle nodes used by multiple operations, ensuring all contributions are summed.",
       hints: [
@@ -2361,8 +2354,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Initializing all weights in a neural network to exactly zero prevents the symmetry-breaking required for learning, because all neurons in a layer compute identical gradients and update identically.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "If all weights are zero, all neurons in a layer produce the same activation (zero) and receive the same gradient, so they remain identical after each update. This symmetry is never broken, effectively collapsing the layer to a single neuron. Random initialization breaks symmetry, allowing different neurons to specialize.",
       hints: [
@@ -2418,8 +2410,7 @@ registerQuestions({
       difficulty: "easy",
       question:
         "Early stopping is a regularization technique where training is halted when the validation loss stops improving, preventing the model from overfitting by not allowing it to memorize training-set noise.",
-      options: ["True", "False"],
-      correctAnswer: 0,
+      correctAnswer: "true",
       explanation:
         "**Step 1:** Early stopping tracks validation loss and stops training when it fails to improve for 'patience' steps.\\n\\n**Step 2:** The model checkpoint with the best validation loss is retained as the final model.\\n\\n**Step 3:** It is a simple, architecture-agnostic regularization technique that prevents overfitting without any model changes.",
       hints: [
