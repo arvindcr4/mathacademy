@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // APPLIED ML FOR TABULAR DATA
+  {
+    id: 'tabular-ml',
+    slug: 'tabular-ml',
+    name: 'Applied ML for Tabular Data',
+    description: 'Tree-based methods, gradient boosting, feature engineering, and deep learning for tabular data.',
+    topics: [
+      {
+        id: 'tree-based-methods',
+        name: 'Tree-Based Methods',
+        description: 'Decision trees, random forests, and ensemble methods for tabular data.',
+        knowledgePoints: [
+          { id: 'tab-kp-1', slug: 'decision-trees', name: 'Decision Trees & CART Algorithm' },
+          { id: 'tab-kp-2', slug: 'random-forests', name: 'Random Forests & Bagging' },
+          { id: 'tab-kp-3', slug: 'extra-trees', name: 'Extra Trees & Feature Randomization' },
+          { id: 'tab-kp-4', slug: 'feature-importance', name: 'Feature Importance (Gini, Permutation, SHAP)' },
+          { id: 'tab-kp-5', slug: 'oblique-trees', name: 'Oblique Trees & Non-Axis-Aligned Splits' },
+        ]
+      },
+      {
+        id: 'gradient-boosting',
+        name: 'Gradient Boosting Methods',
+        description: 'XGBoost, LightGBM, CatBoost, and gradient boosting theory.',
+        knowledgePoints: [
+          { id: 'tab-kp-6', slug: 'gradient-boosting-theory', name: 'Gradient Boosting Theory & Functional Gradient' },
+          { id: 'tab-kp-7', slug: 'xgboost', name: 'XGBoost & Second-Order Approximation' },
+          { id: 'tab-kp-8', slug: 'lightgbm', name: 'LightGBM & Leaf-Wise Growth' },
+          { id: 'tab-kp-9', slug: 'catboost', name: 'CatBoost & Ordered Boosting' },
+          { id: 'tab-kp-10', slug: 'gbm-hypertuning', name: 'Hyperparameter Tuning for GBM Models' },
+        ]
+      },
+      {
+        id: 'tabular-feature-engineering',
+        name: 'Feature Engineering & Selection',
+        description: 'Encoding categorical features, interaction features, and dimensionality reduction.',
+        knowledgePoints: [
+          { id: 'tab-kp-11', slug: 'categorical-encoding', name: 'Categorical Encoding (OHE, Target, Embeddings)' },
+          { id: 'tab-kp-12', slug: 'feature-interactions', name: 'Feature Interactions & Polynomial Features' },
+          { id: 'tab-kp-13', slug: 'missing-values', name: 'Missing Value Imputation Strategies' },
+          { id: 'tab-kp-14', slug: 'feature-selection-tab', name: 'Feature Selection (RFE, Boruta, mRMR)' },
+          { id: 'tab-kp-15', slug: 'pca-tabular', name: 'PCA & Dimensionality Reduction for Tabular' },
+        ]
+      },
+      {
+        id: 'deep-tabular',
+        name: 'Deep Learning for Tabular Data',
+        description: 'TabNet, FT-Transformer, and neural networks for structured data.',
+        knowledgePoints: [
+          { id: 'tab-kp-16', slug: 'tabnet', name: 'TabNet & Attentive Feature Selection' },
+          { id: 'tab-kp-17', slug: 'ft-transformer', name: 'FT-Transformer & Feature Tokenization' },
+          { id: 'tab-kp-18', slug: 'tab-resnet', name: 'MLP-Mixer & ResNet for Tabular' },
+          { id: 'tab-kp-19', slug: 'tabtransformer', name: 'TabTransformer & Categorical Embeddings' },
+          { id: 'tab-kp-20', slug: 'tree-dl-hybrid', name: 'Tree + Deep Learning Hybrids (NODE, SAINT)' },
+        ]
+      },
+      {
+        id: 'tabular-automl',
+        name: 'AutoML for Tabular Data',
+        description: 'AutoGluon, H2O, TPOT, and automated ML for structured data.',
+        knowledgePoints: [
+          { id: 'tab-kp-21', slug: 'autogluon', name: 'AutoGluon & Stacked Ensembling' },
+          { id: 'tab-kp-22', slug: 'h2o-automl', name: 'H2O AutoML & Auto-Stacking' },
+          { id: 'tab-kp-23', slug: 'tpot', name: 'TPOT & Genetic Programming for AutoML' },
+          { id: 'tab-kp-24', slug: 'optuna-automl', name: 'Optuna & Hyperparameter Optimization Frameworks' },
+          { id: 'tab-kp-25', slug: 'llm-tabular', name: 'LLMs for Tabular (TabPFN, LIFT)' },
+        ]
+      },
+      {
+        id: 'tabular-applications',
+        name: 'Tabular ML Applications',
+        description: 'Fraud detection, churn prediction, and competition winning strategies.',
+        knowledgePoints: [
+          { id: 'tab-kp-26', slug: 'fraud-detection', name: 'Fraud Detection & Imbalanced Classification' },
+          { id: 'tab-kp-27', slug: 'churn-prediction', name: 'Churn Prediction & Customer Lifetime Value' },
+          { id: 'tab-kp-28', slug: 'kaggle-tabular', name: 'Kaggle Tabular Competition Strategies' },
+          { id: 'tab-kp-29', slug: 'survival-analysis', name: 'Survival Analysis & Time-to-Event Modeling' },
+          { id: 'tab-kp-30', slug: 'tabular-prod', name: 'Deploying Tabular Models in Production' },
+        ]
+      },
+    ]
+  },
+
   // EVALUATION & BENCHMARKING OF ML SYSTEMS
   {
     id: 'ml-evaluation-benchmarking',
