@@ -223,8 +223,7 @@ registerQuestions({
         "Using an AWS IAM role.",
         "No authentication is required for Gemini Pro.",
       ],
-      correctAnswer:
-        "Providing an API key generated from Google AI Studio via an x-goog-api-key header or SDK configuration.",
+      correctAnswer: 1,
       explanation:
         "The primary authentication method for the Google AI Studio Gemini API is an API key, which is passed in the SDK client initialization or via HTTP headers.",
       hints: [

@@ -1595,10 +1595,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "UHIs arise from low-albedo impervious surfaces that absorb solar radiation, lack of evapotranspiration from vegetation, urban geometry trapping longwave radiation, and waste heat from traffic and buildings — all causing cities to be 1–5°C warmer than surrounding rural areas.",
+        "UHI effects arise from the urban energy balance:\n\n" +
+        "\\[Q_* = Q_H + Q_E + \\Delta Q_S\\]\n\n" +
+        "where:\n" +
+        "\\[- Q_* = \\text{net radiation} \\uparrow \\text{due to low albedo}\\]" +
+        "\\[- Q_E = \\text{latent heat flux} \\downarrow \\text{due to lack of vegetation}\\]" +
+        "\\[- Q_H = \\text{sensible heat flux} \\uparrow \\text{due to waste heat}\\]" +
+        "\\[- \\Delta Q_S = \\text{storage heat in urban fabric}\\]\n\n" +
+        "Cities are 1-5°C warmer than surrounding rural areas, with strongest effects at night.",
       hints: [
-        "Compare a grass field (cools through evapotranspiration, high albedo) to an asphalt parking lot (low albedo, no evaporation).",
-        "The UHI effect is strongest at night when urban surfaces slowly release stored daytime heat.",
+        "Compare a grass field (cools through evapotranspiration, high albedo) to an asphalt parking lot (low albedo, no evaporation). How do these surfaces differ in their energy balance?",
+        "The UHI effect is strongest at night. Why does stored heat from urban surfaces release slowly rather than cooling quickly?",
       ],
     },
     {
@@ -1609,10 +1616,12 @@ const questions: Record<string, Question[]> = {
         "Landsat thermal infrared data is commonly used to map Land Surface Temperature (LST) and identify urban heat island hotspots.",
       correctAnswer: "True",
       explanation:
-        "Landsat\'s Thermal Infrared Sensor (TIRS) measures LST at 100 m resolution (resampled to 30 m); ML algorithms combining LST with NDVI, surface albedo, and urban morphology data identify UHI hotspots and quantify the cooling effect of green spaces.",
+        "Landsat's Thermal Infrared Sensor (TIRS) measures LST at 100m resolution:\n\n" +
+        "\\[\\text{LST} = \\frac{hc}{\\lambda k_B} \\frac{1}{\\ln\\left(\\frac{2hc^2}{I_\\lambda \\lambda^5} + 1\\right)}\\]\n\n" +
+        "ML algorithms combine LST with NDVI, surface albedo, and urban morphology to identify UHI hotspots and quantify the cooling effect of green spaces.",
       hints: [
-        "LST from thermal infrared satellites captures the surface energy balance directly — hotter surfaces emit more thermal radiation.",
-        "Combining LST with vegetation indices allows identification of which urban interventions (trees, green roofs) most effectively cool hotspots.",
+        "LST from thermal infrared satellites captures the surface energy balance directly. What physical property does thermal infrared measure?",
+        "Combining LST with vegetation indices allows identification of which urban interventions (trees, green roofs) most effectively cool hotspots. What does NDVI measure?",
       ],
     },
     {
@@ -1629,10 +1638,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Evapotranspiration is the dominant UHI mitigation mechanism of vegetation; plants transpire water that evaporates, consuming latent heat and dramatically cooling the surrounding air — urban trees can reduce local temperatures by 2–8°C through this process.",
+        "Evapotranspiration is the dominant cooling mechanism. The energy balance for vegetated surfaces:\n\n" +
+        "\\[\\lambda E = \\text{LAI} \\cdot (R_n - G) \\cdot \\frac{\\rho c_p}{\\gamma} \\cdot \\frac{e_s - e}{r_a}\\]\n\n" +
+        "Vegetation:\n" +
+        "\\[- \\text{Transpires water (biological process)}\\]" +
+        "\\[- \\text{Converts sensible heat (H) to latent heat (LE)}\\]" +
+        "\\[- \\text{Reduces net radiation via canopy absorption}\\]\n\n" +
+        "Urban trees reduce local temperatures by 2-8°C through evapotranspiration. This is analogous to sweating for humans.",
       hints: [
-        "Think about how sweating cools the human body — vegetation does the same thing at a large scale.",
-        "Albedo and shading contribute, but evapotranspiration\'s latent heat flux is the largest cooling term in the urban surface energy balance.",
+        "Think about how sweating cools the human body. How does vegetation achieve a similar cooling effect at large scale?",
+        "In the surface energy balance, what happens to sensible heat when water evaporates from leaves?",
       ],
     },
   ],

@@ -615,7 +615,7 @@ const questionOverrides: Record<string, QuestionOverride> = {
   "q-sciml-kp1-1": {
     question:
       "A PINN is evaluated at 4 interior collocation points, and the PDE residual values N[u_θ](x_i,t_i) are [1, -1, 2, -2]. What is the physics residual loss L_r?",
-    options: ["1.5", "2.5", "10", "sqrt(2.5) ≈ 1.58"],
+    options: ["1.5", "2.5", "10", "sqrt(2.5) \$\\approx\$ 1.58"],
     correctAnswer: 1,
   },
   "q-sciml-kp2-2": {
@@ -1871,6 +1871,50 @@ const questionOverrides: Record<string, QuestionOverride> = {
       "AttnGAN generates images from text by using word-level attention at multiple resolutions to align specific words with specific spatial regions of the image.",
     options: ["True", "False"],
     correctAnswer: "true",
+  },
+  "q-prod-ex4-2": {
+    question:
+      "In an ML DAG, preprocessing takes 4 hours and fans out to 5 training jobs. One training job fails after 3 hours. What should the pipeline do?",
+    options: [
+      "Rerun the entire DAG, including preprocessing.",
+      "Retry only the failed training job from checkpointed preprocessing output.",
+      "Mark the DAG successful with the other 4 models.",
+      "Pause the whole DAG for manual recovery.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-ex5-2": {
+    question:
+      "An ML team runs 200 experiments per week with no experiment tracker. What is the main production risk?",
+    options: [
+      "Training slows down because too many runs compete for infrastructure.",
+      "The team cannot reliably identify, reproduce, or audit the run behind the deployed model.",
+      "Running many experiments always causes overfitting.",
+      "This only affects compliance, not operations.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-ex6-1": {
+    question:
+      "For a 10% treatment / 90% control ML A/B test, which assignment method is correct?",
+    options: [
+      "Route treatment by time of day.",
+      "Use a deterministic hash of a stable user ID.",
+      "Randomize every request independently.",
+      "Assign users alphabetically.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-ex9-3": {
+    question:
+      "A canary improves overall metrics but regresses for users in region X (8% of traffic). What is the correct promotion decision?",
+    options: [
+      "Promote because most users improve.",
+      "Block promotion until the region X regression is understood and either fixed or explicitly accepted.",
+      "Promote everywhere except region X immediately.",
+      "Reject the model permanently.",
+    ],
+    correctAnswer: 1,
   },
 };
 
