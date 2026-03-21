@@ -664,7 +664,7 @@ const questions: Record<string, Question[]> = {
       difficulty: 'medium',
       question: 'An LLM that scores perfectly on all NLP benchmarks (MMLU, HumanEval, GSM8K) is guaranteed to be well-aligned with human values.',
       options: ['True', 'False'],
-      correctAnswer: 'False',
+      correctAnswer: 'false',
       explanation: 'Benchmark performance measures capability (what the model can do), not alignment (whether it does what humans actually want). A model could score 100% on MMLU while producing harmful outputs, being deceptive, or failing to follow instructions - benchmarks measure narrow task performance, not the full scope of alignment.',
       hints: [
         'Alignment requires helpfulness, harmlessness, and honesty - none of which are directly measured by standard benchmarks.',
@@ -714,7 +714,7 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Supervised Fine-Tuning (SFT) alone on high-quality demonstrations is sufficient for LLMs to learn nuanced human preferences, making RLHF unnecessary for most alignment tasks.',
-      correctAnswer: 'False',
+      correctAnswer: 'false',
       explanation: 'SFT on demonstrations provides positive-only learning signal for demonstrated outputs. It cannot teach the model to distinguish between good and bad responses on prompts not in the demonstration set, nor provide calibrated uncertainty or explicit preference ranking. RLHF adds bidirectional signal: both reinforcing good responses and penalising bad ones, enabling alignment generalisation beyond the SFT demonstration distribution.',
       hints: [
         'SFT learns "what good responses look like" but not "why some responses are better than others."',

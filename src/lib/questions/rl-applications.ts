@@ -1722,7 +1722,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'MADDPG (Multi-Agent DDPG) uses centralized training with decentralized execution: critics are conditioned on all agents\' observations and actions during training, but actors only use local observations at execution time.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'MADDPG\'s central critics can exploit global information to reduce non-stationarity during training, while decentralized actors ensure scalability at execution. This CTDE paradigm is widely adopted in cooperative MARL.',
       hints: [
@@ -1778,7 +1778,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'In goal-conditioned hierarchical RL, the high-level policy sets sub-goals for the low-level policy, and the low-level policy receives a dense intrinsic reward based on how close it gets to the sub-goal.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Goal-conditioned HRL (e.g., HIRO) has a high-level controller that generates sub-goals g_t every k steps. The low-level controller receives intrinsic reward r_t = −‖s_{t+1} − g_t‖ encouraging it to reach g_t, while the high-level maximizes extrinsic reward.',
       hints: [
@@ -1834,7 +1834,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'World Models (Ha & Schmidhuber 2018) compress raw sensory observations into a latent representation using a VAE, then train a recurrent neural network (RNN/MDN) to predict future latent states.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'World Models consist of: V (Vision model - VAE encodes frames to z_t), M (Memory model - MDN-RNN predicts P(z_{t+1}|z_t, a_t, h_t)), and C (Controller - linear policy trained in the dream). The agent can learn entirely inside its own learned world model.',
       hints: [
@@ -1889,7 +1889,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Reward hacking in RLHF occurs when the policy finds high-scoring outputs that satisfy the reward model but diverge from true human intent, typically because the reward model is an imperfect proxy.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Reward hacking (Goodhart\'s Law): "When a measure becomes a target, it ceases to be a good measure." The LM can find adversarial inputs that exploit reward model blind spots - e.g., verbose or sycophantic responses that score highly but are unhelpful.',
       hints: [
@@ -1945,7 +1945,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'SAC (Soft Actor-Critic) differs from TD3 (Twin Delayed Deep Deterministic) primarily in that SAC maximizes an entropy-augmented objective, leading to a stochastic policy, while TD3 uses a deterministic policy.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'SAC optimizes J = E[\\Sigma r_t + \\alpha\\cdotH(\\pi(\\cdot|s_t))], encouraging maximum entropy exploration. TD3 improves DDPG with twin critics and delayed policy updates but maintains a deterministic policy. SAC\'s stochastic policy provides natural exploration without explicit noise injection.',
       hints: [
@@ -2001,7 +2001,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'AlphaGo uses Monte Carlo Tree Search (MCTS) guided by a policy network (to select promising moves) and a value network (to evaluate board positions) trained from human expert games and self-play.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'AlphaGo combines: (1) policy network P(a|s) trained by supervised learning on expert games then refined by policy gradient self-play; (2) value network V(s) trained by regression on self-play outcomes; (3) MCTS that uses P for tree expansion and V for leaf evaluation, replacing expensive random rollouts.',
       hints: [
@@ -2056,7 +2056,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'The credit assignment problem in RL refers to the difficulty of determining which specific actions in a long trajectory caused a delayed reward received many timesteps later.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'When a reward arrives at time T after a sequence of actions a_1,...,a_T, attributing the reward to the correct actions is the temporal credit assignment problem. Techniques like eligibility traces, advantage estimation, and attention mechanisms help propagate credit backward through time.',
       hints: [
@@ -2112,7 +2112,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Shielding in safe RL uses a verified safety monitor that intercepts the RL agent\'s actions and overrides any action that would provably violate a safety constraint.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'A shield is a reactive safety layer derived from formal verification (e.g., model checking): it computes for each state the set of safe actions and either blocks unsafe actions or replaces them with a safe fallback. The RL agent learns freely within the shield\'s safety envelope.',
       hints: [
@@ -2168,7 +2168,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Conservative Q-Learning (CQL) penalizes Q-values for out-of-distribution actions to prevent overestimation, while still supporting Bellman backups on in-distribution data.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'CQL minimizes E_{\\mu}[Q(s,a)] − E_{D}[Q(s,a)] + standard Bellman loss, where \\mu is a broad distribution over actions and D is the data distribution. This pushes down Q for OOD actions and pulls up Q for in-distribution actions, preventing the policy from exploiting Q-overestimation.',
       hints: [
@@ -2224,7 +2224,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Universal Value Function Approximators (UVFAs) extend value functions to V(s, g) conditioned on a goal g, enabling generalization across different goals without retraining.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'UVFAs (Schaul et al. 2015) represent V(s,g;\\theta) as a single network that generalizes across both states and goals. Trained on diverse (s,g) pairs, UVFAs can estimate value for unseen (s,g) combinations via generalization. Combined with HER, this enables efficient goal-conditioned RL.',
       hints: [

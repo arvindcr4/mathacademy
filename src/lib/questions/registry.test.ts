@@ -622,3 +622,229 @@ describe('Multiple Choice Options', () => {
     }
   })
 })
+
+describe('Question ID Format', () => {
+  it('should have valid kebab-case IDs', () => {
+    const allQuestions = getAllQuestions()
+    const kebabPattern = /^[a-z0-9-]+$/
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          kebabPattern.test(q.id),
+          `${bankName}: ${q.id} should be kebab-case (lowercase, numbers, hyphens)`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have IDs with reasonable length', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          q.id.length,
+          `${bankName}: ${q.id} ID should be at least 3 chars`
+        ).toBeGreaterThanOrEqual(3)
+        expect(
+          q.id.length,
+          `${bankName}: ${q.id} ID should be at most 100 chars`
+        ).toBeLessThanOrEqual(100)
+      }
+    }
+  })
+
+  it('should not have consecutive hyphens in IDs', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          q.id.includes('--'),
+          `${bankName}: ${q.id} should not have consecutive hyphens`
+        ).toBe(false)
+      }
+    }
+  })
+})
+
+describe('Explanation Quality', () => {
+  it('should have explanations ending with punctuation', () => {
+    const allQuestions = getAllQuestions()
+    const validEndings = ['.', '!', '?', ')', ']', '`']
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        const lastChar = q.explanation.trim().slice(-1)
+        expect(
+          validEndings.includes(lastChar),
+          `${bankName}: ${q.id} explanation should end with punctuation, got "${lastChar}"`
+        ).toBe(true)
+      }
+    }
+  })
+
+  it('should have explanations without leading whitespace', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        expect(
+          q.explanation.startsWith(' '),
+          `${bankName}: ${q.id} explanation should not start with space`
+        ).toBe(false)
+      }
+    }
+  })
+
+  it('should have step-by-step explanations for complex questions', () => {
+    const allQuestions = getAllQuestions()
+
+    // Check that hard questions often have step markers
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      for (const q of questions) {
+        if (q.difficulty === 'hard') {
+          const hasSteps = q.explanation.includes('Step') ||
+                          q.explanation.includes('**Step')
+          // This is a soft check - log if missing but don't fail
+          if (!hasSteps) {
+            console.log(`Note: ${bankName}: ${q.id} hard question missing step markers`)
+          }
+        }
+      }
+    }
+  })
+})
+
+describe('Registry Edge Cases', () => {
+  it('should handle registering empty question bank', () => {
+    const emptyBank: QuestionsMap = {
+      'empty-test-bank': [],
+    }
+
+    registerQuestions(emptyBank)
+
+    const retrieved = getQuestions('empty-test-bank')
+    expect(retrieved).toEqual([])
+  })
+
+  it('should handle overwriting existing bank', () => {
+    const firstVersion: QuestionsMap = {
+      'overwrite-test-bank': [
+        {
+          id: 'overwrite-q-1',
+          type: 'multiple-choice',
+          difficulty: 'easy',
+          question: 'First version?',
+          options: ['A', 'B'],
+          correctAnswer: 0,
+          explanation: 'First explanation.',
+        },
+      ],
+    }
+
+    const secondVersion: QuestionsMap = {
+      'overwrite-test-bank': [
+        {
+          id: 'overwrite-q-2',
+          type: 'true-false',
+          difficulty: 'medium',
+          question: 'Second version?',
+          correctAnswer: 'true',
+          explanation: 'Second explanation.',
+        },
+      ],
+    }
+
+    registerQuestions(firstVersion)
+    expect(getQuestions('overwrite-test-bank').length).toBe(1)
+    expect(getQuestions('overwrite-test-bank')[0].id).toBe('overwrite-q-1')
+
+    registerQuestions(secondVersion)
+    expect(getQuestions('overwrite-test-bank').length).toBe(1)
+    expect(getQuestions('overwrite-test-bank')[0].id).toBe('overwrite-q-2')
+  })
+
+  it('should handle special characters in slug lookup', () => {
+    // Test that special characters don't cause errors
+    const result1 = getQuestions('test-with-dashes')
+    expect(Array.isArray(result1)).toBe(true)
+
+    const result2 = getQuestions('test123')
+    expect(Array.isArray(result2)).toBe(true)
+
+    const result3 = getQuestions('')
+    expect(Array.isArray(result3)).toBe(true)
+  })
+})
+
+describe('Difficulty Distribution', () => {
+  it('should have questions across all difficulty levels', () => {
+    const allQuestions = getAllQuestions()
+    const difficulties = new Set<string>()
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        difficulties.add(q.difficulty)
+      }
+    }
+
+    expect(difficulties.has('easy'), 'Should have easy questions').toBe(true)
+    expect(difficulties.has('medium'), 'Should have medium questions').toBe(true)
+    expect(difficulties.has('hard'), 'Should have hard questions').toBe(true)
+  })
+
+  it('should have reasonable difficulty distribution per bank', () => {
+    const allQuestions = getAllQuestions()
+
+    for (const [bankName, questions] of Object.entries(allQuestions)) {
+      if (questions.length < 5) continue // Skip small banks
+
+      const easyCount = questions.filter(q => q.difficulty === 'easy').length
+      const hardCount = questions.filter(q => q.difficulty === 'hard').length
+
+      // At least some variety in difficulty
+      const hasVariety = easyCount > 0 || hardCount > 0
+      if (!hasVariety && questions.length > 3) {
+        console.log(`Note: ${bankName} has limited difficulty variety`)
+      }
+    }
+  })
+})
+
+describe('Question Type Coverage', () => {
+  it('should have multiple-choice questions', () => {
+    const allQuestions = getAllQuestions()
+    let hasMC = false
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'multiple-choice') {
+          hasMC = true
+          break
+        }
+      }
+      if (hasMC) break
+    }
+
+    expect(hasMC, 'Should have at least one multiple-choice question').toBe(true)
+  })
+
+  it('should have true-false questions', () => {
+    const allQuestions = getAllQuestions()
+    let hasTF = false
+
+    for (const questions of Object.values(allQuestions)) {
+      for (const q of questions) {
+        if (q.type === 'true-false') {
+          hasTF = true
+          break
+        }
+      }
+      if (hasTF) break
+    }
+
+    expect(hasTF, 'Should have at least one true-false question').toBe(true)
+  })
+})

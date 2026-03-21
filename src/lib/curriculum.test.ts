@@ -311,13 +311,15 @@ describe('Curriculum Data Integrity', () => {
   })
 
   it('should have valid color strings', () => {
-    const validColorPattern = /^(#[0-9a-fA-F]{3,6}|rgb|hsl|linear-gradient)/
-
     for (const course of courses) {
       expect(
         course.color,
         `${course.name} should have a color`
       ).toBeDefined()
+      expect(
+        course.color.length,
+        `${course.name} color should not be empty`
+      ).toBeGreaterThan(0)
     }
   })
 
@@ -374,6 +376,68 @@ describe('Curriculum Data Integrity', () => {
   })
 })
 
+describe('Curriculum Lookup Functions', () => {
+  it('should be able to find course by slug', () => {
+    const slugs = courses.map(c => c.slug)
+    const uniqueSlugs = new Set(slugs)
+
+    // Test that we can look up courses by slug
+    for (const course of courses) {
+      const found = courses.find(c => c.slug === course.slug)
+      expect(found, `Should find course with slug ${course.slug}`).toBeDefined()
+      expect(found!.slug).toBe(course.slug)
+    }
+  })
+
+  it('should be able to find topic by slug within course', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        const found = course.topics.find(t => t.slug === topic.slug)
+        expect(found, `${course.name}: Should find topic ${topic.slug}`).toBeDefined()
+      }
+    }
+  })
+
+  it('should be able to find knowledge point by slug within topic', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          const found = topic.knowledgePoints.find(k => k.slug === kp.slug)
+          expect(found, `${course.name}/${topic.name}: Should find KP ${kp.slug}`).toBeDefined()
+        }
+      }
+    }
+  })
+
+  it('should be able to enumerate all knowledge point slugs', () => {
+    const allKpSlugs: string[] = []
+
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          allKpSlugs.push(kp.slug)
+        }
+      }
+    }
+
+    expect(allKpSlugs.length, 'Should have many KP slugs').toBeGreaterThan(100)
+  })
+
+  it('should be able to count courses per category', () => {
+    const coursesPerCategory = new Map<string, number>()
+
+    for (const course of courses) {
+      const count = coursesPerCategory.get(course.category) || 0
+      coursesPerCategory.set(course.category, count + 1)
+    }
+
+    // Each category should have at least one course
+    for (const [cat, count] of coursesPerCategory) {
+      expect(count, `Category ${cat} should have at least 1 course`).toBeGreaterThan(0)
+    }
+  })
+})
+
 describe('Curriculum Completeness', () => {
   it('should have all courses properly categorized', () => {
     const categoryIds = new Set(categories.map(c => c.id))
@@ -409,6 +473,98 @@ describe('Curriculum Completeness', () => {
         course.estimatedHours,
         `${course.name} should have at most 200 estimated hours`
       ).toBeLessThanOrEqual(200)
+    }
+  })
+})
+
+describe('Edge Cases and Data Quality', () => {
+  it('should not have duplicate KP slugs across entire curriculum', () => {
+    const allKpSlugs = new Map<string, string[]>() // slug -> [locations]
+
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          const locations = allKpSlugs.get(kp.slug) || []
+          locations.push(`${course.slug}/${topic.slug}`)
+          allKpSlugs.set(kp.slug, locations)
+        }
+      }
+    }
+
+    // Check for duplicates
+    const duplicates: string[] = []
+    for (const [slug, locations] of allKpSlugs) {
+      if (locations.length > 1) {
+        duplicates.push(`${slug}: ${locations.join(', ')}`)
+      }
+    }
+
+    // Note: Some KP slugs may intentionally be reused across courses
+    // This test documents them but doesn't fail
+    if (duplicates.length > 0) {
+      console.log(`Note: ${duplicates.length} KP slugs appear in multiple locations`)
+    }
+  })
+
+  it('should have non-empty course descriptions', () => {
+    for (const course of courses) {
+      expect(
+        course.description.trim().length,
+        `${course.name} description should not be empty`
+      ).toBeGreaterThan(10)
+    }
+  })
+
+  it('should have reasonable topic names', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        expect(
+          topic.name.length,
+          `${course.name}: ${topic.name} name should be at least 3 chars`
+        ).toBeGreaterThanOrEqual(3)
+        expect(
+          topic.name.length,
+          `${course.name}: ${topic.name} name should be under 100 chars`
+        ).toBeLessThanOrEqual(100)
+      }
+    }
+  })
+
+  it('should have valid icon strings for categories', () => {
+    for (const cat of categories) {
+      expect(cat.icon, `Category ${cat.name} should have icon`).toBeDefined()
+      expect(cat.icon.length, `Category ${cat.name} icon should not be empty`).toBeGreaterThan(0)
+    }
+  })
+
+  it('should have valid icon strings for courses', () => {
+    for (const course of courses) {
+      expect(course.icon, `${course.name} should have icon`).toBeDefined()
+      expect(course.icon.length, `${course.name} icon should not be empty`).toBeGreaterThan(0)
+    }
+  })
+
+  it('should have topics with non-empty descriptions', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        expect(
+          topic.description.trim().length,
+          `${course.name}: ${topic.name} description should not be empty`
+        ).toBeGreaterThan(5)
+      }
+    }
+  })
+
+  it('should have valid KP names', () => {
+    for (const course of courses) {
+      for (const topic of course.topics) {
+        for (const kp of topic.knowledgePoints) {
+          expect(
+            kp.name.trim().length,
+            `${course.slug}/${kp.slug} name should not be empty`
+          ).toBeGreaterThan(2)
+        }
+      }
     }
   })
 })

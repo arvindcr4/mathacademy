@@ -1640,7 +1640,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'KL divergence is asymmetric: KL(P||Q) \$\\neq\$ KL(Q||P) in general. KL(P||Q) is called the forward KL and tends to be mass-covering (mean-seeking), while KL(Q||P) is called the reverse KL and tends to be mode-seeking (zero-forcing).',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Forward KL (P||Q): penalizes Q being small where P is large, forcing Q to cover all modes of P (mass-covering). Reverse KL (Q||P): penalizes Q being large where P is small, so Q collapses to a single mode of P (mode-seeking). Variational inference minimizes reverse KL; MLE minimizes forward KL.',
       hints: [
@@ -1696,7 +1696,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Mean-field variational inference assumes the variational posterior factorizes as q(z) = \\prod_i q_i(z_i), making the approximation independent across latent dimensions.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Mean-field VI (from statistical physics) assumes full independence: q(z\\_1,...,z_k) = q\\_1(z\\_1)\\cdot...\\cdotq_k(z_k). This enables efficient coordinate ascent (CAVI): each factor q_i(z_i) \\propto exp(E_{q_{-i}}[log p(x,z)]) has a closed form for exponential family models. The trade-off: cannot capture posterior correlations between latent dimensions.',
       hints: [
@@ -1752,7 +1752,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'The Hessian matrix H of a scalar function f: \\mathbb{R}\\^n \\to \\mathbb{R} is the matrix of second partial derivatives H_ij = \\partial\\^2f/\\partialx_i\\partialx_j, and is always symmetric for twice continuously differentiable functions.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Schwarz\'s theorem (symmetry of second derivatives): if f is twice continuously differentiable (C\\^2), then \\partial\\^2f/\\partialx_i\\partialx_j = \\partial\\^2f/\\partialx_j\\partialx_i, so H = H\\^T. The Hessian characterizes the local curvature of f; its eigenvalues determine whether a critical point is a minimum (all +), maximum (all -), or saddle point (mixed).',
       hints: [
@@ -1808,7 +1808,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'A saddle point is a critical point (\\nablaf = 0) where the Hessian has both positive and negative eigenvalues, indicating it is a minimum in some directions and a maximum in others.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Saddle points are ubiquitous in high-dimensional neural network loss landscapes. The Hessian at a saddle point is indefinite (some eigenvalues > 0, some < 0). Gradient descent may slow near saddle points (gradient \\approx 0) but noise and curvature asymmetry typically allow escape. True local minima (all positive Hessian eigenvalues) are exponentially rare in high dimensions.',
       hints: [
@@ -1864,7 +1864,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'For a continuous random variable X with density f_X, the expectation E[g(X)] = \\int g(x) f_X(x) dx is defined as a Lebesgue integral, which agrees with the Riemann integral when f_X is Riemann-integrable.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'The Lebesgue integral generalizes the Riemann integral. For well-behaved densities (e.g., continuous or piecewise continuous), both integrals agree. Lebesgue integration handles more general functions (e.g., indicator functions, limits of measurable functions) and allows powerful convergence theorems (Dominated Convergence, Monotone Convergence) crucial for probability theory.',
       hints: [
@@ -1920,7 +1920,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'A conjugate prior is a prior distribution P(\\theta) such that the posterior P(\\theta|x) belongs to the same parametric family as the prior, enabling closed-form Bayesian updates.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Conjugate priors give analytical posteriors: Beta prior + Bernoulli likelihood \\to Beta posterior; Gaussian prior + Gaussian likelihood \\to Gaussian posterior; Dirichlet prior + Categorical likelihood \\to Dirichlet posterior. Conjugacy enables efficient sequential Bayesian updating without numerical integration.',
       hints: [
@@ -1976,7 +1976,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'In GP regression, the posterior predictive mean at a new point x* is a weighted sum of training outputs y, where the weights depend on the kernel function k(x*, x\\_i) evaluated between x* and training points.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'GP posterior: \\mu*(x*) = k(x*, X)[K(X,X) + \\sigma\\^2I]\\^{-1}y = \\sum\_i \\alpha\\_i k(x*, x\\_i) where \\alpha = [K+\\sigma\\^2I]\\^{-1}y. The prediction is an interpolation of training outputs weighted by kernel similarities. The posterior variance \\sigma\\^2*(x*) = k(x*,x*) - k(x*,X)[K+\\sigma\\^2I]\\^{-1}k(X,x*) quantifies uncertainty.',
       hints: [
@@ -2031,7 +2031,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Markov Chain Monte Carlo (MCMC) methods like Metropolis-Hastings generate samples from a target distribution P(x) by constructing a Markov chain whose stationary distribution equals P(x), without needing to evaluate the normalizing constant of P.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'MH accepts/rejects proposed moves using the acceptance ratio \\alpha = min(1, P(x\')Q(x|x\')/P(x)Q(x\'|x)). Since P appears as a ratio, the normalizing constant cancels - only the unnormalized P̃(x) \\propto P(x) is needed. Under detailed balance, the chain\'s stationary distribution is P(x). This makes MCMC invaluable for Bayesian inference where P(\\theta|x) \\propto P(x|\\theta)P(\\theta) is known up to normalizer.',
       hints: [
@@ -2087,7 +2087,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'PageRank computes a stationary distribution of a random walk on the web graph, where at each step the surfer either follows a random outgoing link with probability d, or teleports to a random page with probability (1-d).',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'PageRank vector \\pi satisfies \\pi = d\\cdotA\\^T\\pi + (1-d)\\cdot1/n. The damping factor d \\approx 0.85 prevents rank sinks (nodes with no outlinks) and dangling nodes. The teleportation term (1-d)/n ensures the Markov chain is irreducible and aperiodic, guaranteeing a unique stationary distribution. PageRank = principal eigenvector of the modified transition matrix.',
       hints: [
@@ -2143,7 +2143,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'medium',
       question:
         'Hoeffding\'s inequality states that for independent bounded random variables X\\_i \\in [a\\_i, b\\_i] with S_n = \\Sigma X\\_i, the tail bound P(S_n - E[S_n] \\geq t) \\leq exp(-2t\\^2/\\sum(b\\_i-a\\_i)\\^2) decays exponentially in t.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation:
         'Hoeffding\'s inequality gives exponential (sub-Gaussian) concentration for bounded variables - much tighter than Chebyshev\'s polynomial bound. For the sample mean X̄_n of i.i.d. [0,1] variables: P(X̄_n - \\mu \\geq \\epsilon) \\leq exp(-2n\\epsilon\\^2). This is the foundation of PAC learning bounds and confidence intervals in ML theory.',
       hints: [

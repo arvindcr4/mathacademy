@@ -1965,7 +1965,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'V-JEPA (Video Joint Embedding Predictive Architecture) predicts in a latent feature space rather than pixel space, avoiding the need to reconstruct fine-grained visual details that are irrelevant to high-level video understanding.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: 'V-JEPA (Assran et al., 2024) predicts representations of masked video regions in the embedding space of a target encoder (EMA of the context encoder), not in pixel space. This focuses the model on semantically meaningful features (motion, object identity) rather than texture and high-frequency pixel details. Experiments show V-JEPA learns better action recognition features with less compute than pixel-reconstruction methods.',
       hints: [
         'Pixel reconstruction: model must predict exact RGB values - wastes capacity on irrelevant texture details.',

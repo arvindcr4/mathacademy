@@ -1596,7 +1596,7 @@ const questions: Record<string, Question[]> = {
         "CTC is specifically designed for sequence-to-sequence mapping when input and output lengths differ and are unaligned.\n\n**Step 1.** The CNN produces $T$ feature vectors (one per column). The RNN processes these sequentially. The output at each time step is a probability distribution over $C + 1$ classes (characters + blank).\n\n**Step 2.** The CTC loss collapses this sequence by: (1) merging repeated characters, then (2) removing blanks. For the sequence \"aa-bbb-\" (where '-' is blank): \"aa-bbb-\" $\\to$ \"ab\".\n\n**Step 3.** At inference, either greedy decoding (highest probability per time step $\\to$ collapse) or beam search decoding (search over candidate collapsed sequences) is used. This eliminates the need for frame-level character segmentation.",
       hints: [
         "The CNN produces $T$ feature columns; the text might have $L$ characters with $L \\neq T$. CTC bridges this gap. How?",
-        "CTC decoding: (1) merge repeated characters, (2) remove blanks. Input: \"tttt-hh-eeee-ll-ll-o--\" → output: \"hello\".",
+        "CTC decoding: (1) merge repeated characters, (2) remove blanks. Input: \"tttt-hh-eeee-ll-ll-o--\" \$\\to\$ output: \"hello\".",
       ],
     },
     {
@@ -1653,7 +1653,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Spectral signatures are the key advantage of multi-spectral imagery.\n\n**Step 1.** In RGB, vegetation and some soils can appear similar (both brownish-green). But in Near-Infrared (NIR), healthy vegetation has very high reflectance while soil has moderate reflectance — making them easily separable.\n\n**Step 2.** The Normalised Difference Vegetation Index (NDVI) $= (\\text{NIR} - \\text{Red})/(\\text{NIR} + \\text{Red})$ exploits this: vegetation has NDVI $\\approx 0.8$; bare soil has NDVI $\\approx 0$; water has NDVI $< 0$.\n\n**Step 3.** Hyperspectral imagery (hundreds of bands) goes further, enabling mineral identification, vegetation species classification, and water quality assessment — applications impossible with RGB alone.",
       hints: [
-        "Healthy vegetation: high NIR reflectance, moderate Red reflectance → high NDVI. Water: low NIR, moderate Red → NDVI < 0. What does RGB see?",
+        "Healthy vegetation: high NIR reflectance, moderate Red reflectance \$\\to\$ high NDVI. Water: low NIR, moderate Red \$\\to\$ NDVI < 0. What does RGB see?",
         "NDVI exploits the fact that different materials reflect different wavelengths differently — this is the spectral signature.",
       ],
     },
@@ -1752,7 +1752,7 @@ const questions: Record<string, Question[]> = {
         "The content-style trade-off is controlled by the relative loss weights.\n\n**Step 1.** $\\mathcal{L}_{\\text{content}}$ measures how different the generated image's features are from the content image's features. Minimising it forces the generated image to preserve content structure.\n\n**Step 2.** $\\mathcal{L}_{\\text{style}}$ measures how different the generated image's Gram matrices are from the style image's Gram matrices. Minimising it forces the generated image to have the same texture, colour, and style patterns.\n\n**Step 3.** With $\\beta/\\alpha = 10^3$ to $10^4$, style dominates — Picasso-style paintings. With $\\beta/\\alpha = 10^1$, content dominates — Van Gogh painting of the content image. The ratio $\\beta/\\alpha$ is the primary artistic control parameter.",
       hints: [
         "$\\alpha \\mathcal{L}_{\\text{content}}$: content preservation. $\\beta \\mathcal{L}_{\\text{style}}$: style matching. Which term dominates when $\\beta/\\alpha$ is large?",
-        "Large $\\beta/\\alpha$: style dominates → strongly stylised image. Small $\\beta/\\alpha$: content dominates → content-faithful image.",
+        "Large $\\beta/\\alpha$: style dominates \$\\to\$ strongly stylised image. Small $\\beta/\\alpha$: content dominates \$\\to\$ content-faithful image.",
       ],
     },
     {

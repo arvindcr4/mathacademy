@@ -11937,4 +11937,222 @@ export const courses: Course[] = [
       },
     ],
   },
+  {
+    id: "llm-inference-optimization",
+    slug: "llm-inference-optimization",
+    name: "LLM Inference Optimization & Production Serving",
+    description:
+      "Advanced techniques for deploying LLMs with low latency, high throughput, and efficient resource utilization. Covers vLLM, batching, quantization, and multi-GPU strategies.",
+    category: "fine-tuning",
+    icon: "⚡",
+    color: "#F59E0B",
+    topicCount: 6,
+    estimatedHours: 10,
+    topics: [
+      {
+        id: "inference-fundamentals",
+        slug: "inference-fundamentals",
+        name: "Inference Fundamentals & Bottlenecks",
+        description:
+          "Understanding what makes LLM inference slow and how to measure performance.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-1",
+            slug: "inference-bottlenecks",
+            name: "Memory vs Compute Bound Operations",
+          },
+          {
+            id: "inf-kp-2",
+            slug: "prefill-decode",
+            name: "Prefill vs Decode Phases",
+          },
+          {
+            id: "inf-kp-3",
+            slug: "kv-cache-basics",
+            name: "KV Cache Fundamentals",
+          },
+          {
+            id: "inf-kp-4",
+            slug: "inference-metrics",
+            name: "TTFT, TBT, and Throughput Metrics",
+          },
+          {
+            id: "inf-kp-5",
+            slug: "attention-complexity",
+            name: "Attention Complexity (O(n²))",
+          },
+        ],
+      },
+      {
+        id: "batching-strategies",
+        slug: "batching-strategies",
+        name: "Batching & Scheduling Strategies",
+        description:
+          "How to batch requests efficiently for maximum throughput.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-6",
+            slug: "static-batching",
+            name: "Static vs Dynamic Batching",
+          },
+          {
+            id: "inf-kp-7",
+            slug: "continuous-batching",
+            name: "Continuous Batching (Iteration-level)",
+          },
+          {
+            id: "inf-kp-8",
+            slug: "pagedattention",
+            name: "PagedAttention & vLLM",
+          },
+          {
+            id: "inf-kp-9",
+            slug: "chunked-prefill",
+            name: "Chunked Prefill",
+          },
+          {
+            id: "inf-kp-10",
+            slug: "prefix-caching",
+            name: "Prefix Caching & Reuse",
+          },
+        ],
+      },
+      {
+        id: "quantization-inference",
+        slug: "quantization-inference",
+        name: "Quantization for Inference",
+        description:
+          "Reducing model size and memory usage through quantization techniques.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-11",
+            slug: "ptq-basics",
+            name: "Post-Training Quantization (PTQ)",
+          },
+          {
+            id: "inf-kp-12",
+            slug: "gptq-awq",
+            name: "GPTQ, AWQ, and GGUF",
+          },
+          {
+            id: "inf-kp-13",
+            slug: "int8-int4",
+            name: "INT8 vs INT4 Trade-offs",
+          },
+          {
+            id: "inf-kp-14",
+            slug: "kv-cache-quant",
+            name: "KV Cache Quantization",
+          },
+          {
+            id: "inf-kp-15",
+            slug: "activation-outliers",
+            name: "Handling Activation Outliers",
+          },
+        ],
+      },
+      {
+        id: "speculative-decoding",
+        slug: "speculative-decoding",
+        name: "Speculative Decoding & Optimization",
+        description:
+          "Using draft models and other techniques to accelerate token generation.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-16",
+            slug: "speculative-decoding-basics",
+            name: "Speculative Decoding Concept",
+          },
+          {
+            id: "inf-kp-17",
+            slug: "draft-models",
+            name: "Draft Model Selection",
+          },
+          {
+            id: "inf-kp-18",
+            slug: "acceptance-rate",
+            name: "Acceptance Rate & Speedup",
+          },
+          {
+            id: "inf-kp-19",
+            slug: "self-speculative",
+            name: "Self-Speculative Decoding (Early Exit)",
+          },
+          {
+            id: "inf-kp-20",
+            slug: "medusa-heads",
+            name: "Medusa & Multi-Head Decoding",
+          },
+        ],
+      },
+      {
+        id: "multi-gpu-serving",
+        slug: "multi-gpu-serving",
+        name: "Multi-GPU & Distributed Serving",
+        description:
+          "Scaling inference across multiple GPUs and nodes.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-21",
+            slug: "tensor-parallelism",
+            name: "Tensor Parallelism",
+          },
+          {
+            id: "inf-kp-22",
+            slug: "pipeline-parallelism",
+            name: "Pipeline Parallelism",
+          },
+          {
+            id: "inf-kp-23",
+            slug: "nvlink-nccl",
+            name: "NVLink & NCCL Communication",
+          },
+          {
+            id: "inf-kp-24",
+            slug: "model-sharding",
+            name: "Model Sharding Strategies",
+          },
+          {
+            id: "inf-kp-25",
+            slug: "load-balancing",
+            name: "Load Balancing Across Replicas",
+          },
+        ],
+      },
+      {
+        id: "production-architecture",
+        slug: "production-architecture",
+        name: "Production Architecture Patterns",
+        description:
+          "Best practices for deploying LLMs in production environments.",
+        knowledgePoints: [
+          {
+            id: "inf-kp-26",
+            slug: "autoscaling",
+            name: "Autoscaling Strategies",
+          },
+          {
+            id: "inf-kp-27",
+            slug: "request-routing",
+            name: "Request Routing & Load Balancing",
+          },
+          {
+            id: "inf-kp-28",
+            slug: "streaming-responses",
+            name: "Streaming & Chunked Responses",
+          },
+          {
+            id: "inf-kp-29",
+            slug: "caching-strategies",
+            name: "Semantic & Exact Caching",
+          },
+          {
+            id: "inf-kp-30",
+            slug: "fallback-routing",
+            name: "Fallback & Model Routing",
+          },
+        ],
+      },
+    ],
+  },
 ];

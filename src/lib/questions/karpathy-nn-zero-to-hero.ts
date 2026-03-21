@@ -159,7 +159,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Autograd engines dynamically build a Directed Acyclic Graph (DAG) during the forward pass, linking scalar values or tensors with the operations that produced them, enabling reverse-mode differentiation.",
+        "**Step 1:** Autograd engines dynamically build a Directed Acyclic Graph (DAG) during the forward pass.\n\n**Step 2:** The DAG links scalar values or tensors with the operations that produced them.\n\n**Step 3:** This graph enables reverse-mode differentiation - traversing the graph backward to compute gradients via the chain rule.",
       hints: [
         "Nodes store the value and its children; edges encode which operation created it.",
         "DAG means no cycles - gradients can flow backwards without looping.",
@@ -179,7 +179,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Each Value node stores: `data` (the forward value), `grad` (the gradient, initialised to 0), `_prev` (set of input nodes), and `_backward` (the closure that propagates gradients to children).",
+        "**Step 1:** Each Value node stores `data` - the forward pass scalar value.\n\n**Step 2:** It stores `grad` (gradient initialized to 0), `_prev` (set of input nodes), and `_backward` (closure that propagates gradients).\n\n**Step 3:** This self-contained structure enables automatic differentiation - each node knows how to compute and propagate its local gradient backward.",
       hints: [
         "The _backward closure is set at creation time by each operation's implementation.",
         "grad starts at 0 and is accumulated during the backward pass.",
@@ -199,7 +199,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In dynamic (define-by-run) frameworks, the computational graph is re-created every forward pass based on actual Python control flow. This makes debugging natural (use normal print/debugger) and allows data-dependent architectures.",
+        "**Step 1:** In dynamic (define-by-run) frameworks, the computational graph is re-created every forward pass.\n\n**Step 2:** The graph structure is based on actual Python control flow at runtime.\n\n**Step 3:** This makes debugging natural and allows data-dependent architectures like RNNs with variable-length sequences.",
       hints: [
         "Think about how Python if/for statements interact with the graph construction.",
         "Contrast with TF1 where you first define a static graph, then feed data into a session.",
@@ -219,7 +219,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Calling `.backward()` on the output node seeds the loss's own gradient to 1.0, performs a topological sort of the DAG, then iterates in reverse topological order calling `_backward` on each node to propagate gradients to its parents.",
+        "**Step 1:** Calling `.backward()` on the output node seeds the loss's own gradient to 1.0.\n\n**Step 2:** It performs a topological sort of the DAG to determine the correct order.\n\n**Step 3:** It iterates in reverse topological order, calling `_backward` on each node to propagate gradients to its parents.",
       hints: [
         "The loss node is the root; gradients flow from root to leaves.",
         "Topological sort ensures parents receive gradients after all their children have been processed.",
@@ -239,7 +239,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Leaf nodes are the 'inputs' to the graph - model weights, biases, or input data. They have no `_children`. Gradients accumulate at leaves, and these are what the optimizer updates. Intermediate nodes are ephemeral computation results.",
+        "**Step 1:** Leaf nodes are the inputs to the graph - model weights, biases, or input data.\n\n**Step 2:** They have no `_children` because they are not produced by any operation.\n\n**Step 3:** Gradients accumulate at leaf nodes via `+=`, and these are the parameters that the optimizer updates during training.",
       hints: [
         "In PyTorch, leaf tensors are those created directly by the user (not as the result of an operation).",
         "Only leaf tensors retain their gradients by default after .backward().",
@@ -259,7 +259,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "During forward, every intermediate value needed for gradient computation is stored on the graph. For deep or long-sequence models this is a significant memory cost. Gradient checkpointing trades recomputation for memory by discarding and recomputing intermediate activations.",
+        "**Step 1:** During forward, every intermediate value needed for gradient computation is stored on the graph.\n\n**Step 2:** For deep or long-sequence models, this is a significant memory cost.\n\n**Step 3:** Gradient checkpointing trades recomputation for memory by discarding and recomputing intermediate activations.",
       hints: [
         "The backward function closures hold references to the input tensors they need.",
         "This is one motivation for techniques like gradient checkpointing in large models.",
@@ -279,7 +279,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Inside a `with torch.no_grad():` block, PyTorch does not record operations into the autograd graph. This reduces memory usage and speeds up inference since no backward computation is needed.",
+        "**Step 1:** Inside a `with torch.no_grad():` block, PyTorch does not record operations into the autograd graph.\n\n**Step 2:** This means no backward graph is built during the forward pass.\n\n**Step 3:** It reduces memory usage and speeds up inference since no backward computation is needed.",
       hints: [
         "Use torch.no_grad() during evaluation or inference loops.",
         "Without it, every forward pass builds a graph that is never used during inference, wasting memory.",
@@ -301,7 +301,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "In a DAG, a node's gradient depends on the gradients of the nodes it outputs to. A topological sort guarantees we traverse the graph backward in the correct dependency order.",
+        "**Step 1:** In a DAG, a node's gradient depends on the gradients of the nodes it outputs to.\n\n**Step 2:** A topological sort orders all nodes so that every node appears after all the nodes that depend on it.\n\n**Step 3:** Reversing this order gives the correct backward traversal for gradient propagation.",
       hints: [
         "A node's gradient is the sum of contributions from all nodes it feeds into.",
         "Topological order means every node appears after all its dependencies.",
@@ -321,7 +321,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A DFS-based topological sort visits a node's children first, then appends the node itself. After the recursion, reversing this list gives the correct topological order from output to inputs.",
+        "**Step 1:** A DFS-based topological sort visits a node's children first.\n\n**Step 2:** After visiting all descendants, the node itself is appended to the order list.\n\n**Step 3:** Reversing this list gives the correct topological order from output to inputs for backpropagation.",
       hints: [
         "Post-order DFS naturally produces a reverse topological ordering.",
         "Karpathy tracks visited nodes in a set to avoid processing duplicates.",
@@ -341,7 +341,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If the graph had a cycle, topological sort would not terminate (or would fail), and gradients would loop back and accumulate indefinitely. Acyclicity guarantees a well-defined order and finite gradient computation.",
+        "**Step 1:** If the graph had a cycle, topological sort would not terminate.\n\n**Step 2:** Gradients would loop back and accumulate indefinitely during backpropagation.\n\n**Step 3:** Acyclicity guarantees a well-defined order and finite gradient computation.",
       hints: [
         "Try running DFS on a graph with a cycle - what happens?",
         "Feedforward networks are acyclic by design; RNNs are unrolled to be acyclic.",
@@ -361,7 +361,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "dL/dL = 1.0 by definition. We seed the loss node's gradient to 1.0 and then propagate backwards. This is how reverse-mode autodiff (backpropagation) starts.",
+        "**Step 1:** dL/dL = 1.0 by definition - the derivative of any quantity with respect to itself is 1.\n\n**Step 2:** We seed the loss node's gradient to 1.0 and then propagate backwards through the graph.\n\n**Step 3:** This is how reverse-mode autodiff (backpropagation) starts.",
       hints: [
         "The derivative of a quantity with respect to itself is always 1.",
         "Backprop flows from the loss backward through the graph.",
@@ -381,7 +381,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A node's _backward needs the already-computed gradient of its output node(s). In forward order, when you process a node, the output node's gradient hasn't been accumulated yet (it's still 0), so the gradient written to the inputs is incorrect.",
+        "**Step 1:** In backpropagation, each node's `_backward` needs the already-computed gradient of its output node(s).\n\n**Step 2:** In forward topological order, the output node's gradient hasn't been accumulated yet (still 0).\n\n**Step 3:** This means gradients written to inputs are incorrect or zero, leading to wrong parameter updates.",
       hints: [
         "Each _backward reads `out.grad` and writes to its children's `.grad`.",
         "If out.grad is 0 when _backward runs, the chain rule product is 0.",
@@ -401,7 +401,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "When x appears as both operands in x * x, the backward of the multiply node fires once but contributes two gradient terms to x.grad (once for each position). Since `.grad` is accumulated with `+=`, both contributions are added correctly.",
+        "**Step 1:** When x appears as both operands in x * x, the backward of multiply fires once but needs to contribute two gradient terms.\n\n**Step 2:** This is because dz/dx = 2x in z = x^2, so both paths through the graph contribute to x.grad.\n\n**Step 3:** Since `.grad` is accumulated with `+=`, both contributions are added correctly.",
       hints: [
         "For z = x^2, dz/dx = 2x. Both paths through the graph contribute x each.",
         "Using `=` would only record one path's contribution, losing the other.",
@@ -421,7 +421,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "_op is a human-readable label used for visualization (e.g., with Graphviz). It records which operation created this node, making it easy to debug and display the computational graph structure.",
+        "**Step 1:** `_op` is a human-readable label used for visualization (e.g., with Graphviz).\n\n**Step 2:** It records which operation (such as '+', '*', 'tanh') created this node.\n\n**Step 3:** This makes it easy to debug and display the computational graph structure.",
       hints: [
         "Karpathy uses _op only for visualization; it has no effect on computation.",
         "Leaf nodes (weights, inputs) have _op = '' since they were not created by an operation.",
@@ -443,7 +443,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "A neuron computes `w*x + b` and then passes that pre-activation value through a non-linear activation function (e.g., Tanh) to squash or transform the output, allowing the network to learn non-linear representations.",
+        "**Step 1:** A neuron computes w*x + b (dot product of weights and inputs plus bias).\n\n**Step 2:** This pre-activation value is passed through a non-linear activation function (e.g., Tanh).\n\n**Step 3:** This non-linearity allows the network to learn complex, non-linear representations that a single linear transformation could not capture.",
       hints: [
         "Without the non-linearity, stacking layers would still be a linear model.",
         "Activation functions introduce the non-linearity needed to learn complex functions.",
@@ -463,7 +463,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "Karpathy initialises each weight as `Value(random.uniform(-1, 1))` in the Neuron constructor. Random initialization breaks symmetry so neurons learn different features, while zero initialization would make all neurons identical.",
+        "**Step 1:** Karpathy initializes each weight as `Value(random.uniform(-1, 1))` in the Neuron constructor.\n\n**Step 2:** Random initialization breaks symmetry so neurons learn different features.\n\n**Step 3:** Zero initialization would make all neurons identical since they would all receive the same gradients.",
       hints: [
         "Zero initialization is a common mistake - all neurons would have identical gradients and learn nothing different.",
         "Symmetry breaking requires at least random initialization.",
@@ -483,7 +483,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "`parameters()` recursively collects all Value objects that represent weights and biases from every Neuron in every Layer in the MLP. This list is then iterated during the gradient descent update step.",
+        "**Step 1:** `parameters()` recursively collects all Value objects from every Neuron in every Layer in the MLP.\n\n**Step 2:** It returns a list of all learnable parameters (weights and biases) across the network.\n\n**Step 3:** This list is iterated during gradient descent to update each parameter: `p.data -= lr * p.grad`.",
       hints: [
         "The optimizer needs to know which values to update.",
         "It mirrors PyTorch's `model.parameters()` which returns an iterator of all learnable tensors.",
@@ -503,7 +503,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Each `.backward()` call adds to `.grad` via `+=`. If you run `.backward()` twice without zeroing, the second pass adds to the gradients from the first pass, giving a doubled (incorrect) gradient. Always zero before each new backward.",
+        "**Step 1:** Each `.backward()` call adds to `.grad` via `+=`.\n\n**Step 2:** Running `.backward()` twice without zeroing doubles the gradients.\n\n**Step 3:** Always zero gradients with `.grad = 0` before each new backward pass.",
       hints: [
         "In PyTorch, this is `optimizer.zero_grad()` or `model.zero_grad()`.",
         "In Micrograd, Karpathy manually loops over parameters and sets `.grad = 0`.",
@@ -523,7 +523,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A composition of linear functions is still a linear function. W2 * (W1 * x) = (W2 W1) * x. Any depth of linear layers is representationally equivalent to a single matrix multiplication, making depth useless without non-linearity.",
+        "**Step 1:** A composition of linear functions is still a linear function: W2 * (W1 * x) = (W2 W1) * x.\n\n**Step 2:** Any depth of linear layers is representationally equivalent to a single matrix multiplication.\n\n**Step 3:** Non-linear activation functions break this linearity, making depth useful.",
       hints: [
         "Linear maps composed are still linear maps.",
         "This is why activation functions are not optional in deep learning.",
@@ -543,7 +543,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Computing exp(2x) for large x causes floating-point overflow (inf). Dividing inf-1 by inf+1 gives NaN. Built-in tanh implementations use numerically stable algorithms that avoid this, which is why fused kernel approaches matter in production deep learning.",
+        "**Step 1:** Computing exp(2x) for large x causes floating-point overflow to inf.\n\n**Step 2:** Dividing inf-1 by inf+1 gives NaN in floating-point arithmetic.\n\n**Step 3:** Built-in tanh implementations use numerically stable algorithms (like the one Karpathy derives) to avoid this issue.",
       hints: [
         "Python floats overflow to inf at around exp(709).",
         "Karpathy notes this in the lectures as a motivation for numerical stability in frameworks.",
@@ -563,7 +563,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Micrograd operates on individual scalar values to build intuition for autograd. Every number in the computation is a Value object. Real frameworks like PyTorch operate on tensors for efficiency, but the conceptual machinery is identical.",
+        "**Step 1:** Micrograd operates on individual scalar values to build intuition for autograd.\n\n**Step 2:** Every number in the computation is a Value object that builds up a computational graph.\n\n**Step 3:** Real frameworks like PyTorch operate on tensors for efficiency, but the autograd machinery is conceptually identical.",
       hints: [
         "Micrograd is pedagogical - it trades efficiency for clarity.",
         "PyTorch's autograd works the same way but on entire tensors at once.",
@@ -585,7 +585,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "The learning rate is a hyperparameter that scales the gradient, determining how big of a step to take in the parameter space towards a local minimum of the loss function.",
+        "**Step 1:** The learning rate is a hyperparameter that scales the gradient.\n\n**Step 2:** It determines the step size taken in the direction of the negative gradient during weight updates.\n\n**Step 3:** A well-chosen learning rate enables efficient convergence to a local minimum without overshooting.",
       hints: [
         "Too high: the loss oscillates or diverges. Too low: training is painfully slow.",
         "The update rule is: param -= learning_rate * param.grad",
@@ -605,7 +605,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The gradient points in the direction of steepest ascent (increase) of the loss. To minimize the loss, we move in the opposite direction - hence we subtract the gradient times the learning rate from the parameters.",
+        "**Step 1:** The gradient points in the direction of steepest ascent of the loss.\n\n**Step 2:** To minimize the loss, we move in the opposite direction.\n\n**Step 3:** Hence we subtract the gradient (scaled by learning rate) from the parameters: `param -= lr * param.grad`.",
       hints: [
         "Gradient ascent adds the gradient; gradient descent subtracts it.",
         "We are minimizing the loss function, so we go opposite to the gradient.",
@@ -625,7 +625,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Full-batch GD computes the exact gradient but is very slow per update. SGD and minibatch SGD compute noisy but cheap gradient estimates, enabling many more update steps in the same time, which typically leads to faster practical convergence.",
+        "**Step 1:** Full-batch GD computes the exact gradient but is very slow per update.\n\n**Step 2:** SGD and minibatch SGD compute noisy but cheap gradient estimates.\n\n**Step 3:** Many more updates in the same time typically leads to faster practical convergence despite the noise.",
       hints: [
         "The 'S' in SGD stands for Stochastic - gradient is estimated from random subsets.",
         "More frequent but noisier updates often beat infrequent exact updates.",
@@ -645,7 +645,7 @@ registerQuestions({
       ],
       correctAnswer: 3,
       explanation:
-        "Having more training data is generally beneficial, not a cause of stalled training. Non-decreasing loss is typically caused by learning rate issues, vanishing/exploding gradients, architecture problems, or bugs in the training code.",
+        "**Step 1:** Having more training data is generally beneficial for generalization.\n\n**Step 2:** Non-decreasing loss is typically caused by learning rate issues or bugs.\n\n**Step 3:** Other causes include vanishing/exploding gradients and architecture problems.",
       hints: [
         "More data helps generalization; it does not prevent the loss from decreasing.",
         "Debugging non-decreasing loss: check learning rate, gradient magnitudes, and code correctness first.",
@@ -665,7 +665,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "When debugging, MSE is easy to reason about - a loss near zero means predictions are close to targets. Cross-entropy with softmax is more numerically complex. Starting simple helps isolate whether the backprop implementation is correct before adding complexity.",
+        "**Step 1:** When debugging, MSE is easy to reason about - loss near zero means predictions are close to targets.\n\n**Step 2:** Cross-entropy with softmax is more numerically complex.\n\n**Step 3:** Starting simple helps isolate whether the backprop implementation is correct before adding complexity.",
       hints: [
         "Karpathy emphasizes building intuition by starting simple.",
         "If MSE does not decrease, there is likely a bug in the forward or backward pass.",
@@ -685,7 +685,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The loss landscape is a high-dimensional surface over the parameter space. Regions with steep curvature require small learning rates; flat saddle regions make progress slow. Overparameterized neural networks tend to have surprisingly benign landscapes, contributing to their trainability.",
+        "**Step 1:** The loss landscape is a high-dimensional surface over the parameter space.\n\n**Step 2:** Its geometry (curvature, saddle points, local minima) determines how easily gradient descent converges.\n\n**Step 3:** Overparameterized networks tend to have surprisingly benign landscapes, contributing to their trainability.",
       hints: [
         "Visualizing a 2D slice of the loss landscape (loss vs. one or two parameters) can build intuition.",
         "Sharp minima tend to generalize worse than flat minima.",
@@ -705,7 +705,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Gradient descent moves parameters in the direction that reduces the loss. We subtract the gradient (scaled by the learning rate) from the current parameter value. p.data -= lr * p.grad is the standard in-place update used in Karpathy's Micrograd training loop.",
+        "**Step 1:** Gradient descent moves parameters in the direction that reduces the loss.\n\n**Step 2:** We subtract the gradient (scaled by learning rate) from the current parameter value.\n\n**Step 3:** `p.data -= lr * p.grad` is the standard in-place update used in Karpathy's Micrograd training loop.",
       hints: [
         "Subtraction because we move against the gradient (descent, not ascent).",
         "lr scales how large a step we take; too large causes divergence, too small is slow.",
@@ -727,7 +727,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A character-level model treats individual characters (like 'a', 'b', '\n') as its atomic units (vocabulary) and tries to predict the next character in a sequence.",
+        "**Step 1:** A character-level model treats individual characters (like 'a', 'b', '\n') as its atomic units.\n\n**Step 2:** The vocabulary consists of all unique characters in the training data.\n\n**Step 3:** The model predicts the next character in a sequence, learning the distribution over character sequences.",
       hints: [
         "The vocabulary is built from `sorted(set(''.join(words)))` over the training corpus.",
         "For English names, this is typically 26 letters plus a special start/end token.",
@@ -747,7 +747,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Karpathy uses the period '.' (or sometimes a special token like '.') as both the start and end-of-sequence marker. The model learns to start generating after '.' and stop when it predicts '.' again.",
+        "**Step 1:** Karpathy uses the period '.' as both the start and end-of-sequence marker.\n\n**Step 2:** The model learns to start generating after '.' and stop when it predicts '.' again.\n\n**Step 3:** This provides natural boundaries for generated sequences.",
       hints: [
         "This simplifies the model - one token serves dual duty as start and stop.",
         "In the bigram matrix, the '.' row gives the probability of each character being the first character.",
@@ -767,7 +767,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Autoregressive generation samples from P(next_char | context) using `torch.multinomial`, feeds the sampled character back as the new input, and repeats until the model generates the end token. This produces diverse, novel outputs.",
+        "**Step 1:** Autoregressive generation samples from P(next_char | context) using `torch.multinomial`.\n\n**Step 2:** The sampled character is fed back as the new input for the next step.\n\n**Step 3:** This process repeats until the end token is generated, producing diverse outputs.",
       hints: [
         "Greedy decoding (argmax) often produces repetitive outputs.",
         "torch.multinomial samples from a categorical distribution defined by the probability tensor.",
@@ -787,7 +787,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "For each bigram (context, target), the model assigns a probability to the target. The loss is -log(prob_of_target), averaged across the dataset. A perfect model assigns probability 1.0 to each target, giving log(1) = 0 and loss = 0.",
+        "**Step 1:** For each bigram (context, target), the model assigns a probability to the target.\n\n**Step 2:** The loss is -log(prob_of_target), averaged across the dataset.\n\n**Step 3:** A perfect model assigns probability 1.0, giving log(1) = 0 and total loss = 0.",
       hints: [
         "Lower NLL means the model assigns higher probability to the correct next character.",
         "The average NLL over the dataset is equivalent to the cross-entropy loss.",
@@ -807,7 +807,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If each of the 27 characters is equally likely (uniform distribution), the model assigns probability 1/27 to each. The NLL per character is -log(1/27) = log(27) \\approx 3.296. This is the baseline 'dumb' model loss; a trained model should beat it.",
+        "**Step 1:** If each of 27 characters is equally likely, the model assigns probability 1/27 to each.\n\n**Step 2:** The NLL per character is -log(1/27) = log(27) \\approx 3.296.\n\n**Step 3:** This is the baseline 'dumb' model loss; a trained model should beat it.",
       hints: [
         "NLL = -log(probability assigned to correct character).",
         "Uniform probability over 27 characters is 1/27; -log(1/27) = log(27).",
@@ -827,7 +827,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The neural bigram model (one linear layer with softmax, trained with NLL) converges to the same probabilities as the counting model. Karpathy uses this equivalence to show students that the NN framework is a generalization, building intuition before moving to context-window MLPs.",
+        "**Step 1:** The neural bigram model converges to the same probabilities as the counting model.\n\n**Step 2:** Karpathy uses this equivalence to show the NN framework is a generalization.\n\n**Step 3:** This bridges conceptual gaps before moving to context-window MLPs.",
       hints: [
         "The weight matrix W in the neural bigram model learns to represent log-counts.",
         "This bridge is pedagogically important: counts are special-case NNs.",
@@ -847,7 +847,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Karpathy splits the names dataset into 80% training, 10% dev/validation, and 10% test. The validation set is used to tune hyperparameters; the test set is used only for final evaluation to get an unbiased estimate of generalization.",
+        "**Step 1:** Karpathy splits data into 80% training, 10% validation, and 10% test.\n\n**Step 2:** The validation set is used to tune hyperparameters during development.\n\n**Step 3:** The test set is used only for final evaluation to get an unbiased estimate.",
       hints: [
         "The validation set guides hyperparameter choices; the test set measures final performance.",
         "Looking at test performance during development leads to overfitting to the test set.",
@@ -869,7 +869,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "In a pure counting bigram model, `P(w2|w1) = count(w1, w2) / count(w1)`. You normalize the raw frequencies of the bigrams by the frequency of the context.",
+        "**Step 1:** In a pure counting bigram model, P(w2|w1) = count(w1, w2) / count(w1).\n\n**Step 2:** This normalizes raw frequencies of bigrams by the frequency of the context character.\n\n**Step 3:** The result is a proper probability distribution over next characters.",
       hints: [
         "This is simply the definition of conditional probability from counting.",
         "In code: `P = N / N.sum(1, keepdim=True)` where N is the bigram count matrix.",
@@ -889,7 +889,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "N[i, j] counts how many times character j followed character i in the training data. To get the probability distribution over next characters given context character i, you look at row i and normalize.",
+        "**Step 1:** N[i, j] counts how many times character j followed character i in the training data.\n\n**Step 2:** Row i contains counts for each possible next character after context character i.\n\n**Step 3:** Normalizing row i by dividing by N[i].sum() gives P(next | context=i).",
       hints: [
         "Accessing N[i] gives a 1D tensor of counts for each possible next character after i.",
         "Normalization: N[i] / N[i].sum() gives P(next | context=i).",
@@ -909,7 +909,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "torch.multinomial samples indices according to a probability distribution. Karpathy calls `torch.multinomial(p, num_samples=1, replacement=True)` to sample one character index from the model's output probability distribution.",
+        "**Step 1:** `torch.multinomial` samples indices according to a probability distribution.\n\n**Step 2:** Karpathy calls `torch.multinomial(p, num_samples=1, replacement=True)` to sample one character.\n\n**Step 3:** This performs weighted random sampling from the categorical distribution p.",
       hints: [
         "argmax would always pick the single most likely character (greedy), giving repetitive output.",
         "multinomial performs weighted random sampling from a categorical distribution.",
@@ -929,7 +929,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Karpathy prepends and appends '.' to each word (e.g., 'emma' becomes '.emma.'). This allows the model to learn the distribution over starting characters (from '.') and ending characters (transitioning to '.').",
+        "**Step 1:** Karpathy prepends and appends '.' to each word (e.g., 'emma' becomes '.emma.').\n\n**Step 2:** This allows the model to learn the distribution over starting characters (from '.') and ending characters (transitioning to '.').\n\n**Step 3:** The '.' character marks natural boundaries for generated sequences.",
       hints: [
         "Without start/end tokens, the model would not know which characters begin or end words.",
         "The '.' character gets index 0 in Karpathy's stoi mapping.",
@@ -949,7 +949,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "With only one character of context, the bigram model cannot capture patterns that span multiple characters (e.g., 'qu' is almost always followed by a vowel, which requires seeing 'q' two steps back). Larger context windows or neural networks with embeddings address this limitation.",
+        "**Step 1:** A bigram model uses only one character of context.\n\n**Step 2:** It cannot capture patterns spanning multiple characters (e.g., 'qu' requires seeing 'q' two steps back).\n\n**Step 3:** Larger context windows (trigrams, MLPs) address this limitation.",
       hints: [
         "The context window of a bigram model is 1. More context usually means better predictions.",
         "This motivates the MLP model in makemore Part 3 (Bengio et al.).",
@@ -969,7 +969,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Adding 1 to every count means every bigram has count at least 1. After normalization, unseen bigrams (originally 0) become 1 / (sum_of_counts + vocab_size). This avoids infinite NLL from zero-probability bigrams encountered at test time.",
+        "**Step 1:** Adding 1 to every count ensures every bigram has count at least 1.\n\n**Step 2:** After normalization, unseen bigrams get probability 1 / (sum_of_counts + vocab_size).\n\n**Step 3:** This avoids infinite NLL from zero-probability bigrams at test time.",
       hints: [
         "Laplace smoothing is also called additive smoothing or add-one smoothing.",
         "The denominator increases by vocab_size because 1 is added to each of the vocab_size possible next characters.",
@@ -989,7 +989,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "stoi maps each character string to its integer index. N[stoi[ch1], stoi[ch2]] indexes the cell in the count matrix representing the bigram (ch1 followed by ch2), and += 1 records one more occurrence of this pair.",
+        "**Step 1:** stoi (string-to-integer) maps each character to its integer index.\n\n**Step 2:** N[stoi[ch1], stoi[ch2]] indexes the cell for bigram (ch1, ch2) in the count matrix.\n\n**Step 3:** `+= 1` records one more occurrence of this character pair.",
       hints: [
         "stoi stands for string-to-integer: a dictionary mapping each character to a unique index.",
         "After counting all bigrams, normalizing each row gives the conditional probability distribution.",
@@ -1011,7 +1011,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Multiplying many probabilities (values between 0 and 1) leads to numerical underflow. Taking the log transforms the product into a sum, and taking the negative turns the maximization problem into a standard loss minimization problem.",
+        "**Step 1:** Multiplying many probabilities (between 0 and 1) leads to numerical underflow.\n\n**Step 2:** Taking the log transforms the product into a sum: log(a * b) = log(a) + log(b).\n\n**Step 3:** Taking the negative turns maximization into minimization: NLL = -log(probabilities).",
       hints: [
         "log(a * b) = log(a) + log(b) - products become sums under log.",
         "Since log is monotonically increasing, maximizing log(prob) is equivalent to maximizing prob.",
@@ -1026,7 +1026,7 @@ registerQuestions({
       options: ["infinity", "1.0", "0.0", "-1.0"],
       correctAnswer: 2,
       explanation:
-        "-log(1.0) = 0. A perfect model assigns probability 1 to every correct prediction, so the log of 1 is 0, and the negative of that is also 0. In practice, NLL > 0 for any real model.",
+        "**Step 1:** -log(1.0) = 0 because log(1) = 0.\n\n**Step 2:** A perfect model assigns probability 1 to every correct prediction.\n\n**Step 3:** In practice, NLL > 0 for any real model since perfect predictions are impossible.",
       hints: [
         "log(1) = 0, so -log(1) = 0.",
         "NLL = 0 means perfect predictions with complete certainty.",
@@ -1046,7 +1046,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "-log(x) as x approaches 0 goes to +infinity. This is why assigning zero probability to a correct token is catastrophic - the loss becomes infinite. This motivates smoothing and numerical safeguards.",
+        "**Step 1:** -log(x) as x approaches 0 goes to +infinity.\n\n**Step 2:** Assigning zero probability to a correct token is catastrophic - loss becomes infinite.\n\n**Step 3:** This motivates smoothing techniques and numerical safeguards.",
       hints: [
         "Plot -log(x) for x in (0, 1] to see the behavior.",
         "This is the mathematical reason why we must avoid zero probabilities.",
@@ -1066,7 +1066,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "F.cross_entropy accepts raw logits and internally applies log-softmax + NLL loss in a numerically stable fused operation. You should NOT apply softmax before passing to cross_entropy, as that would compute softmax twice.",
+        "**Step 1:** `F.cross_entropy` accepts raw logits and internally applies log-softmax + NLL.\n\n**Step 2:** It uses the log-sum-exp trick for numerical stability.\n\n**Step 3:** You should NOT apply softmax before passing to cross_entropy.",
       hints: [
         "NLLLoss expects log-probabilities (output of log_softmax), not raw logits.",
         "cross_entropy = log_softmax + NLLLoss, done in one stable step.",
@@ -1086,7 +1086,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "H(p, q) = H(p) + KL(p || q). When p is a one-hot distribution, H(p) = 0 (no uncertainty), so H(p, q) = KL(p || q). Minimizing cross-entropy is equivalent to minimizing the KL divergence between the true and predicted distributions.",
+        "**Step 1:** Cross-entropy is H(p, q) = H(p) + KL(p || q), where H(p) is the entropy.\n\n**Step 2:** When p is one-hot, H(p) = 0, so H(p, q) = KL(p || q).\n\n**Step 3:** Minimizing cross-entropy is equivalent to minimizing KL divergence between true and predicted distributions.",
       hints: [
         "One-hot distributions have zero entropy - they are completely certain.",
         "This connection shows cross-entropy loss has a clean information-theoretic interpretation.",
@@ -1106,7 +1106,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The weight matrix W has shape [27, 27]. For each input character (row), the logits are the 27 raw scores. Softmax converts these to a valid probability distribution (non-negative, sums to 1) over the 27 possible next characters.",
+        "**Step 1:** The weight matrix W has shape [27, 27], with each row representing an input character.\n\n**Step 2:** The logits in each row are raw scores for each possible next character.\n\n**Step 3:** Softmax converts these to a valid probability distribution (non-negative, sums to 1).",
       hints: [
         "Softmax: exp(logit_i) / sum(exp(logit_j) for all j).",
         "The output of softmax is always in (0, 1) and sums to exactly 1 per row.",
@@ -1126,7 +1126,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Perplexity is exp(NLL). A uniform model over 27 characters has NLL = log(27) \\approx 3.296, so perplexity = exp(log(27)) = 27. A model with perplexity 27 is no better than random guessing. Lower perplexity is better.",
+        "**Step 1:** Perplexity is defined as exp(NLL), where NLL is negative log likelihood.\n\n**Step 2:** A uniform model over 27 characters has NLL = log(27) \\approx 3.296, so perplexity = 27.\n\n**Step 3:** Perplexity 27 means no better than random guessing. Lower perplexity indicates better performance.",
       hints: [
         "Perplexity = exp(cross-entropy loss). Lower is better.",
         "Perplexity can be interpreted as the effective vocabulary size the model is choosing from.",
@@ -1148,7 +1148,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "If a bigram never appeared in the training data, its count is 0. If the model encounters this in evaluation, the probability is 0, making the log likelihood negative infinity. Adding a 'fake count' ensures all probabilities are non-zero.",
+        "**Step 1:** If a bigram never appeared in training data, its count is 0 and probability is 0.\n\n**Step 2:** During evaluation, log(0) = -infinity causes NaN gradients.\n\n**Step 3:** Adding a small constant ensures all probabilities are non-zero.",
       hints: [
         "Laplace smoothing is one of the simplest forms of regularization.",
         "Larger smoothing values make the distribution more uniform (less confident).",
@@ -1168,7 +1168,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Adding a very large constant to all counts dominates the actual observed counts, making all cells roughly equal. After normalization, this approaches 1/27 for every character - a uniform distribution. The model 'forgets' the training data and becomes maximally uncertain.",
+        "**Step 1:** Adding a very large constant to all counts dominates the actual observed counts.\n\n**Step 2:** After normalization, this approaches 1/27 for every character - a uniform distribution.\n\n**Step 3:** The model 'forgets' the training data and becomes maximally uncertain.",
       hints: [
         "Think of the limit: as smoothing -> infinity, observed counts become negligible.",
         "This is the bias-variance tradeoff: more smoothing = lower variance but higher bias.",
@@ -1188,7 +1188,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Smoothing reduces the probability assigned to common, frequently-seen bigrams (by boosting unseen ones), so the training NLL slightly worsens. But on the test set, the risk of encountering a zero-probability bigram is eliminated, preventing catastrophic infinite loss.",
+        "**Step 1:** Smoothing reduces probability for common bigrams by boosting unseen ones.\n\n**Step 2:** This slightly worsens training NLL but prevents infinite loss on unseen bigrams.\n\n**Step 3:** It trades some training fit for better generalization and numerical stability.",
       hints: [
         "Smoothing is a regularization technique - it trades training fit for better generalization.",
         "Regularization almost always slightly hurts training loss while helping test loss.",
@@ -1208,7 +1208,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "L2 regularization on the logit weights pushes them toward zero, which via softmax pushes the output probabilities toward uniform (1/vocab_size). This is analogous to Laplace smoothing pulling bigram probabilities toward uniform. Both are forms of regularization.",
+        "**Step 1:** L2 regularization pushes logit weights toward zero.\n\n**Step 2:** Via softmax, this pushes probabilities toward uniform (1/vocab_size).\n\n**Step 3:** This is analogous to Laplace smoothing - both are forms of regularization.",
       hints: [
         "Karpathy explicitly makes this analogy in the makemore lecture.",
         "Zero logits -> softmax outputs 1/27 for each character = uniform distribution.",
@@ -1228,7 +1228,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "softmax([0, 0, ..., 0]) = [1/27, 1/27, ..., 1/27]. A weight matrix of all zeros is exactly the maximally uncertain (uniform) model, equivalent to a bigram model with infinite smoothing. The loss in this case is log(27) \\approx 3.296.",
+        "**Step 1:** softmax([0, 0, ..., 0]) = [1/27, 1/27, ..., 1/27] because exp(0) = 1.\n\n**Step 2:** A weight matrix of all zeros produces a uniform distribution.\n\n**Step 3:** This is the maximally uncertain model with loss log(27) \\approx 3.296.",
       hints: [
         "All-zero logits means all exponentiated values are exp(0) = 1, and there are 27 of them.",
         "This is the initialization point for the neural bigram model before training.",
@@ -1248,7 +1248,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The term `(W**2).mean()` is the mean squared magnitude of the weights. By including it in the total loss with a small coefficient, gradient descent is penalized for making weights large, which corresponds to making overconfident predictions - the neural analog of Laplace smoothing.",
+        "**Step 1:** `(W**2).mean()` computes the mean squared magnitude of the weights.\n\n**Step 2:** Adding it to the loss penalizes large weight values during training.\n\n**Step 3:** This discourages overconfident predictions - the neural analog of Laplace smoothing.",
       hints: [
         "L2 regularization is also known as weight decay.",
         "Large logits -> overconfident softmax outputs; small logits -> uniform outputs.",
@@ -1268,7 +1268,7 @@ registerQuestions({
       ],
       correctAnswer: 0,
       explanation:
-        "Adding pseudocounts corresponds to a Dirichlet prior in Bayesian statistics. A uniform Dirichlet prior (all pseudocounts = 1) represents the belief that all transitions are equally likely a priori, which gets updated with observed data.",
+        "**Step 1:** Adding pseudocounts corresponds to a Dirichlet prior in Bayesian statistics.\n\n**Step 2:** A uniform Dirichlet prior represents the belief that all transitions are equally likely.\n\n**Step 3:** The observed data updates this prior to produce the posterior distribution.",
       hints: [
         "The Dirichlet distribution is the conjugate prior for the categorical/multinomial distribution.",
         "More pseudocounts = stronger prior belief in uniformity.",
@@ -1290,7 +1290,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Categorical data like character IDs are generally represented as one-hot vectors-arrays of all zeros with a single '1' at the index corresponding to the category-so they can be multiplied by a weight matrix.",
+        "**Step 1:** Categorical data like character IDs are represented as one-hot vectors.\n\n**Step 2:** A one-hot vector is all zeros with a single '1' at the category index.\n\n**Step 3:** This allows the vector to be multiplied by a weight matrix to select the appropriate row.",
       hints: [
         "One-hot: all zeros except a single 1 at the position corresponding to the category.",
         "In PyTorch: F.one_hot(tensor, num_classes=27).float()",
@@ -1305,7 +1305,7 @@ registerQuestions({
       options: ["(1,)", "(27,)", "(27, 27)", "(1, 27)"],
       correctAnswer: 1,
       explanation:
-        "A one-hot vector for a vocabulary of size 27 is a 1D tensor of length 27, with a single 1 at the character's index and 0s everywhere else. When batched, it becomes shape (batch_size, 27).",
+        "**Step 1:** A one-hot vector for vocabulary size 27 is a 1D tensor of length 27.\n\n**Step 2:** It has a single 1 at the character's index and 0s elsewhere.\n\n**Step 3:** When batched, it becomes shape (batch_size, 27).",
       hints: [
         "The vector length equals the vocabulary size.",
         "Each entry is a binary flag indicating whether that index is the current character.",
@@ -1325,7 +1325,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "A one-hot vector with a 1 at position i, when matrix-multiplied by W, zeros out all rows except row i and returns exactly row i of W. This is why embedding lookup (indexing into a matrix) is equivalent to multiplying by a one-hot vector.",
+        "**Step 1:** A one-hot vector with 1 at position i, when multiplied by W, zeros out all rows except row i.\n\n**Step 2:** It returns exactly row i of W: e_i @ W = W[i, :].\n\n**Step 3:** This is why embedding lookup is mathematically equivalent to multiplying by a one-hot vector.",
       hints: [
         "e_i @ W = W[i, :] where e_i is the standard basis vector.",
         "This mathematical equivalence is central to understanding embedding layers.",
@@ -1345,7 +1345,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Mathematically identical, but indexing into a matrix (e.g., `W[i]`) is O(embedding_dim) while doing the full matrix multiplication with a one-hot vector is O(vocab_size * embedding_dim). For large vocabularies, the speedup is enormous.",
+        "**Step 1:** Mathematically, one-hot multiplication and embedding lookup are identical.\n\n**Step 2:** But indexing `W[i]` is O(embedding_dim) while one-hot multiplication is O(vocab_size * embedding_dim).\n\n**Step 3:** For large vocabularies, the speedup from indexing is enormous.",
       hints: [
         "Multiplying by a sparse one-hot vector does redundant work (multiplying by 0 many times).",
         "PyTorch's nn.Embedding directly implements this efficient indexed lookup.",
@@ -1365,7 +1365,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Each of the 3 context characters is mapped to a low-dimensional embedding vector (e.g., 2D or 10D) via an embedding table lookup. These three vectors are then concatenated to form the MLP input, allowing the network to learn interactions between context characters.",
+        "**Step 1:** Each of the 3 context characters is mapped to a low-dimensional embedding vector.\n\n**Step 2:** These three vectors are concatenated to form the MLP input.\n\n**Step 3:** This allows the network to learn interactions between context characters.",
       hints: [
         "Concatenation preserves positional information; summing would lose it.",
         "If each embedding is 2D and context is 3 chars, the MLP input is 6D (3*2).",
@@ -1385,7 +1385,7 @@ registerQuestions({
       ],
       correctAnswer: 2,
       explanation:
-        "After training, plotting the 2D embeddings shows that vowels tend to cluster together (as do certain consonant groups) because they appear in similar contexts (e.g., 'a' and 'e' can both follow 'b'). The network learns distributional similarity without being told about phonetics.",
+        "**Step 1:** After training, plotting 2D embeddings reveals learned structure.\n\n**Step 2:** Vowels cluster together because they appear in similar contexts.\n\n**Step 3:** The network learns distributional similarity without being explicitly taught about phonetics.",
       hints: [
         "This is the distributional hypothesis: words/characters in similar contexts have similar meanings/roles.",
         "Karpathy visualizes this with matplotlib scatter plots to build intuition for what embeddings learn.",
@@ -1405,7 +1405,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "For a vocabulary of 50,000 tokens (like GPT-2), each one-hot vector would be 50,000 floats. A dataset of 1M tokens would require 200GB of memory just for the inputs. Embedding lookup stores only the embedding table (50000 x embed_dim) and accesses it by index, using a tiny fraction of the memory.",
+        "**Step 1:** For vocabulary of 50,000 tokens, each one-hot vector would be 50,000 floats.\n\n**Step 2:** A dataset of 1M tokens would require 200GB for inputs alone.\n\n**Step 3:** Embedding lookup stores only the table and accesses by index, using a tiny fraction of the memory.",
       hints: [
         "Large language models use vocabularies of 50K+ tokens - one-hot encoding is infeasible.",
         "nn.Embedding is the standard solution: it stores a lookup table and indexes into it.",
@@ -1427,7 +1427,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Multiplying a one-hot vector by matrix `W` simply extracts the i-th row of `W`. PyTorch's `nn.Embedding` optimizes this by skipping the matrix multiplication and directly indexing into the parameter matrix.",
+        "**Step 1:** Multiplying a one-hot vector by matrix W extracts row i: e_i @ W = W[i].\n\n**Step 2:** PyTorch's `nn.Embedding` optimizes this by directly indexing into the parameter matrix.\n\n**Step 3:** This is much more efficient than performing the full sparse matrix multiplication.",
       hints: [
         "One-hot @ W = W[i], where i is the non-zero index of the one-hot vector.",
         "nn.Embedding(num_embeddings, embedding_dim) stores a learnable lookup table.",
@@ -1449,7 +1449,7 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "Unlike a simple linear model, the hidden layer combined with a non-linearity allows the network to learn complex, non-linear relationships and higher-order interactions between the context words/characters.",
+        "**Step 1:** A simple linear model can only learn linear relationships between inputs and outputs.\n\n**Step 2:** The hidden layer combined with a non-linearity allows the network to learn complex, non-linear relationships.\n\n**Step 3:** This enables the network to capture higher-order interactions between context characters.",
       hints: [
         "The hidden layer transforms the concatenated embeddings into a new representation.",
         "Without the non-linearity, the MLP would be equivalent to a single linear layer.",

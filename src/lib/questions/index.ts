@@ -66,6 +66,7 @@ import "./systems-design-api-gateway";
 import "./systems-design-healthcare";
 import "./systems-design-video";
 import "./rl-finetuning-platforms";
+import "./llm-inference-optimization";
 
 // Export questionBanks for test access
 import { getAllQuestions } from "./registry";

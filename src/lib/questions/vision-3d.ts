@@ -1281,7 +1281,7 @@ const questions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Gaussian Avatar methods (GaussianAvatar, SplattingAvatar) represent human bodies as sets of 3D Gaussians attached to the SMPL mesh surface, enabling real-time neural avatar rendering by inheriting the speed advantage of 3D Gaussian Splatting.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Gaussian avatars: initialise 3D Gaussians on the SMPL mesh surface; each Gaussian inherits the local pose transformation from its attached mesh triangle (LBS + rotation).. As the body moves, Gaussians move with the mesh.\n\n**Step 2**: A small MLP predicts pose-dependent Gaussian attribute updates (appearance changes from shadowing, cloth deformation).. Rendering: standard 3DGS rasterisation at >100 FPS - 1000x faster than NeRF-based avatars.\n\n**Step 3**: ',
       hints: [
         'Gaussians attached to mesh triangles: each Gaussian has local (u,v,w) barycentric coordinates on a triangle - it moves with the triangle under LBS.',
@@ -1618,7 +1618,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Instant-NGP\'s multiresolution hash encoding can represent scenes with hash collisions without explicit conflict resolution because gradient learning implicitly averages colliding features to represent the most frequently queried content.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: When two spatial locations hash to the same table entry, their gradients are summed.. Frequently queried positions (e.g., object surfaces visible from many training views) dominate the gradient signal, so the feature adapts to represent them well.\n\n**Step 2**: Rarely queried positions (background, occluded regions) contribute fewer gradients and their collisions matter less.. This implicit averaging makes collision-based hash encoding robust in practice.\n\n**Step 3**: ',
       hints: [
         'High-frequency query positions get more gradient updates \\to their features win over rarely-queried collision partners.',
@@ -1668,7 +1668,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'PointNet achieves permutation invariance by using a symmetric function (global max-pooling) over point features, so the output is identical regardless of the order in which points are processed.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: PointNet (Qi et al., 2017): each point p_i is independently mapped to a feature h_i = f(p_i) (shared MLP).. Global feature g = max(h_1,...,h_N) (element-wise maximum).\n\n**Step 2**: Since max-pool is symmetric (commutative), g is invariant to the permutation of points.. A critical point function: {p_i | h_i = g} - the subset of points whose features are the global max - determines the global feature.\n\n**Step 3**: ',
       hints: [
         'Symmetric function: f(a,b,c) = f(c,a,b) = f(b,c,a). Max-pool satisfies this for any number of inputs.',
@@ -1718,7 +1718,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'CenterPoint detects 3D objects by predicting a heatmap of object centres in BEV space rather than predicting bounding boxes directly, which simplifies the detection head and improves performance on rotated objects.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: CenterPoint (Yin et al., 2021): a centre-based detection head predicts a BEV heatmap where peaks correspond to object centres (inspired by CenterNet for 2D).\n\n**Step 2**: From each peak, separate regression heads predict height, size, rotation angle (yaw), and velocity.\n\n**Step 3**: Centre-based detection avoids the anchor-design problem and naturally handles objects at any orientation without anchor alignment issues.',
       hints: [
         'Anchor-based: need anchors at every location \\times every orientation \\times every size. Centre-based: just find the peak, then regress attributes.',
@@ -1768,7 +1768,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: '3D human pose estimation from a single RGB camera is inherently ambiguous because multiple 3D joint configurations can project to the same 2D skeleton, making it an ill-posed problem that requires learned priors to resolve.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Monocular 3D pose ambiguity: a 2D skeleton (projected joints) is consistent with infinitely many 3D skeletons (different depths).. Humans use contextual cues (typical pose statistics, body proportions, contact with environment) to resolve this.\n\n**Step 2**: 3D pose estimators learn statistical priors over human joint configurations (e.g., SMPL body model) to disambiguate.. Multi-view cameras or depth sensors remove this ambiguity but require additional hardware.\n\n**Step 3**: ',
       hints: [
         'Rotation ambiguity: a limb can be at multiple depths while projecting to the same 2D point.',
@@ -1818,7 +1818,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: '3D scene flow is a generalisation of 2D optical flow to 3D space, where each point in a point cloud receives a 3D motion vector (dx, dy, dz) rather than a 2D pixel displacement (du, dv).',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: 2D optical flow: for each pixel (u,v) in image I_t, predict displacement (\\Deltau, \\Deltav) to its location in I_{t+1}.\n\n**Step 2**: 3D scene flow: for each 3D point p_i in frame t, predict 3D motion vector (\\Deltax, \\Deltay, \\Deltaz) to its location in frame t+1.\n\n**Step 3**: 3D scene flow enables understanding of 3D motion in world coordinates, not just projected motion - critical for autonomous driving (understanding which 3D points are moving and where).',
       hints: [
         '2D optical flow: ambiguous for depth (a point moving in depth produces no image motion if it stays on the same ray).',
@@ -1868,7 +1868,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Monocular depth estimation is an ill-posed problem (scale ambiguous), while stereo depth estimation provides metric (absolute) depth because the known stereo baseline converts disparity to physical distance.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Stereo: depth Z = f\\cdotB/d where B (baseline = distance between cameras) and f (focal length) are known from calibration.. Disparity d is measured in pixels.\n\n**Step 2**: Result: metric depth in metres.. Monocular: a scene scaled by \\lambda produces the same image for any \\lambda - depth is only recoverable up to scale.\n\n**Step 3**: Monocular models learn a scale-ambiguous depth prior; post-hoc scale alignment with a GPS or LiDAR point is needed for metric estimates.',
       hints: [
         'Stereo baseline B: cameras are 6cm apart \\to B = 0.06m. This physical constant converts relative disparity to absolute depth.',
@@ -1918,7 +1918,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'One3D and Zero123 demonstrate zero-shot novel view synthesis: given a single image, they generate the object from arbitrary viewpoints by fine-tuning a diffusion model to be conditioned on camera pose.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Zero123 (Liu et al., 2023): fine-tune Stable Diffusion on (image, relative camera pose) \\to target view pairs.\n\n**Step 2**: At inference: given a single input image and a target (\\Deltaazimuth, \\Deltaelevation, \\Deltadistance), generate the novel view.\n\n**Step 3**: The model learns the mapping from image appearance + camera geometry to novel view appearance - enabling arbitrary view synthesis from a single image without 3D reconstruction.',
       hints: [
         'Training data: synthetic 3D objects rendered from multiple poses \\to (source view, relative pose) \\to target view pairs.',
@@ -1968,7 +1968,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'TSDF (Truncated Signed Distance Function) fusion represents a 3D surface by storing, at each voxel, the signed distance to the nearest surface - positive outside, negative inside - and the surface is extracted at the zero-crossing using Marching Cubes.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: TSDF (Curless & Levoy, 1996; KinectFusion, 2011): each voxel stores (TSDF value, weight).. For each depth frame, update TSDF: if the voxel is in front of the measured surface, TSDF > 0; behind, TSDF < 0; truncate at \\pmt.\n\n**Step 2**: The surface is at TSDF = 0.. Marching Cubes extracts the isosurface as a triangle mesh.\n\n**Step 3**: Multiple depth frames are fused by weighted averaging, improving robustness to noise.',
       hints: [
         'SDF zero-crossing: voxels where TSDF changes sign mark the surface - Marching Cubes finds this boundary.',
@@ -2018,7 +2018,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'Tesla\'s Autopilot vision-only perception system demonstrates that camera-only 3D perception can approach LiDAR-level accuracy for autonomous driving by using surround-view cameras with implicit 3D reasoning.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Tesla Autopilot uses 8 surround-view cameras (no LiDAR) and predicts a BEV occupancy map from multi-camera image features.\n\n**Step 2**: By training on fleet data with pseudo-labels from a teacher LiDAR-based model, the vision system learns implicit 3D reasoning.\n\n**Step 3**: While not strictly equivalent to LiDAR on all metrics (especially in poor lighting), Tesla\'s deployment at scale demonstrates that vision-only perception can reach production-grade performance for many driving scenarios.',
       hints: [
         'Vision-only advantage: cameras are cheaper, smaller, and don\'t fail in rain unlike some LiDAR systems.',
@@ -2068,7 +2068,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'NeRF composition methods allow combining multiple independently trained NeRFs into a single scene by treating each NeRF as an object and compositing their radiance fields using spatial bounding regions or opacity-based blending.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Object-compositional NeRF (uORF, ObjectNeRF): each object has its own NeRF.. During rendering, a ray samples densities from all object NeRFs; compositing uses the alpha-compositing formula over objects along the ray.\n\n**Step 2**: Spatial bounding boxes restrict each object NeRF to its region.. This enables scene editing: move an object by translating its bounding box, swap objects by replacing one NeRF with another - without retraining the full scene.\n\n**Step 3**: ',
       hints: [
         'Object NeRF: trained on crops/masks of each object. Scene rendering: composite all objects via alpha-compositing.',
@@ -2118,7 +2118,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: '3D Gaussian Splatting renders pixel colour C by front-to-back alpha compositing: C = \\Sigma\\_i c\\_i \\alpha\\_i \\Pi\\_j<\\_i (1 − \\alpha\\_j), where \\alpha\\_i = o\\_i \\cdot exp(−½(x−\\mu\\_2ᴅ)^T \\Sigma\\_2ᴅ\\^{-1} (x−\\mu\\_2ᴅ)) evaluates the projected 2D Gaussian at pixel position x.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: After projecting each 3D Gaussian to a 2D Gaussian (via the Jacobian of the projective transform), 3DGS composes pixel colour front-to-back: C = \\Sigma\\_i c\\_i\\alpha\\_i\\Pi\\_j<\\_i(1−\\alpha\\_j).\n\n**Step 2**: Here \\alpha\\_i = o\\_i\\cdotG\\_2ᴅ(x) is the product of learned opacity o\\_i and the 2D Gaussian value at pixel x.\n\n**Step 3**: This is exactly the same alpha-compositing formula as NeRF\'s volume rendering but evaluated in 2D after splatting - enabling the fast tile-based GPU rasterizer.',
       hints: [
         'Compare to NeRF\'s C(r) = \\Sigma\\_i T\\_i\\alpha\\_ic\\_i: 3DGS uses the same compositing formula but Gaussians are already projected to 2D.',
@@ -2168,7 +2168,7 @@ const additionalVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'easy',
       question: 'Semantic 3D scene graphs represent indoor scenes as graphs where nodes are objects/rooms and edges encode spatial relationships (on, in, next-to), enabling reasoning about functional relationships beyond geometric proximity.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: 3D scene graphs (Armeni et al., 2019; SceneGraphNet): nodes = rooms, objects, cameras; edges = spatial/functional relationships (chair is at table, table is in kitchen).\n\n**Step 2**: This representation supports spatial queries ("find all chairs next to a table"), navigation planning, and language grounding ("pick up the cup on the counter").\n\n**Step 3**: Scene graphs bridge raw geometry and semantic understanding.',
       hints: [
         'Pure geometry: "these points form a cluster." Scene graph: "this cluster is a chair (node), next to a table (edge)."',
@@ -2241,7 +2241,7 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: 'NeRF training convergence on a single scene typically requires 100K-300K gradient steps and takes hours to days on a single GPU, which is the primary motivation for instant-NGP and subsequent accelerated NeRF methods.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: '**Step 1**: Original NeRF training takes 1-2 days on a single V100 GPU for 300K iterations over one scene.. The bottleneck is querying the MLP at thousands of points per ray for millions of rays.\n\n**Step 2**: Instant-NGP (Müller et al.. 2022) replaces the large MLP with a multi-resolution hash grid encoding + tiny MLP, reducing training to 5 seconds and rendering to real-time.\n\n**Step 3**: TensoRF, Zip-NeRF, and Gaussian Splatting are further alternatives addressing the same convergence speed problem.',
       hints: [
         'Per-scene optimisation: NeRF trains one model per scene - it does not generalise across scenes without additional work.',
@@ -2273,7 +2273,7 @@ const moreVision3dQuestions: Record<string, Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question: '3D Gaussian Splatting optimises scene parameters (Gaussian positions, covariances, opacities, and spherical harmonic colour coefficients) using standard backpropagation through a differentiable rasteriser with a photometric loss against training images.',
-      correctAnswer: 'True',
+      correctAnswer: 'true',
       explanation: "3DGS trains all Gaussian parameters end-to-end via gradient descent. The differentiable tile rasteriser (CUDA implementation) allows gradients to flow back from pixel-level L1 + SSIM photometric loss to each Gaussian's \\mu, \\Sigma, \\alpha, and SH coefficients. Adaptive density control (splitting, cloning, pruning) is applied every 100 iterations based on positional gradient magnitudes. After training (~30 minutes on a V100), the explicit Gaussian scene can be rendered at real-time rates.",
       hints: [
         'The CUDA rasteriser is custom-written with backward passes for each Gaussian parameter - not using standard autograd.',
