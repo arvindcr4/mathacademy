@@ -169,7 +169,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IR = (E[Rₚ] − E[Rb]) / \\sigma(Rₚ − Rb), where Rₚ is portfolio return, Rb is benchmark return, and \\sigma(Rₚ − Rb) is the tracking error (annualised standard deviation of active returns). Grinold\'s Fundamental Law of Active Management states IR \\approx IC \\times √BR, where IC is the Information Coefficient (skill per bet) and BR is the breadth (number of independent bets per year).",
+        "The Information Ratio is defined as:\n\n\\[\n\\text{IR} = \\frac{E[R_p] - E[R_b]}{\\sigma(R_p - R_b)},\n\\]\n\nwhere \\(R_p\\) is portfolio return, \\(R_b\\) is benchmark return, and \\(\\sigma(R_p - R_b)\\) is the tracking error — the annualised standard deviation of active returns.\n\nGrinold's Fundamental Law of Active Management states:\n\n\\[\n\\text{IR} \\approx \\text{IC} \\times \\sqrt{\\text{BR}},\n\\]\n\nwhere IC is the Information Coefficient (skill per bet, measured as the rank correlation between predictions and realisations) and BR is the breadth (number of independent bets per year). This explains why even a modest IC can produce a strong IR when applied at sufficient scale.",
       hints: [
         "The IR is analogous to the Sharpe ratio but measured relative to a benchmark rather than the risk-free rate.",
         "The denominator is tracking error — the volatility of active returns (portfolio minus benchmark), not total portfolio volatility.",
