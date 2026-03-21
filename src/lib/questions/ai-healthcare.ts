@@ -103,7 +103,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DSC = 2|A\\capB| / (|A|+|B|), measuring spatial overlap between predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap - it is the standard segmentation evaluation metric.",
+        "The Dice Similarity Coefficient is defined as:\n\n" +
+        "\\[\\text{DSC} = \\frac{2|A \\cap B|}{|A| + |B|}\\]" +
+        "\n\nThis formula measures the spatial overlap between the predicted and ground-truth masks. A DSC of 1.0 means perfect overlap; 0 means no overlap. It is the standard evaluation metric for medical image segmentation tasks.",
       hints: [
         "DSC involves a ratio that compares the intersection of two sets to their combined size.",
         "It is sometimes called the F1 score for segmentation tasks.",
@@ -727,7 +729,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "FedAvg aggregates by computing \\sum(n_k/n)\\cdotw_k - a weighted average of local model weights proportional to local dataset size - which converges to the same solution as centralized training under IID data conditions.",
+        "FedAvg aggregates by computing:\n\n" +
+        "\\[\\sum_{k} \\frac{n_k}{n} \\cdot w_k\\]" +
+        "\n\nThis is a weighted average of local model weights, proportional to each client's dataset size, which converges to the same solution as centralized training under IID data conditions.",
       hints: [
         "FedAvg is the most basic aggregation rule; it weights each institution\'s contribution by its data volume.",
         "A hospital with 10,000 patients contributes more to the aggregated model than one with 500.",
@@ -1125,8 +1129,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Comprehensive fairness audits disaggregate performance by race, sex, age, insurance status, site, and intersectional groups - overall metrics can mask severe underperformance in minority subgroups that are underrepresented in training data.",
       hints: [
-        "Think about what happens to statistical power when you enroll patients who are unlikely to respond.",
-        "The goal is to make the treatment effect signal stronger and detectable with fewer patients.",
+        "Overall AUC can mask severe underperformance in minority subgroups that are underrepresented in training data.",
+        "Intersectional analysis (e.g., Black women, elderly men) may reveal disparities invisible to single-axis subgroup analysis.",
       ],
     },
   ],
