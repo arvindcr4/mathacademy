@@ -759,7 +759,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Iterative insertion uses two pointers: current and parent. Descend the tree following the BST invariant:\n\n\\[\n\\begin{aligned}\n&parent = null;\\; current = root\\\\\n&\\text{while }(current \\neq null):\\\\\n&\\quad parent = current\\\\\n&\\quad current = (val < current.val) ? current.\\text{left} : current.\\text{right}\\\\[5pt]\n&\\text{// current is now null}\\\\\n&\\text{if }(val < parent.val):\\; parent.\\text{left} = \\text{new } TreeNode(val)\\\\\n&\\text{else: } parent.\\text{right} = \\text{new } TreeNode(val)\n\\end{aligned}\n\\]\n\nThis is O(h) time and O(1) extra space (no recursion stack).",
+        "Iterative insertion uses two pointers: current and parent. Descend the tree following the BST invariant:\n\n\\[\n\\begin{aligned}\n&parent = null;\\; current = root \\\\[3pt]\n&\\text{while }(current \\neq null): \\\\[3pt]\n&\\quad parent = current \\\\[3pt]\n&\\quad current = (val < current.val) ? current.\\text{left} : current.\\text{right} \\\\[5pt]\n&\\text{// current is now null} \\\\[3pt]\n&\\text{if }(val < parent.val):\\; parent.\\text{left} = \\text{new } TreeNode(val) \\\\[3pt]\n&\\text{else: } parent.\\text{right} = \\text{new } TreeNode(val)\n\\end{aligned}\n\\]\n\nThis is O(h) time and O(1) extra space (no recursion stack).",
       hints: [
         "Use two pointers: one to track the current node and one to remember the parent.",
         "When current becomes null, the parent is where we attach the new node as a left or right child.",
@@ -1668,6 +1668,518 @@ const questions: Record<string, Question[]> = {
         "Morris threading avoids recursion entirely — the tree\'s right pointers serve as the implicit stack.",
         "Space O(1) means only a constant number of pointers regardless of n.",
       ],
+    },
+  ],
+
+  // ── NEW SECTIONS ─────────────────────────────────────────────────────────
+
+  "lowest-common-ancestor-advanced": [
+    {
+      id: "q-lcaa-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "LCA in a DAG (directed acyclic graph) differs from binary tree LCA because:",
+      options: [
+        "A node can have multiple parents, so we cannot rely on a single upward path",
+        "DAGs have cycles that must be handled",
+        "DAG LCA always equals the root",
+        "Binary search can be applied to DAGs",
+      ],
+      correctAnswer: 0,
+      hints: [
+        "In a tree each node has exactly one parent; in a DAG a node can have multiple parents",
+        "Finding ancestors requires tracking all paths, not just one upward chain",
+      ],
+      explanation:
+        "In a DAG, a node can have multiple parents, so ancestor is the set of all nodes reachable in reverse. LCA(u,v) = deepest node in ancestors(u) intersect ancestors(v). Approach: BFS/DFS from both u and v in reverse-edge graph, intersect ancestor sets. Time: O(V + E); Space: O(V). No simple O(log n) binary lifting since there is no unique root-to-node path.",
+    },
+    {
+      id: "q-lcaa-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Binary Lifting for LCA preprocessing allows queries in O(log n). What is the preprocessing time?",
+      options: ["O(n)", "O(n log n)", "O(n^2)", "O(log n)"],
+      correctAnswer: 1,
+      hints: [
+        "We precompute 2^k-th ancestors for each node across log n levels",
+        "Each level takes O(n) to fill using the previous level",
+      ],
+      explanation:
+        "Binary lifting stores anc[node][k] = 2^k-th ancestor for k = 0..log n. Preprocessing: for each of n nodes and log n levels, anc[node][k] = anc[anc[node][k-1]][k-1], costing O(n log n) time and space. Query: bring both nodes to same depth and jump in O(log n). Total: O(n log n) preprocess, O(log n) per query.",
+    },
+    {
+      id: "q-lcaa-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "LCA of two nodes in a binary tree can be found in O(h) time using recursive DFS without extra space (beyond the call stack).",
+      correctAnswer: "True",
+      hints: [
+        "The recursive solution returns the LCA naturally when both nodes are found",
+        "O(h) is the recursion stack depth; h = O(log n) balanced, O(n) worst case",
+      ],
+      explanation:
+        "True. The standard recursive LCA: if root is null or equals p or q, return root. Recurse left and right. If both return non-null, current root is LCA. If one is null, return the non-null side. Time: O(n) in worst case; Space: O(h) call stack.",
+    },
+  ],
+
+  "binary-tree-cameras": [
+    {
+      id: "q-btc-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Minimum Camera Cover (LeetCode 968) uses a greedy DFS with how many states per node?",
+      options: ["2", "3", "4", "n"],
+      correctAnswer: 1,
+      hints: [
+        "Each node can be: not covered, covered without a camera, or has a camera",
+        "Parent decisions depend on which state a child returns",
+      ],
+      explanation:
+        "Three states: 0 = not covered (needs camera from parent), 1 = covered without a camera, 2 = has a camera. Bottom-up DFS: if any child returns 0, place camera at current (state 2). If any child returns 2, current is covered (state 1). Else current is uncovered (state 0). At root, if state 0, add one more camera. Time: O(n), Space: O(h).",
+    },
+    {
+      id: "q-btc-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In the greedy camera placement for binary trees, cameras are preferably placed at leaf nodes.",
+      correctAnswer: "False",
+      hints: [
+        "Cameras at leaves only cover their immediate parent",
+        "Placing cameras one level above leaves maximizes coverage",
+      ],
+      explanation:
+        "False. The greedy prefers placing cameras at parents of leaves. A camera at a leaf covers only its parent and itself; a camera at the leaf parent covers the leaf, the parent, and potentially the grandparent. Bottom-up greedy: leaves return uncovered, their parents are forced to install cameras.",
+    },
+    {
+      id: "q-btc-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "What is the time and space complexity of the greedy camera solution?",
+      options: [
+        "O(n^2) time, O(n) space",
+        "O(n) time, O(h) space",
+        "O(n log n) time, O(n) space",
+        "O(n) time, O(n) space",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "We visit each node exactly once in a DFS",
+        "Space is determined by the recursion stack depth",
+      ],
+      explanation:
+        "The DFS visits each of the n nodes exactly once: O(n) time. Space is O(h) for the recursion stack — O(log n) for balanced trees, O(n) for skewed trees. No additional data structures are needed beyond the three integer states returned per node.",
+    },
+  ],
+
+  "maximum-binary-tree": [
+    {
+      id: "q-mbt-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Constructing a Maximum Binary Tree (LeetCode 654) naively has what time complexity?",
+      options: ["O(n log n)", "O(n^2)", "O(n)", "O(n^2 log n)"],
+      correctAnswer: 1,
+      hints: [
+        "At each recursive call we scan the current subarray to find the maximum",
+        "In the worst case (sorted array), we make n, n-1, n-2, ... comparisons",
+      ],
+      explanation:
+        "Naive recursive approach: find max in range [l, r] in O(n), recursively build left and right subtrees. Worst case (sorted input): T(n) = T(n-1) + O(n), solving to O(n^2). Average case (random input): O(n log n).",
+    },
+    {
+      id: "q-mbt-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The monotonic stack O(n) approach for Maximum Binary Tree maintains:",
+      options: [
+        "A min-stack of current path",
+        "A decreasing stack where each popped node becomes the new element left child",
+        "A queue of level-order nodes",
+        "A stack of (index, value) pairs for binary search",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "The stack maintains nodes in decreasing order of value",
+        "When a new larger element is encountered, it becomes the parent of previous smaller nodes",
+      ],
+      explanation:
+        "Monotonic decreasing stack: for each nums[i], create node v. While stack top value < v value: pop node t, t becomes v.left. Push v; if stack non-empty, v becomes the new right child of the stack top. Result: stack bottom is the root. Each element pushed and popped at most once: O(n) time, O(n) space.",
+    },
+    {
+      id: "q-mbt-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The maximum binary tree satisfies the max-heap ordering property (every parent value is larger than its children values).",
+      correctAnswer: "True",
+      hints: [
+        "The root of each subtree is the maximum of its subarray",
+        "By construction, every parent is the max of its range and thus larger than any child",
+      ],
+      explanation:
+        "True. By definition, the root of each subarray is its maximum. So every parent is larger than all values in its left and right subtrees, satisfying the max-heap ordering property. However, it does NOT satisfy the shape property (complete binary tree), so it is not a max-heap in the traditional sense.",
+    },
+  ],
+
+  "find-duplicate-number": [
+    {
+      id: "q-fdn-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Floyd cycle detection finds the duplicate in an array of n+1 integers in [1,n] with what complexity?",
+      options: [
+        "O(n log n) time, O(1) space",
+        "O(n) time, O(1) space",
+        "O(n) time, O(n) space",
+        "O(n^2) time, O(1) space",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Treat nums[i] as a pointer to index nums[i], forming a linked list with a cycle",
+        "The duplicate entry creates two edges into the same node, causing a cycle",
+      ],
+      explanation:
+        "Model the array as a linked list: index i points to nums[i]. The duplicate value creates two edges into the same node — a cycle. Floyd algorithm phase 1 finds the intersection point (tortoise and hare), phase 2 finds the cycle entrance (the duplicate). Time: O(n), Space: O(1). No array modification required.",
+    },
+    {
+      id: "q-fdn-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Binary search approach for finding the duplicate: count elements <= mid. If count > mid, duplicate is in [1..mid]. Time complexity?",
+      options: ["O(n)", "O(n log n)", "O(log n)", "O(n^2)"],
+      correctAnswer: 1,
+      hints: [
+        "Binary search runs log n iterations",
+        "Each iteration scans all n elements to count those <= mid",
+      ],
+      explanation:
+        "Binary search on value range [1..n]. For each midpoint mid, count elements in nums that are <= mid: O(n) scan. If count > mid, duplicate is in [1..mid]; else in [mid+1..n]. Repeat log n times. Total: O(n log n) time, O(1) space. Slower than Floyd O(n) but uses a different paradigm.",
+    },
+    {
+      id: "q-fdn-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Sorting the array to find the duplicate works in O(n log n) time and O(1) extra space (using in-place sort).",
+      correctAnswer: "True",
+      hints: [
+        "After sorting, duplicates will be adjacent",
+        "In-place sorting algorithms like heapsort use O(1) extra space",
+      ],
+      explanation:
+        "True. Sort in-place (e.g., heapsort): O(n log n) time, O(1) space. Scan adjacent pairs to find the duplicate: O(n). However, this modifies the original array, which the problem often disallows. Floyd O(n)/O(1) and binary search O(n log n)/O(1) both preserve the original array.",
+    },
+  ],
+
+  "kth-smallest-bst": [
+    {
+      id: "q-ksb-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Finding the k-th smallest element in a BST via inorder traversal has what complexity?",
+      options: [
+        "O(k) time, O(k) space",
+        "O(n) time, O(h) space",
+        "O(log n) time, O(1) space",
+        "O(k log n) time, O(h) space",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Inorder traversal visits all n nodes in sorted order",
+        "We stop after visiting k nodes, but worst case is O(n)",
+      ],
+      explanation:
+        "Inorder traversal yields BST elements in sorted order. Stop after visiting k nodes. Worst case (k = n or unbalanced tree): O(n) time. Space: O(h) for the recursion stack or explicit stack. For repeated queries, an augmented BST storing subtree sizes enables O(log n) per query.",
+    },
+    {
+      id: "q-ksb-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "An augmented BST storing subtree sizes enables k-th smallest in O(log n). The key recurrence is:",
+      options: [
+        "If leftSize == k, return root; if k < leftSize, go left; else go right with k -= leftSize",
+        "If leftSize + 1 == k, return root; if k <= leftSize, go left; else go right with k -= (leftSize + 1)",
+        "Binary search on node values with O(log n) depth",
+        "Count all nodes then subtract from n",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "If left subtree has L nodes, the root is the (L+1)-th smallest element",
+        "Adjust k when recursing right: subtract L+1 elements already accounted for",
+      ],
+      explanation:
+        "Store leftSize = size of left subtree. k-th smallest: if leftSize+1 == k, return root; if k <= leftSize, recurse left; else recurse right with k = k - leftSize - 1. Time: O(log n) balanced, O(n) worst case. Space: O(n) for the extra field per node.",
+    },
+    {
+      id: "q-ksb-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Morris traversal can find the k-th smallest BST element in O(n) time and O(1) space.",
+      correctAnswer: "True",
+      hints: [
+        "Morris traversal performs inorder traversal without a stack or recursion",
+        "It uses the tree right pointers temporarily, restoring them afterward",
+      ],
+      explanation:
+        "True. Morris inorder traversal visits nodes in sorted order using O(1) auxiliary space (threading right pointers temporarily). Count nodes visited; stop at k. Time: O(n) since each node is visited at most twice. Space: O(1) — no stack or recursion needed.",
+    },
+  ],
+
+  "right-side-view": [
+    {
+      id: "q-rsv-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Binary Tree Right Side View (LeetCode 199) via BFS: at each level, which node do we record?",
+      options: ["First node dequeued", "Last node dequeued", "Node with maximum value", "Rightmost leaf"],
+      correctAnswer: 1,
+      hints: [
+        "BFS processes nodes level by level from left to right",
+        "The rightmost visible node at each level is the last one in that level",
+      ],
+      explanation:
+        "BFS level-order traversal: process each level completely. The last node dequeued per level is the rightmost visible node. Time: O(n) since all nodes are visited once. Space: O(w) where w is max level width — up to O(n) for a complete binary tree.",
+    },
+    {
+      id: "q-rsv-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "DFS approach for Right Side View visits nodes in what order to naturally produce the rightmost view?",
+      options: [
+        "Preorder left-first: record first node at each depth",
+        "Preorder right-first: record first node seen at each new depth",
+        "Postorder right-first: record last node at each depth",
+        "Inorder: record middle node at each depth",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Visit right child before left child in DFS",
+        "The first node encountered at each depth level in right-first DFS is the rightmost",
+      ],
+      explanation:
+        "DFS right-first preorder: visit root, then right subtree, then left subtree. Track current depth. When depth == result.length, this is the first node seen at this depth — it is the rightmost. Append to result. Time: O(n), Space: O(h) for the recursion call stack.",
+    },
+    {
+      id: "q-rsv-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "The right side view of a binary tree always contains exactly as many nodes as the tree height.",
+      correctAnswer: "True",
+      hints: [
+        "Each level of the tree contributes exactly one node to the right side view",
+        "The number of levels equals the tree height",
+      ],
+      explanation:
+        "True. The right side view collects one node per level (the rightmost visible). The number of levels equals the tree height h (counting root as level 1). So the result always has exactly h elements. Height ranges from O(log n) for balanced to O(n) for skewed trees.",
+    },
+  ],
+
+  "cousins-in-binary-tree": [
+    {
+      id: "q-cbt-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Two nodes are cousins in a binary tree if they have the same depth but different parents. Which data captures this in BFS?",
+      options: [
+        "Node value and left child pointer",
+        "Node depth and parent node reference",
+        "Node index in level-order array",
+        "Subtree size of each node",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "To check same depth, track the depth of each node during BFS",
+        "To check different parents, track each node parent",
+      ],
+      explanation:
+        "Track (depth, parent) for the two target nodes x and y. Nodes are cousins iff depth(x) == depth(y) AND parent(x) != parent(y). BFS approach: for each node, record depth and parent when the target value is found. Time: O(n), Space: O(n) for the BFS queue.",
+    },
+    {
+      id: "q-cbt-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Two sibling nodes (same parent) cannot be cousins.",
+      correctAnswer: "True",
+      hints: [
+        "Cousins must have different parents by definition",
+        "Siblings share the same parent",
+      ],
+      explanation:
+        "True. The definition of cousins requires different parents. Siblings share a parent, so they fail the different parents criterion. They do share the same depth, but that alone is insufficient. Cousins are: same depth AND different parents.",
+    },
+    {
+      id: "q-cbt-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "DFS solution for Cousins in Binary Tree (LeetCode 993) passes what information through recursion?",
+      options: [
+        "Only the node value",
+        "Current node, its parent, and its depth",
+        "Subtree heights for both targets",
+        "In-order position of each node",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "We need to find the depth and parent of each target node",
+        "DFS passes parent and depth down through recursive calls",
+      ],
+      explanation:
+        "DFS signature: dfs(node, parent, depth). When node.val == x or node.val == y, record (depth, parent). After full DFS, compare: cousins iff depthX == depthY AND parentX != parentY. Time: O(n), Space: O(h) recursion stack.",
+    },
+  ],
+
+  "all-nodes-distance-k": [
+    {
+      id: "q-ank-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "All Nodes Distance K in Binary Tree (LeetCode 863): converting the tree to an undirected graph allows what traversal?",
+      options: [
+        "Binary search on node values",
+        "BFS from the target node to find all nodes at exactly distance k",
+        "DFS with backtracking to enumerate all paths",
+        "Topological sort",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "In an undirected graph, BFS from a source visits nodes at distance 1, 2, 3, ...",
+        "Adding parent edges allows traveling upward in the tree",
+      ],
+      explanation:
+        "Build adjacency list (undirected) from the tree: add both parent-to-child and child-to-parent edges. BFS from target node: collect all nodes at exactly distance k. Time: O(n) for graph build + O(n) for BFS = O(n). Space: O(n) for the adjacency list and BFS queue.",
+    },
+    {
+      id: "q-ank-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "DFS approach for All Nodes Distance K without graph conversion returns what from each call?",
+      options: [
+        "The number of nodes in the subtree",
+        "The distance from the subtree root to the target, or -1 if target not in subtree",
+        "The height of the subtree",
+        "Whether the target is in left or right subtree",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Once target is found, we know distances going downward into subtrees",
+        "Going upward: distance from target through current node is 1 + child returned distance",
+      ],
+      explanation:
+        "DFS returns dist = distance from current node to target (-1 if not in subtree). When target found: collect nodes at distance k downward. When a child returns dist >= 0: collect nodes at distance k - dist - 1 from the other child and from nodes reachable upward via the parent. Time: O(n), Space: O(h).",
+    },
+    {
+      id: "q-ank-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "BFS from the target node after building an undirected graph produces correct results even if k equals 0.",
+      correctAnswer: "True",
+      hints: [
+        "Distance 0 means the node itself; BFS starts at the target so it is at level 0",
+        "If k=0, BFS returns just the target node itself",
+      ],
+      explanation:
+        "True. BFS levels: level 0 = {target}. When k=0, we output the target itself — no traversal beyond the starting node. The visited set prevents revisiting. For k>0, BFS correctly expands level by level in the undirected graph. Time: O(n), Space: O(n).",
+    },
+  ],
+
+  "check-completeness": [
+    {
+      id: "q-cc-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Check Completeness of a Binary Tree (LeetCode 958): the BFS null-termination rule states:",
+      options: [
+        "If we see a node with a missing child, all subsequent nodes must also be null",
+        "If we see a null node, the tree is immediately incomplete",
+        "Null nodes can appear anywhere in BFS order",
+        "Only leaf nodes can be null",
+      ],
+      correctAnswer: 0,
+      hints: [
+        "In a complete binary tree, all levels are fully filled except possibly the last",
+        "In BFS order, once a null slot appears, no non-null node should follow",
+      ],
+      explanation:
+        "BFS with null enqueuing: enqueue children even if null. If we dequeue a null and subsequently dequeue a non-null, the tree is not complete. A complete binary tree in BFS order has all non-null nodes before the first null. Time: O(n), Space: O(n) for the queue.",
+    },
+    {
+      id: "q-cc-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "A complete binary tree of n nodes always has height floor(log2(n)).",
+      correctAnswer: "True",
+      hints: [
+        "A complete binary tree fills levels left to right",
+        "All levels except the last are completely filled",
+      ],
+      explanation:
+        "True. A complete binary tree has all levels fully filled except the last, which is filled left-to-right. Height = floor(log2(n)). This property enables counting complete tree nodes in O(log^2 n): compare left and right subtree heights to determine if the last level falls in the left or right half.",
+    },
+    {
+      id: "q-cc-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "What is the time complexity to count nodes in a complete binary tree (LeetCode 222)?",
+      options: ["O(n)", "O(log^2 n)", "O(n log n)", "O(log n)"],
+      correctAnswer: 1,
+      hints: [
+        "At each level, compute heights of left and right subtrees in O(log n)",
+        "Recurse only into one subtree per level — there are O(log n) levels",
+      ],
+      explanation:
+        "For a complete binary tree: compute left height hL and right height hR in O(log n) each. If hL == hR, left subtree is perfect with 2^hL - 1 nodes, add root, recurse right. Else recurse left with 2^hR - 1 right nodes. Recurrence: T(n) = T(n/2) + O(log n), solving to O(log^2 n). Much faster than O(n) generic traversal.",
+    },
+  ],
+
+  "sum-of-left-leaves": [
+    {
+      id: "q-sll-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Sum of Left Leaves (LeetCode 404): the recursive solution passes what extra information?",
+      options: [
+        "Current node value",
+        "Whether the current node is a left child",
+        "Current depth level",
+        "Parent node reference",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "We need to know if a node is a left child to identify left leaves",
+        "A left leaf is a leaf node that is specifically the left child of its parent",
+      ],
+      explanation:
+        "Recursive approach: dfs(node, isLeft). If node is a leaf AND isLeft is true, add node.val to sum. Else recurse: dfs(node.left, true) and dfs(node.right, false). Time: O(n) — all nodes visited. Space: O(h) recursion stack.",
+    },
+    {
+      id: "q-sll-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Iterative solution for Sum of Left Leaves uses which data structure?",
+      options: [
+        "Priority queue ordered by node value",
+        "Stack or queue storing (node, isLeft) pairs",
+        "Hash map of node to parent",
+        "Two arrays: one for left children, one for right",
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Any iterative tree traversal uses a stack (DFS) or queue (BFS)",
+        "We need to track whether each node is a left child alongside the node reference",
+      ],
+      explanation:
+        "Iterative DFS using an explicit stack of (node, isLeft) tuples. Pop (node, isLeft): if leaf and isLeft, add to sum. Else push (node.right, false) and (node.left, true). Time: O(n), Space: O(h) for the stack — O(log n) balanced, O(n) skewed.",
+    },
+    {
+      id: "q-sll-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The root node can never be counted as a left leaf, even if the tree has only one node.",
+      correctAnswer: "True",
+      hints: [
+        "The root is not a child of any node — it is neither left nor right",
+        "Left leaf means a leaf that is specifically the left child of its parent",
+      ],
+      explanation:
+        "True. A left leaf must be the left child of some parent node. The root has no parent, so it cannot be a left child. Even if the root is a leaf (single-node tree), it does not count as a left leaf. The sum of left leaves for a single-node tree is 0.",
     },
   ],
 };
