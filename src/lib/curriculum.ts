@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // EFFICIENT ML & MODEL COMPRESSION
+  {
+    id: 'efficient-ml',
+    slug: 'efficient-ml',
+    name: 'Efficient ML & Model Compression',
+    description: 'Quantization, pruning, distillation, and hardware-aware ML for edge and production deployment.',
+    topics: [
+      {
+        id: 'quantization',
+        name: 'Quantization',
+        description: 'Post-training and quantization-aware training for efficient inference.',
+        knowledgePoints: [
+          { id: 'em-kp-1', slug: 'quantization-basics', name: 'Quantization Fundamentals (INT8, INT4, FP8)' },
+          { id: 'em-kp-2', slug: 'post-training-quantization', name: 'Post-Training Quantization (PTQ)' },
+          { id: 'em-kp-3', slug: 'quantization-aware-training', name: 'Quantization-Aware Training (QAT)' },
+          { id: 'em-kp-4', slug: 'gptq-gguf', name: 'GPTQ, GGUF & LLM Quantization' },
+          { id: 'em-kp-5', slug: 'awq-squeezellm', name: 'AWQ, SqueezeLLM & Activation-Aware Quantization' },
+        ]
+      },
+      {
+        id: 'pruning',
+        name: 'Neural Network Pruning',
+        description: 'Magnitude pruning, structured pruning, and sparse neural networks.',
+        knowledgePoints: [
+          { id: 'em-kp-6', slug: 'magnitude-pruning', name: 'Magnitude Pruning & Weight Sparsity' },
+          { id: 'em-kp-7', slug: 'structured-pruning', name: 'Structured Pruning (Channel, Head, Layer)' },
+          { id: 'em-kp-8', slug: 'lottery-ticket', name: 'Lottery Ticket Hypothesis' },
+          { id: 'em-kp-9', slug: 'sparseGPT', name: 'SparseGPT & Wanda for LLM Pruning' },
+          { id: 'em-kp-10', slug: 'dynamic-sparse', name: 'Dynamic Sparse Training (DST, RiGL)' },
+        ]
+      },
+      {
+        id: 'knowledge-distillation',
+        name: 'Knowledge Distillation',
+        description: 'Teacher-student training, logit distillation, and feature-level transfer.',
+        knowledgePoints: [
+          { id: 'em-kp-11', slug: 'hinton-distillation', name: 'Hinton\'s Knowledge Distillation & Soft Labels' },
+          { id: 'em-kp-12', slug: 'feature-distillation', name: 'Feature-Level & Intermediate Distillation' },
+          { id: 'em-kp-13', slug: 'self-distillation', name: 'Self-Distillation & Born-Again Networks' },
+          { id: 'em-kp-14', slug: 'llm-distillation', name: 'LLM Distillation (MiniLLM, Distil-Whisper)' },
+          { id: 'em-kp-15', slug: 'task-agnostic-distillation', name: 'Task-Agnostic vs Task-Specific Distillation' },
+        ]
+      },
+      {
+        id: 'neural-architecture-search',
+        name: 'Neural Architecture Search',
+        description: 'AutoML, NAS methods, and efficient architecture design.',
+        knowledgePoints: [
+          { id: 'em-kp-16', slug: 'nas-intro', name: 'NAS Overview & Search Spaces' },
+          { id: 'em-kp-17', slug: 'darts', name: 'DARTS & Gradient-Based NAS' },
+          { id: 'em-kp-18', slug: 'efficientnet', name: 'EfficientNet & Compound Scaling' },
+          { id: 'em-kp-19', slug: 'once-for-all', name: 'Once-For-All & Slimmable Networks' },
+          { id: 'em-kp-20', slug: 'hardware-aware-nas', name: 'Hardware-Aware NAS & Latency Constraints' },
+        ]
+      },
+      {
+        id: 'hardware-ml',
+        name: 'Hardware Acceleration & Edge ML',
+        description: 'GPU/TPU/NPU optimization, CUDA programming, and edge deployment.',
+        knowledgePoints: [
+          { id: 'em-kp-21', slug: 'gpu-programming-ml', name: 'GPU Architecture & CUDA for ML' },
+          { id: 'em-kp-22', slug: 'tpu-xla', name: 'TPU Architecture & XLA Compilation' },
+          { id: 'em-kp-23', slug: 'operator-fusion', name: 'Operator Fusion & Kernel Optimization' },
+          { id: 'em-kp-24', slug: 'tflite-coreml', name: 'TFLite, Core ML & Edge Deployment' },
+          { id: 'em-kp-25', slug: 'tensor-parallelism', name: 'Tensor & Pipeline Parallelism' },
+        ]
+      },
+      {
+        id: 'inference-optimization',
+        name: 'Inference Optimization',
+        description: 'vLLM, Flash Attention, speculative decoding, and serving optimization.',
+        knowledgePoints: [
+          { id: 'em-kp-26', slug: 'flash-attention-opt', name: 'Flash Attention & Memory-Efficient Attention' },
+          { id: 'em-kp-27', slug: 'vllm-serving', name: 'vLLM & PagedAttention for LLM Serving' },
+          { id: 'em-kp-28', slug: 'speculative-decoding-opt', name: 'Speculative Decoding & Draft Models' },
+          { id: 'em-kp-29', slug: 'batching-strategies', name: 'Dynamic Batching & Continuous Batching' },
+          { id: 'em-kp-30', slug: 'mlc-llm', name: 'MLC-LLM & Universal LLM Deployment' },
+        ]
+      },
+    ]
+  },
+
   // FEDERATED LEARNING & PRIVACY-PRESERVING ML
   {
     id: 'federated-learning',
