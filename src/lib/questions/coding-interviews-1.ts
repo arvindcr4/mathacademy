@@ -90,6 +90,25 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The correct answer is Because sorting changes index order. Without a hash map, we cannot check if a complement exists in O(1) time. Sorting changes original indices, and the problem requires original indices. Without storing elements, we'd need to sort first: O(n log n), or search linearly: O(n^2). Achieving O(n) time requires O(n) space for hash map lookup. This is a fundamental time-space trade-off.",
     },
+    {
+      id: "q-ts-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "In Two Sum, what if the same number appears twice and target = 2 * num?",
+      options: [
+        "Hash map approach fails",
+        "Must use two-pointer approach",
+        "Store index in map; verify complement index differs from current",
+        "No special handling needed"
+      ],
+      correctAnswer: 2,
+      hints: [
+        "If nums[i] == target - nums[i], the complement is the number itself",
+        "Storing the index lets us verify we use two different positions"
+      ],
+      explanation:
+        "Store value-to-index mappings. When the complement is found, verify the stored index differs from the current index i. Example: nums=[3,3], target=6. At i=0, complement=3 not in map, store {3:0}. At i=1, complement=3 found at index 0, and 0 != 1, so return [0,1].",
+    },
   ],
 
   "maximum-subarray": [
@@ -100,7 +119,11 @@ const questions: Record<string, Question[]> = {
       question: "Kadane\'s algorithm has time complexity:",
       options: ["O(n²)", "O(n)", "O(n log n)", "O(1)"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Think about how many times we iterate through the array',
+        'Is there any nested looping or do we do constant work per element?',
+      ],
+explanation:
         "Single pass through array maintaining current sum and max sum in O(n) time.",
     },
     {
@@ -110,7 +133,11 @@ const questions: Record<string, Question[]> = {
       question: "Kadane\'s algorithm fails when all numbers are:",
       options: ["Positive", "Negative", "Zero", "Mixed"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'What happens when all numbers are negative and we reset maxEndingHere to 0?',
+        'The standard version that resets to 0 misses the case where max subarray is all negative',
+      ],
+explanation:
         "With all negative numbers, the algorithm must be modified to track the maximum (least negative) rather than resetting.",
     },
     {
@@ -120,7 +147,11 @@ const questions: Record<string, Question[]> = {
       question:
         "Kadane\'s algorithm works in O(n) time using dynamic programming.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'What does DP mean for array problems?',
+        'Is maxEndingHere at position i dependent only on maxEndingHere at position i-1?',
+      ],
+explanation:
         "DP formulation: maxEndingHere = max(maxEndingHere + num, num); maxSoFar = max(maxSoFar, maxEndingHere).",
     },
     {
@@ -130,7 +161,11 @@ const questions: Record<string, Question[]> = {
       question: "For [-2,1,-3,4,-1,2,1,-5,4], Kadane\'s algorithm returns:",
       options: ["5", "6", "7", "8"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Trace through: at each index, compute maxEndingHere = max(prev + nums[i], nums[i])',
+        'Track maxSoFar as the running maximum',
+      ],
+explanation:
         "The max subarray is [4,-1,2,1] with sum = 6. Algorithm tracks maxEndingHere and maxSoFar each step.",
     },
     {
@@ -140,8 +175,25 @@ const questions: Record<string, Question[]> = {
       question: "The divide-and-conquer approach for max subarray runs in:",
       options: ["O(n)", "O(n log n)", "O(n²)", "O(log n)"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'What is the recurrence for divide-and-conquer on arrays?',
+        'Apply the Master Theorem: T(n) = 2T(n/2) + O(n)',
+      ],
+explanation:
         "Divide array in half, find max in left, right, and crossing subarrays. Recurrence T(n) = 2T(n/2) + O(n) = O(n log n).",
+    },
+    {
+      id: "q-ms-6",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Kadane's algorithm can also track the start and end indices of the maximum subarray.",
+      correctAnswer: "True",
+      hints: [
+        "When maxEndingHere resets (starts a new subarray), record the new candidate start index",
+        "When maxSoFar is updated, record the current index as the end index"
+      ],
+      explanation:
+        "True. We track startTemp (candidate start) that resets when we begin a new subarray, and update start/end whenever maxSoFar improves. This adds only O(1) overhead while maintaining O(n) time and O(1) space.",
     },
   ],
 
@@ -159,7 +211,11 @@ const questions: Record<string, Question[]> = {
         "Sorting",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Consider what information you need for each position',
+        'Prefix products give everything to the left; suffix products give everything to the right',
+      ],
+explanation:
         "Compute prefix[i] = product of all elements left of i, suffix[i] = product of all elements right of i. Result[i] = prefix[i] * suffix[i].",
     },
     {
@@ -168,7 +224,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Division approach works when zero is present in the array.",
       correctAnswer: "false",
-      explanation:
+            hints: [
+        'What happens mathematically when you divide by zero?',
+        'Think about an array like [1, 0, 2]',
+      ],
+explanation:
         "Division fails with zeros because you cannot divide by zero. Prefix/suffix approach handles zeros correctly.",
     },
     {
@@ -178,7 +238,11 @@ const questions: Record<string, Question[]> = {
       question: "For [1,2,3,4], Product Except Self yields:",
       options: ["[24,12,8,6]", "[2,3,4,1]", "[24,12,6,4]", "[6,8,12,24]"],
       correctAnswer: 0,
-      explanation: "[2*3*4, 1*3*4, 1*2*4, 1*2*3] = [24, 12, 8, 6]",
+            hints: [
+        'Result[0] = 2*3*4 (everything except nums[0])',
+        'Compute prefix and suffix products and multiply them',
+      ],
+explanation: "[2*3*4, 1*3*4, 1*2*4, 1*2*3] = [24, 12, 8, 6]",
     },
     {
       id: "q-pe-4",
@@ -192,7 +256,11 @@ const questions: Record<string, Question[]> = {
         "Fails with multiple zeros",
       ],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'When two zeros exist, every position\'s product includes at least one zero',
+        'A product that includes zero is always zero',
+      ],
+explanation:
         "If more than one zero exists, all result values are 0 because some element excludes that zero. If exactly one zero, all non-zero positions get product and zero positions get 0.",
     },
     {
@@ -224,7 +292,11 @@ const questions: Record<string, Question[]> = {
         "[1,2,3,4,5,6,7]",
       ],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'Right rotation by k moves the last k elements to the front',
+        'Rotating [1,2,3,4,5,6,7] by 3 moves elements 5,6,7 to the front',
+      ],
+explanation:
         "Rotate right by k: last k elements move to front. k=3: [5,6,7] moves front, giving [5,6,7,1,2,3,4]. Wait - let me reconsider: right rotate by 3 means [1,2,3,4] → end, [5,6,7] → front. Result: [5,6,7,1,2,3,4] (option 1).",
     },
     {
@@ -239,7 +311,11 @@ const questions: Record<string, Question[]> = {
         "O(log n)",
       ],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'We must visit every element at least once',
+        'Think about the reversal trick: reverse entire, then each half',
+      ],
+explanation:
         "Reversal algorithm: reverse entire array, reverse first k, reverse last n-k. Total O(n) time, O(1) space.",
     },
     {
@@ -254,7 +330,11 @@ const questions: Record<string, Question[]> = {
         "Return original array",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'What does rotating by n+k give compared to rotating by k?',
+        'Rotation is periodic with period n',
+      ],
+explanation:
         "k %= nums.length handles rotation wraparound. Rotating by n+k is same as rotating by k.",
     },
     {
@@ -264,7 +344,11 @@ const questions: Record<string, Question[]> = {
       question:
         "Juggling algorithm (cyclic replacements) uses O(1) extra space.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'Does the juggling algorithm allocate any extra arrays?',
+        'How many variables does it use?',
+      ],
+explanation:
         "Juggling moves elements in cycles using only a temporary variable. However it requires GCD(n, k) cycles and is more complex than reversal.",
     },
     {
@@ -280,6 +364,25 @@ const questions: Record<string, Question[]> = {
       explanation:
         "True. The three-step reversal (reverse all, reverse first k, reverse last n-k) correctly moves the last k elements to the front while maintaining their original order. For example, [1,2,3,4,5] rotated by 2 gives [4,5,1,2,3] — elements 4,5 and 1,2,3 each maintain their relative order.",
     },
+    {
+      id: "q-ra-6",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "Rotating an array of length 7 by k=7 results in:",
+      options: [
+        "All zeros",
+        "The original array",
+        "Reversed array",
+        "Undefined behavior"
+      ],
+      correctAnswer: 1,
+      hints: [
+        "What does k % n equal when k equals n?",
+        "Rotating by the array's own length brings everything back to its original position"
+      ],
+      explanation:
+        "The original array. Since k % n = 7 % 7 = 0, rotation by 0 is a no-op. Every element returns to its starting position. This is why we always compute k = k % n before rotating — any multiple of n is equivalent to no rotation.",
+    },
   ],
 
   "contains-duplicate": [
@@ -290,7 +393,11 @@ const questions: Record<string, Question[]> = {
       question: "Time complexity of sorting approach for Contains Duplicate:",
       options: ["O(1)", "O(n)", "O(n log n)", "O(n²)"],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'What is the time complexity of sorting?',
+        'After sorting, how do we check for duplicates?',
+      ],
+explanation:
         "Sorting costs O(n log n), then single pass checks adjacent elements for duplicates.",
     },
     {
@@ -299,7 +406,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Using a hash set gives O(n) time complexity.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'What is the average-case time complexity of hash set lookup?',
+        'How many elements do we process?',
+      ],
+explanation:
         "Hash set provides O(1) average lookup; if adding finds existing element, duplicate exists.",
     },
     {
@@ -309,7 +420,11 @@ const questions: Record<string, Question[]> = {
       question: "Space complexity of hash set approach for Contains Duplicate:",
       options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'In the worst case (no duplicates), how many elements are in the set?',
+        'The set holds all elements that haven\'t been seen before',
+      ],
+explanation:
         "Hash set stores at most n elements in worst case (no duplicates found), giving O(n) space.",
     },
     {
@@ -319,7 +434,11 @@ const questions: Record<string, Question[]> = {
       question: "To check duplicates in a sorted array, you only need:",
       options: ["Hash set", "Two pointers", "Sorting first", "Both A and C"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'In a sorted array, where are duplicate elements located relative to each other?',
+        'Can we check neighbors without extra space?',
+      ],
+explanation:
         "Since array is sorted, duplicates are adjacent. Single pass O(n) without extra space. No hash set needed.",
     },
     {
@@ -347,7 +466,11 @@ const questions: Record<string, Question[]> = {
         'For ["flower", "flow", "flight"], the longest common prefix is:',
       options: ["fl", "flow", "f", "flight"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'Check character by character: \'f\' matches for all three, \'l\' matches for all three...',
+        'What is the first character where two strings disagree?',
+      ],
+explanation:
         '"fl" is common to all three strings. "flow" doesn\'t match "flight" at position 4.',
     },
     {
@@ -362,7 +485,11 @@ const questions: Record<string, Question[]> = {
         "O(m)",
       ],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'How many characters could we check in the worst case?',
+        'Think about n strings each of length m',
+      ],
+explanation:
         "Vertical scan: check char at position i for all strings. If different or index exceeds any string, stop. O(n*m) worst case.",
     },
     {
@@ -372,7 +499,11 @@ const questions: Record<string, Question[]> = {
       question: "Sorting strings before finding LCP reduces complexity to:",
       options: ["O(n*m)", "O(n*m log n)", "O(m log n)", "O(n log n * m)"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'After sorting, the lexicographically smallest and largest strings differ the most',
+        'Why do only the first and last sorted strings need to be compared?',
+      ],
+explanation:
         "Sorting O(n log n) comparisons, each comparison O(m). Then only compare adjacent strings (2 strings), so O(m) for final comparison.",
     },
     {
@@ -381,7 +512,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "If any string is empty, the LCP is an empty string.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'An empty string has length 0',
+        'You can\'t share any characters with a string of length 0',
+      ],
+explanation:
         'Empty string shares no common prefix with any string (except itself). LCP of ["", "abc"] is "".',
     },
     {
@@ -480,6 +615,20 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Valid. The empty string is vacuously true - it contains no brackets, so it cannot have any mismatched pairs. Every closer matches its opener, nesting is correct, and stack is empty at end.",
     },
+    {
+      id: "q-vp-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "What is the minimum number of bracket additions to make ')((' valid?",
+      options: ["1", "2", "3", "4"],
+      correctAnswer: 2,
+      hints: [
+        "Count unmatched closing brackets and unmatched opening brackets separately",
+        "Each unmatched ) needs one ( added before it; each unmatched ( needs one ) added after"
+      ],
+      explanation:
+        "3 additions needed. Trace: ) has no opener (unmatched closer, +1 addition), ( has no closer, ( has no closer (+2 additions for unmatched openers). Total = 1 + 2 = 3. The general formula: additions = unmatched_closers + unmatched_openers.",
+    },
   ],
 
   // ── LINKED LISTS ─────────────────────────────────────────────────────
@@ -557,6 +706,20 @@ const questions: Record<string, Question[]> = {
       ],
       explanation:
         "This is true. We locate the node before the sublist start (startPrev), disconnect it, reverse just the sublist portion, then reconnect. For example, reversing nodes 2 to 4 in 1 -> 2 -> 3 -> 4 -> 5 gives 1 -> 4 -> 3 -> 2 -> 5.",
+    },
+    {
+      id: "q-rll-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "What is the space complexity of the recursive approach to reverse a linked list?",
+      options: ["O(1)", "O(log n)", "O(n)", "O(n²)"],
+      correctAnswer: 2,
+      hints: [
+        "Each recursive call uses stack frame memory",
+        "How deep does the recursion go for a list of n nodes?"
+      ],
+      explanation:
+        "O(n) space due to the call stack. For a list of n nodes, the recursion goes n levels deep before hitting the base case. Each level holds a stack frame with a reference to the current node. The iterative approach uses O(1) space, making it preferable when memory is constrained.",
     },
   ],
 
@@ -647,6 +810,25 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Move both one step at a time. When they meet again, that\'s the cycle entrance. Mathematically, if u = distance to cycle entrance and k = cycle length, after u moves both pointers meet at the entrance. Pointer from head travels u steps, pointer from meeting point also travels u steps to reach the entrance.",
     },
+    {
+      id: "q-dc-6",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "What does Floyd's algorithm return when there is NO cycle?",
+      options: [
+        "The last node",
+        "null (fast pointer reaches end of list)",
+        "The middle node",
+        "The head node"
+      ],
+      correctAnswer: 1,
+      hints: [
+        "Fast pointer moves 2 steps at a time through the list",
+        "In an acyclic list, fast pointer eventually falls off the end"
+      ],
+      explanation:
+        "When there is no cycle, the fast pointer reaches the end of the list (null). The while loop condition fast != null && fast.next != null fails, and we return false/null. There is no cycle to bring the fast pointer back around.",
+    },
   ],
 
   "merge-sorted-lists": [
@@ -657,7 +839,11 @@ const questions: Record<string, Question[]> = {
       question: "Merging two sorted linked lists uses:",
       options: ["Two stacks", "Two pointers", "Recursion only", "Sorting"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Both lists are sorted, so the minimum is always at one of the two heads',
+        'Which pointer do we advance after picking an element?',
+      ],
+explanation:
         "Compare heads of both lists, attach smaller to result, advance that pointer. O(n+m) time.",
     },
     {
@@ -667,7 +853,11 @@ const questions: Record<string, Question[]> = {
       question: "Time complexity to merge k sorted lists of average length n:",
       options: ["O(kn)", "O(n log k)", "O(kn log k)", "O(k + n)"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'A min-heap of size k lets us efficiently find the minimum across k lists',
+        'Each heap operation costs O(log k)',
+      ],
+explanation:
         "Min-heap of size k gives O(n log k) total. Each of n elements is pushed/popped from heap of size k.",
     },
     {
@@ -676,7 +866,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Divide and conquer merging k lists takes O(n log k) time.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'After round 1, we have k/2 lists. After round 2, k/4 lists...',
+        'How many rounds until one list remains?',
+      ],
+explanation:
         "Pair up lists, merge each pair. Next round has k/2 lists, continue until one remains. log k rounds × O(n) per merge = O(n log k).",
     },
     {
@@ -686,7 +880,11 @@ const questions: Record<string, Question[]> = {
       question: "For [1,2,4] and [1,3,4], merge result is:",
       options: ["[1,1,2,3,4,4]", "[1,2,3,4]", "[1,4,3,2,1,4]", "[1,1,4,4,2,3]"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'Compare heads at each step and pick the smaller',
+        'Trace: compare 1 and 1, then 2 and 1, then 2 and 3...',
+      ],
+explanation:
         "Both lists sorted. Compare heads: 1 vs 1 (equal, pick either), then 2 vs 3, then 4 vs 3, then 4 vs 4. Result: [1,1,2,3,4,4].",
     },
     {
@@ -712,7 +910,11 @@ const questions: Record<string, Question[]> = {
       question: "To remove nth node from end, you need:",
       options: ["Single pass", "Two passes", "Three passes", "Binary search"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'The first pass determines the list length n',
+        'The target node is at position n - k + 1 from the start',
+      ],
+explanation:
         "First pass finds length. Second pass removes node at position len-n+1 from start. Or use two pointers (one pass).",
     },
     {
@@ -727,7 +929,11 @@ const questions: Record<string, Question[]> = {
         "Slow pointer is n ahead",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'If fast is n+1 ahead and we move both until fast reaches null...',
+        'Where is slow when fast.next == null?',
+      ],
+explanation:
         "Fast pointer starts n+1 ahead. When fast reaches end, slow is at node before target. Delete slow.next.",
     },
     {
@@ -736,7 +942,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Dummy head node simplifies edge case of removing head.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'What happens when the node to delete is the original head?',
+        'Dummy.next = head lets us handle the head case uniformly',
+      ],
+explanation:
         "Dummy.next = head. If removing first node, just dummy.next = dummy.next.next. No special case for head.",
     },
     {
@@ -746,7 +956,11 @@ const questions: Record<string, Question[]> = {
       question: "For 1→2→3→4→5, remove 2nd from end gives:",
       options: ["1→2→3→4", "1→2→4→5", "1→3→4→5", "2→3→4→5"],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'Count from the end: position 1 is node 5, position 2 is node 4',
+        'The node to remove has value 4',
+      ],
+explanation:
         "2nd from end is node with value 4. Remove it: 1→2→3→5. Wait, remove 2nd from end means position 2 in [5,4,3,2,1] = node 4.",
     },
     {
@@ -778,7 +992,11 @@ const questions: Record<string, Question[]> = {
         "Sort and compare",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'A palindrome reads the same forwards and backwards',
+        'If we reverse the second half, it should equal the first half',
+      ],
+explanation:
         "Reverse the second half and compare with first half. If same, palindrome.",
     },
     {
@@ -787,7 +1005,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "Stack approach for palindrome uses O(n) extra space.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'We push all n values and then compare by popping',
+        'How much memory does the stack use?',
+      ],
+explanation:
         "Push all values to stack, then compare while popping. O(n) time and space.",
     },
     {
@@ -802,7 +1024,11 @@ const questions: Record<string, Question[]> = {
         "Use hash map",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Recursion builds a call stack as it goes deeper',
+        'As recursion unwinds, we can compare the left side (from parameters) with the right side',
+      ],
+explanation:
         "Recursive approach reverses as it returns, comparing with original traversal. Still O(n) space for call stack.",
     },
     {
@@ -812,7 +1038,11 @@ const questions: Record<string, Question[]> = {
       question: "Is 1→2→1 a palindrome?",
       options: ["Yes", "No", "Depends on list length", "Cannot determine"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'Write out the sequence: 1, 2, 1',
+        'Is this the same forwards and backwards?',
+      ],
+explanation:
         "Reading forward: 1,2,1. Reading backward: 1,2,1. Same in both directions → palindrome.",
     },
     {
@@ -840,7 +1070,11 @@ const questions: Record<string, Question[]> = {
       question: "Balanced Parentheses uses what data structure?",
       options: ["Queue", "Stack", "Array", "Heap"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Which data structure has LIFO access?',
+        'The most recently seen opener should be matched first',
+      ],
+explanation:
         "Push opening brackets, pop and verify match for closing. LIFO ensures correct nesting order.",
     },
     {
@@ -850,7 +1084,11 @@ const questions: Record<string, Question[]> = {
       question: "Time complexity of Balanced Parentheses:",
       options: ["O(1)", "O(n)", "O(n²)", "O(log n)"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'How many characters does a single pass process?',
+        'Is each character processed a constant number of times?',
+      ],
+explanation:
         "Single pass through string of length n. O(n) time, O(n) worst-case space for stack.",
     },
     {
@@ -859,7 +1097,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Stack empty at end means parentheses are balanced.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'If every opener was matched with a closer, what does the stack look like at the end?',
+        'What does an empty stack signify?',
+      ],
+explanation:
         "Every opening bracket was matched with a closing bracket. Empty stack + not rejected = balanced.",
     },
     {
@@ -869,7 +1111,11 @@ const questions: Record<string, Question[]> = {
       question: "Which string is NOT balanced?",
       options: ['"{[()]}"', '"((()))"', '"([)]"', '"{}[]()[]"'],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'Trace through "([)]" using a stack',
+        'When ) appears, what is on top of the stack?',
+      ],
+explanation:
         '"([)]" has wrong nesting order. When ")" appears, top of stack is "[", not "(". Mismatch detected.',
     },
     {
@@ -884,8 +1130,26 @@ const questions: Record<string, Question[]> = {
         "Push then conditional pop",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Think about what happens at each character, not at the end',
+        'Do we wait until the end to pop?',
+      ],
+explanation:
         "Each character processed: push opening, pop and match closing. Result: stack empty at end.",
+    },
+    {
+      id: "q-bp-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "What is the minimum number of bracket removals to make '(()' valid?",
+      options: ["0", "1", "2", "3"],
+      correctAnswer: 1,
+      hints: [
+        "Trace through using a counter for unmatched openers",
+        "How many opening brackets remain unmatched at the end?"
+      ],
+      explanation:
+        "1 removal needed. Trace: first ( unmatched (+1), second ( unmatched (+2), ) matches the second ( (-1, count=1). At the end, 1 unmatched opener remains. Removing it gives () which is valid. The answer is the number of unmatched opening brackets.",
     },
   ],
 
@@ -902,7 +1166,11 @@ const questions: Record<string, Question[]> = {
         "Heap",
       ],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'A single min variable doesn\'t track history — what happens when you pop the current min?',
+        'We need to know the minimum AT EACH STATE of the stack',
+      ],
+explanation:
         "Push (value, currentMin) as pair. getMin() returns top.min in O(1). Space O(n) worst case.",
     },
     {
@@ -912,7 +1180,11 @@ const questions: Record<string, Question[]> = {
       question:
         "Using two stacks, the min stack tracks all minima historically.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'When do we push to the min stack? When the new value is <= current minimum',
+        'When do we pop from the min stack? When the popped value equals the current minimum',
+      ],
+explanation:
         "Push to min stack only when new value <= current min. Pop both stacks when value equals min.",
     },
     {
@@ -923,7 +1195,11 @@ const questions: Record<string, Question[]> = {
         "For MinStack with push(5), push(3), push(7), getMin(), push(2), getMin():",
       options: ["3, 2", "3, 3", "2, 2", "5, 2"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'Track the minimum after each push operation',
+        'After push(3), min = 3. After push(7), min = 3. After push(2), min = 2',
+      ],
+explanation:
         "After pushes: stack [5,3,7], min=3. After push(2): stack [5,3,7,2], min=2.",
     },
     {
@@ -938,7 +1214,11 @@ const questions: Record<string, Question[]> = {
         "When min changes",
       ],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Not every pop changes the minimum',
+        'Only pop from the min stack when the value being removed IS the current minimum',
+      ],
+explanation:
         "If popped value equals current min (top of min stack), pop from min stack too. This reveals previous min.",
     },
     {
@@ -965,7 +1245,11 @@ const questions: Record<string, Question[]> = {
       question: "Queue with two stacks: enqueue is:",
       options: ["O(1)", "O(n)", "O(log n)", "Amortized O(1)"],
       correctAnswer: 3,
-      explanation:
+            hints: [
+        'Enqueue always goes to stack1 — what is the cost of pushing?',
+        'Each element is transferred at most once across stacks',
+      ],
+explanation:
         "enqueue: push to stack1 (O(1)). dequeue: if stack2 empty, transfer all from stack1 (O(n)) then pop (amortized O(1) since n pops per n pushes).",
     },
     {
@@ -975,7 +1259,11 @@ const questions: Record<string, Question[]> = {
       question:
         "With two stacks, the order of elements is preserved correctly.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'When we transfer from stack1 to stack2, the order is reversed',
+        'After transfer, stack2 top is the front of the queue',
+      ],
+explanation:
         "stack1: [front,...,back] for enqueue. Transfer to stack2 reverses: [back,...,front] for dequeue. FIFO maintained.",
     },
     {
@@ -986,7 +1274,11 @@ const questions: Record<string, Question[]> = {
         "If stack1 has [1,2,3] (1=front), and we dequeue, stack2 becomes:",
       options: ["[3,2,1]", "[1,2,3]", "[ ]", "[1]"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'What happens when we pop from stack1 and push to stack2 repeatedly?',
+        'Stack1 bottom becomes stack2 top',
+      ],
+explanation:
         "Transfer from stack1 to stack2 reverses order. stack2 top (pop order): [3,2,1] so dequeue returns 1.",
     },
     {
@@ -1001,7 +1293,11 @@ const questions: Record<string, Question[]> = {
         "Memory waste",
       ],
       correctAnswer: 2,
-      explanation:
+            hints: [
+        'Where is the front element in a single stack?',
+        'Getting to the bottom of a stack requires removing all elements above it',
+      ],
+explanation:
         "Single stack requires O(n) to dequeue (reverse entire stack). Two stacks achieve amortized O(1).",
     },
     {
@@ -1027,7 +1323,11 @@ const questions: Record<string, Question[]> = {
       question: "Next Greater Element uses what data structure?",
       options: ["Queue", "Stack", "Array", "Heap"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'We want to find the next element to the RIGHT that is greater',
+        'The stack helps us track elements waiting for their next greater',
+      ],
+explanation:
         "Stack maintains candidates in decreasing order. When greater element found, it is next greater for all popped elements.",
     },
     {
@@ -1037,7 +1337,11 @@ const questions: Record<string, Question[]> = {
       question: "For [2,1,5,3,4], next greater for position 0 (value 2):",
       options: ["1", "5", "3", "4"],
       correctAnswer: 1,
-      explanation:
+            hints: [
+        'Start at index 0 (value 2), scan right for first value > 2',
+        'Value 1 is not greater than 2; value 5 is',
+      ],
+explanation:
         "Scanning right from index 0, 1 is smaller than 2, 5 is first greater. So NGE(2) = 5.",
     },
     {
@@ -1046,7 +1350,11 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question: "If no greater element exists, return -1.",
       correctAnswer: "true",
-      explanation:
+            hints: [
+        'What do we assign when the stack is not empty at the end?',
+        'Elements that are never popped have no greater element to their right',
+      ],
+explanation:
         "Elements never popped from stack have no greater element to their right. Default value is -1.",
     },
     {
@@ -1056,7 +1364,11 @@ const questions: Record<string, Question[]> = {
       question: "For [1,2,3,4], all next greater elements are:",
       options: ["[2,3,4,-1]", "[2,3,4,4]", "[-1,-1,-1,-1]", "[2,3,4,None]"],
       correctAnswer: 0,
-      explanation:
+            hints: [
+        'This is an increasing array — every element\'s next greater is the element immediately after it',
+        'What about the last element?',
+      ],
+explanation:
         "Each element\'s next greater is the next element. Last element has no greater, returns -1.",
     },
     {
@@ -1066,7 +1378,11 @@ const questions: Record<string, Question[]> = {
       question: "Time complexity of Next Greater Element:",
       options: ["O(n²)", "O(n)", "O(n log n)", "O(n) amortized"],
       correctAnswer: 3,
-      explanation:
+            hints: [
+        'Each element is pushed onto the stack at most once',
+        'Each element is popped from the stack at most once',
+      ],
+explanation:
         "Each element pushed and popped at most once. Overall O(n) time, each operation amortized O(1).",
     },
     {
