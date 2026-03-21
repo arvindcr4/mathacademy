@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // APPLIED MATH FOR AI: LINEAR ALGEBRA DEEP DIVE
+  {
+    id: 'linear-algebra-deep-dive',
+    slug: 'linear-algebra-deep-dive',
+    name: 'Applied Math for AI: Linear Algebra Deep Dive',
+    description: 'Advanced linear algebra for ML practitioners: matrix decompositions, tensor operations, and geometry.',
+    topics: [
+      {
+        id: 'matrix-decompositions',
+        name: 'Matrix Decompositions',
+        description: 'SVD, eigendecomposition, QR, and Cholesky for ML applications.',
+        knowledgePoints: [
+          { id: 'lad-kp-1', slug: 'svd-deep', name: 'SVD & Dimensionality Reduction' },
+          { id: 'lad-kp-2', slug: 'eigendecomposition', name: 'Eigendecomposition & Spectral Theorem' },
+          { id: 'lad-kp-3', slug: 'qr-decomposition', name: 'QR Decomposition & Gram-Schmidt' },
+          { id: 'lad-kp-4', slug: 'cholesky-decomp', name: 'Cholesky Decomposition & Positive Definiteness' },
+          { id: 'lad-kp-5', slug: 'low-rank-approx', name: 'Low-Rank Approximation & Truncated SVD' },
+        ]
+      },
+      {
+        id: 'tensor-algebra',
+        name: 'Tensor Algebra & Operations',
+        description: 'Tensor products, contractions, and tensor decompositions for ML.',
+        knowledgePoints: [
+          { id: 'lad-kp-6', slug: 'tensor-products', name: 'Tensor Products & Multilinear Maps' },
+          { id: 'lad-kp-7', slug: 'einsum', name: 'Einstein Summation & Einsum Notation' },
+          { id: 'lad-kp-8', slug: 'cp-tucker', name: 'CP & Tucker Tensor Decompositions' },
+          { id: 'lad-kp-9', slug: 'tensor-networks', name: 'Tensor Networks & Matrix Product States' },
+          { id: 'lad-kp-10', slug: 'tensor-train', name: 'Tensor Train & Tensor Ring Decompositions' },
+        ]
+      },
+      {
+        id: 'linear-maps-transformations',
+        name: 'Linear Maps & Geometric Transformations',
+        description: 'Projections, rotations, and geometric interpretations in high dimensions.',
+        knowledgePoints: [
+          { id: 'lad-kp-11', slug: 'orthogonal-projections', name: 'Orthogonal Projections & Subspaces' },
+          { id: 'lad-kp-12', slug: 'rotation-matrices', name: 'Rotation Matrices & Lie Groups' },
+          { id: 'lad-kp-13', slug: 'affine-transformations', name: 'Affine Transformations in ML' },
+          { id: 'lad-kp-14', slug: 'change-of-basis', name: 'Change of Basis & Coordinate Systems' },
+          { id: 'lad-kp-15', slug: 'kernel-trick', name: 'Kernel Trick & Implicit Feature Maps' },
+        ]
+      },
+      {
+        id: 'matrix-calculus',
+        name: 'Matrix Calculus & Gradients',
+        description: 'Jacobians, Hessians, and matrix derivatives for backpropagation.',
+        knowledgePoints: [
+          { id: 'lad-kp-16', slug: 'jacobian-matrix', name: 'Jacobian Matrix & Chain Rule' },
+          { id: 'lad-kp-17', slug: 'hessian-matrix', name: 'Hessian Matrix & Second-Order Derivatives' },
+          { id: 'lad-kp-18', slug: 'matrix-derivatives', name: 'Matrix Derivatives & Denominator Layout' },
+          { id: 'lad-kp-19', slug: 'backprop-linear-algebra', name: 'Backpropagation as Matrix Multiplication' },
+          { id: 'lad-kp-20', slug: 'forward-mode-ad', name: 'Forward Mode AD & Dual Numbers' },
+        ]
+      },
+      {
+        id: 'random-matrix-theory',
+        name: 'Random Matrix Theory & High-Dimensional Stats',
+        description: 'Concentration inequalities, random projections, and high-dimensional phenomena.',
+        knowledgePoints: [
+          { id: 'lad-kp-21', slug: 'jl-lemma', name: 'Johnson-Lindenstrauss Lemma & Random Projections' },
+          { id: 'lad-kp-22', slug: 'concentration-ineq', name: 'Concentration Inequalities (Hoeffding, Bernstein)' },
+          { id: 'lad-kp-23', slug: 'rmt-eigenvalue', name: 'Random Matrix Theory & Marchenko-Pastur' },
+          { id: 'lad-kp-24', slug: 'curse-dimensionality', name: 'Curse of Dimensionality & Blessing of Sparsity' },
+          { id: 'lad-kp-25', slug: 'compressive-sensing', name: 'Compressive Sensing & Sparse Recovery' },
+        ]
+      },
+      {
+        id: 'numerical-linear-algebra',
+        name: 'Numerical Linear Algebra',
+        description: 'Condition numbers, numerical stability, and efficient linear system solvers.',
+        knowledgePoints: [
+          { id: 'lad-kp-26', slug: 'condition-number', name: 'Condition Number & Numerical Stability' },
+          { id: 'lad-kp-27', slug: 'iterative-solvers', name: 'Iterative Solvers (CG, GMRES, Krylov)' },
+          { id: 'lad-kp-28', slug: 'preconditioning', name: 'Preconditioning & Convergence Acceleration' },
+          { id: 'lad-kp-29', slug: 'sparse-matrices', name: 'Sparse Matrix Formats & Algorithms' },
+          { id: 'lad-kp-30', slug: 'gpu-blas', name: 'GPU Linear Algebra (cuBLAS, cuSPARSE)' },
+        ]
+      },
+    ]
+  },
+
   // APPLIED ML FOR TABULAR DATA
   {
     id: 'tabular-ml',
