@@ -16,7 +16,9 @@ registerQuestions({
       ],
       correctAnswer: 1,
       explanation:
-        "The chain rule from calculus allows us to calculate the derivative of a composite function by multiplying the local gradients of each operation, propagating the error from the output back to the inputs or weights.",
+        "**Step 1:** Recall that the chain rule states that for a composite function $f(x) = g(h(x))$, the derivative with respect to $x$ is the product of the outer function's derivative evaluated at the inner function times the inner function's derivative.\n" +
+        "\n**Step 2:** In backpropagation, we apply this principle recursively. The error signal from the output flows backward through the computational graph, and at each node we multiply the upstream gradient by the local gradient of that operation.\n" +
+        "\n**Step 3:** This process repeats until we reach the input weights, with each gradient being the product of all local gradients along the path from the loss to that weight.",
       hints: [
         "Think about how calculus handles derivatives of composed functions.",
         "The gradient of the loss with respect to an early parameter must travel through every operation in between.",
@@ -53,7 +55,9 @@ registerQuestions({
       options: ["0", "y", "1", "x"],
       correctAnswer: 2,
       explanation:
-        "The derivative of a sum z = x + y with respect to x is 1, meaning the gradient from the output is passed through unchanged to x (and also to y). This is why addition fans out gradients equally.",
+        "**Step 1:** Consider the function $z = x + y$. To find $\frac{dz}{dx}$, treat $y$ as a constant (since $y$ does not depend on $x$).\n" +
+        "\n**Step 2:** Differentiating gives $\frac{dz}{dx} = \frac{d}{dx}(x + y) = 1 + 0 = 1$.\n" +
+        "\n**Step 3:** This means the gradient from the output is passed through unchanged to $x$ (and also to $y$). This is why addition nodes fan out gradients equally to all their inputs.",
       hints: [
         "Differentiate x + y with respect to x treating y as a constant.",
         "The local gradient of addition with respect to each input is always 1.",
