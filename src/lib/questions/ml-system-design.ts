@@ -704,8 +704,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Continuous training introduces risks: a data pipeline bug can corrupt training data, a sudden distribution shift can degrade the model, and noisy labels from a new data source can reduce quality. Continuous training pipelines require validation gates (e.g., "new model must achieve AUC ≥ current model − 0.01 on a holdout set") and automated rollback before promotion.',
       hints: [
-        "Automation increases velocity but requires guard rails — otherwise a bad data batch retrains a worse model.",
-        "A feedback loop bug (wrong labels) will silently degrade a continuously-training model.",
+        "Does automating retraining introduce any new risks compared to manual retraining with human review?",
+        "What safeguards are needed to prevent a corrupted data batch from silently degrading a continuously-trained model?",
       ],
     },
     {
@@ -747,8 +747,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Shadow deployment mirrors all production traffic to the new model but discards its response — users always receive the old model\'s output. This validates that the new model produces correct outputs, meets latency SLOs under real traffic patterns, handles edge cases, and does not crash — all without any risk to users. Only after shadow validation passes is the model promoted to canary or A/B testing.",
       hints: [
-        "Shadow mode: both models run, old model serves. A/B test: different users get different models.",
-        "Shadow deployment is the safest validation step: zero user impact, full real-traffic validation.",
+        "In shadow deployment, both the old and new models receive production traffic. Which model's output is actually served to users?",
+        "What is the primary advantage of shadow deployment over A/B testing in terms of user risk?",
       ],
     },
     {
@@ -762,8 +762,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Post-training INT8 quantization often achieves accuracy within 0.5-1% of FP32 on most tasks while reducing model size by 4× and inference latency by 2-4×. Quantization-aware training (QAT) further closes the accuracy gap. For well-calibrated models on tasks like image classification, speech recognition, and NLP classification, INT8 is routinely used in production (e.g., TensorRT, OpenVINO deployments). Accuracy loss only becomes significant for tasks requiring fine-grained numerical precision.",
       hints: [
-        "BERT-base with INT8 quantization achieves within 1% of FP32 on GLUE while being 2× faster.",
-        "Quantization-aware training (QAT) simulates quantization during training, reducing the accuracy gap further.",
+        "Does INT8 quantization always significantly degrade accuracy, or is the accuracy loss often within acceptable bounds for production?",
+        "What technique simulates quantization effects during training to minimize the accuracy gap?",
       ],
     },
     {
@@ -802,8 +802,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "During a scaling lag, bounded request queuing provides graceful degradation: requests queue until replicas are available, and once the queue is full, new requests get a structured error (503 + Retry-After) that allows clients to retry. This is better than dropping connections silently or letting queues grow unboundedly (causing timeouts). Dynamic batching (option A) helps but cannot absorb a 10× traffic spike alone. The CPU fallback (option D) is a valid secondary measure but is not the primary overload handling technique.",
       hints: [
-        "Unbounded queues = OOM crashes. Bounded queues = structured failure with retry signals.",
-        "503 + Retry-After is the correct HTTP response for overload — clients know to retry in N seconds.",
+        "What happens to a system when queues grow without bound during a traffic spike?",
+        "What HTTP response code and Retry-After header signal to clients that they should resubmit their request later?",
       ],
     },
     {

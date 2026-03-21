@@ -79,8 +79,7 @@ registerQuestions({
         "It processes only text data to maximize processing speed.",
         "It is completely open-source and free for all commercial use.",
       ],
-      correctAnswer:
-        "State-of-the-art performance on highly complex tasks like coding, logical reasoning, and nuanced multimodal understanding.",
+      correctAnswer: 1,
       explanation:
         "Gemini Ultra is the most capable model in the family, designed specifically for highly complex, compute-intensive tasks that require deep reasoning and state-of-the-art multimodal understanding.",
       hints: [
