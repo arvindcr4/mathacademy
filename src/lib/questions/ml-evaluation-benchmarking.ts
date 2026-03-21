@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "On a dataset with 99% class-0 and 1% class-1 samples, a model that always predicts class 0 achieves 99% accuracy, making accuracy a reliable metric for this problem.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Accuracy = (TP + TN) / (TP + TN + FP + FN). For a trivial model predicting class 0 always on 10,000 samples (9,900 class 0, 100 class 1): TP = 0, TN = 9,900, FP = 0, FN = 100. Accuracy = 9,900/10,000 = 0.99. But Recall = 0/(0+100) = 0 and Precision is undefined — the model detects no positive cases at all. Accuracy is fundamentally misleading when class distributions are skewed: it is dominated by the majority class performance. For imbalanced problems, use: F1 or Fβ (combines precision and recall), balanced accuracy = (TPR + TNR)/2 = 0.5, PR-AUC, or ROC-AUC.",
       hints: [
@@ -86,7 +86,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "ROC-AUC is invariant to class imbalance and therefore remains a reliable metric even when positives are 1% of the dataset.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "ROC-AUC uses FPR = FP / (FP + TN) on the x-axis. With 99% negatives: TN is very large. Even if FP is relatively large (say 100 FP out of 9,900 negatives), FPR = 100/9,900 ≈ 0.01 — making the ROC curve look good in the low-FPR region even for a mediocre model. This is not a paradox: it is a feature. The AUC is the area under the ROC curve, which is a plot of TPR vs. FPR. When positives are rare, the FPR axis is dominated by the TN count, making the curve look better than it is. The key is that AUC is threshold-independent. The same model might have AUC = 0.95 on a balanced dataset but AUC = 0.5 on a heavily imbalanced one. The metric is not wrong; it is just not capturing the problem. For imbalanced datasets, use PR-AUC (Precision-Recall AUC) or Davis & Goadrich 2006) or consider the Brier score (calibration) and log-loss (uncalibrated models can have high AUC but low calibration).",
       hints: [
@@ -143,7 +143,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "R² = 1 − SS_res / SS_tot = 0.90 always indicates an excellent model fit, regardless of context.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "R² = 1 − Σ(yᵢ − ŷᵢ)² / Σ(yᵢ − ȳ)². It measures variance explained relative to predicting the mean ȳ. Three scenarios where R² = 0.90 is misleading: (1) The baseline (predicting ȳ) is trivial — if all y values are nearly identical, any model easily exceeds it. (2) Residual plots show clear structure (heteroscedasticity, nonlinearity) that the model misses — R² ignores residual patterns. (3) Time series: R² computed on a random split includes future leakage. Additionally, R² can be negative for non-linear models evaluated on held-out data (prediction worse than the mean baseline). Always inspect residuals, not just R².",
       hints: [
@@ -200,7 +200,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "For a 3-class problem (classes A, B, C), macro-averaged F1 weights each class equally regardless of its sample count, while weighted F1 weights by class support.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Macro F1: compute F1_A, F1_B, F1_C for each class independently (using one-vs-rest binary confusion matrices), then average: F1_macro = (F1_A + F1_B + F1_C) / 3. Each class has equal weight regardless of support. If class C has 1,000 samples and class B has 10 samples, both contribute equally to macro F1. Weighted F1: F1_weighted = (n_A·F1_A + n_B·F1_B + n_C·F1_C) / (n_A + n_B + n_C), proportional to each class\'s support. Weighted F1 emphasizes performance on frequent classes; macro F1 emphasizes uniform performance across all classes (especially important for rare classes).",
       hints: [
@@ -257,7 +257,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A statistically significant improvement in model performance (p < 0.001) on a test set of n = 1,000,000 samples always implies that the improvement is practically meaningful.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "With n = 1,000,000 samples, the standard error of any metric estimate approaches 0: SE = σ/√n → 0. A difference of Δ = 0.0001 (0.01% accuracy improvement) achieves: z = Δ/SE = 0.0001 / (0.5/√1,000,000) = 0.0001 / 0.0005 = 0.2... actually with SE = √(p(1-p)/n) ≈ 0.0005, a difference of 0.001 gives z = 2.0 (p ≈ 0.05), and 0.002 gives p ≈ 0.002. The p-value measures evidence against H₀, not the size of the effect. A Δ = 0.1% accuracy improvement may be statistically significant with large n but completely irrelevant for a model that already achieves 95% accuracy. Report effect sizes and confidence intervals alongside p-values.",
       hints: [
@@ -314,7 +314,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The .632+ bootstrap estimator of test error is designed to correct for the pessimistic bias of the out-of-bag (OOB) error estimate when the learning algorithm heavily overfits.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'The .632 bootstrap estimator: ε̂_.632 = 0.368·ε̂_train + 0.632·ε̂_OOB, where 0.632 = 1 − 1/e = the expected fraction of unique training samples in one bootstrap draw. When the model overfits severely (ε̂_train ≈ 0), the pure OOB estimate is pessimistic because OOB samples were NOT seen during training, and a highly overfit model performs much worse on them than on unseen future data (which shares more structure with training data). The .632+ estimator (Efron & Tibshirani 1997) adapts the weight dynamically based on how much the model overfits, using the "no-information" error rate ε̂_γ as a correction term.',
       hints: [
@@ -372,7 +372,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Leave-One-Out Cross-Validation (LOOCV) always provides a lower-variance estimate of generalization error than 10-fold CV because it uses more data per fold.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "LOOCV trains n models, each on n−1 samples. The n models are nearly identical (differ by 1 sample), so their predictions are highly correlated — the variance of the LOOCV estimator is dominated by the large positive correlations between fold estimates. Formally: Var(LOOCV) = (1/n²)·Σᵢ Σⱼ Cov(Lᵢ, Lⱼ), which is large when Cov(Lᵢ, Lⱼ) > 0 for i ≠ j. Arlot & Celisse (2010) showed LOOCV can have higher variance than 5- or 10-fold CV. Bias-variance for the CV estimator itself: LOOCV has near-zero bias (training size ≈ full n) but high variance. K-fold CV has slightly more bias (training size = (K-1)/K × n) but lower variance. Empirically, 5- or 10-fold CV achieves a better bias-variance tradeoff for the error estimator.",
       hints: [
@@ -429,7 +429,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "In Kaggle competitions, the private leaderboard (revealed at competition end) is one safeguard against leaderboard hacking because competitors cannot observe private LB scores during the competition.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'Kaggle splits the test set: ~20-30% forms the public leaderboard (scores visible after each submission), ~70-80% forms the private leaderboard (revealed only at competition end). Competitors can adaptively overfit to the public portion by submitting many times, but the private portion is never queried during the competition — it remains a truly held-out set. Models that genuinely generalize will perform similarly on public and private; models that overfit to the public set will see a large "shake-up" (score drop on the private LB). Historical Kaggle competitions have seen dramatic rank changes when the private LB is revealed, demonstrating the importance of this safeguard.',
       hints: [
@@ -486,7 +486,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "BLEU score measures what fraction of n-grams in the reference text appear in the generated text (recall), making it a completeness metric.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "BLEU (Bilingual Evaluation Understudy, Papineni et al. 2002) is a precision metric. For n-gram order n, BLEUₙ = (number of n-grams in candidate matching reference) / (total n-grams in candidate). The denominator is the candidate length — so BLEU measures what fraction of the generated text appears in the reference. Recall-based metrics (ROUGE-R) use the reference as the denominator: what fraction of the reference appears in the candidate. ROUGE-F combines both metrics.",
       hints: [
@@ -544,7 +544,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Mean Reciprocal Rank (MRR) = mean over queries of 1/(rank of first relevant result). If a query\'s first relevant result is at rank 3, its reciprocal rank is 1/3, regardless of whether there are relevant results at ranks 5 and 7.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         'This statement is TRUE (MRR only considers the first relevant result), not false. Wait — the question asks if MRR "considers the ranks of all relevant documents." MRR = (1/|Q|)·Σ_q 1/rank₁_q where rank₁_q = rank of the FIRST relevant result for query q. If the first relevant result is at rank 3: RR = 1/3 ≈ 0.333. Documents at ranks 5 and 7 are ignored. MRR is appropriate when users care only about finding the first relevant result (navigational queries, question answering with one correct answer). For tasks where all relevant documents matter (comprehensive search, recall-focused retrieval), use MAP or NDCG which account for all relevant positions.',
       hints: [
@@ -601,7 +601,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Krippendorff\'s Alpha can handle any number of annotators, missing annotations, and both nominal and ordinal data by substituting different distance metrics.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Krippendorff\'s Alpha: α = 1 − D_o / D_e, where D_o = observed disagreement and D_e = expected disagreement. The disagreement is measured using a distance function d(c, k) that depends on the scale type: Nominal: d(c, k) = 0 if c=k, 1 otherwise. Ordinal: d(c, k) = (Σᵥ₌min(c,k)^max(c,k) nᵥ)² − (nᵢ² + nⱼ²)/4 (reflects the number of scale steps between c and k). Interval: d(c, k) = (c − k)². The same formula applies regardless of the scale. Alpha handles any number of annotators n ≥ 2 and treats missing annotations correctly (only available pairs contribute to disagreement counts). Cohen\'s Kappa requires exactly 2 annotators, complete annotation, and nominal data.",
       hints: [
@@ -658,7 +658,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "HELM (Holistic Evaluation of Language Models, Liang et al. 2022) deliberately avoids a single aggregate score, instead reporting performance across multiple dimensions (accuracy, robustness, fairness, efficiency) to expose tradeoffs.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         'HELM evaluates models across 42 scenarios × 7 metric categories. Rather than a single "HELM score," it reports a structured scorecard revealing: accuracy on different tasks, calibration (how well probabilities match outcomes), robustness (performance under input perturbation), fairness (disparate performance across demographic groups), efficiency (inference cost). A model might achieve high accuracy but poor calibration or high latency — a single aggregate would hide this. HELM also standardizes prompting format across models for fair comparison. The multi-dimensional view reflects that different deployments prioritize different properties.',
       hints: [
@@ -715,7 +715,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "A model can achieve 95% accuracy while being poorly calibrated, for example by assigning 99.9% confidence to all predictions including the 5% it gets wrong.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Accuracy measures the fraction of correct predictions (threshold-based, ignoring confidence magnitudes). Calibration measures whether predicted probabilities match empirical frequencies. A model predicting 99.9% confidence for all samples: accuracy = 95% (correctly classifies 95%). The Brier score decomposes as:\n\\[\n\\text{Brier} = \\frac{1}{n}\\sum_{i=1}^{n}(p_i - y_i)^2\n\\]\nFor correct predictions ($y_i = 1$) with $p_i = 0.999$: $(0.999 - 1)^2 = 10^{-6}$. For wrong predictions ($y_i = 0$) with $p_i = 0.999$: $(0.999 - 0)^2 \\approx 0.998$. With 95% correct:\n\\[\n\\text{Brier} \\approx 0.95 \\times 10^{-6} + 0.05 \\times 0.998 \\approx 0.0499\n\\]\nThis is much worse than a calibrated 95%-accurate model (Brier $\\approx 0.05 \\times 0.95 \\times 0.05 \\approx 0.0024$). The model's ECE in the $[0.99, 1.0)$ bin is $|0.999 - 0.95| = 0.049$, confirming severe miscalibration. Accuracy and calibration are orthogonal properties: you can have high accuracy with poor calibration, or perfect calibration with poor accuracy.",
       hints: [
@@ -772,7 +772,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "hard",
       question:
         "A classifier can simultaneously satisfy Demographic Parity, Equal Opportunity, and Predictive Parity when the base rates (prevalence of the positive class) differ between groups.",
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Chouldechova (2017) and Kleinberg et al. (2017) independently proved impossibility theorems: when group base rates differ $\\mathrm{P}(Y=1 \\mid A=a) \\neq \\mathrm{P}(Y=1 \\mid A=b)$, no non-trivial classifier can simultaneously satisfy Demographic Parity (DP), Equal Opportunity (EO), and Predictive Parity (PP). The proof sketch: PPV (precision) within group $a$ is:\n\\[\n\\text{PPV}_a = \\frac{\\text{TPR}_a \\cdot \\mathrm{P}(Y=1 \\mid A=a)}{\\mathrm{P}(\\hat{Y}=1 \\mid A=a)}\n\\]\nIf TPR is equal across groups (EO) and base rates differ, then $\\mathrm{P}(\\hat{Y}=1 \\mid A=a) \\neq \\mathrm{P}(\\hat{Y}=1 \\mid A=b)$ — but DP requires these to be equal. Contradiction. These impossibility results mean fairness metric selection is a normative choice, not a technical one resolvable by better modeling.",
       hints: [
@@ -829,7 +829,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question:
         "Adversarial examples are inputs crafted by adding perturbations bounded in ℓ_∞ norm (ε-bounded) that are imperceptible to humans but cause confident model misclassification.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Goodfellow et al. (2015) defined adversarial examples: x_adv = x + δ where ‖δ‖_∞ ≤ ε (each pixel changes by at most ε, e.g., ε = 8/255 for images in [0, 1]). For ε = 8/255 ≈ 0.031, the perturbation is visually imperceptible (below the JND — just-noticeable difference) but causes models like ResNet to misclassify with >99% confidence. FGSM (Fast Gradient Sign Method): δ = ε · sign(∇_x L(x, y)). PGD (Projected Gradient Descent) applies FGSM iteratively with projection onto the ε-ball. Adversarial training (min_θ E[max_{‖δ‖≤ε} L(x+δ, y; θ)]) is the main defense, but reduces clean accuracy by ~5–10%.",
       hints: [
@@ -863,7 +863,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp16-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is stratified k-fold cross-validation and when should it be used instead of standard k-fold?",
       options: [
@@ -883,7 +883,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp16-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "You have a dataset of 1,000 patients where each patient contributes 5 measurements over time. What cross-validation strategy correctly prevents data leakage?",
       options: [
@@ -912,7 +912,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp17-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What does a p-value of 0.03 mean in the context of comparing two ML models?",
       options: [
@@ -928,7 +928,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp17-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "The McNemar test is appropriate for comparing two classifiers on the same test set. When should it be preferred over a paired t-test on accuracy?",
       options: [
@@ -957,7 +957,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp18-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "Why is the area under the Precision-Recall curve (PR-AUC) preferred over ROC-AUC for evaluating classifiers on highly imbalanced datasets?",
       options: [
@@ -973,7 +973,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp18-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "You are evaluating a fraud detection model on a dataset where 0.1% of transactions are fraudulent. The model achieves 99.9% accuracy, 80% recall, and 10% precision. How should you interpret this?",
       options: [
@@ -1002,7 +1002,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp19-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "When should Mean Absolute Error (MAE) be preferred over Root Mean Squared Error (RMSE) as the primary regression evaluation metric?",
       options: [
@@ -1022,7 +1022,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp19-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A house price prediction model achieves RMSE = $50,000. Is this a good or bad result, and how should you contextualize this metric?",
       options: [
@@ -1051,7 +1051,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp20-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is Normalized Discounted Cumulative Gain (NDCG) and why is it preferred over Precision@k for evaluating ranking systems?",
       options: [
@@ -1067,7 +1067,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp20-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A recommendation system's offline evaluation shows NDCG@10 = 0.72 but online A/B test shows no improvement in user engagement. What is the likely cause?",
       options: [
@@ -1096,7 +1096,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp21-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What does the BLEU score measure, and what is its major limitation for evaluating modern language model outputs?",
       options: [
@@ -1116,7 +1116,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp21-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "How should you evaluate a summarization system when reference summaries are unavailable and you need to assess factual consistency?",
       options: [
@@ -1145,7 +1145,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp22-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the purpose of a validation set versus a test set in ML model evaluation?",
       options: [
@@ -1161,7 +1161,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp22-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "After training 50 models with different hyperparameter configurations, all evaluated on the same validation set, how do you estimate the risk that the selected model's validation performance overfits the validation set?",
       options: [
@@ -1190,7 +1190,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp23-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is the multiple testing problem in ML evaluation, and how does it affect reported benchmark results?",
       options: [
@@ -1206,7 +1206,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp23-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "A benchmark shows your model achieves 93% accuracy, versus 91% for the previous state-of-the-art on 10,000 samples. Is this difference statistically significant and practically meaningful?",
       options: [
@@ -1235,7 +1235,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp24-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is distribution shift in ML evaluation, and why does it cause models that perform well on test sets to fail in production?",
       options: [
@@ -1255,7 +1255,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp24-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "How should a financial fraud detection model be evaluated to assess its true production performance when trained on transactions from January-June and deployed in July-December?",
       options: [
@@ -1284,7 +1284,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp25-1",
       type: "multiple-choice",
-      difficulty: "intermediate",
+      difficulty: "medium",
       question:
         "What is bootstrapping in ML evaluation, and what does it enable that standard test set evaluation does not?",
       options: [
@@ -1300,7 +1300,7 @@ const questions: Record<string, Question[]> = {
     {
       id: "q-eval-kp25-2",
       type: "multiple-choice",
-      difficulty: "advanced",
+      difficulty: "hard",
       question:
         "You want to compare two models' AUC-ROC on a test set of 10,000 samples. Which statistical approach correctly accounts for the paired structure of the evaluation?",
       options: [
