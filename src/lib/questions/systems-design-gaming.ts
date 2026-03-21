@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
         "The server cannot distinguish between player inputs and cheat injections"
       ],
       correctAnswer: 2,
-      explanation: "Lock-step synchronization requires every participant to confirm before the simulation advances a step. With 8+ players, the simulation rate is bounded by the worst-case latency in the room. One player on a high-latency connection forces everyone else to wait, causing periodic freezes. This is why modern real-time games abandoned strict lock-step in favor of client-side prediction with authoritative server correction. Lock-step survives in turn-based and RTS games (StarCraft originally used it) where millisecond responsiveness is less critical.",
+      explanation: "**Step 1:** Lock-step synchronization requires every participant to confirm receipt of each simulation step before the simulation advances to the next step.\n**Step 2:** With 8+ players, the simulation rate is bounded by the worst-case latency in the room — one high-latency player becomes the bottleneck for the entire group.\n**Step 3:** This forces all other clients to wait for the laggy player, causing periodic freezes for everyone. Modern real-time games abandoned strict lock-step in favor of client-side prediction with authoritative server correction. Lock-step survives in turn-based and RTS games (StarCraft originally used it) where millisecond responsiveness is less critical.",
       hints: ["Lock-step means everyone moves in unison — what happens if one person can't keep up?", "This was a major complaint in early online RTS games."],
     },
   ],
@@ -48,7 +48,7 @@ const questions: Record<string, Question[]> = {
         "Rollback runs the simulation on a central server while delay-based is purely peer-to-peer"
       ],
       correctAnswer: 1,
-      explanation: "Rollback netcode speculatively advances the simulation using the last known inputs of remote players (prediction). When the real remote input arrives and differs from the prediction, the engine rolls back to the last confirmed frame, applies the correct input, and re-simulates forward — happening fast enough that players rarely notice. Delay-based netcode instead inserts a fixed N-frame input delay for all players so that by the time frame F is executed, all inputs for frame F are guaranteed to have arrived. Delay-based creates sluggish controls at high latency; rollback feels local even at 100ms+ but requires a fast, deterministic simulation engine.",
+      explanation: "**Step 1:** Rollback netcode speculatively advances the simulation using the last known inputs of remote players as a prediction.\n**Step 2:** When the real remote input arrives and differs from the prediction, the engine rolls back to the last confirmed frame, applies the correct input, and re-simulates forward — happening fast enough that players rarely notice.\n**Step 3:** Delay-based netcode instead inserts a fixed N-frame input delay for all players so that by the time frame F is executed, all inputs for frame F are guaranteed to have arrived. Delay-based creates sluggish controls at high latency; rollback feels local even at 100ms+ but requires a fast, deterministic simulation engine.",
       hints: ["Think about which approach actually delays your own inputs vs. which one replays history.", "GGPO is the famous middleware that popularized rollback in fighting games."],
     },
     {
@@ -75,7 +75,7 @@ const questions: Record<string, Question[]> = {
         "The client is made authoritative for hit detection to eliminate server latency entirely"
       ],
       correctAnswer: 0,
-      explanation: "Without lag compensation, the server checks the shot against current enemy positions, but the shooter aimed at where the enemy was 100ms ago (the shooter's view is behind real time by their latency). The shot misses even though it looked like a hit on the client. Backward reconciliation (Valve's implementation, described in their 2001 paper) rewinds the server's history of entity positions to the timestamp of the shooter's fire event and performs hit detection there. This favors the shooter's perspective. The tradeoff: victims can appear to die behind cover from their own perspective, since the server validated the shot against their past position.",
+      explanation: "**Step 1:** Without lag compensation, the server checks the shot against current enemy positions, but the shooter aimed at where the enemy was 100ms ago (the shooter's view is behind real time by their latency). The shot misses even though it looked like a hit on the client.\n**Step 2:** Backward reconciliation (Valve's implementation, described in their 2001 paper) rewinds the server's history of entity positions to the timestamp of the shooter's fire event and performs hit detection there, favoring the shooter's perspective.\n**Step 3:** The tradeoff: victims can appear to die behind cover from their own perspective, since the server validated the shot against their past position.",
       hints: ["The shooter's screen shows a delayed view of the world — where was the enemy on the shooter's screen vs. where are they now?", "Valve calls this 'lag compensation' in their Source engine documentation."],
     },
     {
@@ -102,7 +102,7 @@ const questions: Record<string, Question[]> = {
         "TrueSkill2, which is purely based on win/loss streaks without uncertainty modeling"
       ],
       correctAnswer: 2,
-      explanation: "Glicko-2 (and its predecessor Glicko) tracks a Rating Deviation (RD) alongside the rating itself. RD increases when a player is inactive (uncertainty grows) and decreases as they play more games (more data, less uncertainty). This causes rating to change more aggressively when RD is high (returning players, placement matches) and more conservatively when RD is low (frequent players with established ratings). TrueSkill uses a similar concept (sigma). Riot's LP/MMR system is loosely inspired by Glicko-2 concepts. Standard Elo uses a fixed K-factor and has no uncertainty model.",
+      explanation: "**Step 1:** Glicko-2 (and its predecessor Glicko) tracks a Rating Deviation (RD) alongside the rating itself — RD increases when a player is inactive and decreases as they play more games.\n**Step 2:** This causes rating to change more aggressively when RD is high (returning players, placement matches) and more conservatively when RD is low (frequent players with established ratings).\n**Step 3:** TrueSkill uses a similar concept (sigma). Riot's LP/MMR system is loosely inspired by Glicko-2. Standard Elo uses a fixed K-factor and has no uncertainty model.",
       hints: ["Which system explicitly tracks 'confidence' in a player's rating, not just the rating itself?", "Think about what happens mathematically when you have fewer data points about a player."],
     },
     {
@@ -117,7 +117,7 @@ const questions: Record<string, Question[]> = {
         "Dedicated queues per region with no cross-region matching, even if it means 10-minute wait times for high MMR players"
       ],
       correctAnswer: 1,
-      explanation: "The expanding skill window approach (used by most major matchmaking systems including Riot, Blizzard, and Valve) starts with a tight acceptable MMR range and widens it progressively if the queue cannot be filled within a time threshold. This provides fast matches for players in densely populated MMR buckets while still finding matches (at the cost of balance quality) for players in sparse high-MMR tiers. The tradeoff between wait time and match quality is made explicit and tunable. A single sorted queue ignores the density problem; random selection is obviously harmful to balance.",
+      explanation: "**Step 1:** The expanding skill window approach (used by Riot, Blizzard, and Valve) starts with a tight acceptable MMR range and widens it progressively if the queue cannot be filled within a time threshold.\n**Step 2:** This provides fast matches for players in densely populated MMR buckets while still finding matches (at the cost of balance quality) for players in sparse high-MMR tiers.\n**Step 3:** The tradeoff between wait time and match quality is made explicit and tunable. A single sorted queue ignores the density problem; random selection harms balance.",
       hints: ["High-MMR players are rare — how do you balance wait time vs. match quality for them?", "Think about a sliding tolerance window that grows over time."],
     },
     {
@@ -132,7 +132,7 @@ const questions: Record<string, Question[]> = {
         "A distributed priority queue backed by Cassandra, scanning all partitions to find top-100 by skill"
       ],
       correctAnswer: 1,
-      explanation: "Redis Sorted Sets with MMR as the score are purpose-built for this use case. ZADD inserts players in O(log N), and ZRANGEBYSCORE retrieves all players within a skill window in O(log N + M) where M is the result count. A matchmaker worker claims a player (atomically removes them with ZPOPMIN/ZPOPMAX or a Lua script), builds a lobby, and launches a game server. This scales to millions of queued players with sub-millisecond range queries. SQL ORDER BY queries at 500K rows are slow and create lock contention. Graph max-clique is NP-hard. Cassandra full scans are expensive and unordered within partitions.",
+      explanation: "**Step 1:** Redis Sorted Sets with MMR as the score are purpose-built for this use case — ZADD inserts players in O(log N) and ZRANGEBYSCORE retrieves all players within a skill window in O(log N + M).\n**Step 2:** A matchmaker worker atomically claims a player (using ZPOPMIN/ZPOPMAX or a Lua script), builds a lobby, and launches a game server — scaling to millions of queued players with sub-millisecond range queries.\n**Step 3:** SQL ORDER BY at 500K rows is slow with lock contention. Graph max-clique is NP-hard. Cassandra full scans are expensive and unordered within partitions.",
       hints: ["Which Redis data structure maintains sorted order and supports efficient range queries by score?", "ZRANGEBYSCORE — what does the score represent here?"],
     },
   ],
@@ -216,7 +216,7 @@ const questions: Record<string, Question[]> = {
         "Send only the 10 nearest players' state to each client, ignoring players beyond 200 meters"
       ],
       correctAnswer: 1,
-      explanation: "Delta compression sends only what changed since the last ACK'd snapshot, reducing typical payloads by 80-95% compared to full snapshots. Combined with snapshot interpolation (client smoothly blends between the last two received snapshots), players see smooth movement even at 20Hz updates. Area-of-interest filtering (your option D) is also applied in practice, but delta compression provides the largest per-message savings. Gzip helps but the repeated structure savings are already captured by delta encoding. Reducing tick rate to 5Hz creates noticeable 200ms visual stutter. Valve's Source engine, Unreal, and Unity's Netcode all implement delta snapshot compression.",
+      explanation: "**Step 1:** Delta compression sends only what changed since the last acknowledged snapshot, reducing typical payloads by 80–95% compared to full snapshots.\n**Step 2:** Combined with snapshot interpolation (the client smoothly blends between the last two received snapshots), players see smooth movement even at 20Hz updates.\n**Step 3:** Area-of-interest filtering is also applied in practice, but delta compression provides the largest per-message savings. Gzip helps but delta encoding already captures repeated structure savings. Reducing tick rate to 5Hz creates noticeable 200ms visual stutter.",
       hints: ["If position changes 1cm between snapshots, why send the full 50KB state?", "What does 'acknowledged' mean in the context of delta compression?"],
     },
     {
@@ -225,7 +225,7 @@ const questions: Record<string, Question[]> = {
       difficulty: "easy",
       question: "Snapshot interpolation on the game client means the client always renders the game world slightly in the past relative to the server's current time, using two buffered server snapshots to smoothly interpolate entity positions between them.",
       correctAnswer: "True",
-      explanation: "True. Snapshot interpolation requires the client to buffer at least two server snapshots and render at a time between them — typically 1-2 tick periods behind. For example, at 20Hz (50ms per tick) the client might render 100ms behind real time, always interpolating between the snapshot at T-100ms and T-50ms. This produces perfectly smooth visuals even if a snapshot is occasionally delayed or dropped. The tradeoff is added visual latency. Extrapolation (predicting beyond the latest snapshot) is used when interpolation data is unavailable but produces artifacts on direction changes.",
+      explanation: "**Step 1:** Snapshot interpolation requires the client to buffer at least two server snapshots and render at a time between them — typically 1–2 tick periods behind real time.\n**Step 2:** For example, at 20Hz (50ms per tick) the client might render 100ms behind real time, always interpolating between the snapshot at T-100ms and T-50ms. This produces perfectly smooth visuals even if a snapshot is occasionally delayed or dropped.\n**Step 3:** The tradeoff is added visual latency. Extrapolation (predicting beyond the latest snapshot) is used when interpolation data is unavailable but produces artifacts on direction changes.",
       hints: ["Why would you intentionally render behind real time?", "What would happen if you tried to render exactly at the latest snapshot time and a packet was delayed?"],
     },
   ],
@@ -291,7 +291,7 @@ const questions: Record<string, Question[]> = {
         "Immediately ban the player account for speed hacking"
       ],
       correctAnswer: 1,
-      explanation: "Server-side position validation (player physics checks) is fundamental to authoritative server architecture. 5 units in 0.1 seconds = 50 units/second, which exceeds the 10 units/second maximum by 5x. The server should reject the position and correct the player to a valid position (typically their last valid position or a physics-corrected position). An immediate ban on first detection is too aggressive (could be severe network jitter). Trusting the client for movement means abandoning server authority. Logging without correcting allows the cheat to function. In practice, servers apply a small tolerance buffer for network jitter (e.g., +20%) before flagging, and ban only on repeated violations or extreme magnitudes.",
+      explanation: "**Step 1:** Server-side position validation (player physics checks) is fundamental to authoritative server architecture.\n**Step 2:** Moving 5 units in 0.1 seconds implies a speed of 50 units/second, which exceeds the 10 units/second maximum by a factor of 5. The server should reject the position and correct the player to a valid position (typically their last valid position or a physics-corrected position).\n**Step 3:** An immediate ban on first detection is too aggressive (could be severe network jitter). In practice, servers apply a small tolerance buffer for network jitter (e.g., +20%) before flagging, and ban only on repeated violations or extreme magnitudes.",
       hints: ["Speed = distance / time. What speed does this movement imply?", "What is the core principle of authoritative server architecture regarding client-reported positions?"],
     },
   ],
@@ -336,7 +336,7 @@ const questions: Record<string, Question[]> = {
         "The game should use a player-to-player auction house to set prices naturally"
       ],
       correctAnswer: 1,
-      explanation: "Dual-currency economies fail when: (1) the soft currency (Gold) generates faster than it is destroyed (insufficient gold sinks like crafting costs, repair fees, auction house taxes, premium item costs in gold), causing inflation that devalues all gold-priced items. (2) Allowing Gold-to-Gems conversion lets players bypass real-money purchases by farming gold, directly harming revenue. Healthy economies require gold sinks proportional to gold sources. Diablo 3's auction house (player-to-player gold trading) caused catastrophic inflation — Blizzard eventually removed it. WoW's gold sinks (repair, enchanting, consumables) were carefully tuned to slow gold accumulation.",
+      explanation: "**Step 1:** Dual-currency economies fail when the soft currency (Gold) generates faster than it is destroyed — insufficient gold sinks (crafting costs, repair fees, auction house taxes, premium item costs) cause hyperinflation that devalues all gold-priced items.\n**Step 2:** Allowing Gold-to-Gems conversion lets players bypass real-money purchases by farming gold, directly harming revenue and undermining monetization.\n**Step 3:** Healthy economies require gold sinks proportional to gold sources. Diablo 3's auction house caused catastrophic inflation — Blizzard removed it. WoW's gold sinks (repair, enchanting, consumables) were carefully tuned to slow accumulation.",
       hints: ["What mechanisms 'destroy' currency to counteract its creation?", "Why might allowing Gold->Gems conversion harm a game's monetization?"],
     },
   ],
@@ -369,7 +369,7 @@ const questions: Record<string, Question[]> = {
         "Game servers write kill events to a Kafka topic; a consumer aggregates counts per player in memory and grants achievements, using Kafka consumer group exactly-once semantics"
       ],
       correctAnswer: 1,
-      explanation: "Redis INCR is atomic — even with 100 concurrent game servers reporting kills simultaneously, each INCR is serialized by Redis and the counter advances correctly without lost updates. A watcher checks if INCR returns exactly 1000 (or uses WATCH/MULTI/EXEC for conditional logic) and triggers the achievement grant. The grant itself must be idempotent (UNIQUE constraint on player_id + achievement_id) to handle retries. Option A has a classic read-modify-write race condition. Single-threaded consumer works but is a bottleneck. Kafka exactly-once processing (option D) also works but is more complex and introduces latency. Redis INCR is the simplest correct solution for counters.",
+      explanation: "**Step 1:** Redis INCR is atomic — even with 100 concurrent game servers reporting kills simultaneously, each INCR is serialized by Redis and the counter advances correctly without lost updates.\n**Step 2:** A watcher checks if INCR returns exactly 1000 (or uses WATCH/MULTI/EXEC for conditional logic) and triggers the achievement grant.\n**Step 3:** The grant itself must be idempotent (UNIQUE constraint on player_id + achievement_id) to handle retries. Option A has a classic read-modify-write race condition. Single-threaded queuing works but is a bottleneck. Kafka exactly-once processing also works but is more complex and introduces latency.",
       hints: ["What makes Redis INCR safe for concurrent increments from multiple servers?", "Why must the achievement grant itself also be idempotent?"],
     },
   ],
@@ -435,7 +435,7 @@ const questions: Record<string, Question[]> = {
         "Log events to flat files on application servers; process with nightly cron MapReduce jobs"
       ],
       correctAnswer: 1,
-      explanation: "Kafka + columnar data warehouse is the industry-standard analytics pipeline for games at this scale (used by Riot, King, Supercell). Kafka handles burst ingestion (250M events/day = ~2,900/sec average, spikes much higher) without loss. Micro-batch loads into BigQuery/Redshift store events in columnar format, enabling highly efficient sequential scans for funnel analysis (e.g., scan only the event_type column across millions of rows). Partition pruning by date reduces scan cost dramatically. PostgreSQL at 250M rows/day with complex funnel queries would be impractically slow without massive sharding. Redis can't store 250M events/day cost-effectively. Nightly batch processing means 24-hour analysis lag.",
+      explanation: "**Step 1:** Kafka handles burst ingestion (250M events/day ≈ 2,900/sec average, spikes much higher) without loss, acting as a durable buffer between game servers and storage.\n**Step 2:** Micro-batch loads into BigQuery/Redshift store events in columnar format, enabling highly efficient sequential scans for funnel analysis — for example, scanning only the event_type column across millions of rows.\n**Step 3:** Partition pruning by date reduces scan cost dramatically. PostgreSQL at 250M rows/day with complex funnel queries would be impractically slow. Redis cannot store 250M events/day cost-effectively. Nightly batch processing introduces 24-hour analysis lag.",
       hints: ["What makes columnar storage particularly efficient for queries that scan one or two columns across billions of rows?", "Why is Kafka in front of the warehouse instead of writing directly to the warehouse?"],
     },
   ],
@@ -501,7 +501,7 @@ const questions: Record<string, Question[]> = {
         "Disable spectator mode during competitive matches; stream sniping cannot be prevented otherwise"
       ],
       correctAnswer: 1,
-      explanation: "The delayed spectator architecture: (1) The authoritative game server publishes state snapshots to a Kafka topic in real time. (2) A video encoder service (or WebSocket relay) reads from Kafka but always reads from the offset corresponding to 3 minutes ago. (3) This delayed stream is packaged as HLS/DASH segments and pushed to a CDN for HTTP-based delivery to 500K viewers (CDN-served HTTP scales trivially). The 3-minute delay is enforced by the read offset into Kafka. S3 recording adds the correct delay but requires waiting 3 minutes before any viewer can start watching — Kafka gives continuous delayed streaming. Direct connections to game servers would not survive 500K spectators. This mirrors how Twitch/YouTube low-latency live with delay-enforcement works.",
+      explanation: "**Step 1:** The authoritative game server publishes state snapshots to a Kafka topic in real time.\n**Step 2:** A video encoder service (or WebSocket relay) reads from Kafka but always reads from the offset corresponding to 3 minutes ago, enforcing the delay on every spectator connection.\n**Step 3:** This delayed stream is packaged as HLS/DASH segments and pushed to a CDN for HTTP-based delivery to 500K viewers — CDN-served HTTP scales trivially. Direct connections to game servers would not survive 500K spectators. This mirrors how Twitch/YouTube enforce delay for competitive broadcasts.",
       hints: ["How do you consume a stream with a fixed time delay using Kafka consumer offsets?", "Why is CDN-served HLS preferred over WebSocket for 500K simultaneous spectators?"],
     },
     {
@@ -585,7 +585,7 @@ const questions: Record<string, Question[]> = {
         "Players on different OS versions see different chunk layouts because the OS random number generator differs"
       ],
       correctAnswer: 1,
-      explanation: "IEEE 754 floating-point operations are not guaranteed to produce bit-identical results across different CPU architectures, instruction sets (x86 SSE vs. ARM NEON vs. AVX-512), compiler optimizations, and FMA (fused multiply-add) availability. A procedural noise function using floats may produce subtly different heightmaps on different hardware. In a shared multiplayer world, this means collision boundaries differ, players clip through terrain or get stuck, and loot spawn positions diverge. Solutions: (1) Use integer or fixed-point arithmetic throughout generation, (2) quantize all float operations to a deterministic precision, (3) generate chunks server-side and stream them to clients. Minecraft's Java Edition uses Java's platform-abstracted RNG, but still encountered cross-platform differences when porting.",
+      explanation: "**Step 1:** IEEE 754 floating-point operations are not guaranteed to produce bit-identical results across different CPU architectures, instruction sets (x86 SSE vs. ARM NEON vs. AVX-512), compiler optimizations, and FMA availability.\n**Step 2:** A procedural noise function using floats may produce subtly different heightmaps on different hardware, causing collision boundaries to differ, players to clip through terrain, and loot spawn positions to diverge.\n**Step 3:** Solutions include: (1) use integer or fixed-point arithmetic throughout generation, (2) quantize all float operations to a deterministic precision, (3) generate chunks server-side and stream them to clients. Minecraft's Java Edition encountered cross-platform differences when porting despite Java's platform-abstracted RNG.",
       hints: ["What property of floating-point arithmetic breaks cross-platform determinism?", "If two clients generate different collision data for the same chunk, what gameplay bugs result?"],
     },
   ],
