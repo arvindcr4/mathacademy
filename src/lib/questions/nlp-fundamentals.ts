@@ -1738,6 +1738,586 @@ const questions: Record<string, Question[]> = {
       ],
     },
   ],
+
+  // ── nlp-kp-31: Subword Tokenization Details ───────────────────────────────
+  "subword-tokenization-details": [
+    {
+      id: "q-nlp-kp31-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "SentencePiece differs from BPE and WordPiece mainly because it treats the input as what?",
+      options: [
+        "A sequence of bytes, converting all text to UTF-8 byte values before tokenisation",
+        "A raw stream of Unicode characters with no pre-tokenisation whitespace split, enabling language-agnostic subword segmentation",
+        "A sequence of morphemes obtained by a morphological analyser before BPE is applied",
+        "A sequence of syllables detected via a rule-based syllabifier specific to each target language",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SentencePiece (Kudo & Richardson, 2018) does not rely on pre-tokenisation or whitespace splitting — it trains a BPE or unigram language-model segmenter directly on raw Unicode characters. Whitespace is treated as an ordinary character (represented as ▁). This makes it fully language-agnostic and reversible (the original string can be recovered exactly from tokens), which is critical for languages like Japanese, Chinese, and Thai that lack explicit word boundaries.",
+      hints: [
+        "Unlike BPE which splits on whitespace first, SentencePiece sees the raw character stream — no language-specific pre-processing needed.",
+        "The ▁ symbol in SentencePiece tokens represents a space — it encodes word boundaries implicitly.",
+      ],
+    },
+    {
+      id: "q-nlp-kp31-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The unigram language-model tokeniser (used in SentencePiece) starts with a large vocabulary and iteratively removes tokens, whereas BPE starts with a small vocabulary and iteratively adds tokens.",
+      correctAnswer: "True",
+      explanation:
+        "BPE is bottom-up: begin with characters, add merged symbols step by step. The unigram LM (Kudo, 2018) is top-down: start with a large over-complete vocabulary (all substrings up to some length), then prune tokens whose removal increases the corpus likelihood the least, until the target vocabulary size is reached. Both produce subword vocabularies, but via opposite directions of search.",
+      hints: [
+        "BPE merges: vocabulary grows from characters up. Unigram LM prunes: vocabulary shrinks from over-complete down.",
+        "Think of BPE as constructive and unigram LM as eliminative.",
+      ],
+    },
+    {
+      id: "q-nlp-kp31-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When comparing BPE and WordPiece tokenisers on the same text, which statement best describes the key algorithmic difference in how the next merge/token is selected?",
+      options: [
+        "BPE selects the pair with the highest frequency count; WordPiece selects the pair that maximises the likelihood ratio count(AB) / (count(A) × count(B))",
+        "BPE selects the pair with the highest TF-IDF score; WordPiece selects the pair that minimises perplexity on a held-out set",
+        "BPE selects pairs at random with probability proportional to frequency; WordPiece uses a deterministic greedy PMI criterion across all n-grams simultaneously",
+        "Both BPE and WordPiece use identical selection criteria — they differ only in how they handle the end-of-word marker",
+      ],
+      correctAnswer: 0,
+      explanation:
+        "BPE greedily picks the adjacent symbol pair with the highest raw frequency in the corpus. WordPiece normalises by the product of individual symbol frequencies — effectively maximising pointwise mutual information — which biases the selection toward pairs that are highly predictive of each other rather than merely common. This distinction leads to different tokenisations on the same vocabulary size budget.",
+      hints: [
+        "BPE criterion: argmax count(AB). WordPiece criterion: argmax count(AB) / (count(A) * count(B)).",
+        "High-frequency symbols individually (like 'e' and 's') might form a common pair by raw count; WordPiece asks whether seeing 'e' actually predicts 's'.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-32: Retrieval-Augmented Generation ─────────────────────────────
+  "rag-details": [
+    {
+      id: "q-nlp-kp32-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "In a RAG (Retrieval-Augmented Generation) system, what is the primary difference between dense retrieval and sparse retrieval?",
+      options: [
+        "Dense retrieval uses inverted-index exact keyword matching; sparse retrieval uses neural embeddings for approximate nearest-neighbour search",
+        "Dense retrieval represents queries and documents as continuous embedding vectors and retrieves via approximate nearest-neighbour search; sparse retrieval uses high-dimensional term-frequency vectors (e.g., BM25) with exact keyword matching",
+        "Dense retrieval fetches the entire document; sparse retrieval fetches only named entities from documents",
+        "Dense retrieval requires GPU inference; sparse retrieval always runs on CPU — they are otherwise equivalent",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Dense retrieval (e.g., DPR — Karpukhin et al., 2020) encodes both query and passages into dense vectors via a bi-encoder; retrieval is approximate nearest-neighbour (ANN) using FAISS. Sparse retrieval (BM25, TF-IDF) represents text as high-dimensional sparse vectors over vocabulary terms and uses an inverted index for exact term matching. Dense retrieval captures semantic similarity beyond keyword overlap; sparse retrieval is fast and interpretable. Hybrid systems (e.g., combining BM25 + DPR) often outperform either alone.",
+      hints: [
+        "Dense = continuous embeddings, ANN search. Sparse = term-frequency vectors, inverted index.",
+        "BM25 misses 'automobile' when query says 'car'; a dense retriever with a shared embedding space would capture this synonym.",
+      ],
+    },
+    {
+      id: "q-nlp-kp32-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "When setting chunk size in a RAG pipeline, which trade-off is most important to consider?",
+      options: [
+        "Larger chunks reduce retrieval latency but increase GPU memory usage during generation",
+        "Larger chunks provide more context per retrieved passage but reduce retrieval precision; smaller chunks improve precision but may miss surrounding context needed for answering",
+        "Chunk size only affects indexing time, not retrieval quality or answer generation",
+        "Smaller chunks always produce better answers because they contain less irrelevant information",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Chunk size is a fundamental RAG hyper-parameter. Small chunks (e.g., 128 tokens) give the retriever high precision — the returned chunk is likely to directly contain the answer — but may lack the surrounding context needed for the generator to produce a coherent answer. Large chunks (e.g., 512–1024 tokens) provide more context but dilute the dense embedding, reducing retrieval precision. Common strategies: retrieve with small chunks but expand context windows around hits, or use hierarchical chunking.",
+      hints: [
+        "Think about what the retriever embeds vs. what the generator reads — they can differ if you expand context after retrieval.",
+        "A chunk of 50 tokens is precise but may cut off a sentence mid-thought. A chunk of 2000 tokens captures context but the embedding becomes less focused.",
+      ],
+    },
+    {
+      id: "q-nlp-kp32-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "RAGAS is a framework for evaluating RAG pipelines that measures faithfulness (whether the answer is supported by retrieved context) and answer relevance separately from retrieval quality.",
+      correctAnswer: "True",
+      explanation:
+        "RAGAS (Es et al., 2023) decomposes RAG evaluation into: (1) faithfulness — does the answer contain only claims entailed by retrieved documents? (2) answer relevance — does the answer address the question? (3) context precision/recall — did retrieval return the right documents? These components expose whether failures come from retrieval (wrong chunks) or generation (hallucination given correct chunks), enabling targeted debugging.",
+      hints: [
+        "RAGAS separates retrieval quality from generation quality — important because different components can fail independently.",
+        "Faithfulness specifically checks whether the generated answer can be fully deduced from the retrieved passages — a direct hallucination metric.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-33: LLM Prompting ──────────────────────────────────────────────
+  "llm-prompting-v2": [
+    {
+      id: "q-nlp-kp33-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Which statement best describes the difference between zero-shot and few-shot prompting in large language models?",
+      options: [
+        "Zero-shot prompting requires the model to be fine-tuned; few-shot prompting does not",
+        "Zero-shot prompting provides only a task description without examples; few-shot prompting includes a small number of input-output demonstration examples in the prompt",
+        "Zero-shot prompting uses temperature=0; few-shot prompting samples with temperature > 0",
+        "Zero-shot prompting works only for classification tasks; few-shot prompting works for generative tasks",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Zero-shot prompting relies entirely on the model's pre-trained knowledge — only a task instruction is provided (e.g., 'Translate English to French: ...'). Few-shot prompting (Brown et al., 2020 — GPT-3) prepends k demonstration examples (input, output) pairs to the prompt, enabling in-context learning without gradient updates. Few-shot typically improves performance on complex tasks by clarifying format and expected reasoning style.",
+      hints: [
+        "Zero-shot = task description only. Few-shot = task description + k examples of (input, output).",
+        "GPT-3's key finding was that large enough models can learn from in-context examples without fine-tuning.",
+      ],
+    },
+    {
+      id: "q-nlp-kp33-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Chain-of-thought (CoT) prompting improves LLM reasoning primarily by doing what?",
+      options: [
+        "Adding a final verification step that checks the answer against a symbolic calculator",
+        "Instructing the model to output intermediate reasoning steps before the final answer, which improves accuracy on multi-step arithmetic and logical reasoning tasks",
+        "Splitting the prompt across multiple API calls to reduce context length",
+        "Training a separate reasoning module that post-processes LLM outputs",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Wei et al. (2022) demonstrated that prompting LLMs with examples that include step-by-step reasoning (chain-of-thought) before the final answer — e.g., 'Roger has 5 balls. He buys 2 more cans of 3 balls each. 2×3=6, 5+6=11. The answer is 11.' — dramatically improves performance on GSM8K and other reasoning benchmarks. The intermediate steps decompose the problem and reduce the probability of early errors propagating. Zero-shot CoT ('Let's think step by step.') also works on large models.",
+      hints: [
+        "CoT makes the model show its work. Why would that help with multi-step arithmetic?",
+        "The 'Let's think step by step' suffix is a zero-shot CoT trigger — no examples needed.",
+      ],
+    },
+    {
+      id: "q-nlp-kp33-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Instruction tuning (FLAN, InstructGPT) trains a language model to follow natural-language task descriptions, improving zero-shot generalisation to unseen task types.",
+      correctAnswer: "True",
+      explanation:
+        "Instruction tuning fine-tunes pre-trained LLMs on a large collection of NLP tasks framed as natural-language instructions (e.g., 'Summarise the following article:', 'Translate to French:', 'Is this review positive or negative?'). FLAN (Wei et al., 2022) and T0 showed that models instruction-tuned on many tasks generalise better zero-shot to held-out tasks than base pre-trained models. InstructGPT adds RLHF on top of instruction tuning to align with human preferences.",
+      hints: [
+        "Without instruction tuning, an LLM given 'Summarize:' might complete the prompt literally. After instruction tuning, it follows the instruction.",
+        "FLAN used 62 tasks; models trained on those tasks zero-shot improved on 25 held-out tasks.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-34: Text Classification ───────────────────────────────────────
+  "text-classification-advanced": [
+    {
+      id: "q-nlp-kp34-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "When fine-tuning BERT for binary text classification, which architectural modification is most commonly made?",
+      options: [
+        "The entire BERT model is discarded and a new LSTM is trained on BERT's tokeniser output",
+        "A linear classification head is added on top of the [CLS] token representation and the whole model is fine-tuned end-to-end",
+        "Only the final two transformer layers are replaced; all earlier layers are frozen permanently",
+        "The [CLS] token is removed and mean pooling over all token embeddings is used with no additional head",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Standard BERT fine-tuning (Devlin et al., 2019) adds a single linear layer W∈ℝ^{d×C} on top of the [CLS] token representation (the aggregate sequence representation) and fine-tunes all parameters end-to-end with cross-entropy loss. The [CLS] token accumulates a global sentence representation through the self-attention layers. Typical hyper-parameters: 2–5 epochs, learning rate 2e-5 to 5e-5, batch size 16–32.",
+      hints: [
+        "BERT's [CLS] token was designed to aggregate sequence-level information — it is the natural hook for classification.",
+        "Fine-tuning end-to-end updates the pre-trained weights slightly to adapt the representation to the target task.",
+      ],
+    },
+    {
+      id: "q-nlp-kp34-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In multi-label text classification, a document can belong to zero or more classes simultaneously, so sigmoid (not softmax) activation is applied per class in the output layer.",
+      correctAnswer: "True",
+      explanation:
+        "Multi-label classification requires independent binary decisions per class (e.g., a news article tagged as both 'politics' and 'economy'). Softmax normalises probabilities across classes to sum to 1, which is appropriate for mutually exclusive classes (multi-class). Sigmoid independently squashes each class logit to (0,1), allowing any subset of classes to be predicted. Binary cross-entropy loss is used per class, and thresholds (typically 0.5, but tunable via F1 optimisation on a dev set) convert probabilities to binary labels.",
+      hints: [
+        "Softmax forces probabilities to sum to 1 — if class A has 0.9, class B can only have 0.1. That is wrong for multi-label.",
+        "With sigmoid, each class independently fires. A document can be 0.9 politics AND 0.8 economy simultaneously.",
+      ],
+    },
+    {
+      id: "q-nlp-kp34-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Hierarchical text classification (HTC) arranges classes in a taxonomy (e.g., Sports > Football > Penalty). Which challenge is unique to HTC compared to flat classification?",
+      options: [
+        "HTC requires more training data because hierarchical labels are noisier than flat labels",
+        "HTC models must respect label consistency constraints — if a document is assigned a child label, its parent labels must also be assigned — while flat classifiers make independent predictions",
+        "HTC is only applicable to document-level classification and cannot handle sentence-level inputs",
+        "HTC requires the taxonomy to be balanced (equal leaves per parent) or performance degrades sharply",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In HTC, the taxonomy imposes a constraint: a document labelled 'Football' must also be labelled 'Sports'. Flat classifiers may violate this by predicting 'Football' without 'Sports'. HTC-specific architectures (e.g., HiAGM, BERT-HTC) propagate information up and down the hierarchy and enforce consistency either through structural regularisation or constrained decoding. Evaluation uses hierarchy-aware metrics that penalise inconsistency differently from flat precision/recall.",
+      hints: [
+        "If a flat classifier says 'Football=yes, Sports=no' that is logically inconsistent. HTC forces valid label subsets.",
+        "Methods like HiAGM model the taxonomy structure explicitly using graph neural networks over the class hierarchy.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-35: Information Extraction ────────────────────────────────────
+  "information-extraction-v2": [
+    {
+      id: "q-nlp-kp35-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Open Information Extraction (Open IE) differs from traditional closed IE mainly because it does what?",
+      options: [
+        "Extracts relations defined in a fixed, pre-specified schema (e.g., 'founded-by', 'located-in')",
+        "Extracts (subject, relation, object) triples from text with no pre-defined relation schema, using linguistic patterns or neural models",
+        "Requires annotated training data for every target relation type before extraction can begin",
+        "Only works on structured databases and spreadsheets, not free text",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Open IE (Banko et al., 2007 — TextRunner; Mausam et al., 2012 — OLLIE; Stanovsky et al., 2018 — OpenIE 5) extracts arbitrary (argument1, relation-phrase, argument2) triples directly from text without a closed schema. This allows processing of any domain without labelled training data per relation. Closed IE requires defining target relations upfront (e.g., ACE, TAC KBP) and typically has higher precision for targeted extractions. Open IE sacrifices precision for broad coverage.",
+      hints: [
+        "Closed IE: you define 'CEO-of' beforehand and find instances. Open IE: you extract whatever relation the sentence expresses.",
+        "Open IE output for 'Elon Musk founded SpaceX in 2002' would be (Elon Musk, founded, SpaceX) — no pre-defined schema needed.",
+      ],
+    },
+    {
+      id: "q-nlp-kp35-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In document-level relation extraction, which challenge does NOT appear in sentence-level relation extraction?",
+      options: [
+        "Ambiguous entity mentions (e.g., 'Apple' as company vs. fruit)",
+        "Cross-sentence coreference — the two entities participating in a relation may appear in different sentences",
+        "Class imbalance — most entity pairs do not stand in any target relation",
+        "The need to encode both entities in the same neural representation",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Sentence-level RE extracts relations between entity pairs that appear within a single sentence. Document-level RE (DocRED, Re-DocRED) requires reasoning across sentences: 'Alice was born in Paris. The city is in France.' — the relation (Alice, country-of-birth, France) requires linking 'Paris' to 'France' across sentences via coreference. This demands graph-based or cross-sentence attention models (e.g., ATLOP, DocuNET) that sentence-level models cannot handle.",
+      hints: [
+        "Sentence-level RE sees both entities in one sentence context. Doc-level RE may see entity A in sentence 1 and entity B in sentence 10.",
+        "Coreference chains (she → Alice, the city → Paris) must be resolved before cross-sentence relations can be extracted.",
+      ],
+    },
+    {
+      id: "q-nlp-kp35-3",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Event detection, a subtask of information extraction, involves identifying trigger words in text (e.g., the word 'exploded' signals an Attack event) and classifying them into predefined event types.",
+      correctAnswer: "True",
+      explanation:
+        "Event detection (as defined in ACE 2005 and TAC KBP benchmarks) has two subtasks: (1) trigger identification — finding the word or phrase that most clearly expresses the occurrence of an event; (2) trigger classification — labelling the trigger with an event type (e.g., Conflict:Attack, Life:Die). A full event extraction system additionally identifies the arguments (who, what, when, where) of each event, which is the argument extraction subtask.",
+      hints: [
+        "In 'Three soldiers were killed in the blast', 'killed' and 'blast' are event triggers for Life:Die and Conflict:Attack respectively.",
+        "Event detection is a sequence labelling or span classification problem — each token/span receives an event-type label or NONE.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-36: Dialogue Systems ──────────────────────────────────────────
+  "dialogue-systems-v2": [
+    {
+      id: "q-nlp-kp36-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Which component of a task-oriented dialogue system is responsible for tracking the user's goal across multiple turns (e.g., destination city, departure date)?",
+      options: [
+        "Natural Language Understanding (NLU) module",
+        "Dialogue State Tracker (DST)",
+        "Policy network",
+        "Natural Language Generation (NLG) module",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In the classic pipeline for task-oriented dialogue (Henderson et al., 2014), the Dialogue State Tracker (DST) maintains the current belief state — a structured representation of the user's goal filled so far (e.g., {destination: 'Paris', date: None, class: 'business'}). The NLU extracts intents and slots from the current turn; the DST accumulates them across turns; the policy decides the next system action; the NLG generates the response. The MultiWOZ benchmark evaluates DST performance.",
+      hints: [
+        "If the user says 'Actually, make it Tuesday instead', the DST updates the date slot while keeping all other slots unchanged.",
+        "DST output is a structured belief state (slot-value pairs), not free text — it feeds the policy module.",
+      ],
+    },
+    {
+      id: "q-nlp-kp36-2",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Open-domain dialogue systems (chatbots) and task-oriented dialogue systems share the same primary objective: completing a specific user task such as booking a flight or finding a restaurant.",
+      correctAnswer: "False",
+      explanation:
+        "Task-oriented dialogue systems have a clear end goal — successfully completing a transaction (booking, reservation, query). Success is measured by task completion rate and efficiency. Open-domain dialogue systems (e.g., Blenderbot, LaMDA) aim for engaging, coherent, and persona-consistent conversation without a fixed task. They are evaluated on human-judged naturalness, engagingness, and coherence rather than task completion. The two paradigms have different architectures, training data, and evaluation metrics.",
+      hints: [
+        "Task-oriented: 'I want to book a flight to Tokyo on Monday.' Open-domain: 'What do you think about space travel?'",
+        "One system has a completion criterion (flight booked or not); the other has no such end state.",
+      ],
+    },
+    {
+      id: "q-nlp-kp36-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "In end-to-end neural task-oriented dialogue, what is the main advantage of end-to-end training over the classic pipeline (NLU → DST → Policy → NLG)?",
+      options: [
+        "End-to-end models always achieve higher task completion rates than pipeline models on all benchmarks",
+        "End-to-end models propagate gradients through all components jointly, allowing components to adapt representations to each other and avoiding error propagation from upstream modules",
+        "End-to-end models eliminate the need for any annotated dialogue data, requiring only raw conversation logs",
+        "End-to-end models require a fixed ontology, which allows them to be deployed in new domains with no modification",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Classic pipeline systems suffer from error propagation: an NLU mistake (wrong intent) corrupts the DST which corrupts the policy. Each module is trained independently, so representations are not optimised for downstream use. End-to-end models (e.g., Simpletod, T5-based dialogue) are trained with a single loss over the full system, allowing each component to adapt its representations to downstream needs. However, they typically require more data and lose the interpretability of explicit belief states.",
+      hints: [
+        "In a pipeline, the DST sees only the NLU output — if NLU is wrong, DST cannot recover. In E2E, gradients from the final loss reach all components.",
+        "Error propagation: a 90% accurate NLU + 90% accurate DST + 90% accurate policy gives only 72.9% overall accuracy if errors are independent.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-37: Semantic Textual Similarity ────────────────────────────────
+  "semantic-textual-similarity": [
+    {
+      id: "q-nlp-kp37-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Sentence-BERT (SBERT) uses a bi-encoder architecture for semantic textual similarity. What is the primary advantage of bi-encoders over cross-encoders for large-scale retrieval?",
+      options: [
+        "Bi-encoders are always more accurate than cross-encoders on STS benchmarks",
+        "Bi-encoders encode each sentence independently, enabling pre-computation of embeddings and O(1) retrieval via ANN; cross-encoders must process every query-document pair jointly at inference time",
+        "Bi-encoders do not require training data; cross-encoders require thousands of labelled sentence pairs",
+        "Bi-encoders only work for English; cross-encoders support multilingual comparison",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In a bi-encoder (Reimers & Gurevych, 2019), both sentences are encoded independently into fixed-length embeddings via BERT + pooling. All corpus embeddings can be pre-computed and stored; retrieval is a single ANN lookup per query — O(1) complexity at query time regardless of corpus size. Cross-encoders concatenate both sentences and run them through BERT jointly, producing a single similarity score. Cross-encoders are more accurate but require N forward passes for N candidates — impractical for million-scale retrieval. Common practice: use bi-encoder for retrieval, cross-encoder for re-ranking top-k results.",
+      hints: [
+        "Bi-encoder: embed sentence A once, embed sentence B once, compute cosine similarity — no joint processing.",
+        "Cross-encoder: must run [A;B] through BERT for every (A, B) pair — N pairs = N forward passes.",
+      ],
+    },
+    {
+      id: "q-nlp-kp37-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "The MTEB (Massive Text Embedding Benchmark) evaluates text embedding models across a single task type — semantic textual similarity — using only English datasets.",
+      correctAnswer: "False",
+      explanation:
+        "MTEB (Muennighoff et al., 2022) is a comprehensive benchmark with 56 datasets across 8 task categories: classification, clustering, pair classification, reranking, retrieval, STS, summarisation, and bitext mining. It covers 112 languages. The goal is to prevent models from overfitting to STS benchmarks by evaluating embedding quality across diverse downstream uses. Models like E5, GTE, and BGE are routinely compared on the MTEB leaderboard.",
+      hints: [
+        "MTEB stands for Massive Text Embedding Benchmark — 'massive' suggests more than one task type.",
+        "Bitext mining (finding translation pairs) and retrieval (finding relevant documents) are very different from STS scoring.",
+      ],
+    },
+    {
+      id: "q-nlp-kp37-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Which loss function is most commonly used to fine-tune a bi-encoder for semantic similarity, and how does it operate?",
+      options: [
+        "Cross-entropy loss over a 5-class similarity scale (0–4), treating STS as a classification problem",
+        "Cosine-similarity MSE loss — the model is trained to match the cosine similarity of its sentence embeddings to human-annotated similarity scores on a continuous scale",
+        "Triplet loss — for each anchor sentence, a positive (similar) and negative (dissimilar) sentence are sampled; the model is trained to bring anchor-positive closer than anchor-negative by a margin",
+        "Mean squared error over absolute token-level alignment scores computed by dynamic time warping",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "SBERT (Reimers & Gurevych, 2019) showed that triplet loss outperforms regression objectives for learning semantically meaningful embedding spaces. For each anchor a, a positive p (semantically similar), and a negative n (semantically dissimilar): loss = max(0, ||e_a − e_p|| − ||e_a − e_n|| + margin). In-batch negatives (treating other examples in the same batch as negatives) scale this efficiently. Contrastive loss (InfoNCE / SimCSE) is a related approach that also works well, using in-batch negatives without explicit triplet construction.",
+      hints: [
+        "Triplet loss: pull similar pairs together, push dissimilar pairs apart by at least a margin distance.",
+        "In-batch negatives make triplet/contrastive training efficient: for a batch of N, each anchor has N-1 negatives for free.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-38: Question Answering ─────────────────────────────────────────
+  "question-answering-advanced": [
+    {
+      id: "q-nlp-kp38-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "Extractive QA and abstractive QA differ in how they produce answers. Which statement is correct?",
+      options: [
+        "Extractive QA generates a free-form answer by paraphrasing; abstractive QA copies a span directly from the source passage",
+        "Extractive QA identifies and copies a contiguous span from the source passage as the answer; abstractive QA generates the answer in the model's own words, potentially synthesising information from multiple sources",
+        "Both extractive and abstractive QA always require multiple retrieved documents — neither can work with a single passage",
+        "Extractive QA is always more accurate because it does not risk hallucination; abstractive QA is always less accurate",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Extractive QA (SQuAD, Rajpurkar et al., 2016) frames the task as predicting start and end token indices in a passage — the answer is literally a substring of the context. Models like BERT fine-tuned on SQuAD output span boundaries. Abstractive QA (NarrativeQA, ELI5) requires generating a new text sequence, often combining information from multiple sentences or paraphrasing. It is evaluated with ROUGE/BERTScore. Open-domain QA (DrQA, RAG) often uses extractive retrieval + abstractive generation.",
+      hints: [
+        "Extractive: the model highlights a passage span. Abstractive: the model writes a new sentence.",
+        "SQuAD is extractive — the ground-truth answer is always a substring of the provided Wikipedia paragraph.",
+      ],
+    },
+    {
+      id: "q-nlp-kp38-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "The SQuAD 2.0 benchmark added 'unanswerable questions' to SQuAD 1.1. What additional capability does a model need to handle SQuAD 2.0?",
+      options: [
+        "The model must perform multi-hop reasoning across multiple paragraphs to find answers",
+        "The model must learn to abstain — to predict that no answer exists in the passage — in addition to extracting spans when an answer is present",
+        "The model must generate abstractive answers when the passage does not contain the exact answer wording",
+        "The model must perform coreference resolution to link pronouns to their antecedents before span extraction",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "SQuAD 2.0 (Rajpurkar et al., 2018) adds ~50K unanswerable questions alongside the 100K answerable ones from SQuAD 1.1. The adversarial unanswerable questions are crafted to look plausible — the passage contains related information but not the actual answer. Models must both predict span boundaries AND output a confidence-based 'no answer' flag when the passage does not support an answer. This tests reading comprehension more realistically than the original version where an answer always existed.",
+      hints: [
+        "SQuAD 1.1: always extract a span. SQuAD 2.0: sometimes say 'the passage doesn't answer this question'.",
+        "The adversarial design ensures that the passage always contains related words — the model cannot simply search for keywords.",
+      ],
+    },
+    {
+      id: "q-nlp-kp38-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In open-domain QA, the retriever-reader pipeline first retrieves relevant passages from a large corpus (e.g., Wikipedia) and then applies a reading comprehension model to extract or generate the answer from the retrieved passages.",
+      correctAnswer: "True",
+      explanation:
+        "DrQA (Chen et al., 2017) introduced the retriever-reader paradigm for open-domain QA: (1) retriever: BM25 or DPR retrieves the top-k passages from a 5M-article Wikipedia corpus; (2) reader: a BERT/span-extraction model reads the top-k passages and predicts the answer span. This separates knowledge storage (indexed passages) from reasoning (reader model) and scales to any large text corpus. Modern RAG systems follow the same paradigm with generative readers.",
+      hints: [
+        "Open-domain QA has no provided passage — the system must first find relevant documents from a corpus, then read them.",
+        "DrQA's two components map to two sub-tasks: passage retrieval (IR) and reading comprehension (NLP).",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-39: Text Summarization ─────────────────────────────────────────
+  "text-summarization": [
+    {
+      id: "q-nlp-kp39-1",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What is the key difference between extractive and abstractive text summarisation?",
+      options: [
+        "Extractive summarisation rewrites sentences in simpler language; abstractive summarisation copies sentences verbatim",
+        "Extractive summarisation selects and concatenates sentences from the source document; abstractive summarisation generates new text that may paraphrase, compress, or fuse information from the source",
+        "Extractive summarisation requires a neural model; abstractive summarisation uses only heuristic sentence scoring",
+        "Extractive summarisation only works on news articles; abstractive summarisation works on all document types",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Extractive summarisation selects a subset of sentences (or passages) from the source document — the summary contains only verbatim spans. Methods: TextRank (graph-based), SummaRuNNer (neural classifier per sentence), BERT-extractive. Abstractive summarisation generates a new summary that may compress multiple sentences, paraphrase, fuse cross-sentence information, or omit details. Models: BART, T5, Pegasus. Abstractive is more powerful but prone to factuality errors (hallucinating unsupported content).",
+      hints: [
+        "Extractive = select existing sentences. Abstractive = write new sentences.",
+        "If the summary contains the exact sentence 'The economy grew by 3%' copied from the article, it is extractive.",
+      ],
+    },
+    {
+      id: "q-nlp-kp39-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "ROUGE-1 and ROUGE-L are both recall-based metrics for summarisation evaluation. What aspect of summary quality does ROUGE NOT directly measure?",
+      options: [
+        "Unigram overlap between generated and reference summaries",
+        "Longest common subsequence between generated and reference summaries",
+        "Factual consistency — whether claims in the generated summary are supported by the source document",
+        "N-gram co-occurrence frequency with the reference summary",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "ROUGE (Lin, 2004) measures n-gram overlap and longest common subsequence between a generated summary and one or more human reference summaries. It captures lexical similarity but does not evaluate faithfulness/factuality — a summary can score high on ROUGE while containing hallucinated facts not present in the source document. Factual consistency evaluation requires separate methods: NLI-based (e.g., FactCC, DAE), QA-based (QuestEval), or model-based (AlignScore). This limitation is a major drawback of ROUGE as the primary summarisation metric.",
+      hints: [
+        "ROUGE compares generated text to reference text — it has no access to the source document, so it cannot check factuality.",
+        "A generated summary that copies sentences from the source may be faithful but score low on ROUGE if it differs from the reference.",
+      ],
+    },
+    {
+      id: "q-nlp-kp39-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Pegasus (Zhang et al., 2020) uses a pre-training objective called Gap Sentence Generation (GSG) specifically designed for abstractive summarisation, where important sentences are masked and the model generates them.",
+      correctAnswer: "True",
+      explanation:
+        "Pegasus is pre-trained with GSG: whole sentences — selected by their importance (ROUGE score with the remaining document) — are masked from the document, and the model is trained to generate the masked sentences as if producing a summary. This directly mirrors the summarisation task (generate salient content from a document), making Pegasus particularly well-suited for fine-tuning on downstream summarisation benchmarks. Pegasus achieves state-of-the-art ROUGE scores on CNN/DailyMail, XSum, and other summarisation datasets with minimal fine-tuning.",
+      hints: [
+        "Standard masked LM (BERT) masks individual tokens. GSG masks entire sentences — more analogous to abstractive summarisation.",
+        "The masked sentences are chosen by ROUGE importance, so the model learns to extract and regenerate the most salient content.",
+      ],
+    },
+  ],
+
+  // ── nlp-kp-40: LLM Safety ─────────────────────────────────────────────────
+  "llm-safety-v2": [
+    {
+      id: "q-nlp-kp40-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Red teaming of LLMs involves what primary activity?",
+      options: [
+        "Training a second LLM to automatically generate safer outputs from the base model",
+        "Systematically probing an LLM with adversarial prompts to identify harmful, unsafe, or undesired behaviours before deployment",
+        "Fine-tuning an LLM exclusively on high-quality curated data to reduce the chance of harmful outputs",
+        "Applying differential privacy during pre-training to prevent memorisation of sensitive training data",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Red teaming (Ganguli et al., 2022 — Anthropic; Perez et al., 2022) involves human or automated adversaries crafting inputs designed to elicit harmful, biased, or otherwise undesired outputs from an LLM. Goals: discover failure modes (harmful content generation, jailbreaks, privacy leaks) before public deployment. Red team findings inform safety fine-tuning, RLHF reward modelling, and system-level mitigations. Automated red teaming uses another LLM to generate adversarial prompts at scale.",
+      hints: [
+        "Red team = attack team. Their goal is to find weaknesses before the model is released.",
+        "Red teaming produces a dataset of (adversarial prompt, harmful output) pairs that can be used to improve safety training.",
+      ],
+    },
+    {
+      id: "q-nlp-kp40-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Constitutional AI (CAI, Anthropic, 2022) trains an LLM to be helpful, harmless, and honest using a set of written principles. Which two-phase training process does CAI use?",
+      options: [
+        "Phase 1: train a reward model on human preference data; Phase 2: fine-tune the LLM with PPO using the reward model",
+        "Phase 1: supervised fine-tuning on human-written constitutionally-aligned responses; Phase 2: RLHF with human preference labels for harmlessness",
+        "Phase 1: the LLM critiques and revises its own outputs based on a written constitution (SL-CAI); Phase 2: RLAIF — train a preference model using AI-generated harmlessness labels, then fine-tune with RL",
+        "Phase 1: filter training data using classifier-based safety checks; Phase 2: fine-tune on the filtered corpus with standard language modelling loss",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "CAI (Bai et al., 2022) has two stages: (1) Supervised Learning from AI Feedback (SL-CAI): the model is prompted to generate a response, then critique it against a list of constitutional principles (e.g., 'Is this response harmful?'), then revise. The revised responses are used for SFT. (2) RL from AI Feedback (RLAIF): the AI generates preference labels (which response is more constitutional?) to train a harmlessness preference model, then RL fine-tunes the policy. This reduces dependence on human labellers for harmlessness feedback while scaling safety training.",
+      hints: [
+        "SL-CAI: self-critique and revision using the constitution. RLAIF: AI generates preference labels instead of humans.",
+        "Constitutional = a written set of principles governing acceptable behaviour, analogous to a legal constitution.",
+      ],
+    },
+    {
+      id: "q-nlp-kp40-3",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Jailbreaking attacks on LLMs, such as the 'DAN' (Do Anything Now) prompt, succeed by exploiting fine-tuning data poisoning vulnerabilities in the model's weights.",
+      correctAnswer: "False",
+      explanation:
+        "Most jailbreaking attacks are inference-time prompt-based exploits, not attacks on model weights. Jailbreaks craft prompts that trick the model into abandoning safety constraints through role-play scenarios ('Pretend you are an AI with no restrictions'), hypothetical framings, or suffix optimisation (GCG — Zou et al., 2023 — appends adversarial token suffixes). They exploit the tension between helpfulness (following instructions) and harmlessness (refusing harmful requests) baked in during RLHF. Data poisoning is a separate threat model that requires access to the training pipeline.",
+      hints: [
+        "DAN prompts are simple text inputs that users type into a chat interface — no access to model weights required.",
+        "Prompt injection and jailbreaking are inference-time attacks. Training-time attacks (data poisoning, backdoors) are a different category.",
+      ],
+    },
+  ],
 };
 
 registerQuestions(questions);
