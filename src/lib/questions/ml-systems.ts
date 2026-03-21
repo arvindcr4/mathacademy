@@ -34,7 +34,7 @@ const questions: Record<string, Question[]> = {
         "Training-serving skew can occur even when the feature transformation code is identical in both environments.",
       correctAnswer: "True",
       explanation:
-        "Skew can arise from differences in data distributions, timing of feature computation, or subtle library version discrepancies - not just code divergence. Example: a feature 'days_since_last_purchase' computed at training time using a warehouse timestamp may differ from serving time due to timezone handling bugs, or different Python/numpy library versions may produce slightly different floating-point results for the same input. The feature 'user_age' may be computed using a birthdate lookup in training but a cached value at serving time.",
+        "**Step 1:** Skew can arise from differences in data distributions, timing of feature computation, or subtle library version discrepancies - not just code divergence.\n\n**Step 2:** Example: a feature 'days_since_last_purchase' computed at training time using a warehouse timestamp may differ from serving time due to timezone handling bugs, or different Python/numpy library versions may produce slightly different floating-point results for the same input.\n\n**Step 3:** The feature 'user_age' may be computed using a birthdate lookup in training but a cached value at serving time.",
       hints: [
         "Code being identical does not guarantee identical outputs - check library versions, data sources, and timing.",
         'Think about time-dependent features: "days since last purchase" is a moving window that differs between training (snapshot) and serving (current state).',
@@ -55,11 +55,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Online feature stores use low-latency key-value stores (e.g., Redis ~0.5ms, DynamoDB ~5ms) to serve precomputed features in milliseconds during inference. Inference latency budgets are typically 50-100ms total - a data warehouse query (seconds) is incompatible. Redis stores precomputed feature vectors; at request time, the serving layer fetches features by entity key (e.g., user_id) and passes them to the model. The offline batch job computes features; the online store serves them.",
+        "**Step 1:** Online feature stores use low-latency key-value stores (e.g., Redis ~0.5ms, DynamoDB ~5ms) to serve precomputed features in milliseconds during inference.\n\n**Step 2:** Inference latency budgets are typically 50-100ms total - a data warehouse query (seconds) is incompatible.\n\n**Step 3:** Redis stores precomputed feature vectors; at request time, the serving layer fetches features by entity key (e.g., user_id) and passes them to the model. The offline batch job computes features; the online store serves them.",
       hints: [
         "Inference latency budgets are typically in the tens of milliseconds - a SQL query to BigQuery (seconds) is not acceptable.",
-        "Key-value stores (Redis, DynamoDB) are optimized for single-key lookups, not analytical scans.",
-        "The architecture: offline computation \\to materialization to online store \\to low-latency retrieval at inference time.",
+        "Key-value stores (Redis, DynamoDB) are optimized for single-key lookups, not analytical scans."
       ],
     },
   ],
@@ -78,7 +77,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DVC stores lightweight `.dvc` pointer files in Git while keeping large data files in remote storage, enabling reproducible data versioning without bloating Git.",
+        "**Step 1:** DVC stores lightweight `.dvc` pointer files in Git while keeping large data files in remote storage, enabling reproducible data versioning without bloating Git.",
       hints: [
         "Git itself is not designed for large binary files - DVC solves this limitation.",
         "DVC files are small text pointers; the actual data lives elsewhere.",
@@ -92,7 +91,7 @@ const questions: Record<string, Question[]> = {
         "Delta Lake\'s ACID transaction support allows concurrent readers and writers on the same table without data corruption.",
       correctAnswer: "True",
       explanation:
-        "Delta Lake uses optimistic concurrency control and a transaction log to provide ACID guarantees, enabling safe concurrent reads and writes on object storage.",
+        "**Step 1:** Delta Lake uses optimistic concurrency control and a transaction log to provide ACID guarantees, enabling safe concurrent reads and writes on object storage.",
       hints: [
         "Object storage like S3 doesn\'t natively support transactions - Delta Lake adds this layer.",
         "ACID stands for Atomicity, Consistency, Isolation, Durability.",
@@ -112,7 +111,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Delta Lake\'s time travel feature uses the transaction log to reconstruct any historical version of a table, which is invaluable for reproducing past ML training datasets.",
+        "**Step 1:** Delta Lake\'s time travel feature uses the transaction log to reconstruct any historical version of a table, which is invaluable for reproducing past ML training datasets.",
       hints: [
         "Reproducibility requires being able to retrieve the exact data used for a previous training run.",
         "The feature name is quite literal - you\'re traveling back to a past state.",
@@ -135,7 +134,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "MLflow tracks parameters, metrics, tags, and artifacts - but not individual data labels. Dataset versioning is handled separately, e.g., via DVC or dataset hashing.",
+        "**Step 1:** MLflow tracks parameters, metrics, tags, and artifacts - but not individual data labels.\n\n**Step 2:** Dataset versioning is handled separately, e.g., via DVC or dataset hashing.",
       hints: [
         "MLflow is about tracking the experiment configuration and outputs, not raw data contents.",
         "Row-level data belongs in a data versioning or lineage system.",
@@ -149,11 +148,10 @@ const questions: Record<string, Question[]> = {
         "In Weights & Biases (W&B), calling `wandb.init()` alone is sufficient to automatically log model gradients and topology.",
       correctAnswer: "False",
       explanation:
-        "`wandb.init()` only establishes the run context (project name, run name, experiment metadata). Automatic logging of gradients and model topology requires an explicit call to `wandb.watch(model)`, which instruments the model to record gradients and topology information throughout training.",
+        "**Step 1:** `wandb.init()` only establishes the run context (project name, run name, experiment metadata).\n\n**Step 2:** Automatic logging of gradients and model topology requires an explicit call to `wandb.watch(model)`, which instruments the model to record gradients and topology information throughout training.",
       hints: [
         "In W&B, `wandb.init()` handles run setup, not model instrumentation.",
-        "`wandb.watch(model)` is the dedicated call for automatic gradient and topology logging.",
-        "Initialization and model watching are two distinct operations in the W&B API.",
+        "`wandb.watch(model)` is the dedicated call for automatic gradient and topology logging."
       ],
     },
     {
@@ -170,7 +168,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Even with identical hyperparameters, non-determinism from random initialization, CUDA operations, or data shuffling can produce different metrics across runs.",
+        "**Step 1:** Even with identical hyperparameters, non-determinism from random initialization, CUDA operations, or data shuffling can produce different metrics across runs.",
       hints: [
         "True reproducibility requires fixing random seeds AND controlling hardware-level non-determinism.",
         "GPU operations like cuDNN convolutions can be non-deterministic by default.",
@@ -193,11 +191,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "gRPC leverages HTTP/2 multiplexing and Protobuf binary serialization, resulting in significantly lower latency and higher throughput than REST/JSON for structured data. A 1 KB JSON payload serializes to ~200 bytes in Protobuf (5x smaller), reducing I/O overhead. HTTP/2 multiplexing allows 50,000 RPS to share a small pool of TCP connections instead of opening a new connection per request. At p99 < 5 ms latency targets, these efficiencies are critical - JSON serialization alone can consume 1-2 ms at high QPS.",
+        "**Step 1:** gRPC leverages HTTP/2 multiplexing and Protobuf binary serialization, resulting in significantly lower latency and higher throughput than REST/JSON for structured data.\n\n**Step 2:** A 1 KB JSON payload serializes to ~200 bytes in Protobuf (5x smaller), reducing I/O overhead.\n\n**Step 3:** HTTP/2 multiplexing allows 50,000 RPS to share a small pool of TCP connections instead of opening a new connection per request. At p99 < 5 ms latency targets, these efficiencies are critical - JSON serialization alone can consume 1-2 ms at high QPS.",
       hints: [
         "Binary serialization is 5-10x smaller than JSON - less I/O at the same throughput.",
-        "HTTP/2 multiplexing eliminates head-of-line blocking that plagues HTTP/1.1 at high concurrency.",
-        "For internal microservices at >10K RPS, gRPC's Protocol Buffers are the de facto standard.",
+        "HTTP/2 multiplexing eliminates head-of-line blocking that plagues HTTP/1.1 at high concurrency."
       ],
     },
     {
@@ -208,7 +205,7 @@ const questions: Record<string, Question[]> = {
         "NVIDIA Triton Inference Server can serve models from multiple frameworks (TensorFlow, PyTorch, ONNX) simultaneously on the same server instance.",
       correctAnswer: "True",
       explanation:
-        "Triton\'s backend architecture allows multiple framework backends to coexist, enabling a single deployment to host models from different frameworks simultaneously. Each backend (TensorFlow, PyTorch, ONNX Runtime) is a separate plugin that Triton manages. This is critical for organizations migrating between frameworks: a team can run TensorFlow models alongside PyTorch models during a transition period without separate infrastructure.",
+        "**Step 1:** Triton\'s backend architecture allows multiple framework backends to coexist, enabling a single deployment to host models from different frameworks simultaneously.\n\n**Step 2:** Each backend (TensorFlow, PyTorch, ONNX Runtime) is a separate plugin that Triton manages.\n\n**Step 3:** This is critical for organizations migrating between frameworks: a team can run TensorFlow models alongside PyTorch models during a transition period without separate infrastructure.",
       hints: [
         "Triton was designed for heterogeneous model deployment scenarios.",
         'Think about what "backend" means in the context of Triton\'s architecture.',
@@ -237,8 +234,7 @@ const questions: Record<string, Question[]> = {
         "Triton's dynamic batcher waits up to the configured time window before executing - trading a small amount of added latency for a large throughput gain.",
       hints: [
         "GPUs achieve peak efficiency when many samples are processed in a single kernel launch - a single request leaves most CUDA cores idle.",
-        "Dynamic batching resolves the tension between low latency (desirable for individual requests) and high throughput (desirable for resource efficiency).",
-        "The time window parameter controls the trade-off: longer windows allow larger batches but add latency to individual requests.",
+        "Dynamic batching resolves the tension between low latency (desirable for individual requests) and high throughput (desirable for resource efficiency)."
       ],
     },
   ],
@@ -253,11 +249,10 @@ const questions: Record<string, Question[]> = {
       options: ["Staging", "Production", "Archived", "Deleted"],
       correctAnswer: 3,
       explanation:
-        "MLflow Model Registry uses Staging, Production, and Archived stages. Models are Archived (not Deleted) to preserve audit history and reproducibility. Audit trails matter for compliance: a regulator may ask 'what model was in production on March 15, 2023?' - Archived models answer this. Deleting a model destroys this evidence and makes incident reconstruction impossible.",
+        "**Step 1:** MLflow Model Registry uses Staging, Production, and Archived stages.\n\n**Step 2:** Models are Archived (not Deleted) to preserve audit history and reproducibility.\n\n**Step 3:** Audit trails matter for compliance: a regulator may ask 'what model was in production on March 15, 2023?' - Archived models answer this. Deleting a model destroys this evidence and makes incident reconstruction impossible.",
       hints: [
         "Audit trails require that historical model versions remain accessible - Archived preserves them.",
-        "MLflow stages represent deployment readiness, not deletion - Deleted is not a stage.",
-        "In regulated industries (finance, healthcare), model deletion may also violate record-keeping requirements.",
+        "MLflow stages represent deployment readiness, not deletion - Deleted is not a stage."
       ],
     },
     {
@@ -268,11 +263,10 @@ const questions: Record<string, Question[]> = {
         "A model registry should store model binaries directly in the same database as its metadata.",
       correctAnswer: "False",
       explanation:
-        "Best practice is to store model artifacts in object storage (e.g., S3, GCS) and keep only references (URIs) in the metadata database, keeping the registry lightweight and scalable. A model binary (10 MB to 10 GB) stored as a BLOB in a relational database causes: (1) database bloat, (2) slow backup/restore, (3) connection pool exhaustion. Object storage is designed for large binary objects with built-in versioning, replication, and lifecycle policies.",
+        "**Step 1:** Best practice is to store model artifacts in object storage (e.g., S3, GCS) and keep only references (URIs) in the metadata database, keeping the registry lightweight and scalable.\n\n**Step 2:** A model binary (10 MB to 10 GB) stored as a BLOB in a relational database causes: (1) database bloat, (2) slow backup/restore, (3) connection pool exhaustion.\n\n**Step 3:** Object storage is designed for large binary objects with built-in versioning, replication, and lifecycle policies.",
       hints: [
         "Model files can be gigabytes - databases are optimized for structured data, not large binary blobs.",
-        "Separation of concerns: metadata in a database (fast queries), binaries in object storage (fast retrieval of large files).",
-        "S3 versioning + MLflow's artifact URI tracking = complete model lineage.",
+        "Separation of concerns: metadata in a database (fast queries), binaries in object storage (fast retrieval of large files)."
       ],
     },
     {
@@ -289,11 +283,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Immutable versioned artifacts combined with a pointer/alias system (e.g., MLflow's 'Production' alias) allow instant rollback by redirecting the alias to a previously validated version without any retraining. Example: v23 (broken) is in production; rollback = update 'Production' alias from v23 to v22 (takes seconds). Overwriting in place destroys v23, making forward recovery impossible. Retraining from scratch is slow and may not reproduce the same weights due to randomness.",
+        "**Step 1:** Immutable versioned artifacts combined with a pointer/alias system (e.g., MLflow's 'Production' alias) allow instant rollback by redirecting the alias to a previously validated version without any retraining.\n\n**Step 2:** Example: v23 (broken) is in production; rollback = update 'Production' alias from v23 to v22 (takes seconds).\n\n**Step 3:** Overwriting in place destroys v23, making forward recovery impossible. Retraining from scratch is slow and may not reproduce the same weights due to randomness.",
       hints: [
         "Rollback speed is critical - instant redirection via alias vs. minutes/hours of retraining.",
-        "Immutability guarantees you can always return to an exact prior state without reconstruction.",
-        "MLflow's alias system: 'Production' alias \\to v22. To rollback: set_alias('Production', 'v22'). Done.",
+        "Immutability guarantees you can always return to an exact prior state without reconstruction."
       ],
     },
   ],
@@ -313,7 +306,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DDP uses ring all-reduce to average gradients across all workers after each backward pass, ensuring all replicas stay synchronized without a central bottleneck.",
+        "**Step 1:** DDP uses ring all-reduce to average gradients across all workers after each backward pass, ensuring all replicas stay synchronized without a central bottleneck.",
       hints: [
         "DDP is designed to avoid single points of failure - no central server.",
         "Ring all-reduce is a collective communication primitive where every node both sends and receives.",
@@ -327,7 +320,7 @@ const questions: Record<string, Question[]> = {
         "Fully Sharded Data Parallel (FSDP) shards optimizer states, gradients, AND model parameters across GPUs, unlike DDP which only replicates them.",
       correctAnswer: "True",
       explanation:
-        "FSDP shards all three components (parameters, gradients, optimizer states) to fit larger models in aggregate GPU memory, whereas DDP holds a full replica on each GPU.",
+        "**Step 1:** FSDP shards all three components (parameters, gradients, optimizer states) to fit larger models in aggregate GPU memory, whereas DDP holds a full replica on each GPU.",
       hints: [
         "DDP requires each GPU to hold a full model copy - what happens when the model is too large?",
         '"Fully sharded" means every component of training state is distributed.',
@@ -347,7 +340,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "ZeRO Stage 3 shards all three: optimizer states (Stage 1), gradients (Stage 2), and parameters (Stage 3), achieving near-linear memory reduction proportional to the number of GPUs.",
+        "**Step 1:** ZeRO Stage 3 shards all three: optimizer states (Stage 1), gradients (Stage 2), and parameters (Stage 3), achieving near-linear memory reduction proportional to the number of GPUs.",
       hints: [
         "ZeRO stages are cumulative - each stage adds more sharding on top of the previous.",
         "Stage 3 is the most aggressive: if N GPUs are used, each holds ~1/N of every component.",
@@ -370,7 +363,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Gradient checkpointing discards intermediate activations during the forward pass and recomputes them during backpropagation, trading extra compute (roughly 33% overhead) for significantly less activation memory.",
+        "**Step 1:** Gradient checkpointing discards intermediate activations during the forward pass and recomputes them during backpropagation, trading extra compute (roughly 33% overhead) for significantly less activation memory.",
       hints: [
         "Memory and compute are often interchangeable resources in ML training.",
         "Activations stored for backprop can dominate memory usage for deep networks.",
@@ -384,7 +377,7 @@ const questions: Record<string, Question[]> = {
         "CPU offloading in DeepSpeed moves optimizer states to CPU RAM during the optimizer step, reducing GPU memory pressure.",
       correctAnswer: "True",
       explanation:
-        "DeepSpeed\'s CPU offloading (ZeRO-Offload) moves optimizer states and gradients to CPU memory, allowing training of models that far exceed GPU VRAM capacity at the cost of PCIe bandwidth.",
+        "**Step 1:** DeepSpeed\'s CPU offloading (ZeRO-Offload) moves optimizer states and gradients to CPU memory, allowing training of models that far exceed GPU VRAM capacity at the cost of PCIe bandwidth.",
       hints: [
         "CPU RAM is much larger but slower than GPU VRAM - the trade-off is bandwidth.",
         "Optimizer states (e.g., Adam\'s m and v tensors) can be 2x the model size.",
@@ -404,7 +397,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Small gradient values can underflow to zero in FP16 due to its limited dynamic range, so weight updates are applied to an FP32 master copy to preserve training stability.",
+        "**Step 1:** Small gradient values can underflow to zero in FP16 due to its limited dynamic range, so weight updates are applied to an FP32 master copy to preserve training stability.",
       hints: [
         "FP16 has a dynamic range of ~6 orders of magnitude; FP32 has ~38.",
         "Even tiny gradients must produce measurable weight changes to converge.",
@@ -426,7 +419,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ONNX (Open Neural Network Exchange) is an open standard representing ML models as a computation graph, decoupling the training framework from the inference runtime. You can train in PyTorch and deploy on TensorRT, CoreML, or ONNX Runtime without rewriting model code. The graph is hardware-agnostic; each runtime optimizes for its target (e.g., TensorRT compiles ONNX to optimized CUDA kernels for NVIDIA GPUs).",
+        "**Step 1:** ONNX (Open Neural Network Exchange) is an open standard representing ML models as a computation graph, decoupling the training framework from the inference runtime.\n\n**Step 2:** You can train in PyTorch and deploy on TensorRT, CoreML, or ONNX Runtime without rewriting model code.\n\n**Step 3:** The graph is hardware-agnostic; each runtime optimizes for its target (e.g., TensorRT compiles ONNX to optimized CUDA kernels for NVIDIA GPUs).",
       hints: [
         'ONNX = "Open Neural Network Exchange" - portability between frameworks is the core value proposition.',
         "ONNX Runtime is NOT the same as PyTorch or TensorFlow - it's a dedicated inference runtime that ingests the ONNX graph.",
@@ -441,11 +434,10 @@ const questions: Record<string, Question[]> = {
         "TensorRT\'s kernel fusion optimization merges multiple sequential operations into a single GPU kernel, reducing memory bandwidth consumption.",
       correctAnswer: "True",
       explanation:
-        "Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv \\to BatchNorm \\to ReLU becomes a single fused kernel). Without fusion: each op writes its output to VRAM, then the next op reads it back - 3 separate kernel launches and 3 VRAM round-trips. With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
+        "**Step 1:** Kernel fusion eliminates intermediate memory round-trips between GPU compute and VRAM for sequential ops (e.g., Conv \\to BatchNorm \\to ReLU becomes a single fused kernel).\n\n**Step 2:** Without fusion: each op writes its output to VRAM, then the next op reads it back - 3 separate kernel launches and 3 VRAM round-trips.\n\n**Step 3:** With fusion: one kernel launch, one VRAM round-trip. For a typical CNN, this reduces latency by 30-50% and memory bandwidth by 2-3x.",
       hints: [
         "Each separate kernel launch = one write + one read from VRAM. Fusion eliminates intermediate round-trips.",
-        "Memory bandwidth is often the bottleneck for modern GPUs, not raw FLOPs - fusion directly attacks this bottleneck.",
-        "TensorRT's layer fusion is the canonical example: Fused Conv+BatchNorm+ReLU as a single CUDA kernel.",
+        "Memory bandwidth is often the bottleneck for modern GPUs, not raw FLOPs - fusion directly attacks this bottleneck."
       ],
     },
     {
@@ -473,8 +465,7 @@ const questions: Record<string, Question[]> = {
         "When a sequence completes, its pages are returned to the pool for reuse. This achieves >90% GPU memory utilization vs. 60-70% with standard allocation, enabling 2-4x higher batch sizes and throughput.",
       hints: [
         "Standard KV cache pre-allocates the maximum sequence length per request - catastrophic fragmentation when actual sequences are much shorter than max.",
-        "PagedAttention's 16-token cache blocks are inspired by OS virtual memory pages (typically 4KB).",
-        "Higher batch size means more samples are processed per GPU kernel launch, directly increasing throughput.",
+        "PagedAttention's 16-token cache blocks are inspired by OS virtual memory pages (typically 4KB)."
       ],
     },
   ],
@@ -494,11 +485,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Data drift (covariate shift) is when P(X) changes while P(Y|X) remains stable - the input distribution shifts but the relationship between features and labels is unchanged. Concept drift is when P(Y|X) itself changes - the underlying phenomenon the model learned changes. Example: during COVID, user spending patterns (P(X)) shifted but the relationship between spending and fraud (P(Y|X)) may have remained similar - data drift, not concept drift.",
+        "**Step 1:** Data drift (covariate shift) is when P(X) changes while P(Y|X) remains stable - the input distribution shifts but the relationship between features and labels is unchanged.\n\n**Step 2:** Concept drift is when P(Y|X) itself changes - the underlying phenomenon the model learned changes.\n\n**Step 3:** Example: during COVID, user spending patterns (P(X)) shifted but the relationship between spending and fraud (P(Y|X)) may have remained similar - data drift, not concept drift.",
       hints: [
         "The key question: did the feature distribution change, or did the feature-to-label relationship change?",
-        "P(X) = input distribution; P(Y|X) = conditional label distribution given inputs.",
-        "A retailer's user demographics shifting from young to older is data drift; fraudsters changing tactics is concept drift.",
+        "P(X) = input distribution; P(Y|X) = conditional label distribution given inputs."
       ],
     },
     {
@@ -519,8 +509,7 @@ const questions: Record<string, Question[]> = {
         "PSI = 0 means identical distributions; PSI grows toward infinity as the distributions become more disjoint.",
       hints: [
         "PSI = 0 means the distributions are identical; PSI \\(\\to \\infty\\) means they are completely disjoint.",
-        "PSI > 0.25 on a key feature (e.g., transaction\\_amount, user\\_age) should trigger an ML on-call alert.",
-        "PSI is label-free - it only compares feature distributions, so no labeled data is needed for online monitoring.",
+        "PSI > 0.25 on a key feature (e.g., transaction\\_amount, user\\_age) should trigger an ML on-call alert."
       ],
     },
     {
@@ -537,11 +526,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Using both confidence score monitoring and feature distribution drift as leading indicators provides early warning before labels arrive, enabling proactive retraining decisions. Confidence drop (e.g., average predicted probability shifting from 0.72 to 0.55) often precedes measurable accuracy drops because the model starts encountering unfamiliar patterns before accuracy formally degrades. PSI/KL divergence on input features catches covariate shifts that may eventually cause concept drift. Neither signal alone is sufficient - combining them is the mature monitoring strategy.",
+        "**Step 1:** Using both confidence score monitoring and feature distribution drift as leading indicators provides early warning before labels arrive, enabling proactive retraining decisions.\n\n**Step 2:** Confidence drop (e.g., average predicted probability shifting from 0.72 to 0.55) often precedes measurable accuracy drops because the model starts encountering unfamiliar patterns before accuracy formally degrades.\n\n**Step 3:** PSI/KL divergence on input features catches covariate shifts that may eventually cause concept drift. Neither signal alone is sufficient - combining them is the mature monitoring strategy.",
       hints: [
         "No single signal is sufficient; combining leading indicators is best practice.",
-        "A drop in model confidence often precedes a measurable accuracy drop by days or weeks.",
-        "PSI detects data drift (P(X) change); confidence monitoring detects when the model starts seeing unfamiliar patterns.",
+        "A drop in model confidence often precedes a measurable accuracy drop by days or weeks."
       ],
     },
   ],
@@ -560,7 +548,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "An Expectation Suite is a named, versioned collection of expectations (assertions about data) that can be run against a batch of data to validate quality.",
+        "**Step 1:** An Expectation Suite is a named, versioned collection of expectations (assertions about data) that can be run against a batch of data to validate quality.",
       hints: [
         '"Suite" implies a grouped collection - think of it like a test suite in software testing.',
         "Great Expectations is essentially unit testing for data.",
@@ -574,7 +562,7 @@ const questions: Record<string, Question[]> = {
         "Data validation should ideally be performed both at data ingestion time and immediately before model training to catch issues introduced during preprocessing.",
       correctAnswer: "True",
       explanation:
-        "Validating at ingestion catches upstream issues while validating pre-training catches bugs introduced during feature engineering and preprocessing transformations.",
+        "**Step 1:** Validating at ingestion catches upstream issues while validating pre-training catches bugs introduced during feature engineering and preprocessing transformations.",
       hints: [
         "Bugs can be introduced at multiple stages - ingestion bugs and preprocessing bugs are different.",
         "Defense in depth applies to data pipelines, not just security systems.",
@@ -594,7 +582,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Failing validation should stop the pipeline immediately; proceeding would propagate bad data downstream, potentially corrupting model training or serving. Quarantine and alert preserves data integrity.",
+        "**Step 1:** Failing validation should stop the pipeline immediately; proceeding would propagate bad data downstream, potentially corrupting model training or serving.\n\n**Step 2:** Quarantine and alert preserves data integrity.",
       hints: [
         "Garbage in, garbage out - invalid data must never reach training or serving.",
         "The cost of stopping is lower than the cost of propagating corrupted data.",
@@ -617,7 +605,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Spark UDFs run in the distributed Spark execution engine, preserving parallelism. Collecting to the driver or converting to Pandas defeats distributed processing and risks OOM errors.",
+        "**Step 1:** Spark UDFs run in the distributed Spark execution engine, preserving parallelism.\n\n**Step 2:** Collecting to the driver or converting to Pandas defeats distributed processing and risks OOM errors.",
       hints: [
         "Any operation that moves data to a single machine breaks distributed processing.",
         "Spark is designed to push computation to where the data lives.",
@@ -631,7 +619,7 @@ const questions: Record<string, Question[]> = {
         "Target encoding a categorical feature on the full training set (before cross-validation splits) leads to target leakage.",
       correctAnswer: "True",
       explanation:
-        "Computing target encoding statistics using the full dataset - including validation folds - allows the model to indirectly see validation labels during training, inflating performance estimates.",
+        "**Step 1:** Computing target encoding statistics using the full dataset - including validation folds - allows the model to indirectly see validation labels during training, inflating performance estimates.",
       hints: [
         "Any statistics derived from labels must be computed strictly within each training fold.",
         "Cross-validation assumes strict separation between training and validation data.",
@@ -651,7 +639,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Time-series features must only use information available at or before the prediction timestamp. Future data in features and random (non-temporal) splits both cause leakage.",
+        "**Step 1:** Time-series features must only use information available at or before the prediction timestamp.\n\n**Step 2:** Future data in features and random (non-temporal) splits both cause leakage.",
       hints: [
         "In production, only historical data is available at the time of prediction.",
         "Rolling windows must always look backward, never forward.",
@@ -674,11 +662,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Daily batch recommendations can be precomputed offline for all users and cached, avoiding real-time model latency while enabling complex, compute-intensive models. Example: Netflix recommends rows of 20 movies per user - computing this for 200M users with a complex model takes hours but can run overnight. The results are stored in a fast key-value store (e.g., Redis) for sub-millisecond serving when users open the app. Staleness of ~24 hours is acceptable for daily recommendations.",
+        "**Step 1:** Daily batch recommendations can be precomputed offline for all users and cached, avoiding real-time model latency while enabling complex, compute-intensive models.\n\n**Step 2:** Example: Netflix recommends rows of 20 movies per user - computing this for 200M users with a complex model takes hours but can run overnight.\n\n**Step 3:** The results are stored in a fast key-value store (e.g., Redis) for sub-millisecond serving when users open the app. Staleness of ~24 hours is acceptable for daily recommendations.",
       hints: [
         "If results can be precomputed ahead of time, batch is almost always more efficient - complex models, no latency constraints.",
-        "Daily granularity means staleness of a few hours is acceptable for non-urgent use cases.",
-        "Batch inference + cached results = best of both worlds: complex model computation + low-latency serving.",
+        "Daily granularity means staleness of a few hours is acceptable for non-urgent use cases."
       ],
     },
     {
@@ -689,11 +676,10 @@ const questions: Record<string, Question[]> = {
         "Real-time inference always produces fresher predictions than batch inference.",
       correctAnswer: "True",
       explanation:
-        "Real-time inference uses the latest available features at request time (e.g., current cart contents, today's browsing history), while batch inference uses features as of the last batch run (e.g., last night's snapshot). For rapidly changing signals (stock prices, breaking news relevance, current inventory), this freshness difference is critical. The trade-off: real-time inference requires low-latency feature retrieval infrastructure.",
+        "**Step 1:** Real-time inference uses the latest available features at request time (e.g., current cart contents, today's browsing history), while batch inference uses features as of the last batch run (e.g., last night's snapshot).\n\n**Step 2:** For rapidly changing signals (stock prices, breaking news relevance, current inventory), this freshness difference is critical.\n\n**Step 3:** The trade-off: real-time inference requires low-latency feature retrieval infrastructure.",
       hints: [
         "Batch predictions are computed at a fixed schedule and may be hours or days old by the time they're served.",
-        "Freshness is one of the core trade-offs: batch = stale but cheap; real-time = fresh but requires live feature infrastructure.",
-        "Real-time inference is necessary when the features themselves change between batch runs (e.g., inventory levels, current location).",
+        "Freshness is one of the core trade-offs: batch = stale but cheap; real-time = fresh but requires live feature infrastructure."
       ],
     },
     {
@@ -710,7 +696,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Fraud detection requires real-time features (last N transactions) and low-latency decisions. The architecture: Apache Flink maintains a sliding window of the last 10 transactions per card_id, continuously updated as new transactions arrive via Kafka. These rolling counts are materialized to Redis (~0.5ms read latency). At inference time (triggered by an authorization request), the model fetches features from Redis and runs inference - total latency <200ms. A data warehouse refresh (hourly or nightly) is too stale for fraud detection.",
+        "**Step 1:** Fraud detection requires real-time features (last N transactions) and low-latency decisions.\n\n**Step 2:** The architecture: Apache Flink maintains a sliding window of the last 10 transactions per card_id, continuously updated as new transactions arrive via Kafka.\n\n**Step 3:** These rolling counts are materialized to Redis (~0.5ms read latency). At inference time (triggered by an authorization request), the model fetches features from Redis and runs inference - total latency <200ms. A data warehouse refresh (hourly or nightly) is too stale for fraud detection.",
       hints: [
         "The 200ms SLA rules out any batch approach - batch jobs take minutes to hours.",
         'Features derived from "the last 10 transactions" are time-series features that must be updated continuously, not periodically.',
@@ -796,7 +782,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The p-value is the probability of observing the measured effect size or larger under the null hypothesis (no true difference), not the probability that one model is better.",
+        "**Step 1:** The p-value is the probability of observing the measured effect size or larger under the null hypothesis (no true difference), not the probability that one model is better.",
       hints: [
         "A p-value is about the data, not a direct statement about the hypothesis being true.",
         "The null hypothesis assumes no real difference between A and B.",
@@ -810,7 +796,7 @@ const questions: Record<string, Question[]> = {
         "Stopping an A/B test early as soon as statistical significance is reached (p < 0.05) is a valid and recommended practice.",
       correctAnswer: "False",
       explanation:
-        "Early stopping inflates the false positive rate because peeking at results repeatedly increases the chance of spuriously crossing the significance threshold; pre-specified sample sizes and testing durations must be respected.",
+        "**Step 1:** Early stopping inflates the false positive rate because peeking at results repeatedly increases the chance of spuriously crossing the significance threshold; pre-specified sample sizes and testing durations must be respected.",
       hints: [
         'Each "peek" at interim results is an additional hypothesis test, inflating Type I error.',
         "Sequential testing methods exist to handle early stopping correctly.",
@@ -830,7 +816,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SUTVA requires that each unit receives only one treatment. If the same user sees both A and B across different page views, their behavior in one variant contaminates the other, violating independence.",
+        "**Step 1:** SUTVA requires that each unit receives only one treatment.\n\n**Step 2:** If the same user sees both A and B across different page views, their behavior in one variant contaminates the other, violating independence.",
       hints: [
         "A user who sees both variants cannot be considered an independent observation for either.",
         'SUTVA is the "no interference" assumption - units must not affect each other.',
@@ -861,8 +847,7 @@ const questions: Record<string, Question[]> = {
         "If the canary fails, 10,000 users are affected. If the full rollout had proceeded instead, 1,000,000 users would be at risk. The canary acts as a real-world test with limited exposure - the \"canary in a coal mine\" principle applied to production ML.",
       hints: [
         "The canary's purpose is to catch regressions before they affect all users - the initial traffic fraction is chosen to balance statistical relevance against blast radius.",
-        "A canary deployment is distinct from a shadow deployment: in a canary, users are actually served by the new model (not just silently evaluated).",
-        "At 10M DAU, a 1% canary covers 100K users - sufficient for detecting meaningful metric regressions within hours.",
+        "A canary deployment is distinct from a shadow deployment: in a canary, users are actually served by the new model (not just silently evaluated)."
       ],
     },
     {
@@ -873,11 +858,10 @@ const questions: Record<string, Question[]> = {
         "A shadow deployment and a canary deployment both expose real users to the new model\'s predictions.",
       correctAnswer: "False",
       explanation:
-        "Shadow deployments run the new model in parallel but serve only the production model's predictions to users - zero user impact. Canary deployments actually serve the new model's predictions to a small user subset (1-5%) - real exposure, real feedback. Shadow is for validation; canary is for live testing with real user behavior as the metric.",
+        "**Step 1:** Shadow deployments run the new model in parallel but serve only the production model's predictions to users - zero user impact.\n\n**Step 2:** Canary deployments actually serve the new model's predictions to a small user subset (1-5%) - real exposure, real feedback.\n\n**Step 3:** Shadow is for validation; canary is for live testing with real user behavior as the metric.",
       hints: [
         "Shadow = the new model runs invisibly alongside the champion. User sees champion predictions only.",
-        "Canary = a small % of users see challenger predictions. Real behavior, real metrics.",
-        "Use shadow first (zero risk), then canary (small risk) for a phased evaluation.",
+        "Canary = a small % of users see challenger predictions. Real behavior, real metrics."
       ],
     },
     {
@@ -894,11 +878,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Automated canary analysis (ACA) monitors real-time error rates, latency, and business metrics (conversion, fraud recall); when any exceed defined thresholds (e.g., error rate > 1%, p99 latency > 200ms, revenue per user drops > 2%), an automated rollback fires without human intervention to minimize blast radius. Tools like Argo Rollouts and Flagger implement automated canary analysis with configurable metrics and rollback policies. Fixed timers are dangerous: a broken canary can cause 24 hours of user harm.",
+        "**Step 1:** Automated canary analysis (ACA) monitors real-time error rates, latency, and business metrics (conversion, fraud recall); when any exceed defined thresholds (e.g., error rate > 1%, p99 latency > 200ms, revenue per user drops > 2%), an automated rollback fires without human intervention to minimize blast radius.\n\n**Step 2:** Tools like Argo Rollouts and Flagger implement automated canary analysis with configurable metrics and rollback policies.\n\n**Step 3:** Fixed timers are dangerous: a broken canary can cause 24 hours of user harm.",
       hints: [
         "Manual processes are too slow when production is degraded - automated rollback fires in seconds.",
-        "The rollback trigger must be based on observable signals (error rate, latency) that indicate user harm, not arbitrary time.",
-        "Configure rollback thresholds before deployment: what error rate is unacceptable? What latency threshold? Get stakeholder agreement.",
+        "The rollback trigger must be based on observable signals (error rate, latency) that indicate user harm, not arbitrary time."
       ],
     },
   ],
@@ -932,7 +915,7 @@ const questions: Record<string, Question[]> = {
         "Post-training quantization to INT8 typically requires no retraining and can be applied directly to a pretrained model.",
       correctAnswer: "True",
       explanation:
-        "Post-training quantization calibrates scale factors using a small calibration dataset without gradient-based retraining, though quantization-aware training generally achieves better accuracy.",
+        "**Step 1:** Post-training quantization calibrates scale factors using a small calibration dataset without gradient-based retraining, though quantization-aware training generally achieves better accuracy.",
       hints: [
         '"Post-training" is the key - it happens after training is complete.',
         "Calibration data is used to determine quantization ranges, not to update weights.",
@@ -959,8 +942,7 @@ const questions: Record<string, Question[]> = {
         "The trade-off: structured pruning may sacrifice some sparsity efficiency (cannot achieve the same compression ratios) but delivers practical speedups on commodity hardware.",
       hints: [
         "Standard GPUs accelerate dense matrix multiplications - they do not natively accelerate arbitrary sparse patterns.",
-        "In structured pruning, what gets removed are entire attention heads, CNN channels, or layers - not individual weights.",
-        "The practical advantage: structured pruning works on any GPU without special hardware support.",
+        "In structured pruning, what gets removed are entire attention heads, CNN channels, or layers - not individual weights."
       ],
     },
   ],
@@ -980,7 +962,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Spot Instances can be interrupted by AWS with a 2-minute notice; training jobs must checkpoint regularly to S3 so work is not lost upon interruption.",
+        "**Step 1:** Spot Instances can be interrupted by AWS with a 2-minute notice; training jobs must checkpoint regularly to S3 so work is not lost upon interruption.",
       hints: [
         "The cost savings (60-90%) come with availability risk.",
         "Checkpointing is the standard mitigation - save progress frequently.",
@@ -994,7 +976,7 @@ const questions: Record<string, Question[]> = {
         "Semantic caching for LLM APIs stores embeddings of past queries and returns cached responses for semantically similar (not just identical) future queries.",
       correctAnswer: "True",
       explanation:
-        "Semantic caching computes embeddings of queries and retrieves cached responses when a new query\'s embedding is within a cosine similarity threshold, dramatically reducing API calls for paraphrased but equivalent questions.",
+        "**Step 1:** Semantic caching computes embeddings of queries and retrieves cached responses when a new query\'s embedding is within a cosine similarity threshold, dramatically reducing API calls for paraphrased but equivalent questions.",
       hints: [
         "Exact string matching misses cases where users ask the same thing differently.",
         "Vector similarity enables fuzzy matching on meaning, not just text.",
@@ -1042,7 +1024,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ML systems have three axes of change: code, data, and model weights. MLOps CI/CD must test and validate all three, whereas traditional CI/CD focuses only on code correctness.",
+        "**Step 1:** ML systems have three axes of change: code, data, and model weights.\n\n**Step 2:** MLOps CI/CD must test and validate all three, whereas traditional CI/CD focuses only on code correctness.",
       hints: [
         "What changes between ML deployments that doesn\'t change in regular software deployments?",
         "Data and model performance are first-class citizens in ML pipelines.",
@@ -1056,7 +1038,7 @@ const questions: Record<string, Question[]> = {
         "Continuous Training (CT) is a distinct MLOps practice from Continuous Delivery (CD) and involves automatically retraining models when data drift or performance degradation is detected.",
       correctAnswer: "True",
       explanation:
-        "CT extends standard CD with the ability to automatically trigger retraining pipelines based on monitoring signals, keeping models fresh without manual intervention.",
+        "**Step 1:** CT extends standard CD with the ability to automatically trigger retraining pipelines based on monitoring signals, keeping models fresh without manual intervention.",
       hints: [
         "Models degrade over time as the world changes - CT automates the response.",
         'CT is unique to ML; traditional software doesn\'t need automated "retraining".',
@@ -1076,7 +1058,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Containerization isolates each pipeline step\'s environment, enables independent versioning, and allows Kubeflow to cache step outputs - reusing unchanged steps to speed up iterative development.",
+        "**Step 1:** Containerization isolates each pipeline step\'s environment, enables independent versioning, and allows Kubeflow to cache step outputs - reusing unchanged steps to speed up iterative development.",
       hints: [
         'Dependency isolation prevents "works on my machine" issues across pipeline steps.',
         "Caching intermediate steps is a major iteration speed boost during development.",
@@ -1106,8 +1088,7 @@ const questions: Record<string, Question[]> = {
         "This selectivity minimizes the labeling budget required to achieve a target model performance.",
       hints: [
         "Active learning seeks to maximize model improvement per human annotation dollar - it is not designed to label everything automatically.",
-        "High model uncertainty (e.g., a binary classifier outputting ~0.5) means the model is confused - the correct label would be most informative here.",
-        "The uncertainty criterion is often measured by entropy or by the gap between top two class probabilities.",
+        "High model uncertainty (e.g., a binary classifier outputting ~0.5) means the model is confused - the correct label would be most informative here."
       ],
     },
     {
@@ -1118,7 +1099,7 @@ const questions: Record<string, Question[]> = {
         "Inter-annotator agreement (IAA) is a metric used to assess the consistency and reliability of human labelers.",
       correctAnswer: "True",
       explanation:
-        "IAA metrics (e.g., Cohen\'s Kappa, Fleiss' Kappa) measure how consistently multiple annotators assign labels, identifying ambiguous cases and unreliable annotators that can degrade training data quality.",
+        "**Step 1:** IAA metrics (e.g., Cohen\'s Kappa, Fleiss' Kappa) measure how consistently multiple annotators assign labels, identifying ambiguous cases and unreliable annotators that can degrade training data quality.",
       hints: [
         "If annotators frequently disagree, the labeling task itself may be ill-defined.",
         "High IAA means the label definition is clear and annotators apply it consistently.",
@@ -1138,7 +1119,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pre-annotations from a baseline model convert labeling from creation to correction - a significantly easier cognitive task - reducing fatigue-induced errors while maintaining quality.",
+        "**Step 1:** Pre-annotations from a baseline model convert labeling from creation to correction - a significantly easier cognitive task - reducing fatigue-induced errors while maintaining quality.",
       hints: [
         "Correcting a near-correct label is much faster and less error-prone than creating one from scratch.",
         'This is called "human-in-the-loop" or "model-assisted annotation".',
@@ -1161,7 +1142,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Vector databases index high-dimensional embeddings and support approximate nearest-neighbor (ANN) search, which is foundational for semantic search, RAG, and recommendation systems.",
+        "**Step 1:** Vector databases index high-dimensional embeddings and support approximate nearest-neighbor (ANN) search, which is foundational for semantic search, RAG, and recommendation systems.",
       hints: [
         "Embeddings are dense vectors - finding similar ones is the core problem.",
         "Exact nearest-neighbor search is too slow for high dimensions and large corpora.",
@@ -1175,7 +1156,7 @@ const questions: Record<string, Question[]> = {
         "HNSW (Hierarchical Navigable Small World) is an exact search algorithm that always returns the true nearest neighbors.",
       correctAnswer: "False",
       explanation:
-        "HNSW is an approximate nearest-neighbor algorithm. It trades a small recall loss for dramatically better query speed and scalability compared to exact brute-force search.",
+        "**Step 1:** HNSW is an approximate nearest-neighbor algorithm.\n\n**Step 2:** It trades a small recall loss for dramatically better query speed and scalability compared to exact brute-force search.",
       hints: [
         'The "approximate" in ANN means exact results are not guaranteed.',
         "Recall vs. speed is the fundamental trade-off in ANN algorithms.",
@@ -1195,7 +1176,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Payload filtering allows combining ANN vector search with metadata constraints in a single query, enabling faceted semantic search without expensive post-filtering on large result sets.",
+        "**Step 1:** Payload filtering allows combining ANN vector search with metadata constraints in a single query, enabling faceted semantic search without expensive post-filtering on large result sets.",
       hints: [
         "Pure vector search ignores metadata - payload filters add structured constraints.",
         'Combining semantic and keyword/attribute filters is called "hybrid search".',
@@ -1218,7 +1199,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Consumer groups distribute topic partitions across multiple consumers, enabling parallel, scalable feature computation where each event is processed by exactly one consumer in the group.",
+        "**Step 1:** Consumer groups distribute topic partitions across multiple consumers, enabling parallel, scalable feature computation where each event is processed by exactly one consumer in the group.",
       hints: [
         "Parallel consumption requires that partitions are divided among consumers.",
         "Each partition is exclusively owned by one consumer within a group at a time.",
@@ -1232,7 +1213,7 @@ const questions: Record<string, Question[]> = {
         "Apache Flink supports exactly-once processing semantics for stateful stream processing, even in the presence of failures.",
       correctAnswer: "True",
       explanation:
-        "Flink achieves exactly-once semantics through distributed snapshots (Chandy-Lamport algorithm) and two-phase commit to sinks, ensuring each event affects state exactly once even after recovery.",
+        "**Step 1:** Flink achieves exactly-once semantics through distributed snapshots (Chandy-Lamport algorithm) and two-phase commit to sinks, ensuring each event affects state exactly once even after recovery.",
       hints: [
         '"Exactly-once" is the hardest processing guarantee - at-least-once and at-most-once are simpler.',
         "Flink\'s checkpointing mechanism is the key to fault-tolerant stateful processing.",
@@ -1252,7 +1233,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Network delays cause events to arrive out of order; watermarks define how late events can arrive before a window is closed, balancing completeness against latency in feature computation.",
+        "**Step 1:** Network delays cause events to arrive out of order; watermarks define how late events can arrive before a window is closed, balancing completeness against latency in feature computation.",
       hints: [
         "Events don\'t always arrive in the order they occurred - network latency varies.",
         'Watermarks tell Flink when it is "safe" to finalize a time window.',
@@ -1275,7 +1256,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Kubeflow\'s training operators (PyTorchJob, TFJob) extend Kubernetes with ML-specific job types that handle distributed training coordination, worker-master communication, and fault recovery natively.",
+        "**Step 1:** Kubeflow\'s training operators (PyTorchJob, TFJob) extend Kubernetes with ML-specific job types that handle distributed training coordination, worker-master communication, and fault recovery natively.",
       hints: [
         "Standard Kubernetes Job lacks ML-specific coordination primitives.",
         "Kubeflow adds custom resource definitions (CRDs) specifically for distributed training patterns.",
@@ -1289,7 +1270,7 @@ const questions: Record<string, Question[]> = {
         "Kubernetes resource limits for GPU are specified with the resource key `nvidia.com/gpu` and a GPU is always shared between multiple pods by default.",
       correctAnswer: "False",
       explanation:
-        "By default, Kubernetes GPU resources are not shared - a GPU requested by a pod is exclusively assigned to it. GPU sharing requires additional mechanisms like NVIDIA MPS or time-slicing plugins.",
+        "**Step 1:** By default, Kubernetes GPU resources are not shared - a GPU requested by a pod is exclusively assigned to it.\n\n**Step 2:** GPU sharing requires additional mechanisms like NVIDIA MPS or time-slicing plugins.",
       hints: [
         "Exclusive GPU assignment is the default; sharing requires explicit configuration.",
         "GPU sharing adds complexity around memory isolation and context switching.",
@@ -1309,7 +1290,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Node affinity with custom labels (e.g., `nvlink-domain: A`) directs the scheduler to place all pods of a distributed training job onto nodes sharing high-bandwidth interconnects, critical for all-reduce performance.",
+        "**Step 1:** Node affinity with custom labels (e.g., `nvlink-domain: A`) directs the scheduler to place all pods of a distributed training job onto nodes sharing high-bandwidth interconnects, critical for all-reduce performance.",
       hints: [
         "Network topology affects distributed training speed - nodes must be close in the network.",
         "Custom node labels expose hardware topology to the Kubernetes scheduler.",
@@ -1332,7 +1313,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SageMaker Automatic Model Tuning runs multiple training jobs with different hyperparameter combinations using Bayesian optimization to find the configuration that maximizes the target metric.",
+        "**Step 1:** SageMaker Automatic Model Tuning runs multiple training jobs with different hyperparameter combinations using Bayesian optimization to find the configuration that maximizes the target metric.",
       hints: [
         'The feature name directly describes its purpose - "tuning" hyperparameters.',
         "Bayesian optimization is more efficient than grid or random search.",
@@ -1346,7 +1327,7 @@ const questions: Record<string, Question[]> = {
         "GCP Vertex AI Pipelines and AWS SageMaker Pipelines are both built on top of the open-source Kubeflow Pipelines SDK.",
       correctAnswer: "False",
       explanation:
-        "Vertex AI Pipelines is built on Kubeflow Pipelines, but SageMaker Pipelines uses AWS\'s own proprietary pipeline definition format and execution engine, not the Kubeflow SDK.",
+        "**Step 1:** Vertex AI Pipelines is built on Kubeflow Pipelines, but SageMaker Pipelines uses AWS\'s own proprietary pipeline definition format and execution engine, not the Kubeflow SDK.",
       hints: [
         "Not all cloud ML platforms adopt the same open-source substrate.",
         "Vendor lock-in vs. open standards is a key consideration when choosing cloud ML platforms.",
@@ -1366,7 +1347,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Managed endpoints abstract away cluster management, auto-scaling policies, and deployment strategies, letting ML engineers focus on model development rather than infrastructure operations.",
+        "**Step 1:** Managed endpoints abstract away cluster management, auto-scaling policies, and deployment strategies, letting ML engineers focus on model development rather than infrastructure operations.",
       hints: [
         '"Managed" implies the cloud provider handles the operational work.',
         "The trade-off is flexibility vs. operational simplicity.",
@@ -1388,7 +1369,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Demographic parity (statistical parity) requires that the probability of a positive prediction is equal across protected groups, regardless of true label distributions.",
+        "**Step 1:** Demographic parity (statistical parity) requires that the probability of a positive prediction is equal across protected groups, regardless of true label distributions.",
       hints: [
         "Parity here means the rate of a specific outcome - the positive prediction rate - is equal.",
         "This is different from equal accuracy or equal error rates.",
@@ -1402,7 +1383,7 @@ const questions: Record<string, Question[]> = {
         "It is mathematically possible to simultaneously satisfy demographic parity, equalized odds, and calibration when base rates differ between groups.",
       correctAnswer: "False",
       explanation:
-        "Chouldechova\'s impossibility theorem proves that when base rates differ between groups, the three fairness criteria cannot all be satisfied simultaneously - a fundamental tension in algorithmic fairness.",
+        "**Step 1:** Chouldechova\'s impossibility theorem proves that when base rates differ between groups, the three fairness criteria cannot all be satisfied simultaneously - a fundamental tension in algorithmic fairness.",
       hints: [
         "Fairness metrics often conflict with each other - optimizing one can worsen another.",
         "This is a proven mathematical impossibility result, not just an engineering limitation.",
@@ -1422,7 +1403,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Comprehensive per-prediction logging with features, model version, and relevant demographic attributes enables retrospective fairness analysis, regulatory audits, and disparity detection across subgroups.",
+        "**Step 1:** Comprehensive per-prediction logging with features, model version, and relevant demographic attributes enables retrospective fairness analysis, regulatory audits, and disparity detection across subgroups.",
       hints: [
         "You can only audit what you\'ve logged - missing data makes fairness analysis impossible.",
         "Regulators may require the ability to reconstruct any past decision.",
@@ -1445,7 +1426,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Model extraction attacks use carefully chosen queries to train a surrogate model that approximates the target model\'s behavior, effectively stealing the model without accessing its weights.",
+        "**Step 1:** Model extraction attacks use carefully chosen queries to train a surrogate model that approximates the target model\'s behavior, effectively stealing the model without accessing its weights.",
       hints: [
         "If you can query a model many times, you can observe and replicate its input-output mapping.",
         "The attack steals intellectual property encoded in the model\'s behavior.",
@@ -1459,7 +1440,7 @@ const questions: Record<string, Question[]> = {
         "Rate limiting and query monitoring on a model\'s prediction API can help detect and mitigate model extraction attacks.",
       correctAnswer: "True",
       explanation:
-        "Extraction attacks require a large number of queries; rate limiting reduces the attacker\'s query budget, and anomaly detection on query patterns (e.g., systematically exploring the input space) can identify ongoing attacks.",
+        "**Step 1:** Extraction attacks require a large number of queries; rate limiting reduces the attacker\'s query budget, and anomaly detection on query patterns (e.g., systematically exploring the input space) can identify ongoing attacks.",
       hints: [
         "Extraction requires many queries - limiting query rate raises the attacker\'s cost.",
         "Unusual query distributions (e.g., uniform random inputs) are fingerprints of extraction.",
@@ -1479,7 +1460,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Membership inference attacks exploit the fact that models often produce different confidence distributions for training versus non-training samples, allowing an attacker to infer whether a specific record was in the training set - a significant privacy risk.",
+        "**Step 1:** Membership inference attacks exploit the fact that models often produce different confidence distributions for training versus non-training samples, allowing an attacker to infer whether a specific record was in the training set - a significant privacy risk.",
       hints: [
         '"Membership" refers to membership in the training dataset, not model membership.',
         "Models that overfit are more vulnerable because they memorize training examples.",
@@ -1502,7 +1483,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Batching amortizes model invocation overhead across requests, improving throughput (samples/second), but each request waits longer to be included in a batch - increasing tail latency.",
+        "**Step 1:** Batching amortizes model invocation overhead across requests, improving throughput (samples/second), but each request waits longer to be included in a batch - increasing tail latency.",
       hints: [
         "Requests must wait for a full batch to form - this waiting time is added latency.",
         "GPU efficiency increases with batch size; individual request wait time also increases.",
@@ -1516,7 +1497,7 @@ const questions: Record<string, Question[]> = {
         "P99 latency is a more conservative and safety-relevant metric than mean latency for user-facing ML systems.",
       correctAnswer: "True",
       explanation:
-        "P99 (99th percentile) latency represents the worst case for 99% of requests, capturing tail latency that mean completely hides. In user-facing systems, tail latency determines user experience for a significant fraction of users.",
+        "**Step 1:** P99 (99th percentile) latency represents the worst case for 99% of requests, capturing tail latency that mean completely hides.\n\n**Step 2:** In user-facing systems, tail latency determines user experience for a significant fraction of users.",
       hints: [
         "The mean can be low while a small fraction of requests are extremely slow.",
         "If 1% of users see 10-second latency, that\'s a real problem the mean doesn\'t show.",
@@ -1536,7 +1517,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Before scaling out or making model changes, profiling identifies the actual bottleneck. Scaling a CPU-bound system with more GPUs wastes money; fixing the binding constraint is always the most efficient first step.",
+        "**Step 1:** Before scaling out or making model changes, profiling identifies the actual bottleneck.\n\n**Step 2:** Scaling a CPU-bound system with more GPUs wastes money; fixing the binding constraint is always the most efficient first step.",
       hints: [
         "Optimizing the wrong component wastes resources without improving performance.",
         '"Find the bottleneck first" is the universal principle for performance engineering.',
@@ -1559,7 +1540,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Exact-match caching only hits when queries are byte-for-byte identical, making it nearly useless for natural language inputs where the same question can be phrased countless ways.",
+        "**Step 1:** Exact-match caching only hits when queries are byte-for-byte identical, making it nearly useless for natural language inputs where the same question can be phrased countless ways.",
       hints: [
         "Natural language is highly variable - rare for two users to type exactly the same string.",
         "This limitation motivates semantic (embedding-based) caching.",
@@ -1579,8 +1560,7 @@ const questions: Record<string, Question[]> = {
         "Since the system prompt may be hundreds to thousands of tokens, caching it can reduce time-to-first-token by 30-70% for typical chat workloads.",
       hints: [
         "System prompts are typically long (hundreds of tokens) and identical across all users - recomputing their KV cache on every request is the inefficiency prefix caching targets.",
-        "The KV cache is stored as a hash-keyed cache - if the hash of the prefix matches a prior request, the cached KV values are reused.",
-        "The prefill phase dominates latency for longer prompts; prefix caching directly reduces this component.",
+        "The KV cache is stored as a hash-keyed cache - if the hash of the prefix matches a prior request, the cached KV values are reused."
       ],
     },
     {
@@ -1603,8 +1583,7 @@ const questions: Record<string, Question[]> = {
         "The optimal threshold is domain-dependent and should be tuned on a representative evaluation set of query pairs labeled as same-intent or different-intent.",
       hints: [
         "The threshold answers: how similar must two queries be for one to stand in for the other? This is the core design trade-off.",
-        "Too high a threshold = cache misses (expensive LLM calls not avoided). Too low a threshold = correctness failures (wrong answers served).",
-        "Domain-specific evaluation sets - pairs of queries labeled as same or different intent - are the standard tool for calibrating this threshold.",
+        "Too high a threshold = cache misses (expensive LLM calls not avoided). Too low a threshold = correctness failures (wrong answers served)."
       ],
     },
   ],
@@ -1631,8 +1610,7 @@ const questions: Record<string, Question[]> = {
         "That is, for every parameter in the model, approximately 20 tokens of training data are compute-optimally allocated. Prior large models like Gopher (280B parameters, 300B tokens) were significantly undertrained relative to this ratio - they had too few tokens per parameter. Chinchilla showed that a model half the size of Gopher, trained on twice the data, would match its performance at a fraction of the inference cost.",
       hints: [
         "Chinchilla's key finding: prior large language models were significantly undertrained relative to their size - they had too few training tokens per parameter.",
-        "The compute-optimal ratio \\(D/N \\approx 20\\) means a 10B parameter model should be trained on ~200B tokens for maximum efficiency.",
-        "This has major inference cost implications: a model trained to Chinchilla-optimal ratios requires significantly less compute to serve at the same quality level.",
+        "The compute-optimal ratio \\(D/N \\approx 20\\) means a 10B parameter model should be trained on ~200B tokens for maximum efficiency."
       ],
     },
     {
@@ -1643,7 +1621,7 @@ const questions: Record<string, Question[]> = {
         "Scaling laws imply that doubling model parameters always doubles model performance on downstream tasks.",
       correctAnswer: "False",
       explanation:
-        "Scaling laws show a power-law (sub-linear) relationship between scale and loss - performance improves predictably but with diminishing returns, not linearly with parameter count.",
+        "**Step 1:** Scaling laws show a power-law (sub-linear) relationship between scale and loss - performance improves predictably but with diminishing returns, not linearly with parameter count.",
       hints: [
         "Power laws have exponents less than 1 - doubling input gives less than double output.",
         "Scaling curves are log-linear, not linear.",
@@ -1663,7 +1641,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Scaling laws provide predictive equations for loss, compute, and sample efficiency, allowing infrastructure teams to estimate cluster size, training duration, and cost before initiating expensive training runs.",
+        "**Step 1:** Scaling laws provide predictive equations for loss, compute, and sample efficiency, allowing infrastructure teams to estimate cluster size, training duration, and cost before initiating expensive training runs.",
       hints: [
         "The value is in prediction before committing resources.",
         "Scaling laws let you extrapolate from small experiments to large-scale costs.",
@@ -1686,7 +1664,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Prometheus is a time-series metrics collection and alerting engine that scrapes metrics endpoints from services at regular intervals; Grafana then reads from Prometheus to render dashboards.",
+        "**Step 1:** Prometheus is a time-series metrics collection and alerting engine that scrapes metrics endpoints from services at regular intervals; Grafana then reads from Prometheus to render dashboards.",
       hints: [
         "Prometheus collects and stores; Grafana visualizes - they have distinct roles.",
         "Prometheus scrapes /metrics endpoints exposed by your ML services.",
@@ -1707,8 +1685,7 @@ const questions: Record<string, Question[]> = {
         "By examining individual span durations, engineers identify which specific service in the chain is responsible for latency anomalies - not just that latency is elevated, but precisely where.",
       hints: [
         "A single inference request in an ML system typically traverses multiple services: feature store, model server, and post-processing - each contributes a span to the trace.",
-        "Metrics (e.g., Prometheus) tell you latency is elevated; distributed traces tell you which specific service in the call chain is responsible.",
-        "Trace context is propagated via HTTP headers (e.g., W3C TraceContext or B3 headers in Zipkin) through all synchronous service calls.",
+        "Metrics (e.g., Prometheus) tell you latency is elevated; distributed traces tell you which specific service in the call chain is responsible."
       ],
     },
     {
@@ -1725,7 +1702,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Histograms aggregate latency samples into pre-defined buckets, enabling server-side percentile calculation (P50, P95, P99) across multiple instances - essential for SLA monitoring.",
+        "**Step 1:** Histograms aggregate latency samples into pre-defined buckets, enabling server-side percentile calculation (P50, P95, P99) across multiple instances - essential for SLA monitoring.",
       hints: [
         "To compute P99 latency, you need a distribution, not just a single value.",
         "Histograms allow aggregation across multiple Prometheus instances; summaries do not.",
@@ -1748,7 +1725,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Graceful degradation ensures the system provides reduced but functional service during partial failures - e.g., falling back to a simpler rule-based model if the ML model service is unavailable.",
+        "**Step 1:** Graceful degradation ensures the system provides reduced but functional service during partial failures - e.g., falling back to a simpler rule-based model if the ML model service is unavailable.",
       hints: [
         "The opposite of graceful degradation is a complete outage when any component fails.",
         "Fallback mechanisms are the implementation of this principle.",
@@ -1762,7 +1739,7 @@ const questions: Record<string, Question[]> = {
         'The "data flywheel" effect describes how a deployed ML product that attracts more users generates more training data, which improves the model, which attracts more users.',
       correctAnswer: "True",
       explanation:
-        "The data flywheel is a virtuous cycle where user engagement generates labeled data that improves the model, creating a compounding competitive advantage that is difficult for competitors to replicate.",
+        "**Step 1:** The data flywheel is a virtuous cycle where user engagement generates labeled data that improves the model, creating a compounding competitive advantage that is difficult for competitors to replicate.",
       hints: [
         "A flywheel is a self-reinforcing cycle - each turn makes the next turn easier.",
         "This is why data network effects are a key moat for ML-driven products.",
@@ -1806,7 +1783,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SHAP values provide consistent, locally accurate feature attributions by computing each feature's average marginal contribution across all possible feature subsets. Unlike simpler attribution methods, SHAP satisfies desirable properties: local accuracy, missingness, and consistency, making it the gold standard for model explanation.",
+        "**Step 1:** SHAP values provide consistent, locally accurate feature attributions by computing each feature's average marginal contribution across all possible feature subsets.\n\n**Step 2:** Unlike simpler attribution methods, SHAP satisfies desirable properties: local accuracy, missingness, and consistency, making it the gold standard for model explanation.",
       hints: [
         "Shapley values come from cooperative game theory - imagine features as players splitting a payout (prediction).",
         "SHAP is model-agnostic but also has fast, model-specific implementations for tree ensembles.",
@@ -1855,7 +1832,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Model cards (Mitchell et al., 2019) are model documentation artifacts: they specify intended use cases, out-of-scope uses, performance metrics across demographic groups, ethical considerations, and training data information. They enable stakeholders to assess whether a model is appropriate for a given deployment context and make ML systems more transparent and accountable.",
+        "**Step 1:** Model cards (Mitchell et al., 2019) are model documentation artifacts: they specify intended use cases, out-of-scope uses, performance metrics across demographic groups, ethical considerations, and training data information.\n\n**Step 2:** They enable stakeholders to assess whether a model is appropriate for a given deployment context and make ML systems more transparent and accountable.",
       hints: [
         "Google, Hugging Face, and many organizations publish model cards for their public models.",
         "Think of a model card as a nutrition label for ML models.",
@@ -1904,7 +1881,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Behavioral testing (CheckList) creates test suites targeting specific model capabilities: minimum functionality tests (basic sanity checks), invariance tests (adding typos or changing names should not change sentiment), and directional tests (adding not should flip sentiment). This reveals failures that aggregate metrics miss - a model with 95% accuracy may still completely fail at understanding negation.",
+        "**Step 1:** Behavioral testing (CheckList) creates test suites targeting specific model capabilities: minimum functionality tests (basic sanity checks), invariance tests (adding typos or changing names should not change sentiment), and directional tests (adding not should flip sentiment).\n\n**Step 2:** This reveals failures that aggregate metrics miss - a model with 95% accuracy may still completely fail at understanding negation.",
       hints: [
         "Inspired by software testing checklists - check specific behaviors, not just aggregate performance.",
         "Different from adversarial testing: behavioral tests check expected model properties.",
@@ -1953,7 +1930,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Transformer inference cost drivers: (1) attention computation is O(n^2) in sequence length - FlashAttention reduces memory I/O by fusing operations; (2) KV cache grows linearly with context length, becoming the memory bottleneck for long contexts; (3) speculative decoding (small draft model proposes tokens, large model verifies in parallel) can achieve 2-4x speedup for repetitive outputs.",
+        "**Step 1:** Transformer inference cost drivers: (1) attention computation is O(n^2) in sequence length - FlashAttention reduces memory I/O by fusing operations; (2) KV cache grows linearly with context length, becoming the memory bottleneck for long contexts; (3) speculative decoding (small draft model proposes tokens, large model verifies in parallel) can achieve 2-4x speedup for repetitive outputs.",
       hints: [
         "Autoregressive decoding generates tokens sequentially - each token requires a full forward pass.",
         "Speculative decoding exploits that verification is cheaper than sequential generation.",
@@ -2047,7 +2024,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Cron jobs are primitive: they run at a schedule but have no dependency management, no retry logic, no monitoring, and no parameterization. ML pipelines have complex dependencies and failure modes requiring retries. Orchestrators provide DAG-based dependency resolution, step-level monitoring, parameter sweeps, artifact tracking, and integration with compute backends.",
+        "**Step 1:** Cron jobs are primitive: they run at a schedule but have no dependency management, no retry logic, no monitoring, and no parameterization.\n\n**Step 2:** ML pipelines have complex dependencies and failure modes requiring retries.\n\n**Step 3:** Orchestrators provide DAG-based dependency resolution, step-level monitoring, parameter sweeps, artifact tracking, and integration with compute backends.",
       hints: [
         "A cron job that fails silently is a common source of ML production incidents.",
         "Orchestrators provide the glue between pipeline steps that cron lacks.",
@@ -2186,7 +2163,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Data versioning (DVC, Delta Lake, LakeFS) is analogous to code version control for datasets. Without it, which data was used to train the model that was in production on March 15 is unanswerable. With versioning: full reproducibility by tagging training dataset versions, bisect data quality issues by comparing versions when metrics degraded, and rollback to last-known-good dataset.",
+        "**Step 1:** Data versioning (DVC, Delta Lake, LakeFS) is analogous to code version control for datasets.\n\n**Step 2:** Without it, which data was used to train the model that was in production on March 15 is unanswerable.\n\n**Step 3:** With versioning: full reproducibility by tagging training dataset versions, bisect data quality issues by comparing versions when metrics degraded, and rollback to last-known-good dataset.",
       hints: [
         "DVC (Data Version Control) integrates with git to version datasets stored in S3, GCS, etc.",
         "Content-addressed storage (sha256 hash of content) naturally versions data without metadata management.",
@@ -2235,7 +2212,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Silent failures are the most dangerous ML production issues: infrastructure is healthy (no errors, normal latency) but predictions are quietly wrong. Examples: feature pipeline bug causing all users to get the same features, data drift making the model output nonsense that passes schema validation. Detection requires business metric monitoring (revenue, engagement) and prediction distribution monitoring - not just system health checks.",
+        "**Step 1:** Silent failures are the most dangerous ML production issues: infrastructure is healthy (no errors, normal latency) but predictions are quietly wrong.\n\n**Step 2:** Examples: feature pipeline bug causing all users to get the same features, data drift making the model output nonsense that passes schema validation.\n\n**Step 3:** Detection requires business metric monitoring (revenue, engagement) and prediction distribution monitoring - not just system health checks.",
       hints: [
         "System monitoring catches crashes; business metric monitoring catches silent failures.",
         "No news is good news is a dangerous assumption for ML systems.",
@@ -2283,7 +2260,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Tree all-reduce using a binary reduction tree with the master node at the root",
       ],
       correctAnswer: 1,
-      explanation: "Ring all-reduce (Baidu's implementation, 2017; NCCL library) is the dominant algorithm for data-parallel gradient synchronization. Each of N workers sends gradient chunks around a ring in two phases: scatter-reduce (each worker accumulates one chunk) then all-gather (each worker distributes its chunk). Total communication per worker: 2*(N-1)/N * M bytes, which is near-optimal and independent of N for large N. This avoids the parameter server bottleneck (O(N*M) traffic at the server) and scales to thousands of GPUs. PyTorch DDP and Horovod use ring all-reduce via NCCL.",
+      explanation: "**Step 1:** Ring all-reduce (Baidu's implementation, 2017; NCCL library) is the dominant algorithm for data-parallel gradient synchronization.\n\n**Step 2:** Each of N workers sends gradient chunks around a ring in two phases: scatter-reduce (each worker accumulates one chunk) then all-gather (each worker distributes its chunk).\n\n**Step 3:** Total communication per worker: 2*(N-1)/N * M bytes, which is near-optimal and independent of N for large N. This avoids the parameter server bottleneck (O(N*M) traffic at the server) and scales to thousands of GPUs. PyTorch DDP and Horovod use ring all-reduce via NCCL.",
       hints: [
         "Parameter server bottleneck: all N workers send to one server - server network is O(N*M). Ring all-reduce: O(2M) per worker regardless of N.",
         "NCCL (NVIDIA Collective Communications Library) implements ring all-reduce optimized for NVLink/InfiniBand topologies.",
@@ -2301,7 +2278,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Reduce-scatter to aggregate partial results and distribute different chunks to each GPU",
       ],
       correctAnswer: 1,
-      explanation: "Megatron-LM (Shoeybi et al., 2019) column-then-row parallelism is designed to minimize communication. Column-parallel: W_1 is split column-wise into N shards; each GPU computes XW_1^i = partial activation chunk. No communication needed here - each GPU passes its chunk directly into the corresponding row-parallel shard of W_2 (also split). After the row-parallel layer, each GPU holds a partial sum of the final output; a single all-reduce synchronizes these. The key insight: pairing column-parallel (split columns of W_1) with row-parallel (split rows of W_2) avoids intermediate all-gather, requiring only one all-reduce per MLP block.",
+      explanation: "**Step 1:** Megatron-LM (Shoeybi et al., 2019) column-then-row parallelism is designed to minimize communication.\n\n**Step 2:** Column-parallel: W_1 is split column-wise into N shards; each GPU computes XW_1^i = partial activation chunk.\n\n**Step 3:** No communication needed here - each GPU passes its chunk directly into the corresponding row-parallel shard of W_2 (also split). After the row-parallel layer, each GPU holds a partial sum of the final output; a single all-reduce synchronizes these. The key insight: pairing column-parallel (split columns of W_1) with row-parallel (split rows of W_2) avoids intermediate all-gather, requiring only one all-reduce per MLP block.",
       hints: [
         "Column-parallel output shape: [batch, seq, 4*d_model/N] per GPU - this directly maps to the row-parallel weight split.",
         "Only ONE all-reduce per MLP block in Megatron-LM - after the row-parallel layer, not between the two linear layers.",
@@ -2319,7 +2296,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Batch normalization statistics cannot be computed correctly across pipeline stages",
       ],
       correctAnswer: 1,
-      explanation: "In naive pipeline parallelism with K stages and one micro-batch: stage 1 processes the batch, sends activations to stage 2, then idles. Stage 2 processes, sends to stage 3, then idles waiting for the next batch. At any step, only 1 of K stages is active - utilization is 1/K (the 'pipeline bubble'). GPipe fixes this with micro-batching: split the batch into M micro-batches, filling the pipeline. Bubble fraction reduces to (K-1)/(M+K-1), which shrinks as M increases. PipeDream uses 1F1B (one-forward-one-backward) scheduling to further reduce bubble fraction.",
+      explanation: "**Step 1:** In naive pipeline parallelism with K stages and one micro-batch: stage 1 processes the batch, sends activations to stage 2, then idles. Stage 2 processes, sends to stage 3, then idles waiting for the next batch.\n\n**Step 2:** At any step, only 1 of K stages is active - utilization is 1/K (the 'pipeline bubble'). GPipe fixes this with micro-batching: split the batch into M micro-batches, filling the pipeline.\n\n**Step 3:** Bubble fraction reduces to (K-1)/(M+K-1), which shrinks as M increases. PipeDream uses 1F1B (one-forward-one-backward) scheduling to further reduce bubble fraction.",
       hints: [
         "Pipeline bubble = idle time when stages wait for activations. Micro-batching keeps the pipeline filled.",
         "With M=K micro-batches, bubble fraction = (K-1)/(2K-1) \\approx 50%. With M>>K, bubble fraction \\to 0.",
@@ -2332,7 +2309,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Model parallelism (splitting a single model across multiple GPUs) is primarily motivated by memory constraints when a model's parameters and activations exceed a single GPU's memory capacity, rather than by throughput maximization.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "Data parallelism maximizes throughput by processing more data in parallel - it requires each worker to hold the full model, so it is feasible when the model fits on one GPU. Model parallelism (tensor, pipeline, or sequence) is motivated by models that do NOT fit on a single GPU: GPT-3 (175B params, ~350GB in FP16) cannot fit on one A100 (80GB VRAM). Model parallelism distributes parameters across GPUs to enable training. However, model parallelism introduces communication overhead between GPU groups, often making it less efficient per-FLOP than data parallelism when not memory-constrained.",
+      explanation: "**Step 1:** Data parallelism maximizes throughput by processing more data in parallel - it requires each worker to hold the full model, so it is feasible when the model fits on one GPU.\n\n**Step 2:** Model parallelism (tensor, pipeline, or sequence) is motivated by models that do NOT fit on a single GPU: GPT-3 (175B params, ~350GB in FP16) cannot fit on one A100 (80GB VRAM).\n\n**Step 3:** Model parallelism distributes parameters across GPUs to enable training. However, model parallelism introduces communication overhead between GPU groups, often making it less efficient per-FLOP than data parallelism when not memory-constrained.",
       hints: [
         "Rule of thumb: use data parallelism when the model fits on one GPU (throughput-optimal). Use model parallelism only when forced by memory constraints.",
         "3D parallelism (Megatron-LM + DeepSpeed): combines data, tensor, and pipeline parallelism for massive models.",
@@ -2352,7 +2329,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "O(L) extra compute - each layer's activation must be recomputed L times",
       ],
       correctAnswer: 1,
-      explanation: "With full gradient checkpointing (checkpoint every layer), memory is O(L) for storing one activation per layer, but all activations are recomputed during backprop - cost is 2x (one forward, one backward, plus one full recompute). With selective checkpointing at sqrt(L) intervals (Chen et al., 2016), memory is O(sqrt(L)) activation segments * O(sqrt(L)) activations within each segment = O(L) total, but this is a looser bound. The practical regime for transformers: checkpoint at each transformer block, recompute within blocks during backward - extra cost ~33% (1/3 of forward compute is recomputed). PyTorch's torch.utils.checkpoint implements this per-module.",
+      explanation: "**Step 1:** With full gradient checkpointing (checkpoint every layer), memory is O(L) for storing one activation per layer, but all activations are recomputed during backprop - cost is 2x (one forward, one backward, plus one full recompute).\n\n**Step 2:** With selective checkpointing at sqrt(L) intervals (Chen et al., 2016), memory is O(sqrt(L)) activation segments * O(sqrt(L)) activations within each segment = O(L) total, but this is a looser bound.\n\n**Step 3:** The practical regime for transformers: checkpoint at each transformer block, recompute within blocks during backward - extra cost ~33% (1/3 of forward compute is recomputed). PyTorch's torch.utils.checkpoint implements this per-module.",
       hints: [
         "Full recompute: 2x compute, O(1) activation memory. No recompute: 1x compute, O(L) activation memory.",
         "Practical transformers use per-block checkpointing: store block inputs, recompute internals (attention, MLP) during backward.",
@@ -2370,7 +2347,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Requires half the memory of FP16, further reducing training memory footprint",
       ],
       correctAnswer: 1,
-      explanation: "FP16 has 5 exponent bits (range: ~6e-5 to 6.5e4) and 10 mantissa bits. BF16 has 8 exponent bits (range: ~1.2e-38 to 3.4e38, identical to FP32) and 7 mantissa bits. LLM training with FP16 frequently overflows (activations/gradients exceed FP16 max) or underflows (small gradients become 0), requiring loss scaling to compensate. BF16 avoids overflow/underflow due to its FP32-equivalent range, eliminating loss scaling complexity. The lower precision of BF16 (7 vs 10 mantissa bits) is acceptable because the dynamic range matters more than precision for gradient descent stability.",
+      explanation: "**Step 1:** FP16 has 5 exponent bits (range: ~6e-5 to 6.5e4) and 10 mantissa bits.\n\n**Step 2:** BF16 has 8 exponent bits (range: ~1.2e-38 to 3.4e38, identical to FP32) and 7 mantissa bits.\n\n**Step 3:** LLM training with FP16 frequently overflows (activations/gradients exceed FP16 max) or underflows (small gradients become 0), requiring loss scaling to compensate. BF16 avoids overflow/underflow due to its FP32-equivalent range, eliminating loss scaling complexity. The lower precision of BF16 (7 vs 10 mantissa bits) is acceptable because the dynamic range matters more than precision for gradient descent stability.",
       hints: [
         "FP16 max value: 65504. LLM activations after LayerNorm or attention softmax can easily exceed this - overflow to NaN.",
         "BF16 = FP32 exponent + half mantissa: same range as FP32, lower precision than FP16 - a favorable tradeoff for training.",
@@ -2388,7 +2365,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Only model parameters, not optimizer states or gradients",
       ],
       correctAnswer: 2,
-      explanation: "ZeRO eliminates the redundancy in standard data parallelism where each GPU holds identical copies of optimizer states, gradients, and parameters. ZeRO Stage 1: partition optimizer states only (8-byte Adam state per param, 4x reduction). Stage 2: partition optimizer states + gradients (additional 2x). Stage 3: partition optimizer states + gradients + parameters (additional 2x, total 8x memory reduction for 16 GPUs). Communication volume in Stage 3: all-gather parameters before forward/backward, reduce-scatter gradients after backward. Total communication is 3x the baseline all-reduce - a 3x overhead for 8x memory savings.",
+      explanation: "**Step 1:** ZeRO eliminates the redundancy in standard data parallelism where each GPU holds identical copies of optimizer states, gradients, and parameters. ZeRO Stage 1: partition optimizer states only (8-byte Adam state per param, 4x reduction).\n\n**Step 2:** Stage 2: partition optimizer states + gradients (additional 2x). Stage 3: partition optimizer states + gradients + parameters (additional 2x, total 8x memory reduction for 16 GPUs).\n\n**Step 3:** Communication volume in Stage 3: all-gather parameters before forward/backward, reduce-scatter gradients after backward. Total communication is 3x the baseline all-reduce - a 3x overhead for 8x memory savings.",
       hints: [
         "Standard DP with Adam: each GPU stores 16 bytes per param (4 weights + 4 gradients + 8 Adam states in FP32). ZeRO-3 divides by N.",
         "ZeRO-3 tradeoff: 3x communication overhead (vs 1x all-reduce in standard DP) for 8x memory reduction.",
@@ -2401,9 +2378,9 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Mixed-precision training with FP16/BF16 weights and FP32 master weights requires maintaining two copies of the model parameters in memory, effectively negating the memory savings of using FP16.",
       options: ["True", "False"],
       correctAnswer: 1,
-      explanation: "Mixed-precision training maintains: (1) FP16/BF16 working copy of weights for forward/backward (2 bytes/param), and (2) FP32 master copy for optimizer updates (4 bytes/param). Total: 6 bytes/param for weights. Compared to pure FP32 training: 4 bytes/param weights + 4 bytes/param gradients + 8 bytes/param Adam states = 16 bytes/param. Mixed precision: 2 (FP16 weights) + 4 (FP32 master) + 2 (FP16 gradients) + 8 (FP32 Adam states) = 16 bytes/param - same total! However, the benefit is in activation memory: FP16 activations are 2x smaller than FP32 activations, which dominates during training of large models with long sequences.",
+      explanation: "**Step 1:** Mixed-precision training maintains: (1) FP16/BF16 working copy of weights for forward/backward (2 bytes/param), and (2) FP32 master copy for optimizer updates (4 bytes/param).\n\n**Step 2:** Total: 6 bytes/param for weights.\n\n**Step 3:** Compared to pure FP32 training: 4 bytes/param weights + 4 bytes/param gradients + 8 bytes/param Adam states = 16 bytes/param. Mixed precision: 2 (FP16 weights) + 4 (FP32 master) + 2 (FP16 gradients) + 8 (FP32 Adam states) = 16 bytes/param - same total! However, the benefit is in activation memory: FP16 activations are 2x smaller than FP32 activations, which dominates during training of large models with long sequences.",
       hints: [
-        "The memory savings from mixed precision come primarily from FP16 activations (proportional to batch*seq*hidden), not from weights.",
+        "The memory savings from mixed precision come primarily from FP16 activations (proportional to batch \\cdot seq \\cdot hidden), not from weights.",
         "For a 1B param model, weights + optimizer states dominate; for large batches/sequences, activations dominate - FP16 helps there.",
       ],
     },
@@ -2421,7 +2398,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Systolic arrays have higher clock frequencies (10+ GHz vs GPU's 1-2 GHz) which provides the throughput advantage",
       ],
       correctAnswer: 1,
-      explanation: "A systolic array for matrix multiplication (A * B = C) has a 2D mesh of PE (processing elements). A elements flow right, B elements flow down, and C accumulates in place. Each PE: (1) receives an A element from the left, (2) receives a B element from above, (3) computes A*B and adds to local accumulator, (4) passes A right and B down. Data reuse is maximized: each weight element passes through the entire array. NVIDIA tensor cores implement a similar dataflow. TPU systolic arrays (128x128 = 16,384 MACs per cycle) are specialized for dense matrix ops; GPU CUDA cores are general-purpose and require explicit memory orchestration via shared memory tiles.",
+      explanation: "**Step 1:** A systolic array for matrix multiplication (A * B = C) has a 2D mesh of PE (processing elements). A elements flow right, B elements flow down, and C accumulates in place.\n\n**Step 2:** Each PE: (1) receives an A element from the left, (2) receives a B element from above, (3) computes A*B and adds to local accumulator, (4) passes A right and B down. Data reuse is maximized: each weight element passes through the entire array.\n\n**Step 3:** NVIDIA tensor cores implement a similar dataflow. TPU systolic arrays (128x128 = 16,384 MACs per cycle) are specialized for dense matrix ops; GPU CUDA cores are general-purpose and require explicit memory orchestration via shared memory tiles.",
       hints: [
         "Systolic: 'rhythmic' data flow - like a heartbeat, data pulses through the array. Memory bandwidth bottleneck is eliminated.",
         "TPU MXU (Matrix Multiply Unit) = systolic array. NVIDIA tensor cores implement a similar weight-stationary or output-stationary dataflow.",
@@ -2439,7 +2416,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "O(d^2 / batch) - only memory-bound when batch=1, compute-bound for large batches",
       ],
       correctAnswer: 2,
-      explanation: "For matrix-vector product y = Wx (W: d x d, x: d): FLOPs = 2*d^2 (multiply-add per element). Bytes loaded = 2*d^2 (weight matrix, FP16) + 2*d (input, negligible). Arithmetic intensity = 2*d^2 / (2*d^2) = 1 FLOP/byte. A100 GPU: 312 TFLOP/s (BF16), 2 TB/s memory bandwidth \\to roofline threshold = 156 FLOP/byte. At 1 FLOP/byte, inference is 156x below the compute threshold - fully memory-bandwidth-bound. This explains why LLM inference latency scales with model size (more parameters = more memory to load) not with compute. Batching amortizes weight loading: batch B raises arithmetic intensity to ~B FLOP/byte.",
+      explanation: "**Step 1:** For matrix-vector product y = Wx (W: d x d, x: d): FLOPs = 2*d^2 (multiply-add per element). Bytes loaded = 2*d^2 (weight matrix, FP16) + 2*d (input, negligible).\n\n**Step 2:** Arithmetic intensity = 2*d^2 / (2*d^2) = 1 FLOP/byte. A100 GPU: 312 TFLOP/s (BF16), 2 TB/s memory bandwidth \\to roofline threshold = 156 FLOP/byte.\n\n**Step 3:** At 1 FLOP/byte, inference is 156x below the compute threshold - fully memory-bandwidth-bound. This explains why LLM inference latency scales with model size (more parameters = more memory to load) not with compute. Batching amortizes weight loading: batch B raises arithmetic intensity to ~B FLOP/byte.",
       hints: [
         "Arithmetic intensity = FLOPs / bytes. Below the roofline threshold (FLOP/s / bandwidth), operations are memory-bound.",
         "Batch size = 1: load all weights once, perform O(d) FLOPs per weight byte loaded. Batch size = 128: perform 128x more FLOPs per weight byte.",
@@ -2452,7 +2429,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "NVLink provides significantly higher GPU-to-GPU bandwidth than PCIe for multi-GPU training, which is why systems using NVLink (e.g., DGX A100 with NVLink 3.0) achieve much better all-reduce performance than PCIe-connected GPU clusters.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "NVLink 3.0 (A100): 600 GB/s bidirectional bandwidth per GPU (12 NVLink 3.0 links * 50 GB/s each). PCIe Gen4 x16: 32 GB/s bidirectional. For ring all-reduce with 8 GPUs, the bottleneck is GPU-to-GPU bandwidth. NVLink gives ~18x more bandwidth than PCIe for all-reduce operations. A DGX A100 (8 GPUs, fully connected NVLink) achieves ~300 GB/s effective all-reduce bandwidth per GPU, enabling gradient synchronization of a 7B parameter model (14GB gradients in FP16) in ~47ms. PCIe equivalent: ~870ms - a 18x difference that directly impacts training throughput.",
+      explanation: "**Step 1:** NVLink 3.0 (A100): 600 GB/s bidirectional bandwidth per GPU (12 NVLink 3.0 links * 50 GB/s each). PCIe Gen4 x16: 32 GB/s bidirectional.\n\n**Step 2:** For ring all-reduce with 8 GPUs, the bottleneck is GPU-to-GPU bandwidth. NVLink gives ~18x more bandwidth than PCIe for all-reduce operations.\n\n**Step 3:** A DGX A100 (8 GPUs, fully connected NVLink) achieves ~300 GB/s effective all-reduce bandwidth per GPU, enabling gradient synchronization of a 7B parameter model (14GB gradients in FP16) in ~47ms. PCIe equivalent: ~870ms - a 18x difference that directly impacts training throughput.",
       hints: [
         "NVLink 3.0: 600 GB/s per GPU. PCIe 4.0 x16: 32 GB/s per GPU. ~18x difference in bandwidth.",
         "All-reduce bandwidth determines how fast gradient synchronization occurs after each backward pass.",
@@ -2470,7 +2447,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Parallelizing attention heads across separate GPU kernels with asynchronous execution",
       ],
       correctAnswer: 1,
-      explanation: "Standard attention: Q, K, V in HBM. Compute S = QK^T (O(N^2) HBM reads/writes for N tokens), apply softmax, compute P = softmax(S)V. HBM bandwidth is the bottleneck: O(N^2 * d) bytes of HBM traffic. FlashAttention tiles: loads Q, K, V tiles into SRAM (fast, ~20 TB/s), computes partial attention results within SRAM using online softmax (Milakov & Gimelshein, 2018) to handle the running max, writes only final O back to HBM. HBM reads: O(N*d) not O(N^2*d). FlashAttention is 2-4x faster on A100 for N=2048 and 5-9x for N=8192 - the speedup grows with sequence length where N^2 attention score materialization is most costly.",
+      explanation: "**Step 1:** Standard attention: Q, K, V in HBM. Compute S = QK^T (O(N^2) HBM reads/writes for N tokens), apply softmax, compute P = softmax(S)V.\n\n**Step 2:** HBM bandwidth is the bottleneck: O(N^2 * d) bytes of HBM traffic. FlashAttention tiles: loads Q, K, V tiles into SRAM (fast, ~20 TB/s), computes partial attention results within SRAM using online softmax (Milakov & Gimelshein, 2018) to handle the running max, writes only final O back to HBM.\n\n**Step 3:** HBM reads: O(N*d) not O(N^2*d). FlashAttention is 2-4x faster on A100 for N=2048 and 5-9x for N=8192 - the speedup grows with sequence length where N^2 attention score materialization is most costly.",
       hints: [
         "HBM (High Bandwidth Memory) = GPU DRAM, ~2 TB/s. SRAM (on-chip shared memory) = ~20 TB/s. Keeping computation in SRAM avoids slow HBM round-trips.",
         "Online softmax: compute softmax without materializing the full N\\timesN attention matrix - process blocks, tracking running max for numerical stability.",
@@ -2490,7 +2467,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "GPTQ quantizes only the attention layers and leaves MLP layers in FP16 to preserve accuracy",
       ],
       correctAnswer: 1,
-      explanation: "GPTQ is based on the Optimal Brain Quantization (OBQ) framework. For each weight w_q being quantized: the quantization error delta = w_q - round(w_q / scale) * scale creates a residual. The Hessian H = X^T X (where X is layer input from calibration data) captures how sensitive the output is to each weight. GPTQ updates remaining unquantized weights w_j by adding -delta * H_qj / H_qq to compensate for w_q's quantization error. This lazy batch processing (Cholesky-based) enables quantizing GPT-3-175B in ~4 GPU-hours. Result: 4-bit GPTQ has <1% perplexity degradation vs FP16 on most LLMs.",
+      explanation: "**Step 1:** GPTQ is based on the Optimal Brain Quantization (OBQ) framework. For each weight w_q being quantized: the quantization error delta = w_q - round(w_q / scale) * scale creates a residual.\n\n**Step 2:** The Hessian H = X^T X (where X is layer input from calibration data) captures how sensitive the output is to each weight. GPTQ updates remaining unquantized weights w_j by adding -delta * H_qj / H_qq to compensate for w_q's quantization error.\n\n**Step 3:** This lazy batch processing (Cholesky-based) enables quantizing GPT-3-175B in ~4 GPU-hours. Result: 4-bit GPTQ has <1% perplexity degradation vs FP16 on most LLMs.",
       hints: [
         "OBQ/GPTQ key: quantizing one weight introduces error; compensate by adjusting neighboring weights using the Hessian of the output.",
         "Calibration data (small unlabeled dataset, ~128 samples) provides the Hessian estimate - no gradient computation needed.",
@@ -2508,7 +2485,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Thermal output - INT8 arithmetic generates less heat, allowing sustained higher clock speeds",
       ],
       correctAnswer: 1,
-      explanation: "For autoregressive LLM inference at batch size 1, the operation is memory-bandwidth-bound (arithmetic intensity ~1 FLOP/byte, far below GPU roofline). W8A16 quantization: weights stored in INT8 (1 byte/param), dequantized to FP16 just before the matrix multiply. Loading 1-byte INT8 weights is 2x faster than loading 2-byte FP16 weights from DRAM. Since memory bandwidth is the bottleneck, this directly halves time-per-token. For batch sizes large enough to become compute-bound, INT8 tensor core throughput (TOPS) also improves. LLM.int8() (Dettmers et al., 2022) implements this with outlier handling in FP16.",
+      explanation: "**Step 1:** For autoregressive LLM inference at batch size 1, the operation is memory-bandwidth-bound (arithmetic intensity ~1 FLOP/byte, far below GPU roofline). W8A16 quantization: weights stored in INT8 (1 byte/param), dequantized to FP16 just before the matrix multiply.\n\n**Step 2:** Loading 1-byte INT8 weights is 2x faster than loading 2-byte FP16 weights from DRAM. Since memory bandwidth is the bottleneck, this directly halves time-per-token.\n\n**Step 3:** For batch sizes large enough to become compute-bound, INT8 tensor core throughput (TOPS) also improves. LLM.int8() (Dettmers et al., 2022) implements this with outlier handling in FP16.",
       hints: [
         "At batch=1: model weights are loaded once per forward pass. INT8 = 2x less DRAM traffic = 2x faster token generation.",
         "W8A16: INT8 weights dequantized to FP16 for the matmul - no INT8 compute kernel needed, just faster weight loading.",
@@ -2521,7 +2498,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Quantization-aware training (QAT) generally achieves higher accuracy than post-training quantization (PTQ) at aggressive quantization levels (e.g., INT4) because QAT simulates quantization error during training, allowing the model to adapt its weights to be more robust to quantization.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "QAT inserts fake quantization operations (round-to-INT4 with straight-through estimators for gradients) during training, allowing the model to learn weight distributions that are robust to 4-bit quantization. PTQ quantizes a pre-trained FP32/FP16 model without gradient updates - the weights were not optimized for the quantization grid. At INT8, PTQ (e.g., GPTQ, SmoothQuant) achieves near-lossless accuracy. At INT4, QAT typically recovers 1-3% more accuracy than PTQ. The tradeoff: QAT requires full or partial retraining (expensive), while PTQ runs in hours on a small calibration set.",
+      explanation: "**Step 1:** QAT inserts fake quantization operations (round-to-INT4 with straight-through estimators for gradients) during training, allowing the model to learn weight distributions that are robust to 4-bit quantization.\n\n**Step 2:** PTQ quantizes a pre-trained FP32/FP16 model without gradient updates - the weights were not optimized for the quantization grid.\n\n**Step 3:** At INT8, PTQ (e.g., GPTQ, SmoothQuant) achieves near-lossless accuracy. At INT4, QAT typically recovers 1-3% more accuracy than PTQ. The tradeoff: QAT requires full or partial retraining (expensive), while PTQ runs in hours on a small calibration set.",
       hints: [
         "Straight-through estimator: treat the rounding operation as identity during backward pass to allow gradients to flow.",
         "INT8 PTQ \\approx QAT in quality; INT4 PTQ < QAT in quality - QAT's advantage grows at lower bit widths.",
@@ -2539,7 +2516,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "SmoothQuant replaces outlier activation values with their channel mean before quantization to eliminate spikes",
       ],
       correctAnswer: 1,
-      explanation: "LLM activations have systematic per-channel outliers: certain hidden dimensions consistently have 10-100x larger values than others (Dettmers et al., 2022 observed this in OPT/BLOOM). Naive INT8 quantization of activations clips these outliers, causing large errors. Weights, by contrast, have smooth distributions easy to quantize. SmoothQuant per-channel scaling: Y = (X * diag(1/s)) * (diag(s) * W^T). Choose s_j = max|X_j|^alpha / max|W_j|^(1-alpha) to balance quantization difficulty. After transformation, both X/s and sW are smooth and INT8-quantizable with minimal error. Alpha controls the migration (alpha=0.5 recommended).",
+      explanation: "**Step 1:** LLM activations have systematic per-channel outliers: certain hidden dimensions consistently have 10-100x larger values than others (Dettmers et al., 2022 observed this in OPT/BLOOM). Naive INT8 quantization of activations clips these outliers, causing large errors.\n\n**Step 2:** Weights, by contrast, have smooth distributions easy to quantize. SmoothQuant per-channel scaling: Y = (X * diag(1/s)) * (diag(s) * W^T).\n\n**Step 3:** Choose s_j = max|X_j|^alpha / max|W_j|^(1-alpha) to balance quantization difficulty. After transformation, both X/s and sW are smooth and INT8-quantizable with minimal error. Alpha controls the migration (alpha=0.5 recommended).",
       hints: [
         "Key insight: move the 'hard-to-quantize' outliers from activations (dynamic, computed at runtime) to weights (static, pre-quantizable offline).",
         "After SmoothQuant: X/s has no outliers (easy to quantize at runtime); sW has absorbed the scaling (quantized offline, no overhead).",
@@ -2559,7 +2536,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Soft targets prevent the student from overfitting by adding label smoothing regularization",
       ],
       correctAnswer: 1,
-      explanation: "Hard label for 'cat': [0,0,1,0,...] - no information about class relationships. Teacher soft label: [0.01 (car), 0.07 (dog), 0.85 (cat), 0.04 (tiger),...] - encodes that cats are somewhat similar to dogs and tigers but not to cars. This relational information is lost with one-hot labels. Hinton's 'dark knowledge': the non-maximum probabilities (even if small) carry information about the teacher's generalization. Distillation loss: alpha * CE(student, soft_teacher) + (1-alpha) * CE(student, hard_label). Temperature T > 1 is applied to soften the teacher distribution further: q_i = exp(z_i/T) / sum(exp(z_j/T)).",
+      explanation: "**Step 1:** Hard label for 'cat': [0,0,1,0,...] - no information about class relationships. Teacher soft label: [0.01 (car), 0.07 (dog), 0.85 (cat), 0.04 (tiger),...] - encodes that cats are somewhat similar to dogs and tigers but not to cars.\n\n**Step 2:** This relational information is lost with one-hot labels. Hinton's 'dark knowledge': the non-maximum probabilities (even if small) carry information about the teacher's generalization.\n\n**Step 3:** Distillation loss: alpha * CE(student, soft_teacher) + (1-alpha) * CE(student, hard_label). Temperature T > 1 is applied to soften the teacher distribution further: q_i = exp(z_i/T) / sum(exp(z_j/T)).",
       hints: [
         "Soft targets at T=1: very peaked (0.99 for true class). At T=4: smoother, more informative inter-class signals.",
         "The teacher's 'mistakes' (non-zero probability on wrong classes) are the dark knowledge - they encode what classes are similar.",
@@ -2577,7 +2554,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "The model generates K independent samples in parallel and returns the most likely sequence according to its own scoring function",
       ],
       correctAnswer: 0,
-      explanation: "Speculative decoding: (1) A small fast draft model (e.g., 7B) autoregressively generates K tokens cheaply. (2) The large target model (e.g., 70B) runs ONE forward pass on [prefix + K draft tokens] in parallel - getting probabilities for all K+1 positions simultaneously. (3) Each draft token is accepted with probability min(1, p_target/p_draft) - a rejection sampling scheme that preserves the target model's exact output distribution. (4) First rejected token is resampled; accepted tokens are output. When draft acceptance rate is high (e.g., 80%), K=4-8 tokens are output per target model call instead of 1. Speedup = K * acceptance_rate / overhead.",
+      explanation: "**Step 1:** Speculative decoding: (1) A small fast draft model (e.g., 7B) autoregressively generates K tokens cheaply. (2) The large target model (e.g., 70B) runs ONE forward pass on [prefix + K draft tokens] in parallel - getting probabilities for all K+1 positions simultaneously. (3) Each draft token is accepted with probability min(1, p_target/p_draft) - a rejection sampling scheme that preserves the target model's exact output distribution. (4) First rejected token is resampled; accepted tokens are output.\n\n**Step 2:** When draft acceptance rate is high (e.g., 80%), K=4-8 tokens are output per target model call instead of 1.\n\n**Step 3:** Speedup = K * acceptance_rate / overhead.",
       hints: [
         "The key: the target model already evaluates K tokens in one pass during verification - the same compute as generating 1 token in standard decoding.",
         "Output distribution is identical to standard sampling from the target model - speculative decoding is lossless.",
@@ -2590,7 +2567,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Structured pruning (removing entire attention heads or MLP neurons) is generally preferred over unstructured pruning (setting individual weights to zero) for LLM inference acceleration because structured pruning directly reduces computation without requiring sparse hardware support.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "Unstructured pruning creates sparse weight matrices (e.g., 50% zeros). On dense hardware like GPUs, sparse matrix operations are not automatically faster - standard CUDA kernels process all elements regardless of sparsity. Speedup requires special sparse kernels (NVIDIA cuSPARSE) which only outperform dense kernels at very high sparsity (>90%). Structured pruning removes entire rows/columns/heads - the resulting smaller dense matrix runs fast with standard GEMM kernels. Wanda (Sun et al., 2023) and LLM-Pruner (Ma et al., 2023) use structured pruning for LLMs: remove attention heads and MLP channels, producing smaller dense models that run faster on standard hardware.",
+      explanation: "**Step 1:** Unstructured pruning creates sparse weight matrices (e.g., 50% zeros).\n\n**Step 2:** On dense hardware like GPUs, sparse matrix operations are not automatically faster - standard CUDA kernels process all elements regardless of sparsity.\n\n**Step 3:** Speedup requires special sparse kernels (NVIDIA cuSPARSE) which only outperform dense kernels at very high sparsity (>90%). Structured pruning removes entire rows/columns/heads - the resulting smaller dense matrix runs fast with standard GEMM kernels. Wanda (Sun et al., 2023) and LLM-Pruner (Ma et al., 2023) use structured pruning for LLMs: remove attention heads and MLP channels, producing smaller dense models that run faster on standard hardware.",
       hints: [
         "50% unstructured sparsity on GPU: 0-20% speedup (sparse overhead dominates). 50% structured pruning: ~2x speedup (dense matrix half the size).",
         "Exception: NVIDIA's 2:4 sparsity format (50% structured) has hardware support on Ampere+ GPUs - 2x speedup for weight-sparse operations.",
@@ -2608,7 +2585,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "It batches gradient updates across multiple inference requests to amortize compute costs",
       ],
       correctAnswer: 1,
-      explanation: "Static batching: gather N requests, run until ALL finish (the longest sequence determines batch completion). If one request needs 1000 tokens and another needs 10 tokens, 9990 of the short request's iterations have idle slots. GPU utilization degrades with variable-length requests. Continuous batching (Orca, Yu et al., 2022): at each decoding iteration, check which sequences have finished; immediately insert new waiting requests into freed slots. GPU sees a continuously full batch. vLLM implements continuous batching with PagedAttention for KV cache management. Result: 2-23x throughput improvement over static batching at high request rates.",
+      explanation: "**Step 1:** Static batching: gather N requests, run until ALL finish (the longest sequence determines batch completion). If one request needs 1000 tokens and another needs 10 tokens, 9990 of the short request's iterations have idle slots.\n\n**Step 2:** GPU utilization degrades with variable-length requests. Continuous batching (Orca, Yu et al., 2022): at each decoding iteration, check which sequences have finished; immediately insert new waiting requests into freed slots.\n\n**Step 3:** GPU sees a continuously full batch. vLLM implements continuous batching with PagedAttention for KV cache management. Result: 2-23x throughput improvement over static batching at high request rates.",
       hints: [
         "Static batching: all N sequences must finish before the batch completes. Short sequences waste GPU cycles waiting.",
         "Continuous batching: at each token step, replace finished sequences with new ones - GPU is always processing new work.",
@@ -2628,7 +2605,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "O(M*log(N)) bytes per GPU - tree all-reduce reduces gradient size at each level",
       ],
       correctAnswer: 2,
-      explanation: "Ring all-reduce: N GPUs arranged in a ring. Phase 1 (scatter-reduce): each GPU sends M/N bytes to its right neighbor, receives M/N from its left, accumulates, and passes on. After N-1 steps, each GPU holds the correct sum of one M/N chunk - total sent: (N-1)*(M/N) bytes. Phase 2 (all-gather): distribute each chunk to all GPUs - another (N-1)*(M/N) bytes per GPU. Total: 2*(N-1)*M/N bytes per GPU \\to as N\\to\\infty, approaches 2M bytes per GPU, independent of N. This is within 2x of the information-theoretic lower bound. Compare: naive all-to-all: O(M*N) per GPU. Ring all-reduce is optimal for bandwidth-bound collective operations.",
+      explanation: "**Step 1:** Ring all-reduce: N GPUs arranged in a ring. Phase 1 (scatter-reduce): each GPU sends M/N bytes to its right neighbor, receives M/N from its left, accumulates, and passes on.\n\n**Step 2:** After N-1 steps, each GPU holds the correct sum of one M/N chunk - total sent: (N-1)*(M/N) bytes. Phase 2 (all-gather): distribute each chunk to all GPUs - another (N-1)*(M/N) bytes per GPU.\n\n**Step 3:** Total: 2*(N-1)*M/N bytes per GPU \\to as N\\to\\infty, approaches 2M bytes per GPU, independent of N. This is within 2x of the information-theoretic lower bound. Compare: naive all-to-all: O(M*N) per GPU. Ring all-reduce is optimal for bandwidth-bound collective operations.",
       hints: [
         "Ring all-reduce phases: (1) scatter-reduce - accumulate M/N chunk; (2) all-gather - distribute chunks. Each phase: (N-1)*M/N bytes.",
         "As N\\to\\infty, ring all-reduce communication per GPU \\to 2M bytes - scales perfectly. Parameter server: M*N bytes at the server.",
@@ -2641,7 +2618,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Gradient compression techniques such as 1-bit Adam and PowerSGD reduce all-reduce communication volume at the cost of introducing gradient noise that can degrade model convergence if not carefully managed.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "1-bit SGD/Adam (Seide et al., 2014; Tang et al., 2021) compresses gradients to 1 bit per element (sign of gradient) using error feedback to accumulate compression errors. Communication is reduced by 32x (FP32) or 16x (FP16), but gradient noise increases. PowerSGD (Vogels et al., 2019) uses low-rank approximation: approximate gradient matrix G \\approx P*Q^T with rank r, communicating P and Q instead of G - compression ratio d/(2r) for d-dim gradients. Both methods can destabilize training if error feedback is not implemented correctly, especially at low learning rates where gradient signal is small relative to compression noise.",
+      explanation: "**Step 1:** 1-bit SGD/Adam (Seide et al., 2014; Tang et al., 2021) compresses gradients to 1 bit per element (sign of gradient) using error feedback to accumulate compression errors.\n\n**Step 2:** Communication is reduced by 32x (FP32) or 16x (FP16), but gradient noise increases.\n\n**Step 3:** PowerSGD (Vogels et al., 2019) uses low-rank approximation: approximate gradient matrix G \\approx P*Q^T with rank r, communicating P and Q instead of G - compression ratio d/(2r) for d-dim gradients. Both methods can destabilize training if error feedback is not implemented correctly, especially at low learning rates where gradient signal is small relative to compression noise.",
       hints: [
         "Error feedback: accumulate compression error and add to next gradient - prevents systematic bias from compression.",
         "Gradient compression is most beneficial when communication is the bottleneck (large models, slow interconnects) relative to compute.",
@@ -2661,7 +2638,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "TPUs have 2x more HBM capacity per chip than A100, reducing gradient checkpointing overhead",
       ],
       correctAnswer: 1,
-      explanation: "TPU v4 pods (4096 chips) use a custom 3D torus interconnect (ICI: Inter-Chip Interconnect) with ~600 Gbit/s per link, providing every chip with 3 bidirectional links to neighbors in X, Y, Z dimensions. This topology is optimized for collective operations (all-reduce, all-gather) with low latency and high bandwidth at any scale. A100 multi-node training requires expensive InfiniBand networking ($50K+ per switch) and careful topology engineering. TPU pods are sold as integrated systems where networking is already optimized - enabling 1000+ chip training with linear scaling efficiency (>95% hardware utilization) that is hard to achieve with GPU clusters at equivalent scale.",
+      explanation: "**Step 1:** TPU v4 pods (4096 chips) use a custom 3D torus interconnect (ICI: Inter-Chip Interconnect) with ~600 Gbit/s per link, providing every chip with 3 bidirectional links to neighbors in X, Y, Z dimensions.\n\n**Step 2:** This topology is optimized for collective operations (all-reduce, all-gather) with low latency and high bandwidth at any scale.\n\n**Step 3:** A100 multi-node training requires expensive InfiniBand networking ($50K+ per switch) and careful topology engineering. TPU pods are sold as integrated systems where networking is already optimized - enabling 1000+ chip training with linear scaling efficiency (>95% hardware utilization) that is hard to achieve with GPU clusters at equivalent scale.",
       hints: [
         "TPU ICI bandwidth: comparable to NVLink speeds but across the entire pod. GPU multi-node: limited by InfiniBand (200-400 Gbit/s HDR/NDR).",
         "Scaling efficiency: TPU pod achieves >95% linear scaling to 1000+ chips; GPU clusters often see 80-90% at 512+ GPUs due to networking bottlenecks.",
@@ -2674,7 +2651,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "NVIDIA tensor cores (introduced in Volta/V100) accelerate matrix multiply-accumulate operations by performing a 4x4 or 16x16 matrix multiply in a single clock cycle, directly increasing the effective TFLOP/s for training workloads that are dominated by matrix multiplications.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "Tensor cores perform warp-level matrix multiply: D = A*B + C where A, B, C, D are small matrices (e.g., 16x16x16 in FP16). A single tensor core instruction executes this in a few clock cycles vs. hundreds of scalar FMA operations in CUDA cores. V100: 640 tensor cores delivering 125 TFLOP/s (FP16) vs. 15.7 TFLOP/s without tensor cores - 8x speedup for GEMM. A100: 312 TFLOP/s (BF16 tensor core) vs. 19.5 TFLOP/s (FP64 CUDA core). Transformer training is 90%+ matrix multiply by FLOPs, so tensor core utilization directly drives training throughput.",
+      explanation: "**Step 1:** Tensor cores perform warp-level matrix multiply: D = A*B + C where A, B, C, D are small matrices (e.g., 16x16x16 in FP16).\n\n**Step 2:** A single tensor core instruction executes this in a few clock cycles vs. hundreds of scalar FMA operations in CUDA cores.\n\n**Step 3:** V100: 640 tensor cores delivering 125 TFLOP/s (FP16) vs. 15.7 TFLOP/s without tensor cores - 8x speedup for GEMM. A100: 312 TFLOP/s (BF16 tensor core) vs. 19.5 TFLOP/s (FP64 CUDA core). Transformer training is 90%+ matrix multiply by FLOPs, so tensor core utilization directly drives training throughput.",
       hints: [
         "Tensor core: 16x16 matmul in one instruction. CUDA core: one multiply-add per instruction. 256 multiplications vs. 1 per clock cycle.",
         "cuBLAS automatically uses tensor cores for GEMM when matrix dimensions are multiples of 8 (FP16) or 4 (TF32).",
@@ -2694,7 +2671,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "Batch size variability: PagedAttention uses page tables to route different batch sizes to different GPU memory regions",
       ],
       correctAnswer: 0,
-      explanation: "Standard LLM serving pre-allocates KV cache for the maximum sequence length per request. If a request might generate 2048 tokens but generates 50, the remaining 1998 slots are wasted (internal fragmentation). Different requests have different actual lengths (external fragmentation). GPU memory is wasted. PagedAttention (inspired by OS virtual memory): KV cache is stored in fixed-size blocks (pages, e.g., 16 tokens each). A block table maps logical KV positions to physical page locations. Pages are allocated on demand as tokens are generated, deallocated when sequences complete. Result: near-zero KV cache waste, enabling 2-4x more concurrent requests on the same GPU.",
+      explanation: "**Step 1:** Standard LLM serving pre-allocates KV cache for the maximum sequence length per request. If a request might generate 2048 tokens but generates 50, the remaining 1998 slots are wasted (internal fragmentation).\n\n**Step 2:** Different requests have different actual lengths (external fragmentation). GPU memory is wasted.\n\n**Step 3:** PagedAttention (inspired by OS virtual memory): KV cache is stored in fixed-size blocks (pages, e.g., 16 tokens each). A block table maps logical KV positions to physical page locations. Pages are allocated on demand as tokens are generated, deallocated when sequences complete. Result: near-zero KV cache waste, enabling 2-4x more concurrent requests on the same GPU.",
       hints: [
         "OS analogy: PagedAttention solves memory fragmentation the same way OS virtual memory solves heap fragmentation.",
         "Without PagedAttention: pre-allocate max_len KV cache per request \\to ~30-40% GPU memory wasted. With PagedAttention: allocate pages on demand \\to <4% waste.",
@@ -2712,7 +2689,7 @@ const extraMlSystems: Record<string, Question[]> = {
         "H * d_head^2 * 2 bytes (quadratic in d_head due to outer product)",
       ],
       correctAnswer: 0,
-      explanation: "KV cache per token per layer: K vector of size d_model (= H * d_head) and V vector of size d_model. Each in FP16 (2 bytes). Total: 2 * d_model * 2 = 4 * d_model bytes. For LLaMA-2 70B: d_model = 8192, L = 80 layers. KV cache per token: 4 * 8192 * 80 = 2,621,440 bytes \\approx 2.5 MB per token. For a context of 4096 tokens: 4096 * 2.5MB = 10GB just for KV cache. This explains why longer contexts exhaust GPU memory - KV cache grows linearly with context length and can exceed model parameter memory for long sequences.",
+      explanation: "**Step 1:** KV cache per token per layer: K vector of size d_model (= H * d_head) and V vector of size d_model. Each in FP16 (2 bytes).\n\n**Step 2:** Total: 2 * d_model * 2 = 4 * d_model bytes. For LLaMA-2 70B: d_model = 8192, L = 80 layers.\n\n**Step 3:** KV cache per token: 4 * 8192 * 80 = 2,621,440 bytes \\approx 2.5 MB per token. For a context of 4096 tokens: 4096 * 2.5MB = 10GB just for KV cache. This explains why longer contexts exhaust GPU memory - KV cache grows linearly with context length and can exceed model parameter memory for long sequences.",
       hints: [
         "KV cache = K + V per token per layer. K shape: [d_model], V shape: [d_model] in FP16 = 2 * 2 * d_model bytes.",
         "For Llama-2-70B at 4K context: 4096 tokens * 80 layers * 4 * 8192 bytes \\approx 10.7 GB for KV cache alone.",
@@ -2725,7 +2702,7 @@ const extraMlSystems: Record<string, Question[]> = {
       question: "Tensor parallelism during inference requires synchronization communication (all-reduce) after each transformer layer, which can become a latency bottleneck when the all-reduce must complete before the next layer begins.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "During inference with tensor parallelism (e.g., across 8 GPUs): each GPU holds 1/8 of each attention/MLP weight matrix. After the row-parallel linear layer in each transformer block, partial activations must be summed via all-reduce before feeding the next block. For a hidden dimension of 8192 and sequence length 1: all-reduce sends 8192 * 2 bytes = 16KB across 8 GPUs. At 600 GB/s NVLink bandwidth, this takes ~0.03ms per layer. For 80 layers: 2.4ms overhead. For large batches or long sequences, all-reduce traffic scales with batch*seq*d_model, making this a real bottleneck that limits how much tensor parallelism is beneficial.",
+      explanation: "**Step 1:** During inference with tensor parallelism (e.g., across 8 GPUs): each GPU holds 1/8 of each attention/MLP weight matrix. After the row-parallel linear layer in each transformer block, partial activations must be summed via all-reduce before feeding the next block.\n\n**Step 2:** For a hidden dimension of 8192 and sequence length 1: all-reduce sends 8192 * 2 bytes = 16KB across 8 GPUs. At 600 GB/s NVLink bandwidth, this takes ~0.03ms per layer.\n\n**Step 3:** For 80 layers: 2.4ms overhead. For large batches or long sequences, all-reduce traffic scales with batch*seq*d_model, making this a real bottleneck that limits how much tensor parallelism is beneficial.",
       hints: [
         "Each transformer block requires 2 all-reduces (after attention and after MLP in Megatron-LM). With 80 layers: 160 all-reduces per forward pass.",
         "For batch=1, seq=1: all-reduce sends tiny tensors (16KB), and latency (NVLink round-trip ~1us) dominates over bandwidth.",
@@ -2749,7 +2726,7 @@ const extraMlSystems2: Record<string, Question[]> = {
         "Task-agnostic is always better because task-specific distillation causes catastrophic forgetting in the student",
       ],
       correctAnswer: 1,
-      explanation: "Task-specific distillation: fine-tune student on (input, teacher_soft_labels) for the target task. The student learns the exact soft probability distribution the teacher produces for that task - capturing inter-class relationships and confidence calibration specific to the task. This outperforms task-agnostic distillation on that task (measured by accuracy, F1, etc.) because the soft targets are directly relevant. The tradeoff: the student overfits to the target task distribution and transfers less well to other tasks. For production deployments with a fixed task (e.g., sentiment analysis), task-specific distillation is preferred.",
+      explanation: "**Step 1:** Task-specific distillation: fine-tune student on (input, teacher_soft_labels) for the target task.\n\n**Step 2:** The student learns the exact soft probability distribution the teacher produces for that task - capturing inter-class relationships and confidence calibration specific to the task.\n\n**Step 3:** This outperforms task-agnostic distillation on that task (measured by accuracy, F1, etc.) because the soft targets are directly relevant. The tradeoff: the student overfits to the target task distribution and transfers less well to other tasks. For production deployments with a fixed task (e.g., sentiment analysis), task-specific distillation is preferred.",
       hints: [
         "Task-specific soft targets: teacher says 30% positive, 70% negative for an ambiguous review - the student learns this nuanced calibration.",
         "Task-agnostic distillation: student learns general language understanding. Task-specific: student learns task decision boundary.",
@@ -2767,7 +2744,7 @@ const extraMlSystems2: Record<string, Question[]> = {
         "Gradient-based methods require second-order optimization and are therefore computationally infeasible for large models",
       ],
       correctAnswer: 0,
-      explanation: "Magnitude pruning: |w| < threshold \\to prune. Simple, cheap, but misses that a small weight in a critical path may be more important than a large weight in a redundant pathway. Gradient-based importance: score w_i by |w_i * gradient_i| (Taylor expansion of loss change) or by |w_i^2 * H_ii| (Hessian diagonal, second-order). These scores approximate the increase in loss if w_i were removed, identifying truly important weights. Wanda (Sun et al., 2023) uses |w_i * X_norm_i| (weight magnitude * input activation norm) - a first-order approximation that outperforms magnitude pruning for LLMs at 50-70% sparsity.",
+      explanation: "**Step 1:** Magnitude pruning: |w| < threshold \\to prune.\n\n**Step 2:** Simple, cheap, but misses that a small weight in a critical path may be more important than a large weight in a redundant pathway.\n\n**Step 3:** Gradient-based importance: score w_i by |w_i * gradient_i| (Taylor expansion of loss change) or by |w_i^2 * H_ii| (Hessian diagonal, second-order). These scores approximate the increase in loss if w_i were removed, identifying truly important weights. Wanda (Sun et al., 2023) uses |w_i * X_norm_i| (weight magnitude * input activation norm) - a first-order approximation that outperforms magnitude pruning for LLMs at 50-70% sparsity.",
       hints: [
         "Magnitude pruning ignores context: a weight of 0.01 in a critical position matters more than a weight of 10 in an ignored pathway.",
         "Taylor importance: delta_loss \\approx w_i * grad_i - approximates how much loss increases if w_i is zeroed out.",
@@ -2780,7 +2757,7 @@ const extraMlSystems2: Record<string, Question[]> = {
       question: "LoRA (Low-Rank Adaptation, Hu et al., 2021) is a parameter-efficient fine-tuning method that reduces the number of trainable parameters for adaptation by decomposing weight updates into low-rank matrices, making it suitable for serving multiple task-specific model variants without storing full fine-tuned copies for each task.",
       options: ["True", "False"],
       correctAnswer: 0,
-      explanation: "LoRA decomposes the fine-tuning weight update delta_W = A * B where A is (d x r) and B is (r x k) with rank r << min(d,k). Instead of storing a full delta_W (d*k parameters), LoRA stores A and B (r*(d+k) parameters). For r=8, d=k=4096: delta_W has 16.7M params; A+B have 65K params - 256x compression. For serving N task variants: store one base model + N LoRA adapters (each ~50-100MB) instead of N full fine-tuned models (each 7-70GB). At inference time, load the base model and swap LoRA adapters on-the-fly for different tasks.",
+      explanation: "**Step 1:** LoRA decomposes the fine-tuning weight update delta_W = A * B where A is (d x r) and B is (r x k) with rank r << min(d,k).\n\n**Step 2:** Instead of storing a full delta_W (d*k parameters), LoRA stores A and B (r*(d+k) parameters).\n\n**Step 3:** For r=8, d=k=4096: delta_W has 16.7M params; A+B have 65K params - 256x compression. For serving N task variants: store one base model + N LoRA adapters (each ~50-100MB) instead of N full fine-tuned models (each 7-70GB). At inference time, load the base model and swap LoRA adapters on-the-fly for different tasks.",
       hints: [
         "LoRA rank r=8-64 is typical; r=1 gives maximum compression but minimum expressiveness.",
         "Multi-tenant serving with LoRA: one GPU holds the base model, tasks are served by swapping lightweight adapters.",
