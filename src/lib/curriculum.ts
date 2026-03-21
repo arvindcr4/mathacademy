@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // DOMAIN ADAPTATION & TRANSFER LEARNING ADVANCED
+  {
+    id: 'domain-adaptation-advanced',
+    slug: 'domain-adaptation-advanced',
+    name: 'Advanced Domain Adaptation & Transfer Learning',
+    description: 'Deep transfer learning, domain adaptation theory, UDA, and cross-domain generalization.',
+    topics: [
+      {
+        id: 'transfer-learning-theory',
+        name: 'Transfer Learning Theory',
+        description: 'Theoretical foundations of transfer learning and domain shift.',
+        knowledgePoints: [
+          { id: 'dat-kp-1', slug: 'transfer-learning-theory', name: 'Transfer Learning Theory & H-divergence' },
+          { id: 'dat-kp-2', slug: 'negative-transfer', name: 'Negative Transfer & When Not to Transfer' },
+          { id: 'dat-kp-3', slug: 'fine-tuning-theory', name: 'Fine-Tuning Theory & Feature Reuse' },
+          { id: 'dat-kp-4', slug: 'task-relatedness', name: 'Task Relatedness & Transfer Distance' },
+          { id: 'dat-kp-5', slug: 'catastrophic-forgetting', name: 'Catastrophic Forgetting & Stability-Plasticity' },
+        ]
+      },
+      {
+        id: 'unsupervised-domain-adaptation',
+        name: 'Unsupervised Domain Adaptation',
+        description: 'DANN, CORAL, and deep domain adaptation methods.',
+        knowledgePoints: [
+          { id: 'dat-kp-6', slug: 'dann', name: 'DANN & Domain-Adversarial Neural Networks' },
+          { id: 'dat-kp-7', slug: 'coral', name: 'CORAL & Second-Order Statistics Alignment' },
+          { id: 'dat-kp-8', slug: 'mdd-dann', name: 'MDD & Margin Disparity Discrepancy' },
+          { id: 'dat-kp-9', slug: 'mmd-adaptation', name: 'MMD & Maximum Mean Discrepancy' },
+          { id: 'dat-kp-10', slug: 'optimal-transport-da', name: 'Optimal Transport for Domain Adaptation' },
+        ]
+      },
+      {
+        id: 'continual-learning-advanced',
+        name: 'Continual Learning & Lifelong Learning',
+        description: 'Elastic weight consolidation, progressive networks, and replay methods.',
+        knowledgePoints: [
+          { id: 'dat-kp-11', slug: 'ewc', name: 'Elastic Weight Consolidation (EWC)' },
+          { id: 'dat-kp-12', slug: 'progressive-nets', name: 'Progressive Neural Networks & PackNet' },
+          { id: 'dat-kp-13', slug: 'experience-replay', name: 'Experience Replay & Episodic Memory' },
+          { id: 'dat-kp-14', slug: 'gem-agem', name: 'GEM & A-GEM: Gradient Episodic Memory' },
+          { id: 'dat-kp-15', slug: 'der-dark-experience', name: 'Dark Experience Replay & DER++' },
+        ]
+      },
+      {
+        id: 'multi-source-domain',
+        name: 'Multi-Source Domain Adaptation',
+        description: 'Adapting from multiple source domains and domain generalization.',
+        knowledgePoints: [
+          { id: 'dat-kp-16', slug: 'multi-source-da', name: 'Multi-Source Domain Adaptation' },
+          { id: 'dat-kp-17', slug: 'domain-generalization', name: 'Domain Generalization & DomainBed' },
+          { id: 'dat-kp-18', slug: 'irm-da', name: 'IRM & Invariant Risk Minimization' },
+          { id: 'dat-kp-19', slug: 'mixup-domain', name: 'Mixup for Domain Generalization' },
+          { id: 'dat-kp-20', slug: 'test-time-adaptation', name: 'Test-Time Adaptation & TTT' },
+        ]
+      },
+      {
+        id: 'parameter-efficient-transfer',
+        name: 'Parameter-Efficient Transfer Learning',
+        description: 'Adapters, LoRA, prefix tuning, and PEFT methods.',
+        knowledgePoints: [
+          { id: 'dat-kp-21', slug: 'adapters-transfer', name: 'Adapter Layers & Bottleneck Adapters' },
+          { id: 'dat-kp-22', slug: 'lora-transfer', name: 'LoRA & Low-Rank Adaptation Theory' },
+          { id: 'dat-kp-23', slug: 'ia3', name: 'IA3 & Infused Adapter via Inhibiting' },
+          { id: 'dat-kp-24', slug: 'bitfit', name: 'BitFit & Bias-Only Fine-Tuning' },
+          { id: 'dat-kp-25', slug: 'peft-comparison', name: 'PEFT Methods Comparison & Selection Guide' },
+        ]
+      },
+      {
+        id: 'cross-modal-transfer',
+        name: 'Cross-Modal & Cross-Lingual Transfer',
+        description: 'Transfer between modalities and languages.',
+        knowledgePoints: [
+          { id: 'dat-kp-26', slug: 'cross-lingual-transfer', name: 'Cross-Lingual Transfer & mBERT' },
+          { id: 'dat-kp-27', slug: 'zero-shot-cross-lingual', name: 'Zero-Shot Cross-Lingual Transfer' },
+          { id: 'dat-kp-28', slug: 'vision-to-text-transfer', name: 'Vision-to-Text & Cross-Modal Transfer' },
+          { id: 'dat-kp-29', slug: 'speech-text-transfer', name: 'Speech-to-Text Transfer Learning' },
+          { id: 'dat-kp-30', slug: 'universal-representation', name: 'Universal Representations & Task Agnostic Encoding' },
+        ]
+      },
+    ]
+  },
+
   // ML SYSTEM DESIGN FOR INTERVIEWS
   {
     id: 'ml-system-design',
