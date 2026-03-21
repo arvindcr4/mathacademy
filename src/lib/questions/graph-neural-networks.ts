@@ -411,7 +411,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GIN is proven to achieve 1-WL expressive power regardless of ε (fixed or learned), as long as the MLP is a universal approximator. The (1+ε) factor ensures h_v ≠ AGG(N(v)) — the node can tell apart h_v=0, N(v)={0,0} from h_v=0, N(v)={} (empty neighborhood). In practice, both fixed ε=0 and learned ε work well. The paper tries both and finds similar performance, with fixed ε=0 being simpler. The key to expressiveness is the MLP, not the specific value of ε.",
+        "GIN is proven to achieve 1-WL expressive power regardless of ε (fixed or learned), as long as the MLP is a universal approximator. The (1+ε) factor ensures h_v \$\\neq\$ AGG(N(v)) — the node can tell apart h_v=0, N(v)={0,0} from h_v=0, N(v)={} (empty neighborhood). In practice, both fixed ε=0 and learned ε work well. The paper tries both and finds similar performance, with fixed ε=0 being simpler. The key to expressiveness is the MLP, not the specific value of ε.",
       hints: [
         "The (1+ε) ensures the self-feature h_v and the aggregated sum can be distinguished even when they are numerically similar.",
         "Setting ε=0 reduces to: h_v^{l+1} = MLP(h_v^l + Σ_{u∈N(v)}h_u^l).",
@@ -637,7 +637,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "RotatE's unit-modulus complex rotation can model: (1) Symmetry: |r|=1, arg(r)=0 → r=1 → h◦r=h, so t=h (symmetric); (2) Anti-symmetry: r≠r^{-1} → h◦r≠t◦r; (3) Inversion: r2 = r1^{-1}; (4) Composition: r3 = r1·r2 (angle sum). TransE only models composition and cannot represent symmetry (h+r=t and t+r=h implies r=0) or inversion efficiently. Empirically, RotatE achieves state-of-the-art on FB15k-237 and WN18RR benchmarks.",
+        "RotatE's unit-modulus complex rotation can model: (1) Symmetry: |r|=1, arg(r)=0 → r=1 → h◦r=h, so t=h (symmetric); (2) Anti-symmetry: r\$\\neq\$r^{-1} → h◦r\$\\neq\$t◦r; (3) Inversion: r2 = r1^{-1}; (4) Composition: r3 = r1·r2 (angle sum). TransE only models composition and cannot represent symmetry (h+r=t and t+r=h implies r=0) or inversion efficiently. Empirically, RotatE achieves state-of-the-art on FB15k-237 and WN18RR benchmarks.",
       hints: [
         "'HasSpouse' is symmetric; 'ParentOf' and 'ChildOf' are inverses — important patterns in KGs.",
         "Rotation in complex space = addition of phase angles: |h|=|t|=1, arg(t) = arg(h) + arg(r).",

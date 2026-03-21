@@ -260,7 +260,7 @@ const questions: Record<string, Question[]> = {
         "The do-operator models a physical intervention: do(X=x) sets X to value x and severs all causal mechanisms that previously determined X (removing all arrows into X in the 'mutilated' graph). In contrast, conditioning on X=x is an observational operation that does not change the underlying mechanisms. They coincide only when there are no confounders between X and Y.",
       hints: [
         "An intervention makes X exogenous — it removes the influence of X's causes.",
-        "P(Y|X=x) ≠ P(Y|do(X=x)) when there are confounders — this is the key insight of causal inference.",
+        "P(Y|X=x) \$\\neq\$ P(Y|do(X=x)) when there are confounders — this is the key insight of causal inference.",
       ],
     },
     {
@@ -497,7 +497,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A valid IV satisfies: (1) Relevance: Cov(Z,T) ≠ 0 — Z predicts treatment; (2) Exogeneity: Z ⊥ U where U represents unmeasured confounders — Z is 'as good as random'; (3) Exclusion restriction: Z affects Y only through T, not through any other pathway. The classic example is a lottery randomizing access to treatment satisfying all three conditions.",
+        "A valid IV satisfies: (1) Relevance: Cov(Z,T) \$\\neq\$ 0 — Z predicts treatment; (2) Exogeneity: Z ⊥ U where U represents unmeasured confounders — Z is 'as good as random'; (3) Exclusion restriction: Z affects Y only through T, not through any other pathway. The classic example is a lottery randomizing access to treatment satisfying all three conditions.",
       hints: [
         "The exclusion restriction is the hardest to verify empirically — it is an untestable assumption.",
         "A 'weak instrument' satisfies relevance only weakly (small first-stage F-statistic), leading to large finite-sample bias.",
@@ -825,7 +825,7 @@ const questions: Record<string, Question[]> = {
         "Several papers (e.g., Reisach et al. 2021 'Beware of the Simulated DAG') showed that NOTEARS and related methods can perform well on simulated data simply because of data normalization artifacts, and may underperform simpler baselines on real data. The non-convex optimization landscape means solutions depend on initialization, and the continuous relaxation does not guarantee recovery of the true DAG even asymptotically without strong assumptions.",
       hints: [
         "'Beware of the Simulated DAG' showed that sorting variables by variance can outperform NOTEARS on typical benchmarks.",
-        "Continuous optimization ≠ consistent causal discovery; strong identifiability assumptions are still needed.",
+        "Continuous optimization \$\\neq\$ consistent causal discovery; strong identifiability assumptions are still needed.",
       ],
     },
   ],
@@ -1162,7 +1162,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "In a fuzzy RDD: lim_{x↓c} E[T|X=x] ≠ lim_{x↑c} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is τ_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X≥c) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
+        "In a fuzzy RDD: lim_{x↓c} E[T|X=x] \$\\neq\$ lim_{x↑c} E[T|X=x] but the jump is not exactly 1. The fuzzy RDD estimator is τ_FRD = (discontinuity in E[Y|X=x] at c) / (discontinuity in E[T|X=x] at c). This is equivalent to using 1(X≥c) as an instrument for T in a 2SLS regression, restricted to a bandwidth around c. It identifies the LATE for compliers at the threshold.",
       hints: [
         "The threshold 1(X≥c) is a valid instrument: it shifts treatment probability discontinuously but (under continuity) does not directly shift outcomes.",
         "Fuzzy RDD = local IV; sharp RDD = reduced form = IV estimate when compliance is perfect.",

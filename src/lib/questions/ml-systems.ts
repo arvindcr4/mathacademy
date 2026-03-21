@@ -2729,5 +2729,60 @@ const extraMlSystems: Record<string, Question[]> = {
 };
 Object.assign(questions, extraMlSystems);
 
+const extraMlSystems2: Record<string, Question[]> = {
+  "pruning-distillation-advanced": [
+    {
+      id: "q-mls-kp59-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Task-agnostic vs task-specific knowledge distillation for LLMs: DistilBERT (Sanh et al., 2019) uses task-agnostic distillation on the pre-training corpus, while task-specific distillation fine-tunes on labeled task data. Which approach produces a better student for a known production task?",
+      options: [
+        "Task-agnostic always produces a better student because it preserves more of the teacher's general knowledge",
+        "Task-specific distillation produces better task accuracy because the soft targets during fine-tuning directly teach the student the teacher's decision boundary for that task, but the student is less transferable to other tasks",
+        "Both approaches are equivalent if the student has the same architecture as the teacher",
+        "Task-agnostic is always better because task-specific distillation causes catastrophic forgetting in the student",
+      ],
+      correctAnswer: 1,
+      explanation: "Task-specific distillation: fine-tune student on (input, teacher_soft_labels) for the target task. The student learns the exact soft probability distribution the teacher produces for that task — capturing inter-class relationships and confidence calibration specific to the task. This outperforms task-agnostic distillation on that task (measured by accuracy, F1, etc.) because the soft targets are directly relevant. The tradeoff: the student overfits to the target task distribution and transfers less well to other tasks. For production deployments with a fixed task (e.g., sentiment analysis), task-specific distillation is preferred.",
+      hints: [
+        "Task-specific soft targets: teacher says 30% positive, 70% negative for an ambiguous review — the student learns this nuanced calibration.",
+        "Task-agnostic distillation: student learns general language understanding. Task-specific: student learns task decision boundary.",
+      ],
+    },
+    {
+      id: "q-mls-kp59-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Layer-wise relevance propagation (LRP) and gradient-based attribution methods for neural network pruning differ from magnitude-based pruning in that:",
+      options: [
+        "LRP and gradient methods prune weights based on their contribution to the loss on a calibration dataset rather than their absolute magnitude, potentially keeping small-magnitude but high-importance weights",
+        "LRP and gradient methods only work for convolutional networks and cannot be applied to transformers",
+        "Magnitude-based pruning always outperforms LRP-based pruning on language tasks",
+        "Gradient-based methods require second-order optimization and are therefore computationally infeasible for large models",
+      ],
+      correctAnswer: 0,
+      explanation: "Magnitude pruning: |w| < threshold → prune. Simple, cheap, but misses that a small weight in a critical path may be more important than a large weight in a redundant pathway. Gradient-based importance: score w_i by |w_i * gradient_i| (Taylor expansion of loss change) or by |w_i^2 * H_ii| (Hessian diagonal, second-order). These scores approximate the increase in loss if w_i were removed, identifying truly important weights. Wanda (Sun et al., 2023) uses |w_i * X_norm_i| (weight magnitude * input activation norm) — a first-order approximation that outperforms magnitude pruning for LLMs at 50-70% sparsity.",
+      hints: [
+        "Magnitude pruning ignores context: a weight of 0.01 in a critical position matters more than a weight of 10 in an ignored pathway.",
+        "Taylor importance: delta_loss ≈ w_i * grad_i — approximates how much loss increases if w_i is zeroed out.",
+      ],
+    },
+    {
+      id: "q-mls-kp59-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "LoRA (Low-Rank Adaptation, Hu et al., 2021) is a parameter-efficient fine-tuning method that reduces the number of trainable parameters for adaptation by decomposing weight updates into low-rank matrices, making it suitable for serving multiple task-specific model variants without storing full fine-tuned copies for each task.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "LoRA decomposes the fine-tuning weight update delta_W = A * B where A is (d x r) and B is (r x k) with rank r << min(d,k). Instead of storing a full delta_W (d*k parameters), LoRA stores A and B (r*(d+k) parameters). For r=8, d=k=4096: delta_W has 16.7M params; A+B have 65K params — 256x compression. For serving N task variants: store one base model + N LoRA adapters (each ~50-100MB) instead of N full fine-tuned models (each 7-70GB). At inference time, load the base model and swap LoRA adapters on-the-fly for different tasks.",
+      hints: [
+        "LoRA rank r=8-64 is typical; r=1 gives maximum compression but minimum expressiveness.",
+        "Multi-tenant serving with LoRA: one GPU holds the base model, tasks are served by swapping lightweight adapters.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extraMlSystems2);
+
 registerQuestions(questions);
 export default questions;

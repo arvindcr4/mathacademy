@@ -578,7 +578,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "This is the key insight of the recursive formulation:\n\n\\[\n\\text{If } \\text{LCA}(p, q) \\text{ found in left AND in right } \\implies \\text{current node is LCA}\n\\]\n\n- left result ≠ null: one of p or q is in the left subtree\n- right result ≠ null: the other is in the right subtree\n- Since they split across subtrees, current = LCA",
+        "This is the key insight of the recursive formulation:\n\n\\[\n\\text{If } \\text{LCA}(p, q) \\text{ found in left AND in right } \\implies \\text{current node is LCA}\n\\]\n\n- left result \$\\neq\$ null: one of p or q is in the left subtree\n- right result \$\\neq\$ null: the other is in the right subtree\n- Since they split across subtrees, current = LCA",
       hints: [
         "p is in left subtree, q is in right subtree (or vice versa). Their LCA = current node.",
         "When both children return a valid result, current is the LCA.",
@@ -1389,7 +1389,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A complete binary tree fills levels top-to-bottom, left-to-right. The last level may be partially filled but all present nodes are as far left as possible:\n\n\\[\n\\text{Nodes at depth } d < h:\\; 2^d \\quad \\text{(fully filled)}\n\\]\n\\[\n\\text{Nodes at depth } h:\\; 1 \\leq k \\leq 2^h \\quad \\text{(left-aligned)}\n\\]\n\nTotal nodes: between 2^h and 2^(h+1)-1.",
       hints: [
-        "Complete ≠ perfect. Perfect means every level is fully filled.",
+        "Complete \$\\neq\$ perfect. Perfect means every level is fully filled.",
         "Heap arrays represent complete binary trees: parent at i, children at 2i+1 and 2i+2.",
       ],
     },

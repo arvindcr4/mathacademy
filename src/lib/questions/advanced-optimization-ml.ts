@@ -147,10 +147,18 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "AdaGrad divides each parameter\'s gradient by the square root of the sum of all historical squared gradients; this sum only grows, eventually making learning rates negligibly small — RMSProp and Adam fix this by using exponential moving averages instead.",
+        "AdaGrad accumulates the sum of all historical squared gradients:\n" +
+        "\\[v_t = v_{t-1} + g_t^2 = \\sum_{i=1}^{t} g_i^2\\]\n\n" +
+        "The parameter update is:\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\frac{\\eta}{\\sqrt{v_t} + \\epsilon} g_t\\]\n\n" +
+        "The issue: \\(v_t\\) is a monotonically increasing sum — it only grows, never shrinks. As \\(v_t \\to \\infty\\), the effective learning rate \\(\\eta/\\sqrt{v_t} \\to 0\\), effectively stopping learning.\n\n" +
+        "RMSProp fixes this by replacing the sum with an exponential moving average:\n" +
+        "\\[v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\]\n\n" +
+        "This is a rolling average that forgets old gradients: \\(v_t \\approx \\frac{1}{1-\\beta}\\) times the average squared gradient from the recent window, not the entire history. The effective learning rate remains bounded away from zero.\n\n" +
+        "Adam similarly uses exponential moving averages of squared gradients (with additional bias correction).",
       hints: [
-        "AdaGrad\'s accumulated second moment is a sum, not an exponential moving average — what happens to a sum that grows forever?",
-        "Think about why a decaying average (RMSProp) solves this problem.",
+        "AdaGrad\'s \\(v_t = \\sum_{i=1}^{t} g_i^2\\) is a sum that grows without bound — what happens to \\(\\eta/\\sqrt{v_t}\\) as \\(v_t \\to \\infty\\)?",
+        "RMSProp and Adam use \\(v_t = \\beta v_{t-1} + (1-\\beta) g_t^2\\) — an exponential moving average that forgets old gradients, keeping \\(v_t\\) bounded.",
       ],
     },
   ],
@@ -170,10 +178,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Lion updates parameters using sign(β₁m + (1-β₁)g), where m is momentum and g is the gradient — taking a fixed-magnitude step in the sign direction of the momentum-adjusted gradient, requiring no second-moment memory and using less memory than Adam.",
+        "Lion's update rule is:\n" +
+        "\\[m_t = \\beta_1 m_{t-1} + (1-\\beta_1) g_t\\]  (momentum update)\n" +
+        "\\[\\theta_{t+1} = \\theta_t - \\eta \\cdot \\text{sign}(\\beta_1 m_t + (1-\\beta_1) g_t)\\]  (parameter update)\n\n" +
+        "Key observations:\n\n" +
+        "1. **Sign operation:** The sign(·) function maps each element to {-1, 0, +1}. This collapses all gradient magnitudes to a fixed step size of ±\\(\\eta\\).\n\n" +
+        "2. **Memory savings:** Adam stores TWO additional vectors (\\(m_t\\) and \\(v_t\\)), each of size equal to the parameters. Lion stores only ONE (\\(m_t\\)), cutting optimizer state memory in half.\n\n" +
+        "3. **Decoupled weight decay:** Lion uses AdamW-style decoupled weight decay for proper regularization.\n\n" +
+        "The fixed step size from sign() is beneficial for training large models with large batch sizes, as it provides uniform updates across all parameters regardless of gradient magnitude.",
       hints: [
-        "The update sign(·) collapses the gradient magnitude to ±1 — what does that imply about step sizes?",
-        "Lion uses less memory than Adam because it tracks only one moment (the gradient history), not two.",
+        "The sign(·) operation maps any gradient magnitude to ±1, so every parameter moves the same distance per step — \\(\\eta\\) in each direction.",
+        "Adam needs two state vectors (\\(m\\) and \\(v\\)); Lion needs only one (\\(m\\)), halving the optimizer memory footprint.",
       ],
     },
     {
@@ -227,10 +242,19 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Early in training, Adam\'s second-moment estimates are unreliable (biased toward zero even after bias correction), causing overly large updates; warmup keeps the learning rate low during this initialization period until the estimates stabilize.",
+        "Adam's second-moment estimate is:\n" +
+        "\\[v_t = \\beta_2 v_{t-1} + (1-\\beta_2) g_t^2\\]\n\n" +
+        "With \\(v_0 = 0\\) and \\(\\beta_2 = 0.999\\), the estimate grows very slowly. Early in training:\n" +
+        "\\[\\hat{v}_t = \\frac{v_t}{1-\\beta_2^t} \\approx \\frac{(1-\\beta_2) \\sum_{i=1}^{t} \\beta_2^{t-i} g_i^2}{1-\\beta_2^t}\\]\n\n" +
+        "At \\(t=1\\): \\(\\hat{v}_1 \\approx g_1^2/0.999 \\approx g_1^2\\), but as \\(t\\) increases, \\(\\hat{v}_t\\) stabilizes to a meaningful scale.\n\n" +
+        "The problem: Adam's effective step size is \\(\\eta/\\sqrt{\\hat{v}_t}\\). When \\(\\hat{v}_t\\) is small (underestimated), the effective step is too large, causing instability.\n\n" +
+        "Warmup keeps the learning rate low during the first \\(T_{\\text{warmup}}\\) steps, allowing \\(\\hat{v}_t\\) to build up reliable estimates before the full learning rate is applied.\n\n" +
+        "For the original Transformer schedule:\n" +
+        "\\[\\eta_t = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot T_{\\text{warmup}}^{-1.5}\\right)\\]\n\n" +
+        "The learning rate increases linearly for the first \\(T_{\\text{warmup}}\\) steps, then decays as \\(t^{-0.5}\\).",
       hints: [
-        "Early Adam steps have small second-moment accumulators — what happens when you divide by a small number?",
-        "Warmup gives the optimizer time to gather reliable statistics before taking large steps.",
+        "When \\(\\hat{v}_t\\) is small (underestimated early in training), the effective step size \\(\\eta/\\sqrt{\\hat{v}_t}\\) becomes too large.",
+        "Warmup gives the exponential moving average \\(v_t\\) time to accumulate reliable statistics before large learning rate steps are taken.",
       ],
     },
     {
@@ -261,10 +285,18 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "At random initialization, gradient variance is high across all parameters; warmup allows early gradient estimates to average out before the model commits to large updates, and the original Transformer paper schedules lr as d_model^(-0.5) × min(step^(-0.5), step × warmup_steps^(-1.5)).",
+        "At random initialization, the model's predictions are essentially random, so gradients are high-variance estimates of the true gradient direction. Using a large learning rate at this point can cause the model to take large, unreliable steps in the wrong direction.\n\n" +
+        "Warmup addresses this by:\n" +
+        "1. **Reducing variance through averaging:** With a small learning rate, each step makes only small changes, allowing gradient estimates across multiple steps to average out before committing to large updates.\n" +
+        "2. **Stabilizing adaptive moments:** As shown in q-opt-kp4-1, Adam's second-moment estimates are unreliable early in training. Warmup prevents large steps while these estimates build up.\n\n" +
+        "The original Transformer paper (Vaswani et al., 2017) uses:\n" +
+        "\\[\\eta_t = d_{\\text{model}}^{-0.5} \\cdot \\min\\left(t^{-0.5},\\; t \\cdot T_{\\text{warmup}}^{-1.5}\\right)\\]\n\n" +
+        "During warmup (\\(t < T_{\\text{warmup}}\\)): \\(\\eta_t \\propto t\\), increasing linearly.\n" +
+        "After warmup (\\(t \\geq T_{\\text{warmup}}\\)): \\(\\eta_t \\propto t^{-0.5}\\), decaying inverse square root.\n\n" +
+        "The maximum learning rate occurs at \\(t = T_{\\text{warmup}}\\), giving \\(\\eta_{\\max} = d_{\\text{model}}^{-0.5} \\cdot T_{\\text{warmup}}^{0.5}\\).",
       hints: [
-        "Random initialization means the loss landscape is unexplored — why is high learning rate risky at this point?",
-        "The Transformer paper\'s formula increases lr linearly then decreases it as inverse square root — when does the maximum occur?",
+        "At random initialization, the loss landscape is completely unexplored — why is a large learning rate risky when gradients are high-variance?",
+        "The Transformer schedule increases lr linearly during warmup, then decays as \\(t^{-0.5}\\) — the maximum occurs at the end of the warmup period.",
       ],
     },
   ],
@@ -567,10 +599,19 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "For smooth convex functions, SGD with properly chosen diminishing step sizes achieves an O(1/T) convergence rate for the running average of iterates; strongly convex functions give a faster O(1/T) rate on the last iterate.",
+        "For a smooth convex function \\(f\\) with Lipschitz gradient \\(L\\) and proper step size selection:\n\n" +
+        "**Full gradient descent** (not SGD) with \\(\\eta_t = 1/L\\) achieves:\n" +
+        "\\[f(x_t) - f^* \\leq \\frac{L \\|x_0 - x^*\\|^2}{2t} = O\\left(\\frac{1}{t}\\right)\\]\n\n" +
+        "**SGD** on convex functions with diminishing step sizes \\(\\eta_t = O(1/t)\\) achieves:\n" +
+        "\\[\\mathbb{E}\\left[f\\left(\\frac{1}{t}\\sum_{i=1}^{t} x_i\\right)\\right] - f^* \\leq O\\left(\\frac{1}{t}\\right)\\]\n\n" +
+        "The \\(O(1/T)\\) rate for the **running average** of SGD iterates is the best possible for stochastic first-order methods on general convex functions.\n\n" +
+        "**Key insight:** The stochastic noise in SGD introduces variance \\(\\sigma^2\\) that limits convergence. As \\(t \\to \\infty\\), the error floor is \\(O(\\sigma^2 \\eta)\\), which is why step sizes must decay for exact convergence.\n\n" +
+        "For **strongly convex** functions (with strong convexity constant \\(\\mu > 0\\)), SGD with averaging achieves:\n" +
+        "\\[\\mathbb{E}[f(x_t) - f^*] \\leq O\\left(\\frac{1}{t}\\right) + O\\left(\\frac{\\sigma^2}{\\mu t}\\right)\\]\n\n" +
+        "This is faster (\\(O(1/t)\\) vs \\(O(1/\\sqrt{t})\\)) for the last iterate, thanks to the stronger curvature guarantee.",
       hints: [
-        "Convergence rates are usually expressed as how the suboptimality gap decreases with T iterations.",
-        "Stochastic noise from SGD fundamentally limits convergence compared to full gradient descent — where does that show up in the rate?",
+        "Convergence rates measure how the suboptimality gap \\(f(x_t) - f^*\\) decreases with \\(T\\) iterations.",
+        "SGD's stochastic noise introduces variance that fundamentally limits how fast the gap can shrink — this shows up as the \\(O(1/T)\\) vs the \\(O(1/T^2)\\) possible with Nesterov acceleration on convex problems.",
       ],
     },
     {
@@ -581,10 +622,20 @@ const questions: Record<string, Question[]> = {
         "For strongly convex smooth functions, full gradient descent (not SGD) achieves linear (geometric) convergence to the global minimum.",
       correctAnswer: "True",
       explanation:
-        "Gradient descent on strongly convex smooth functions converges at rate O((1-μ/L)^T) where μ is the strong convexity constant and L is the Lipschitz constant of the gradient — a geometric rate meaning the error decreases by a constant factor each step.",
+        "For an \\(L\\)-smooth and \\(\\mu\\)-strongly convex function \\(f\\), the gradient descent update is:\n" +
+        "\\[x_{t+1} = x_t - \\eta \\nabla f(x_t)\\]\n\n" +
+        "With step size \\(\\eta = 2/(L + \\mu)\\), the convergence is:\n" +
+        "\\[\\|x_{t+1} - x^*\\|_2^2 \\leq \\left(1 - \\frac{2\\mu}{L + \\mu}\\right) \\|x_t - x^*\\|_2^2\\]\n\n" +
+        "Equivalently:\n" +
+        "\\[f(x_t) - f^* \\leq \\left(1 - \\frac{\\mu}{L}\\right)^t \\cdot (f(x_0) - f^*)\\]\n\n" +
+        "This is **linear (geometric) convergence**: the error decreases by a constant factor \\((1 - \\mu/L)\\) each iteration. For example, if \\(\\mu/L = 0.01\\), the error shrinks by 99\\% every 460 iterations.\n\n" +
+        "**Why does strong convexity help?** Strong convexity gives a lower bound on the Hessian: \\(\\nabla^2 f(x) \\succeq \\mu I\\). This means:\n" +
+        "1. There is a unique global minimum (no flat regions).\n" +
+        "2. The gradient always points strongly toward the minimum.\n" +
+        "3. The condition number \\(\\kappa = L/\\mu\\) determines convergence speed: smaller \\(\\kappa\\) means faster convergence.",
       hints: [
-        "Linear convergence means the log of the error decreases linearly with iterations.",
-        "Strong convexity ensures a unique global minimum and a lower bound on curvature — why does that help convergence?",
+        "Linear convergence means \\(\\log(f(x_t) - f^*)\\) decreases linearly with \\(t\\) — the error shrinks exponentially fast.",
+        "Strong convexity (\\(\\nabla^2 f \\succeq \\mu I\\)) gives a guaranteed minimum curvature \\(\\mu\\), ensuring the gradient always makes strong progress toward the minimum.",
       ],
     },
     {
@@ -596,10 +647,16 @@ const questions: Record<string, Question[]> = {
       options: ["O(1/ε)", "O(1/ε²)", "O(1/ε^(4/3))", "O(log(1/ε))"],
       correctAnswer: 1,
       explanation:
-        "For smooth non-convex optimization, finding a point where ||∇f|| ≤ ε requires Ω(ε⁻²) gradient evaluations in the worst case; SGD matches this rate, establishing it as optimal for stochastic first-order methods on non-convex problems.",
+        "For smooth (\\(\\beta\\)-smooth \\(L\\)-gradient) non-convex functions, the goal is to find an \\(\\varepsilon\\)-approximate first-order stationary point:\n" +
+        "\\[\\|\\nabla f(x)\\| \\leq \\varepsilon\\]\n\n" +
+        "**Lower bound (Carmon et al., 2017):** Any first-order algorithm requires at least \\(\\Omega(\\varepsilon^{-2})\\) gradient evaluations in the worst case.\n\n" +
+        "**SGD matches this bound:** With step size \\(\\eta_t = O(1/\\sqrt{t})\\), SGD achieves:\n" +
+        "\\[\\min_{i \\in [t]} \\mathbb{E}\\|\\nabla f(x_i)\\|^2 \\leq O\\left(\\frac{1}{\\sqrt{t}}\\right)\\]\n\n" +
+        "Setting this equal to \\(\\varepsilon^2\\) gives \\(t = O(1/\\varepsilon^2)\\) — matching the lower bound.\n\n" +
+        "**Key insight:** Non-convexity only guarantees convergence to stationary points, not global minima. The \\(\\Omega(\\varepsilon^{-2})\\) lower bound reflects the fundamental difficulty of finding stationary points in high-dimensional non-convex landscapes.",
       hints: [
-        "Non-convex problems only guarantee convergence to stationary points (where gradient is small), not global minima.",
-        "Lower bounds establish what no first-order algorithm can beat — how does SGD\'s rate compare?",
+        "Non-convex problems only guarantee convergence to stationary points (\\(\\|\\nabla f\\| \\leq \\varepsilon\\)), not global minima.",
+        "The lower bound \\(\\Omega(\\varepsilon^{-2})\\) is matched by SGD with appropriate step sizes — no first-order method can do better in the worst case.",
       ],
     },
   ],
@@ -674,10 +731,19 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SAM computes an adversarial perturbation ε̂ that maximizes loss within an ε-ball around current weights, then takes a gradient step on L(θ + ε̂) — seeking parameters where even the worst nearby perturbation has low loss (flat regions).",
+        "SAM solves a minimax problem:\n" +
+        "\\[\\min_{\\theta} \\; \\max_{\\|\\varepsilon\\|_p \\leq \\rho} L(\\theta + \\varepsilon)\\]\n\n" +
+        "**Step 1 — Inner maximization:** Find the perturbation \\(\\hat{\\varepsilon}\\) that maximally increases the loss within an \\(\\varepsilon\\)-ball:\n" +
+        "\\[\\hat{\\varepsilon} = \\arg\\max_{\\|\\varepsilon\\|_2 \\leq \\rho} L(\\theta + \\varepsilon)\\]\n\n" +
+        "For \\(p = 2\\) (Euclidean norm), the solution is:\n" +
+        "\\[\\hat{\\varepsilon} = \\rho \\cdot \\frac{\\nabla L(\\theta)}{\\|\\nabla L(\\theta)\\|_2}\\]\n\n" +
+        "**Step 2 — Outer minimization:** Take a gradient step on the loss at the perturbed point:\n" +
+        "\\[\\theta_{\\text{new}} = \\theta - \\eta \\nabla L(\\theta + \\hat{\\varepsilon})\\]\n\n" +
+        "**Intuition:** SAM seeks parameters where the loss is low even under the worst-case perturbation. A flat minimum has small gradient everywhere in the neighborhood, so \\(\\hat{\\varepsilon}\\) would cause little loss increase. A sharp minimum has large gradients, so \\(\\hat{\\varepsilon}\\) would cause large loss increase.\n\n" +
+        "By minimizing the worst-case loss, SAM explicitly finds flatter regions that empirically generalize better.",
       hints: [
-        "SAM adds an inner maximization step — what is it maximizing, and why?",
-        "Minimizing the worst-case perturbed loss encourages the model to land in flat, not just low, regions.",
+        "SAM has two steps: (1) find the perturbation \\(\\varepsilon\\) that maximizes the loss within the \\(\\varepsilon\\)-ball, (2) take a gradient step on the loss at \\(\\theta + \\varepsilon\\).",
+        "Minimizing \\(\\max_{\\|\\varepsilon\\| \\leq \\rho} L(\\theta + \\varepsilon)\\) encourages the loss to be low even at the worst nearby point — a flat minimum.",
       ],
     },
     {
@@ -1297,10 +1363,21 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SVRG periodically computes the full gradient ∇f(θ̃) at a snapshot θ̃; each stochastic update uses g = ∇fᵢ(θ) - ∇fᵢ(θ̃) + ∇f(θ̃), canceling the noise component via the correction term and enabling convergence with a constant step size on strongly convex problems.",
+        "SVRG addresses SGD's variance problem on finite-sum objectives:\n" +
+        "\\[f(\\theta) = \\frac{1}{n} \\sum_{i=1}^{n} f_i(\\theta)\\]\n\n" +
+        "**SGD gradient:** \\(g_t = \\nabla f_{i_t}(\\theta_t)\\) has variance \\(\\sigma^2\\) that doesn't go to zero as \\(\\theta_t \\to \\theta^*\\).\n\n" +
+        "**SVRG correction:** Periodically compute the full gradient:\n" +
+        "\\[\\tilde{\\mu} = \\nabla f(\\tilde{\\theta}) = \\frac{1}{n} \\sum_{i=1}^{n} \\nabla f_i(\\tilde{\\theta})\\]\n\n" +
+        "Then use the variance-reduced estimator:\n" +
+        "\\[\\tilde{g}_t = \\nabla f_{i_t}(\\theta_t) - \\nabla f_{i_t}(\\tilde{\\theta}) + \\tilde{\\mu}\\]\n\n" +
+        "**Why is this unbiased?**\n" +
+        "\\[\\mathbb{E}_{i_t}[\\tilde{g}_t] = \\mathbb{E}_{i_t}[\\nabla f_{i_t}(\\theta_t)] - \\mathbb{E}_{i_t}[\\nabla f_{i_t}(\\tilde{\\theta})] + \\tilde{\\mu} = \\nabla f(\\theta_t) - \\nabla f(\\tilde{\\theta}) + \\tilde{\\mu}\\]\n\n" +
+        "At the snapshot \\((\\theta_t = \\tilde{\\theta})\\): \\(\\mathbb{E}[\\tilde{g}_t] = \\tilde{\\mu} = \\nabla f(\\tilde{\\theta})\\).\n\n" +
+        "**Variance at optimum:** As \\(\\theta_t \\to \\tilde{\\theta} \\to \\theta^*\\), we have \\(\\tilde{g}_t \\to \\nabla f_{i_t}(\\theta^*) - \\nabla f_{i_t}(\\theta^*) + \\nabla f(\\theta^*) = 0\\). Variance goes to zero!\n\n" +
+        "This enables constant step sizes and linear convergence on strongly convex problems — matching full gradient descent speed with SGD per-step cost.",
       hints: [
-        "The correction term ∇fᵢ(θ̃) is an unbiased estimate of the noise in ∇fᵢ(θ) — what does subtracting it do?",
-        "SVRG achieves linear convergence like full gradient descent, but with per-step cost similar to SGD.",
+        "The correction term \\(\\nabla f_{i_t}(\\tilde{\\theta})\\) is an unbiased estimator of the noise in \\(\\nabla f_{i_t}(\\theta_t)\\) — subtracting it removes the noise component.",
+        "At the snapshot \\(\\tilde{\\theta}\\), the gradient estimator \\(\\tilde{g}_t = \\tilde{\\mu}\\) has zero variance, and variance decreases to zero as \\(\\theta_t \\to \\tilde{\\theta}\\).",
       ],
     },
     {
@@ -1614,10 +1691,19 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "SPSA uses a random perturbation vector Δ with ±1 entries and estimates the gradient as (f(x+cΔ) - f(x-cΔ))/(2c) × Δ⁻¹, requiring only 2 function evaluations per step regardless of dimension — at the cost of a noisy gradient estimate.",
+        "SPSA estimates the gradient of \\(f: \\mathbb{R}^d \\to \\mathbb{R}\\) using only two function evaluations:\n\n" +
+        "\\[\\hat{\\nabla} f(x) = \\frac{f(x + c\\Delta) - f(x - c\\Delta)}{2c} \\cdot \\Delta^{-1}\\]\n\n" +
+        "where \\(\\Delta \\in \\{-1, +1\\}^d\\) is a random perturbation vector with independent entries.\n\n" +
+        "**Finite differences** would require \\(d\\) or \\(2d\\) evaluations (one-sided or central):\n" +
+        "\\[\\frac{\\partial f}{\\partial x_i} \\approx \\frac{f(x + c e_i) - f(x)}{c}\\]\n\n" +
+        "**SPSA** gets the full gradient with just 2 evaluations, regardless of \\(d\\).\n\n" +
+        "**Why does it work?** Using the finite difference approximation and expectation:\n" +
+        "\\[\\mathbb{E}_\\Delta\\left[\\frac{f(x + c\\Delta) - f(x - c\\Delta)}{2c} \\cdot \\Delta_i^{-1}\\right] \\approx \\frac{\\partial f}{\\partial x_i}\\]\n\n" +
+        "The key insight: \\(E[\\Delta_i^{-1} \\cdot \\Delta_j] = \\delta_{ij}\\) for symmetric \\(\\Delta\\), so the estimate is unbiased.\n\n" +
+        "The cost is variance: SPSA gradient estimates are noisier than finite differences, requiring more iterations to converge.",
       hints: [
-        "Finite differences perturb one dimension at a time (d evaluations); SPSA perturbs all at once (2 evaluations).",
-        "The Δ⁻¹ term distributes the scalar difference back to individual parameter dimensions.",
+        "Finite differences perturb one dimension at a time, needing \\(O(d)\\) evaluations. SPSA perturbs ALL dimensions simultaneously with a random \\(\\{\\pm 1\\}^d\\) vector, needing only 2 evaluations.",
+        "The \\(\\Delta^{-1}\\) term (where \\(\\Delta^{-1} = \\Delta\\) since \\(\\Delta_i = \\pm 1\\)) distributes the scalar difference back to each coordinate direction.",
       ],
     },
   ],

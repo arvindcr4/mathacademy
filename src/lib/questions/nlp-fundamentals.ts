@@ -623,7 +623,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'EM is binary: the normalised prediction must exactly match the normalised gold answer. "the Amazon River" ≠ "the Amazon", so EM = 0. F1 computes token overlap: predicted = {the, Amazon, River}, gold = {the, Amazon}. Precision = 2/3, Recall = 2/2 = 1, F1 = 2×(2/3×1)/(2/3+1) = 4/5 = 0.8. (Exact value depends on normalisation.) The point is that F1 gives partial credit for near-correct spans, making it a softer and often more informative metric.',
+        'EM is binary: the normalised prediction must exactly match the normalised gold answer. "the Amazon River" \$\\neq\$ "the Amazon", so EM = 0. F1 computes token overlap: predicted = {the, Amazon, River}, gold = {the, Amazon}. Precision = 2/3, Recall = 2/2 = 1, F1 = 2×(2/3×1)/(2/3+1) = 4/5 = 0.8. (Exact value depends on normalisation.) The point is that F1 gives partial credit for near-correct spans, making it a softer and often more informative metric.',
       hints: [
         "EM = 1 only if every character matches after normalisation (lowercasing, removing articles/punctuation). Even one extra word = EM 0.",
         "F1 = 2×P×R/(P+R) over token sets. Tokens in both prediction and gold are true positives.",
@@ -1676,7 +1676,7 @@ const questions: Record<string, Question[]> = {
         "LLMs hallucinate even about topics extensively covered in training data. The fundamental cause is not a knowledge gap but a generation process that optimises for plausibility given the context, not factual accuracy. A model may have seen correct information about Napoleon but still generate a plausible-sounding but wrong birth date — because the generation objective rewards fluent, context-consistent tokens, not fact-verified tokens. Hallucination is most severe for specific numbers, dates, citations, and names where many plausible values exist.",
       hints: [
         "Ask an LLM about a famous physicist\'s specific publication year — a heavily-trained domain. Does it never hallucinate? Test it.",
-        'The LM objective is: predict the next token given context. There is no explicit "check if this is true" step. Plausibility ≠ accuracy.',
+        'The LM objective is: predict the next token given context. There is no explicit "check if this is true" step. Plausibility \$\\neq\$ accuracy.',
       ],
     },
   ],

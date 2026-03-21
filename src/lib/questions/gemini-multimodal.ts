@@ -57,8 +57,7 @@ registerQuestions({
         "Only generating audio from textual descriptions.",
         "Operating exclusively without an internet connection on IoT devices.",
       ],
-      correctAnswer:
-        "General-purpose enterprise applications requiring a balance of strong reasoning, performance, and multimodality.",
+      correctAnswer: 1,
       explanation:
         "Gemini Pro is the versatile, workhorse model of the Gemini family, offering a great balance of advanced reasoning, multimodal processing, and efficiency for most enterprise use cases.",
       hints: [

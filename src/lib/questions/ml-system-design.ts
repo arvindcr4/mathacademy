@@ -54,8 +54,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "99.9% availability = 0.1% downtime = 43.8 minutes/month. For ML systems, 'availability' must include silent failures: a data pipeline bug producing incorrect features causes the model to serve wrong predictions with no infrastructure failure — the system appears 'up' but is unavailable in the meaningful sense. ML availability SLOs must cover both infrastructure uptime and model output correctness.",
       hints: [
-        "99.9% = 1 - 0.001; 30 days × 24 hrs × 60 min × 0.001 = 43.2 minutes.",
-        "Silent model degradation (wrong features, stale model) is functionally equivalent to downtime.",
+        "Convert 99.9% to a decimal fraction of downtime, then multiply by total minutes in 30 days.",
+        "In ML systems, can a system appear technically 'up' while producing completely wrong outputs? What does this mean for availability SLOs?",
       ],
     },
     {
@@ -129,8 +129,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Using Little\'s Law: throughput = concurrency ÷ latency. At 80 ms p99 (0.08 s), a replica handling 100 concurrent requests serves ~1,250 QPS. To serve 10,000 QPS requires ~8 replicas at minimum. With 100 concurrent capacity per replica and overhead/headroom: 10,000 ÷ 100 = 100 replicas is the capacity-based estimate (assuming each slot is utilized 100%). In practice, you add 20–30% headroom.",
       hints: [
-        "Little\'s Law: L = λ × W (concurrency = throughput × latency). Rearranged: throughput = concurrency ÷ latency.",
-        "At p99 latency = 80 ms and 100 concurrent slots: each replica handles 100/0.08 = 1,250 req/s max.",
+        "Capacity planning: how many requests can each replica process per second given its concurrency limit and latency?",
+        "Use Little's Law to reason about the relationship between concurrency, latency, and throughput.",
       ],
     },
   ],
@@ -222,8 +222,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Pointwise regression ignores inter-document relationships: predicting scores independently cannot capture relative ordering constraints. Listwise losses (e.g., ListNet, LambdaLoss) directly optimize ranking metrics like NDCG by considering the full ranked list jointly. Pointwise approaches often underperform pairwise and listwise on NDCG because they optimize the wrong objective.",
       hints: [
-        "NDCG rewards placing highly relevant documents at rank 1 — pointwise MSE does not directly optimize for this.",
-        "Two documents with scores 0.9 and 0.1 are ranked the same as 0.8 and 0.1 by pointwise models, but differently by NDCG.",
+        "Pointwise regression predicts each document's score independently. Can it capture the fact that documents are being ranked relative to each other?",
+        "How does NDCG reward the ordering of the entire list, not just individual document scores?",
       ],
     },
     {
@@ -242,8 +242,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'At 0.05% fraud rate, a model predicting "not fraud" always achieves 99.95% accuracy — useless. The relevant metrics are precision-recall AUC and operational precision@recall (e.g., at 80% recall, what fraction of flagged transactions are truly fraudulent?). Focal loss or oversampling addresses the extreme imbalance, and the 150 ms SLO constrains model complexity.',
       hints: [
-        "0.05% fraud rate: if 10M transactions/day, 50K are fraud. 40% recall = 20K caught; 30K missed (false negatives).",
-        "The correct metrics: recall (did we catch enough fraud?) and precision (how many flags are real fraud?).",
+        "At 0.05% fraud rate, a naive classifier predicting 'not fraud' always achieves what accuracy?",
+        "Accuracy alone is meaningless for imbalanced data. Which metrics directly measure fraud-catching ability?",
       ],
     },
   ],
@@ -280,8 +280,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators — the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
       hints: [
-        "Cohen\'s kappa of 0.8+ indicates strong agreement; below 0.6 is weak agreement — unreliable ground truth.",
-        "A model cannot learn a task better than humans can agree on what the correct answer is.",
+        "What kappa threshold distinguishes reliable ground truth from noisy labels? Below what value should annotation guidelines be revised?",
+        "What fundamental limit exists on a model's ability to learn from human labels?",
       ],
     },
     {
@@ -320,8 +320,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Position bias is the dominant issue in recommendation/search logs: items ranked higher receive disproportionately more clicks regardless of their true relevance (simply because they are seen). A model trained on raw logs learns to predict "was shown at position 1" rather than "is relevant." Inverse propensity scoring (IPS) or position-aware models are needed to debias.',
       hints: [
-        "If item A appears at rank 1 and item B at rank 10, A gets more clicks even if B is more relevant.",
-        'The model cannot distinguish "clicked because relevant" from "clicked because shown first."',
+        "Why might an item at rank 1 receive more clicks than a more relevant item at rank 10, even when users are shown both?",
+        "When a user clicks an item, what two possible reasons explain the click — and which one does the model actually learn from?",
       ],
     },
     {
@@ -355,8 +355,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Uncertainty sampling for binary classification selects examples where the model\'s predicted probability is closest to 0.5 — the decision boundary. These are the examples where the model is most uncertain and where a label provides the most information gain. Labeling examples with high or low confidence (far from 0.5) teaches the model things it already knows.",
       hints: [
-        "Examples near the decision boundary most change the model — that\'s where labeled data has the highest value.",
-        "P(y=1|x) ≈ 0.5 means the model cannot decide — a human label resolves the uncertainty entirely.",
+        "The model is most uncertain when it assigns near-equal probability to both classes. Which predicted probability values represent maximum uncertainty?",
+        "Labeling examples the model is already confident about adds little information. Where does a new label provide the most value?",
       ],
     },
   ],
@@ -413,8 +413,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "For point lookups (not similarity search) at 500M users, sharded Redis is optimal: 500M × 1 KB = 500 GB across a 50-node cluster is 10 GB/node — within typical Redis capacity. Redis GET latency is sub-millisecond, easily meeting the 5 ms SLO. FAISS is for ANN similarity search, not point lookups by user_id. DynamoDB adds network latency and JSON parsing overhead that may approach the 5 ms limit.",
       hints: [
-        "FAISS = find nearest neighbors. Redis = fetch by exact key. These are different retrieval patterns.",
-        "500M × 1 KB = ~500 GB. Sharded across 50 nodes = 10 GB/node — Redis is designed for this.",
+        "Is this a similarity search problem (find nearest neighbors) or a key-based lookup (retrieve by user_id)?",
+        "What is the total memory footprint, and how should it be partitioned to achieve sub-millisecond point lookups?",
       ],
     },
     {
@@ -521,8 +521,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Statistical significance only means the observed difference is unlikely to be due to chance — it says nothing about the magnitude or practical importance of the difference. With large sample sizes (common in ML A/B tests), even a 0.001% CTR improvement can be statistically significant. Practical significance requires also reporting the effect size (absolute and relative lift) and comparing it to the cost of deployment, maintenance, and infrastructure. Minimum detectable effect (MDE) should be pre-specified based on business value.",
       hints: [
-        "p < 0.05 with 100M users can detect a 0.001% change — statistically significant but practically negligible.",
-        "Always report both p-value (statistical significance) AND effect size (practical significance).",
+        "With very large sample sizes (e.g., 100M users), can a tiny effect size be statistically significant? Is that effect worth deploying?",
+        "What two metrics must always be reported together to distinguish statistical significance from practical importance?",
       ],
     },
     {
@@ -541,8 +541,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Multi-objective NAS requires finding the Pareto frontier — the set of architectures where improving accuracy requires increasing latency and vice versa. Both option B (Pareto search) and option D (constrained optimization) are valid; Pareto search provides the full trade-off picture while constrained optimization finds one optimal point. The weighted sum (option C) requires knowing λ a priori and can miss non-convex Pareto regions. Option A ignores architecture-level latency optimization.",
       hints: [
-        "Pareto frontier: a point is Pareto-optimal if no other point improves one objective without worsening another.",
-        "MobileNetV3 and EfficientNet were found via NAS with latency-accuracy multi-objective optimization.",
+        "In multi-objective optimization, what does the Pareto frontier represent, and what property does each point on it have?",
+        "What real-world neural architecture search methods use multi-objective optimization over accuracy and latency?",
       ],
     },
     {
@@ -562,7 +562,7 @@ const questions: Record<string, Question[]> = {
         "A p99 latency SLA is a hard constraint: a model that violates it cannot be deployed regardless of accuracy. Model A is the only viable option. Knowledge distillation (training a small student model to mimic Model B) or pruning Model B can often recover most of the 0.02 AUC gap while meeting the latency constraint. Never negotiate SLAs downward to accommodate a model.",
       hints: [
         "SLAs are contractual commitments — violating them has business consequences.",
-        "Knowledge distillation: a 7B model can often match a 70B model\'s AUC at a fraction of the latency.",
+        "When a better model violates the latency constraint, what technique can transfer its knowledge to a smaller, faster model?",
       ],
     },
     {
@@ -634,8 +634,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Large batch sizes can hurt generalization. Small-batch SGD converges to sharper minima with poor generalization; large-batch training converges faster but often to sharp minima that generalize poorly ('generalization gap'). The linear scaling rule (scale learning rate proportionally with batch size) partially mitigates this but has limits. Learning rate warmup, gradient clipping, and careful batch size selection are required to achieve good accuracy with large batches.",
       hints: [
-        "A batch size of 32K may train 10× faster than 32 but often achieves 1-2% lower accuracy without careful tuning.",
-        "The 'generalization gap' in large-batch training is well-documented: Keskar et al. 2017 showed large batches converge to sharp minima.",
+        "Does using more samples per gradient update always improve the model's ability to generalize to unseen data?",
+        "What well-documented phenomenon shows that large-batch training often converges to minima that generalize poorly?",
       ],
     },
     {
@@ -724,8 +724,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Low GPU utilization with high CPU utilization is the classic signature of a data pipeline bottleneck: the GPU sits idle waiting for batches the CPU is still preprocessing. Fixes include: increasing num_workers (parallel data loading), using prefetch_factor (prefetch batches into GPU memory), pre-caching tokenized data to disk, and using DALI or other GPU-accelerated data pipelines.",
       hints: [
-        "GPU utilization = (time GPU is computing) / (total time). Low GPU, high CPU means GPU is waiting for data.",
-        "The fix is always on the data pipeline side — not the model or optimizer.",
+        "Low GPU utilization despite high CPU utilization is a classic symptom of what type of bottleneck?",
+        "If the GPU is idle while the CPU is busy, what component is failing to keep the GPU fed with data?",
       ],
     },
   ],
@@ -782,8 +782,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The total sequential latency is 5+10+20+2=37 ms but p99 is 80 ms — indicating tail latency from I/O and queuing. Parallelizing independent steps (e.g., fetching user features and item features in parallel during feature fetch; starting feature pre-fetch during ANN retrieval) eliminates serial waits. This is the highest-leverage optimization: cutting 10 ms of serial I/O by parallelizing can halve end-to-end p99. Optimizing the already-fast 5 ms or 2 ms steps yields minimal gain.",
       hints: [
-        "Amdahl\'s Law: speed up the slowest sequential step. Feature fetch and reranking dominate.",
-        "I/O-bound steps (feature fetch from Redis) can be parallelized — fire all requests simultaneously instead of sequentially.",
+        "The total latency is 5+10+20+2 = 37 ms, but p99 is 80 ms. What does this gap suggest about where time is being lost?",
+        "Which stages in the pipeline must wait for previous ones to finish, and which could run concurrently?",
       ],
     },
     {
@@ -837,8 +837,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Traditional static batching waits for all requests in a batch to finish before starting new ones — requests that finish early leave GPU capacity idle. vLLM\'s continuous batching schedules at the token generation step level: when a sequence completes (hits EOS or max_tokens), its slot is immediately filled by a waiting request. This dramatically improves GPU utilization and throughput for variable-length LLM outputs.",
       hints: [
-        "LLM outputs vary greatly in length — one request may finish in 10 tokens while another takes 1000.",
-        "Static batching wastes GPU cycles waiting for the longest request; continuous batching fills those cycles.",
+        "In static batching, what happens to GPU slots when one request finishes early but others in the batch are still generating?",
+        "What key innovation does vLLM introduce to fill those idle GPU slots immediately?",
       ],
     },
     {
@@ -857,8 +857,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "A 70B model in FP16 requires ~140 GB VRAM — exceeding a single 80 GB GPU. Tensor parallelism across 4–8 A100s splits the model across devices. FP16 halves memory vs. FP32. vLLM\'s continuous batching maximizes GPU utilization; PagedAttention manages KV cache memory without fragmentation. Together these achieve the throughput and latency targets at 1,000 QPS.",
       hints: [
-        "70B × 2 bytes/param (FP16) = 140 GB — requires at least 2× A100 80 GB. 4× gives compute headroom.",
-        "PagedAttention (vLLM) stores KV cache in non-contiguous pages, eliminating memory waste from reserved-but-unused cache slots.",
+        "What is the VRAM requirement for a 70B parameter model in FP16? How does this compare to a single A100 80 GB?",
+        "What technique manages KV cache memory to eliminate waste from pre-allocated but unused slots?",
       ],
     },
   ],
@@ -950,8 +950,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Serving latency is the hard constraint. A 100M-item catalog with even a 1 µs ranking model takes 100 seconds per query — unusable. The retrieval stage uses ANN search over user/item embeddings (FAISS, HNSW) to narrow 100M items to ~1,000 candidates in <10 ms. The heavy ranker then scores only those ~1,000 items, meeting latency SLOs.",
       hints: [
-        "ANN retrieval: O(log n) or O(√n) to find top-k; sequential scoring: O(n). For n=100M, the difference is billions of operations.",
-        "The two-stage pipeline trades retrieval recall for serving feasibility — a well-engineered trade-off.",
+        "What is the computational complexity of scoring all 100M items sequentially versus finding top-k via approximate nearest neighbors?",
+        "The two-stage pipeline solves a fundamental trade-off between what two competing requirements?",
       ],
     },
     {
@@ -985,8 +985,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "This is the classic recommendation alignment failure: CTR is a proxy for engagement, not satisfaction. Sensational content drives clicks (high proxy metric) while eroding trust and long-term retention (the true objective). YouTube, Facebook, and Twitter have all documented this failure. Mitigation requires optimizing multi-objective rewards that include long-term signals (e.g., subscription retention, explicit satisfaction surveys).",
       hints: [
-        'This is Goodhart\'s Law applied to ML: "When a measure becomes a target, it ceases to be a good measure."',
-        "CTR ≠ user value. A click and immediate regret still counts as a click in the training signal.",
+        "What happens when a proxy metric is optimized directly, rather than the true underlying objective?",
+        "A user who clicks on sensational content and immediately feels worse — does that click represent value or a misleading signal?",
       ],
     },
   ],
@@ -1113,8 +1113,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Cross-encoders process query and document together in a single forward pass, enabling deep interaction modeling for high accuracy. But this requires running the model for every (query, document) pair at query time — O(corpus_size) inference per query, infeasible for millions of documents. Bi-encoders pre-compute document embeddings offline; at query time only the query is encoded and ANN search finds top-k candidates in milliseconds.",
       hints: [
-        "1M documents × 50 ms cross-encoder inference = 50,000 seconds per query. Unusable.",
-        "The two-stage pattern: fast bi-encoder retrieval (100K→1K) → accurate cross-encoder reranking (1K→10).",
+        "If a cross-encoder scores each document independently, how many forward passes are needed per query at corpus scale?",
+        "What is the standard two-stage pattern that combines the speed of bi-encoders with the accuracy of cross-encoders?",
       ],
     },
   ],
@@ -1377,8 +1377,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "The feedback loop works as follows: (1) the current model ranks content A highly → users click on A → A generates more training signal → the next model ranks A even higher → A crowds out content B. If the current model has a bias toward certain content types (e.g., sensational content), each training iteration amplifies that bias. Breaking the loop requires exploration (showing non-top-ranked content to collect unbiased signal), causal methods (IPS debiasing), and diversity objectives.",
       hints: [
-        "Feedback loop: model biases influence what data is collected, which retrains a more biased model.",
-        "The only way to break the loop is to show content the model would NOT have ranked highly — deliberate exploration.",
+        "What does the model learn from data generated by its own past ranking decisions?",
+        "What mechanism is needed to collect unbiased signal about content the current model would not have surfaced?",
       ],
     },
     {
@@ -1398,7 +1398,7 @@ const questions: Record<string, Question[]> = {
         "Weight tuning for multi-objective feed ranking requires online experiments because the right objective is long-term user value — not any single offline metric. Different weight combinations should be A/B tested against long-term metrics (7-day/30-day retention, satisfaction surveys, session length trends). The risk of static weights is Goodhart\'s Law: the system will exploit whichever proxy signals have high weights, potentially gaming them at the expense of true user value.",
       hints: [
         "Offline tuning optimizes proxy metrics; online A/B tests measure actual user outcomes.",
-        "Goodhart\'s Law: if shares have weight w2=10, the model will surface shareable-but-not-valuable content.",
+        "What happens when a proxy metric is given a very high weight — does the system optimize for the true objective or for the metric itself?",
       ],
     },
     {
@@ -1417,7 +1417,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Angry reactions indicate emotional arousal and engagement (the model\'s signal) but negative user experience (the true objective). Content that triggers outrage maximizes short-term engagement signals while degrading long-term satisfaction and mental health. This is the metric misalignment problem: the proxy (engagement) diverges from the true objective (user wellbeing and retention).",
       hints: [
-        'Engagement ≠ satisfaction. A user spending 5 minutes in outrage is "engaging" but not benefiting.',
+        'Engagement \$\\neq\$ satisfaction. A user spending 5 minutes in outrage is "engaging" but not benefiting.',
         "Long-term signals like weekly active return rate or satisfaction surveys better capture true user value.",
       ],
     },
@@ -1623,8 +1623,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "50B pairs × 0.1 ms = 5M seconds — infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B × 0.1 ms = 500K seconds — still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
       hints: [
-        "50B × 0.1 ms = 5M seconds ≈ 58 days on one machine. Must reduce candidate count by >1000×.",
-        "Union-find (disjoint set): if A=B and B=C, then A=C. Necessary when matching across 3+ databases.",
+        "What is the total computation time if all 50B pairs are scored sequentially? Is this tractable?",
+        "When matching records across 3+ databases, if A matches B and B matches C, what must be true about A and C?",
       ],
     },
     {
@@ -1643,8 +1643,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Blocking groups records into candidate sets (blocks) using a blocking key (e.g., first 3 chars of last name + zip code). Only records within the same block are compared. If two truly matching records are in different blocks (due to typos in the blocking key), they will never be matched — a recall loss. The trade-off is computational feasibility (O(n²)→near-linear) at the cost of some missed matches.",
       hints: [
-        "Without blocking, comparing all n=10M records requires 50 trillion pairs — infeasible.",
-        "Multiple blocking passes (union of blocked sets) improve recall at the cost of more comparisons.",
+        "What is the computational cost of comparing all n records against all n records? Is this tractable for large datasets?",
+        "The recall loss in blocking comes from what source — which pairs are never compared?",
       ],
     },
     {
@@ -1658,8 +1658,8 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Blocking is a precision-recall trade-off: it dramatically reduces the number of comparisons (enabling scalability) but introduces false negatives when true matches are assigned to different blocks. Well-designed blocking (using multiple blocking keys, "canopy clustering," or LSH-based blocking) minimizes this recall loss while maintaining tractable candidate pair counts.',
       hints: [
-        "Without blocking, comparing all n=10M records requires 50 trillion pairs — infeasible.",
-        "Multiple blocking passes (union of blocked sets) improve recall at the cost of more comparisons.",
+        "The recall loss comes from which pairs of records never being compared?",
+        "What technique allows trading off more comparisons for higher recall?",
       ],
     },
     {
@@ -2385,7 +2385,7 @@ const famous: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "With modulo hashing and N→N+1 nodes, almost every key maps to a different node (key % N ≠ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
+        "With modulo hashing and N→N+1 nodes, almost every key maps to a different node (key % N \$\\neq\$ key % (N+1) for most keys), so effectively ~100% of keys must be remapped — catastrophic for a cache. With consistent hashing on a ring, adding one node steals only its fair share: ~1/(N+1) = 1/5 = 20% of keys, and these come from the single adjacent predecessor node. Virtual nodes (vnodes) improve load balance: without them a single physical node might own an uneven arc; with 100 vnodes per server the load variance is low. This is why consistent hashing is used in DynamoDB, Cassandra, and Redis Cluster.",
       hints: [
         "Consistent hashing invariant: adding node X only remaps keys in X's arc on the ring — no other nodes are affected.",
         "Virtual nodes: each physical server owns V points on the ring. Larger V → more uniform load distribution but higher coordination overhead.",
@@ -2438,5 +2438,177 @@ const famous: Record<string, Question[]> = {
   ],
 };
 Object.assign(questions, famous);
+
+const famous2: Record<string, Question[]> = {
+  "sysdesign-typeahead": [
+    {
+      id: "q-msd-famous2-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Design Google Search typeahead (autocomplete): given a user typing 'sta', return the top 5 completions in <100ms. You have 10B historical queries with frequencies. Which data structure and serving architecture is correct?",
+      options: [
+        "Store all queries in a SQL table (query TEXT, freq INT). On each keystroke, run SELECT query FROM searches WHERE query LIKE 'sta%' ORDER BY freq DESC LIMIT 5. Add a B-tree index on query.",
+        "Build a trie where each node stores the top-K (e.g., K=5) completions with their frequencies, aggregated from all children. Serve from an in-memory trie per data-center region. On prefix 'sta', traverse 3 nodes and return the pre-computed top-5 list in O(prefix_length) time. Rebuild trie offline every few hours from MapReduce aggregation of query logs.",
+        "Use Elasticsearch prefix queries with a completion suggester mapping. The completion suggester uses an in-memory FST (finite-state transducer) for fast prefix lookup with scores.",
+        "Cache the top 100K most popular prefixes in Redis (key = prefix, value = JSON array of top 5 completions). Serve from Redis for 99% of queries; fall back to DB for rare prefixes.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Google's typeahead uses a trie with pre-aggregated top-K lists at each node — this is the canonical answer. Each internal node stores the K highest-frequency completions beneath it, not just the children's prefixes. Traversal is O(length of prefix) = O(3) for 'sta', with O(1) list retrieval. The trie is built offline (MapReduce over query logs) and loaded into each serving machine's memory (~10GB compressed). LIKE queries on SQL are slow even with B-tree indexes (no range scan for suffix patterns). Redis caching only covers hot prefixes; trie handles all prefixes uniformly. Elasticsearch completion suggester is a production alternative (Spotify uses it) but has higher latency than in-memory trie.",
+      hints: [
+        "Key trie optimization: store top-K completions at EVERY node, not just leaf nodes. Traversing 'sta' returns the pre-computed top-5 without scanning all children.",
+        "Trie memory: 10B queries × average 30 chars = ~300GB raw; frequency aggregation collapses to ~50M unique prefixes × top-5 entries ≈ manageable with compression.",
+      ],
+    },
+    {
+      id: "q-msd-famous2-2",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "For a typeahead system, displaying personalized completions (based on the individual user's past queries) requires the same trie data structure as global completions, just partitioned by user_id.",
+      correctAnswer: "False",
+      explanation:
+        "Personalized completions require a fundamentally different architecture. A global trie aggregates frequencies across all users — you cannot shard it by user_id while maintaining global top-K semantics. Personalization is typically done by a separate lightweight model: (1) fetch top-K global completions from the global trie; (2) re-rank using a per-user model that boosts completions matching the user's past query history, location, language, and session context. The re-ranking model (logistic regression or small neural net) runs in-memory with the user's profile vector. This two-stage approach (retrieve then personalize) keeps the global trie simple while enabling personalization.",
+      hints: [
+        "Two-stage: global retrieval (trie) + per-user re-ranking (lightweight ML model). Same pattern used in recommendation systems.",
+        "User query history is typically stored as a bloom filter or recency-weighted frequency vector, not a full trie.",
+      ],
+    },
+  ],
+  "sysdesign-netflix": [
+    {
+      id: "q-msd-famous2-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Design Netflix: a user in Mumbai clicks play on a 4K video. Describe the critical path from click to first frame playing, focusing on how Netflix avoids serving 4K video from its US origin servers.",
+      options: [
+        "Netflix's origin servers in US stream directly to the user. Adaptive bitrate (ABR) reduces the resolution to 720p for users far from the origin to compensate for latency.",
+        "Netflix uses its Open Connect CDN: ISPs host Netflix Open Connect Appliances (OCA) inside their own networks. The Mumbai ISP's OCA has pre-fetched popular titles overnight via proactive caching (Zipf distribution — top 20% of titles = 80% of plays). The player requests the video from the nearest OCA, serving from local storage with sub-millisecond network hops inside the ISP.",
+        "Netflix uses AWS CloudFront edge locations. The Mumbai CloudFront PoP caches video segments on-demand (cache-on-miss). The first viewer of an unpopular title fetches from S3 origin and populates the edge cache for subsequent viewers.",
+        "Netflix streams via WebRTC peer-to-peer: users in the same city share video chunks with each other, reducing origin server load.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Netflix's Open Connect is the key differentiator: Netflix partners with ~1000 ISPs globally to place its own servers (OCAs) inside ISP data centers. OCAs proactively fill overnight with the most popular titles predicted for the next day (Zipf distribution means ~95% of plays hit cached content). This means 4K video plays entirely inside the local ISP's network — zero internet backbone traversal. The CDN cost is physical servers at ISPs, not per-GB bandwidth. For uncached long-tail content, OCAs fall back to Netflix's origin (AWS S3 + EC2). The player uses ABR (DASH or HLS): it fetches short 2-4 second segments and dynamically selects bitrate based on measured throughput, enabling smooth startup and quality adaptation.",
+      hints: [
+        "Open Connect = Netflix's own CDN, not a third-party. Key advantage: ISP placement means video traffic never leaves the ISP's network.",
+        "Proactive caching: OCAs pull popular content overnight during off-peak hours, using predicted demand models. Reactive caching would cause slow first-play for popular titles.",
+      ],
+    },
+  ],
+  "sysdesign-uber": [
+    {
+      id: "q-msd-famous2-4",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Design Uber: 1M drivers send GPS location updates every 4 seconds. A rider requests a trip — the system must find all available drivers within 5km in <200ms. Which geospatial indexing approach does Uber use and why?",
+      options: [
+        "MySQL with lat/lng columns and a query: SELECT * FROM drivers WHERE lat BETWEEN rider_lat-0.045 AND rider_lat+0.045 AND lng BETWEEN rider_lng-0.045 AND rider_lng+0.045. Add a composite B-tree index on (lat, lng).",
+        "Google S2 geometry: divide Earth into a hierarchy of cells using the Hilbert space-filling curve. Each driver's location maps to an S2 cell ID at multiple precisions. Store driver locations in a key-value store keyed by S2 cell ID. Query: fetch all drivers in the target S2 cells covering the 5km radius. S2 cells at level 14 are ~600m across, so a 5km radius requires ~50 S2 cells. Cell IDs are 64-bit integers enabling fast integer-key lookups.",
+        "Geohash: encode each driver's location as a 6-character geohash (~1.2km precision). Store drivers in a Redis set per geohash cell. Query nearby geohash cells (the 8 neighbors + center) for drivers. Limitation: geohash cells don't map cleanly to circular radii.",
+        "QuadTree: recursively subdivide the map into four quadrants. Store driver locations in a balanced QuadTree in memory on each matching server. Range query: traverse the QuadTree to find all drivers within 5km bounding box.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Uber uses Google S2 geometry (open-sourced). The Hilbert curve property is critical: nearby points on Earth map to nearby S2 cell IDs, enabling range queries with integer key comparisons. At level 14 (~600m cells), a 5km radius needs ~50 cells — fetch all drivers with cell IDs in those 50 cells from a distributed KV store (Uber uses Riak/DynamoDB). Driver location updates (1M × 15/min = 15M writes/min) write to the KV store keyed by cell ID. S2 advantages over geohash: (1) equal-area cells at each level; (2) exact coverage of arbitrary regions without edge artifacts; (3) hierarchical — same system handles city-level and street-level queries. QuadTree works but requires in-memory data structure management across server restarts.",
+      hints: [
+        "Hilbert curve: maps 2D space to 1D while preserving locality. Adjacent points in 2D have close IDs in 1D, enabling range queries.",
+        "Driver location update: S2 cell ID at multiple levels = cell ID at level 8 (city block), 12 (neighborhood), 14 (street). Store all three for multi-precision queries.",
+      ],
+    },
+  ],
+  "sysdesign-payment": [
+    {
+      id: "q-msd-famous2-5",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Design a payment system like Stripe: a user clicks 'Pay $100' and your server calls the payment processor. The network times out — you don't know if the charge succeeded. How do you prevent double-charging while ensuring the payment eventually completes?",
+      options: [
+        "Retry the API call immediately. If the payment processor returns 'already charged', catch that error and treat the payment as successful.",
+        "Never retry. On timeout, mark the order as 'pending' and require the user to manually retry the payment from the UI.",
+        "Generate a client-generated idempotency key (UUID) per payment attempt before the API call. Send this key as a header (Idempotency-Key: <uuid>) on every attempt. The payment processor stores (idempotency_key, result) in its DB with a unique constraint. Retries with the same key return the cached result — guaranteed exactly-once processing regardless of retries or timeouts.",
+        "Use two-phase commit (2PC) between your DB and the payment processor's DB. Phase 1: prepare both sides. Phase 2: commit if both prepared successfully. On coordinator failure, the transaction rolls back.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Idempotency keys are the industry-standard solution (Stripe, PayPal, Braintree all implement this). The client generates a UUID before the first attempt and reuses it on all retries for the same logical payment. The payment processor stores (idempotency_key → result) with a UNIQUE constraint — duplicate requests return the stored result without re-executing. This is safe to implement with a Redis SET NX (set if not exists) or DB UNIQUE constraint. The key insight: the idempotency key is client-generated (not server-generated) so it survives network failures. 2PC is impractical with external payment processors (they don't expose distributed transaction APIs). Option A depends on the processor returning a specific error — not guaranteed across all processors.",
+      hints: [
+        "Idempotency key lifecycle: generate before first attempt, store with the order in your DB, send on every retry. Expire keys after 24-48 hours.",
+        "Stripe's implementation: Idempotency-Key header + DB unique index on (customer_id, idempotency_key). Returns cached response for up to 24 hours.",
+      ],
+    },
+  ],
+  "sysdesign-distributed-kv": [
+    {
+      id: "q-msd-famous2-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Design a distributed key-value store like DynamoDB/Cassandra: you need write-optimized storage handling 1M writes/second to a single node. Which storage engine design explains why LSM trees outperform B-trees for this workload?",
+      options: [
+        "B-tree: writes update nodes in-place on disk. Random writes cause disk seeks. At 1M writes/s, a spinning disk (150 seeks/s) saturates immediately. SSDs handle random writes faster but still suffer write amplification from B-tree node splits.",
+        "LSM tree (Log-Structured Merge-tree): writes go to an in-memory buffer (MemTable), then sequentially to disk as immutable SSTables. Sequential writes maximize disk throughput. Background compaction merges SSTables. Read performance trades off against write performance — reads may require checking multiple SSTables (mitigated by Bloom filters per SSTable).",
+        "Both B-tree and LSM tree have the same write throughput because SSD random write IOPS (100K+) exceeds the 1M writes/s requirement at the data-per-operation level.",
+        "LSM tree buffers writes in memory until a crash, making it unsuitable for durability requirements without a write-ahead log (WAL). B-trees are more durable by default.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "LSM trees optimize for write throughput by converting random writes into sequential disk writes. Write path: (1) append to WAL for durability; (2) write to in-memory MemTable (AVL tree or skip list); (3) when MemTable is full (~64MB), flush to a sorted SSTable on disk sequentially. Sequential writes achieve full disk bandwidth (GB/s vs MB/s for random). Compaction merges SSTables to reclaim space and maintain read performance. Bloom filters (one per SSTable, ~10 bits/key) answer 'does this key exist in this SSTable?' with O(1) and ~1% false positive rate — avoiding disk reads for missing keys. B-trees update in-place with random writes, causing write amplification from page splits and rebalancing. RocksDB (Facebook) is the canonical LSM implementation, used by DynamoDB, Cassandra, and many others.",
+      hints: [
+        "LSM write path: WAL (durability) → MemTable (speed) → SSTable (persistence). WAL + MemTable = writes survive crash; WAL is sequential append.",
+        "Bloom filter per SSTable: before reading SSTable for a key, check Bloom filter. If negative, skip SSTable entirely. Reduces read amplification from O(SSTables) to O(1) for missing keys.",
+      ],
+    },
+  ],
+  "sysdesign-twitter-feed": [
+    {
+      id: "q-msd-famous2-7",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "Design Twitter's home timeline: a user with 500 followers posts a tweet. Another user follows 2000 accounts and opens their feed. Twitter tried both fan-out-on-write and fan-out-on-read. Which approach does Twitter use in production and why?",
+      options: [
+        "Pure fan-out-on-read (pull): when a user opens their feed, query all 2000 followed accounts for their recent tweets, merge and sort by time. Simple but slow at read time — 2000 DB queries per feed load.",
+        "Pure fan-out-on-write (push): when a user posts, write the tweet ID to each follower's timeline cache (Redis sorted set). Feed reads are O(1). Problem: a celebrity with 30M followers causes 30M Redis writes per tweet — write latency is unacceptable.",
+        "Hybrid: fan-out-on-write for normal users (≤ ~10K followers) into each follower's Redis timeline cache. For celebrities (> threshold), use fan-out-on-read at render time — fetch celebrity tweets separately and merge with the pre-computed timeline. This limits write fan-out to manageable sizes while keeping reads fast for all users.",
+        "Fan-out-on-write for all users, using Kafka to buffer the 30M writes asynchronously. The celebrity's 30M followers all eventually receive the tweet within 5 seconds.",
+      ],
+      correctAnswer: 2,
+      explanation:
+        "Twitter's production system (documented in their engineering blog) uses the hybrid approach. Fan-out-on-write: posting a tweet triggers async writes of the tweet ID to each follower's timeline Redis sorted set (score = tweet timestamp). Read: fetch tweet IDs from Redis, hydrate from tweet cache. This gives O(1) reads. Problem: Katy Perry has 100M followers — fan-out would mean 100M Redis writes per tweet, causing multi-second write latency. Solution: detect high-follower accounts (celebrities), skip fan-out for them, and at read time merge the user's pre-computed timeline with a separate fetch of celebrity tweets. This bounds fan-out write latency while keeping read latency fast (one precomputed list + small number of celebrity queries).",
+      hints: [
+        "Fan-out-on-write complexity: O(followers) writes per tweet, O(1) reads. Fan-out-on-read: O(1) writes, O(following) reads. Hybrid balances both.",
+        "Celebrity threshold: Twitter uses ~10K followers as the heuristic. Above this, the account is excluded from fan-out and handled at read time.",
+      ],
+    },
+  ],
+  "sysdesign-web-crawler": [
+    {
+      id: "q-msd-famous2-8",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "Design a web crawler for Google Search: you need to crawl 10 billion pages in 30 days (~4000 pages/second). What are the three most critical systems design challenges and their solutions?",
+      options: [
+        "(1) Speed: use 1000 crawler threads. (2) Storage: store all HTML in a single MySQL DB. (3) Politeness: crawl each domain as fast as possible to finish quickly.",
+        "(1) URL deduplication: keep a distributed Bloom filter (or hashset) of seen URLs — prevents re-crawling. (2) Politeness: per-domain crawl delay (respect robots.txt + 1 req/s default) using per-domain priority queues. (3) URL frontier prioritization: prioritize high-PageRank, frequently-updated pages using a multi-level priority queue + back queue routing by domain.",
+        "(1) Download speed: fetch pages in parallel using async I/O (aiohttp). (2) Parser: extract links using regex, not HTML parsing libraries. (3) Storage: write raw HTML to HDFS for later processing.",
+        "(1) Robots.txt: check robots.txt before crawling each page on every request. (2) DNS: resolve each domain's IP via public DNS on every request. (3) Deduplication: use exact URL string matching in a SQL database.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The three canonical challenges for web crawlers at Google scale: (1) Deduplication: 10B pages produce far more URLs (links create cycles and duplicates). A Bloom filter with 10B bits ≈ 1.2GB memory handles 10B URLs with ~1% false positive rate — far cheaper than a hash set. (2) Politeness: crawling too aggressively gets your IP blocked and violates robots.txt. Each domain gets its own queue processed at the allowed rate. (3) URL prioritization: not all pages are equal. PageRank estimate, update frequency (sitemaps), and content quality determine crawl priority. A two-level queue (front queue for priority, back queue by domain for politeness) is the standard architecture. DNS caching is also critical — 4000 req/s with uncached DNS means 4000 DNS lookups/s; cache TTL of 1 hour reduces this by 100-1000x.",
+      hints: [
+        "Bloom filter false positive tradeoff: at 10 bits/element, false positive rate ≈ 0.8%. A false positive means a new URL is incorrectly marked as seen and skipped — acceptable for a crawler.",
+        "robots.txt caching: fetch and cache robots.txt per domain (not per page). Re-fetch every 24 hours. Checking robots.txt on every request adds latency and violates the spirit of the standard.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, famous2);
 
 registerQuestions(questions);

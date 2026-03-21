@@ -16,7 +16,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Covariate shift (Shimodaira, 2000) is the specific case where the marginal input distribution shifts (P_S(X) ≠ P_T(X)) while the conditional label distribution remains constant (P_S(Y|X) = P_T(Y|X)). The challenge is that ERM on source data minimizes E_{P_S}[L(h(X),Y)], not E_{P_T}[L(h(X),Y)] — importance weighting corrects this by reweighting source samples by w(x) = P_T(x)/P_S(x).",
+        "Covariate shift (Shimodaira, 2000) is the specific case where the marginal input distribution shifts (P_S(X) \$\\neq\$ P_T(X)) while the conditional label distribution remains constant (P_S(Y|X) = P_T(Y|X)). The challenge is that ERM on source data minimizes E_{P_S}[L(h(X),Y)], not E_{P_T}[L(h(X),Y)] — importance weighting corrects this by reweighting source samples by w(x) = P_T(x)/P_S(x).",
       hints: [
         '"Covariate" refers to the input variables X; "shift" means the distribution of X has changed.',
         "If P(Y|X) is the same, a model trained on source data would generalize perfectly to the target — the challenge is the input distribution shift.",
@@ -161,13 +161,13 @@ const questions: Record<string, Question[]> = {
         "The unbiased U-statistic estimator of MMD²(P,Q) from samples {x_1,...,x_m}∼P and {y_1,...,y_n}∼Q is:",
       options: [
         "Only cross-domain terms: (2/mn) Σ_{i,j} k(x_i, y_j)",
-        "MMD̂² = [1/(m(m−1)) Σ_{i≠j} k(x_i,x_j)] − [2/(mn) Σ_{i,j} k(x_i,y_j)] + [1/(n(n−1)) Σ_{i≠j} k(y_i,y_j)]",
+        "MMD̂² = [1/(m(m−1)) Σ_{i\$\\neq\$j} k(x_i,x_j)] − [2/(mn) Σ_{i,j} k(x_i,y_j)] + [1/(n(n−1)) Σ_{i\$\\neq\$j} k(y_i,y_j)]",
         "Only within-domain terms averaged: [1/m² Σ_{i,j} k(x_i,x_j) + 1/n² Σ_{i,j} k(y_i,y_j)] / 2",
         "The log of the ratio of within-class to between-class kernel values",
       ],
       correctAnswer: 1,
       explanation:
-        "The U-statistic excludes diagonal terms (i=j) to ensure unbiasedness: MMD̂² uses sums over i≠j pairs for within-source and within-target terms. Excluding diagonals ensures E[MMD̂²] = MMD² without a positive bias from k(x_i, x_i) = k(y_j, y_j) = 1 (for normalized kernels).",
+        "The U-statistic excludes diagonal terms (i=j) to ensure unbiasedness: MMD̂² uses sums over i\$\\neq\$j pairs for within-source and within-target terms. Excluding diagonals ensures E[MMD̂²] = MMD² without a positive bias from k(x_i, x_i) = k(y_j, y_j) = 1 (for normalized kernels).",
       hints: [
         "Expand ||μ_S − μ_T||² in the RKHS to see all three term types.",
         "The U-statistic is unbiased because it excludes self-comparisons k(x_i, x_i).",
@@ -1865,7 +1865,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
         "Ben-David et al. (2010) bound: ε_T(h) ≤ ε_S(h) + d_{H△H}(S,T) + λ* where: ε_T(h) = target error; ε_S(h) = source error; d_{H△H}(S,T) = H-divergence (how well a classifier can distinguish source from target); λ* = min_{h∈H}[ε_S(h)+ε_T(h)] = combined error of the best joint classifier. This bound motivates DANN: minimize source error + domain divergence (via domain adversarial loss). The λ* term is irreducible — it represents tasks where source and target have inherently different optimal classifiers.",
       hints: [
         "H-divergence: d_{H△H}(S,T) ≈ 2(1 - 2·min_h error_rate(domain_classifier)) — related to the DANN discriminator error. If the discriminator can\'t distinguish source from target, H-divergence ≈ 0.",
-        "λ* term: if P_S(Y|X) ≠ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — λ* is non-zero.",
+        "λ* term: if P_S(Y|X) \$\\neq\$ P_T(Y|X) (concept drift), even perfect alignment can\'t achieve zero target error — λ* is non-zero.",
       ],
     },
     {

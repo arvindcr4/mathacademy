@@ -159,7 +159,7 @@ const questions: Record<string, Question[]> = {
         "Data drift detection operates on the input feature distribution P(X), which does not require labels. Methods include: (1) Univariate tests: Kolmogorov-Smirnov (KS) test per feature comparing training vs. serving distributions. (2) Multivariate: Maximum Mean Discrepancy (MMD) between training and serving feature embeddings. (3) Population Stability Index (PSI): PSI = Σ (p_i − q_i) × ln(p_i/q_i) per feature bin. These all work on unlabeled serving data. Label drift (concept drift) requires labels, but input drift does not. In practice, labels are often unavailable in real time (e.g., it takes 30 days to observe whether a loan was repaid). Input drift detection is used as a proxy: if input distribution shifts, model performance likely also shifts.",
       hints: [
         "Population Stability Index (PSI) > 0.2 conventionally signals significant drift requiring model retraining.",
-        "Input drift ≠ concept drift. Input drift: P(X) changes. Concept drift: P(Y|X) changes. Both can degrade model performance but require different detection methods.",
+        "Input drift \$\\neq\$ concept drift. Input drift: P(X) changes. Concept drift: P(Y|X) changes. Both can degrade model performance but require different detection methods.",
       ],
     },
     {
@@ -233,7 +233,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Confident Learning algorithm (Northcutt et al. 2021): (1) Train a classifier via K-fold cross-validation to get out-of-sample predicted probabilities p̂ij. Matrix shape: n × C. (2) For each class j, compute the threshold t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, the average self-confidence. (3) Build the C×C "confident joint" matrix: C̃[j,k] = |{x : ỹᵢ = j AND p̂_ik ≥ t_k AND k ≠ j}|. Entry C̃[j,k] counts examples labeled as j that the model confidently predicts as k ≠ j — likely mislabeled. Normalizing C̃ gives Q[ỹ, y*], the estimated joint noise distribution. Examples in off-diagonal entries of C̃ are the likely label errors.',
+        'Confident Learning algorithm (Northcutt et al. 2021): (1) Train a classifier via K-fold cross-validation to get out-of-sample predicted probabilities p̂ij. Matrix shape: n × C. (2) For each class j, compute the threshold t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, the average self-confidence. (3) Build the C×C "confident joint" matrix: C̃[j,k] = |{x : ỹᵢ = j AND p̂_ik ≥ t_k AND k \$\\neq\$ j}|. Entry C̃[j,k] counts examples labeled as j that the model confidently predicts as k \$\\neq\$ j — likely mislabeled. Normalizing C̃ gives Q[ỹ, y*], the estimated joint noise distribution. Examples in off-diagonal entries of C̃ are the likely label errors.',
       hints: [
         "Out-of-sample predictions are essential: if the model is evaluated on its own training data, it will be overconfident on memorized examples, and the thresholds will be inflated.",
         "K-fold cross-validation produces out-of-sample predictions for every training example without a separate held-out set: each fold\'s validation predictions are used.",
@@ -802,7 +802,7 @@ const questions: Record<string, Question[]> = {
         "In Snorkel\'s data programming framework, a labeling function that always returns ABSTAIN on every example contributes no useful information and effectively reduces the number of active labeling functions by one.",
       correctAnswer: "True",
       explanation:
-        "A labeling function with 100% ABSTAIN rate has zero coverage — it never votes on any example. In Snorkel\'s label model, such an LF contributes no information to the probabilistic label estimates because it never participates in any vote aggregation. The coverage of an LF is: cov(LFₖ) = P(LFₖ ≠ ABSTAIN). An LF with cov = 0 provides no signal. In practice, ABSTAIN-heavy LFs (very low coverage) are almost as bad: an LF with 0.1% coverage votes on only 500 out of 500,000 examples and contributes negligible influence on the label model. LF coverage vs. accuracy tradeoff: high coverage but 55% accuracy is often more valuable than 99% accuracy with 1% coverage, because the high-coverage LF provides more total information despite individual errors.",
+        "A labeling function with 100% ABSTAIN rate has zero coverage — it never votes on any example. In Snorkel\'s label model, such an LF contributes no information to the probabilistic label estimates because it never participates in any vote aggregation. The coverage of an LF is: cov(LFₖ) = P(LFₖ \$\\neq\$ ABSTAIN). An LF with cov = 0 provides no signal. In practice, ABSTAIN-heavy LFs (very low coverage) are almost as bad: an LF with 0.1% coverage votes on only 500 out of 500,000 examples and contributes negligible influence on the label model. LF coverage vs. accuracy tradeoff: high coverage but 55% accuracy is often more valuable than 99% accuracy with 1% coverage, because the high-coverage LF provides more total information despite individual errors.",
       hints: [
         "Coverage: fraction of examples where the LF does not ABSTAIN. Accuracy: fraction of non-ABSTAIN votes that match the true label (estimated by Snorkel\'s label model).",
         "Designing good LFs: aim for coverage > 10% with accuracy > 60%. Multiple lower-accuracy, high-coverage LFs combined by the label model usually outperform a single high-accuracy, low-coverage LF.",
@@ -865,7 +865,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CleanLab input requirements: (1) p̂_ij ∈ [0, 1]: the predicted probability that sample i belongs to class j, from K-fold cross-validation (so each sample\'s prediction is out-of-sample). Matrix shape: n × C. (2) ỹᵢ ∈ {1, …, C}: the given (noisy) label for each sample. From these two inputs, Confident Learning: (a) computes per-class thresholds t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, (b) builds the confident joint C̃[j,k] counting samples with ỹ=j and p̂_ik ≥ t_k and k ≠ j, (c) normalizes to get the joint noise distribution, (d) identifies likely errors as off-diagonal samples. No additional models, no human annotation, no noise rate specification needed — the algorithm infers everything from the model\'s own predictions.",
+        "CleanLab input requirements: (1) p̂_ij ∈ [0, 1]: the predicted probability that sample i belongs to class j, from K-fold cross-validation (so each sample\'s prediction is out-of-sample). Matrix shape: n × C. (2) ỹᵢ ∈ {1, …, C}: the given (noisy) label for each sample. From these two inputs, Confident Learning: (a) computes per-class thresholds t_j = (1/|ỹ=j|) Σ_{ỹ=j} p̂ij, (b) builds the confident joint C̃[j,k] counting samples with ỹ=j and p̂_ik ≥ t_k and k \$\\neq\$ j, (c) normalizes to get the joint noise distribution, (d) identifies likely errors as off-diagonal samples. No additional models, no human annotation, no noise rate specification needed — the algorithm infers everything from the model\'s own predictions.",
       hints: [
         "Out-of-sample predictions are essential: if you use in-sample predictions (the model evaluated on its own training data), it will be overconfident on memorized examples, and the thresholds will be inflated.",
         "K-fold cross-validation produces out-of-sample predictions for every training example without a separate held-out set: each fold\'s validation predictions are used.",
@@ -899,7 +899,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Confident Learning flagging criterion: sample i (with ỹᵢ = j) is a likely label error if there exists a class k ≠ j such that p̂ᵢₖ ≥ tₖ, where tₖ = (1/|{i: ỹᵢ = k}|) Σ_{i: ỹᵢ = k} p̂ᵢₖ is the average predicted probability for class k among examples WITH given label k. Interpretation: tₖ is how confident the model typically is when it correctly identifies class k. If an example labeled "cat" has p̂(dog) ≥ t_dog, the model is "as confident" that it is a dog as it typically is for correctly-labeled dogs — strong evidence of mislabeling. The class-specific threshold (not a fixed 0.5) is crucial: for a rare class with generally low confidence (t_dog = 0.3), the bar is lower; for a common clear class (t_cat = 0.9), the bar is higher.',
+        'Confident Learning flagging criterion: sample i (with ỹᵢ = j) is a likely label error if there exists a class k \$\\neq\$ j such that p̂ᵢₖ ≥ tₖ, where tₖ = (1/|{i: ỹᵢ = k}|) Σ_{i: ỹᵢ = k} p̂ᵢₖ is the average predicted probability for class k among examples WITH given label k. Interpretation: tₖ is how confident the model typically is when it correctly identifies class k. If an example labeled "cat" has p̂(dog) ≥ t_dog, the model is "as confident" that it is a dog as it typically is for correctly-labeled dogs — strong evidence of mislabeling. The class-specific threshold (not a fixed 0.5) is crucial: for a rare class with generally low confidence (t_dog = 0.3), the bar is lower; for a common clear class (t_cat = 0.9), the bar is higher.',
       hints: [
         "The threshold t_k is adaptive: for a class where the model is generally uncertain, even moderate p̂_ik can flag an error. For a class where the model is very confident, only very high p̂_ik flags an error.",
         "Option A (p̂(cat) < 0.5) is too simple: a cat example with p̂ = [0.4, 0.35, 0.25] has p̂(cat) < 0.5 but the model is not confident about any alternative class — not a clear label error.",
@@ -979,7 +979,7 @@ const questions: Record<string, Question[]> = {
         "Dataset distillation bilevel optimization: outer problem: min_{S*} ℓ(θ*(S*)) where ℓ is performance on real test/validation data. Inner problem: θ*(S*) = argmin_θ Σ_{(x,y) ∈ S*} L(f_θ(x), y) — train a model to convergence on synthetic data S*. S* is a set of learned (not selected) image-label pairs, optimized end-to-end via gradient backpropagation through the inner optimization loop. Wang et al. achieved: 10 synthetic images per class (10 classes = 100 total images) trained a model to ~94% of the performance of training on 60,000 MNIST images. Applications: privacy (share S* instead of real data), faster neural architecture search (evaluate architectures on S* instead of full data), continual learning.",
       hints: [
         "Bilevel: the outer gradient ∂ℓ/∂S* flows through the inner optimization step θ*(S*) — requires unrolling or implicit differentiation of the inner training loop.",
-        "Dataset distillation ≠ coreset selection: coresets SELECT from real data. Distillation GENERATES new (often imperceptible to humans) data images that encode learning signals.",
+        "Dataset distillation \$\\neq\$ coreset selection: coresets SELECT from real data. Distillation GENERATES new (often imperceptible to humans) data images that encode learning signals.",
       ],
     },
     {
@@ -1323,7 +1323,7 @@ const questions: Record<string, Question[]> = {
         "SimCLR (Chen et al. 2020) defines positive pairs using data augmentation — two augmented views of the same image — and negative pairs as augmented views from DIFFERENT images in the same mini-batch, with no class labels required.",
       correctAnswer: "True",
       explanation:
-        'SimCLR contrastive learning: for each image x in batch of size N: create two augmented views: x_i = t(x) and x_j = t\'(x) using stochastic augmentations t, t\' drawn from the augmentation distribution T. The 2N augmented views form N positive pairs and 2N(N-1) negative pairs. Loss (NT-Xent): ℓ(i, j) = −log exp(sim(zᵢ, zⱼ)/τ) / Σ_{k≠i} exp(sim(zᵢ, zₖ)/τ), where sim = cosine similarity and τ is temperature. No class labels are used: the "label" is simply "these two views came from the same image." The model learns representations where same-image augmentations are similar (nearby in embedding space) and different-image augmentations are dissimilar (far apart).',
+        'SimCLR contrastive learning: for each image x in batch of size N: create two augmented views: x_i = t(x) and x_j = t\'(x) using stochastic augmentations t, t\' drawn from the augmentation distribution T. The 2N augmented views form N positive pairs and 2N(N-1) negative pairs. Loss (NT-Xent): ℓ(i, j) = −log exp(sim(zᵢ, zⱼ)/τ) / Σ_{k\$\\neq\$i} exp(sim(zᵢ, zₖ)/τ), where sim = cosine similarity and τ is temperature. No class labels are used: the "label" is simply "these two views came from the same image." The model learns representations where same-image augmentations are similar (nearby in embedding space) and different-image augmentations are dissimilar (far apart).',
       hints: [
         "SimCLR requires large batch sizes (N ≥ 4096) because negatives come from the same batch — more negatives → harder contrastive task → better representations.",
         "Key augmentations: random cropping (most important), color jitter, grayscale. These define what the model should be invariant to.",
@@ -1377,7 +1377,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins loss: L = Σᵢ (1 − Cᵢᵢ)² + λ Σᵢ Σⱼ≠ᵢ Cᵢⱼ², where C is the cross-correlation matrix between normalized embeddings of the two views, computed over a batch: Cᵢⱼ = Σ_b z^A_{b,i} z^B_{b,j} / (‖z^A_{:,i}‖₂ ‖z^B_{:,j}‖₂). The two terms: (1) invariance term: diagonal entries should equal 1 — the same feature should be perfectly correlated across the two views (feature i of view A ↔ feature i of view B). (2) redundancy reduction: off-diagonal entries should equal 0 — different features should be uncorrelated. This is inspired by neuroscience principle that efficient coding should use statistically independent features. Advantage over contrastive methods: does not require negative samples (no large batch size requirement). Advantage over BYOL/DINO: does not require asymmetric architectures (EMA teacher).",
+        "Barlow Twins loss: L = Σᵢ (1 − Cᵢᵢ)² + λ Σᵢ Σⱼ\$\\neq\$ᵢ Cᵢⱼ², where C is the cross-correlation matrix between normalized embeddings of the two views, computed over a batch: Cᵢⱼ = Σ_b z^A_{b,i} z^B_{b,j} / (‖z^A_{:,i}‖₂ ‖z^B_{:,j}‖₂). The two terms: (1) invariance term: diagonal entries should equal 1 — the same feature should be perfectly correlated across the two views (feature i of view A ↔ feature i of view B). (2) redundancy reduction: off-diagonal entries should equal 0 — different features should be uncorrelated. This is inspired by neuroscience principle that efficient coding should use statistically independent features. Advantage over contrastive methods: does not require negative samples (no large batch size requirement). Advantage over BYOL/DINO: does not require asymmetric architectures (EMA teacher).",
       hints: [
         "The cross-correlation matrix C is computed over the batch dimension. Each row/column represents one feature dimension of the embedding. Identity matrix C = I means: each feature is perfectly invariant across views and uncorrelated with all other features.",
         "λ controls the tradeoff: small λ emphasizes invariance over redundancy reduction; large λ emphasizes decorrelation. λ = 0.0051 was found optimal in the original paper.",
@@ -1534,7 +1534,7 @@ const questions: Record<string, Question[]> = {
         "Robots Exclusion Protocol (REP): robots.txt is a text file at domain/robots.txt that communicates crawling preferences. User-agent: * Disallow: /search/ instructs all crawlers to avoid /search/ paths. robots.txt is: (1) Advisory: no technical enforcement — the server will still serve the page to a direct HTTP request. (2) Ethical: major search engines (Google, Bing) respect it as a professional norm. (3) Legally complex: in the US, the hiQ v. LinkedIn ruling (9th Circuit) held that scraping publicly accessible data does not violate the CFAA, but violating robots.txt may constitute breach of contract (ToS violation) in some jurisdictions. For AI training data collection, respecting robots.txt is both an ethical standard and increasingly a regulatory expectation.",
       hints: [
         "arXiv provides a dedicated bulk data API (arXiv.org/help/bulk_data) and OAI-PMH interface — the preferred and allowed way to collect paper metadata at scale.",
-        "robots.txt Disallow ≠ technical block. It is a request, not a firewall. But well-behaved crawlers (and legally cautious organizations) respect it.",
+        "robots.txt Disallow \$\\neq\$ technical block. It is a request, not a firewall. But well-behaved crawlers (and legally cautious organizations) respect it.",
       ],
     },
     {
@@ -1633,7 +1633,7 @@ const questions: Record<string, Question[]> = {
         "When scraping social media data for training an NLP model, including usernames, email addresses, and phone numbers in the training corpus is acceptable as long as the data was scraped from publicly visible posts.",
       correctAnswer: "False",
       explanation:
-        "Publicly visible ≠ appropriate for inclusion in AI training data. Regulatory and ethical constraints: (1) GDPR (EU): personal data (names, emails, phone numbers) requires a lawful basis for processing. Training an ML model on personal data constitutes processing and requires consent or legitimate interest — scraping public posts does not automatically establish consent. (2) CCPA (California): consumers have the right to opt out of sale of personal information. (3) Practical risks: models can memorize and regurgitate personal data at inference time — a user could ask the model for 'John Smith\'s email' and get a real email from training data. (4) Ethical norm: users posting publicly do not expect their contact details to be extracted for AI training at scale. Standard practice: scrub PII (personally identifiable information) before training using regex patterns, named entity recognizers, or dedicated PII detection tools (Microsoft Presidio, Amazon Comprehend PII).",
+        "Publicly visible \$\\neq\$ appropriate for inclusion in AI training data. Regulatory and ethical constraints: (1) GDPR (EU): personal data (names, emails, phone numbers) requires a lawful basis for processing. Training an ML model on personal data constitutes processing and requires consent or legitimate interest — scraping public posts does not automatically establish consent. (2) CCPA (California): consumers have the right to opt out of sale of personal information. (3) Practical risks: models can memorize and regurgitate personal data at inference time — a user could ask the model for 'John Smith\'s email' and get a real email from training data. (4) Ethical norm: users posting publicly do not expect their contact details to be extracted for AI training at scale. Standard practice: scrub PII (personally identifiable information) before training using regex patterns, named entity recognizers, or dedicated PII detection tools (Microsoft Presidio, Amazon Comprehend PII).",
       hints: [
         "PII in training data creates privacy risk not just during training but at inference: language models can memorize and reproduce rare strings (email addresses, phone numbers) that appear multiple times in training data.",
         "The 'publicness' defense is weakening legally: GDPR enforcement actions (e.g., Clearview AI) have found that scraping publicly visible data at scale without consent violates privacy law in many jurisdictions.",
@@ -1716,6 +1716,386 @@ const moreDCQ: Record<string, Question[]> = {
 };
 
 Object.assign(questions, moreDCQ);
+
+
+const extraDCQ: Record<string, Question[]> = {
+  "data-valuation-shapley": [
+    {
+      id: "q-dc-ex1-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Data Shapley assigns a value to each training example by computing its marginal contribution across all possible training subsets. The Shapley value for training point z_i is formally defined as:",
+      options: [
+        "The change in model performance when z_i is added to the full dataset",
+        "The weighted average of marginal contributions v(S union z_i) minus v(S) over all subsets S not containing z_i, weighted by |S|!(n-|S|-1)!/n!",
+        "The gradient of the loss with respect to z_i's embedding",
+        "The leave-one-out accuracy change when z_i is removed from the full training set",
+      ],
+      correctAnswer: 1,
+      explanation: "Data Shapley (Ghorbani & Zou 2019) applies the Shapley value from cooperative game theory to data valuation. The Shapley value for point z_i is the weighted average of its marginal contributions over all subsets S of the remaining data. This is the unique value function satisfying efficiency, symmetry, null player, and linearity axioms. Because exact computation requires 2^n model evaluations, Monte Carlo approximation (KNN-Shapley, TMC-Shapley) is used in practice.",
+      hints: [
+        "The Shapley value is the only value satisfying four axioms: efficiency (values sum to total value), symmetry, null player, and linearity — making it theoretically unique.",
+        "LOO (leave-one-out) is a special case that only considers the marginal contribution to the full dataset, ignoring contributions to all smaller subsets — it can mislead on redundant data points.",
+      ],
+    },
+    {
+      id: "q-dc-ex1-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "KNN-Shapley approximates Data Shapley values exactly for k-nearest neighbor classifiers in O(n log n) time, making it orders of magnitude faster than Monte Carlo Shapley estimation for large datasets.",
+      correctAnswer: "True",
+      explanation: "Jia et al. (2019) showed that for KNN classifiers, Data Shapley values have a recursive structure that can be computed exactly in O(n log n) using sorted neighbor lists. For each test point, the algorithm traverses training points in order of distance and accumulates Shapley contributions via a recurrence relation. This makes KNN-Shapley practical for datasets with millions of points, while Monte Carlo TMC-Shapley requires O(n x T) model retraining iterations for T samples.",
+      hints: [
+        "The KNN recursive formula allows O(n) computation after O(n log n) sorting, making the total cost O(n log n) for exact Shapley values.",
+        "KNN-Shapley is often used as a proxy for the Shapley values of more complex models — the rankings of low-value points tend to transfer across model classes.",
+      ],
+    },
+    {
+      id: "q-dc-ex1-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Data Valuation with Reinforcement Learning (DVRL, Yoon et al. 2020) trains a data value estimator network. Compared to Data Shapley, the main practical advantage of DVRL is:",
+      options: [
+        "DVRL provides theoretically guaranteed Shapley values",
+        "DVRL learns a value estimator that generalizes to new data points without recomputing Shapley values, scales to large datasets via mini-batch training, and can incorporate task-specific performance signals as rewards",
+        "DVRL requires fewer hyperparameters than Shapley estimation",
+        "DVRL is more interpretable than Shapley because it uses a neural network",
+      ],
+      correctAnswer: 1,
+      explanation: "DVRL uses a data value estimator (DVE) network that outputs a selection probability for each training example. The DVE is trained via REINFORCE to maximize a downstream performance reward. Key advantages over Data Shapley: (1) Amortized — once trained, new points get values in a forward pass, not 2^n evaluations. (2) Scalable — mini-batch training works for millions of examples. (3) Flexible reward — can optimize for any downstream metric including fairness or robustness. Disadvantage: no theoretical uniqueness guarantees that Shapley provides.",
+      hints: [
+        "DVRL's data value estimator outputs per-example weights used during downstream model training — high-value examples get higher training weights.",
+        "REINFORCE variance: DVRL training can be unstable; control variates and careful learning rate scheduling are important for convergence.",
+      ],
+    },
+    {
+      id: "q-dc-ex1-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Influence functions estimate the effect of upweighting a training example z on the trained model's loss at a test point z_test. The influence of z on z_test is approximately:",
+      options: [
+        "The dot product of gradient vectors at z and z_test",
+        "Negative gradient of the test loss times the inverse Hessian times the gradient of the training loss at z",
+        "The difference in validation loss when z is removed and the model is fully retrained",
+        "The cosine similarity between the embeddings of z and z_test",
+      ],
+      correctAnswer: 1,
+      explanation: "Koh & Liang (2017) derived the influence function: I(z, z_test) = -grad_L(z_test, theta)^T H_theta^{-1} grad_L(z, theta), where H_theta is the Hessian of the training loss. This approximates the parameter change when z is upweighted by epsilon — the chain rule gives the test loss change. Applications: identifying training examples that most harm or help test performance, detecting label errors (high influence of correctly-labeled test examples on mislabeled training neighbors), and understanding model behavior.",
+      hints: [
+        "The inverse Hessian H^{-1} is expensive: for neural networks with millions of parameters, LiSSA (linear-time stochastic second-order approximation) computes H^{-1}v efficiently.",
+        "Influence functions assume convexity near theta-hat — they work well for linear models and convex losses but are approximate for deep networks with non-convex loss landscapes.",
+      ],
+    },
+    {
+      id: "q-dc-ex1-5",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Leave-one-out (LOO) data valuation — measuring how much validation performance drops when a single training point is removed — is computationally equivalent to Data Shapley for large datasets.",
+      correctAnswer: "False",
+      explanation: "LOO requires n model retrainings (one per removed example), while exact Data Shapley requires 2^n retrainings — exponentially more. However, LOO is a fundamentally different estimator, not an approximation of Shapley. LOO only measures marginal contribution to the full dataset and cannot detect redundancy: if two identical points are in the dataset, removing either one alone has zero effect (each LOO value is 0), but together they contribute positive value. Data Shapley correctly assigns each a positive value via the subset averaging.",
+      hints: [
+        "Redundancy blind spot: LOO assigns near-zero value to duplicated examples even though the pair together is valuable — Shapley distributes the joint value evenly.",
+        "LOO computation: if model retraining is fast (e.g., linear models), LOO is practical. Data Shapley approximation via Monte Carlo sampling is needed for expensive models.",
+      ],
+    },
+    {
+      id: "q-dc-ex1-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "A practitioner uses Data Shapley to identify training examples with negative Shapley values. The recommended action is:",
+      options: [
+        "Always remove all negative-value examples to maximize model performance",
+        "Investigate negative-value examples for mislabeling or distribution shift — they may be valid hard examples from underrepresented classes, or they may be genuinely harmful noise worth removing after inspection",
+        "Keep all examples regardless of Shapley value to avoid selection bias",
+        "Replace negative-value examples with synthetic data generated by a GAN",
+      ],
+      correctAnswer: 1,
+      explanation: "Negative Shapley values indicate that including an example hurts model performance on average across subsets — a red flag for mislabeling or harmful noise. However, not all negative-value examples are bad: hard examples from minority classes may have negative Shapley under standard accuracy (because they hurt majority-class accuracy) but positive Shapley under balanced accuracy. A systematic workflow: (1) Sort by Shapley value, (2) Inspect lowest-valued examples for label errors, (3) Reannotate or remove confirmed errors, (4) Verify class representation before mass removal.",
+      hints: [
+        "In imbalanced datasets, negative Shapley examples under accuracy often include correctly-labeled minority examples — use a class-balanced performance metric instead.",
+        "Empirical finding: removing the bottom 10% of Shapley-valued examples often improves test performance by 1-5%, comparable to collecting 20-30% more clean data.",
+      ],
+    },
+  ],
+  "confident-learning": [
+    {
+      id: "q-dc-ex2-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Confident Learning (Northcutt et al. 2021) estimates the joint distribution of noisy observed labels and latent true labels using a noise transition matrix Q. How is Q estimated without access to true labels?",
+      options: [
+        "By comparing model predictions on the training set to validation labels",
+        "By computing a calibrated confusion matrix from out-of-fold predicted probabilities: for each class pair (s=i, y=j), count examples with noisy label i whose predicted probability for class j exceeds a per-class threshold",
+        "By training a separate noise-detection neural network on synthetically mislabeled data",
+        "By using the EM algorithm on the raw feature space without model predictions",
+      ],
+      correctAnswer: 1,
+      explanation: "CL estimates Q_{s=i, y=j} by counting examples with noisy label i whose out-of-fold predicted probability for class j exceeds the class-average self-confidence threshold for class j. Out-of-fold probabilities avoid overfitting: the model predicts on held-out data, so high-confidence predictions on mislabeled examples reveal label errors — if a model trained without x predicts P(y=cat)=0.97 for an example labeled 'dog', CL flags it as likely mislabeled. The diagonal of Q represents per-class accuracy rates; off-diagonal entries capture systematic confusions.",
+      hints: [
+        "The diagonal of Q represents the per-class noise rate: Q_{s=j, y=j} is the fraction of examples in class j that are correctly labeled.",
+        "Off-diagonal entries Q_{s=i, y=j} capture systematic confusions: how often true class j examples are labeled as class i.",
+      ],
+    },
+    {
+      id: "q-dc-ex2-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Confident Learning assumes that label noise is class-conditional — the probability of a label error for an example with true class y depends only on y, not on the specific feature values x.",
+      correctAnswer: "True",
+      explanation: "CL uses the class-conditional noise model (CCNM): P(s | x, y) = P(s | y). This means the noise transition matrix Q is the same for all examples with the same true label, regardless of their features. While this is a simplification (in practice, ambiguous boundary examples may have higher noise rates), it enables tractable estimation of Q from observed data without requiring labeled clean examples. Instance-dependent noise models (where P(s | x, y) depends on x) are more general but require additional assumptions to identify.",
+      hints: [
+        "CCNM enables the joint distribution factorization: P(s, y) = Q_{s|y} times P(y), allowing Q to be estimated from observed noisy labels and model predictions.",
+        "Boundary examples have higher noise in practice — class-conditional noise is a simplification that works well when average noise rates per class are the key quantity.",
+      ],
+    },
+    {
+      id: "q-dc-ex2-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "CleanLab implements Confident Learning and identifies label errors by flagging examples in the off-diagonal of the estimated joint distribution matrix. Which criterion does it use to rank examples as most likely mislabeled?",
+      options: [
+        "Examples with the lowest predicted probability for their given label",
+        "Examples where the self-confidence (predicted probability for the given noisy label) is below the class-average self-confidence threshold for that label class",
+        "Examples with the highest loss gradient magnitude",
+        "Examples that differ most from the class centroid in embedding space",
+      ],
+      correctAnswer: 1,
+      explanation: "CL flags example (x, s=j) as a potential label error if p-hat(y=j | x) < t_j, where t_j = average predicted probability for class j among examples with noisy label j. Intuitively: if most dog examples have P(dog)=0.85, but a particular dog-labeled example has P(dog)=0.2 and P(cat)=0.75, the model is more confident it is a cat — likely a mislabeled example. The threshold t_j adapts to per-class difficulty, avoiding false positives for inherently ambiguous classes with lower average confidence.",
+      hints: [
+        "Calibrated out-of-fold probabilities are critical: overconfident models set thresholds too high; underconfident models flag too many examples. Temperature scaling improves calibration before applying CL.",
+        "CL finds errors across all classes including self-errors (correctly-labeled ambiguous examples that look like the wrong class) — these are harder to detect than clear labeling mistakes.",
+      ],
+    },
+    {
+      id: "q-dc-ex2-4",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Confident Learning can detect label errors in datasets with up to 40% noise rate, but its performance degrades sharply above 30% noise because the base classifier becomes too inaccurate to identify label errors reliably.",
+      correctAnswer: "True",
+      explanation: "CL's label error detection depends on a base classifier with reasonable accuracy. At 40% noise rate, training accuracy drops significantly and predicted probabilities become poorly calibrated — the classifier cannot reliably distinguish mislabeled from correctly-labeled examples. Northcutt et al. show CL works well at 30-35% noise but degrades above 40%. Mitigations: (1) iterative CL (find and remove errors, retrain, find more errors), (2) use an ensemble of classifiers for more robust probability estimates, (3) use semi-supervised pretraining to improve base classifier quality before CL.",
+      hints: [
+        "Iterative CL: after removing the top-k detected errors and retraining, the new classifier is cleaner and can detect additional errors missed in the first pass.",
+        "At 50% noise rate, labels are random and no method can reliably identify individual label errors — only statistical properties of the noise distribution can be estimated.",
+      ],
+    },
+    {
+      id: "q-dc-ex2-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "A medical imaging dataset has 10,000 labeled X-rays. A radiologist estimates that 8% of labels may be incorrect. After running CleanLab, 820 examples are flagged as likely label errors. The most responsible next step is:",
+      options: [
+        "Automatically remove all 820 flagged examples and retrain immediately",
+        "Have a radiologist review the flagged examples, correct confirmed errors, and decide on ambiguous cases — then retrain on the cleaned dataset and compare performance",
+        "Add the 820 examples to a held-out set to avoid contaminating training",
+        "Reduce the model's confidence threshold so it is less sensitive to label noise",
+      ],
+      correctAnswer: 1,
+      explanation: "Automated label removal without expert review risks removing valid hard examples and introducing systematic bias. In medical imaging, mislabeled examples may include rare disease presentations that are genuinely ambiguous — removing them discards critical training signal. The responsible workflow: (1) Prioritize review of highest-confidence CL detections, (2) Correct confirmed errors, (3) Document ambiguous cases separately, (4) Retrain and compare performance on a clean held-out test set. This treats CL as a prioritization tool for human review, not an automatic filter.",
+      hints: [
+        "CL precision at top detections: the highest-ranked flagged examples are most likely genuine errors — radiologist review time is best spent here.",
+        "Audit trail: document which labels were changed, by whom, and why — essential for medical AI regulatory compliance.",
+      ],
+    },
+  ],
+  "data-augmentation-strategies": [
+    {
+      id: "q-dc-ex3-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Mixup (Zhang et al. 2018) creates training examples by linearly interpolating pairs of training examples and their labels. For two examples (x_i, y_i) and (x_j, y_j) with mixing coefficient lambda ~ Beta(alpha, alpha), the mixed example is:",
+      options: [
+        "x-tilde = x_i if lambda > 0.5 else x_j, y-tilde = y_i if lambda > 0.5 else y_j",
+        "x-tilde = lambda * x_i + (1-lambda) * x_j, y-tilde = lambda * y_i + (1-lambda) * y_j — a convex combination of both examples and their soft labels",
+        "x-tilde = concat(x_i first half, x_j second half), y-tilde = (y_i + y_j) / 2",
+        "x-tilde = x_i + Gaussian noise, y-tilde = y_i",
+      ],
+      correctAnswer: 1,
+      explanation: "Mixup trains on convex combinations of training examples. The parameter alpha controls the Beta distribution shape: alpha=1 gives uniform lambda in [0,1]; small alpha (0.1-0.4) concentrates lambda near 0 or 1, creating mostly pure examples with occasional mixtures; large alpha (1-4) creates more mixed examples. Benefits: (1) Regularization — forces linear behavior between training examples, reducing memorization, (2) Calibration — models trained with Mixup produce better-calibrated confidence scores, (3) Label smoothing effect — mixed labels prevent overconfidence on training examples. Best practice: alpha=0.2-0.4 for image classification, alpha=0.1 for tabular data.",
+      hints: [
+        "Manifold Mixup applies Mixup in hidden representation space rather than input space, creating smoother decision boundaries in feature space.",
+        "Mixup is most effective for classification with well-separated classes. For dense prediction tasks (segmentation), CutMix is preferred because Mixup creates ghosting artifacts in mixed images.",
+      ],
+    },
+    {
+      id: "q-dc-ex3-2",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "CutMix (Yun et al. 2019) augments images by replacing a rectangular patch from one training image with a patch from another, adjusting labels proportionally to patch area. Compared to Mixup, CutMix's primary advantage for object detection tasks is:",
+      options: [
+        "CutMix creates sharper decision boundaries than Mixup",
+        "CutMix preserves local spatial context — the non-mixed regions remain intact, allowing the model to learn from full object parts rather than blended pixel values that do not correspond to real textures",
+        "CutMix requires less computation than Mixup",
+        "CutMix handles class imbalance better than Mixup",
+      ],
+      correctAnswer: 1,
+      explanation: "Mixup blends pixels across the entire image: every pixel is a blend that never appears in the natural image distribution. For object detection, blended textures make it harder for the model to learn meaningful local features. CutMix cuts a rectangular box from image B and pastes it into image A. The non-box region has real pixels from image A; the box region has real pixels from image B. The label mix ratio equals the box area fraction. This preserves local texture realism while still regularizing the model and mixing labels — particularly useful for learning part-based features.",
+      hints: [
+        "CutMix generates a box region with area proportional to a Beta(alpha, alpha) sample. The label mixing ratio r = Area(box) / (W x H).",
+        "FMix (Harris et al. 2020) extends CutMix to irregular masks derived from Fourier-domain low-frequency noise, creating more natural-looking cut regions.",
+      ],
+    },
+    {
+      id: "q-dc-ex3-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "RandAugment (Cubuk et al. 2020) simplifies AutoAugment by searching over a reduced augmentation space with only two hyperparameters. These two hyperparameters are:",
+      options: [
+        "Learning rate and batch size",
+        "N (number of augmentation operations to apply sequentially per image) and M (magnitude of each operation, shared across all operation types)",
+        "The number of augmentation policy stages and the probability threshold",
+        "Image resolution and color jitter strength",
+      ],
+      correctAnswer: 1,
+      explanation: "RandAugment samples N operations uniformly from a fixed set of 14 augmentation types and applies them sequentially with magnitude M. The key simplification over AutoAugment: (1) A single magnitude M controls all operation strengths (removing per-operation magnitude tuning), (2) Only N and M need to be searched (vs AutoAugment's 30-dimensional policy space requiring 15,000 GPU-hours). Typical values: N=2, M=9 for ImageNet. During training, N and M are fixed; at inference, no augmentation is applied. RandAugment's grid search over (N, M) takes around 10 experiments vs AutoAugment's 15,000 GPU-hours.",
+      hints: [
+        "AutoAugment (Cubuk et al. 2019) used reinforcement learning to search over 14 operation types times 10 magnitude levels times 11 probability values — an intractable space requiring 15,000 GPU-hours on CIFAR-10.",
+        "TrivialAugment (Muller & Hutter 2021) further simplifies: randomly pick one operation and one magnitude uniformly — matching RandAugment performance with zero hyperparameters to tune.",
+      ],
+    },
+    {
+      id: "q-dc-ex3-4",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Test-time augmentation (TTA) improves model predictions by applying multiple augmentations to each test example, running inference for each augmented version, and averaging the predictions — this is valid even if the augmentations were not used during training.",
+      correctAnswer: "True",
+      explanation: "TTA works even without training augmentation because: (1) Averaging predictions reduces prediction variance — each augmented view provides an independent noisy estimate of the true class probabilities, and averaging reduces noise, (2) Augmentations exploit known invariances (horizontal flips for natural images, 90 degree rotations for medical imaging) that the model may have partially learned, (3) The averaged probability is often better calibrated. However, TTA is more effective when the model was trained with matching augmentations. Common TTA for medical imaging: 4 rotations times 2 flips = 8 predictions averaged. Adds inference cost proportional to number of augmented views.",
+      hints: [
+        "TTA is related to MC Dropout at test time — both inject randomness and average to reduce variance, but TTA uses deterministic augmentations while MC Dropout uses random dropout masks.",
+        "Optimal TTA augmentations depend on the domain: for satellite imagery, all 8 rotation/flip combinations are valid; for text, back-translation is a common TTA strategy.",
+      ],
+    },
+    {
+      id: "q-dc-ex3-5",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question: "A practitioner is training a chest X-ray classifier and wants to apply data augmentation. Which augmentation would be INAPPROPRIATE for this medical imaging task?",
+      options: [
+        "Random horizontal flip (left-right flip)",
+        "Small random rotation (plus or minus 5 degrees)",
+        "Random vertical flip (top-bottom flip)",
+        "Random brightness and contrast adjustment",
+      ],
+      correctAnswer: 2,
+      explanation: "Vertical flip (top-bottom) is inappropriate for chest X-ray: the heart, lung anatomy, and diaphragm position are deterministic — a flipped chest X-ray is medically impossible and would teach the model to recognize inverted anatomy that never appears in real patients. Horizontal flip (left-right) is acceptable because most anatomical findings are not strictly lateralized in appearance. Small rotations (plus or minus 5 degrees) mimic patient positioning variation. Brightness and contrast adjustments mimic exposure differences across imaging equipment. Domain knowledge determines which augmentations preserve the data distribution vs. creating out-of-distribution images.",
+      hints: [
+        "Safe medical imaging augmentations: small rotations, brightness/contrast, elastic deformations, horizontal flip for chest. Unsafe: vertical flip, large rotations for brain MRI (where orientation carries diagnostic meaning).",
+        "Augmentation validity principle: only apply augmentations that produce images plausibly from the same distribution as the training data — unrealistic augmentations can hurt performance.",
+      ],
+    },
+    {
+      id: "q-dc-ex3-6",
+      type: "true-false",
+      difficulty: "hard",
+      question: "Adversarial augmentation methods such as AugMax maximize the loss over an augmentation space during training, producing more robust models than standard random augmentation at the cost of higher computational overhead.",
+      correctAnswer: "True",
+      explanation: "AugMax solves: min over theta of E[max over t in T of L(f_theta(t(x)), y)] — the inner max finds the hardest augmentation for the current model, and the outer min trains the model to handle it. This is analogous to adversarial training (PGD) but in augmentation space rather than l_p perturbation space. The resulting model is robust to the full range of augmentations in T. Computational overhead: finding the hardest augmentation requires multiple forward passes per training step. The robustness-efficiency tradeoff is similar to adversarial training: 2-5x more computation for meaningful robustness improvements.",
+      hints: [
+        "AugMax is related to DeepAugment (Hendrycks et al.) which applies image-to-image networks as augmentations — both aim to increase the diversity and difficulty of augmentations seen during training.",
+        "Max-augmentation training improves corruption robustness on ImageNet-C but may hurt clean accuracy — a tradeoff requiring careful tuning of the augmentation magnitude range.",
+      ],
+    },
+  ],
+  "dataset-lineage-governance": [
+    {
+      id: "q-dc-ex4-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A datasheet for datasets (Gebru et al. 2021) includes a section on 'Composition'. Which question does this section answer that is most critical for identifying potential representational harms?",
+      options: [
+        "What software was used to collect the data?",
+        "Does the dataset represent the full diversity of the population it will be used to make decisions about — including demographic subgroups, geographic regions, and edge cases?",
+        "How large is the dataset in gigabytes?",
+        "What license is the dataset released under?",
+      ],
+      correctAnswer: 1,
+      explanation: "Representational harms occur when a dataset underrepresents certain groups, causing models trained on it to perform poorly for those groups. The Composition section of a datasheet requires documenting: what each instance represents, how many instances per class, whether there is missing data, and whether certain subpopulations may be underrepresented. For face recognition, this means documenting skin tone, age, and gender distributions — the absence of this information in early datasets led to documented disparate error rates across demographic groups.",
+      hints: [
+        "IJB-A dataset composition: approximately 80% white faces, 11% Black faces — models trained predominantly on this data have higher error rates for underrepresented groups.",
+        "The Composition section also addresses sensitive content: does the dataset contain personally identifiable information, offensive content, or data about minors?",
+      ],
+    },
+    {
+      id: "q-dc-ex4-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Model cards (Mitchell et al. 2019) document intended use cases, performance across demographic groups, and known limitations — they are distinct from datasheets because they describe the model rather than the dataset used to train it.",
+      correctAnswer: "True",
+      explanation: "Datasheets for datasets document the training data (what it contains, how it was collected, who owns it, what it should or should not be used for). Model cards document the trained model: (1) Model details (architecture, training data version, evaluation data), (2) Intended use (primary use case, out-of-scope uses), (3) Factors (demographic subgroups and environmental conditions that affect performance), (4) Metrics (disaggregated performance by subgroup), (5) Ethical considerations, (6) Caveats and recommendations. Together, datasheets and model cards provide end-to-end documentation for responsible AI deployment.",
+      hints: [
+        "Google publishes model cards for many of their production ML models, including face detection and text toxicity classifiers.",
+        "Hugging Face integrates model cards directly into their model hub — every model repository includes a model card template.",
+      ],
+    },
+    {
+      id: "q-dc-ex4-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Data lineage tracking records the provenance of training data through all transformation steps. In a production ML system, which data lineage property is most important for debugging a sudden model performance regression?",
+      options: [
+        "The geographic location of data collection servers",
+        "The immutable record of which data sources, versions, filter operations, and transformations produced the training dataset for each deployed model version — enabling bisection to identify which data change caused the regression",
+        "The names of engineers who ran each data pipeline step",
+        "The storage cost of each dataset version",
+      ],
+      correctAnswer: 1,
+      explanation: "Performance regressions in production ML often have data root causes: a pipeline bug introduced corrupted examples, a data source changed schema, a new data vendor has a different distribution, or a filtering step was accidentally removed. Without lineage, identifying the cause requires manually inspecting all recent pipeline changes. With lineage: (1) Find the last model version that performed correctly, (2) Compare its data provenance to the regressed model, (3) Diff the lineage graphs to identify the changed data step, (4) Roll back or fix the identified change. Tools: Apache Atlas, Marquez (OpenLineage), Delta Lake lineage, MLflow data tracking.",
+      hints: [
+        "OpenLineage is an open standard for data lineage metadata — integrating with Airflow, Spark, dbt, and ML platforms to auto-capture lineage without manual annotation.",
+        "Data contracts: formal schemas and SLAs between data producers and consumers that fail CI/CD pipelines when violated — a preventive complement to lineage-based debugging.",
+      ],
+    },
+    {
+      id: "q-dc-ex4-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "A company trains a customer churn model on 18 months of historical transaction data. Six months later, the model's performance degrades significantly. Data governance best practice dictates the FIRST diagnostic step is:",
+      options: [
+        "Immediately retrain the model on the most recent 6 months of data",
+        "Run distribution shift diagnostics: compare feature distributions and target rate between the original training window and the current scoring window to identify whether covariate shift, label shift, or concept drift is occurring",
+        "Increase model complexity to handle the distribution change",
+        "Switch from gradient boosting to a neural network for better adaptability",
+      ],
+      correctAnswer: 1,
+      explanation: "Performance degradation has multiple data-related causes requiring different remediation: (1) Covariate shift: P(X) changed but P(Y|X) unchanged — retrain on recent data or use importance weighting, (2) Label shift: P(Y) changed but P(X|Y) unchanged — recalibrate the model threshold, (3) Concept drift: P(Y|X) changed — model must be retrained because the learned relationship is no longer valid. Diagnostic: PSI (Population Stability Index) for feature distributions, target rate monitoring for label shift. Misdiagnosing drift type leads to wrong remediation.",
+      hints: [
+        "PSI > 0.2 on a feature indicates significant distribution shift — investigate that feature first.",
+        "Feature attribution drift: if SHAP values for a top feature change significantly between time periods, the feature's relationship to the target has shifted.",
+      ],
+    },
+    {
+      id: "q-dc-ex4-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "GDPR's right to erasure requires that ML models trained on a user's data must be retrained from scratch after that user requests data deletion, because the user's information is embedded in the model weights.",
+      correctAnswer: "False",
+      explanation: "Exact unlearning (retraining from scratch after each deletion) is computationally prohibitive. Machine unlearning research (Cao & Yang 2015, Bourtoule et al. 2021) provides approximate methods: (1) SISA training (Sharded Isolated Sliced Aggregated training) partitions data so only the affected shard needs retraining, (2) Gradient-based approximate unlearning reverses the gradient updates from deleted examples, (3) Influence function-based methods estimate parameter updates needed to forget a sample. Regulators generally accept demonstrably approximate unlearning that provides statistical guarantees, not exact deletion.",
+      hints: [
+        "SISA training: if data is partitioned into S shards, deleting one point requires retraining only 1/S of the model, reducing cost by S times.",
+        "Unlearning verification: membership inference attacks can test whether deleted data is still influencing model predictions — a lower attack success rate indicates better unlearning.",
+      ],
+    },
+    {
+      id: "q-dc-ex4-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Differential privacy (DP-SGD) in ML training adds calibrated Gaussian noise to clipped gradients at each training step. The primary trade-off when applying DP-SGD to training data governance is:",
+      options: [
+        "Training speed vs model interpretability",
+        "Privacy guarantee strength (smaller epsilon = stronger privacy) vs model utility (smaller epsilon requires more noise = worse model performance) — with the optimal epsilon depending on the sensitivity of the training data and the acceptable performance degradation",
+        "Memory footprint vs gradient computation cost",
+        "Batch size vs learning rate stability",
+      ],
+      correctAnswer: 1,
+      explanation: "DP-SGD (Abadi et al. 2016) clips per-example gradients to norm C, then adds calibrated Gaussian noise before averaging. The privacy cost accumulates over training steps. The privacy-utility trade-off: epsilon=10 gives high privacy protection with ~2% accuracy drop on MNIST; epsilon=1 gives strong privacy with ~10% drop; epsilon=0.1 gives very strong privacy with ~20% drop. Large models have more parameters (more noise dimensions) but also more capacity to learn despite noise — privacy cost per parameter decreases with model size, making large-scale DP training more viable for LLMs than small models.",
+      hints: [
+        "Privacy budget accounting: the Renyi DP (RDP) accounting method gives tighter epsilon estimates than naive composition — important for long training runs.",
+        "Gradient clipping threshold C: too small clips valid gradients (hurting learning), too large allows sensitive examples to dominate (hurting privacy). C is typically tuned by observing median gradient norm.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extraDCQ);
 
 export default questions;
 registerQuestions(questions);

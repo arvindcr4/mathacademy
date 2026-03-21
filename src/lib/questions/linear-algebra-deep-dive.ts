@@ -1970,16 +1970,30 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       id: "q-alg-kp28-1",
       type: "multiple-choice",
       difficulty: "easy",
-      question: "The adjacency matrix A of an undirected graph satisfies:",
+      question: "The adjacency matrix $A$ of an undirected graph satisfies:",
       options: [
-        "Aᵢⱼ = 1 if there is a directed edge from i to j only",
-        "A = Aᵀ (symmetric) with Aᵢⱼ = 1 if nodes i and j are connected",
-        "Aᵢᵢ = 1 for all diagonal entries",
-        "A has all positive eigenvalues",
+        "$A_{ij} = 1$ if there is a directed edge from $i$ to $j$ only",
+        "$A = A^T$ (symmetric) with $A_{ij} = 1$ if nodes $i$ and $j$ are connected",
+        "$A_{ii} = 1$ for all diagonal entries (self-loops)",
+        "$A$ has all positive eigenvalues",
       ],
       correctAnswer: 1,
-      explanation:
-        "Undirected graphs have symmetric adjacency matrices (Aᵢⱼ = Aⱼᵢ) because an edge between i and j is bidirectional; directed graphs have asymmetric adjacency matrices.",
+      explanation: `The adjacency matrix $A$ of an undirected graph encodes which vertices are connected by edges.
+
+**Step 1: Definition.** For an undirected graph with $n$ vertices:
+$$A_{ij} = \\begin{cases} 1 & \\text{if vertices } i \\text{ and } j \\text{ are connected by an edge} \\\\ 0 & \\text{otherwise} \\end{cases}$$
+
+**Step 2: Symmetry.** Since edges in an undirected graph have no direction — an edge between $i$ and $j$ means $j$ is connected to $i$ as well — the matrix must satisfy:
+$$A_{ij} = A_{ji} \\implies A = A^T$$
+
+This means $A$ is a **symmetric matrix**.
+
+**Step 3: Why the other options are wrong.**
+- Option 0: This describes a **directed graph** adjacency matrix (where $A_{ij} \\neq A_{ji}$ in general).
+- Option 2: Self-loops ($A_{ii} = 1$) are not present in standard graph definitions unless explicitly added. Most simple undirected graphs have $A_{ii} = 0$.
+- Option 3: Symmetric matrices have real eigenvalues, but they need not all be positive. For example, a path graph can have negative eigenvalues.
+
+Therefore, $\\boxed{A = A^T \\text{ (symmetric) with } A_{ij} = 1 \\text{ if nodes } i \\text{ and } j \\text{ are connected}}$ is correct.`,
       hints: [
         "In an undirected graph, if i connects to j, then j also connects to i.",
         "Symmetry of A implies it has real eigenvalues by the spectral theorem.",
@@ -1990,13 +2004,27 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "true-false",
       difficulty: "medium",
       question:
-        "The (i, j) entry of the matrix Aᵏ (the k-th power of the adjacency matrix) counts the number of walks of length exactly k between nodes i and j.",
+        "The $(i, j)$ entry of the matrix $A^k$ (the $k$-th power of the adjacency matrix) counts the number of walks of length exactly $k$ between nodes $i$ and $j$.",
       correctAnswer: "True",
-      explanation:
-        "By induction, (Aᵏ)ᵢⱼ counts the number of distinct paths of length k from node i to node j, including paths that revisit nodes — this is a fundamental property used in graph algorithms and GNNs.",
+      explanation: `This is a fundamental property of the adjacency matrix, proven by induction on $k$.
+
+**Step 1: Base case $k = 1$.** By definition, $A_{ij} = 1$ if and only if there is an edge between $i$ and $j$ — a walk of length 1. So the claim holds for $k = 1$.
+
+**Step 2: Inductive step.** Assume $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$. Then:
+$$(A^{k+1})_{ij} = \\sum_{\\ell=1}^n (A^k)_{i\\ell} \\cdot A_{\\ell j}$$
+
+Each term $(A^k)_{i\\ell} \\cdot A_{\\ell j}$ counts walks of length $k$ from $i$ to $\\ell$ followed by an edge from $\\ell$ to $j$ (a walk of length 1). Summing over all intermediate nodes $\\ell$ gives all walks of length $k+1$ from $i$ to $j$.
+
+**Step 3: Walks vs. paths.** Note that this counts **walks** (which may revisit nodes), not simple **paths** (which do not revisit nodes).
+
+**Step 4: Example.** For $k=2$: $(A^2)_{ij} = \\sum_\\ell A_{i\\ell} A_{\\ell j}$. The term $A_{i\\ell} A_{\\ell j}$ is 1 if $\\ell$ is a common neighbor of $i$ and $j$, so $(A^2)_{ij}$ counts common neighbors — the number of length-2 walks.
+
+This property is used in spectral GNNs: polynomial filters $p(L) = p_0 I + p_1 L + p_2 L^2 + \\cdots$ use powers of $L$ to aggregate information from multi-hop neighbors.
+
+Therefore, $\\boxed{\\text{True}}$ — $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$.`,
       hints: [
-        "Verify for k=2: (A²)ᵢⱼ = Σₖ AᵢₖAₖⱼ counts how many common neighbors i and j share.",
-        "This property is exploited in polynomial graph filters used in spectral GNNs.",
+        "Verify for $k=2$: $(A^2)_{ij} = \\sum_\\ell A_{i\\ell} A_{\\ell j}$. Each term $A_{i\\ell} A_{\\ell j}$ is 1 if $\\ell$ is a common neighbor of $i$ and $j$, so $(A^2)_{ij}$ counts common neighbors — i.e., walks of length 2.",
+        "Proof by induction: if $(A^k)_{ij}$ counts walks of length $k$ from $i$ to $j$, then $(A^{k+1})_{ij} = \\sum_\\ell (A^k)_{i\\ell} A_{\\ell j}$ adds one more step, counting walks of length $k+1$."
       ],
     },
     {
@@ -2004,20 +2032,38 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In graph neural networks, the normalized Laplacian L̃ = D^(−1/2) L D^(−1/2) is preferred over the raw Laplacian for message passing because:",
+        "In graph neural networks, the normalized Laplacian $\\tilde{L} = D^{-1/2} L D^{-1/2}$ is preferred over the raw Laplacian for message passing because:",
       options: [
         "The normalized Laplacian is always invertible unlike the raw Laplacian",
-        "Normalization bounds eigenvalues to [0, 2], preventing gradient explosion in deep GNNs and accounting for different node degrees",
+        "Normalization bounds eigenvalues to $[0, 2]$, preventing gradient explosion in deep GNNs and accounting for different node degrees",
         "The normalized Laplacian is sparse and the raw Laplacian is dense",
         "Normalization makes the Laplacian asymmetric, enabling directed graph modeling",
       ],
       correctAnswer: 1,
-      explanation:
-        "The normalized Laplacian has spectrum in [0, 2], ensuring stable gradient flow in deep GNNs; it also accounts for node degree (a high-degree node\'s features are scaled down), preventing high-degree nodes from dominating aggregation.",
+      explanation: `The normalized Laplacian $\\tilde{L} = D^{-1/2}LD^{-1/2}$ addresses two key problems with the raw Laplacian in deep GNNs.
+
+**Step 1: Raw Laplacian issues.** For a graph with degree heterogeneity (some nodes with degree 1000, others with degree 3), the raw Laplacian $L = D - A$ has eigenvalues unbounded by graph structure. In deep GNNs, repeated message passing with $L$ amplifies some directions exponentially, causing gradient explosion or vanishing.
+
+**Step 2: Eigenvalue bound of normalized Laplacian.** The normalized Laplacian $\\tilde{L} = D^{-1/2}LD^{-1/2}$ satisfies:
+$$0 = \\lambda_1 \\leq \\lambda_2 \\leq \\cdots \\leq \\lambda_n \\leq 2$$
+
+This eigenvalue bound $[0, 2]$ holds for **any** graph, regardless of degree distribution. Message passing with $\\tilde{L}^k$ never amplifies directions by more than $2^k$.
+
+**Step 3: Degree-aware aggregation.** In message passing, the raw Laplacian uses:
+$$h_i^{(k+1)} = \\sigma\\left(\\sum_j L_{ij} h_j^{(k)}\\right)$$
+
+High-degree nodes (large $L_{ij}$ values) dominate this aggregation. The normalized Laplacian uses:
+$$h_i^{(k+1)} = \\sigma\\left(\\sum_j \\frac{1}{\\sqrt{d_i d_j}} A_{ij} \\, h_j^{(k)}\\right)$$
+
+This **symmetric normalization** scales messages by $1/\\sqrt{d_i d_j}$, ensuring a node with 1000 neighbors contributes equally to one with 3 neighbors.
+
+**Step 4: Why asymmetry is not the goal.** Option 3 is wrong because $\\tilde{L}$ is still **symmetric** ( $\\tilde{L}^T = \\tilde{L}$ ) — degree normalization does not introduce asymmetry.
+
+Therefore, $\\boxed{\\text{Option 1}}$ — normalization bounds eigenvalues to $[0,2]$ and handles degree heterogeneity.`,
       hints: [
-        "Think about what happens to gradients during backpropagation when eigenvalues are unbounded.",
-        "Degree normalization ensures that a node with 1000 neighbors and one with 3 neighbors contribute equally in aggregation.",
-      ],
+        "The normalized Laplacian satisfies $0 \\leq \\lambda_i(\\tilde{L}) \\leq 2$ for all $i$, regardless of graph structure. This means $\\|\\tilde{L}\\|_2 \\leq 2$, so repeated message passing does not cause exponential gradient growth.",
+        "In raw Laplacian aggregation, a node with 1000 neighbors contributes 1000× more than a node with 1 neighbor. In normalized aggregation, each edge contributes $\\frac{1}{\\sqrt{d_i d_j}}$ — balancing the influence of high- and low-degree nodes."
+      ]
     },
   ],
 
@@ -2069,12 +2115,32 @@ Therefore, $\\boxed{\\text{Option 0}}$ — LoRA reduces VRAM by training far few
         "Computing the Kronecker product of the two qubit states",
       ],
       correctAnswer: 1,
-      explanation:
-        "Reshaping the 4-dimensional state vector of two qubits into a 2×2 matrix M, entanglement corresponds to rank(M) > 1; the Schmidt decomposition via SVD of M directly quantifies entanglement via the Schmidt coefficients.",
+      explanation: `Entanglement detection uses the Schmidt decomposition of the two-qubit state.
+
+**Step 1: The state vector.** A two-qubit state $|\psi\\rangle \\in \\mathbb{C}^4$ can be written in the computational basis as:
+$$|\\psi\\rangle = \\sum_{i,j=0}^1 \\alpha_{ij} |i\\rangle \\otimes |j\\rangle, \\quad \\sum_{i,j} |\\alpha_{ij}|^2 = 1$$
+
+**Step 2: Reshape to a matrix.** Define the $2 \\times 2$ matrix $M$ with entries $M_{ij} = \\alpha_{ij}$:
+$$M = \\begin{pmatrix} \\alpha_{00} & \\alpha_{01} \\\\ \\alpha_{10} & \\alpha_{11} \\end{pmatrix}$$
+
+**Step 3: SVD of the matrix.** Perform SVD on $M$:
+$$M = U \\Sigma V^\\dagger$$
+
+**Step 4: The Schmidt criterion.** The number of non-zero singular values of $M$ equals the **Schmidt rank**. 
+
+- If $\\operatorname{rank}(M) = 1$: $|\psi\\rangle$ is a **product state** $|\psi\\rangle = |\\psi_1\\rangle \\otimes |\\psi_2\\rangle$ (not entangled).
+- If $\\operatorname{rank}(M) > 1$: $|\psi\\rangle$ is **entangled**.
+
+**Step 5: Example — Bell state.** The Bell state $|\psi^+\\rangle = \\frac{1}{\\sqrt{2}}(|00\\rangle + |11\\rangle)$ has:
+$$M = \\frac{1}{\\sqrt{2}}\\begin{pmatrix} 1 & 0 \\\\ 0 & 1 \\end{pmatrix} = \\frac{1}{\\sqrt{2}}I$$
+
+which has full rank 2 (two equal singular values) — maximally entangled.
+
+Therefore, $\\boxed{\\text{Option 1}}$ — SVD of the reshaped state matrix detects entanglement via rank exceeding 1.`,
       hints: [
-        "A product state |ψ₁⟩ ⊗ |ψ₂⟩ reshapes to a rank-1 matrix (outer product of two vectors).",
-        "Entanglement is quantified by the Schmidt rank — the number of nonzero singular values of M.",
-      ],
+        "A product state $|\\psi_1\\rangle \\otimes |\\psi_2\\rangle$ reshapes to $M = |\\psi_1\\rangle\\langle\\psi_2^*|$, which is a rank-1 matrix (outer product of two vectors).",
+        "The Schmidt decomposition: $M = \\sum_k \\sigma_k |u_k\\rangle\\langle v_k|$. The number of non-zero $\\sigma_k$ is the Schmidt rank. If it is 1, the state is a product state; if > 1, it is entangled."
+      ]
     },
   ],
 
@@ -2163,17 +2229,139 @@ const moreAlgQ: Record<string, Question[]> = {
     { id: "q-alg-kp35-3", type: "multiple-choice", difficulty: "hard", question: "The Cheeger inequality relates the Fiedler value λ₂ of the normalized Laplacian to the graph's conductance φ(G). The bound is:", options: ["λ₂/2 ≤ φ(G) ≤ √(2λ₂)", "λ₂ = φ(G) exactly", "φ(G) ≤ λ₂ always", "λ₂ ≤ φ(G)/2 always"], correctAnswer: 0, explanation: "The Cheeger inequality λ₂/2 ≤ φ(G) ≤ √(2λ₂) provides a spectral certificate for graph expansion. Small λ₂ implies a graph bottleneck (easy cut), and the spectral sweep algorithm finds a cut achieving conductance O(√λ₂).", hints: ["Conductance φ(G) = min_S |E(S,S̄)|/(min(vol(S),vol(S̄))) — the bottleneck ratio.", "Small λ₂ ≈ 0 means the graph is nearly disconnected — spectral clustering finds the cut."] },
   ],
   "matrix-calculus-v2": [
-    { id: "q-alg-kp36-1", type: "multiple-choice", difficulty: "medium", question: "The gradient of f(X) = tr(AX) with respect to matrix X is:", options: ["A", "A^T", "X^TA^T", "tr(A)·I"], correctAnswer: 1, explanation: "Using the matrix derivative identity: ∂tr(AX)/∂X = A^T. This is foundational for deriving backpropagation rules in linear layers: if the forward pass is Y = WX, then ∂L/∂W = (∂L/∂Y)·X^T.", hints: ["d(tr(AX)) = tr(A·dX) = tr((A^T)^T dX), so the gradient is A^T by the trace inner product.", "For f(X) = tr(X^TAX), ∂f/∂X = (A + A^T)X."] },
-    { id: "q-alg-kp36-2", type: "true-false", difficulty: "medium", question: "The Jacobian of a vector-valued function f: ℝⁿ → ℝᵐ is an m×n matrix where entry (i,j) is ∂fᵢ/∂xⱼ.", correctAnswer: "True", explanation: "The Jacobian J ∈ ℝ^{m×n} has J_{ij} = ∂fᵢ/∂xⱼ. In backpropagation, the vector-Jacobian product (VJP) vᵀJ is computed efficiently without materializing J — this is the core of reverse-mode autodiff.", hints: ["For scalar f (m=1), the Jacobian reduces to the gradient ∇f (a row vector).", "In JAX/PyTorch, jacrev computes the Jacobian via reverse mode; jacfwd via forward mode."] },
-    { id: "q-alg-kp36-3", type: "multiple-choice", difficulty: "hard", question: "The gradient of f(W) = ½‖Y - WX‖²_F with respect to W (Frobenius norm loss for linear regression with matrix outputs) is:", options: ["-(Y-WX)", "-(Y-WX)X^T", "(WX-Y)^TX", "X(Y-WX)^T"], correctAnswer: 1, explanation: "Expanding: f = ½tr((Y-WX)(Y-WX)^T). Taking the matrix gradient: ∂f/∂W = -(Y-WX)X^T = (WX-Y)X^T. This is the matrix generalization of the vector OLS gradient X^T(Xw-y).", hints: ["Apply chain rule: ∂f/∂W = ∂(½‖E‖²_F)/∂E · ∂E/∂W where E = Y-WX.", "∂(½‖E‖²_F)/∂E = E and ∂(Y-WX)/∂W in the E direction gives -·X^T."] },
+    { id: "q-alg-kp36-1", type: "multiple-choice", difficulty: "medium", question: "The gradient of $f(X) = \\operatorname{tr}(AX)$ with respect to matrix $X$ is:", options: ["$A$", "$A^T$", "$X^TA^T$", "$\\operatorname{tr}(A) \\cdot I$"], correctAnswer: 1, explanation: `Using the matrix derivative identity, let us derive $\\frac{\\partial \\operatorname{tr}(AX)}{\\partial X}$.
+
+**Step 1: Use the differential.** The differential of $f(X) = \\operatorname{tr}(AX)$ is:
+$$df = \\operatorname{tr}(A \\, dX)$$
+
+**Step 2: Apply the trace inner product identity.** For any matrix $M$, the inner product with $dX$ can be rewritten using the cyclic property of trace:
+$$\\operatorname{tr}(A \\, dX) = \\operatorname{tr}((A^T)^T \\, dX) = \\left\\langle A^T, \\, dX \\right\\rangle$$
+
+**Step 3: Identify the gradient.** By the definition of the matrix gradient: if $df = \\operatorname{tr}(G^T dX)$ for all $dX$, then $\\frac{\\partial f}{\\partial X} = G$. Here $G = A^T$.
+
+**Verification for backpropagation:** If the forward pass is $Y = WX$ and the loss is $L$, then by the chain rule:
+$$\\frac{\\partial L}{\\partial W} = \\left(\\frac{\\partial L}{\\partial Y}\\right) X^T$$
+
+This is the matrix generalization of the scalar gradient $\\frac{\\partial}{\\partial w}(Xw - y)^2 = 2X^T(Xw - y)$.
+
+Therefore, $\\boxed{A^T}$ is the correct gradient.`, hints: ["The key identity is $d\\operatorname{tr}(AX) = \\operatorname{tr}(A\\,dX)$. What matrix $G$ satisfies $d\\operatorname{tr}(AX) = \\operatorname{tr}(G^T\\, dX)$ for all $dX$?", "Using the cyclic property of trace: $\\operatorname{tr}(A\\,dX) = \\operatorname{tr}((A^T)^T\\,dX)$ — this identifies the gradient as $A^T$."] },
+    { id: "q-alg-kp36-2", type: "true-false", difficulty: "medium", question: "The Jacobian of a vector-valued function $f: \\mathbb{R}^n \\to \\mathbb{R}^m$ is an $m \\times n$ matrix where entry $(i,j)$ is $\\frac{\\partial f_i}{\\partial x_j}$.", correctAnswer: "True", explanation: `This statement is **true**. Let us verify the dimensions and entries carefully.
+
+**Step 1: Dimensions.** $f$ maps from $\\mathbb{R}^n$ (input dimension $n$) to $\\mathbb{R}^m$ (output dimension $m$). The Jacobian $J$ is the matrix of all first-order partial derivatives:
+$$J \\in \\mathbb{R}^{m \\times n}$$
+
+**Step 2: Entry formula.** The entry in row $i$, column $j$ of $J$ is:
+$$J_{ij} = \\frac{\\partial f_i}{\\partial x_j}$$
+
+where $f_i$ is the $i$-th component of the output and $x_j$ is the $j$-th component of the input.
+
+**Step 3: Full matrix form.** Writing it out:
+$$J = \\begin{pmatrix} \\frac{\\partial f_1}{\\partial x_1} & \\frac{\\partial f_1}{\\partial x_2} & \\cdots & \\frac{\\partial f_1}{\\partial x_n} \\\\ \\frac{\\partial f_2}{\\partial x_1} & \\frac{\\partial f_2}{\\partial x_2} & \\cdots & \\frac{\\partial f_2}{\\partial x_n} \\\\ \\vdots & \\vdots & \\ddots & \\vdots \\\\ \\frac{\\partial f_m}{\\partial x_1} & \\frac{\\partial f_m}{\\partial x_2} & \\cdots & \\frac{\\partial f_m}{\\partial x_n} \\end{pmatrix}$$
+
+**Step 4: Special cases.** For $m = 1$ (scalar function), the Jacobian reduces to the gradient row vector. For $n = 1$, it is a column vector of partial derivatives.
+
+**Step 5: Backpropagation connection.** In reverse-mode automatic differentiation (used in PyTorch/JAX), the vector-Jacobian product $\\mathbf{v}^T J$ is computed without ever materializing the full Jacobian $J$ — this is the computational foundation of efficient gradient computation.
+
+Therefore, $\\boxed{\\text{True}}$ — the Jacobian has shape $m \\times n$ with $J_{ij} = \\partial f_i / \\partial x_j$.`, hints: ["For a scalar function $f: \\mathbb{R}^n \\to \\mathbb{R}$ (i.e., $m=1$), the Jacobian has shape $1 \\times n$ and is simply the gradient row vector $\\nabla f$.", "In backpropagation, we never compute the full Jacobian explicitly — we only need vector-Jacobian products $\\mathbf{v}^T J$, which can be computed efficiently by chain-ruling through the computation graph."] },
+    { id: "q-alg-kp36-3", type: "multiple-choice", difficulty: "hard", question: "The gradient of $f(W) = \\frac{1}{2}\\|Y - WX\\|_F^2$ with respect to $W$ (Frobenius norm loss for linear regression with matrix outputs) is:", options: ["$-(Y - WX)$", "$-(Y - WX)X^T$", "$(WX - Y)^T X$", "$X(Y - WX)^T$"], correctAnswer: 1, explanation: `Let us derive the gradient step by step using the chain rule and matrix differential calculus.
+
+**Step 1: Set up the loss.** Define the error matrix $E = Y - WX$. Then:
+$$f(W) = \\frac{1}{2} \\|E\\|_F^2 = \\frac{1}{2} \\operatorname{tr}(EE^T)$$
+
+**Step 2: Compute the differential.** Using $dE = -dW \\cdot X$:
+\\begin{align}
+df &= \\frac{1}{2} \\operatorname{tr}(dE \\cdot E^T + E \\cdot dE^T) = \\operatorname{tr}(E \\cdot dE^T) \\\\
+&= \\operatorname{tr}\\big(E \\cdot (-X^T dW^T)\\big) = -\\operatorname{tr}\\big((EX^T)^T dW\\big)
+\\end{align}
+
+**Step 3: Identify the gradient.** By the trace identity, if $df = \\operatorname{tr}(G^T dW)$, then $\\frac{\\partial f}{\\partial W} = G$. Here:
+$$df = -\\operatorname{tr}\\big((EX^T)^T dW\\big) \\implies \\frac{\\partial f}{\\partial W} = -EX^T = -(Y - WX)X^T$$
+
+**Step 4: Vector case check.** For the scalar case with $w \\in \\mathbb{R}^n$, $y \\in \\mathbb{R}^m$, and $X \\in \\mathbb{R}^{n \\times m}$, the gradient of $\\frac{1}{2}\\|y - Xw\\|^2$ is $X(Xw - y)$. The matrix case $-(Y - WX)X^T = (WX - Y)X^T$ is the direct generalization.
+
+**Why the other options are wrong:**
+- Option 0: $-(Y - WX)$ has the wrong shape — it ignores the $X^T$ factor from the chain rule.
+- Option 2: $(WX - Y)^T X$ is the transpose of the correct answer, wrong shape.
+- Option 3: $X(Y - WX)^T$ has the wrong arrangement of terms.
+
+Therefore, $\\boxed{-(Y - WX)X^T}$ is the correct gradient.`,
+      hints: [
+        "Apply the chain rule: $\\frac{\\partial f}{\\partial W} = \\frac{\\partial \\frac{1}{2}\\|E\\|_F^2}{\\partial E} \\cdot \\frac{\\partial E}{\\partial W}$ where $E = Y - WX$. What is $\\frac{\\partial \\frac{1}{2}\\|E\\|_F^2}{\\partial E}$?",
+        "Using the differential: $df = \\operatorname{tr}(E \\cdot dE^T) = \\operatorname{tr}(E(-X^T dW^T)) = -\\operatorname{tr}((EX^T)^T dW)$. What matrix $G$ satisfies $df = \\operatorname{tr}(G^T dW)$?"
+      ]
+    },
   ],
   "low-rank-approximation": [
-    { id: "q-alg-kp37-1", type: "multiple-choice", difficulty: "medium", question: "LoRA (Low-Rank Adaptation) for fine-tuning large language models represents weight updates as ΔW = AB where A ∈ ℝ^{d×r} and B ∈ ℝ^{r×k} with r ≪ min(d,k). This reduces trainable parameters because:", options: ["It eliminates the need for backpropagation", "Instead of training a d×k matrix (dk parameters), only A and B are trained (r(d+k) parameters ≪ dk for small r)", "It compresses the base model weights", "It removes attention heads"], correctAnswer: 1, explanation: "LoRA constrains the weight update to a low-rank subspace. For r=8 on a 4096×4096 matrix: 8×2×4096 = 65,536 parameters vs 16.7M full parameters — a 255× reduction. The base model weights W₀ are frozen.", hints: ["Total LoRA parameters: r×d + r×k = r(d+k). For r ≪ min(d,k), this is much less than dk.", "QLoRA further quantizes W₀ to 4-bit, reducing memory another 4×."] },
+    { id: "q-alg-kp37-1", type: "multiple-choice", difficulty: "medium", question: "LoRA (Low-Rank Adaptation) for fine-tuning large language models represents weight updates as $\\Delta W = BA$ where $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ with $r \\ll \\min(d,k)$. This reduces trainable parameters because:", options: ["It eliminates the need for backpropagation", "Instead of training a $d \\times k$ matrix ($dk$ parameters), only $B$ and $A$ are trained ($r(d+k)$ parameters $\\ll dk$ for small $r$)", "It compresses the base model weights", "It removes attention heads"], correctAnswer: 1, explanation: `LoRA (Hu et al., 2021) reduces the parameter count of fine-tuning by exploiting low-rank structure in weight updates.
+
+**Step 1: Full fine-tuning.** A pre-trained weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ has $dk$ parameters. Full fine-tuning updates all of them and stores gradients and Adam optimizer states for each.
+
+**Step 2: LoRA's parameterization.** LoRA freezes $W_0$ and represents the update as:
+$$\\Delta W = B A, \\quad B \\in \\mathbb{R}^{d \\times r}, \\; A \\in \\mathbb{R}^{r \\times k}$$
+
+**Step 3: Parameter count.** With $r \\ll \\min(d, k)$:
+$$\\text{LoRA parameters} = dr + rk = r(d+k)$$
+
+For a $4096 \\times 4096$ weight matrix with $r = 8$:
+$$\\text{Full:} \\; 4096^2 \\approx 16.8 \\text{M params} \\quad vs. \\quad \\text{LoRA:} \\; 8 \\times 4096 + 8 \\times 4096 \\approx 65{,}536 \\text{ params}$$
+
+**Step 4: Memory reduction.** The base model weights $W_0$ are frozen (forward only), and only $B$ and $A$ require gradient storage and optimizer states. This enables fine-tuning large models on consumer GPUs.
+
+Therefore, $\\boxed{\\text{Option 1}}$ — LoRA reduces trainable parameters from $dk$ to $r(d+k) \\ll dk$.`, hints: ["Count parameters: a $d \\times k$ matrix needs $dk$ parameters, while LoRA's $B \\in \\mathbb{R}^{d \\times r}$ and $A \\in \\mathbb{R}^{r \\times k}$ need $dr + rk = r(d+k)$ parameters.", "For $W_0 \\in \\mathbb{R}^{4096 \\times 4096}$ with $r=8$: full fine-tuning $\\approx 16.8$M params; LoRA $\\approx 65$K params — roughly 250× fewer."] },
     { id: "q-alg-kp37-2", type: "true-false", difficulty: "easy", question: "The Eckart-Young theorem guarantees that the best rank-k approximation to a matrix A in both the Frobenius norm and the spectral norm is given by truncated SVD Aₖ = UₖΣₖVₖ^T.", correctAnswer: "True", explanation: "Eckart-Young: ‖A - Aₖ‖₂ = σₖ₊₁ and ‖A - Aₖ‖_F = √(Σᵢ>ₖ σᵢ²), and no rank-k matrix achieves smaller error in either norm. This is why SVD-based compression is optimal for dimensionality reduction.", hints: ["The theorem applies to both operator (spectral) and Frobenius norms — an unusually strong result.", "The optimal rank-k approximation error in Frobenius norm is √(σₖ₊₁² + ... + σₙ²)."] },
-    { id: "q-alg-kp37-3", type: "multiple-choice", difficulty: "hard", question: "The stable rank of a matrix A is defined as sr(A) = ‖A‖²_F / ‖A‖²₂ = (Σσᵢ²) / σ₁². It is used in randomized algorithms because:", options: ["sr(A) = rank(A) always", "sr(A) ≤ rank(A) and quantifies how 'numerically low-rank' A is — algorithms require O(sr(A)) random samples to achieve good approximation", "sr(A) determines the computational complexity of Cholesky", "sr(A) is always an integer"], correctAnswer: 1, explanation: "Stable rank sr(A) ∈ [1, rank(A)] measures effective dimensionality. A matrix with sr(A) = 1 has all energy in one direction (exactly rank 1); sr(A) = rank(A) means energy is spread uniformly. Randomized algorithms require sample complexity O(sr(A)/ε²) for ε-approximation.", hints: ["A rank-100 matrix with σ₁ ≫ σ₂,...,σ₁₀₀ has sr(A) ≈ 1 — well approximated by rank-1.", "Stable rank controls the 'effective' dimension for random projections via Johnson-Lindenstrauss."] },
+    { id: "q-alg-kp37-3", type: "multiple-choice", difficulty: "hard", question: "The stable rank of a matrix $A$ is defined as $\\operatorname{sr}(A) = \\|A\\|_F^2 / \\|A\\|_2^2 = \\frac{\\sum_i \\sigma_i^2}{\\sigma_1^2}$. It is used in randomized algorithms because:", options: ["$\\operatorname{sr}(A) = \\operatorname{rank}(A)$ always", "$\\operatorname{sr}(A) \\leq \\operatorname{rank}(A)$ and quantifies how numerically low-rank $A$ is — randomized algorithms require $O(\\operatorname{sr}(A))$ samples to achieve an $\\varepsilon$-approximation", "$\\operatorname{sr}(A)$ determines the computational complexity of Cholesky decomposition", "$\\operatorname{sr}(A)$ is always an integer"], correctAnswer: 1, explanation: `The stable rank (also called numerical rank) provides a more nuanced measure of matrix "size" than rank.
+
+**Step 1: Definition.** For a matrix $A$ with singular values $\\sigma_1 \\geq \\sigma_2 \\geq \\cdots \\geq \\sigma_r > 0$:
+$$\\operatorname{sr}(A) = \\frac{\\|A\\|_F^2}{\\|A\\|_2^2} = \\frac{\\sigma_1^2 + \\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2}$$
+
+**Step 2: Relationship to rank.** Since $\\|A\\|_F^2 = \\sum_i \\sigma_i^2$ and $\\|A\\|_2 = \\sigma_1$:
+$$\\operatorname{sr}(A) = 1 + \\frac{\\sigma_2^2 + \\cdots + \\sigma_r^2}{\\sigma_1^2} \\geq 1$$
+
+and because $\\sigma_i \\leq \\sigma_1$ for all $i$, we have $\\operatorname{sr}(A) \\leq r = \\operatorname{rank}(A)$.
+
+**Step 3: Interpretation.** A matrix with $\\operatorname{sr}(A) \\approx 1$ has most of its Frobenius norm concentrated in the top singular value — it is numerically rank-1. A matrix with $\\operatorname{sr}(A) = \\operatorname{rank}(A)$ has energy spread uniformly across all singular values.
+
+**Step 4: Role in randomized algorithms.** Random sampling-based algorithms (for SVD, least squares, etc.) require $O(\\operatorname{sr}(A)/\\varepsilon^2)$ samples to achieve relative $\\varepsilon$-approximation in Frobenius norm. This is much smaller than $O(\\operatorname{rank}(A)/\\varepsilon^2)$ when singular values decay rapidly.
+
+Therefore, $\\boxed{\\text{Option 1}}$ — stable rank captures effective dimensionality and controls sample complexity in randomized numerical linear algebra.`,
+      hints: [
+        "A matrix with $\\sigma_1 \\gg \\sigma_2, \\sigma_3, \\ldots$ has $\\operatorname{sr}(A) \\approx 1$, meaning it is numerically low-rank even if its exact rank is high.",
+        "Randomized SVD and related methods need $O(\\operatorname{sr}(A)/\\varepsilon^2)$ samples to achieve $\\varepsilon$-approximation — stable rank, not exact rank, determines sample complexity."
+      ]
+    },
   ],
   "linear-systems": [
-    { id: "q-alg-kp38-1", type: "multiple-choice", difficulty: "medium", question: "A least-squares problem min_x ‖Ax - b‖₂ where A ∈ ℝ^{m×n} with m > n (overdetermined) has the unique solution:", options: ["x = A⁻¹b", "x = (A^TA)⁻¹A^Tb (normal equations solution)", "x = (AA^T)⁻¹A^Tb", "x = A^Tb / ‖A‖²"], correctAnswer: 1, explanation: "The normal equations A^TAx = A^Tb give the least-squares solution x* = (A^TA)⁻¹A^Tb when A has full column rank. In practice, QR decomposition or SVD are numerically preferred over directly solving the (potentially ill-conditioned) normal equations.", hints: ["The normal equations arise from setting the gradient of ‖Ax-b‖² to zero: 2A^T(Ax-b) = 0.", "If A is ill-conditioned, (A^TA) amplifies errors — use QR or SVD instead."] },
+    { id: "q-alg-kp38-1", type: "multiple-choice", difficulty: "medium", question: "A least-squares problem $\\min_{\\mathbf{x}} \\|A\\mathbf{x} - \\mathbf{b}\\|_2$ where $A \\in \\mathbb{R}^{m \\times n}$ with $m > n$ (overdetermined) has the unique solution:", options: ["$\\mathbf{x} = A^{-1}\\mathbf{b}$", "$\\mathbf{x} = (A^TA)^{-1}A^T\\mathbf{b}$ (normal equations solution)", "$\\mathbf{x} = (AA^T)^{-1}A^T\\mathbf{b}$", "$\\mathbf{x} = A^T\\mathbf{b} / \\|A\\|^2$"], correctAnswer: 1, explanation: `The least-squares problem finds $\\hat{\\mathbf{x}}$ that minimizes $\|A\\mathbf{x} - \\mathbf{b}\\|^2$.
+
+**Step 1: Set up the normal equations.** The objective is:
+$$J(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2 = (A\\mathbf{x} - \\mathbf{b})^T(A\\mathbf{x} - \\mathbf{b})$$
+
+Setting the gradient to zero:
+\\begin{align}
+\\nabla_\\mathbf{x} J &= 2A^T(A\\mathbf{x} - \\mathbf{b}) = 0 \\\\
+A^TA\\mathbf{x} &= A^T\\mathbf{b}
+\\end{align}
+
+**Step 2: Solve for $\\hat{\\mathbf{x}}$.** When $A$ has full column rank ($\\operatorname{rank}(A) = n$), $A^TA$ is invertible, giving:
+$$\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}$$
+
+**Step 3: Why this is unique.** With full column rank, the columns of $A$ are linearly independent. The map $\\mathbf{x} \\mapsto A\\mathbf{x}$ is injective, so there is a unique minimizer of $\|A\\mathbf{x} - \\mathbf{b}\|^2$.
+
+**Step 4: Practical considerations.** In numerical practice, solving $A^TA\\mathbf{x} = A^T\\mathbf{b}$ directly can be ill-conditioned. Numerically stable alternatives include:
+- **QR decomposition:** $A = QR$ gives $\\hat{\\mathbf{x}} = R^{-1}Q^T\\mathbf{b}$
+- **SVD:** $\\hat{\\mathbf{x}} = V\\Sigma^{-1}U^T\\mathbf{b}$
+
+**Why the other options are wrong:**
+- Option 0: $A^{-1}$ requires $A$ to be square and invertible, but $A$ is $m \\times n$ with $m > n$.
+- Option 2: $(AA^T)^{-1}$ would give an $m \\times m$ matrix inverse, wrong for this problem.
+- Option 3: $A^T\\mathbf{b} / \\|A\\|^2$ has no theoretical basis.
+
+Therefore, $\\boxed{\\hat{\\mathbf{x}} = (A^TA)^{-1}A^T\\mathbf{b}}$ is the correct solution.`,
+      hints: [
+        "Start by writing out the objective $J(\\mathbf{x}) = \\|A\\mathbf{x} - \\mathbf{b}\\|^2$ and differentiating: $\\nabla_\\mathbf{x} J = 2A^T(A\\mathbf{x} - \\mathbf{b}) = 0$.",
+        "The gradient $2A^T(A\\mathbf{x} - \\mathbf{b}) = 0$ gives the normal equations $A^TA\\mathbf{x} = A^T\\mathbf{b}$. Solve these for $\\mathbf{x}$."
+      ]
+    },
     { id: "q-alg-kp38-2", type: "true-false", difficulty: "medium", question: "Ridge regression (Tikhonov regularization) solves min_x ‖Ax-b‖² + λ‖x‖², and its solution (A^TA + λI)⁻¹A^Tb is always well-defined even when A^TA is singular.", correctAnswer: "True", explanation: "Adding λI to A^TA ensures all eigenvalues are at least λ > 0, making the matrix positive definite and invertible. This regularization shrinks the solution toward zero and stabilizes the inversion — essential when features are collinear.", hints: ["Eigenvalues of A^TA + λI = eigenvalues of A^TA + λ ≥ λ > 0 always.", "In SVD form: x_ridge = Σᵢ (σᵢ/(σᵢ² + λ)) uᵢvᵢ^Tb — small singular values are dampened."] },
     { id: "q-alg-kp38-3", type: "multiple-choice", difficulty: "hard", question: "The LASSO regression solves min_x ‖Ax-b‖² + λ‖x‖₁. Unlike ridge regression, LASSO produces sparse solutions because:", options: ["The ℓ₁ norm penalty has a square shape in 2D that makes corners at axis intersections", "The ℓ₁ norm ball has corners on the coordinate axes; the quadratic loss contour tends to touch these corners where some xᵢ = 0, inducing sparsity", "ℓ₁ is smoother than ℓ₂ and easier to optimize", "LASSO always sets exactly half the coefficients to zero"], correctAnswer: 1, explanation: "Geometrically, the ℓ₁ ball (diamond/cross-polytope shape) has corners on coordinate axes. The loss contour expansion hits these corners (where some coordinates are exactly 0) with positive probability, inducing sparsity. In contrast, the smooth ℓ₂ ball has no corners.", hints: ["In 2D: ℓ₁ ball is a diamond (corners at (±1,0),(0,±1)); ℓ₂ ball is a circle (no corners).", "Proximal gradient methods solve LASSO via soft-thresholding: sign(x)·max(|x|-λ, 0)."] },
   ],

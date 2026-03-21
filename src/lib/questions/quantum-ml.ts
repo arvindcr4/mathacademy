@@ -2298,12 +2298,12 @@ const extraQmlQuestions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Exponential concentration (Thanasilp et al., 2022): highly expressive quantum feature maps on n qubits map data to near-orthogonal states, so K(xi, xj) ≈ 2^{-n} for all pairs. The kernel matrix becomes proportional to the identity — all distances look the same — rendering the SVM uninformative. This is the kernel analogue of barren plateaus: expressibility hurts trainability.",
       hints: [
-        "More expressive ≠ more useful: a feature map mapping everything to near-uniform states provides no discrimination.",
+        "More expressive \$\\neq\$ more useful: a feature map mapping everything to near-uniform states provides no discrimination.",
         "Inductive bias must be built into the feature map; random deep feature maps suffer the same concentration as random deep circuits.",
       ],
     },
   ],
-  "barren-plateaus": [
+  "barren-plateaus-deep": [
     {
       id: "q-qml-ex2-1",
       type: "multiple-choice",
@@ -2597,6 +2597,164 @@ const extraQmlQuestions: Record<string, Question[]> = {
 };
 
 Object.assign(questions, extraQmlQuestions);
+
+const extraQmlQuestions2: Record<string, Question[]> = {
+  "barren-plateau-mitigation": [
+    {
+      id: "q-qml-ex7-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Identity block initialisation (Grant et al., 2019) mitigates barren plateaus at the start of training. What is the initialisation strategy?",
+      options: [
+        "Initialise all rotation angles to zero so every gate is the identity matrix",
+        "Pair parameterised blocks so each pair multiplies to the identity; small perturbations around this initialisation preserve gradient information without entering the exponentially flat random landscape",
+        "Initialise all angles randomly from Uniform[-0.01, 0.01] to stay near identity",
+        "Use He initialisation from classical deep learning, adapted by scaling by 1/sqrt(qubit count)",
+      ],
+      correctAnswer: 1,
+      explanation: "Identity block initialisation structures the ansatz as a product of blocks B_k B_k^{-1}, each evaluating to identity. Parameters within each block are set so the block pair cancels, but the parameters themselves are non-zero. Small random perturbations around this point give non-zero, computable gradients — the circuit is near identity but not a 2-design, avoiding barren plateaus while allowing expressive optimisation to proceed.",
+      hints: [
+        "A circuit identically equal to the identity produces zero gradient everywhere — so exact identity initialisation is also bad.",
+        "The key insight: near-identity circuits are not 2-designs, so their gradients have polynomial (not exponential) variance.",
+      ],
+    },
+    {
+      id: "q-qml-ex7-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Hardware-efficient ansatze (HEA) are designed to reduce circuit depth and SWAP overhead on NISQ devices, but they are generally more susceptible to barren plateaus than structured chemistry-inspired ansatze (e.g., UCCSD).",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "HEA consists of layers of parameterised single-qubit rotations and fixed entangling gates arranged for hardware connectivity — they are expressive but lack physical structure. UCCSD (Unitary Coupled Cluster Singles and Doubles) is motivated by quantum chemistry; its structured, problem-specific form avoids over-parameterisation and the random 2-design behaviour that causes barren plateaus. Structure is a barren plateau mitigation strategy.",
+      hints: [
+        "Over-expressible ansatze approach 2-designs, causing barren plateaus; problem-structured ansatze restrict to physically relevant states.",
+        "UCCSD exponential operator form naturally respects fermion symmetries, limiting the reachable state space and avoiding barren plateau regions.",
+      ],
+    },
+    {
+      id: "q-qml-ex7-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Noise-induced barren plateaus (NiBP) are distinct from expressibility-induced barren plateaus. What is the mechanism of NiBP and how does it scale?",
+      options: [
+        "Hardware noise causes bit-flip errors that corrupt gradient estimates; NiBP scales linearly with circuit depth",
+        "Depolarising noise at each layer exponentially suppresses the purity of the quantum state toward the maximally mixed state; gradients of any observable in the maximally mixed state are exactly zero, so noise drives gradients to zero exponentially in circuit depth",
+        "Phase noise from qubit decoherence introduces random offsets to rotation angles; the gradient variance scales as 1/T where T is the coherence time",
+        "NiBP occurs only in trapped-ion systems due to their slow gate speeds; superconducting qubits are immune",
+      ],
+      correctAnswer: 1,
+      explanation: "NiBP (Wang et al., 2021): each depolarising noise channel at rate p mixes the quantum state toward the maximally mixed state I/2^n by a factor (1-p) per gate. After L layers, the state purity decreases as (1-p)^L. The gradient of any observable in a nearly maximally mixed state is (1-p)^L times the noiseless gradient — exponential suppression with depth. This is independent of the ansatz structure, making NiBP more fundamental than expressibility-induced barren plateaus.",
+      hints: [
+        "Maximally mixed state rho = I/2^n: every observable has expectation Tr[O I/2^n] = Tr[O]/2^n, a constant independent of circuit parameters — zero gradient.",
+        "NiBP applies to any variational circuit on noisy hardware; even structured, shallow ansatze eventually hit NiBP if circuit depth exceeds the hardware's effective coherence budget.",
+      ],
+    },
+  ],
+  "qsvm-kernel-alignment": [
+    {
+      id: "q-qml-ex8-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Quantum kernel estimation on hardware requires repeated circuit evaluation to statistically estimate K(xi, xj). What is the standard method to ensure the estimated kernel matrix is valid (positive semidefinite) despite shot noise?",
+      options: [
+        "Discard negative eigenvalues from the kernel matrix by setting them to zero after eigendecomposition",
+        "Clip the diagonal of the kernel matrix to ensure it is exactly 1",
+        "Thresholding: set all kernel entries below a noise threshold to zero",
+        "Add a small multiple of the identity matrix (ridge regularisation) to the kernel matrix to ensure positive definiteness before SVM training",
+      ],
+      correctAnswer: 3,
+      explanation: "Shot noise can introduce small negative eigenvalues into the estimated kernel matrix, violating positive semi-definiteness required by SVM training (Mercer's condition). Adding a ridge term lambda*I to the kernel matrix (equivalent to L2 regularisation in SVM) shifts all eigenvalues up by lambda, guaranteeing positive definiteness. This is standard practice in quantum kernel experiments (e.g., Qiskit Machine Learning's QSVC).",
+      hints: [
+        "Shot noise makes K_ij estimates stochastic; when aggregated into a matrix, small negative eigenvalues appear due to rounding errors.",
+        "Ridge regularisation K + lambda*I is mathematically equivalent to adding a Gaussian RBF kernel to the quantum kernel, providing numerical stability.",
+      ],
+    },
+    {
+      id: "q-qml-ex8-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Classical kernel methods like the RBF (Radial Basis Function) kernel can always be computed exactly and in O(n) time for n-dimensional input data, giving them a practical advantage over quantum kernels that require O(n_shots) circuit evaluations per pair.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation: "Classical RBF kernel evaluation K(x, x') = exp(-||x-x'||^2 / (2 sigma^2)) is O(d) in input dimension d, not O(n) — O(n) refers to O(d) scaling in dimension. More importantly, computing the full Gram matrix for N training points is O(N^2 d). Quantum kernels require O(N^2 * n_shots) circuit evaluations, with each evaluation potentially offering exponential feature space access — but the O(N^2) query complexity is the same.",
+      hints: [
+        "Classical kernel evaluation is cheap per pair but the full Gram matrix has N^2 entries — both quantum and classical kernels share this O(N^2) bottleneck.",
+        "The practical quantum kernel disadvantage is per-entry cost: each K(xi, xj) requires running a quantum circuit ~1000 times, versus one O(d) arithmetic operation classically.",
+      ],
+    },
+  ],
+  "quantum-advantage-ml-advanced": [
+    {
+      id: "q-qml-ex9-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The quantum speedup for recommendation systems claimed by Kerenidis and Prakash (2016) was reduced to a polynomial classical speedup by Tang (2019). What specific classical technique enabled this dequantization?",
+      options: [
+        "Fast Fourier Transform applied to the user-item preference matrix",
+        "Stochastic gradient descent with mini-batches enabling O(poly(d)) matrix factorisation",
+        "Sample and query (SQ) access: the ability to efficiently sample entries of the matrix proportional to their squared magnitudes, enabling Monte Carlo low-rank approximation with polylogarithmic overhead",
+        "Locality-sensitive hashing to find approximate nearest neighbours in the user embedding space",
+      ],
+      correctAnswer: 2,
+      explanation: "Tang introduced SQ (sample-and-query) access as the classical equivalent of QRAM: given a vector v, SQ access allows sampling index i proportional to |v_i|^2 and querying v_i in O(1). Under SQ access, classical randomised algorithms for SVD and least-squares achieve the same asymptotic complexity as the quantum algorithms claimed, removing the quantum advantage. The key insight is that quantum advantage from QRAM only requires the ability to sample — achievable classically.",
+      hints: [
+        "QRAM allows superposition access to data: 'query all indices at once.' SQ access simulates this classically by efficient importance sampling.",
+        "The quantum recommendation algorithm's core is low-rank matrix approximation via quantum phase estimation; Tang showed Monte Carlo methods under SQ access achieve the same complexity.",
+      ],
+    },
+    {
+      id: "q-qml-ex9-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "For quantum ML to achieve a practical advantage over classical ML, it is generally sufficient to show that the quantum algorithm has better asymptotic complexity on some problem instance.",
+      options: ["True", "False"],
+      correctAnswer: "False",
+      explanation: "Practical advantage requires more than asymptotic complexity: (1) the input data must be efficiently loadable into quantum hardware (QRAM is a major bottleneck), (2) the output must be measurable without exponential sampling overhead, (3) the constant factors hidden in O() notation must be favourable for realistic hardware, and (4) the problem instances where the speedup applies must be practically relevant. Many claimed speedups evaporate under these practical constraints.",
+      hints: [
+        "Asymptotic speedup on paper vs. practical speedup: hardware constants, QRAM overhead, and output sampling costs all matter.",
+        "Dequantization shows that the asymptotic speedup often relies on QRAM assumptions that are themselves classically simulable.",
+      ],
+    },
+    {
+      id: "q-qml-ex9-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Quantum ML models are sometimes proposed for learning from quantum data generated by other quantum systems (e.g., quantum sensors, quantum chemistry experiments). Why is this the strongest case for quantum ML advantage?",
+      options: [
+        "Quantum sensors always produce more data than classical sensors, giving quantum ML more training signal",
+        "Quantum data (quantum states) has no efficient classical description in general; processing quantum data on a quantum computer avoids the exponentially expensive step of measuring and classically reconstructing the state, offering genuine computational savings",
+        "Quantum ML models have more parameters when applied to quantum data, enabling better generalisation",
+        "Quantum data is always low-dimensional, making quantum ML more efficient than classical methods",
+      ],
+      correctAnswer: 1,
+      explanation: "For classical data, the first step is loading it into a quantum computer (bottleneck). For quantum data (e.g., output of a quantum chemistry experiment), the state is already quantum — no loading cost. Processing it classically would require full quantum state tomography (exponentially expensive in qubit count). A quantum ML model can directly operate on the quantum state, providing genuine exponential savings over the classical pipeline. This is the most compelling near-term quantum ML advantage scenario.",
+      hints: [
+        "Classical ML on quantum data: measure the quantum state (destroying it) to get exponentially many classical parameters, then run classical ML. Quantum ML: process the state directly.",
+        "Full quantum state tomography of n qubits requires O(2^n) measurements — processing the state directly on a quantum computer is always more efficient.",
+      ],
+    },
+    {
+      id: "q-qml-ex9-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "The NISQ era constraint of limited coherence time most directly limits which aspect of variational quantum ML algorithms?",
+      options: [
+        "The number of trainable parameters in the variational circuit",
+        "The maximum useful circuit depth (number of sequential gate layers), since decoherence degrades state quality proportional to execution time",
+        "The number of qubits that can be used in the circuit",
+        "The number of times the same circuit can be re-run for gradient estimation",
+      ],
+      correctAnswer: 1,
+      explanation: "Coherence time T2 (or T2*) sets the maximum circuit execution time before the quantum state decoheres unrecoverably. Since each gate takes a fixed time (e.g., 50ns for superconducting two-qubit gates), coherence time directly translates to a maximum circuit depth: depth_max = T2 / t_gate. For T2 = 100 microseconds and t_gate = 500ns, max useful depth ~200 two-qubit gates — a hard constraint on circuit expressibility.",
+      hints: [
+        "Coherence time is a wall clock constraint: the circuit must complete before the quantum state decoheres into a useless mixed state.",
+        "Depth limit from coherence: deeper circuits are more expressive but exponentially more noisy; the NISQ sweet spot is near the coherence-limited depth.",
+      ],
+    },
+  ],
+};
+
+Object.assign(questions, extraQmlQuestions2);
 
 registerQuestions(questions);
 export default questions;

@@ -1189,6 +1189,398 @@ const questionOverrides: Record<string, QuestionOverride> = {
     ],
     correctAnswer: 1,
   },
+  "q-prod-kp23-1": {
+    question:
+      "An inference service's p99 latency jumps from 80 ms to 400 ms after a deploy. Which combination of observability signals best answers: 'Is there a spike?', 'Which requests are affected?', and 'Where in the prediction path is time spent?'",
+    options: [
+      "Metrics for detecting the spike, logs for inspecting affected requests, and traces for locating which component adds latency.",
+      "Logs for detecting the spike, traces for inspecting affected requests, and metrics for locating which component adds latency.",
+      "Metrics for all three questions, because aggregates are sufficient for debugging.",
+      "Traces for detecting the spike, logs for locating the slow component, and metrics for inspecting affected requests.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-prod-kp24-1": {
+    question:
+      "An on-call engineer is paged for PSI > 0.25 on a key production feature at 2 AM. Which runbook content would most directly help them triage and mitigate the incident safely?",
+    options: [
+      "A copy of the full model training code and recent experiment history.",
+      "Alert definitions and thresholds, step-by-step triage checks, copy-paste rollback commands, escalation contacts, and common root causes.",
+      "A list of all users affected by previous incidents.",
+      "The quarterly roadmap for the ML platform team.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp26-1": {
+    question:
+      "A hiring model advances 72% of applicants from group A and 54% from group B. Under the 80% rule, what is the correct conclusion?",
+    options: [
+      "No disparate impact, because both groups have pass rates above 50%.",
+      "Potential disparate impact, because 54/72 = 0.75, which is below 0.8.",
+      "No disparate impact, because the absolute gap is only 18 percentage points.",
+      "You cannot assess disparate impact here without measuring latency by group.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-prod-kp29-1": {
+    question:
+      "A profiled inference kernel achieves only 25% of peak FLOPs but already uses 90% of peak GPU memory bandwidth. According to roofline analysis, which optimization is most likely to improve throughput?",
+    options: [
+      "Reduce memory traffic with kernel fusion or quantization, because the kernel is memory-bandwidth-bound.",
+      "Focus on tensor-core optimizations only, because low FLOP utilization means compute is the bottleneck.",
+      "Add more CPU data-loading workers, because the GPU bandwidth numbers imply a host-side input bottleneck.",
+      "Lower the learning rate so each training step does less work.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-aud-kp3-2": {
+    type: "multiple-choice",
+    question: "CTC collapse: decode a, blank, a, a, blank.",
+    options: ["aa", "a", "aaa", "no label"],
+    correctAnswer: 0,
+  },
+  "q-aud-kp5-2": {
+    type: "multiple-choice",
+    question:
+      "Adding the LM log-score to each partial beam-search hypothesis is called:",
+    options: ["shallow fusion", "deep fusion", "N-best rescoring", "cold fusion"],
+    correctAnswer: 0,
+  },
+  "q-aud-kp24-2": {
+    type: "multiple-choice",
+    question: "In Mean Teacher, the teacher weights are updated by:",
+    options: [
+      "taking an exponential moving average of the student weights",
+      "training a separate teacher on labeled data only",
+      "copying the student weights exactly after each minibatch",
+      "freezing the teacher after the first epoch",
+    ],
+    correctAnswer: 0,
+  },
+  "q-aud-kp28-2": {
+    type: "multiple-choice",
+    question:
+      "When output order can flip between [A, B] and [B, A], PIT solves the:",
+    options: [
+      "label permutation problem",
+      "phase reconstruction problem",
+      "speaker counting problem",
+      "beam search problem",
+    ],
+    correctAnswer: 0,
+  },
+  "q-k-kp-33": {
+    question:
+      "If a bigram model's predicted distribution exactly matches the true data distribution P, what is the expected average NLL?",
+    options: ["0", "H(P)", "log(vocab_size), regardless of P", "It diverges to infinity"],
+    correctAnswer: "H(P)",
+  },
+  "q-k-kp-36": {
+    type: "multiple-choice",
+    question:
+      "If X has shape (B, T) and C has shape (V, d), what is the shape of C[X] before flattening in Karpathy's MLP?",
+    options: ["(B, T, d)", "(B, d)", "(V, T, d)", "(B, T*d)"],
+    correctAnswer: "(B, T, d)",
+  },
+  "q-k-kp-43": {
+    question:
+      "If p = softmax(logits) and y_one_hot is the target vector, what is dL/dlogits for cross-entropy loss on one example?",
+    options: [
+      "p - y_one_hot",
+      "y_one_hot - p",
+      "-log(p_y) applied element-wise",
+      "1/p_y at the target index and 0 elsewhere",
+    ],
+    correctAnswer: "p - y_one_hot",
+  },
+  "q-k-kp-52": {
+    question: "In Micrograd, which Value counts as a leaf node?",
+    options: [
+      "The final loss Value at the end of the graph",
+      "A Value created directly as an input or parameter, not produced by an operation on other Values",
+      "Any Value whose gradient is nonzero after backward()",
+      "Any Value that stores an _op string",
+    ],
+    correctAnswer:
+      "A Value created directly as an input or parameter, not produced by an operation on other Values",
+  },
+  "q-eval-kp3-1": {
+    question:
+      "A house-price model has MAE = 43.3K and RMSE = 58.3K. What does RMSE being noticeably larger than MAE usually indicate?",
+    options: [
+      "The model is underfitting on lower-priced houses.",
+      "A few large prediction errors are inflating RMSE more than MAE.",
+      "There is an implementation bug, because RMSE should equal MAE for an unbiased model.",
+      "The target prices have high variance, not the model errors.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-eval-kp5-1": {
+    question:
+      "You have 10 fold-by-fold accuracy differences between Model A and Model B and want to run a paired t-test on those differences. Which assumption does the test make?",
+    options: [
+      "The paired fold-by-fold differences are approximately normally distributed.",
+      "Both models must achieve at least 90% accuracy.",
+      "The training split in each fold must be larger than the test split.",
+      "The two models must have identical variance on every fold.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-eval-kp10-2": {
+    type: "true-false",
+    question:
+      "If the first relevant result for a query is at rank 3, additional relevant results at ranks 5 and 7 do not change that query's reciprocal rank.",
+    options: ["True", "False"],
+    correctAnswer: "true",
+  },
+  "q-eval-kp22-2": {
+    question:
+      "You try 50 hyperparameter settings on the same validation set and keep the one with the best validation score. How do you check whether that score is over-optimistic?",
+    options: [
+      "There is no risk, because the validation set was never used for gradient updates.",
+      "Evaluate the selected model once on a held-out test set; the validation-test gap estimates selection bias. Using cross-validation instead of one split also helps.",
+      "Average the 50 validation scores to debias the selected model.",
+      "Validation overfitting only becomes a problem after thousands of configurations.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tab-kp13-1": {
+    question:
+      "Why do tree-based models often outperform MLPs on tabular data with many irrelevant features?",
+    options: [
+      "Because MLPs cannot handle numerical inputs unless every feature is normalized",
+      "Because trees perform implicit feature selection through splits, while MLPs ingest all features and are more sensitive to irrelevant ones",
+      "Because tree models require less GPU memory than MLPs",
+      "Because MLPs cannot model nonlinear relationships in tabular data",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tab-kp19-2": {
+    question:
+      "Which statement best describes LIME's core assumption and main limitation?",
+    options: [
+      "It assumes the model is globally linear, so it fails on nonlinear models",
+      "It assumes the model is approximately linear near the explained point, but the neighborhood and perturbation kernel are user-defined and can change the explanation",
+      "It assumes independent features and therefore returns exact Shapley values",
+      "It assumes only the top-k features matter and ignores all others",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tab-kp31-2": {
+    question:
+      "Which statement correctly describes temperature scaling for multiclass calibration?",
+    options: [
+      "It replaces softmax with softmax(logits / T), where T is a single scalar fit on validation data; T > 1 makes predictions less confident",
+      "It fits a separate sigmoid for each class after training",
+      "It rescales input features during training to stabilize gradients",
+      "It learns one temperature per class and changes the ranking of class probabilities",
+    ],
+    correctAnswer: 0,
+  },
+  "q-tab-kp35-1": {
+    question:
+      "Which approach is a valid way to detect concept drift in production tabular ML systems?",
+    options: [
+      "Drift can only be detected after labels arrive and production accuracy drops",
+      "Comparing feature means with t-tests is sufficient for all types of drift",
+      "Monitoring only training loss during retraining is enough to detect drift",
+      "Using unlabeled shift tests such as PSI / KS / chi-squared, output-distribution monitoring, or a classifier that separates old from new data; when labels arrive, also monitoring production performance",
+    ],
+    correctAnswer: 3,
+  },
+  "q-hc-kp10-2": {
+    type: "multiple-choice",
+    question: "What does the proportional hazards assumption in a Cox model mean?",
+    options: [
+      "Each patient's absolute hazard must remain constant over time.",
+      "The hazard ratio between two individuals with different covariates is assumed constant over time.",
+      "All predictors must have linear effects on raw survival time.",
+      "The dataset cannot contain censored patients.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-hc-kp30-2": {
+    type: "multiple-choice",
+    question: "What is confounding by indication in an observational real-world evidence study?",
+    options: [
+      "Patients are randomized to treatment based on disease severity.",
+      "The clinical reason a patient receives a treatment is itself related to the outcome, biasing crude treatment comparisons.",
+      "Investigators remove untreated patients from the analysis after enrollment.",
+      "A treatment's mechanism of action is unknown at the time of analysis.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-hc-kp34-2": {
+    type: "multiple-choice",
+    question:
+      "Why are chest X-ray worklist triage AI tools usually regulated differently from autonomous diagnostic AI?",
+    options: [
+      "Because triage tools typically prioritize cases for radiologist review rather than making the final diagnosis, so the clinician remains in the loop.",
+      "Because chest X-rays are exempt from FDA review when AI is used only for workflow.",
+      "Because any radiology AI that flags urgent findings is automatically a Class I device.",
+      "Because workflow tools are evaluated only on speed, not clinical safety.",
+    ],
+    correctAnswer: 0,
+  },
+  "q-hc-kp40-2": {
+    type: "multiple-choice",
+    question:
+      "What does epsilon-differential privacy aim to guarantee in federated healthcare training?",
+    options: [
+      "That a model trained with DP cannot make any mistakes on minority patient groups.",
+      "That adding or removing one patient's data changes the distribution of released outputs only by a bounded amount controlled by epsilon.",
+      "That all gradients are encrypted end-to-end so the server never computes on plaintext values.",
+      "That no attacker can ever infer anything at all about the training data.",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp4-3": {
+    question:
+      "A finite-difference solver uses 100 grid points in each spatial dimension. If the PDE is 4-dimensional, how many grid points are in the full grid?",
+    options: ["400", "10,000", "1,000,000", "100,000,000"],
+    correctAnswer: 3,
+  },
+  "q-sciml-kp9-3": {
+    question:
+      "A conformal model outputs 90% prediction intervals for molecular energy. Over many new molecules, what should that mean in practice?",
+    options: [
+      "Each individual interval has exactly 90% probability of containing the true energy",
+      "About 90% of true energies should fall inside their predicted intervals on average",
+      "All prediction intervals must have the same width",
+      "The guarantee only holds when prediction errors are Gaussian",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp17-1": {
+    question:
+      "Seismologists record wave arrival times at the surface and use them to infer the underground rock structure. This is an example of:",
+    options: [
+      "A forward problem, because the measurements are known",
+      "An inverse problem, because unknown parameters are inferred from observations",
+      "A causal discovery problem, because the data form a time series",
+      "A reinforcement learning problem, because the measurements arrive sequentially",
+    ],
+    correctAnswer: 1,
+  },
+  "q-sciml-kp24-1": {
+    question:
+      "A wind turbine has a live software model that ingests sensor data, updates its state in real time, and predicts failures before they happen. This system is best described as:",
+    options: [
+      "A cloud backup of the turbine's CAD files",
+      "A digital twin",
+      "A duplicate physical turbine used for destructive testing",
+      "A static 3D visualization for operators",
+    ],
+    correctAnswer: 1,
+  },
+  "q-adapt-kp1-3": {
+    question: "How does KLIEP estimate the importance ratio w(x)=P_T(x)/P_S(x)?",
+    options: [
+      "Train a source-vs-target classifier and use its odds ratio",
+      "Directly fit w(x) so the reweighted source distribution matches the target under a normalization constraint",
+      "Reweight each class by the ratio of target and source label frequencies",
+      "Standardize source features to the target mean and variance",
+    ],
+    correctAnswer: 1,
+  },
+  "q-adapt-kp3-1": {
+    question: "What is MMD^2(P,Q) for a kernel k?",
+    options: [
+      "The squared distance between the RKHS mean embeddings of P and Q",
+      "The KL divergence between P and Q estimated with kernels",
+      "The Wasserstein-1 distance between P and Q",
+      "The squared difference between the covariance matrices of P and Q",
+    ],
+    correctAnswer: 0,
+  },
+  "q-adapt-kp4-3": {
+    question:
+      "In the Ben-David adaptation bound, what does the H-Delta-H divergence term measure?",
+    options: [
+      "The KL divergence between source and target feature distributions",
+      "How well hypotheses in H can tell source examples from target examples apart",
+      "The Wasserstein distance between the source and target marginals",
+      "The mutual information between the domain label and the input",
+    ],
+    correctAnswer: 1,
+  },
+  "q-adapt-kp34-3": {
+    question: "How does CoCoOp improve on CoOp for CLIP-based domain adaptation?",
+    options: [
+      "By learning more prompt tokens with a higher learning rate",
+      "By making the prompt context depend on each input image instead of using one fixed context for all images",
+      "By adding a separate adapter that replaces CLIP's text encoder",
+      "By fine-tuning a target-domain language model for text prompts",
+    ],
+    correctAnswer: 1,
+  },
+  "q-cv-kp2-2": {
+    question:
+      "How many learnable parameters does a 64-filter 3 x 3 conv have on a 32-channel input, with one bias per filter?",
+    options: ["18,432", "18,496", "18,560", "36,864"],
+    correctAnswer: 1,
+  },
+  "q-cv-kp2-3": {
+    question:
+      "For a 3 x 3 conv with stride 1, what padding keeps the spatial size unchanged?",
+    options: ["P = 0", "P = 1", "P = 2", "P depends on channel count"],
+    correctAnswer: 1,
+  },
+  "q-cv-kp5-1": {
+    question:
+      "A predicted box has area 60, a ground-truth box has area 80, and their intersection is 40. What is IoU?",
+    options: ["0.40", "0.50", "0.67", "0.75"],
+    correctAnswer: 0,
+  },
+  "q-cv-kp6-2": {
+    question: 'What does the "8s" in FCN-8s mean?',
+    options: [
+      "It uses an 8x-downsampled feature map with skip connections for finer output",
+      "It uses 8 filters in the segmentation head",
+      "It predicts 8 classes per pixel",
+      "It upsamples in 8 separate stages",
+    ],
+    correctAnswer: 0,
+  },
+  "q-tr-kp1-1": {
+    question:
+      "In scaled dot-product attention with d_k = 64, why do we divide the scores by sqrt(d_k) = 8?",
+    options: [
+      "To make each attention row sum to 1",
+      "To keep the logits from getting too large and saturating the softmax",
+      "To match the size of the value vectors",
+      "To turn dot products into cosine similarities",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tr-kp1-2": {
+    question:
+      "For a sequence of length 512, how many query-key dot products are in the full self-attention score matrix?",
+    options: ["32,768", "262,144", "16,777,216", "4,096"],
+    correctAnswer: 1,
+  },
+  "q-tr-kp2-1": {
+    question:
+      "Why does 8-head attention with d_model = 512 have about the same attention compute as one 512-dimensional head?",
+    options: [
+      "Because each head still uses 512 dimensions",
+      "Because each head uses only 512/8 = 64 dimensions, so 8 smaller heads add up to about the same total work",
+      "Because all heads share the same Q, K, and V projections",
+      "Because parallel execution makes the extra heads free",
+    ],
+    correctAnswer: 1,
+  },
+  "q-tr-kp5-1": {
+    question:
+      "Using lr = d_model^-0.5 * min(step^-0.5, step * warmup_steps^-1.5), with d_model = 512 and warmup_steps = 4000, when does the learning rate peak and about what is it?",
+    options: [
+      "Step 1000; about 0.001",
+      "Step 4000; about 0.000696",
+      "Step 10000; about 0.1",
+      "Step 1; about 1.0",
+    ],
+    correctAnswer: 1,
+  },
 };
 
 // ── Hint generation helpers ─────────────────────────────────────────────────

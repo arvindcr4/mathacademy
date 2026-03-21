@@ -2257,5 +2257,521 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
 
 Object.assign(questions, extra);
 
+const extra2: Record<string, Question[]> = {
+  "ctde-methods": [
+    {
+      id: "q-rla-kp41-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "CTDE (Centralized Training, Decentralized Execution) is a paradigm for cooperative MARL. What does it mean for a critic to be 'centralized' during training in MADDPG?",
+      options: [
+        "The critic runs on a central server rather than on each agent's hardware",
+        "The critic Q_i(s, a_1, ..., a_n) is conditioned on the joint observations and actions of ALL agents during training, giving it access to global information that individual agents cannot access at execution time",
+        "The critic is shared across all agents, meaning all agents use an identical value function",
+        "The critic only observes the state and ignores actions from other agents",
+      ],
+      correctAnswer: 1,
+      explanation: "In MADDPG (Lowe et al., 2017), each agent i has a centralized critic Q_i(x, a_1, ..., a_n) that takes the global state x and all agents' actions as input during training. At execution time, each actor π_i(o_i) uses only its local observation o_i. The centralized critic helps agents learn coordinated policies by providing better credit assignment and handling the non-stationarity of other agents' changing policies — if you condition on others' actions, the environment appears stationary from each agent's view.",
+      hints: [
+        "During training, each agent's critic receives information about what all other agents are doing. How does this help with the non-stationarity problem?",
+        "At execution time, only local observations are available. How does the decentralized actor avoid needing the centralized critic?",
+      ],
+    },
+    {
+      id: "q-rla-kp41-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "QMIX (Rashid et al., 2018) factorizes the joint Q-function as a sum of individual Q-functions: Q_tot = Σ_i Q_i(o_i, a_i).",
+      correctAnswer: "False",
+      explanation: "QMIX uses a more expressive factorization: Q_tot = f(Q_1(o_1,a_1), ..., Q_n(o_n,a_n)) where f is a monotone mixing network with weights conditioned on the global state. This satisfies the IGM (Individual-Global-Max) property: argmax Q_tot = (argmax Q_1, ..., argmax Q_n). Simple additive factorization (VDN) is a special case of QMIX. The monotone mixing network allows QMIX to represent cooperative strategies beyond simple summation while maintaining decentralized execution.",
+      hints: [
+        "A simple sum Σ_i Q_i would be VDN (Value Decomposition Network). Is QMIX the same as VDN?",
+        "QMIX requires that argmax Q_tot can be found by each agent independently maximizing its own Q_i. What constraint on the mixing function ensures this?",
+      ],
+    },
+    {
+      id: "q-rla-kp41-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The non-stationarity problem in MARL occurs because from any single agent's perspective, other agents are part of the environment. Why does CTDE specifically address this, and what residual challenge remains?",
+      options: [
+        "CTDE eliminates non-stationarity completely because all agents learn simultaneously with a shared global critic",
+        "CTDE addresses non-stationarity by conditioning critics on joint actions (making each agent's learning problem conditionally stationary given others' policies). The residual challenge is that policies still change during training, so the centralized critic must track a moving target as all agents' policies co-evolve.",
+        "CTDE eliminates non-stationarity by freezing other agents' policies during each agent's update",
+        "CTDE only addresses non-stationarity for cooperative settings, not competitive ones",
+      ],
+      correctAnswer: 1,
+      explanation: "CTDE reduces non-stationarity: by conditioning the critic on joint actions, the transition T(s'|s, a_1,...,a_n) appears stationary from each agent's perspective (conditioned on all actions). However, as all agents update their policies simultaneously, the marginal transition T(s'|s, a_i) from agent i's perspective still shifts. This is a fundamental challenge in MARL. Recent methods address it by modeling other agents' policies (opponent modeling), using population-based training, or applying fictitious self-play for the competitive case.",
+      hints: [
+        "If agent i's critic conditions on all agents' joint actions, does the environment appear stationary conditioned on those joint actions?",
+        "Even with CTDE, all agents update their policies during training. Does this still cause the effective transition distribution to shift from any single agent's perspective?",
+      ],
+    },
+  ],
+
+  "offline-rl-advanced": [
+    {
+      id: "q-rla-kp42-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Conservative Q-Learning (CQL, Kumar et al., 2020) penalizes Q-values for out-of-distribution (OOD) actions. What is the specific penalty CQL adds to the standard Bellman loss?",
+      options: [
+        "CQL subtracts the Q-value of the most likely dataset action from the objective",
+        "CQL minimizes E_{s~D}[log Σ_a exp(Q(s,a))] - E_{(s,a)~D}[Q(s,a)], pushing down Q-values for actions not in the dataset while pushing up Q-values for dataset actions",
+        "CQL adds an L2 regularizer on Q-values to prevent them from growing too large",
+        "CQL clips Q-values at zero for any action not observed in the offline dataset",
+      ],
+      correctAnswer: 1,
+      explanation: "CQL's conservative penalty is: α * (E_{s}[log Σ_a exp Q(s,a)] - E_{(s,a)~D}[Q(s,a)]). The first term pushes down Q-values for all actions (softmax-weighted average), the second pushes up Q-values for dataset actions. Combined with the Bellman loss, CQL learns Q-values that are lower bounds on the true Q-values under the dataset policy, preventing overestimation for OOD actions. This stops the policy from exploiting spurious high Q-values for actions the agent should never take.",
+      hints: [
+        "The penalty has two terms: one that pushes Q-values DOWN for all actions, and one that pushes Q-values UP for dataset actions. Why the asymmetry?",
+        "log Σ_a exp Q(s,a) = log softmax partition function. Which actions does this term most penalize?",
+      ],
+    },
+    {
+      id: "q-rla-kp42-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "IQL (Implicit Q-Learning, Kostrikov et al., 2021) avoids querying OOD actions by using expectile regression. What does expectile regression with τ > 0.5 compute, and why is it preferable to CQL for offline RL?",
+      options: [
+        "Expectile regression computes the mean Q-value; it is preferable because it is unbiased",
+        "Expectile regression with τ close to 1 approximates the maximum of the Q-function over actions, obtained by fitting only to transitions where Q(s,a) exceeds the current value estimate. This avoids querying Q at OOD actions altogether, making it safe for offline settings.",
+        "Expectile regression computes the minimum Q-value; this avoids overestimation of OOD action values",
+        "Expectile regression adds a monotone transformation to make Q-values more stable numerically",
+      ],
+      correctAnswer: 1,
+      explanation: "IQL's key insight: to find V*(s) = max_a Q*(s,a) without querying OOD actions, use expectile regression on the value function V(s). The expectile loss L_τ^2(u) = |τ - 1(u<0)| * u^2 with τ close to 1 asymmetrically penalizes underestimation, fitting V(s) to the upper quantile of Q(s,a) over dataset actions. The policy is then extracted via advantage-weighted regression: π(a|s) ∝ exp(β * (Q(s,a) - V(s))). IQL outperforms CQL on many benchmarks and scales better to complex function approximators.",
+      hints: [
+        "Expectile τ=0.5 recovers the mean (like L2 regression). What does τ → 1.0 compute?",
+        "IQL never evaluates Q at OOD actions — it only uses (s,a) pairs from the dataset. How does it still approximate the policy improvement step?",
+      ],
+    },
+    {
+      id: "q-rla-kp42-3",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Distribution shift in offline RL refers to the mismatch between the state-action distribution induced by the learned policy and the state-action distribution of the offline dataset used for training.",
+      correctAnswer: "True",
+      explanation: "During offline RL training, the Q-function is estimated from a fixed dataset D = {(s,a,r,s')} collected by some behavior policy π_b. The learned policy π may visit (s,a) pairs that are rare or absent in D, causing Q-values extrapolated to OOD regions to be unreliable (often overestimated). This distribution shift is the core challenge: the Bellman backup uses Q(s', π(s')) which may query OOD actions. CQL, IQL, TD3+BC, and other offline RL methods each address this shift differently.",
+      hints: [
+        "The dataset was collected by a specific behavior policy. Does the learned policy visit the same states and actions?",
+        "If Q(s,a) is overestimated for OOD (s,a) pairs, what happens to the policy that greedily maximizes Q?",
+      ],
+    },
+  ],
+
+  "td3bc-offline": [
+    {
+      id: "q-rla-kp43-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "TD3+BC (Fujimoto & Gu, 2021) is a minimal offline RL algorithm that adds a behavioral cloning term to TD3. Its policy objective is: π = argmax_a [λ * Q(s,a) - (a - π_β(s))^2]. What does the BC term do?",
+      options: [
+        "It forces the learned policy to exactly replicate the behavior policy π_β from the dataset",
+        "It regularizes the policy toward the dataset's actions, preventing large deviations from the data distribution that would require evaluating Q at OOD states",
+        "It adds an entropy term to encourage exploration during offline training",
+        "It penalizes the policy for selecting actions with high Q-values, preventing overestimation",
+      ],
+      correctAnswer: 1,
+      explanation: "The BC term (a - π_β(s))^2 penalizes the policy for deviating from the behavior policy's actions on dataset states. The hyperparameter λ = α / (1/N * Σ|Q(s,a)|) normalizes the Q-values scale. This simple regularization prevents the policy from exploiting overestimated Q-values at OOD actions without requiring complex constrained optimization (unlike CQL). TD3+BC matches or outperforms more sophisticated offline RL algorithms on D4RL benchmarks despite its simplicity.",
+      hints: [
+        "The term (a - π_β(s))^2 penalizes actions that deviate from the dataset. How does this prevent OOD action exploitation?",
+        "If Q(s,a) is overestimated for some OOD action a', but the BC term penalizes deviating from π_β(s), which force wins?",
+      ],
+    },
+    {
+      id: "q-rla-kp43-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Offline RL algorithms trained on suboptimal datasets (e.g., containing mostly random behavior) can still recover a near-optimal policy as long as the dataset covers the state-action space densely.",
+      correctAnswer: "False",
+      explanation: "Dense coverage of the state-action space does not guarantee near-optimal policy recovery. First, the offline dataset must contain some near-optimal trajectories or the stitching of suboptimal paths that compose to optimal behavior — dense random coverage may not include these. Second, offline RL algorithms like CQL and IQL are conservative and may underestimate Q-values in data-sparse regions, preventing improvement beyond the behavior policy. Third, stitching (combining different parts of suboptimal trajectories) requires accurate value estimation in the overlap regions, which is difficult with noisy random data.",
+      hints: [
+        "If the dataset only contains random trajectories, does it contain examples of optimal behavior for the agent to learn from?",
+        "Offline RL cannot collect new data. If the optimal policy requires a sequence of actions not observed consecutively in the dataset, can the algorithm discover this?",
+      ],
+    },
+    {
+      id: "q-rla-kp43-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The 'deadly triad' in off-policy RL with function approximation consists of three factors whose combination causes divergence. Which three factors form the deadly triad?",
+      options: [
+        "High learning rates, large replay buffers, and discount factor γ close to 1",
+        "Function approximation, bootstrapping (TD learning), and off-policy training",
+        "Neural networks, stochastic gradient descent, and high-dimensional observation spaces",
+        "Epsilon-greedy exploration, experience replay, and target networks",
+      ],
+      correctAnswer: 1,
+      explanation: "The deadly triad (Sutton & Barto, Chapter 11) consists of: (1) Function approximation — Q-values are estimated by a parametric model that generalizes; (2) Bootstrapping — targets use current Q-value estimates (TD), creating a feedback loop; (3) Off-policy training — the behavior distribution differs from the target policy's distribution. Any two of these three factors alone is manageable, but all three together can cause divergence (as in Baird's counterexample). Offline RL with neural networks faces all three factors simultaneously, making it inherently challenging.",
+      hints: [
+        "Baird's counterexample shows divergence with linear FA + off-policy TD. Which two of the three deadly triad factors does this use?",
+        "Online Q-learning with function approximation can also be unstable. Which two deadly triad factors does it use?",
+      ],
+    },
+  ],
+
+  "rlhf-mechanics": [
+    {
+      id: "q-rla-kp44-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "RLHF (Reinforcement Learning from Human Feedback) for language models consists of three phases. What are they in correct order?",
+      options: [
+        "Pre-train on text → fine-tune with PPO directly → apply KL penalty",
+        "Pre-train on text → supervised fine-tuning (SFT) on demonstrations → train a reward model from preference comparisons → fine-tune the LLM with PPO using the reward model",
+        "Pre-train on text → collect human ratings of individual responses → fine-tune with REINFORCE using those ratings as rewards",
+        "Train a reward model → use it to generate synthetic demonstrations → pre-train the LLM on those demonstrations",
+      ],
+      correctAnswer: 1,
+      explanation: "RLHF (InstructGPT, Ouyang et al., 2022) proceeds in three phases: (1) SFT: fine-tune the pre-trained LLM on human-written demonstrations of desired behavior; (2) Reward Model: collect human preference pairs (response A vs. B is preferred), train a reward model R(x,y) using the Bradley-Terry model via a classification loss; (3) RL fine-tuning: use PPO to maximize E[R(x,y)] while keeping the policy close to the SFT model via a KL penalty. This KL penalty is critical: without it, the LLM collapses to reward hacking.",
+      hints: [
+        "Why do we need SFT before collecting preferences? Can't we just ask humans to rate raw LLM outputs?",
+        "The reward model is trained on preference pairs (A preferred over B) rather than absolute scores. Why is relative preference data easier to collect than absolute ratings?",
+      ],
+    },
+    {
+      id: "q-rla-kp44-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The KL penalty in RLHF fine-tuning has the form: J(π) = E_{x~D, y~π}[R(x,y)] - β * KL(π || π_SFT). What is the purpose of the KL penalty, and what does β control?",
+      options: [
+        "The KL penalty prevents the policy from becoming deterministic; β controls entropy of the output distribution",
+        "The KL penalty prevents reward hacking by keeping the policy close to the SFT reference model; β controls the trade-off between reward maximization and staying close to the reference — high β yields a conservative policy close to SFT, low β allows more aggressive optimization that risks mode collapse or reward hacking",
+        "The KL penalty encourages diversity of outputs; β is a learning rate multiplier",
+        "The KL penalty replaces the reward signal when human feedback is unavailable; β scales the reward magnitude",
+      ],
+      correctAnswer: 1,
+      explanation: "Without the KL penalty, PPO maximizes R(x,y) by exploiting flaws in the reward model — the policy finds outputs that score high under R but are not actually preferred by humans (reward hacking/model overoptimization). The KL penalty KL(π || π_SFT) = E_π[log π(y|x) - log π_SFT(y|x)] keeps the fine-tuned policy close to the SFT baseline. High β → policy barely moves from SFT (safe but limited improvement). Low β → policy aggressively optimizes R, risking reward hacking. The optimal β trades these off. Gao et al. (2022) showed that RL fine-tuning improvements peak at moderate KL distances before degrading.",
+      hints: [
+        "If β=0, the policy freely maximizes R(x,y). What happens if the reward model has blind spots or errors?",
+        "If β is very large, the policy barely deviates from π_SFT. Is this likely to achieve the alignment goals?",
+      ],
+    },
+    {
+      id: "q-rla-kp44-3",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Reward hacking in RLHF occurs when the language model finds outputs that achieve high scores under the learned reward model but are not actually preferred by humans — exploiting imperfections in the reward model.",
+      correctAnswer: "True",
+      explanation: "Reward hacking (also called reward model overoptimization) is a central challenge in RLHF: the reward model R(x,y) is an imperfect proxy for human preferences, trained on a finite set of comparisons. The RL fine-tuning process can find outputs that exploit the reward model's errors — long responses that artificially boost scores, repetitive patterns, or sycophantic text — while human evaluators would actually prefer simpler, more honest responses. Gao et al. (2022) empirically showed that as the KL divergence from the reference policy grows, RL performance first improves then degrades, following an 'alignment tax' curve.",
+      hints: [
+        "The reward model is a neural network trained on finite human preference data. Can a neural network be perfectly calibrated for all possible text outputs?",
+        "If the policy discovers that very long responses always score high under R, but human evaluators actually prefer concise responses, what has happened?",
+      ],
+    },
+  ],
+
+  "rlhf-dpo": [
+    {
+      id: "q-rla-kp45-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Direct Preference Optimization (DPO, Rafailov et al., 2023) eliminates the separate reward model training phase of RLHF. What is the key mathematical insight that enables this?",
+      options: [
+        "DPO replaces pairwise comparisons with absolute ratings, making reward model training unnecessary",
+        "The optimal RLHF policy π* has a closed-form expression as π*(y|x) ∝ π_ref(y|x) * exp(R*(x,y)/β). Inverting this gives R*(x,y) = β * log(π*(y|x)/π_ref(y|x)) + const. Substituting into the Bradley-Terry preference model yields a loss directly in terms of the policy π, bypassing reward model training.",
+        "DPO uses model-based RL to simulate preference comparisons internally without human feedback",
+        "DPO trains the reward model and policy simultaneously in a single optimization step",
+      ],
+      correctAnswer: 1,
+      explanation: "The RLHF objective J(π) = E[R(x,y)] - β*KL(π||π_ref) has optimal solution π* ∝ π_ref * exp(R*/β), giving R* = β * log(π*/π_ref) + Z(x). Plugging into the Bradley-Terry preference model P(y_w > y_l) = σ(R(x,y_w) - R(x,y_l)), the reward difference becomes β*(log(π*/π_ref)(y_w) - log(π*/π_ref)(y_l)). DPO directly minimizes -log σ(β * (log(π_θ/π_ref)(y_w) - log(π_θ/π_ref)(y_l))) over the policy π_θ — no separate reward model needed. DPO is simpler, more stable, and often matches or exceeds RLHF performance.",
+      hints: [
+        "The optimal RL policy satisfies π* ∝ π_ref * exp(R/β). Can we express R in terms of π* and π_ref?",
+        "If R appears in the preference model P(y_w > y_l), and R can be expressed in terms of π, can we optimize π directly on the preference data?",
+      ],
+    },
+    {
+      id: "q-rla-kp45-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "RLHF with PPO requires sampling from the language model policy during fine-tuning (online), while DPO only requires a fixed offline dataset of preference pairs.",
+      correctAnswer: "True",
+      explanation: "RLHF with PPO is an online RL method: at each training step, the LLM generates new completions (samples from π_θ), which are scored by the reward model, and PPO updates are computed. This requires inference during training, making it expensive. DPO is offline: the loss is computed entirely from a fixed dataset of (prompt, preferred, rejected) triples. No LLM inference is needed during training, only forward passes through the policy and reference model. This makes DPO 2-3x faster to train than PPO-based RLHF.",
+      hints: [
+        "PPO's policy gradient requires computing E_{y~π_θ}[R(x,y)*∇log π_θ(y|x)]. Does this require sampling from π_θ?",
+        "DPO's loss -log σ(β*(log(π_θ/π_ref)(y_w) - log(π_θ/π_ref)(y_l))) requires only forward passes through π_θ and π_ref. Does this require sampling?",
+      ],
+    },
+    {
+      id: "q-rla-kp45-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In RLHF fine-tuning with PPO, the combined reward used for policy updates is typically R_total(x,y) = R_model(x,y) - β * log(π_θ(y|x) / π_ref(y|x)). Why is the log ratio term included per token rather than as a single episode-level penalty?",
+      options: [
+        "Per-token KL is easier to implement than episode-level KL",
+        "Per-token KL provides a dense reward signal at each token, reducing the credit assignment problem. It keeps the per-step optimization well-defined and prevents degenerate length-based exploits (e.g., generating very long responses to dilute the KL penalty).",
+        "Per-token KL prevents the policy from outputting the same token twice in a row",
+        "Per-token KL replaces the need for a baseline in the PPO objective",
+      ],
+      correctAnswer: 1,
+      explanation: "Text generation is a sequential decision process where each token is an 'action'. The KL penalty applied per-token gives a dense shaped reward signal at each step, substantially reducing the credit assignment problem (compared to a single terminal reward for the full response). It also prevents length exploitation: if KL were applied once at the sequence level, generating longer sequences would dilute the per-token penalty, incentivizing verbose responses. Per-token KL accumulates proportionally to sequence length, discouraging length-based reward hacking.",
+      hints: [
+        "Text generation produces one token at a time. What is the credit assignment challenge if the only reward is given at the end of the full response?",
+        "If the KL penalty is applied once per full response as -β*KL(π||π_ref), what incentive does the policy have regarding response length?",
+      ],
+    },
+  ],
+
+  "sim-to-real-transfer": [
+    {
+      id: "q-rla-kp46-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Domain randomization is a key technique for sim-to-real transfer in robotic RL. What is the core idea, and why does it work?",
+      options: [
+        "The robot is trained in many different real-world environments to generalize across domains",
+        "During simulation training, physical parameters (friction, mass, actuator delays, sensor noise) are randomized across a wide range. This forces the policy to learn behaviors that work across many possible environments, hopefully including the real world — which is treated as just another draw from the randomization distribution.",
+        "The simulation is made photorealistic by rendering high-quality images, reducing the visual domain gap",
+        "The robot is trained with a fixed simulator that exactly matches the real world by careful calibration",
+      ],
+      correctAnswer: 1,
+      explanation: "Domain randomization (Tobin et al., 2017; OpenAI dexterous manipulation) randomizes simulator parameters — friction coefficients, link masses, motor constants, camera positions, lighting — during training. The policy must succeed across all these configurations. If the real world's parameters fall within the randomization range (or can be extrapolated from it), the policy should generalize. This is the 'sim-to-real' success story behind policies trained in simulation that transfer zero-shot to physical robots, avoiding the cost and danger of real-world RL training.",
+      hints: [
+        "If the policy must work for many different friction values during training, what kind of policy does it learn?",
+        "The real world has some specific (unknown) physical parameters. If those parameters are within the training randomization range, what should happen at test time?",
+      ],
+    },
+    {
+      id: "q-rla-kp46-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "The reality gap in sim-to-real transfer refers to the mismatch between simulation physics and the real world, which can cause policies trained in simulation to fail when deployed on physical robots.",
+      correctAnswer: "True",
+      explanation: "The reality gap encompasses multiple sources of mismatch: (1) physics fidelity — simulators cannot perfectly model contact dynamics, deformable objects, or fluid; (2) actuation — real motors have delays, backlash, and nonlinear responses that differ from ideal actuators; (3) perception — real sensor noise, lighting variations, and camera characteristics differ from simulation; (4) unmodeled dynamics — wear, temperature effects, and environmental disturbances. Techniques to address the gap include domain randomization, system identification (calibrating the simulator to match real data), and domain adaptation (fine-tuning on limited real data).",
+      hints: [
+        "Can any physics simulator perfectly replicate the friction behavior between a robot's rubber gripper and an irregular wooden block?",
+        "Name two sources of mismatch between simulation and reality that could cause a sim-trained walking policy to fail on a real robot.",
+      ],
+    },
+    {
+      id: "q-rla-kp46-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Adaptive domain randomization methods like Automatic Domain Randomization (ADR, OpenAI, 2019) adapt the randomization range during training. What criterion does ADR use to adjust the randomization distribution?",
+      options: [
+        "ADR increases randomization range whenever the training loss decreases below a threshold",
+        "ADR monitors the policy's performance on held-out evaluation environments and expands (or contracts) the randomization range for each parameter based on whether the policy's success rate on boundary cases exceeds (or falls below) a target threshold, automatically curriculum-training on increasing difficulty",
+        "ADR uses a separate adversarial network to propose the hardest possible environment configurations",
+        "ADR randomizes more parameters when the policy's gradient variance is low, indicating overfit to a narrow distribution",
+      ],
+      correctAnswer: 1,
+      explanation: "Automatic Domain Randomization (OpenAI, 2019, used for Dactyl dexterous manipulation) maintains lower and upper bounds for each randomized parameter. Performance-triggered expansion: if the policy succeeds on the current boundary configurations (easy end of the range), the bound expands further (making training harder). If the policy fails, the bound contracts. This creates an automatic curriculum that progressively challenges the policy with harder and more varied physics, enabling training on extremely diverse environments without manual curriculum design.",
+      hints: [
+        "ADR expands randomization range when the policy is doing well on the hardest current configurations. What does this achieve over time?",
+        "ADR contracts the range when the policy fails. Why might this be necessary for stable training?",
+      ],
+    },
+  ],
+
+  "reward-shaping-pitfalls": [
+    {
+      id: "q-rla-kp47-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Potential-based reward shaping (Ng, Harada & Russell, 1999) guarantees that the shaped reward F(s,a,s') = γΦ(s') - Φ(s) preserves the optimal policy. What does 'preserves the optimal policy' mean precisely?",
+      options: [
+        "The shaped reward makes training faster by providing denser rewards",
+        "Any policy that is optimal under the shaped reward R' = R + F is also optimal under the original reward R, and vice versa. The value function transforms as V^{π,R'} = V^{π,R} + Φ, so ranking of policies is unchanged.",
+        "The agent will eventually learn the correct behavior regardless of the potential function Φ",
+        "The shaped reward makes the MDP easier to solve because it reduces the episode length",
+      ],
+      correctAnswer: 1,
+      explanation: "With potential-based shaping F = γΦ(s') - Φ(s), the Q-function under the shaped reward satisfies Q^{π,R'} = Q^{π,R} + Φ(s) (adjusting for the state value). Since all policies' Q-values shift by the same state-dependent term Φ(s), the ordering of policies is unchanged — the optimal policy under R' is identical to the optimal policy under R. This is the key theorem: potential-based shaping is the ONLY form of reward shaping guaranteed to preserve optimality (Ng et al., 1999). Non-potential-based shaping can create suboptimal fixed points.",
+      hints: [
+        "If Q^{π,R'}(s,a) = Q^{π,R}(s,a) + Φ(s) for all policies π, can the ranking of policies by their Q-values change?",
+        "Φ(s) is a constant with respect to action selection. Does adding a state-dependent (but action-independent) constant to all Q-values change which action maximizes Q?",
+      ],
+    },
+    {
+      id: "q-rla-kp47-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Adding a reward of +1 for every timestep the agent stays alive in a navigation task (to encourage longer episodes) is a safe form of reward shaping that will not change the optimal policy.",
+      correctAnswer: "False",
+      explanation: "A constant +1 reward per timestep is NOT potential-based (it cannot be written as γΦ(s') - Φ(s) for any Φ unless γ=1 and Φ=const). This changes the optimal policy: the agent now prefers longer episodes, potentially learning to delay reaching the goal or to wander aimlessly (reward hacking). This is a classic example of a misspecified reward shaping that causes the policy to optimize the shaped reward instead of the true objective. In contrast, the potential-based shaping -Φ(s) + Φ(s') encourages progress without incentivizing delay.",
+      hints: [
+        "Can the constant reward +1 be written as γΦ(s') - Φ(s) for some function Φ? Try Φ(s) = c for all s.",
+        "If the agent gets +1 for every step alive, does it want to reach the goal quickly or slowly?",
+      ],
+    },
+    {
+      id: "q-rla-kp47-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In the boat racing game example (Amodei et al., 2016), an RL agent trained to maximize score discovered it could get more reward by spinning in circles collecting bonuses repeatedly rather than completing the race. What type of problem does this illustrate?",
+      options: [
+        "Reward hacking: the agent found a policy that maximizes the specified reward function but violates the designer's intent, exploiting the gap between the formal reward specification and the true objective",
+        "Reward shaping gone wrong: the bonus items were an unintentional potential-based shaping term",
+        "Exploration collapse: the agent converged to a local optimum due to insufficient exploration",
+        "Credit assignment failure: the agent could not connect the bonus rewards to the race completion goal",
+      ],
+      correctAnswer: 0,
+      explanation: "The boat racing example illustrates reward hacking (Amodei et al., 2016): the specified reward was 'game score,' which included points for hitting bonus items. The agent discovered that repeatedly hitting the same bonuses by spinning in a loop maximized the specified score better than completing the race — the designer's intent. This is a reward misspecification problem: the formal reward R(s,a) does not fully capture the true objective. Solutions include: more comprehensive reward specification, constrained RL with safety constraints, inverse RL learning from human demonstrations, or RLHF to ground rewards in human preferences.",
+      hints: [
+        "The agent's behavior (spinning in circles) maximizes the formal reward function. Does it satisfy the designer's intent?",
+        "Was the reward function poorly specified, or did the agent fail to learn? What does this say about the difficulty of reward engineering?",
+      ],
+    },
+  ],
+
+  "safety-constraints-deployment": [
+    {
+      id: "q-rla-kp48-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Control Barrier Functions (CBFs) are used as safety filters in deployed RL systems. How does a CBF safety filter modify the RL policy's actions at execution time?",
+      options: [
+        "It selects a completely different action from a pre-programmed safe action set whenever the RL policy selects an unsafe action",
+        "It solves a quadratic program (QP) that finds the minimum-norm modification to the RL policy's action a_RL that keeps the system within a provably safe set, defined as h(s) ≥ 0 where h is the barrier function",
+        "It scales down the RL policy's action magnitude whenever the agent is near a constraint boundary",
+        "It switches between the RL policy and a human teleoperator when approaching unsafe states",
+      ],
+      correctAnswer: 1,
+      explanation: "A CBF safety filter solves: min_a ||a - a_RL||^2 subject to ∂h/∂s * f(s,a) + α(h(s)) ≥ 0 (the CBF condition ensuring h(s) stays ≥ 0 forward in time). This is a convex QP solvable in real-time. The key properties: (1) it is minimally invasive — only modifies actions when necessary to maintain safety; (2) it provides hard safety guarantees — the system is provably confined to the safe set; (3) it is independent of the RL policy — the RL policy can be arbitrary as long as the CBF filter is applied. This decouples the RL performance objective from the safety requirement.",
+      hints: [
+        "The CBF filter solves a minimum-norm problem: find the closest safe action to a_RL. What does 'closest' mean here?",
+        "The CBF condition ∂h/∂s * f(s,a) + α(h(s)) ≥ 0 ensures h remains nonneg. If h(s)=0 (at the boundary), what does this condition require?",
+      ],
+    },
+    {
+      id: "q-rla-kp48-2",
+      type: "true-false",
+      difficulty: "easy",
+      question: "Constrained Policy Optimization (CPO, Achiam et al., 2017) guarantees monotone policy improvement on the reward objective while satisfying safety constraints at every policy update.",
+      correctAnswer: "True",
+      explanation: "CPO (Achiam et al., 2017) is a policy optimization algorithm that provides theoretical guarantees for both reward improvement and constraint satisfaction at each update step (similar to TRPO's reward improvement guarantee but extended to CMDPs). It achieves this by solving a constrained optimization problem with a trust region and analytical approximations of the constraint functions using the cost advantage. While these are first-order approximations and may occasionally be violated due to approximation errors, CPO provides the strongest available guarantees for safe policy optimization with constraints.",
+      hints: [
+        "TRPO guarantees monotone improvement without constraints. How does CPO extend this to include safety constraints?",
+        "CPO uses the same trust region approach as TRPO but adds constraint terms. What does the trust region ensure?",
+      ],
+    },
+    {
+      id: "q-rla-kp48-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Lagrangian methods for constrained RL convert the CMDP into an unconstrained problem. A key challenge in practice is the choice of the Lagrange multiplier update rule. Which approach is most stable?",
+      options: [
+        "Set λ to a large fixed constant to ensure constraints are always satisfied",
+        "Update λ using dual gradient ascent: λ_{k+1} = max(0, λ_k + α_λ * (E[C(π)] - d)), where the step size α_λ is tuned to balance constraint violation speed against policy update speed",
+        "Update λ only after the policy has fully converged to ensure a stable target",
+        "Use λ=0 during early training and increase it linearly after the policy becomes competent",
+      ],
+      correctAnswer: 1,
+      explanation: "Dual gradient ascent (also called primal-dual optimization) updates the multiplier λ in the direction of increasing constraint violation: λ increases when E[C(π)] > d (constraint violated) and decreases otherwise (clamped at 0). The step size α_λ critically controls stability: too large → λ oscillates wildly, causing unstable policy updates; too small → constraint violations persist for too long before λ responds. In practice, separate learning rates for the policy (primal) and multipliers (dual) are tuned carefully. Recent work (Ray et al., 2019 Safety Gym) showed that simple Lagrangian methods work well when both are tuned appropriately.",
+      hints: [
+        "λ increases when the constraint is violated and decreases when it is satisfied. What happens if α_λ is very large?",
+        "If the policy update step size and the multiplier update step size are mismatched, can the joint optimization still converge?",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extra2);
+
+const extra3: Record<string, Question[]> = {
+  "marl-nash-equilibrium": [
+    {
+      id: "q-rla-kp49-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In two-player zero-sum games, the Nash equilibrium policy for each player is a minimax strategy. Why does independent Q-learning (each agent treats others as part of the environment) fail to converge to Nash equilibrium in general?",
+      options: [
+        "Independent Q-learning uses too high a learning rate for multi-agent settings",
+        "From each agent's perspective, the environment is non-stationary because other agents are learning simultaneously. This violates Q-learning's convergence assumption of a stationary MDP, causing Q-values to oscillate and potentially not converge to the Nash equilibrium.",
+        "Independent Q-learning only works for cooperative settings, not zero-sum games",
+        "Independent Q-learning requires more replay buffer capacity than is practical for multi-agent settings",
+      ],
+      correctAnswer: 1,
+      explanation: "Q-learning convergence proofs assume a stationary MDP. In MARL with independent learning, each agent i sees transitions that depend on other agents' policies, which change as they learn. This creates a moving target problem: the optimal Q_i depends on other agents' current policies, which themselves evolve during training. In zero-sum games, this often leads to cycling rather than convergence to Nash. Algorithms like Nash Q-learning (Hu & Wellman, 2003) compute Nash equilibria explicitly at each step, while minimax Q-learning is provably convergent for two-player zero-sum matrix games.",
+      hints: [
+        "From agent 1's perspective, agent 2's actions are part of the environment's transition function. If agent 2's policy changes over time, what happens to the MDP seen by agent 1?",
+        "Q-learning requires the MDP to be stationary — same transition probabilities throughout. Is this satisfied when other agents are simultaneously learning?",
+      ],
+    },
+    {
+      id: "q-rla-kp49-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "In cooperative MARL, achieving global optimality is generally harder than in single-agent RL because the joint action space grows exponentially with the number of agents.",
+      correctAnswer: "True",
+      explanation: "In cooperative MARL with n agents each having |A| actions, the joint action space has |A|^n elements. Computing the joint Q-function Q(s, a_1, ..., a_n) and finding argmax over the joint space is exponential in n. This is why value decomposition methods (VDN, QMIX, QPLEX) factorize the joint Q-function into individual contributions that can be maximized independently (the IGM condition). Even with factorization, representing and learning from the exponentially large joint state-action space remains a fundamental challenge in cooperative MARL.",
+      hints: [
+        "With 10 agents each having 5 actions, how large is the joint action space?",
+        "If we can factorize Q_tot = f(Q_1,...,Q_n) where each agent maximizes Q_i independently, how does the complexity scale?",
+      ],
+    },
+    {
+      id: "q-rla-kp49-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Emergent communication in cooperative MARL occurs when agents learn to use a communication channel to coordinate without pre-programmed communication protocols. What is the primary challenge in learning emergent communication?",
+      options: [
+        "The communication channel has limited bandwidth, preventing agents from sharing full state information",
+        "Communication actions are discrete (e.g., symbols), making the communication protocol non-differentiable and requiring techniques like straight-through estimators or Gumbel-softmax to enable end-to-end gradient training",
+        "Agents cannot learn to communicate unless they share a common reward function",
+        "Communication increases the dimensionality of the observation space, causing the curse of dimensionality",
+      ],
+      correctAnswer: 1,
+      explanation: "Learning emergent communication end-to-end requires gradients to flow through discrete message symbols. Since argmax(logits) is non-differentiable, methods like DIAL (Foerster et al., 2016) use continuous relaxations during training (Gumbel-softmax or straight-through estimators). CommNet (Sukhbaatar et al., 2016) uses continuous communication vectors and differentiable pooling. The core challenge: discrete communication is naturally discrete (language uses symbols), but gradient-based training requires differentiability. This creates a tension between expressivity and trainability.",
+      hints: [
+        "If agents communicate using discrete symbols (e.g., one of 10 messages), why can't standard backpropagation compute gradients through message selection?",
+        "Gumbel-softmax and straight-through estimators provide approximate gradients for discrete choices. What problem do they solve?",
+      ],
+    },
+  ],
+
+  "rlhf-advanced-topics": [
+    {
+      id: "q-rla-kp50-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Constitutional AI (CAI, Anthropic, 2022) modifies RLHF by using the model to generate its own preference labels rather than human annotators. What is the core mechanism?",
+      options: [
+        "CAI trains the reward model using a pre-specified constitution of values written by Anthropic engineers",
+        "CAI uses the AI model itself to critique and revise its own outputs according to a set of principles (the 'constitution'), then trains a preference model on AI-generated preference labels (AI Feedback), reducing reliance on human labelers for harmlessness training",
+        "CAI replaces the reward model with a rule-based system that checks outputs against explicit rules",
+        "CAI uses the model's own log-probabilities as a reward signal, bypassing the need for any external reward model",
+      ],
+      correctAnswer: 1,
+      explanation: "Constitutional AI (CAI) has two phases: (1) SL-CAI: generate responses, use the model to critique and revise them according to a written constitution (e.g., 'be helpful, harmless, and honest'), then train on the revised responses; (2) RL-CAI: generate pairs of responses, use the model to choose which better satisfies the constitutional principles, then train a reward model (preference model) on these AI-generated labels (RLAIF — RL from AI Feedback). This scales harmlessness training without requiring human labelers for every sensitive topic, while still grounding behavior in human-written principles.",
+      hints: [
+        "Human labelers are expensive and may be uncomfortable judging very harmful content. How does CAI reduce reliance on human labelers for these cases?",
+        "The 'constitution' is a list of principles written by humans. How does the model use these principles to generate training signal?",
+      ],
+    },
+    {
+      id: "q-rla-kp50-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Group Relative Policy Optimization (GRPO, DeepSeek, 2024) eliminates the need for a separate critic/value network by computing advantages relative to a group of sampled responses for the same prompt.",
+      correctAnswer: "True",
+      explanation: "GRPO (used in DeepSeek-R1) samples G responses {y_1, ..., y_G} for each prompt x, computes rewards {r_1, ..., r_G} from a reward model, and normalizes: A_i = (r_i - mean(r)) / std(r). This group-relative advantage eliminates the critic network entirely — no separate value function is learned. The policy is updated with a clipped importance ratio (like PPO) using these normalized advantages. GRPO is simpler and more memory-efficient than PPO-based RLHF (no critic forward/backward pass) and showed strong performance for training reasoning models on math and coding tasks.",
+      hints: [
+        "PPO requires a value network V(s) to estimate baselines. Does GRPO need a value network?",
+        "If 5 responses have rewards [0.8, 0.3, 0.9, 0.2, 0.5], what are the group-relative advantages? Which response gets the highest advantage?",
+      ],
+    },
+    {
+      id: "q-rla-kp50-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Process Reward Models (PRMs) vs. Outcome Reward Models (ORMs) represent two approaches to rewarding LLM reasoning chains. What is the key difference and when is each preferred?",
+      options: [
+        "PRMs reward individual reasoning steps; ORMs reward only the final answer. PRMs are preferred when intermediate reasoning can be verified (e.g., math proofs) because they provide denser feedback and can identify where errors occur. ORMs are simpler to implement but suffer from sparse rewards and cannot penalize faulty reasoning that reaches correct answers by chance.",
+        "PRMs use process supervision (human labelers check each step); ORMs use automated evaluation. PRMs are always preferred because human supervision is more accurate.",
+        "PRMs reward exploration during search; ORMs reward exploitation. PRMs are preferred for MCTS-based search, ORMs for greedy decoding.",
+        "PRMs and ORMs are identical in reward signal; the difference is only in network architecture.",
+      ],
+      correctAnswer: 0,
+      explanation: "Outcome Reward Models (ORMs) assign a single reward to the final answer (e.g., correct/incorrect), providing sparse feedback. Process Reward Models (PRMs, Lightman et al., 2023 'Let's Verify Step by Step') assign rewards to each reasoning step, providing dense feedback. PRMs enable fine-grained credit assignment — an error in step 3 of a 10-step proof is caught immediately rather than attributed only at the end. They also allow Best-of-N reranking and MCTS-guided search to select high-quality intermediate steps. However, PRMs require expensive human labeling of intermediate steps or automatic verification. ORMs scale more easily but incentivize any path to the correct answer, including lucky guesses.",
+      hints: [
+        "If a model gets the right final answer through incorrect reasoning, how does an ORM respond? How does a PRM respond?",
+        "Dense reward signals at each step reduce which fundamental RL challenge in long-horizon tasks?",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extra3);
+
 export default questions;
 registerQuestions(questions);

@@ -8,19 +8,23 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "PanGu-Weather uses a hierarchical 3D Earth Specific Transformer (3DEST) architecture. What is the key reason for using separate transformer models at different forecast lead times rather than a single model for all horizons?",
+        "PanGu-Weather uses a hierarchical 3D Earth Specific Transformer (3DEST) architecture with separate models for 1h, 3h, 6h, and 24h lead times. What is the key reason for this hierarchical design?",
       options: [
         "Separate models reduce memory usage by sharing no parameters across time horizons",
-        "Atmospheric predictability has different dominant spatial scales at short vs. long lead times — short-range forecasts require capturing mesoscale detail while longer horizons are dominated by synoptic-scale dynamics",
-        "Different transformer depths are legally required by meteorological standards bodies for different forecast horizons",
+        "Atmospheric predictability has different dominant spatial scales at short versus long lead times; short-range forecasts require high-resolution mesoscale features while longer horizons are dominated by synoptic-scale dynamics",
+        "Different transformer depths are required by meteorological standards bodies for different forecast horizons",
         "Separate models allow different training datasets to be used for each lead time",
       ],
       correctAnswer: 1,
       explanation:
-        "PanGu-Weather (Bi et al., 2023) trains four separate 3DEST models for lead times of 1h, 3h, 6h, and 24h. This hierarchical design reflects that short-range forecasting requires high-resolution mesoscale features while longer horizons are dominated by synoptic-scale patterns. Forecasts for arbitrary horizons are produced by composing model calls (e.g., 24h + 6h + 1h = 31h), analogous to binary doubling.",
+        "PanGu-Weather (Bi et al., 2023) trains four separate 3DEST models for lead times of 1h, 3h, 6h, and 24h. This hierarchical design reflects that atmospheric predictability varies with forecast horizon:\n\n" +
+        "\\[\\text{Short-range (1--6h):} \\quad \\text{mesoscale detail dominates, high spatial resolution needed}\\]" +
+        "\\[\\text{Long-range (24h+):} \\quad \\text{synoptic-scale patterns dominate}\\]" +
+        "\nForecasts for arbitrary horizons are produced by composing model calls (e.g., \\(24h + 6h + 1h = 31h\\)), analogous to binary doubling for representing any integer as a sum of powers of 2.\n\n" +
+        "Using a single model for all horizons would require compromising between these conflicting resolution and scale requirements.",
       hints: [
-        "The atmosphere evolves differently at short (hours) and medium (days) timescales — different physical processes dominate.",
-        "PanGu-Weather\'s hierarchical composition (1h, 3h, 6h, 24h) allows arbitrary lead times by chaining models, similar to how powers of 2 represent any integer.",
+        "The atmosphere has different dominant spatial patterns at short (hours) versus medium (days) timescales. What implications does this have for model design?",
+        "PanGu-Weather chains its models like building blocks (24h + 6h + 1h for 31h). This is analogous to representing any integer using powers of 2 — what property makes this composition work?",
       ],
     },
     {
@@ -28,13 +32,16 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "ML models like Pangu-Weather and FourCastNet can produce global weather forecasts at a fraction of the computational cost of traditional NWP models.",
+        "ML models such as Pangu-Weather and FourCastNet can produce global weather forecasts at a fraction of the computational cost of traditional numerical weather prediction (NWP) models.",
       correctAnswer: "True",
       explanation:
-        "ML-based forecast models trained on ERA5 reanalysis data can generate 10-day global forecasts in seconds on a single GPU, compared to thousands of CPU-hours for operational NWP systems like ECMWF\'s IFS. PanGu-Weather produces a 10-day global forecast (0.25° resolution, 13 pressure levels) in about 1.4 seconds on a single A100 GPU.",
+        "ML-based forecast models are trained once on ERA5 reanalysis data, then perform only forward inference at inference time. " +
+        "This is fundamentally more efficient than NWP, which must numerically solve the primitive atmospheric equations at each time step:\n\n" +
+        "\\[\\frac{\\partial \\mathbf{u}}{\\partial t} + (\\mathbf{u} \\cdot \\nabla)\\mathbf{u} = -\\frac{1}{\\rho}\\nabla p - f\\mathbf{k} \\times \\mathbf{u} + \\mathbf{F}_{\\text{dissipation}}\\]\n\n" +
+        "PanGu-Weather generates a 10-day global forecast (0.25° resolution, 13 pressure levels) in approximately 1.4 seconds on a single A100 GPU, compared to thousands of CPU-hours for operational NWP systems like ECMWF's IFS.",
       hints: [
-        "Once trained, neural networks perform only forward inference — compare this to solving differential equations numerically at each time step.",
-        "ECMWF\'s IFS requires a large HPC cluster; ML models reduce this to a single GPU at inference time.",
+        "Once trained, a neural network performs only forward inference — no iterative numerical solvers are needed. How does this compare to solving differential equations at each time step?",
+        "Traditional NWP requires a large HPC cluster; ML models reduce this computational burden dramatically at inference time.",
       ],
     },
     {
@@ -42,19 +49,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'PanGu-Weather\'s 3D Earth Specific Transformer (3DEST) modifies standard transformer attention to be "Earth-specific." What does this Earth-specific modification address?',
+        "PanGu-Weather's 3D Earth Specific Transformer (3DEST) modifies standard transformer attention to be \"Earth-specific.\" What specific problem does this Earth-specific modification address?",
       options: [
-        "Replacing positional encodings with learned altitude embeddings for pressure levels",
-        "Adding latitude-dependent absolute position biases to self-attention to account for Earth\'s spherical geometry and the non-uniform area of latitude bands at different latitudes",
+        "Replacing positional encodings with learned altitude embeddings for each pressure level",
+        "Adding latitude-dependent absolute position biases to self-attention to account for Earth's spherical geometry and the non-uniform physical area of latitude bands at different latitudes",
         "Masking attention between land and ocean grid points to prevent spurious correlations",
         "Using separate attention heads for each of the 13 pressure levels to prevent inter-level information mixing",
       ],
       correctAnswer: 1,
       explanation:
-        "Standard transformers use uniform positional encodings that do not reflect Earth\'s spherical geometry. PanGu-Weather\'s 3DEST incorporates Earth-specific relative position biases in attention that depend on latitude, capturing the fact that grid cells near the poles represent much smaller physical areas than equatorial cells and that atmospheric dynamics are anisotropic with respect to latitude.",
+        "Standard transformers use uniform positional encodings that do not reflect Earth's spherical geometry. On a regular latitude-longitude grid:\n\n" +
+        "\\[\\text{Grid cell area} \\propto \\cos(\\text{latitude})\\]\n\n" +
+        "This means grid cells near the poles represent much smaller physical areas than equatorial cells. For example, the 360 grid cells along a latitude circle at 89° span the same longitude range as those at the equator but cover roughly 1/60th the physical area.\n\n" +
+        "3DEST incorporates Earth-specific relative position biases in attention that depend on latitude, capturing:\n" +
+        "\\[- \\text{Anisotropic atmospheric dynamics (different behavior near poles versus equator)}\\]" +
+        "\\[- \\text{Variable grid cell area affecting information propagation}\\]",
       hints: [
-        "On a regular lat-lon grid, the 360 cells along a latitude circle near the pole span the same longitude degrees as equatorial cells but cover far less physical area.",
-        'Earth-specific position biases teach the attention mechanism that "north-south" and "east-west" spatial relationships have different meaning depending on latitude.',
+        "On a regular lat-lon grid, the 360 cells along a latitude circle near the pole span the same number of degrees as equatorial cells. What is different about these cells?",
+        "Atmospheric dynamics near the poles involve fundamentally different physics (e.g., polar vortex, jet stream) than at the equator. How might this affect attention patterns?",
       ],
     },
   ],
@@ -65,19 +77,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "GraphCast represents the global atmosphere using an icosahedral multi-mesh rather than a regular lat-lon grid. What advantage does an icosahedral mesh provide over a regular lat-lon grid?",
+        "GraphCast represents the global atmosphere using an icosahedral multi-mesh rather than a regular lat-lon grid. What is the primary advantage of this design choice?",
       options: [
         "It reduces the total number of atmospheric variables stored from 227 to 10",
-        "The icosahedral mesh has near-uniform area across the globe, avoiding the polar singularity and grid-cell area distortion of lat-lon grids",
-        "It allows GraphCast to assimilate satellite observations directly without remapping",
+        "The icosahedral mesh has near-uniform cell area across the globe, avoiding the polar singularity and grid-cell area distortion inherent in lat-lon grids",
+        "It allows GraphCast to assimilate satellite observations directly without any coordinate transformation",
         "The triangular cells of an icosahedral mesh can represent topography more accurately than rectangular grid cells",
       ],
       correctAnswer: 1,
       explanation:
-        "A regular lat-lon grid has extremely small cells near the poles (where longitude lines converge), causing numerical instability and wasted computation in polar regions. GraphCast uses a refined icosahedral mesh (subdivision of a regular icosahedron projected onto the sphere) that provides near-uniform cell areas across the globe, avoiding polar singularities and making message passing spatially uniform.",
+        "A regular lat-lon grid has a fundamental problem at the poles: as longitude lines converge, the grid cells become extremely small. The cell area is proportional to \\(\\cos(\\text{latitude})\\), which approaches zero at the poles. This causes:\n\n" +
+        "\\[- \\text{Numerical instability near poles}\\]" +
+        "\\[- \\text{Wasted computation in polar regions (many tiny cells)}\\]" +
+        "\\[- \\text{Non-uniform message passing in graph neural networks}\\]" +
+        "\n" +
+        "GraphCast uses a refined icosahedral mesh created by recursively subdividing the 20 triangular faces of a regular icosahedron and projecting onto the sphere. This produces near-uniform triangular cells across the globe, eliminating the polar singularity.",
       hints: [
-        "On a lat-lon grid, the 360 cells along a latitude circle near the pole span the same longitude degrees as equatorial cells but cover far less physical area.",
-        "An icosahedron has 20 equilateral triangular faces; recursive subdivision and projection onto the sphere yields a nearly uniform triangular mesh.",
+        "On a lat-lon grid, cell area is proportional to \\(\\cos(\\text{latitude})\\). What happens at the poles where \\(\\cos(90°) = 0\\)?",
+        "An icosahedron has 20 equilateral triangular faces. Recursive subdivision of these faces and projection onto the sphere creates a mesh with what key property?",
       ],
     },
     {
@@ -85,13 +102,17 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "GraphCast was trained on ECMWF\'s ERA5 reanalysis dataset, which provides historical atmospheric states on a global grid at 0.25° resolution covering 1979–2018.",
+        "GraphCast was trained on ECMWF's ERA5 reanalysis dataset, which provides gridded historical atmospheric states at 0.25° resolution (~28 km at the equator) covering the period 1979–2018.",
       correctAnswer: "True",
       explanation:
-        "GraphCast (Lam et al., DeepMind 2023) was trained on 40 years of ERA5 reanalysis data (1979–2018) at 0.25° resolution (~28 km), learning to auto-regressively predict the next 6-hour atmospheric state for 227 variables across 37 pressure levels. ERA5 is the ECMWF\'s fifth-generation atmospheric reanalysis, considered the gold-standard gridded climate dataset.",
+        "GraphCast (Lam et al., DeepMind 2023) was trained on 40 years of ERA5 reanalysis data (1979–2018). Each training example consists of:\n\n" +
+        "\\[- \\text{Input: atmospheric state at time } t\\]" +
+        "\\[- \\text{Target: atmospheric state at time } t + 6\\text{h}\\]" +
+        "\n" +
+        "The model learns to auto-regressively predict the next 6-hour atmospheric state for 227 variables across 37 pressure levels. ERA5 (ECMWF's fifth-generation atmospheric reanalysis) is the gold-standard gridded climate dataset, providing consistent, quality-controlled historical weather estimates.",
       hints: [
-        "ERA5 is the European Centre for Medium-Range Weather Forecasts' fifth generation reanalysis — a gridded reconstruction of past weather.",
-        "0.25° resolution corresponds to roughly 28 km at the equator — the finest publicly available global reanalysis.",
+        "ERA5 is the European Centre for Medium-Range Weather Forecasts' fifth generation reanalysis — essentially a physically consistent, gridded reconstruction of past weather.",
+        "0.25° resolution corresponds to roughly 28 km at the equator. Why might this resolution be considered fine for global reanalysis?",
       ],
     },
     {
@@ -99,7 +120,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "GraphCast uses an encoder-processor-decoder architecture with a multi-resolution mesh in the processor. How does the multi-resolution mesh enable efficient global information propagation?",
+        "GraphCast uses an encoder-processor-decoder architecture with a multi-resolution icosahedral mesh in the processor. How does the multi-resolution mesh enable efficient long-range information propagation?",
       options: [
         "The processor uses a coarse global mesh alongside a fine local mesh; grid-to-mesh and mesh-to-grid mappings allow information to travel long distances in few GNN hops on the coarser levels",
         "The multi-resolution mesh doubles the number of message-passing steps at each resolution level",
@@ -108,10 +129,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "GraphCast\'s processor uses a hierarchy of icosahedral meshes at multiple refinement levels simultaneously. The encoder maps input lat-lon grid data to the finest mesh; the processor runs 16 rounds of GNN message passing on this multi-mesh where coarser levels allow information to traverse the globe in fewer hops (long-range propagation), while finer levels capture local detail. The decoder maps mesh outputs back to the lat-lon grid.",
+        "GraphCast's processor runs 16 rounds of GNN message passing on a hierarchy of icosahedral meshes at multiple refinement levels:\n\n" +
+        "\\[\\text{Fine mesh:} \\quad \\text{distance per hop} \\approx 100\\text{ km} \\Rightarrow \\text{need thousands of hops to cross the globe}\\]" +
+        "\\[\\text{Coarse mesh:} \\quad \\text{distance per hop} \\approx 1000\\text{ km} \\Rightarrow \\text{need tens of hops to cross the globe}\\]" +
+        "\n" +
+        "Each fine-mesh node is connected to corresponding nodes at all coarser resolutions, creating \"shortcut\" edges for long-range atmospheric teleconnections (e.g., El Nino's effect on North American weather). The decoder then maps mesh outputs back to the lat-lon grid.",
       hints: [
-        "On a fine mesh, a GNN message propagates only to nearest neighbors per step — how many steps are needed to cross the globe? A coarser mesh makes this much shorter.",
-        "The multi-mesh connects each fine-mesh node to nodes at all coarser resolutions, creating shortcuts for long-range atmospheric teleconnections.",
+        "On a fine mesh, a GNN message propagates only to nearest neighbors per step. How many such hops are needed to span the globe? A coarser mesh changes this calculation — how?",
+        "The multi-mesh connects each fine-mesh node to nodes at all coarser resolutions. What does this connection structure enable that a single-resolution mesh cannot?",
       ],
     },
   ],
@@ -124,16 +149,18 @@ const questions: Record<string, Question[]> = {
       question: "Statistical downscaling in climate science aims to:",
       options: [
         "Reduce the number of climate models used in an ensemble",
-        "Generate high-resolution local climate information from coarse global model output",
-        "Compress climate datasets for storage",
-        "Downsample satellite imagery to lower resolution",
+        "Generate high-resolution local climate information (e.g., temperature, precipitation) from coarse global climate model output",
+        "Compress climate datasets for more efficient storage",
+        "Downsample satellite imagery to a lower resolution",
       ],
       correctAnswer: 1,
       explanation:
-        "Statistical downscaling learns a mapping from coarse-resolution global climate model output to fine-resolution local observations, enabling high-resolution projections of temperature, precipitation, and other variables for impact studies.",
+        "Global climate models (GCMs) typically run at 50--100 km horizontal resolution. However, local impact studies — for agriculture, urban planning, or infrastructure — often require 1--10 km resolution. Statistical downscaling bridges this gap by learning a mapping:\n\n" +
+        "\\[\\hat{X}_{\\text{high-res}} = f\\left(X_{\\text{coarse}}\\right)\\]\n\n" +
+        "where \\(f\\) is learned from paired coarse-fine historical data. This enables high-resolution projections without running prohibitively expensive fine-grid climate simulations.",
       hints: [
-        "Global climate models run at 50–100 km resolution; local impact studies need 1–10 km — downscaling bridges this gap.",
-        'The word "down" refers to going down in scale (larger scale number = finer resolution).',
+        "Global climate models typically operate at 50--100 km resolution. Local impact studies often need 1--10 km resolution. What bridges this gap?",
+        'The word "down" in downscaling refers to going to finer spatial scales. Why might a smaller-scale number represent finer resolution?',
       ],
     },
     {
@@ -141,13 +168,15 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Deep learning super-resolution methods (e.g., SRCNN, ESRGAN) have been adapted for climate downscaling, treating coarse climate grids like low-resolution images.",
+        "Deep learning super-resolution methods (e.g., SRCNN, ESRGAN) have been adapted for climate downscaling by treating coarse climate grids as low-resolution images and learning to add fine-scale spatial detail.",
       correctAnswer: "True",
       explanation:
-        "Deep learning downscaling methods (e.g., DeepSD, ClimateGAN) apply image super-resolution architectures to climate fields, learning to add fine-scale spatial detail to coarse climate model outputs by training on paired coarse-fine datasets.",
+        "Climate fields on a grid are 2D arrays of values — structurally identical to image pixel grids. Methods such as DeepSD and ClimateGAN apply image super-resolution architectures to climate data:\n\n" +
+        "\\[I_{\\text{coarse}} \\xrightarrow{\\text{SR model}} \\hat{I}_{\\text{high-res}}\\]\n\n" +
+        "These models are trained on paired coarse-fine datasets (e.g., coarse GCM output matched with high-resolution observations) and learn to hallucinate physically plausible fine-scale features consistent with the coarse pattern.",
       hints: [
-        "Climate fields on a grid are 2D arrays of values — structurally similar to image pixel grids.",
-        "Super-resolution networks learn to hallucinate plausible fine-scale detail; the same idea applies to climate variables.",
+        "Climate data on a grid is fundamentally a 2D array of values. What other type of data is also represented as 2D arrays of values with spatial structure?",
+        "In image super-resolution, the goal is to reconstruct a high-resolution image from a low-resolution version. How does this map to climate data?",
       ],
     },
     {
@@ -155,19 +184,26 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A key challenge in evaluating deep learning climate downscaling models is:",
+        "A key challenge when evaluating deep learning climate downscaling models is that pixel-wise loss functions like MSE tend to produce outputs that:",
       options: [
-        "The models produce outputs that are too smooth and lack fine-scale variability",
-        "Climate variables have no spatial structure",
-        "Deep learning cannot process gridded data",
-        "Downscaling only works for temperature, not precipitation",
+        "Are too smooth and lack fine-scale variability, suppressing physically important extremes",
+        "Have no spatial structure",
+        "Cannot be processed by deep learning architectures",
+        "Only work for temperature, not precipitation",
       ],
       correctAnswer: 0,
       explanation:
-        "Pixel-wise loss functions (MSE/MAE) penalize large pointwise errors and produce overly smooth outputs that preserve the mean but suppress physically important extremes and fine-scale variability; perceptual and physics-informed losses help address this.",
+        "Pixel-wise losses like MSE and MAE minimize the expected pixel-level error. For a target \\(y\\) and prediction \\(\\hat{y}\\):\n\n" +
+        "\\[\\mathcal{L}_{\\text{MSE}} = \\mathbb{E}\\left[(y - \\hat{y})^2\\right]\\]\n\n" +
+        "This loss is minimized by predicting the conditional mean \\(\\hat{y} = \\mathbb{E}[y|x]\\), which averages out variability. The result is overly smooth outputs that:\n\n" +
+        "\\[- \\text{Preserve the mean accurately}\\]" +
+        "\\[- \\text{Underestimate extremes (heat waves, heavy rainfall)}\\]" +
+        "\\[- \\text{Lack physically important fine-scale structure}\\]" +
+        "\n" +
+        "Perceptual losses, adversarial losses, and physics-informed losses are used to address this.",
       hints: [
-        "MSE minimization finds the conditional mean, which averages out variability — is this a problem for capturing extreme events?",
-        'This is the same "blurriness" problem seen in image super-resolution with L2 loss — what alternative losses are used in classical SR?',
+        "MSE loss is minimized by the conditional mean. What does this averaging operation do to extreme values in the prediction?",
+        "The same 'blurriness' problem appears in image super-resolution with L2 loss. What alternative loss functions are used to produce sharper images?",
       ],
     },
   ],
@@ -187,10 +223,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Event attribution science uses probabilistic methods and ML to compare the likelihood of extreme events in the current climate versus a counterfactual world without anthropogenic forcing, estimating the human influence on extreme event risk.",
+        "Event attribution science addresses the counterfactual question: would this extreme event have occurred without anthropogenic climate change, and how much did human forcing change its probability or intensity?\n\n" +
+        "\\[P(\\text{event} | \\text{factual climate}) \\quad \\text{vs.} \\quad P(\\text{event} | \\text{counterfactual climate})\\]\n\n" +
+        "ML enables rapid detection of attribution-relevant patterns in large climate model ensembles (thousands of simulations), comparing worlds with and without human forcing.",
       hints: [
-        'Attribution asks not just "did this happen?" but "would it have happened without climate change, and how likely was it?"',
-        "This requires comparing two worlds: the factual (with human forcing) and counterfactual (without it).",
+        "Attribution asks not just 'did this happen?' but 'would it have happened without climate change, and how much did climate change alter its likelihood?'",
+        "This requires comparing two worlds: the factual world (with human forcing) versus a counterfactual world (without it).",
       ],
     },
     {
@@ -198,13 +236,18 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Convolutional neural networks have been applied to detect extreme weather patterns (e.g., tropical cyclones, atmospheric rivers) in climate model output.",
+        "Convolutional neural networks (CNNs) have been applied to detect extreme weather patterns (e.g., tropical cyclones, atmospheric rivers) in climate model output.",
       correctAnswer: "True",
       explanation:
-        "CNNs trained on labeled climate model outputs can identify spatial patterns characteristic of extreme events (tropical cyclones, atmospheric rivers, weather fronts) at scale across petabytes of climate simulation data.",
+        "CNNs excel at identifying spatial patterns in gridded data. Climate model output is structurally identical to image data: a 2D spatial grid of values. By treating climate fields as 'images,' CNN architectures — the same ones used in computer vision — can be applied directly:\n\n" +
+        "\\[\\text{Input:} \\quad T(x, y, t), \\; u(x, y, t), \\; v(x, y, t) \\quad \\text{(temperature, wind components)}\\]" +
+        "\\[\\downarrow \\text{Conv layers}\\]" +
+        "\\[\\text{Output:} \\quad \\text{event label (cyclone / no cyclone)}\\]" +
+        "\n" +
+        "This enables automated detection across petabytes of climate simulation data.",
       hints: [
-        "Climate data on a grid is spatially structured — the same convolution operations that detect image features can detect spatial weather patterns.",
-        "Manual labeling of extreme events is time-consuming; CNNs can automate detection across large climate archives.",
+        "Climate data on a grid is spatially structured — the same convolution operations that detect edges and features in images can detect spatial weather patterns.",
+        "Manual labeling of extreme events is time-consuming; CNNs can automate detection across large climate archives at scale.",
       ],
     },
     {
@@ -212,19 +255,26 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Rare extreme events pose a class imbalance problem for ML models. Which technique is commonly used to address this?",
+        "Rare extreme events pose a class imbalance problem for ML models. Which approach is commonly used to address this?",
       options: [
-        "Undersampling common events and oversampling extremes, or using asymmetric loss functions",
-        "Ignoring rare events in training data",
+        "Undersampling common events and oversampling extremes, or using asymmetric loss functions that penalize missing rare events more heavily",
+        "Ignoring rare events in training data to focus on common cases",
         "Using only events with return periods under 10 years",
         "Normalizing all event probabilities to be equal",
       ],
       correctAnswer: 0,
       explanation:
-        "Extreme events are by definition rare; ML models trained with standard losses are biased toward common conditions. Techniques include SMOTE oversampling, undersampling majorities, focal loss, or extreme-value-theory-based loss functions to improve sensitivity to rare extremes.",
+        "A model predicting 'no extreme event' 99% of the time can achieve 99% accuracy if extremes are rare — yet it is completely useless for early warning. This is the class imbalance problem.\n\n" +
+        "Data-level solutions:\n" +
+        "\\[- \\text{Oversampling: SMOTE generates synthetic minority examples}\\]" +
+        "\\[- \\text{Undersampling: remove majority (non-event) samples}\\]" +
+        "\n" +
+        "Algorithm-level solutions:\n" +
+        "\\[- \\text{Focal loss: } \\mathcal{L}_{\\text{focal}} = -(1 - p_t)^\\gamma \\log(p_t) \\text{ — focuses on hard, rare examples}\\]" +
+        "\\[- \\text{Asymmetric loss: penalize false negatives more than false positives}\\]",
       hints: [
-        'A model that predicts "no extreme" 99% of the time can have high accuracy if extremes are rare — but this is useless.',
-        "Class imbalance solutions either rebalance the training data or reweight the loss to penalize misclassification of rare events more heavily.",
+        "If a model achieves 99% accuracy by predicting 'no extreme' always, what is the problem with this model for early warning applications?",
+        "Class imbalance solutions work at either the data level (resampling) or the algorithm level (modifying the loss function). Which approach would you use if you cannot collect more data?",
       ],
     },
   ],
@@ -235,7 +285,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Neural Earth System Model (ESM) emulators are trained to replace which component of traditional climate simulations?",
+        "Neural Earth System Model (ESM) emulators are trained to replace which computationally expensive component of traditional climate simulations?",
       options: [
         "The data collection instruments",
         "The computationally expensive forward simulation of the full Earth system",
@@ -244,10 +294,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ESM emulators (e.g., ClimaX, NeuralGCM) learn to approximate the input-output mapping of expensive physics-based Earth system models, enabling rapid generation of climate projections at a fraction of the computational cost.",
+        "Earth system models simulate the coupled atmosphere, ocean, land surface, and ice using numerically solving partial differential equations:\n\n" +
+        "\\[\\frac{\\partial \\mathbf{u}}{\\partial t} = -(\\mathbf{u} \\cdot \\nabla)\\mathbf{u} - f\\mathbf{k} \\times \\mathbf{u} + \\mathcal{F}\\]" +
+        "\\[\\frac{\\partial T}{\\partial t} = -\\nabla \\cdot \\mathbf{F}_{\\text{rad}} + \\mathcal{Q}_{\\text{convection}}\\]\n\n" +
+        "Running a full ESM for one emissions scenario can take weeks on a supercomputer. ESM emulators learn the input-output mapping:\n\n" +
+        "\\[\\hat{\\mathbf{y}} = f_\\theta(\\mathbf{x}; \\text{scenario})\\]\n\n" +
+        "Enabling rapid climate projections at a fraction of the computational cost.",
       hints: [
-        "Running a full ESM for one scenario can take weeks on a supercomputer; an emulator produces similar outputs in minutes.",
-        "Emulators enable large ensemble studies (thousands of runs) that would be infeasible with the full model.",
+        "Running a full ESM for one scenario can take weeks on a supercomputer. An emulator can produce similar outputs in what timeframe?",
+        "Emulators enable large ensemble studies (thousands of runs) that would be infeasible with the full model. Why might we need so many runs?",
       ],
     },
     {
@@ -258,10 +313,14 @@ const questions: Record<string, Question[]> = {
         "ESM emulators trained on one emissions scenario can be directly applied without modification to very different scenarios far outside their training distribution.",
       correctAnswer: "False",
       explanation:
-        "Emulators can fail to generalize to emissions scenarios (e.g., extreme mitigation or high-end warming) far outside their training distribution, a form of distribution shift that requires careful validation and sometimes domain adaptation.",
+        "ML models generalize within the distribution they were trained on. For ESM emulators:\n\n" +
+        "\\[\\text{Training distribution:} \\quad \\Delta T \\in [1.5^\\circ\\text{C}, 4^\\circ\\text{C}] \\text{ warming}\\]" +
+        "\\[\\text{Test distribution:} \\quad \\Delta T > 6^\\circ\\text{C} \\text{ (extreme scenario)}\\]\n\n" +
+        "When inputs are far outside training data, models may extrapolate catastrophically. An emulator trained on moderate warming scenarios may fail to capture tipping point behaviors (e.g., ice sheet collapse, permafrost thaw) that emerge only at high warming levels.\n\n" +
+        "This is a form of distribution shift requiring careful validation and domain adaptation.",
       hints: [
-        "ML models generalize within the distribution they were trained on — consider what happens when inputs are very different from training data.",
-        "An emulator trained on 1.5–4°C warming scenarios may extrapolate poorly to a 6°C scenario.",
+        "ML models generalize within the distribution they were trained on. What happens when inputs are very different from anything in training data?",
+        "An emulator trained on 1.5–4°C warming scenarios may extrapolate poorly to a 6°C scenario. What physical processes become dominant at very high warming levels that may not appear in moderate scenarios?",
       ],
     },
     {
@@ -269,19 +328,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "ClimaX (Nguyen et al., 2023) is a foundation model for climate science. What training strategy allows it to generalize across many climate tasks?",
+        "ClimaX (Nguyen et al., 2023) is a foundation model for climate science. What training strategy allows it to generalize across many different climate tasks?",
       options: [
-        "Supervised training on a single labeled dataset",
-        "Pre-training on diverse climate and weather datasets with masked prediction, then fine-tuning on downstream tasks",
+        "Supervised training on a single labeled climate dataset",
+        "Pre-training on diverse climate and weather datasets using masked prediction (self-supervised), then fine-tuning on downstream tasks",
         "Reinforcement learning with reward signals from weather stations",
-        "Zero-shot inference without any training",
+        "Zero-shot inference without any task-specific training",
       ],
       correctAnswer: 1,
       explanation:
-        "ClimaX uses a BERT-style masked token prediction pre-training objective on multiple heterogeneous climate datasets (ERA5, CMIP6, etc.), learning general atmospheric representations that can be fine-tuned for forecasting, downscaling, or projection tasks.",
+        "ClimaX uses a BERT-style masked token prediction pre-training objective on multiple heterogeneous climate datasets (ERA5, CMIP6, etc.):\n\n" +
+        "\\[\\mathcal{L}_{\\text{MAE}} = \\mathbb{E}\\left[\\|\\text{Decoder}(\\text{Encoder}(\\mathbf{x}_{\\text{masked}})) - \\mathbf{x}_{\\text{original}}\\|^2\\right]\\]\n\n" +
+        "The model learns general atmospheric representations by predicting randomly masked patches of climate data. Pre-training on diverse datasets enables the model to learn generalizable features. Fine-tuning on hundreds to thousands of labeled samples then achieves strong performance on downstream tasks:\n\n" +
+        "\\[- \\text{Weather forecasting}\\]" +
+        "\\[- \\text{Climate downscaling}\\]" +
+        "\\[- \\text{Projection under new scenarios}\\]",
       hints: [
-        "Foundation models in NLP use self-supervised pre-training then task-specific fine-tuning — ClimaX applies this paradigm to climate.",
-        "The diversity of pre-training data enables the model to learn generalizable atmospheric features.",
+        "Foundation models in NLP use self-supervised pre-training on large unlabeled corpora, then task-specific fine-tuning. How does ClimaX apply this paradigm to climate data?",
+        "The diversity of pre-training data across different climate datasets and variables enables what key property for downstream tasks?",
       ],
     },
   ],
@@ -294,17 +358,19 @@ const questions: Record<string, Question[]> = {
       question:
         "Which meteorological variable is the primary input for machine learning models that forecast photovoltaic (PV) power output?",
       options: [
-        "Wind speed at hub height",
-        "Global Horizontal Irradiance (GHI) or Direct Normal Irradiance (DNI)",
+        "Wind speed at hub height of a wind turbine",
+        "Global Horizontal Irradiance (GHI) or Direct Normal Irradiance (DNI), which measure solar radiation at the surface",
         "Sea surface temperature",
         "Soil moisture content",
       ],
       correctAnswer: 1,
       explanation:
-        "PV power generation is primarily driven by solar irradiance (GHI for flat panels, DNI for concentrating systems); ML models forecast irradiance from NWP outputs, satellite imagery, or sky camera images, then convert to power using panel efficiency curves.",
+        "Photovoltaic panels convert solar radiation directly into electricity. The power output is approximately:\n\n" +
+        "\\[P_{\\text{PV}} = GHI \\cdot A \\cdot \\eta\\]\n\n" +
+        "where \\(A\\) is panel area and \\(\\eta\\) is efficiency. GHI (Global Horizontal Irradiance) is the total solar radiation on a horizontal surface; DNI (Direct Normal Irradiance) is used for concentrating solar systems. ML models forecast irradiance from NWP outputs, satellite imagery, or sky camera images, then convert to power using efficiency curves.",
       hints: [
-        "Photovoltaic panels convert light energy to electricity — what measure of light reaching the surface is most relevant?",
-        "GHI (global horizontal irradiance) is the total solar radiation on a horizontal surface, the standard input for PV models.",
+        "Photovoltaic panels convert light energy directly to electricity. What measure of light reaching the surface is most relevant for predicting power output?",
+        "GHI (global horizontal irradiance) is the total solar radiation on a horizontal surface — why is this the standard input for flat PV panel models?",
       ],
     },
     {
@@ -312,13 +378,15 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Sky imagery from ground-based cameras combined with CNNs can forecast solar irradiance up to several hours ahead with high accuracy.",
+        "Sky imagery from ground-based cameras combined with CNNs can forecast solar irradiance accurately up to several hours ahead.",
       correctAnswer: "False",
       explanation:
-        "Sky cameras provide accurate very short-term (nowcasting, 0–30 minutes) forecasts by tracking cloud movement, but multi-hour ahead forecasts require NWP model output or satellite data, as clouds move beyond the camera\'s field of view.",
+        "Sky cameras capture a local field of view (typically 180° or 360° hemispheric images). Clouds move at typical speeds of 5--20 m/s:\n\n" +
+        "\\[\\text{Forecast horizon} \\approx \\frac{\\text{camera range}}{\\text{cloud speed}} \\approx \\frac{10\\text{ km}}{10\\text{ m/s}} \\approx 1000\\text{ s} \\approx 15\\text{ minutes}\\]\n\n" +
+        "Beyond this horizon, clouds have moved out of the camera's field of view. Sky cameras therefore excel at nowcasting (0--30 minutes) but cannot provide reliable multi-hour ahead forecasts. For longer horizons, NWP model output or satellite data is required.",
       hints: [
-        "Sky cameras capture a local view; clouds move across the sky — how far ahead can you predict from a local camera?",
-        "The forecasting horizon of sky cameras is limited by the time it takes clouds to move out of or into the field of view.",
+        "Sky cameras capture a local view of the sky. Clouds move at 5--20 m/s — how far can they travel in one hour? Is this within a typical sky camera's field of view?",
+        "The forecasting horizon of sky cameras is physically limited by the time it takes clouds to traverse the camera's field of view. What data source is needed for multi-hour ahead forecasts?",
       ],
     },
     {
@@ -326,19 +394,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Probabilistic solar forecasting is preferred over deterministic point forecasts for grid integration. Why?",
+        "Probabilistic solar forecasting is preferred over deterministic point forecasts for grid integration. What is the key reason?",
       options: [
-        "Probabilistic forecasts are easier to compute",
-        "Grid operators need uncertainty quantification to make optimal reserve scheduling and risk management decisions",
-        "Deterministic forecasts are illegal in electricity markets",
-        "Probabilistic forecasts are more accurate in mean absolute error",
+        "Probabilistic forecasts are computationally easier to produce",
+        "Grid operators require uncertainty quantification for optimal reserve scheduling, storage dispatch, and risk-aware decision making under uncertainty",
+        "Deterministic forecasts are not permitted in electricity markets",
+        "Probabilistic forecasts always have lower mean absolute error than deterministic forecasts",
       ],
       correctAnswer: 1,
       explanation:
-        "Grid operators need to know not just the expected solar output but also its uncertainty (prediction intervals, quantiles) to optimally schedule spinning reserves, storage dispatch, and ancillary services — decisions that require risk-aware optimization.",
+        "A deterministic forecast says '500 MW' but provides no information about uncertainty. A probabilistic forecast might say:\n\n" +
+        "\\[\\hat{y} = 500\\text{ MW}, \\quad P_{90}(y \\in [460, 540]\\text{ MW}) = 90\\%\\]\n\n" +
+        "Grid operators must make risk-aware decisions about:\n\n" +
+        "\\[- \\text{Spinning reserves (backup capacity to cover shortfalls)}\\]" +
+        "\\[- \\text{Storage dispatch (when to charge/discharge)}\\]" +
+        "\\[- \\text{Ancillary services (frequency regulation)}\\]\n\n" +
+        "All of these require knowing not just the expected output but the full distribution of possible outcomes.",
       hints: [
-        'A forecast saying "500 MW ± 50 MW" is more actionable than just "500 MW" when deciding how much backup capacity to hold.',
-        "Reserve scheduling is an economic decision under uncertainty — probabilistic information enables better decisions.",
+        'A forecast saying "500 MW ± 50 MW" provides actionable uncertainty information. Why is this more useful than just "500 MW" when deciding how much backup capacity to hold?',
+        "Reserve scheduling is fundamentally an economic decision under uncertainty. What specific information does a grid operator need to make this decision optimally?",
       ],
     },
   ],
@@ -349,14 +423,20 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Wind power output P is related to wind speed v by which physical relationship?",
-      options: ["P ∝ v", "P ∝ v²", "P ∝ v³", "P ∝ √v"],
+        "Wind power output \\(P\\) is related to wind speed \\(v\\) by which physical relationship?",
+      options: ["\\(P \\propto v\\)", "\\(P \\propto v^2\\)", "\\(P \\propto v^3\\)", "\\(P \\propto \\sqrt{v}\\)"],
       correctAnswer: 2,
       explanation:
-        "Wind power follows P = ½ρAv³ (Betz\'s law), scaling as the cube of wind speed; this cubic relationship means small errors in wind speed forecasts translate to large errors in power prediction, making accurate wind forecasting critical.",
+        "Wind power follows from the kinetic energy flux through a turbine rotor. The power extracted from the wind is:\n\n" +
+        "\\[P = \\frac{1}{2} \\eta \\rho A v^3\\]\n\n" +
+        "where:\n" +
+        "\\[- \\eta = \\text{blade efficiency (Betz limit } \\approx 0.59\\text{)}\\]" +
+        "\\[- \\rho = \\text{air density }(\\approx 1.225\\text{ kg/m}^3)\\]" +
+        "\\[- A = \\text{rotor swept area } = \\pi r^2\\]\n\n" +
+        "The \\(v^3\\) scaling means small forecast errors amplify dramatically: a 10% error in wind speed leads to a ~33% error in power output. This makes accurate wind forecasting critical for grid integration.",
       hints: [
-        "The kinetic energy of air flowing through a turbine rotor area A at speed v involves both area, density, and the speed — what power of v appears in kinetic energy?",
-        "Kinetic energy is ½mv² and power is energy per unit time; the mass flow rate through the turbine adds another factor of v.",
+        "Wind power comes from the kinetic energy of moving air. Kinetic energy is \\(KE = \\frac{1}{2}mv^2\\). Power is energy per unit time. What additional factor of \\(v\\) appears when you consider mass flow rate through the turbine?",
+        "The kinetic energy equation involves \\(v^2\\); power is energy per time. When you account for how much air mass flows through the turbine per second (which itself is proportional to \\(v\\)), what power do you get?",
       ],
     },
     {
@@ -364,13 +444,19 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "SCADA data from wind turbines (rotor speed, pitch angle, power output, vibration) can be used to train ML models for predictive maintenance.",
+        "SCADA data from wind turbines — including rotor speed, pitch angle, power output, and vibration measurements — can be used to train ML models for predictive maintenance.",
       correctAnswer: "True",
       explanation:
-        "SCADA systems on wind turbines collect high-frequency operational data; ML models trained on this data can detect anomalies and predict component failures (gearbox, bearings, blades) days to weeks before they occur, reducing unplanned downtime.",
+        "SCADA (Supervisory Control and Data Acquisition) systems continuously record high-frequency operational data from wind turbines:\n\n" +
+        "\\[\\mathbf{x}_t = \\{T_{\\text{gearbox}}, \\omega_{\\text{rotor}}, \\theta_{\\text{pitch}}, P_{\\text{output}}, a_{\\text{vibration}}, \\ldots\\}\\]\n\n" +
+        "As components degrade (bearing wear, gearbox fatigue, blade erosion), their signatures in SCADA data change:\n\n" +
+        "\\[- \\text{Gearbox temperature rises}\\]" +
+        "\\[- \\text{Vibration amplitude increases}\\]" +
+        "\\[- \\text{Efficiency drops (same wind, less power)}\\]\n\n" +
+        "ML models trained on historical failure data learn to detect these precursor signatures, predicting failures days to weeks in advance.",
       hints: [
-        "SCADA data contains rich real-time operational signals that change when components start to degrade.",
-        "Predictive maintenance uses historical failure data to train models that recognize the precursor signatures of failures.",
+        "SCADA data contains rich real-time operational signals. What happens to these signals when a component starts to degrade — do they remain the same?",
+        "Predictive maintenance uses historical failure data to train models. What do the models learn to recognize — the signatures of failure or the normal operating patterns?",
       ],
     },
     {
@@ -378,19 +464,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Wake effects in wind farms reduce downstream turbine power output. Which ML approach is commonly used to model wake interactions for farm-level power optimization?",
+        "Wake effects in wind farms cause upwind turbines to reduce power output of downstream turbines. Which ML approach is commonly used to model wake interactions for farm-level power optimization?",
       options: [
         "Linear regression on total farm output",
-        "Graph Neural Networks treating turbines as nodes and wake propagation as directed edges",
+        "Graph Neural Networks (GNNs) treating turbines as nodes and wake propagation as directed edges",
         "Convolutional networks on satellite wind maps",
         "Recurrent networks on national grid frequency data",
       ],
       correctAnswer: 1,
       explanation:
-        "Wake interactions propagate from upwind to downwind turbines following the prevailing wind direction; GNNs naturally represent this directed spatial dependency, with turbines as nodes and wake edges carrying flow deficit information for farm-level optimization.",
+        "Wake effects create a directed spatial dependency: wake deficits propagate from upwind to downwind turbines along the wind direction. A graph structure naturally captures this:\n\n" +
+        "\\[\\mathcal{G} = (\\mathcal{V}, \\mathcal{E})\\]" +
+        "\\[\\mathcal{V} = \\{\\text{turbines}\\}, \\quad \\mathcal{E} = \\{\\text{wake edges along wind direction}\\}\\]\n\n" +
+        "GNNs perform message passing on this graph:\n\n" +
+        "\\[h_i^{(k+1)} = \\text{UPDATE}\\left(h_i^{(k)}, \\sum_{j \\in \\mathcal{N}_i} \\text{MESSAGE}(h_i^{(k)}, h_j^{(k)})\\right)\\]\n\n" +
+        "The message function incorporates wake deficit information (flow speed reduction, turbulence intensity). Since the wind direction changes, the graph topology is dynamic, requiring GNNs that can adapt to varying edge structures.",
       hints: [
-        "Wake effects are directional and depend on turbine layout and wind direction — what data structure captures pairwise directional relationships?",
-        "The interaction graph changes with wind direction, making dynamic GNNs appropriate for varying wake topologies.",
+        "Wake effects are directional: they propagate downwind from upwind turbines. What data structure is designed to capture directed pairwise relationships between entities?",
+        "When the wind direction changes, which turbines affect which other turbines also changes. What property of GNNs makes them suitable for this dynamic wake topology?",
       ],
     },
   ],
@@ -410,10 +501,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "ML-driven demand response programs forecast demand, identify flexible loads (HVAC, EV charging, industrial processes), and send price signals or direct control commands to shift consumption away from peak periods, reducing the need for expensive peaking plants.",
+        "Demand response adjusts electricity consumption rather than generation. During peak demand periods:\n\n" +
+        "\\[\\text{Demand} > \\text{Supply capacity} \\Rightarrow \\text{spot prices spike}\\]\n\n" +
+        "ML enables demand response by:\n\n" +
+        "\\[- \\text{Forecasting demand at fine spatial/temporal resolution}\\]" +
+        "\\[- \\text{Identifying flexible loads (HVAC, EV charging, industrial processes)}\\]" +
+        "\\[- \\text{Sending price signals or direct control commands}\\]" +
+        "\n" +
+        "This shifts consumption away from peaks, reducing reliance on expensive peaking power plants.",
       hints: [
-        "Demand response is about adjusting consumption, not generation — when is grid stress highest and what can be deferred?",
-        "Flexible loads that can be shifted in time without significant user impact are the target of demand response programs.",
+        "Demand response is about adjusting consumption, not generation. When is grid stress highest (peaks)? What types of electricity use can be deferred to different times without significant user impact?",
+        "Flexible loads (HVAC, EV charging) can be shifted in time. Why are these targets of demand response programs?",
       ],
     },
     {
@@ -421,13 +519,18 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "Optimal Power Flow (OPF) is an NP-hard optimization problem that ML methods are being used to speed up for real-time grid operation.",
+        "Optimal Power Flow (OPF) is an NP-hard optimization problem that ML methods are being used to accelerate for real-time grid operation.",
       correctAnswer: "True",
       explanation:
-        "AC Optimal Power Flow is non-convex and NP-hard in general; ML approaches (learning to warm-start solvers, predict active constraints, or directly output near-optimal solutions) enable faster OPF solving for real-time grid dispatch decisions.",
+        "The AC Optimal Power Flow problem solves:\n\n" +
+        "\\[\\min_{\\mathbf{x}} \\sum_i c_i P_i \\quad \\text{s.t.} \\quad |V_i| = V_i^{\\text{spec}}, \\; |S_{ij}| \\leq S_{ij}^{\\max}, \\; P_{\\text{gen}} - P_{\\text{load}} = P(\\mathbf{x})\\]\n\n" +
+        "This involves non-linear power flow equations (Kirchhoff's laws) over a large network. AC-OPF is non-convex and NP-hard. ML approaches accelerate OPF by:\n\n" +
+        "\\[- \\text{Learning warm-start initializations for Newton-Raphson solvers}\\]" +
+        "\\[- \\text{Predicting active constraint sets (reducing the problem size)}\\]" +
+        "\\[- \\text{Directly outputting near-optimal dispatch decisions}\\]",
       hints: [
-        "OPF involves non-linear power flow equations over a large network — it\'s computationally intensive even for medium-sized grids.",
-        "ML can learn the mapping from grid conditions to optimal dispatch, bypassing iterative solver steps.",
+        "OPF involves non-linear power flow equations (Kirchhoff's laws) over a large network of buses and transmission lines. What computational complexity class does this fall into?",
+        "ML can learn the mapping from grid conditions (loads, generation) to optimal dispatch, bypassing what computationally intensive process?",
       ],
     },
     {
@@ -435,19 +538,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Graph Neural Networks applied to power grid optimization treat the grid as a graph. What do nodes and edges represent?",
+        "Graph Neural Networks applied to power grid optimization treat the grid as a graph. In this representation, what do nodes and edges typically represent?",
       options: [
-        "Countries and their energy trading relationships",
-        "Buses (substations/generators) and transmission lines",
-        "Individual electrons and their paths",
-        "Time steps and state transitions",
+        "Countries and their international energy trading relationships",
+        "Buses (substations, generators, loads) and transmission lines connecting them",
+        "Individual electrons and their microscopic paths through conductors",
+        "Time steps in a sequential dispatch problem and the transitions between them",
       ],
       correctAnswer: 1,
       explanation:
-        "In power grid GNNs, nodes represent electrical buses (substations, generators, loads) with voltage and power injection features, and edges represent transmission lines with impedance and thermal limit attributes, enabling physics-informed message passing.",
+        "In power grid GNNs, the graph structure mirrors the physical topology of the network:\n\n" +
+        "\\[\\text{Nodes } \\mathcal{V}: \\quad \\text{buses } i \\text{ with features } h_i = \\{V_i, \\theta_i, P_i, Q_i\\}\\]\n" +
+        "\\[\\text{Edges } \\mathcal{E}: \\quad (i, j) \\text{ with attributes } e_{ij} = \\{z_{ij}, S_{ij}^{\\max}\\}\\]\n\n" +
+        "where \\(V_i\\) is voltage magnitude, \\(\\theta_i\\) is voltage angle, \\(P_i, Q_i\\) are active/reactive power, and \\(z_{ij} = r_{ij} + jx_{ij}\\) is the line impedance. GNN message passing on this graph:\n\n" +
+        "\\[h_i^{(k+1)} = \\sigma\\left(W^{(k)} h_i^{(k)} + \\sum_{j \\in \\mathcal{N}_i} M^{(k)}(h_i^{(k)}, h_j^{(k)}, e_{ij})\\right)\\]\n\n" +
+        "This enables physics-informed optimization that respects grid topology.",
       hints: [
-        'A power grid connects generation sources to loads through transmission infrastructure — what are the natural "atoms" of this network?',
-        "The graph structure of a GNN mirrors the physical topology of the power grid.",
+        "A power grid connects generation sources to loads through transmission infrastructure. What are the natural 'atoms' of this network — the entities connected and the connections between them?",
+        "The graph structure of a GNN mirrors the physical topology of the power grid. In physics-informed GNNs for power systems, what physical laws are encoded in the message passing?",
       ],
     },
   ],
@@ -458,19 +566,23 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Reinforcement learning is used for battery storage management in energy systems. What is typically the RL agent\'s action space?",
+        "Reinforcement learning is used for battery storage management in energy systems. What is typically the RL agent's action space?",
       options: [
-        "The physical battery chemistry parameters",
-        "Charge and discharge power rate (or the decision to hold)",
+        "The physical battery chemistry parameters (electrolyte composition, electrode materials)",
+        "The charge/discharge power rate at each time step (positive for charging, negative for discharging, or zero for holding)",
         "The electricity price forecast",
         "The solar irradiance level",
       ],
       correctAnswer: 1,
       explanation:
-        "The RL agent for battery management controls the charge/discharge power rate (positive = charge, negative = discharge, zero = hold) at each time step, optimizing decisions over a horizon to maximize revenue or minimize grid costs subject to state-of-charge constraints.",
+        "Battery management involves a sequential decision at each time step:\n\n" +
+        "\\[a_t \\in \\{P_{\\text{charge}}, \\; P_{\\text{discharge}}, \\; 0\\}\\]\n\n" +
+        "The state-of-charge evolves according to:\n\n" +
+        "\\[\\text{SoC}_{t+1} = \\text{SoC}_t - \\frac{P_{\\text{discharge}} \\cdot \\Delta t}{C_{\\text{battery}}} = \\text{SoC}_t + \\frac{P_{\\text{charge}} \\cdot \\Delta t}{C_{\\text{battery}}}\\]\n\n" +
+        "The RL agent observes electricity prices, current SoC, and grid conditions, then decides the power rate. The reward is typically the profit from energy arbitrage minus degradation costs.",
       hints: [
-        "The agent controls what it can actively decide — it observes prices and state of charge, but can only control energy flow.",
-        "Battery management is fundamentally a sequential decision problem: when to buy (charge) and when to sell (discharge) energy.",
+        "The RL agent can only control what it can directly act upon. It observes prices and SoC, but what specific variable does it directly control related to energy flow?",
+        "Battery management is fundamentally about when to buy energy from the grid (charge) and when to sell it back (discharge). How is this decision formalized as an action?",
       ],
     },
     {
@@ -478,13 +590,23 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "The State of Charge (SoC) of a battery must always be maintained within safe bounds (e.g., 20%–90%) to prevent degradation, and this is a key constraint in RL-based battery management.",
+        "The State of Charge (SoC) of a battery must be maintained within safe bounds (e.g., 20%–90%) to prevent degradation, and this represents a key constraint in RL-based battery management.",
       correctAnswer: "True",
       explanation:
-        "Overcharging (SoC > 100%) or deep discharging (SoC < 0%) damages battery cells; RL agents for battery management must incorporate SoC bounds as hard constraints or penalize violations in the reward function to protect battery longevity.",
+        "Lithium-ion batteries degrade when:\n\n" +
+        "\\[\\text{SoC} > 100\\% \\quad \\text{(overcharging)} \\Rightarrow \\text{lithium plating}\\]" +
+        "\\[\\text{SoC} < 0\\% \\quad \\text{(deep discharge)} \\Rightarrow \\text{irreversible capacity loss}\\]" +
+        "\n" +
+        "This creates a constrained MDP:\n\n" +
+        "\\[\\min_{\\pi} \\mathbb{E}\\left[\\sum_t r_t\\right] \\quad \\text{s.t.} \\quad \\text{SoC}_t \\in [\\text{SoC}_{\\min}, \\text{SoC}_{\\max}]\\]\n\n" +
+        "Approaches to enforce SoC bounds include:\n" +
+        "\\[- \\text{Hard constraints: clip actions that would violate bounds}\\]" +
+        "\\[- \\text{Constrained RL: project to feasible set after each step}\\]" +
+        "\\[- \\text{Penalty method: add degradation cost to reward}\\]\n\n" +
+        "Safe exploration is critical — in a physical system, unsafe actions during training can damage equipment.",
       hints: [
-        "Batteries have physical limits on charge; exceeding them degrades capacity permanently.",
-        "Safe RL or constrained MDP formulations are needed to enforce SoC bounds during training and deployment.",
+        "Batteries have physical limits on charge — exceeding these limits degrades capacity permanently. What does this mean for the SoC range in which a battery should operate?",
+        "Safe RL or constrained MDP formulations are needed to enforce SoC bounds during both training and deployment. Why is this particularly important during training (exploration)?",
       ],
     },
     {
@@ -492,19 +614,29 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "In energy arbitrage with a battery, the optimal charging strategy depends on forecasting electricity prices. Which RL formulation naturally handles the uncertainty in future prices?",
+        "In energy arbitrage with a battery, the optimal charging strategy depends on forecasting electricity prices. Which RL formulation naturally handles the inherent uncertainty in future prices?",
       options: [
         "Deterministic model predictive control",
-        "Stochastic MDP with probabilistic price forecasts as part of the state",
+        "Stochastic MDP where the state includes probabilistic price forecasts (e.g., scenario trees or distributional embeddings)",
         "Linear programming over a fixed price schedule",
         "Greedy single-step optimization",
       ],
       correctAnswer: 1,
       explanation:
-        "Electricity prices are stochastic; formulating battery management as a stochastic MDP where the state includes probabilistic price forecasts (e.g., scenario trees or distributional embeddings) allows the RL agent to learn risk-aware policies that hedge against price uncertainty.",
+        "Electricity prices are stochastic with temporal dependencies:\n\n" +
+        "\\[p_t \\sim \\mathcal{N}(\\mu_t, \\sigma_t^2), \\quad \\mu_t = f(p_{t-1}, p_{t-2}, \\ldots)\\]\n\n" +
+        "A stochastic MDP incorporates price uncertainty directly into the state:\n\n" +
+        "\\[s_t = \\{\\text{SoC}_t, \\; \\hat{p}_{t:t+H}, \\; \\text{scenario index } k\\}\\]\n\n" +
+        "where \\(\\hat{p}_{t:t+H}\\) represents a price scenario tree. The agent learns a policy that is robust across scenarios:\n\n" +
+        "\\[\\pi^* = \\arg\\max_\\pi \\mathbb{E}\\left[\\sum_t r(s_t, a_t)\\right]\\]\n\n" +
+        "This is critical because:\n" +
+        "\\[- \\text{Deterministic MPC assumes perfect foresight — fails in practice}\\]" +
+        "\\[- \\text{Greedy optimization ignores future price trajectories}\\]" +
+        "\\[- \\text{Stochastic MDP learns risk-aware policies across diverse scenarios}\\]\n\n" +
+        "The agent trained on diverse price scenarios learns to be robust rather than optimizing for a single predicted trajectory.",
       hints: [
-        "Deterministic control assumes perfect foresight; real prices are uncertain — which framework naturally handles this?",
-        "An RL agent trained on diverse price scenarios learns to be robust to uncertainty rather than optimizing for a single predicted trajectory.",
+        "Deterministic control assumes you know future prices exactly. Why is this assumption violated in real electricity markets?",
+        "An RL agent trained only on a single predicted price trajectory may overfit to that trajectory. What happens when actual prices deviate? How does a stochastic MDP address this?",
       ],
     },
   ],
@@ -524,10 +656,12 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "A VPP aggregates heterogeneous distributed energy resources (DERs) — rooftop solar, home batteries, EV chargers, flexible loads — and coordinates them via software to appear and operate as a single dispatchable power plant to the grid.",
+        "A VPP aggregates heterogeneous distributed energy resources (DERs) that individually are too small to participate in wholesale electricity markets:\n\n" +
+        "\\[\\text{VPP} = \\{\\text{rooftop solar}, \\; \\text{home batteries}, \\; \\text{EV chargers}, \\; \\text{flexible HVAC loads}, \\ldots\\}\\]\n\n" +
+        "Coordination software aggregates their flexibility and dispatches them as a single unit. This allows thousands of small assets to collectively provide services (frequency regulation, peak shaving) that only large generators could previously provide.",
       hints: [
-        'The "virtual" in VPP means there is no single physical plant — it is a software-coordinated portfolio of small assets.',
-        "Aggregation allows small resources that cannot participate individually in wholesale markets to do so collectively.",
+        "The 'virtual' in VPP means there is no single physical power plant. Instead, what is being coordinated by software?",
+        "Why might small resources like home batteries not be able to participate individually in wholesale markets? How does aggregation solve this?",
       ],
     },
     {
@@ -538,10 +672,13 @@ const questions: Record<string, Question[]> = {
         "ML models in VPPs are used to forecast the aggregate output and flexibility of thousands of distributed assets, enabling optimal bidding in energy markets.",
       correctAnswer: "True",
       explanation:
-        "VPP optimization requires accurate forecasts of each asset\'s available flexibility (e.g., how much a battery can discharge, how much an EV can be delayed); ML aggregates these across thousands of assets to optimize market bids and real-time dispatch.",
+        "VPP optimization requires forecasting at two levels:\n\n" +
+        "\\[1. \\; \\text{Per-asset generation/consumption forecasts} \\Rightarrow \\text{uncertainty } \\sigma_i^2\]" +
+        "\\[2. \\; \\text{Aggregate VPP flexibility} \\Rightarrow \\text{combined uncertainty scales as } \\sigma_{\\text{agg}}^2 \\approx \\sum_i \\sigma_i^2 \\cdot w_i^2\\]\n\n" +
+        "ML models trained on historical asset data predict each asset's available flexibility (e.g., how much a battery can discharge, how much an EV charging session can be delayed). Aggregation reduces total forecast uncertainty relative to individual assets. Market bidding requires both expected output and uncertainty bounds to be credible.",
       hints: [
-        "Each asset (solar panel, battery, EV) has its own forecast uncertainty; aggregating thousands reduces total uncertainty.",
-        "Optimal market bidding requires knowing not just expected output but also the uncertainty in available capacity.",
+        "Each asset (solar panel, battery, EV) has its own forecast uncertainty. What happens to total uncertainty when you aggregate thousands of assets?",
+        "Optimal market bidding requires knowing not just the expected output but also uncertainty in available capacity. Why is this uncertainty information important for market credibility?",
       ],
     },
     {
@@ -558,10 +695,18 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Federated learning trains a global aggregation model by sharing only model updates (gradients), not raw energy usage data, preserving the privacy of individual residential and commercial customers while still enabling system-wide optimization.",
+        "In federated learning for VPPs, each home/business trains a local model on its own energy data:\n\n" +
+        "\\[\\theta_i^{(k+1)} = \\theta_i^{(k)} - \\eta \\nabla \\mathcal{L}_i(\\theta_i^{(k)})\\]\n\n" +
+        "Only model gradients (not raw data) are shared with a central server:\n\n" +
+        "\\[\\theta_{\\text{global}} = \\frac{1}{N}\\sum_i \\theta_i\\]\n\n" +
+        "This preserves privacy because:\n" +
+        "\\[- \\text{Raw energy consumption patterns (reveal daily routines) never leave the home}\\]" +
+        "\\[- \\text{Only mathematical gradients are transmitted}\\]" +
+        "\\[- \\text{Local differential privacy can further protect individual data}\\]\n\n" +
+        "The approach enables system-wide VPP optimization without compromising customer privacy.",
       hints: [
-        "Home energy data is sensitive — smart meter data can reveal daily routines and occupancy patterns.",
-        "Federated learning keeps sensitive data on local devices while still contributing to a shared model.",
+        "Home energy data is sensitive — smart meter data can reveal when people wake up, sleep, leave for work, and more. How does federated learning address this privacy concern?",
+        "In federated learning, what specifically is shared with the central server (model weights, gradients, or raw data)? What stays local?",
       ],
     },
   ],
@@ -572,7 +717,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Satellite-based GHG monitoring uses which type of spectroscopy to detect CO₂ and CH₄ concentrations in the atmosphere?",
+        "Satellite-based GHG monitoring uses which type of spectroscopy to detect atmospheric CO₂ and CH₄ concentrations?",
       options: [
         "X-ray fluorescence",
         "Near-infrared and shortwave-infrared (NIR/SWIR) absorption spectroscopy",
@@ -581,10 +726,14 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "CO₂ and CH₄ absorb solar radiation at specific NIR/SWIR wavelengths; satellites like OCO-2, GOSAT, and Sentinel-5P measure the reflected sunlight spectrum to retrieve column-averaged GHG concentrations using spectral inversion algorithms.",
+        "CO₂ and CH₄ have characteristic absorption features in the NIR/SWIR portion of the electromagnetic spectrum:\n\n" +
+        "\\[\\text{CO}_2: \\quad \\lambda \\approx 1.6\\;\\mu\\text{m}, \\; 2.0\\;\\mu\\text{m}\\]" +
+        "\\[\\text{CH}_4: \\quad \\lambda \\approx 1.7\\;\\mu\\text{m}, \\; 2.3\\;\\mu\\text{m}\\]\n\n" +
+        "Satellites like OCO-2, GOSAT, and Sentinel-5P measure the reflected solar spectrum in these absorption bands. The depth of the absorption feature encodes the column concentration of the gas above the surface. Spectral inversion algorithms retrieve the concentration:\n\n" +
+        "\\[I_{\\text{observed}}(\\lambda) = I_{\\text{surface}}(\\lambda) \\cdot T(\\lambda; C_{\\text{GHG}})\\]",
       hints: [
-        "Greenhouse gases absorb infrared radiation — this same absorption signature in sunlight reflected from the surface enables remote sensing.",
-        "The specific wavelengths at which CO₂ and CH₄ absorb define the spectral bands used by GHG monitoring satellites.",
+        "Greenhouse gases absorb infrared radiation — this is the physical basis for how remote sensing detects them. In which portion of the spectrum do these absorption features appear?",
+        "The specific wavelengths at which CO₂ and CH₄ absorb are determined by their molecular structure. What do these characteristic absorption wavelengths define in the satellite instrument design?",
       ],
     },
     {
@@ -595,10 +744,16 @@ const questions: Record<string, Question[]> = {
         "ML models have been used to detect individual methane plumes from industrial facilities in satellite hyperspectral imagery.",
       correctAnswer: "True",
       explanation:
-        "ML models (CNNs, matched filters combined with deep learning) applied to hyperspectral data from EMIT, PRISMA, and GHGSat satellites can detect and quantify individual methane super-emitter plumes from oil and gas facilities, landfills, and agriculture.",
+        "Methane plumes create localized spectral anomalies in hyperspectral imagery. A methane detection approach:\n\n" +
+        "\\[1. \\; \\text{Measure spectrum } I(\\lambda) \\text{ at each pixel}\\]" +
+        "\\[2. \\; \\text{Compute methane column } C_{\\text{CH}_4} \\text{ via spectral fitting}\\]" +
+        "\\[3. \\; \\text{Apply ML anomaly detection: } \\hat{y} = f(I(\\lambda))\\]\n\n" +
+        "Instruments like EMIT (NASA's Earth Surface Mineral Dust Source Investigation) detect methane via:\n" +
+        "\\[\\text{CH}_4 \\text{ absorption feature at } 2.3\\;\\mu\\text{m} \\Rightarrow \\text{enhanced radiance deficit}\\]\n\n" +
+        "ML models (matched filters, CNNs) identify super-emitter plumes from oil/gas facilities, landfills, and agriculture against the background atmospheric concentration.",
       hints: [
-        "Individual facility plumes create small, localized spectral anomalies in satellite imagery — ML can detect these patterns.",
-        "EMIT (Earth Surface Mineral Dust Source Investigation) data has been used to map thousands of methane plumes globally.",
+        "Individual facility plumes create small, localized spectral anomalies — what property of the spectrum is being analyzed to detect these plumes?",
+        "EMIT (Earth Surface Mineral Dust Source Investigation) was designed for mineral mapping but has been used to detect what specific greenhouse gas from thousands of industrial facilities?",
       ],
     },
     {
@@ -606,19 +761,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Inverse modeling in atmospheric GHG monitoring uses ML to solve which ill-posed problem?",
+        "Inverse modeling in atmospheric GHG monitoring uses ML to solve which fundamentally ill-posed problem?",
       options: [
-        "Predicting future emissions from policy scenarios",
-        "Inferring surface emission fluxes from observed atmospheric concentration measurements",
-        "Generating synthetic satellite images for training",
-        "Converting spectral radiance to surface reflectance",
+        "Predicting future emissions under different policy scenarios",
+        "Inferring surface emission fluxes from observed atmospheric concentration measurements, accounting for atmospheric transport",
+        "Generating synthetic satellite images for training ML models",
+        "Converting spectral radiance measurements to surface reflectance values",
       ],
       correctAnswer: 1,
       explanation:
-        "Inverse modeling solves for the surface emission field (sources and sinks) that best explains observed atmospheric concentrations, accounting for atmospheric transport; this ill-posed inversion is being accelerated with ML as an efficient surrogate for the transport model.",
+        "Inverse modeling reverses the forward modeling process:\n\n" +
+        "\\[\\text{Forward: } \\quad \\mathbf{C} = \\mathcal{M}(\\mathbf{E}) + \\epsilon\\]" +
+        "\\[\\text{Inverse: } \\quad \\hat{\\mathbf{E}} = \\mathcal{M}^{-1}(\\mathbf{C})\\]\n\n" +
+        "where \\(\\mathbf{C}\\) are observed concentrations, \\(\\mathbf{E}\\) are emissions, and \\(\\mathcal{M}\\) is the atmospheric transport model. The problem is ill-posed because:\n\n" +
+        "\\[\\text{Non-uniqueness: } \\quad \\text{Many emission patterns produce similar concentration observations}\\]" +
+        "\\[\\text{Transport chaos: } \\quad \\text{Small errors in transport model propagate to large emission errors}\\]\n\n" +
+        "ML accelerates this by learning a surrogate for the expensive transport model \\(\\mathcal{M}\\), enabling fast posterior estimation via Bayesian inversion.",
       hints: [
-        "Forward modeling predicts concentrations from emissions; inverse modeling reverses this — going from observations to sources.",
-        "Atmospheric transport makes this problem ill-posed: many different emission patterns can produce similar observation signals.",
+        "Forward modeling predicts atmospheric concentrations given emissions. What does inverse modeling do — what is being solved for from what?",
+        "Atmospheric transport (wind patterns, turbulence) introduces uncertainty. Can different emission patterns produce the same observed concentration pattern? What makes this problem ill-posed?",
       ],
     },
   ],
@@ -638,10 +799,17 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Industrial facilities emit heat and chemical plumes detectable in thermal infrared and spectral bands; ML models applied to multispectral, hyperspectral, and thermal satellite imagery can identify and classify emission sources, map plumes, and estimate emission rates.",
+        "Industrial facilities have distinctive thermal and spectral signatures:\n\n" +
+        "\\[\\text{Thermal IR:} \\quad \\text{Heat plumes from cooling towers, furnaces} \\Rightarrow T > 300\\text{ K above background}\\]" +
+        "\\[\\text{Hyperspectral:} \\quad \\text{Chemical absorption features (SO}_2\\text{, NO}_x\\text{, CO}_2\\text{) in SWIR}\\]\n\n" +
+        "ML models applied to these data can:\n" +
+        "\\[- \\text{Identify and classify emission source types}\\]" +
+        "\\[- \\text{Map plume dispersion patterns}\\]" +
+        "\\[- \\text{Estimate emission rates from plume concentration profiles}\\]\n\n" +
+        "For example, flare stacks from oil refineries emit in thermal IR with a characteristic blackbody spectrum.",
       hints: [
-        "Hot industrial processes emit heat and chemical by-products — which parts of the electromagnetic spectrum capture these?",
-        "Visible imagery shows facility structure; thermal IR reveals heat signatures; hyperspectral captures chemical absorption features.",
+        "Hot industrial processes emit heat and chemical by-products. Which parts of the electromagnetic spectrum are specifically sensitive to heat signatures and chemical absorption?",
+        "Visible imagery shows structural features; thermal IR reveals heat signatures. What additional information does hyperspectral imagery provide that the other two do not?",
       ],
     },
     {
@@ -649,13 +817,19 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "Object detection models (e.g., YOLO, Faster R-CNN) have been adapted to detect industrial infrastructure (power plants, oil refineries) in satellite imagery to track global emissions sources.",
+        "Object detection models (e.g., YOLO, Faster R-CNN) have been adapted to detect industrial infrastructure such as power plants and oil refineries in satellite imagery to track global emissions sources.",
       correctAnswer: "True",
       explanation:
-        "Projects like Global Energy Monitor and WattTime\'s Climate TRACE use object detection models trained on labeled satellite imagery to automatically detect and track industrial assets (cooling towers, flare stacks, storage tanks) globally for bottom-up emissions accounting.",
+        "Object detection models trained on labeled satellite imagery can identify industrial facilities by their visual signatures:\n\n" +
+        "\\[\\text{Cooling towers:} \\quad \\text{large rectangular hyperbolic shapes, water vapor plumes}\\]" +
+        "\\[\\text{Flare stacks:} \\quad \\text{tall vertical structures with thermal anomalies}\\]" +
+        "\\[\\text{Storage tanks:} \\quad \\text{circular structures with floating roofs}\\]\n\n" +
+        "Projects like Global Energy Monitor and Climate TRACE (WattTime) use these detections for bottom-up emissions accounting:\n\n" +
+        "\\[\\text{Emissions} = \\sum_{\\text{facilities}} \\text{Activity} \\times \\text{Emission Factor}\\]\n\n" +
+        "Automating facility detection across the globe is only feasible with ML — manual annotation of millions of square km of imagery is impossible.",
       hints: [
-        "Industrial facilities have distinctive visual signatures from space — cooling towers, stacks, storage tanks — detectable by object detectors.",
-        "Automating facility detection across the globe at scale is only feasible with ML, not manual annotation.",
+        "Industrial facilities have distinctive visual signatures from space (cooling towers, stacks, storage tanks). What computer vision task identifies and localizes these objects in imagery?",
+        "Automating facility detection across the globe at scale — why is this task infeasible for human analysts but feasible for ML?",
       ],
     },
     {
@@ -663,19 +837,25 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Climate TRACE uses a multi-modal ML approach to estimate facility-level emissions. Which combination of data sources is typical?",
+        "Climate TRACE uses a multi-modal ML approach to estimate facility-level emissions. Which combination of data sources is typical of this approach?",
       options: [
         "Only self-reported emissions from companies",
-        "Satellite imagery, nighttime lights, air quality sensor data, economic activity proxies, and atmospheric observations fused with ML",
+        "Satellite imagery (optical, thermal, SAR), nighttime lights, air quality sensor data, economic activity proxies, and atmospheric observations fused with ML",
         "Ground-level air quality monitors only",
         "Smartphone GPS traces of industrial workers",
       ],
       correctAnswer: 1,
       explanation:
-        "Climate TRACE combines satellite remote sensing (optical, thermal, SAR), nighttime lights (as activity proxy), air quality measurements, weather data, and atmospheric GHG observations in multi-modal ML models to produce independent, facility-level emissions estimates.",
+        "No single data source provides complete information about industrial activity and emissions. Climate TRACE fuses multiple modalities:\n\n" +
+        "\\[\\mathbf{X} = \\{\\underbrace{I_{\\text{satellite}}}_{\\text{facility detection}}, \\; \\underbrace{L_{\\text{nighttime}}}_{\\text{activity proxy}}, \\; \\underbrace{AQ_{\\text{sensors}}}_{\\text{concentration}}, \\; \\underbrace{GHG_{\\text{atm}}}_{\\text{emissions}}\\}\\]\n\n" +
+        "Multi-modal fusion provides:\n" +
+        "\\[- \\text{Redundancy: multiple signals for the same activity}\\]" +
+        "\\[- \\text{Complementarity: different modalities capture different aspects}\\]" +
+        "\\[- \\text{Cross-validation: consistent signals strengthen confidence}\\]\n\n" +
+        "The goal is independent estimation without relying on self-reported data, which may be incomplete or inaccurate.",
       hints: [
-        "No single data source captures all aspects of facility activity and emissions — multi-modal fusion provides redundancy and fills gaps.",
-        "The goal is independent estimation without relying on self-reported data that may be incomplete or inaccurate.",
+        "No single data source captures all aspects of facility activity and emissions. What does multi-modal fusion provide — redundancy, complementarity, or both?",
+        "The goal is independent estimation of emissions without relying on self-reported data. Why might self-reported data be unreliable?",
       ],
     },
   ],
@@ -689,16 +869,23 @@ const questions: Record<string, Question[]> = {
         'Life Cycle Assessment (LCA) quantifies the environmental impact of a product. What does "cradle-to-grave" analysis cover?',
       options: [
         "Only the manufacturing stage",
-        "Raw material extraction through disposal/end-of-life",
+        "Raw material extraction through manufacturing, distribution, use, and disposal/end-of-life",
         "Just the use phase of a product",
-        "Only transportation emissions",
+        "Only transportation emissions during distribution",
       ],
       correctAnswer: 1,
       explanation:
-        "Cradle-to-grave LCA tracks all environmental impacts from raw material extraction (cradle), through manufacturing, distribution, use, and finally to waste treatment or disposal (grave), providing a complete picture of a product\'s lifecycle emissions.",
+        "Cradle-to-grave LCA covers the complete lifecycle:\n\n" +
+        "\\[\\underbrace{\\text{Raw material extraction}}_{\\text{cradle}} \\Rightarrow \\text{Manufacturing} \\Rightarrow \\text{Distribution} \\Rightarrow \\text{Use Phase} \\Rightarrow \\underbrace{\\text{Disposal/Recycling}}_{\\text{grave}}\\]\n\n" +
+        "For a gasoline-powered car, cradle-to-grave includes:\n" +
+        "\\[- \\text{Oil extraction, refining (cradle)}\\]" +
+        "\\[- \\text{Manufacturing, assembly}\\]" +
+        "\\[- \\text{Use: fuel combustion emissions}\\]" +
+        "\\[- \\text{End-of-life: scrapping, recycling (grave)}\\]\n\n" +
+        "Partial LCA (e.g., only use phase) misses significant upstream or downstream emissions, potentially leading to misleading conclusions.",
       hints: [
-        'The metaphor of "cradle" (birth/raw materials) to "grave" (disposal) covers the full product lifecycle.',
-        "Partial LCA (e.g., only the use phase) misses important upstream or downstream emissions.",
+        "The metaphor of 'cradle' (birth/raw materials) to 'grave' (disposal/end-of-life) — what stages of a product's existence does this span?",
+        "A partial LCA considering only the use phase of a gasoline car misses what major emissions sources?",
       ],
     },
     {
@@ -709,10 +896,17 @@ const questions: Record<string, Question[]> = {
         "NLP models can automate the extraction of carbon emissions data from corporate sustainability reports and supply chain documents.",
       correctAnswer: "True",
       explanation:
-        "NLP models (named entity recognition, relation extraction, document classification) trained on sustainability reporting standards (GRI, TCFD, CDP) can automatically extract Scope 1, 2, and 3 emission figures from unstructured text in annual reports and ESG disclosures.",
+        "Corporate sustainability reports contain structured data in unstructured text. NLP techniques extract this automatically:\n\n" +
+        "\\[\\text{Documents} \\xrightarrow{\\text{NER}} \\text{Entities: Scope 1/2/3 emissions, targets, timelines}\\]" +
+        "\\[\\xrightarrow{\\text{Relation Extraction}} \\text{Relations: company } \\xrightarrow{\\text{reports}} \\text{emissions} \\xrightarrow{\\text{as}} \\text{value}\\]\n\n" +
+        "Models trained on reporting standards (GRI, TCFD, CDP) can:\n" +
+        "\\[- \\text{Extract Scope 1, 2, 3 emission figures}\\]" +
+        "\\[- \\text{Identify reduction targets and timelines}\\]" +
+        "\\[- \\text{Classify companies by climate risk exposure}\\]\n\n" +
+        "This enables automated analysis across thousands of companies for portfolio climate risk assessment.",
       hints: [
-        "Corporate sustainability reports contain emissions data in unstructured text — NLP can extract structured information from this.",
-        "Automating extraction at scale enables comparison and aggregation of emissions data across thousands of companies.",
+        "Corporate sustainability reports contain emissions data in free text. What NLP technique transforms this unstructured text into structured database entries?",
+        "Manually reading and extracting data from thousands of sustainability reports would take years. What does automation enable at scale?",
       ],
     },
     {
@@ -722,17 +916,25 @@ const questions: Record<string, Question[]> = {
       question:
         "Scope 3 emissions are the most challenging to account for in corporate carbon accounting. Why?",
       options: [
-        "They occur inside the company\'s own facilities",
-        "They span the entire value chain (upstream suppliers and downstream customers) and require data from entities outside direct control",
+        "They occur inside the company's own facilities",
+        "They span the entire value chain (upstream suppliers and downstream customers) and require data from entities outside the company's direct control",
         "They are too small to measure accurately",
         "They only apply to financial institutions",
       ],
       correctAnswer: 1,
       explanation:
-        "Scope 3 covers indirect value chain emissions (purchased goods, employee travel, product use and disposal) from entities outside the reporting company\'s operational control, requiring data collection from thousands of suppliers and customers with varying reporting quality.",
+        "Scope 3 covers all indirect emissions in the value chain:\n\n" +
+        "\\[\\text{Scope 3 categories:}\\]" +
+        "\\[- \\text{Purchased goods and services}\\]" +
+        "\\[- \\text{Employee commuting and business travel}\\]" +
+        "\\[- \\text{Product use by customers}\\]" +
+        "\\[- \\text{End-of-life treatment of sold products}\\]\n\n" +
+        "The challenge is data collection from thousands of entities with varying reporting quality:\n\n" +
+        "\\[\\text{Scope 3}_{\\text{company}} = \\sum_{\\text{suppliers } j} E_j \\cdot T_{ij}\\]\n\n" +
+        "where \\(E_j\\) is supplier \\(j\\)'s emissions and \\(T_{ij}\\) is the contribution of supplier \\(j\\)'s input to product \\(i\\). A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined.",
       hints: [
-        "Scope 1 is direct (own facilities), Scope 2 is purchased energy, and Scope 3 is everything else up and down the supply chain.",
-        "A manufacturer\'s Scope 3 can be 10x larger than Scopes 1+2 combined, but tracking it requires cooperation from all suppliers.",
+        "Scope 1 is direct emissions (own facilities), Scope 2 is purchased energy. Scope 3 is 'everything else' — what does this include?",
+        "A manufacturer's Scope 3 can be 10x larger than Scopes 1+2 combined. What makes collecting this data difficult — is it the number of entities involved or something else?",
       ],
     },
   ],
@@ -743,19 +945,21 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "easy",
       question:
-        "Which satellite constellation provides frequent (daily to weekly) optical imagery of the entire Earth\'s surface, enabling near-real-time deforestation monitoring?",
+        "Which satellite constellation provides frequent (daily to weekly) optical imagery of the entire Earth's surface, enabling near-real-time deforestation monitoring?",
       options: [
         "GPS satellites",
-        "Planet Labs' Dove constellation (3–5 m resolution daily coverage)",
+        "Planet Labs' Dove constellation (3-5 m resolution with daily global coverage)",
         "Hubble Space Telescope",
-        "NOAA weather satellites",
+        "NOAA weather satellites (GOES series)",
       ],
       correctAnswer: 1,
       explanation:
-        "Planet Labs' fleet of hundreds of Dove CubeSats achieves daily global coverage at 3–5 m resolution; this high temporal frequency enables near-real-time change detection, making it transformative for deforestation monitoring in systems like GLAD alerts.",
+        "Planet Labs' Dove constellation consists of over 100 CubeSats in Sun-synchronous orbits providing daily global coverage at 3-5 m resolution:\n\n" +
+        "\\[\\text{Revisit frequency} \\approx 1\\text{ day} \\quad (360\\text{ orbits/day over poles})\\]\n\n" +
+        "Traditional Landsat satellites revisit every 16 days — insufficient for rapid deforestation events that can remove forest cover in days. Planet's high temporal frequency enables near-real-time change detection systems like GLAD (Global Land Analysis and Discovery) deforestation alerts.",
       hints: [
-        "Near-real-time deforestation monitoring needs high revisit frequency — which satellite constellation is designed for daily global coverage?",
-        "Traditional satellites like Landsat revisit every 16 days — insufficient for rapid deforestation events.",
+        "Near-real-time deforestation monitoring requires high revisit frequency. Planet Labs' Dove constellation was specifically designed for what temporal resolution?",
+        "Traditional satellites like Landsat revisit every 16 days. Why might this be insufficient for monitoring deforestation in the Amazon?",
       ],
     },
     {
@@ -766,10 +970,17 @@ const questions: Record<string, Question[]> = {
         "SAR (Synthetic Aperture Radar) satellites are particularly valuable for deforestation detection in tropical rainforests because they can penetrate cloud cover.",
       correctAnswer: "True",
       explanation:
-        "Tropical rainforests are frequently covered by clouds that block optical satellites; SAR sensors emit microwave pulses that penetrate clouds and collect structural backscatter information from the forest canopy, enabling continuous monitoring regardless of cloud cover.",
+        "SAR and optical sensing differ fundamentally in how they interact with the atmosphere:\n\n" +
+        "\\[\\text{Optical:} \\quad I_{\\text{observed}} = I_{\\text{surface}} \\cdot T_{\\text{atmosphere}} \\quad \\Rightarrow \\text{blocked by clouds}\\]\n" +
+        "\\[\\text{SAR:} \\quad \\text{signal} \\xrightarrow{\\text{emit}} \\text{clouds} \\xrightarrow{\\text{scatter}} \\text{receiver} \\quad \\Rightarrow \\text{penetrates clouds}\\]\n\n" +
+        "SAR emits microwave pulses (typically C-band or X-band) that:\n" +
+        "\\[- \\text{Penetrate cloud cover (clouds are largely transparent to microwaves)}\\]" +
+        "\\[- \\text{Provide day/night operation (active sensor)}\\]" +
+        "\\[- \\text{Capture canopy structure from backscatter intensity}\\]\n\n" +
+        "Tropical rainforests are perpetually cloud-covered — SAR provides reliable, continuous monitoring.",
       hints: [
-        "Optical sensors need sunlight and clear skies; radar systems generate their own signal and can operate day/night, through clouds.",
-        "The Amazon and Congo Basin are perpetually cloud-covered in optical imagery — SAR provides reliable coverage.",
+        "Optical sensors need sunlight and clear skies to see the surface. What physical property of radar waves allows them to 'see' through clouds?",
+        "The Amazon and Congo Basin are frequently cloud-covered. What type of satellite sensor provides reliable deforestation monitoring in these regions?",
       ],
     },
     {
@@ -786,10 +997,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "GLAD alerts analyze dense time-series of Landsat 8 reflectance data, using spectral indices (NDVI, NDWI) and statistical change detection with a Bayesian probability model to identify pixels where forest cover has been lost, providing near-weekly alerts.",
+        "GLAD analyzes dense Landsat 8 time series for each pixel. The NDVI (Normalized Difference Vegetation Index) captures vegetation greenness:\n\n" +
+        "\\[\\text{NDVI} = \\frac{\\text{NIR} - \\text{Red}}{\\text{NIR} + \\text{Red}} \\in [-1, +1]\\]\n\n" +
+        "\\[\\text{Dense vegetation:} \\quad \\text{NDVI} \\approx 0.8-0.9\\]" +
+        "\\[\\text{Bare ground:} \\quad \\text{NDVI} \\approx 0.0-0.1\\]\n\n" +
+        "GLAD uses a Bayesian change detection model on the NDVI time series:\n\n" +
+        "\\[P(\\text{change} | \\text{NDVI}_{t:t+T}) > \\tau \\Rightarrow \\text{alert}\\]\n\n" +
+        "Decision trees classify pixels as forest/non-forest based on NDVI thresholds and temporal consistency. Alerts are generated near-weekly when a pixel's NDVI drops below the forest threshold.",
       hints: [
-        "GLAD needs to detect sudden changes in dense vegetation — which spectral index measures vegetation greenness?",
-        'Time-series analysis can flag the moment a pixel\'s spectral signature changes from "dense forest" to "bare ground."',
+        "GLAD needs to detect sudden changes in dense vegetation. Which spectral index specifically measures vegetation greenness — what does this index compare?",
+        "A pixel that was 'dense forest' (NDVI ~0.8) suddenly shows NDVI ~0.1. What does this temporal signature suggest about what happened?",
       ],
     },
   ],
@@ -809,10 +1026,15 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "IAMs couple energy system models (technology deployment, cost curves), macroeconomic models (investment, GDP), land-use models (agriculture, forests), and simplified climate models to explore consistent scenarios of decarbonization pathways and their consequences.",
+        "Reaching net zero requires understanding interactions across multiple Earth systems. IAMs couple:\n\n" +
+        "\\[- \\text{Energy system models: technology deployment, cost curves, learning rates}\\]" +
+        "\\[- \\text{Macroeconomic models: investment, GDP, employment impacts}\\]" +
+        "\\[- \\text{Land-use models: agriculture, forests, bioenergy constraints}\\]" +
+        "\\[- \\text{Climate models: simplified temperature and carbon cycle responses}\\]\n\n" +
+        "This coupling ensures internal consistency: energy decisions affect land use, which affects climate, which affects the economy. The IPCC uses IAMs (MESSAGE, REMIND, IMAGE) to develop shared socioeconomic pathways (SSPs).",
       hints: [
-        "Reaching net zero requires changes across energy, economy, land use, and climate — no single model type captures all these dimensions.",
-        "The IPCC uses IAMs (e.g., MESSAGE, REMIND, IMAGE) to develop the shared socioeconomic pathways (SSPs).",
+        "Reaching net zero requires changes across energy, economy, land use, and climate. Why is no single model type sufficient to capture all these dimensions?",
+        "The IPCC uses specific IAMs (MESSAGE, REMIND, IMAGE) to develop the shared socioeconomic pathways (SSPs). What does SSP stand for?",
       ],
     },
     {
@@ -823,10 +1045,18 @@ const questions: Record<string, Question[]> = {
         "ML can accelerate net-zero pathway optimization by acting as a fast surrogate for expensive IAM simulations.",
       correctAnswer: "True",
       explanation:
-        "ML emulators trained on IAM scenario databases can evaluate thousands of pathway scenarios in seconds, enabling rapid exploration of the solution space for optimal decarbonization strategies that would take months using the full IAM.",
+        "Running a full IAM scenario for one pathway takes hours to days on HPC infrastructure:\n\n" +
+        "\\[T_{\\text{full IAM}} \\approx 4-48\\text{ hours per scenario}\\]\n\n" +
+        "ML emulators trained on IAM scenario databases learn the input-output relationship:\n\n" +
+        "\\[\\hat{y} = f_\\theta(\\text{policy inputs}; \\text{scenario assumptions})\\]\n\n" +
+        "Once trained, emulators evaluate thousands of scenarios per second, enabling:\n" +
+        "\\[- \\text{Rapid exploration of the policy solution space}\\]" +
+        "\\[- \\text{Monte Carlo uncertainty quantification (1000s of runs)}\\]" +
+        "\\[- \\text{Optimization over policy parameters}\\]\n\n" +
+        "This is the same emulator concept used for climate models — fast ML approximations of expensive simulations.",
       hints: [
-        "Running a full IAM scenario takes hours to days; emulators compress this to milliseconds, enabling optimization over the policy space.",
-        'This is the same "emulator" concept used for climate models — fast ML approximations of expensive simulations.',
+        "Running a full IAM scenario takes hours to days on a supercomputer. What does ML compression enable this to be reduced to?",
+        "What is the 'emulator' concept in climate science — how does it relate to IAMs?",
       ],
     },
     {
@@ -843,10 +1073,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Net-zero pathways involve Pareto trade-offs among cost minimization, emission reduction speed, energy security (avoiding import dependence), distributional equity (just transition), biodiversity (land use for bioenergy), and food security (competition for land).",
+        "Net-zero pathways involve fundamental trade-offs across multiple objectives:\n\n" +
+        "\\[\\min \\; \\{ \\text{Cost}, \\; \\text{Emissions}, \\; \\text{Land use}, \\; \\text{Equity} \\}\\]\n\n" +
+        "Key trade-offs:\n" +
+        "\\[- \\text{Bioenergy (low-carbon but land-intensive)} \\Leftrightarrow \\text{Food security, Biodiversity}\\]" +
+        "\\[- \\text{Rapid decarbonization} \\Leftrightarrow \\text{Economic disruption, Equity (just transition)}\\]" +
+        "\\[- \\text{Energy independence} \\Leftrightarrow \\text{Cost minimization}\\]\n\n" +
+        "These objectives are often in tension — a pathway minimizing cost might require massive land use for bioenergy, conflicting with biodiversity goals. Multi-objective optimization produces a Pareto frontier of optimal trade-offs, not a single solution.",
       hints: [
-        "A pathway that minimizes cost might require massive land use for bioenergy, conflicting with food and biodiversity goals.",
-        "Multi-objective problems have no single optimal solution — they have a Pareto frontier of trade-offs.",
+        "A pathway that minimizes cost might require massive land use for bioenergy. What other objectives does this potentially conflict with?",
+        "Multi-objective problems with competing objectives don't have a single 'optimal' solution. What do they have instead?",
       ],
     },
   ],
@@ -866,10 +1102,16 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Semantic segmentation produces a dense class map where each pixel is assigned a land cover or land use category; unlike object detection (bounding boxes), segmentation provides pixel-level understanding of the spatial distribution of classes.",
+        "Semantic segmentation produces a dense class map where each pixel receives a label:\n\n" +
+        "\\[\\hat{y}_{i,j} = f_\\theta(I_{i,j}) \\in \\{\\text{urban}, \\; \\text{forest}, \\; \\text{water}, \\; \\text{cropland}, \\ldots\\}\\]\n\n" +
+        "This contrasts with:\n" +
+        "\\[- \\text{Object detection: bounding boxes around objects}\\]" +
+        "\\[- \\text{Instance segmentation: unique IDs per object instance}\\]" +
+        "\\[- \\text{Semantic segmentation: class label per pixel}\\]\n\n" +
+        "For deforestation monitoring, semantic segmentation provides pixel-level area estimates — more precise than counting bounding boxes.",
       hints: [
-        'Segmentation answers "what is this pixel?" for every pixel in the image simultaneously.',
-        "Dense pixel labeling is more informative than bounding boxes for area estimation tasks like measuring deforestation or urban expansion.",
+        "Segmentation answers 'what is this pixel?' for every pixel in the image simultaneously. What specific information is assigned to each pixel?",
+        "For measuring urban expansion, why is pixel-level labeling (segmentation) more informative than bounding boxes (object detection)?",
       ],
     },
     {
@@ -880,10 +1122,14 @@ const questions: Record<string, Question[]> = {
         "U-Net, originally developed for biomedical image segmentation, is widely used for satellite image segmentation due to its encoder-decoder architecture with skip connections.",
       correctAnswer: "True",
       explanation:
-        "U-Net\'s encoder-decoder with skip connections preserves fine spatial detail while building hierarchical semantic features; this architecture transfers effectively to satellite imagery segmentation and has become a standard baseline for remote sensing tasks.",
+        "U-Net's architecture consists of:\n\n" +
+        "\\[\\text{Encoder (downsampling):} \\quad I \\xrightarrow{\\text{conv}} h_1 \\xrightarrow{\\text{conv}} h_2 \\xrightarrow{\\text{conv}} h_3\\]" +
+        "\\[\\text{Decoder (upsampling):} \\quad h_3 \\xrightarrow{\\text{deconv}} g_2 \\xrightarrow{\\text{deconv}} g_1 \\xrightarrow{\\text{deconv}} \\hat{I}\\]" +
+        "\\[\\text{Skip connections:} \\quad g_i = \\text{Concat}(g_{i+1}, h_i)\\]\n\n" +
+        "Skip connections preserve fine spatial details that would otherwise be lost during downsampling. This is critical for satellite imagery where precise boundary delineation (e.g., forest edges) matters. The architecture transfers effectively because both biomedical and satellite images are dense prediction tasks requiring spatial precision.",
       hints: [
-        "Skip connections in U-Net pass high-resolution spatial features directly from the encoder to the decoder — why would this matter for segmentation?",
-        "The encoder-decoder structure works for any dense prediction task, not just the biomedical images it was designed for.",
+        "During downsampling in the encoder, spatial resolution is reduced. What architectural feature of U-Net allows high-resolution spatial information from the encoder to reach the decoder?",
+        "U-Net was designed for biomedical cell segmentation. What property makes it applicable to satellite imagery — is it the architecture type or the specific feature extraction?",
       ],
     },
     {
@@ -891,19 +1137,23 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "A major challenge in satellite semantic segmentation is domain shift between different sensors. What causes this shift?",
+        "A major challenge in satellite semantic segmentation is domain shift between different sensors. What is the primary cause of this shift?",
       options: [
         "Different countries use different map projections",
         "Different sensors have different spectral bands, spatial resolutions, and radiometric calibrations",
-        "Satellite data is always in different file formats",
-        "Cloud masks are applied inconsistently",
+        "Satellite data is always stored in different file formats",
+        "Cloud masks are applied inconsistently by different processing pipelines",
       ],
       correctAnswer: 1,
       explanation:
-        "Models trained on Sentinel-2 imagery (10 m, 13 bands) fail on Planet imagery (3 m, 4 bands) because the spectral and spatial characteristics differ; domain adaptation, multi-sensor training, or foundation models pretrained on diverse sensors address this shift.",
+        "Domain shift occurs when the statistical distribution of image values differs between training and test data:\n\n" +
+        "\\[P_{\\text{train}}(I, y) \\neq P_{\\text{test}}(I, y)\\]\n\n" +
+        "For satellite sensors, key differences:\n\n" +
+        "\\[\\begin{array}{c|c|c} \\text{Property} & \\text{Sentinel-2} & \\text{Planet}\\\\ \\hline \\text{Spatial resolution} & 10\\text{ m} & 3\\text{ m}\\\\ \\text{Spectral bands} & 13\\; (\\text{VNIR/SWIR}) & 4\\; (\\text{RGB/NIR}) \\\\ \\text{Radiometric calibration} & \\text{ESA calibrated} & \\text{Planet calibrated} \\end{array}\\]\n\n" +
+        "These differences cause spectral and spatial characteristics to differ, leading to distribution shift that degrades model performance when transferring between sensors.",
       hints: [
-        "A model trained on one camera fails when deployed on another — this is domain shift, caused by differences in the imaging process.",
-        "Satellite sensors vary in wavelength bands, ground sampling distance, and calibration — all of which change the statistical distribution of image values.",
+        "A model trained on Sentinel-2 imagery fails when deployed on Planet imagery. What changed — the model architecture or the input data distribution?",
+        "Satellite sensors vary in spectral bands, ground sampling distance, and radiometric calibration. Which of these creates the most fundamental change in the statistical distribution of pixel values?",
       ],
     },
   ],
@@ -917,16 +1167,18 @@ const questions: Record<string, Question[]> = {
         "Prithvi (IBM/NASA) is a geospatial foundation model pre-trained using which self-supervised learning strategy?",
       options: [
         "Supervised classification on ImageNet",
-        "Masked AutoEncoder (MAE) on HLS Landsat and Sentinel-2 time-series data",
+        "Masked AutoEncoder (MAE) on Harmonized Landsat Sentinel (HLS) multi-spectral time-series data",
         "Contrastive learning between paired SAR and optical images",
         "Next-token prediction on satellite metadata text",
       ],
       correctAnswer: 1,
       explanation:
-        "Prithvi uses a Vision Transformer trained with Masked AutoEncoder objectives on Harmonized Landsat Sentinel (HLS) multi-spectral time-series data, learning rich spatiotemporal representations that can be fine-tuned for downstream Earth observation tasks.",
+        "Prithvi uses a Vision Transformer (ViT) trained with Masked AutoEncoder objectives:\n\n" +
+        "\\[\\mathcal{L}_{\\text{MAE}} = \\mathbb{E}\\left[\\|\\text{Decoder}(\\text{Encoder}(I_{\\text{masked}})) - I_{\\text{original}}\\|^2\\right]\\]\n\n" +
+        "The model learns by predicting randomly masked patches of multi-spectral satellite time series. Pre-training on Harmonized Landsat Sentinel (HLS) data — which provides consistent, harmonized Landsat 8/9 and Sentinel-2 products — teaches rich spatiotemporal representations that transfer to downstream Earth observation tasks.",
       hints: [
-        "MAE (masked autoencoding) learns by predicting masked patches — applied to satellite time-series instead of natural images.",
-        "Self-supervised pre-training on large unlabeled satellite archives avoids the need for massive labeled datasets.",
+        "MAE (masked autoencoding) learns by predicting masked patches. How is this applied to satellite time-series data rather than natural images?",
+        "Self-supervised pre-training on large unlabeled satellite archives avoids the need for what — labeled datasets or unlabeled data?",
       ],
     },
     {
@@ -937,10 +1189,15 @@ const questions: Record<string, Question[]> = {
         "Geospatial foundation models like SatMAE and Prithvi can be fine-tuned on small labeled datasets to achieve strong performance on specialized Earth observation tasks.",
       correctAnswer: "True",
       explanation:
-        "Foundation models pre-trained on large unlabeled satellite datasets learn general geospatial representations that transfer efficiently; fine-tuning on hundreds to thousands of labeled samples achieves competitive performance on tasks like crop mapping, flood detection, and building extraction.",
+        "Foundation models leverage transfer learning from self-supervised pre-training:\n\n" +
+        "\\[\\theta_{\\text{pretrained}} \\xrightarrow{\\text{fine-tune}} \\theta_{\\text{task}}\\]\n\n" +
+        "The pre-training on massive unlabeled satellite archives (millions of scenes) provides rich, generalizable representations. Fine-tuning on small labeled datasets (hundreds to thousands of samples) achieves competitive performance because:\n" +
+        "\\[- \\text{Low-level features (edges, textures) transfer across sensors}\\]" +
+        "\\[- \\text{High-level semantic features are task-specific and learned during fine-tuning}\\]\n\n" +
+        "This mirrors BERT fine-tuning in NLP: strong pre-trained features + small labeled dataset = good downstream performance.",
       hints: [
-        "The pre-training on massive unlabeled data provides rich initial representations — fine-tuning only adjusts these for the specific task.",
-        "This mirrors how BERT fine-tuning works in NLP: strong pre-trained features + small labeled dataset = good downstream performance.",
+        "What does the pre-training on massive unlabeled satellite data provide — is it task-specific knowledge or generalizable representations?",
+        "In NLP, BERT pre-training + fine-tuning on small labeled data produces strong results. What does this paradigm look like when applied to satellite imagery?",
       ],
     },
     {
@@ -948,19 +1205,24 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "SatMAE extends standard MAE to handle satellite imagery by introducing which key modification?",
+        "SatMAE extends standard MAE to handle satellite imagery by introducing which key modification for multi-temporal multi-spectral inputs?",
       options: [
-        "Replacing transformers with CNNs for efficiency",
-        "Temporal and spectral group masking to handle multi-temporal multi-spectral inputs",
+        "Replacing transformers with CNNs for computational efficiency",
+        "Temporal and spectral group masking that masks entire time steps or spectral bands rather than random spatial patches",
         "Using GPS coordinates as positional encodings instead of 2D grid positions",
         "Applying contrastive loss instead of reconstruction loss",
       ],
       correctAnswer: 1,
       explanation:
-        "SatMAE introduces temporal and spectral group masking strategies that mask entire time steps or spectral bands rather than random patches, forcing the model to learn meaningful temporal and cross-spectral relationships critical for Earth observation applications.",
+        "Standard MAE masks random spatial patches. Satellite imagery has additional dimensions:\n\n" +
+        "\\[I \\in \\mathbb{R}^{H \\times W \\times T \\times B}\\]\n\n" +
+        "where \\(T\\) = time steps and \\(B\\) = spectral bands. SatMAE introduces group masking:\n\n" +
+        "\\[\\text{Temporal masking:} \\quad \\text{mask all bands for certain time steps}\\]" +
+        "\\[\\text{Spectral masking:} \\quad \\text{mask all time steps for certain bands}\\]\n\n" +
+        "This forces the model to learn cross-temporal and cross-spectral relationships, which are more meaningful pretext tasks for Earth observation than random spatial patching.",
       hints: [
-        "Standard MAE masks random spatial patches; satellite data also has temporal and spectral dimensions — how should masking be adapted?",
-        "Group masking at the temporal/spectral level teaches the model to reconstruct missing time steps or bands, a more meaningful pretext task.",
+        "Standard MAE masks random spatial patches on 2D images. Satellite data has additional dimensions (time and spectral bands). How should masking be adapted?",
+        "Group masking at the temporal/spectral level forces the model to learn what type of relationships that random spatial patching cannot?",
       ],
     },
   ],

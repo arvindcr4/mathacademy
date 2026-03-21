@@ -738,7 +738,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         'Holtzman et al. (2020) "The Curious Case of Neural Text Degeneration" showed that beam search produces text that is high-probability but bland, generic, and repetitive — humans consistently prefer nucleus-sampled text for open-ended generation. Beam search is better for constrained tasks (translation, summarization) where there is a clearly correct output.',
       hints: [
-        "High probability ≠ high quality for creative tasks — unexpected choices make text interesting.",
+        "High probability \$\\neq\$ high quality for creative tasks — unexpected choices make text interesting.",
         'Beam search\'s repetition problem: "the company said the company said the company said..." maximizes P(token | prefix) locally.',
       ],
     },

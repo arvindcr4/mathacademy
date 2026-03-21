@@ -10,17 +10,17 @@ const questions: Record<string, Question[]> = {
       question:
         "Mel-Frequency Cepstral Coefficients (MFCCs) are designed to mimic human auditory perception by:",
       options: [
-        "Using a linear frequency scale to represent all frequencies equally",
-        "Applying a mel-scale filterbank that compresses high frequencies, matching the ear\'s logarithmic frequency sensitivity",
-        "Computing the raw Fourier transform magnitudes at fixed 100 Hz intervals",
-        "Encoding the phase information of the speech signal using sinusoidal basis functions",
+        "Using a linear frequency scale so that all frequencies are represented with equal resolution",
+        "Applying a mel-scale filterbank that compresses high frequencies, reflecting that the human ear is less sensitive to fine frequency differences at high frequencies",
+        "Computing the raw Fourier transform magnitudes at logarithmically spaced frequency intervals to match auditory filter shapes",
+        "Extracting spectral peaks from the short-time Fourier transform and encoding their frequencies as sinusoidal basis coefficients",
       ],
       correctAnswer: 1,
       explanation:
-        "The mel scale is a perceptually motivated frequency scale where equal spacing corresponds to equal perceived pitch differences; the filterbank applies wider filters at high frequencies, reflecting that human hearing is less sensitive to fine frequency distinctions there.",
+        "The mel scale is a perceptually motivated frequency scale where equal perceptual pitch intervals are equally spaced. The mel filterbank applies wider filters at high frequencies and narrower filters at low frequencies, reflecting that humans perceive pitch changes more finely at low frequencies and less precisely at high frequencies. This compression of high-frequency resolution is what gives MFCCs their perceptual character.",
       hints: [
-        "Humans perceive pitch changes more finely at low frequencies—how should the filterbank spacing reflect this?",
-        'The word "mel" comes from the word "melody"—it is a perceptual, not physical, scale.',
+        "At low frequencies, two close notes sound different; at high frequencies, the same frequency difference sounds like a single tone. How should the filterbank reflect this?",
+        'The word "mel" comes from "melody" — it is a perceptual scale, not a physical one.',
       ],
     },
     {
@@ -32,29 +32,29 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "Adjacent mel filterbank channels overlap and are correlated; the DCT projects the log-energy vector into a space where most information is concentrated in the first ~13 coefficients and the coefficients are nearly decorrelated, making MFCCs compact features for downstream models.",
+        "Adjacent mel filterbank channels overlap heavily and are therefore correlated. The DCT projects the log-energy vector into a space where most information is concentrated in the first approximately 13 coefficients and the coefficients are nearly decorrelated. This decorrelation means that a simple diagonal-covariance model (e.g., Gaussian) can represent the features well, making MFCCs compact and effective for downstream models.",
       hints: [
-        "Correlated features waste model capacity—decorrelation concentrates information into fewer dimensions.",
-        "The DCT is related to the PCA of the filterbank energies under certain assumptions.",
+        "Decorrelation means the covariance matrix of the transformed features is close to diagonal — why is this important for compact modeling?",
+        "The DCT is the optimal linear transform for decorrelating Gaussian sources under MSE — it plays a role analogous to PCA here.",
       ],
     },
     {
       id: "q-aud-kp1-3",
       type: "multiple-choice",
       difficulty: "hard",
-      question: "A mel spectrogram differs from an MFCC in that it:",
+      question: "A mel spectrogram differs from MFCCs in that the mel spectrogram:",
       options: [
-        "Uses a linear frequency scale instead of the mel scale",
-        "Retains the log-power representation after the mel filterbank without applying the DCT, preserving richer spectral shape information",
-        "Is computed from the raw waveform using 1D convolutions rather than short-time Fourier transform",
-        "Includes phase information discarded during MFCC computation",
+        "Uses a linear frequency scale instead of the mel scale, capturing all frequencies uniformly",
+        "Stops after the log-mel filterbank step, retaining the full high-dimensional spectral envelope without the DCT compression used in MFCCs",
+        "Is computed directly from the raw waveform using 1D convolutions without any STFT windowing",
+        "Preserves the raw STFT phase information that is discarded in MFCC computation",
       ],
       correctAnswer: 1,
       explanation:
-        "A mel spectrogram is simply the log-power output of the mel filterbank (STFT magnitude → mel filterbank → log), stopping before the DCT; it is higher-dimensional than MFCCs but retains full spectral shape, making it preferred as input for deep learning models.",
+        "A mel spectrogram is computed as \\[\\text{STFT} \\rightarrow \\text{mel filterbank} \\rightarrow \\log \\], stopping before the DCT. MFCCs apply one additional step — the DCT — to decorrelate and compress these log-mel energies into approximately 13 coefficients. Because the mel spectrogram skips the DCT, it retains the full high-dimensional spectral envelope (typically 80 or 128 mel bins), preserving richer spectral shape information that deep neural networks can exploit.",
       hints: [
-        "MFCCs add one more step beyond the log-mel filterbank output—what step is that?",
-        "Deep neural networks can learn their own compression; they do not need the DCT\'s manual decorrelation.",
+        "MFCCs apply one more transformation after the log-mel filterbank — what is it, and why might skipping it be beneficial?",
+        "Deep networks can learn their own data-driven compression; the DCT's fixed linear decorrelation may discard information useful for the task.",
       ],
     },
   ],
@@ -68,17 +68,17 @@ const questions: Record<string, Question[]> = {
       question:
         "In a traditional HMM-based ASR system, the acoustic model represents:",
       options: [
-        "The probability of a word sequence given the acoustic observation sequence",
-        "The probability of observing acoustic features (e.g., MFCCs) given a phoneme state",
+        "The prior probability of each word before any audio is observed",
+        "The probability of observing acoustic features (e.g., MFCCs) given a particular phoneme state",
         "The language model probability of word sequences in a given language",
-        "The mapping from graphemes (letters) to phonemes using a pronunciation dictionary",
+        "The mapping from graphemes (written letters) to phonemes (spoken sounds) using a pronunciation dictionary",
       ],
       correctAnswer: 1,
       explanation:
-        "The acoustic model (emission probability) in HMM-ASR estimates P(observations | phoneme state); combined with the transition model and language model, this forms the basis for MAP decoding of the most likely word sequence.",
+        "The acoustic model estimates the emission probability \\[P(\\text{observations} \\mid \\text{phoneme state})\\], describing what acoustic features look like when a particular phoneme is spoken. Combined with the HMM transition model and the language model via Bayes' rule, this enables finding the most likely word sequence.",
       hints: [
-        "ASR uses Bayes' rule: the acoustic model provides P(features | words), the language model provides P(words).",
-        'The acoustic model encodes what each phoneme "sounds like" in feature space.',
+        "Bayes' rule for ASR: \\[P(W \\mid O) \\propto P(O \\mid W) P(W)\\]. Which term comes from the acoustic model?",
+        'The acoustic model encodes what each phoneme "sounds like" as a distribution over feature vectors.',
       ],
     },
     {
@@ -90,10 +90,10 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        "GMMs model P(MFCCs | HMM state) as a weighted sum of Gaussians, allowing flexible approximation of the typically non-Gaussian acoustic feature distributions for each phoneme state; they were the dominant acoustic modelling approach before DNNs.",
+        "GMMs model \\[P(\\text{MFCCs} \\mid \\text{HMM state})\\] as a weighted sum of Gaussians. Since acoustic distributions for each phoneme are typically multimodal (different speakers, phonetic contexts), a single Gaussian would be insufficient. A mixture of K Gaussians can approximate any smooth density with enough components, making GMMs the dominant acoustic modeling approach before DNNs.",
       hints: [
-        "MFCC distributions per phoneme are multimodal (different speakers, contexts)—why would a single Gaussian be insufficient?",
-        "A mixture of K Gaussians can approximate any smooth density with enough components.",
+        "Why would a single Gaussian fail to model the MFCC distribution of a phoneme spoken by many different people?",
+        "With enough mixture components, a GMM can model arbitrarily complex density shapes — what mathematical property makes this possible?",
       ],
     },
     {
@@ -101,19 +101,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'In the Viterbi algorithm for HMM decoding in ASR, the "trellis" represents:',
+        'In the Viterbi algorithm for HMM decoding in ASR, the "trellis" is:',
       options: [
-        "The full word lattice of possible transcriptions ranked by acoustic score",
-        "A dynamic programming table storing the probability of the most likely partial path ending in each state at each time step",
-        "The confusion matrix of phoneme substitution errors from the acoustic model",
-        "The graph of all possible phone sequences in the pronunciation lexicon",
+        "A word-level lattice enumerating all possible transcriptions with their acoustic scores",
+        "A dynamic programming table where each cell stores the maximum log-probability of any partial path ending in a given state at a given time step, along with a back-pointer to recover the optimal state sequence",
+        "A confusion matrix summarising phoneme-level substitution errors from the acoustic model",
+        "A graph of all possible phone sequences from the pronunciation lexicon",
       ],
       correctAnswer: 1,
       explanation:
-        "The Viterbi trellis is a (states × time) matrix where each cell stores the maximum probability of any path reaching that state at that time and a back-pointer to trace the optimal path; this enables O(T × S²) decoding instead of exponential enumeration.",
+        "The Viterbi trellis is a states-by-time matrix. Each cell \\[\\delta_t(s)\\] holds the maximum log-probability of any path ending in state s at time t, computed via:\n\\[\n\\delta_t(s) = \\max_{s'} \\left[ \\delta_{t-1}(s') + \\log a_{s's} \\right] + \\log b_s(O_t)\n\\]\nwhere \\[a_{s's}\\] is the transition probability and \\[b_s(O_t)\\] is the emission score. A back-pointer records which previous state achieved the maximum. This avoids exponential enumeration, reducing complexity from O(S^T) to O(T \\cdot S^2).",
       hints: [
-        "Dynamic programming avoids re-computing sub-problems—what sub-problem does each trellis cell encode?",
-        "The back-pointer in each cell traces which previous state led to the maximum probability.",
+        "Each trellis cell encodes the best partial path ending there — what sub-problem does this represent?",
+        "The back-pointer enables reconstructing the full optimal state sequence after the forward pass completes.",
       ],
     },
   ],
@@ -127,17 +127,17 @@ const questions: Record<string, Question[]> = {
       question:
         "The main problem that CTC (Connectionist Temporal Classification) loss solves in ASR is:",
       options: [
-        "Reducing the memory requirements of training large transformer models",
-        "Enabling training without requiring frame-level alignments between acoustic features and phoneme labels",
-        "Improving beam search decoding speed by pruning the hypothesis space",
-        "Preventing overfitting by acting as a regularisation term on the output distribution",
+        "Reducing the memory footprint of large transformer models during training",
+        "Enabling end-to-end training without requiring explicit frame-level alignments between acoustic features and phoneme labels",
+        "Accelerating beam search decoding by pruning low-probability hypotheses early",
+        "Acting as a regularisation term that prevents overfitting to the acoustic training data",
       ],
       correctAnswer: 1,
       explanation:
-        "CTC marginalises over all valid alignments between the variable-length input sequence and the shorter output label sequence, eliminating the need for the expensive forced-alignment step required in HMM-GMM training.",
+        "CTC eliminates the need for the expensive forced-alignment step required in HMM-GMM training, where each audio frame must be explicitly labelled with the corresponding phoneme state. Instead, CTC introduces a blank token and marginalises over all valid alignments between the variable-length input sequence and the shorter output label sequence, allowing the network to learn an implicit alignment during training.",
       hints: [
-        "Traditional HMM training needed explicit frame-to-phoneme alignment labels—how does CTC avoid this?",
-        'CTC sums the probability over all "valid" ways to collapse the output to the target sequence.',
+        "Traditional HMM-GMM acoustic model training requires a separate forced-alignment step that labels every audio frame with its corresponding phoneme — how does CTC remove this requirement?",
+        'CTC sums the probability over all "valid" ways to map the output sequence to the target label sequence, using a blank token to handle repetitions.',
       ],
     },
     {
@@ -145,14 +145,14 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "medium",
       question:
-        "CTC uses a special blank token in the output alphabet; consecutive repeated characters or characters separated only by blanks collapse to the same label, enabling multiple frames to emit the same phoneme.",
+        "CTC uses a special blank token; under the CTC collapsing rule, consecutive repeated characters or characters separated only by blanks collapse to the same label, which is how CTC handles multiple frames emitting the same phoneme.",
       options: ["True", "False"],
       correctAnswer: "True",
       explanation:
-        'The CTC collapsing rule removes consecutive repeated tokens and then removes blanks, so "a-blank-a-a" collapses to "aa" (two a\'s) while "a-a-blank-a" also collapses to "aa"; this allows multiple-frame emissions without explicit segmentation.',
+        'The CTC collapsing rule applies two steps in order: (1) remove all blank tokens, then (2) collapse any remaining consecutive repeated characters into a single instance. For example, the output sequence "c-a-b-blank-a-a-blank-c" collapses to "cabac", and both "c-blank-c" and "c-c" collapse to "c" — which is why the blank token is essential: it allows the model to emit the same character over multiple non-consecutive frames without confusion.',
       hints: [
-        'Without the blank token, how would CTC distinguish "aa" from a single "a" emitted over two frames?',
-        'The blank acts as an "I am still in the same label" signal across time steps.',
+        'Consider the sequence "a-a" emitted over two frames vs. "a-blank-a" emitted over two frames — what does each collapse to, and why does this distinction matter?',
+        'The blank token acts as a "separator" signal — it tells CTC "this frame did not emit any output character."',
       ],
     },
     {
@@ -160,19 +160,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "Attention-based encoder-decoder models for ASR differ from CTC models primarily in that:",
+        "A key difference between attention-based encoder-decoder ASR and CTC-based ASR is that:",
       options: [
-        "Attention models process audio in real time while CTC requires the full utterance",
-        "Attention models learn a soft, learnable alignment between encoder states and output tokens, enabling richer context and better handling of long-range dependencies",
-        "Attention models output phoneme sequences while CTC outputs word sequences directly",
-        "Attention models require no language model during decoding while CTC always requires one",
+        "Attention models can process streaming audio in real time, while CTC requires the entire utterance before decoding begins",
+        "Attention models learn a soft, learned alignment between encoder states and each output token, enabling explicit modelling of output-to-output dependencies; CTC imposes a conditional independence assumption that output tokens depend only on the input",
+        "Attention models output phoneme sequences while CTC outputs word sequences directly without any vocabulary mapping",
+        "Attention models require a language model for decoding, whereas CTC does not benefit from language model rescoring",
       ],
       correctAnswer: 1,
       explanation:
-        "Attention-based seq2seq models compute a dynamic weighted combination of all encoder states at each decoding step, learning a soft alignment; this enables better handling of long utterances and cross-lingual phenomena compared to CTC\'s conditional independence assumption.",
+        "Attention-based seq2seq models use a cross-attention mechanism to compute a dynamic weighted combination of all encoder states at each decoding step. This enables each output token to depend on the entire input and on previously generated output tokens, capturing output-to-output dependencies (similar to an implicit language model). CTC, by contrast, assumes each output label is conditionally independent of all other outputs given the encoder states — \\[P(y_1, ..., y_T \\mid x) = \\prod_t P(y_t \\mid x)\\] — which is a key limitation that attention-based models overcome.",
       hints: [
-        "CTC assumes conditional independence between output frames given the input—what does attention relax?",
-        'The attention mechanism lets the decoder "look back" at any part of the encoded audio when generating each output token.',
+        "CTC's conditional independence assumption: \\[P(y_t \\mid y_{<t}, x) = P(y_t \\mid x)\\]. How does attention violate this?",
+        'The attention mechanism lets the decoder "look back" at any encoded audio frame when generating each output token, and also attend to previously generated tokens.',
       ],
     },
   ],
@@ -635,10 +635,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "wav2vec 2.0 uses product quantisation with Gumbel-softmax: it maintains G groups of V entries each and selects one entry per group using temperature-based soft selection that becomes approximately one-hot, allowing end-to-end gradient flow through the discrete bottleneck.",
+        "wav2vec 2.0 uses product quantisation (PQ) with Gumbel-softmax. The latent vector \\[z\\] is split into G groups, each with a codebook of V entries. During training, the Gumbel-softmax selection:\n\\[\\hat{c}_g = \\text{one-hot}\\left(\\arg\\max_i\\left[\\frac{z_g \\cdot e_i}{\\tau} + g_i\\right]\\right)\\]\nwhere \\[g_i \\sim \\text{Gumbel}(0,1)\\] and \\[\\tau\\] is temperature, provides a differentiable approximation to argmax (\\[\\tau \\to 0\\] makes it nearly one-hot). This allows end-to-end gradient flow through the discrete bottleneck. PQ with G groups yields an effective codebook of size V^G, enabling high-dimensional quantisation without storing a single large codebook.",
       hints: [
-        "Hard argmax is not differentiable—what technique provides a differentiable approximation to discrete selection?",
-        "Product quantisation uses multiple codebooks in parallel to increase the effective codebook size exponentially.",
+        "Hard argmax is not differentiable—what technique provides a differentiable approximation to discrete one-hot selection?",
+        "Product quantisation: if each of G groups has V entries, the total number of unique codes is V^G — exponentially larger than V with a single codebook.",
       ],
     },
   ],
@@ -2481,7 +2481,7 @@ const extraAudioQuestions: Record<string, Question[]> = {
       ],
     },
   ],
-  "voice-cloning": [
+  "zero-shot-voice-cloning": [
     {
       id: "q-aud-ex6-1",
       type: "multiple-choice",

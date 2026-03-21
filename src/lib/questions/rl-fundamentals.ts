@@ -10,16 +10,14 @@ const questions: Record<string, Question[]> = {
       question:
         'Sutton & Barto define a policy as "a mapping from states to probabilities of selecting each possible action." Which of the following best captures this definition?',
       options: [
-        "A function π(a|s) giving the probability of taking action a in state s",
+        "A function $\pi(a \mid s)$ that gives the probability of taking action $a$ when in state $s$",
         "The total discounted reward accumulated over an episode",
-        "The transition probability P(s'|s,a) describing how the environment evolves",
-        "A neural network that outputs state values V(s)",
+        "The transition probability $P(s' \mid s, a)$ describing how the environment evolves",
+        "A neural network that outputs state values $V(s)$",
       ],
       correctAnswer: 0,
       explanation:
-        "A policy $\pi$ maps every state $s \in \mathcal{S}$ and action $a \in \mathcal{A}(s)$ to the probability $\pi(a \mid s)$ of taking action $a$ when in state $s$. This is the definition given in Sutton & Barto Chapter 3. It fully specifies the agent's behavior: at each state, the agent's action distribution is completely determined by $\pi$.
-
-The other options describe different RL concepts: the discounted return $G_t$ (option 2), the transition dynamics $P(s' \mid s, a)$ (option 3), and a value function approximator (option 4). None of these are mappings from states to action probabilities.
+        "Per Sutton & Barto (Chapter 3), a policy $\\pi$ is a mapping from each state $s \\in S$ and action $a \\in A(s)$ to the probability $\\pi(a|s)$ of taking action a when in state s. It fully specifies the agent's behavior at every state.",
       hints: [
         "The definition involves probabilities of actions given states. Which option expresses a conditional probability distribution over actions?",
         "Think about the type signature: input = state, output = probabilities over actions.",
@@ -35,8 +33,8 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       explanation:
         "Policies can be represented in many ways: lookup tables (tabular RL), linear function approximators, or deep neural networks (deep RL). What matters is that the representation maps states (or observations) to action probabilities. Sutton & Barto discuss function approximation in Chapters 9–11 precisely because tables become infeasible for large state spaces.",
       hints: [
-        "Atari games have roughly 10^33,000 distinct pixel-level states — a lookup table is obviously impossible.",
-        'Chapter 9 of Sutton & Barto is titled "On-Policy Prediction with Approximation" — why would approximation be needed if tables always sufficed?',
+        "Can you enumerate all states in a game like Chess or StarCraft? If not, how would you represent a policy?",
+        "Chapter 9 of Sutton & Barto is titled On-Policy Prediction with Approximation. Why would approximation be needed if tables always sufficed?",
       ],
     },
     {
@@ -55,7 +53,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       explanation:
         "The Markov property (Sutton & Barto §3.1) states that the state sₜ is a sufficient statistic of the history: the future is independent of the past given the present. Therefore, a policy conditioned only on sₜ can be optimal — there is never any benefit to conditioning on earlier states in a fully observed MDP.",
       hints: [
-        'Sutton & Barto write: "The state must include information about all aspects of the past agent–environment interaction that make a difference for the future."',
+        "The definition says the state must encode all past information relevant to the future. If $s_t$ already does this, what does that imply about $s_1, \ldots, s_{t-1}$?",
         "If sₜ truly summarizes history, knowing s₁,...,s_{t-1} adds no predictive power about sₜ₊₁.",
       ],
     },
@@ -92,8 +90,8 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       explanation:
         "Sutton & Barto (§3.6) prove that for any finite MDP there is always at least one deterministic optimal policy. This follows from the policy improvement theorem: given V^π, acting greedily (deterministically) yields a policy at least as good as any mixed strategy. Stochastic policies offer no benefit in fully observed MDPs.",
       hints: [
-        'S&B: "There is always at least one policy that is better than or equal to all other policies." This policy can be chosen deterministic.',
-        "If π*(a|s) assigned positive probability to a suboptimal action, switching to the greedy action would strictly improve the policy.",
+        "If a stochastic optimal policy assigned positive probability to a suboptimal action, switching to the greedy action would strictly improve the expected return. So an optimal policy can always be chosen to be deterministic.",
+        "Think: if $\pi^*(a \mid s) > 0$ for a suboptimal $a$, what happens if you switch to the greedy action at that state?",
       ],
     },
     {
@@ -103,7 +101,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       question:
         "In repeated rock-paper-scissors (a symmetric zero-sum game), agent A uses a fixed deterministic policy (always plays Rock). What is the minimum expected payoff agent B can guarantee per round by best-responding?",
       options: [
-        "0 (break-even), because Rock beats Scissors equally often as Paper beats Rock",
+        "$0$, because Rock beats Scissors equally often as Paper beats Rock",
         "+1 (win every round), by always playing Paper",
         "-1 (lose every round), because the opponent knows your strategy",
         "1/3, because stochastic strategies are unpredictable",
@@ -112,8 +110,8 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       explanation:
         "A deterministic policy is fully exploitable in an adversarial game: if A always plays Rock, B simply always plays Paper and wins every round (+1 per round). The Nash equilibrium of RPS is the uniform mixed strategy (1/3, 1/3, 1/3), which yields expected payoff 0 against any opponent strategy. Any deterministic deviation from Nash can be exploited for +1.",
       hints: [
-        "The Minimax theorem guarantees that the Nash equilibrium strategy prevents the opponent from exploiting you — but only a mixed strategy achieves this in RPS.",
-        "A deterministic policy is a degenerate distribution: P(Rock)=1, P(Paper)=0, P(Scissors)=0. If your opponent knows this, they never lose.",
+        "If A's policy is deterministic and known, what is B's best response?",
+        "The Nash equilibrium is optimal in the worst-case sense — it prevents exploitation. But if the opponent's strategy is known and suboptimal, you can do better.",
       ],
     },
   ],
@@ -136,7 +134,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
         "The optimal policy simultaneously maximizes V^π(s) for every state s. Crucially, S&B prove that in finite MDPs there always exists a single π* that is optimal everywhere at once — you do not need different policies for different starting states. V^{π*} = V*, the unique optimal value function.",
       hints: [
         "S&B §3.6: \"A policy π is defined to be better than or equal to a policy π' if its expected return is greater than or equal to that of π' for all states.\"",
-        'π* being "simultaneously" optimal across all states is non-trivial and is what the existence theorem (§3.6) proves.',
+        "S&B §3.6 proves that a single policy can be optimal everywhere at once. This is the existence theorem for $\pi^*取.",
       ],
     },
     {
@@ -169,7 +167,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       explanation:
         "From Sutton & Barto §3.6 (Bellman optimality equations): π*(s) = argmax_a Σ_{s',r} p(s',r|s,a)[r + γV*(s')]. This is a one-step lookahead: for each action a, compute the expected immediate reward plus the discounted value of the resulting state, summed over all possible next states s'. The action achieving the maximum is greedy-optimal.",
       hints: [
-        "You need the transition probabilities P(s'|s,a) because the environment is stochastic — the next state is uncertain.",
+        "The Bellman optimality equation involves an expectation over next states $s'$ weighted by $P(s' \mid s, a)$. Which option includes this?",
         "Note: V*(s) alone doesn\'t depend on a, so argmax_a V*(s) is meaningless. The argmax must be over the expected next-state value.",
       ],
     },
@@ -255,7 +253,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
         "For a deterministic policy μ, V^μ(s) = Q^μ(s, μ(s)) holds for all states s.",
       correctAnswer: "True",
       explanation:
-        'Sutton & Barto establish V^pi(s) = sum_a pi(a|s) Q^pi(s,a). For a deterministic policy mu, pi(mu(s)|s) = 1 and pi(a|s) = 0 for all a != mu(s). The sum collapses to: V^mu(s) = 1*Q^mu(s,mu(s)) = Q^mu(s,mu(s)). Spinning Up also states this identity: "V^pi(s) = Q^pi(s, mu(s)) for a deterministic policy."',
+        'Sutton & Barto establish V^π(s) = Σ_a π(a|s) Q^π(s,a). For a deterministic policy μ, π(μ(s)|s) = 1 and π(a|s) = 0 for all a \$\\neq\$ μ(s). The sum collapses to: V^μ(s) = 1·Q^μ(s,μ(s)) = Q^μ(s,μ(s)). Spinning Up also states this identity: "V^π(s) = Q^π(s, μ(s)) for a deterministic policy."',
       hints: [
         "Use the identity V^π(s) = Σ_a π(a|s) Q^π(s,a) and substitute π(a|s) for a deterministic policy.",
         "A deterministic policy puts all probability mass on one action, so only one term survives the sum.",
@@ -988,7 +986,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
         "Ordinary importance sampling provides an unbiased estimate of V^π(s) but can have infinite variance, while weighted importance sampling is biased but has finite variance and is strongly consistent.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (Σ ρ_i G_i) / n is unbiased (E[V̂] = V^π(s)) but its variance can be infinite if ρ_i is heavy-tailed. Weighted IS normalizes by Σ ρ_i: V̂_w(s) = Σ ρ_i G_i / Σ ρ_i — this is biased (E[V̂_w] ≠ V^π(s) for finite n) but consistent (converges to V^π(s)) and has dramatically lower variance.",
+        "Sutton & Barto §5.5–5.6: ordinary IS estimate V̂(s) = (Σ ρ_i G_i) / n is unbiased (E[V̂] = V^π(s)) but its variance can be infinite if ρ_i is heavy-tailed. Weighted IS normalizes by Σ ρ_i: V̂_w(s) = Σ ρ_i G_i / Σ ρ_i — this is biased (E[V̂_w] \$\\neq\$ V^π(s) for finite n) but consistent (converges to V^π(s)) and has dramatically lower variance.",
       hints: [
         "Ordinary IS: ρ can be very large when b(a|s) is small but π(a|s) is large. The product of T such ratios can be enormous.",
         'S&B §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred over ordinary importance sampling."',
@@ -1487,7 +1485,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       ],
       correctAnswer: 0,
       explanation:
-        "The standard ε-greedy rule (Sutton & Barto §2.4): with probability 1−ε select the greedy action a*; with probability ε select uniformly at random over all |A| actions (including a*). So π(a*|s) = 1−ε + ε/|A| = 0.9 + 0.025 = 0.925 and π(a≠a*|s) = ε/|A| = 0.025. Total: 0.925 + 3×0.025 = 1 ✓. This ensures every action is tried with probability at least ε/|A| > 0.",
+        "The standard ε-greedy rule (Sutton & Barto §2.4): with probability 1−ε select the greedy action a*; with probability ε select uniformly at random over all |A| actions (including a*). So π(a*|s) = 1−ε + ε/|A| = 0.9 + 0.025 = 0.925 and π(a\$\\neq\$a*|s) = ε/|A| = 0.025. Total: 0.925 + 3×0.025 = 1 ✓. This ensures every action is tried with probability at least ε/|A| > 0.",
       hints: [
         "Careful: the random uniform draw includes the greedy action itself, so π(a*|s) = 1−ε + ε/|A|, not simply 1−ε.",
         'S&B §2.4: ε-greedy "behaves greedily most of the time, but every once in a while...selects randomly from all the actions with equal probability."',
@@ -1544,7 +1542,7 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
       ],
       correctAnswer: 1,
       explanation:
-        'Ordinary IS: V̂ = (1/n)Σᵢ ρᵢGᵢ is unbiased (E[V̂] = V^π(s)) but ρᵢ can be very large, causing high variance. Weighted IS: V̂_w = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ is a self-normalizing (ratio) estimator — biased for finite n (E[V̂_w] ≠ V^π(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
+        'Ordinary IS: V̂ = (1/n)Σᵢ ρᵢGᵢ is unbiased (E[V̂] = V^π(s)) but ρᵢ can be very large, causing high variance. Weighted IS: V̂_w = Σᵢ ρᵢGᵢ / Σᵢ ρᵢ is a self-normalizing (ratio) estimator — biased for finite n (E[V̂_w] \$\\neq\$ V^π(s)) but consistent and with dramatically lower variance. Sutton & Barto §5.6: "In practice, weighted importance sampling usually has dramatically lower variance and is strongly preferred."',
       hints: [
         "The denominator Σᵢ ρᵢ instead of n is what distinguishes weighted from ordinary IS.",
         "If all ρᵢ = 1 (on-policy), both estimators reduce to the standard sample mean.",
@@ -1558,9 +1556,9 @@ The other options describe different RL concepts: the discounted return $G_t$ (o
         "Weighted importance sampling is consistent: as the number of episodes n → ∞, V̂_w(s) converges to V^π(s) with probability 1, despite being biased for finite n.",
       correctAnswer: "True",
       explanation:
-        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)Σρᵢ → E_b[ρ] = 1 and (1/n)ΣρᵢGᵢ → E_b[ρG] = E_π[G] = V^π(s). The ratio converges to V^π(s)/1 = V^π(s). Bias for finite n arises because the ratio of averages ≠ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
+        "Sutton & Barto §5.6 establish that weighted IS is consistent (strongly consistent under mild conditions). By the strong law of large numbers, (1/n)Σρᵢ → E_b[ρ] = 1 and (1/n)ΣρᵢGᵢ → E_b[ρG] = E_π[G] = V^π(s). The ratio converges to V^π(s)/1 = V^π(s). Bias for finite n arises because the ratio of averages \$\\neq\$ average of ratios, but both numerator and denominator converge, so their ratio converges to the correct value.",
       hints: [
-        "Slutsky\'s theorem: if Xₙ → X and Yₙ → Y (in probability), then Xₙ/Yₙ → X/Y as long as Y ≠ 0.",
+        "Slutsky\'s theorem: if Xₙ → X and Yₙ → Y (in probability), then Xₙ/Yₙ → X/Y as long as Y \$\\neq\$ 0.",
         "The bias of weighted IS is O(1/n), which decreases with sample size — hence consistency despite finite-sample bias.",
       ],
     },

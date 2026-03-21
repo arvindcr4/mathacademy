@@ -142,7 +142,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In the InfoNCE loss L = −log[exp(sim(z_i,z_j)/τ) / Σ_{k≠i} exp(sim(z_i,z_k)/τ)], what is the role of the temperature parameter τ, and what value does SimCLR use?",
+        "In the InfoNCE loss L = −log[exp(sim(z_i,z_j)/τ) / Σ_{k\$\\neq\$i} exp(sim(z_i,z_k)/τ)], what is the role of the temperature parameter τ, and what value does SimCLR use?",
       options: [
         "τ controls learning rate; SimCLR uses τ = 1.0",
         "τ sharpens or smooths the similarity distribution: low τ (e.g., 0.07 in SimCLR) focuses more on hard negatives; high τ treats all negatives more uniformly",
@@ -194,7 +194,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/τ) / Σ_{k≠i}^{2N} exp(sim(z_i,z_k)/τ)], evaluated symmetrically.",
+        "NT-Xent = Normalized Temperature-scaled Cross Entropy. SimCLR creates 2N augmented views for N images; for any anchor view i, the 2(N−1) other views (from both augmented copies of all other N−1 images) serve as negatives. The loss is: L_i = −log[exp(sim(z_i,z_j)/τ) / Σ_{k\$\\neq\$i}^{2N} exp(sim(z_i,z_k)/τ)], evaluated symmetrically.",
       hints: [
         "NT-Xent is the full name — Normalized (cosine similarity) Temperature-scaled Cross Entropy.",
         "Each image produces 2 views; so N images → 2N views → 2(N−1) negatives per anchor.",
@@ -2089,7 +2089,7 @@ const additionalSslQuestions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + λ × sum_{i≠j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
+        "Barlow Twins computes the cross-correlation matrix C where C_ij = correlation(embedding_i from view 1, embedding_j from view 2) across the batch. Loss = sum_i (1 - C_ii)² + λ × sum_{i\$\\neq\$j} C_ij². First term: diagonal entries should be 1 (same information in both views = invariance). Second term: off-diagonal should be 0 (different dimensions should be uncorrelated = redundancy reduction). This is inspired by Barlow\'s efficient coding hypothesis in neuroscience.",
       hints: [
         "Identity cross-correlation matrix = each feature dimension is invariant to augmentation AND uncorrelated with other dimensions.",
         "No negative pairs needed — the off-diagonal penalty prevents collapse by decorrelating dimensions.",
@@ -2785,6 +2785,80 @@ const extraSsl: Record<string, Question[]> = {
   ],
 };
 Object.assign(questions, extraSsl);
+
+const patchSsl: Record<string, Question[]> = {
+  "ssl-kp30-patch": [
+    {
+      id: "q-ssl-kp30-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "SSL models for tabular data face a unique challenge compared to image/text SSL: which property of tabular data makes standard augmentations like cropping or masking less effective?",
+      options: [
+        "Tabular datasets are always too small for SSL to be effective",
+        "Tabular features are heterogeneous (mixed types: categorical, numerical) with no natural spatial or temporal structure, making semantics-preserving augmentations hard to define",
+        "Tabular data always requires supervised labels because the features are already human-engineered",
+        "Gradient-based optimization is incompatible with discrete categorical features in tabular data",
+      ],
+      correctAnswer: 1,
+      explanation: "Tabular data lacks the structural regularity of images (spatial coherence) or text (sequential grammar). Features are heterogeneous: some are categorical (cannot be interpolated), some numerical (can be corrupted), with no natural ordering. Augmentations like cropping assume spatial continuity; masking assumes feature redundancy that may not exist when columns are independent. SCARF and SAINT address this with feature-space corruption using the empirical marginal distribution, generating 'corrupted views' by replacing random subsets of features with values sampled from other rows.",
+      hints: [
+        "Images have spatial coherence — nearby pixels are correlated. Tabular columns may be statistically independent.",
+        "SCARF (Self-supervised Contrastive learning using Random Feature Corruption) samples corruptions from the marginal distribution of each feature.",
+      ],
+    },
+  ],
+  "ssl-kp35-patch": [
+    {
+      id: "q-ssl-kp35-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "In SSL for medical imaging, which factor most severely limits the direct application of natural image SSL methods like SimCLR to medical images?",
+      options: [
+        "Medical images are too high-resolution for GPU memory",
+        "Standard augmentations (aggressive color jitter, random grayscale) can destroy diagnostically critical features, and positive pairs from the same image may share pathology that is semantically different from augmentation invariance",
+        "Medical images use DICOM format which cannot be loaded by standard PyTorch dataloaders",
+        "SimCLR requires ImageNet pre-training which uses photographic images incompatible with medical domain",
+      ],
+      correctAnswer: 1,
+      explanation: "Medical image SSL faces the augmentation mismatch problem: SimCLR's default augmentations (aggressive color jitter, random horizontal flipping for histopathology where orientation matters, Gaussian blur that obscures lesion borders) can destroy pathologically relevant features. Furthermore, two crops of the same medical image may capture the same tumor in different views — making them 'positive pairs' — but different images with similar tumors are treated as negatives. This violates the contrastive assumption that positive pairs should be semantically similar. Domain-specific augmentations and patient-level positive mining are required.",
+      hints: [
+        "Consider pathology: horizontal flipping of a histology slide changes perceived cell arrangement, which has diagnostic meaning.",
+        "Two patches of the same breast cancer slide are positives — but so should be patches from different slides of the same cancer type.",
+      ],
+    },
+    {
+      id: "q-ssl-kp35-2",
+      type: "true-false",
+      difficulty: "medium",
+      question: "SSL pre-training on unlabeled medical images (e.g., chest X-rays) consistently outperforms ImageNet-supervised pre-training for downstream medical imaging tasks, even when the ImageNet-pre-trained model is fine-tuned on the same medical dataset.",
+      correctAnswer: "False",
+      explanation: "The superiority of domain-specific SSL over ImageNet supervised pre-training is task-dependent and dataset-size-dependent. For large medical datasets (e.g., CheXpert with 224K X-rays), domain-specific SSL (e.g., MoCo v2 trained on X-rays) can match or slightly exceed ImageNet pre-training on CXR tasks. However, for small medical datasets, ImageNet supervised pre-training often remains competitive because the feature hierarchy (edges, textures, shapes) transfers well. The picture is nuanced: SSL on in-domain data helps more when labeled data is scarce and the domain gap is large (e.g., pathology vs. natural images).",
+      hints: [
+        "ImageNet pre-training captures a rich visual hierarchy that transfers across many visual tasks.",
+        "The benefit of domain-specific SSL increases as the domain gap between ImageNet and the target increases.",
+      ],
+    },
+    {
+      id: "q-ssl-kp35-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The GigaSSL approach for whole-slide image (WSI) SSL must address which fundamental computational challenge not present in standard image SSL?",
+      options: [
+        "Whole-slide images require 3D convolutional encoders because they have multiple focal plane layers",
+        "WSIs are gigapixel images (100K x 100K pixels) that cannot fit in GPU memory, requiring hierarchical or patch-based SSL where the 'image' is a bag of thousands of non-overlapping patches",
+        "Medical image archives use lossless compression formats that cannot be decoded fast enough for online augmentation",
+        "WSI pixels are 16-bit integers rather than 8-bit, requiring specialized normalization that breaks standard batch normalization",
+      ],
+      correctAnswer: 1,
+      explanation: "Whole-slide histopathology images are gigapixel-scale (~100K x 100K pixels at 20x magnification). They cannot be processed as a single image. Standard WSI SSL: (1) extract thousands of non-overlapping patches (e.g., 256x256) from tissue regions, (2) encode each patch independently with a backbone (e.g., ResNet pre-trained with SimCLR), (3) aggregate patch features for slide-level representation using multiple-instance learning (MIL) or transformer-based aggregators. The SSL challenge is defining 'positive pairs' at the slide level: use two random subsets of patches from the same slide as augmented views of the same slide.",
+      hints: [
+        "A gigapixel image at 256x256 patch size yields (100K/256)^2 ~ 150K patches per slide.",
+        "SSL must be applied either at the patch level (define positives as augmented patches) or slide level (define positives as two subsets of the same slide's patches).",
+      ],
+    },
+  ],
+};
+Object.assign(questions, patchSsl);
 
 Object.assign(questions, additionalSslQuestions);
 

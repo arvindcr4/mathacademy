@@ -2750,6 +2750,27 @@ const extra: Record<string, Question[]> = {
       ],
     },
   ],
+
+  "icd-coding-fhir": [
+    {
+      id: "q-hc-ex7-1",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The CAML (Convolutional Attention for Multi-Label classification) model for automated ICD coding from clinical notes uses attention mechanisms for which purpose beyond standard text classification?",
+      options: [
+        "To speed up inference by skipping tokens that are unlikely to contain diagnosis information",
+        "To learn a per-label attention distribution that highlights the specific text spans supporting each individual ICD code, providing label-specific explanations",
+        "To weight tokens by their inverse document frequency in the medical corpus",
+        "To apply multi-head attention across ICD code hierarchies for code grouping",
+      ],
+      correctAnswer: 1,
+      explanation: "CAML computes a separate attention vector over the document for each ICD label, allowing the model to focus on different parts of the clinical note for different codes — 'pneumonia' focuses on different sentences than 'heart failure.' This per-label attention also provides interpretable evidence for each predicted code.",
+      hints: [
+        "Multi-label classification requires the model to produce a separate decision for each of the thousands of ICD codes.",
+        "Per-label attention means the model reads the note differently depending on which code it is currently evaluating.",
+      ],
+    },
+  ],
 };
 
 Object.assign(questions, extra);

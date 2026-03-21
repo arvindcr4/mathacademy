@@ -64,13 +64,13 @@ const questions: Record<string, Question[]> = {
         "Let A = [[1, 2], [0, 1]] and B = [[1, 0], [3, 1]]. Compute AB and BA. What does this illustrate?",
       options: [
         "AB = BA, so matrix multiplication is commutative",
-        "AB ≠ BA in general, so matrix multiplication is not commutative",
+        "AB \$\\neq\$ BA in general, so matrix multiplication is not commutative",
         "AB = BA only when both matrices are square",
         "AB and BA are always transposes of each other",
       ],
       correctAnswer: 1,
       explanation:
-        "AB = [[7,2],[3,1]] and BA = [[1,2],[3,7]]. Since AB ≠ BA, matrix multiplication is not commutative. However it is always associative: (AB)C = A(BC).",
+        "AB = [[7,2],[3,1]] and BA = [[1,2],[3,7]]. Since AB \$\\neq\$ BA, matrix multiplication is not commutative. However it is always associative: (AB)C = A(BC).",
       hints: [
         "AB: row 1 of A dotted with cols of B gives [1·1+2·3, 1·0+2·1] = [7,2]. Row 2: [0+3, 0+1] = [3,1].",
         "BA: row 1 of B dotted with cols of A gives [1,2]. Row 2: [3·1+1·0, 3·2+1·1] = [3,7].",
@@ -260,7 +260,7 @@ const questions: Record<string, Question[]> = {
         "The principal components returned by PCA are always orthogonal to each other.",
       correctAnswer: "True",
       explanation:
-        "The covariance matrix C is real and symmetric, so by the Spectral Theorem its eigenvectors can be chosen to be orthonormal. Principal components are these eigenvectors, so they are mutually orthogonal: PCᵢ · PCⱼ = 0 for i ≠ j.",
+        "The covariance matrix C is real and symmetric, so by the Spectral Theorem its eigenvectors can be chosen to be orthonormal. Principal components are these eigenvectors, so they are mutually orthogonal: PCᵢ · PCⱼ = 0 for i \$\\neq\$ j.",
       hints: [
         "The Spectral Theorem: real symmetric matrices have orthonormal eigenvectors.",
         "Orthogonality ensures PCs capture independent, non-redundant directions of variance.",
@@ -292,10 +292,10 @@ const questions: Record<string, Question[]> = {
         "If events A and B are mutually exclusive (P(A ∩ B) = 0), then they are also independent (P(A ∩ B) = P(A)·P(B)).",
       correctAnswer: "False",
       explanation:
-        "Mutual exclusivity means P(A ∩ B) = 0. Independence requires P(A ∩ B) = P(A)·P(B). These are equal only if P(A) = 0 or P(B) = 0. For a fair die with A = {1,2,3} and B = {4,5,6}: P(A∩B) = 0 but P(A)·P(B) = 1/4 ≠ 0. They are dependent.",
+        "Mutual exclusivity means P(A ∩ B) = 0. Independence requires P(A ∩ B) = P(A)·P(B). These are equal only if P(A) = 0 or P(B) = 0. For a fair die with A = {1,2,3} and B = {4,5,6}: P(A∩B) = 0 but P(A)·P(B) = 1/4 \$\\neq\$ 0. They are dependent.",
       hints: [
         "Knowing A occurred means B cannot occur — that is informative, violating independence.",
-        "Independence: P(B|A) = P(B). But P(B|A) = 0 ≠ 1/2 = P(B) for mutually exclusive events.",
+        "Independence: P(B|A) = P(B). But P(B|A) = 0 \$\\neq\$ 1/2 = P(B) for mutually exclusive events.",
       ],
     },
     {
@@ -341,7 +341,7 @@ const questions: Record<string, Question[]> = {
         "Y ~ N(aμ, σ²) — mean shifts but variance unchanged",
         "Y ~ N(aμ + b, a²σ²) — mean and variance both transform",
         "Y ~ N(μ + b, σ²) — only mean shifts by b",
-        "Y is no longer Gaussian if a ≠ 1",
+        "Y is no longer Gaussian if a \$\\neq\$ 1",
       ],
       correctAnswer: 1,
       explanation:
@@ -447,10 +447,10 @@ const questions: Record<string, Question[]> = {
       options: ["1", "0", "2", "−1"],
       correctAnswer: 1,
       explanation:
-        "Cov(X,Y) = E[XY] − E[X]E[Y] = E[X·X²] − E[X]E[X²] = E[X³] − 0·1 = E[X³]. For N(0,1), all odd moments are 0 by symmetry. So Cov(X,X²) = 0. Yet X and Y = X² are clearly dependent! Zero covariance ≠ independence.",
+        "Cov(X,Y) = E[XY] − E[X]E[Y] = E[X·X²] − E[X]E[X²] = E[X³] − 0·1 = E[X³]. For N(0,1), all odd moments are 0 by symmetry. So Cov(X,X²) = 0. Yet X and Y = X² are clearly dependent! Zero covariance \$\\neq\$ independence.",
       hints: [
         "E[X³] = 0 because N(0,1) is symmetric around 0 (odd moments vanish).",
-        "X and X² are functionally dependent (knowing X determines Y) but have zero covariance — illustrating that uncorrelated ≠ independent.",
+        "X and X² are functionally dependent (knowing X determines Y) but have zero covariance — illustrating that uncorrelated \$\\neq\$ independent.",
       ],
     },
     {
@@ -520,7 +520,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "E[σ̂²_MLE] = (n−1)/n · σ². The MLE divides by n but the unbiased estimator divides by (n−1) (Bessel\'s correction). For n=10: E[σ̂²_MLE] = 0.9σ² — it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
       hints: [
-        "E[(1/n)Σ(xᵢ−x̄)²] = (n−1)σ²/n ≠ σ². Use s² = (1/(n−1))Σ(xᵢ−x̄)² for unbiasedness.",
+        "E[(1/n)Σ(xᵢ−x̄)²] = (n−1)σ²/n \$\\neq\$ σ². Use s² = (1/(n−1))Σ(xᵢ−x̄)² for unbiasedness.",
         "Dividing by n−1 rather than n corrects for the one degree of freedom lost to estimating the mean.",
       ],
     },
@@ -828,7 +828,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "By Jensen\'s inequality applied to the convex function −log: D_KL(P‖Q) = E_P[log(P/Q)] = −E_P[log(Q/P)] ≥ −log(E_P[Q/P]) = −log(1) = 0. Equality holds iff P/Q is constant, i.e., P = Q. KL is asymmetric: D_KL(P‖Q) ≠ D_KL(Q‖P) in general.",
+        "By Jensen\'s inequality applied to the convex function −log: D_KL(P‖Q) = E_P[log(P/Q)] = −E_P[log(Q/P)] ≥ −log(E_P[Q/P]) = −log(1) = 0. Equality holds iff P/Q is constant, i.e., P = Q. KL is asymmetric: D_KL(P‖Q) \$\\neq\$ D_KL(Q‖P) in general.",
       hints: [
         "Jensen\'s inequality: for convex f, E[f(X)] ≥ f(E[X]). Apply with f = −log and X = Q(x)/P(x).",
         "KL asymmetry: P = N(0,1), Q = N(1,1): D_KL(P‖Q) = 0.5 but D_KL(Q‖P) = 0.5 (symmetric here due to equal variances). Try different variances for asymmetry.",
@@ -1004,7 +1004,7 @@ const questions: Record<string, Question[]> = {
       explanation:
         "Ridge shrinks ŵ = (XᵀX+λI)⁻¹Xᵀy toward 0. As λ→∞, ŵ→0 regardless of data → prediction always near 0 → high bias. But ŵ becomes less sensitive to training data → lower variance. This is the classic bias-variance tradeoff modulated by regularization strength.",
       hints: [
-        "As λ→∞: ŵ→0 (extreme shrinkage). Prediction f̂(x) = wᵀx → 0. If true f(x) ≠ 0, bias is large.",
+        "As λ→∞: ŵ→0 (extreme shrinkage). Prediction f̂(x) = wᵀx → 0. If true f(x) \$\\neq\$ 0, bias is large.",
         "But f̂(x)≈0 for all training sets → variance ≈ 0.",
       ],
     },
@@ -1291,7 +1291,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "IEEE 754 double-precision (float64) uses 52 mantissa bits, 11 exponent bits, and 1 sign bit. The machine epsilon (smallest ε with 1+ε ≠ 1 in float64) is approximately:",
+        "IEEE 754 double-precision (float64) uses 52 mantissa bits, 11 exponent bits, and 1 sign bit. The machine epsilon (smallest ε with 1+ε \$\\neq\$ 1 in float64) is approximately:",
       options: ["2⁻²³ ≈ 1.2×10⁻⁷", "2⁻⁵² ≈ 2.2×10⁻¹⁶", "2⁻¹⁰²³", "10⁻³²"],
       correctAnswer: 1,
       explanation:
@@ -1631,7 +1631,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
         'KL(P||Q) = Σ_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL ≥ 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
       hints: [
         'KL is always non-negative by Jensen\'s inequality: log is concave so E[log x] ≤ log E[x].',
-        'KL(P||Q) ≠ KL(Q||P) — it is asymmetric and not a true distance metric.',
+        'KL(P||Q) \$\\neq\$ KL(Q||P) — it is asymmetric and not a true distance metric.',
       ],
     },
     {
@@ -1639,7 +1639,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       type: 'true-false',
       difficulty: 'medium',
       question:
-        'KL divergence is asymmetric: KL(P||Q) ≠ KL(Q||P) in general. KL(P||Q) is called the forward KL and tends to be mass-covering (mean-seeking), while KL(Q||P) is called the reverse KL and tends to be mode-seeking (zero-forcing).',
+        'KL divergence is asymmetric: KL(P||Q) \$\\neq\$ KL(Q||P) in general. KL(P||Q) is called the forward KL and tends to be mass-covering (mean-seeking), while KL(Q||P) is called the reverse KL and tends to be mode-seeking (zero-forcing).',
       correctAnswer: 'True',
       explanation:
         'Forward KL (P||Q): penalizes Q being small where P is large, forcing Q to cover all modes of P (mass-covering). Reverse KL (Q||P): penalizes Q being large where P is small, so Q collapses to a single mode of P (mode-seeking). Variational inference minimizes reverse KL; MLE minimizes forward KL.',
@@ -2019,7 +2019,7 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        'Importance sampling: E_P[f(x)] = E_Q[f(x)P(x)/Q(x)] = E_Q[f(x)w(x)]. Samples x_i ~ Q are weighted by importance weights w_i = P(x_i)/Q(x_i). The estimator is unbiased if Q(x) > 0 wherever P(x)f(x) ≠ 0. Variance is low when Q ≈ P·|f| (proposal matches integrand shape).',
+        'Importance sampling: E_P[f(x)] = E_Q[f(x)P(x)/Q(x)] = E_Q[f(x)w(x)]. Samples x_i ~ Q are weighted by importance weights w_i = P(x_i)/Q(x_i). The estimator is unbiased if Q(x) > 0 wherever P(x)f(x) \$\\neq\$ 0. Variance is low when Q ≈ P·|f| (proposal matches integrand shape).',
       hints: [
         'Importance weights w = P/Q correct for the mismatch between sampling distribution Q and target P.',
         'High-variance weights (Q much lighter-tailed than P) cause catastrophic importance sampling failure.',
@@ -2362,7 +2362,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "CG is only applicable to diagonal matrices",
       ],
       correctAnswer: 1,
-      explanation: "CG generates mutually A-conjugate search directions (dᵢᵀAdⱼ = 0 for i≠j), ensuring each new step makes progress in a previously unexplored direction. For an n×n SPD system: CG terminates in ≤ n steps exactly. Convergence rate: ‖eₜ‖_A ≤ 2((√κ−1)/(√κ+1))^t ‖e₀‖_A — dependent on √κ rather than κ for gradient descent.",
+      explanation: "CG generates mutually A-conjugate search directions (dᵢᵀAdⱼ = 0 for i\$\\neq\$j), ensuring each new step makes progress in a previously unexplored direction. For an n×n SPD system: CG terminates in ≤ n steps exactly. Convergence rate: ‖eₜ‖_A ≤ 2((√κ−1)/(√κ+1))^t ‖e₀‖_A — dependent on √κ rather than κ for gradient descent.",
       hints: [
         "CG termination in n steps: n search directions span ℝⁿ — x* is found exactly.",
         "Condition number dependence: GD converges as (1−2/(κ+1))^t; CG as ((√κ−1)/(√κ+1))^t — CG is faster by factor √κ.",

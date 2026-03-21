@@ -2692,6 +2692,169 @@ const extraDL: Record<string, Question[]> = {
     },
   ],
 };
+
+const extraDL2: Record<string, Question[]> = {
+  "normalization-techniques-ext": [
+    {
+      id: "q-dl-ext5-1",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "During training, Batch Normalization normalises activations using mini-batch statistics. During inference, what statistics are used instead and why?",
+      options: [
+        "The statistics of the current inference batch, same as during training",
+        "Running estimates of the population mean and variance accumulated during training via an exponential moving average, because test batches may be small or single-sample and batch statistics would be noisy",
+        "Zero mean and unit variance (standard normal) as a fixed prior, because the actual statistics are unknown at inference",
+        "The statistics of the last training batch, saved as a checkpoint alongside the model weights",
+      ],
+      correctAnswer: 1,
+      explanation: "BatchNorm tracks running statistics during training using EMA: mu_running = (1-momentum) * mu_running + momentum * mu_batch. At inference, these fixed population estimates are used instead of mini-batch statistics. This is crucial: at test time, a single-sample inference would have undefined batch statistics, and using batch statistics from a small test batch introduces noise. The running statistics approximate E[x] and Var[x] over the full training dataset.",
+      hints: [
+        "Single-sample inference: a batch of size 1 has no variance. BatchNorm must use pre-computed population statistics instead.",
+        "The running mean/variance are NOT parameters updated by gradient descent — they are buffer statistics updated via EMA during training.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-2",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Layer Normalization (Ba et al., 2016) normalises activations over the feature dimension rather than the batch dimension. Why is LayerNorm preferred over BatchNorm in transformer models?",
+      options: [
+        "LayerNorm is computationally cheaper than BatchNorm on GPUs due to fewer memory accesses",
+        "LayerNorm is independent of batch size — it normalises each sample using statistics over its own feature dimension, making it well-suited for sequence models where batch sizes vary and each position has different semantics",
+        "LayerNorm eliminates the need for learnable gamma and beta parameters, reducing parameter count",
+        "LayerNorm produces better-calibrated probabilities in the output distribution than BatchNorm",
+      ],
+      correctAnswer: 1,
+      explanation: "In transformers, each sequence position has different semantics (e.g., token 1 is a verb, token 5 is a noun), making batch normalisation across positions inappropriate. LayerNorm normalises over the feature dimension (all d_model features) for each token independently: y = gamma * (x - mu) / sigma + beta, where mu and sigma are computed over the d_model features of that single token. This is invariant to batch size (works for batch=1 and RNN-style sequential inference) and respects the independence of positions.",
+      hints: [
+        "BatchNorm: normalise over the batch dimension (N samples) for each feature. LayerNorm: normalise over the feature dimension for each sample.",
+        "Sequence models need per-token normalisation — using BatchNorm would mix different tokens, which have different distributions.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-3",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "GroupNorm (Wu and He, 2018) divides channels into G groups and normalises within each group. What problem does it solve that BatchNorm cannot handle well?",
+      options: [
+        "GroupNorm solves the dying ReLU problem by normalising negative activations within each group",
+        "GroupNorm works well at very small batch sizes (e.g., 1-2 images per GPU) common in object detection and segmentation training, where BatchNorm statistics become inaccurate due to small batch sampling noise",
+        "GroupNorm eliminates the need for weight decay by normalising weights rather than activations",
+        "GroupNorm reduces overfitting by randomly grouping channels at each training step",
+      ],
+      correctAnswer: 1,
+      explanation: "BatchNorm requires sufficiently large batches (typically 32-128) for accurate mini-batch statistics. In object detection and segmentation, GPU memory limits force small batch sizes (1-2 images per GPU), where BatchNorm statistics are extremely noisy. GroupNorm normalises over spatial locations and channel group members for each sample independently — its statistics are batch-size-independent. GroupNorm with G=32 groups maintains performance from batch size 2 to 32+, whereas BatchNorm degrades sharply below batch size 4.",
+      hints: [
+        "Detection training: batch size 2 images/GPU is common. BatchNorm needs 32+ for stable statistics. GroupNorm needs only 1.",
+        "GroupNorm axes: normalise over (H, W, C/G) for each (N, group) pair. Fully batch-independent.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-4",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "RMSNorm (Root Mean Square Layer Normalization) is used in LLaMA and GPT models instead of standard LayerNorm. What simplification does it make and why is this beneficial?",
+      options: [
+        "RMSNorm removes the learnable gain parameter gamma, relying only on the normalisation for training stability",
+        "RMSNorm removes the mean subtraction step, normalising by RMS only: y_i = x_i / RMS(x) * gamma. This reduces computation while achieving comparable performance because re-centering is less important than re-scaling for training stability",
+        "RMSNorm normalises across the batch dimension rather than the feature dimension, making it equivalent to a fast BatchNorm",
+        "RMSNorm uses the L1 norm instead of L2 norm, making it more robust to outlier activations",
+      ],
+      correctAnswer: 1,
+      explanation: "Standard LayerNorm: y = gamma * (x - mean(x)) / sqrt(var(x) + eps) + beta. RMSNorm (Zhang and Sennrich, 2019): y = gamma * x / RMS(x) where RMS(x) = sqrt(mean(x^2)). It drops both mean subtraction and the learnable beta offset. The authors found that re-centering (mean subtraction) is less critical for training stability than re-scaling (dividing by RMS). RMSNorm is 10-15% faster than LayerNorm, and at LLM scale this matters. LLaMA, Mistral, and other modern LLMs use RMSNorm as the default normalisation.",
+      hints: [
+        "RMSNorm = LayerNorm without mean subtraction and without beta. Just scale by the inverse RMS.",
+        "At LLaMA-7B scale: every 1% speedup per layer compounds across 32 layers and billions of tokens. RMSNorm savings are significant.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-5",
+      type: "true-false",
+      difficulty: "medium",
+      question: "Batch Normalization acts as a regularizer during training, reducing the need for Dropout, because the randomness in mini-batch statistics introduces noise that prevents the model from overfitting to exact training samples.",
+      options: ["True", "False"],
+      correctAnswer: "True",
+      explanation: "BatchNorm introduces stochasticity through mini-batch statistics: the normalisation of each sample depends on which other samples are in the batch. This randomness acts as a form of regularisation — the model cannot overfit to any specific sample exact activation values. The original BatchNorm paper (Ioffe and Szegedy, 2015) reported that adding BatchNorm often allowed reducing or eliminating Dropout without increased overfitting, particularly in image classification networks like Inception.",
+      hints: [
+        "Each sample is normalised using its batch statistics — these statistics change every batch, adding noise to activations.",
+        "This stochasticity is analogous to Dropout (random neuron zeroing) but operates at the normalisation level.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-6",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "DenseNet (Huang et al., 2017) connects each layer to every subsequent layer via dense skip connections using concatenation. Compared to ResNet additive skip connections, what is the key advantage of DenseNet concatenation?",
+      options: [
+        "Dense connections reduce the number of parameters compared to ResNet by eliminating redundant feature maps",
+        "Dense connections enable explicit feature reuse: each layer receives the feature maps of ALL preceding layers, encouraging reuse of low-level features throughout the network and providing an implicit deep supervision signal to early layers",
+        "Dense connections make the network equivalent to an ensemble of shallow networks of different depths",
+        "Dense connections allow the network to dynamically select which skip connections to use based on input content",
+      ],
+      correctAnswer: 1,
+      explanation: "In DenseNet, layer l receives concatenated feature maps from layers 0, 1, ..., l-1: H_l = F_l([H_0, H_1, ..., H_{l-1}]). Unlike ResNet addition (which modifies the feature map), concatenation preserves all features — every layer can directly access all preceding features. This enables feature reuse (deep layers can use low-level edge detectors without rediscovering them) and provides implicit deep supervision. DenseNet achieves competitive accuracy with fewer parameters than ResNet by exploiting this reuse.",
+      hints: [
+        "ResNet: x_l = F_l(x_{l-1}) + x_{l-1} (addition, same-size). DenseNet: x_l = F_l(concat(x_0, x_1, ..., x_{l-1})) (concatenation, growing channels).",
+        "Feature reuse means later layers can rely on early layers edge detectors without learning redundant copies — fewer parameters needed.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-7",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Focal loss (Lin et al., 2017) was introduced to address class imbalance in one-stage object detection. How does it modify the standard cross-entropy loss?",
+      options: [
+        "It multiplies the cross-entropy loss by the inverse class frequency, upweighting rare classes",
+        "It adds a modulating factor (1 - p_t)^gamma that downweights easy examples (high p_t) and focuses training on hard, misclassified examples (low p_t)",
+        "It replaces the softmax normalisation with a sigmoid to allow multi-label prediction across all object categories",
+        "It clips the gradient of the cross-entropy loss for confident predictions to prevent exploding gradients",
+      ],
+      correctAnswer: 1,
+      explanation: "Focal loss = -alpha_t * (1 - p_t)^gamma * log(p_t). The modulating factor (1 - p_t)^gamma reduces the loss contribution of easy examples exponentially. With gamma=2: an example with p_t=0.9 (easy) gets a factor of (0.1)^2 = 0.01 — its contribution is 100x less than a hard example with p_t=0.1. This focuses training on hard negatives and misclassified examples, addressing the extreme class imbalance in one-stage detectors (e.g., approximately 100K background proposals vs approximately 10 foreground objects per image).",
+      hints: [
+        "Standard CE: if p_t=0.9 (easy), loss is -log(0.9)=0.1. Focal: (1-0.9)^2 * 0.1 = 0.001 — much smaller contribution.",
+        "One-stage detectors evaluate approximately 100K candidate boxes. Without focal loss, training is dominated by easy background boxes.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-8",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "The one-cycle learning rate policy (Smith 2018) cycles from a low LR to a high LR and back in three phases. What are these three phases and what does each accomplish?",
+      options: [
+        "Warmup phase (LR increases), constant phase (LR fixed at max), decay phase (LR decreases to zero)",
+        "Ascent phase (LR linearly increases from base_lr to max_lr exploring the loss landscape), descent phase (LR decreases from max_lr back to base_lr for convergence), annealing phase (LR decreases to near-zero for fine settling into a flat minimum)",
+        "Exploration phase (random LR sampling), exploitation phase (LR fixed at best found value), convergence phase (LR decays)",
+        "Batch size warmup (small batch -> large batch), LR decay, and momentum increase phases",
+      ],
+      correctAnswer: 1,
+      explanation: "One-cycle LR (Smith 2018, popularised by fast.ai): (1) Ascent: LR linearly increases from base_lr to max_lr over 30-45% of training — this explores the loss landscape. (2) Descent: LR decreases from max_lr back to base_lr over 45-70% of training — this converges. (3) Annealing: LR drops to a very small value (base_lr/div_factor) over the final 10% — this settles into a flat minimum. Momentum is inversely cycled (high when LR is low, low when LR is high). One-cycle enables super-convergence — training in 1/5 to 1/10 of standard epochs.",
+      hints: [
+        "One-cycle trains in 3 phases: ramp up (explore) -> ramp down (converge) -> anneal (finalise). Total = 1 cycle.",
+        "Inverse momentum cycling: high LR with low momentum = aggressive, exploratory updates. Low LR with high momentum = fine-grained convergence.",
+      ],
+    },
+    {
+      id: "q-dl-ext5-9",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question: "Weight decay (L2 regularisation) and the AdamW optimizer differ in how they apply regularisation. What is the key difference between L2 regularisation applied to Adam and AdamW?",
+      options: [
+        "L2 regularisation adds lambda*theta to the gradient before Adam update; AdamW applies weight decay directly to the weights after Adam update, bypassing gradient scaling by the second moment estimate",
+        "L2 regularisation with Adam applies weight decay only to the final layer; AdamW applies it uniformly to all layers",
+        "L2 regularisation with Adam is applied per-sample; AdamW applies it per-batch",
+        "L2 regularisation and AdamW are mathematically equivalent for Adam — the distinction only matters for SGD",
+      ],
+      correctAnswer: 0,
+      explanation: "L2 regularisation: adds lambda*theta to gradient g_t, so Adam update uses g_t + lambda*theta. Adam then adapts this modified gradient by dividing by sqrt(v_t) — so effective weight decay is lambda*theta/sqrt(v_t), which varies per parameter based on gradient history. AdamW (decoupled weight decay, Loshchilov and Hutter 2019): subtracts lambda*theta directly from weights AFTER Adam gradient update. This means all weights decay by the same fraction lambda*lr per step, regardless of gradient history. AdamW is theoretically cleaner and empirically outperforms Adam+L2 on language model training.",
+      hints: [
+        "Adam+L2: decay is scaled by 1/sqrt(v_t) — parameters with large gradients are decayed less than parameters with small gradients.",
+        "AdamW: theta -= lr * lambda * theta after gradient step. Every parameter decays by the same fraction — no gradient history dependence.",
+      ],
+    },
+  ],
+};
+Object.assign(questions, extraDL2);
 Object.assign(questions, extraDL);
 
 registerQuestions(questions);
