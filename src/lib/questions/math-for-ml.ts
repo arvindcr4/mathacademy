@@ -2670,6 +2670,25 @@ const extra3: Record<string, import("@/lib/curriculum").Question[]> = {
         "EM does not guarantee global optimum - multiple random restarts are used to find a good local maximum.",
       ],
     },
+    {
+      id: "q-mfml-kp46-3",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question: "Low-rank matrix approximation via truncated SVD: Given a matrix A with SVD A = U \\Sigma V^T, the best rank-k approximation A_k = U_k \\Sigma_k V_k^T minimizes which norm?",
+      options: [
+        "The L1 norm \\|A - A_k\\|_1",
+        "The Frobenius norm \\|A - A_k\\|_F and the spectral norm \\|A - A_k\\|_2 (Eckart-Young-Mirsky theorem)",
+        "The nuclear norm \\|A - A_k\\|_*",
+        "The infinity norm \\|A - A_k\\|_\\infty",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The Eckart-Young-Mirsky theorem states that the truncated SVD A_k = \\sum_{i=1}^k \\sigma_i u_i v_i^T provides the best rank-k approximation to A under both the Frobenius norm (\\|A - A_k\\|_F = \\sqrt{\\sum_{i=k+1}^r \\sigma_i^2}) and the spectral norm (\\|A - A_k\\|_2 = \\sigma_{k+1}). This makes truncated SVD optimal for dimensionality reduction, compression, and denoising applications.",
+      hints: [
+        "The theorem holds for both the Frobenius norm (sum of squared singular values) and the spectral norm (largest singular value).",
+        "Truncating to rank k keeps the top k singular values and vectors, discarding the smallest singular values.",
+      ],
+    },
   ],
 };
 

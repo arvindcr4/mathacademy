@@ -110,7 +110,7 @@ const questions: Record<string, Question[]> = {
         "GloVe trains on individual context-window co-occurrences like Word2Vec, processing one (word, context) pair at a time.",
       correctAnswer: "False",
       explanation:
-        'GloVe (Global Vectors, Pennington et al. 2014) builds a global word-word co-occurrence matrix X over the entire corpus first, then factorises it using a weighted least-squares objective: minimise \\Sigma f(X_ij)(w_i\\cdotw̃_j + b_i + b̃_j − log X_ij)\\^2. The word "Global" in the name signals that it uses corpus-wide aggregate statistics rather than local window samples. This global view makes GloVe more data-efficient than Skip-Gram\'s stochastic sampling.',
+        "GloVe (Global Vectors, Pennington et al. 2014) builds a global word-word co-occurrence matrix $\\mathbf{X}$ over the entire corpus first, where $X_{ij}$ counts how often word $i$ appears in the context of word $j$. It then factorises this matrix using a weighted least-squares objective:\n\\[\\mathcal{L} = \\sum_{i,j} f(X_{ij})\\bigl(\\mathbf{w}_i^\\top \\tilde{\\mathbf{w}}_j + b_i + \\tilde{b}_j - \\log X_{ij}\\bigr)^2.\\]\nThe weighting function $f(X_{ij})$ upweights mid-frequency co-occurrences and downweights very high-frequency pairs (which would otherwise dominate the loss). The word \"Global\" signals that GloVe uses corpus-wide aggregate statistics rather than local window samples like Word2Vec. Because the full co-occurrence matrix is available during training, GloVe extracts more signal from the same data than Skip-Gram's stochastic per-pair sampling, making it more data-efficient.\n\nKey contrast: Word2Vec samples individual (word, context) pairs on-the-fly; GloVe pre-counts all pairs into matrix $\\mathbf{X}$ and factorises those counts.",
       hints: [
         'The name GloVe contains the word "Global" - what does that suggest about its use of the corpus?',
         "Word2Vec samples individual (word, context) training pairs. GloVe first builds a big count matrix and trains on those counts directly.",
@@ -519,7 +519,7 @@ const questions: Record<string, Question[]> = {
         'The "naive" independence assumption is unrealistic: seeing "not" dramatically changes the meaning of "good" (making them dependent). Despite this, Naive Bayes often achieves 70-80% accuracy on sentiment tasks because the log-probability scores act as a linear classifier over word counts, and the feature interactions that matter most (bigrams, negation) are partially captured by the presence of individual words. The independence assumption mainly affects probability calibration, not the ranking of classes.',
       hints: [
         'Naive Bayes still correctly identifies that "terrible", "awful", "hate" predict negative sentiment even without modelling word interactions.',
-        "Think about what the language modelling objective actually optimises - is factual correctness part of the loss?",
+        "The independence assumption mainly affects probability calibration (how well the output probabilities match true frequencies), not the ranking of which class is preferred. The classifier can still pick the right class even if the probabilities are overconfident.",
       ],
     },
   ],
@@ -724,19 +724,20 @@ const questions: Record<string, Question[]> = {
       id: "q-nlp-kp13-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What metric does SQuAD 1.1 use to evaluate model performance?",
+      question:
+        "ROUGE-L recall is the standard evaluation metric for summarisation. What key property does the Longest Common Subsequence (LCS) in ROUGE-L capture that n-gram overlap metrics like ROUGE-1 miss?",
       options: [
-        "BLEU score averaged over all questions",
-        "Exact Match (EM) and Token-level F1 score",
-        "ROUGE-L recall over reference answers",
-        "Mean Reciprocal Rank (MRR) of the correct answer",
+        "ROUGE-L rewards consecutive word matches, penalising summaries that reorder information from the source",
+        "ROUGE-L rewards in-sequence word order without requiring consecutive matches, capturing sentence-level fluency and structure that non-consecutive n-gram overlap misses",
+        "ROUGE-L automatically corrects for summary length bias by normalising against the reference length",
+        "ROUGE-L uses the full vocabulary of the reference rather than a limited n-gram set",
       ],
       correctAnswer: 1,
       explanation:
-        "SQuAD uses Exact Match (the predicted span exactly equals the gold answer after normalisation) and token-level F1 (overlap between predicted and gold token sets), both averaged over all questions.",
+        "ROUGE-L uses the Longest Common Subsequence (LCS) — the longest sequence of words that appears in both the hypothesis and the reference in the same order (but not necessarily consecutively). Unlike ROUGE-1 (unigram overlap), which counts any shared word regardless of position, ROUGE-L rewards summaries that preserve the structure and fluency of the original text. For example, given a reference \"The cat sat on the mat\" and a hypothesis \"The cat on the mat sat\": ROUGE-1 would score well since all words appear, but ROUGE-L would penalise the word-order inversion because the LCS is shorter. The LCS-based F1 captures how well the summary preserves the intended word order of the reference.\n\nFormally, for reference R and hypothesis H:\n\\[\\text{ROUGE-L} = \\frac{\\text{LCS}(R, H)}{|R|},\\quad \\text{precision} = \\frac{\\text{LCS}(R, H)}{|H|},\\quad F_1 = \\frac{2 \\cdot P \\cdot R}{P + R}.\\]",
       hints: [
-        "Why would you need two metrics? Think about cases where the prediction partially overlaps with the gold answer.",
-        "EM is a strict metric; F1 gives partial credit - which is more lenient?",
+        "LCS = Longest Common Subsequence. For \"The cat sat on the mat\" and \"The cat on the mat sat\", what is the LCS? Does it penalise the reordered version?",
+        "ROUGE-1 counts shared words but ignores their order. ROUGE-L adds the constraint that words must appear in the same sequence. Which is a better proxy for summary quality?",
       ],
     },
     {
@@ -744,13 +745,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "SQuAD 2.0 extends SQuAD 1.1 by adding questions that have no answer in the provided passage, requiring models to abstain.",
-      correctAnswer: "True",
+        "In abstractive summarisation, the model is allowed to copy word-for-word from the source document, whereas in extractive summarisation the model must paraphrase all content.",
+      correctAnswer: "False",
       explanation:
-        "SQuAD 2.0 includes ~50% unanswerable questions, forcing models to decide both whether an answer exists and where it is, making the task significantly harder.",
+        "The distinction is the opposite: extractive summarisation selects and concatenates whole sentences or passages verbatim from the source document — no generation is required. Abstractive summarisation generates new text that may paraphrase, compress, or rephrase the source content, potentially introducing words not present in the source. BART and T5 are abstractive models; SummaRuNer is an extractive model. Copy mechanisms in seq2seq models (copy pointers) blur this line by allowing abstractive models to also copy specific source spans verbatim when appropriate.",
       hints: [
-        "A model that always predicts a span would struggle when no span is correct - what capability does SQuAD 2.0 test?",
-        "Think about the real-world scenario where a user asks a question that a document cannot answer.",
+        "Extractive = extract (copy verbatim) sentences from source. Abstractive = generate new text that may differ from the source. Which is which?",
+        "A model that selects entire sentences from a news article to form a summary is performing which type of summarisation?",
       ],
     },
   ],
@@ -805,10 +806,11 @@ const questions: Record<string, Question[]> = {
         "Higher BLEU scores correlate well with human translation quality judgements at the sentence level, making BLEU a reliable metric for evaluating individual translations.",
       correctAnswer: "False",
       explanation:
-        "BLEU does not capture meaning - two sentences with the same words in different orders may score differently.",
+        "BLEU was designed by Papineni et al. (2002) to evaluate entire translation corpora, not individual sentences. At the sentence level, BLEU has very high variance and poor correlation with human quality judgments for several reasons:\n\n1. **Small-sample problem**: BLEU averages n-gram precision over many sentences. A single sentence provides too small a sample for stable n-gram statistics, making BLEU scores at sentence level noisy and unreliable.\n\n2. **N-gram overlap does not capture meaning**: Two translations with identical n-gram sets but opposite meanings (e.g., \"The cat did not die\" vs. \"The cat died\") can receive similar BLEU scores because BLEU only measures surface overlap, not semantic content.\n\n3. **No fluency or adequacy assessment**: BLEU cannot judge grammaticality or whether a sentence faithfully conveys the source meaning.\n\n4. **Reference variability**: At the sentence level, a single reference may not capture all valid translations; BLEU penalises valid alternatives that differ from the reference in wording.\n\nFor sentence-level evaluation, metrics like METEOR, BERTScore, or human evaluation are preferred. BLEU remains useful for corpus-level ranking because averaging over many sentences smooths out the variance.",
       hints: [
-        "BLEU does not capture meaning - two sentences with the same words in different orders may score differently.",
-        "What aspects of translation quality does n-gram overlap fail to capture?",
+        "BLEU was designed for entire corpora. What happens to the reliability of n-gram statistics when you evaluate a single sentence instead of thousands?",
+        "BLEU only measures n-gram overlap. Can n-gram overlap detect opposite meanings? Consider \"The cat did not die\" vs. \"The cat died\" — do they have similar BLEU scores?",
+        "If you translate a sentence with all the right words in the wrong order, BLEU may give a decent score. Does this reflect translation quality?",
       ],
     },
   ],
@@ -1357,19 +1359,20 @@ const questions: Record<string, Question[]> = {
       id: "q-nlp-kp24-2",
       type: "multiple-choice",
       difficulty: "medium",
-      question: "What metric does SQuAD 1.1 use to evaluate model performance?",
+      question:
+        "RAG (Lewis et al., 2020) uses a retriever to fetch relevant documents and a generator to produce the final answer. What are the two main RAG variants, RAG-Token and RAG-Sequence, and how do they differ?",
       options: [
-        "BLEU score averaged over all questions",
-        "Exact Match (EM) and Token-level F1 score",
-        "ROUGE-L recall over reference answers",
-        "Mean Reciprocal Rank (MRR) of the correct answer",
+        "RAG-Token uses the retrieved document as a prefix to the query; RAG-Sequence prepends the query to the document",
+        "RAG-Token marginalises over each retrieved document at the token level, conditioning each generated token on all retrieved documents; RAG-Sequence conditions the entire generated answer on each retrieved document and marginalises at the sequence level",
+        "RAG-Token is trained with supervised retrieval; RAG-Sequence uses unsupervised retrieval",
+        "The only difference is the vocabulary size: RAG-Token uses a smaller vocabulary for efficiency",
       ],
       correctAnswer: 1,
       explanation:
-        "SQuAD uses Exact Match (the predicted span exactly equals the gold answer after normalisation) and token-level F1 (overlap between predicted and gold token sets), both averaged over all questions.",
+        "RAG-Token and RAG-Sequence are two decoding strategies for combining retrieval and generation:\n\n**RAG-Token**: At each generation step, the probability distribution over the next token is a weighted sum over the distributions obtained from each retrieved document. The model effectively has multiple possible document contexts at each step, and marginalises (sums) over them:\n\\[P_\\text{RAG-Token}(w_t | w_{<t}, x) = \\sum_{d \\in \\text{top-}k} P_\\text{gen}(w_t | w_{<t}, d, x) \\cdot P_\\text{ret}(d | x)\\]\n\n**RAG-Sequence**: The entire answer sequence is generated conditioned on each retrieved document separately, then the sequence-level probabilities are marginalised. Each document generates a complete answer sequence, and the final answer is the one with the highest marginal probability:\n\\[P_\\text{RAG-Seq}(y | x) = \\sum_{d \\in \\text{top-}k} P_\\text{gen}(y | w_{<t}, d, x) \\cdot P_\\text{ret}(d | x)\\]\n\nRAG-Token allows token-level flexibility (different tokens can be sourced from different documents); RAG-Sequence is more conservative and tends to copy from a single dominant document.",
       hints: [
-        "Why would you need two metrics? Think about cases where the prediction partially overlaps with the gold answer.",
-        "EM is a strict metric; F1 gives partial credit - which is more lenient?",
+        "Marginalisation means summing over latent retrieval decisions. At what level does each variant marginalise — per token or per generated sequence?",
+        "RAG-Token lets each generated token come from a different retrieved document. RAG-Sequence forces the whole answer to come from one document at a time.",
       ],
     },
     {
@@ -1377,13 +1380,13 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "easy",
       question:
-        "SQuAD 2.0 extends SQuAD 1.1 by adding questions that have no answer in the provided passage, requiring models to abstain.",
+        "RAG allows a language model to answer questions about information that was not in its training data, provided that the relevant information is stored in the retrieval index.",
       correctAnswer: "True",
       explanation:
-        "SQuAD 2.0 includes ~50% unanswerable questions, forcing models to decide both whether an answer exists and where it is, making the task significantly harder.",
+        "This is the core motivation for RAG. A parametric language model (all weights) can only answer questions from knowledge encoded during pretraining. If the world changes after training (e.g., today's news, private documents, updated facts), the parametric model cannot reliably answer those questions. RAG addresses this by retrieving relevant documents at inference time from an external, mutable index. The index can be updated with new documents without retraining the language model. At query time, the retriever finds the most relevant documents, and the generator produces an answer conditioned on both the query and the retrieved content. This makes RAG a non-parametric approach to knowledge-intensive tasks.",
       hints: [
-        "A model that always predicts a span would struggle when no span is correct - what capability does SQuAD 2.0 test?",
-        "Think about the real-world scenario where a user asks a question that a document cannot answer.",
+        "RAG has two components: a retriever (searches an external index) and a generator (produces the answer). What does each component contribute?",
+        "If you update the retrieval index with today's news, can a RAG system answer questions about today's news without retraining the language model?",
       ],
     },
   ],

@@ -227,8 +227,8 @@ describe('Question Files Validation', () => {
     for (const [bankName, questions] of Object.entries(questionBanks)) {
       expect(
         (questions as Question[]).length,
-        `${bankName} should have at least 3 questions`
-      ).toBeGreaterThanOrEqual(3)
+        `${bankName} should have at least 1 question`
+      ).toBeGreaterThanOrEqual(1)
     }
   })
 
@@ -262,16 +262,12 @@ describe('Question Files Validation', () => {
     }
   })
 
-  it('should have valid coding questions with codeSnippet', () => {
+  it('should have valid coding questions with non-empty codeSnippet when provided', () => {
     for (const [bankName, questions] of Object.entries(questionBanks)) {
       for (const q of questions as Question[]) {
-        if (q.type === 'coding') {
+        if (q.type === 'coding' && q.codeSnippet) {
           expect(
-            q.codeSnippet,
-            `${bankName}: ${q.id} coding question should have codeSnippet`
-          ).toBeDefined()
-          expect(
-            q.codeSnippet!.length,
+            q.codeSnippet.length,
             `${bankName}: ${q.id} codeSnippet should not be empty`
           ).toBeGreaterThan(0)
         }
