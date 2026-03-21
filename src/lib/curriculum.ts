@@ -1546,6 +1546,88 @@ export const courses: Course[] = [
       },
     ]
   },
+  // AI FOR HEALTHCARE & DRUG DISCOVERY
+  {
+    id: 'ai-healthcare',
+    slug: 'ai-healthcare',
+    name: 'AI for Healthcare & Drug Discovery',
+    description: 'Medical imaging AI, clinical NLP, drug discovery, and healthcare AI deployment.',
+    topics: [
+      {
+        id: 'medical-imaging-ai',
+        name: 'Medical Imaging AI',
+        description: 'Deep learning for radiology, pathology, and medical image analysis.',
+        knowledgePoints: [
+          { id: 'health-kp-1', slug: 'chest-xray-ai', name: 'Chest X-Ray Analysis & Diagnosis AI' },
+          { id: 'health-kp-2', slug: 'ct-mri-segmentation', name: 'CT & MRI Segmentation with U-Net' },
+          { id: 'health-kp-3', slug: 'pathology-ai', name: 'Digital Pathology & Whole Slide Image Analysis' },
+          { id: 'health-kp-4', slug: 'retinal-screening', name: 'Retinal Disease Screening & Diabetic Retinopathy' },
+          { id: 'health-kp-5', slug: 'medical-foundation-models', name: 'Medical Foundation Models (SAM-Med, BioViL)' },
+        ]
+      },
+      {
+        id: 'clinical-nlp',
+        name: 'Clinical NLP & EHR Analysis',
+        description: 'Processing clinical notes, ICD coding, and clinical BERT models.',
+        knowledgePoints: [
+          { id: 'health-kp-6', slug: 'clinical-bert', name: 'ClinicalBERT & Biomedical NLP Models' },
+          { id: 'health-kp-7', slug: 'icd-coding', name: 'Automated ICD Coding & Clinical Coding AI' },
+          { id: 'health-kp-8', slug: 'ehr-prediction', name: 'EHR Prediction & Readmission Modeling' },
+          { id: 'health-kp-9', slug: 'de-identification', name: 'Clinical De-Identification & PHI Detection' },
+          { id: 'health-kp-10', slug: 'medical-qa', name: 'Medical QA & Clinical Decision Support' },
+        ]
+      },
+      {
+        id: 'drug-discovery-ai',
+        name: 'Drug Discovery & Molecular Design',
+        description: 'Virtual screening, ADMET prediction, and de novo drug design.',
+        knowledgePoints: [
+          { id: 'health-kp-11', slug: 'virtual-screening', name: 'Virtual Screening & Molecular Docking' },
+          { id: 'health-kp-12', slug: 'admet-prediction', name: 'ADMET Property Prediction' },
+          { id: 'health-kp-13', slug: 'de-novo-drug-design', name: 'De Novo Drug Design with Generative Models' },
+          { id: 'health-kp-14', slug: 'target-prediction', name: 'Target Identification & Binding Affinity' },
+          { id: 'health-kp-15', slug: 'drug-combination', name: 'Drug Combination & Synergy Prediction' },
+        ]
+      },
+      {
+        id: 'genomics-ml',
+        name: 'Genomics & Precision Medicine',
+        description: 'Variant calling, gene expression, and multi-omics integration.',
+        knowledgePoints: [
+          { id: 'health-kp-16', slug: 'variant-calling-ml', name: 'Variant Calling & Somatic Mutation Detection' },
+          { id: 'health-kp-17', slug: 'gene-expression', name: 'Gene Expression Analysis & scRNA-seq' },
+          { id: 'health-kp-18', slug: 'multi-omics', name: 'Multi-Omics Integration (Genomics + Proteomics)' },
+          { id: 'health-kp-19', slug: 'gwas-ml', name: 'GWAS & Polygenic Risk Scores' },
+          { id: 'health-kp-20', slug: 'cancer-genomics', name: 'Cancer Genomics & Tumor Heterogeneity' },
+        ]
+      },
+      {
+        id: 'clinical-trials-ai',
+        name: 'Clinical Trials & Treatment Optimization',
+        description: 'Patient stratification, trial optimization, and treatment effect estimation.',
+        knowledgePoints: [
+          { id: 'health-kp-21', slug: 'patient-stratification', name: 'Patient Stratification & Subgroup Discovery' },
+          { id: 'health-kp-22', slug: 'rwe-analysis', name: 'Real-World Evidence & Observational Studies' },
+          { id: 'health-kp-23', slug: 'adaptive-trials', name: 'Adaptive Clinical Trial Design with ML' },
+          { id: 'health-kp-24', slug: 'treatment-effect-clinical', name: 'Treatment Effect Estimation in Healthcare' },
+          { id: 'health-kp-25', slug: 'survival-analysis-clinical', name: 'Survival Analysis for Clinical Outcomes' },
+        ]
+      },
+      {
+        id: 'healthcare-ai-deployment',
+        name: 'Healthcare AI Deployment & Regulation',
+        description: 'FDA clearance, clinical validation, and responsible AI in medicine.',
+        knowledgePoints: [
+          { id: 'health-kp-26', slug: 'fda-clearance', name: 'FDA Clearance & SaMD Regulations' },
+          { id: 'health-kp-27', slug: 'clinical-validation', name: 'Clinical Validation & Prospective Studies' },
+          { id: 'health-kp-28', slug: 'health-data-privacy', name: 'HIPAA Compliance & Health Data Privacy' },
+          { id: 'health-kp-29', slug: 'algorithmic-bias-health', name: 'Algorithmic Bias & Health Equity' },
+          { id: 'health-kp-30', slug: 'ai-radiologist-collab', name: 'Human-AI Collaboration in Clinical Settings' },
+        ]
+      },
+    ]
+  },
+
   // SCIENTIFIC ML & PHYSICS-INFORMED NEURAL NETWORKS
   {
     id: 'scientific-ml',
