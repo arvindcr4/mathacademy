@@ -4,6 +4,9 @@ import './globals.css'
 export const metadata: Metadata = {
   title: 'MathAcademy - Master Math 4x Faster',
   description: 'AI-powered adaptive learning platform for mathematics, reinforcement learning, and software engineering',
+  icons: {
+    icon: '/favicon.svg',
+  },
 }
 
 export default function RootLayout({
