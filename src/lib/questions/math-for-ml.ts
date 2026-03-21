@@ -484,10 +484,10 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Log-likelihood: ℓ(\\mu) = −n/(2\\sigma\\^2)\\cdot\\Sigma(x\\_i−\\mu)\\^2. Taking dℓ/d\\mu = (1/\\sigma\\^2)\\Sigma(x\\_i−\\mu) = 0 gives \\mû_MLE = (1/n)\\Sigmax\\_i = x̄. The MLE for a Gaussian mean is the sample mean.",
+        "Log-likelihood: ℓ(\\mu) = −n/(2\\sigma\\^2)\\cdot\\sum(x\\_i−\\mu)\\^2. Taking dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i−\\mu) = 0 gives \\mû_MLE = (1/n)\\Sigmax\\_i = x̄. The MLE for a Gaussian mean is the sample mean.",
       hints: [
-        "Maximize log-likelihood ℓ(\\mu) = const − (1/2\\sigma\\^2)\\Sigma(x\\_i−\\mu)\\^2.",
-        "Differentiate with respect to \\mu: dℓ/d\\mu = (1/\\sigma\\^2)\\Sigma(x\\_i−\\mu) = 0 ⟹ \\mû = x̄.",
+        "Maximize log-likelihood ℓ(\\mu) = const − (1/2\\sigma\\^2)\\sum(x\\_i−\\mu)\\^2.",
+        "Differentiate with respect to \\mu: dℓ/d\\mu = (1/\\sigma\\^2)\\sum(x\\_i−\\mu) = 0 ⟹ \\mû = x̄.",
       ],
     },
     {
@@ -515,12 +515,12 @@ const questions: Record<string, Question[]> = {
       type: "true-false",
       difficulty: "hard",
       question:
-        "The MLE for the variance of a normal distribution, \\sigmâ\\^2 = (1/n)\\Sigma(x\\_i−x̄)\\^2, is an unbiased estimator.",
+        "The MLE for the variance of a normal distribution, \\sigmâ\\^2 = (1/n)\\sum(x\\_i−x̄)\\^2, is an unbiased estimator.",
       correctAnswer: "False",
       explanation:
         "E[\\sigmâ\\^2_MLE] = (n−1)/n \\cdot \\sigma\\^2. The MLE divides by n but the unbiased estimator divides by (n−1) (Bessel\'s correction). For n=10: E[\\sigmâ\\^2_MLE] = 0.9\\sigma\\^2 - it systematically underestimates by 10%. This is because estimating x̄ from the data uses one degree of freedom.",
       hints: [
-        "E[(1/n)\\Sigma(x\\_i−x̄)\\^2] = (n−1)\\sigma\\^2/n \$\\neq\$ \\sigma\\^2. Use s\\^2 = (1/(n−1))\\Sigma(x\\_i−x̄)\\^2 for unbiasedness.",
+        "E[(1/n)\\sum(x\\_i−x̄)\\^2] = (n−1)\\sigma\\^2/n \$\\neq\$ \\sigma\\^2. Use s\\^2 = (1/(n−1))\\sum(x\\_i−x̄)\\^2 for unbiasedness.",
         "Dividing by n−1 rather than n corrects for the one degree of freedom lost to estimating the mean.",
       ],
     },
@@ -804,7 +804,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = −\\Sigma p(x) log\\_2 p(x).",
+        "Compute the Shannon entropy H(X) for a fair coin: P(H)=P(T)=0.5, using H = −\\sum p(x) log\\_2 p(x).",
       options: ["0 bits", "0.5 bits", "1 bit", "2 bits"],
       correctAnswer: 2,
       explanation:
@@ -819,7 +819,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "KL divergence D_KL(P ‖ Q) = \\Sigma P(x) log(P(x)/Q(x)) satisfies which property?",
+        "KL divergence D_KL(P ‖ Q) = \\sum P(x) log(P(x)/Q(x)) satisfies which property?",
       options: [
         "D_KL(P‖Q) = D_KL(Q‖P) always (symmetric)",
         "D_KL(P‖Q) \\geq 0 with equality iff P = Q (non-negative)",
@@ -1621,14 +1621,14 @@ const extra: Record<string, import('@/lib/curriculum').Question[]> = {
       difficulty: 'easy',
       question: 'The KL divergence KL(P || Q) between distributions P and Q is defined as:',
       options: [
-        '\\Sigma_x P(x) log(Q(x)/P(x))',
-        '\\Sigma_x P(x) log(P(x)/Q(x))',
-        '\\Sigma_x |P(x) − Q(x)|',
-        '√(\\Sigma_x (P(x) − Q(x))\\^2)',
+        '\\sum_x P(x) log(Q(x)/P(x))',
+        '\\sum_x P(x) log(P(x)/Q(x))',
+        '\\sum_x |P(x) − Q(x)|',
+        '√(\\sum_x (P(x) − Q(x))\\^2)',
       ],
       correctAnswer: 1,
       explanation:
-        'KL(P||Q) = \\Sigma_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL \\geq 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
+        'KL(P||Q) = \\sum_x P(x) log(P(x)/Q(x)) = E_P[log P/Q]. It measures the expected information loss when Q is used to approximate P. KL \\geq 0 always (Gibbs\' inequality), with KL = 0 iff P = Q.',
       hints: [
         'KL is always non-negative by Jensen\'s inequality: log is concave so E[log x] \\leq log E[x].',
         'KL(P||Q) \$\\neq\$ KL(Q||P) - it is asymmetric and not a true distance metric.',
@@ -2192,7 +2192,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       correctAnswer: 1,
       explanation: "For a uniform distribution over n outcomes: H(X) = −\\Sigma\\_i (1/n) log\\_2(1/n) = log\\_2(n). A fair coin (n=2) has H=1 bit; a fair die (n=6) has H=log\\_26\\approx2.58 bits. Uniform is the maximum-entropy distribution for fixed n.",
       hints: [
-        "Each outcome has probability 1/n. Plug into H = −\\Sigma p log p.",
+        "Each outcome has probability 1/n. Plug into H = −\\sum p log p.",
         "Entropy is maximized by the uniform distribution - all outcomes equally surprising.",
       ],
     },
@@ -2205,7 +2205,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       correctAnswer: 1,
       explanation: "H = −(0.5 log\\_20.5 + 0.25 log\\_20.25 + 0.125 log\\_20.125 + 0.125 log\\_20.125) = 0.5\\times1 + 0.25\\times2 + 0.125\\times3 + 0.125\\times3 = 0.5 + 0.5 + 0.375 + 0.375 = 1.75. Wait: the Huffman code assigns lengths 1, 2, 3, 3, so average length = 1.75 bits, which equals entropy H = 1.75 bits - achieving the theoretical optimum.",
       hints: [
-        "H = −\\Sigma p\\_i log\\_2p\\_i. For each symbol: −0.5\\timeslog\\_20.5 = 0.5, −0.25\\timeslog\\_20.25 = 0.5, each −0.125\\timeslog\\_20.125 = 0.375.",
+        "H = −\\sum p\\_i log\\_2p\\_i. For each symbol: −0.5\\timeslog\\_20.5 = 0.5, −0.25\\timeslog\\_20.25 = 0.5, each −0.125\\timeslog\\_20.125 = 0.375.",
         "Sum: 0.5 + 0.5 + 0.375 + 0.375 = 1.75 bits.",
       ],
     },
@@ -2261,9 +2261,9 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
       id: "q-mfml-kp41-6",
       type: "true-false",
       difficulty: "easy",
-      question: "Cross-entropy H(P, Q) = −\\Sigma P(x) log Q(x) is always greater than or equal to the entropy H(P) = −\\Sigma P(x) log P(x), with equality iff P = Q.",
+      question: "Cross-entropy H(P, Q) = −\\sum P(x) log Q(x) is always greater than or equal to the entropy H(P) = −\\sum P(x) log P(x), with equality iff P = Q.",
       correctAnswer: "True",
-      explanation: "H(P, Q) − H(P) = KL(P||Q) \\geq 0 (Gibbs' inequality). Equivalently: −\\Sigma P log Q \\geq −\\Sigma P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
+      explanation: "H(P, Q) − H(P) = KL(P||Q) \\geq 0 (Gibbs' inequality). Equivalently: −\\sum P log Q \\geq −\\sum P log P. Cross-entropy is the expected code length when using Q to encode messages drawn from P. The inefficiency relative to the optimal H(P) is exactly the KL divergence KL(P||Q).",
       hints: [
         "H(P,Q) = H(P) + KL(P||Q). Since KL \\geq 0, cross-entropy \\geq entropy.",
         "In ML training, minimising cross-entropy H(P_data, P_model) = H(P_data) + KL(P_data||P_model), so minimising cross-entropy = minimising KL.",
@@ -2449,7 +2449,7 @@ const extra2: Record<string, import("@/lib/curriculum").Question[]> = {
         "All transition probabilities are equal",
       ],
       correctAnswer: 1,
-      explanation: "Detailed balance (also called reversibility or microreversibility) means the probability flux from x to x' equals that from x' to x: \\pi(x)T(x'|x) = \\pi(x')T(x|x'). Summing over x': \\Sigma_x \\pi(x)T(x'|x) = \\pi(x')\\cdot\\Sigma_x T(x|x') = \\pi(x'). So detailed balance implies stationarity. Metropolis-Hastings is designed to satisfy detailed balance by construction.",
+      explanation: "Detailed balance (also called reversibility or microreversibility) means the probability flux from x to x' equals that from x' to x: \\pi(x)T(x'|x) = \\pi(x')T(x|x'). Summing over x': \\sum_x \\pi(x)T(x'|x) = \\pi(x')\\cdot\\sum_x T(x|x') = \\pi(x'). So detailed balance implies stationarity. Metropolis-Hastings is designed to satisfy detailed balance by construction.",
       hints: [
         "Detailed balance = equal flux in both directions. Sum over x to verify \\pi satisfies \\piP = \\pi.",
         "Not all MCMC methods satisfy detailed balance. Non-reversible chains can mix faster but are harder to construct.",

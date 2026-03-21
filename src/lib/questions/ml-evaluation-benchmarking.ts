@@ -236,19 +236,19 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "You compare Model A vs. Model B using 10-fold CV, recording per-fold accuracy differences: d = [+0.02, +0.03, −0.01, +0.04, +0.02, +0.03, +0.01, +0.02, +0.03, +0.01]. d̄ = 0.02, s = 0.013. The paired t-test statistic is t = d̄ / (s/√10) \\approx 4.87. This test is valid under which assumption?",
+        "You compare Model A vs. Model B using 10-fold CV, recording per-fold accuracy differences: d = [+0.02, +0.03, -0.01, +0.04, +0.02, +0.03, +0.01, +0.02, +0.03, +0.01]. \\bar{d} = 0.02, s = 0.013. The paired t-test statistic is t = \\bar{d} / (s/\\sqrt{10}) \\approx 4.87. This test is valid under which assumption?",
       options: [
-        "The ten fold-differences d\\_1, …, d\\_1\\_0 are approximately normally distributed (or n is large enough for CLT)",
+        "The ten fold-differences $d_1, \\dots, d_{10}$ are approximately normally distributed (or n is large enough for CLT)",
         "Both models must achieve at least 90% accuracy",
         "The test set must be larger than the training set in each fold",
         "The ten folds must be independent random subsets of the data",
       ],
       correctAnswer: 0,
       explanation:
-        "The paired t-test applies to the differences d\\_k = acc_A(fold k) − acc_B(fold k). It assumes these K differences are i.i.d. from approximately N(\\mu, \\sigma\\^2). CLT ensures this is approximately valid for K \\geq 10 folds even if individual accuracy distributions are not normal. In this example: t = 0.02 / (0.013/√10) = 0.02 / 0.00411 \\approx 4.87. With 9 degrees of freedom, this exceeds t_{0.025, 9} = 2.262, so p < 0.05. However, the CV folds are NOT independent (they share training data with other folds), making the paired t-test anti-conservative (Bouckaert & Frank). Dietterich\'s 5\\times2 CV test addresses this by using 5 repetitions of 2-fold CV.",
+        "**Step 1:** Understand the paired t-test setup. The paired t-test applies to the differences $d_k = acc_A(fold\\ k) - acc_B(fold\\ k)$. It assumes these K differences are i.i.d. from approximately $N(\\mu, \\sigma^2)$.\n\n**Step 2:** Verify the validity condition. The CLT ensures this is approximately valid for K \\geq 10 folds even if individual accuracy distributions are not normal. In this example: $t = 0.02 / (0.013/\\sqrt{10}) = 0.02 / 0.00411 \\approx 4.87$, exceeding $t_{0.025, 9} = 2.262$, so $p < 0.05$.\n\n**Step 3:** Note the anti-conservative nature. The CV folds are NOT independent (they share training data with other folds), making the paired t-test anti-conservative (Bouckaert & Frank). Dietterich's 5\\times2 CV test addresses this.",
       hints: [
-        "The key assumption: normality of the differences d\\_k (not of the raw accuracy values). CLT applies when K is large enough.",
-        "Independence violation: fold k\'s test set is different from fold k+1's test set, but their training sets overlap heavily. This induces positive correlation between d\\_k values, inflating Type I error.",
+        "The key assumption: normality of the differences $d_k$ (not of the raw accuracy values). The CLT applies when K is large enough.",
+        "Independence violation: fold k's test set differs from fold k+1's test set, but their training sets overlap heavily. This induces positive correlation between $d_k$ values, inflating Type I error.",
       ],
     },
     {
@@ -259,10 +259,10 @@ const questions: Record<string, Question[]> = {
         "A statistically significant improvement in model performance (p < 0.001) on a test set of n = 1,000,000 samples always implies that the improvement is practically meaningful.",
       correctAnswer: "False",
       explanation:
-        "With n = 1,000,000 samples, the standard error of any metric estimate approaches 0: SE = \\sigma/√n \\to 0. A difference of \\Delta = 0.0001 (0.01% accuracy improvement) achieves: z = \\Delta/SE = 0.0001 / (0.5/√1,000,000) = 0.0001 / 0.0005 = 0.2... actually with SE = √(p(1-p)/n) \\approx 0.0005, a difference of 0.001 gives z = 2.0 (p \\approx 0.05), and 0.002 gives p \\approx 0.002. The p-value measures evidence against H\\_0, not the size of the effect. A \\Delta = 0.1% accuracy improvement may be statistically significant with large n but completely irrelevant for a model that already achieves 95% accuracy. Report effect sizes and confidence intervals alongside p-values.",
+        "**Step 1:** Understand what p-value measures. The p-value measures evidence against $H_0$ (no true difference), not the size of the effect. With n = 1,000,000, the standard error approaches 0.\n\n**Step 2:** See why large n makes significance easy. With SE = \\sqrt{p(1-p)/n} \\approx 0.0005, a difference of only 0.001 gives z = 2.0 (p \\approx 0.05), and 0.002 gives p \\approx 0.002.\n\n**Step 3:** Distinguish statistical from practical significance. A \\Delta = 0.1% accuracy improvement may be statistically significant with large n but completely irrelevant for a model that already achieves 95% accuracy. Always report effect sizes and confidence intervals alongside p-values.",
       hints: [
-        "Power law: with 10\\times more data, you can detect effects 1/√10 \\approx 31.6% as large at the same significance level. More data \\to statistical significance is easier to achieve.",
-        "Effect size matters: Cohen\'s d, or just the raw \\Delta with a CI, conveys practical importance. A CI of [0.0001, 0.0003] improvement with p < 0.001 is significant but trivial.",
+        "Power law: with 10\\times more data, you can detect effects 1/\\sqrt{10} \\approx 31.6% as large at the same significance level. More data makes statistical significance easier to achieve.",
+        "Effect size matters: Cohen's d, or just the raw \\Delta with a CI, conveys practical importance. A CI of [0.0001, 0.0003] improvement with p < 0.001 is significant but trivial.",
       ],
     },
     {
@@ -270,18 +270,18 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        'You test 20 model variants against a baseline, each at \\alpha = 0.05. Even if all 20 variants are identical to the baseline, how many spurious "significant" results do you expect, and which correction addresses this?',
+        "You test 20 model variants against a baseline, each at \\alpha = 0.05. Even if all 20 variants are identical to the baseline, how many spurious \"significant\" results do you expect, and which correction addresses this?",
       options: [
         "0 spurious results; multiple testing is only a problem in clinical trials",
-        "Expected 20 \\times 0.05 = 1 false positive; Bonferroni correction divides \\alpha by the number of tests: \\alpha_corrected = 0.05/20 = 0.0025",
+        "Expected 20 \\times 0.05 = 1 false positive; Bonferroni correction divides \\alpha by the number of tests: \\alpha_{\\text{corrected}} = 0.05/20 = 0.0025",
         "20 spurious results; you need a completely different evaluation framework",
         "0.5 spurious results; the Bonferroni correction is too conservative for correlated tests",
       ],
       correctAnswer: 1,
       explanation:
-        "Under the null hypothesis (all variants are identical to baseline), each individual test has a 5% chance of a false positive. With m = 20 independent tests, the family-wise error rate (FWER) = 1 − (1 − 0.05)^20 = 1 − 0.95^20 \\approx 0.64. We expect m \\times \\alpha = 20 \\times 0.05 = 1 spurious significant result. Bonferroni correction: test each comparison at \\alpha/m = 0.05/20 = 0.0025, controlling FWER \\leq 0.05. Bonferroni is conservative (assumes tests are independent). For correlated tests (e.g., correlated model variants), Holm-Bonferroni (step-down) or Benjamini-Hochberg (controls FDR, not FWER) are less conservative alternatives.",
+        "**Step 1:** Calculate expected false positives. Under the null hypothesis, each test has a 5% chance of false positive. With m = 20 independent tests: FWER = 1 - (1 - 0.05)^{20} \\approx 0.64. We expect m \\times \\alpha = 20 \\times 0.05 = 1 spurious result.\n\n**Step 2:** Apply Bonferroni correction. Test each comparison at \\alpha/m = 0.05/20 = 0.0025, controlling FWER \\leq 0.05.\n\n**Step 3:** Note the limitations. Bonferroni is conservative (assumes independent tests). For correlated tests, Holm-Bonferroni or Benjamini-Hochberg (controls FDR) are less conservative alternatives.",
       hints: [
-        "FWER vs. FDR: FWER = P(any false positive); FDR = E[FP / (FP + TP)]. BH procedure controls FDR at level q, rejecting fewer hypotheses than Bonferroni when many are truly significant.",
+        "FWER vs. FDR: FWER = P(any false positive); FDR = E[FP / (FP + TP)]. The BH procedure controls FDR at level q, rejecting fewer hypotheses than Bonferroni when many are truly significant.",
         "In ML: if you tune 100 hyperparameter configurations and report the best CV score without correction, you are almost certainly seeing inflated performance from multiple testing.",
       ],
     },

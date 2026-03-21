@@ -1966,7 +1966,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "DVD-GAN (Dual Video Discriminator GAN) uses two separate discriminators for video generation. What do they evaluate?",
+        "DVD-GAN (Dual Video Discriminator GAN) uses two separate discriminators for video generation. Step 1: Video has two quality dimensions - spatial (each frame photorealistic) and temporal (frames flow together smoothly). Step 2: A single discriminator cannot cleanly separate spatial from temporal failures. Step 3: DVD-GAN splits these concerns. What does each discriminator evaluate?",
       options: [
         "One discriminator evaluates color fidelity; the other evaluates spatial resolution",
         "One discriminator evaluates single-frame spatial quality; the other evaluates temporal coherence across sampled frames",
@@ -1975,7 +1975,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Step 1: Video generation has two distinct quality dimensions: spatial (each frame looks photorealistic) and temporal (frames flow together smoothly). Step 2: A single discriminator that processes all frames jointly cannot cleanly distinguish spatial from temporal failures. Step 3: DVD-GAN splits these into D_S (spatial discriminator, evaluates individual frames) and D_T (temporal discriminator, evaluates a sparse set of frames jointly for motion consistency), allowing each failure mode to be addressed separately during training.",
+        "DVD-GAN's spatial discriminator (D_S) evaluates individual frames for photorealism while the temporal discriminator (D_T) evaluates a sparse set of frames jointly for motion consistency, disentangling spatial quality from temporal coherence during training.",
       hints: [
         "Spatial quality and temporal consistency are different properties - DVD-GAN uses specialized discriminators for each.",
         "The temporal discriminator receives multiple frames simultaneously to assess inter-frame coherence.",
@@ -2000,7 +2000,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "TGAN (Temporal GAN) decomposes video generation into temporal and spatial components. How does it handle temporal modeling?",
+        "TGAN (Temporal GAN) separates video generation into temporal and spatial components. Step 1: Motion and appearance are independent aspects of video. Step 2: A recurrent temporal generator produces latent codes z_1...z_T from a single noise seed. Step 3: A shared image generator independently renders each z_t into a frame. What is the key advantage of this separation?",
       options: [
         "It generates all frames simultaneously with a 3D convolutional generator",
         "It uses a temporal generator that samples a sequence of latent codes from a recurrent network, then an image generator that independently renders each frame from its latent code",
@@ -2009,7 +2009,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Step 1: TGAN's core idea is to separate motion (temporal dynamics) from appearance (individual frame content). Step 2: The temporal generator is a recurrent network that takes a single noise seed and produces a sequence of latent codes z_1, z_2, ..., z_T, each encoding the motion state at that timestep. Step 3: The image generator (shared across all timesteps) takes each z_t and renders it independently into a frame. Since the image generator is shared, all frames have consistent appearance (same character, scene) while the temporal generator controls motion dynamics.",
+        "Since the image generator is shared across all timesteps, all frames have consistent appearance (same character, scene). The temporal generator independently controls motion dynamics via the sequence of z codes, enabling disentangled control of content and motion.",
       hints: [
         "Separation of temporal (motion) and spatial (appearance) generation is a common design pattern in video GANs.",
         "The shared image generator ensures consistent appearance across frames given consistent latent codes.",
@@ -2023,7 +2023,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "medium",
       question:
-        "In-domain GAN inversion (In-Domain GAN, Zhu et al. 2020) addresses which limitation of standard encoder-based inversion?",
+        "In-domain GAN inversion (Zhu et al. 2020) addresses a key limitation of standard encoder-based inversion. Step 1: Standard encoders minimize reconstruction loss but can produce z values outside the learned latent manifold. Step 2: Off-manifold codes behave unpredictably under semantic editing directions. Step 3: In-domain GAN inversion adds a discriminator-based regularizer. What does this regularizer do?",
       options: [
         "Standard encoders are too slow for real-time editing applications",
         "Standard encoders map images to latent codes outside the generator's learned manifold, reducing editability; in-domain inversion constrains codes to remain on the manifold via an additional domain-regularized training objective",
@@ -2032,7 +2032,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Step 1: Standard encoders minimize reconstruction loss and can find z that produces a near-perfect reconstruction of x, but there is no guarantee that this z lies within the learned latent distribution. Step 2: Latent codes outside the learned distribution (off-manifold) behave unpredictably under semantic editing directions, which are trained on codes from the learned distribution. Step 3: In-domain GAN inversion adds a discriminator-based regularizer that penalizes codes that the discriminator identifies as atypical, keeping inverted codes on the manifold where editing directions remain effective.",
+        "The discriminator-based regularizer penalizes inverted codes that the discriminator identifies as atypical of the learned latent distribution, keeping them on the manifold where editing directions remain effective.",
       hints: [
         "The latent space has a 'valid' region where the generator produces meaningful images; out-of-distribution codes behave unpredictably.",
         "Domain regularization penalizes codes that the discriminator identifies as atypical for the learned latent distribution.",
@@ -2057,7 +2057,7 @@ const questions: Record<string, Question[]> = {
       type: "multiple-choice",
       difficulty: "hard",
       question:
-        "The editability-distortion tradeoff in StyleGAN inversion refers to the observation that:",
+        "The editability-distortion tradeoff in StyleGAN inversion. Step 1: Lower distortion means G(z) more closely matches the original image. Step 2: Achieving lower distortion often requires extreme W+ codes that are far from the well-behaved W subspace where semantic directions are trained. Step 3: Semantic editing directions (like +age, +smile) were discovered in W space. What tradeoff does this create?",
       options: [
         "Higher-resolution inversions have worse editability due to overfitting",
         "Latent codes that achieve lower reconstruction distortion (closer to the original image) tend to lie further from the editable W space, reducing the effectiveness of semantic editing directions",
@@ -2066,7 +2066,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Step 1: Lower reconstruction distortion means G(z) more closely matches the original image x. Step 2: Achieving lower distortion often requires using codes in less-regularized regions of the latent space (e.g., extreme values in W+). Step 3: Semantic editing directions (like +age or +smile) are discovered in the well-behaved W subspace, which may not transfer to off-manifold codes. Therefore, as distortion decreases, editability typically decreases - a fundamental tradeoff.",
+        "As distortion decreases, editability typically decreases - a fundamental tradeoff. Low-distortion codes are off-manifold and semantic directions don't transfer predictably; high-distortion codes are on-manifold but look less like the original.",
       hints: [
         "Low distortion means the reconstructed image closely matches the original.",
         "High editability means that applying a semantic direction (e.g., +age) produces the expected change.",

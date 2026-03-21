@@ -2855,7 +2855,7 @@ const questions: Record<string, Question[]> = {
         ],
         correctAnswer: 0,
         explanation:
-          "MAE's efficiency comes from encoding only the visible patches. For a 75% masking ratio, only 25% of patches enter the encoder — a 4× reduction in encoder computation.\n\n**Step 1.** Input: image to patch embedding to mask 75% of patches randomly. The encoder sees only the 25% visible patches.\n\n**Step 2.** The full sequence (visible patches + masked position embeddings) is passed through a lightweight decoder that predicts pixel values for the masked positions.\n\n**Step 3.** Only the encoder is used for downstream tasks — the decoder is discarded. The 75% masking makes the reconstruction task non-trivial.",
+          "MAE's efficiency comes from encoding only the visible patches. For a 75% masking ratio, only 25% of patches enter the encoder — a $4\\times$ reduction in encoder computation.\n\n**Step 1.** Input: image to patch embedding to mask 75% of patches randomly. The encoder sees only the 25% visible patches.\n\n**Step 2.** The full sequence (visible patches + masked position embeddings) is passed through a lightweight decoder that predicts pixel values for the masked positions.\n\n**Step 3.** Only the encoder is used for downstream tasks — the decoder is discarded. The 75% masking makes the reconstruction task non-trivial.",
         hints: [
           "If 75% of patches are masked, what fraction of the encoder's computation is saved compared to processing all patches?",
           "The decoder reconstructs pixels for masked patches — what does the encoder not need to do for masked patches that it would otherwise need to do?",

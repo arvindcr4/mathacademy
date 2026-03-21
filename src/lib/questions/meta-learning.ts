@@ -2211,7 +2211,7 @@ const extraMeta: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation: "Full MAML computes d/d(theta) of the adapted parameters phi_i, which requires differentiating through the inner-loop update steps - producing second-order (Hessian) terms. FOMAML simply stops the gradient at the adapted parameters, treating them as constants for the purpose of computing the outer-loop gradient. This dramatically reduces memory and compute (no second-order backprop) at the cost of a biased meta-gradient estimate. Empirically the bias matters little, and FOMAML matches MAML in most benchmarks.",
       hints: [
-        "Think about what terms appear when you differentiate phi_i = theta - alpha * grad_L_i(theta) with respect to theta.",
+        "Think about what terms appear when you differentiate phi_i = theta - alpha \cdot grad_L_i(theta) with respect to theta.",
         "The Hessian appears because phi_i depends on theta twice: directly and through the gradient.",
       ],
     },
@@ -2227,7 +2227,7 @@ const extraMeta: Record<string, Question[]> = {
         "Sampling episodes and maximizing the mutual information between support and query predictions",
       ],
       correctAnswer: 0,
-      explanation: "Reptile is extremely simple: sample a task, run k steps of SGD to get adapted parameters phi, then update theta toward phi via theta <- theta + epsilon*(phi - theta). No second-order derivatives and no explicit train/test split within an episode are needed. Reptile can be shown to approximately maximize the inner product between task gradients, encouraging an initialization from which all tasks are reachable in few steps.",
+      explanation: "Reptile is extremely simple: sample a task, run k steps of SGD to get adapted parameters phi, then update theta toward phi via theta <- theta + epsilon \cdot (phi - theta). No second-order derivatives and no explicit train/test split within an episode are needed. Reptile can be shown to approximately maximize the inner product between task gradients, encouraging an initialization from which all tasks are reachable in few steps.",
       hints: [
         "Reptile's update is a simple interpolation: move the meta-parameters toward the task-adapted parameters.",
         "Unlike MAML, Reptile does not require a query set - it uses the same data for inner and outer loop.",
@@ -2239,7 +2239,7 @@ const extraMeta: Record<string, Question[]> = {
       difficulty: "hard",
       question: "Reptile is mathematically equivalent to FOMAML when using a single inner-loop gradient step.",
       correctAnswer: "False",
-      explanation: "With a single inner step, Reptile reduces to joint training (standard multi-task gradient descent) because phi - theta = -alpha*grad_L(theta), so the Reptile update is proportional to the plain task gradient evaluated at theta. FOMAML with one inner step is identical to joint training too, but for multiple inner steps Reptile differs: it implicitly maximizes within-task gradient alignment across tasks without requiring an explicit query set, making it distinct from FOMAML even though both are first-order methods.",
+      explanation: "With a single inner step, Reptile reduces to joint training (standard multi-task gradient descent) because phi - theta = -alpha \cdot grad_L(theta), so the Reptile update is proportional to the plain task gradient evaluated at theta. FOMAML with one inner step is identical to joint training too, but for multiple inner steps Reptile differs: it implicitly maximizes within-task gradient alignment across tasks without requiring an explicit query set, making it distinct from FOMAML even though both are first-order methods.",
       hints: [
         "With k=1 inner step, Reptile's update direction is exactly the task gradient, same as joint training.",
         "The interesting meta-learning behavior of Reptile emerges only with k > 1 inner steps.",
@@ -2259,7 +2259,7 @@ const extraMeta: Record<string, Question[]> = {
         "Parameterizing the inner-loop optimizer with a learned LSTM",
       ],
       correctAnswer: 1,
-      explanation: "iMAML defines the inner-loop solution phi_i as the minimizer of L_i(phi) + (lambda/2)||phi - theta||^2, then applies the implicit function theorem: d(phi_i)/d(theta) = (H_i + lambda*I)^(-1) * lambda*I, where H_i is the task Hessian at phi_i. This gives exact meta-gradients without storing the entire inner-loop computation graph, making iMAML memory-efficient and capable of using any black-box inner optimizer.",
+      explanation: "iMAML defines the inner-loop solution phi_i as the minimizer of L_i(phi) + (lambda/2)||phi - theta||^2, then applies the implicit function theorem: d(phi_i)/d(theta) = (H_i + lambda \cdot I)^(-1) \cdot lambda \cdot I, where H_i is the task Hessian at phi_i. This gives exact meta-gradients without storing the entire inner-loop computation graph, making iMAML memory-efficient and capable of using any black-box inner optimizer.",
       hints: [
         "Implicit differentiation differentiates through an optimality condition F(phi, theta)=0 rather than through the computation graph.",
         "The regularization term ||phi - theta||^2 links the inner-loop solution to the meta-parameters.",

@@ -151,7 +151,7 @@ const questions: Record<string, Question[]> = {
         "Two different SCMs (with different structural equations) can generate the same observational joint distribution $P(X_1, \\dots, X_n)$.",
       correctAnswer: "True",
       explanation:
-        "This is the problem of **Markov equivalence** and **causal non-identifiability** from observational data alone. Multiple SCMs — even with different causal structures — can be consistent with the same observational distribution.\n\nFor example, $X \\to Y$ and $Y \\to X$ are indistinguishable from $P(X, Y)$ alone under Gaussian linear models:\n\\[\nP(X, Y) = \\int P(Y|X)P(X) = \\int P(X|Y)P(Y)\n\\]\n\nThis is why additional assumptions (functional form restrictions, non-Gaussianity, or interventional data) are needed for causal discovery.",
+        "**Step 1**: Recognize that multiple SCMs can generate the same observational distribution.\nThis is the problem of **Markov equivalence** and **causal non-identifiability** from observational data alone. Multiple SCMs — even with different causal structures — can be consistent with the same observational distribution.\n\n**Step 2**: See why different causal structures can look the same in the data.\nFor example, $X \\to Y$ and $Y \\to X$ are indistinguishable from $P(X, Y)$ alone under Gaussian linear models:\n\\[\nP(X, Y) = \\int P(Y|X)P(X) = \\int P(X|Y)P(Y)\n\\]\n\n**Step 3**: Understand what is needed to distinguish causal structure.\nThis is why additional assumptions (functional form restrictions, non-Gaussianity, or interventional data) are needed for causal discovery.",
       hints: [
         "Think about $X \\to Y$ vs $Y \\to X$: both can be consistent with the same bivariate distribution under certain noise models.",
         "This is why causal discovery is harder than structure learning in Bayesian networks.",
@@ -171,7 +171,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Pearl's causal hierarchy has three rungs:\n\n1. **Association** (seeing): $P(Y \\mid X=x)$ — what is the probability of $Y$ given that I observe $X=x$?\n\n2. **Intervention** (doing): $P(Y \\mid do(X=x))$ — what is the probability of $Y$ if I set $X=x$ by intervention?\n\n3. **Counterfactual** (imagining): $P(Y_{x} \\mid X=x', Y=y')$ — what would $Y$ have been had $X$ been $x$, given that I observed $X=x'$ and $Y=y'$?\n\nEach level requires strictly more causal information than the one below.",
+        "**Step 1**: Understand the first rung — Association (seeing).\nPearl's causal hierarchy has three rungs:\n\n1. **Association** (seeing): $P(Y \\mid X=x)$ — what is the probability of $Y$ given that I observe $X=x$?\n\n**Step 2**: Understand the second rung — Intervention (doing).\n2. **Intervention** (doing): $P(Y \\mid do(X=x))$ — what is the probability of $Y$ if I set $X=x$ by intervention?\n\n**Step 3**: Understand the third rung — Counterfactual (imagining).\n3. **Counterfactual** (imagining): $P(Y_{x} \\mid X=x', Y=y')$ — what would $Y$ have been had $X$ been $x$, given that I observed $X=x'$ and $Y=y'$?\n\nEach level requires strictly more causal information than the one below.",
       hints: [
         "Rung 1 is what standard statistical models answer with observational data.",
         "Rung 3 requires reasoning about what would have happened under a different treatment for a unit we already observed.",

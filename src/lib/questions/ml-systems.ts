@@ -733,7 +733,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Shadow deployments mirror real production traffic to the new model without serving its predictions, allowing safe evaluation of behavior on real data without user impact.",
+        "**Step 1:** Shadow deployments mirror real production traffic to the new model without serving its predictions.\n\n" +
+        "**Step 2:** This allows safe evaluation of behavior on real data without user impact.\n\n" +
+        "**Step 3:** The word \"shadow\" implies the new model runs invisibly alongside the production model - user impact must be zero during shadow testing.",
       hints: [
         'The word "shadow" implies the new model runs invisibly alongside the production model.',
         "User impact must be zero during shadow testing.",
@@ -747,7 +749,9 @@ const questions: Record<string, Question[]> = {
         "Integration tests for ML pipelines should verify that the full training pipeline produces a model with performance above a minimum threshold on a held-out dataset.",
       correctAnswer: "True",
       explanation:
-        "ML integration tests should go beyond code correctness to verify end-to-end pipeline behavior, including that the output model meets minimum performance criteria on a validation set.",
+        "**Step 1:** ML integration tests should go beyond code correctness to verify end-to-end pipeline behavior.\n\n" +
+        "**Step 2:** This includes verifying that the output model meets minimum performance criteria on a validation set.\n\n" +
+        "**Step 3:** A pipeline that runs without errors but produces a random model is still broken. Performance thresholds act as acceptance criteria for the integration test.",
       hints: [
         "A pipeline that runs without errors but produces a random model is still broken.",
         "Performance thresholds act as acceptance criteria for the integration test.",
@@ -767,7 +771,9 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Slice-based testing evaluates model performance on specific data subgroups (e.g., by demographic, geographic region, or input type) to surface disparate performance hidden by aggregate metrics.",
+        "**Step 1:** Slice-based testing evaluates model performance on specific data subgroups (e.g., by demographic, geographic region, or input type).\n\n" +
+        "**Step 2:** This surfaces disparate performance hidden by aggregate metrics like overall accuracy.\n\n" +
+        "**Step 3:** Average accuracy can hide poor performance on minority subgroups, making slice-based testing essential for fairness analysis.",
       hints: [
         "Average accuracy can hide poor performance on minority subgroups.",
         "Fairness analysis relies heavily on this type of evaluation.",

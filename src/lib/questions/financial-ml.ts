@@ -444,7 +444,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "A market maker earns the bid-ask spread on round-trip trades but accumulates inventory if one side dominates; the RL agent must learn to adjust quotes to manage this inventory risk.",
+        "**Step 1:** Understand market maker mechanics. A market maker earns the bid-ask spread on round-trip trades but accumulates inventory if one side dominates; the RL agent must learn to adjust quotes to manage this inventory risk.",
       hints: [
         "If only buyers hit the market maker\'s ask, what happens to the maker\'s position over time?",
         "The spread income and inventory risk form the core reward-penalty structure of market-making RL.",
@@ -464,7 +464,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The Avellaneda-Stoikov reservation price shifts the agent\'s indifference price based on inventory (to lean against accumulation), time to horizon (urgency), and risk aversion (penalty on variance of wealth).",
+        "**Step 1:** Understand the reservation price. The Avellaneda-Stoikov reservation price shifts the agent's indifference price based on inventory (to lean against accumulation), time to horizon (urgency), and risk aversion (penalty on variance of wealth).",
       hints: [
         "The reservation price is where the agent would be indifferent between buying and selling.",
         "Holding large inventory close to end-of-day is risky—how should this affect the quoted prices?",
@@ -487,7 +487,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Latency arbitrageurs use faster connectivity to react to price-moving events on one venue before slower market makers can cancel or update their quotes on other venues, effectively picking off stale prices.",
+        "**Step 1:** Understand latency arbitrage. Latency arbitrageurs use faster connectivity to react to price-moving events on one venue before slower market makers can cancel or update their quotes on other venues, effectively picking off stale prices.",
       hints: [
         "The profit comes from a time advantage measured in microseconds or nanoseconds.",
         "The victim in this trade is typically a market maker with a quote that has become stale.",
@@ -502,7 +502,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "FPGAs implement trading logic directly in hardware, avoiding OS scheduling jitter and software stack overhead, enabling deterministic round-trip latencies in the nanosecond to low-microsecond range.",
+        "**Step 1:** Understand FPGAs in trading. FPGAs implement trading logic directly in hardware, avoiding OS scheduling jitter and software stack overhead, enabling deterministic round-trip latencies in the nanosecond to low-microsecond range.",
       hints: [
         "Software running on a CPU must pass through the OS kernel for network I/O—how much latency does that add?",
         "FPGAs are reconfigurable hardware chips that can implement custom logic pipelines.",
@@ -522,7 +522,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Toxic flow originates from informed or faster participants who trade against market makers based on superior information or speed, consistently causing the maker to buy high and sell low.",
+        "**Step 1:** Understand toxic order flow. Toxic flow originates from informed or faster participants who trade against market makers based on superior information or speed, consistently causing the maker to buy high and sell low.",
       hints: [
         "If a counterparty always profits at the market maker\'s expense, what does that say about information asymmetry?",
         "Think about the distinction between uninformed noise traders and informed directional traders.",
@@ -545,7 +545,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The LOB aggregates all resting limit orders on both sides (bids and asks) at each price level, providing a real-time view of market depth and supply-demand imbalance.",
+        "**Step 1:** Understand the LOB. The LOB aggregates all resting limit orders on both sides (bids and asks) at each price level, providing a real-time view of market depth and supply-demand imbalance.",
       hints: [
         "Think about what information is needed beyond just the last trade price to understand market liquidity.",
         'The "book" metaphor refers to recording pending orders at each price level.',
@@ -560,7 +560,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "DeepLOB applies convolutional layers across the price-level dimension to extract local order book features and LSTM layers to model their evolution over time, enabling mid-price movement prediction.",
+        "**Step 1:** Understand DeepLOB architecture. DeepLOB applies convolutional layers across the price-level dimension to extract local order book features and LSTM layers to model their evolution over time, enabling mid-price movement prediction.",
       hints: [
         "The spatial dimension of a LOB snapshot is the set of price levels; the temporal dimension is the sequence of snapshots.",
         "Which deep learning building block is designed for sequential data with long-range dependencies?",
@@ -580,7 +580,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "OFI measures net buying pressure at the top of the book by tracking increases in best-bid size (buy pressure) minus increases in best-ask size (sell pressure), and is a strong short-term price predictor.",
+        "**Step 1:** Understand OFI. OFI measures net buying pressure at the top of the book by tracking increases in best-bid size (buy pressure) minus increases in best-ask size (sell pressure), and is a strong short-term price predictor.",
       hints: [
         "OFI focuses on changes at the best bid and ask, not the whole book.",
         "An increase in the best-bid queue signals buyers are more aggressive—how would you measure this?",

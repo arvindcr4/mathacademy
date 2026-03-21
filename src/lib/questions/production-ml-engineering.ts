@@ -1359,6 +1359,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Runbooks operationalize incident response: (1) alert context tells the on-call what triggered and what it means; (2) triage procedures (check X, then Y, then Z) reduce time-to-diagnose for common issues; (3) copy-paste rollback commands minimize errors during stressful incidents; (4) escalation matrix ensures the right expert is paged if primary on-call cannot resolve; (5) common root causes accelerate diagnosis of recurring patterns; (6) PIR templates ensure consistent post-incident learning.",
+      hints: [
+        "Copy-paste rollback commands save critical seconds at 2 AM when typos are dangerous.",
+        "A runbook without alert definitions forces the on-call to guess what triggered - useless under pressure.",
+      ],
     },
     {
       id: "q-prod-kp24-2",
@@ -1375,6 +1379,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Green system metrics with degraded model quality is the classic silent ML failure pattern. Feature distribution inspection is the highest-yield first step: (1) check feature staleness timestamps in the feature store; (2) sample live feature vectors and compare distributions to training; (3) check for null or out-of-range values indicating upstream data issues. Restarting instances or rolling back without diagnosis may fix the symptom without finding the cause, and the issue will recur.",
+      hints: [
+        "Green system metrics with bad predictions = the problem is in the data or model layer, not the infrastructure layer.",
+        "Feature staleness is the most common silent failure: the feature store stopped updating but the serving path did not alert.",
+      ],
     },
     {
       id: "q-prod-kp24-3",
@@ -1387,6 +1395,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         'Blameless PIRs (pioneered by Google SRE and Etsy) recognize that production incidents arise from systemic factors - missing monitoring, inadequate testing, unclear procedures - not individual incompetence. Blame discourages reporting, hides near-misses, and doesn\'t improve systems. Blameless culture enables honest analysis: "the monitoring didn\'t catch this because we had no distribution shift alerts" leads to adding those alerts; "John made a mistake" leads to nothing improving.',
+      hints: [
+        "Blameless does not mean consequence-free - it means focusing on systems, not individuals.",
+        "Near-misses are valuable learning opportunities that only get reported in blameless cultures.",
+      ],
     },
   ],
 
@@ -1406,6 +1418,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "INT8 quantization maps FP32 weight values to 8-bit integers using a scale and zero-point. Benefits: 4x smaller model, 2-4x faster inference on hardware with INT8 acceleration (all modern GPUs via Tensor Cores, CPUs via AVX-512 VNNI). Cost: quantization error introduces small accuracy degradation. For most tasks, this degradation is acceptable; for precision-critical applications (medical, financial), careful per-layer sensitivity analysis determines which layers can be safely quantized.",
+      hints: [
+        "INT8 quantization reduces memory by 4x and increases inference speed by 2-4x on modern hardware.",
+        "Accuracy degradation of 0.1-1% is typical and acceptable for most production applications.",
+      ],
     },
     {
       id: "q-prod-kp25-2",
@@ -1422,6 +1438,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "INT4 requires more sophisticated quantization: GPTQ (uses Hessian-based optimal rounding) and AWQ (Activation-Weighted Quantization, preserves salient weights critical for accuracy) achieve near-lossless INT4 quantization. W4A16 (4-bit weights, 16-bit activations) is the dominant mobile serving format - weight storage is 4-bit for small model size, but activation computation remains in FP16 for accuracy. This achieves 4x smaller model with ~0.5% accuracy loss vs. FP16.",
+      hints: [
+        "GPTQ and AWQ are the state-of-the-art INT4 quantization methods that minimize accuracy loss.",
+        "W4A16 (4-bit weights, 16-bit activations) is the standard format for mobile INT4 deployment.",
+      ],
     },
     {
       id: "q-prod-kp25-3",
@@ -1434,6 +1454,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "Dynamic quantization: scale factors for activations are computed per-tensor at runtime - more accurate but adds runtime overhead per layer. Static quantization: run calibration data through the model to collect activation statistics, pre-compute scale factors, bake them into the model - faster at inference since no runtime scale computation needed. Static quantization is preferred for production deployment where latency is critical and a calibration dataset is available.",
+      hints: [
+        "Dynamic quantization computes scales at runtime; static quantization pre-computes them with calibration data.",
+        "Static quantization is preferred for production latency-critical inference.",
+      ],
     },
   ],
 
@@ -1453,6 +1477,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Disparate impact (Griggs v. Duke Power Co., 1971) occurs when a facially neutral policy disproportionately harms a protected group. In ML: a hiring model that accepts 80% of white applicants but only 50% of Black applicants has a 50/80 = 0.625 adverse impact ratio (below the 0.8 threshold, indicating disparate impact). Fairness metrics beyond the 80% rule include: demographic parity, equalized odds (equal TPR and FPR across groups), and calibration within groups.",
+      hints: [
+        "The 4/5ths rule (adverse impact ratio < 0.8) is the EEOC standard for hiring discrimination analysis.",
+        "A model can produce disparate impact even without using protected attributes directly - through proxy features.",
+      ],
     },
     {
       id: "q-prod-kp26-2",
@@ -1469,6 +1497,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "The accuracy fairness illusion: a model can achieve equal accuracy while having very different error rates across groups. Equalized odds requires equal TPR AND equal FPR across groups. In lending, high FNR for one group means creditworthy individuals from that group are denied credit at higher rates - a potential fair lending violation even if the model is technically accurate overall. Threshold adjustment per group is one remedy, though its legality varies by jurisdiction and domain.",
+      hints: [
+        "Equal accuracy with unequal error rates is possible when group sizes or base rates differ.",
+        "Equalized odds = equal TPR and FPR across groups. Equal accuracy does not imply equalized odds.",
+      ],
     },
     {
       id: "q-prod-kp26-3",
@@ -1481,6 +1513,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         'Removing protected attributes is necessary but not sufficient: proxy features (zip code correlated with race, name predictive of gender, hobbies correlated with age) can allow the model to recover protected attribute information from other features. This is called "proxy discrimination." True fairness requires measuring actual model outcomes across groups (not just inputs) and applying fairness constraints or post-processing to ensure equitable outcomes.',
+      hints: [
+        "Zip code, name, and purchase history can all encode race - the model can reconstruct protected attributes from proxies.",
+        "Fairness must be measured by outcomes across groups, not just by the absence of protected features in the input.",
+      ],
     },
   ],
 
@@ -1500,6 +1536,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "ML-specific review checklist additions: (1) data leakage - are future features accidentally included in training? (2) evaluation correctness - are train/val/test splits correct and leakage-free? (3) training-serving skew - does preprocessing match between training code and serving code? (4) hyperparameter justification - are choices reasonable or arbitrary? (5) offline evaluation - are metrics on held-out data included before merging? These ML-specific concerns are invisible to reviewers using only standard code review criteria.",
+      hints: [
+        "ML code review must check for data leakage, training-serving skew, and evaluation methodology - standard code review misses these.",
+        "A model change without offline evaluation results is a red flag in ML code review.",
+      ],
     },
     {
       id: "q-prod-kp27-2",
@@ -1516,6 +1556,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         'The research-engineering duality is fundamental to ML organizations: imposing full engineering overhead on every experiment kills research velocity; applying research code standards to production systems creates reliability disasters. The two-track model: research uses notebooks/scripts to validate ideas quickly; productionization is a separate engineering effort that refactors research code into maintainable, tested, monitored production systems. The transition criteria (e.g., "concept is validated, will serve >1K users") must be explicit.',
+      hints: [
+        "Research and production tracks should have different standards - research prioritizes speed, production prioritizes reliability.",
+        "The transition from research to production should have explicit criteria, not be ad hoc.",
+      ],
     },
     {
       id: "q-prod-kp27-3",
@@ -1528,6 +1572,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "ML DoD extends beyond model accuracy: a model without monitoring will have failures go undetected; a model without alerts requires human polling to detect issues; a model without runbooks creates on-call hell. Mature ML organizations include in their DoD: offline metrics meeting threshold, A/B test plan, monitoring dashboards live, drift alerts configured, rollback procedure tested, runbook written, and data retention policy set. Shipping without these creates operational debt immediately.",
+      hints: [
+        "ML DoD extends beyond model accuracy to include monitoring, alerting, and documentation.",
+        "A model without runbooks creates on-call hell - the DoD prevents this technical debt.",
+      ],
     },
   ],
 
@@ -1547,6 +1595,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Datasheets (analogous to datasheets for electronic components) answer critical dataset questions: Who collected it and why? What does it contain? How was it collected and preprocessed? What are the known biases? What are recommended and prohibited uses? In production, datasheets prevent misuse (applying a dataset outside its intended domain) and support fairness audits (understanding demographic representation). They are increasingly required by ML governance frameworks.",
+      hints: [
+        "Datasheets answer: who collected the data, what it contains, how it was collected, and what biases it has.",
+        "Without datasheets, teams may use datasets outside their intended domain - a major source of ML failures.",
+      ],
     },
     {
       id: "q-prod-kp28-2",
@@ -1563,6 +1615,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "EU AI Act Article 11 requires extensive technical documentation for high-risk AI systems: system design, data governance (lineage, preprocessing), performance testing (including on subgroups), risk assessment, ongoing monitoring plan, and human oversight mechanisms. CV screening is explicitly listed as high-risk. Non-compliance carries fines up to 3% of global revenue. This regulatory context makes ML documentation a legal requirement, not just engineering best practice.",
+      hints: [
+        "EU AI Act requires technical documentation including risk assessments and performance metrics across demographic groups.",
+        "CV screening is explicitly listed as high-risk under the EU AI Act - non-compliance can cost up to 3% of global revenue.",
+      ],
     },
     {
       id: "q-prod-kp28-3",
@@ -1575,6 +1631,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         'ADRs capture decisions and their rationale: "We chose gradient boosting over neural networks because interpretability is required for regulatory compliance, and XGBoost achieves comparable accuracy with 10x faster inference on our hardware." Without ADRs, future engineers waste time re-litigating past decisions or making changes that reverse carefully considered choices. In ML, ADRs are especially valuable because modeling decisions are often non-obvious and highly context-dependent.',
+      hints: [
+        "ADRs capture the why behind decisions - future engineers can understand the context without re-litigating past choices.",
+        "Without ADRs, important modeling decisions get reversed by future engineers who do not know the original rationale.",
+      ],
     },
   ],
 
@@ -1594,6 +1654,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "The roofline model: the achievable performance (FLOP/s) is min(peak_compute, bandwidth \\times operational_intensity). If a layer is memory-bandwidth-bound (left of the roof ridge), optimizing FLOPs won't help - reduce memory traffic (kernel fusion, quantization). If it's compute-bound (right of the ridge), optimize arithmetic (larger matrix multiplications, tensor cores). This directly guides optimization priorities instead of guessing.",
+      hints: [
+        "The roofline model tells you whether to optimize compute or memory bandwidth based on where operations sit relative to hardware limits.",
+        "Memory-bandwidth-bound operations benefit from kernel fusion; compute-bound operations benefit from tensor cores.",
+      ],
     },
     {
       id: "q-prod-kp29-2",
@@ -1610,6 +1674,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Standard attention materializes the full n\\timesn attention matrix in GPU HBM (slow memory), causing O(n\\^2) memory reads/writes. FlashAttention tiles the computation: processes blocks of Q, K, V in on-chip SRAM (fast), never materializing the full matrix in HBM. This reduces memory traffic from O(n\\^2) to O(n), making attention memory-bandwidth-bound operations 2-4x faster and enabling much longer sequences. It is now the default attention implementation in most ML frameworks.",
+      hints: [
+        "FlashAttention reduces attention memory from O(n^2) to O(n) by never materializing the full matrix in HBM.",
+        "At sequence length 4K, the 16M element attention matrix in HBM is the primary bottleneck - FlashAttention solves this.",
+      ],
     },
     {
       id: "q-prod-kp29-3",
@@ -1622,6 +1690,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "Premature optimization anti-pattern: engineers often guess that the large matrix multiplication is the bottleneck, when profiling reveals 70% of time is in a small elementwise normalization layer with high cache miss rate. Tools like PyTorch Profiler, NVIDIA Nsight, and Chrome Trace Event show per-operation time with CUDA kernel-level detail. Always measure before optimizing - the rule of thumb is 90% of runtime is in 10% of code, and that 10% is rarely what you expect.",
+      hints: [
+        "PyTorch Profiler generates Chrome traces showing every CUDA kernel and its duration - profile before optimizing.",
+        "90% of runtime is in 10% of code, and that 10% is rarely what you expect - always profile first.",
+      ],
     },
   ],
 
@@ -1641,6 +1713,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "ML-specific dependency risks: scikit-learn has changed default hyperparameters (n_estimators in RandomForest) between minor versions, silently producing different models; numpy changed random number generation between versions 1.16 and 1.17, breaking reproducibility; PyTorch CUDA kernels can produce different numerical results across patch versions. Production ML requires: exact version pinning in requirements.txt or pyproject.toml, hash verification (pip install --require-hashes), and Docker images with pinned base images.",
+      hints: [
+        "ML libraries change default hyperparameters and numerical behavior in minor versions - exact pinning prevents silent changes.",
+        "scikit-learn, numpy, and PyTorch have all made breaking changes between minor versions that silently changed model behavior.",
+      ],
     },
     {
       id: "q-prod-kp30-2",
@@ -1657,6 +1733,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 1,
       explanation:
         "Transitive dependency changes are the most insidious form of ML environment drift: no code changed, but a sub-dependency update changes numerical behavior. Investigation: (1) compare lock files between the last known-good run and the failing run; (2) identify changed packages; (3) selectively pin the changed package to the previous version to confirm it reproduces the issue; (4) add that pinned version to the production lock file. Tools like pip-audit also check for known vulnerabilities in the full dependency tree.",
+      hints: [
+        "pip-compile generates a fully pinned lock file capturing all transitive dependencies - use it in production CI.",
+        "Git bisect on lock files can identify exactly which transitive dependency caused a behavioral change.",
+      ],
     },
     {
       id: "q-prod-kp30-3",
@@ -1669,6 +1749,10 @@ const questions: Record<string, Question[]> = {
       correctAnswer: 0,
       explanation:
         "Docker containers package the application, its dependencies, and system libraries into an immutable artifact. The same Docker image runs identically on a developer's laptop, a staging server, and a production GPU cluster, eliminating environment-induced behavioral differences. For ML: the CUDA version, cuDNN version, PyTorch version, and all Python packages are all captured in the Dockerfile and pinned in the requirements file baked into the image.",
+      hints: [
+        "Docker images capture the entire software stack: OS, Python, CUDA, cuDNN, and all pip packages at exact versions.",
+        "The same Docker image runs identically on a laptop, staging server, and production GPU cluster - eliminating environment drift.",
+      ],
     },
   ],
 

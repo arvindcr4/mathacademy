@@ -536,7 +536,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "DINO\'s teacher is a momentum copy: \\xi \\leftarrow \\lambda\\xi + (1−\\lambda)\\theta (no gradient). The student minimizes cross-entropy H(P_t, P_s) where P_t = softmax((g_\\xi(x) − c)/\\tau_t), using the teacher\'s output with centering vector c and teacher temperature \\tau_t < \\tau_s. Different global/local crops create the view pair - a form of knowledge distillation requiring no labels.",
+        "**Step 1:** The teacher EMA update.\n\nDINO's teacher is a momentum copy: $\\xi \\leftarrow \\lambda \\cdot \\xi + (1 - \\lambda) \\cdot \\theta$ (no gradient flows to the teacher).\n\n**Step 2:** The student objective.\n\nThe student minimises cross-entropy $H(P_t, P_s)$ where $P_t = \\text{softmax}\\left(\\left(g_\\xi(x) - c\\right) / \\tau_t\\right)$, using the teacher's output with centering vector $c$ and teacher temperature $\\tau_t < \\tau_s$.\n\n**Step 3:** How views are created.\n\nDifferent global/local crops create the view pair — a form of knowledge distillation requiring no labels.",
       hints: [
         '"Self" distillation: the teacher comes from the student itself via exponential moving average.',
         "No labels: the training signal is the teacher\'s output distribution, not a human-assigned class.",

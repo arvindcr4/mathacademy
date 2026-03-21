@@ -263,7 +263,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Concept drift occurs when the joint distribution P(Y|X) changes over time - features that predicted default in 2010-2020 may no longer be predictive in 2023 due to macroeconomic changes, regulatory changes, or demographic shifts. COVID-19 dramatically changed income stability and spending patterns, obsoleting models trained on pre-pandemic data. Regular monitoring and retraining cadences are required to detect and correct concept drift.",
+        "**Step 1**: Identify the problem as concept drift.\nConcept drift occurs when the joint distribution P(Y|X) changes over time - features that predicted default in 2010-2020 may no longer be predictive in 2023 due to macroeconomic changes, regulatory changes, or demographic shifts.\n\n**Step 2**: Recognize the real-world cause.\nCOVID-19 dramatically changed income stability and spending patterns, obsoleting models trained on pre-pandemic data.\n\n**Step 3**: Apply the corrective action.\nRegular monitoring and retraining cadences are required to detect and correct concept drift before it significantly impacts model performance.",
       hints: [
         "Concept drift: P(Y|X) changes. Data drift: P(X) changes. Both can degrade model performance.",
         "A model that was accurate in 2020 but fails in 2023 is not overfitting - it is suffering from distribution shift.",
@@ -278,7 +278,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "Low inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators - the training signal is noisy. Training on such data produces a model that learns annotator disagreement rather than true signal. IAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
+        "**Step 1**: Measure inter-annotator agreement first.\nLow inter-annotator agreement (e.g., kappa < 0.6) means labels are inconsistent across annotators - the training signal is noisy.\n\n**Step 2**: Understand the consequence of noisy labels.\nTraining on such data produces a model that learns annotator disagreement rather than true signal.\n\n**Step 3**: Apply the corrective process.\nIAA must be measured first, annotation guidelines refined, annotators calibrated, and only sufficiently agreed-upon labels used. IAA < 0.6 typically requires annotation guideline revision.",
       hints: [
         "What kappa threshold distinguishes reliable ground truth from noisy labels? Below what value should annotation guidelines be revised?",
         "What fundamental limit exists on a model's ability to learn from human labels?",
@@ -298,7 +298,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "Web-crawled data contains toxic content, extremist material, personal information, and harmful instructions. LLMs trained on unfiltered web data memorize and can reproduce this content. Mitigation requires: content filtering (blocklists, classifiers), deduplication (reduces memorization), PII scrubbing, and quality filtering (remove spam, low-quality content). The C4, RefinedWeb, and Dolma datasets illustrate different approaches to this problem.",
+        "**Step 1**: Identify the root cause.\nWeb-crawled data contains toxic content, extremist material, personal information, and harmful instructions. LLMs trained on unfiltered web data memorize and can reproduce this content.\n\n**Step 2**: Apply mitigation techniques.\nMitigation requires: content filtering (blocklists, classifiers), deduplication (reduces memorization), PII scrubbing, and quality filtering (remove spam, low-quality content).\n\n**Step 3**: Reference established approaches.\nThe C4, RefinedWeb, and Dolma datasets illustrate different approaches to this problem.",
       hints: [
         "GPT-2 could reproduce verbatim training data including personal phone numbers from its training set.",
         "Deduplication reduces memorization: if a document appears once, it is less likely to be reproduced verbatim.",

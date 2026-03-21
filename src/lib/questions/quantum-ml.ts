@@ -41,7 +41,7 @@ const questions: Record<string, Question[]> = {
       options: ["Identity I", "Pauli-X", "Pauli-Z", "Hadamard H"],
       correctAnswer: 2,
       explanation:
-        "The S gate is diagonal: S = \\begin{pmatrix} 1 & 0 \\\\ 0 & i \\end{pmatrix} = \\operatorname{diag}(1, i).  Squaring a diagonal matrix squares each diagonal entry:\n\\[\nS^2 = \\operatorname{diag}(1^2, i^2) = \\operatorname{diag}(1, -1) = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix} = Z.\n\\]\nApplying the phase gate twice gives a total phase shift of \\pi (since i \\times i = -1), which is exactly the Pauli-Z operation.",
+        "The S gate is diagonal: S = \\begin{pmatrix} 1 & 0 \\\\ 0 & i \\end{pmatrix} = \\operatorname{diag}(1, i).  Squaring a diagonal matrix squares each diagonal entry:\n\\[\nS^2 = \\operatorname{diag}(1^2, i^2) = \\operatorname{diag}(1, -1) = \\begin{pmatrix} 1 & 0 \\\\ 0 & -1 \\end{pmatrix} = Z.\n\\]\nApplying the phase gate twice gives a total phase shift of \\pi (since i \cdot i = -1), which is exactly the Pauli-Z operation.",
       hints: [
         "S = diag(1, i). Squaring a diagonal matrix just squares the diagonal entries: S\\^2 = diag(1\\^2, i\\^2) = diag(1, −1).",
         "Compare S\\^2 = diag(1,−1) with the Pauli-Z matrix diag(1,−1). They are the same.",
@@ -474,7 +474,7 @@ const questions: Record<string, Question[]> = {
       options: ["\\pi/8", "\\pi/4", "\\pi/2", "\\pi"],
       correctAnswer: 2,
       explanation:
-        "The general parameter-shift formula for a gate U(\\theta) = e^{-i\\theta G} with eigenvalues \\pm r gives shift s = \\pi/(4r).  For the standard Pauli rotation G = P/2 (eigenvalues \\pm 1/2), we have r = 1/2, so:\n\\[\ns = \\frac{\\pi}{4 \\times \\frac{1}{2}} = \\frac{\\pi}{2}.\n\\]\nThis is the widely used \\pi/2 shift in PennyLane, Qiskit, and other frameworks.",
+        "The general parameter-shift formula for a gate U(\\theta) = e^{-i\\theta G} with eigenvalues \\pm r gives shift s = \\pi/(4r).  For the standard Pauli rotation G = P/2 (eigenvalues \\pm 1/2), we have r = 1/2, so:\n\\[\ns = \\frac{\\pi}{4 \cdot \frac{1}{2}} = \\frac{\\pi}{2}.\n\\]\nThis is the widely used \\pi/2 shift in PennyLane, Qiskit, and other frameworks.",
       hints: [
         "Substitute r = 1/2 into s = \\pi/(4r) directly.",
         "This is the standard shift used in PennyLane and most QML frameworks for single-qubit rotation gates.",
