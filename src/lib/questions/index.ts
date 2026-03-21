@@ -2028,6 +2028,28 @@ const questionOverrides: Record<string, QuestionOverride> = {
     question:
       "With Gemini's long context window, how can a RAG system handle very large document sets?",
   },
+  "q-aud-kp22-1": {
+    question:
+      "Audio Event Detection (AED) differs from audio classification in that AED:",
+    options: [
+      "Works only with music recordings while audio classification handles environmental sounds",
+      "Predicts not just which sound events are present, but also when they start and end within a recording",
+      "Requires multi-channel microphone arrays instead of single-channel audio",
+      "Uses only symbolic music notation rather than audio waveforms as input",
+    ],
+  },
+  "q-aud-kp25-2": {
+    question:
+      "AudioCaps was created by collecting human-written captions for 10-second AudioSet clips sourced from YouTube, and it remains a major benchmark for automated audio captioning.",
+  },
+  "q-aud-kp30-2": {
+    question:
+      "Speech LLMs like SpeechGPT can generate spoken responses by predicting discrete speech tokens, which are then decoded into audio instead of first handing text to a separate TTS module.",
+  },
+  "q-aud-kp38-2": {
+    question:
+      "High-frequency spectral artifacts (> 8 kHz) are often useful cues for detecting neural TTS spoofing, because some vocoders introduce oversmoothing or phase artifacts in those bands.",
+  },
 };
 
 function normalizeText(text: string): string {

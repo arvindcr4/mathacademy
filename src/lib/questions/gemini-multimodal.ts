@@ -315,6 +315,10 @@ registerQuestions({
         "Developers can configure thresholds (e.g., BLOCK_ONLY_HIGH) for various categories like Harassment, Hate Speech, and Dangerous Content.",
       explanation:
         "The Gemini API provides granular safety settings, allowing developers to adjust blocking thresholds across different harm categories depending on their application’s use case.",
+      hints: [
+        "\’Granular\’ means you can configure each harm category independently.",
+        "Threshold names like BLOCK_ONLY_HIGH indicate the level at which blocking triggers.",
+      ],
     },
   ],
   "image-understanding": [
@@ -333,6 +337,10 @@ registerQuestions({
       correctAnswer: "All of the above.",
       explanation:
         "Gemini is highly capable at VQA, OCR, and rich image captioning due to its native multimodal architecture.",
+      hints: [
+        "VQA means answering questions about image content.",
+        "OCR means extracting text embedded in an image.",
+      ],
     },
   ],
   "video-processing": [
@@ -351,6 +359,10 @@ registerQuestions({
         "It samples frames from the video at a specific frame rate and processes them sequentially along with the audio track.",
       explanation:
         "Gemini processes video by sampling it as a sequence of image frames (e.g., 1 frame per second) and analyzing them in order, combined with the transcribed audio.",
+      hints: [
+        "Video is essentially a sequence of image frames — how many per second?",
+        "Audio is processed alongside the visual frames for comprehensive understanding.",
+      ],
     },
   ],
   "audio-transcription": [
@@ -370,6 +382,10 @@ registerQuestions({
         "It can directly reason over the audio (e.g., understanding tone, identifying speakers, summarizing) without needing an intermediate text transcript.",
       explanation:
         "Because Gemini is natively multimodal, it processes audio directly. This means it can capture nuances like tone, emotion, and overlapping voices that are often lost in standard text transcripts.",
+      hints: [
+        "What information does a pure text transcript not capture?",
+        "Gemini processes raw audio waveforms, not just word sequences.",
+      ],
     },
   ],
   "file-api": [
@@ -388,6 +404,10 @@ registerQuestions({
         "To temporarily upload large files (like videos, large PDFs, or audio) to Google’s servers so they can be referenced in API prompts.",
       explanation:
         "The File API allows developers to upload large files (up to 2GB per file) for temporary storage (usually 48 hours), returning a URI that can be used in `generateContent` requests without hitting payload size limits.",
+      hints: [
+        "The File API solves the problem of sending large files in HTTP request bodies.",
+        "Files are temporary — they expire after 48 hours.",
+      ],
     },
   ],
   "document-qa": [
@@ -401,6 +421,10 @@ registerQuestions({
       correctAnswer: "True",
       explanation:
         "Gemini has strong document understanding capabilities, including the ability to parse long PDFs, extract information, and reason over embedded tables and charts.",
+      hints: [
+        "Gemini treats PDF pages as images and can read both text and visual content.",
+        "Charts and tables are visual encodings of data — Gemini can decode them.",
+      ],
     },
   ],
   "tool-declarations": [
@@ -419,6 +443,10 @@ registerQuestions({
         "By passing an array of `FunctionDeclaration` objects detailing the function name, description, and parameter schema.",
       explanation:
         "Tools are defined by passing `FunctionDeclaration` objects (which use OpenAPI JSON schema syntax) to the model. The model uses these descriptions to determine if and how to call the function.",
+      hints: [
+        "The object type name is \'FunctionDeclaration\' — it declares the function signature.",
+        "OpenAPI JSON schema syntax is the same format used in REST API documentation.",
+      ],
     },
   ],
   "function-execution": [
@@ -438,6 +466,10 @@ registerQuestions({
         "Execute the function locally using the arguments provided by Gemini, and then send the result back to Gemini in a new prompt.",
       explanation:
         "Gemini does not execute custom functions. It only generates the function name and arguments. The developer must intercept this, run the code locally, and return the `functionResponse` back to the model.",
+      hints: [
+        "Gemini is the orchestrator — it tells the developer what to run.",
+        "The result must be returned as a `functionResponse` in the next conversation turn.",
+      ],
     },
   ],
   "parallel-function-calling": [
@@ -451,6 +483,10 @@ registerQuestions({
       correctAnswer: "True",
       explanation:
         "Gemini can recognize when multiple independent function calls are needed (e.g., getting the weather for three different cities) and return them simultaneously, saving round-trip latency.",
+      hints: [
+        "If two functions are independent, why make two round trips?",
+        "Parallel calls reduce total latency compared to sequential calls.",
+      ],
     },
   ],
   "google-search-grounding": [
@@ -470,6 +506,10 @@ registerQuestions({
         "It allows the model to augment its training data with real-time, up-to-date information from the web to reduce hallucinations.",
       explanation:
         "Grounding with Google Search connects the model to the live internet, significantly reducing hallucinations and allowing it to answer queries about recent events.",
+      hints: [
+        "Hallucinations occur when a model generates plausible but factually incorrect content.",
+        "Grounding tethers responses to real, verifiable web content.",
+      ],
     },
   ],
   "code-execution": [
@@ -489,6 +529,10 @@ registerQuestions({
         "It allows Gemini to write and execute Python code in a secure sandbox on Google’s servers to solve complex math or logic problems.",
       explanation:
         "The Code Execution tool enables the model to autonomously write and execute Python code in a secure Google sandbox, which is incredibly useful for math, data analysis, and deterministic logic tasks.",
+      hints: [
+        "A sandbox ensures user safety by isolating the executed code.",
+        "Python is the language supported in the Gemini Code Execution environment.",
+      ],
     },
   ],
   "gemini-agents": [
@@ -508,6 +552,10 @@ registerQuestions({
         "Think -> Act -> Observe (ReAct) loop utilizing tool calling.",
       explanation:
         "Agentic workflows typically rely on the ReAct (Reasoning and Acting) paradigm, where the model iteratively thinks about the problem, calls tools (acts), observes the result, and decides the next step.",
+      hints: [
+        "ReAct stands for Reasoning and Acting — a looping paradigm.",
+        "The loop repeats until the model decides it has a final answer.",
+      ],
     },
   ],
   "rag-with-gemini": [
@@ -527,6 +575,10 @@ registerQuestions({
         "It can ingest massive entire document repositories directly in the prompt, sometimes reducing the need for complex vector chunking.",
       explanation:
         "Gemini 1.5 Pro features a massive 2-million token context window, which allows developers to often bypass complex traditional RAG (chunking/vector databases) and just place entire codebases or document libraries directly into the prompt.",
+      hints: [
+        "2 million tokens can hold an entire codebase or set of documents.",
+        "When you can fit everything in context, you may not need a vector DB.",
+      ],
     },
   ],
   "model-tuning": [
@@ -546,6 +598,10 @@ registerQuestions({
         "Parameter-Efficient Fine-Tuning (PEFT) / Supervised Fine-Tuning.",
       explanation:
         "Google AI Studio allows developers to perform Supervised Fine-Tuning (often using parameter-efficient methods under the hood) by providing a dataset of input-output examples to adapt the model to a specific tone or task.",
+      hints: [
+        "Fine-tuning uses labeled examples of desired input/output behavior.",
+        "PEFT means only a small subset of parameters are updated, saving compute.",
+      ],
     },
   ],
   "evaluating-gemini": [
