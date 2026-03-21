@@ -59,6 +59,26 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-msd-kp1-7",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A team is designing an ML system for real-time personalization. The engineering lead proposes using the same evaluation metric for both offline model selection and online A/B test success criteria. What is the problem with this approach?",
+      options: [
+        "It is computationally inefficient to compute the same metric twice.",
+        "Offline metrics (e.g., AUC on historical data) measure model quality in isolation; online metrics (e.g., conversion rate) measure system-level business outcomes. A model can improve offline AUC while decreasing online conversion due to system interactions, latency changes, or distribution shift. Different metrics are required.",
+        "The A/B test cannot measure model-specific metrics like AUC.",
+        "Using the same metric simplifies the evaluation process — this is actually a best practice.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Offline metrics measure model quality on static historical data. Online metrics measure the full system\'s business impact in live traffic. These are fundamentally different: a model with better offline AUC can degrade online metrics due to increased latency (slower response reduces conversion), system interactions (the model interacts with caching, feature pipelines, UI), or distribution shift (historical test data does not represent current user behavior). Always specify separate offline and online success criteria.",
+      hints: [
+        "Offline: static data, model quality. Online: live traffic, business outcomes.",
+        "A faster model with lower AUC can outperform a slower model with higher AUC in an A/B test.",
+      ],
+    },
+    {
       id: "q-msd-kp1-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -398,6 +418,21 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-msd-kp4-7",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "A feature store\'s offline store (e.g., BigQuery or Parquet files) is used to serve features at model inference time in production.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "The offline store is used for training data generation and batch inference — not for real-time serving. The online store (Redis, DynamoDB, Cassandra) serves features at inference time because it supports low-latency point lookups (sub-millisecond). The offline store contains the full feature history for point-in-time correct training data generation, but querying it at inference time would introduce seconds of latency — incompatible with real-time serving SLOs.",
+      hints: [
+        "Offline store: analytical queries for training. Online store: point lookups for serving.",
+        "BigQuery query time: seconds to minutes. Redis GET: sub-millisecond. Only one is suitable for serving.",
+      ],
+    },
+    {
       id: "q-msd-kp4-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -624,6 +659,21 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-msd-kp6-7",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "A model trained with a fixed random seed on the same data will always produce exactly identical weights across different hardware accelerators (e.g., V100 vs. A100).",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Different GPU architectures implement floating-point operations with different rounding behaviors, and CUDA non-deterministic operations (e.g., atomicAdd in certain kernels) produce different results across GPU generations even with fixed seeds. Additionally, cuDNN algorithm selection changes across library versions. For truly reproducible training, deterministic CUDA mode must be explicitly enabled (torch.use_deterministic_algorithms(True)) and the same hardware/library version must be used.",
+      hints: [
+        "CUDA floating-point arithmetic is not deterministic across GPU architectures due to different rounding.",
+        "torch.use_deterministic_algorithms(True) enforces determinism but may reduce performance.",
+      ],
+    },
+    {
       id: "q-msd-kp6-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -734,6 +784,26 @@ const questions: Record<string, Question[]> = {
       hints: [
         "Amdahl\'s Law: speed up the slowest sequential step. Feature fetch and reranking dominate.",
         "I/O-bound steps (feature fetch from Redis) can be parallelized — fire all requests simultaneously instead of sequentially.",
+      ],
+    },
+    {
+      id: "q-msd-kp7-7",
+      type: "multiple-choice",
+      difficulty: "medium",
+      question:
+        "A model serving system experiences a sudden spike from 1,000 to 10,000 QPS. The auto-scaler takes 3 minutes to provision new replicas. During those 3 minutes, which technique best handles the overload without dropping requests?",
+      options: [
+        "Increase the model batch size dynamically to process more requests per inference call.",
+        "Use request queuing with a bounded queue: accept incoming requests into a queue up to a capacity limit, process them as resources allow, and return a 503 with Retry-After for requests that exceed the queue depth.",
+        "Reduce model precision from FP16 to INT4 to speed up inference during the spike.",
+        "Route excess requests to a slower CPU-based fallback model.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "During a scaling lag, bounded request queuing provides graceful degradation: requests queue until replicas are available, and once the queue is full, new requests get a structured error (503 + Retry-After) that allows clients to retry. This is better than dropping connections silently or letting queues grow unboundedly (causing timeouts). Dynamic batching (option A) helps but cannot absorb a 10× traffic spike alone. The CPU fallback (option D) is a valid secondary measure but is not the primary overload handling technique.",
+      hints: [
+        "Unbounded queues = OOM crashes. Bounded queues = structured failure with retry signals.",
+        "503 + Retry-After is the correct HTTP response for overload — clients know to retry in N seconds.",
       ],
     },
     {
@@ -850,6 +920,21 @@ const questions: Record<string, Question[]> = {
       ],
     },
     {
+      id: "q-msd-kp8-7",
+      type: "true-false",
+      difficulty: "easy",
+      question:
+        "Online (real-time) features such as 'items clicked in the last 5 minutes' require a streaming pipeline to compute and cannot be served from a pre-materialized batch feature store.",
+      options: ["True", "False"],
+      correctAnswer: "true",
+      explanation:
+        "Online features that capture very recent user behavior (session-level signals within the last minutes) change too rapidly to be served from a batch-materialized store, which is typically updated hourly or daily. They require a streaming pipeline (Flink, Kafka Streams) that computes per-user aggregations in near-real-time and writes to the online store continuously. These session features are critical for recommendation quality — a user who just clicked on action movies should immediately get more action movie recommendations.",
+      hints: [
+        "Batch feature: pre-computed, static, e.g., \'user\'s favorite genre over past 30 days\'.",
+        "Streaming feature: computed in real time, e.g., \'items clicked in current session\'.",
+      ],
+    },
+    {
       id: "q-msd-kp8-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -907,6 +992,76 @@ const questions: Record<string, Question[]> = {
   ],
 
   "search-ranking-design": [
+    {
+      id: "q-msd-kp9-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A dense retrieval model (bi-encoder) is trained using contrastive learning with in-batch negatives. What are 'in-batch negatives' and why are they used?",
+      options: [
+        "Negatives are drawn from a separate hard-negative mining step before training.",
+        "For each (query, positive_doc) pair in a batch, all other documents in the batch serve as negative examples. This is computationally efficient because the batch\'s document encodings are already computed.",
+        "Negatives are random documents sampled uniformly from the corpus at each step.",
+        "Negatives are documents flagged as irrelevant by human annotators.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In-batch negatives reuse document encodings already computed for other training pairs in the same batch as negatives for each query. With batch size B, each (query, positive) pair gets B-1 negatives at no extra encoding cost. This makes contrastive training highly efficient. The limitation is that some in-batch negatives may be 'false negatives' (actually relevant documents) — a problem mitigated by hard negative mining from BM25 or a previous model checkpoint.",
+      hints: [
+        "Batch size 256: each query gets 255 in-batch negatives. Only 256 document encodings are needed, not 256×256.",
+        "False negatives (relevant docs treated as negatives) in in-batch training reduce training signal quality.",
+      ],
+    },
+    {
+      id: "q-msd-kp9-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Query expansion (adding synonyms and related terms to a query before retrieval) always improves precision in keyword-based search systems.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Query expansion improves recall (finding more relevant documents) but typically hurts precision (adding noise from irrelevant expanded terms). For example, expanding 'apple' to include 'fruit, iPhone, company' may retrieve relevant iPhone documents but also fruit recipes and company filings. Controlled query expansion (using domain-specific dictionaries or model-generated expansions limited to high-confidence synonyms) is required to prevent precision degradation. Pseudo-relevance feedback can also introduce topic drift.",
+      hints: [
+        "Recall: did we find all relevant documents? Precision: of what we found, how much is relevant?",
+        "Query expansion: better recall, often worse precision — a fundamental information retrieval trade-off.",
+      ],
+    },
+    {
+      id: "q-msd-kp9-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A product search system must handle queries in 50 languages, with the product catalog also in 50 languages. Cross-lingual retrieval (Spanish query → English product title) is required. Which architecture best solves this?",
+      options: [
+        "Run BM25 separately for each language pair — 2500 separate indices.",
+        "Train a multilingual bi-encoder (e.g., fine-tuned mE5 or LaBSE) that maps queries and documents from all 50 languages into a single shared embedding space, enabling cross-lingual dot product similarity.",
+        "Machine-translate all queries to English before retrieval, then use an English-only bi-encoder.",
+        "Use language detection followed by a separate monolingual model for each language.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Multilingual bi-encoders (mE5, LaBSE, mDPR) encode queries and documents from any language into a single aligned embedding space where semantically equivalent text from different languages has high cosine similarity. This enables cross-lingual retrieval natively without machine translation. MT adds latency and translation errors; 50 separate monolingual models are maintenance-heavy and cannot handle cross-lingual queries.",
+      hints: [
+        "LaBSE (Language-agnostic BERT Sentence Embeddings) was trained on 109 languages with translation pairs — encodings are cross-lingually aligned.",
+        "Cross-lingual embedding: Spanish \'manzana\' and English \'apple\' map to nearby vectors in the embedding space.",
+      ],
+    },
+    {
+      id: "q-msd-kp9-7",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Mean Reciprocal Rank (MRR) and NDCG@10 always agree on which ranking system is better when comparing two systems on the same query set.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "MRR measures where the first relevant result appears (1/rank_of_first_relevant). NDCG@10 measures the quality of the entire top-10 list, rewarding systems that place multiple relevant results early with higher relevance grades. A system with perfect MRR (first result always relevant) but poor NDCG@10 (only the first result is relevant) can lose to a system with lower MRR but many moderately-relevant results in the top 10. The two metrics optimize for different aspects of ranking quality.",
+      hints: [
+        "MRR: did we get the first relevant result right? NDCG@10: how good is the full top-10 list?",
+        "A navigational query ('Wikipedia homepage') rewards MRR; an exploratory query rewards NDCG@10.",
+      ],
+    },
     {
       id: "q-msd-kp9-1",
       type: "multiple-choice",
@@ -966,6 +1121,61 @@ const questions: Record<string, Question[]> = {
 
   "fraud-detection-design": [
     {
+      id: "q-msd-kp10-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A fraud detection model must decide in real time whether to block a payment. The cost of a false negative (missed fraud) is $200 on average, and the cost of a false positive (blocking a legitimate transaction) is $10 in customer friction and support costs. How should the decision threshold be set?",
+      options: [
+        "At probability 0.5 — the standard decision boundary.",
+        "Lower than 0.5 — since false negatives are 20× more costly than false positives, the model should flag more transactions (be more conservative) to catch more fraud even at the cost of more false positives.",
+        "Higher than 0.5 — precision is more important than recall in fraud detection.",
+        "The threshold should not be changed from the default; business costs do not affect model thresholds.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "The optimal decision threshold is cost-sensitive: with FN cost = $200 and FP cost = $10, the cost ratio is 20:1. The Bayes optimal threshold is P(fraud) > FP_cost / (FP_cost + FN_cost) = 10 / (10 + 200) ≈ 0.048. This means flag any transaction with >4.8% fraud probability. This threshold explicitly encodes the business cost trade-off into the decision rule. Standard 0.5 threshold ignores the asymmetric cost structure.",
+      hints: [
+        "Optimal threshold = FP_cost / (FP_cost + FN_cost) = 10 / 210 ≈ 0.048.",
+        "Asymmetric costs shift the threshold: the more costly the false negative, the lower the threshold.",
+      ],
+    },
+    {
+      id: "q-msd-kp10-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "Graph-based fraud detection (modeling account relationships as a graph and using graph neural networks) is superior to tabular feature-based models for detecting all types of fraud.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Graph-based fraud detection excels at detecting coordinated fraud rings where multiple accounts collaborate (e.g., synthetic identity fraud networks, mule account networks). For isolated individual fraud (e.g., a single stolen card used for unauthorized purchases), tabular GBDTs with velocity features (transaction count in 1h, spending pattern deviation) are typically more effective and faster to serve. The best production systems combine both: tabular features for fast first-pass scoring and GNNs for network-level signals.",
+      hints: [
+        "GNNs: powerful for detecting connected fraud rings. GBDTs: powerful for individual transaction anomaly detection.",
+        "Production fraud systems typically use both: tabular model for <50 ms decision, GNN for post-authorization review.",
+      ],
+    },
+    {
+      id: "q-msd-kp10-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A fraud model achieves 85% recall and 70% precision on the test set. In production, you observe recall dropping to 60% within 3 months. The fraud rate has not changed. What is the most likely cause and corrective action?",
+      options: [
+        "The test set was too small; retrain with more data.",
+        "Adversarial concept drift: fraudsters are adapting their behavior patterns to evade the model. Corrective action: continuous model monitoring with adversarial feature drift detection, frequent retraining on recent data, and active collection of new fraud patterns.",
+        "The serving infrastructure has bugs causing wrong predictions.",
+        "The model was overfitted to the test set; apply stronger regularization.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Fraud is adversarial: once a model is deployed, fraudsters study its decision boundaries and change their behavior to evade detection. This is a domain-specific form of concept drift. The corrective action includes: (1) monitoring feature distributions and model output distributions for drift; (2) retraining on recent fraud patterns (frequent, e.g., daily/weekly); (3) active investigation of false negatives to discover new fraud patterns; (4) rule-based overrides for newly discovered fraud patterns while retraining.",
+      hints: [
+        "Adversarial drift: fraudsters observe which transactions are blocked and change patterns to avoid detection.",
+        "Fraud model recall: never monitor only on fixed test sets. Monitor on a sliding window of recent production outcomes.",
+      ],
+    },
+    {
       id: "q-msd-kp10-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -1023,6 +1233,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "ads-ranking-design": [
+    {
+      id: "q-msd-kp11-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "In a second-price auction (Vickrey auction), the winner pays the second-highest bid. Why do second-price auctions incentivize honest bidding?",
+      options: [
+        "Because the winner pays less, so they can afford to bid higher.",
+        "Because bidding true value is the dominant strategy: bidding higher cannot increase the amount paid (determined by others), and bidding lower risks losing the auction without saving money.",
+        "Because advertisers cannot see other bids, so they must guess and bid honestly.",
+        "Because the platform monitors bids and penalizes dishonest advertisers.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "In a second-price auction, the winner pays the runner-up\'s bid, not their own. If your true value is $5: bidding $5 means you win when you should (when others bid <$5) and pay the second-highest price. Bidding $7 wins you the same auctions (still beats the same set of competitors) and pays the same second price — no benefit. Bidding $3 might cause you to lose auctions where you would have been profitable. Hence, bidding true value is weakly dominant.",
+      hints: [
+        "Second-price: winner pays runner-up\'s bid. First-price: winner pays own bid.",
+        "Bidding above true value: same wins, same price — no gain. Bidding below: same price if you win, but risk losing.",
+      ],
+    },
+    {
+      id: "q-msd-kp11-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "A generalized second-price (GSP) auction used in sponsored search is equivalent to a truthful Vickrey-Clarke-Groves (VCG) mechanism.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "GSP is not truthful in general: bidders can benefit by bidding strategically (not at their true value), because the payment structure in GSP does not satisfy incentive compatibility for all positions. VCG is provably truthful (bidding true value is a dominant strategy) but computationally expensive and rarely used in practice. Google\'s original AdWords used GSP, not VCG. The distinction matters for mechanism design in ads systems.",
+      hints: [
+        "Truthful mechanism: bidding true value is always optimal, regardless of others\' bids.",
+        "GSP is simpler and commonly used; VCG is truthful but computationally complex for multiple slots.",
+      ],
+    },
+    {
+      id: "q-msd-kp11-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "An ads ranking system uses a two-tower model to predict pCTR: user tower (200 features) and ad tower (150 features) produce 64-dim embeddings, combined via dot product. The pCTR model is miscalibrated: predicted pCTR is on average 2× higher than observed CTR. What is the most efficient calibration fix without retraining the model?",
+      options: [
+        "Retrain the full two-tower model with a calibration objective.",
+        "Apply Platt scaling: train a logistic regression on (model output, observed label) pairs using recent production data, then use the regression to map raw model outputs to calibrated probabilities.",
+        "Multiply all pCTR predictions by 0.5 uniformly.",
+        "Filter out low-pCTR predictions below 0.01.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Platt scaling is the standard post-hoc calibration technique: fit a logistic regression f(x) = 1 / (1 + exp(-(a*s + b))) where s is the model score, using (score, observed_label) pairs from recent production data. This learns the correct mapping without retraining the full model. A uniform 0.5× multiplier (option C) only corrects the overall mean but not distributional shape. Platt scaling corrects both mean and shape. Temperature scaling is an alternative for neural classifiers.",
+      hints: [
+        "Calibration: the model\'s predicted probabilities should match empirical frequencies.",
+        "Platt scaling: one logistic regression layer on top of the existing model\'s outputs — cheap and effective.",
+      ],
+    },
     {
       id: "q-msd-kp11-1",
       type: "multiple-choice",
@@ -1082,6 +1347,61 @@ const questions: Record<string, Question[]> = {
 
   "feed-ranking-design": [
     {
+      id: "q-msd-kp12-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A social media feed ranking model scores each post with a single score and ranks them in descending order. A user follows 500 people who post 2,000 items/day. Why is this approach insufficient for a high-quality feed?",
+      options: [
+        "The model cannot process 2,000 posts fast enough to meet latency requirements.",
+        "A purely score-based ranking ignores diversity and recency: a single viral topic could fill the entire feed, and older but still-relevant posts compete unfairly with brand-new content.",
+        "Score-based ranking requires more training data than is available.",
+        "Users follow too many people for collaborative filtering to work effectively.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Pure score-based ranking suffers from two problems: (1) topic concentration — if 10 friends post about the same event, the top 20 feed slots are all the same topic, reducing diversity; (2) recency vs. relevance trade-off — a highly relevant 2-day-old post competes with less relevant but newer posts. Production feed systems use diversity re-ranking (MMR, DPP) and recency decay to balance relevance, diversity, and freshness.",
+      hints: [
+        "Diversity: user wants to see multiple topics, not 20 posts about one sports game.",
+        "Recency decay: a 1-hour-old post of moderate relevance beats a 48-hour-old post of slightly higher relevance.",
+      ],
+    },
+    {
+      id: "q-msd-kp12-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In a feed ranking system, training on historical user interactions creates a feedback loop that can amplify existing biases in content recommendations over time.",
+      options: ["True", "False"],
+      correctAnswer: "true",
+      explanation:
+        "The feedback loop works as follows: (1) the current model ranks content A highly → users click on A → A generates more training signal → the next model ranks A even higher → A crowds out content B. If the current model has a bias toward certain content types (e.g., sensational content), each training iteration amplifies that bias. Breaking the loop requires exploration (showing non-top-ranked content to collect unbiased signal), causal methods (IPS debiasing), and diversity objectives.",
+      hints: [
+        "Feedback loop: model biases influence what data is collected, which retrains a more biased model.",
+        "The only way to break the loop is to show content the model would NOT have ranked highly — deliberate exploration.",
+      ],
+    },
+    {
+      id: "q-msd-kp12-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A feed ranking system uses a multi-objective reward: R = w1 × p_like + w2 × p_share + w3 × p_comment − w4 × p_hide. How should the weights be tuned and what is the risk of this approach?",
+      options: [
+        "Tune weights using gradient descent on a held-out validation set with a combined accuracy metric.",
+        "Tune weights via online A/B experiments that vary weight combinations, measuring long-term user retention and satisfaction — not just engagement. Risk: the learned weights may over-optimize short-term proxy signals and miss long-term user value.",
+        "Set weights based on revenue contribution: shares generate more viral reach so w2 should be highest.",
+        "Use Bayesian optimization to minimize cross-entropy loss across all four objectives simultaneously.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Weight tuning for multi-objective feed ranking requires online experiments because the right objective is long-term user value — not any single offline metric. Different weight combinations should be A/B tested against long-term metrics (7-day/30-day retention, satisfaction surveys, session length trends). The risk of static weights is Goodhart\'s Law: the system will exploit whichever proxy signals have high weights, potentially gaming them at the expense of true user value.",
+      hints: [
+        "Offline tuning optimizes proxy metrics; online A/B tests measure actual user outcomes.",
+        "Goodhart\'s Law: if shares have weight w2=10, the model will surface shareable-but-not-valuable content.",
+      ],
+    },
+    {
       id: "q-msd-kp12-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -1140,6 +1460,61 @@ const questions: Record<string, Question[]> = {
 
   "content-moderation-design": [
     {
+      id: "q-msd-kp13-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "A content moderation system uses a two-stage pipeline: a fast binary classifier (stage 1) flags potentially harmful content, then a slower, more accurate model (stage 2) reviews flagged content. Why is this two-stage design used?",
+      options: [
+        "Because a single model cannot achieve both high precision and high recall.",
+        "To reduce overall cost and latency: the fast stage-1 classifier screens the vast majority of content at low cost, and the expensive stage-2 model only processes the small fraction flagged by stage 1.",
+        "Because regulations require human review before any content is removed.",
+        "Because stage-1 models are always more accurate for binary classification tasks.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "At 100K QPS with 0.1% harmful content, ~100 posts/second are harmful and ~99,900 are safe. Running an expensive stage-2 model on all 100K posts/second would be prohibitively costly. Stage 1 uses a fast, high-recall (low-threshold) classifier to flag ~1,000 posts/second for review; stage 2 applies precision-optimized scoring to those 1,000. This reduces stage-2 compute by 99× while maintaining system-level recall.",
+      hints: [
+        "Stage 1: fast, high recall (catch everything), low precision. Stage 2: slow, high precision (confirm).",
+        "Running stage 2 on 100K QPS vs. 1K QPS = 100× cost difference — the two-stage design pays for itself.",
+      ],
+    },
+    {
+      id: "q-msd-kp13-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "For content moderation, the precision-recall trade-off can be independently controlled by adjusting the model\'s classification threshold after training, without retraining the model.",
+      options: ["True", "False"],
+      correctAnswer: "true",
+      explanation:
+        "A classifier outputs a probability score for each piece of content. By adjusting the threshold (e.g., from 0.5 to 0.3 for more aggressive removal), precision and recall trade off without retraining. Lowering the threshold increases recall (catches more harmful content) but decreases precision (more false positives). Raising it does the reverse. The optimal threshold depends on the platform\'s policy goals (e.g., protecting minors requires high recall; reducing creator friction requires high precision).",
+      hints: [
+        "The ROC curve and Precision-Recall curve show all achievable (precision, recall) points by varying threshold.",
+        "Policy decisions (how much false positive risk is acceptable) determine threshold — not the model training.",
+      ],
+    },
+    {
+      id: "q-msd-kp13-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "A content moderation classifier is fine-tuned and achieves 95% precision, 90% recall on a test set of English hate speech. When deployed globally, the recall drops to 70% for non-English content and the model flags 15% of innocuous content in certain languages as harmful. What are the two distinct failure modes and their fixes?",
+      options: [
+        "Underfitting on non-English languages (fix: larger model) and distribution shift (fix: more test data).",
+        "Cross-lingual transfer failure (recall drops because the English-trained model does not generalize to other languages — fix: multilingual fine-tuning with target-language examples) and cultural/linguistic false positive bias (the model flags culturally-specific idioms as harmful — fix: adversarial debiasing with native-language annotators).",
+        "The model is overfitting to English training data (fix: add L2 regularization) and has high false positive rate globally (fix: increase the classification threshold).",
+        "Insufficient training data (fix: collect more English examples) and annotation errors (fix: re-annotate the test set).",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Two distinct failures: (1) Low recall on non-English — the English-fine-tuned classifier does not generalize to other languages because of different linguistic patterns, idioms, and slang; fix: multilingual pre-trained model + few-shot fine-tuning with target-language hate speech examples. (2) False positive bias — the model confuses culturally-specific language, dialects, or code-switching with hate speech; fix: collect native-annotated examples from affected communities, apply targeted debiasing. These are separate problems requiring separate solutions.",
+      hints: [
+        "Low recall = missing harmful content. High false positive = incorrectly removing safe content. Both are bad, for different reasons.",
+        "Cultural false positives: African American Vernacular English (AAVE) has been systematically over-flagged by English hate speech classifiers.",
+      ],
+    },
+    {
       id: "q-msd-kp13-1",
       type: "multiple-choice",
       difficulty: "easy",
@@ -1197,6 +1572,61 @@ const questions: Record<string, Question[]> = {
   ],
 
   "entity-resolution-design": [
+    {
+      id: "q-msd-kp14-4",
+      type: "multiple-choice",
+      difficulty: "easy",
+      question:
+        "What distinguishes entity resolution (record linkage) from deduplication?",
+      options: [
+        "Entity resolution requires ML; deduplication only uses exact string matching.",
+        "Deduplication identifies duplicate records within a single database; entity resolution links records referring to the same real-world entity across multiple databases.",
+        "Entity resolution is faster because it uses simpler algorithms.",
+        "Deduplication only applies to text data; entity resolution applies to structured records.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "Deduplication: identify and merge duplicate records within one dataset (e.g., same customer entered twice). Entity resolution (record linkage): match records across separate databases that refer to the same entity (e.g., linking customer records from CRM, billing system, and support tickets). Both use similar techniques (blocking, similarity scoring, classification) but the scale and data access patterns differ. Entity resolution also handles schema heterogeneity between different database schemas.",
+      hints: [
+        "Deduplication: one database, find internal duplicates. Entity resolution: multiple databases, cross-link.",
+        "Entity resolution must handle schema differences: one DB has 'first_name, last_name'; another has 'full_name'.",
+      ],
+    },
+    {
+      id: "q-msd-kp14-5",
+      type: "true-false",
+      difficulty: "medium",
+      question:
+        "In ML-based entity resolution, using the match/non-match labels from a manually-curated gold standard test set to evaluate a production system is sufficient, even if the production data distribution differs from the test set.",
+      options: ["True", "False"],
+      correctAnswer: "false",
+      explanation:
+        "Gold standard test sets for entity resolution are typically constructed by sampling record pairs for human labeling — often with oversampling of potential matches to create a balanced evaluation set. Production data has a very different distribution: most pairs are non-matches (extreme class imbalance), and the specific entity types, data quality issues, and domain distribution may differ. Production monitoring must include sampling from live decisions and measuring precision/recall on production-representative pairs.",
+      hints: [
+        "If gold standard has 50% match rate but production has 0.01% match rate, test metrics are not representative.",
+        "Always evaluate on production-representative samples, not just on the labeled development/test set.",
+      ],
+    },
+    {
+      id: "q-msd-kp14-6",
+      type: "multiple-choice",
+      difficulty: "hard",
+      question:
+        "You are building an entity resolution system for 500M customer records across 3 databases. After blocking, you have 50 billion candidate pairs to score. A pairwise classifier takes 0.1 ms per pair. How do you make this tractable without sacrificing recall?",
+      options: [
+        "Run the classifier on all 50B pairs using a distributed cluster of 500 machines.",
+        "Apply two-stage scoring: a fast vectorized similarity pre-filter (TF-IDF cosine < 0.3 → discard) to reduce candidate pairs by 90%, followed by the 0.1 ms classifier on the remaining 5B pairs. Add transitivity closure (union-find) to propagate matches.",
+        "Reduce blocking to 100M candidate pairs by using stricter blocking keys, accepting recall loss.",
+        "Use approximate nearest neighbor search (LSH) to replace blocking entirely, generating 1M candidate pairs.",
+      ],
+      correctAnswer: 1,
+      explanation:
+        "50B pairs × 0.1 ms = 5M seconds — infeasible for a single cluster. A two-stage approach: (1) fast pre-filter (vectorized TF-IDF cosine similarity, 0.001 ms/pair) eliminates 90% of pairs, reducing to 5B; (2) then 5B × 0.1 ms = 500K seconds — still too slow. Further filtering stages are needed. Practically: 3+ stages of increasing accuracy/cost. LSH-based candidate generation (option D) is a strong alternative. Transitivity closure via union-find ensures match propagation across all three databases.",
+      hints: [
+        "50B × 0.1 ms = 5M seconds ≈ 58 days on one machine. Must reduce candidate count by >1000×.",
+        "Union-find (disjoint set): if A=B and B=C, then A=C. Necessary when matching across 3+ databases.",
+      ],
+    },
     {
       id: "q-msd-kp14-1",
       type: "multiple-choice",
