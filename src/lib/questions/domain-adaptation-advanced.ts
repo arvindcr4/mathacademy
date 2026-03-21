@@ -29,7 +29,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Under covariate shift, a classifier that achieves 100% training accuracy will necessarily generalize perfectly to the target domain.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "High training accuracy does not imply target generalization under covariate shift; the model may have overfit to source-domain input patterns that differ from the target, causing degraded performance despite perfect training accuracy.",
       hints: [
@@ -87,7 +87,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Kernel Mean Matching (KMM) estimates importance weights by directly minimizing the MMD between the weighted source distribution and the target distribution in a reproducing kernel Hilbert space, formulated as a quadratic program.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "KMM solves: min_w ||μ_T − Σ_i w_i φ(x_i^S)||²_{RKHS} subject to w_i ≥ 0 and |Σ_i w_i/n_S − 1| ≤ ε. Expanding the squared RKHS norm gives a quadratic objective in w with kernel matrix K_SS and cross-kernel k_ST, yielding a QP that can be solved without explicit density estimation.",
       hints: [
@@ -145,7 +145,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Deep Adaptation Network (DAN) minimizes Multi-Kernel MMD (MK-MMD) between source and target domain representations in multiple fully-connected layers of a deep network simultaneously.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DAN uses a mixture of kernels (MK-MMD: k = Σ_u β_u k_u) in multiple task-specific layers simultaneously to align distributions at multiple levels of abstraction. The multi-kernel approach makes the MMD test more powerful by selecting the best kernel combination.",
       hints: [
@@ -203,7 +203,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In DANN, the feature extractor is trained to simultaneously minimize task loss on source data and minimize domain discrimination accuracy.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DANN jointly optimizes: (1) minimize classification loss L_y on labeled source data (task performance); (2) maximize domain classifier loss L_d (domain confusion — the GRL flips this to minimize for the domain classifier). The overall objective is: min_{G_f,G_y} max_{G_d} [L_y(G_y(G_f(x_s)), y_s) − λ·L_d(G_d(G_f(x)), d)].",
       hints: [
@@ -261,7 +261,7 @@ const questions: Record<string, Question[]> = {
       question:
         "CORAL requires target domain labels to compute the covariance alignment loss.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "CORAL only requires unlabeled target data to compute target covariance C_T = (1/(n_T−1))(X_T^T X_T − (1/n_T)(1^T X_T)^T(1^T X_T)); the alignment loss is purely statistical and does not use target labels. This makes CORAL directly applicable in unsupervised domain adaptation.",
       hints: [
@@ -318,7 +318,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Curriculum domain adaptation selects target pseudo-labeled samples for training in order from easiest to hardest, progressively expanding the training set.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Following curriculum learning principles, curriculum DA starts with high-confidence pseudo-labeled target samples and gradually includes harder ones, reducing the risk of noise from low-confidence pseudo-labels corrupting early training.",
       hints: [
@@ -376,7 +376,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Mixture of Experts approaches can be applied to multi-source DA by training a separate expert model for each source domain and learning a gating network for the target.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Each expert specializes in one source domain; the gating network learns to weight experts based on target input similarity to each source, effectively combining multiple adapted models.",
       hints: [
@@ -433,7 +433,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Importance-weighted adversarial nets (IWAN) for partial DA down-weight source examples from classes unlikely to appear in the target domain.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "IWAN assigns lower weights to source samples from outlier classes (not in the target) by using auxiliary domain and class discriminators, focusing alignment only on the shared class space.",
       hints: [
@@ -491,7 +491,7 @@ const questions: Record<string, Question[]> = {
       question:
         'Universal DA requires a threshold to distinguish "known" (shared class) from "unknown" (target-private) target samples, and this threshold is always set manually.',
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Methods like UAN (Universal Adaptation Network) learn to estimate the threshold adaptively using a domain similarity score, avoiding manual threshold tuning.",
       hints: [
@@ -549,7 +549,7 @@ const questions: Record<string, Question[]> = {
       question:
         "TTT (Test-Time Training, Sun et al.) trains an auxiliary self-supervised task jointly with the main task so the model can adapt at test time using the auxiliary loss alone.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TTT introduces a self-supervised auxiliary task (e.g., rotation prediction) trained with the main task on source data; at test time, the model fine-tunes using the auxiliary loss on each test example before making predictions.",
       hints: [
@@ -607,7 +607,7 @@ const questions: Record<string, Question[]> = {
       question:
         "SHOT (Source Hypothesis Transfer) adapts to the target domain by freezing the source model\'s classifier and only updating the feature extractor.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "SHOT freezes the source hypothesis (classifier) and adapts the feature extractor via information maximization (entropy minimization + diversity) and self-supervised pseudo-labeling on target data.",
       hints: [
@@ -665,7 +665,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Domain-adversarial training is directly applicable to zero-shot DA since it requires unlabeled target samples to compute the domain confusion loss.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "DANN-style methods require target samples to train the domain discriminator; without any target data, feature-level adversarial alignment cannot be applied directly in zero-shot DA.",
       hints: [
@@ -723,7 +723,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Empirical Risk Minimization (ERM) — simply training on pooled source domains — is a surprisingly strong baseline for domain generalization.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Gulrajani & Lopez-Paz (2021) showed in the DomainBed benchmark that careful ERM with proper hyperparameter tuning matches or outperforms many sophisticated DG methods, highlighting the importance of rigorous evaluation.",
       hints: [
@@ -780,7 +780,7 @@ const questions: Record<string, Question[]> = {
       question:
         "IRMv1 (the practical IRM implementation) adds a gradient penalty that penalizes the norm of the gradient of the loss with respect to a fixed dummy classifier on top of $\\Phi$.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "IRMv1 (IRMV1) replaces the intractable bilevel optimization of IRM with a tractable penalty. The gradient penalty\n\\[\\|\\nabla_{w=1} R^e(w \\circ \\Phi)\\|^2\\]\nmeasures how far the representation $\\Phi$ is from admitting $w=1$ as its optimal classifier in environment $e$. If $\\Phi$ were truly invariant, then for each environment the scalar $1 \\cdot \\Phi(X)$ would be the optimal linear classifier, making the gradient of the loss w.r.t. $w$ equal to zero at $w=1$. IRMv1 adds this penalty to the standard ERM loss, making the optimization fully differentiable end-to-end.",
       hints: [
@@ -838,7 +838,7 @@ const questions: Record<string, Question[]> = {
       question:
         "MAML (Model-Agnostic Meta-Learning) can be applied to domain adaptation by treating each source domain as a separate task during meta-training.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "MAML trains an initialization that can be quickly fine-tuned to any task; using source domains as tasks produces an initialization that adapts efficiently to new target domains with few gradient steps.",
       hints: [
@@ -896,7 +896,7 @@ const questions: Record<string, Question[]> = {
       question:
         'CLIP zero-shot classification can itself serve as a domain adaptation baseline by using text prompts like "a photo of a [class]" without any domain-specific training.',
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "CLIP zero-shot classification matches image features against text class embeddings; because CLIP is domain-agnostic by training, this approach provides competitive accuracy on new domains without any adaptation.",
       hints: [
@@ -953,7 +953,7 @@ const questions: Record<string, Question[]> = {
       question:
         "AdaIN (Adaptive Instance Normalization) can be used for domain adaptation by replacing source feature statistics with target feature statistics.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "AdaIN transfers style by replacing the mean and variance of source feature maps with those from target examples; applied to intermediate network layers, this effectively stylizes source images to match target appearance.",
       hints: [
@@ -1010,7 +1010,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Domain-adaptive pre-training (DAPT, Gururangan et al.) continues pre-training a language model on unlabeled target domain text before task fine-tuning, improving performance on target domain tasks.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DAPT adapts the language model\'s internal representations to target domain vocabulary and style by continuing masked language model pre-training on target corpus, consistently improving downstream NLP task performance.",
       hints: [
@@ -1068,7 +1068,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Adverse weather domain adaptation (adapting from clear to foggy/rainy conditions) can be addressed by augmenting training data with synthetic weather effects.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Synthetic weather augmentation (fog, rain, night) using physics-based or GAN-based rendering exposes models to target-like conditions during training, improving robustness without collecting real adverse-weather data.",
       hints: [
@@ -1125,7 +1125,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Histogram matching (normalizing intensity distributions to a reference) is a simple yet effective pre-processing technique for medical image domain adaptation.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Histogram normalization aligns the marginal intensity distribution of target images to a reference source distribution, reducing scanner-induced statistical shift as a simple, interpretable pre-processing step.",
       hints: [
@@ -1183,7 +1183,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Adverse weather domain adaptation (adapting from clear to foggy/rainy conditions) can be addressed by augmenting training data with synthetic weather effects.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Synthetic weather augmentation (fog, rain, night) using physics-based or GAN-based rendering exposes models to target-like conditions during training, improving robustness without collecting real adverse-weather data.",
       hints: [
@@ -1240,7 +1240,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Elastic Weight Consolidation (EWC) can be applied to continual DA to protect important weights from being overwritten when adapting to a new domain.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "EWC adds a penalty on weight changes proportional to their importance (Fisher information) for previous tasks/domains, slowing down the forgetting of previously acquired domain knowledge during continual adaptation.",
       hints: [
@@ -1298,7 +1298,7 @@ const questions: Record<string, Question[]> = {
       question:
         "In federated domain adaptation, a globally shared model may perform worse on individual clients than locally trained models because of client-specific distribution differences.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Global model averaging (FedAvg) can produce a model that is suboptimal for every individual client when client data distributions differ significantly; personalized federated DA methods address this by learning client-specific components.",
       hints: [
@@ -1356,7 +1356,7 @@ const questions: Record<string, Question[]> = {
       question:
         "DomainNet is a large-scale DA benchmark containing approximately 600,000 images across 6 domains and 345 categories.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "DomainNet (Peng et al., 2019) is one of the largest DA benchmarks with ~600K images spanning 345 object categories across 6 domains: Clipart, Infograph, Painting, Quickdraw, Real, and Sketch.",
       hints: [
@@ -1414,7 +1414,7 @@ const questions: Record<string, Question[]> = {
       question:
         "When labeled target data is available, even in small amounts, supervised fine-tuning typically outperforms unsupervised domain adaptation methods.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Even a small amount of labeled target data provides direct task supervision that unsupervised alignment cannot match; supervised fine-tuning is almost always the preferred strategy when any target labels are available.",
       hints: [
@@ -1470,7 +1470,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Under label shift, the optimal correction is to reweight source samples by the ratio of target to source class priors w_k = p_t(Y=k)/p_s(Y=k).",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Since P(X|Y) is identical across domains under label shift, reweighting source samples by the class prior ratio corrects the distribution mismatch, making the weighted source distribution equivalent to the target distribution.",
       hints: [
@@ -1528,7 +1528,7 @@ const questions: Record<string, Question[]> = {
       question:
         "ADWIN (ADaptive WINdowing) detects concept drift by maintaining a sliding window of data and testing whether the mean of an older sub-window differs significantly from a recent sub-window.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "ADWIN adaptively adjusts the window size using a statistical test: when a significant difference is detected between older and newer data within the window, the old data is dropped, signaling a drift event.",
       hints: [
@@ -1586,7 +1586,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Open-vocabulary adaptation requires collecting new labeled images for each novel target-domain category during deployment.",
       options: ["True", "False"],
-      correctAnswer: "false",
+      correctAnswer: "False",
       explanation:
         "Open-vocabulary models use language descriptions (class names or text prompts) to define new categories without labeled images, enabling zero-shot adaptation to novel categories in new domains.",
       hints: [
@@ -1643,7 +1643,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Mean Teacher (Tarvainen & Valpola) improves pseudo-label quality by maintaining an exponential moving average (EMA) of model weights as the teacher that generates pseudo-labels.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "The EMA teacher is a temporally ensemble model that produces more stable, less noisy predictions than the student model being trained, providing higher-quality pseudo-labels and improving self-training stability.",
       hints: [
@@ -1701,7 +1701,7 @@ const questions: Record<string, Question[]> = {
       question:
         "Model selection (hyperparameter tuning) for UDA is challenging because using labeled target validation data violates the unsupervised assumption.",
       options: ["True", "False"],
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Standard hyperparameter selection uses a validation set with labels; in UDA, no target labels are available for validation, requiring proxy metrics (e.g., source validation accuracy, DEV, importance-weighted validation) that may not correlate with target accuracy.",
       hints: [
@@ -1760,7 +1760,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "TTT++ (Liu et al., 2021) improves on standard test-time training by using contrastive self-supervised learning as the adaptation objective instead of rotation prediction, enabling better feature alignment between source and test distributions.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "TTT++ uses SimCLR-style contrastive learning: the auxiliary head minimizes the contrastive loss over augmented views of test examples. Advantages over rotation prediction: (1) Contrastive learning is more tightly coupled to the main task features. (2) Works for non-geometric distribution shifts where rotation prediction may not correlate with the main task. (3) TTT++ achieves better results on corruption robustness benchmarks (ImageNet-C) than rotation-based TTT.",
       hints: [
@@ -1817,7 +1817,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Negative transfer in multi-source domain adaptation occurs when including data from an unrelated source domain hurts performance on the target domain compared to using only the most related source domain.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Negative transfer: adding source domain C (unrelated to target) to source domains A and B (related) can hurt performance. Mechanism: the model is forced to learn representations that generalize across A, B, C — but generalizing to unrelated C pushes the representation away from the optimal alignment for the target. Solutions: (1) Domain weighting: weight source domains by similarity to target. (2) Source selection: exclude source domains with high discrepancy to target. (3) Per-domain classifiers: train separate domain-specific components combined via gating.",
       hints: [
@@ -1874,7 +1874,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "The A-distance (proxy distance) between two domains can be estimated using a binary domain classifier: a lower A-distance indicates greater domain similarity.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Proxy A-distance: train a binary classifier h to distinguish source vs. target samples. A-distance ≈ 2(1 - 2·error(h)). If domains are identical (indistinguishable), the classifier achieves 50% accuracy, and A-distance ≈ 0. If domains are very different (easily distinguishable), the classifier achieves near 100% accuracy, and A-distance ≈ 2. A lower A-distance means greater domain similarity — more likely that domain adaptation will succeed without large error.",
       hints: [
@@ -1931,7 +1931,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Visual prompt tuning (VPT) applies prompt tuning to vision transformers (ViT) for domain adaptation, learning prepended visual token embeddings while keeping the ViT backbone frozen.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "VPT (Jia et al., 2022): for ViT models, prepend p learnable patch token embeddings to the input sequence at each transformer block (VPT-Deep) or only at the input layer (VPT-Shallow). Only these prompt tokens are trained; the pre-trained ViT weights are frozen. VPT-Deep outperforms full fine-tuning on FGVC (fine-grained visual classification) with 25 prompt tokens × 12 layers = only 0.03% of ViT-Large parameters.",
       hints: [
@@ -1988,7 +1988,7 @@ const moreAdaptQuestions: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Generative replay in source-free domain adaptation — generating synthetic source-like data from the source model and using it for domain alignment — is inspired by continual learning approaches to prevent catastrophic forgetting.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Generative replay for SFDA: train a generator G to produce synthetic source-like images from the source model. During adaptation, align target features with the generated pseudo-source features — without needing the real source data. Inspiration from continual learning: Experience Replay and Generative Replay (Shin et al., 2017) prevent catastrophic forgetting by replaying past task data (or generated approximations). Methods: GSFDA uses the source model\'s softmax outputs as class prototypes.",
       hints: [
@@ -2049,7 +2049,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "In continual domain adaptation, using a larger learning rate for adapter layers while freezing the backbone is a standard technique to reduce catastrophic forgetting.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Freezing the backbone limits parameter updates to adapter layers (small fraction of total parameters), dramatically reducing catastrophic forgetting. The backbone retains general representations; adapters specialize per domain. L2-SP regularizes fine-tuned parameters toward pre-trained values — an alternative allowing gradual adaptation. Both are standard PEFT techniques for CDA.",
       hints: [
@@ -2105,7 +2105,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Naively combining all source datasets (source pooling) typically underperforms MSDA methods that explicitly model inter-source heterogeneity.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Source pooling ignores inter-source gaps. When sources have conflicting statistics, a pooled model learns domain-confounded representations. MSDA methods with per-source discriminators and weighting outperform source pooling on Office-31 and DomainNet by 2-8%. Domain-specific batch normalization separates source-specific distributions while enabling a shared feature extractor.",
       hints: [
@@ -2160,7 +2160,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Empirical Risk Minimization (ERM) with strong pre-trained backbones can sometimes match or outperform specialized DG algorithms on controlled benchmark evaluations.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Gulrajani & Lopez-Paz (2021): ERM with proper hyperparameter tuning matches or beats many specialized DG algorithms on DomainBed. Key reasons: (1) Many DG algorithms tune on target domain (leakage). (2) Strong backbone + ERM is a powerful baseline. (3) True gains require genuinely better OOD generalization, not just better hyperparameter selection. This paper prompted the community to adopt stricter evaluation protocols.",
       hints: [
@@ -2215,7 +2215,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Group DRO requires group annotations at training time to optimize worst-group performance.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Standard Group DRO requires knowing each training sample\'s group to compute per-group losses and minimize the maximum. Annotations may be unavailable, legally restricted (GDPR), or expensive. Methods without explicit annotations: JTT (uses model errors as proxy), EIIL (infers environment labels from model disagreement), CnC (uses contrastive signals). The requirement for demographic labels is a practical limitation for real-world deployment.",
       hints: [
@@ -2271,7 +2271,7 @@ const moreAdaptQ2: Record<string, Question[]> = {
       difficulty: "medium",
       question:
         "Zero-shot cross-lingual transfer (fine-tuning mBERT/XLM-R on English, evaluating on Spanish) can be viewed as domain adaptation where language is the domain.",
-      correctAnswer: "true",
+      correctAnswer: "True",
       explanation:
         "Cross-lingual transfer through DA lens: English = labeled source domain, Spanish = unlabeled target domain. Domain shift is both lexical and syntactic. DA methods applied to cross-lingual: (1) Language-adversarial training: make representations indistinguishable across languages. (2) Multilingual pre-training (XLM-R, mBERT): pre-trains on 100+ languages, learning cross-lingual invariances. XLM-R achieves near-English performance on XNLI for high-resource languages.",
       hints: [
