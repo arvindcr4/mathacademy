@@ -30,7 +30,7 @@ const questions: Record<string, Question[]> = {
       options: ["4", "5", "6", "7"],
       correctAnswer: 1,
       explanation:
-        "We build up using the recurrence $dp[i] = dp[i-1] + dp[i-2]$:\n\n\[\n\\begin{align}\ndp[1] &= 1 \\quad &\\text{(just 1)}\\\[5pt]\ndp[2] &= dp[1] + dp[0] = 1 + 1 = 2 \\quad &\\text{(1+1 or 2)}\\\[5pt]\ndp[3] &= dp[2] + dp[1] = 2 + 1 = 3 \\quad &\\text{(1+1+1, 1+2, 2+1)}\\\[5pt]\ndp[4] &= dp[3] + dp[2] = 3 + 2 = 5\\n\\end{align}$$\n\nThe five valid sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, and $(2,2)$.",
+        "We build up using the recurrence $dp[i] = dp[i-1] + dp[i-2]$:\n\n\n\\begin{align}\ndp[1] &= 1 \\quad &\\text{(just 1)}\\\[5pt]\ndp[2] &= dp[1] + dp[0] = 1 + 1 = 2 \\quad &\\text{(1+1 or 2)}\\\[5pt]\ndp[3] &= dp[2] + dp[1] = 2 + 1 = 3 \\quad &\\text{(1+1+1, 1+2, 2+1)}\\\[5pt]\ndp[4] &= dp[3] + dp[2] = 3 + 2 = 5\\n\\end{align}$$\n\nThe five valid sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, and $(2,2)$.",
       hints: [
         "Build the values from the bottom up: $dp[1] = 1, dp[2] = 2, dp[3] = 3, \\dots$",
         "Use $dp[4] = dp[3] + dp[2]$ or enumerate all five valid sequences manually.",
@@ -71,7 +71,7 @@ const questions: Record<string, Question[]> = {
       options: ["5", "6", "7", "8"],
       correctAnswer: 2,
       explanation:
-        "With step sizes 1, 2, and 3, the recurrence extends to use the previous three states:\n\n\[\n\\begin{align}\ndp[4] &= dp[3] + dp[2] + dp[1]\\\[5pt]\n\\text{where: } &dp[1] = 1 \\text{ (only } 1)\\n&dp[2] = 2 \\text{ (1+1 or } 2)\\n&dp[3] = 4 \\text{ (1+1+1, 1+2, 2+1, or } 3)\n\\end{align}$$\n\nTherefore:\n$$dp[4] = 4 + 2 + 1 = 7$$\n\nThe seven sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, $(2,2)$, $(1,3)$, and $(3,1)$.",
+        "With step sizes 1, 2, and 3, the recurrence extends to use the previous three states:\n\n\n\\begin{align}\ndp[4] &= dp[3] + dp[2] + dp[1]\\\[5pt]\n\\text{where: } &dp[1] = 1 \\text{ (only } 1)\\n&dp[2] = 2 \\text{ (1+1 or } 2)\\n&dp[3] = 4 \\text{ (1+1+1, 1+2, 2+1, or } 3)\n\\end{align}$$\n\nTherefore:\n$$dp[4] = 4 + 2 + 1 = 7$$\n\nThe seven sequences are: $(1,1,1,1)$, $(1,1,2)$, $(1,2,1)$, $(2,1,1)$, $(2,2)$, $(1,3)$, and $(3,1)$.",
       hints: [
         "With step sizes 1, 2, and 3, the recurrence uses the previous three states: $dp[i] = dp[i-1] + dp[i-2] + dp[i-3]$.",
         "Use $dp[4] = dp[3] + dp[2] + dp[1]$ with base values $dp[1] = 1, dp[2] = 2, dp[3] = 4$.",
@@ -90,7 +90,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The recurrence $dp[i] = dp[i-1] + dp[i-2]$ only requires the two most recent values. We can replace the full array with two variables:\n\n\[\n\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad \\text{(previous state)}\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad \\text{(state before that)}\\\[5pt]\n\\text{current} &= \\text{prev1} + \\text{prev2}\\n\\end{align}$$\n\nAfter computing each $dp[i]$, we shift: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{current}$. This uses $O(1)$ space.",
+        "The recurrence $dp[i] = dp[i-1] + dp[i-2]$ only requires the two most recent values. We can replace the full array with two variables:\n\n\n\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad \\text{(previous state)}\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad \\text{(state before that)}\\\[5pt]\n\\text{current} &= \\text{prev1} + \\text{prev2}\\n\\end{align}$$\n\nAfter computing each $dp[i]$, we shift: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{current}$. This uses $O(1)$ space.",
       hints: [
         "Look at how many previous DP values the recurrence actually needs at any step.",
         "If only the last two states matter, why keep the full table?",
@@ -112,7 +112,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Let $dp[i]$ be the minimum coins needed to form amount $i$. For each coin with value $\\text{coin}$:\n\n\[\n\\begin{align}\n\\text{If } i \\geq \\text{coin}:\\n\\quad dp[i] &= \\min\\big(dp[i],\\; dp[i - \\text{coin}] + 1\\big)\n\\end{align}$$\n\nWe initialize $dp[0] = 0$ (zero coins for amount 0) and all other $dp[i] = \\infty$ before processing.",
+        "Let $dp[i]$ be the minimum coins needed to form amount $i$. For each coin with value $\\text{coin}$:\n\n\n\\begin{align}\n\\text{If } i \\geq \\text{coin}:\\n\\quad dp[i] &= \\min\\big(dp[i],\\; dp[i - \\text{coin}] + 1\\big)\n\\end{align}$$\n\nWe initialize $dp[0] = 0$ (zero coins for amount 0) and all other $dp[i] = \\infty$ before processing.",
       hints: [
         "State = minimum coins needed to form amount $i$.",
         "For each coin $\\text{coin}$, ask: can using this coin give a better (smaller) answer for amount $i$?",
@@ -127,7 +127,7 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "5", "11"],
       correctAnswer: 1,
       explanation:
-        "We compute $dp$ bottom-up:\n\n\[\n\\begin{align}\ndp[0] &= 0\\\[5pt]\ndp[1] &= \\min(dp[1], dp[0]+1) = 1\\\[5pt]\ndp[2] &= \\min(dp[2], dp[1]+1, dp[0]+1) = 1\\\[5pt]\n&\\vdots\\\[5pt]\ndp[5] &= 1\\quad \\text{(coin: 5)}\\\[5pt]\ndp[11] &= 3\\quad \\text{(5 + 5 + 1)}\n\\end{align}$$\n\nOptimal: $11 = 5 + 5 + 1$ using only 3 coins. Other decompositions like $2+2+2+2+2+1 = 6$ coins are worse.",
+        "We compute $dp$ bottom-up:\n\n\n\\begin{align}\ndp[0] &= 0\\\[5pt]\ndp[1] &= \\min(dp[1], dp[0]+1) = 1\\\[5pt]\ndp[2] &= \\min(dp[2], dp[1]+1, dp[0]+1) = 1\\\[5pt]\n&\\vdots\\\[5pt]\ndp[5] &= 1\\quad \\text{(coin: 5)}\\\[5pt]\ndp[11] &= 3\\quad \\text{(5 + 5 + 1)}\n\\end{align}$$\n\nOptimal: $11 = 5 + 5 + 1$ using only 3 coins. Other decompositions like $2+2+2+2+2+1 = 6$ coins are worse.",
       hints: [
         "Try to form 11 with the fewest pieces, not just any decomposition.",
         "Two 5s and one 1 reach 11 using only three coins.",
@@ -170,7 +170,7 @@ const questions: Record<string, Question[]> = {
       options: ["O(amount)", "O(amount \\times coins)", "O(coins)", "O(2^amount)"],
       correctAnswer: 1,
       explanation:
-        "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n\[\n\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\[5pt]\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
+        "We use a two-dimensional DP with dimensions $(\\text{amount} + 1) \\times (\\text{number of coins})$:\n\n\n\\begin{align}\n\\text{for } i &= 1 \\text{ to } \\text{amount}:\\n\\quad \\text{for each coin } c:\\\[5pt]\n\\quad\\quad dp[i] = \\min(dp[i], dp[i-c] + 1)\n\\end{align}$$\n\nThis gives $O(\\text{amount} \\times \\text{len(coins)})$ time complexity.",
       hints: [
         "There is one dimension for amounts (1 to target) and one for coin types.",
         "At each amount, you check every available coin.",
@@ -206,7 +206,7 @@ const questions: Record<string, Question[]> = {
       options: ["10", "11", "12", "13"],
       correctAnswer: 2,
       explanation:
-        "We compute using $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$:\n\n\[\n\\begin{align}\ndp[0] &= 2\\n\\text{dp[1]} &= \\max(2, 7) = 7\\n\\text{dp[2]} &= \\max(7, 2 + 9) = 11\\n\\text{dp[3]} &= \\max(11, 7 + 3) = 11\\n\\text{dp[4]} &= \\max(11, 11 + 1) = 12\n\\end{align}$$\n\nRobbing houses 0, 2, and 4: $2 + 9 + 1 = 12$. Alternative: houses 1 and 3 give $7 + 3 = 10$.",
+        "We compute using $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$:\n\n\n\\begin{align}\ndp[0] &= 2\\n\\text{dp[1]} &= \\max(2, 7) = 7\\n\\text{dp[2]} &= \\max(7, 2 + 9) = 11\\n\\text{dp[3]} &= \\max(11, 7 + 3) = 11\\n\\text{dp[4]} &= \\max(11, 11 + 1) = 12\n\\end{align}$$\n\nRobbing houses 0, 2, and 4: $2 + 9 + 1 = 12$. Alternative: houses 1 and 3 give $7 + 3 = 10$.",
       hints: [
         "Try the best non-adjacent combinations explicitly.",
         "Compute $dp[4]$ step by step to find the maximum amount.",
@@ -239,7 +239,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 1,
       explanation:
-        "The recurrence $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$ only requires the two most recent values. We can use two variables instead of an array:\n\n\[\n\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad &(\\text{current max up to } i-1)\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad &(\\text{max up to } i-2)\\\[5pt]\n\\text{curr} &= \\max(\\text{prev1},\\; \\text{prev2} + \\text{nums}[i])\n\\end{align}$$\n\nAfter each step: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{curr}$. Space: $O(1)$.",
+        "The recurrence $dp[i] = \\max(dp[i-1], dp[i-2] + \\text{nums}[i])$ only requires the two most recent values. We can use two variables instead of an array:\n\n\n\\begin{align}\n\\text{prev1} &= dp[i-1] \\quad &(\\text{current max up to } i-1)\\\[5pt]\n\\text{prev2} &= dp[i-2] \\quad &(\\text{max up to } i-2)\\\[5pt]\n\\text{curr} &= \\max(\\text{prev1},\\; \\text{prev2} + \\text{nums}[i])\n\\end{align}$$\n\nAfter each step: $\\text{prev2} \\leftarrow \\text{prev1}$, $\\text{prev1} \\leftarrow \\text{curr}$. Space: $O(1)$.",
       hints: [
         "The recurrence only references the previous two answers.",
         "Rolling values for $dp[i-1]$ and $dp[i-2]$ are enough to compute $dp[i]$.",
@@ -258,7 +258,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 3,
       explanation:
-        "Base cases for 0-indexed $\\text{nums}$:\n\n\[\n\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\[5pt]\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
+        "Base cases for 0-indexed $\\text{nums}$:\n\n\n\\begin{align}\ndp[0] &= \\text{nums}[0] \\quad &(\\text{only house 0 can be robbed})\\\[5pt]\ndp[1] &= \\max(\\text{nums}[0],\\; \\text{nums}[1]) \\quad &(\\text{rob house 0 or house 1, not both})\n\\end{align}$$\n\nFor $n = 1$: answer is $\\text{nums}[0]$. For $n = 2$: answer is $\\max(\\text{nums}[0], \\text{nums}[1])$.",
       hints: [
         "Start by solving the one-house and two-house cases.",
         "With two adjacent houses, you must choose the larger value because you cannot rob both.",
@@ -454,7 +454,7 @@ const questions: Record<string, Question[]> = {
       options: ["$O(n)$", "$O(n \\log \\log n)$", "$O(n \\log n)$", "$O(n^2)$"],
       correctAnswer: 1,
       explanation:
-        "The Sieve of Eratosthenes marks multiples of each prime $p$ starting from $p^2$ (since smaller multiples were already marked by smaller primes):\n\n\[\n\\begin{align}\n\\sum_{p \\leq n} \\frac{n}{p} &= n \\left(\\frac{1}{2} + \\frac{1}{3} + \\frac{1}{5} + \\cdots\\right)\\\\\n&= n \\cdot \\log \\log n + O(n)\n\\end{align}$$\n\nThis harmonic sum of primes converges to $\\log \\log n$, giving overall $O(n \\log \\log n)$.",
+        "The Sieve of Eratosthenes marks multiples of each prime $p$ starting from $p^2$ (since smaller multiples were already marked by smaller primes):\n\n\n\\begin{align}\n\\sum_{p \\leq n} \\frac{n}{p} &= n \\left(\\frac{1}{2} + \\frac{1}{3} + \\frac{1}{5} + \\cdots\\right)\\\\\n&= n \\cdot \\log \\log n + O(n)\n\\end{align}$$\n\nThis harmonic sum of primes converges to $\\log \\log n$, giving overall $O(n \\log \\log n)$.",
       hints: [
         "The Sieve marks each composite at the step corresponding to its smallest prime factor.",
         "The sum $\\sum_{p \\leq n} 1/p$ converges to $\\log \\log n$ as $n \\to \\infty$.",
@@ -542,7 +542,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "We factor 360 step by step:\n\n\[\n\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\[5pt]\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
+        "We factor 360 step by step:\n\n\n\\begin{align}\n360 &= 36 \\times 10 = (6 \\times 6) \\times (2 \\times 5)\\\[5pt]\n     &= (2 \\times 3) \\times (2 \\times 3) \\times 2 \\times 5\\\\\n     &= 2^3 \\times 3^2 \\times 5\n\\end{align}$$\n\nAlternatively: $360 = 8 \\times 45 = 2^3 \\times (9 \\times 5) = 2^3 \\times 3^2 \\times 5$.",
       hints: [
         "Break 360 into prime factors systematically.",
         "Look for powers of 2: $360 = 8 \\times 45 = 2^3 \\times 45$.",
@@ -556,7 +556,7 @@ const questions: Record<string, Question[]> = {
       options: ["$O(\\sqrt{n})$", "$O(n)$", "$O(\\log n)$", "$O(n \\log n)$"],
       correctAnswer: 0,
       explanation:
-        "In trial division, we test divisibility by all integers $d = 2, 3, 4, \\ldots, \\lfloor\\sqrt{n}\\rfloor$:\n\n\[\n\\begin{align}\n\\text{In the worst case: } &\\text{we test all numbers } d \\in [2, \\sqrt{n}]\\\\\n\\text{Count of tests: } &\\sqrt{n} - 2 + 1 = O(\\sqrt{n})\n\\end{align}$$\n\nEach division is $O(1)$, so overall complexity is $O(\\sqrt{n})$.",
+        "In trial division, we test divisibility by all integers $d = 2, 3, 4, \\ldots, \\lfloor\\sqrt{n}\\rfloor$:\n\n\n\\begin{align}\n\\text{In the worst case: } &\\text{we test all numbers } d \\in [2, \\sqrt{n}]\\\\\n\\text{Count of tests: } &\\sqrt{n} - 2 + 1 = O(\\sqrt{n})\n\\end{align}$$\n\nEach division is $O(1)$, so overall complexity is $O(\\sqrt{n})$.",
       hints: [
         "How many trial divisions do we need in the worst case?",
         "If $d > \\sqrt{n}$ and $d | n$, then $n = d \\times k$ with $k < \\sqrt{n}$, so $k$ would have been found first.",
@@ -590,7 +590,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "With an SPF array where $\\text{SPF}[n] = $ smallest prime factor of $n$, we factor $n$ by repeated division:\n\n\[\n\\begin{align}\n\\text{while } n > 1:\\n\\quad p &= \\text{SPF}[n]\\n\\quad \\text{add } p \\text{ to factors}\\n\\quad n &= n / p\n\\end{align}$$\n\nEach division reduces $n$ by at least a factor of 2, so the number of iterations is $O(\\log n)$.",
+        "With an SPF array where $\\text{SPF}[n] = $ smallest prime factor of $n$, we factor $n$ by repeated division:\n\n\n\\begin{align}\n\\text{while } n > 1:\\n\\quad p &= \\text{SPF}[n]\\n\\quad \\text{add } p \\text{ to factors}\\n\\quad n &= n / p\n\\end{align}$$\n\nEach division reduces $n$ by at least a factor of 2, so the number of iterations is $O(\\log n)$.",
       hints: [
         "With SPF, each division removes at least one prime factor.",
         "How many times can you divide by 2 before $n$ becomes 1?",
@@ -648,7 +648,7 @@ const questions: Record<string, Question[]> = {
       options: ["6", "8", "12", "24"],
       correctAnswer: 0,
       explanation:
-        "Applying the Euclidean algorithm:\n\n\[\n\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\[5pt]\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
+        "Applying the Euclidean algorithm:\n\n\n\\begin{align}\n\\gcd(48, 18) &= \\gcd(18, 48 \\bmod 18) = \\gcd(18, 12)\\\[5pt]\n\\gcd(18, 12) &= \\gcd(12, 18 \\bmod 12) = \\gcd(12, 6)\\\\\n\\gcd(12, 6) &= \\gcd(6, 12 \\bmod 6) = \\gcd(6, 0) = 6\n\\end{align}$$\n\nOr by factoring: $48 = 2^4 \\cdot 3$ and $18 = 2 \\cdot 3^2$, so $\\gcd = 2 \\cdot 3 = 6$.",
       hints: [
         "Apply the Euclidean algorithm step by step.",
         "$\\gcd(48, 18) = \\gcd(18, 12) = \\gcd(12, 6) = 6$.",
@@ -677,7 +677,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "$-1$", "2", "$-2$"],
       correctAnswer: 1,
       explanation:
-        "We solve $35x + 15y = \\gcd(35, 15) = 5$ using the extended Euclidean algorithm:\n\n\[\n\\begin{align}\n35 &= 2 \\cdot 15 + 5\\n15 &= 3 \\cdot 5 + 0\n\\end{align}$$\n\nBack-substituting:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nSo $x = -1, y = 3$. Check: $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10 \\neq 5$.\n\nWait, let me recalculate:\n$$\\gcd(35, 15) = \\gcd(15, 5) = \\gcd(5, 0) = 5$$\n\nBack-substitution:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nFor $\\gcd = 10$:  $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10$. Correct!",
+        "We solve $35x + 15y = \\gcd(35, 15) = 5$ using the extended Euclidean algorithm:\n\n\n\\begin{align}\n35 &= 2 \\cdot 15 + 5\\n15 &= 3 \\cdot 5 + 0\n\\end{align}$$\n\nBack-substituting:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nSo $x = -1, y = 3$. Check: $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10 \\neq 5$.\n\nWait, let me recalculate:\n$$\\gcd(35, 15) = \\gcd(15, 5) = \\gcd(5, 0) = 5$$\n\nBack-substitution:\n$$5 = 35 - 2 \\cdot 15 = 35 + 15 \\cdot (-2)$$\n\nFor $\\gcd = 10$:  $35 \\cdot (-1) + 15 \\cdot 3 = -35 + 45 = 10$. Correct!",
       hints: [
         "Use the extended Euclidean algorithm to find coefficients $x, y$.",
         "Verify: $35 \\cdot (-1) + 15 \\cdot 3 = 10 = \\gcd(35, 15)$.",
@@ -1268,7 +1268,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "The invariant keeps the answer in $[\\text{left}, \\text{right}]$:\n\n\[\n\\begin{align}\nP(\\text{left} - 1) &= \\text{false} \\quad (\\text{everything before left fails})\\\[5pt]\nP(\\text{right} + 1) &= \\text{true} \\quad (\\text{everything after right succeeds})\n\\end{align}$$\n\nEach mid-point check narrows the interval until $\\text{left} = \\text{right}$, which is the answer.",
+        "The invariant keeps the answer in $[\\text{left}, \\text{right}]$:\n\n\n\\begin{align}\nP(\\text{left} - 1) &= \\text{false} \\quad (\\text{everything before left fails})\\\[5pt]\nP(\\text{right} + 1) &= \\text{true} \\quad (\\text{everything after right succeeds})\n\\end{align}$$\n\nEach mid-point check narrows the interval until $\\text{left} = \\text{right}$, which is the answer.",
       hints: [
         "Think of the array as FFFF...TTTT. The answer is the first T.",
         "The invariant ensures $[\\text{left}, \\text{right}]$ always contains the first T.",
@@ -1317,7 +1317,7 @@ const questions: Record<string, Question[]> = {
       question: "Merge sort is a stable sorting algorithm.",
       correctAnswer: "True",
       explanation:
-        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n\[\n\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
+        "Merge sort is **stable** because during the merge step, when we have equal elements from both halves, we always take the element from the **left half first**:\n\n\n\\begin{align}\n\\text{Merge}(L, R):\\n&\\text{while } L \\text{ and } R \\text{ not empty:}\\\[5pt]\n&\\quad \\text{if } L[0] \\leq R[0]: \\text{ take from } L\\n&\\quad \\text{else}: \\text{ take from } R\n\\end{align}$$\n\nThe $\\leq$ comparison ensures that equal elements from the left subarray are placed before those from the right, preserving their original relative order.",
       hints: [
         "Equal elements maintain their original relative order.",
         "When both halves have equal elements, take from the left half first to maintain stability.",
@@ -1333,7 +1333,7 @@ const questions: Record<string, Question[]> = {
 }`,
       correctAnswer: 0,
       explanation:
-        "During the merge step, when we take an element from the right half before an element from the left half, all remaining elements in the left half form inversions with that element:\n\n\[\n\\begin{align}\n\\text{while merging:}\\\[5pt]\n&\\text{if } L[i] \\leq R[j]:\\n&\\quad \\text{take } L[i]\\n&\\text{else}:\\n&\\quad \\text{take } R[j]\\n&\\quad \\text{inversions += remaining elements in } L\\n&\\quad (L[i...end] \\text{ are all > } R[j])\n\\end{align}$$",
+        "During the merge step, when we take an element from the right half before an element from the left half, all remaining elements in the left half form inversions with that element:\n\n\n\\begin{align}\n\\text{while merging:}\\\[5pt]\n&\\text{if } L[i] \\leq R[j]:\\n&\\quad \\text{take } L[i]\\n&\\text{else}:\\n&\\quad \\text{take } R[j]\\n&\\quad \\text{inversions += remaining elements in } L\\n&\\quad (L[i...end] \\text{ are all > } R[j])\n\\end{align}$$",
       hints: [
         "Count inversions when the left element is greater than the right element during merge.",
         "When you take from the right half, add the count of remaining left elements to the inversion total.",
@@ -1800,7 +1800,7 @@ const questions: Record<string, Question[]> = {
       question: "Matrix exponentiation using fast exponentiation can compute the $n$-th Fibonacci number in $O(\\log n)$ time.",
       correctAnswer: "True",
       explanation:
-        "The Fibonacci recurrence can be written as a matrix equation:\n\n\[\n\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
+        "The Fibonacci recurrence can be written as a matrix equation:\n\n\n\\begin{pmatrix} F_{n+1} \\\\ F_n \\end{pmatrix} = \\begin{pmatrix} 1 & 1 \\\\ 1 & 0 \\end{pmatrix}^n \\begin{pmatrix} 1 \\\\ 0 \\end{pmatrix}$$\n\nUsing fast (binary) exponentiation on the $2 \\times 2$ matrix:\n- Each matrix multiplication: $O(1)$ (fixed size)\n- Number of multiplications: $O(\\log n)$\n\nTotal: $O(\\log n)$.",
       hints: [
         "Express the Fibonacci recurrence as matrix multiplication.",
         "Apply binary exponentiation to compute the $n$-th power of the matrix.",
@@ -2044,7 +2044,7 @@ const questions: Record<string, Question[]> = {
       options: ["True", "False"],
       correctAnswer: 0,
       explanation:
-        "XOR swap works using three XOR operations:\n\n\[\n\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
+        "XOR swap works using three XOR operations:\n\n\n\\begin{align}\na &= a \\oplus b \\quad &(\\text{now } a \\text{ holds } a \\oplus b)\\\[5pt]\nb &= a \\oplus b \\quad &(\\text{now } b = (a \\oplus b) \\oplus b = a)\\\\\na &= a \\oplus b \\quad &(\\text{now } a = (a \\oplus b) \\oplus a = b)\n\\end{align}$$\n\n**Caution**: This fails if $a$ and $b$ point to the same memory location (e.g., `swap(x, x)` gives 0).",
       hints: [
         "Three XOR operations in sequence: $a = a \\oplus b$, $b = a \\oplus b$, $a = a \\oplus b$.",
         "All properties of XOR ($a \\oplus a = 0$, $a \\oplus 0 = a$, commutativity, associativity) make this work.",
@@ -2063,7 +2063,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "Brian Kernighan's algorithm uses the fact that $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n\[\n\\begin{align}\nn = 12 &= 1100_2\\\[5pt]\nn \\; \[5pt]& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
+        "Brian Kernighan's algorithm uses the fact that $n \\; \[5pt]& \\; (n-1)$ **clears the lowest set bit** each iteration:\n\n\n\\begin{align}\nn = 12 &= 1100_2\\\[5pt]\nn \\; \[5pt]& \\; 11 &= 1000_2 \\quad \\text{(cleared bit 2)}\\\\\nn \\; \\& \\; 7  &= 0000_2 \\quad \\text{(cleared bit 3)}\n\\end{align}$$\n\nTwo iterations $\\Rightarrow$ two set bits. Time: $O(k)$ where $k$ = number of set bits.",
       hints: [
         "$n \\; \\& \\; (n-1)$ clears the lowest set bit.",
         "Count how many operations until $n$ becomes 0.",
@@ -2100,7 +2100,7 @@ const questions: Record<string, Question[]> = {
       options: ["2", "3", "4", "1"],
       correctAnswer: 2,
       explanation:
-        "XOR all elements:\n\n\[\n\\begin{align}\n2 \\oplus 3 \\oplus 2 \\oplus 4 \\oplus 3\n&= (2 \\oplus 2) \\oplus (3 \\oplus 3) \\oplus 4\\\\\n&= 0 \\oplus 0 \\oplus 4\\\\\n&= 4\n\\end{align}$$\n\nThe element appearing only once is **4**.",
+        "XOR all elements:\n\n\n\\begin{align}\n2 \\oplus 3 \\oplus 2 \\oplus 4 \\oplus 3\n&= (2 \\oplus 2) \\oplus (3 \\oplus 3) \\oplus 4\\\\\n&= 0 \\oplus 0 \\oplus 4\\\\\n&= 4\n\\end{align}$$\n\nThe element appearing only once is **4**.",
       hints: [
         "Group the pairs: $2 \\oplus 2 = 0$ and $3 \\oplus 3 = 0$.",
         "XOR is commutative and associative, so we can reorder.",
@@ -2152,7 +2152,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 2,
       explanation:
-        "Standard XOR cancels in pairs ($a \\oplus a = 0$) but not in triples.\n\nUse two integers $\\text{ones}$ and $\\text{twos}$ tracking how many times each bit has appeared mod 3:\n\n\[\n\\begin{align}\n\\text{ones}  &= \\text{bits seen 1 time mod 3}\\\\\n\\text{twos}  &= \\text{bits seen 2 times mod 3}\n\\end{align}$$\n\nUpdate rule per element $x$:\n1. $\\text{ones} = (\\text{ones} \\oplus x) \\; \\& \\; \\sim\\text{twos}$\n2. $\\text{twos} = (\\text{twos} \\oplus x) \\; \\& \\; \\sim\\text{ones}$\n\nAfter processing, $\\text{ones}$ holds the unique element.",
+        "Standard XOR cancels in pairs ($a \\oplus a = 0$) but not in triples.\n\nUse two integers $\\text{ones}$ and $\\text{twos}$ tracking how many times each bit has appeared mod 3:\n\n\n\\begin{align}\n\\text{ones}  &= \\text{bits seen 1 time mod 3}\\\\\n\\text{twos}  &= \\text{bits seen 2 times mod 3}\n\\end{align}$$\n\nUpdate rule per element $x$:\n1. $\\text{ones} = (\\text{ones} \\oplus x) \\; \\& \\; \\sim\\text{twos}$\n2. $\\text{twos} = (\\text{twos} \\oplus x) \\; \\& \\; \\sim\\text{ones}$\n\nAfter processing, $\\text{ones}$ holds the unique element.",
       hints: [
         "XOR only cancels pairs. You need a counter mod 3 for each bit position.",
         "Maintain $\\text{ones}$ and $\\text{twos}$ to track bit frequencies.",
@@ -2298,7 +2298,7 @@ const questions: Record<string, Question[]> = {
       options: ["1", "2", "4", "8"],
       correctAnswer: 2,
       explanation:
-        "For $n = 15 = 1111_2$:\n\n\[\n\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\[5pt]&=n-1} 1110_2 \\quad (1)$\\\[5pt]\n1110_2 &\\xrightarrow{n\[5pt]&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
+        "For $n = 15 = 1111_2$:\n\n\n\\begin{align}\nn = 15 = 1111_2 &\\xrightarrow{n\[5pt]&=n-1} 1110_2 \\quad (1)$\\\[5pt]\n1110_2 &\\xrightarrow{n\[5pt]&=n-1} 1100_2 \\quad (2)$\\\\\n1100_2 &\\xrightarrow{n\\&=n-1} 1000_2 \\quad (3)$\\\\\n1000_2 &\\xrightarrow{n\\&=n-1} 0000_2 \\quad (4)$\n\\end{align}$$\n\nFour iterations, so $\\text{countBits}(15) = 4$. Indeed, $15$ has four 1-bits.",
       hints: [
         "$15 = 1111_2$ has four 1-bits.",
         "Each $n \\; \\& \\; (n-1)$ clears one set bit.",
@@ -2466,7 +2466,7 @@ const questions: Record<string, Question[]> = {
       ],
       correctAnswer: 0,
       explanation:
-        "To convert Gray code $g$ back to binary $n$:\n\n\[\n\\begin{align}\nn_k &= g_k \\quad (\\text{MSB is the same})\\\\\nn_i &= n_{i+1} \\oplus g_i \\quad (\\text{each subsequent bit})\n\\end{align}$$\n\nThis is equivalent to $n = g \\oplus (g >> 1) \\oplus (g >> 2) \\oplus \\ldots$, and also can be written as $n = g \\oplus (g >> 1)$ applied repeatedly (prefix XOR), but the compact iterative formula is the prefix XOR of $g$.",
+        "To convert Gray code $g$ back to binary $n$:\n\n\n\\begin{align}\nn_k &= g_k \\quad (\\text{MSB is the same})\\\\\nn_i &= n_{i+1} \\oplus g_i \\quad (\\text{each subsequent bit})\n\\end{align}$$\n\nThis is equivalent to $n = g \\oplus (g >> 1) \\oplus (g >> 2) \\oplus \\ldots$, and also can be written as $n = g \\oplus (g >> 1)$ applied repeatedly (prefix XOR), but the compact iterative formula is the prefix XOR of $g$.",
       hints: [
         "The MSB of the binary code equals the MSB of the Gray code.",
         "Each subsequent binary bit is the XOR of the previous binary bit and the current Gray bit.",
@@ -3015,7 +3015,7 @@ const questions: Record<string, Question[]> = {
       options: ["$O(n)$", "$O(n \\log n)$", "$O(n^2)$", "$O(n^3)$"],
       correctAnswer: 2,
       explanation:
-        "Optimal Three Sum: sort in $O(n \\log n)$, then fix one element and use two pointers for the remaining pair:\n\n\[\n\\begin{align}\n\\text{for } i &= 0 \\text{ to } n - 3:\\\\\n&\\quad \\text{left} = i + 1, \\; \\text{right} = n - 1\\\\\n&\\quad \\text{while left < right: two-pointer scan}\n\\end{align}$$\n\nOuter loop: $O(n)$; inner two-pointer: $O(n)$. Total: $O(n^2)$.\n\nThis is optimal since $\\Omega(n^2)$ triplets can exist in the output.",
+        "Optimal Three Sum: sort in $O(n \\log n)$, then fix one element and use two pointers for the remaining pair:\n\n\n\\begin{align}\n\\text{for } i &= 0 \\text{ to } n - 3:\\\\\n&\\quad \\text{left} = i + 1, \\; \\text{right} = n - 1\\\\\n&\\quad \\text{while left < right: two-pointer scan}\n\\end{align}$$\n\nOuter loop: $O(n)$; inner two-pointer: $O(n)$. Total: $O(n^2)$.\n\nThis is optimal since $\\Omega(n^2)$ triplets can exist in the output.",
       hints: [
         "Fix one element, solve Two Sum on the remainder.",
         "Sorting + two pointers gives $O(n)$ per fixed element.",
