@@ -1555,6 +1555,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'gan-foundations',
+        slug: 'gan-foundations',
         name: 'GAN Foundations',
         description: 'Original GAN, minimax game, mode collapse, and training challenges.',
         knowledgePoints: [
@@ -1567,6 +1568,7 @@ export const courses: Course[] = [
       },
       {
         id: 'improved-gan-training',
+        slug: 'improved-gan-training',
         name: 'Improved GAN Training Methods',
         description: 'Wasserstein GAN, spectral normalization, and gradient penalty.',
         knowledgePoints: [
@@ -1579,6 +1581,7 @@ export const courses: Course[] = [
       },
       {
         id: 'high-fidelity-gans',
+        slug: 'high-fidelity-gans',
         name: 'High-Fidelity Image Synthesis GANs',
         description: 'StyleGAN, BigGAN, and state-of-the-art image generation.',
         knowledgePoints: [
@@ -1591,6 +1594,7 @@ export const courses: Course[] = [
       },
       {
         id: 'video-3d-gans',
+        slug: 'video-3d-gans',
         name: 'Video & 3D GANs',
         description: 'Temporal consistency, 3D-aware GANs, and NeRF-GAN hybrids.',
         knowledgePoints: [
@@ -1603,6 +1607,7 @@ export const courses: Course[] = [
       },
       {
         id: 'gan-applications',
+        slug: 'gan-applications',
         name: 'GAN Applications',
         description: 'Data augmentation, domain transfer, and creative applications.',
         knowledgePoints: [
@@ -1615,6 +1620,7 @@ export const courses: Course[] = [
       },
       {
         id: 'gan-theory',
+        slug: 'gan-theory',
         name: 'GAN Evaluation & Theory',
         description: 'FID, precision/recall for generative models, and GAN game theory.',
         knowledgePoints: [
@@ -1637,6 +1643,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'transfer-learning-theory',
+        slug: 'transfer-learning-theory',
         name: 'Transfer Learning Theory',
         description: 'Theoretical foundations of transfer learning and domain shift.',
         knowledgePoints: [
@@ -1649,6 +1656,7 @@ export const courses: Course[] = [
       },
       {
         id: 'unsupervised-domain-adaptation',
+        slug: 'unsupervised-domain-adaptation',
         name: 'Unsupervised Domain Adaptation',
         description: 'DANN, CORAL, and deep domain adaptation methods.',
         knowledgePoints: [
@@ -1661,6 +1669,7 @@ export const courses: Course[] = [
       },
       {
         id: 'continual-learning-advanced',
+        slug: 'continual-learning-advanced',
         name: 'Continual Learning & Lifelong Learning',
         description: 'Elastic weight consolidation, progressive networks, and replay methods.',
         knowledgePoints: [
@@ -1673,6 +1682,7 @@ export const courses: Course[] = [
       },
       {
         id: 'multi-source-domain',
+        slug: 'multi-source-domain',
         name: 'Multi-Source Domain Adaptation',
         description: 'Adapting from multiple source domains and domain generalization.',
         knowledgePoints: [
@@ -1685,6 +1695,7 @@ export const courses: Course[] = [
       },
       {
         id: 'parameter-efficient-transfer',
+        slug: 'parameter-efficient-transfer',
         name: 'Parameter-Efficient Transfer Learning',
         description: 'Adapters, LoRA, prefix tuning, and PEFT methods.',
         knowledgePoints: [
@@ -1697,6 +1708,7 @@ export const courses: Course[] = [
       },
       {
         id: 'cross-modal-transfer',
+        slug: 'cross-modal-transfer',
         name: 'Cross-Modal & Cross-Lingual Transfer',
         description: 'Transfer between modalities and languages.',
         knowledgePoints: [
@@ -1719,6 +1731,7 @@ export const courses: Course[] = [
     topics: [
       {
         id: 'ml-system-fundamentals',
+        slug: 'ml-system-fundamentals',
         name: 'ML System Design Fundamentals',
         description: 'MLESDI framework, requirements gathering, and system design process.',
         knowledgePoints: [
@@ -1731,6 +1744,7 @@ export const courses: Course[] = [
       },
       {
         id: 'feed-ranking-design',
+        slug: 'feed-ranking-design',
         name: 'News Feed & Content Ranking',
         description: 'Designing Twitter/LinkedIn/TikTok feed ranking systems.',
         knowledgePoints: [
@@ -1743,6 +1757,7 @@ export const courses: Course[] = [
       },
       {
         id: 'search-design',
+        slug: 'search-design',
         name: 'Search & Query Understanding',
         description: 'Designing ML-powered search systems with query understanding and ranking.',
         knowledgePoints: [
@@ -1755,6 +1770,7 @@ export const courses: Course[] = [
       },
       {
         id: 'ads-design',
+        slug: 'ads-design',
         name: 'Ads & Monetization Systems',
         description: 'Click-through rate prediction, bidding, and ad auction design.',
         knowledgePoints: [
@@ -1767,6 +1783,7 @@ export const courses: Course[] = [
       },
       {
         id: 'fraud-anomaly-design',
+        slug: 'fraud-anomaly-design',
         name: 'Fraud Detection & Trust & Safety',
         description: 'Real-time fraud detection, account integrity, and content moderation.',
         knowledgePoints: [
@@ -1779,6 +1796,7 @@ export const courses: Course[] = [
       },
       {
         id: 'nlp-system-design',
+        slug: 'nlp-system-design',
         name: 'NLP & Conversational AI System Design',
         description: 'Designing chatbots, question answering, and language understanding systems.',
         knowledgePoints: [
